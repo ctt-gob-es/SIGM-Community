@@ -1,6 +1,6 @@
 #SIGM-REGISTRO del Ministerio de Sanidad Servicios Sociales e Igualdad
 
-En esta rama del repositorio tiene a su disposición el código del módulo de Registro de SIGM desarrollado por el Ministerio de Sanidad, Servicios Sociales e Igualdad (en adelante MSSSI). Las principales particularidades frente al módulo de Registro de la rama *master* son:
+En esta rama del repositorio contiene el código del módulo de Registro de SIGM desarrollado por el Ministerio de Sanidad, Servicios Sociales e Igualdad (en adelante MSSSI). Las principales particularidades frente al módulo de Registro de la rama *master* son:
 
 - Este es el código de la aplicación que, instalada y operativa en el MSSSI, ha superado el proceso de certificación para conectarse al Servicio de Intercambio Registral (SIR).
 - Se ha construido una nueva interfaz gráfica que refuerza tanto la usabilidad como la seguridad de la aplicación (se utiliza tecnología más reciente que incluye validaciones de entrada y salida robustas).
