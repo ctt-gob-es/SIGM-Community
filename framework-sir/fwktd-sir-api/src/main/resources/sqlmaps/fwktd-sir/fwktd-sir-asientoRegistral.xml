@@ -269,7 +269,10 @@
 			</iterate>
 			<iterate prepend="AND" property="criterios" conjunction="AND">
 				<isEqual property="criterios[].operador.value" compareValue="like">
-					$criterios[].nombre.table$.$criterios[].nombre.value$ LIKE '%$criterios[].valor$%'
+										 translate(UPPER($criterios[].nombre.table$.$criterios[].nombre.value$),
+                        'ÁÀÂÉÈÊÍÌÎÓÒÔÚÙÛ', 'AAAEEEIIIOOOUUU') LIKE 
+                         translate(UPPER('%$criterios[].valor$%'), 'ÁÀÂÉÈÊÍÌÎÓÒÔÚÙÛ',
+                        'AAAEEEIIIOOOUUU')
 				</isEqual>
 				<isNotEqual property="criterios[].operador.value" compareValue="like">
 					<isEqual property="criterios[].operador.value" compareValue="in">
@@ -297,6 +300,9 @@
 		<iterate prepend="ORDER BY" property="orden" conjunction=",">
 			$orden[].table$.$orden[].value$
 		</iterate>
+		<isNotNull prepend="ORDER BY" property="ordenString">
+		 	$ordenString$
+		</isNotNull>
 	</select>
 
 	<select id="getAsientoRegistralVOs" resultMap="asientoRegistral">
@@ -384,5 +390,17 @@
 		DELETE FROM
 			<include refid="table" />
 	</delete>
-
+	
+	<select id="getEstadoByCode" parameterClass="java.lang.String" resultMap="estadoAsientoRegistralMap">
+		SELECT
+			cd_estado,
+			fe_estado,
+			ds_nombre_usuario,
+			ds_contacto_usuario,
+			ds_tipo_anotacion
+		FROM
+			<include refid="table" />
+		WHERE
+			cd_intercambio=#value#
+	</select>
 </sqlMap>

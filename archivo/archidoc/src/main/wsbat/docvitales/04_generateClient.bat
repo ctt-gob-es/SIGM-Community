@@ -1,1 +1,0 @@
-CALL ..\comun\04_generateClient.bat ..\docvitales\defs.bat

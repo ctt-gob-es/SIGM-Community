@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+
+<wls:weblogic-web-app xmlns:wls="http://xmlns.oracle.com/weblogic/weblogic-web-app" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd http://xmlns.oracle.com/weblogic/weblogic-web-app http://xmlns.oracle.com/weblogic/weblogic-web-app/1.2/weblogic-web-app.xsd">
+	<wls:weblogic-version>10.3.4</wls:weblogic-version>
+	<wls:context-root>dir3Quartz</wls:context-root>
+	<wls:container-descriptor>
+		<wls:prefer-web-inf-classes>false</wls:prefer-web-inf-classes>
+		<wls:show-archived-real-path-enabled>true</wls:show-archived-real-path-enabled>  
+	</wls:container-descriptor>
+	<wls:resource-description>
+		<wls:res-ref-name>jdbc/fwktd-dir3DS</wls:res-ref-name>
+		<wls:jndi-name>${weblogic.dataSource.jndi.name.fwktddir3DS}</wls:jndi-name>
+	</wls:resource-description>
+	<wls:resource-description>
+		<wls:res-ref-name>jdbc/registroDS_000</wls:res-ref-name>
+		<wls:jndi-name>${weblogic.dataSource.jndi.name.registroDS_000}</wls:jndi-name>
+	</wls:resource-description>
+</wls:weblogic-web-app>

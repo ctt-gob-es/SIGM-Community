@@ -62,11 +62,11 @@ public class AxXfEntity implements ServerKeys {
 
 	public void remove(AxXfPK pk, String entidad) throws Exception {
 		loadEntityPrimaryKey(pk);
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			String sentence = MessageFormat.format(DELETE_SENTENCE,
 					new String[] { getFinalTableName() });
 			ps = con.prepareStatement(sentence);
@@ -84,19 +84,19 @@ public class AxXfEntity implements ServerKeys {
 							+ "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
 	public void load(String entidad) throws Exception {
 		// loadEntityContextPrimaryKey();
-
+	    	BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			String sentence = MessageFormat.format(SELECT_SENTENCE,
 					new String[] { getFinalTableName() });
 			ps = con.prepareStatement(sentence);
@@ -120,9 +120,9 @@ public class AxXfEntity implements ServerKeys {
 			log.error("Error en método load.PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
@@ -134,11 +134,11 @@ public class AxXfEntity implements ServerKeys {
 		this.id = id;
 		this.text = value;
 		this.timeStamp = timestamp;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			String sentence = MessageFormat.format(INSERT_SENTENCE,
 					new String[] { getFinalTableName() });
 			ps = con.prepareStatement(sentence);
@@ -149,10 +149,14 @@ public class AxXfEntity implements ServerKeys {
 			if (dataBaseType.equals("DB2")) {
 				stringClobType.nullSafeSet1(ps, value, 4);
 			} else {
-				stringClobType.nullSafeSet(ps, value, 4);
+				if (value != null){
+					stringClobType.nullSafeSet(ps, value, 4);
+				}else{
+					ps.setObject(4,null);
+				}
 			}
 			// ps.setString(4, value);
-			ps.setDate(5, BBDDUtils.getDate(timestamp));
+			ps.setDate(5, bbddUtils.getDate(timestamp));
 
 			ps.executeUpdate();
 			return getPrimaryKey();
@@ -167,8 +171,8 @@ public class AxXfEntity implements ServerKeys {
 							+ "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
@@ -176,12 +180,12 @@ public class AxXfEntity implements ServerKeys {
 		this.type = pk.getType();
 		this.fdrId = pk.getFdrId();
 		this.fldId = pk.getFldId();
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			String sentence = MessageFormat.format(FINDBY_SENTENCE,
 					new String[] { getFinalTableName() });
 			ps = con.prepareStatement(sentence);
@@ -200,9 +204,9 @@ public class AxXfEntity implements ServerKeys {
 					+ getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 
 		return new AxXfPK(pk.getType(), pk.getFdrId(), pk.getFldId());

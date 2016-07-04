@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core" xml:lang="es" lang="es">
+<h:head>
+		<f:facet name="first">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+			<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15" />
+		</f:facet>
+		<meta http-equiv="Pragma" content="no-cache" /> 
+		<meta http-equiv="Cache-Control" content="no-cache" />		
+		<meta content="Ministerio de Sanidad, Servicios Sociales e Igualdad" name="description"/>
+		<meta content="Ministerio de Sanidad, Servicios Sociales e Igualdad" name="keywords"/>
+		<title>Ministerio de Sanidad, Servicios Sociales e Igualdad</title>
+		<link rel="stylesheet" type="text/css" href="#{webParam.entryParameters['URLRoot']}/css/intranet-sigm.css" media="screen,projection"/>
+		<link rel="stylesheet" type="text/css" href="#{webParam.entryParameters['URLRoot']}/css/intranet-sigm-imprimir.css" media="print"/>
+		<link rel="stylesheet" type="text/css" href="#{webParam.entryParameters['URLRoot']}/css/primefaces.css" />
+		<script type="text/javascript" src="#{webParam.entryParameters['URLRoot']}/js/menu.js"></script>
+	</h:head>
+     
+<h:body>
+<div id="contenedor">
+<!-- Cabecera -->
+		<div id="cabecera">
+				<div id="escudo"><a title="Ministerio de Sanidad, Servicios Sociales e Igualdad - Gobierno de Espa&ntilde;a" href="#"><img alt="Ministerio de Sanidad, Servicios Sociales e Igualdad - Gobierno de Espa&ntilde;a" src="#{webParam.entryParameters['URLRoot']}/img/logo_ministerio.jpg"/></a></div>
+				<div id="titulo"><h1>Aplicación de Registro</h1></div>
+		</div>
+		<!-- Cabecera -->
+		
+		<!-- Menu horizontal -->
+		<div id="menuhorizontal">
+			<div class="izquierdo"><h2>Aplicación de Registro</h2></div>
+			<div class="derecho">
+			
+			</div>
+		</div>
+		
+			<div id="login">
+			<div class="usuario">
+					<h:form id="form">
+						<div class="content_title">
+							<h2>
+								<h:outputText value="#{msgs.reportTitle}" />
+							</h2>
+						</div>
+						<div class='content_body reportTicket'>
+							<p>
+								<h:outputText value="#{msgs.instructionsText}" />
+							</p>
+							<div style="float: left; width: 50%">
+								<h3>
+									<h:outputText value="#{msgs.instructionsTicketText}" />
+								</h3>
+								<ul style="margin: 0.5em 1em !important">
+									<li><h:outputText value="#{msgs.step1ReportText}"
+											escape="false" /><br /> 
+											<div style="text-align: center;"><a style="font-weight: bold;text-decoration: underline;"
+										href="http://gestion.aae.msc.es/otrs/customer.pl"
+										target="otrs" title="#{msgs.reportTitle}" class="pfbutton">#{msgs.reportTitle}</a></div>
+										<br />
+									</li>
+									<li><h:outputText value="#{msgs.step2ReportText}"
+											escape="false" /><br /><br /></li>
+									<li><h:outputText value="#{msgs.step3ReportText}"
+											escape="false" /><br /><br /></li>
+									<li><h:outputText value="#{msgs.step4ReportText}"
+											escape="false" /> 
+										<h:outputText value="#{msgs.step41ReportText}" escape="false" /><br /><br /></li>
+									<li><h:outputText value="#{msgs.step5ReportText}"
+											escape="false" /><br /><br /></li>
+								</ul>
+							</div>
+							<div style="float: right; width: 50%">
+								<h3>
+									<h:outputText value="#{msgs.instructionsMailText}" />
+								</h3>
+								<ul style="margin: 0.5em 1em !important">
+									<li><h:outputText value="#{msgs.step1EmailText}"
+											escape="false" /><br /><div style="text-align: center;">
+											<a style="font-weight: bold;text-decoration: underline;"
+										href="mailto:xxxxxxx@xxxx.es?subject=[SIGM-Registro] ">xxxxxxxxx@xxxx.es</a><br /></div><br />
+									</li>
+									<li><h:outputText value="#{msgs.step2EmailText}"
+											escape="false" /></li>
+								</ul>
+							</div>
+                            <p style="clear: both;">
+                                <h:outputText value="#{msgs.monitoringText}" />
+                            </p>
+						</div>
+					</h:form>
+				</div>
+
+			</div>
+</div>
+</h:body>
+</html>

@@ -76,7 +76,7 @@ public interface IDocKeys {
 	public static final int FIELD_NUM_TRANSPORTE_SIZE_IR_DISABLED = 30;
 
     //Información de los caracteres para los nombre de los ficheros
-    public static final int MAX_LENGTH_NAME_FILE = 64;
+    public static final int MAX_LENGTH_NAME_FILE = 80;
 
     /*******************************************************************************************************************
      * Constructors

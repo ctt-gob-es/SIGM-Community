@@ -6,7 +6,8 @@
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%@ page import="ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion" %>
 <%@ page import="ieci.tecdoc.sgm.core.services.gestion_administracion.ConstantesGestionUsuariosAdministracion" %>
 
@@ -23,14 +24,14 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 
 <ieci:baseInvesDoc/>
 
-<link rel="Stylesheet" rev="Stylesheet" href="include/css/tabs.css" />
-<link rel="Stylesheet" rev="Stylesheet" href="include/css/estilos.css" />
-<link rel="stylesheet" type="text/css" href="include/css/adminApp.css"/>
+<link rel="Stylesheet" rev="Stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/tabs.css" />
+<link rel="Stylesheet" rev="Stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css" />
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/adminApp.css"/>
 
-<script src="include/js/docobj.js" type="text/javascript"></script>
-<script src="include/js/tabs.js" type="text/javascript"></script>
-<script src="include/js/edition.js" type="text/javascript"></script>
-<script src="include/js/validations.js" type="text/javascript"></script>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/docobj.js" type="text/javascript"></script>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/tabs.js" type="text/javascript"></script>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/edition.js" type="text/javascript"></script>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/validations.js" type="text/javascript"></script>
 
 <c:import url="../common/limitUserPrivilege.jsp">
 	<c:param name="method" value="bd"/>
@@ -40,10 +41,10 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 
 	function activaPestanhaGeneral()
 	{
-		document.getElementById("img1").src='include/images/subme3_on.gif';
-		document.getElementById("img2").src='include/images/subme3_on_of.gif';
-		document.getElementById("img3").src='include/images/subme3_of_of.gif';
-		document.getElementById("img4").src='include/images/subme3_of_0.gif';
+		document.getElementById("img1").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on.gif';
+		document.getElementById("img2").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on_of.gif';
+		document.getElementById("img3").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_of.gif';
+		document.getElementById("img4").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_0.gif';
 		document.getElementById("tab1").className='submen1on';
 		document.getElementById("tab2").className='submen1off';
 		document.getElementById("tab3").className='submen1off';
@@ -51,10 +52,10 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 	
 	function activaPestanhaDatosPersonales()
 	{
-		document.getElementById("img1").src='include/images/subme3_off.gif';
-		document.getElementById("img2").src='include/images/subme3_of_on.gif';
-		document.getElementById("img3").src='include/images/subme3_on_of.gif';
-		document.getElementById("img4").src='include/images/subme3_of_0.gif';
+		document.getElementById("img1").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_off.gif';
+		document.getElementById("img2").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_on.gif';
+		document.getElementById("img3").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on_of.gif';
+		document.getElementById("img4").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_0.gif';
 		document.getElementById("tab1").className='submen1off';
 		document.getElementById("tab2").className='submen1on';
 		document.getElementById("tab3").className='submen1off';
@@ -62,10 +63,10 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 	
 	function activaPestanhaPerfil()
 	{
-		document.getElementById("img1").src='include/images/subme3_off.gif';
-		document.getElementById("img2").src='include/images/subme3_of_of.gif';
-		document.getElementById("img3").src='include/images/subme3_of_on.gif';
-		document.getElementById("img4").src='include/images/subme3_on_0.gif';
+		document.getElementById("img1").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_off.gif';
+		document.getElementById("img2").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_of.gif';
+		document.getElementById("img3").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_on.gif';
+		document.getElementById("img4").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on_0.gif';
 		document.getElementById("tab1").className='submen1off';
 		document.getElementById("tab2").className='submen1off';
 		document.getElementById("tab3").className='submen1on';
@@ -159,17 +160,17 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 						<div class="submenu3">
 							<ul>
 	        					<li class="submen1on" id="tab1" onclick="choosebox(1,9);activaPestanhaGeneral();">
-	        						<img id="img1" src="include/images/subme3_on.gif" />
+	        						<img id="img1" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on.gif" />
 	        						<label id="tabmiddle1"><bean:message key="message.comun.pestana.general"/></label>
 	        					</li>
 								<li class="submen1off" id="tab2" onclick="choosebox(2,9);activaPestanhaDatosPersonales();">
-									<img id="img2" src="include/images/subme3_on_of.gif" />
+									<img id="img2" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on_of.gif" />
 									<label id="tabmiddle2"><bean:message key="message.comun.pestana.datospersonales"/></label>									
 								</li>	   
 								<li class="submen1off" id="tab3" onclick="choosebox(3,9);activaPestanhaPerfil();">
-									<img id="img3" src="include/images/subme3_of_of.gif" />
+									<img id="img3" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_of.gif" />
 									<label id="tabmiddle3"><bean:message key="message.comun.pestana.perfiles"/></label>
-									<img id="img4" src="include/images/subme3_of_0.gif" />
+									<img id="img4" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_0.gif" />
 								</li>	   
 								     					
 							</ul>

@@ -27,8 +27,12 @@
 	    )
 		VALUES (
 			#id:INT#,
-		    #idLibro:INT#,
-			#idRegistro:INT#,
+		   <isNull property="idLibro">NULL</isNull>
+		   <isNotNull property="idLibro">#idLibro:INT#</isNotNull>
+		    ,
+		    <isNull property="idRegistro">NULL</isNull>
+		    <isNotNull property="idRegistro">#idRegistro:INT#</isNotNull>
+			,
 			#idOfic:INT#,
 			#idIntercambioInterno:INT#,
 			#idIntercambioRegistral:VARCHAR#,
@@ -70,8 +74,11 @@
 	<select id="getBandejaEntradaByEstado" parameterClass="java.util.HashMap"  resultMap="bandejaEntradaItemResultmap">
 	select * from SCR_EXREG_IN
 	where STATE=#estado:INT# and ID_OFIC=#idOfic:INT#
+	<isNotNull prepend="ORDER BY" property="ordenString">
+		 	$ordenString$
+		</isNotNull>
 	</select>
-
+	
 	<select id="getIntercambioRegistralEntradaById" parameterClass="java.lang.Long"  resultMap="intercambioRegistralEntradaResultMap">
 	select * from SCR_EXREG_IN where id=#value#
 	</select>
@@ -91,7 +98,8 @@
 	where libro.fdrid=#idRegistro:INT#
 	</select>
 
-
-
-
+	<select id="getCountBandejaEntradaByEstado" parameterClass="java.util.HashMap"  resultClass="java.lang.Integer">
+		select count(*) from SCR_EXREG_IN
+		where STATE=#estado:INT# and ID_OFIC=#idOfic:INT#
+	</select>
 </sqlMap>

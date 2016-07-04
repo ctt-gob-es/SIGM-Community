@@ -5,6 +5,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ page import="ieci.tecdoc.isicres.rpadmin.struts.util.AutenticacionAdministracion" %>
 <%@ page import="es.ieci.tecdoc.isicres.admin.core.services.ConstantesGestionUsuariosAdministracion" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
 
 <%
@@ -16,9 +18,9 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 
 <html>
 <head>
-<link href="<html:rewrite page="/css/estilos.css"/>" rel="stylesheet" type="text/css" />
-<link href="<html:rewrite page="/css/xtree.css"/>" rel="stylesheet" type="text/css" />
-<script type="text/javascript" language="JavaScript" src="js/common.js"></script>
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/xtree.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" language="JavaScript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
 <script>
 	
 	var idTipo = <bean:write name="tipo" />;
@@ -132,7 +134,7 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 						<tr class="usuarioSeleccionado" id='fila_<bean:write name="index" />' style="cursor:hand" ondblclick="<c:out value="${funciondblclickUser}"/>" 
 						    onclick="<c:out value="${funcionclickUser}"/>" 
 							onmouseover="overFilas(<bean:write name="index" />)" onmouseout="outFilas(<bean:write name="index" />)">
-							<td width="20" align="left"><img src='<html:rewrite page="/img/usuario.gif"/>' /></td>
+							<td width="20" align="left"><img src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/usuario.gif' /></td>
 							<td><bean:write name="usuario" property="descripcion"/></td>
 						</tr>
 					</logic:iterate>

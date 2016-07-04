@@ -61,6 +61,7 @@ import com.ieci.tecdoc.common.invesicres.ScrOrg;
 import com.ieci.tecdoc.common.invesicres.ScrRegstate;
 import com.ieci.tecdoc.common.invesicres.ScrUserfilter;
 import com.ieci.tecdoc.common.invesicres.ScrUsrIdent;
+import com.ieci.tecdoc.common.invesicres.ScrUsrloc;
 import com.ieci.tecdoc.common.isicres.AxPK;
 import com.ieci.tecdoc.common.isicres.AxSf;
 import com.ieci.tecdoc.common.isicres.AxSfIn;
@@ -202,33 +203,34 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 			throws BookException, SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
+		BBDDUtils bbddUtils = new BBDDUtils();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
-			Date currentDate = BBDDUtils
+			Date currentDate = bbddUtils
 					.getDateFromTimestamp(DBEntityDAOFactory
 							.getCurrentDBEntityDAO().getDBServerDate(entidad));
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 			return currentDate;
 
 		} catch (HibernateException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible obtein DB Server Date for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_OBTAIN_DBSERVER_DATE);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible obtein DB Server Date for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_OBTAIN_DBSERVER_DATE);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -249,14 +251,14 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 				ValidationException.ATTRIBUTE_SESSION);
 
 		Transaction tran = null;
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		boolean isLdap = LDAPAuthenticationPolicy.isLdap(entidad);
 
 		try {
 			SessionInformation sessionInformation = new SessionInformation();
 			sessionInformation.setSessionId(sessionID);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
@@ -280,6 +282,19 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 			} catch (HibernateException e) {
 			}
 
+			List<ScrUsrloc> scrUsrlocs = null;
+			ScrUsrloc scrUsrloc = null;
+			try {
+			    scrUsrlocs = (List<ScrUsrloc>) ISicresQueries.getUsrLoc(session, user.getId());
+			    if (scrUsrlocs != null && scrUsrlocs.size()>0){
+				scrUsrloc = scrUsrlocs.get(0);
+				if (scrUsrloc.getTelephone() != null && !"".equals(scrUsrloc.getTelephone())){
+				    sessionInformation.setUserContact(scrUsrloc.getTelephone());
+				}
+			    }
+			} catch (HibernateException e) {
+			}
+			
 			if (!isLdap) {
 				sessionInformation.setUserName(getUserName(scrUsrIdent, user
 						.getName()));
@@ -287,6 +302,13 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 				sessionInformation.setOtherOffice(String
 						.valueOf(getOtherOffices(session, sessionID, locale,
 								entidad).size()));
+				if (user.getDeptid() != null){
+				    Iuserdepthdr departament = ISicresQueries.getUserDeptHdrByDeptId(session, user.getDeptid());
+				    if (departament != null) {
+					sessionInformation.setDepartamentName(departament.getName());
+					sessionInformation.setDepartamentFather(departament.getNameDepFather());
+				    }
+				}
 			} else {
 				sessionInformation.setUserName(getUserNameLdap(session, user,
 						entidad));
@@ -314,25 +336,25 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 				sessionInformation.setOfficeEnabled(new Boolean(scrOfic.getDisableDate() == null).toString());
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 			return sessionInformation;
 
 		} catch (HibernateException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible obtein session information of user for the session ["
 							+ sessionID + "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_OBTAIN_SESSION_INFORMATION);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible obtein session information of user for the session ["
 							+ sessionID + "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_OBTAIN_SESSION_INFORMATION);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -627,7 +649,7 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 			AuthenticationUser user, ScrOfic scrOfic, String entidad)
 			throws HibernateException, Exception {
 		boolean result = false;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		//Obtenemos el valor de tiempo de la configuracion para expirar el bloqueo
 		int timeLockRegisterUser = 0;
 		try{
@@ -682,13 +704,13 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 						result = false;
 					} else {
 						ISicresSaveQueries.saveIDocFdrStat(session, bookID,
-								fdrid, user, BBDDUtils.getDate(currentDate));
+								fdrid, user, bbddUtils.getDate(currentDate));
 						result = true;
 					}
 				} else {
 					// no bloqueada, entonces bloquearla
 					ISicresSaveQueries.saveIDocFdrStat(session, bookID, fdrid,
-							user, BBDDUtils.getDate(currentDate));
+							user, bbddUtils.getDate(currentDate));
 					result = true;
 				}
 			} else {
@@ -1195,7 +1217,7 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 
 	private static List getUserLdapUserHdr(Integer id, String entidad)
 			throws SQLException {
-
+	    BBDDUtils bbddUtils = new BBDDUtils();
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
@@ -1206,7 +1228,7 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 
 		try {
 
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query);
 
@@ -1227,9 +1249,9 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 			throw new SQLException("Error ejecutando [" + query.toString()
 					+ "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 
 		return listIUserLdap;
@@ -1304,6 +1326,7 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 			int fdrid, AuthenticationUser user, Timestamp currentDate,
 			List distReg, boolean lockDistReg) throws HibernateException,
 			Exception {
+	    BBDDUtils bbddUtils = new BBDDUtils();
 		ScrDistreg scrDistRegAux = (ScrDistreg) distReg.get(0);
 		for (int k = 1; k < distReg.size(); k++) {
 			ScrDistreg scrDistRegAux1 = (ScrDistreg) distReg.get(k);
@@ -1316,14 +1339,14 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 		if (lockDistReg) {
 			if (scrDistRegAux.getState() == 2 || scrDistRegAux.getState() == 3) {
 				ISicresSaveQueries.saveIDocFdrStat(session, bookID, fdrid,
-						user, BBDDUtils.getDate(currentDate));
+						user, bbddUtils.getDate(currentDate));
 				return true;
 			} else {
 				return false;
 			}
 		} else if (scrDistRegAux.getState() != 4) {
 			ISicresSaveQueries.saveIDocFdrStat(session, bookID, fdrid, user,
-					BBDDUtils.getDate(currentDate));
+					bbddUtils.getDate(currentDate));
 			return true;
 		} else {
 			return false;

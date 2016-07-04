@@ -2,7 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <bean:define id="url" name="cambioClaveBean" property="url" type="java.lang.String"/>
 
 <html:html>
@@ -12,8 +13,8 @@
 		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 		%> 
 		<base href="<%= basePath %>" />
-		<link rel="stylesheet" href="css/estilos.css" type="text/css" />
-		<script type="text/javascript" language="javascript" src="js/idioma.js"></script>
+		<link rel="stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" type="text/css" />
+		<script type="text/javascript" language="javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/idioma.js"></script>
 		<script type="text/javascript" language="javascript">
 		//<!--
 			function init() {
@@ -87,8 +88,6 @@
 					              </p>
 
 					              <p class="fila">
-				                		<label for="interno" class="new_login" ><bean:message key="autenticacion.interno" /></label>
-					                	<html:checkbox styleId="interno" styleClass="checkbox" property="interno" onclick="javascript:mostrarEntidades();"/>
 					              </p>
 
 

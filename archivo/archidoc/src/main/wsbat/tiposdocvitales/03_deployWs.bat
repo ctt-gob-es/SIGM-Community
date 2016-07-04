@@ -1,1 +1,0 @@
-CALL ..\comun\03_deployWs.bat ..\tiposdocvitales\defs.bat

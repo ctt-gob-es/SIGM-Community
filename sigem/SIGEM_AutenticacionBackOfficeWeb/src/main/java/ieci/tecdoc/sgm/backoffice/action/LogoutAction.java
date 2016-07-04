@@ -26,8 +26,15 @@ public class LogoutAction extends Action{
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
+		
+		String desconectar = (String)request.getParameter(ConstantesGestionUsuariosBackOffice.PARAMETRO_DESCONECTAR);
+		
 		try{
-			String desconectar = (String)request.getParameter(ConstantesGestionUsuariosBackOffice.PARAMETRO_DESCONECTAR);
+			
+			
+			String idEntidad = (String)request.getParameter(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD);
+			String idAplicacion = (String)request.getParameter(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_APLICACION);
+			
 			if (!Utilidades.isNuloOVacio(desconectar)) {
 				HttpSession session = request.getSession();
 				
@@ -42,25 +49,41 @@ public class LogoutAction extends Action{
 
 				}
 				
-				// SLuna-20081217-F
+				if(Utilidades.isNuloOVacio(idEntidad))
+					session.removeAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD);
+				else
+					session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD,idEntidad);
 				
-				session.removeAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_APLICACION);
-				session.removeAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD);
+				if(Utilidades.isNuloOVacio(idAplicacion))
+					session.removeAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_APLICACION);
+				else
+					session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_APLICACION,idAplicacion);
+				
 				session.removeAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_PASSWORD);
 				session.removeAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_USUARIO);
 				
-				String key = (String)session.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO);
 				session.removeAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO);
+					
+				
+				/*
+				 String key = (String)session.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO);
+				
 				if (!Utilidades.isNuloOVacio(key)) {
 					ServicioAdministracionSesionesBackOffice oClient = LocalizadorServicios.getServicioAdministracionSesionesBackOffice();
 					oClient.caducarSesion(key);
-				}
+				}*/
 			}
+		
+			
 		}catch(Exception e){
 			logger.error("Se ha producido un error al deslogar.", e.fillInStackTrace());
 			request.setAttribute("error_logout", e.getCause());
 			return mapping.findForward("success");
-	   	}		
-		return mapping.findForward("success");
+	   	}
+		
+		if (!Utilidades.isNuloOVacio(desconectar) && desconectar.equalsIgnoreCase("sede"))
+			return mapping.findForward("sede");
+		else
+			return mapping.findForward("success");
 	}
 }

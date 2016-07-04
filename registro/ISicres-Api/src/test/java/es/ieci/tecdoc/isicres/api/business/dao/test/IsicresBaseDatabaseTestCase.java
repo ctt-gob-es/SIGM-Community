@@ -40,7 +40,7 @@ public class IsicresBaseDatabaseTestCase extends TestCase {
 						<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource"
 							destroy-method="close" singleton="false">
 							<property name="driverClassName" value="org.postgresql.Driver" />
-							<property name="url" value="jdbc:postgresql://10.228.20.98:5432:5432/registro_000" />
+							<property name="url" value="jdbc:postgresql://127.0.0.1:5432:5432/registro_000" />
 							<property name="username" value="postgres" />
 							<property name="password" value="postgres" />
 							

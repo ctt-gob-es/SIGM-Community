@@ -4,17 +4,18 @@
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 <%@ page import="ieci.tecdoc.isicres.rpadmin.struts.util.AutenticacionAdministracion" %>
 <%@ page import="es.ieci.tecdoc.isicres.admin.core.services.ConstantesGestionUsuariosAdministracion" %>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<meta name="author" content="IECISA" />
 	<title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.rpadmin.dco.gestion"/></title>
-	<link href="<html:rewrite page="/css/estilos.css"/>" rel="stylesheet" type="text/css" />
-	<link href="css/adminApp.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
-	<script type="text/javascript" language="javascript" src="js/jquery.blockUI.js"></script>
+	<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+	<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/adminApp.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" language="javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/jquery.blockUI.js"></script>
 	<script>
 		var action = '<html:rewrite page="/gestionDCO.do"/>';
 

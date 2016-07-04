@@ -22,7 +22,7 @@ public class XstreamTest {
 
 		ClassPathResource classpathREsourceLoader = new ClassPathResource("jndi.xml");
 		File file = classpathREsourceLoader.getFile();
-		DatosBasicosOficinaVO oficina = (DatosBasicosOficinaVO)xstream.fromXML(new FileInputStream(new File("C:/tmp/datosBasicosUOrganica.xml")));
+		DatosBasicosOficinaVO oficina = (DatosBasicosOficinaVO)xstream.fromXML(new FileInputStream(new File("D:/Repositorio/SIGEM/dirTemp/datosBasicosUOrganica.xml")));
 		System.out.print(oficina.getNombre());
 		}catch (Exception e) {
 			e.toString();

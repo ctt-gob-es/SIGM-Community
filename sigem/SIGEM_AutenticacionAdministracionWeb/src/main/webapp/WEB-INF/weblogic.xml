@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wls:weblogic-web-app xmlns:wls="http://www.bea.com/ns/weblogic/weblogic-web-app" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd http://www.bea.com/ns/weblogic/weblogic-web-app http://www.bea.com/ns/weblogic/weblogic-web-app/1.0/weblogic-web-app.xsd">
+	<wls:weblogic-version>10.3</wls:weblogic-version>
+	<wls:context-root>SIGEM_AutenticacionAdministracionWeb</wls:context-root>
+	
+	<wls:container-descriptor>
+		<wls:show-archived-real-path-enabled>true</wls:show-archived-real-path-enabled>  
+		<wls:prefer-web-inf-classes>false</wls:prefer-web-inf-classes>
+		<wls:prefer-application-packages>
+             <wls:package-name>org.apache.commons.*</wls:package-name>
+			 <wls:package-name>org.springframework.*</wls:package-name>
+			 <wls:package-name>org.bouncycastle.*</wls:package-name>
+			 <wls:package-name>org.apache.xerces.*</wls:package-name>
+		</wls:prefer-application-packages>
+	</wls:container-descriptor>
+	
+	<!-- DATASOURCES -->
+	<wls:resource-description>
+		<wls:res-ref-name>jdbc/sigemAdmin</wls:res-ref-name>
+		<wls:jndi-name>${weblogic.dataSource.jndi.name.sigemadmin}</wls:jndi-name>
+	</wls:resource-description>
+	<wls:resource-description>
+		<wls:res-ref-name>jdbc/eTramitacionDS_000</wls:res-ref-name>
+		<wls:jndi-name>${weblogic.dataSource.jndi.name.eTramitacionDS_000}</wls:jndi-name>
+	</wls:resource-description>
+	<wls:resource-description>
+		<wls:res-ref-name>jdbc/fwktd-auditDS_000</wls:res-ref-name>
+		<wls:jndi-name>${weblogic.dataSource.jndi.name.sigemaudit_000}</wls:jndi-name>
+	</wls:resource-description>
+	
+	<!-- CONFIGURACION WORKMANAGER -->
+	<wls:work-manager>
+		<wls:name>SIGM/wm/wm-04</wls:name>
+		</wls:work-manager>
+	<wls:wl-dispatch-policy>SIGM/wm/wm-04</wls:wl-dispatch-policy>
+</wls:weblogic-web-app>

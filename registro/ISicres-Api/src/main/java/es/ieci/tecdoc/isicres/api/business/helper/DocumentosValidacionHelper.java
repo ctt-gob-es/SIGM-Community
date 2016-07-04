@@ -18,10 +18,10 @@ import es.ieci.tecdoc.isicres.api.business.vo.PaginaDocumentoRegistroVO;
 public class DocumentosValidacionHelper {
 
 	//Maxima longitud de nombre para los documentos
-	private static final int maxLengthNameDocument = 32;
+	private static final int maxLengthNameDocument = 80;
 
 	//Maxima longitud de nombre para las paginas
-	private static final int maxLengthNamePage = 64;
+	private static final int maxLengthNamePage = 80;
 
 	private static final Logger logger = Logger
 			.getLogger(DocumentosValidacionHelper.class);

@@ -397,11 +397,12 @@ public class RegisterServicesUtil extends RegisterServicesUtilPrivate {
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_NotNull(axsfQuery,
 				ValidationException.ATTRIBUTE_AXSFQUERY);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
+		BBDDUtils bbddUtils = new BBDDUtils();
 		Transaction tran = null;
 		AxSfQueryResults queryResults = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -425,7 +426,7 @@ public class RegisterServicesUtil extends RegisterServicesUtilPrivate {
 				ScrRegstate scrRegstate = ISicresQueries.getScrRegstate(
 						session, auxBookId);
 				axsfQuery.setBookId(auxBookId);
-				AxSf axsfBookIds = BBDDUtils.getTableSchemaFromDatabase(
+				AxSf axsfBookIds = bbddUtils.getTableSchemaFromDatabase(
 						auxBookId.toString(), entidad);
 				UtilsSession.getAPerms(session, auxBookId, user.getId(),
 						userusertype.getType(), user.getDeptid(), aPerms,
@@ -444,20 +445,20 @@ public class RegisterServicesUtil extends RegisterServicesUtilPrivate {
 						auxTotalSize, axsfQuery.getPageSize());
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return queryResults;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+		    hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+		    hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+		    hibernateUtil.rollbackTransaction(tran);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_REGISTERS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+		    hibernateUtil.closeSession(entidad);
 		}
 	}
 

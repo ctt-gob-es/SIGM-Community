@@ -2,6 +2,7 @@ package com.ieci.tecdoc.common.invesdoc;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -42,9 +43,28 @@ public class Iuserdepthdr implements Serializable {
 
     /** nullable persistent field */
     private Date upddate;
-
+    
+    /** formula field */
+    private String nameDepFather;
+    
+    /** formula field */
+    private Integer idorg;
+    
     /** full constructor */
     public Iuserdepthdr(Integer id, String name, int parentid, int mgrid, int type, String remarks, int crtrid, Date crtndate, Integer updrid, Date upddate) {
+	this.id = id;
+        this.name = name;
+        this.parentid = parentid;
+        this.mgrid = mgrid;
+        this.type = type;
+        this.remarks = remarks;
+        this.crtrid = crtrid;
+        this.crtndate = crtndate;
+        this.updrid = updrid;
+        this.upddate = upddate;
+    }
+    
+    public Iuserdepthdr(Integer id, String name, int parentid, int mgrid, int type, String remarks, int crtrid, Date crtndate, Integer updrid, Date upddate, String nameDepFather, Integer idorg) {
         this.id = id;
         this.name = name;
         this.parentid = parentid;
@@ -55,6 +75,8 @@ public class Iuserdepthdr implements Serializable {
         this.crtndate = crtndate;
         this.updrid = updrid;
         this.upddate = upddate;
+        this.nameDepFather = nameDepFather;
+        this.idorg = idorg;
     }
 
     /** default constructor */
@@ -219,6 +241,21 @@ public class Iuserdepthdr implements Serializable {
         this.upddate = upddate;
     }
 
+    /** 
+     *            @hibernate.property
+     *             type="java.lang.Integer"
+     *             column="IDORG"
+     *         
+     */
+    public Integer getIdorg() {
+        return this.idorg;
+    }
+
+    public void setIdorg(Integer idorg) {
+        this.idorg = idorg;
+    }
+
+    
     public String toString() {
         return new ToStringBuilder(this)
             .append("id", getId())
@@ -276,6 +313,15 @@ public String toXML() {
                                
 //************************************  
                                                                                                                                                                    
+public String getNameDepFather() {
+    return nameDepFather;
+}
+
+public void setNameDepFather(
+    String nameDepFather) {
+    this.nameDepFather = nameDepFather;
+}
+
 public int hashCode() {
       
         return new HashCodeBuilder()

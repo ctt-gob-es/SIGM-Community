@@ -78,6 +78,9 @@
 			<xs:element name="procesarFicherosRecibidosResponse" type="tns:procesarFicherosRecibidosResponse" />
 			<xs:element name="comprobarTimeOutEnvios" type="tns:comprobarTimeOutEnvios" />
 			<xs:element name="comprobarTimeOutEnviosResponse" type="tns:comprobarTimeOutEnviosResponse" />
+			<xs:element name="getHistoricoAsientoRegistralCode" type="tns:getHistoricoAsientoRegistralCode" />
+			<xs:element name="getHistoricoAsientoRegistralCodeResponse"
+				type="tns:getHistoricoAsientoRegistralCodeResponse" />
 			<xs:complexType name="countAsientosRegistrales">
 				<xs:sequence>
 					<xs:element minOccurs="0" name="criterios" type="tns:criteriosDTO" />
@@ -461,7 +464,18 @@
 						type="tns:trazabilidadDTO" />
 				</xs:sequence>
 			</xs:complexType>
-			
+			<xs:complexType name="getHistoricoAsientoRegistralCode">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="entity" type="xs:string" />
+					<xs:element minOccurs="0" name="code" type="xs:string" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="getHistoricoAsientoRegistralCodeResponse">
+				<xs:sequence>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="return"
+						type="tns:trazabilidadDTO" />
+				</xs:sequence>
+			</xs:complexType>
 			<xs:complexType name="getHistoricoMensajeIntercambioRegistral">
 				<xs:sequence>
 					<xs:element minOccurs="0" name="id" type="xs:string" />
@@ -914,8 +928,14 @@
 		<wsdl:part name="parameters" element="tns:comprobarTimeOutEnviosResponse">
 		</wsdl:part>
 	</wsdl:message>
-	
-	
+	<wsdl:message name="getHistoricoAsientoRegistralCode">
+		<wsdl:part name="parameters" element="tns:getHistoricoAsientoRegistralCode">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getHistoricoAsientoRegistralCodeResponse">
+		<wsdl:part name="parameters" element="tns:getHistoricoAsientoRegistralCodeResponse">
+		</wsdl:part>
+	</wsdl:message>
 	
 	<!-- declaracion de operaciones -->
 	<wsdl:portType name="IntercambioRegistralWS">
@@ -1121,7 +1141,13 @@
 				message="tns:comprobarTimeOutEnviosResponse">
 			</wsdl:output>
 		</wsdl:operation>
-
+		<wsdl:operation name="getHistoricoAsientoRegistralCode">
+			<wsdl:input name="getHistoricoAsientoRegistralCode" message="tns:getHistoricoAsientoRegistralCode">
+			</wsdl:input>
+			<wsdl:output name="getHistoricoAsientoRegistralCodeResponse"
+				message="tns:getHistoricoAsientoRegistralCodeResponse">
+			</wsdl:output>
+		</wsdl:operation>
 	</wsdl:portType>
 	
 	
@@ -1396,12 +1422,21 @@
 				<soap:body use="literal" />
 			</wsdl:output>
 		</wsdl:operation>
+		<wsdl:operation name="getHistoricoAsientoRegistralCode">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="getHistoricoAsientoRegistralCode">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getHistoricoAsientoRegistralCodeResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
 	</wsdl:binding>
 	
 	<!-- declaracion del binding -->
 	<wsdl:service name="IntercambioRegistralWS">
 		<wsdl:port name="IntercambioRegistralWSPort" binding="tns:IntercambioRegistralWSSoapBinding">
-			<soap:address location="http://localhost:9090/IntercambioRegistralWS" />
+			<soap:address location="http://localhost:7001/fwktdsirWS" /> 
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>

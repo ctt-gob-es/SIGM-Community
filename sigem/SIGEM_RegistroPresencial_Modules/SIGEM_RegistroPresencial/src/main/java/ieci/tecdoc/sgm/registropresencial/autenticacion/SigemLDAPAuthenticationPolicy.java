@@ -257,10 +257,10 @@ public class SigemLDAPAuthenticationPolicy implements AuthenticationPolicy,
 
 	private Integer userVerification(LDAPAuthenticationUser attributesUser,
 			String entidad) throws SecurityException {
-
+	   	HibernateUtil hibernateUtil = new HibernateUtil();
 		Integer userId = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			// tran = session.beginTransaction();
 
 			List list = ISicresQueries.getUserLdapUser(session, attributesUser
@@ -318,6 +318,8 @@ public class SigemLDAPAuthenticationPolicy implements AuthenticationPolicy,
 			log.error("Impossible to verify user [" + attributesUser
 					+ "] on LDAP", e);
 			throw new SecurityException(SecurityException.ERROR_SQL);
+		} finally {
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return userId;
@@ -561,8 +563,9 @@ public class SigemLDAPAuthenticationPolicy implements AuthenticationPolicy,
 			throws SecurityException {
 		Transaction tran = null;
 		Integer result = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			// tran = session.beginTransaction();
 
 			// Obtener el grupo ldap de la tabla de grupos
@@ -582,9 +585,9 @@ public class SigemLDAPAuthenticationPolicy implements AuthenticationPolicy,
 			// HibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to verify user with guid[" + guid + "]", e);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
-		}/*
-		 * finally { HibernateUtil.closeSession(); }
-		 */
+		} finally {
+			hibernateUtil.closeSession(entidad);
+		}
 		return result;
 
 	}
@@ -696,8 +699,9 @@ public class SigemLDAPAuthenticationPolicy implements AuthenticationPolicy,
 	private Integer getRegisterDeptOfic(String guid, String entidad)
 			throws SecurityException {
 		Integer deptId = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			// tran = session.beginTransaction();
 
 			// Obtener el grupo ldap de la tabla de grupos
@@ -726,9 +730,9 @@ public class SigemLDAPAuthenticationPolicy implements AuthenticationPolicy,
 			// HibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to verify user with guid[" + guid + "]", e);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
-		}/*
-			 * finally { HibernateUtil.closeSession(); }
-			 */
+		} finally {
+			hibernateUtil.closeSession(entidad);
+		}
 		return deptId;
 
 	}
@@ -826,9 +830,9 @@ public class SigemLDAPAuthenticationPolicy implements AuthenticationPolicy,
 		String sqlUsrOfic = "id in (select idofic from scr_usrofic where iduser = ";
 		StringBuffer query = new StringBuffer();
 		List deptList = new ArrayList();
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 
 			query.append(sqlUsrOfic);
 			query.append(userId);
@@ -857,6 +861,8 @@ public class SigemLDAPAuthenticationPolicy implements AuthenticationPolicy,
 					+ "]", e);
 
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
+		} finally {
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 

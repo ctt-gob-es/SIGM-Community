@@ -3,7 +3,7 @@ package es.ieci.tecdoc.isicres.api.documento.electronico.business.dao.impl;
 import junit.framework.Assert;
 
 import org.jgroups.demos.Topology;
-import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -41,7 +41,7 @@ public class IbatisDocumentoTipoDocumentalDAOImplTest extends
 	}
 	
 	//para el correcto funcionamiento del test, en la tabla SCR_PAGETYPE debe existir una fila (0,'Sin tipo')
-	@Test
+
 	public void mainTest() {
 		//MultiEntityContextHolder debe tener valor, sino falla.
 		MultiEntityContextHolder.setEntity("");

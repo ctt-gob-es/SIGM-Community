@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+/*
+* Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+* Licencia con arreglo a la EUPL, Versión 1.1 o –en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+* Solo podrá usarse esta obra si se respeta la Licencia. 
+* Puede obtenerse una copia de la Licencia en: 
+* http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+* Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTÍAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+* Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+*/
+
+<wsdl:definitions targetNamespace="http://impl.manager.ws.directorio.map.es" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://impl.manager.ws.directorio.map.es" xmlns:intf="http://impl.manager.ws.directorio.map.es" xmlns:tns1="http://impl.manager.ws.directorio.map.es/wsExport" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema targetNamespace="http://impl.manager.ws.directorio.map.es/wsExport" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <simpleType name="formatoFichero">
+    <restriction base="xsd:string">
+     <enumeration value="XML"/>
+     <enumeration value="CSV"/>
+    </restriction>
+   </simpleType>
+   <simpleType name="tipoConsultaNO">
+    <restriction base="xsd:string">
+     <enumeration value="COMPLETO"/>
+     <enumeration value="UNIDADES"/>
+     <enumeration value="HISTORICOS"/>
+    </restriction>
+   </simpleType>
+   <complexType name="excluidos">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="UnNoOrganicasWs">
+    <sequence>
+     <element name="usuario" type="xsd:string"/>
+     <element name="clave" type="xsd:string"/>
+     <element name="formatoFichero" type="tns1:formatoFichero"/>
+     <element name="tipoConsulta" type="tns1:tipoConsultaNO"/>
+     <element maxOccurs="1" minOccurs="0" name="codigo" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="nivelAdministracion" type="xsd:int"/>
+     <element maxOccurs="1" minOccurs="0" name="estados" type="tns1:excluidos"/>
+     <element maxOccurs="1" minOccurs="0" name="comunidad" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="provincia" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="codigoUnidad" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="fechaInicio" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="fechaFin" type="xsd:string"/>
+     <element maxOccurs="1" minOccurs="0" name="tipoUnidadNoOrganica" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <complexType name="RespuestaWS">
+    <sequence>
+     <element name="codigo" type="xsd:string"/>
+     <element name="descripcion" type="xsd:string"/>
+     <element name="fichero" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="exportarV2Response">
+
+      <wsdl:part name="exportarReturn" type="tns1:RespuestaWS"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="exportarResponse">
+
+      <wsdl:part name="exportarReturn" type="tns1:RespuestaWS"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="exportarRequest">
+
+      <wsdl:part name="exportarRequest" type="tns1:UnNoOrganicasWs"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="exportarV2Request">
+
+      <wsdl:part name="exportarRequest" type="tns1:UnNoOrganicasWs"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="SD03NO_DescargaUnNoOrganicas">
+
+      <wsdl:operation name="exportar" parameterOrder="exportarRequest">
+
+         <wsdl:input message="impl:exportarRequest" name="exportarRequest"/>
+
+         <wsdl:output message="impl:exportarResponse" name="exportarResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="exportarV2" parameterOrder="exportarRequest">
+
+         <wsdl:input message="impl:exportarV2Request" name="exportarV2Request"/>
+
+         <wsdl:output message="impl:exportarV2Response" name="exportarV2Response"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="SD03NO_DescargaUnNoOrganicasSoapBinding" type="impl:SD03NO_DescargaUnNoOrganicas">
+
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="exportar">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="exportarRequest">
+
+            <wsdlsoap:body namespace="http://impl.manager.ws.directorio.map.es" use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="exportarResponse">
+
+            <wsdlsoap:body namespace="http://impl.manager.ws.directorio.map.es" use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="exportarV2">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="exportarV2Request">
+
+            <wsdlsoap:body namespace="http://impl.manager.ws.directorio.map.es" use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="exportarV2Response">
+
+            <wsdlsoap:body namespace="http://impl.manager.ws.directorio.map.es" use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="SD03NO_DescargaUnNoOrganicasService">
+
+      <wsdl:port binding="impl:SD03NO_DescargaUnNoOrganicasSoapBinding" name="SD03NO_DescargaUnNoOrganicas">
+
+         <wsdlsoap:address location="http://dir3ws.redsara.es/directorio/services/SD03NO_DescargaUnNoOrganicas"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

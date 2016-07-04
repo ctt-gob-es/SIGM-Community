@@ -7,12 +7,17 @@
 	</parent>
 	<artifactId>ISicres-Terceros</artifactId>
 	<name>ISicres-Terceros</name>
+	<version>3.0.0-msssi2.0.0</version>	
+	<properties>
+		<fwktdMSSSI.version>3.0.0-msssi2.0.0</fwktdMSSSI.version>
+	</properties>
+
 	<dependencies>
 		
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd</groupId>
 			<artifactId>fwktd-server</artifactId>
-			<version>${fwktd.version}</version>
+			<version>${fwktdMSSSI.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
@@ -85,7 +90,7 @@
 						<!-- common configurations -->
 						<configuration>
 							<driver>org.postgresql.Driver</driver>
-							<url>jdbc:postgresql://10.228.75.106:5432/ISicres_3_0</url>
+							<url>jdbc:postgresql://127.0.0.1:5432/ISicres_3_0</url>
 							<username>postgres</username>
 							<password>postgres</password>
 						</configuration>

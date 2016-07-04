@@ -1,1 +1,0 @@
-ALTER TABLE sgm_adm_perfiles MODIFY (id_entidad character varying(3));

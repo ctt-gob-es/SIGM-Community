@@ -84,7 +84,7 @@ public class AxDochxEntity extends AbstractAx implements ServerKeys {
 	protected void assignStore(PreparedStatement ps, String entidad)
 			throws SQLException {
 		int index = 1;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		ps.setInt(index++, getId());
 		ps.setInt(index++, getFdrId());
 		ps.setInt(index++, getArchId());
@@ -100,19 +100,19 @@ public class AxDochxEntity extends AbstractAx implements ServerKeys {
 		ps.setInt(index++, getAccessType());
 		ps.setInt(index++, getAcsId());
 		ps.setInt(index++, getCrtrId());
-		ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+		ps.setDate(index++, bbddUtils.getDate(getCrtnDate()));
 		ps.setInt(index++, getUpdrId());
-		ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+		ps.setDate(index++, bbddUtils.getDate(getUpdDate()));
 		ps.setInt(index++, getAccrId());
-		ps.setDate(index++, BBDDUtils.getDate(getAccDate()));
+		ps.setDate(index++, bbddUtils.getDate(getAccDate()));
 		ps.setInt(index++, getAcccount());
-		ps.setDate(index++, BBDDUtils.getDate(getTimeStamp()));
+		ps.setDate(index++, bbddUtils.getDate(getTimeStamp()));
 	}
 
 	protected void assignStore(PreparedStatement ps, String entidad,
 			String dataBaseType) throws SQLException {
 		int index = 1;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		ps.setInt(index++, getId());
 		ps.setInt(index++, getFdrId());
 		ps.setInt(index++, getArchId());
@@ -128,13 +128,13 @@ public class AxDochxEntity extends AbstractAx implements ServerKeys {
 		ps.setInt(index++, getAccessType());
 		ps.setInt(index++, getAcsId());
 		ps.setInt(index++, getCrtrId());
-		ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+		ps.setDate(index++, bbddUtils.getDate(getCrtnDate()));
 		ps.setInt(index++, getUpdrId());
-		ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+		ps.setDate(index++, bbddUtils.getDate(getUpdDate()));
 		ps.setInt(index++, getAccrId());
-		ps.setDate(index++, BBDDUtils.getDate(getAccDate()));
+		ps.setDate(index++, bbddUtils.getDate(getAccDate()));
 		ps.setInt(index++, getAcccount());
-		ps.setDate(index++, BBDDUtils.getDate(getTimeStamp()));
+		ps.setDate(index++, bbddUtils.getDate(getTimeStamp()));
 
 	}
 

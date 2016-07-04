@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- Servicio de obtener ficheros de inicializacion -->
+	<bean id="fwktd_dir3_dco_servicioObtenerInicializacionDCO"
+		class="es.ieci.tecdoc.fwktd.dir3.services.impl.ServicioObtenerInicializacionDCOWSClientImpl">
+		<property name="servicioVolcadoUnidadesURL" value="${fwktd-dir3-dco.volcado.unidades.ws.url}" />
+		<property name="servicioVolcadoOficinasURL" value="${fwktd-dir3-dco.volcado.oficinas.ws.url}" />
+		<property name="tempFilesDir" value="${fwktd-dir3-dco.tempFilesDir}" />
+		<!-- Login y pass para acceder al DCO -->
+		<property name="login" value="${fwktd-dir3-dco.ws.login}" />
+		<property name="pass" value="${fwktd-dir3-dco.ws.pass}" />
+		<property name="fileFormat" value="${fwktd-dir3-dco.ws.fileFormat}" />
+		<property name="oficinasQueryType" value="${fwktd-dir3-dco.ws.oficinas.queryType}" />
+		<property name="unidadesQueryType" value="${fwktd-dir3-dco.ws.unidades.queryType}" />
+
+	</bean>
+
+<!-- Servicio de obtener ficheros de actualización -->
+	<bean id="fwktd_dir3_dco_servicioObtenerActualizacionDCO"
+		class="es.ieci.tecdoc.fwktd.dir3.services.impl.ServicioObtenerActualizacionesDCOWSClientImpl">
+		<property name="servicioIncrementalUnidadesURL" value="${fwktd-dir3-dco.incremental.unidades.ws.url}" />
+		<property name="servicioIncrementalOficinasURL" value="${fwktd-dir3-dco.incremental.oficinas.ws.url}" />
+		<property name="tempFilesDir" value="${fwktd-dir3-dco.tempFilesDir}" />
+		<!-- Login y pass para acceder al DCO -->
+		<property name="login" value="${fwktd-dir3-dco.ws.login}" />
+		<property name="pass" value="${fwktd-dir3-dco.ws.pass}" />
+		<property name="fileFormat" value="${fwktd-dir3-dco.ws.fileFormat}" />
+		<property name="oficinasQueryType" value="${fwktd-dir3-dco.ws.oficinas.queryType}" />
+		<property name="unidadesQueryType" value="${fwktd-dir3-dco.ws.unidades.queryType}" />
+
+	</bean>
+
+</beans>

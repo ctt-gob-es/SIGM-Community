@@ -189,7 +189,7 @@ public abstract class ServiceTree {
     	ResourceBundle rb = ResourceBundle.getBundle("ApplicationResource", locale);
     	String idNodo = id.replaceAll("-", "_");
         String sentencia =
-            "nodoTonto=\""+ rb.getString("cargandoJS") +"\"; var tonto = new WebFXTreeItem(nodoTonto,'','','img/arbol/clockani.gif','',''); \n" +
+            "nodoTonto=\""+ rb.getString("cargandoJS") +"\"; var tonto = new WebFXTreeItem(nodoTonto,'','','/StaticRegistroPresencialAdminWeb/resources/img/arbol/clockani.gif','',''); \n" +
         	"nodo"+idNodo+".add(tonto); \n";
         sbuff.append(sentencia);
     }

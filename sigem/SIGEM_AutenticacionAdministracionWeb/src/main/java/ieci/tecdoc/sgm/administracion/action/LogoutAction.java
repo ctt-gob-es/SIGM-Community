@@ -26,8 +26,10 @@ public class LogoutAction extends Action {
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
+		
+		String desconectar = (String)request.getParameter(ConstantesGestionUsuariosAdministracion.PARAMETRO_DESCONECTAR);
+		
 		try{
-			String desconectar = (String)request.getParameter(ConstantesGestionUsuariosAdministracion.PARAMETRO_DESCONECTAR);
 			if (!Utilidades.isNuloOVacio(desconectar)) {
 				HttpSession session = request.getSession();
 				session.removeAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_APLICACION);
@@ -36,10 +38,10 @@ public class LogoutAction extends Action {
 				session.removeAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_USUARIO);
 				
 				String key = (String)session.getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM);
-				if (!Utilidades.isNuloOVacio(key)) {
+				/*if (!Utilidades.isNuloOVacio(key)) {
 					ServicioAdministracionSesionesAdministrador oClient = LocalizadorServicios.getServicioAdministracionSesionesAdministrador();
 					oClient.caducarSesion(key);
-				}
+				}*/
 				
 				session.removeAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM);
 			}
@@ -48,7 +50,10 @@ public class LogoutAction extends Action {
 			request.setAttribute("error_logout", e.getCause());
 			return mapping.findForward("success");
 	   	}		
-		return mapping.findForward("success");
+		if (!Utilidades.isNuloOVacio(desconectar) && desconectar.equalsIgnoreCase("sede"))
+			return mapping.findForward("sede");
+		else
+			return mapping.findForward("success");
 	}
 	
 }

@@ -4,103 +4,45 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%@ page import="ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion" %>
+<%@ page import="ieci.tecdoc.sgm.core.services.gestion_administracion.*"%>
 
 <%
 response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 response.setHeader("Pragma","no-cache"); //HTTP 1.0
 response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+
+String url = (String)request.getAttribute("urlLogout");
+if (url == null || url.equals(""))
+	url = ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion.obtenerUrlLogout(request);	
+
+url+="?desconectar=si";
+
+session.removeAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_APLICACION);
+session.removeAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD);
+session.removeAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_USUARIO);
+session.removeAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_PASSWORD);
+
 %>
 
-<html:html>
-
-
-<head>
-  <ieci:baseInvesDoc/>    
-	<title><bean:message key="message.common.title"/></title>
-	<link rel="stylesheet" type="text/css" href="include/css/logout.css"/>
-</head>
-
-<body>
-
-<% response.sendRedirect("../" + AutenticacionAdministracion.obtenerUrlLogout(request)); %>
-
-</body>
-
-<!-- 
-<body>
-	<table class="tableBase">
-		<tr>
-			<td width="100%">
-				<table class="tableBase">
-					<tr>
-						<td class="cabecera" valign="top" align="left"><img hspace="10" src="include/images/logo_idocWhite.gif"/>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<table class="tableBase" height="350px">
-					<tr>
-						<td width="50%" align="right">
-							<table>
-								<tr>
-									<td><img src="include/images/desk.gif" border="0" width="392px" height="351px"/>
-									</td>
-								</tr>
-							</table>
-						</td>
-						<td width="50%" align="left"  class="index"> 
-							<c:choose>
-								<c:when test="${param.logout eq null}">
-									<%-- <bean-el:message key="message.logout.timeout" arg0="${session_life_time}" /><br> --%>
-									<bean:message key="message.logout.apologise"/><br>
-								</c:when>
-								
-								<c:when test="${param.logout eq 'error'}">
-									<bean:message key="message.logout.notprivilege"/><br>
-								</c:when>
-								
-								<c:when test="${param.logout ne null}">
-									<bean:message key="message.logout.executed"/><br>
-								</c:when>
-								
-							</c:choose>
-							<bean:message key="message.logout.connect"/>
-						  <html:link page="/acs/login.jsp" styleClass="relogin" ><bean:message key="message.logout.connect.link"/></html:link>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>							
-</body>
- -->
-
-<script type="text/javascript">
-
-	function getParent(obj) {	
-		return obj.top;
-	}
-	
-	if(parent.frames.length)
-		top.location=document.location;
-
-	<%-- 
-	if (window.opener){
-	
-		var obj = window.opener; 
-		var principal = getParent(obj); // Da un pete en explorer
-		
-		
-		principal.location.replace(document.location);
-		window.close();
-		
-	}--%>
-	
-</script>
-
-</html:html>
+<html>
+	<head>
+		 <script>
+				window.name="ParentWindow";
+				function redirigir(){
+					document.forms[0].submit();			
+				}
+		  </script>
+	</head>
+	<body onload="javascript:setTimeout('redirigir()', 3000);">
+		<p>
+			<bean:message key="cargando"/>
+			<form action="<html:rewrite href="<%=url%>"/>" method="POST">
+				<input type="hidden" name="<%=ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD%>" id="<%=ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD%>" value="000" />
+				<input type="hidden" name="<%=ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_APLICACION%>" id="<%=ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_APLICACION%>" value="<%=ConstantesGestionUsuariosAdministracion.APLICACION_ESTRUCTURA_ORGANIZATIVA%>" />
+			</form>
+		</p>
+	</body>
+</html>

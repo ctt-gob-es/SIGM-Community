@@ -7,7 +7,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/x.tld" prefix="x" %>
 <%@page import="ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativaLdap" %>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%
 	HashMap params   = new HashMap();
 	params.put("logout", "true");
@@ -21,9 +22,9 @@
 		<c:out value="<base href=\"http://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/\">" escapeXml="false"/>	
 		--%>
 		
-		<link rel="stylesheet" type="text/css" href="include/css/header.css"/>
-		<link rel="stylesheet" type="text/css" href="include/css/estilos.css"/>
-		<script src="include/js/modalWindow.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/header.css"/>
+		<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css"/>
+		<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/modalWindow.js" type="text/javascript"></script>
 
 				
 		<script>
@@ -63,7 +64,7 @@
 			{
 				var width = 1100;
 				var height = 580;
-				path = appBase + linkAyuda;
+				path = linkAyuda;
 				ShowWindow(path,width,height);
 			}
 			function addCertificate(){
@@ -77,11 +78,11 @@
 	<body>
 			<div id="cabecera">
 		   		<div id="logo">
-		   			<img src="include/images/minetur.jpg" alt="GOBIERNO DE ESPAÑ‘A. MINISTERIO DE INDUSTRIA, ENERGÍA Y TURISMO " />
-		   			<img src="include/images/logo.gif" alt="sigem" />
+		   			<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/minetur.jpg" alt="GOBIERNO DE ESPAÑ‘A. MINISTERIO DE INDUSTRIA, ENERGÍA Y TURISMO " />
+		   			<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/logo.gif" alt="sigem" />
 		   		</div>
 				<div class="salir">
-					<img src="include/images/exit.gif" alt="salir" width="26" height="20" class="icono" />
+					<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/exit.gif" alt="salir" width="26" height="20" class="icono" />
 					<span class="titular">
 						<a href="javascript:logout();"><bean:message key="message.header.logout"/></a>
 					</span>
@@ -103,7 +104,7 @@
 							</td>			    		
 			    			<td>
 					      		<div style="padding-top: 8px; padding-right: 24px;">
-							   		<a id="ayuda" href="javascript:showHelp()"><img src="include/images/help.gif" style="border: 0px" alt='<bean:message key="message.header.help"/>' width="16" height="16" /></a>
+							   		<a id="ayuda" href="javascript:showHelp()"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/help.gif" style="border: 0px" alt='<bean:message key="message.header.help"/>' width="16" height="16" /></a>
 							   	</div>
 							</td>
 						</tr>
@@ -112,7 +113,7 @@
 		    	</div>
 			</div>
 			<div id="migas">
-				<img src="include/images/flecha_migas.gif" width="13" height="9" class="margen"/>
+				<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/flecha_migas.gif" width="13" height="9" class="margen"/>
 				<!-- td valign="top" colspan="2" align="left" id="status" class="status">Inicio</td -->
 				<label class="status" id="status" name="status"><bean:message key="message.comun.miga.inicio.usuarios"/></label>
 			</div>

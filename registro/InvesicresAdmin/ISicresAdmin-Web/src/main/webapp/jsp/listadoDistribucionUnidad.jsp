@@ -6,6 +6,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ page import="ieci.tecdoc.isicres.rpadmin.struts.util.AutenticacionAdministracion" %>
 <%@ page import="es.ieci.tecdoc.isicres.admin.core.services.ConstantesGestionUsuariosAdministracion" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
@@ -13,9 +15,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="IECISA" />
 <title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.sgm.rpadmin.unidades.titulo"/></title>
-<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-<link href="css/adminApp.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/common.js"></script>
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/adminApp.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
 <script>
 
 	var urlSessionExpired = '<%=AutenticacionAdministracion.obtenerUrlLogin(request, ConstantesGestionUsuariosAdministracion.APLICACION_REGISTRO) %>';
@@ -91,7 +93,7 @@
 						<td align="right" class="col_nuevo" onclick="chequearPopup('<html:rewrite page="/jsp/anadirDistribucionUnidad.jsp"/>')"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.anadir"/></td>
 					</logic:notEqual>
 					<td align="right" class="col_eliminar" onclick="chequear('<html:rewrite page="/listadoUnidad.do"/>')"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.cancelar"/></td>
-					<td width="20"><img src="../img/dot.gif" width="20" height="1" /></td>
+					<td width="20"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" width="20" height="1" /></td>
 				</tr>
 			</table>
 			<div id="tableUnidadHijos" style="overflow:auto;height:270px;width:100%">
@@ -103,15 +105,15 @@
 						 	<tr>
 
 						 		<logic:equal name="fila" property="tipoDestino" value="1">
-						 			<td><img src='<html:rewrite page="/img/usuario.gif"/>' />&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.unidades.distribucion.usuario" /></td>
+						 			<td><img src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/usuario.gif' />&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.unidades.distribucion.usuario" /></td>
 						 		</logic:equal>
 
 						 		<logic:equal name="fila" property="tipoDestino" value="2">
-						 			<td><img src='<html:rewrite page="/img/departamento.gif"/>' />&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.unidades.distribucion.departamento" /></td>
+						 			<td><img src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/departamento.gif' />&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.unidades.distribucion.departamento" /></td>
 						 		</logic:equal>
 
 						 		<logic:equal name="fila" property="tipoDestino" value="3">
-						 			<td><img src='<html:rewrite page="/img/grupo.gif"/>' />&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.unidades.distribucion.grupo" /></td>
+						 			<td><img src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/grupo.gif' />&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.unidades.distribucion.grupo" /></td>
 						 		</logic:equal>
 
 						 	</tr>

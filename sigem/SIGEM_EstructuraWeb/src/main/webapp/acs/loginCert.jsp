@@ -13,7 +13,7 @@ if (param != null){
 	addCertificate = new Boolean(param);
 	session.setAttribute("addCertificate", addCertificate);
 }
-response.sendRedirect("https://10.228.69.200/servlet/com.telventi.autenticacion.ServletAutenticacion?ap=wardaadm&sesion="+sessionID);
+response.sendRedirect("https://127.0.0.1/servlet/com.telventi.autenticacion.ServletAutenticacion?ap=wardaadm&sesion="+sessionID);
 %>
 </body>
 </html>

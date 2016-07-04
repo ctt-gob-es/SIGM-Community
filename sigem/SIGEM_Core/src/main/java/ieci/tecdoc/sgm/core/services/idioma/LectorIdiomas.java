@@ -30,7 +30,7 @@ public class LectorIdiomas {
 	
 	static{
 		try {
-			configuracion = new Config(new String[]{"SIGEM_spring.xml","Idiomas_spring.xml"});
+			configuracion = new Config(new String[]{"Idiomas_spring.xml"});
 			configIdioma = (ConfigIdioma)configuracion.getBean(CONFIG_IDIOMA);
 		} catch (Exception e) {
 			logger.error("Error inicializando configuración de idiomas disponibles.", e);

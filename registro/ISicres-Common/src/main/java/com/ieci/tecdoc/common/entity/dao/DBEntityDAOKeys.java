@@ -23,11 +23,11 @@ public class DBEntityDAOKeys {
 
 	// protected static String AXSF_FINDALL_SENTENCE = "SELECT fdrid FROM {0}
 	// {1} ORDER BY fld1";
-	protected static String AXSF_FINDALL_SENTENCE = "SELECT fdrid FROM {0} {1}";
+	protected static String AXSF_FINDALL_SENTENCE = "SELECT fdrid FROM {0} R {1}";
 
-	protected static String AXSF_FINDALL_SIZE_SENTENCE = "SELECT count(*) FROM {0} {1}";
+	protected static String AXSF_FINDALL_SIZE_SENTENCE = "SELECT count(*) FROM {0} R {1}";
 
-	protected static String AXSF_FIND_LASTFORUSER = "SELECT MAX(FDRID) AS FDRID FROM {0} {1}";
+	protected static String AXSF_FIND_LASTFORUSER = "SELECT MAX(FDRID) AS FDRID FROM {0} R {1}";
 
 	protected static String UPDATE_NEXT_ID_3 = "UPDATE IDOCXNEXTID SET ID=ID+1 WHERE TYPE=3 AND PARENTID=?";
 

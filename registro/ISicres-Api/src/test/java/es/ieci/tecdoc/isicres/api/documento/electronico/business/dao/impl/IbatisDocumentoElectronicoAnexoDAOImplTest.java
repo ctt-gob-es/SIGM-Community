@@ -19,7 +19,7 @@ import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
-import org.junit.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -95,7 +95,6 @@ AbstractDbUnitTransactionalJUnit4SpringContextTests{
 	}
 
 
-	@Test
 	public void testSaveGet() {
 		//MultiEntityContextHolder debe tener valor, sino falla.
 		MultiEntityContextHolder.setEntity("");
@@ -114,7 +113,7 @@ AbstractDbUnitTransactionalJUnit4SpringContextTests{
 	}
 
 
-	@Test
+	
 	public void testSaveGetIdentificadorDocumentoElectronicoAnexo() {
 
 		Long idDocumentoElectronicoAnexo=new Long(1);
@@ -148,7 +147,7 @@ AbstractDbUnitTransactionalJUnit4SpringContextTests{
 
 	}
 
-	@Test
+	
 	public void getDatosFirmaByIdDocumentoElectronicoTest(){
 
 		Long idDocumentoElectronicoAnexo=new Long(1);
@@ -161,7 +160,7 @@ AbstractDbUnitTransactionalJUnit4SpringContextTests{
 		testEqual(documento.getDatosFirma(),datosFirmaRetrieve);
 	}
 
-	@Test
+	
 	public void getDatosFirmaByIdTest(){
 
 		Long idDocumentoElectronicoAnexo=new Long(1);
@@ -175,7 +174,7 @@ AbstractDbUnitTransactionalJUnit4SpringContextTests{
 		testEqual(documento.getDatosFirma(),datosFirmaRetrieve);
 	}
 
-	@Test
+	
 	public void getFirmasIdTest(){
 
 		Long idDocumentoElectronicoAnexo=new Long(1);
@@ -195,7 +194,7 @@ AbstractDbUnitTransactionalJUnit4SpringContextTests{
 
 	}
 
-	@Test
+	
 	public void getDocumentoElectronicoAnexoByRegistroTest(){
 		Long idDocumentoElectronicoAnexo=new Long(1);
 		Long idDatosFirma=new Long(2);
@@ -215,7 +214,7 @@ AbstractDbUnitTransactionalJUnit4SpringContextTests{
 		}
 	}
 
-	@Test
+	
 	public void getIdentificadorDocumentoElectronicoAnexoByRegistroTest(){
 		Long idDocumentoElectronicoAnexo=new Long(1);
 		Long idDatosFirma=new Long(2);
@@ -235,7 +234,7 @@ AbstractDbUnitTransactionalJUnit4SpringContextTests{
 		}
 	}
 
-	@Test
+	
 	public void getDocumentoFirmadoTest(){
 		Long idDocumentoElectronicoAnexo=new Long(1);
 		Long idDatosFirma=new Long(2);

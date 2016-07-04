@@ -3,6 +3,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%
 response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -13,8 +15,8 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 <html>
 <head>
 <ieci:baseInvesDoc/>
-<link rel="stylesheet" type="text/css" href="include/css/adminApp.css"/>
-<link rel="Stylesheet" rev="Stylesheet" href="include/css/estilos.css" />
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/adminApp.css"/>
+<link rel="Stylesheet" rev="Stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css" />
 <style>
 	.primeraColumna {
 		font-size:10px;

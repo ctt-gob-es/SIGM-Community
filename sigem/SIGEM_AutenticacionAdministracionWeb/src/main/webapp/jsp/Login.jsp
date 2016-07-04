@@ -2,7 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%@page import="ieci.tecdoc.sgm.administracion.utils.Defs"%>
 <%@page import="ieci.tecdoc.sgm.core.services.gestion_administracion.ConstantesGestionUsuariosAdministracion"%>
 <%@page import="ieci.tecdoc.idoc.admin.api.EstructuraOrganizativaLdapManager" %>
@@ -56,8 +57,8 @@
 		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 		%>
 		<base href="<%= basePath %>" />
-		<link rel="stylesheet" href="css/estilos.css" type="text/css" />
-		<script type="text/javascript" src="js/idioma.js" ></script>
+		<link rel="stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" type="text/css" />
+		<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/idioma.js" ></script>
 
 		<script type="text/javascript">
 
@@ -183,7 +184,7 @@
 
 					              <p class="fila_sub">
 			                		<label for="username" class="login" ><bean:message key="autenticacion.username" /></label>
-			                		<input type="text" name="username" id="username" class="login"/>
+			                		<input type="text" name="username" id="username" class="login" autofocus="" spellcheck="false"/>
 					              </p>
 					              <p class="fila_sub">
 			                		<label for="password" class="login"><bean:message key="autenticacion.password" /></label>
@@ -197,13 +198,7 @@
 					                %>
 
 						              <p class="fila">
-					                		<label for="interno" class="login" ><bean:message key="autenticacion.interno" /></label>
-						                	<input type="checkbox" class="checkbox" name="interno" id="interno" onclick="javascript:mostrarEntidades();"/>
-						                	<label for="linkLoginCertificado" id="tr_certificado" style="visibility:hidden;">
-						                		<a href="javascript:loginCertificado();" id="linkLoginCertificado" style="font-size: 100%;margin-left:10px;">
-						                			<bean:message key="autenticacion.acceso.certificado"/>
-						                		</a>
-						                	</label>
+					                		
 						              </p>
 						              <% if (sso) { %>
 						              <p class="fila" id="msg_autenticacion_sso" style="visibility: hidden;">

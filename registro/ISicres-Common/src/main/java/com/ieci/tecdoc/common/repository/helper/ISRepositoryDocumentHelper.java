@@ -169,12 +169,14 @@ public class ISRepositoryDocumentHelper {
 	protected static ISRepositoryBasicDocumentVO getBookAttributes(
 			ISRepositoryBasicDocumentVO basicVO, boolean closeSession) {
 		 Transaction tran = null;
-
+		 log.warn("getBookAttributes - Transaccion creada");
+		 HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil
+			Session session = hibernateUtil
 					.currentSession(basicVO.getEntidad());
+			log.warn("getBookAttributes - Sesion creada");
 			tran = session.beginTransaction();
-
+			log.warn("getBookAttributes - Transaccion iniciada con sesion");
 			ScrRegstate regState = ISicresQueries.getScrRegstate(session,
 					basicVO.getBookID());
 
@@ -183,15 +185,15 @@ public class ISRepositoryDocumentHelper {
 				basicVO.setBookType(new Integer(regState.getIdocarchhdr()
 						.getType()));
 			}
-
-			 HibernateUtil.commitTransaction(tran);
+			log.warn("getBookAttributes - Commit de la transaccion");
+			hibernateUtil.commitTransaction(tran);
 		} catch (HibernateException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Se ha producido un error al acceder al libro ["
 					+ basicVO.getBookID() + "]", e);
 		} finally {
 			if (closeSession)
-				HibernateUtil.closeSession(basicVO.getEntidad());
+				hibernateUtil.closeSession(basicVO.getEntidad());
 		}
 
 		return basicVO;

@@ -1,10 +1,10 @@
 package ieci.tecdoc.sgm.administracion.utils;
 
+import ieci.tecdoc.sgm.base.guid.Guid;
 import ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.administracion.Aplicacion;
 import ieci.tecdoc.sgm.core.services.administracion.ServicioAdministracion;
-import ieci.tecdoc.sgm.core.services.administracion.Usuario;
 import ieci.tecdoc.sgm.core.services.admsesion.administracion.ServicioAdministracionSesionesAdministrador;
 import ieci.tecdoc.sgm.core.services.entidades.Entidad;
 import ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativa;
@@ -35,7 +35,7 @@ public class Comprobador {
 
 		// Key de sesion válido
 		if (!Utilidades.isNuloOVacio(key)
-				&& AutenticacionAdministracion.autenticar(request)) {
+				&& autenticar(request)) {
 			ServicioAdministracionSesionesAdministrador oCliente = LocalizadorServicios
 					.getServicioAdministracionSesionesAdministrador();
 			ieci.tecdoc.sgm.core.services.admsesion.administracion.Sesion datosSesion = oCliente
@@ -254,7 +254,36 @@ public class Comprobador {
 			}
 		}
 	}
-
+	
+	private static boolean autenticar(HttpServletRequest request) {
+		
+    	String key = request.getParameter(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM);
+    	if(AutenticacionAdministracion.isNuloOVacio(key)) {
+    		key = (String) request.getSession().getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM);
+    	}
+    	
+    	if(AutenticacionAdministracion.isNuloOVacio(key)) {
+    		return false;
+    	} else  {
+   			request.getSession().setAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM, key);
+   			return true;
+    	}
+	}
+	
+	private static Sesion mapperParamtoSesion(String key_session_usuario) {
+		Sesion newSesion = null;
+		
+		if (key_session_usuario!=null){
+			newSesion = new Sesion();
+			newSesion.setDatosEspecificos(null);
+			newSesion.setIdEntidad(key_session_usuario.split("_")[2]);
+			newSesion.setIdSesion(key_session_usuario.split("_")[1]);
+			newSesion.setUsuario(key_session_usuario.split("_")[0]);
+			newSesion.setTipoUsuario(Sesion.TIPO_USUARIO_ADMINISTRADOR);
+		}
+		return newSesion;
+	}
+	
 	public static String comprobarInformacion(HttpServletRequest request,
 			String key, String idEntidad, String idAplicacion, String usuario,
 			String password, boolean validado) throws Exception {
@@ -263,32 +292,23 @@ public class Comprobador {
 
 		// Key de sesion válido
 		if (!Utilidades.isNuloOVacio(key)
-				&& AutenticacionAdministracion.autenticar(request)) {
-			ServicioAdministracionSesionesAdministrador oCliente = LocalizadorServicios
-					.getServicioAdministracionSesionesAdministrador();
-			ieci.tecdoc.sgm.core.services.admsesion.administracion.Sesion datosSesion = oCliente
-					.obtenerSesion(key);
+				&& autenticar(request)) {
+			String key_session_usuario = (String) request.getSession().getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM_ENTIDAD);
+			
 			// Datos de sesion válidos
-			if (datosSesion != null) {
+			if (key_session_usuario != null) {
+				Sesion datosSesion = mapperParamtoSesion (key_session_usuario);
 				// Id de entidad válido
 				if (!Utilidades.isNuloOVacio(idEntidad)) {
 					// Usuario con acceso a la entidad
 					if (Utilidades.permisosEntidad(datosSesion.getUsuario(),
 							idEntidad)) {
-						datosSesion = oCliente.obtenerSesionEntidad(key + "_"
-								+ idEntidad);
+
 						String keyEntidad = null;
 						// Sesion de entidad ya creada
-						if (datosSesion == null) {
-							keyEntidad = oCliente.nuevaSesionEntidad(key,
-									idEntidad);
-							datosSesion = oCliente
-									.obtenerSesionEntidad(keyEntidad);
-						} else {
 							keyEntidad = datosSesion.getUsuario() + "_"
 									+ datosSesion.getIdSesion() + "_"
 									+ datosSesion.getIdEntidad();
-						}
 						// Id de aplicacion válido
 						if (!Utilidades.isNuloOVacio(idAplicacion)) {
 							// Usuario con acceso a la aplicacion de la entidad
@@ -370,16 +390,10 @@ public class Comprobador {
 									.setAttribute(
 											ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD,
 											idEntidad);
-							key = oCliente.nuevaSesion(usuario,
-									Sesion.TIPO_USUARIO_ADMINISTRADOR);
-							Usuario oUsuario = oServicio
-									.obtenerUsuario(usuario);
-							oCliente.modificarDatosSesion(
-									key,
-									oUsuario.getNombre() + " "
-											+ oUsuario.getApellidos());
-							String keyEntidad = oCliente.nuevaSesionEntidad(
-									key, idEntidad);
+							String idSesion = new Guid().toString();
+							key = usuario+"_"+idSesion;
+							String keyEntidad = key +"_"+idEntidad;
+
 							request.getSession()
 									.setAttribute(
 											ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM,
@@ -453,13 +467,9 @@ public class Comprobador {
 								.setAttribute(
 										ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD,
 										idEntidad);
-						key = oCliente.nuevaSesion(usuario,
-								Sesion.TIPO_USUARIO_ADMINISTRADOR);
-						Usuario oUsuario = oServicio.obtenerUsuario(usuario);
-						oCliente.modificarDatosSesion(key, oUsuario.getNombre()
-								+ " " + oUsuario.getApellidos());
-						String keyEntidad = oCliente.nuevaSesionEntidad(key,
-								idEntidad);
+						String idSesion = new Guid().toString();
+						key = usuario+"_"+idSesion;
+						String keyEntidad = key +"_"+idEntidad;
 						request.getSession()
 								.setAttribute(
 										ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM,
@@ -516,18 +526,9 @@ public class Comprobador {
 							if (Utilidades.permisosAplicacion(usuario,
 									idEntidad, idAplicacion)) {
 								// Crear nueva sesion
-								ServicioAdministracionSesionesAdministrador oCliente = LocalizadorServicios
-										.getServicioAdministracionSesionesAdministrador();
-								key = oCliente.nuevaSesion(usuario,
-										Sesion.TIPO_USUARIO_ADMINISTRADOR);
-								Usuario oUsuario = oServicio
-										.obtenerUsuario(usuario);
-								oCliente.modificarDatosSesion(
-										key,
-										oUsuario.getNombre() + " "
-												+ oUsuario.getApellidos());
-								String keyEntidad = oCliente
-										.nuevaSesionEntidad(key, idEntidad);
+								String idSesion = new Guid().toString();
+								key = usuario+"_"+idSesion;
+								String keyEntidad = key +"_"+idEntidad;
 								request.getSession()
 										.setAttribute(
 												ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM,
@@ -546,18 +547,10 @@ public class Comprobador {
 							}
 							// Usuario sin acceso a la aplicacion de la entidad
 							else {
-								ServicioAdministracionSesionesAdministrador oCliente = LocalizadorServicios
-										.getServicioAdministracionSesionesAdministrador();
-								key = oCliente.nuevaSesion(usuario,
-										Sesion.TIPO_USUARIO_ADMINISTRADOR);
-								Usuario oUsuario = oServicio
-										.obtenerUsuario(usuario);
-								oCliente.modificarDatosSesion(
-										key,
-										oUsuario.getNombre() + " "
-												+ oUsuario.getApellidos());
-								String keyEntidad = oCliente
-										.nuevaSesionEntidad(key, idEntidad);
+
+								String idSesion = new Guid().toString();
+								key = usuario+"_"+idSesion;
+								String keyEntidad = key +"_"+idEntidad;
 								request.getSession()
 										.setAttribute(
 												ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM,
@@ -580,18 +573,9 @@ public class Comprobador {
 						}
 						// Id de aplicación no válido
 						else {
-							ServicioAdministracionSesionesAdministrador oCliente = LocalizadorServicios
-									.getServicioAdministracionSesionesAdministrador();
-							key = oCliente.nuevaSesion(usuario,
-									Sesion.TIPO_USUARIO_ADMINISTRADOR);
-							Usuario oUsuario = oServicio
-									.obtenerUsuario(usuario);
-							oCliente.modificarDatosSesion(
-									key,
-									oUsuario.getNombre() + " "
-											+ oUsuario.getApellidos());
-							String keyEntidad = oCliente.nuevaSesionEntidad(
-									key, idEntidad);
+							String idSesion = new Guid().toString();
+							key = usuario+"_"+idSesion;
+							String keyEntidad = key +"_"+idEntidad;
 							request.getSession()
 									.setAttribute(
 											ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM,
@@ -624,18 +608,10 @@ public class Comprobador {
 									.setAttribute(
 											ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD,
 											idEntidad);
-							ServicioAdministracionSesionesAdministrador oCliente = LocalizadorServicios
-									.getServicioAdministracionSesionesAdministrador();
-							key = oCliente.nuevaSesion(usuario,
-									Sesion.TIPO_USUARIO_ADMINISTRADOR);
-							Usuario oUsuario = oServicio
-									.obtenerUsuario(usuario);
-							oCliente.modificarDatosSesion(
-									key,
-									oUsuario.getNombre() + " "
-											+ oUsuario.getApellidos());
-							String keyEntidad = oCliente.nuevaSesionEntidad(
-									key, idEntidad);
+
+							String idSesion = new Guid().toString();
+							key = usuario+"_"+idSesion;
+							String keyEntidad = key +"_"+idEntidad;
 							request.getSession()
 									.setAttribute(
 											ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM,
@@ -678,16 +654,9 @@ public class Comprobador {
 						// Si tiene permiso para administrar entidades
 						if (Utilidades.accesoAdministracion(usuario)) {
 							// Crear nueva sesion
-							ServicioAdministracionSesionesAdministrador oCliente = LocalizadorServicios
-									.getServicioAdministracionSesionesAdministrador();
-							key = oCliente.nuevaSesion(usuario,
-									Sesion.TIPO_USUARIO_ADMINISTRADOR);
-							Usuario oUsuario = oServicio
-									.obtenerUsuario(usuario);
-							oCliente.modificarDatosSesion(
-									key,
-									oUsuario.getNombre() + " "
-											+ oUsuario.getApellidos());
+
+							String idSesion = new Guid().toString();
+							key = usuario+"_"+idSesion;
 							Aplicacion aplicacion = oServicio
 									.getAplicacion(idAplicacion);
 							String Url = Utilidades.obtenerUrlAplicacion(
@@ -716,15 +685,10 @@ public class Comprobador {
 								.setAttribute(
 										ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD,
 										idEntidad);
-						ServicioAdministracionSesionesAdministrador oCliente = LocalizadorServicios
-								.getServicioAdministracionSesionesAdministrador();
-						key = oCliente.nuevaSesion(usuario,
-								Sesion.TIPO_USUARIO_ADMINISTRADOR);
-						Usuario oUsuario = oServicio.obtenerUsuario(usuario);
-						oCliente.modificarDatosSesion(key, oUsuario.getNombre()
-								+ " " + oUsuario.getApellidos());
-						String keyEntidad = oCliente.nuevaSesionEntidad(key,
-								idEntidad);
+
+						String idSesion = new Guid().toString();
+						key = usuario+"_"+idSesion;
+						String keyEntidad = key +"_"+idEntidad;
 						request.getSession()
 								.setAttribute(
 										ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM,
@@ -767,6 +731,8 @@ public class Comprobador {
 		}
 	}
 
+
+
 	public static String comprobarInformacionInterno(
 			HttpServletRequest request, String key, String idEntidad,
 			String idAplicacion, String usuario, String password,
@@ -781,7 +747,7 @@ public class Comprobador {
 
 		// Key de sesion válido
 		if (!Utilidades.isNuloOVacio(key)
-				&& AutenticacionAdministracion.autenticar(request)) {
+				&& autenticar(request)) {
 
 			ieci.tecdoc.sgm.core.services.admsesion.administracion.Sesion datosSesion = oServicioAdmSesionesAdm
 					.obtenerSesion(key);

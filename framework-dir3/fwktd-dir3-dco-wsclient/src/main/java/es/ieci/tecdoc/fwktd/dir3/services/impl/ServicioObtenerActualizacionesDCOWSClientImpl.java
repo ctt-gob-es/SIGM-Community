@@ -25,7 +25,7 @@ import es.map.directorio.manager.impl.wsexport.RespuestaWS;
  *
  */
 public class ServicioObtenerActualizacionesDCOWSClientImpl implements ServicioObtenerActualizacionesDCO{
-
+ 
 	/**
 	 * Servicio para llamar al WS SC02UNIncrementalDatosBasicos - Actualización de Unidades Organicas
 	 */

@@ -57,10 +57,10 @@ public class InvesDocAuthenticationPolicy implements AuthenticationPolicy, IDocK
 
     public AuthenticationUser validate(String login, String password, String entidad) throws SecurityException, ValidationException {
         validateParameters(login, password);
-
+        HibernateUtil hibernateUtil = new HibernateUtil();
         Transaction tran = null;
         try {
-            Session session = HibernateUtil.currentSession(entidad);
+            Session session = hibernateUtil.currentSession(entidad);
             tran = session.beginTransaction();
 
             // Recuperamos el usuario
@@ -132,13 +132,13 @@ public class InvesDocAuthenticationPolicy implements AuthenticationPolicy, IDocK
             authenticationUser.setDeptIdOriginal(new Integer(user.getDeptid()));
 
             //Commit de la transacción
-            HibernateUtil.commitTransaction(tran);
+            hibernateUtil.commitTransaction(tran);
 
             return authenticationUser;
         } catch (SecurityException sE){
 			try {
 				//Commit de la transacción
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException cE) {
 				log.warn("Error al realizar el commit de la transacción", cE);
 			}
@@ -146,14 +146,14 @@ public class InvesDocAuthenticationPolicy implements AuthenticationPolicy, IDocK
         } catch (HibernateException hE) {
 			try {
 				//Commit de la transacción
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException cE) {
 				log.warn("Error al realizar el commit de la transacción", cE);
 			}
             log.warn("No se puede validar al usuario [" + login + "] password [" + password + "]");
             throw new SecurityException(SecurityException.ERROR_SQL);
         } finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
         }
     }
 
@@ -164,8 +164,9 @@ public class InvesDocAuthenticationPolicy implements AuthenticationPolicy, IDocK
             ValidationException {
         if (Configurator.getInstance().getPropertyAsBoolean(ConfigurationKeys.KEY_SERVER_CHECK_PASSWORD).booleanValue()) {
             validateParameters(login, newPassword, oldPassword);
+            HibernateUtil hibernateUtil = new HibernateUtil();
             try {
-                Session session = HibernateUtil.currentSession(entidad);
+                Session session = hibernateUtil.currentSession(entidad);
 
                 // Recuperamos el usuario
                 List list = ISicresQueries.getUserUserHdrByName(session, login);
@@ -231,7 +232,10 @@ public class InvesDocAuthenticationPolicy implements AuthenticationPolicy, IDocK
                         "No se puede cambiar la contraseña al usuario [" + login + "] password [" + oldPassword + "]",
                         hE);
                 throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
-            }
+            } finally {
+		hibernateUtil.closeSession(entidad);
+		
+	}
         }
     }
 
@@ -322,9 +326,9 @@ public class InvesDocAuthenticationPolicy implements AuthenticationPolicy, IDocK
 		StringBuffer queryUsrOfic = new StringBuffer();
 		StringBuffer queryIuseruserhdr = new StringBuffer();
 		List deptList = new ArrayList();
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 
 			queryUsrOfic.append(sqlUsrOfic);
 			queryUsrOfic.append(idUser);
@@ -368,6 +372,9 @@ public class InvesDocAuthenticationPolicy implements AuthenticationPolicy, IDocK
 					+ idUser + "]", e);
 
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
+		} finally {
+			hibernateUtil.closeSession(entidad);
+			
 		}
 
 	}

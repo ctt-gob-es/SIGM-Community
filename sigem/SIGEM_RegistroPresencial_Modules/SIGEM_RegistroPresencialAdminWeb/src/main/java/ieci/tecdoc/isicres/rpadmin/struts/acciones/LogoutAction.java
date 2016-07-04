@@ -16,7 +16,7 @@ public class LogoutAction extends RPAdminWebAction {
 			throws Exception {
 
 		request.getSession().invalidate();
-		response.sendRedirect(SesionHelper.getWebAuthDesconectURL(request));
+		response.sendRedirect(SesionHelper.getWebAuthDesconectURL(request)+"?desconectar=y");
 		return null;
 	}
 

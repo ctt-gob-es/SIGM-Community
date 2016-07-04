@@ -42,7 +42,8 @@ public class IbatisInfoRegistroDAOImpl implements
 	private static final String GET_INFO_REGISTRO_DIRECCION_INTERESADO = "InfoRegistroDireccionVO.getInfoRegistroDireccionInteresado";
 	private static final String GET_INFO_REGISTRO_PAGE_REPOSITORIES = "InfoRegistroPageRepositoryVO.getInfoRegistroPageRepositories";
 	private static final String GET_INFO_REGISTRO_INFO_DOCUMENTO = "InfoRegistroPageRepositoryVO.getInfoRegistroInfoDocumento";
-
+	private static final String GET_INFO_REGISTRO_PAGE_REPOSITORIES_WITHNEWREPORT = "InfoRegistroPageRepositoryVO.getInfoRegistroPageRepositoriesWithNewReport";
+	
 	protected SqlMapClientTemplate sqlMapClientTemplate = new SqlMapClientTemplate();
 
 
@@ -255,7 +256,21 @@ public class IbatisInfoRegistroDAOImpl implements
 		this.sqlMapClientTemplate.setSqlMapClient(aSqlMapClient);
 	}
 
+	public List<InfoRegistroPageRepositoryVO> getInfoRegistroPageRepositoriesWithNewReport(
+		Long idLibro, Long idRegistro) {
+	try{
+		HashMap<String, Long> params = new HashMap<String, Long>();
+		params.put("idLibro", idLibro);
+		params.put("idRegistro", idRegistro);
+		List<InfoRegistroPageRepositoryVO> infoDocumentos = (List<InfoRegistroPageRepositoryVO>)getSqlMapClientTemplate().queryForList(GET_INFO_REGISTRO_PAGE_REPOSITORIES_WITHNEWREPORT, params);
+		return infoDocumentos;
+	}
+	catch (DataAccessException e) {
+		logger.error("Error en la busqueda de los documentos del registro", e);
 
+		throw new RuntimeException(e);
+	}
+}
 
 
 }

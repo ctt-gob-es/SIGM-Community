@@ -4,7 +4,7 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dir3</groupId>
-		<artifactId>fwktd-dir3</artifactId>
+		<artifactId>fwktd-dir3-parent</artifactId>
 		<version>1.0</version>
 	</parent>
 
@@ -29,7 +29,7 @@
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dir3</groupId>
-			<artifactId>fwktd-dir3-dco-wsclient</artifactId>
+			<artifactId>fwktd-dir3-dco-wsclientjaxws</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -71,13 +71,7 @@
 			<version>${oracle.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>8.3-603.jdbc3</version>
-			<scope>test</scope>
-		</dependency>
-
+	
 	</dependencies>
 
 	<build>

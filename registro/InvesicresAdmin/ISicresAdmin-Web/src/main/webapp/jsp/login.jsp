@@ -2,6 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@page import="es.ieci.tecdoc.isicres.admin.core.locale.LocaleFilterHelper"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -13,10 +15,10 @@
 </script>
 
 
-<link REL="stylesheet" TYPE="text/css" HREF="css/global.css" />
-<link REL="stylesheet" TYPE="text/css" HREF="css/font.css" />
-<link REL="stylesheet" TYPE="text/css" HREF="css/frame.css" />
-<link rel="stylesheet" type="text/css" href="css/estilos.css">
+<link REL="stylesheet" TYPE="text/css" HREF="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/global.css" />
+<link REL="stylesheet" TYPE="text/css" HREF="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/font.css" />
+<link REL="stylesheet" TYPE="text/css" HREF="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/frame.css" />
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css">
 
 <!--[if lte IE 5]>
 	<link rel="stylesheet" type="text/css" href="css/estilos_ie5.css"/>
@@ -163,10 +165,10 @@
 	<div id="cabecera_login">
 	<div id="appHeaderLogin" cellpadding="0">
 			<div id="logo_app_login">
-				<img  src="./img/inicio-ieci.png" id="logo_app_img_login"/>
+				<img  src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>//img/inicio-ieci.png" id="logo_app_img_login"/>
 			</div>
 			<div id="logo_cia_login">
-				<img  src="./img/inicio-nombre.png" id="logo_app_img2_login" align="right"/>
+				<img  src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>//img/inicio-nombre.png" id="logo_app_img2_login" align="right"/>
 			</div>
 	</div>
 	</div>
@@ -193,7 +195,7 @@
 				</a>
 
 				<a href="#">
-					<% String ayuda = "/ayuda/" + LocaleFilterHelper.getCurrentLocale(request).getLanguage() + "/index.html";%>
+					<% String ayuda = ((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")+"/ayuda/" + LocaleFilterHelper.getCurrentLocale(request).getLanguage() + "/index.html";%>
 
 					<img src="img/help.gif" id="helplogin" onclick="abreAyuda('<html:rewrite page="<%=ayuda%>" />')"
 						alt="<bean:message key='ieci.tecdoc.isicres.rpadmin.help'/>"

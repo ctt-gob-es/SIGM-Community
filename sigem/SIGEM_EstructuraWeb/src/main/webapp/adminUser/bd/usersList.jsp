@@ -4,7 +4,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%@ page import="ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion" %>
 <%@ page import="ieci.tecdoc.sgm.core.services.gestion_administracion.ConstantesGestionUsuariosAdministracion" %>
 
@@ -19,9 +20,9 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 <html>
 <head>
 <ieci:baseInvesDoc/>
-<link rel="stylesheet" type="text/css" href="include/css/adminApp.css"/>
-<link rel="stylesheet" type="text/css" href="include/css/estilos.css"/>
-<script src="include/js/validations.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/adminApp.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css"/>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/validations.js" type="text/javascript"></script>
 
 <script language="javascript">
 var appBase = '<c:out value="${pageContext.request.contextPath}"/>';

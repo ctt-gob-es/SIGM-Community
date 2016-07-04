@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "dtd/log4j.dtd">
+<!-- Fichero de configuraciÃ³n del sistema de trazas log4j -->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="FICHERORES" class="org.apache.log4j.RollingFileAppender">
+		<!-- _${weblogic.Name} -->
+		<param name="File" value="${sigem.log.path}/SIGEM_RegistroPresencialMSSSIWeb/SIGEM_RegistroPresencial.log"/>
+		<param name="MaxFileSize" value="3072KB"/>
+		<param name="MaxBackupIndex" value="3"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} SIGM %-5p [%t] %m%n"/>
+			<!--  value="%d{yyyy-MM-dd HH:mm:ss} %t [%p] %C %M %m %n"/>
+				  value="%d{yyyy-MM-dd HH:mm:ss} %p [%C] %m%n" -->
+		</layout>
+	</appender>
+	
+	<logger name="es.msssi" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="FICHERORES"/>
+	</logger>
+
+	<logger name="org.springframework">
+		<level value="ERROR"/>
+		<appender-ref ref="FICHERORES"/>
+	</logger>
+	<logger name="org.hibernate">
+		<level value="ERROR"/>
+		<appender-ref ref="FICHERORES"/>
+	</logger>
+	<logger name="net.sf.hibernate">
+		<level value="ERROR"/>
+		<appender-ref ref="FICHERORES"/>
+	</logger>
+	<logger name="com.opensymphony.oscache">
+		<level value="OFF"/>
+		<appender-ref ref="FICHERORES"/>
+	</logger>
+	<logger name="core.log">
+		<level value="ERROR"/>
+		<appender-ref ref="FICHERORES"/>
+	</logger>
+
+	<logger name="com.ieci.tecdoc">
+		<level value="INFO"/>
+		<appender-ref ref="FICHERORES"/>
+	</logger>
+	<logger name="ieci" additivity="false">
+		<level value="INFO"/>
+		<appender-ref ref="FICHERORES"/>
+	</logger>
+	<logger name="es">
+		<level value="INFO"/>
+		<appender-ref ref="FICHERORES"/>
+	</logger>
+	<logger name="net.sf.jasperreports" >
+		<level value="INFO"/>
+		<appender-ref ref="FICHERORES"/>
+	</logger>
+	<logger name="com" >
+		<level value="INFO"/>
+		<appender-ref ref="FICHERORES"/>
+	</logger>
+	<root>
+		<level value="ERROR" />
+		<appender-ref ref="FICHERORES" />
+	</root>
+</log4j:configuration>

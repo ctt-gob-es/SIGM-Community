@@ -196,4 +196,13 @@ public class TercerosHelper {
 		}
 		return iSicresPerson;
 	}
+
+	public static List<InteresadoVO> getListaInteresadosVacia() {
+	    List<InteresadoVO> lista = new ArrayList<InteresadoVO>();
+	    InteresadoVO interesadoVO = new InteresadoVO();
+	    interesadoVO.setId(null);
+	    interesadoVO.setNombre("interesado");
+	    lista.add(interesadoVO);
+	    return lista;
+	}
 }

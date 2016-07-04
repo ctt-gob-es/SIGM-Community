@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+
+</h:head>
+
+<h:body>
+	<ui:composition>
+		<p:messages id="messagesInt" showDetail="false" closable="true"
+			autoUpdate="false" redisplay="false" />
+		<h:panelGrid id="gridI" styleClass="ampliar">
+			<h:outputLabel value="#{msgs.labelInteresado}"
+				style="font-weight:bold;"></h:outputLabel>
+			<label for="outputRegisterDataForm:tipoI" class="general"> <p:selectOneRadio
+					id="tipoI"
+					value="#{outputRegisterAction.outputRegisterBean.interesado.tipo}">
+					<f:selectItem itemLabel="Persona Física" itemValue="P" />
+					<f:selectItem itemLabel="Persona Jurídica" itemValue="J" />
+					<p:ajax update="gridI" />
+				</p:selectOneRadio>
+			</label>
+			<ui:fragment
+				rendered="${outputRegisterAction.outputRegisterBean.interesado.tipo=='P'}">
+				<label for="outputRegisterDataForm:tipoDocIntP" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelTipoDocumento}"></h:outputLabel></span> <p:selectOneMenu
+						value="#{outputRegisterAction.outputRegisterBean.interesado.tipodoc}" binding="#{tipoDocIntP}"
+						id="tipoDocIntP">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItem itemLabel="NIF" itemValue="2" />
+						<f:selectItem itemLabel="Pasaporte" itemValue="3" />
+						<f:selectItem itemLabel="Documento de Identificación Extranjeros"
+							itemValue="4" />
+						<f:selectItem itemLabel="Otros" itemValue="5" />
+					</p:selectOneMenu>
+				</label>
+				<label for="outputRegisterDataForm:docIndentidadIntP" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelNumeroDocumento}"></h:outputLabel></span> <p:inputText
+						id="docIndentidadIntP" label="#{msgs.labelNumeroDocumento}"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.docIndentidad}" >
+							<f:validateLength maximum="17" />
+							<f:validator validatorId="nifValidator" />
+							<f:attribute name="tipoDOC" value="#{tipoDocIntP}" />
+						</p:inputText>
+				</label>
+				<label for="outputRegisterDataForm:docIndentidadIntP" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelNombre}"></h:outputLabel> *</span> <p:inputText
+						id="nombreInt" required="true" label="#{msgs.labelNombre}"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.nombre}" >
+							<f:validateLength maximum="30" />
+						</p:inputText>
+				</label>
+				<label for="outputRegisterDataForm:docIndentidadIntP" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelPrimerApellido}"></h:outputLabel> *</span> <p:inputText
+						id="papellidoInt" required="true"
+						label="#{msgs.labelPrimerApellido}"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.papellido}" >
+							<f:validateLength maximum="30" />
+						</p:inputText>
+				</label>
+				<label for="outputRegisterDataForm:sapellidoInt" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelSegundoApellido}"></h:outputLabel></span> <p:inputText
+						id="sapellidoInt"  label="#{msgs.labelSegundoApellido}"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.sapellido}" >
+							<f:validateLength maximum="30" />
+						</p:inputText>
+				</label>
+			</ui:fragment>
+			<ui:fragment
+				rendered="${outputRegisterAction.outputRegisterBean.interesado.tipo=='J'}">
+				<label for="outputRegisterDataForm:tipoDocIntJ" class="general">
+					<span class="label"><h:outputLabel 
+							value="#{msgs.labelTipoDocumento}"></h:outputLabel></span> <p:selectOneMenu
+						value="#{outputRegisterAction.outputRegisterBean.interesado.tipodoc}"
+						 binding="#{tipoDocIntJ}" id="tipoDocIntJ">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItem itemLabel="CIF" itemValue="1" />
+						<f:selectItem itemLabel="Código de Origen" itemValue="6" />
+					</p:selectOneMenu>
+				</label>
+				<label for="outputRegisterDataForm:tipoDocIntJ" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelNumeroDocumento}"></h:outputLabel></span> <p:inputText
+						id="docIndentidadIntJ" label="#{msgs.labelNumeroDocumento}"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.docIndentidad}">
+							<f:validateLength maximum="17" />
+							<f:validator validatorId="nifValidator" />
+							<f:attribute name="tipoDOC" value="#{tipoDocIntJ}" />
+						</p:inputText>
+				</label>
+				<label for="outputRegisterDataForm:razonSocialInt" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelRazonSocial}"></h:outputLabel> *</span> <p:inputText
+						id="razonSocialInt" label="#{msgs.labelRazonSocial}" required="true"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.razonSocial}" >
+							<f:validateLength maximum="80" />
+						</p:inputText>
+				</label>
+			</ui:fragment>
+		</h:panelGrid>
+		<h:panelGrid id="gridR" styleClass="ampliar">
+			<br />
+			<h:outputLabel value="#{msgs.labelRepresentante}"
+				style="font-weight:bold;"></h:outputLabel>
+			<label for="outputRegisterDataForm:tipoR" class="general"> <p:selectOneRadio
+					id="tipoR"
+					value="#{outputRegisterAction.outputRegisterBean.interesado.representante.tipo}">
+					<f:selectItem itemLabel="No tiene representante" itemValue="N" />
+					<f:selectItem itemLabel="Persona Física" itemValue="P" />
+					<f:selectItem itemLabel="Persona Jurídica" itemValue="J" />
+					<p:ajax update="gridR" />
+				</p:selectOneRadio>
+			</label>
+			<ui:fragment
+				rendered="${outputRegisterAction.outputRegisterBean.interesado.representante.tipo=='P'}">
+				<label for="outputRegisterDataForm:tipoDocRepP" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelTipoDocumento}"></h:outputLabel></span> <p:selectOneMenu
+						value="#{outputRegisterAction.outputRegisterBean.interesado.representante.tipodoc}"
+						 binding="#{tipoDocRepP}" id="tipoDocRepP">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItem itemLabel="NIF" itemValue="2" />
+						<f:selectItem itemLabel="Pasaporte" itemValue="3" />
+						<f:selectItem itemLabel="Documento de Identificación Extranjeros"
+							itemValue="4" />
+						<f:selectItem itemLabel="Otros" itemValue="5" />
+					</p:selectOneMenu>
+				</label>
+				<label for="outputRegisterDataForm:tipoDocRepP" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelNumeroDocumento}"></h:outputLabel></span> <p:inputText
+						id="docIndentidadRepP" label="#{msgs.labelNumeroDocumento}"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.representante.docIndentidad}" >
+							<f:validateLength maximum="17" />
+							<f:validator validatorId="nifValidator" />
+							<f:attribute name="tipoDOC" value="#{tipoDocRepP}" />
+						</p:inputText>
+				</label>
+				<label for="outputRegisterDataForm:nombreRep" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelNombre}"></h:outputLabel> *</span> <p:inputText
+						id="nombreRep" label="#{msgs.labelNombre}" required="true"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.representante.nombre}" >
+							<f:validateLength maximum="30" />
+						</p:inputText>
+				</label>
+				<label for="outputRegisterDataForm:papellidoRep" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelPrimerApellido}"></h:outputLabel> *</span> <p:inputText
+						id="papellidoRep" label="#{msgs.labelPrimerApellido}" required="true"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.representante.papellido}" >
+							<f:validateLength maximum="30" />
+						</p:inputText>
+				</label>
+				<label for="outputRegisterDataForm:sapellidoRep" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelSegundoApellido}"></h:outputLabel></span> <p:inputText
+						id="sapellidoRep" label="#{msgs.labelSegundoApellido}"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.representante.sapellido}" >
+							<f:validateLength maximum="30" />
+						</p:inputText>
+				</label>
+			</ui:fragment>
+			<ui:fragment
+				rendered="${outputRegisterAction.outputRegisterBean.interesado.representante.tipo=='J'}">
+				<label for="outputRegisterDataForm:tipoDocRepJ" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelTipoDocumento}"></h:outputLabel></span> <p:selectOneMenu
+						value="#{outputRegisterAction.outputRegisterBean.interesado.representante.tipodoc}"
+						 binding="#{tipoDocRepJ}" id="tipoDocRepJ">
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItem itemLabel="CIF" itemValue="1" />
+					</p:selectOneMenu>
+				</label>
+				<label for="outputRegisterDataForm:docIndentidadRepJ" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelNumeroDocumento}"></h:outputLabel></span> <p:inputText
+						id="docIndentidadRepJ" label="#{msgs.labelNumeroDocumento}"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.representante.docIndentidad}" >
+							<f:validateLength maximum="17" />
+							<f:validator validatorId="nifValidator" />
+							<f:attribute name="tipoDOC" value="#{tipoDocRepJ}" />
+						</p:inputText>
+				</label>
+				<label for="outputRegisterDataForm:razonSocialRep" class="general">
+					<span class="label"><h:outputLabel
+							value="#{msgs.labelRazonSocial}"></h:outputLabel> *</span> <p:inputText
+						id="razonSocialRep" label="#{msgs.labelRazonSocial}" required="true"
+						value="#{outputRegisterAction.outputRegisterBean.interesado.representante.razonSocial}" >
+							<f:validateLength maximum="80" />
+						</p:inputText>
+				</label>
+			</ui:fragment>
+		</h:panelGrid>
+		<p style="font-size:0.75em;margin-top:15px" class="ampliar">
+			<h:outputLabel  value="#{msgs.textSIRInteresados}"></h:outputLabel>
+		</p>
+		<h:panelGroup id="botonesInt">
+			<p style="text-align: center">
+					<p:commandButton styleClass="annadir" id="btn_add"
+						value="#{( empty outputRegisterAction.outputRegisterBean.interesado.id  )? msgs.labelAnadir: msgs.labelBotonModificar}"
+						update="gridI,gridR,messagesInt,:accordion:outputRegisterDataForm:TInteresados"
+						actionListener="#{outputRegisterAction.saveInterestedTypeDefault}"
+						oncomplete="handleIntRequest (xhr, status, args)" >
+						<p:collector
+							value="#{outputRegisterAction.outputRegisterBean.interesado}"
+							addTo="#{outputRegisterAction.outputRegisterBean.interesados}" />
+					</p:commandButton>
+					<p:commandButton styleClass="cerrar" id="btn_hide"
+						value="#{msgs.labelBotonCerrar}" immediate="true"
+						oncomplete="PF('intDialog').hide();" />
+				</p>
+			</h:panelGroup>
+	</ui:composition>
+
+
+</h:body>
+
+</html>

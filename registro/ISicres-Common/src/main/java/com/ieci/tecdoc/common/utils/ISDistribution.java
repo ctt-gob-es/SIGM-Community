@@ -48,13 +48,13 @@ public class ISDistribution {
 			Date currentDate, String userName, Integer userId, String entidad,
 			boolean caseSensitive) throws HibernateException, SQLException,
 			Exception {
-	
+	    	BBDDUtils bbddUtils = new BBDDUtils();
 		int distStateId = DBEntityDAOFactory.getCurrentDBEntityDAO().getNextIdForScrDistRegState(userId, entidad);
 		
 //		String tableName = "SCR_DISTREGSTATE";
 //		Integer size = BBDDUtils.getTableColumnSize(tableName, "USERNAME", entidad);
 		
-		Integer size = new Integer(BBDDUtils.SCR_DISTREGSTATE_USERNAME_FIELD_LENGTH);
+		Integer size = new Integer(bbddUtils.SCR_DISTREGSTATE_USERNAME_FIELD_LENGTH);
 		
 		String aux = userName;
 		if (aux.length() > size.intValue()){

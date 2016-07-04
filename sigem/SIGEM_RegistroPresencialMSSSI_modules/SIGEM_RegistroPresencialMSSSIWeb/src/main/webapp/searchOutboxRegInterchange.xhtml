@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xml:lang="es" lang="es">
+    <h:head>
+    </h:head>
+ 
+    <h:body>
+    	
+    	<ui:composition template="/template/layout.xhtml">
+    	<ui:define name="head">
+			<script type="text/javascript" src="#{webParam.entryParameters['URLRoot']}/js/jquery.ui.accordion.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/interchange.js"></script>
+			<script type="text/javascript" src="#{webParam.entryParameters['URLRoot']}/js/dialog.js"></script>
+		</ui:define>
+			 
+    		<ui:define name="breadcrumb">
+    			<ol><li><h:link value="#{msgs.labelInicio}" outcome="goInicioForm"/></li>
+    			<li><h:outputText  value="#{msgs.labelIntRegistral}" /></li></ol>
+    		</ui:define>
+    		<ui:define name="content">
+				<h2><h:outputText  value="#{msgs.labelIntRegistral}" /></h2>
+				<div class="sombra"></div>
+				
+				<h:form  id="form">
+					<div class="enlaces">	  
+					</div>
+					
+					<!--DIV PARA EL LIBRO DE SALIDA-->	
+					<div id="salida">
+						<div id="accordion">
+							<h3 class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top" role="tab" aria-expanded="true" aria-selected="true" tabindex="0"><h:outputText  value="#{msgs.labelCriteriosBusqueda}" /></h3>
+							<fieldset class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active" role="tabpanel" style="height: 725px;">
+								<h:panelGroup id="panel" layout="block">
+									<label for="form:type" class="general">
+										<span class="label"><h:outputText id="typelabel" value="#{msgs.typelabel}" /></span>
+										<p:selectOneMenu id="type"  value="#{searchOutboxRegInterchangeAction.searchbean.type}">  
+								           <f:selectItem itemLabel="Asientos Enviados a otros Organismos" itemValue="0" />  
+								           <f:selectItem itemLabel="Asientos Recibidos de otros Organismos" itemValue="1" />
+								           <p:ajax update="panel,tableResults" listener="#{searchOutboxRegInterchangeAction.goInBoxRegInterchange}" />  
+								        </p:selectOneMenu>  
+									</label>
+									<label for="form:state" class="general">
+										<span class="label"><h:outputText id="statelabel" value="#{msgs.statelabel}" /></span>
+										<p:selectOneMenu id="outState"  value="#{searchOutboxRegInterchangeAction.searchbean.outState}">  
+								           <f:selectItem itemLabel="#{msgs.IRenviados}" itemValue="1" />  
+								           <f:selectItem itemLabel="#{msgs.IRaceptados}" itemValue="5" />  
+										   <f:selectItem itemLabel="#{msgs.IRdevueltos}" itemValue="4" />  
+										   <f:selectItem itemLabel="#{msgs.IRrectificado}" itemValue="999" />  
+								        </p:selectOneMenu>  
+									</label>
+									<label for="form:state" class="general">
+										<span class="label"><h:outputText id="bookslabel" value="#{msgs.bookslabel}" /></span>
+										<p:selectOneMenu id="book"  value="#{searchOutboxRegInterchangeAction.searchbean.book}">  
+								            <f:selectItems value="#{booksAction.listBook.inList}" var="bookin" itemValue="#{bookin.idocarchhdrId}" itemLabel="#{bookin.idocarchhdrName}" />
+								       		<f:selectItems value="#{booksAction.listBook.outList}" var="bookout" itemValue="#{bookout.idocarchhdrId}" itemLabel="#{bookout.idocarchhdrName}" />
+								        </p:selectOneMenu>  
+									</label>					
+									<div class="botones">
+										<p:commandButton styleClass="boton-buscar"  value="#{msgs.labelBotonBuscar}" update="panel tableResults dialogMessage panel1" process="@form" actionListener="#{searchOutboxRegInterchangeAction.search}" /> 
+									</div>
+								</h:panelGroup>
+							</fieldset>
+							<h3 class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top" role="tab" style="margin-top: 0.8em" aria-expanded="true" aria-selected="true" tabindex="0"><h:outputText value="#{msgs.labelResultadosBusqueda}" /></h3>
+							<fieldset class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active" role="tabpanel" style="height: 725px; padding-top: 16px;padding-bottom: 16px;padding-left: 16px;padding-right: 16px;">
+								<h:panelGroup id="panel1" layout="block">
+								<div class="opciones">
+								
+									<ui:fragment
+												rendered="${J_PERMSUSER.canAccessRegInterchange and searchOutboxRegInterchangeAction.searchbean.outState == 4 }">
+												<ul>
+												<li><p:commandLink id="reenviar"
+														value="#{msgs.labelReenviar}" process="@form"
+														styleClass="cambiardestino" update="dialogMessage"
+														actionListener="#{searchOutboxRegInterchangeAction.isSelect}"
+														oncomplete="decideOpenningReenviar (xhr, status, args)" ></p:commandLink></li>
+														<li><p:commandLink id="rectificar"
+														value="#{msgs.labelRectificar}" process="@form"
+														styleClass="cambiardestino" update="dialogMessage"
+														actionListener="#{searchOutboxRegInterchangeAction.isSelect}"
+														oncomplete="decideOpenningRectificar (xhr, status, args)"></p:commandLink></li>
+									 		</ul>
+									 </ui:fragment>
+								</div>
+								</h:panelGroup>
+								<p></p>
+								<p:dataTable sortMode="multiple"  summary="Tabla de Resultados" var="reg" value="#{searchOutboxRegInterchangeAction.outBoxList}" emptyMessage="No se encuentran registros"
+							          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"    paginator="true" rows="10"  
+							         rowKey="#{reg.idRegistro}"  selection="#{searchOutboxRegInterchangeAction.selectedRegisters}" dblClickSelect="true" 
+							           paginatorPosition="bottom" 
+							           id="tableResults">  
+							          <p:ajax event="rowDblselect" listener="#{searchOutboxRegInterchangeAction.onInputRegister}"  />  
+								  		<f:facet name="header">  
+								        </f:facet>   
+								        <p:column selectionMode="multiple" style="width:2%"   />
+								  		<p:column sortBy="numeroRegistro">
+								  			<f:facet name="header">  
+									            <h:outputText value="#{msgs.fld1labelShort}" />  
+									        </f:facet>
+								    		<h:outputText value="#{reg.numeroRegistro}" />
+								  		</p:column>
+								  		<p:column sortBy="fechaRegistro">
+								  			<f:facet name="header">  
+									            <h:outputText value="#{msgs.fld2labelShort}" />  
+									        </f:facet>  
+								    		<h:outputText value="#{reg.fechaRegistro}">
+								    			 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"  locale="es_ES" timeZone="Europe/Paris"/>
+								    		</h:outputText>
+								  		</p:column>
+								  		<p:column sortBy="codeEntity">
+								  			<f:facet name="header">  
+									            <h:outputText value="#{msgs.labelEntidadDestino}" />  
+									        </f:facet>  
+								    		<h:outputText value="#{reg.codeEntity} #{reg.nameEntity}" />
+								  		</p:column>
+								  		<p:column sortBy="codeTramunit">
+								  			<f:facet name="header">  
+									            <h:outputText value="#{msgs.labelUnidadDestino}" />  
+									        </f:facet>  
+								    		<h:outputText value="#{reg.codeTramunit} #{reg.nameTramunit}" />
+								  		</p:column>
+								  		<p:column sortBy="fechaIntercambioRegistral">
+								  			<f:facet name="header">  
+									            <h:outputText value="#{msgs.fechaIntercambio}" />  
+									        </f:facet>  
+								    		<h:outputText value="#{reg.fechaIntercambioRegistral}">
+								    			 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"  locale="es_ES" timeZone="Europe/Paris"/>
+								    		</h:outputText>
+								  		</p:column>
+								  		<p:column sortBy="idIntercambioRegistral">
+								  			<f:facet name="header">  
+									            <h:outputText value="#{msgs.headercodigoIntercambio}" />  
+									        </f:facet>
+								    		<h:outputText value="#{reg.idIntercambioRegistral}" />
+								  		</p:column>
+								  		<p:column sortBy="comentarios">
+									  			<f:facet name="header">  
+										            <h:outputText value="#{msgs.labelComentario}" />  
+										        </f:facet>  
+									    		<h:outputText value="#{reg.comentarios}"/>
+									  	</p:column>
+						  		<f:facet name="footer">  
+						            #{msgs.labelTotalResultados}: #{ fn:length(searchOutboxRegInterchangeAction.outBoxList)} 
+						        </f:facet>  
+							</p:dataTable> 	
+							</fieldset>
+							<p:dialog id="dialog" widgetVar="dialog" draggable="false"
+							header="Validación" resizable="false" modal="true">
+								<p:messages id="dialogMessage" showDetail="true" />
+							</p:dialog>
+						</div>
+					</div>
+				</h:form>
+				<h:form id="reenviForm">
+				
+				<p:dialog header="#{msgs.labelheaderReenviar}"
+					widgetVar="dlgReenviar" id="dlgReenviar" resizable="false"
+					modal="true">
+					<p:messages id="messagesRee" closable="true" autoUpdate="false"
+						redisplay="false" />
+					<p:panel id="panelDigRe" style="width:550px">
+						<strong><h:outputText id="labelUnidadDestinatariaRI"
+								value="#{msgs.labelUnidadDestinatariaRI}" /></strong>
+						<br />
+						<br />
+						<h:outputText id="labelUnidadTramitadora"
+							value="#{msgs.labelUnidadTramitadora}" />
+						<br />
+						<c:set var="uRegistralPadre"
+							value=" (#{uRegistral.nameOrgsFather})" />
+						<c:set var="unidadReg"
+							value="#{uRegistral.codeTramunit} #{uRegistral.nameTramunit}" />
+						<p:autoComplete
+							value="#{searchOutboxRegInterchangeAction.unidadTramitadoraDestino}"
+							id="unidadTramitadoraDestino"
+							completeMethod="#{validationListDCOAction.completeUnidTramitadora}"
+							minQueryLength="4" var="uRegistral" required="true"
+							itemLabel="#{(empty uRegistral) ? '' : unidadReg}"
+							itemValue="#{uRegistral}"
+							title="#{(empty uRegistral) ? '' : unidadReg}"
+							label="#{msgs.labelUnidadTramitadora}"
+							converter="unidadTramitadoraConverter" forceSelection="true"
+							scrollHeight="200" escape="false"
+							styleClass="destinoRegistralDialog">
+							<p:ajax event="itemSelect"
+								listener="#{searchOutboxRegInterchangeAction.changeEntity}"
+								update="entidadRegistralDestinoDig" />
+
+							<p:column>
+								<h:outputText styleClass="organismo"
+									value="#{uRegistral.codeTramunit} #{uRegistral.nameTramunit}" />
+								<br />
+								<h:outputText styleClass="organismopadre"
+									value="#{uRegistralPadre}" />
+							</p:column>
+						</p:autoComplete>
+						<p:commandButton id="DestinationButton"
+											styleClass="organismobusq" icon="ui-icon-search"
+											title="#{msgs.busquedaOrglabel}" inmediate="true"
+											process="@this"
+											actionListener="#{searchUnitsTramAction.chooseUnits}">
+											<p:ajax event="dialogReturn"
+												listener="#{searchOutboxRegInterchangeAction.updateDestinationDig}"
+												update="unidadTramitadoraDestino,entidadRegistralDestinoDig" />
+										</p:commandButton>
+						<br />
+						<br />
+						<h:outputText id="labelEntidadRegistral"
+							value="#{msgs.labelEntidadRegistral}" />
+						<br />
+						<c:set var="eRegistral"
+							value="#{searchOutboxRegInterchangeAction.unidadTramitadoraDestino.codeEntity} #{searchOutboxRegInterchangeAction.unidadTramitadoraDestino.nameEntity}" />
+						<h:outputText id="entidadRegistralDestinoDig"
+							styleClass="resultado"
+							value="#{(empty searchOutboxRegInterchangeAction.unidadTramitadoraDestino.codeEntity) ? '' : eRegistral}" />
+						<br />
+						<br />
+						<h:outputText value="#{msgs.labelobservForward}" />
+						<br />
+						<p:inputTextarea id="observForward" required="true"
+							label="#{msgs.labelobservForward}" maxlength="80"
+							value="#{searchOutboxRegInterchangeAction.observForward}"
+							autoResize="false" rows="5">
+							<f:validateLength maximum="80" />
+						</p:inputTextarea>
+						<br />
+						<div style="text-align: center;">
+						<p:commandButton styleClass="boton-buscar" id="reenviarIR"
+							value="#{msgs.labelBotonAceptar}" onstart="start()"
+							update="messagesRee,panelDigRe,:form:tableResults"
+							process="dlgReenviar"
+							actionListener="#{searchOutboxRegInterchangeAction.reenviar}"
+							oncomplete="stop();handleReenIRRequest(xhr, status, args)" />
+						<p:commandButton styleClass="boton-buscar"
+							value="#{msgs.labelBotonCancelar}"
+							onclick="PF('dlgReenviar').hide();" />
+						</div>
+						<br />
+					</p:panel>
+				</p:dialog>
+			</h:form>
+			<h:form id="rectificarForm">
+				
+				<p:dialog header="#{msgs.labelRectificar}"
+					widgetVar="dlgRectificar" id="dlgRectificar" resizable="false"
+					modal="true">
+					
+					<p:panel id="panelDigRectificar" style="width:350px">
+			<h:outputText id="textoRectificar"
+							value="#{msgs.textRectificar}"  />
+						<br /><br />
+						<div style="text-align: center;">
+						<p:commandButton styleClass="boton-buscar" id="rectificarIR"
+							value="#{msgs.labelBotonRectificar}" onstart="start()"
+							update="panelDigRectificar,:form:tableResults"
+							process="dlgRectificar"
+							actionListener="#{searchOutboxRegInterchangeAction.rectificar}"
+							oncomplete="handleRecIRRequest status, args)" />
+						<p:commandButton styleClass="boton-buscar"
+							value="#{msgs.labelBotonCancelar}"
+							onclick="PF('dlgRectificar').hide();" />
+						</div>
+						<br />
+					</p:panel>
+				</p:dialog>
+			</h:form>
+    		</ui:define>
+    	</ui:composition>
+    </h:body>
+ 
+</html>

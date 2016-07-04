@@ -4,6 +4,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 
 	<c:set var="CENTRAL" value="0"/>
 	<c:set var="POR_OFICINA" value="2"/>
@@ -57,7 +59,7 @@
 									<td>
 										<input type="hidden" name="consultarCheck_<c:out value="${fila_rowNum-1}"/>"/>
 										<c:if test="${fila.consultar}">
-											<img src="<html:rewrite page="/img/guardar.gif"/>"/>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/guardar.gif"/>
 										</c:if>
 									</td>
 								</tr>
@@ -69,7 +71,7 @@
 									<td>
 										<input type="hidden" name="crearCheck_<c:out value="${fila_rowNum-1}"/>"/>
 										<c:if test="${fila.crear}">
-											<img src="<html:rewrite page="/img/guardar.gif"/>"/>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/guardar.gif"/>
 										</c:if>				
 									</td>
 								</tr>
@@ -81,7 +83,7 @@
 									<td>
 										<input type="hidden" name="modificarCheck_<c:out value="${fila_rowNum-1}"/>"/>
 										<c:if test="${fila.modificar}">
-											<img src="<html:rewrite page="/img/guardar.gif"/>"/>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/guardar.gif"/>
 										</c:if>																						
 									</td>
 								</tr>
@@ -102,7 +104,7 @@
 										<c:set var="funcionllamadaActionComprobarCambios">
 											llamadaActionComprobarCambios("<html:rewrite page='/actualizarNumeracion.do'/>" + "?idLibro=" + "<bean:write name='libroForm' property='id' filter='false'/>" + "&deptId=" +"<bean:write name='fila' property='id' filter='false'/>" + "&tipo=" + "<bean:write name='libroForm' property='tipo' filter='false'/>", true,"<bean:message key='ieci.tecdoc.sgm.rpadmin.cambios.sin.guardar'/>")	
 										</c:set>																				
-										<img src="<html:rewrite page="/img/refresh.gif"/>" onclick="<c:out value="${funcionllamadaActionComprobarCambios}"/>"/>									
+										<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/refresh.gif" onclick="<c:out value="${funcionllamadaActionComprobarCambios}"/>"/>									
 									</td>
 								</tr>	
 							</table>																				

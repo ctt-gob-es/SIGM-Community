@@ -6,7 +6,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/x.tld" prefix="x" %>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%
 	HashMap params   = new HashMap();
 	params.put("logout", "true");
@@ -19,9 +20,9 @@
 		<c:out value="<base href=\"http://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/\">" escapeXml="false"/>	
 		--%>
 		
-		<link rel="stylesheet" type="text/css" href="include/css/header.css"/>
-		<link rel="stylesheet" type="text/css" href="include/cssTemp/estilos.css"/>
-		<script src="include/js/modalWindow.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/header.css"/>
+		<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/cssTemp/estilos.css"/>
+		<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/modalWindow.js" type="text/javascript"></script>
 
 				
 		<script>
@@ -76,13 +77,13 @@
     <div id="contenedora" >
 		<div id="cabecera">
 	   		<div id="logo">
-	   			<img src="/SIGEM_EstructuraOrganizativaWeb/img/logo.gif" alt="sigem" />
+	   			<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/img/logo.gif" alt="sigem" />
 	   		</div>
 	   		<logic:present name="user" >
 				<bean:write name="user" property="userName"/>
 			</logic:present>
 			<div class="salir">
-				<img src="/SIGEM_EstructuraOrganizativaWeb/img/exit.gif" alt="salir" width="26" height="20" class="icono" />
+				<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/img/exit.gif" alt="salir" width="26" height="20" class="icono" />
 				<span class="titular">
 					<a href="javascript:logout();">Salir</a>
 				</span>
@@ -95,7 +96,7 @@
 			</div>
 	    	<div class="usuarioright">
 	      		<div style="padding-top: 8px; padding-right: 24px;">
-			   		<a href="javascript:addCertificate()"><img src="/SIGEM_EstructuraOrganizativaWeb/img/help.gif" style="border: 0px" alt="ayuda" width="16" height="16" /></a>
+			   		<a href="javascript:addCertificate()"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/img/help.gif" style="border: 0px" alt="ayuda" width="16" height="16" /></a>
 			   	</div>
 	    	</div>
 		 </div>

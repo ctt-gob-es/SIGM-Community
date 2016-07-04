@@ -231,7 +231,7 @@ public class CompulsaJustificanteHelper {
 		String dataText;
 		String tag;
 		String value;
-		
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		//Leemos el fichero de texto con la plantilla a usar para los datos de información de compulsa
 		try {
 			dataText = readStream(new FileInputStream(iSicresCompulsaVO.getDatosPath()));
@@ -243,11 +243,13 @@ public class CompulsaJustificanteHelper {
 		//Abrimos la sesion de hibernate
 		Session session;
 		try {
-			session = HibernateUtil.currentSession(iSicresCompulsaVO.getEntidad());
+			session = hibernateUtil.currentSession(iSicresCompulsaVO.getEntidad());
 		} catch (HibernateException e) {
 			String msgError = "Error al obtener la sesión de Hibernate.";
 			logger.error(msgError, e);
 			throw new ISicresCompulsaJustificanteException(msgError);
+		} finally {
+			hibernateUtil.closeSession(iSicresCompulsaVO.getEntidad());
 		}
 		
 		//Componer expresion regular para buscar todos los tags ${*}

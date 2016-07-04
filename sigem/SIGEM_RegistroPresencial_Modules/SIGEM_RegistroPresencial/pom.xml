@@ -2,13 +2,18 @@
 	<parent>
 		<artifactId>sigem_registroPresencial_modules</artifactId>
 		<groupId>es.ieci.tecdoc.sigem</groupId>
-		<version>3.0.1-M2</version>
+		<version>3.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>sigem_registroPresencial</artifactId>
+	<version>3.0.0-msssi2.0.0</version>
 	<packaging>jar</packaging>
 
 	<properties>
+		<sigem.version>3.0</sigem.version>
+		<sigemMSSSI.version>3.0.0-msssi2.0.0</sigemMSSSI.version>
+		<isicres.version>8.0.1</isicres.version>		
+		<isicresMSSSI.version>3.0.0-msssi2.0.0</isicresMSSSI.version>
 		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory>
 	</properties>
 
@@ -17,7 +22,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-Desktop-Jar</artifactId>
-			<version>${isicres.version}</version>
+			<version>${isicresMSSSI.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>crimson</groupId>
@@ -53,11 +58,11 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-Server</artifactId>
-			<version>${isicres.version}</version>
+			<version>${isicresMSSSI.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.sun.media</groupId>
-					<artifactId>jai-codec</artifactId>
+					<artifactId>jai_codec</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>javax.management</groupId>
@@ -72,7 +77,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-Document-Connector-Invesdoc</artifactId>
-			<version>${isicres.version}</version>
+			<version>${isicresMSSSI.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
@@ -89,7 +94,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-Api</artifactId>
-			<version>${isicres.version}</version>
+			<version>${isicresMSSSI.version}</version>
 		</dependency>
 				
 
@@ -97,7 +102,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_registroPresencial-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigemMSSSI.version}</version>
 			<classifier>configurableSigem</classifier>
 			<type>zip</type>
 		</dependency>
@@ -123,7 +128,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_clasesBase</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-net</groupId>
@@ -134,7 +139,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_entidades</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			
 		</dependency>		
 
@@ -245,7 +250,6 @@
 				<property>
 					<name>unix</name>
 				</property>
-				<activeByDefault>true</activeByDefault>
 			</activation>
 			<build>
 				<filters>
@@ -266,6 +270,22 @@
 				<filters>
 					<filter>
 						${project.basedir}/../SIGEM_RegistroPresencialWeb/src/main/filters/system/Windows.properties
+					</filter>
+				</filters>
+			</build>
+		</profile>
+		<profile>
+			<id>msssi</id>
+			<activation>
+				<property>
+					<name>msssi</name>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<filters>
+					<filter>
+						${project.basedir}/../SIGEM_RegistroPresencialWeb/src/main/filters/system/msssi.properties
 					</filter>
 				</filters>
 			</build>

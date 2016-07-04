@@ -56,6 +56,7 @@ public class AttributesSession extends AttributesSessionUtil implements
 
 	private static final Logger log = Logger.getLogger(AttributesSession.class);
 
+	
 	/***************************************************************************
 	 * Public methods
 	 **************************************************************************/
@@ -138,7 +139,7 @@ public class AttributesSession extends AttributesSessionUtil implements
 		boolean result = false;
 		// Transaction tran = null;
 		try {
-			// Session session = HibernateUtil.currentSession(entidad);
+			// Session session = hibernateUtil.currentSession(entidad);
 			// tran = session.beginTransaction();
 
 			ValidationFormat validationFormat = getValidationFormat(sessionID,
@@ -165,20 +166,20 @@ public class AttributesSession extends AttributesSessionUtil implements
 						AttributesException.ERROR_NOT_VALIDATION_FIELD);
 			}
 
-			// HibernateUtil.commitTransaction(tran);
+			// hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (AttributesException sE) {
-			// HibernateUtil.rollbackTransaction(tran);
+			// hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			// HibernateUtil.rollbackTransaction(tran);
+			// hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (BookException sE) {
-			// HibernateUtil.rollbackTransaction(tran);
+			// hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			// HibernateUtil.rollbackTransaction(tran);
+			// hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load the validation value field  bookID ["
 					+ bookID + "] fldid [" + fldid + "] for the session ["
 					+ sessionID + "]", e);
@@ -196,11 +197,11 @@ public class AttributesSession extends AttributesSessionUtil implements
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
 		Validator.validate_NotNull(values,
 				ValidationException.ATTRIBUTE_VALIDATION_FIELD_VALUE);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Map result = new HashMap();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			ValidationFormat validationFormat = getValidationFormat(sessionID,
@@ -216,27 +217,27 @@ public class AttributesSession extends AttributesSessionUtil implements
 						AttributesException.ERROR_NOT_VALIDATION_FIELD);
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (AttributesException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (BookException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load the validation value field  bookID ["
 					+ bookID + "] fldid [" + fldid + "] for the session ["
 					+ sessionID + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -249,11 +250,11 @@ public class AttributesSession extends AttributesSessionUtil implements
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
 		Validator.validate_NotNull(fldids,
 				ValidationException.ATTRIBUTE_VALIDATION_FIELD_VALUE);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Map result = new HashMap(fldids.size());
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			ValidationFormat validationFormat = getValidationFormat(sessionID,
@@ -278,26 +279,26 @@ public class AttributesSession extends AttributesSessionUtil implements
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (AttributesException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (BookException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load the validation value field  bookID ["
 					+ bookID + "] for the session [" + sessionID + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -309,11 +310,11 @@ public class AttributesSession extends AttributesSessionUtil implements
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			ValidationFormat validationFormat = getValidationFormat(sessionID,
@@ -353,29 +354,27 @@ public class AttributesSession extends AttributesSessionUtil implements
 						AttributesException.ERROR_NOT_VALIDATION_FIELD);
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (AttributesException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (BookException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load the validation value field  bookID ["
 					+ bookID + "] fldid [" + fldid + "] for the session ["
 					+ sessionID + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONFIELDS);
 		} finally {
-			if (closeSession) {
-				HibernateUtil.closeSession(entidad);
-			}
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -395,12 +394,12 @@ public class AttributesSession extends AttributesSessionUtil implements
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		String result = null;
 		Transaction tran = null;
 		List privOrgs = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
@@ -458,26 +457,26 @@ public class AttributesSession extends AttributesSessionUtil implements
 			} catch (Exception e) {
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (AttributesException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (BookException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load the validation value field  bookID ["
 					+ bookID + "] for the session [" + sessionID + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -490,9 +489,9 @@ public class AttributesSession extends AttributesSessionUtil implements
 
 		ValidationResultCode result = new ValidationResultCode();
 		Transaction tran = null;
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -566,23 +565,23 @@ public class AttributesSession extends AttributesSessionUtil implements
 			result.setFldid(new Integer(fldid));
 			result.setCode(code);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 			return result;
 		} catch (AttributesException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (BookException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -594,12 +593,12 @@ public class AttributesSession extends AttributesSessionUtil implements
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
 		Validator.validate_NotNull(values,
 				ValidationException.ATTRIBUTE_VALIDATION_FIELD_VALUE);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Map result = new HashMap();
 		Transaction tran = null;
 		List privOrgs = new ArrayList();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -641,20 +640,20 @@ public class AttributesSession extends AttributesSessionUtil implements
 						AxSf.FLD12_FIELD_ID), true, false));
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (AttributesException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (BookException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible to translate the validation fixed value field  bookID ["
 							+ bookID + "] for the session [" + sessionID + "]",
@@ -662,7 +661,7 @@ public class AttributesSession extends AttributesSessionUtil implements
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -675,12 +674,12 @@ public class AttributesSession extends AttributesSessionUtil implements
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
 		Validator.validate_NotNull(values,
 				ValidationException.ATTRIBUTE_VALIDATION_FIELD_VALUE);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Map result = new HashMap();
 		Transaction tran = null;
 		List privOrgs = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -717,23 +716,23 @@ public class AttributesSession extends AttributesSessionUtil implements
 						AxSf.FLD12_FIELD_ID), false, false));
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (AttributesException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (BookException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (ValidationException vE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw vE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible to translate the validation fixed value field  bookID ["
 							+ bookID + "] for the session [" + sessionID + "]",
@@ -741,7 +740,7 @@ public class AttributesSession extends AttributesSessionUtil implements
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 

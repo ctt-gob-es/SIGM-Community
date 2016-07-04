@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=ISO-8859-1" language="java" %>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%
 response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -10,8 +12,8 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 <html>
 <head>
 <ieci:baseInvesDoc/>
-<link rel="stylesheet" type="text/css" href="include/css/adminApp.css"/>
-<script src="include/js/validations.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/adminApp.css"/>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/validations.js" type="text/javascript"></script>
 
 <script language="javascript">
 	var guid = '<c:out value="${param.guid}"/>';

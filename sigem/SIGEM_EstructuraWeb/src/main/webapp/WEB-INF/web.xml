@@ -3,15 +3,15 @@
                          "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
 	<display-name>SIGEM_EstructuraWeb</display-name>
-	<filter>
-  		<filter-name>checkInitFilter</filter-name>
-  		<filter-class>ieci.tecdoc.mvc.filter.CheckInitFilter</filter-class>
- 	</filter>
- 	<filter-mapping>
-  		<filter-name>checkInitFilter</filter-name>
-  		<url-pattern>/acs/login.jsp</url-pattern>
- 	</filter-mapping>
- 	
+	<!-- SERVLET CONFIGURACION SIGM -->
+	<servlet>
+	    <servlet-name>InitServlet</servlet-name>
+	    <description>Servlet que introduce en las variables de sistema las rutas provenientes de los env-entry</description>
+	    <servlet-class>es.msssi.tecdoc.sgm.registropresencial.servlet.InitPathServlet</servlet-class>
+	    <load-on-startup>1</load-on-startup>
+    </servlet>
+
+ 	<!-- SERVLET CONFIGURACION LOG4J SIGM -->
  	<servlet>
 		<servlet-name>log4j-init</servlet-name>
 		<servlet-class>ieci.tecdoc.sgm.core.log.web.Log4jInitServlet</servlet-class>
@@ -23,10 +23,10 @@
 			<param-name>fileName</param-name>
 			<param-value>log4j.xml</param-value>
 		</init-param>
-		<load-on-startup>0</load-on-startup>
+		<load-on-startup>2</load-on-startup>
 	</servlet>
  	
- 	
+ 	<!-- SERVLET STRUTS -->
 	<servlet>
   		<servlet-name>action</servlet-name>
   		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
@@ -34,17 +34,30 @@
    			<param-name>config</param-name>
    			<param-value>/WEB-INF/struts-config.xml</param-value>
   		</init-param>
-  		<load-on-startup>1</load-on-startup>
+  		<load-on-startup>3</load-on-startup>
  	</servlet>
+	 	<servlet-mapping>
+  		<servlet-name>action</servlet-name>
+  		<url-pattern>*.do</url-pattern>
+ 	</servlet-mapping>
+	
+	<!-- SERVLET SIGM -->
  	<servlet>
   		<servlet-name>start</servlet-name>
   		<servlet-class>ieci.tecdoc.mvc.util.servlet.control.CheckStartSystemServlet</servlet-class>
   		<load-on-startup>4</load-on-startup>
  	</servlet>
- 	<servlet-mapping>
-  		<servlet-name>action</servlet-name>
-  		<url-pattern>*.do</url-pattern>
- 	</servlet-mapping>
+
+	<!-- FILTRO SIGM -->
+	<filter>
+  		<filter-name>checkInitFilter</filter-name>
+  		<filter-class>ieci.tecdoc.mvc.filter.CheckInitFilter</filter-class>
+ 	</filter>
+ 	<filter-mapping>
+  		<filter-name>checkInitFilter</filter-name>
+  		<url-pattern>/acs/login.jsp</url-pattern>
+ 	</filter-mapping>
+	
  	<welcome-file-list>
   		<welcome-file>index.jsp</welcome-file>
  	</welcome-file-list>
@@ -84,4 +97,109 @@
   		<taglib-uri>/WEB-INF/ieci</taglib-uri>
   		<taglib-location>/WEB-INF/ieci.tld</taglib-location>
  	</taglib>
+ 	
+	<!-- DATASOURCES -->
+	<resource-ref>
+		<res-ref-name>jdbc/registroDS_000</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<resource-ref>
+		<res-ref-name>jdbc/fwktd-auditDS_000</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<resource-ref>
+		<res-ref-name>jdbc/sigemAdmin</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	
+	<!-- ENV-ENTRY SIGM-->
+	<env-entry>
+		<description>Path del directorio</description>
+		<env-entry-name>PATH_REPO</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>${PATH_REPO}</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>URL webservice</description>
+		<env-entry-name>URL_WS</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>${sigem.url.webservices}</env-entry-value>
+	</env-entry>
+	
+	<!-- ENV-ENTRY ESTATICOS DE SIGM-->
+	<env-entry>
+		<description>URL estaticos</description>
+		<env-entry-name>URLRoot</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>${URLRootRelative}</env-entry-value>
+	</env-entry>
+	<env-entry> 
+		<description>Path del directorio general de logs</description>
+	    <env-entry-name>MSSSIPATH_sigem.path</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value></env-entry-value>  
+	</env-entry>
+	<env-entry> 
+		<description>Path del directorio general de logs</description>
+	    <env-entry-name>MSSSIPATH_sigem.log.path</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>logs</env-entry-value>  
+	</env-entry>
+	<env-entry>
+		<description>Path del directorio general de configuracion</description>
+	    <env-entry-name>MSSSIPATH_sigem.config.location.path</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>config/</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Path del directorio general de configuracion</description>
+	    <env-entry-name>MSSSIPATH_SIGEM_CONFIG_DIR</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>config/</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_AdministracionSesionesBackOfficeWS</description>
+	    <env-entry-name>MSSSIURL_sigem.url.adm_ses_bckoff_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>/SIGEM_AdministracionSesionesBackOfficeWS/services/AdministracionSesionesBackOfficeWebService</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_AdministracionSesionesAdmWS</description>
+	    <env-entry-name>MSSSIURL_sigem.url.adm_ses_adm_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>/SIGEM_AdministracionSesionesAdmWS/services/AdministracionSesionesAdministradorWebService?wsdl</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_AutenticacionUsuariosWS</description>
+	    <env-entry-name>MSSSIURL_sigem.url.autenticacion_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>/SIGEM_AutenticacionUsuariosWS/services/AdministracionUsuariosPortalWebService</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_SessionUsuarioWS</description>
+	    <env-entry-name>MSSSIURL_sigem.url.ses_usuario_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>/SIGEM_SessionUsuarioWS/services/SesionUsuarioWebService</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_RegistroPresencialWS</description>
+	    <env-entry-name>MSSSIURL_sigem.url.registro_presencial_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>/SIGEM_RegistroPresencialWS/services/ServicioRegistroWebService</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de sesion_adm_ws</description>
+	    <env-entry-name>MSSSIURL_sigem.url.sesion_adm_ws</env-entry-name> 
+		<env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>/SIGEM_CertificacionWS/services/CertificacionWebService</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_GestionUsuariosBackOfficeWS</description>
+	    <env-entry-name>MSSSIURL_sigem.url.gest_usu_bckoff_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>/SIGEM_GestionUsuariosBackOfficeWS/services/GestionUsuariosBackOfficeWebService</env-entry-value>  
+	</env-entry>
 </web-app>

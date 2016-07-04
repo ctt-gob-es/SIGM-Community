@@ -1,0 +1,222 @@
+/*
+* Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+* Licencia con arreglo a la EUPL, Versión 1.1 o –en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+* Solo podrá usarse esta obra si se respeta la Licencia. 
+* Puede obtenerse una copia de la Licencia en: 
+* http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+* Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+* Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+*/
+
+/* ESTILOS GENERALES */
+body {margin: 0; padding: 0; background: #fff; color: #000; font-family: Arial, Helvetica, sans-serif}
+img {border: 0}
+.clear {clear: both; margin: 0}
+hr {border:1px dotted #CCC; margin:1em 0.2em 1em 0.2em; width:auto; padding:0}
+.separador {border-bottom:1px dotted #D7D7D7; margin:1em 1.2em 1em 0.2em; width:auto; padding:0}
+.menuOculto {display: none}
+
+#contenedor {width: auto; background: #fff; border: 0; margin: 1.8em 0 0em 0; padding: 0}
+
+#contenedor #cabecera {margin: 0 0 1em 0; padding: 0; display: inline-block;}
+#contenedor #cabecera #escudo {margin: 0; padding: 0; }
+#contenedor #cabecera #titulo h1 {margin: 0.8em 0 0 0em; padding: 0; color: #123152; font-size: 1.5em; font-weight: normal}
+#contenedor #cabecera #titulo h1 a {color:#1C5393; text-decoration: none}
+#contenedor #cabecera #titulo h1 a:hover {color:#1C5393; text-decoration: none}
+
+/* MENU SUPERIOR HORIZONTAL*/
+#contenedor #menuhorizontal {width: auto; background: #fff; margin: 0.2em 0 0.1em 0; padding: 0.4em 0.3em 0.2em 0.3em; border-top: 0;}
+#contenedor #menuhorizontal .izquierdo {width: auto;}
+#contenedor #menuhorizontal .derecho {display: none}
+#contenedor #menuhorizontal ul {padding: 0; margin:0;}
+#contenedor #menuhorizontal ul li {display: inline; padding: 0.6em 0.4em 0.56em 0.4em; margin: 0; border: 0;}
+#contenedor #menuhorizontal ul li a {color: #345372; font-size: 1em; padding: 0em 0.4em 0em 0.4em; font-weight: bold; text-decoration: none; font-family: Arial, Helvetica, sans-serif}
+#contenedor #menuhorizontal h2 {font-size: 0.9em; margin: 0 0 0 0.4em; padding: 0 0 0 0.4em}
+
+/* MIGAS */
+#contenedor #migas {width: 58.2em; margin: 0.7em 0 0 0.9em;}
+#contenedor #migas span {font-weight:normal; margin: 0.5em 0.7em 0 0; padding: 0; float: left; font-size: 0.75em; color: #000}
+#contenedor #migas ol {margin: 0.3em 0 0 0em; padding: 0.3em 0 0 0em; font-size: 0.75em}
+#contenedor #migas ol li {font-size: 100%; display: inline-block; float: left; white-space:nowrap; margin-right: 0.7em; padding-left: 0.7em; list-style:none; background:url("../img/ico-migas.gif") left no-repeat; line-height: 1.6em;}
+#contenedor #migas a {color: #000; text-decoration: none; font-weight: normal;}
+#contenedor #migas a:hover {text-decoration: underline;}
+#contenedor #migas li strong {color: #123152; font-weight: bold; float: none}
+
+/* CONTENEDOR BLOQUE CONTENIDO */
+#contenedor #bloquecontenido {width: auto; clear: both; margin: 2.1em 0.5em 1.1em 1em}
+
+/* MENU */
+#contenedor #bloquecontenido  .menu {display: none}
+
+/* PANTALLA DE LOGIN*/
+#contenedor #login {background: #fff; padding: 1.4em 2em 0.4em 2em; margin: 1.8em auto 4.6em auto;}
+#contenedor #login .usuario {background: #fff; border: 0px; min-height: 12.9em; height: auto !important; height: 12.9em; padding: 1em; margin: 0.6em 0 0em 0;}
+#contenedor #login .usuario h2 {text-align: center; margin: 0.5em 1em 1.5em 1em; font-size: 0.95em}
+#contenedor #login .sombra {margin: 0em 0em 0.7em 2em; height: 1em; background: transparent url("../img/sombra-azul.jpg") top right no-repeat;}
+#contenedor #login form fieldset {min-height: 2em; height: auto !important; height: 2em; background:transparent; border: 0px; margin: 0; padding: 0; position: relative}
+#contenedor #login form input {text-align: left; background: #fff; border: 1px #839FC7 solid; padding-left: 0.2em; width: 18em}
+#contenedor #login form label {display: block; margin: 0.6em 0; font-size: 0.75em}
+#contenedor #login form label span {text-align: right; width: 18em; display: inline-block; margin: 0 0.2em 0 0}
+#contenedor #login form .botones {text-align: center; margin: 0 auto; padding: 0; display: block;}
+#contenedor #login form .botones input[type=submit] {cursor: pointer; width: auto; font-weight: bold; font-size: 0.75em; color: #fff !important; background: #fff; border: 1px solid #256C92; text-align: center; padding: 0.2em 1.2em 0.2em 1.2em; margin: 1em auto 0 auto}
+#contenedor #login ul {margin: 1em 0 0.2em 0em; padding: 1em 0 0.2em 0em; display: block;}
+#contenedor #login ul li {display: inline; background: url("../img/ul-2.gif") left no-repeat; padding-left: 0.8em; margin: 0 0.4em 0 1.2em;}
+#contenedor #login ul li a {font-weight: normal}
+
+/* CONTENIDO */
+#contenedor #bloquecontenido .contenido {width: auto; background: #fff; background: #fff }
+#contenedor #bloquecontenido .contenido h2 {min-height: 1.5em; vertical-align:middle; font-size: 0.75em; font-weight: bold; margin: 0em 0em 0em 0.2em; padding:  0.8em 0.4em 0.4em 1em;  color: #123152; background: #9EBFD0 url("../img/fondo-titular.jpg") bottom left repeat-x; border-bottom: 1px solid #8AC3E7}
+#contenedor #bloquecontenido .contenido .sombra {display: none;}
+
+#contenedor #bloquecontenido .contenido .enlaces {display: none;}
+
+
+/* GENERICOS */
+h2 {font-size: 1.2em; font-weight: normal; margin: 0.5em 0.1em 0.7em 0em; padding-bottom: 0em; color: #123152;}
+h3 {font-size: 1.1em; font-weight: normal; margin: 0.3em 0.5em 0.6em 0.3em; color: #123152}
+h4 {font-size: 0.9em; font-weight: bold; margin: 0.6em 0.5em 0.6em 0.65em; color: #123152}
+h5 {font-size: 0.85em; font-weight: bold; margin: 1em 0.5em 0.6em 0.65em; color: #000}
+h6 {font-size: 0.75em; font-weight: bold; margin: 1em 0.5em 0.6em 0.85em; color: #000}
+p {font-size: 0.75em; font-weight: normal; margin: 1em 0.5em 1em 1.5em; text-align:justify; line-height: 1.4em}
+
+ul {margin: 0.2em 0.4em 0.2em 1.7em; padding: 0.2em 0 0.2em 1.7em;}
+ul li {list-style-image: url("../img/ul.gif"); text-align: justify; font-size: 0.75em; margin: 0.5em 0}
+
+ul ul {margin: 0 0 0.2em 1em; padding: 0 0 0.2em 1em}
+ul ul li {list-style-image: url("../img/ul-2.gif"); text-align: justify; font-size: 100%; margin: 0.4em 0}
+
+ul ul ul {margin: 0 0 0.2em 1em; padding: 0 0 0.2em 1em}
+ul ul ul li {list-style-image: url("../img/ul-3.gif"); text-align: justify; font-size: 100%; margin: 0.4em 0}
+
+a {color: #123152; text-decoration: none; font-weight: bold}
+a:hover {color: #123152; text-decoration: underline;}
+
+/* FORMULARIOS */
+fieldset {background:#E8EFF3; border: 0; margin: 0.5em 0; padding: 0.2em 0.2em 0.6em 0.2em; }
+*+html fieldset {background:#E8EFF3; border: 0px solid #98B0CC; margin: 0.5em 0; padding: 0.2em 0.2em 0.6em 1.2em; }
+fieldset legend {color: #123152; font-size: 0.75em; font-weight: bold; padding: 1em 0 1em 0em; background: none; background: transparent }
+fieldset label.general {margin: 0.3em 0.2em 0 1.8em; float: left; clear: left}
+fieldset label.general span.label {clear: left; display: inline-block; color: #000; width: 10em; text-align: left; font-size: 0.75em; font-family: Arial, helvetica, sans-serif; font-weight: normal; padding: 0.2em 0.2em 0 0.3em;}
+fieldset label.general input {text-align: left; font-size: 0.75em; background-color: #fff; border: 1px #839FC7 solid; padding-left: 0.2em; margin: 0 0 0 0.4em; font-family: Arial, helvetica, sans-serif;}
+
+fieldset label.float {margin: 0.3em 0.2em 0 0.4em; float: left}
+fieldset label.float input {text-align: left; font-size: 0.75em; background-color: #fff; border: 1px #839FC7 solid; padding-left: 0.2em; margin: 0.1em 0 0 0.4em; font-family: Arial, helvetica, sans-serif; float:left;}
+fieldset label.float input[type="image"] {float:left; cursor: pointer; border: 0; background: transparent; padding: 0em 0.2em 0em 0.2em; margin: 0em 0 0 0.2em}
+fieldset label.float span {display: none}
+
+*+html fieldset {width: auto}
+*+html fieldset label.general {float: left; width: 19em}
+*+html fieldset label.general span {float: left;}
+*+html fieldset label.float {float: left; width: 16em}
+
+.botones {clear: both; text-align: center; padding-top: 0.9em; margin: 0.9em 4em 0.8em 0em;}
+.botones input[type="submit"] {cursor: pointer; width: auto; font-weight: normal; font-size: 0.7em; font-family: Arial, helvetica, sans-serif; color: #fff; background: #0F445F url("../img/boton.jpg") top repeat-x; border: 1px solid #256C92; text-align: center; padding: 0.2em 1em 0.3em 1.8em; margin: 0.25em 0 0 0.2em}
+.botones a {cursor: pointer; width: auto; font-weight: bold; font-size: 0.7em; font-family: Arial, helvetica, sans-serif; color: #fff; background: #0F445F url("../img/boton.jpg") top repeat-x; border: 1px solid #256C92; text-align: center; padding: 0.2em 1.2em 0.2em 1.2em; margin: 0.25em 0 0 0.2em}
+.botones a:hover {color: #fff; text-decoration: none}
+.botones  input.boton-buscar {background: transparent url("../img/boton-buscar.jpg") top left no-repeat;}
+.botones  input.boton-limpiar {background: transparent url("../img/boton-limpiar.jpg") top left no-repeat;}
+.botones  input.boton-buscarultimo {background: transparent url("../img/boton-buscarultimo.jpg") top left no-repeat;}
+.botones  input.boton-ordenar {background: transparent url("../img/boton-ordenar.jpg") top left no-repeat;}
+.botones  input.boton-avanzada {background: transparent url("../img/boton-avanzada.jpg") top left no-repeat;}
+
+/* PESTAÑAS */
+.opciones{text-align: right; margin: 0.5em 0.4em -0.7em 0; }
+*+html .opciones{text-align: right; margin: 1.5em 0 -0.6em 0;}
+
+.opciones ul li {display: inline; margin: 0 0.1em; padding: 0.4em 0.3em 0.5em 0.3em; background: #D1DEE7; border-top: 1px solid #ADC5D3; border-left: 1px solid #ADC5D3; border-right: 1px solid #ADC5D3; font-size: 0.7em}
+.opciones ul li a {padding: 0.2em 0.5em 0.1em 1.6em;}
+.opciones ul li a.excel {background: transparent url("../img/ico-excel.gif") left no-repeat;}
+.opciones ul li a.editar {background: transparent url("../img/ico-editar.gif") left no-repeat;}
+.opciones ul li a.copiar {background: transparent url("../img/ico-copiar.gif") left no-repeat;}
+.opciones ul li a.imprimir {background: transparent url("../img/ico-imprimir.gif") left no-repeat; padding-left: 2em}
+.opciones ul li a.distribuir {background: transparent url("../img/ico-distribuir.gif") left no-repeat; padding-left: 2.6em}
+.opciones ul li a.abrir {background: transparent url("../img/ico-abrir.gif") left no-repeat; padding-left: 2em}
+
+.opciones input{cursor: pointer; display: inline; margin: 0 0.1em; padding: 0.4em 0.4em 0.5em 2em; background: #D1DEE7; border-top: 1px solid #ADC5D3; border-left: 1px solid #ADC5D3; border-right: 1px solid #ADC5D3; border-bottom: 0; font-size: 0.7em}
+.opciones input.excel {background: #D1DEE7 url("../img/ico-excel.gif") 0.3em 0.6em no-repeat;}
+.opciones input.editar {background: #D1DEE7 url("../img/ico-editar.gif") 0.3em 0.3em no-repeat;}
+.opciones input.copiar {background: #D1DEE7 url("../img/ico-copiar.gif") 0.3em 0.4em no-repeat;}
+.opciones input.imprimir {background: #D1DEE7 url("../img/ico-imprimir.gif") 0.3em 0.4em no-repeat;}
+.opciones input.distribuir {background: #D1DEE7 url("../img/ico-distribuir.gif") 0.1em 0.4em no-repeat;}
+.opciones input.abrir {background: #D1DEE7 url("../img/ico-abrir.gif") 0.3em 0.5em no-repeat;}
+
+/* REGISTROS */
+.registros {float: left; margin: 0 0 0 0.3em}
+.registros fieldset {border: 0; margin: 0; padding: 0}
+.registros form {border: 0; margin: 0; padding: 0}
+.registros label {font-size: 0.75em; margin: 0; padding: 0}
+.registros input[type="text"] {font-size: 100%}
+.registros input[type="submit"] {cursor: pointer; width: auto; font-weight: bold; font-family: Arial, helvetica, sans-serif; color: #000; background: transparent; border: 0px; text-align: center; padding: 0.1em 0.2em 0em 0.2em; margin: 0.25em 0 0 0.2em; }
+.registros .numero-registros {border-left: 1px solid #123152; font-size: 0.75em; border-right: 1px solid #123152; display: inline; padding: 0.2em 0.6em}
+.registros .navegacion-registros {display: inline; margin: 0em 0.6em 0em 0.6em;}
+.registros .navegacion-registros input {margin: 0em 0.3em 0em 0.3em;}
+.registros .navegacion-registros label span {display: none}
+
+.seleccion {float: right; margin: 0 0.5em 0 0}
+.seleccion fieldset {border: 0; margin: 0; padding: 0}
+.seleccion form {border: 0; margin: 0; padding: 0}
+.seleccion label {font-size: 0.75em; margin: 0; padding: 0}
+
+.mensaje {margin: 1em 0em 0.8em 0em; padding: 0.8em 0.8em 0.4em 0.8em; background: #F7F7F7; border-top: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0}
+.mensaje p {color:#9D0000; font-weight: bold; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif;}
+.mensaje ul {margin: 0.6em 0 0.6em 1em; padding: 0 0 0 1em}
+.mensaje ul li {list-style-image: url("../img/ul.gif"); font-family: Arial, Helvetica, sans-serif; margin-top: 0.6em; font-size: 0.75em}
+
+.volver {display: none}
+
+/* TABLAS */
+div.ui-datatable-tablewrapper {width: auto; margin: 0; padding: 0; overflow: hidden;}
+div.ui-datatable-tablewrapper table {margin: 0; padding: 0}
+#contenedor #bloquecontenido .contenidogrande div.ui-datatable-tablewrapper {width: 100%; overflow: hidden; padding-bottom: 0.6em}
+.tablascroll {width: 43em; overflow: auto}
+table td {font-size: 90%; color: #000}
+
+#pie p {font-size: 0.75em; text-align: left}
+
+
+/* AÑADIDO PARA EL LIBRO DE SALIDA */
+#salida #accordion h3.ui-corner-all {}
+#salida #accordion h3.ui-corner-top {background: #FEEFBC url("../img/libro-salida-bg.gif") right repeat-y; border-bottom: 0px solid #FFCC80; margin-bottom: 0; color: #7C0F0C !important}
+#salida #accordion fieldset {background: #F3F3E9; margin: 0;}
+#salida #accordion .opciones ul li {background: #FEEFBC; border-top: 1px solid #FFCC80 !important; border-right: 1px solid #FFCC80 !important; border-left: 1px solid #FFCC80 !important; border-bottom: 0px;}
+#salida #accordion .ui-state-highlight, #salida #accordion .ui-widget-content #salida #accordion .ui-state-highlight, #salida #accordion .ui-widget-header #salida #accordion .ui-state-highlight{border-bottom:0px solid #666666; border-top:1px solid #666666;background:#FEEFBC;}
+#salida #accordion .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {background:#fff}
+#salida #accordion .ui-datepicker-trigger.ui-state-focus, .ui-widget-content .ui-datepicker-trigger.ui-state-focus {cursor: pointer; width:2em; height: 1.9em; background: transparent url("../img/calendario.gif") 0.2em 0.3em no-repeat; border: 0; margin: 0 0 0 0.3em; padding: 0; vertical-align: top}
+#salida #accordion .ui-widget-content a {color: #7C0F0C}
+
+/*BOTON OCULTAR MENÚ*/
+#buttonshow {display: none; margin: 0.5em 0.6em 0 0.6em; position: absolute; left: 1em; margin-top: 3.3em;}
+
+/*Importado de Primefaces*/
+
+#accordion h3 {font-size: 0.8em; padding: 0.4em 1.6em}
+#accordion h3 .ui-accordion-header-icon {background: none}
+.ui-datepicker-trigger {cursor: pointer; width:2em; height: 1.9em; background: transparent url("../img/calendario.gif") 0.2em 0.3em no-repeat; border: 0; margin: 0 0 0 0.3em; padding: 0; vertical-align: top}
+.ui-datepicker-hover {cursor: pointer; width:2em; height: 1.9em; background: transparent url("../img/calendario.gif") 0.2em 0.3em no-repeat; border: 0; margin: 0 0 0 0.3em; padding: 0; vertical-align: top}
+
+.ui-datepicker-trigger.ui-state-focus, .ui-widget-content .ui-datepicker-trigger.ui-state-focus, .ui-widget-header .ui-datepicker-trigger.ui-state-focus {cursor: pointer; width:2em; height: 1.9em; background: transparent url("../img/calendario.gif") 0.2em 0.3em no-repeat; border: 0; margin: 0 0 0 0.3em; padding: 0; vertical-align: top}
+
+.ui-datepicker-trigger.ui-state-active, .ui-widget-content .ui-datepicker-trigger.ui-state-active, .ui-widget-header .ui-datepicker-trigger.ui-state-active {cursor: pointer; width:2em; height: 1.9em; background: transparent url("../img/calendario.gif") 0.2em 0.3em no-repeat !important; border: 0; margin: 0 0 0 0.3em; padding: 0; vertical-align: top}
+
+*+html tr.ui-state-hover td {font-weight: normal; font-size: 0.9em}
+
+/* Importado de themes*/
+.hasDatepicker {width: 10em !important}
+.ui-inputfield {width: 28em;}
+
+ 
+label.general button.ui-state-default, label.general button.ui-widget-content label.general button.ui-state-default, label.general button.ui-widget-header label.general button.ui-state-default {border:0; cursor: pointer; width:2em; height: 1.9em; background: transparent url("../img/calendario.gif") 0.2em 0.3em no-repeat; border: 0; margin: 0 0 0 0.3em; padding: 0; vertical-align: top}
+ 
+label.general .ui-selectonemenu select {margin-left: 1em; display: block}
+label.general div.ui-selectonemenu {width: 25em !important}
+*+html label.general div.ui-selectonemenu { display: inline; margin-left: 1em}
+label.general span.label div.ui-selectonemenu {float: left}
+
+/* Pantalla de intercambio registral*/
+#intercambio {margin: 1.4em 0em 0 0em}
+#intercambio h3 {background: #ccc; padding: 0.6em 0em 0.6em 2.2em; margin: 0em 0.6em 0em 0.5em; font-size: 0.8em; background:#E2EBF0 url("../img/ul.gif") 0.8em 0.8em no-repeat; font-weight: bold}
+#intercambio fieldset {min-height: 10em; height: auto !important; height: 20em; background:#F3F3E9; border-top: 1px solid #CACACA; border-bottom: 2px solid #CACACA; border-left: 0; border-right: 0; margin: 0em 0.5em; padding: 1em 0.2em 0.6em 0.2em; position: relative}
+#intercambio span.resultado {width: auto; min-height: 1.8em; display: inline-block; color: #123152; text-align: left; font-size: 0.75em; font-family: Arial, helvetica, sans-serif; font-weight: bold; padding: 0.5em 0.8em 0em 0.6em !important; margin-left: 0.4em; vertical-align: top; background: #BFD8E3; border-radius: 6px;}
+#intercambio .ui-inputfield {width: 41em; font-size: 0.75em}
+#intercambio label.general span.label {min-height: 1.8em; display: inline-block; color: #000; width: 12.5em !important; text-align: right; font-size: 0.75em; font-family: Arial, helvetica, sans-serif; font-weight: normal; padding: 0.4em 0.2em 0 0.3em; vertical-align: top}
+/* Fin pantalla de intercambio registral*/

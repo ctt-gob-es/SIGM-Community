@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+    default-lazy-init="false">
+    	<import resource="classpath*:beans/dir3-api-castor-applicationContext.xml" />
+	<import resource="classpath*:beans/dir3-core-applicationContext.xml" />
+	<import resource="classpath*:beans/dir3-api-applicationContext.xml" />
+	<import resource="classpath*:beans/dir3-dco-wsclient-applicationContext.xml" />
+	<!-- Beans Declaration -->
+	<bean id="documentDAOImpl" name="documentDAO"
+		class="es.msssi.sgm.registropresencial.daos.DocumentDAO" lazy-init="true">
+		<property name="sqlMapClient" ref="sqlMapConfigMSSSI" />
+	</bean>
+	<bean id="reportDAOImpl" name="reportDAO"
+		class="es.msssi.sgm.registropresencial.daos.ReportDAO" lazy-init="true">
+		<property name="sqlMapClient" ref="sqlMapConfigMSSSI" />
+	</bean>
+	<bean id="scrCCAADAOImpl" name="scrCCAADAO"
+		class="es.msssi.sgm.registropresencial.daos.ScrCCAADAO" lazy-init="true">
+		<property name="sqlMapClient" ref="sqlMapConfigMSSSI" />
+	</bean>
+	<bean id="unidadTramitadoraImpl" name="unidadTramitadoraDAO"
+		class="es.msssi.sgm.registropresencial.daos.UnidadTramitadoraDAO" lazy-init="true">
+		<property name="sqlMapClient" ref="sqlMapConfigMSSSI" />
+	</bean>
+		<bean id="moveRegisterDAOImpl" name="moveRegisterDAO"
+		class="es.msssi.sgm.registropresencial.daos.MoveRegisterDAO" lazy-init="true">
+		<property name="sqlMapClient" ref="sqlMapConfigMSSSI" />
+	</bean>
+	<bean id="scrDirOficDAOImpl" name="scrDirOficDAO"
+		class="es.msssi.sgm.registropresencial.daos.ScrDiroficDAO" lazy-init="true">
+		<property name="sqlMapClient" ref="sqlMapConfigMSSSI" />
+	</bean>
+	<bean id="unlockRegisterDAOImpl" name="unlockRegisterDAO"
+		class="es.msssi.sgm.registropresencial.daos.UnlockRegisterDAO" lazy-init="true">
+		<property name="sqlMapClient" ref="sqlMapConfigMSSSI" />
+	</bean>
+	<bean id="unitsImpl" name="unitsDAO"
+		class="es.msssi.sgm.registropresencial.daos.UnitsDAO" lazy-init="true">
+		<property name="sqlMapClient" ref="sqlMapConfigMSSSI" />
+	</bean>
+	<bean id="userImpl" name="userDAO"
+		class="es.msssi.sgm.registropresencial.daos.UserDAO" lazy-init="true">
+		<property name="sqlMapClient" ref="sqlMapConfigMSSSI" />
+	</bean>
+	<bean id="iuserdepthdrDAOImpl" name="iuserdepthdrDAO"
+		class="es.msssi.sgm.registropresencial.daos.IuserdepthdrDAO" lazy-init="true">
+		<property name="sqlMapClient" ref="sqlMapConfigMSSSI" />
+	</bean>
+	<bean id="sqlMapConfigMSSSIImpl" name="sqlMapConfigMSSSI"
+		class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation"
+			value="classpath:ibatis/conf/ibatis-sql-map-config.xml" />
+		<property name="dataSource" ref="dataSourceMSSSI" />
+	</bean>
+	<bean id="dataSourceMSSSIImpl" name="dataSourceMSSSI"
+		class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="jdbc/registroDS_000" />
+	</bean>
+	
+	<bean id="queryCompactSearchOrg" name="queryCompactSearchOrg"
+		class="es.msssi.sgm.registropresencial.beans.QueryCompactSearchOrg">
+		<property name="where" value="((UO_TYPE IN ('GB','AB','DP','DL','SE','SG','ST','SB','SS','PR','DE','DG','DGE','IN','UP') 
+			AND TYPE IN (2,3)) OR TYPE = 1 OR TYPE = 7 OR
+			(UO_TYPE = 'AD' AND ENTITY_TYPE IN ('DP','MN'))
+			OR 
+			(UO_TYPE ='DV' AND ENTITY_TYPE ='MN'))" />
+
+		<property name="orderBy" value ="scrTypeadm.id"/>
+	</bean>
+
+	
+	<bean id="queryCompactSearchUnitTram" name="queryCompactSearchUnitTram"
+		class="es.msssi.sgm.registropresencial.beans.QueryCompactSearchOrg">
+		<property name="where" value="((orgs.UO_TYPE IN ('GB','AB','DP','DL','SE','SG','ST','SB','SS','PR','DE','DG','DGE','IN','UP','UI','CJ') 
+			AND orgs.TYPE IN (2,3))  OR 
+			(orgs.UO_TYPE = 'AD' AND orgs.ENTITY_TYPE IN ('DP','MN'))
+			OR 
+			(orgs.UO_TYPE ='DV' AND orgs.ENTITY_TYPE ='MN') OR  TYPE = 1) " />
+		<property name="orderBy" value ="tramunit.name_tramunit"/>
+	</bean>
+	
+		<!-- Job actualizar estado de los asientos -->
+	<bean id="registroDS_dataSourceImpl" name="registroDS_dataSource"
+		class="es.ieci.tecdoc.fwktd.core.spring.configuration.jdbc.datasource.MultiEntityJndiDatasource">
+		<property name="jndiBaseName">
+			<value>jdbc/registroDS_000</value>
+		</property>
+	</bean>	
+	<bean id="schedulerFactory"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="applicationContextSchedulerContextKey" value="applicationContext"></property>
+		<property name="overwriteExistingJobs" value="true" />
+		<property name="dataSource" ref="registroDS_dataSource" />
+		<property name="autoStartup" value="true" />
+		<property name="jobDetails">
+			<list>
+				<ref bean="updateStatesSIRJobSigem" />
+				<ref bean="unlockRegisterJobSigem" />
+			</list>
+		</property>
+		<property name="triggers">
+			<list>
+				<ref bean="updateStatesSIRJobSigemTrigger" />
+				<ref bean="unlockRegisterJobSigemTrigger" />
+			</list>
+		</property>
+		<property name="quartzProperties">
+			<props>
+				<prop key="org.quartz.scheduler.instanceName">UpdateSirBatchScheduler</prop>
+				<prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+				<prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+				<prop key="org.quartz.threadPool.threadCount">25</prop>
+				<prop key="org.quartz.threadPool.threadPriority">5</prop>
+				<prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
+				<prop key="org.quartz.jobStore.class">org.quartz.impl.jdbcjobstore.JobStoreTX</prop>
+				<prop key="org.quartz.jobStore.driverDelegateClass">org.quartz.impl.jdbcjobstore.WebLogicDelegate</prop>
+				<prop key="org.quartz.jobStore.tablePrefix">qrtz_</prop>
+				<prop key="org.quartz.jobStore.isClustered">S</prop>
+
+			</props>
+		</property>
+	</bean>
+	<bean id="updateStatesSIRJobSigemImpl" name="updateStatesSIRJobSigem"
+	      class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="es.msssi.sgm.registropresencial.jobs.UpdateStatesSIRJobSigem" />
+		<property name="jobDataAsMap">
+			<map>
+			</map>
+		</property>
+	</bean>
+	<bean id="unlockRegisterJobSigemImpl" name="unlockRegisterJobSigem"
+	      class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="es.msssi.sgm.registropresencial.jobs.UnlockRegisterJobSigem" />
+		<property name="jobDataAsMap">
+			<map>
+			</map>
+		</property>
+	</bean>
+	<bean id="updateStatesSIRJobSigemTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"
+		lazy-init="true">
+		<property name="jobDetail" ref="updateStatesSIRJobSigem" />
+		<property name="cronExpression" value="0 0/3 * * * ?" />
+	</bean>
+	<bean id="unlockRegisterJobSigemTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"
+		lazy-init="true">
+		<property name="jobDetail" ref="unlockRegisterJobSigem" />
+		<property name="cronExpression" value="0 0/5 * * * ?" />
+	</bean>
+</beans>

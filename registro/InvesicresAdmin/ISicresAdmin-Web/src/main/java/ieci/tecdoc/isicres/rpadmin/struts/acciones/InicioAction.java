@@ -30,8 +30,8 @@ public class InicioAction extends RPAdminWebAction {
 		entidad.setIdentificador(MultiEntityContextHolder.getEntity());
 
 		String sEntidad = entidad.getIdentificador();
-
-		String caseSensitive = DBSessionManager.getDBCaseSensitive(sEntidad);
+		DBSessionManager dBSessionManager = new DBSessionManager();
+		String caseSensitive = dBSessionManager.getDBCaseSensitive(sEntidad);
 
 		SesionHelper.guardarCaseSensitive(request, caseSensitive);
 

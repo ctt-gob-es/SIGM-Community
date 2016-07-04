@@ -2,6 +2,7 @@ package es.ieci.tecdoc.fwktd.sir.api.manager.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +51,7 @@ import es.ieci.tecdoc.fwktd.sir.core.vo.TrazabilidadVO;
  * @version $Revision$
  *
  */
-public class RecepcionManagerImpl implements RecepcionManager {
+public class RecepcionManagerImpl implements RecepcionManager, Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(RecepcionManagerImpl.class);
 
@@ -262,7 +263,9 @@ public class RecepcionManagerImpl implements RecepcionManager {
 		AsientoRegistralVO asiento = null;
 
 		try {
-
+			logger.info("----------------------------------------");
+			logger.info("----RECIBIENDO FICHERO INTERCAMBIO ----");
+			logger.info("------------------------------------------");
 	        Assert.hasText(xmlFicheroIntercambio, "'xmlFicheroIntercambio' must not be empty");
 
 			// Cargar la información del asiento registral
@@ -279,8 +282,10 @@ public class RecepcionManagerImpl implements RecepcionManager {
 					throw new ValidacionException(ErroresEnum.ERROR_0045);
 				}
 			}
-
-			logger.info("Fichero de intercambio parseado [{}]", ficheroIntercambio.getIdentificadorIntercambio());
+			logger.info("----------------------------------------");
+			logger.info("----RECIBIENDO FICHERO INTERCAMBIO "+ficheroIntercambio.getIdentificadorIntercambio()+"----");
+			logger.info("------------------------------------------");
+			//logger.info("Fichero de intercambio parseado [{}]", ficheroIntercambio.getIdentificadorIntercambio());
 			logger.debug("Información del fichero de intercambio parseado: {}", ficheroIntercambio);
 
 			asiento = recibirFicheroIntercambio(ficheroIntercambio, xmlFicheroIntercambio);
@@ -346,7 +351,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
     	Unmarshaller unmarshaller= new Unmarshaller(es.ieci.tecdoc.fwktd.sir.api.schema.Fichero_Intercambio_SICRES_3.class);
     	//desactivamos la validacion
     	unmarshaller.setValidation(false);
-    	    	
+	    	
     	try {
 			fichero_Intercambio_SICRES_3= (es.ieci.tecdoc.fwktd.sir.api.schema.Fichero_Intercambio_SICRES_3) unmarshaller.unmarshal(new StringReader(xml));
 		} catch (MarshalException e) {
@@ -372,8 +377,8 @@ public class RecepcionManagerImpl implements RecepcionManager {
         try {
         	getSicresXMLManager().validarFicheroIntercambio(ficheroIntercambio);
 		}catch (IllegalArgumentException e) {
-			logger.error("Se produjo un error de validacion del xml recibido:"+e.getMessage());
-        	throw new ValidacionException(ErroresEnum.ERROR_0037);
+		    logger.error("Se produjo un error de validacion del xml recibido:"+e.getMessage());
+		    throw new ValidacionException(ErroresEnum.ERROR_0037,e, e.getMessage());
 		}
 
         // Audita el fichero de datos de intercambio
@@ -391,7 +396,9 @@ public class RecepcionManagerImpl implements RecepcionManager {
             			|| EstadoAsientoRegistralEnum.ENVIADO_Y_ERROR.equals(asientoExistente.getEstado())
             			|| EstadoAsientoRegistralEnum.REENVIADO.equals(asientoExistente.getEstado())
             			|| EstadoAsientoRegistralEnum.REENVIADO_Y_ACK.equals(asientoExistente.getEstado())
-            			|| EstadoAsientoRegistralEnum.REENVIADO_Y_ERROR.equals(asientoExistente.getEstado())) {
+            			|| EstadoAsientoRegistralEnum.REENVIADO_Y_ERROR.equals(asientoExistente.getEstado())
+            			|| EstadoAsientoRegistralEnum.RECIBIDO.equals(asientoExistente.getEstado())
+            			|| EstadoAsientoRegistralEnum.RECHAZADO.equals(asientoExistente.getEstado())) {
 
 	                Date fechaActual = getFechaManager().getFechaActual();
 
@@ -408,7 +415,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
             	} else if (EstadoAsientoRegistralEnum.DEVUELTO.equals(asientoExistente.getEstado())) {
             		
                 	logger.error("El asiento ya está en estado DEVUELTO: {}", ficheroIntercambio.getIdentificadorIntercambio());
-                	insertarTrazabilidad(ficheroIntercambio, EstadoTrazabilidadEnum.ERROR, ErroresEnum.ERROR_0205);
+                	//insertarTrazabilidad(ficheroIntercambio, EstadoTrazabilidadEnum.ERROR, ErroresEnum.ERROR_0205);
                 	throw new ValidacionException(ErroresEnum.ERROR_0205);
                 	
             	} else {
@@ -430,7 +437,9 @@ public class RecepcionManagerImpl implements RecepcionManager {
             	if (EstadoAsientoRegistralEnum.RECHAZADO.equals(asientoExistente.getEstado())
             			|| EstadoAsientoRegistralEnum.RECHAZADO_Y_ACK.equals(asientoExistente.getEstado())
             			|| EstadoAsientoRegistralEnum.RECHAZADO_Y_ERROR.equals(asientoExistente.getEstado())
-            			//|| EstadoAsientoRegistralEnum.REENVIADO.equals(asientoExistente.getEstado())
+            			|| EstadoAsientoRegistralEnum.ENVIADO.equals(asientoExistente.getEstado())
+            			|| EstadoAsientoRegistralEnum.ENVIADO_Y_ACK.equals(asientoExistente.getEstado())
+            			|| EstadoAsientoRegistralEnum.ENVIADO_Y_ERROR.equals(asientoExistente.getEstado())
             			|| EstadoAsientoRegistralEnum.REENVIADO_Y_ACK.equals(asientoExistente.getEstado())
             			//|| EstadoAsientoRegistralEnum.REENVIADO_Y_ERROR.equals(asientoExistente.getEstado())
             			) {
@@ -438,12 +447,21 @@ public class RecepcionManagerImpl implements RecepcionManager {
 					// El asiento ya existe en local pero estaba rechazado
 					// => Eliminarlo y crear uno nuevo con la información recibida
             		getAsientoRegistralManager().deleteAsientoRegistral(asientoExistente.getId());
-
-            	} else if (EstadoAsientoRegistralEnum.RECIBIDO.equals(asientoExistente.getEstado())||EstadoAsientoRegistralEnum.VALIDADO.equals(asientoExistente.getEstado())) {
+            		
+            		//SI ES UN ENVIO Y EL ASIENTO EXISTE Y ESTA EN ESTADO RECIBIDO
+            	} else if (TipoAnotacionEnum.ENVIO.equals(ficheroIntercambio.getTipoAnotacion())
+            		&& (EstadoAsientoRegistralEnum.RECIBIDO.equals(asientoExistente.getEstado())
+            			|| EstadoAsientoRegistralEnum.VALIDADO.equals(asientoExistente.getEstado()))) {
             		
                 	logger.error("El asiento ya está en estado RECIBIDO: {}", ficheroIntercambio.getIdentificadorIntercambio());
-                	insertarTrazabilidad(ficheroIntercambio, EstadoTrazabilidadEnum.ERROR, ErroresEnum.ERROR_0205);
+                	//insertarTrazabilidad(ficheroIntercambio, EstadoTrazabilidadEnum.ERROR, ErroresEnum.ERROR_0205);
                 	throw new ValidacionException(ErroresEnum.ERROR_0205);
+                	//SI ES UN REENVIO Y EL ASIENTO EXISTE Y ESTA EN ESTADO RECIBIDO
+            	}  else if (TipoAnotacionEnum.REENVIO.equals(ficheroIntercambio.getTipoAnotacion())
+            		&& (EstadoAsientoRegistralEnum.RECIBIDO.equals(asientoExistente.getEstado())
+            			|| EstadoAsientoRegistralEnum.VALIDADO.equals(asientoExistente.getEstado()))) {
+            		
+            	    	getAsientoRegistralManager().deleteAsientoRegistral(asientoExistente.getId());
                 	
             	} else {
             		logger.error("Se ha intentado enviar/reenviar un asiento con estado incompatible [{}]: {}", ficheroIntercambio.getIdentificadorIntercambio(), asientoExistente.getEstado());
@@ -524,7 +542,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
                 	if (logger.isInfoEnabled()){
                 		logger.info("Se ha recibido un mensaje duplicado: [{}]", ToStringLoggerApiHelper.toStringLogger(mensaje));
                 	}
-                	insertarTrazabilidad(mensaje, EstadoTrazabilidadEnum.ERROR, ErroresEnum.ERROR_0206);
+                	//insertarTrazabilidad(mensaje, EstadoTrazabilidadEnum.ERROR, ErroresEnum.ERROR_0206);
                 	throw new ValidacionException(ErroresEnum.ERROR_0206);
 
                 } else {
@@ -565,7 +583,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
                 		logger.info("Se ha recibido un mensaje duplicado: [{}]", ToStringLoggerApiHelper.toStringLogger(mensaje));
                 	}
                 	
-                	insertarTrazabilidad(mensaje, EstadoTrazabilidadEnum.ERROR, ErroresEnum.ERROR_0206);
+                	//insertarTrazabilidad(mensaje, EstadoTrazabilidadEnum.ERROR, ErroresEnum.ERROR_0206);
                 	throw new ValidacionException(ErroresEnum.ERROR_0206);
 
             	} else {
@@ -627,7 +645,7 @@ public class RecepcionManagerImpl implements RecepcionManager {
                 		logger.info("Se ha recibido un mensaje duplicado: [{}]", ToStringLoggerApiHelper.toStringLogger(mensaje));
                 	}
                 	
-                	insertarTrazabilidad(mensaje, EstadoTrazabilidadEnum.ERROR, ErroresEnum.ERROR_0206);
+                	//insertarTrazabilidad(mensaje, EstadoTrazabilidadEnum.ERROR, ErroresEnum.ERROR_0206);
                 	throw new ValidacionException(ErroresEnum.ERROR_0206);
                 	
                 } else {

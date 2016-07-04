@@ -3,12 +3,13 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <html:html locale="true">
 <head>
 	<title><bean:message key="message.common.title"/></title>
 	<ieci:baseInvesDoc/>
-	<link rel="stylesheet" type="text/css" href="include/css/adminApp.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/adminApp.css"/>
 	
 	<script language="javascript">
 	function addCertificate()

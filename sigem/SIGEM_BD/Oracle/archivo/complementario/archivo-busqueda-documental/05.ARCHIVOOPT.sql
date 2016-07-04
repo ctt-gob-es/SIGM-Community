@@ -1,9 +1,0 @@
-BEGIN
-	archivo.OptimizePolicy('ADVCTEXTCF','VALOR');
-	archivo.OptimizePolicy('ADVCTEXTLCF','VALOR');
-	archivo.OptimizePolicy('ADVCTEXTDESCR','VALOR');
-	archivo.OptimizePolicy('ADVCTEXTLDESCR','VALOR');
-	archivo.OptimizePolicy('ASGFELEMENTOCF','TITULO');
-	archivo.OptimizePolicy('ADDESCRIPTOR','NOMBRE');
-END;
-/

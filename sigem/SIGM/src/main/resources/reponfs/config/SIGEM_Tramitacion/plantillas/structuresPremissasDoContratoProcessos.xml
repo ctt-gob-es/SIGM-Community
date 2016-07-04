@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<structures>
+	<title>Relatório Contratos UTIC Sem Licitação - Processos em Aberto</title>
+    <structure>
+        <periodoContratoDE>26/08/2014</periodoContratoDE>
+        <periodoContratoATE>26/06/2014</periodoContratoATE>
+        <tipoContrato>Completo</tipoContrato>
+        <processoSGP>94673</processoSGP>
+        <aditamento>Sim</aditamento>
+    </structure>
+	<structure>
+        <periodoContratoDE>22/06/2014</periodoContratoDE>
+        <periodoContratoATE>26/05/2014</periodoContratoATE>
+        <tipoContrato>Obra</tipoContrato>
+        <processoSGP>2535</processoSGP>
+        <aditamento>Sim</aditamento>
+    </structure>
+	<structure>
+        <periodoContratoDE>22/02/2014</periodoContratoDE>
+        <periodoContratoATE>26/01/2014</periodoContratoATE>
+        <tipoContrato>Jornada</tipoContrato>
+        <processoSGP>2535</processoSGP>
+        <aditamento>Sim</aditamento>
+    </structure>
+	<structure>
+        <periodoContratoDE>22/06/2014</periodoContratoDE>
+        <periodoContratoATE>26/05/2014</periodoContratoATE>
+        <tipoContrato>Obra</tipoContrato>
+        <processoSGP>123456789</processoSGP>
+        <aditamento>Sim</aditamento>
+    </structure>
+	<structure>
+        <periodoContratoDE>22/06/2014</periodoContratoDE>
+        <periodoContratoATE>26/05/2014</periodoContratoATE>
+        <tipoContrato>123456789</tipoContrato>
+        <processoSGP>123456789</processoSGP>
+        <aditamento>Sim</aditamento>
+    </structure>
+</structures>

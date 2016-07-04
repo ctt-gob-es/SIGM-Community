@@ -13,7 +13,7 @@
 
 <body onload="javascript:redirigir();">
 	<p><bean:message key="cargando"/></p>
-	<form action="../portal/" method="POST">
+	<form action="login.do" method="POST">
 	</form>
 </body>
 </html>

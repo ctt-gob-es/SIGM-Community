@@ -49,7 +49,6 @@ import es.ieci.tecdoc.fwktd.util.file.FileUtils;
  *
  */
 @ContextConfiguration({
-	"classpath*:/beans/fwktd-sir-api-applicationContext.xml",
 	"/beans/fwktd-sir-ws-test-beans.xml" })
 public class IntercambioRegistralWSFunctionalTest extends AbstractWSTest { 
 
@@ -475,7 +474,7 @@ public void testReenviarAsientoRegistral() throws Exception {
 	public void testRecepcionFicheroIntercambio() throws Exception {
 		logger.info("Inicio de testRecepcionFicheroIntercambio");
 		
-		File fichero = new ClassPathResource("/xml/SIR-RC-PR-070-1.xml").getFile();
+		File fichero = new ClassPathResource("/xml/SIR-RC-PR-131-1.xml").getFile();
 		logger.info("Consultando fichero de intercambio {}", fichero.getName());
 	
 		String mensajeFallo=probarRecepcionFicheroIntercambio(fichero);
@@ -585,7 +584,7 @@ public void testReenviarAsientoRegistral() throws Exception {
 		case 102: case 103: case 104: case 106: case 107: case 108: case 109:
 		case 114: case 115: case 116: case 118: case 119: case 120: case 121:
 		case 122: case 123: case 124: case 125: case 126: case 127: case 128:
-		case 130: case 131: case 134:
+		case 130: case 131: case 134: case 135: case 136:
 			result=checkCodigoRecepcion(ErroresEnum.OK.getValue(),respuesta);
 			break;
 		case 2: case 3: case 4: case 5: case 6: case 7: case 31: case 81: 

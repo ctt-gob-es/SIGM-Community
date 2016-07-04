@@ -8,8 +8,10 @@
 	<artifactId>ISicresAdmin-Web</artifactId>
 	<packaging>war</packaging>
 	<description>Modulo de Presentacion de la Administracion de Invesicres</description>
+	<version>3.0.0-msssi2.0.0</version>
 
 	<properties>
+		<isicres.version>8.0.1</isicres.version>
 		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory>
 	</properties>
 
@@ -22,12 +24,12 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres.admin</groupId>
 			<artifactId>ISicresAdmin-EstructuraCore</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres.admin</groupId>
 			<artifactId>ISicresAdmin-IntercambioRegistral</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		<exclusions>
 			<exclusion>
 				<groupId>es.ieci.tecdoc.isicres</groupId>
@@ -38,7 +40,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres.admin</groupId>
 			<artifactId>ISicresAdmin-ClasesBase</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-net</groupId>
@@ -223,7 +225,7 @@
 								<artifactItem>
 									<groupId>es.ieci.tecdoc.isicres</groupId>
 									<artifactId>ISicres-resources-config</artifactId>
-									<version>${pom.version}</version>
+									<version>${isicres.version}</version>
 									<type>zip</type>
 									<overWrite>false</overWrite>
 									<excludes>
@@ -241,7 +243,7 @@
 								<artifactItem>
 									<groupId>es.ieci.tecdoc.isicres</groupId>
 									<artifactId>ISicres-resources-configurable</artifactId>
-									<version>${pom.version}</version>
+									<version>${isicres.version}</version>
 									<type>zip</type>
 									<overWrite>false</overWrite>
 								</artifactItem>

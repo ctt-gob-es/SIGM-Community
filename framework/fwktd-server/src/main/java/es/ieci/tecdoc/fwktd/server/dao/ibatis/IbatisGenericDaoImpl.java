@@ -64,7 +64,8 @@ public class IbatisGenericDaoImpl<Entity, Id extends Serializable> extends
 				anEntity);
 
 		// check for null id
-		if (EntityUtils.getPrimaryKeyValue(anEntity) == null) {
+		EntityUtils entityUtils = new EntityUtils();
+		if (entityUtils.getPrimaryKeyValue(anEntity) == null) {
 			throw new ObjectRetrievalFailureException(ClassUtils
 					.getShortName(anEntity.getClass()), anEntity);
 		} else {
@@ -81,7 +82,8 @@ public class IbatisGenericDaoImpl<Entity, Id extends Serializable> extends
 				anEntity);
 
 		// check for null id
-		if (EntityUtils.getPrimaryKeyValue(anEntity) == null) {
+		EntityUtils entityUtils = new EntityUtils();
+		if (entityUtils.getPrimaryKeyValue(anEntity) == null) {
 			throw new ObjectRetrievalFailureException(ClassUtils
 					.getShortName(anEntity.getClass()), anEntity);
 		} else {

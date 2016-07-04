@@ -21,8 +21,8 @@ import es.ieci.tecdoc.fwktd.sir.core.vo.AsientoRegistralVO;
 import es.ieci.tecdoc.fwktd.test.db.AbstractDbUnitTransactionalJUnit4SpringContextTests;
 import es.ieci.tecdoc.fwktd.test.db.annotation.DatasetLocation;
 
-@DatasetLocation("data/dataset.xml")
-@ContextConfiguration({ 
+
+@ContextConfiguration({ "/jndi.xml", "/cxf.xml",
 	"/beans/fwktd-sir-test-beans-initial-custom.xml",
 	"/beans/fwktd-sir-api-applicationContext.xml",
 		"/beans/fwktd-sir-test-beans-custom.xml" })

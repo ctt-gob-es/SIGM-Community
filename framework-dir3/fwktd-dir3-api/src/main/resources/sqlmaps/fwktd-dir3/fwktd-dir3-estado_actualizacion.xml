@@ -3,9 +3,11 @@
 						"http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="EstadoActualizacionDcoVO">
 
+	<typeAlias alias="estadoActualizacionDco"
+		type="es.ieci.tecdoc.fwktd.dir3.api.vo.EstadoActualizacionDcoVO" />
 
 
-	<resultMap id="EstadoActualizacionDco" class="es.ieci.tecdoc.fwktd.dir3.api.vo.EstadoActualizacionDcoVO">
+	<resultMap id="estadoActualizacionDco" class="es.ieci.tecdoc.fwktd.dir3.api.vo.EstadoActualizacionDcoVO">
 		<result property="id" column="ID" />
 		<result property="fechaActualizacion" column="FECHA_ACTUALIZACION" />
 		<result property="estado" column="ESTADO" />
@@ -18,7 +20,14 @@
 		ESTADO.FECHA_ACTUALIZACION,
 		ESTADO.ESTADO
 	</sql>
-
+	<sql id="columns_insert">
+		FECHA_ACTUALIZACION,
+		ESTADO
+	</sql>
+	<sql id="insert">
+		#fechaActualizacion#,
+		#estado#
+	</sql>
 	<sql id="from">
 		<include refid="table" /> ESTADO
 	</sql>
@@ -26,13 +35,19 @@
 
 
 
-	<select id="getLastSuccessUpdate" resultMap="EstadoActualizacionDco">
+	<select id="getLastSuccessUpdate" resultMap="estadoActualizacionDco">
 		SELECT
 			<include refid="columns" />
 		from
 		  <include refid="from" />
 		where ESTADO.ESTADO='OK' and ESTADO.ID=(SELECT MAX(EA.ID) from DIR_ESTADO_ACTUALIZACION EA)
 	</select>
+	<insert id="addEstadoActualizacionDcoVO" parameterClass="estadoActualizacionDco">
+		INSERT INTO
+			<include refid="table" />
+		(<include refid="columns_insert" />)
+		VALUES (<include refid="insert" />)
+	</insert>
 
 
 </sqlMap>

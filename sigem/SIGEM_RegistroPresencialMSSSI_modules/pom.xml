@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.msssi.tecdoc.sigem</groupId>
+	<version>3.0.0-msssi2.0.0</version>
+	<artifactId>SIGEM_RegistroPresencialMSSSI_modules</artifactId>
+	<packaging>pom</packaging>
+	<name>SIGEM_RegistroPresencialMSSSI_modules</name>
+
+	<description>Registro Presencial MSSSI</description>
+
+	<properties>
+		<spring.version>3.0.2.RELEASE</spring.version>
+		<hibernate.version>2.1.3</hibernate.version>
+		<log4j.version>1.2.13</log4j.version>
+		<sigem.version>3.0</sigem.version>
+		<pom.version>3.0</pom.version>
+		<sigemMSSSI.version>3.0.0-msssi2.0.0</sigemMSSSI.version>
+		<isicres.version>8.0.1</isicres.version>
+		<assembly.plugin.version>2.2-beta-3</assembly.plugin.version>
+		<maven-war-plugin.version>2.1-alpha-1</maven-war-plugin.version>
+	</properties>
+	<build>
+		<plugins>
+			<!-- TODO: Pendiente de generalizar Este fragmento descarga el .zip con 
+				los ficheros configurables y lo deja en target/configurable -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+	                <source>1.5</source>
+	                <target>1.5</target>
+	            </configuration>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeTypes>zip</includeTypes>
+							<excludeTypes>jar</excludeTypes>
+							<outputDirectory>${project.build.directory}/configurable</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>generate-config</id>
+			<activation>
+				<property>
+					<name>config</name>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+<!-- 			<modules> -->
+<!-- 				<module>SIGEM_RegistroPresencialMSSSIWeb-configurable-resources</module> -->
+<!-- 			</modules> -->
+		</profile>
+		<profile>
+			<id>generate-jars</id>
+			<activation>
+				<property>
+					<name>jars</name>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+<!-- 			<modules> -->
+<!-- 				<module>SIGEM_RegistroPresencialMSSSIWeb-configurable-resources</module> -->
+<!-- 			</modules> -->
+		</profile>
+		<profile>
+			<id>93801m</id>
+			<properties>
+		        <!-- WEBLOGIC NAME -->
+		        <system.name>SIGM_WEBSERVICES</system.name>
+			</properties>
+			<modules>
+				<module>sigm.dao</module>
+				<module>sigm.webservices</module>
+				<module>sigm.ear</module>
+			</modules>
+		</profile>
+		
+	</profiles>
+
+	<modules>
+		<module>../SIGEM_init</module>
+		<module>../SIGEM_Config</module>
+		<module>../SIGEM_Core</module>
+		<module>../SIGEM_EstructuraWeb</module>
+		<module>../SIGEM_AutenticacionBackOfficeWeb</module>
+		<module>../../registro/ISicres-Terceros</module>
+		<module>../SIGEM_RegistroPresencial_modules/SIGEM_RegistroPresencialAdmin</module>
+		<module>../SIGEM_RegistroPresencial_modules/SIGEM_RegistroPresencialAdminWeb</module>
+		<module>../SIGEM_RegistroPresencial_modules/SIGEM_RegistroPresencial</module>
+		<module>SIGEM_RegistroPresencialMSSSI</module>
+		<module>SIGEM_RegistroPresencialMSSSIWeb</module>
+		<module>SIGEM_RegistroPresencialMSSSIJAXWS</module>
+		<module>../SIGM</module>
+		<module>../SIGM_administrationear</module>
+	</modules>
+</project>

@@ -97,7 +97,7 @@ public class AxXnidEntity extends AbstractAx implements ServerKeys {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		int result = 0;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String update = "UPDATE A" + bookID.toString()
 				+ "XNID SET ID=ID+1 WHERE TYPE=8 AND PARENTID=?";
 		String updateLock = "UPDATE A" + bookID.toString()
@@ -108,18 +108,18 @@ public class AxXnidEntity extends AbstractAx implements ServerKeys {
 				+ "XNID (ID,PARENTID,TYPE) VALUES(1,?,8)";
 
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 
 			ps = con.prepareStatement(updateLock);
 			ps.setInt(1, parentID);
 			int affected = ps.executeUpdate();
-			BBDDUtils.close(ps);
+			bbddUtils.close(ps);
 
 			if (affected == 0) {
 				ps = con.prepareStatement(insert);
 				ps.setInt(1, parentID);
 				affected = ps.executeUpdate();
-				BBDDUtils.close(ps);
+				bbddUtils.close(ps);
 			}
 
 			ps = con.prepareStatement(select);
@@ -129,12 +129,12 @@ public class AxXnidEntity extends AbstractAx implements ServerKeys {
 			while (rs.next()) {
 				result = rs.getInt(1);
 			}
-			BBDDUtils.close(ps);
+			bbddUtils.close(ps);
 			
 			ps = con.prepareStatement(update);
 			ps.setInt(1, parentID);
 			ps.executeUpdate();
-			BBDDUtils.close(ps);
+			bbddUtils.close(ps);
 		} catch (SQLException ex) {
 			log.fatal("getNextID. Sentence [" + update + "] parentID "
 					+ parentID, ex);
@@ -144,9 +144,9 @@ public class AxXnidEntity extends AbstractAx implements ServerKeys {
 					+ parentID, ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 
 		return result;

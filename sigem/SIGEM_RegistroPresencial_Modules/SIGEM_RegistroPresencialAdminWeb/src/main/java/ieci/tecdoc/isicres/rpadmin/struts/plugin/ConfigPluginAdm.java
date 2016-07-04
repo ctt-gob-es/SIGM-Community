@@ -13,7 +13,7 @@ import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.entidades.Entidad;
 import ieci.tecdoc.sgm.core.services.entidades.ServicioEntidades;
 
-import java.util.HashMap;
+import java.util.HashMap; 
 import java.util.List;
 
 import javax.servlet.ServletException;

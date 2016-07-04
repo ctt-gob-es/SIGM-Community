@@ -2,13 +2,15 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <html:html locale="true">
 <head>
 	<title>InvesDoc</title>
 	<ieci:baseInvesDoc/>
-	<link rel="stylesheet" rev="stylesheet" href="include/css/tabs2.css" />
-	<script src="include/js/docobj.js" type="text/javascript"></script>
-	<script src="include/js/tabs.js" type="text/javascript"></script>
+	<link rel="stylesheet" rev="stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/tabs2.css" />
+	<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/docobj.js" type="text/javascript"></script>
+	<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/tabs.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		window.name="popUP";
 	</script>
@@ -28,10 +30,10 @@
 		<table summary="" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td class="tableft" height="17" width="7">
-					<img src="include/images/dot.gif" alt="" border="0" height="17" width="7">
+					<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/dot.gif" alt="" border="0" height="17" width="7">
 				</td>
 				<td id="tabmiddle1">General</td>
-				<td class="tabright"><img src="include/images/dot.gif" alt="" border="0" height="17" width="7"></td>
+				<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/dot.gif" alt="" border="0" height="17" width="7"></td>
 			</tr>
 		</table>
 	</div>
@@ -46,10 +48,10 @@
 		<table summary="" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td class="tableft" height="17" width="7">
-					<img src="include/images/dot.gif" alt="" border="0" height="17" width="7">
+					<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/dot.gif" alt="" border="0" height="17" width="7">
 				</td>
 				<td id="tabmiddle2">Campos</td>
-				<td class="tabright"><img src="include/images/dot.gif" alt="" border="0" height="17" width="7"></td>
+				<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/dot.gif" alt="" border="0" height="17" width="7"></td>
 			</tr>
 		</table>
 	</div>

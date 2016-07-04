@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea- versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+						"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="UnitVO">
+
+	<typeAlias alias="unit" type="es.msssi.dir3.api.vo.UnitVO" />
+	<typeAlias alias="BasicDataUnit" type="es.msssi.dir3.api.vo.BasicDataUnitVO" />
+	<resultMap id="BasicDataUnit" class="es.msssi.dir3.api.vo.BasicDataUnitVO">
+		<result property="id" column="C_ID_UD_ORGANICA" />
+		<result property="name" column="C_DNM_UD_ORGANICA" />
+		<result property="status" column="ID_ESTADOOFI" />
+		<result property="fatherUnitId" column="C_ID_DEP_UD_SUPERIOR" />
+		<result property="fatherUnitName" column="DENOM_UNIDAD_SUP_JERARQUICA" />
+	</resultMap>
+
+	<resultMap id="unit" class="es.msssi.dir3.api.vo.UnitVO">
+
+		<result property="id" column="C_ID_UD_ORGANICA" />
+		<result property="name" column="C_DNM_UD_ORGANICA" />
+		<result property="acronyms" column="C_DNM_SIGLAS_UD" />
+		<result property="fatherUnitId" column="C_ID_DEP_UD_SUPERIOR" />
+		<result property="fatherUnitName" column="DENOM_UNIDAD_SUP_JERARQUICA" />
+		<result property="principalUnitId" column="C_ID_DEP_UD_PRINCIPAL" />
+		<result property="principalUnitName" column="DENOM_UNIDAD_PRINC_JERARQUICA" />
+		<result property="publicEntityLevel" column="N_NIVEL_JERARQUICO" />
+		<result property="entityPublicLawIndicator" column="B_SW_DEP_EDP_PRINCIPAL" />
+		<result property="administrationLevelId" column="C_ID_NIVEL_ADMON" />
+		<result property="administrationLevelName" column="C_DESC_NIVEL" />
+		<result property="publicEntityTypeId" column="C_ID_TIPO_ENT_PUBLICA" />
+		<result property="publicEntityTypeName" column="C_DESC_TIPO_UNIDAD" />
+		<result property="unitTypeId" column="C_ID_TIPO_UD_ORGANICA" />
+		<result property="unitTypeName" column="C_DESC_TIPO" />
+		<result property="entityUnitOfPublicLawId" column="C_ID_DEP_EDP_PRINCIPAL" />
+		<result property="entityUnitOfPublicLawName" column="DENOM_DEP_EDP_PRINCIPAL" />
+		<result property="territorialScopeOfCompetenceId" column="C_ID_AMB_TERR_COMPET" />
+		<result property="territorialScopeOfCompetenceName" column="C_DENOMINACION_AMBITO" />
+		<result property="cityId" column="C_ID_AMB_MUNICIPIO" />
+		<result property="cityName" column="UO_C_DESC_LOCALIDAD" />
+		<result property="minorLocalEntityId" column="C_ID_AMB_ELM" />
+		<result property="minorLocalEntityName" column="UO_DESC_AMB_ELM" />
+		<result property="geographicalEntityId" column="C_ID_AMB_ENT_GEOGRAFICA" />
+		<result property="geographicalEntityName" column="UO_C_DESC_ENT_GEOGRAFICA" />
+		<result property="countryId" column="C_ID_AMB_PAIS" />
+		<result property="countryName" column="UO_C_DESC_PAIS" />
+		<result property="autonomousCommunityId" column="C_ID_AMB_C_AUTONOMA" />
+		<result property="autonomousCommunityName" column="UO_C_DESC_COMUNIDAD" />
+		<result property="provinceId" column="C_ID_AMB_PROVINCIA" />
+		<result property="provinceName" column="UO_C_DESC_PROV" />
+		<result property="islandId" column="C_ID_AMB_ISLA" />
+		<result property="islandName" column="UO_C_DESC_ISLA" />
+		<result property="foreignLocation" column="C_ID_AMB_LOC_EXTRANJERA" />
+		<result property="competencesOfUnit" column="C_COMPET_UD" />
+		<result property="legalProvisionOfCompetencesOfUnit" column="C_COMPET_DISP_LEGAL" />
+		<result property="bSameAddressFatherUnit" column="B_SW_LOC_UD_SUPERIOR" />
+		<result property="address" resultMap="AddressVO.address" />
+		<result property="status" column="C_ID_ESTADO" />
+		<result property="addOfficialDate" column="D_VIG_ALTA_OFICIAL" />
+		<result property="deleteOfficialDate" column="D_VIG_BAJA_OFICIAL" />
+		<result property="extinctionDate" column="D_VIG_EXTINCION" />
+		<result property="annulationDate" column="D_VIG_ANULACION" />
+		<result property="generalObservations" column="C_OBSERVACION_GENERAL" />
+		<result property="deleteObservations" column="C_OBSERVACION_BAJA" />
+		<result property="contactObservations" column="C_OBSERVACION_CONTACTO" />
+		<result property="authorityId" column="N_ID_PODER" />
+		<result property="authorityName" column="NOMBRE_PODER" />
+		<result property="externalId" column="C_ID_EXTERNO_FUENTE" />
+		<result property="systemCreationDate" column="D_ALTA_SISTEMA" />
+		<result property="lastUpdateDate" column="D_ULT_ACTUALIZ" />
+		<result property="rootUnit" column="S_RAIZ" />
+		<result property="cif" column="NIF_CIF" />
+		<result property="language" column="N_ID_IDIOMA" />
+		<result property="unoUnitTypeId" column="C_ID_TYPEUNO" />
+		<result property="unoCodUOResponsable" column="C_ID_UORESPONSABLE" />
+		<result property="unoobservations" column="C_OBSERVACION" />
+		<result property="typeUnit" column="N_TYPE" />
+		<result property="contacts" column="C_ID_UD_ORGANICA"
+			select="ContactUOVO.getActiveContactUOVOs" />
+		<result property="organizationalRelationshipsUO" column="C_ID_UD_ORGANICA"
+				select="OfficeVO.getOrganizationalRelationshipsUO" />	
+		<result property="relationshipsSIRUO" 
+				resultMap="OfficeVO.basicDataOfficeRel" />	
+		</resultMap>
+
+	<sql id="table">DIR_UNIDAD_ORGANICA</sql>
+
+	<sql id="view">VW_UNIDAD_ORGANICA</sql>
+	<sql id="columnsBasic">
+		UO.C_ID_UD_ORGANICA,
+		UO.C_DNM_UD_ORGANICA,
+		UO.ID_ESTADOOFI,
+        UO.C_ID_DEP_UD_SUPERIOR,
+        DENOM_UNIDAD_SUP_JERARQUICA
+	</sql>
+	
+	<sql id="columnsBasicRel">
+		UO.C_ID_UD_ORGANICA,
+		UO.C_DNM_UD_ORGANICA,
+		UO.C_ID_ESTADO AS ID_ESTADOOFI,
+        UO.C_ID_DEP_UD_SUPERIOR,
+        UOF.C_DNM_UD_ORGANICA AS DENOM_UNIDAD_SUP_JERARQUICA
+	</sql>
+	
+	<sql id="columns">
+		UO.C_ID_UD_ORGANICA,
+		UO.C_DNM_UD_ORGANICA,
+		UO.C_DNM_SIGLAS_UD,
+		UO.C_ID_NIVEL_ADMON,
+		UO.C_ID_TIPO_ENT_PUBLICA,
+		UO.C_DESC_TIPO_UNIDAD,
+		UO.C_ID_TIPO_UD_ORGANICA,
+		UO.C_DESC_TIPO,
+		UO.N_NIVEL_JERARQUICO,
+		UO.C_DESC_NIVEL,
+		UO.C_ID_DEP_UD_SUPERIOR,
+		UO.DENOM_UNIDAD_SUP_JERARQUICA,
+		UO.C_ID_DEP_UD_PRINCIPAL,
+		UO.DENOM_UNIDAD_PRINC_JERARQUICA,
+		UO.B_SW_DEP_EDP_PRINCIPAL,
+		UO.C_ID_DEP_EDP_PRINCIPAL,
+		UO.DENOM_DEP_EDP_PRINCIPAL,
+		UO.C_ID_AMB_TERR_COMPET,
+		UO.C_DENOMINACION_AMBITO,
+		UO.C_ID_AMB_ENT_GEOGRAFICA,
+		UO.UO_C_DESC_ENT_GEOGRAFICA,
+		UO.C_ID_AMB_PAIS,
+		UO.UO_C_DESC_PAIS,
+		UO.C_ID_AMB_C_AUTONOMA,
+		UO.UO_C_DESC_COMUNIDAD,
+		UO.C_ID_AMB_PROVINCIA,
+		UO.UO_C_DESC_PROV,
+		UO.C_ID_AMB_ISLA,
+		UO.UO_C_DESC_ISLA,
+		UO.C_ID_AMB_MUNICIPIO,
+		UO.UO_C_DESC_LOCALIDAD,
+		UO.C_ID_AMB_ELM,
+		UO.UO_DESC_AMB_ELM,
+		UO.C_ID_AMB_LOC_EXTRANJERA,
+		UO.C_COMPET_UD,
+		UO.C_COMPET_DISP_LEGAL,
+		UO.B_SW_LOC_UD_SUPERIOR,
+		UO.C_ID_ESTADO,
+		UO.D_VIG_ALTA_OFICIAL,
+		UO.D_VIG_BAJA_OFICIAL,
+		UO.D_VIG_EXTINCION,
+		UO.D_VIG_ANULACION,
+		UO.C_ID_EXTERNO_FUENTE,
+		UO.C_OBSERVACION_GENERAL,
+		UO.C_OBSERVACION_CONTACTO,
+		UO.C_OBSERVACION_BAJA,
+		UO.N_ID_PODER,
+		UO.NOMBRE_PODER,
+		UO.C_ID_EXTERNO_DIR2,
+		UO.D_ALTA_SISTEMA,
+		UO.D_ULT_ACTUALIZ,
+		UO.S_RAIZ,
+		UO.NIF_CIF,
+		UO.N_ID_IDIOMA,
+		UO.N_ID_LOC_DIRECCION AS N_ID_DIRECCION,
+		UO.C_ID_TIPO_VIA,
+		UO.C_DESC_TIPO_VIA,
+		UO.C_NOMBRE_VIA,
+		UO.C_NUM_VIA,
+		UO.C_COMPLEMENTO_DIRECCION,
+		UO.C_CODIGO_POSTAL,
+		UO.C_ID_PAIS,
+		UO.C_DESC_PAIS,
+		UO.C_ID_COMUNIDAD,
+		UO.C_DESC_COMUNIDAD,
+		UO.C_ID_ENTIDAD_GEOGRAFICA,
+		UO.C_DESC_ENT_GEOGRAFICA,
+		UO.C_ID_PROVINCIA,
+		UO.C_DESC_PROV,
+		UO.C_ID_LOCALIDAD,
+		UO.C_DESC_LOCALIDAD,
+		UO.C_LOC_EXTRANJERA,
+		UO.C_DIR_EXTRANJERA,
+		UO.C_OBSERVACION_LOCAL,
+		UO.C_ID_OFICINA,
+		UO.C_DNM_OFICINA,
+		UO.ID_ESTADOOFI,
+		C_ID_TIPO_OFICINA,
+		C_DESC_JERARQUIA,
+		C_ID_DEP_UD_SUPERIOROFI,
+		C_DNM_UD_ORGANICAOFI,
+		C_ID_TYPEUNO,
+		C_ID_UORESPONSABLE,
+		C_OBSERVACION,
+		UO.N_TYPE
+	</sql>
+
+	<sql id="from">
+		<include refid="view" />
+		UO
+	</sql>
+
+	<sql id="columns_insert">
+		C_ID_UD_ORGANICA,
+		C_DNM_UD_ORGANICA,
+		C_DNM_SIGLAS_UD,
+		C_ID_ESTADO,
+		C_ID_NIVEL_ADMON,
+		N_NIVEL_JERARQUICO,
+		C_ID_DEP_UD_SUPERIOR,
+		C_ID_DEP_UD_PRINCIPAL,
+		C_COMPET_UD,
+		C_COMPET_DISP_LEGAL,
+		C_OBSERVACION_GENERAL,
+		C_OBSERVACION_BAJA,
+		D_VIG_ALTA_OFICIAL,
+		D_VIG_BAJA_OFICIAL,
+		D_VIG_EXTINCION,
+		D_VIG_ANULACION,
+		NIF_CIF,
+		C_ID_EXTERNO_FUENTE,
+		B_SW_DEP_EDP_PRINCIPAL,
+		C_ID_DEP_EDP_PRINCIPAL,
+		C_ID_TIPO_ENT_PUBLICA,
+		C_ID_TIPO_UD_ORGANICA,
+		C_ID_AMB_TERR_COMPET,
+		C_ID_AMB_ENT_GEOGRAFICA,
+		C_ID_AMB_PAIS,
+		C_ID_AMB_C_AUTONOMA,
+		C_ID_AMB_PROVINCIA,
+		C_ID_AMB_MUNICIPIO,
+		C_ID_AMB_ISLA,
+		C_ID_AMB_ELM,
+		C_ID_AMB_LOC_EXTRANJERA,
+		D_ALTA_SISTEMA,
+		D_ULT_ACTUALIZ,
+		S_RAIZ,
+		N_ID_PODER,
+		B_SW_LOC_UD_SUPERIOR,
+		N_ID_LOC_DIRECCION,
+		C_ID_TYPEUNO,
+		C_ID_UORESPONSABLE,
+		C_OBSERVACION,
+		N_TYPE
+	</sql>
+
+	<sql id="insert">
+		#id#,
+		#name#,
+		#acronyms#,
+		#status#,
+		#administrationLevelId#,
+		#publicEntityLevel#,
+		#fatherUnitId#,
+		#principalUnitId#,
+		#competencesOfUnit#,
+		#legalProvisionOfCompetencesOfUnit#,
+		#generalObservations#,
+		#deleteObservations#,
+		#addOfficialDate#,
+		#deleteOfficialDate#,
+		#extinctionDate#,
+		#annulationDate#,
+		#cif#,
+		#externalId#,
+		#entityPublicLawIndicator#,
+		#entityUnitOfPublicLawId#,
+		#publicEntityTypeId#,
+		#unitTypeId#,
+		#territorialScopeOfCompetenceId#,
+		#geographicalEntityId#,
+		#countryId#,
+		#autonomousCommunityId#,
+		#provinceId#,
+		#cityId#,
+		#islandId#,
+		#minorLocalEntityId#,
+		#foreignLocation#,
+		sysdate,
+		sysdate,
+		#rootUnit#,
+		#authorityId#,
+		#bSameAddressFatherUnit#,
+		#address.id#,
+		#unoUnitTypeId#,
+		#unoCodUOResponsable#,
+		#unoobservations#,
+		#typeUnit#
+	</sql>
+	<sql id="update">
+		C_DNM_UD_ORGANICA = #name#,
+		C_DNM_SIGLAS_UD = #acronyms#,
+		C_ID_ESTADO = #status#,
+		C_ID_NIVEL_ADMON = #administrationLevelId#,
+		N_NIVEL_JERARQUICO = #publicEntityLevel#,
+		C_ID_DEP_UD_SUPERIOR =
+		#fatherUnitId#,
+		C_ID_DEP_UD_PRINCIPAL = #principalUnitId#,
+		C_COMPET_UD =
+		#competencesOfUnit#,
+		C_COMPET_DISP_LEGAL =
+		#legalProvisionOfCompetencesOfUnit#,
+		C_OBSERVACION_GENERAL =
+		#generalObservations#,
+		C_OBSERVACION_BAJA = #deleteObservations#,
+		D_VIG_BAJA_OFICIAL = #deleteOfficialDate#,
+		D_VIG_EXTINCION =
+		#extinctionDate#,
+		D_VIG_ANULACION = #annulationDate#,
+		NIF_CIF = #cif#,
+		C_ID_EXTERNO_FUENTE = #externalId#,
+		B_SW_DEP_EDP_PRINCIPAL =
+		#entityPublicLawIndicator#,
+		C_ID_DEP_EDP_PRINCIPAL =
+		#entityUnitOfPublicLawId#,
+		C_ID_TIPO_ENT_PUBLICA =
+		#publicEntityTypeId#,
+		C_ID_TIPO_UD_ORGANICA = #unitTypeId#,
+		C_ID_AMB_TERR_COMPET = #territorialScopeOfCompetenceId#,
+		C_ID_AMB_ENT_GEOGRAFICA = #geographicalEntityId#,
+		C_ID_AMB_PAIS = #countryId#,
+		C_ID_AMB_C_AUTONOMA = #autonomousCommunityId#,
+		C_ID_AMB_PROVINCIA = #provinceId#,
+		C_ID_AMB_MUNICIPIO = #cityId#,
+		C_ID_AMB_ISLA = #islandId#,
+		C_ID_AMB_ELM = #minorLocalEntityId#,
+		C_ID_AMB_LOC_EXTRANJERA = #foreignLocation#,
+		D_ULT_ACTUALIZ = sysdate,
+		S_RAIZ= #rootUnit#,
+		N_ID_PODER = #authorityId#,
+		B_SW_LOC_UD_SUPERIOR=#bSameAddressFatherUnit#,
+		C_ID_TYPEUNO =#unoUnitTypeId#,
+		C_ID_UORESPONSABLE = #unoCodUOResponsable#,
+		C_OBSERVACION = #unoobservations#
+		<isEmpty property="address">
+			, N_ID_LOC_DIRECCION=NULL
+		</isEmpty>
+		<isNotEmpty property="address">
+			, N_ID_LOC_DIRECCION=#address.id#
+		</isNotEmpty>
+	</sql>
+
+	<sql id="findUnits_fragment">
+		FROM
+		<include refid="from" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="criteria">
+				<iterate prepend="AND" property="criteria" conjunction="AND">
+					<isNotEqual property="criteria[].name.value"
+						compareValue="ID_OFICINA_RELACIONADA">
+						<isEqual property="criteria[].operator.value"
+							compareValue="like">
+							translate(UPPER($criteria[].name.table$.$criteria[].name.value$),
+							'ÁÀÂÉÈÊÍÌÎÓÒÔÚÙÛ', 'AAAEEEIIIOOOUUU') LIKE
+							translate(UPPER('%$criteria[].value$%'), 'ÁÀÂÉÈÊÍÌÎÓÒÔÚÙÛ', 'AAAEEEIIIOOOUUU')
+						</isEqual>
+						<isNotEqual property="criteria[].operator.value"
+							compareValue="like">
+							<isEqual property="criteria[].operator.value"
+								compareValue="in">
+								UPPER($criteria[].name.table$.$criteria[].name.value$)
+								<iterate prepend="IN" property="criteria[].value" open="("
+									close=")" conjunction=",">
+									UPPER(#criteria[].value[]#)
+								</iterate>
+							</isEqual>
+							<isNotEqual property="criteria[].operator.value"
+								compareValue="in">
+								UPPER($criteria[].name.table$.$criteria[].name.value$)
+								$criteria[].operator.value$
+								<isNotEqual property="criteria[].operator.value"
+									compareValue="IS NULL">
+									<isNotEqual property="criteria[].operator.value"
+										compareValue="IS NOT NULL">
+										UPPER(#criteria[].value#)
+									</isNotEqual>
+								</isNotEqual>
+							</isNotEqual>
+						</isNotEqual>
+					</isNotEqual>
+				</iterate>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+
+	<select id="countFindUnits" parameterClass="java.util.Map"
+	 resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="findUnits_fragment" />
+	</select>
+
+	<select id="findUnits" resultMap="unit">
+		SELECT
+		<include refid="columns" />
+		<include refid="findUnits_fragment" />
+		<isPropertyAvailable property="orden">
+			<iterate prepend="ORDER BY" property="orden" conjunction=",">
+				$orden[].table$.$orden[].value$
+			</iterate>
+		</isPropertyAvailable>
+	</select>
+
+	<select id="findBasicDataUnits" resultMap="BasicDataUnit">
+		SELECT
+		<include refid="columnsBasic" />
+		<include refid="findUnits_fragment" />
+		<isPropertyAvailable property="orden">
+			<iterate prepend="ORDER BY" property="orden" conjunction=",">
+				$orden[].table$.$orden[].value$
+			</iterate>
+		</isPropertyAvailable>
+	</select>
+	
+	<select id="getUnitVO" parameterClass="java.lang.String"
+		resultMap="unit">
+		SELECT
+		<include refid="columns" />
+		FROM
+		<include refid="from" />
+		WHERE
+		UO.C_ID_UD_ORGANICA=#value#
+	</select>
+
+	<select id="getOrganizationalRelationshipsOFI" parameterClass="java.lang.String"
+		resultMap="BasicDataUnit">
+		SELECT
+		<include refid="columnsBasicRel" />
+		FROM
+		<include refid="table" />
+		UO
+		INNER JOIN REL_ORGANIZATIVAS_UO_OFI REL
+		ON UO.C_ID_UD_ORGANICA = REL.C_ID_UNIDAD_ORGANICA
+		AND REL.C_ID_ESTADO = 'V'
+		 INNER JOIN DIR_UNIDAD_ORGANICA   UOF ON
+        UOF.C_ID_UD_ORGANICA =  UO.C_ID_DEP_UD_SUPERIOR
+		WHERE REL.C_ID_OFICINA =#value#
+	</select>
+	<select id="existsUnit" parameterClass="java.lang.String"
+		resultClass="java.lang.Integer">
+		SELECT count (*)
+		FROM
+		<include refid="table" />
+		WHERE
+		C_ID_UD_ORGANICA=#value#
+	</select>
+	<select id="getRelationshipsSIROFI" parameterClass="java.lang.String"
+		resultMap="BasicDataUnit">
+		SELECT
+		<include refid="columnsBasicRel" />
+		FROM
+		<include refid="table" />
+		UO
+		INNER JOIN REL_UNIDAD_ORGANICA_OFICINA REL
+		ON UO.C_ID_UD_ORGANICA = REL.C_ID_UNIDAD_ORGANICA
+		AND REL.C_ID_ESTADO = 'V'
+		INNER JOIN DIR_UNIDAD_ORGANICA   UOF ON
+        UOF.C_ID_UD_ORGANICA =  UO.C_ID_DEP_UD_SUPERIOR
+		WHERE REL.C_ID_OFICINA =#value#
+	</select>
+
+	<insert id="addUnitVO" parameterClass="unit">
+		INSERT INTO
+		<include refid="table" />
+		(
+		<include refid="columns_insert" />
+		)
+		VALUES (
+		<include refid="insert" />
+		)
+	</insert>
+
+	<update id="updateUnitVO" parameterClass="unit">
+		UPDATE
+		<include refid="table" />
+		SET
+		<include refid="update" />
+		WHERE C_ID_UD_ORGANICA=#id#
+	</update>
+
+
+</sqlMap>

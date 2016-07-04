@@ -4,15 +4,17 @@
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 <%@ page import="ieci.tecdoc.isicres.rpadmin.struts.util.AutenticacionAdministracion" %>
 <%@ page import="es.ieci.tecdoc.isicres.admin.core.services.ConstantesGestionUsuariosAdministracion" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="IECISA" />
 <title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.sgm.rpadmin.oficinas.titulo"/></title>
-<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/common.js"></script>
-<script type="text/javascript" src="js/tabsOficina.js"></script>
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/tabsOficina.js"></script>
 
 <script>
 	function init() {
@@ -101,9 +103,9 @@
 									<table summary="" border="0" cellpadding="0" cellspacing="0">
 									<tbody><tr>
 										<td class="tableft" height="17" width="7">
-											<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 										<td class="tabmiddle1" id="tabmiddle1" onclick="nuevaOficinaClick()"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.oficina.nuevo"/></td>
-										<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+										<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 									</tr>
 									</tbody></table>
 								</div>
@@ -113,9 +115,9 @@
 									<table summary="" border="0" cellpadding="0" cellspacing="0">
 									<tbody><tr>
 										<td class="tableft" height="17" width="7">
-											<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 										<td class="tabmiddle2" id="tabmiddle2" onclick="direccionOficinaClick()"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.oficina.direccion"/></td>
-										<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+										<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 									</tr>
 									</tbody></table>
 								</div>
@@ -130,9 +132,9 @@
 									<table summary="" border="0" cellpadding="0" cellspacing="0">
 									<tbody><tr>
 										<td class="tableft" height="17" width="7">
-											<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 										<td class="tabmiddle3" id="tabmiddle3" onclick="intercambioRegistralOficinaClick()"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.intercambioRegistral"/></td>
-										<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+										<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 									</tr>
 									</tbody></table>
 								</div>
@@ -195,7 +197,7 @@
 						</tr>
 						<tr class="col">
 							<td class="txt"><bean:message key="ieci.tecdoc.sgm.rpadmin.oficinas.nombre"/>&nbsp;&nbsp;</td>
-							<td><html:text property="nombre" styleClass="textInput" maxlength="32"/></td>
+							<td><html:text property="nombre" styleClass="textInput" maxlength="60"/></td>
 						</tr>
 						<tr class="col">
 							<td class="txt"><bean:message key="ieci.tecdoc.sgm.rpadmin.oficinas.abreviatura"/>&nbsp;&nbsp;</td>

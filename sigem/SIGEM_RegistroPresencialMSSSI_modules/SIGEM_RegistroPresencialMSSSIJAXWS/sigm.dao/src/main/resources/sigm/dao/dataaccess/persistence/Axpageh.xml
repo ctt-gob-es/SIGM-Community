@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sigm.dao.dataaccess.persistence.AxpagehMapper">
+ 
+    <select id="getByFdrid"
+            parameterType="java.util.HashMap"
+            resultType="es.msssi.sgm.registropresencial.beans.ibatis.Axpageh">
+		SELECT PA.ID AS id, PA.FDRID AS fdrid, PA.NAME as name, DOCID, CRTNDATE as crtndate, PA.LOC as loc, FILEID as fileId,
+     			FILESIZE as fileSize, PR.PAGEID as pageId, SA.COMMENTS as comments, SA.MIME_TYPE as mimeType, 
+                SA.VALIDITY_TYPE as validityType, VALIDITYDOC.name as nameValidityType, SA.DOCUMENT_TYPE as documentType,
+                TYPEDOC.name as nameDocumentType,  SA2.PAGEID AS pageSignedId, SAS.HASH AS hash, SAS.HASH_ALG AS hashAlg
+			     FROM A${idBook}PAGEH PA INNER JOIN IVOLFILEHDR IV   ON FILEID = IV.ID
+			     AND IV.EXTID1 = ${idBook} AND IV.EXTID2= PA.FDRID AND IV.EXTID3= PA.DOCID
+			    INNER JOIN SCR_PAGEREPOSITORY PR ON IV.ID = PR.DOCUID  AND PR.DELETEDATE IS NULL 
+			    LEFT JOIN SCR_PAGEINFO PI ON PR.BOOKID = PI.BOOKID AND PR.FDRID = PI.REGID
+			        AND PR.PAGEID = PI.PAGEID
+			    LEFT JOIN SCR_ATTACHMENT SA ON SA.BOOKID = PR.BOOKID 
+			        AND SA.FOLDERID = PR.FDRID AND SA.PAGEID = PR.PAGEID
+			    LEFT JOIN SCR_ATTACHMENT_SIGN_INFO SAS ON SAS.ID_ATTACHMENT = SA.ID
+			    LEFT JOIN SCR_ATTACHMENT SA2 ON SA2.ID = SAS.ID_ATTACHMENT_SIGNED
+                LEFT JOIN SCR_ATTACHMENT_DOCUMENT_TYPE  TYPEDOC ON TYPEDOC.ID = SA.DOCUMENT_TYPE
+                LEFT JOIN SCR_ATTACHMENT_VALIDITY_TYPE  VALIDITYDOC ON VALIDITYDOC.ID = SA.VALIDITY_TYPE 			    
+			    WHERE PA.FDRID= #{fdrid}
+    </select>   
+      
+</mapper>

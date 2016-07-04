@@ -208,7 +208,7 @@ public class UserProfileImpl implements UserProfile
 	    DbConnection dbConn=new DbConnection();
 	    try{
 	    	dbConn.open(DBSessionManager.getSession());
-	    	//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+	    	//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
 	    	tableInfo.setTableObject(table);
 	    	tableInfo.setClassName(UserProfilesTable.class.getName());
 	    	tableInfo.setTablesMethod("getTableName");
@@ -238,7 +238,7 @@ public class UserProfileImpl implements UserProfile
 	      DbConnection dbConn = new DbConnection();
 	      try {
 	    	  dbConn.open(DBSessionManager.getSession());
-	    	 //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+	    	 //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
 	         tableInfo.setTableObject(table);
 	         tableInfo.setClassName(UserProfilesTable.class.getName());
 	         tableInfo.setTablesMethod("getTableName");
@@ -269,7 +269,7 @@ public class UserProfileImpl implements UserProfile
 		DbConnection dbConn=new DbConnection();
 		try{
 			dbConn.open(DBSessionManager.getSession());
-			//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+			//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
 
 			count = DbSelectFns.selectCount(dbConn, table.getTableName(),
 				                                table.getByIdUsuarioIdAplicacionQual(_userId, _product));

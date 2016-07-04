@@ -81,7 +81,7 @@ public class PersonValidationImpl implements PersonValidation {
 		Integer inicio = null;
 		Integer rango = null;
 		String sqlPinfo = "id in (select id from scr_pinfo where officeid = ";
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
 			CriteriaAttributes criteriaAttrs = XMLPersons
 					.getAttributesCriteria(xmlSearchParameters);
@@ -97,7 +97,7 @@ public class PersonValidationImpl implements PersonValidation {
 			Validator.validate_String_NotNull_LengthMayorZero(sessionId,
 					ValidationException.ATTRIBUTE_SESSION);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -206,22 +206,22 @@ public class PersonValidationImpl implements PersonValidation {
 			xmlResult = createXMLPersonsInfo(result.getContent(),
 					result.getSize(), criteriaAttrs);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return xmlResult;
 		} catch (ValidationException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to find inter", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_INTER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 	}
@@ -362,13 +362,14 @@ public class PersonValidationImpl implements PersonValidation {
 		String entidad = null;
 		int maxResults = 0;
 		int size = 0;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
 			personID = (String) XMLPersons.getParamId(xmlParamId).get(0);
 			entidad = (String) XMLPersons.getParamId(xmlParamId).get(2);
 			Validator.validate_Integer(new Integer(personID),
 					ValidationException.ATTRIBUTE_PERSON);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			maxResults = new Integer(Configurator.getInstance().getProperty(
@@ -414,20 +415,20 @@ public class PersonValidationImpl implements PersonValidation {
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return createXMLPersonsAddresses(result);
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to find getDirInter [" + personID
 					+ "] with type [" + typeAddress + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_PERSON_ADDRESS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -439,13 +440,14 @@ public class PersonValidationImpl implements PersonValidation {
 		String result = null;
 		String sessionID = null;
 		String entidad = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
 			sessionID = (String) XMLPersons.getParamId(xmlParamId).get(1);
 			entidad = (String) XMLPersons.getParamId(xmlParamId).get(2);
 			Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 					ValidationException.ATTRIBUTE_SESSION);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -454,19 +456,19 @@ public class PersonValidationImpl implements PersonValidation {
 			result = createXMLProvCities(ISicresQueries.getScrProv(session),
 					false);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+		    	hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+		    	hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to find getScrProv", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_PROV);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+		    hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -481,6 +483,7 @@ public class PersonValidationImpl implements PersonValidation {
 		String provId = null;
 		String sessionID = null;
 		String entidad = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
 			provId = (String) XMLPersons.getParamId(xmlParamId).get(0);
 			sessionID = (String) XMLPersons.getParamId(xmlParamId).get(1);
@@ -490,7 +493,7 @@ public class PersonValidationImpl implements PersonValidation {
 			Validator.validate_Integer(new Integer(provId),
 					ValidationException.ATTRIBUTE_PROV);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -500,19 +503,19 @@ public class PersonValidationImpl implements PersonValidation {
 					ISicresQueries.getScrCities(session, new Integer(provId)),
 					true);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to find getScrCities [" + provId + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_CITIES);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -533,13 +536,15 @@ public class PersonValidationImpl implements PersonValidation {
 		ScrPjur pjur = null;
 		List doms = null;
 		List dirTels = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
 			sessionId = XMLPersons.getSessionId(xmlPersonInfo);
 			entidad = XMLPersons.getEntidadId(xmlPersonInfo);
 			Validator.validate_String_NotNull_LengthMayorZero(sessionId,
 					ValidationException.ATTRIBUTE_SESSION);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -551,7 +556,7 @@ public class PersonValidationImpl implements PersonValidation {
 			ScrOfic scrOfic = (ScrOfic) cacheBag
 					.get(HibernateKeys.HIBERNATE_ScrOfic);
 
-			currentDate = BBDDUtils.getDateFromTimestamp(DBEntityDAOFactory
+			currentDate = bbddUtils.getDateFromTimestamp(DBEntityDAOFactory
 					.getCurrentDBEntityDAO().getDBServerDate(entidad));
 
 			int personId = DBEntityDAOFactory.getCurrentDBEntityDAO()
@@ -661,20 +666,20 @@ public class PersonValidationImpl implements PersonValidation {
 					session.delete(scrAddrtel);
 				}
 			}
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return Integer.toString(personId);
 		} catch (ValidationException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to add a person for the session ["
 					+ sessionId + "]", e);
 			if (new Integer(pInfo.getType()).intValue() == 1) {
@@ -683,7 +688,7 @@ public class PersonValidationImpl implements PersonValidation {
 				throw new BookException(BookException.ERROR_CANNOT_ADD_PJUR);
 			}
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -702,13 +707,14 @@ public class PersonValidationImpl implements PersonValidation {
 		ScrPjur pjur = null;
 		List doms = null;
 		List dirTels = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
 			sessionId = XMLPersons.getSessionId(xmlPersonInfo);
 			entidad = XMLPersons.getEntidadId(xmlPersonInfo);
 			Validator.validate_String_NotNull_LengthMayorZero(sessionId,
 					ValidationException.ATTRIBUTE_SESSION);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -840,25 +846,25 @@ public class PersonValidationImpl implements PersonValidation {
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return personId;
 		} catch (ValidationException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (JDBCException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a person for the session ["
 					+ sessionId + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_DELETE_DIRECTION);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a person for the session ["
 					+ sessionId + "]", e);
 			if (new Integer(pInfo.getType()).intValue() == 1) {
@@ -867,7 +873,7 @@ public class PersonValidationImpl implements PersonValidation {
 				throw new BookException(BookException.ERROR_CANNOT_UPDATE_PJUR);
 			}
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -887,6 +893,7 @@ public class PersonValidationImpl implements PersonValidation {
 		String sessionID = null;
 		String entidad = null;
 		int maxResults = 0;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
 			personId = (String) XMLPersons.getParamId(xmlParamId).get(0);
 			sessionID = (String) XMLPersons.getParamId(xmlParamId).get(1);
@@ -896,7 +903,7 @@ public class PersonValidationImpl implements PersonValidation {
 			Validator.validate_Integer(new Integer(personId),
 					ValidationException.ATTRIBUTE_PERSON);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -971,20 +978,20 @@ public class PersonValidationImpl implements PersonValidation {
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return createXMLRecoverPersonInfo(result);
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to find getDirInter [" + personId
 					+ "] with equal [" + equal + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_PERSON_ADDRESS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -1007,6 +1014,7 @@ public class PersonValidationImpl implements PersonValidation {
 		String entidad = null;
 
 		Integer personType = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
 			personTypeString = (String) XMLPersons.getParamId(xmlParamId)
 					.get(0);
@@ -1025,7 +1033,7 @@ public class PersonValidationImpl implements PersonValidation {
 				personType = new Integer(0);
 			}
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -1040,20 +1048,20 @@ public class PersonValidationImpl implements PersonValidation {
 
 			result = XMLPersons.createXMLTypeDocs(listaDocsType);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to find getTypeDocs [" + personTypeString
 					+ "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_TYPE_DOCS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -1062,7 +1070,7 @@ public class PersonValidationImpl implements PersonValidation {
 		String result = null;
 		String sessionID = null;
 		String entidad = null;
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
 			sessionID = (String) XMLPersons.getParamId(xmlParamId).get(1);
 			entidad = (String) XMLPersons.getParamId(xmlParamId).get(2);
@@ -1070,7 +1078,7 @@ public class PersonValidationImpl implements PersonValidation {
 			Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 					ValidationException.ATTRIBUTE_SESSION);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -1081,19 +1089,19 @@ public class PersonValidationImpl implements PersonValidation {
 
 			result = XMLPersons.createXMLTypeAddresses(listaAddressesType);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+		    hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+		    hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to find getTypeAddresses", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_TYPE_ADDRESSES);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+		    hibernateUtil.closeSession(entidad);
 		}
 	}
 

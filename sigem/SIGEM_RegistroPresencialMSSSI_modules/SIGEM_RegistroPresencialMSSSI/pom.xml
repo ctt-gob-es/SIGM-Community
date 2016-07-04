@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  	<parent>
+    	<artifactId>SIGEM_RegistroPresencialMSSSI_modules</artifactId>
+    	<groupId>es.msssi.tecdoc.sigem</groupId>
+    	<version>3.0.0-msssi2.0.0</version>
+  	</parent>
+  	<groupId>es.msssi.tecdoc.sigem</groupId>
+  	<artifactId>SIGEM_RegistroPresencialMSSSI</artifactId>
+  	<version>3.0.0-msssi2.0.0</version>
+  	<packaging>jar</packaging>
+  	<description>
+		Modulo de Presentacion del Registro Presencial de SIGEM para MSSSI
+	</description>
+  	<properties>
+		<isicres.version>8.0.1</isicres.version>
+		<isicresMSSSI.version>3.0.0-msssi2.0.0</isicresMSSSI.version>
+  	</properties>
+
+  	<dependencies> 
+
+
+		<!-- Dependencias de InvesSicres -->
+		<dependency> 
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Api</artifactId>
+			<version>${isicresMSSSI.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xml-security</groupId>
+					<artifactId>xmlsec</artifactId>
+				</exclusion>
+				
+				<exclusion>
+					<groupId>es.ieci.tecdoc.isicres</groupId>
+					<artifactId>ISicres-resources-configurable</artifactId>
+				</exclusion>
+
+				<exclusion>
+					<artifactId>commons-beanutils</artifactId>
+					<groupId>commons-beanutils</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Desktop-Jar</artifactId>
+			<version>${isicresMSSSI.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>crimson</groupId>
+					<artifactId>crimson</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>concurrent</groupId>
+					<artifactId>concurrent</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>jfree</groupId>
+					<artifactId>jcommon</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>jfree</groupId>
+					<artifactId>jfreechart</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xalan</groupId>
+					<artifactId>xalan</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xml-apis</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xml-security</groupId>
+					<artifactId>xmlsec</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-beanutils</artifactId>
+					<groupId>commons-beanutils</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Desktop-Api</artifactId>
+			<version>${isicres.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-beanutils</artifactId>
+					<groupId>commons-beanutils</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-PersonManager</artifactId>
+			<version>${isicresMSSSI.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Compulsa-Connector-Invesicres</artifactId>
+			<version>${isicres.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Document-Connector-Invesdoc</artifactId>
+			<version>${isicresMSSSI.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Terceros</artifactId>
+			<version>${isicresMSSSI.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-beanutils</artifactId>
+					<groupId>commons-beanutils</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Dependencias de SIGEM -->
+  		
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Document-Connector-Alfresco</artifactId>
+			<version>${isicres.version}</version>
+			<scope>${alfresco.manager.scope}</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>wss4j</artifactId>
+					<groupId>wss4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>xmlsec</artifactId>
+					<groupId>xml-security</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>sigem_core</artifactId>
+			<version>${sigemMSSSI.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>es.ieci.tecdoc.fwktd</groupId>
+					<artifactId>fwktd-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-lang</groupId>
+					<artifactId>commons-lang</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.thoughtworks.xstream</groupId>
+					<artifactId>xstream</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+  		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+  			<!-- 3rd Party Provided -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator-annotation-processor</artifactId>
+			<version>4.1.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.0.2.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>es.mspsi.ovfrw</groupId>
+			<artifactId>core.base</artifactId>
+			<version>2.1.0-snts</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+	<groupId>com.google.zxing</groupId>
+	<artifactId>core</artifactId>
+	<version>2.2</version>
+</dependency>
+
+<dependency>
+	<groupId>com.google.zxing</groupId>
+	<artifactId>javase</artifactId>
+	<version>2.2</version>
+</dependency>
+		<!--  dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>2.3.0</version>
+		</dependency -->
+		 <dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1</version>
+		  </dependency>
+  	</dependencies>
+  	<build>
+	  	<plugins>
+		  	<plugin>
+		         <groupId>org.apache.maven.plugins</groupId>
+		         <artifactId>maven-compiler-plugin</artifactId>
+		         <configuration>
+		             <source>1.5</source>
+		             <target>1.5</target>
+		         </configuration>
+		     </plugin>
+		 </plugins>
+	</build>
+</project>

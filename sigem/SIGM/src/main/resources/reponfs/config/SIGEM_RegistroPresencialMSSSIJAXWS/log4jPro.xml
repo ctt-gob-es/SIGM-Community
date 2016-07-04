@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "dtd/log4j.dtd">
+<!-- Fichero de configuración del sistema de trazas log4j -->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="SIGM_JAXWS" class="org.apache.log4j.RollingFileAppender">
+		<!-- _${weblogic.Name} -->
+		<param name="File" value="${sigem.log.path}/SIGEM_RegistroPresencialMSSSIJAXWS/SIGEM_RegistroPresencialMSSSIJAXWS_${weblogic.Name}.log"/>
+		<param name="MaxFileSize" value="5072KB"/>
+		<param name="MaxBackupIndex" value="10"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} SIGM %-5p [%t]  [%l]:  %m%n"/>
+			<!--  value="%d{yyyy-MM-dd HH:mm:ss} %t [%p] %C %M %m %n"/>
+				  value="%d{yyyy-MM-dd HH:mm:ss} %p [%C] %m%n" -->
+		</layout>
+	</appender>
+	<logger name="es.msssi.sigm" additivity="false">
+		<level value="DEBUG"/> <!--CAMBIAR A INFO -->
+		<appender-ref ref="SIGM_JAXWS"/>
+	</logger>
+	<logger name="com.ieci.tecdoc"  additivity="false">
+		<level value="DEBUG"/> <!--CAMBIAR A INFO -->
+		<appender-ref ref="SIGM_JAXWS"/>
+	</logger>
+<!-- 	<logger name="org.springframework"> -->
+<!-- 		<level value="OFF"/> -->
+<!-- 		<appender-ref ref="SIGM_JAXWS"/> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="org.hibernate"> -->
+<!-- 		<level value="OFF"/> -->
+<!-- 		<appender-ref ref="SIGM_JAXWS"/> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="net.sf.hibernate"> -->
+<!-- 		<level value="OFF"/> -->
+<!-- 		<appender-ref ref="SIGM_JAXWS"/> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="com.opensymphony.oscache"> -->
+<!-- 		<level value="OFF"/> -->
+<!-- 		<appender-ref ref="SIGM_JAXWS"/> -->
+<!-- 	</logger> -->
+<!-- 	<logger name="core.log"> -->
+<!-- 		<level value="OFF"/> -->
+<!-- 		<appender-ref ref="SIGM_JAXWS"/> -->
+<!-- 	</logger> -->
+</log4j:configuration>

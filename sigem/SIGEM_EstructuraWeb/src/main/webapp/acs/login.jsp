@@ -6,6 +6,8 @@
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
 <%@ taglib uri="/WEB-INF/x.tld" prefix="x" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%
 response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -18,9 +20,9 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 <ieci:baseInvesDoc/>
 <title><bean:message key="message.common.title"/></title>
 
-<link rel="stylesheet" type="text/css" href="include/css/login.css"/>
-<link rel="stylesheet" type="text/css" href="include/css/error.css"/>
-<script type="text/javascript" src="include/js/validations.js"></script>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/login.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/error.css"/>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/validations.js"></script>
 
 
 <c:choose>
@@ -127,8 +129,8 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 			<td width="100%">
 				<table class="tableBase">
 					<tr>
-						<td valign="top"  align="left" class="cabecera"><img hspace="10" src="include/images/logo_idoc.gif"/></td>
-				                <td valign="top"  align="right" class="cabecera"><img hspace="10" src="include/images/logoJA.gif"/></td>
+						<td valign="top"  align="left" class="cabecera"><img hspace="10" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/logo_idoc.gif"/></td>
+				                <td valign="top"  align="right" class="cabecera"><img hspace="10" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/logoJA.gif"/></td>
 					</tr>
 				</table>
 			</td>

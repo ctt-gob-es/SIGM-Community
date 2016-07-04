@@ -76,8 +76,9 @@ public class ConfiguratorBook {
 	}
 
 	private void init(String entidad) {
+	    HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 
 			// Obtenemos la configuración de invesicres para el sistema
 			StringBuffer query = new StringBuffer();
@@ -101,7 +102,7 @@ public class ConfiguratorBook {
 		} catch (Exception e) {
 			log.error("Impossible to load values for booktype configuration.", e);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 	}

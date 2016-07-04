@@ -1,6 +1,11 @@
 package ieci.tecdoc.isicres.rpadmin.struts.util;
 
 import ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion;
+import ieci.tecdoc.sgm.core.exception.SigemException;
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.administracion.AdministracionException;
+import ieci.tecdoc.sgm.core.services.administracion.ServicioAdministracion;
+import ieci.tecdoc.sgm.core.services.administracion.Usuario;
 import ieci.tecdoc.sgm.core.services.dto.Entidad;
 import ieci.tecdoc.sgm.core.services.gestion_administracion.ConstantesGestionUsuariosAdministracion;
 import ieci.tecdoc.sgm.sesiones.administrador.ws.client.Sesion;
@@ -13,12 +18,20 @@ import org.apache.log4j.Logger;
 public class SesionHelper {
 
 	private static final Logger logger = Logger.getLogger(SesionHelper.class);
+	private static ServicioAdministracion oServicio;
 	
+	static {
+		try {
+			oServicio = LocalizadorServicios.getServicioAdministracion();
+		}
+		catch (SigemException e) {
+		}
+	}
 	public static boolean authenticate(HttpServletRequest request) {
 
-    	if(AutenticacionAdministracion.autenticarEntidad(request, ConstantesGestionUsuariosAdministracion.APLICACION_REGISTRO)) {
+    	if(autenticarEntidad(request, ConstantesGestionUsuariosAdministracion.APLICACION_REGISTRO)) {
     		if(obtenerEntidad(request)==null) {
-    			Sesion sesion = AutenticacionAdministracion.obtenerDatosEntidad(request);
+    			Sesion sesion = obtenerDatosEntidad(request);
     			guardarEntidad(request, sesion.getIdEntidad());
     			guardarSesion(request, sesion);
     		}
@@ -37,7 +50,7 @@ public class SesionHelper {
 	}
 	
 	public static String getEntidad(HttpServletRequest request){
-		Sesion sesion = AutenticacionAdministracion.obtenerDatosEntidad(request);
+		Sesion sesion = obtenerDatosEntidad(request);
 		return sesion.getIdEntidad();
 	}
 	
@@ -74,5 +87,58 @@ public class SesionHelper {
 		}
 		
 		return (String)oCaseSensitive;		
+	}
+	
+	private static Sesion obtenerDatosEntidad(HttpServletRequest request) {
+		
+		String key =
+				request.getParameter(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM_ENTIDAD);
+		if (AutenticacionAdministracion.isNuloOVacio(key)) {
+			key =
+					(String) request
+							.getSession()
+							.getAttribute(
+									ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM_ENTIDAD);
+		}
+		
+		if (AutenticacionAdministracion.isNuloOVacio(key)) {
+			return null;
+		}
+		else {
+			Usuario oUsuario = null;
+			Sesion newSesion = null;
+			try {
+				oUsuario = oServicio.obtenerUsuario(key.split("_")[0]);
+			}
+			catch (AdministracionException e) {
+			}
+			
+			if (oUsuario != null){
+				newSesion = new Sesion();
+				String datos =
+						(new StringBuilder(String.valueOf(oUsuario.getNombre())))
+								.append(" ").append(oUsuario).toString();
+				newSesion.setDatosEspecificos(datos);
+				newSesion.setIdEntidad(key.split("_")[2]);
+				newSesion.setIdSesion(key.split("_")[1]);
+				newSesion.setUsuario(key.split("_")[0]);
+				newSesion.setTipoUsuario(Sesion.TIPO_USUARIO_ADMINISTRADOR);
+			}
+			return newSesion;
+		}
+	}
+	private static boolean autenticarEntidad(HttpServletRequest request, String idAplicacion) {
+		
+    	String key_entidad = request.getParameter(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM_ENTIDAD);
+    	if(AutenticacionAdministracion.isNuloOVacio(key_entidad)) {
+    		key_entidad = (String) request.getSession().getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM_ENTIDAD);
+    	}
+    	
+    	if(AutenticacionAdministracion.isNuloOVacio(key_entidad)) {
+    		return false;
+    	} else{
+   			request.getSession().setAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM_ENTIDAD, key_entidad);
+   			return true;
+    	}
 	}
 }

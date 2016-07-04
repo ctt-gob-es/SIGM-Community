@@ -30,7 +30,7 @@ public class IdentificadoresIntercambioTestHelper {
 	@SuppressWarnings("unchecked")
 	public static void load(){
 		identificadores= new SortedProperties();
-		try {
+		try { 
 			identificadores.load(new ClassPathResource(fileName).getInputStream());
 		} catch (IOException e) {
 			logger.error("Error en load",e);

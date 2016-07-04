@@ -2,6 +2,7 @@ package es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager;
 
 import java.util.List;
 
+import es.ieci.tecdoc.isicres.api.business.vo.IdentificadorRegistroVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.BandejaSalidaItemVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralSalidaVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.IntercambioRegistralSalidaVO;
@@ -61,6 +62,21 @@ public interface IntercambioRegistralSalidaManager {
 	public String enviarIntercambioRegistralSalida(
 			String idLibro, String idRegistro, String idOfic, String username,String tipoOrigen, UnidadTramitacionIntercambioRegistralVO unidadDestino);
 
+	/**
+	 * Envía el registro <code>idRegistro</code> del libro <code>idLibro</code> al destino <code>unidadDestino</code>
+	 * @param idLibro
+	 * @param idRegistro
+	 * @param idOfic
+	 * @param username
+	 * @param usercontact
+	 * @param tipoOrigen
+	 * @param unidadDestino
+	 * @return String el número de intermcabio registral retornado por el CIR
+	 */
+	public String enviarIntercambioRegistralSalida(
+			String idLibro, String idRegistro, String idOfic, String username, String usercontact, String tipoOrigen, UnidadTramitacionIntercambioRegistralVO unidadDestino);
+
+	
 /**
  * metodo que reenvia un intercambio registral de salida hacia el SIR a partir de su ID
  * @param id
@@ -69,10 +85,10 @@ public interface IntercambioRegistralSalidaManager {
  * @param descripcionReenvio
  * @param nuevoDestino
  */
-	public void  reenviarIntercambioRegistralSalidaById(
-			String id, String usuario, String contacto, String descripcionReenvio, UnidadTramitacionIntercambioRegistralVO nuevoDestino);
 
-
+	public void reenviarIntercambioRegistralSalidaById(
+		String idIntercambioRegistralSalida, String user,String contacto,String descripcionReenvio,
+		UnidadTramitacionIntercambioRegistralVO nuevoDestino, Integer idOficina, String codOficina);
 	/**
 	 * metodo que si el registro se encuentra en la bandeja de salida de intercambio registral en estado pendientes de envio, puede ser anulado
 	 * @param id
@@ -148,4 +164,6 @@ public interface IntercambioRegistralSalidaManager {
 	 * @param idOficina
 	 */
 	public List<IntercambioRegistralSalidaVO> getHistorialIntercambioRegistralSalida(String idLibro, String idRegistro, String idOficina);
+
+	public void rectificarIntercambioRegistralSalidaById(String valueOf, IdentificadorRegistroVO  identificadorRegistroVO);
 }

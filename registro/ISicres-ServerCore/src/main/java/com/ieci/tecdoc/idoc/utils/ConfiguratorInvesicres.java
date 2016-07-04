@@ -57,8 +57,10 @@ public class ConfiguratorInvesicres {
 	}
 
 	private void init(String entidad) {
+	    HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+		    
+			Session session = hibernateUtil.currentSession(entidad);
 
 			// Obtenemos la configuración de invesicres para el sistema
 	        StringBuffer query = new StringBuffer();
@@ -80,7 +82,7 @@ public class ConfiguratorInvesicres {
 					"Impossible to load values for invesicres configuration.",
 					e);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 	}

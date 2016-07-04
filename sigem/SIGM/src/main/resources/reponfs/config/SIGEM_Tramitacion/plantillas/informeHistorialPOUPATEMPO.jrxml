@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="informeHistorialTIC" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="476"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\desarrollo\\jasperWorkspace\\02_Procedimiento Solicitud TIC\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="xPath">
+		<![CDATA[//structures/structure]]>
+	</queryString>
+	<field name="interessado" class="java.lang.String">
+		<fieldDescription><![CDATA[interessado]]></fieldDescription>
+	</field>
+	<field name="processoSGP" class="java.lang.String">
+		<fieldDescription><![CDATA[processoSGP]]></fieldDescription>
+	</field>
+	<field name="servPosto" class="java.lang.String">
+		<fieldDescription><![CDATA[servPosto]]></fieldDescription>
+	</field>
+	<field name="instrumentoCodigo" class="java.lang.String">
+		<fieldDescription><![CDATA[instrumentoCodigo]]></fieldDescription>
+	</field>
+	<field name="dataDoe" class="java.lang.String">
+		<fieldDescription><![CDATA[dataDoe]]></fieldDescription>
+	</field>
+	<field name="instrumentoAssinatura" class="java.lang.String">
+		<fieldDescription><![CDATA[instrumentoAssinatura]]></fieldDescription>
+	</field>
+	<field name="instrumentoVigencia" class="java.lang.String">
+		<fieldDescription><![CDATA[instrumentoVigencia]]></fieldDescription>
+	</field>
+	<field name="vencimiento" class="java.lang.String">
+		<fieldDescription><![CDATA[vencimiento]]></fieldDescription>
+	</field>
+	<field name="dataAssinaturaAditamento" class="java.lang.String">
+		<fieldDescription><![CDATA[dataAssinaturaAditamento]]></fieldDescription>
+	</field>
+	<field name="dataDoeAditamento" class="java.lang.String">
+		<fieldDescription><![CDATA[dataDoeAditamento]]></fieldDescription>
+	</field>
+	<field name="dataAssinaturaEncerramento" class="java.lang.String">
+		<fieldDescription><![CDATA[dataAssinaturaEncerramento]]></fieldDescription>
+	</field>
+	<field name="dataDoeEncerramento" class="java.lang.String">
+		<fieldDescription><![CDATA[dataDoeEncerramento]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="21" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="28" backcolor="#C8EBB4"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Convênios e Termos de Cooperação do Poupatempo]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="50" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="50" backcolor="#E5E5E5"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<staticText>
+					<reportElement x="5" y="15" width="65" height="20" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Interessado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="75" y="0" width="50" height="50" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Processo SPDOC]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="130" y="15" width="50" height="20" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Posto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="185" y="15" width="75" height="20" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Nº Convênio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="265" y="15" width="55" height="20" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Data BOE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="325" y="0" width="55" height="50" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Data Assinatura]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="385" y="15" width="55" height="20" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Vigência]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="445" y="15" width="60" height="20" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Vencimiento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="510" y="0" width="55" height="50" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Data Assinatura Aditamento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="570" y="0" width="55" height="50" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Data DOE Aditamento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="630" y="0" width="70" height="50" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Data Assinature Encerramento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="705" y="0" width="70" height="50" isPrintInFirstWholeBand="true"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Data DOE Encerramento]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="30" backcolor="#EEFFF9"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textField>
+					<reportElement x="5" y="5" width="65" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{interessado}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="75" y="5" width="50" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{processoSGP}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="130" y="5" width="50" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{servPosto}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="185" y="5" width="75" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{instrumentoCodigo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="265" y="5" width="55" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{dataDoe}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="325" y="5" width="55" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{instrumentoAssinatura}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="385" y="5" width="55" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{instrumentoVigencia}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="445" y="5" width="60" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{vencimiento}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="510" y="5" width="55" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{dataAssinaturaAditamento}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="570" y="5" width="55" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{dataDoeAditamento}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="630" y="5" width="70" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{dataAssinaturaEncerramento}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="705" y="5" width="70" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{dataDoeEncerramento}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="682" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="762" y="0" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="5" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="30" splitType="Stretch"/>
+	</summary>
+</jasperReport>

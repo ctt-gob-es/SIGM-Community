@@ -5,6 +5,8 @@
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 <%@ page import="ieci.tecdoc.isicres.rpadmin.struts.util.AutenticacionAdministracion" %>
 <%@ page import="es.ieci.tecdoc.isicres.admin.core.services.ConstantesGestionUsuariosAdministracion" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
@@ -12,9 +14,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="IECISA" />
 <title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.sgm.rpadmin.usuarios.titulo"/></title>
-<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/common.js"></script>
-<script type="text/javascript" src="js/tabsUsuario.js"></script>
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/tabsUsuario.js"></script>
 <script>
 	function init() {
 		choosebox(1,2);
@@ -93,9 +95,9 @@
 									<table summary="" border="0" cellpadding="0" cellspacing="0">
 									<tbody><tr>
 										<td class="tableft" height="17" width="7">
-											<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 										<td class="tabmiddle1" id="tabmiddle1" onclick="nuevoUsuarioClick()"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.usuario.nuevo"/></td>
-										<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+										<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 									</tr>
 									</tbody></table>
 								</div>
@@ -105,9 +107,9 @@
 									<table summary="" border="0" cellpadding="0" cellspacing="0">
 									<tbody><tr>
 										<td class="tableft" height="17" width="7">
-											<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 										<td class="tabmiddle2" id="tabmiddle2" onclick="permisosUsuarioClick()"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.usuario.permisos"/></td>
-										<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+										<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 									</tr>
 									</tbody></table>
 								</div>
@@ -117,9 +119,9 @@
 									<table summary="" border="0" cellpadding="0" cellspacing="0">
 									<tbody><tr>
 										<td class="tableft" height="17" width="7">
-											<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 										<td class="tabmiddle3" id="tabmiddle3" onclick="permisosAdministracionClick()"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.usuario.permisos.administracion"/></td>
-										<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+										<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 									</tr>
 									</tbody></table>
 								</div>
@@ -129,9 +131,9 @@
 									<table summary="" border="0" cellpadding="0" cellspacing="0">
 									<tbody><tr>
 										<td class="tableft" height="17" width="7">
-											<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 										<td class="tabmiddle4" id="tabmiddle4" onclick="identificacionUsuarioClick()"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.usuario.identificacion"/></td>
-										<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+										<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 									</tr>
 									</tbody></table>
 								</div>
@@ -141,9 +143,9 @@
 								<table summary="" border="0" cellpadding="0" cellspacing="0">
 								<tbody><tr>
 									<td class="tableft" height="17" width="7">
-										<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+										<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 									<td class="tabmiddle5" id="tabmiddle5" onclick="localizacionUsuarioClick()"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.usuario.localizacion"/></td>
-									<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+									<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 								</tr>
 								</tbody></table>
 								</div>
@@ -169,10 +171,10 @@
 									<tr>
 										<td><html:text property="nombre" readonly="true" styleClass="textInput" maxlength="32" styleId="nombre"/></td>
 										<logic:equal name="usuarioForm" property="tipoUsuario" value="2">
-											<td><a href="#" onclick="javascript:chequearSessionBuscarUsuariosLdap('<html:rewrite page="/jsp/buscarLdapUserPopup.jsp"/>')"><img src="<html:rewrite page="/img/ico_buscar.gif"/>" border="0"/></a></td>
+											<td><a href="#" onclick="javascript:chequearSessionBuscarUsuariosLdap('<html:rewrite page="/jsp/buscarLdapUserPopup.jsp"/>')"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/ico_buscar.gif" border="0"/></a></td>
 										</logic:equal>
 										<logic:notEqual name="usuarioForm" property="tipoUsuario" value="2">
-											<td><a href="#" onclick="javascript:chequearSessionBuscarUsuarios('<html:rewrite page="/jsp/buscarUsuariosPopup.jsp"/>')"><img src="<html:rewrite page="/img/ico_buscar.gif"/>" border="0"/></a></td>
+											<td><a href="#" onclick="javascript:chequearSessionBuscarUsuarios('<html:rewrite page="/jsp/buscarUsuariosPopup.jsp"/>')"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/ico_buscar.gif" border="0"/></a></td>
 										</logic:notEqual>
 									</tr>
 								</table>

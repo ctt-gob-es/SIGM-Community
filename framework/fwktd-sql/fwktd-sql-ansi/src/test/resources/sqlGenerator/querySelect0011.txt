@@ -1,3 +1,0 @@
-SELECT "Clientes".*
- FROM DATACM_4_0."Clientes" "Clientes" 
- ORDER BY "Clientes".edad  ASC , "Clientes".nombre  DESC

@@ -109,7 +109,7 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 	 * PUBLIC METHOD
 	 **************************************************************************/
 
-	public static AxSf generateRegisterNumber(Session session, Integer bookID,
+	public synchronized static AxSf generateRegisterNumber(Session session, Integer bookID,
 			AxSf axsfNew, ScrRegstate scrregstate, ScrOfic scrofic,
 			String entidad) throws BookException, HibernateException,
 			SQLException, Exception {
@@ -341,17 +341,20 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 			Integer bookID, int fdrid, boolean updateDate,
 			Integer launchDistOutRegister, String language, String entidad,
 			FolderDataSession data) throws BookException, SessionException {
-
+	    	
 		// Preparación operación del registro
+	    HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
+		log.warn("preparationOfFolder - Transaccion creada");
 		boolean asocEqualFld8 = true;
 		try {
 
 			data = getInformation(sessionID, bookID, entidad, data);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
+			log.warn("preparationOfFolder - Sesion creada");
 			tran = session.beginTransaction();
-
+			log.warn("preparationOfFolder - Transaccion iniciada con sesion");
 			if (data.isCreate()) {
 				data = setUser(sessionID, bookID, entidad, data);
 				data = setScrOficForImportFolder(session, data);
@@ -391,27 +394,27 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 			// Punto j)
 			data = isAutomaticRegisterCreation(session, bookID, fdrid,
 					asocEqualFld8, entidad, data);
-
-			HibernateUtil.commitTransaction(tran);
+			log.warn("preparationOfFolder - Commit de la transaccion");
+			hibernateUtil.commitTransaction(tran);
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for the session ["
 					+ sessionID + "] and bookID [" + bookID + "]", e);
 			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return data;
 	}
 
-	protected static FolderDataSession getNewIDs(Integer bookID,
+	protected synchronized static FolderDataSession getNewIDs(Integer bookID,
 			int assignedRegisterID, FolderDataSession data, String entidad)
 			throws BookException {
 		Integer newAssociatedBookID = getNewAssociatedBookID(data
@@ -436,7 +439,7 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 			Integer newAssociatedBookID, int newAssociatedRegisterID,
 			String entidad, FolderDataSession data, boolean isConsolidacion)
 			throws BookException {
-
+	    HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
 
@@ -444,7 +447,7 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 			data = completeInterList(sessionID, bookID, newRegisterID, inter,
 					entidad, data);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Generación del número de registro
@@ -501,22 +504,22 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 
 			unlock(session, bookID, newRegisterID, data.getUser());
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (EventException eE){
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw eE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to create a new folder for the session ["
 					+ sessionID + "] and bookID [" + bookID + "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_CREATE_NEW_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return data;
@@ -527,12 +530,13 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 			int newAssociatedRegisterID, String entidad, FolderDataSession data)
 			throws BookException {
 		Transaction tran = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
 			// Punto a)
 			data = completeInterList(sessionID, bookID, fdrid, inter, entidad,
 					data);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Auditoria de modificaciones
@@ -569,19 +573,19 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 			createScrRegAsoc(session, bookID, fdrid, newAssociatedBookID,
 					newAssociatedRegisterID, entidad, data);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (EventException eE){
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for the session ["
 					+ sessionID + "] and bookID [" + bookID + "]", eE);
 			throw eE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for the session ["
 					+ sessionID + "] and bookID [" + bookID + "]", e);
 			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return data;
@@ -594,7 +598,7 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 	protected static BookTypeConf getBookTypeConf(Integer bookID,
 			String entidad, AxSf axsfNew, AxSf axsfOld, String userName,
 			String scrOficCode) {
-
+	    BBDDUtils bbddUtils = new BBDDUtils();
 		BookTypeConf bookTypeConf = null;
 
 		if (Repository.getInstance(entidad).isInBook(bookID).booleanValue()) {
@@ -617,7 +621,7 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 				date = (Date) axsfOld.getAttributeValue("fld2");
 			} else {
 				try {
-					date = BBDDUtils.getDateFromTimestamp(DBEntityDAOFactory
+					date = bbddUtils.getDateFromTimestamp(DBEntityDAOFactory
 							.getCurrentDBEntityDAO().getDBServerDate(entidad));
 				} catch (Exception e) {
 					date = Calendar.getInstance().getTime();
@@ -1076,12 +1080,12 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 			String entidad, FolderDataSession data) throws ParseException,
 			Exception {
 		Locale locale = data.getLocale();
-
-		Date currentDate = BBDDUtils.getDateFromTimestamp(DBEntityDAOFactory
+		BBDDUtils bbddUtils = new BBDDUtils();
+		Date currentDate = bbddUtils.getDateFromTimestamp(DBEntityDAOFactory
 				.getCurrentDBEntityDAO().getDBServerDate(entidad));
 
 		Date currentDate1 = getAxSfDateFormatted(data.getAxsfNew(), locale,
-				DEFAULTSIMPLEDATEFORMAT, currentDate);
+				LONGSIMPLEDATEFORMAT, currentDate);
 
 		if (data.isCreate() && !data.isImportFolder()) {
 			ScrTmzofic scrTmzofic = data.getScrTmzofic();
@@ -1452,28 +1456,29 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 	private static int getNewRegisterID(Integer bookID, Integer userId,
 			int assignedRegisterID, String entidad) throws BookException {
 		Transaction tran = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		int newRegisterID = assignedRegisterID;
 		// Generación ID de registro
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
-
+			
 			if (newRegisterID == -1) {
 				newRegisterID = DBEntityDAOFactory.getCurrentDBEntityDAO()
 						.getNextIdForRegister(bookID, entidad);
-				DBEntityDAOFactory.getCurrentDBEntityDAO().lastRegister(
+				int lastRegister = DBEntityDAOFactory.getCurrentDBEntityDAO().lastRegister(
 						new Integer(newRegisterID), userId, bookID, entidad);
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to create a new folder for bookID [" + bookID
 					+ "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_CREATE_NEW_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return newRegisterID;
@@ -1481,14 +1486,14 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 
 	private static int getNewAssociatedRegisterID(Integer bookID,
 			FolderDataSession data, String entidad) throws BookException {
-
+	    HibernateUtil hibernateUtil = new HibernateUtil();
 		int newAssociatedRegisterID = 0;
 		if (data.isAutomaticRegisterCreation()
 				&& (data.isCreate() || data.getAutomaticRegisterCreactionType() == 3)) {
 			// Generación ID de registro
 			Transaction tran = null;
 			try {
-				Session session = HibernateUtil.currentSession(entidad);
+				Session session = hibernateUtil.currentSession(entidad);
 				tran = session.beginTransaction();
 
 				newAssociatedRegisterID = DBEntityDAOFactory
@@ -1496,15 +1501,15 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 								new Integer(data.getAssociatedBook()
 										.getIdBooksec()), entidad);
 
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 			} catch (Exception e) {
-				HibernateUtil.rollbackTransaction(tran);
+				hibernateUtil.rollbackTransaction(tran);
 				log.error("Impossible to create a new folder for bookID ["
 						+ bookID + "]", e);
 				throw new BookException(
 						BookException.ERROR_CANNOT_CREATE_NEW_FOLDER);
 			} finally {
-				HibernateUtil.closeSession(entidad);
+				hibernateUtil.closeSession(entidad);
 			}
 		}
 
@@ -1569,11 +1574,11 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 	private static void updateFolderAudit(String sessionID, String entidad,
 			Map changedFields, AuthenticationUser user, AxSf axsfOld,
 			Integer bookID, ScrOfic scrofic, Session session) throws Exception {
-
+	    BBDDUtils bbddUtils = new BBDDUtils();
 		Date currentDate = new Date(DBEntityDAOFactory.getCurrentDBEntityDAO()
 				.getDBServerDate(entidad).getTime());
 		if (!changedFields.isEmpty()) {
-			Integer size = new Integer(BBDDUtils.SCR_MODIFREG_USR_FIELD_LENGTH);
+			Integer size = new Integer(bbddUtils.SCR_MODIFREG_USR_FIELD_LENGTH);
 
 			String aux = user.getName();
 			if (aux.length() > size.intValue()) {
@@ -1646,30 +1651,34 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 	}
 
 	private static FolderDataSession completeInterList(String sessionID,
-			Integer bookID, int registerID, List inter, String entidad,
-			FolderDataSession data) throws HibernateException, SQLException,
-			Exception {
-		if (inter != null && !inter.isEmpty()) {
+		Integer bookID, int registerID, List inter, String entidad,
+		FolderDataSession data) throws HibernateException, SQLException,
+		Exception {
+	if (inter != null && !inter.isEmpty()) {
+	    inter.get(0);
+	    if (inter.get(0) instanceof FlushFdrInter) {
+		InteresadoManager interesadoManager =
+			ISicresBeansProvider.getInstance().getInteresadoManager();
 
-			InteresadoManager interesadoManager = ISicresBeansProvider.getInstance().getInteresadoManager();
+		// InteresadoManager interesadoManager = (InteresadoManager)
+		// SpringApplicationContext
+		// .getBean("interesadoManager");
+		interesadoManager.deleteAll(bookID.toString(), String.valueOf(registerID));
 
-//			InteresadoManager interesadoManager = (InteresadoManager) SpringApplicationContext
-//					.getBean("interesadoManager");
-			interesadoManager.deleteAll(bookID.toString(),
-					String.valueOf(registerID));
+		boolean existValidado =
+			addInteresadosValidados(entidad, sessionID, inter, bookID, registerID, data);
 
-			boolean existValidado = addInteresadosValidados(entidad, sessionID,
-					inter, bookID, registerID, data);
+		if (!existValidado) {
+		    addInteresadosNoValidados(entidad, sessionID, inter, bookID, registerID, data);
 
-			if (!existValidado) {
-				addInteresadosNoValidados(entidad, sessionID, inter, bookID,
-						registerID, data);
-
-			}
 		}
+	    }
 
-		return data;
 	}
+
+	return data;
+    }
+
 
 	private static void createGenericInformationFolder(Integer bookID,
 			int newRegisterID, Integer userId, Date currentDate, String entidad)
@@ -1693,7 +1702,7 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 			Integer bookID, int registerID, String entidad,
 			FolderDataSession data) throws BookException, SessionException,
 			ValidationException, SQLException, Exception {
-		AxXfEntity axXfEntity = new AxXfEntity();
+	    AxXfEntity axXfEntity = new AxXfEntity();
 		List extendedFields = getExtendedFields(data);
 
 		String dataBaseType = DBEntityDAOFactory.getCurrentDBEntityDAO()
@@ -1721,9 +1730,9 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 
 					//comprobamos que el valor nuevo y el valor viejo no sean iguales
 					if ((oldValueFieldExtend != null)
-							&& !(oldValueFieldExtend.getText()
+							&& (oldValueFieldExtend.getText() == null || !(oldValueFieldExtend.getText()
 									.equalsIgnoreCase(newValueFieldExtend
-											.getText()))) {
+											.getText())))) {
 						value = newValueFieldExtend.getText();
 						isOk = true;
 					}else{
@@ -1758,6 +1767,13 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 							.getCurrentDBEntityDAO().getDBServerDate(entidad),
 							entidad, dataBaseType);
 				}
+				try{
+				    if (!data.isCreate()) {
+				    updateFolderExtentAudit(sessionID,entidad, extendedFieldId,data.getUser(), data, bookID, data.getScrofic());
+				    }
+				}catch(Exception e){
+				    
+				}
 			}
 		}
 
@@ -1787,6 +1803,7 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 						REGISTER_MODIF_EVENT, bookID, new Integer(registerID),
 						entidad);
 			}
+			
 			data.getAxSfEntity().setAxSf(data.getAxsfOld());
 			data.getAxSfEntity().store(entidad, dataBaseType);
 		}
@@ -1794,6 +1811,80 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 		return data;
 	}
 
+	/**
+	 * Metodo que registra la auditoria cuando modificamos un registro
+	 *
+	 * @param sessionID
+	 * @param entidad
+	 * @param changedFields
+	 * @param user
+	 * @param axsfOld
+	 * @param bookID
+	 * @param scrofic
+	 * @param session
+	 * @throws Exception
+	 */
+	private static void updateFolderExtentAudit(String sessionID, String entidad,
+			Integer extendedFieldId, AuthenticationUser user, FolderDataSession data,
+			Integer bookID, ScrOfic scrofic) throws Exception {
+	    BBDDUtils bbddUtils = new BBDDUtils();
+	    
+		Date currentDate = new Date(DBEntityDAOFactory.getCurrentDBEntityDAO()
+				.getDBServerDate(entidad).getTime());
+		if (extendedFieldId != null) {
+		    HibernateUtil hibernateUtil = new HibernateUtil();
+		    Session session = hibernateUtil.currentSession(entidad);
+		    Transaction tran = null;
+		    tran = session.beginTransaction();
+		    Integer size = new Integer(bbddUtils.SCR_MODIFREG_USR_FIELD_LENGTH);
+
+		    String aux = user.getName();
+		    if (aux.length() > size.intValue()) {
+			aux = aux.substring(0, size.intValue());
+			user.setName(aux);
+		    }
+		    AxXf newValue = (AxXf) data.getAxsfNew().getExtendedFields().get(extendedFieldId);
+		    AxXf oldValue = null;
+		    if (data.getAxsfOld() != null){
+			oldValue =  (AxXf) data.getAxsfOld().getExtendedFields().get(extendedFieldId);
+		    }
+
+		    if (isAuditFieldModif((oldValue !=null)?oldValue.getText():null, (newValue !=null)?newValue.getText():null) ) {
+			Integer updateAuditId = new Integer(DBEntityDAOFactory
+							.getCurrentDBEntityDAO().getNextIdForScrModifreg(
+									user.getId(), entidad));
+			String userName = null;
+			if (isDataBaseCaseSensitive(entidad)) {
+				userName = user.getName().toUpperCase();
+			} else {
+				userName = user.getName();
+			}
+			String numReg = data.getAxsfOld().getAttributeValueAsString("fld1");
+
+			ISicresSaveQueries.saveScrModifreg(session, updateAuditId,
+							userName, currentDate, numReg, extendedFieldId
+									.intValue(), bookID.intValue(), scrofic
+									.getId().intValue(), 0);
+
+			try {
+				DBEntityDAOFactory.getCurrentDBEntityDAO().insertAudit(
+					updateAuditId, (oldValue !=null)?oldValue.getText():null, (newValue !=null)?newValue.getText():null, entidad);
+				hibernateUtil.commitTransaction(tran);
+			} catch (SQLException e) {
+			    hibernateUtil.rollbackTransaction(tran);
+				log.error(
+					"Impossible to audit the update for the session ["
+							+ sessionID + "] and bookID [" + bookID
+							+ "]", e);
+				throw new BookException(
+								BookException.ERROR_AUDIT_CHANGES);
+			}finally {
+				hibernateUtil.closeSession(entidad);
+			}
+		    }
+		}
+	}
+	
 	private static void createGenericInformationDocumentsTipoAsunto(
 			Integer bookID, List documents, int newRegisterID,
 			Date currentDate, Integer userId, String entidad)
@@ -1879,131 +1970,133 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 		}
 	}
 
-	private static FolderDataSession isStateCompletedCreate(Integer bookID,
-			String entidad, FolderDataSession data) {
-		boolean completedState = false;
-		List inter = data.getInter();
-		boolean fullInter = inter != null && !inter.isEmpty();
-		if (fullInter) {
-			FlushFdrInter flushFdrInter = (FlushFdrInter) inter.get(0);
-			fullInter = flushFdrInter.getInterName() != null;
-		}
 
-		if (Repository.getInstance(entidad).isInBook(bookID).booleanValue()) {
-			if ((data.getNewAttributeValue("fld7") != null || fullInter)
-					&& (data.getNewAttributeValue("fld8") != null)
-					&& (data.getNewAttributeValue("fld16") != null || data
-							.getNewAttributeValue("fld17") != null)) {
-				data.setNewAttributeValue("fld6", new Integer(0));
-				completedState = true;
-			} else {
-				data.setNewAttributeValue("fld6", new Integer(1));
-			}
-		} else {
-			if ((data.getNewAttributeValue("fld8") != null || fullInter)
-					&& (data.getNewAttributeValue("fld7") != null)
-					&& (data.getNewAttributeValue("fld12") != null || data
-							.getNewAttributeValue("fld13") != null)) {
-				data.setNewAttributeValue("fld6", new Integer(0));
-				completedState = true;
-			} else {
-				data.setNewAttributeValue("fld6", new Integer(1));
-			}
-		}
-
-		data.setCompletedState(completedState);
-		return data;
-	}
-
-	/**
-	 * Hallar completo o incompleto despues de lo anterior siempre y cuando no
-	 * sea el estado el campo que se está modificando por ejemplo desde las
-	 * opciones de Abrir/Cerrar porque en este caso ya tenemos cuál es el valor
-	 * original y el final
-	 *
-	 * @param bookID
-	 * @param inter
-	 * @param entidad
-	 * @param data
-	 * @return
+    private static FolderDataSession isStateCompletedCreate(Integer bookID, String entidad,
+	    FolderDataSession data) {
+	boolean completedState = false;
+	List inter = data.getInter();
+	boolean fullInter = inter != null && !inter.isEmpty();
+	/*
+	 * if (fullInter) { FlushFdrInter flushFdrInter = (FlushFdrInter)
+	 * inter.get(0); fullInter = flushFdrInter.getInterName() != null; }
 	 */
-	private static FolderDataSession isStateCompletedUpdate(Integer bookID,
-			String entidad, FolderDataSession data) {
 
-		boolean completedState = false;
-		if (data.getChangedFields().size() == 0
-				|| !data.changedContainsKey(new Integer(6))) {
-			Object oldFld6 = data.getOldAttributeValue("fld6");
-			boolean changeState = data.getNewAttributeValue("fld6") == null;
-			if (!changeState) {
-				data.setOldAttributeValue("fld6", data
-						.getNewAttributeValue("fld6"));
-				data.changedPut(new Integer(6), new Object[] { oldFld6,
-						data.getNewAttributeValue("fld6") });
-			}
-
-			List inter = data.getInter();
-			boolean fullInter = inter != null && !inter.isEmpty();
-			boolean deleteInter = false;
-			if (fullInter) {
-				FlushFdrInter flushFdrInter = (FlushFdrInter) inter.get(0);
-				fullInter = flushFdrInter.getInterName() != null;
-				deleteInter = flushFdrInter.getInterName() == null;
-			}
-			if (!fullInter && !deleteInter) {
-				fullInter = data.getOldAttributeValue("fld9") != null;
-			}
-			boolean finalChangeState = false;
-			if (changeState) {
-				int old = 0;
-				if (data.getOldAttributeValue("fld6") instanceof Integer) {
-					old = ((Integer) data.getOldAttributeValue("fld6"))
-							.intValue();
-				}
-				if (Repository.getInstance(entidad).isInBook(bookID)
-						.booleanValue()) {
-					if ((data.getOldAttributeValue("fld7") != null || fullInter)
-							&& (data.getOldAttributeValue("fld8") != null)
-							&& (data.getOldAttributeValue("fld16") != null || data
-									.getOldAttributeValue("fld17") != null)) {
-						data.setOldAttributeValue("fld6", new Integer(0));
-						if (old != 0) {
-							finalChangeState = true;
-						}
-						completedState = true;
-					} else {
-						data.setOldAttributeValue("fld6", new Integer(1));
-						if (old != 1) {
-							finalChangeState = true;
-						}
-					}
-				} else {
-					if (((data.getOldAttributeValue("fld8") != null || fullInter)
-							&& (data.getOldAttributeValue("fld7") != null) && (data
-							.getOldAttributeValue("fld12") != null || data
-							.getOldAttributeValue("fld13") != null))) {
-						data.setOldAttributeValue("fld6", new Integer(0));
-						if (old != 0) {
-							finalChangeState = true;
-						}
-						completedState = true;
-					} else {
-						data.setOldAttributeValue("fld6", new Integer(1));
-						if (old != 1) {
-							finalChangeState = true;
-						}
-					}
-				}
-				if (finalChangeState) {
-					data.changedPut(new Integer(6), new Object[] { oldFld6,
-							data.getOldAttributeValue("fld6") });
-				}
-			}
-		}
-
-		data.setCompletedState(completedState);
-		return data;
+	if (Repository.getInstance(entidad).isInBook(bookID).booleanValue()) {
+	    if ((data.getNewAttributeValue("fld7") != null || fullInter)
+		    && (data.getNewAttributeValue("fld8") != null)
+		    && (data.getNewAttributeValue("fld16") != null || data
+			    .getNewAttributeValue("fld17") != null)) {
+		data.setNewAttributeValue("fld6", new Integer(0));
+		completedState = true;
+	    }
+	    else {
+		data.setNewAttributeValue("fld6", new Integer(1));
+	    }
 	}
+	else {
+	    if ((data.getNewAttributeValue("fld8") != null || fullInter)
+		    && (data.getNewAttributeValue("fld7") != null)
+		    && (data.getNewAttributeValue("fld12") != null || data
+			    .getNewAttributeValue("fld13") != null)) {
+		data.setNewAttributeValue("fld6", new Integer(0));
+		completedState = true;
+	    }
+	    else {
+		data.setNewAttributeValue("fld6", new Integer(1));
+	    }
+	}
+
+	data.setCompletedState(completedState);
+	return data;
+    }
+
+    /**
+     * Hallar completo o incompleto despues de lo anterior siempre y cuando no
+     * sea el estado el campo que se está modificando por ejemplo desde las
+     * opciones de Abrir/Cerrar porque en este caso ya tenemos cuál es el valor
+     * original y el final
+     * 
+     * @param bookID
+     * @param inter
+     * @param entidad
+     * @param data
+     * @return
+     */
+    private static FolderDataSession isStateCompletedUpdate(Integer bookID, String entidad,
+	    FolderDataSession data) {
+
+	boolean completedState = false;
+	if (data.getChangedFields().size() == 0 || !data.changedContainsKey(new Integer(6))) {
+	    Object oldFld6 = data.getOldAttributeValue("fld6");
+	    boolean changeState = data.getNewAttributeValue("fld6") == null;
+	    if (!changeState) {
+		data.setOldAttributeValue("fld6", data.getNewAttributeValue("fld6"));
+		data.changedPut(new Integer(6),
+			new Object[] { oldFld6, data.getNewAttributeValue("fld6") });
+	    }
+
+	    List inter = data.getInter();
+	    boolean fullInter = inter != null && !inter.isEmpty();
+	    boolean deleteInter = false;
+	    /*
+	     * if (fullInter) { FlushFdrInter flushFdrInter = (FlushFdrInter)
+	     * inter.get(0); fullInter = flushFdrInter.getInterName() != null;
+	     * deleteInter = flushFdrInter.getInterName() == null; } if
+	     * (!fullInter && !deleteInter) { fullInter =
+	     * data.getOldAttributeValue("fld9") != null; }
+	     */
+	    boolean finalChangeState = false;
+	    if (changeState) {
+		int old = 0;
+		if (data.getOldAttributeValue("fld6") instanceof Integer) {
+		    old = ((Integer) data.getOldAttributeValue("fld6")).intValue();
+		}
+		if (Repository.getInstance(entidad).isInBook(bookID).booleanValue()) {
+		    if ((data.getOldAttributeValue("fld7") != null || fullInter)
+			    && (data.getOldAttributeValue("fld8") != null)
+			    && (data.getOldAttributeValue("fld16") != null || data
+				    .getOldAttributeValue("fld17") != null)) {
+			data.setOldAttributeValue("fld6", new Integer(0));
+			if (old != 0) {
+			    finalChangeState = true;
+			}
+			completedState = true;
+		    }
+		    else {
+			data.setOldAttributeValue("fld6", new Integer(1));
+			if (old != 1) {
+			    finalChangeState = true;
+			}
+		    }
+		}
+		else {
+		    if (((data.getOldAttributeValue("fld8") != null || fullInter)
+			    && (data.getOldAttributeValue("fld7") != null) && (data
+			    .getOldAttributeValue("fld12") != null || data
+			    .getOldAttributeValue("fld13") != null))) {
+			data.setOldAttributeValue("fld6", new Integer(0));
+			if (old != 0) {
+			    finalChangeState = true;
+			}
+			completedState = true;
+		    }
+		    else {
+			data.setOldAttributeValue("fld6", new Integer(1));
+			if (old != 1) {
+			    finalChangeState = true;
+			}
+		    }
+		}
+		if (finalChangeState) {
+		    data.changedPut(new Integer(6),
+			    new Object[] { oldFld6, data.getOldAttributeValue("fld6") });
+		}
+	    }
+	}
+
+	data.setCompletedState(completedState);
+	return data;
+    }
 
 	private static FolderDataSession isAutomaticRegisterCreationType(
 			Session session, Integer bookID, int fdrid, String entidad,

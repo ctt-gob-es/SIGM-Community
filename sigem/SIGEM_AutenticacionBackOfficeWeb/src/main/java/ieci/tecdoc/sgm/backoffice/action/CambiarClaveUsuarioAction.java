@@ -75,6 +75,8 @@ public class CambiarClaveUsuarioAction extends Action {
 					// Mostrar error de autenticación
 		    		errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionError("autenticacion.error"));
 					saveErrors(request, errors);
+					
+					request.setAttribute("invalid_user", "true");
 
 					return mapping.findForward("error");
 				}
@@ -83,6 +85,9 @@ public class CambiarClaveUsuarioAction extends Action {
 				
 				// Mostrar error de validación del formulario
 				saveErrors(request, errors);
+				
+				request.setAttribute("invalid_user", "true");
+				
 				return mapping.findForward("error");
 			}
 			
@@ -94,6 +99,8 @@ public class CambiarClaveUsuarioAction extends Action {
 			ActionErrors errors = new ActionErrors();
     		errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionError("cambioClave.error", e.getLocalizedMessage()));
 			saveErrors(request, errors);
+			
+			request.setAttribute("invalid_user", "true");
 			
 			return mapping.findForward("error");
 	   	}	

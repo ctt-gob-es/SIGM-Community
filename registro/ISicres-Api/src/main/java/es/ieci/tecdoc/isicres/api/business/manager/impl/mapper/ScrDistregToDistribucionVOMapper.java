@@ -46,7 +46,7 @@ public class ScrDistregToDistribucionVOMapper {
 
 	public DistribucionVO map(ScrDistreg reg) {
 		DistribucionVO distribucion = new DistribucionVO();
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		distribucion.setId(String.valueOf(reg.getId()));
 		distribucion.setMensajeDistribucion(reg.getMessage());
 		distribucion.setFechaDistribucion(reg.getDistDate());
@@ -91,7 +91,7 @@ public class ScrDistregToDistribucionVOMapper {
 
 		ScrDistregstate lastState = null;
 		try {
-			List distregstate = ISicresQueries.getScrDistregstate(HibernateUtil
+			List distregstate = ISicresQueries.getScrDistregstate(hibernateUtil
 					.currentSession(usuario.getConfiguracionUsuario()
 							.getIdEntidad()), Integer.valueOf(distribucion
 					.getId()));
@@ -114,6 +114,10 @@ public class ScrDistregToDistribucionVOMapper {
 			if (logger.isDebugEnabled()) {
 				logger.debug(sb.toString());
 			}
+		} finally {
+			hibernateUtil.closeSession(usuario.getConfiguracionUsuario()
+				.getIdEntidad());
+			
 		}
 		if (null == lastState) {
 			StringBuffer sb = new StringBuffer(

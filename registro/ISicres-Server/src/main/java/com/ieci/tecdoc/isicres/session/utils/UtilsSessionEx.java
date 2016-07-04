@@ -65,11 +65,11 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ScrCaaux result = null;
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -83,24 +83,24 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 
 			result = ISicresQueries.getScrCaaux(session, fldValue);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrCaax bookID[" + bookID
 					+ "] and fdlvalue [" + fldValue + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_FIND_ADDITIONAL_SUBJECT_INFO);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -121,10 +121,10 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ScrCa result = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 
 			//Obtener la oficina
 			ScrOfic scrOfic = ISicresQueries.getScrOficByCode(session, officeCode);
@@ -148,7 +148,7 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 			throw new ValidationException(
 					ValidationException.ERROR_GET_MATTER_FOR_OFFIC, new String[]{matterCode, officeCode});
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -173,11 +173,11 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ScrOrg result = null;
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -191,24 +191,24 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 
 			result = ISUnitsValidator.getUnit(session, code, true, null);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrOrg bookID[" + bookID
 					+ "] and code [" + code + "] for the session [" + sessionID
 					+ "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_FIND_ADDITIONAL_SUBJECT_INFO);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 
@@ -230,11 +230,11 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 			SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		List result = new ArrayList();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -242,23 +242,23 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 
 			result = ISicresQueries.getScrAddress(session, personId, idAddress);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrAddress personId[" + personId
 					+ "] and idAddress[" + idAddress + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_ADDRESS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -276,11 +276,11 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 			throws BookException, SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		List result = new ArrayList();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -288,22 +288,22 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 
 			result = ISicresQueries.getScrDom(session, idAddress);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrDom idAddress[" + idAddress
 					+ "] for the session [" + sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_DOM);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -322,11 +322,11 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 			ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		List result = new ArrayList();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -334,22 +334,22 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 
 			result = ISicresQueries.getScrAddrtel(session, idAddress);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrAddrtel idAddress[" + idAddress
 					+ "] for the session [" + sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_ADDRTEL);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -441,20 +441,20 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 		List list = null;
 		// Transaction tran = null;
 		try {
-			// Session session = HibernateUtil.currentSession(entidad);
+			// Session session = hibernateUtil.currentSession(entidad);
 			// tran = session.beginTransaction();
 
 			list = DBEntityDAOFactory.getCurrentDBEntityDAO()
 					.getScrRegisterInter(bookId, fdrId, orderByOrd, entidad);
-			// HibernateUtil.commitTransaction(tran);
+			// hibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
-			// HibernateUtil.rollbackTransaction(tran);
+			// hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrRegInt bookID[" + bookId
 					+ "] and fdlid[" + fdrId + "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_FIND_INTEREST_LIST);
 			// } finally {
-			// HibernateUtil.closeSession(entidad);
+			// hibernateUtil.closeSession(entidad);
 		}
 		return list;
 	}
@@ -559,11 +559,11 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 			throws TecDocException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		List result = new ArrayList();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
@@ -579,11 +579,11 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 						deptId);
 				result.add(scrOfic);
 			}
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
 			throw new BookException(BookException.ERROR_BOOK_NOTFOUND);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return result;
@@ -593,20 +593,20 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 			String entidad) throws TecDocException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		ScrOfic result = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			result = ISicresQueries.getScrOficByDeptId(session, deptId);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
 			throw new BookException(BookException.ERROR_BOOK_NOTFOUND);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return result;
@@ -616,20 +616,20 @@ public class UtilsSessionEx extends UtilsSession implements ServerKeys, Keys,
 			String entidad) throws TecDocException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		ScrOfic result = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			result = ISicresQueries.getScrOficByDeptId(session, deptId);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
 			throw new BookException(BookException.ERROR_BOOK_NOTFOUND);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return result;

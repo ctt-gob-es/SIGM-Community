@@ -143,7 +143,7 @@
             length="10"
         </meta>    
     </property>
-    <property
+     <property
         name="upddate"
         type="java.sql.Timestamp"
         column="UPDDATE"
@@ -155,8 +155,23 @@
             length="7"
         </meta>    
     </property>
+    
+    <property
+        name="idorg"
+        type="java.lang.Integer"
+        column="IDORG"
+        length="10"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+           type="java.lang.Integer"
+            column="IDORG"
+            length="10"
+        </meta>    
+    </property>
 
     <!-- associations -->
-
+ 	<property name="nameDepFather" 
+     	formula=" (select iuserparent.name from Iuserdepthdr iuserparent where iuserparent.id = PARENTID) " />
 </class>
 </hibernate-mapping>

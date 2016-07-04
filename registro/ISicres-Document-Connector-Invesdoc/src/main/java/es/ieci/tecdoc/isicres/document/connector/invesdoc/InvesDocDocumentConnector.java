@@ -36,11 +36,13 @@ public class InvesDocDocumentConnector implements ISicresDocumentConnector {
 	 * @see es.ieci.tecdoc.isicres.document.connector.ISicresDocumentConnector#create(es.ieci.tecdoc.isicres.document.connector.vo.ISicresAbstractDocumentVO)
 	 */
 	public ISicresAbstractDocumentVO create(ISicresAbstractDocumentVO document) {
+	    	BBDDUtils bbddUtils = new BBDDUtils();
+	    	Connection connection = null;
 		try {
 			InvesDocDatosEspecificosVO datosEspecificosVO = (InvesDocDatosEspecificosVO) document
 					.getDatosEspecificos();
 
-			Connection connection = BBDDUtils.getConnection(datosEspecificosVO
+			connection = bbddUtils.getConnection(datosEspecificosVO
 					.getEntidad());
 			boolean autocommit = connection.getAutoCommit();
 			connection = prepareConnectionForInvesdoc(connection);
@@ -68,15 +70,19 @@ public class InvesDocDocumentConnector implements ISicresDocumentConnector {
 			throw new IsicresDocumentConnectorException(
 					"Impossible to save the file  [" + document.getName() + "]",
 					e);
+		}finally {
+		    bbddUtils.close(connection);
 		}
 	}
 
 	public ISicresAbstractDocumentVO retrieve(ISicresAbstractDocumentVO document) {
-		try {
+	    BBDDUtils bbddUtils = new BBDDUtils();
+	    Connection connection = null;
+	    try {
 			InvesDocDatosEspecificosVO datosEspecificosVO = (InvesDocDatosEspecificosVO) document
 					.getDatosEspecificos();
 
-			Connection connection = BBDDUtils.getConnection(datosEspecificosVO
+			connection = bbddUtils.getConnection(datosEspecificosVO
 					.getEntidad());
 
 			byte[] content = FssBnoFileEx.retrieveFile(connection, new Integer(
@@ -91,15 +97,19 @@ public class InvesDocDocumentConnector implements ISicresDocumentConnector {
 			throw new IsicresDocumentConnectorException(
 					"Impossible to save the file  [" + document.getName() + "]",
 					e);
+		} finally {
+		    bbddUtils.close(connection);
 		}
 	}
 
 	public ISicresAbstractDocumentVO update(ISicresAbstractDocumentVO document) {
-		try {
+	    BBDDUtils bbddUtils = new BBDDUtils();
+	    Connection connection = null;
+	    try {
 			InvesDocDatosEspecificosVO datosEspecificosVO = (InvesDocDatosEspecificosVO) document
 					.getDatosEspecificos();
 
-			Connection connection = BBDDUtils.getConnection(datosEspecificosVO
+			connection = bbddUtils.getConnection(datosEspecificosVO
 					.getEntidad());
 			boolean autocommit = connection.getAutoCommit();
 			connection = prepareConnectionForInvesdoc(connection);
@@ -124,6 +134,8 @@ public class InvesDocDocumentConnector implements ISicresDocumentConnector {
 			throw new IsicresDocumentConnectorException(
 					"Impossible to save the file  [" + document.getName() + "]",
 					e);
+		}finally {
+		    bbddUtils.close(connection);
 		}
 	}
 

@@ -4,6 +4,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/displaytag-el.tld" prefix="display" %>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%
 response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -13,11 +15,11 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="css/xtreeUnidades.css">
-	<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-	<link href="css/adminApp.css" rel="stylesheet" type="text/css" />
-	<link href="css/directorioComun.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="js/common.js"></script>
+	<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/xtreeUnidades.css">
+	<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+	<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/adminApp.css" rel="stylesheet" type="text/css" />
+	<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/directorioComun.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
 	<script type="text/javascript">
 		function returnToTop(idOficina, nombre){
 			window.parent.opener.document.forms[0].codEntidadReg.value = idOficina;

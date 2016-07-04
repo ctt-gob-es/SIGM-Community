@@ -1,1 +1,0 @@
-CALL ..\comun\02_generateServerStubs.bat ..\tiposdocvitales\defs.bat

@@ -4,6 +4,8 @@
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 <%@ page import="es.ieci.tecdoc.isicres.admin.beans.Libro" %>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
@@ -11,9 +13,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="IECISA" />
 <title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.sgm.rpadmin.libros.titulo"/></title>
-<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-<link href="css/adminApp.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/common.js"></script>
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/adminApp.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
 <script>
 	var idLibro;
 	var nombreLibro;
@@ -76,15 +78,15 @@
 				<table cellspacing="0" cellpadding="0" border="0">
 					<tr>
 						<td width="3"></td>
-						<td bgcolor="#000000"><img src='<html:rewrite page="/img/dot.gif"/>' width="1" height="100%" /></td>
+						<td bgcolor="#000000"><img src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif' width="1" height="100%" /></td>
 						<td width="5"></td>
 						<td class="col_nuevo" onclick="send('<html:rewrite page="/nuevoLibro.do"/>', 'NUEVO')" ><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.nuevo"/></td>
 						<td width="3"></td>
-						<td bgcolor="#000000"><img src='<html:rewrite page="/img/dot.gif"/>' width="1" height="100%" /></td>
+						<td bgcolor="#000000"><img src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif' width="1" height="100%" /></td>
 						<td width="5"></td>
 						<td class="col_editar" onclick="send('<html:rewrite page="/editarLibro.do"/>', 'EDITAR')"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.propiedadesEditar"/></td>
 						<td width="3"></td>
-						<td bgcolor="#000000"><img src='<html:rewrite page="/img/dot.gif"/>' width="1" height="100%" /></td>
+						<td bgcolor="#000000"><img src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif' width="1" height="100%" /></td>
 						<td width="5"></td>
 						<td class="col_eliminar" onclick="send('<html:rewrite page="/eliminarLibro.do"/>', 'ELIMINAR')"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.eliminar"/></td>
 					</tr>
@@ -122,13 +124,13 @@
 												<c:set var="funcionllamadaUpdateEstadoLibro1">
 													llamadaUpdateEstadoLibro("<html:rewrite page='/cambiarEstadoLibro.do'/>?idEstado=1","<bean:write name='fila' property='id' filter='false'/>","<bean:message key='ieci.tecdoc.sgm.rpadmin.libros.cerrar.libro'/>","<bean:write name='fila' property='nombre' filter='false'/>")
 												</c:set>
-												<a href="#" onclick="<c:out value="${funcionllamadaUpdateEstadoLibro1}"/>"><img src="<html:rewrite page="/img/abrir.gif"/>" alt="<bean:message key="ieci.tecdoc.sgm.rpadmin.botones.cerrar"/>" border="0" /></a>
+												<a href="#" onclick="<c:out value="${funcionllamadaUpdateEstadoLibro1}"/>"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/abrir.gif" alt="<bean:message key="ieci.tecdoc.sgm.rpadmin.botones.cerrar"/>" border="0" /></a>
 											</logic:equal>
 											<logic:equal name="fila" property="estado" value="1">
 												<c:set var="funcionllamadaUpdateEstadoLibro0">
 													llamadaUpdateEstadoLibro("<html:rewrite page='/cambiarEstadoLibro.do'/>?idEstado=0","<bean:write name='fila' property='id' filter='false' />","<bean:message key='ieci.tecdoc.sgm.rpadmin.libros.abrir.libro'/>","<bean:write name='fila' property='nombre' filter='false'/>")
 												</c:set>
-												<a href="#" onclick="<c:out value="${funcionllamadaUpdateEstadoLibro0}"/>"><img src="<html:rewrite page="/img/cerrar.gif" />" alt="<bean:message key="ieci.tecdoc.sgm.rpadmin.botones.abrir" />" border="0" /></a>
+												<a href="#" onclick="<c:out value="${funcionllamadaUpdateEstadoLibro0}"/>"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/cerrar.gif" alt="<bean:message key="ieci.tecdoc.sgm.rpadmin.botones.abrir" />" border="0" /></a>
 											</logic:equal>
 											&nbsp;</td>
 										</tr>
@@ -164,13 +166,13 @@
 												<c:set var="llamadaUpdateEstadoLibro1">
 													llamadaUpdateEstadoLibro("<html:rewrite page='/cambiarEstadoLibro.do'/>?idEstado=1","<bean:write name='fila' property='id' filter='false'/>","<bean:message key='ieci.tecdoc.sgm.rpadmin.libros.cerrar.libro'/>","<bean:write name='fila' property='nombre' filter='false'/>")
 												</c:set>
-												<a href="#" onclick="<c:out value="${llamadaUpdateEstadoLibro1}"/>"><img src="<html:rewrite page="/img/abrir.gif"/>" alt="<bean:message key="ieci.tecdoc.sgm.rpadmin.botones.cerrar"/>" border="0" /></a>
+												<a href="#" onclick="<c:out value="${llamadaUpdateEstadoLibro1}"/>"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/abrir.gif" alt="<bean:message key="ieci.tecdoc.sgm.rpadmin.botones.cerrar"/>" border="0" /></a>
 											</logic:equal>
 											<logic:equal name="fila" property="estado" value="1">
 												<c:set var="llamadaUpdateEstadoLibro0">
 													llamadaUpdateEstadoLibro("<html:rewrite page='/cambiarEstadoLibro.do'/>?idEstado=0","<bean:write name='fila' property='id' filter='false'/>","<bean:message key='ieci.tecdoc.sgm.rpadmin.libros.abrir.libro'/>","<bean:write name='fila' property='nombre' filter='false'/>")
 												</c:set>
-												<a href="#" onclick="<c:out value="${llamadaUpdateEstadoLibro0}"/>"><img src="<html:rewrite page="/img/cerrar.gif" />" alt="<bean:message key="ieci.tecdoc.sgm.rpadmin.botones.abrir"/>" border="0" /></a>
+												<a href="#" onclick="<c:out value="${llamadaUpdateEstadoLibro0}"/>"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/cerrar.gif" alt="<bean:message key="ieci.tecdoc.sgm.rpadmin.botones.abrir"/>" border="0" /></a>
 											</logic:equal>
 											&nbsp;</td>
 										</tr>

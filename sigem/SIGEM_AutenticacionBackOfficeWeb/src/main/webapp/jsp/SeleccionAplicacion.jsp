@@ -6,6 +6,8 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="ieci.tecdoc.sgm.backoffice.temporal.Aplicacion"%>
 <%@page import="ieci.tecdoc.sgm.core.services.gestion_backoffice.ConstantesGestionUsuariosBackOffice"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <html:html>
 	<head>
 		<%
@@ -13,8 +15,8 @@
 		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 		%> 
 		<base href="<%= basePath %>" />
-		<link rel="stylesheet" href="css/estilos.css" type="text/css" />	
-		<script type="text/javascript" language="javascript" src="js/idioma.js"></script>
+		<link rel="stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" type="text/css" />	
+		<script type="text/javascript" language="javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/idioma.js"></script>
 		
 		<script language="Javascript">
 			function abrirAplicacion(idApp, url) {
@@ -43,7 +45,7 @@
 		        	<div class="cuerpomid">
 		          		<h1><bean:message key="autenticacion.seleccioneAplicacion"/></h1>
 		          		<div class="submenu3"></div>
-		          		<div class="cuadro" style="background: url(img/foto_carpetas.jpg) no-repeat; height: 231px">
+		          		<div class="cuadro" style="background: url(<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/foto_carpetas.jpg) no-repeat; height: 231px">
 		            		<html:form styleId="aplicacionAccesoBean" action="login.do" method="post">
 			            		<br/><br/>
 			            		<label class="gr" style="position:relative; left:300px">

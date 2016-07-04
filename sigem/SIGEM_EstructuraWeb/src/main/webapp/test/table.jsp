@@ -1,15 +1,10 @@
-
-
-
-
-
-
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
-<base href="http://10.229.36.15:8080/AdminApp/ "/>
-<link rel="stylesheet" type="text/css" href="include/css/adminApp.css"/>
+<base href="http://127.0.0.1:8080/AdminApp/ "/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/adminApp.css"/>
 
 <script language="javascript">
 var appBase = '/AdminApp';

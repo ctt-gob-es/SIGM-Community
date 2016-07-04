@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="IUserDept">
+	<select id="selectDeparts" parameterClass="java.util.HashMap"
+		resultClass="com.ieci.tecdoc.common.invesdoc.Iuserdepthdr">	
+		SELECT DISTINCT scr.id, scr.name, scr.parentid, scr.idorg, scrparent.name as nameDepFather
+			FROM IUSERDEPTHDR scr  
+				LEFT JOIN IUSERDEPTHDR scrparent ON   scr.parentid = scrparent.id
+			WHERE exists (select distinct us.deptid from IUSERUSERHDR us where us.deptid =scr.id) 
+ 			 AND scr.type != 1 
+ 			<isNotEmpty property="deptId" >
+ 			 	AND scr.id != #deptId# 
+ 			</isNotEmpty>
+ 			<isNotEmpty property="idsorg">
+ 				START WITH 
+ 				<iterate property="idsorg" conjunction=" OR ">
+ 					 scr.idorg = #idsorg[]#
+ 				</iterate>
+ 				 CONNECT BY PRIOR scr.id = scr.parentid 
+			</isNotEmpty>
+			 ORDER  BY scr.name
+	</select>
+	<select id="getDepart" parameterClass="java.util.HashMap"
+		resultClass="com.ieci.tecdoc.common.invesdoc.Iuserdepthdr">	
+		SELECT DISTINCT scr.id, scr.name, scr.parentid, scr.idorg, scrparent.name as nameDepFather
+			FROM IUSERDEPTHDR scr  
+				LEFT JOIN IUSERDEPTHDR scrparent ON   scr.parentid = scrparent.id
+			WHERE exists (select distinct us.deptid from IUSERUSERHDR us where us.deptid =scr.id) 
+ 			 AND scr.id = #deptId# 
+	</select>
+</sqlMap>

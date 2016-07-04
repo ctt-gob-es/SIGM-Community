@@ -61,9 +61,7 @@ public class SecurityUseCase {
 			sessionID = SecuritySession.login(decodedLogin, password,
 					useCaseConf.getUserDn(), useCaseConf.getUseLdap(),
 					useCaseConf.getUsingOSAuth(), useCaseConf.getLocale(), useCaseConf.getEntidadId());
-
 		} else {
-
 			sessionID = SecuritySession.login(login, password, useCaseConf
 					.getUserDn(), useCaseConf.getUseLdap(), useCaseConf
 					.getUsingOSAuth(), useCaseConf.getLocale(), useCaseConf.getEntidadId());

@@ -1,1 +1,0 @@
-CALL ..\comun\01_generateWsdl.bat ..\transferencias\defs.bat

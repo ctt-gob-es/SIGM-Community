@@ -1,7 +1,7 @@
 <Config>   
    <Pooling>Y</Pooling>
   <!-- Jboss java:/warda Tomcat java:comp/env/jdbc/warda-->
-   <DataSource>java:comp/env/jdbc/registro</DataSource>
+   <DataSource>jdbc/registro</DataSource>
    <User></User>
    <Password></Password>
    <User_Granted></User_Granted>

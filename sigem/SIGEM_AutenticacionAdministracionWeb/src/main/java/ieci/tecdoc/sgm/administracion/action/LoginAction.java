@@ -42,12 +42,12 @@ public class LoginAction extends Action {
 			
 			String idEntidad = (String)session.getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD);
 			if(Utilidades.isNuloOVacio(idEntidad)) {
-				idEntidad = "";
+				idEntidad = "000";
 			}
 		
 			String idAplicacion = (String)session.getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_APLICACION);
 			if(Utilidades.isNuloOVacio(idAplicacion)) {
-				idAplicacion = "";
+				idAplicacion = "5";
 			}
 		
 			String usuario = loginForm.getUsername();

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MoveRegister">
+	<select id="selectIdNextDestRegisterBook" parameterClass="java.lang.Integer"
+		resultClass="java.lang.Integer">
+			SELECT ID FROM IDOCXNEXTID WHERE TYPE=3 AND PARENTID= #value# 
+	</select>
+	
+	<update id="updateIdNextRegisterBook" parameterClass="java.lang.Integer" >
+	 	UPDATE IDOCXNEXTID
+	       SET ID = ID + 1
+	     	WHERE TYPE = 3 AND PARENTID = #value#
+	</update>
+	
+	<insert id="insertDestinationRegASF" parameterClass="java.util.HashMap">
+		INSERT INTO A$idDestinationBook$SF 
+		(FDRID ,TIMESTAMP,FLD1,FLD2,FLD3,FLD4,FLD5,FLD6,FLD7,FLD8,FLD9,FLD10,FLD11,FLD12,
+	     FLD13,FLD14,FLD15,FLD16,FLD17,FLD19,FLD20,FLD503,FLD504,FLD505,FLD506)
+	    SELECT $idDestinationRegister$ AS FDRID ,TIMESTAMP,FLD1,FLD2,FLD3,FLD4,FLD5,FLD6,FLD7,
+	    FLD8,FLD9,FLD10,FLD11,FLD12,FLD13,FLD14,FLD15,FLD16,FLD17,FLD19,FLD20,FLD503,
+	    FLD504,FLD505,FLD506
+	    FROM A$idOriginBook$SF WHERE FDRID=#idOriginRegister#
+	</insert>
+	
+	<insert id="insertDestinationRegAFDRH" parameterClass="java.util.HashMap">
+		INSERT INTO A$idDestinationBook$FDRH 
+		(ID,VERSTAT,REFCOUNT,ACCESSTYPE,ACSID,CRTRID,CRTNDATE,UPDRID,UPDDATE,ACCRID,ACCDATE,ACCCOUNT)
+	    SELECT $idDestinationRegister$ AS ID,VERSTAT,REFCOUNT,ACCESSTYPE,ACSID,CRTRID,CRTNDATE,UPDRID,
+	    	UPDDATE,ACCRID,ACCDATE,ACCCOUNT 
+	    	FROM A$idOriginBook$FDRH WHERE ID=#idOriginRegister#
+	</insert>
+	
+	<select id="selectIdDocsOriginRegisterBook" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		SELECT ID FROM A$idOriginBook$DOCH WHERE FDRID=#idOriginRegister# ORDER BY ID
+	</select>
+	
+	<select id="selectIdNextDocDestRegisterBook" parameterClass="java.lang.Integer"
+		resultClass="java.lang.Integer">
+			SELECT ID FROM IDOCXNEXTID WHERE TYPE=7 AND PARENTID= #value# 
+	</select>
+	
+	<update id="updateIdNextDocRegisterBook" parameterClass="java.lang.Integer" >
+	 	UPDATE IDOCXNEXTID
+	       SET ID = ID + 1
+	     	WHERE TYPE = 7 AND PARENTID = #value#
+	</update>
+	
+	<insert id="insertDestinationRegADOCH"  parameterClass="java.util.HashMap">
+		INSERT INTO A$idDestinationBook$DOCH 
+		(ID,FDRID, ARCHID, NAME,CLFID,TYPE,TITLE,AUTHOR,KEYWORDS,STAT,REFCOUNT,REMARKS,ACCESSTYPE,
+	     ACSID,CRTRID,CRTNDATE,UPDRID,UPDDATE,ACCRID,ACCDATE,ACCCOUNT,TIMESTAMP)
+			SELECT $idDocDestination$ AS ID, $idDestinationRegister$ AS FDRID, $idDestinationBook$ AS ARCHID,
+			 NAME,CLFID,TYPE,TITLE,AUTHOR,KEYWORDS,STAT,REFCOUNT,REMARKS,ACCESSTYPE,
+	         ACSID,CRTRID,CRTNDATE,UPDRID,UPDDATE,ACCRID,ACCDATE,ACCCOUNT,TIMESTAMP 
+	         FROM A$idOriginBook$DOCH WHERE ID=#idDocOrigin#
+	</insert>
+	
+	<insert id="insertDestinationRegAPAGEH"  parameterClass="java.util.HashMap">
+		INSERT INTO A$idDestinationBook$PAGEH 
+		(ID,FDRID,NAME,SORTORDER,DOCID,FILEID,VOLID,LOC,ANNID,STAT,REFCOUNT,
+	     REMARKS,ACCESSTYPE,ACSID,CRTRID,CRTNDATE,UPDRID,UPDDATE,ACCRID,ACCDATE,ACCCOUNT)
+	    	SELECT ID, $idDestinationRegister$ AS FDRID ,NAME,SORTORDER, $idDocDestination$ AS DOCID,
+	    	FILEID,VOLID,LOC,ANNID,STAT,REFCOUNT, REMARKS,ACCESSTYPE,ACSID,CRTRID,CRTNDATE,UPDRID,
+	    	UPDDATE,ACCRID,ACCDATE,ACCCOUNT 
+	    	FROM  A$idOriginBook$PAGEH WHERE DOCID=#idDocOrigin#
+	</insert>
+	
+	<select id="selectAxpageh" parameterClass="java.util.HashMap"
+		resultClass="es.msssi.sgm.registropresencial.beans.ibatis.Axpageh">
+			SELECT ID, FDRID, NAME, DOCID, CRTNDATE, LOC, FILEID, VOLID  
+			FROM A$idOriginBook$PAGEH WHERE DOCID=#idDocOrigin#
+	</select>
+
+	<update  id="updateVolFile" parameterClass="java.util.HashMap">
+		UPDATE IVOLFILEHDR
+	       SET EXTID1 = #idDestinationBook#, EXTID2 = #idDestinationRegister#, EXTID3 = #idDocDestination#
+	       WHERE ID = #idPagVol#
+	</update>
+	
+	<update id="updatePageRepository" parameterClass="java.util.HashMap">
+		UPDATE SCR_PAGEREPOSITORY
+	          SET BOOKID = #idDestinationBook#, FDRID = #idDestinationRegister#
+	        WHERE DOCUID = #idPagVol#
+	</update>
+	
+	<insert id="updatePageInfo" parameterClass="java.util.HashMap">
+		INSERT INTO SCR_PAGEINFO (BOOKID, REGID, PAGEID, HASHVERSION, HASH)
+	      SELECT $idDestinationBook$ AS BOOKID, $idDestinationRegister$ AS REGID,
+	        PAGEID, HASHVERSION, HASH
+	        FROM SCR_PAGEINFO
+	        WHERE BOOKID = #idOriginBook# AND REGID = #idOriginRegister#
+	</insert>
+	
+	<delete  id="deletePageInfo" parameterClass="java.util.HashMap">
+		DELETE FROM SCR_PAGEINFO 
+		WHERE  BOOKID = #idOriginBook# AND REGID = #idOriginRegister#
+	</delete>
+	
+	<insert id="insertDestinationRegAXNID"  parameterClass="java.util.HashMap">
+		INSERT INTO A$idDestinationBook$XNID (TYPE,PARENTID,ID) 
+			SELECT TYPE, $idDestinationRegister$, ID 
+			FROM  A$idOriginBook$XNID
+	        WHERE PARENTID=#idOriginRegister#
+	</insert>
+	
+	<update id="updateDestinationModifReg"  parameterClass="java.util.HashMap">
+         UPDATE SCR_MODIFREG
+               SET ID_ARCH = #idDestinationBook#
+         WHERE EXISTS 
+         	(SELECT 'S' FROM A$idOriginBook$SF WHERE NUM_REG=FLD1 AND FDRID = #idOriginRegister#)
+	</update>
+	
+	<update id="updateDestinationRegInt" parameterClass="java.util.HashMap">
+		UPDATE SCR_REGINT
+	       SET ID_ARCH = #idDestinationBook#, ID_FDR = #idDestinationRegister#
+	       WHERE ID_ARCH = #idOriginBook# AND ID_FDR = #idOriginRegister#
+	</update>
+	
+	<update id="updateDestinationRegExregIn" parameterClass="java.util.HashMap">
+		UPDATE SCR_EXREG_IN
+	       SET ID_ARCH = #idDestinationBook#, ID_FDR = #idDestinationRegister#
+	     WHERE ID_ARCH = #idOriginBook# AND ID_FDR = #idOriginRegister#
+	</update>
+	
+	<select id="selectIdsOriginRegisterBook" parameterClass="java.util.HashMap" 
+		resultClass="java.lang.Integer">
+		SELECT ID  FROM A$idOriginBook$XF WHERE FDRID=#idOriginRegister#  ORDER BY ID
+	</select>
+	
+	<select id="selectIdNextExtDestRegisterBook" parameterClass="java.lang.Integer" 
+		resultClass="java.lang.Integer">
+		SELECT ID FROM IDOCXNEXTID WHERE TYPE=5 AND PARENTID= #value# 
+	</select>
+	
+	<update id="updateIdNextExtDestRegisterBook" parameterClass="java.lang.Integer" >
+	 	UPDATE IDOCXNEXTID
+	       SET ID = ID + 1
+	     	WHERE TYPE = 5 AND PARENTID = #value#
+	</update>
+	
+	<insert id="insertDestinationRegAXF"  parameterClass="java.util.HashMap">
+		INSERT INTO A$idDestinationBook$XF 
+			(ID,FDRID,FLDID,TEXT,TIMESTAMP)
+	        SELECT $idExtDestination$, $idDestinationRegister$, FLDID,TEXT, TIMESTAMP 
+	        FROM A$idOriginBook$XF WHERE ID=#idExtOrigin#
+	</insert>
+</sqlMap>

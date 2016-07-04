@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+	<title><h:outputText id="header"
+			value="#{msgs.busquedaUnitTramlabel}" /></title>
+	<link rel="stylesheet" type="text/css"
+		href="#{webParam.entryParameters['URLRoot']}/css/intranet-sigm.css"
+		media="screen,projection" />
+	<link rel="stylesheet" type="text/css"
+		href="#{webParam.entryParameters['URLRoot']}/css/intranet-sigm-imprimir.css"
+		media="print" />
+	<link rel="stylesheet" type="text/css"
+		href="#{webParam.entryParameters['URLRoot']}/css/primefaces.css" />
+	<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/unitDialog.js"></script>
+</h:head>
+
+<h:body styleClass="bodyUnit">
+	<script type="text/javascript">
+					$(document)
+							.keypress(
+									function(e) {
+										if (e.which == 13) {
+											clicFormTram () ;
+											return false;
+										}
+									});
+		</script>
+	<h:form id="formUnit">
+		<p:tabView id="tabUnitLevel" widgetVar="tabUnitLevelVar" onTabShow="focusFormTram(index);">
+			<p:ajax event="tabChange" listener="#{searchUnitsTramAction.onTabChange}"
+				onstart="PF('statusDialog').show();"
+				oncomplete="PF('statusDialog').hide();"
+				update="selectCCAASearchAutonomic,selectProvSearchLocal,textSearchEstatal,unitsState,textSearchAutonomico,unitsAutonomic,textSearchLocal,unitsLocal" />
+			<p:tab title="Estatal" id="tab2">
+				<label for="formUnit:searchEstatal" class="general">
+				<div class="heightTextSearch">
+				</div>
+					<div class="heightTextSearch">
+						<p:inputText id="textSearchEstatal"
+							value="#{searchUnitsTramAction.textSearch}"
+							label="#{msgs.labelBotonBuscar}" maxlength="60" />
+						<p:commandLink id="SearchEstatalButton"
+							value="#{msgs.labelBotonBuscar}" title="#{msgs.labelBotonBuscar}"
+							inmediate="true" process="@this,textSearchEstatal"
+							update="@this,unitsState"
+							actionListener="#{searchUnitsTramAction.searchState}">
+						</p:commandLink>
+					</div>
+					<div class="center">
+						<p:dataTable widgetVar="tableUnitState"
+							summary="Tabla de Resultados de Unidades Estatales" var="unit"
+							value="#{searchUnitsTramAction.searchUnitsTramBo}" paginator="true"
+							rows="10" styleClass="tableUnit"
+							emptyMessage="No se encuentran unidades"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+							paginatorPosition="bottom" selectionMode="single"
+							rowKey="#{unit.id}" selection="#{searchUnitsTramAction.selectedUnit}"
+							dblClickSelect="true" id="unitsState" lazy="true">
+							<p:ajax event="rowDblselect"
+								listener="#{searchUnitsTramAction.selectUnitFromDialog}" />
+							<p:column headerText="Código" style="width:40px">
+								<h:outputText value="#{unit.codeTramunit}" styleClass="unit" />
+							</p:column>
+							<p:column headerText="Nombre">
+								<h:outputText value="#{unit.nameTramunit}" styleClass="unit" />
+								<br />
+								<h:outputText value="#{unit.nameOrgsFather}"
+									styleClass="unitfather" />
+							</p:column>
+							<p:column headerText="" style="width:1px">
+								<p:commandButton id="selectDirButton" styleClass="buttonUbicacion"
+											 process="@this" update=":formUnit:panelDigdlgDirOrg"
+											action="#{searchUnitsTramAction.viewDirOrg}"
+											oncomplete="PF('viewDirOrgDialog').show()" icon="ui-icon-search"
+											title="Dirección Organismo">
+											<f:setPropertyActionListener value="#{unit}"
+												target="#{searchUnitsTramAction.selectUnitTram}" />
+
+										</p:commandButton>
+							</p:column>
+							<f:facet name="footer">  
+						            #{msgs.labelTotalResultados}: #{searchUnitsTramAction.searchUnitsTramBo.rowCount} 
+						        </f:facet>
+						</p:dataTable>
+					</div>
+				</label>
+				<div class="botones">
+					<p:commandButton process="@this,unitsState"
+						value="#{msgs.labelBotonAceptar}"
+						actionListener="#{searchUnitsTramAction.selectUnitFromDialog}" />
+					<p:commandButton process="@this,unitsState"
+						value="#{msgs.labelBotonCancelar}"
+						actionListener="#{searchUnitsTramAction.hiddenDialog}" />
+				</div>
+				<script type="text/javascript">
+				focusFormTram(0) ;
+				</script>
+			</p:tab>
+			<p:tab title="Autonómico" id="tab3">
+				<label for="formUnit:searchAutonomico" class="general">
+					<div class="heightTextSearch">
+						<p:selectOneMenu id="selectCCAASearchAutonomic"
+							style="width: 220px !important;min-width:220px !important"
+							value="#{searchUnitsTramAction.ccaaSearch}">
+							<p:ajax update="unitsAutonomic" event="change"
+								listener="#{searchUnitsTramAction.searchAutonomic}"
+								process="@this,textSearchAutonomico" />
+							<f:selectItem itemLabel="Todas las Comunidades Autónomas"
+								itemValue="" />
+							<f:selectItems value="#{validationListAction.listCCAA}"
+								var="ccaa" itemValue="#{ccaa.id}" itemLabel="#{ccaa.name}" />
+						</p:selectOneMenu>
+					</div>
+					<div class="heightTextSearch">
+						<p:inputText id="textSearchAutonomico"
+							value="#{searchUnitsTramAction.textSearch}"
+							label="#{msgs.labelBotonBuscar}" maxlength="60" />
+						<p:commandLink id="SearchAutonomicoButton"
+							value="#{msgs.labelBotonBuscar}" title="#{msgs.labelBotonBuscar}"
+							inmediate="true"
+							process="@this,textSearchAutonomico,selectCCAASearchAutonomic"
+							update="@this,unitsAutonomic"
+							actionListener="#{searchUnitsTramAction.searchAutonomic}">
+						</p:commandLink>
+					</div>
+					<div class="center">
+						<p:dataTable widgetVar="tableUnitAutonomic"
+							summary="Tabla de Resultados de Unidades Autonómicas" var="unit"
+							value="#{searchUnitsTramAction.searchUnitsTramBo}" paginator="true"
+							rows="10" styleClass="tableUnit"
+							emptyMessage="No se encuentran unidades"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+							paginatorPosition="bottom" selectionMode="single"
+							rowKey="#{unit.id}" selection="#{searchUnitsTramAction.selectedUnit}"
+							dblClickSelect="true" id="unitsAutonomic" lazy="true">
+							<p:ajax event="rowDblselect"
+								listener="#{searchUnitsTramAction.selectUnitFromDialog}" />
+
+							<p:column headerText="Código" style="width:40px">
+								<h:outputText value="#{unit.codeTramunit}" styleClass="unit" />
+							</p:column>
+							<p:column headerText="Nombre">
+								<h:outputText value="#{unit.nameTramunit}" styleClass="unit" />
+								<br />
+								<h:outputText value="#{unit.nameOrgsFather}"
+									styleClass="unitfather" />
+							</p:column>
+							<p:column headerText="" style="width:1px">
+								<p:commandButton id="selectDirButton" styleClass="buttonUbicacion"
+											 process="@this" update=":formUnit:panelDigdlgDirOrg"
+											action="#{searchUnitsTramAction.viewDirOrg}"
+											oncomplete="PF('viewDirOrgDialog').show()" icon="ui-icon-search"
+											title="Dirección Organismo">
+											<f:setPropertyActionListener value="#{unit}"
+												target="#{searchUnitsTramAction.selectUnitTram}" />
+
+										</p:commandButton>
+							</p:column>
+							<f:facet name="footer">  
+						            #{msgs.labelTotalResultados}: #{searchUnitsTramAction.searchUnitsTramBo.rowCount} 
+						        </f:facet>
+						</p:dataTable>
+					</div>
+				</label>
+				<div class="botones">
+					<p:commandButton process="@this,unitsAutonomic"
+						value="#{msgs.labelBotonAceptar}"
+						actionListener="#{searchUnitsTramAction.selectUnitFromDialog}" />
+					<p:commandButton process="@this,unitsAutonomic"
+						value="#{msgs.labelBotonCancelar}"
+						actionListener="#{searchUnitsTramAction.hiddenDialog}" />
+				</div>
+			</p:tab>
+			<p:tab title="Local" id="tab4">
+				<label for="formUnit:searchLocal" class="general">
+					<div class="heightTextSearch">
+						<p:selectOneMenu id="selectProvSearchLocal"
+							style="width: 220px !important;min-width:220px !important"
+							value="#{searchUnitsTramAction.provSearch}">
+							<p:ajax update="unitsLocal" event="change"
+								listener="#{searchUnitsTramAction.searchLocal}"
+								process="@this,textSearchLocal" />
+							<f:selectItem itemLabel="Todas las Provincias" itemValue="" />
+							<f:selectItems value="#{validationListAction.listProv}"
+								var="prov" itemValue="#{prov.id}" itemLabel="#{prov.name}" />
+						</p:selectOneMenu>
+					</div>
+					<div class="heightTextSearch">
+						<p:inputText id="textSearchLocal"
+							value="#{searchUnitsTramAction.textSearch}"
+							label="#{msgs.labelBotonBuscar}" maxlength="60" />
+						<p:commandLink id="SearchLocalButton"
+							value="#{msgs.labelBotonBuscar}" title="#{msgs.labelBotonBuscar}"
+							inmediate="true"
+							process="@this,textSearchLocal,selectProvSearchLocal"
+							update="@this,unitsLocal"
+							actionListener="#{searchUnitsTramAction.searchLocal}">
+						</p:commandLink>
+					</div>
+					<div class="center">
+						<p:dataTable widgetVar="tableUnitLocal"
+							summary="Tabla de Resultados de Unidades Locales" var="unit"
+							value="#{searchUnitsTramAction.searchUnitsTramBo}" paginator="true"
+							rows="10" styleClass="tableUnit"
+							emptyMessage="No se encuentran unidades"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+							paginatorPosition="bottom" selectionMode="single"
+							rowKey="#{unit.id}" selection="#{searchUnitsTramAction.selectedUnit}"
+							dblClickSelect="true" id="unitsLocal" lazy="true">
+							<p:ajax event="rowDblselect"
+								listener="#{searchUnitsTramAction.selectUnitFromDialog}" />
+
+							<p:column headerText="Código" style="width:40px">
+								<h:outputText value="#{unit.codeTramunit}" styleClass="unit" />
+							</p:column>
+							<p:column headerText="Nombre">
+								<h:outputText value="#{unit.nameTramunit}" styleClass="unit" />
+								<br />
+								<h:outputText value="#{unit.nameOrgsFather}"
+									styleClass="unitfather" />
+							</p:column>
+							<p:column headerText="" style="width:1px">
+								<p:commandButton id="selectDirButton" styleClass="buttonUbicacion"
+											 process="@this" update=":formUnit:panelDigdlgDirOrg"
+											action="#{searchUnitsTramAction.viewDirOrg}"
+											oncomplete="PF('viewDirOrgDialog').show()" icon="ui-icon-search"
+											title="Dirección Organismo">
+											<f:setPropertyActionListener value="#{unit}"
+												target="#{searchUnitsTramAction.selectUnitTram}" />
+
+										</p:commandButton>
+							</p:column>
+							<f:facet name="footer">  
+						            #{msgs.labelTotalResultados}: #{searchUnitsTramAction.searchUnitsTramBo.rowCount} 
+						        </f:facet>
+						</p:dataTable>
+					</div>
+				</label>
+				<div class="botones">
+					<p:commandButton process="@this,unitsLocal"
+						value="#{msgs.labelBotonAceptar}"
+						actionListener="#{searchUnitsTramAction.selectUnitFromDialog}" />
+					<p:commandButton process="@this,unitsLocal"
+						value="#{msgs.labelBotonCancelar}"
+						actionListener="#{searchUnitsTramAction.hiddenDialog}" />
+				</div>
+			</p:tab>
+		</p:tabView>
+				<p:dialog header="#{msgs.labelheaderViewDirOg}"
+					widgetVar="viewDirOrgDialog" resizable="false" id="viewDocDialog"
+					modal="true" >
+					<p:panel id="panelDigdlgDirOrg">
+					<ui:fragment rendered="${not empty searchUnitsTramAction.addressOrg}">
+							<div class="adressorgclass">
+								<ui:fragment rendered="${not empty searchUnitsTramAction.addressOrg.address}">
+									<h:outputText value="#{searchUnitsTramAction.addressOrg.address}"/>
+								</ui:fragment>
+								<ui:fragment rendered="${not empty searchUnitsTramAction.addressOrg.city}">
+									<h:outputText value=", #{searchUnitsTramAction.addressOrg.city}"/>
+								</ui:fragment>
+								<ui:fragment rendered="${not empty searchUnitsTramAction.addressOrg.zip}">
+									<h:outputText value="( #{searchUnitsTramAction.addressOrg.zip} )"/>
+								</ui:fragment>
+								<ui:fragment rendered="${not empty searchUnitsTramAction.addressOrg.country}">
+									<h:outputText value=" #{searchUnitsTramAction.addressOrg.country}"/>
+								</ui:fragment>
+							</div>
+							<div class="telorgclass">
+							<ui:fragment rendered="${not empty searchUnitsTramAction.addressOrg.telephone}">
+								<h:outputText value="#{msgs.labelTelefono}: "/>
+								<h:outputText value="#{searchUnitsTramAction.addressOrg.telephone} "/>
+							</ui:fragment>
+							</div>
+							<div class="telorgclass">
+							<ui:fragment rendered="${not empty searchUnitsTramAction.addressOrg.fax}">
+								<h:outputText value="#{msgs.labelFax}: "/>
+								<h:outputText value="#{searchUnitsTramAction.addressOrg.fax} "/>
+							</ui:fragment>
+							</div>
+							<div class="telorgclass">
+							<ui:fragment rendered="${not empty searchUnitsTramAction.addressOrg.email}">
+								<h:outputText value="#{msgs.lableMail}: "/>
+								<h:outputText value="#{searchUnitsTramAction.addressOrg.email} "/>
+							</ui:fragment>
+							</div>
+						</ui:fragment>
+						<ui:fragment rendered="${empty searchUnitsTramAction.addressOrg}">
+							<div class="adressorgclass">
+								<h:outputText value="#{msgs.lableNotAddress}"/>
+							</div>
+						</ui:fragment>
+					</p:panel>
+					<div style="text-align:center">
+					<p:commandButton process="@this" style="    font-size: 85%;"
+						value="#{msgs.labelBotonAceptar}"
+						oncomplete="PF('viewDirOrgDialog').hide()" />
+					</div>
+		</p:dialog>
+		<p:dialog modal="true" widgetVar="statusDialog"
+			header="Cargando, espere por favor" draggable="false"
+			closable="false" resizable="false">
+			<img
+				src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+		</p:dialog>
+		<script type="text/javascript">
+			function start() {
+				PF('statusDialog').show();
+			}
+			function stop() {
+				PF('statusDialog').hide();
+			}
+		</script>
+	</h:form>
+
+</h:body>
+
+</html>

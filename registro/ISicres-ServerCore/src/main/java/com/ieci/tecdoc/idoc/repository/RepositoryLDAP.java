@@ -54,8 +54,9 @@ public class RepositoryLDAP {
 	}
 
 	private void init(String entidad) {
+	    HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 
 			// Obtenemos la configuración del LDAP para el sistema
 	        StringBuffer query = new StringBuffer();
@@ -75,7 +76,7 @@ public class RepositoryLDAP {
 		} catch (HibernateException e) {
 			log.error("Impossible to load initial values for LDAP.", e);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 	}

@@ -1129,7 +1129,18 @@ public class ISicresQueries implements HibernateKeys {
 
 		return result;
 	}
-
+	
+	public static List getScrDistregPen(Session session, Integer bookID,
+		int fdrid) throws HibernateException {
+	StringBuffer query = new StringBuffer();
+	query.append("FROM ");
+	query.append(HIBERNATE_ScrDistreg);
+	query
+			.append(" scr WHERE scr.state in (1) and scr.idArch=? AND scr.idFdr=? ");
+	return session.find(query.toString(),
+			new Object[] { bookID, new Integer(fdrid) },
+			new Type[] { Hibernate.INTEGER, Hibernate.INTEGER });
+}
 	/***************************************************************************
 	 * Protected methods
 	 **************************************************************************/

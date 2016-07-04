@@ -1,0 +1,16 @@
+<Config>   
+   <Conection>
+      <Provider>1</Provider>
+      <Pooling>N</Pooling>
+      <Pooling_Timeout>0</Pooling_Timeout>
+   </Conection>
+   <Auth_Config>
+      <MaxNumTries>3</MaxNumTries>
+      <User_Search_By_Dn></User_Search_By_Dn>
+      <User_Start></User_Start>
+      <User_Scope></User_Scope>
+      <User_Attribute></User_Attribute>
+      <Group_Start></Group_Start>
+      <Group_Scope></Group_Scope>
+   </Auth_Config>
+</Config>

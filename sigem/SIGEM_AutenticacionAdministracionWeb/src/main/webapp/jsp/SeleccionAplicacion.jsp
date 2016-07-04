@@ -2,7 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%@page import="ieci.tecdoc.sgm.core.services.administracion.Aplicacion"%>
 <%@page import="ieci.tecdoc.sgm.administracion.utils.Defs"%>
 <%@page import="ieci.tecdoc.sgm.administracion.utils.Utilidades"%>
@@ -24,8 +25,8 @@
 		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 		%> 
 		<base href="<%= basePath %>" />
-		<link rel="stylesheet" href="css/estilos.css" type="text/css" />	
-		<script type="text/javascript" language="javascript" src="js/idioma.js"></script>
+		<link rel="stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" type="text/css" />	
+		<script type="text/javascript" language="javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/idioma.js"></script>
 		
 		<script language="Javascript">
 			function abrirAplicacion(idApp, url) {

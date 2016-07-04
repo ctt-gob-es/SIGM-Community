@@ -2,11 +2,12 @@
 	<parent>
 		<artifactId>sigem_registroPresencial_modules</artifactId>
 		<groupId>es.ieci.tecdoc.sigem</groupId>
-		<version>3.0.1-M2</version>
+		<version>3.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>sigem_registroPresencial-configurable-resources</artifactId>
 	<packaging>pom</packaging>
+	<version>3.0.0-msssi2.0.0</version>
 
 	<description>
 		Modulo de Recursos de Configuracion del Registro Presencial de SIGEM
@@ -85,6 +86,7 @@
 									<includes>
 										<include>Unix.properties</include>
 										<include>Windows.properties</include>
+										<include>msssi.properties</include>
 									</includes>
 	      							<filtering>true</filtering>
 								</resource>
@@ -131,6 +133,7 @@
 		<profile>
 			<id>oracle</id>
 			<activation>
+				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>oracle</name>
 				</property>
@@ -152,7 +155,6 @@
 				<property>
 					<name>postgres</name>
 				</property>
-				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<filter.database>${project.basedir}/../SIGEM_RegistroPresencialWeb/src/main/filters/database/Postgres.properties</filter.database>
@@ -209,7 +211,6 @@
 				<property>
 					<name>tomcat</name>
 				</property>
-				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<filter.server>${project.basedir}/../SIGEM_RegistroPresencialWeb/src/main/filters/server/Tomcat.properties</filter.server>
@@ -258,7 +259,25 @@
 				</filters>
 			</build>
 		</profile>
-
+		<profile>
+			<id>weblogic</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>weblogic</name>
+				</property>
+			</activation>
+			<properties>
+				<filter.server>${project.basedir}/../SIGEM_RegistroPresencialWeb/src/main/filters/server/weblogic_msssi.properties</filter.server>
+			</properties>
+			<build>
+				<filters>
+					<filter>
+						${project.basedir}/../SIGEM_RegistroPresencialWeb/src/main/filters/server/weblogic_msssi.properties
+					</filter>
+				</filters>
+			</build>
+		</profile>		
 		<!-- Perfiles de construccion en funcion del S.O. -->
 		<profile>
 			<id>unix</id>
@@ -266,7 +285,6 @@
 				<property>
 					<name>unix</name>
 				</property>
-				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<filter.system>${basedir}/target/resources-filtered/Unix.properties</filter.system>
@@ -299,7 +317,26 @@
 				</filters>
 			</build>
 		</profile>
-
+		<profile>
+			<id>msssi</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>msssi</name>
+				</property>
+			</activation>
+			<properties>
+				<filter.system>${basedir}/target/resources-filtered/msssi.properties</filter.system>
+				<filter.generic.system>${project.basedir}/../../SIGEM_Config/src/main/filters/system/msssi.properties</filter.generic.system>
+			</properties>
+			<build>
+				<filters>
+					<filter>
+						${basedir}/target/resources-filtered/msssi.properties
+					</filter>
+				</filters>
+			</build>
+		</profile>		
 		<!-- Perfiles de construccion en funcion del sistema de autenticación -->
 		<profile>
 			<id>invesdoc</id>

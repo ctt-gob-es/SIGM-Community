@@ -41,6 +41,7 @@ public class AsientoRegistralDaoImpl extends
 	protected static final String  GET_DESCRIPCION_TIPO_ANOTACION_INTERCAMBIO="AsientoRegistralVO.getDescripcionTipoAnotacionIntercambio";
 	protected static final String GET_ESTADO = "AsientoRegistralVO.getEstado";
 	protected static final String GET_ASIENTO_REGISTRAL_BY_ENTIDAD_REGISTRAL_Y_CODIGO_INTERCAMBIO = "AsientoRegistralVO.getAsientoRegistralByEntidadRegistralYCodigoIntercambio";
+	private static final String GET_ESTADO_CODE = "AsientoRegistralVO.getEstadoByCode";
 
 	/**
 	 * Constructor con parámetros de la clase. Establece el tipo de entidad a
@@ -96,7 +97,9 @@ public class AsientoRegistralDaoImpl extends
 		map.put("tablasAuxiliares", getTablasAuxiliares(criterios));
 		map.put("criterios", criterios.getCriterios());
 		map.put("orden", criterios.getOrderBy());
-
+		if (criterios.getOrderByString() != null){
+		    map.put("ordenString", criterios.getOrderByString());
+		}
 		// Comprobar si hay que paginar los resultados
 		PageInfo pageInfo = criterios.getPageInfo();
 		if (pageInfo != null) {
@@ -218,5 +221,19 @@ public class AsientoRegistralDaoImpl extends
 				.queryForObject(GET_DESCRIPCION_TIPO_ANOTACION_INTERCAMBIO, id);
 
 		return codigoIntercambio;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.fwktd.sir.api.dao.AsientoRegistralDao#getEstado(java.lang.String)
+	 */
+	public EstadoAsientoRegistraVO getEstadoByCode(String code) {
+
+		logger.info("Obteniendo el estado del asiento registral [{}]", code);
+
+		EstadoAsientoRegistraVO estado = (EstadoAsientoRegistraVO) getSqlMapClientTemplate()
+				.queryForObject(GET_ESTADO_CODE, code);
+
+		return estado;
 	}
 }

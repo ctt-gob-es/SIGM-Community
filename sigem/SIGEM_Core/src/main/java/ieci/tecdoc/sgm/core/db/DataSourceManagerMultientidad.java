@@ -37,9 +37,9 @@ public class DataSourceManagerMultientidad {
 		   
 	       Connection conn = null;
 		   
-		   if( (entidad == null) || ("".equals(entidad))){
+		  /* if( (entidad == null) || ("".equals(entidad))){
 			   throw new Exception("Error: entidad no definida a la hora de establecer conexión a la base de datos.");
-		   }
+		   }*/
 		   
 		   MultipleDatasourceImpl m_dataSource = (MultipleDatasourceImpl)poConfig.getBean(datasourceName);
 		   if (m_dataSource != null) {

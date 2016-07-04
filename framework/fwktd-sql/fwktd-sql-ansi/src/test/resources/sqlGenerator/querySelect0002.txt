@@ -1,1 +1,0 @@
-SELECT "Alias".PK  AS "id" , "Alias".NAME FROM A_Schema."Table" "Alias"

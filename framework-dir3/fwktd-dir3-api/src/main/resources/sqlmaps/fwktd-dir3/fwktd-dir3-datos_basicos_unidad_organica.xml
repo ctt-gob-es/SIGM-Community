@@ -8,11 +8,11 @@
 
 	<resultMap id="datosBasicosUnidadOrganica" class="es.ieci.tecdoc.fwktd.dir3.api.vo.DatosBasicosUnidadOrganicaVO">
 
-		<result property="id" column="CODIGO_UNIDAD_ORGANICA" />
-		<result property="nombre" column="NOMBRE_UNIDAD_ORGANICA" />
-		<result property="idExternoFuente" column="CODIGO_EXTERNO_FUENTE" />
+		<result property="id" column="C_ID_UD_ORGANICA" />
+		<result property="nombre" column="C_DNM_UD_ORGANICA" />
+		<result property="idExternoFuente" column="C_ID_EXTERNO_FUENTE" />
 
-		<result property="idUnidadOrganicaSuperior" column="CODIGO_UNIDAD_SUP_JERARQUICA" />
+		<result property="idUnidadOrganicaSuperior" column="C_ID_DEP_UD_SUPERIOR" />
 		<result property="nombreUnidadOrganicaSuperior" column="DENOM_UNIDAD_SUP_JERARQUICA" />
 
 
@@ -21,39 +21,43 @@
 	<sql id="table">DIR_UNIDAD_ORGANICA</sql>
 
 	<sql id="columns">
-		UO.CODIGO_UNIDAD_ORGANICA,
-		UO.NOMBRE_UNIDAD_ORGANICA,
-		UO.CODIGO_EXTERNO_FUENTE,
-
-		UO.CODIGO_UNIDAD_SUP_JERARQUICA,
-		UO.DENOM_UNIDAD_SUP_JERARQUICA
-
+		UO.C_ID_UD_ORGANICA,
+		UO.C_DNM_UD_ORGANICA,
+		UO.C_ID_EXTERNO_FUENTE,
+		UO.C_ID_DEP_UD_SUPERIOR,
+		UO2.C_DNM_UD_ORGANICA AS DENOM_UNIDAD_SUP_JERARQUICA
 	</sql>
 
 	<sql id="from">
 		<include refid="table" /> UO
 	</sql>
-
+	<sql id="fromInner">
+		INNER JOIN <include refid="table" /> UO2 
+		ON UO.C_ID_DEP_UD_SUPERIOR=UO2.C_ID_UD_ORGANICA
+	</sql>
+	
 	<sql id="columns_insert">
-		CODIGO_UNIDAD_ORGANICA,
-		NOMBRE_UNIDAD_ORGANICA,
-		CODIGO_EXTERNO_FUENTE,
-		CODIGO_UNIDAD_SUP_JERARQUICA,
-		DENOM_UNIDAD_SUP_JERARQUICA
+		C_ID_UD_ORGANICA,
+		C_DNM_UD_ORGANICA,
+		C_ID_EXTERNO_FUENTE,
+		C_ID_DEP_UD_SUPERIOR
 	</sql>
 
 	<sql id="insert">
 		#id#,
 		#nombre#,
 		#idExternoFuente#,
-		#idUnidadOrganicaSuperior#,
-		#nombreUnidadOrganicaSuperior#
+		#idUnidadOrganicaSuperior#
 	</sql>
-
+	<sql id="update">
+		C_DNM_UD_ORGANICA=#nombre#,
+		C_ID_EXTERNO_FUENTE=#idExternoFuente#,
+		C_ID_DEP_UD_SUPERIOR=#idUnidadOrganicaSuperior#
+	</sql>
 
 	<sql id="findUnidadesOrganicas_fragment">
 		FROM
-			<include refid="from" />
+			<include refid="from" /><include refid="fromInner" />
 		<dynamic prepend="WHERE">
 			<iterate prepend="AND" property="criterios" conjunction="AND">
 
@@ -94,17 +98,17 @@
 		SELECT
 			<include refid="columns" />
 		FROM
-			<include refid="from" />
-		ORDER BY UO.NOMBRE_UNIDAD_ORGANICA
+			<include refid="from" /><include refid="fromInner" />
+		ORDER BY UO.C_DNM_UD_ORGANICA
 	</select>
 
 	<select id="getDatosBasicosUnidadOrganicaVO" parameterClass="java.lang.String" resultMap="datosBasicosUnidadOrganica">
 		SELECT
 			<include refid="columns" />
 		FROM
-			<include refid="from" />
+			<include refid="from" /><include refid="fromInner" />
 		WHERE
-			UO.CODIGO_UNIDAD_ORGANICA=#value#
+			UO.C_ID_UD_ORGANICA=#value#
 	</select>
 
 	<insert id="addDatosBasicosUnidadOrganicaVO" parameterClass="datosBasicosUnidadOrganica">
@@ -117,7 +121,12 @@
 	<delete id="deleteDatosBasicosUnidadOrganicaVO" parameterClass="java.lang.String">
 		DELETE FROM
 			<include refid="table" />
-		WHERE id=#value:INTEGER#
+		WHERE C_ID_UD_ORGANICA=#id#
 	</delete>
 
+	<update id="updateDatosBasicosUnidadOrganicaVO" parameterClass="datosBasicosUnidadOrganica">
+		UPDATE <include refid="table" /> SET
+		<include refid="update" />
+		WHERE C_ID_UD_ORGANICA=#id#
+	</update>
 </sqlMap>

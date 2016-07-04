@@ -172,8 +172,9 @@ public class LoginLDAP{
 			AuthenticationUser user) throws SecurityException {
 		Iuserusertype userusertype;
 		Transaction tran = null;
+		 HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(useCaseConf.getEntidadId());
+			Session session = hibernateUtil.currentSession(useCaseConf.getEntidadId());
 			tran = session.beginTransaction();
 
 			List list = ISicresQueries.getUserUserType(session, user.getId()
@@ -196,18 +197,18 @@ public class LoginLDAP{
 								useCaseConf.getEntidadId());
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 		}  catch (HibernateException hE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			logger.error("Imposible crear el permiso administrador");
 			throw new SecurityException(SecurityException.ERROR_SQL);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			logger.error("Imposible crear el permiso administrador");
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} finally {
-			HibernateUtil.closeSession(useCaseConf.getEntidadId());
+			hibernateUtil.closeSession(useCaseConf.getEntidadId());
 		}
 	}
 

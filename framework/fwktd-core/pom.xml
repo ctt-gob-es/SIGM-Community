@@ -3,16 +3,17 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd</groupId>
-		<artifactId>fwktd</artifactId>
+		<artifactId>fwktd-parent</artifactId>
 		<version>0.7</version>
 	</parent>
 
 	<artifactId>fwktd-core</artifactId>
 
 	<name>Modulo con clases core</name>
-
+	<version>3.0.0-msssi2.0.0</version>
 	<properties>
 		<jug.version>2.0.0</jug.version>
+		<fwktd.version>0.7</fwktd.version>
 	</properties>
 
 	<dependencies>
@@ -74,7 +75,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>fwktd-test</artifactId>
-			<version>${project.version}</version>
+			<version>${fwktd.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -159,5 +160,5 @@
 			<groupId>eu.medsea.mimeutil</groupId>
 			<artifactId>mime-util</artifactId>
 		</dependency>
-  </dependencies>
+	</dependencies>
 </project>

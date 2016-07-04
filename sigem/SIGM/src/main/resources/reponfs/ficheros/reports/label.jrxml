@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="etiquetas" language="groovy" pageWidth="235" pageHeight="75" columnWidth="233" leftMargin="1" rightMargin="1" topMargin="1" bottomMargin="1">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="xPath">
+		<![CDATA[/ETIQUETA]]>
+	</queryString>
+	<field name="TIPO_REGISTRO" class="java.lang.String">
+		<fieldDescription><![CDATA[TIPO_REGISTRO]]></fieldDescription>
+	</field>
+	<field name="FECHA_REGISTRO" class="java.lang.String">
+		<fieldDescription><![CDATA[FECHA_REGISTRO]]></fieldDescription>
+	</field>
+	<field name="NUMERO_REGISTRO" class="java.lang.String">
+		<fieldDescription><![CDATA[NUMERO_REGISTRO]]></fieldDescription>
+	</field>
+	<field name="OFICINA" class="java.lang.String">
+		<fieldDescription><![CDATA[OFICINA]]></fieldDescription>
+	</field>
+	<field name="QRCODE" class="java.lang.String">
+		<fieldDescription><![CDATA[QRCODE]]></fieldDescription>
+	</field>
+	<field name="CSV" class="java.lang.String">
+		<fieldDescription><![CDATA[CSV]]></fieldDescription>
+	</field>
+	<variable name="image" class="java.io.InputStream">
+		<variableExpression><![CDATA[new ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($F{QRCODE}.getBytes("UTF-8")))]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="73">
+			<image scaleImage="RealHeight" isUsingCache="true" evaluationTime="Report">
+				<reportElement isPrintRepeatedValues="false" x="189" y="27" width="44" height="44"/>
+				<imageExpression class="java.io.InputStream"><![CDATA[$V{image}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="135" y="16" width="98" height="12"/>
+				<textElement textAlignment="Right">
+					<font fontName="Helvetica" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FECHA_REGISTRO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Transparent" x="98" y="2" width="135" height="14" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right">
+					<font fontName="Helvetica" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TIPO_REGISTRO}.concat("  ").concat( $F{NUMERO_REGISTRO})]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="2" width="44" height="25"/>
+				<imageExpression class="java.lang.String"><![CDATA["images/escudo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="25" y="8" width="91" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="5" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[MINISTERIO
+DE SANIDAD, SERVICIOS SOCIALES
+E IGUALDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="39" width="188" height="21">
+					<printWhenExpression><![CDATA[$F{CSV} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Helvetica" size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[El acuse de este registro se ha almacenado en el MSSSI (https://sede.msssi.gob.es)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="60" width="24" height="12">
+					<printWhenExpression><![CDATA[$F{CSV} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="helvetica" size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[CSV:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="25" y="59" width="164" height="13" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Helvetica" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CSV}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+</jasperReport>

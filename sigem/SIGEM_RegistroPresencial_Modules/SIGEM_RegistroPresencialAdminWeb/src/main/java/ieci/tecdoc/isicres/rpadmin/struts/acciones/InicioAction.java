@@ -3,7 +3,11 @@ package ieci.tecdoc.isicres.rpadmin.struts.acciones;
 import ieci.tecdoc.isicres.rpadmin.struts.util.PermisosInternosUtils;
 import ieci.tecdoc.isicres.rpadmin.struts.util.SesionHelper;
 import ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion;
+import ieci.tecdoc.sgm.core.exception.SigemException;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.administracion.AdministracionException;
+import ieci.tecdoc.sgm.core.services.administracion.ServicioAdministracion;
+import ieci.tecdoc.sgm.core.services.administracion.Usuario;
 import ieci.tecdoc.sgm.core.services.admsesion.administracion.ServicioAdministracionSesionesAdministrador;
 import ieci.tecdoc.sgm.core.services.gestion_administracion.ConstantesGestionUsuariosAdministracion;
 import ieci.tecdoc.sgm.sesiones.administrador.ws.client.Sesion;
@@ -39,19 +43,28 @@ import es.ieci.tecdoc.isicres.admin.core.manager.DBSessionManager;
 /*$Id*/
 
 public class InicioAction extends RPAdminWebAction {
-
+	private static ServicioAdministracion oServicio;
+	
+	static {
+		try {
+			oServicio = LocalizadorServicios.getServicioAdministracion();
+		}
+		catch (SigemException e) {
+		}
+	}
 	public ActionForward executeAction(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
 		String entidad = SesionHelper.obtenerEntidad(request)
 				.getIdentificador();
-		String caseSensitive = DBSessionManager.getDBCaseSensitive(entidad);
-
+		DBSessionManager dBSessionManager = new DBSessionManager();
+		String caseSensitive = dBSessionManager.getDBCaseSensitive(entidad);
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		SesionHelper.guardarCaseSensitive(request, caseSensitive);
-		Session session = HibernateUtil.currentSession(entidad);
+		Session session = hibernateUtil.currentSession(entidad);
 
-		Sesion sesion = AutenticacionAdministracion.obtenerDatos(request);
+		Sesion sesion = obtenerDatos(request);
 		String datosEspecificos = sesion.getDatosEspecificos();
 		datosEspecificos = "<datos>"+datosEspecificos+"</datos>";
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -135,9 +148,47 @@ public class InicioAction extends RPAdminWebAction {
 
 		request.getSession().setAttribute("isLdapAuthenticationPolicy", isLdapAuthenticationPolicy);
 		request.getSession().setAttribute(ServerKeys.GENPERMS_USER, genPerms);
+		hibernateUtil.closeSession(entidad);
 		return mapping.findForward(PermisosInternosUtils.calculateSuccess(isSuperUser, genPerms));
 	}
 
-
+	private static Sesion obtenerDatos(HttpServletRequest request) {
+		
+		String key =
+				request.getParameter(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM);
+		if (AutenticacionAdministracion.isNuloOVacio(key)) {
+			key =
+					(String) request
+							.getSession()
+							.getAttribute(
+									ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM);
+		}
+		
+		if (AutenticacionAdministracion.isNuloOVacio(key)) {
+			return null;
+		}
+		else {
+			Usuario oUsuario = null;
+			Sesion newSesion = null;
+			try {
+				oUsuario = oServicio.obtenerUsuario(key.split("_")[0]);
+			}
+			catch (AdministracionException e) {
+			}
+			
+			if (oUsuario != null){
+				newSesion = new Sesion();
+				String datos =
+						(new StringBuilder(String.valueOf(oUsuario.getNombre())))
+								.append(" ").append(oUsuario).toString();
+				newSesion.setDatosEspecificos(datos);
+				newSesion.setIdEntidad("000");
+				newSesion.setIdSesion(key.split("_")[1]);
+				newSesion.setUsuario(key.split("_")[0]);
+				newSesion.setTipoUsuario(Sesion.TIPO_USUARIO_ADMINISTRADOR);
+			}
+			return newSesion;
+		}
+	}
 
 }

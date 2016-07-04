@@ -2,12 +2,14 @@
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <html>
 <head>
 <ieci:baseInvesDoc/>
-<link rel="stylesheet" type="text/css" href="include/css/adminApp.css"/>
-<link rel="stylesheet" type="text/css" href="include/css/estilos.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/adminApp.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css"/>
 
 <script language="javascript" >
 function actualiza()

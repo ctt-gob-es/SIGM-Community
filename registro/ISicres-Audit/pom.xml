@@ -7,6 +7,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>ISicres-Audit</artifactId>
 	<name>ISicres-Audit</name>
+	<version>3.0.0-msssi2.0.0</version>	
 	<packaging>jar</packaging>
 	<description>Modulo de logica del Auditoria de InvesSicres</description>
 
@@ -71,7 +72,7 @@
 					<target>1.5</target>
 					<encoding>iso-8859-1</encoding>
 					<fork>true</fork>
-          <!--					<executable>${JAVA_1_5_HOME}/bin/javac</executable>-->
+					<executable>${JAVA_1_5_HOME}/bin/javac</executable>
 				</configuration>
 			</plugin>
 

@@ -22,7 +22,7 @@ public class ServicioRegistroWebServiceServiceLocator extends org.apache.axis.cl
     }
 
     // Use to get a proxy class for ServicioRegistroWebService
-    private java.lang.String ServicioRegistroWebService_address = "http://localhost:8080/SIGEM_RegistroPresencialWS/services/ServicioRegistroWebService";
+    private java.lang.String ServicioRegistroWebService_address = "http://localhost:7001/SIGEM_RegistroPresencialWS/services/ServicioRegistroWebService";
 
     public java.lang.String getServicioRegistroWebServiceAddress() {
         return ServicioRegistroWebService_address;

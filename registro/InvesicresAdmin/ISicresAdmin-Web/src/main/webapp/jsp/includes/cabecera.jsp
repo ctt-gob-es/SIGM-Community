@@ -2,6 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@page import="es.ieci.tecdoc.isicres.admin.core.locale.LocaleFilterHelper"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <script>
 	function abreAyuda( url ) {
 
@@ -15,12 +17,12 @@
 <div id="appHeader">
 	<div id="cabecera_int_left">
 		<div id="logo_app">
-			<img  src="./img/interna-gallery.png" id="logo_app_img"/>
+			<img  src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/interna-gallery.png" id="logo_app_img"/>
 		</div>
 	</div>
 	<div class="cabecera_int_right">
 		<div id="logo_cia">
-			<img  src="./img/invesicres-logo.png" id="logo_app_img2" align="right"/>
+			<img  src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/invesicres-logo.png" id="logo_app_img2" align="right"/>
 			<div id="salir" class="salir">
 				<a href='<html:rewrite page="/logout.do" />'>
 					<bean:message key="ieci.tecdoc.sgm.rpadmin.logout"/>
@@ -36,7 +38,7 @@
 		<h3><bean:message key="ieci.tecdoc.sgm.rpadmin.titulo"/></h3>
 		<p class="ayuda">
 			<b><logic:present name="username"><bean:write name="username"/></logic:present></b>
-			<% String ayuda = "/ayuda/" + LocaleFilterHelper.getCurrentLocale(request).getLanguage() + "/index.html";%>
+			<% String ayuda = ((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")+"/ayuda/" + LocaleFilterHelper.getCurrentLocale(request).getLanguage() + "/index.html";%>
 			<a href="#" onclick="abreAyuda('<html:rewrite page="<%=ayuda%>" />')">&nbsp;</a>
 		</p>
 	</div>

@@ -75,12 +75,10 @@ public class FolderHistSession extends FolderSessionUtil implements ServerKeys,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
 
-		Transaction tran = null;
 		List result = new ArrayList();
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
-
+			Session session = hibernateUtil.currentSession(entidad);
 			// Recuperamos la sesión
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
 					sessionID);
@@ -109,6 +107,11 @@ public class FolderHistSession extends FolderSessionUtil implements ServerKeys,
 
 					Object fldtype = axsf.getAttributeClass("fld"
 							+ String.valueOf(scr.getIdFld()));
+					if (fldtype == null){
+					    if (axsf.getExtendedFields().get(scr.getIdFld()) != null){
+						fldtype = String.class;
+					    }
+					}
 					updHisFdrResults = getUpdHisFdrResultsByFldType(session,
 							updHisFdrResults, fldtype, bookID, scr.getId());
 
@@ -122,23 +125,19 @@ public class FolderHistSession extends FolderSessionUtil implements ServerKeys,
 					result.add(updHisFdrResults);
 				}
 			}
-
 			return result;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to close the book [" + bookID
 					+ "] and fdrid [" + folderId + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_FIND_MODIFICATION_HISTORY);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 

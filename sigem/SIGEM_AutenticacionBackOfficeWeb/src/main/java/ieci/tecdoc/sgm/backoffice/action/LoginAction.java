@@ -4,6 +4,8 @@ import ieci.tecdoc.core.base64.Base64Util;
 import ieci.tecdoc.sgm.backoffice.form.LoginAccesoForm;
 import ieci.tecdoc.sgm.backoffice.utils.Defs;
 import ieci.tecdoc.sgm.backoffice.utils.Utilidades;
+import ieci.tecdoc.sgm.backoffice.utils.Utils;
+import ieci.tecdoc.sgm.base.guid.Guid;
 import ieci.tecdoc.sgm.core.admin.web.AdministracionHelper;
 import ieci.tecdoc.sgm.core.admin.web.AutenticacionBackOffice;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
@@ -31,6 +33,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+
 public class LoginAction extends Action{
 
 	private static final Logger logger = Logger.getLogger(LoginAction.class);
@@ -47,15 +50,17 @@ public class LoginAction extends Action{
 
 			idEntidad = (String)session.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD);
 			if (Utilidades.isNuloOVacio(idEntidad)) {
-				idEntidad = new String("");
+				idEntidad = new String("000");
+				session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD,idEntidad);
 			}
 
 			idAplicacion = (String)session.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_APLICACION);
 			if (Utilidades.isNuloOVacio(idAplicacion)) {
-				idAplicacion = new String("");
+				idAplicacion = new String("RP");
+				session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_APLICACION,idAplicacion);
 			}
 
-			if (Utilidades.isNuloOVacio(idEntidad)){
+			/*if (Utilidades.isNuloOVacio(idEntidad)){
 				List oLista = AdministracionHelper.obtenerListaEntidades();
 				if(oLista.size()==1) {
 					Entidad oEntidad = (Entidad)oLista.get(0);
@@ -64,7 +69,7 @@ public class LoginAction extends Action{
 					request.setAttribute("entidades", oLista);
 			   		return mapping.findForward("entidades");
 				}
-			}
+			}*/
 
 			usuario = formLogin.getUsername();
 			if (Utilidades.isNuloOVacio(usuario)) {
@@ -80,11 +85,13 @@ public class LoginAction extends Action{
 			DatosUsuario user = new DatosUsuario();
 			Entidad entidad = new Entidad();
 			entidad.setIdentificador(idEntidad);
-
+			// Seteamos datos para auditoria
+			Utils.setAuditContext(request);
+			
 			String singleSignOn = (String) session.getServletContext().getAttribute(Defs.PLUGIN_SINGLE_SIGN_ON);
 			if ((singleSignOn != null) && (singleSignOn.equalsIgnoreCase("true"))) {
 
-				// Autenticación Single-Sign On
+				// Autenticacion Single-Sign On
 				usuario = (String)session.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_USUARIO);
 				if (!Utilidades.isNuloOVacio(usuario)) {
 
@@ -126,7 +133,7 @@ public class LoginAction extends Action{
 				}
 			} else {
 
-				// Autenticación mediante Usuario / Password
+				// Autenticaciï¿½n mediante Usuario / Password
 				if (!Utilidades.isNuloOVacio(usuario) && !Utilidades.isNuloOVacio(password)) {
 					user.setUser(usuario);
 					user.setPassword(password);
@@ -157,25 +164,26 @@ public class LoginAction extends Action{
 			  String idAplicacion) throws Exception {
 
 		HttpSession session = request.getSession();
-		ServicioAdministracionSesionesBackOffice oClient = LocalizadorServicios.getServicioAdministracionSesionesBackOffice();
-
-		String key = oClient.nuevaSesion(user.getUser(), idEntidad);
+		//ServicioAdministracionSesionesBackOffice oClient = LocalizadorServicios.getServicioAdministracionSesionesBackOffice();
+		String key = new Guid().toString();
+		//String key = oClient.nuevaSesion(user.getUser(), idEntidad);
 
 		// SLuna-20081217-I
 
-		// Introducimos una nueva 'llave' en la sesión que sólo se
-		// usará cuando entremos en el módulo de Registro
+		// Introducimos una nueva 'llave' en la sesiï¿½n que sï¿½lo se
+		// usarï¿½ cuando entremos en el mï¿½dulo de Registro
 		// Presencial. Se crea una 'llave' con el usuario codificado
-		// en BASE64 por si su nombre de usuario contiene algún
-		// carácter no ANSI.
+		// en BASE64 por si su nombre de usuario contiene algï¿½n
+		// carï¿½cter no ANSI.
 		String keyForRP = null;
 
 		String usuarioBase64 = Base64Util.encodeString(user.getUser());
 		StringBuffer buffer = new StringBuffer();
 
 		buffer.append(usuarioBase64).append("##CODE##");
-		keyForRP = oClient
-				.nuevaSesion(buffer.toString(), idEntidad);
+		keyForRP = new Guid().toString();
+		/*keyForRP = oClient
+				.nuevaSesion(buffer.toString(), idEntidad);*/
 		session.setAttribute("keySesionUsuarioRP", keyForRP);
 
 		// SLuna-20081217-F
@@ -185,11 +193,12 @@ public class LoginAction extends Action{
 		if ((!"".equals(tipoAutenticacion))&&(tipoAutenticacion.equals(DatosUsuario.AUTHENTICATION_TYPE_LDAP))) {
 			datosSesion += "<LdapGuid>"+user.getLdapGuid()+"</LdapGuid>";
 		}
-
 		session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO, key);
-		oClient.modificarDatosSesion(key, datosSesion);
+		session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_USUARIO, user.getUser());
+		session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_DATOS_SESION, datosSesion);
+		//oClient.modificarDatosSesion(key, datosSesion);
 		if (!Utilidades.isNuloOVacio(idAplicacion)){
-			// Si no es la aplicación de Archivo
+			// Si no es la aplicaciï¿½n de Archivo
 			if (!ConstantesGestionUsuariosBackOffice.APLICACION_ARCHIVO.equals(idAplicacion)) {
 				String url = oServicio.obtenerDireccionAplicacion(idAplicacion);
 				url = AutenticacionBackOffice.comprobarURL(request, url);
@@ -198,7 +207,7 @@ public class LoginAction extends Action{
 			}
 		}
 
-		// Aplicación de Archivo
+		// Aplicaciï¿½n de Archivo
 		List oLista = Utilidades.obtenerListaAplicaciones(request, key);
 		request.setAttribute("aplicaciones", oLista);
 		return mapping.findForward("aplicaciones");

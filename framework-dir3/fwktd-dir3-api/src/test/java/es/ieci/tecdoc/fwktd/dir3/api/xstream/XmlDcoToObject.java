@@ -57,7 +57,7 @@ public class XmlDcoToObject {
 			InputStream input = this.getClass().getResourceAsStream("datosBasicosOficina.xml");
 			if(input==null)
 			{
-				input = new FileInputStream(new File("C:/tmp/datosBasicosOficina.xml"));
+				input = new FileInputStream(new File("D:/Repositorio/SIGEM/dirTemp/datosBasicosOficina.xml"));
 			}
 			OficinasVO oficinas = (OficinasVO)xstream.fromXML(input);
 			oficinas.toString();
@@ -88,7 +88,7 @@ public class XmlDcoToObject {
 			InputStream input = this.getClass().getResourceAsStream("datosBasicosUOrganica.xml");
 			if(input==null)
 			{
-				input = new FileInputStream(new File("C:/tmp/datosBasicosUOrganicaCompleto.xml"));
+				input = new FileInputStream(new File("D:/Repositorio/SIGEM/dirTemp/datosBasicosUOrganicaCompleto.xml"));
 			}
 			OrganismosVO oficinas = (OrganismosVO)xstream.fromXML(input);
 			oficinas.toString();

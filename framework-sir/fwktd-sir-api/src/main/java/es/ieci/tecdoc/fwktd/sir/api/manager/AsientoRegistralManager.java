@@ -182,4 +182,13 @@ public interface AsientoRegistralManager extends
 	 * @return Decripcion del tipo de anotacion
 	 */
 	public String getDescripcionTipoAnotacion(String id);
+
+	/**
+	 * Obtiene el estado de un asiento registral.
+	 *
+	 * @param code
+	 *            codigo del asiento registral.
+	 * @return Estado de un asiento registral.
+	 */
+	public EstadoAsientoRegistraVO getEstadoByCode(String code);
 }

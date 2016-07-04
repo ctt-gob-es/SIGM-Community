@@ -50,11 +50,11 @@ public class ProvTypeInvesdoc extends ValidationSessionUtil implements
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 			// Recuperamos la sesión
 			CacheFactory.getCacheInterface().getCacheEntry(sessionID);
@@ -81,7 +81,7 @@ public class ProvTypeInvesdoc extends ValidationSessionUtil implements
 			result.setDocColName(docColName);
 			// result.setResults(cities);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (Exception e) {
@@ -91,7 +91,7 @@ public class ProvTypeInvesdoc extends ValidationSessionUtil implements
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_PROV);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -103,11 +103,11 @@ public class ProvTypeInvesdoc extends ValidationSessionUtil implements
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 			// Recuperamos la sesión
 			CacheFactory.getCacheInterface().getCacheEntry(sessionID);
@@ -129,7 +129,7 @@ public class ProvTypeInvesdoc extends ValidationSessionUtil implements
 			result.setDocColName(docColName);
 			// result.setResults(provincies);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (Exception e) {
@@ -139,7 +139,7 @@ public class ProvTypeInvesdoc extends ValidationSessionUtil implements
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_PROV);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -148,11 +148,11 @@ public class ProvTypeInvesdoc extends ValidationSessionUtil implements
 			ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ScrProv result = null;
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -160,20 +160,20 @@ public class ProvTypeInvesdoc extends ValidationSessionUtil implements
 
 			result = (ScrProv) session.load(ScrProv.class, new Integer(id));
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrProv for session [" + sessionID
 					+ "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_PROV);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -182,11 +182,11 @@ public class ProvTypeInvesdoc extends ValidationSessionUtil implements
 			ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ScrCity result = null;
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -194,20 +194,20 @@ public class ProvTypeInvesdoc extends ValidationSessionUtil implements
 
 			result = (ScrCity) session.load(ScrCity.class, new Integer(id));
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrCity for session [" + sessionID
 					+ "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_CITIES);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 

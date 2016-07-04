@@ -38,5 +38,9 @@ public class TipoValidezDocumentoAnexoEnumVO extends ValuedEnum {
 	protected TipoValidezDocumentoAnexoEnumVO(String name, int value) {
 		super(name, value);
 	}
-
+	
+	 public static TipoValidezDocumentoAnexoEnumVO getEnum(int valor) {
+		return (TipoValidezDocumentoAnexoEnumVO) getEnum(TipoValidezDocumentoAnexoEnumVO.class,
+				valor);
+	}
 }

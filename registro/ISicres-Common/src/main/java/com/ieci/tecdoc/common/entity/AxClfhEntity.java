@@ -72,7 +72,7 @@ public class AxClfhEntity extends AbstractAx implements ServerKeys {
 
 	protected void assignStore(PreparedStatement ps, String entidad) throws SQLException {
 		int index = 1;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		ps.setInt(index++, getId());
 		ps.setInt(index++, getFdrId());
 		ps.setString(index++, getName());
@@ -85,9 +85,9 @@ public class AxClfhEntity extends AbstractAx implements ServerKeys {
 		ps.setInt(index++, getAccessType());
 		ps.setInt(index++, getAcsId());
 		ps.setInt(index++, getCrtrId());
-		ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+		ps.setDate(index++, bbddUtils.getDate(getCrtnDate()));
 		ps.setInt(index++, getUpdrId());
-		ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+		ps.setDate(index++, bbddUtils.getDate(getUpdDate()));
 	}
 	
 	
@@ -95,7 +95,7 @@ public class AxClfhEntity extends AbstractAx implements ServerKeys {
 	protected void assignStore(PreparedStatement ps, String entidad,
 			String dataBaseType) throws SQLException {
 		int index = 1;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		ps.setInt(index++, getId());
 		ps.setInt(index++, getFdrId());
 		ps.setString(index++, getName());
@@ -108,9 +108,9 @@ public class AxClfhEntity extends AbstractAx implements ServerKeys {
 		ps.setInt(index++, getAccessType());
 		ps.setInt(index++, getAcsId());
 		ps.setInt(index++, getCrtrId());
-		ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+		ps.setDate(index++, bbddUtils.getDate(getCrtnDate()));
 		ps.setInt(index++, getUpdrId());
-		ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+		ps.setDate(index++, bbddUtils.getDate(getUpdDate()));
 		
 	}
 

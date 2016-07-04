@@ -1,4 +1,4 @@
-/*package es.ieci.tecdoc.fwktd.dir3.api.service.impl;
+package es.ieci.tecdoc.fwktd.dir3.api.service.impl;
 
 import java.util.List;
 
@@ -24,9 +24,8 @@ import es.ieci.tecdoc.fwktd.dir3.core.vo.DatosBasicosUnidadOrganica;
  * @version $Revision$
  *
  */
-/*
-@ContextConfiguration({"/beans/cxf.xml", "/beans/fwktd-dir3-test-beans.xml",
-		"/beans/fwktd-dir3-api-applicationContext.xml" })
+@ContextConfiguration({"/jndi.xml", "/beans/cxf.xml", "/beans/fwktd-dir3-test-beans.xml",
+"/beans/fwktd-dir3-api-applicationContext.xml" })
 public class ServicioConsultaDirectorioComunImplTest extends
 		AbstractJUnit4SpringContextTests {
 
@@ -80,7 +79,7 @@ public class ServicioConsultaDirectorioComunImplTest extends
 		Assert.assertTrue("No se han obtenido resultados", oficinas.size() > 0);
 
 		// Test de consulta con criterios
-		oficinas = getServicioConsultaDirectorioComun().findOficinas(new Criterios<CriterioOficinaEnum>()
+		/*	oficinas = getServicioConsultaDirectorioComun().findOficinas(new Criterios<CriterioOficinaEnum>()
                 .addCriterio(new Criterio<CriterioOficinaEnum>(
                         CriterioOficinaEnum.OFICINA_INDICADOR_ADHESION_SIR,
                         OperadorCriterioEnum.EQUAL,
@@ -94,7 +93,7 @@ public class ServicioConsultaDirectorioComunImplTest extends
                         OperadorCriterioEnum.IN,
                         new String[] { ID_UNIDAD_ORGANICA_EXISTENTE, "E00004101" }))
                 .addOrderBy(CriterioOficinaEnum.OFICINA_ID)
-                .addOrderBy(CriterioOficinaEnum.OFICINA_NOMBRE));
+                .addOrderBy(CriterioOficinaEnum.OFICINA_NOMBRE));*/
 
 		Assert.assertNotNull("Resultado nulo", oficinas);
 		Assert.assertTrue("No se han obtenido resultados", oficinas.size() > 0);
@@ -211,7 +210,8 @@ public class ServicioConsultaDirectorioComunImplTest extends
 
 
 	protected Criterios<CriterioOficinaEnum> createCriteriosOficina() {
-        return new Criterios<CriterioOficinaEnum>()
+       return null;
+		/*return new Criterios<CriterioOficinaEnum>()
 
             .addCriterio(new Criterio<CriterioOficinaEnum>(
                     CriterioOficinaEnum.OFICINA_ID,
@@ -314,11 +314,12 @@ public class ServicioConsultaDirectorioComunImplTest extends
 //                    OperadorCriterioEnum.EQUAL_OR_LESS_THAN,
 //                    new Date()))
             .addOrderBy(CriterioOficinaEnum.OFICINA_ID)
-            .addOrderBy(CriterioOficinaEnum.OFICINA_NOMBRE);
+            .addOrderBy(CriterioOficinaEnum.OFICINA_NOMBRE);*/
 	}
 
 	protected Criterios<CriterioUnidadOrganicaEnum> createCriteriosUnidadOrganica() {
-        return new Criterios<CriterioUnidadOrganicaEnum>()
+       return null;
+	/*	return new Criterios<CriterioUnidadOrganicaEnum>()
 
             .addCriterio(new Criterio<CriterioUnidadOrganicaEnum>(
                     CriterioUnidadOrganicaEnum.UO_ID,
@@ -399,8 +400,7 @@ public class ServicioConsultaDirectorioComunImplTest extends
 //                    OperadorCriterioEnum.EQUAL_OR_LESS_THAN,
 //                    new Date()))
             .addOrderBy(CriterioUnidadOrganicaEnum.UO_ID)
-            .addOrderBy(CriterioUnidadOrganicaEnum.UO_NOMBRE);
+            .addOrderBy(CriterioUnidadOrganicaEnum.UO_NOMBRE);*/
 	}
 
 }
-*/

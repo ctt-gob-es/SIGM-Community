@@ -115,12 +115,12 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		int size = 0;
 
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -135,27 +135,27 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 								entidad);
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return size;
 		} catch (BookException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (HibernateException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to open the book [" + bookID
 					+ "] for the session [" + sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_OPEN_BOOK);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to open the book [" + bookID
 					+ "] for the session [" + sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_OPEN_BOOK);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -164,10 +164,10 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 			throws BookException, SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -217,7 +217,7 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 				extractRegistersFromQuery(col, result, session, idoc,
 						axSfEntity, locale.getLanguage(), entidad);
 
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 
 				queryResults.setBookId(bookID);
 				queryResults.setTotalQuerySize(1);
@@ -236,18 +236,18 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 
 			return queryResults.clone(result.values());
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to execute the book query for [" + bookID
 					+ "] for the session [" + sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_REGISTERS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -286,10 +286,10 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 				ValidationException.ATTRIBUTE_AXSFQUERY);
 		Validator.validate_Integer(axsfQuery.getBookId(),
 				ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -313,7 +313,7 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 					user, axsfQuery, reportOption, bookIds, userusertype,
 					scrofic, entidad);
 
-			if (totalSize > 0) {
+			if (totalSize >= 0) {
 				AxSfQueryResults queryResults = new AxSfQueryResults(axsfQuery
 						.getBookId(), totalSize, axsfQuery.getPageSize());
 
@@ -321,23 +321,23 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 				bookInformation.put(AXSF_QUERY, axsfQuery);
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return totalSize;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to execute the book query for ["
 					+ axsfQuery.getBookId() + "] for the session [" + sessionID
 					+ "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_REGISTERS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -365,10 +365,10 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 				ValidationException.ATTRIBUTE_AXSFQUERY);
 		Validator.validate_Integer(axsfQuery.getBookId(),
 				ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -392,23 +392,23 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 					user, axsfQuery, reportOption, bookIds, userusertype,
 					scrofic, entidad);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return totalSize;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to execute the book query for ["
 					+ axsfQuery.getBookId() + "] for the session [" + sessionID
 					+ "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_REGISTERS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -418,11 +418,11 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		boolean result = false;
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -440,23 +440,23 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 
 			result = lock(session, bookID, fdrid, user, scrOfic, entidad);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to lock the book [" + bookID
 					+ "] and fdrid [" + fdrid + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_LOCK_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -469,16 +469,16 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 			Date beginDate, Date endDate, String unit, boolean isTarget,
 			String entidad) throws BookException, SessionException,
 			ValidationException, SQLException {
-
+	    	BBDDUtils bbddUtils = new BBDDUtils();
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ArrayList idsRegisters = new ArrayList();
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 
 			// Recuperamos la sesión
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
@@ -499,7 +499,7 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 					userusertype, scrofic, beginDate, endDate, unit, isTarget,
 					entidad);
 
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
@@ -520,10 +520,10 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 			throw new BookException(
 					BookException.ERROR_CANNOT_GET_REGISTERS_TO_CLOSE);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
-			HibernateUtil.closeSession(entidad);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return idsRegisters;
@@ -547,7 +547,7 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		if (log.isDebugEnabled()) {
 			log.debug("///////// getBookFolder =========================> ["
 					+ bookID + "] fdrid [" + fdrid + "]");
@@ -556,7 +556,7 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 		AxSf axsf = null;
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -579,7 +579,7 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 			axsf = getAxSf(session, bookID, new Integer(fdrid), idoc, locale
 					.getLanguage(), entidad, true);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			if (log.isDebugEnabled()) {
 				log
@@ -589,19 +589,19 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 
 			return axsf;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load the book  for [" + bookID
 					+ "] and fdrid [" + fdrid + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_REGISTERS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -708,9 +708,7 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 		// Preparación del registro
 		data = preparationOfFolder(sessionID, bookID, 0, false,
 				launchDistOutRegister, locale.getLanguage(), entidad, data);
-
 		data = getNewIDs(bookID, assignedRegisterID, data, entidad);
-
 		data = createRegister(sessionID, bookID, inter,
 				data.getNewRegisterID(), data.getNewAssociatedBookID(), data
 						.getNewAssociatedRegisterID(), entidad, data,
@@ -731,7 +729,7 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 
 //		Transaction tran = null;
 		try {
-//			Session session = HibernateUtil.currentSession(entidad);
+//			Session session = hibernateUtil.currentSession(entidad);
 //			tran = session.beginTransaction();
 
 			boolean distributeRegInAccepted = false;
@@ -743,7 +741,6 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 						.getPropertyBoolean(
 								ConfigurationKeys.KEY_WS_DISTRIBUTION_AUTODISTRIBUTION_REGISTER_IMPORT);
 			}
-
 			FolderDataSession data = crearRegistro(sessionID, bookID,
 					axsfNew, inter, -1, launchDistOutRegister, null, locale,
 					entidad, consolidacion, isImport, distributeRegInAccepted, documents);
@@ -757,24 +754,24 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 
 			}
 
-//			HibernateUtil.commitTransaction(tran);
+//			hibernateUtil.commitTransaction(tran);
 
 			return data;
 		} catch (BookException bE) {
-//			HibernateUtil.rollbackTransaction(tran);
+//			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-//			HibernateUtil.rollbackTransaction(tran);
+//			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (EventException eE){
 			throw eE;
 		} catch (Exception e) {
-//			HibernateUtil.rollbackTransaction(tran);
+//			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for the session ["
 					+ sessionID + "] and bookID [" + bookID + "]", e);
 			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
 		} finally {
-//			HibernateUtil.closeSession(entidad);
+//			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -873,45 +870,42 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 			Integer bookID, Integer folderId, Map documents, AxSf axsfNew,
 			Locale locale, String entidad) throws BookException,
 			SessionException, ValidationException {
-
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
+		log.warn("addDocument - Transaccion creada");
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
+			log.warn("addDocument - Sesion creada");
 			tran = session.beginTransaction();
-
+			log.warn("addDocument - Transaccion iniciada con sesion");
 			FolderDataSession data = new FolderDataSession(false, false,
 					axsfNew, null, documents, false);
-
 			data = FolderSession.preparationOfFolder(sessionID, bookID,
 					folderId.intValue(), false, new Integer(0), locale
 							.getLanguage(), entidad, data);
-
 			data.setDocumentsUpdate(updateDocumentsImages(sessionID, bookID,
 					data.getUser(), folderId.intValue(), data
 							.getDocumentsUpdate(), data.getAxsfNew(), data
 							.getAxsfNew(), data.getScrofic(), locale, entidad));
-
-			HibernateUtil.commitTransaction(tran);
-
+			log.warn("addDocument - Commit de la transaccion");
+			hibernateUtil.commitTransaction(tran);
 			return data;
 		} catch (BookException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for bookID [" + bookID
 					+ "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_SAVE_FILE);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for bookID [" + bookID
 					+ "]", e);
 			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
-
 	}
 
 	/**
@@ -968,10 +962,10 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -988,22 +982,22 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 
 			unlock(session, bookID, folderID, user);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to close the book [" + bookID
 					+ "] and fdrid [" + folderID + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_CLOSE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -1013,10 +1007,10 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -1033,22 +1027,22 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 
 			unlock(session, bookID, folderID, user);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to close the book [" + bookID
 					+ "] and fdrid [" + folderID + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_CLOSE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -1062,8 +1056,9 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 			String orderByTable) throws BookException, SessionException,
 			ValidationException {
 		Transaction tran = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -1115,20 +1110,20 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 			extractRegistersFromQuery(col, result, session, idoc, axSfEntity,
 					locale.getLanguage(), entidad);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return queryResults.clone(result.values());
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_REGISTERS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -1191,7 +1186,6 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 			Locale locale, String entidad, boolean isConsolidacion,
 			boolean isImport, boolean distributeRegInAccepted, Map documentos)
 			throws BookException, SessionException, ValidationException {
-
 		FolderDataSession result = createNewFolderEx(sessionID, bookID, axsfNew, inter,
 				assignedRegisterID, launchDistOutRegister, bookTypeConf,
 				locale, entidad, isConsolidacion, isImport,
@@ -1311,6 +1305,17 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 				}
 				String filterBookIds = (String) bookInformation
 						.get(QUERY_FILTER);
+				
+				if (!aPerms.isBookAdmin()) {
+					if ((filterBookIds == null) || (filterBookIds != null && filterBookIds.trim().length() == 0) ) {
+					    filterBookIds = " ";
+					}
+					else {
+					    filterBookIds += " AND ";
+					}
+					 filterBookIds += " (FLD1002 IS NULL OR FLD1002 != 2) ";
+					 bookInformation.put(QUERY_FILTER, filterBookIds);
+				}
 				totalSize = totalSize
 						+ axSfEntity.calculateQuerySize(axsfQuery, axsf,
 								filterBookIds, entidad);

@@ -4,15 +4,16 @@
 	<parent>
 		<groupId>es.ieci.tecdoc.sigem</groupId>
 		<artifactId>sigem_main</artifactId>
-		<version>3.0.1-M2</version>
+		<version>3.0</version>
 	</parent>
 
-
 	<artifactId>sigem_estructuraOrganizativa</artifactId>
+	<version>3.0.0-msssi2.0.0</version>
 	<packaging>jar</packaging>
 	
-
-
+	<properties>
+		<sigem.version>3.0</sigem.version>
+	</properties> 
 	<dependencies>
 	
 	
@@ -34,19 +35,19 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_estructuraOrganizativaCore</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_core</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_clasesBase</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
 		
 	</dependencies>

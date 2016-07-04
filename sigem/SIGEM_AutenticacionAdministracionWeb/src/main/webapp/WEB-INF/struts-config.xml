@@ -83,7 +83,8 @@
 				type="ieci.tecdoc.sgm.administracion.action.LogoutAction"
 				scope="request"
 				validate="false">
-				<forward name="success" path="/jsp/Desconexion.jsp"/>
+				<forward name="success" path="/inicio.do"/>
+				<forward name="sede" path="/jsp/RedireccionSede.jsp"/>
 		</action>
 		<action path="/seleccionClaveUsuario"
 				type="ieci.tecdoc.sgm.administracion.action.SeleccionClaveUsuarioAction"

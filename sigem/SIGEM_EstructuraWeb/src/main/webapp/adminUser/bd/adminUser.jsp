@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=ISO-8859-1" language="java" %>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%
 response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -10,9 +12,9 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 <html>
 <head>
 <ieci:baseInvesDoc/>
-<link rel="stylesheet" type="text/css" href="include/css/common.css"/>
-<link rel="stylesheet" type="text/css" href="include/css/error.css"/>
-<link rel="stylesheet" type="text/css" href="include/css/estilos.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/common.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/error.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css"/>
 <script>
 	function cerrar(){
 	   this.document.getElementById('errorDiv').style.visibility='hidden';
@@ -26,7 +28,7 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 	}
 
 	function setAyuda(){
-		parent.header.linkAyuda = '/help/adminUser.htm';
+		parent.header.linkAyuda = '<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/help/adminUser.htm';
 	}
 
 </script>

@@ -3,13 +3,14 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 
 <html:html locale="true">
 <head>
 	<title></title>
 	<ieci:baseInvesDoc/>
-	<script src="include/js/modalWindow.js" type="text/javascript"></script>
+	<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/modalWindow.js" type="text/javascript"></script>
 	<script type="text/javascript">
 	
 		var appBase = '<c:out value="${pageContext.request.contextPath}"/>';

@@ -22,6 +22,7 @@ import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EntidadRegist
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EntidadRegistralVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadAdministrativaIntercambioRegistralVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionDCO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralSIRVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralVO;
 
 public class ConfiguracionIntercambioRegistralManagerImpl implements
@@ -155,6 +156,13 @@ public class ConfiguracionIntercambioRegistralManagerImpl implements
 	public void setServicioConsultaDirectorioComun(
 			ServicioConsultaDirectorioComun servicioConsultaDirectorioComun) {
 		this.servicioConsultaDirectorioComun = servicioConsultaDirectorioComun;
+	}
+
+
+	public List<UnidadTramitacionIntercambioRegistralSIRVO>
+	    listUnidadesTramitacionIntercambioRegistralSIRVO(
+		String code, String name) {
+	    return getConfiguracionIntercambioRegistralDAO().listUnidadesTramitacionIntercambioRegistralSIRVO(code, name);
 	}
 
 

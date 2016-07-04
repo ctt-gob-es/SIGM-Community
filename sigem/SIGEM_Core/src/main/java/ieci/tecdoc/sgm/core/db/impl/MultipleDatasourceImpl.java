@@ -1,7 +1,7 @@
 package ieci.tecdoc.sgm.core.db.impl;
 
 import java.util.Hashtable;
-
+import org.apache.commons.lang.StringUtils;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
@@ -37,9 +37,27 @@ public class MultipleDatasourceImpl {
 
 	   public DataSource getDataSource(String entidad) throws Exception
 	   {
-		   if( (entidad == null) || ("".equals(entidad))){
+		  /* if( (entidad == null) || ("".equals(entidad))){
 			   throw new Exception("Error entidad no especificada.");
-		   }
+		   }*/
+		   
+		   if (StringUtils.endsWith(getRaizNombreJNDI(), "fwktd-dir3DS")) {
+				entidad="";
+			}
+			else {
+				if (StringUtils.endsWith(getRaizNombreJNDI(), "_000")) {
+					if (StringUtils.endsWith(getRaizNombreJNDI(), "_000_000")) {
+						entidad = getRaizNombreJNDI().replaceAll("_000", "")+"_000";
+					}else{
+						entidad="";
+					}
+				}else{
+					if (!StringUtils.endsWith(getRaizNombreJNDI(),"_null")) {
+						entidad="_" + "000";
+					} 
+				}
+			}
+		   
 		   StringBuffer sbNombre = new StringBuffer(getRaizNombreJNDI());
 		   sbNombre.append(entidad);		   
 		   if (!m_hashtable.containsKey(sbNombre.toString())) setDataSource(sbNombre.toString());

@@ -2,6 +2,7 @@ package es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager;
 
 import java.util.List;
 
+import es.ieci.tecdoc.fwktd.sir.core.vo.CriteriosVO;
 import es.ieci.tecdoc.isicres.api.business.vo.UsuarioVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.BandejaEntradaItemVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.IntercambioRegistralEntradaVO;
@@ -22,6 +23,24 @@ public interface IntercambioRegistralEntradaManager {
 	 */
 	public List<BandejaEntradaItemVO> getBandejaEntradaIntercambioRegistral(Integer estado, Integer idOficina);
 
+	/**
+	 * Obtiene la bandeja de entrada de Intercambio Registral para el <code>estado</code> e <code>idOficina</code> pasados como parámetros.
+	 * @param estado
+	 * @param idOficina
+	 * @param  CriteriosVO criterios
+	 * @return Lista con todos los intercambios de la bandeja de enrada que cumplan los criterios
+	 */
+	public List<BandejaEntradaItemVO> getBandejaEntradaIntercambioRegistral(Integer estado, Integer idOficina,  CriteriosVO criterios);
+
+	/**
+	 * Obtiene  el número de registros de la bandeja de entrada de Intercambio Registral para el <code>estado</code> e <code>idOficina</code> pasados como parámetros.
+	 * @param estado
+	 * @param idOficina
+	 * @param  CriteriosVO criterios
+	 * @return numero de intercambios registrales de la bandeja de entrada que cumplan los criterios
+	 */
+	public int getCountBandejaEntradaIntercambioRegistral(Integer estado, Integer idOficina,  CriteriosVO criterios);
+
 
 	/**
 	 * metodo que acepta un intercambio registral de entrada
@@ -35,6 +54,19 @@ public interface IntercambioRegistralEntradaManager {
 	 */
 	public void aceptarIntercambioRegistralEntradaById(String idIntercambioRegistralEntrada, String idLibro, String user, Integer idOficina, String codOficina, boolean llegoDocFisica);
 
+	/**
+	 * metodo que acepta un intercambio registral de entrada
+	 * @param idIntercambioRegistralEntrada
+	 * @param idLibro
+	 * @param user
+	 * @param password
+	 * @param idOficina
+	 * @param codOficina
+	 * @param llegoDocFisica
+	 */
+	public void aceptarIntercambioRegistralEntradaById(String idIntercambioRegistralEntrada, String idLibro, UsuarioVO user, Integer idOficina, String codOficina, boolean llegoDocFisica);
+
+	
 	/**
 	 * Método que rechaza un intercambio registral de entrada
 	 * @param idIntercambioRegistralEntrada
@@ -50,8 +82,6 @@ public interface IntercambioRegistralEntradaManager {
 	 * estado del intercambio en el módulo SIR.
 	 * 
 	 * @param id
-	 * @param usuario
-	 * @param contacto
 	 * @param descripcionReenvio
 	 * @param nuevoDestino
 	 */
@@ -82,4 +112,34 @@ public interface IntercambioRegistralEntradaManager {
 	 * @return Listado de objetos {@link IntercambioRegistralEntradaVO}
 	 */
 	public List<IntercambioRegistralEntradaVO> getHistorialIntercambioRegistralEntrada(String idLibro, String idRegistro,  String idOficina);
+
+	/**
+	 * Método que rechaza un intercambio registral de entrada
+	 * @param idIntercambioRegistralEntrada
+	 * @param tipoREchazo
+	 * @param observaciones
+	 * @param user
+	 * @param idOficina
+	 * @param codOficina
+	 */
+	public void rechazarIntercambioRegistralEntradaById(String idIntercambioRegistralEntrada,
+		String tipoRechazo, String observaciones, UsuarioVO user, Integer idOficina,
+		String codOficina);
+
+	/**
+	 * Método que reenvia un intercambio registral de entrada
+	 * 
+	 * Almacena el asiento en SICRES con el estado REENVIADO y actualiza el 
+	 * estado del intercambio en el módulo SIR.
+	 * 
+	 * @param id
+	 * @param descripcionReenvio
+	 * @param nuevoDestino
+	 * @param user
+	 * @param idOficina
+	 * @param codOficina
+	 */
+	public void reenviarIntercambioRegistralEntradaById(String idIntercambioRegistralEntrada,
+		UnidadTramitacionIntercambioRegistralVO nuevoDestino, String observaciones,
+		UsuarioVO user, Integer idOficina, String codOficina);
 }

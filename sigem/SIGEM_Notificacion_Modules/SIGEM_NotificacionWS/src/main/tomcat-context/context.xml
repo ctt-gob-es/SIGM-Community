@@ -1,7 +1,0 @@
-<Context path="/SIGEM_NotificacionWS" reloadable="true">
-
-	<ResourceLink global="jdbc/eTramitacionDS_000" name="jdbc/eTramitacionDS_000" type="javax.sql.DataSource"/>
-
-	<ResourceLink global="jdbc/sisnot" name="jdbc/sisnot" type="javax.sql.DataSource"/>
-
-</Context>

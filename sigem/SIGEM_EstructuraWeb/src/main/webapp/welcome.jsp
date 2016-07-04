@@ -2,12 +2,13 @@
 <%@ taglib uri="/WEB-INF/struts-html" prefix="html"%>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <html:html>
 <head>
     <title><bean:message key="message.common.title"/></title>
     <ieci:baseInvesDoc/>
-    <link rel="stylesheet" type="text/css" href="include/css/estilos.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css"/>
 
 </head>
 <body>

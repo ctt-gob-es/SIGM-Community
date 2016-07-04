@@ -60,7 +60,7 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		Object[] result = new Object[3];
 		Map axsfPrim, axsfs, idocs;
@@ -68,7 +68,7 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 		result[1] = axsfs = new HashMap();
 		result[2] = axsfPrim = new HashMap();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
@@ -122,18 +122,18 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 						.getLanguage(), entidad));
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to close the book [" + bookID
 					+ "] and fdrid [" + folderID + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_ASOC_FDR);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -143,10 +143,10 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -166,23 +166,23 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 						folderID);
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return aux;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to close the book [" + bookID
 					+ "] and fdrid [" + folderID + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_ASOC_FDR);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -192,10 +192,10 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -220,23 +220,23 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return false;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to close the book [" + bookID
 					+ "] and fdrid [" + folderID + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_ASOC_FDR);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -249,9 +249,9 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 		Transaction tran = null;
 		Integer id = null;
 		List privOrgs = null;
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -289,28 +289,28 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 			return id;
 		} catch (DistributionException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw e;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (HibernateException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to validate distribution query [" + sessionID
 					+ "]", e);
 			throw new DistributionException(
 					DistributionException.ERROR_CANNOT_ACCEPT_DISTRIBUTION);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to validate distribution query [" + sessionID
 					+ "]", e);
 			throw new DistributionException(
 					DistributionException.ERROR_CANNOT_ACCEPT_DISTRIBUTION);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -331,9 +331,9 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Transaction tran = null;
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -348,17 +348,17 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 			ISicresSaveQueries.saveScrRegAsoc(session, assocId, idArchPrim,
 					idArchSec, idFdrPrim, idFdrSec);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (HibernateException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw e;
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -367,21 +367,21 @@ public class FolderAsocSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Transaction tran = null;
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			session.delete(scrRegasoc);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (HibernateException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw e;
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 

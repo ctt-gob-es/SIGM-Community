@@ -111,7 +111,9 @@ public class CurrentUserSessionContextUtil {
 		OficinaVO result=null;
 		String sessionID=getSessionIdActual(request);
 		ScrOfic scrOfic = getCurrentUserSessionContextUtilHelper().getScrOfic(sessionID);
-		result=new ScrOficToOficinaVOMapper().map(scrOfic);
+		if (scrOfic !=null){
+		    result=new ScrOficToOficinaVOMapper().map(scrOfic);
+		}
 		return result;
 			
 	}

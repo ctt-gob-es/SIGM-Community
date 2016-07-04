@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-  "http://java.sun.com/dtd/web-app_2_3.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-<web-app>
 	<display-name>SIGEM_RegistroPresencialWS</display-name>
+	<servlet>
+		<description>Servlet que introduce en las variables de sistema las rutas provenientes de los env-entry</description>
+	    <servlet-name>InitServlet</servlet-name>
+	    <servlet-class>es.msssi.tecdoc.sgm.registropresencial.servlet.InitPathServlet</servlet-class>
+	    <load-on-startup>1</load-on-startup>
+    </servlet>
+    
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
@@ -33,12 +40,13 @@
 			<param-name>fileName</param-name>
 			<param-value>log4j.xml</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>2</load-on-startup>
 	</servlet>
 	<servlet>
 		<servlet-name>AxisServlet</servlet-name>
 		<servlet-class>
 		org.apache.axis.transport.http.AxisServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
 	</servlet>
 	<servlet>
 		<servlet-name>AdminServlet</servlet-name>
@@ -70,4 +78,236 @@
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
+		<!-- ENV-ENTRY QUE INICIALIZAN EL SISTEMA MSSSI-->
+	<resource-ref>
+		<res-ref-name>jdbc/registroDS_000</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<resource-ref>
+		<res-ref-name>jdbc/fwktd-dir3DS</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<resource-ref>
+		<res-ref-name>jdbc/fwktd-sirDS</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<resource-ref>
+		<res-ref-name>jdbc/sigemAdmin</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<env-entry> 
+		<description>Path del directorio general de logs</description>
+	    <env-entry-name>MSSSI_sigem.log.path</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.log.path}</env-entry-value>  
+	</env-entry>
+	<env-entry>
+		<description>Path del directorio general de configuracion</description>
+	    <env-entry-name>MSSSI_sigem.config.location.path</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.config.location.path}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Path del directorio general de configuracion</description>
+	    <env-entry-name>MSSSI_SIGEM_CONFIG_DIR</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.config.location.path}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_AdministracionSesionesBackOfficeWS</description>
+	    <env-entry-name>MSSSI_sigem.url.adm_ses_bckoff_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.adm_ses_bckoff_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_AdministracionSesionesAdmWS</description>
+	    <env-entry-name>MSSSI_sigem.url.adm_ses_adm_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.adm_ses_adm_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_AutenticacionUsuariosWS</description>
+	    <env-entry-name>MSSSI_sigem.url.autenticacion_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.autenticacion_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_FirmaDigitalWS</description>
+	    <env-entry-name>MSSSI_sigem.url.firmae_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.firmae_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_CriptoValidacionWS</description>
+	    <env-entry-name>MSSSI_sigem.url.validacion_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.validacion_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_PagoElectronicoWS</description>
+	    <env-entry-name>MSSSI_sigem.url.pagotelematico_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.pagotelematico_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_ConsultaWS</description>
+	    <env-entry-name>MSSSI_sigem.url.consexpedientes_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.consexpedientes_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_SessionUsuarioWS</description>
+	    <env-entry-name>MSSSI_sigem.url.ses_usuario_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.ses_usuario_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_NotificacionWS</description>
+	    <env-entry-name>MSSSI_sigem.url.notificaciones_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.notificaciones_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_RdeWS</description>
+	    <env-entry-name>MSSSI_sigem.url.repositorio_docs_tramitacion_ws</env-entry-name>
+	    <env-entry-type>java.lang.String</env-entry-type>  
+	    <env-entry-value>${sigem.url.repositorio_docs_tramitacion_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_TramitacionWS</description>
+	    <env-entry-name>MSSSI_sigem.url.tramitacion_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.tramitacion_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_PublicadorWS</description>
+	    <env-entry-name>MSSSI_sigem.url.publicador_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.publicador_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_TercerosWS</description>
+	    <env-entry-name>MSSSI_sigem.url.terceros_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.terceros_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_RegistroPresencialWS</description>
+	    <env-entry-name>MSSSI_sigem.url.registro_presencial_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.registro_presencial_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_CatalogoTramitesWS</description>
+	    <env-entry-name>MSSSI_sigem.url.catalogo_tramites_ws</env-entry-name>
+	    <env-entry-type>java.lang.String</env-entry-type>  
+	    <env-entry-value>${sigem.url.catalogo_tramites_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_RegistroTelematicoWS</description>
+	    <env-entry-name>MSSSI_sigem.url.registro_telematico_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.registro_telematico_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_CertificacionWS</description>
+	    <env-entry-name>MSSSI_sigem.url.certificacion_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.certificacion_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_CertificacionWS</description>
+	    <env-entry-name>MSSSI_sigem.url.sesion_adm_ws</env-entry-name> 
+		<env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.sesion_adm_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_GestionUsuariosBackOfficeWS</description>
+	    <env-entry-name>MSSSI_sigem.url.gest_usu_bckoff_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.gest_usu_bckoff_ws}</env-entry-value>  
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_EntidadesWS</description>
+	    <env-entry-name>MSSSI_sigem.url.entidades_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.entidades_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_CatastroWS</description>
+	    <env-entry-name>MSSSI_sigem.url.catastro_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.catastro_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_GeoLocalizacionWS</description>
+	    <env-entry-name>MSSSI_sigem.url.geolocalizacion_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.geolocalizacion_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_AntivirusWS</description>
+	    <env-entry-name>MSSSI_sigem.url.antivirus_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.antivirus_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_MensajesCortosWS</description>
+	    <env-entry-name>MSSSI_sigem.url.mens_cortos_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.mens_cortos_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_CalendarioWS</description>
+	    <env-entry-name>MSSSI_sigem.url.calendario_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.calendario_ws}</env-entry-value>  
+	</env-entry>
+	<env-entry>
+		<description>Url de SIGEM_GestionCSVWS</description>
+	    <env-entry-name>MSSSI_sigem.url.gestion_csv_ws</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.url.gestion_csv_ws}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Puerto de SIGEM</description>
+	    <env-entry-name>MSSSI_sigem.http_port</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.http_port}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Puerto seguro de SIGEM</description>
+	    <env-entry-name>MSSSI_sigem.https_port</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.https_port}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Puerto con certificado de SIGEM</description>
+	    <env-entry-name>MSSSI_sigem.cert_port</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.cert_port}</env-entry-value> 
+	</env-entry>
+	
+	<env-entry>
+		<description>Puerto frontend de SIGEM</description>
+	    <env-entry-name>MSSSI_sigem.http_frontend_port</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.http_frontend_port}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Puerto seguro frontend de SIGEM</description>
+	    <env-entry-name>MSSSI_sigem.https_frontend_port</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.https_frontend_port}</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Puerto con certificado frontend de SIGEM</description>
+	    <env-entry-name>MSSSI_sigem.https_frontend_authclient_port</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${sigem.https_frontend_authclient_port}</env-entry-value> 
+	</env-entry>
 </web-app>

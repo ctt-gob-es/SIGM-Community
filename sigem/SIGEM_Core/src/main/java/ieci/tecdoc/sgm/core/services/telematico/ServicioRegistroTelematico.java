@@ -44,6 +44,20 @@ public interface ServicioRegistroTelematico {
 		 */
 		public byte[] registrar (String sessionId, byte[] registryRequest, String additionalInfo, String idiom, String oficina, String plantilla, String certificado, Entidad entidad) throws RegistroTelematicoException;
 
+		/**
+		 * M�todo que registra una solicitud
+		 * @param sessionId Identificador de sesi�n
+		 * @param registryRequest Datos de la solicitud a registrar
+		 * @param additionalInfo Datos espec�ficos
+		 * @param requestDocuments Anexos asociados
+		 * @param idiom Idioma de la solicitud
+		 * @param oficina N�mero de oficina
+		 * @param plantilla Ruta del justificante del registro que se usar� como plantilla
+		 * @param certificado Ruta del certificado del servidor
+		 * @return Registro de la solicitud
+		 * @throws RegistroTelematicoException
+		 */
+		public byte[] registrar (String sessionId, byte[] registryRequest, String additionalInfo, PeticionDocumentos requestDocuments, String idiom, String oficina, String plantilla, String certificado, Entidad entidad) throws RegistroTelematicoException;
 
 		/**
 		 * M�todo que registra una solicitud
@@ -58,7 +72,7 @@ public interface ServicioRegistroTelematico {
 		 * @throws RegistroTelematicoException
 		 */
 		public byte[] registrar (String sessionId, byte[] registryRequest, String additionalInfo, String idiom, String oficina, byte[] plantilla, String certificado, Entidad entidad) throws RegistroTelematicoException;
-
+		
 		/**
 		 * M�todo que obtiene un nuevo n�mero de registro (secuencial)
 		 * @return N�mero de registro

@@ -1,10 +1,12 @@
 <%@ page contentType="text/html;charset=ISO-8859-1" language="java" %>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <html>
 <head>
 <ieci:baseInvesDoc/>
-<link rel="stylesheet" type="text/css" href="include/css/common.css"/>
-<link rel="stylesheet" type="text/css" href="include/css/estilos.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/common.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css"/>
 
 <script type="text/javascript">
 

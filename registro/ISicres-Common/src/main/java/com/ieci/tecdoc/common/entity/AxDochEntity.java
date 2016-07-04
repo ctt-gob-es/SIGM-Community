@@ -38,7 +38,7 @@ public class AxDochEntity implements ServerKeys {
 	protected static String INSERT_SENTENCE = "INSERT INTO {0} (id,fdrid,archid,name,clfid,type,title,author,keywords,stat,refcount,remarks,accesstype,acsid,crtrid,crtndate,updrid,upddate,accrid,accdate,acccount,timestamp) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	protected static String SELECT_SENTENCE = "SELECT id,fdrid,archid,name,clfid,type,title,author,keywords,stat,refcount,remarks,accesstype,acsid,crtrid,crtndate,updrid,upddate,accrid,accdate,acccount,timestamp FROM {0} WHERE fdrid=? and id=?";
 	protected static String UPDATE_SENTENCE = "UPDATE {0} SET archid=?,name=?,clfid=?,type=?,title=?,author=?,keywords=?,stat=?,refcount=?,remarks=?,accesstype=?,acsid=?,crtrid=?,crtndate=?,updrid=?,upddate=?,accrid=?,accdate=?,acccount=?,timestamp=? WHERE fdrid=? and id=?";
-	protected static String SELECT_SENTENCE_FDRID = "SELECT id FROM {0} WHERE fdrid=? ORDER BY name";
+	protected static String SELECT_SENTENCE_FDRID = "SELECT id FROM {0} WHERE fdrid=? ORDER BY CRTNDATE";
 
 	private String typePK = null;
 
@@ -84,11 +84,11 @@ public class AxDochEntity implements ServerKeys {
 
 	public void remove(String entidad) throws Exception {
 		// loadEntityPrimaryKey();
-
+	    	BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			String sentence = MessageFormat.format(DELETE_SENTENCE,	new String[] { getFinalTableName() });
 			ps = con.prepareStatement(sentence);
 			ps.setInt(1, getFdrId());
@@ -101,19 +101,19 @@ public class AxDochEntity implements ServerKeys {
 			log.error("Error en método remove.PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
 	public void load(AxPKById axPKById, String entidad) throws Exception {
 		loadEntityPrimaryKey(axPKById);
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			String sentence = MessageFormat.format(SELECT_SENTENCE, new String[] { getFinalTableName() });
 			ps = con.prepareStatement(sentence);
 			ps.setInt(1, getFdrId());
@@ -138,13 +138,13 @@ public class AxDochEntity implements ServerKeys {
 			setAccessType(rs.getInt(index++));
 			setAcsId(rs.getInt(index++));
 			setCrtrId(rs.getInt(index++));
-			setCrtnDate(rs.getDate(index++));
+			setCrtnDate(bbddUtils.getDateFromTimestamp(rs.getTimestamp(index++)));
 			setUpdrId(rs.getInt(index++));
-			setUpdDate(rs.getDate(index++));
+			setUpdDate(bbddUtils.getDateFromTimestamp(rs.getTimestamp(index++)));
 			setAccrId(rs.getInt(index++));
-			setAccDate(rs.getDate(index++));
+			setAccDate(bbddUtils.getDateFromTimestamp(rs.getTimestamp(index++)));
 			setAcccount(rs.getInt(index++));
-			setTimeStamp(rs.getDate(index++));
+			setTimeStamp(bbddUtils.getDateFromTimestamp(rs.getTimestamp(index++)));
 		} catch (SQLException ex) {
 			log.error("Error en método load.PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
@@ -152,19 +152,19 @@ public class AxDochEntity implements ServerKeys {
 			log.error("Error en método load.PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
 	public void store(String entidad) throws Exception {
 		// loadEntityContextPrimaryKey();
-
+	    BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			String sentence = MessageFormat.format(UPDATE_SENTENCE, new String[] { getFinalTableName() });
 			ps = con.prepareStatement(sentence);
 			int index = 1;
@@ -181,13 +181,13 @@ public class AxDochEntity implements ServerKeys {
 			ps.setInt(index++, getAccessType());
 			ps.setInt(index++, getAcsId());
 			ps.setInt(index++, getCrtrId());
-			ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+			ps.setTimestamp(index++, bbddUtils.getTimestamp(getCrtnDate()));
 			ps.setInt(index++, getUpdrId());
-			ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+			ps.setTimestamp(index++, bbddUtils.getTimestamp(getUpdDate()));
 			ps.setInt(index++, getAccrId());
-			ps.setDate(index++, BBDDUtils.getDate(getAccDate()));
+			ps.setTimestamp(index++, bbddUtils.getTimestamp(getAccDate()));
 			ps.setInt(index++, getAcccount());
-			ps.setDate(index++, BBDDUtils.getDate(getTimeStamp()));
+			ps.setTimestamp(index++, bbddUtils.getTimestamp(getTimeStamp()));
 
 			ps.setInt(index++, getId());
 			ps.setInt(index++, getFdrId());
@@ -200,8 +200,8 @@ public class AxDochEntity implements ServerKeys {
 			log.error("Error en método store.PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
@@ -220,11 +220,11 @@ public class AxDochEntity implements ServerKeys {
 		this.accDate = new Date(timestamp.getTime());
 		this.acccount = 1;
 		this.timeStamp = new Date(timestamp.getTime());
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			String sentence = MessageFormat.format(INSERT_SENTENCE, new String[] { getFinalTableName() });
 			ps = con.prepareStatement(sentence);
 			int index = 1;
@@ -243,13 +243,13 @@ public class AxDochEntity implements ServerKeys {
 			ps.setInt(index++, getAccessType());
 			ps.setInt(index++, getAcsId());
 			ps.setInt(index++, getCrtrId());
-			ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+			ps.setTimestamp(index++, timestamp);
 			ps.setInt(index++, getUpdrId());
-			ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+			ps.setTimestamp(index++, timestamp);
 			ps.setInt(index++, getAccrId());
-			ps.setDate(index++, BBDDUtils.getDate(getAccDate()));
+			ps.setTimestamp(index++, timestamp);
 			ps.setInt(index++, getAcccount());
-			ps.setDate(index++, BBDDUtils.getDate(getTimeStamp()));
+			ps.setTimestamp(index++, timestamp);
 
 			ps.executeUpdate();
 			return getPrimaryKey();
@@ -260,8 +260,8 @@ public class AxDochEntity implements ServerKeys {
 			log.error("Error en método create.PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
@@ -269,12 +269,12 @@ public class AxDochEntity implements ServerKeys {
 		this.typePK = pk.getType();
 		this.fdrId = pk.getFdrId();
 		this.id = pk.getId();
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			String sentence = MessageFormat.format(FINDBY_SENTENCE, new String[] { getFinalTableName() });
 			ps = con.prepareStatement(sentence);
 			ps.setInt(1, pk.getFdrId());
@@ -290,9 +290,9 @@ public class AxDochEntity implements ServerKeys {
 			log.error("Error en método ejbFindByPrimaryKey de un BMP. PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 
 		return new AxPKById(pk.getType(), pk.getFdrId(), pk.getId());
@@ -305,9 +305,9 @@ public class AxDochEntity implements ServerKeys {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		List result = new ArrayList();
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			String sentence = MessageFormat.format(SELECT_SENTENCE_FDRID, new String[] { getFinalTableName() });
 			ps = con.prepareStatement(sentence);
 			ps.setInt(1, fdrid);
@@ -322,9 +322,9 @@ public class AxDochEntity implements ServerKeys {
 			log.error("Error en método ejbFindByFdrid de un BMP. PK [" + bookID + "] fdrid [" + fdrid + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 
 		return result;
@@ -335,11 +335,11 @@ public class AxDochEntity implements ServerKeys {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		int result = -1;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String select = "SELECT ID FROM A" + bookID.toString() + "DOCH WHERE FDRID=? AND NAME=?";
 
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 
 			ps = con.prepareStatement(select);
 			ps.setInt(1, fdrid);
@@ -357,9 +357,9 @@ public class AxDochEntity implements ServerKeys {
 			log.fatal("findName. Sentence [" + select + "] name " + name, ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 
 		/*

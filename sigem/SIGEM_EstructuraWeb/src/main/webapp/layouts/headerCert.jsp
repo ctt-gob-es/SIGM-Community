@@ -5,7 +5,8 @@
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%
 	HashMap params   = new HashMap();
 	params.put("logout", "true");
@@ -18,8 +19,8 @@
 		<c:out value="<base href=\"http://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/\">" escapeXml="false"/>	
 		--%>
 		
-		<link rel="stylesheet" type="text/css" href="include/css/header.css"/>
-		<script src="include/js/modalWindow.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/header.css"/>
+		<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/modalWindow.js" type="text/javascript"></script>
 
 				
 		<script>
@@ -73,7 +74,7 @@
 	<body>
 		<table class="tableBase" border="0" cellpadding="0" cellpadding="0">
 			<tr>
-				<td valign="top" colspan="2" align="left" class="user"><img hspace="10" src="include/images/logo_idoc.gif"/></td>
+				<td valign="top" colspan="2" align="left" class="user"><img hspace="10" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/logo_idoc.gif"/></td>
 			</tr>
 			<tr>
 

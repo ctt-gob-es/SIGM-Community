@@ -30,13 +30,13 @@ public class DocumentoFisicoVOBuilder {
 		DocumentoFisicoVO result = null;
 		
 		Transaction tran = null;
-		
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
 			ISRepositoryRetrieveDocumentVO findDocumentRetrieveVO = ISRepositoryDocumentHelper
 			.getRepositoryRetrieveDocumentVO(new Integer(bookId), new Integer(axPageh.getFdrId()), new Integer(axPageh.getId()),
 					entidad, true);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 			
 			//obtenemos la informacion del documento fisico
@@ -50,14 +50,14 @@ public class DocumentoFisicoVOBuilder {
 			//adaptamos la informacion que tenemos para obtener un DocumentoFisicoVO
 			result = new AxpagehToDocumentoFisicoVO().map(axPageh, findDocumentRetrieveVO);
 			
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
 			logger.error("Error al obtener la información para el documento fisico con id [" + axPageh.getId() + "] " + e.getMessage(), e);
 			throw new RegistroException(
 					"Error al obtener la información para el documento fisico con id ["
 							+ axPageh.getId() + "]", e);
 		} finally{
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 		return result;
 		

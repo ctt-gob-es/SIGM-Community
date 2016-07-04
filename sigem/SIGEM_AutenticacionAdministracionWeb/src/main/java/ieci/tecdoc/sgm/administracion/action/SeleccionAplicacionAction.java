@@ -38,7 +38,7 @@ public class SeleccionAplicacionAction extends Action {
 		
 			String idEntidad = (String)session.getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD);
 			if(Utilidades.isNuloOVacio(idEntidad)) {
-				idEntidad = "";
+				idEntidad = "000";
 			}
 			
 			String usuario = (String)session.getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_USUARIO);
@@ -58,7 +58,7 @@ public class SeleccionAplicacionAction extends Action {
 			
 			String idAplicacion = aplicacionForm.getAplicacionId();
 			if (Utilidades.isNuloOVacio(idAplicacion))
-				idAplicacion = "";
+				idAplicacion = "5";
 			
 			session.setAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_APLICACION, idAplicacion);
 			

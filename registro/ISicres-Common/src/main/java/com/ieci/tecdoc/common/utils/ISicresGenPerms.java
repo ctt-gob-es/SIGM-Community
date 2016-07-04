@@ -164,10 +164,23 @@ public class ISicresGenPerms {
     /**
      * @return
      */
-    public boolean canAccessRegInterchange() {
+    public boolean getCanAccessRegInterchange() {
         return (canAccessInterchange);
     }
 
+    /**
+     * @return
+     */
+    public boolean isCanAccessRegInterchange() {
+        return (canAccessInterchange);
+    }
+    /**
+     * @return
+     */
+    public boolean canAccessRegInterchange() {
+        return (canAccessInterchange);
+    }
+    
 	/**
 	 * @return the canAcceptRegisters
 	 */
@@ -331,6 +344,26 @@ public class ISicresGenPerms {
 
 	public boolean getCanModifyUsers() {
 		return canModifyUsers;
+	}
+
+	public boolean isCanAccessInterchange() {
+		return canAccessInterchange;
+	}
+
+	public void setCanAccessInterchange(boolean canAccessInterchange) {
+		this.canAccessInterchange = canAccessInterchange;
+	}
+
+	public boolean isCanCreatePersons() {
+		return canCreatePersons;
+	}
+
+	public boolean isCanUpdatePersons() {
+		return canUpdatePersons;
+	}
+
+	public boolean isCanUpdateProtectedFields() {
+		return canUpdateProtectedFields;
 	}
 
 }

@@ -2,6 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%
 response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -12,9 +14,9 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 <head>
 
 <ieci:baseInvesDoc/>
-<link rel="stylesheet" rev="stylesheet" href="include/css/tabs.css">
-<script src="include/js/docobj.js" type="text/javascript"></script>
-<script src="include/js/tabs.js" type="text/javascript"></script>
+<link rel="stylesheet" rev="stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/tabs.css">
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/docobj.js" type="text/javascript"></script>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/tabs.js" type="text/javascript"></script>
 
 <html:messages id="msg" message="true" bundle="general_errors">
 	<script>
@@ -115,9 +117,9 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 <div id="tab1" onmouseover="tabover(1)" onmouseout="tabout(1)" onclick="choosebox(1,9)">
 <table summary="" border="0" cellpadding="0" cellspacing="0">
 <tbody><tr>
-	<td class="tableft" height="24" width="8"><img src="include/images/dot.gif" alt="" border="0" height="17" width="7"></td>
+	<td class="tableft" height="24" width="8"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/dot.gif" alt="" border="0" height="17" width="7"></td>
 	<td class="tabmiddle1" id="tabmiddle1">Permisos</td>
-	<td class="tabright"><img src="include/images/dot.gif" alt="" border="0" height="17" width="7"></td>
+	<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/dot.gif" alt="" border="0" height="17" width="7"></td>
 </tr>
 </tbody></table>
 </div>

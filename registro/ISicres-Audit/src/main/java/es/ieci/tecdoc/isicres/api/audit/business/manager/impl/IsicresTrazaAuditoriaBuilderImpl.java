@@ -13,12 +13,14 @@ import es.ieci.tecdoc.isicres.api.audit.business.manager.handlers.impl.IsicresAu
 import es.ieci.tecdoc.isicres.api.audit.business.manager.handlers.impl.IsicresAuditEventAccesoRegistroTrazaBuilderHandler;
 import es.ieci.tecdoc.isicres.api.audit.business.manager.handlers.impl.IsicresAuditEventCreacionCampoRegistroTrazaBuilderHandler;
 import es.ieci.tecdoc.isicres.api.audit.business.manager.handlers.impl.IsicresAuditEventCreacionRegistroTrazaBuilderHandler;
+import es.ieci.tecdoc.isicres.api.audit.business.manager.handlers.impl.IsicresAuditEventFalloAccesoAplicacionTrazaBuilderHandler;
 import es.ieci.tecdoc.isicres.api.audit.business.manager.handlers.impl.IsicresAuditEventModificacionCampoRegistroTrazaBuilderHandler;
 import es.ieci.tecdoc.isicres.api.audit.business.manager.handlers.impl.IsicresAuditEventModificacionRegistroTrazaBuilderHandler;
 import es.ieci.tecdoc.isicres.api.audit.business.vo.enums.IsicresEventAuditHandlerTypeEnum;
 import es.ieci.tecdoc.isicres.api.audit.business.vo.events.IsicresAuditEventAccesoAplicacionVO;
 import es.ieci.tecdoc.isicres.api.audit.business.vo.events.IsicresAuditEventAccesoRegistroVO;
 import es.ieci.tecdoc.isicres.api.audit.business.vo.events.IsicresAuditEventCreacionRegistroVO;
+import es.ieci.tecdoc.isicres.api.audit.business.vo.events.IsicresAuditEventFalloAccesoAplicacionVO;
 import es.ieci.tecdoc.isicres.api.audit.business.vo.events.IsicresAuditEventModificacionRegistroVO;
 import es.ieci.tecdoc.isicres.api.audit.business.vo.events.IsicresAuditEventVO;
 import es.ieci.tecdoc.isicres.api.audit.config.ConfigurationAuditFileKeys;
@@ -130,7 +132,12 @@ public class IsicresTrazaAuditoriaBuilderImpl implements TrazaAuditoriaBuilder {
 					.addAll(getHandlersEspecificos((IsicresAuditEventAccesoRegistroVO) auditEvent));
 			skip = true;
 		}
-
+		// manejadores para el evento acceso a la aplicacion
+		if (!skip && auditEvent instanceof IsicresAuditEventFalloAccesoAplicacionVO) {
+			result
+					.addAll(getHandlersEspecificos((IsicresAuditEventFalloAccesoAplicacionVO) auditEvent));
+			skip = true;
+		}
 		return result;
 	}
 
@@ -210,6 +217,18 @@ public class IsicresTrazaAuditoriaBuilderImpl implements TrazaAuditoriaBuilder {
 		return result;
 	}
 
-
+	/**
+	 * Metodo encargado de obtener los manejadores del evento de fallo de acceso a la aplicación de
+	 * registro
+	 *
+	 * @param auditEvent
+	 * @return
+	 */
+	protected List<IsicresAuditoriaEventHandler> getHandlersEspecificos(
+			IsicresAuditEventFalloAccesoAplicacionVO auditEvent) {
+		List<IsicresAuditoriaEventHandler> result = new ArrayList<IsicresAuditoriaEventHandler>();
+		result.add(new IsicresAuditEventFalloAccesoAplicacionTrazaBuilderHandler());
+		return result;
+	}
 
 }

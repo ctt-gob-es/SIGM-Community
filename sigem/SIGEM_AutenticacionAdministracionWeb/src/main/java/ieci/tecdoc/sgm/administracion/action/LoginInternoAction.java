@@ -42,7 +42,7 @@ public class LoginInternoAction extends Action {
 
 			String idAplicacion = (String)session.getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_APLICACION);
 			if(Utilidades.isNuloOVacio(idAplicacion)) {
-				idAplicacion = "";
+				idAplicacion = "5";
 			}
 
 			String usuario = null;
@@ -70,7 +70,7 @@ public class LoginInternoAction extends Action {
 
 			String idEntidad = loginForm.getIdEntidadInterno();
 			if (Utilidades.isNuloOVacio(idEntidad))
-				idEntidad = "";
+				idEntidad = "000";
 
 			session.setAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD, idEntidad);
 			session.setAttribute(Defs.PARAMETRO_ENTIDADES_INTERNO, idEntidad);

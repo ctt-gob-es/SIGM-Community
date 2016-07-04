@@ -7,6 +7,8 @@ public class InfoRegistroPersonaFisicaOJuridicaVO {
 	protected String nombre;
 	protected String primerApellido;
 	protected String segundoApellido;
+	protected String tipoPersona ="P";
+	
 	public String getTipoDocumento() {
 		return tipoDocumento;
 	}
@@ -37,6 +39,11 @@ public class InfoRegistroPersonaFisicaOJuridicaVO {
 	public void setSegundoApellido(String segundoApellido) {
 		this.segundoApellido = segundoApellido;
 	}
-	
-	
+	public String getTipoPersona() {
+	    return tipoPersona;
+	}
+	public void setTipoPersona(
+	    String tipoPersona) {
+	    this.tipoPersona = tipoPersona;
+	}
 }

@@ -74,36 +74,36 @@ public class AxFdrhEntity extends AbstractAx implements ServerKeys {
 	protected void assignStore(PreparedStatement ps, String entidad)
 			throws SQLException {
 		int index = 1;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		ps.setInt(index++, getId());
 		ps.setInt(index++, getVerStat());
 		ps.setInt(index++, getRefCount());
 		ps.setInt(index++, getAccessType());
 		ps.setInt(index++, getAcsId());
 		ps.setInt(index++, getCrtrId());
-		ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+		ps.setDate(index++, bbddUtils.getDate(getCrtnDate()));
 		ps.setInt(index++, getUpdrId());
-		ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+		ps.setDate(index++, bbddUtils.getDate(getUpdDate()));
 		ps.setInt(index++, getAccrId());
-		ps.setDate(index++, BBDDUtils.getDate(getAccDate()));
+		ps.setDate(index++, bbddUtils.getDate(getAccDate()));
 		ps.setInt(index++, getAcccount());
 	}
 
 	protected void assignStore(PreparedStatement ps, String entidad,
 			String dataBaseType) throws SQLException {
 		int index = 1;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		ps.setInt(index++, getId());
 		ps.setInt(index++, getVerStat());
 		ps.setInt(index++, getRefCount());
 		ps.setInt(index++, getAccessType());
 		ps.setInt(index++, getAcsId());
 		ps.setInt(index++, getCrtrId());
-		ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+		ps.setDate(index++, bbddUtils.getDate(getCrtnDate()));
 		ps.setInt(index++, getUpdrId());
-		ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+		ps.setDate(index++, bbddUtils.getDate(getUpdDate()));
 		ps.setInt(index++, getAccrId());
-		ps.setDate(index++, BBDDUtils.getDate(getAccDate()));
+		ps.setDate(index++, bbddUtils.getDate(getAccDate()));
 		ps.setInt(index++, getAcccount());
 	}
 
@@ -123,7 +123,6 @@ public class AxFdrhEntity extends AbstractAx implements ServerKeys {
 		setAccrId(axFdrh.getAccrId());
 		setAccDate(axFdrh.getAccDate());
 		setAcccount(axFdrh.getAcccount());
-
 		return createFromSentence(INSERT_SENTENCE, entidad);
 	}
 
@@ -132,9 +131,9 @@ public class AxFdrhEntity extends AbstractAx implements ServerKeys {
 		Connection con = null;
 		PreparedStatement ps = null;
 		int result = 0;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(MessageFormat.format(
 					UPDATE_ACCESS_CONTROL, new Object[] { bookID }));
 			ps.setInt(1, userId);
@@ -153,8 +152,8 @@ public class AxFdrhEntity extends AbstractAx implements ServerKeys {
 							new Object[] { bookID }), ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 
 		return result;

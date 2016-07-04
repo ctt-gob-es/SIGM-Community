@@ -62,9 +62,9 @@ public class ISFieldsValidator implements HibernateKeys {
     	List privOrgs = null;
 		List result = new ArrayList();
 		Integer[] arrFields = new Integer[NUM_FIELDS];
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			//Recuperamos la sesión
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(sessionID);
 
@@ -163,7 +163,7 @@ public class ISFieldsValidator implements HibernateKeys {
 		} catch (Exception e) {
 			throw new AttributesException(AttributesException.ERROR_CANNOT_FIND_VALIDATIONFIELDS);
 		} finally {
-			 HibernateUtil.closeSession(entidad);
+			 hibernateUtil.closeSession(entidad);
 		}
 	}
 }

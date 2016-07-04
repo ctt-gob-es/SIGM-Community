@@ -1,1 +1,0 @@
-SELECT "Alias".* FROM A_SCHEMA."Table" "Alias"

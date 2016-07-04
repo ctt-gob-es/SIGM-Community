@@ -175,7 +175,8 @@ public class DefinicionFilterFecha extends DefinicionFilterField {
 
 	private String getInWeekClausule(FiltroImpl filtro, String entidad)
 			throws ISicresAdminDAOException, SQLException {
-		int dbType = DBSessionManager.getDataBase(entidad);
+	    DBSessionManager dBSessionManager = new DBSessionManager();
+		int dbType = dBSessionManager.getDataBase(entidad);
 		String whereClausule = "";
 
 		switch (dbType) {
@@ -200,7 +201,8 @@ public class DefinicionFilterFecha extends DefinicionFilterField {
 
 	private String getInMonthClausule(FiltroImpl filtro, String entidad)
 			throws ISicresAdminDAOException, SQLException {
-		int dbType = DBSessionManager.getDataBase(entidad);
+	    DBSessionManager dBSessionManager = new DBSessionManager();
+		int dbType = dBSessionManager.getDataBase(entidad);
 		String whereClausule = "";
 
 		switch (dbType) {
@@ -225,7 +227,8 @@ public class DefinicionFilterFecha extends DefinicionFilterField {
 
 	private String getInYearClausule(FiltroImpl filtro, String entidad)
 			throws ISicresAdminDAOException, SQLException {
-		int dbType = DBSessionManager.getDataBase(entidad);
+	    DBSessionManager dBSessionManager = new DBSessionManager();
+		int dbType = dBSessionManager.getDataBase(entidad);
 		String whereClausule = "";
 
 		switch (dbType) {
