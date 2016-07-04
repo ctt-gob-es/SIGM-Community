@@ -1,12 +1,14 @@
-#AL SIGM
+#SIGM
 
-AL SIGM (Sistema Integrado de Gestión Modular) es una aplicación desarrollada para el inicio, tramitación, resolución y archivado del procedimiento administrativo. AL SIGM es un proyecto de modernización y actualización de las administraciones públicas, dotándolas de un sistema que puede reunir en formato electrónico toda la documentación de un expediente, integrando los tradicionales subsistemas de Registro, Motor de Expedientes (Flujos de procedimientos) y Archivo.
+SIGM (Sistema Integrado de Gestión Modular) es una aplicación desarrollada para el inicio, tramitación, resolución y archivado del procedimiento administrativo. SIGM es un proyecto de modernización y actualización de las administraciones públicas, dotándolas de un sistema que puede reunir en formato electrónico toda la documentación de un expediente, integrando los tradicionales subsistemas de Registro, Motor de Expedientes (Flujos de procedimientos) y Archivo.
 
-####Descarga AL SIGM
+Este repositorio se ha creado en el espacio del CTT de Github desde <a href="https://github.com/e-admin/alsigm">el antiguo repositorio creado en su momento por CENATIC</a>.
 
-**AL SIGM 3.0.1:** VM no completa, contiene fuentes y wars de los módulos modificados respecto de la 3.0.
+####Descarga SIGM
 
-**AL SIGM 3.0:** VM completa, incluye Postgres, Tomcat y Wars desplegados. Contiene trámites y procedimientos modelados.
+**SIGM 3.0.1:** VM no completa, contiene fuentes y wars de los módulos modificados respecto de la 3.0.
+
+**SIGM 3.0:** VM completa, incluye Postgres, Tomcat y Wars desplegados. Contiene trámites y procedimientos modelados.
 
 Descarga las <a href="https://github.com/Cenatic/alsigm/releases" target="_new">VMs y el código</a>
 
@@ -16,17 +18,13 @@ Aquí tienes disponibles las instrucciones de configuración del entorno Maven d
 
 <a href="https://github.com/Cenatic/alsigm/wiki/Configuraci%C3%B3n-del-entorno-de-desarrollo-(Instalaci%C3%B3n-y-compilaci%C3%B3n)">Instrucciones</a>
 
-Algunos <a href="https://forja.cenatic.es/forum/forum.php?thread_id=344081&forum_id=742&group_id=223">consejos</a> sobre versiones y compilación. Gracias a los colaboradores.
-
 ##Documentación histórica y nueva documentación
 
-Hemos mantenido la documentación histórica del proyecto porque consideramos que tiene un gran valor de consulta, así se han mantenido los foros, wiki, documentos, bugs, peticiones, etc de la etapa anterior del proyecto. Toda esta documentación está accesible desde el wiki de github en este <a href="https://github.com/Cenatic/alsigm/wiki/Hist%C3%B3rico-de-documentaci%C3%B3n,-bugs-e-incidencias-de-AL-SIGM" target="_new">enlace.</a>
-
-Por otro lado, la documentación generada a partir de ahora irá siendo desplegada en nuevas secciones del wiki de github a medida que se vaya generando.
+Hay disponible un archivo .rar con documentación de SIGM en <a href="https://github.com/e-admin/alsigm/releases">la página de Releases de este proyecto</a>.
 
 ##Bugs, foros y petición de nuevas funcionalidades
 
-¿Has detectado algún bug en el código y quieres informar de ello? ¿quieres debatir sobre algún tema de la plataforma o la comunidad, negocio, técnico? ¿tienes alguna necesidad de nueva funcionalidad de la plataforma y lo quieres comunicar a la comunidad? Para todo este tipo de cuestiones utilizaremos la sección "issues" de este proyecto donde hemos desplegado una serie de etiquetas para identificar y distinguir la categoría a tratar, en todo caso, si tenéis alguna sugerencia estaremos encantados de poder escucharos.
+Actualmente el proyecto no está ya auspiciado por el Ministerio de Industria, Energía y Turismo. Diversas organismos continuan utilizando SIGM y han decidido liberar el código resultante de su esfuerzo en este proyecto de Github. Si tienes sugerencias, incidencias, etc, puedes utilizar la seccion de issues pero has de tener en cuenta que ninguno de estos organismos ofrece garantías de ningún tipo de soporte.
 
 ##Versionado, tags y releases
 
@@ -52,9 +50,9 @@ Tenéis disponibles los tags, las releases de las versiones 3.0 y 3.0.1 en este 
 
 ##Contribuye
 
-Hemos abierto en el wiki una sección donde se explica de manera clara y sencilla cómo contribuir a un proyecto en Github como pudiera ser este, los pasos se pueden ver en el siguiente <a href="https://github.com/Cenatic/alsigm/wiki/Contribuye" target="_new">enlace</a>
+Toda aportación de código o documentación es bienvenida, puedes utilizar las herramietnas de Github como en cualquier otro proyecto.
 
-Con el objetivo de homogeneizar el estilo del código de AL SIGM escrito en distintos IDEs recomendamos seguir las pautas que nos proponen desde <a href="editorconfig.org" target="_new">editorconfig.org</a>
+Con el objetivo de homogeneizar el estilo del código de SIGM escrito en distintos IDEs recomendamos seguir las pautas que nos proponen desde <a href="editorconfig.org" target="_new">editorconfig.org</a>
 
 Y muy importante, respeta nuestro <a href="https://github.com/Cenatic/alsigm/wiki/C%C3%B3digo-conducta" target="_new">código de conducta y buenas prácticas</a>
 
