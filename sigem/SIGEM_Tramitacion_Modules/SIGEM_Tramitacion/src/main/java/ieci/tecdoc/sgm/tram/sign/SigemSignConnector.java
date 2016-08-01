@@ -73,6 +73,7 @@ import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfString;
 import com.lowagie.text.pdf.PdfWriter;
 
+
 /**
  */
 public class SigemSignConnector extends AFirmaSignSimpleVerifyConnector implements ISigemSignConnector {
@@ -292,6 +293,8 @@ public class SigemSignConnector extends AFirmaSignSimpleVerifyConnector implemen
 			throw new ISPACException(e);
 		}
 	}
+	
+	
 
 	/**
 	 * Obtiene el texto del recurso especificado.
@@ -1107,5 +1110,6 @@ public class SigemSignConnector extends AFirmaSignSimpleVerifyConnector implemen
 		}
 		return resultado;
 	}
+
 
 }

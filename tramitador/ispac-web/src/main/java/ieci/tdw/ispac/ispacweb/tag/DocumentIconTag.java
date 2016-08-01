@@ -143,7 +143,13 @@ public class DocumentIconTag extends TagSupport {
     		icon = "doc_html.gif";
     	} else if ("odt".equalsIgnoreCase(extension)) {
     		icon = "doc_odt.gif";
-    	} else {
+    	} 
+//		[Manu Ticket #475] Modificaciones para que reconozca los ODS
+    	else if ("ods".equalsIgnoreCase(extension)) {
+    		icon = "doc_ods.gif";
+    	} 
+//		[Manu Ticket #475] Modificaciones para que reconozca los ODS
+    	else {
     		icon = "doc_unknown.gif";
     	}
 

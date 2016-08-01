@@ -57,7 +57,7 @@
 		                		<input type="submit" class="ok" value='<bean:message key="search.form.button"/>' style="position:relative; left:535px;"/>
 		              			<br/><br/>
 		            		</html:form>
-		            		<br/><br/>
+		            		<br/>De conformidad con lo dispuesto en el art. 18.1.b) de la ley 11/2007, de 22 de junio, de acceso electrónico de los ciudadanos a los Servicios Públicos, mediante la inserción del Código Seguro de Verificación (CVE) que aparece en la banda gris del documento electrónico, se permite al interesado la comprobación de la integridad del documento en esta sede electrónica.<br/>
 		          		</div>
 		        	</div>
 		      	</div>
@@ -100,6 +100,24 @@
 				        				<h2><bean:message key="search.result.regType"/></h2>
 				        				<bean:write name="searchBean" property="tpReg"/>
 				        			</div>
+				        			<logic:equal name="searchBean" property="tpReg" value="SALIDA">
+				        				<div>
+					        				<h2><bean:message key="search.result.regNumber"/></h2>
+					        				<bean:write name="searchBean" property="nreg"/>
+					        			</div>
+					        			<div>
+					        				<h2><bean:message key="search.result.regDate"/></h2>
+					        				<bean:write name="searchBean" property="freg"/>
+					        			</div>
+					        			<div>
+					        				<h2><bean:message key="search.result.origen"/></h2>
+					        				<bean:write name="searchBean" property="origen"/>
+					        			</div>
+					        			<div>
+					        				<h2><bean:message key="search.result.destino"/></h2>
+					        				<bean:write name="searchBean" property="destino"/>
+					        			</div>
+				        			</logic:equal>
 				        			<br/>
 				        			<div>
 				        				<a href='<%=request.getContextPath()%>/showDocument.do?id=<bean:write name="searchBean" property="id"/>'><bean:message key="search.result.viewDocument"/></a>

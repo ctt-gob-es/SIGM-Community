@@ -3,6 +3,7 @@ package ieci.tdw.ispac.ispactx;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.ITXTransaction;
 import ieci.tdw.ispac.api.constants.ExpedienteMapConstants;
+import ieci.tdw.ispac.api.entities.SpacEntities;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
@@ -20,8 +21,14 @@ import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventExpedienteAltaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventExpedienteBajaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventTramiteAltaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventTramiteBajaVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
+import ieci.tdw.ispac.ispaclib.common.constants.EntityLockStates;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.dao.entity.EntityFactoryDAO;
+import ieci.tdw.ispac.ispaclib.db.DbCnt;
+import ieci.tdw.ispac.ispaclib.sicres.vo.RegisterType;
 
 import java.util.Date;
 import java.util.List;
@@ -42,7 +49,10 @@ public class TXTransaction implements ITXTransaction {
 	public TXTransaction(ClientContext cs) throws ISPACException {
 		super();
 		mccxt = cs;
-		auditoriaManager = new IspacAuditoriaManagerImpl();
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
 	}
 
 	protected void run(ITXAction[] actions) throws ISPACException {
@@ -132,7 +142,6 @@ public class TXTransaction implements ITXTransaction {
 		int[] ids = (int[]) action.getResult("");
 
 		// TODO: Auditar creación de expediente
-
 		int idProcess = ids[0];
 		IInvesflowAPI invesFlowAPI = mccxt.getAPI();
 		IProcess process = invesFlowAPI.getProcess(ids[0]);
@@ -145,30 +154,36 @@ public class TXTransaction implements ITXTransaction {
 	 * @param numexp
 	 */
 	private void auditCreacionRegistro(String numexp, int idProcess) {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
 
-		IspacAuditEventExpedienteAltaVO evento = new IspacAuditEventExpedienteAltaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setNumExpediente(numexp);
-		evento.setIdProceso(String.valueOf(idProcess));	
-		evento.setIdUser("");
-		evento.setUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+    		AuditContext auditContext = AuditContextHolder.getAuditContext();
 
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {			
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la creación del expediente");
-		auditoriaManager.audit(evento);
+			IspacAuditEventExpedienteAltaVO evento = new IspacAuditEventExpedienteAltaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setNumExpediente(numexp);
+			evento.setIdProceso(String.valueOf(idProcess));	
+			evento.setIdUser("");
+			evento.setUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {			
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la creación del expediente");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	public int[] createSubProcess(int nProcedure, String numexp, String subProcessUID,
@@ -453,7 +468,7 @@ public class TXTransaction implements ITXTransaction {
 		
 		ITXAction action = TXActionFactory.getInstance().closeTask(nIdTask);
 		run(action);
-		//TODO: Auditar
+		//TODO: Auditar		
 		auditDeleteTask(nIdTask, numExpediente);
 	}
 
@@ -509,7 +524,6 @@ public class TXTransaction implements ITXTransaction {
 		// TODO: Auditar creación de trámite
 		Integer idTask = (Integer) action.getResult("");
 		
-		
 		auditCreateTask(idTask.intValue());
 		return idTask.intValue();
 	}
@@ -521,6 +535,7 @@ public class TXTransaction implements ITXTransaction {
 		run(action);
 		
 		Integer idTask = (Integer) action.getResult("");
+
 		auditCreateTask(idTask.intValue());
 		return idTask.intValue();
 	}
@@ -532,60 +547,70 @@ public class TXTransaction implements ITXTransaction {
 	 */
 	private void auditCreateTask(int idTask) throws ISPACException {
 		
-		ITask task = mccxt.getAPI().getTask(idTask);
-		String numExpediente = task.getString(PropName.TRM_NUMEXP);
-		
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventTramiteAltaVO evento = new IspacAuditEventTramiteAltaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setIdUser("");
-		evento.setUser("");
-		evento.setNumExpediente(numExpediente);
-		evento.setIdTramite(String.valueOf(idTask));
-
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la creación del trámite");
-		auditoriaManager.audit(evento);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+			ITask task = mccxt.getAPI().getTask(idTask);
+			String numExpediente = task.getString(PropName.TRM_NUMEXP);
+			
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventTramiteAltaVO evento = new IspacAuditEventTramiteAltaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setIdUser("");
+			evento.setUser("");
+			evento.setNumExpediente(numExpediente);
+			evento.setIdTramite(String.valueOf(idTask));
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la creación del trámite");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	
 	private void auditDeleteTask(int idTask, String numExpediente) throws ISPACException {
 			
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventTramiteBajaVO evento = new IspacAuditEventTramiteBajaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setIdUser("");
-		evento.setUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-		evento.setNumExpediente(numExpediente);
-		evento.setId(String.valueOf(idTask));
-
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la creación del trámite");
-		auditoriaManager.audit(evento);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventTramiteBajaVO evento = new IspacAuditEventTramiteBajaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setIdUser("");
+			evento.setUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			evento.setNumExpediente(numExpediente);
+			evento.setId(String.valueOf(idTask));
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la creación del trámite");
+			auditoriaManager.audit(evento);
+    	}
 	}
 	
 	public int createTask(int nIdPcd, int nIdStage, int nIdTaskPCD, String numExp, Map params)
@@ -746,7 +771,7 @@ public class TXTransaction implements ITXTransaction {
 		run(action);
 	}
 
-	public void sendProcessToTrash(int idProc, Map params) throws ISPACException {
+	public boolean sendProcessToTrash(int idProc, Map params) throws ISPACException {
 		String numExpediente="";
 		try {
 			IInvesflowAPI invesFlowAPI = mccxt.getAPI();
@@ -756,12 +781,20 @@ public class TXTransaction implements ITXTransaction {
 			logger.error("Error al obtener el expediente para obtener el número de expediente", e);
 		}
 		
-		ITXAction action = TXActionFactory.getInstance().sendProcessToTrash(idProc, params);
-		run(action);
-		auditSendProcessToTrash(idProc, numExpediente);
+		//INICIO [dipucr-Felipe #226]
+		if (controlBlockedDocuments(numExpediente)){
+			ITXAction action = TXActionFactory.getInstance().sendProcessToTrash(idProc, params);
+			run(action);
+			auditSendProcessToTrash(idProc, numExpediente);
+			return true;
+		}
+		else{
+			return false;
+		}
+		//FIN [dipucr-Felipe #226]
 	}
 
-	public void sendProcessToTrash(int idProc) throws ISPACException {
+	public boolean sendProcessToTrash(int idProc) throws ISPACException {
 		
 		String numExpediente="";
 		try {
@@ -772,71 +805,120 @@ public class TXTransaction implements ITXTransaction {
 			logger.error("Error al obtener el expediente para obtener el número de expediente", e);
 		}
 		
+		//INICIO [dipucr-Felipe #226]
+		if (controlBlockedDocuments(numExpediente)){
+			ITXAction action = TXActionFactory.getInstance().sendProcessToTrash(idProc);
+			run(action);
+			auditSendProcessToTrash(idProc,numExpediente);
+			return true;
+		}
+		else{
+			return false;
+		}
+		//FIN [dipucr-Felipe #226]
+	}
+	
+	/**
+	 * [dipucr-Felipe #226]
+	 * Controla que no haya documentos bloqueados en el expediente
+	 * @param numexp
+	 * @return
+	 */
+	public boolean controlBlockedDocuments(String numexp) throws ISPACException {
 		
-		ITXAction action = TXActionFactory.getInstance().sendProcessToTrash(idProc);
-		run(action);
-		auditSendProcessToTrash(idProc,numExpediente);
+		DbCnt cnt = mccxt.getConnection();
+
+    	// No se puede enviar a la papelera expedientes que tengan decretos con número, documentos que han generado  
+		// registro de salida o que han iniciado notificación telemática (documento con bloqueo total)
+        String query = "WHERE NUMEXP = '" + numexp
+        			 + "' AND ( TP_REG = '" + RegisterType.SALIDA + "' AND NREG <> '' OR BLOQUEO = '" + EntityLockStates.TOTAL_LOCK +"' )";
+
+        try {
+        	int count = EntityFactoryDAO.getInstance().countEntities(cnt, SpacEntities.SPAC_DT_DOCUMENTOS, query);
+
+        	if (count > 0) {
+    			return false;
+        	}
+    		return true;
+        }
+        catch (ISPACException ie) {
+            throw new ISPACException("Error en EntitiesAPI:controlBlockedDocuments("+numexp+")",ie);
+        }
+        finally {
+            mccxt.releaseConnection(cnt);
+        }
 	}
 
 	/**
 	 * @param idProc
 	 */
 	private void auditSendProcessToTrash(int idProc,String numExpediente) {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventExpedienteAPapeleraVO evento = new IspacAuditEventExpedienteAPapeleraVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setNumExpediente(numExpediente);
-		evento.setIdProcess(String.valueOf(idProc));
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-		
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setIdUser(auditContext.getUserId());
-			evento.setUser(auditContext.getUser());
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la eliminación del expediente");
-		auditoriaManager.audit(evento);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+    		AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventExpedienteAPapeleraVO evento = new IspacAuditEventExpedienteAPapeleraVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setNumExpediente(numExpediente);
+			evento.setIdProcess(String.valueOf(idProc));
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setIdUser(auditContext.getUserId());
+				evento.setUser(auditContext.getUser());
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la eliminación del expediente");
+			auditoriaManager.audit(evento);
+    	}
 	}
 	
 	/**
 	 * @param idProc
 	 */
 	private void auditDeleteProcess(int idProc,String numExpediente) {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventExpedienteBajaVO evento = new IspacAuditEventExpedienteBajaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setNumExpediente(numExpediente);
-		evento.setIdProcess(String.valueOf(idProc));
-
-		evento.setIdUser("");
-		evento.setUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
 		
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setIdUser(auditContext.getUserId());
-			evento.setUser(auditContext.getUser());
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la eliminación del expediente");
-		auditoriaManager.audit(evento);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventExpedienteBajaVO evento = new IspacAuditEventExpedienteBajaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setNumExpediente(numExpediente);
+			evento.setIdProcess(String.valueOf(idProc));
+	
+			evento.setIdUser("");
+			evento.setUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setIdUser(auditContext.getUserId());
+				evento.setUser(auditContext.getUser());
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la eliminación del expediente");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	public void cleanProcess(int idProc) throws ISPACException {

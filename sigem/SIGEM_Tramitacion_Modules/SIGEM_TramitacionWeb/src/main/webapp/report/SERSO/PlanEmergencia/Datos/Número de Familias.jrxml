@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Número de Familias"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="595"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="SUBREPORT_DIR" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["/sigem/app/SIGEM/temp/reports/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["M:\\Documentos\\Imágenes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["DPCR2012/13000"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FECHA_INI" isForPrompting="false" class="java.sql.Timestamp"/>
+	<parameter name="FECHA_FIN" isForPrompting="false" class="java.sql.Timestamp"/>
+	<parameter name="NUMEXPCONVOCATORIA" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="CONVOCATORIAEXCEP" isForPrompting="false" class="java.lang.String"/>
+	<queryString><![CDATA[select sum(num_familias) as num_familias, sum(num_menores) as num_menores
+from 
+(select count(nummenores), sum(nummenores::int)
+	from dpcr_serso_plan_emer datos_solicitud 
+	join spac_expedientes exp_solicitud on $P{NUMEXPCONVOCATORIA} = datos_solicitud.convocatoria and datos_solicitud.numexp = exp_solicitud.numexp
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+	and upper(menores3anios) = 'SI'
+	 and exp_solicitud.freg >= $P{FECHA_INI} and exp_solicitud.freg < $P{FECHA_FIN}
+union all
+	select count(nummenores), sum(nummenores::int)
+	from dpcr_serso_plan_emer datos_solicitud
+	join spac_expedientes exp_solicitud on datos_solicitud.convocatoria = $P{CONVOCATORIAEXCEP} and datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+	and upper(menores3anios) = 'SI'
+	 and exp_solicitud.freg >= $P{FECHA_INI} and exp_solicitud.freg < $P{FECHA_FIN}
+union all
+	select count(nummenores), sum(nummenores::int)
+	from dpcr_serso_plan_emer datos_solicitud 
+	join spac_expedientes_h exp_solicitud on $P{NUMEXPCONVOCATORIA} = datos_solicitud.convocatoria and datos_solicitud.numexp = exp_solicitud.numexp
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+	and upper(menores3anios) = 'SI'
+	 and exp_solicitud.freg >= $P{FECHA_INI} and exp_solicitud.freg < $P{FECHA_FIN}
+union all
+	select count(nummenores), sum(nummenores::int)
+	from dpcr_serso_plan_emer datos_solicitud 
+	join spac_expedientes_h exp_solicitud on datos_solicitud.convocatoria = $P{CONVOCATORIAEXCEP} and datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+	and upper(menores3anios) = 'SI'
+	 and exp_solicitud.freg >= $P{FECHA_INI} and exp_solicitud.freg < $P{FECHA_FIN}
+)as numMenores (num_familias, num_menores)]]></queryString>
+
+	<field name="num_familias" class="java.math.BigDecimal"/>
+	<field name="num_menores" class="java.math.BigDecimal"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="33"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="0"
+						y="1"
+						width="595"
+						height="32"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="20" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Número de Familias]]></text>
+				</staticText>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="46"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="84"
+						y="6"
+						width="187"
+						height="40"
+						forecolor="#FFFFFF"
+						backcolor="#3300FF"
+						key="staticText-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[NUMERO DE FAMILIAS CON MENORES DE 3 AÑOS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="271"
+						y="6"
+						width="187"
+						height="40"
+						forecolor="#FFFFFF"
+						backcolor="#3300FF"
+						key="staticText-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[NÚMERO DE MENORES DE MENOS DE 3 AÑOS]]></text>
+				</staticText>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="20"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="84"
+						y="0"
+						width="187"
+						height="20"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{num_familias}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="271"
+						y="0"
+						width="187"
+						height="20"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{num_menores}]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

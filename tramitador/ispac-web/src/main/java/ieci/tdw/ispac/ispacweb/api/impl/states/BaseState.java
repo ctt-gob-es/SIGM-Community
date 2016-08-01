@@ -162,6 +162,16 @@ public class BaseState implements IState {
 		return mStateContext.getSubProcessId();
 	}
 	
+	//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+	public int getAnio() {
+		return mStateContext.getAnio();
+	}
+
+	//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.	
+	public void setAnio(int anio) {
+		mStateContext.setAnio(anio);
+	}
+	
 	public void blockEntity(IClientContext cctx) throws ISPACException {
 		
 		if ((getEntityId() != 0) &&

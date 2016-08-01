@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+		<groupId>es.ieci.tecdoc.iflow</groupId>
+		<artifactId>ispac-main</artifactId>
+		<version>6.4.1</version>
+	</parent>
+	<issueManagement>
+		<system>Trac Open Sourced Project</system>
+		<url>http://10.12.200.179/trac/SIGEM_incidencias/</url>
+	</issueManagement>
+	
+	<properties>
+		<dipuRules.version>3.0</dipuRules.version>
+		<project.build.sourceEncoding>LATIN9</project.build.sourceEncoding>
+	</properties>
+	
+  <artifactId>SIGEM_TramitacionSecretariaDipucr</artifactId>  
+  <version>${dipuRules.version}</version>
+  <name>SIGEM_TramitacionSecretariaDipucr</name>  
+  <groupId>es.dipucr</groupId>
+  	<packaging>jar</packaging>
+	<url>https://sede.dipucr.es/</url>
+	
+	<organization>
+		<name>Diputación Provincial de Ciudad Real</name>
+		<url>https://sede.dipucr.es/</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>Manuel Quesada Elvira</name>
+			<email>manuel_quesada@dipucr.es</email>
+			<roles>
+				<role>commiter</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>María Teresa Carmona González</name>
+			<email>teresa_carmona@dipucr.es</email>
+			<roles>
+				<role>commiter</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Agustín Jiménez Moreno</name>
+			<email>agustin_jimenez@dipucr.es</email>
+			<roles>
+				<role>commiter</role>
+			</roles>
+		</developer>
+		<developer>
+			<name>Felipe Moyano Enríquez de Salamanca</name>
+			<email>felipe_moyano@dipucr.es</email>
+			<roles>
+				<role>commiter</role>
+			</roles>
+		</developer>
+	</developers>
+	
+	<dependencies>
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>DipucrFuncionesComunes</artifactId>
+			<version>3.0</version>
+		</dependency>
+	</dependencies>
+</project>

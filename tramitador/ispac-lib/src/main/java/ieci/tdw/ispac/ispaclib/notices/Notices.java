@@ -19,6 +19,8 @@ import ieci.tdw.ispac.audit.business.vo.IspacAuditoriaValorModificado;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventAvisoAltaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventAvisoBajaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventAvisoModificacionVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
@@ -74,10 +76,15 @@ public class Notices {
 	private static final Logger logger = Logger.getLogger(Notices.class);
 
 	final ClientContext mctx;
-	private static IspacAuditoriaManager auditoriaManager = new IspacAuditoriaManagerImpl();
+	//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+	private static IspacAuditoriaManager auditoriaManager;
 
 	public Notices(ClientContext ctx) {
 		mctx = ctx;
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
 	}
 
 	/**
@@ -172,37 +179,43 @@ public class Notices {
 	 * @param newstate
 	 */
 	private void auditModifyNotice(int noticeId, int currentstate, int newstate) {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventAvisoModificacionVO evento = new IspacAuditEventAvisoModificacionVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setIdAviso(String.valueOf(noticeId));
-		List<IspacAuditoriaValorModificado> valoresModificados = new ArrayList<IspacAuditoriaValorModificado>();
-		IspacAuditoriaValorModificado valorModificado = new IspacAuditoriaValorModificado();
-		valorModificado.setFieldName(ESTADO_AVISO);
-		valorModificado.setNewValue(String.valueOf(newstate));
-		valorModificado.setOldValue(String.valueOf(currentstate));
-		valoresModificados.add(valorModificado);
-
-		evento.setValoresModificados(valoresModificados);
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la consulta del aviso");
-		auditoriaManager.audit(evento);
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventAvisoModificacionVO evento = new IspacAuditEventAvisoModificacionVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setIdAviso(String.valueOf(noticeId));
+			List<IspacAuditoriaValorModificado> valoresModificados = new ArrayList<IspacAuditoriaValorModificado>();
+			IspacAuditoriaValorModificado valorModificado = new IspacAuditoriaValorModificado();
+			valorModificado.setFieldName(ESTADO_AVISO);
+			valorModificado.setNewValue(String.valueOf(newstate));
+			valorModificado.setOldValue(String.valueOf(currentstate));
+			valoresModificados.add(valorModificado);
+	
+			evento.setValoresModificados(valoresModificados);
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la consulta del aviso");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	/**
@@ -221,7 +234,6 @@ public class Notices {
 
 		// TODO: Auditar. Problema: Se eliminan en bloque y no sabemos las que
 		// se eliminan por lo que se guarda el número de expediente.
-
 		auditEliminacionAviso(numExp);
 
 		if (logger.isDebugEnabled()) {
@@ -235,28 +247,34 @@ public class Notices {
 	 * @param numExp
 	 */
 	private static void auditEliminacionAviso(String numExp) {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-		IspacAuditEventAvisoBajaVO evento = new IspacAuditEventAvisoBajaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setIdAviso(numExp);
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la eliminación del aviso");
-		auditoriaManager.audit(evento);
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+			IspacAuditEventAvisoBajaVO evento = new IspacAuditEventAvisoBajaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setIdAviso(numExp);
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la eliminación del aviso");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	public static int generateNotice(IClientContext cct, int processId, int stageId, int taskId,
@@ -307,7 +325,6 @@ public class Notices {
 		notice.store(cct);
 
 		// TODO: Auditar creación del aviso
-
 		auditGenerateNotice(cct, notice);
 
 		return notice.getKeyInt();
@@ -319,30 +336,36 @@ public class Notices {
 	 * @throws ISPACException
 	 */
 	private static void auditGenerateNotice(IClientContext cct, IItem notice) throws ISPACException {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventAvisoAltaVO evento = new IspacAuditEventAvisoAltaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setIdAviso(notice.getKey().toString());
-		evento.setNewValue(notice.toXml());
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la creación del aviso");
-		auditoriaManager.audit(evento);
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventAvisoAltaVO evento = new IspacAuditEventAvisoAltaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setIdAviso(notice.getKey().toString());
+			evento.setNewValue(notice.toXml());
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la creación del aviso");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	public int generateDelegateObjectNotice(int processId, int stageId, int taskId, String numexp,

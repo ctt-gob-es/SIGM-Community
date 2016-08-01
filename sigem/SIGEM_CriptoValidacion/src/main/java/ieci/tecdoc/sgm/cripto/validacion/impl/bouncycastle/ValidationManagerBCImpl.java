@@ -27,7 +27,6 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 
-
 public class ValidationManagerBCImpl implements ServicioCriptoValidacion{
 
     static{
@@ -124,11 +123,19 @@ public class ValidationManagerBCImpl implements ServicioCriptoValidacion{
     	    X509Certificate cert=(X509Certificate)certificados[0];
 
     	    cert.checkValidity();
+    	    
     	    ArrayList certReaders = new ArrayList();
+    	    
     	    certReaders.add(new DNIEReader());
     	    certReaders.add(new FnmtCertReader());
+    	    certReaders.add(new FnmtUsuariosCertReader()); //[DipuCR-Agustin] #130
+    	    certReaders.add(new FnmtAcAdministracionPublicaCertReader()); //[DipuCR-Agustin] #169
+    	    certReaders.add(new FnmtAcComponentesInformaticosCertReader()); //[DipuCR-Agustin] #169
+    	    certReaders.add(new FnmtAcRepresentacionCertReader()); //[DipuCR-Agustin] #310
     	    certReaders.add(new CEXCertReader());
     	    certReaders.add(new CamerFirmaReader());
+    	    
+    	        	    
     	    for (Iterator itCertReaders = certReaders.iterator(); itCertReaders.hasNext();) {
 				IReaderCert aReader = (IReaderCert) itCertReaders.next();
 				if (aReader.isTypeOf(cert)){
@@ -154,7 +161,7 @@ public class ValidationManagerBCImpl implements ServicioCriptoValidacion{
     	} catch (Throwable e) {
     		log.error("Error al validar certificado [validateCertificate] [Throwable]", e.fillInStackTrace());
     	    throw new CriptoValidacionException(CriptoValidacionException.EXC_CERT_VALIDATION, e.getMessage(), e);
-        }    
+        } 
     	return oResultado;
     }
 
@@ -179,5 +186,20 @@ public class ValidationManagerBCImpl implements ServicioCriptoValidacion{
 		}
 	
 		return config;
+	}
+	
+	public static void main(String args[]){
+		
+		ValidationManagerBCImpl vmbcimpl = new ValidationManagerBCImpl();
+		ResultadoValidacion rv = null;
+		String psB64Certificate = "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";
+		try {
+			rv=vmbcimpl.validateCertificate(psB64Certificate);
+			rv.toString();
+		} catch (CriptoValidacionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

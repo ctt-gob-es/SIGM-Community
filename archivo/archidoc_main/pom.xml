@@ -13,6 +13,14 @@
 		<maven>2.0.9</maven>
 	</prerequisites>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<properties>
 		<assembly.plugin.version>2.2.1</assembly.plugin.version>
 
@@ -271,7 +279,7 @@
 				<version>${commons-pool.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>jmxri</groupId>
+				<groupId>com.sun.jmx</groupId>
 				<artifactId>jmxri</artifactId>
 				<version>${jmx.version}</version>
 			</dependency>
@@ -447,11 +455,6 @@
 				<artifactId>mime-util</artifactId>
 				<version>${mimeutils.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>wss4j</groupId>
-				<artifactId>wss4j</artifactId>
-				<version>${wss4j.version}</version>
-			</dependency>
 
 			<!-- Dependencias de documentacion -->
 			<dependency>
@@ -573,7 +576,7 @@
 				<plugin>
 					<groupId>es.ieci.maven.plugins</groupId>
 					<artifactId>maven-generate-resources-archivo-plugin</artifactId>
-					<version>1.1</version>
+					<version>1.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-dependency-plugin</artifactId>
@@ -619,7 +622,7 @@
 				<plugin>
 					<groupId>es.ieci.maven.plugins</groupId>
 					<artifactId>maven-generate-resources-archivo-plugin</artifactId>
-					<version>1.1</version>
+					<version>1.0</version>
 				</plugin>
 				<plugin>
 					<groupId>com.agilejava.docbkx</groupId>
@@ -674,7 +677,7 @@
 		</plugins>
 	</build>
 	<distributionManagement>
-		<repository>
+		<!--<repository>
 			<id>releases</id>
 			<name>Repositorio de releases</name>
 			<url>http://devel.uji.es/nexus/content/repositories/releases/</url>
@@ -683,6 +686,12 @@
 			<id>snapshots</id>
 			<name>Repositorio de snapshots</name>
 			<url>http://devel.uji.es/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
+		</snapshotRepository>-->
+		<repository>
+			<id>DipucrRepDeploy</id>
+			<name>Repositorio de la Diputación de Ciudad Real</name>
+			<url>http://10.12.200.113:8081/nexus/content/repositories/DipucrRepo/</url>
+		</repository>
 	</distributionManagement>
+
 </project>

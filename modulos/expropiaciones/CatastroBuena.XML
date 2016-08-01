@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="http://www.catastro.meh.es/ayuda/consultalotes3.xsl" type="text/xsl"?>
+<DS>
+	<LAT>
+		<ATE>CASTILLA - LA MANCHA-CIUDAD REAL</ATE>
+	</LAT>
+	<LDS>
+		<DSA>
+			<NIF></NIF>
+			<APE></APE>
+			<RC></RC>
+			<PROV>13</PROV>
+			<MUN>20</MUN>
+			<POL>1</POL>
+			<PAR>123</PAR>
+			<ERR></ERR>
+			<LBI>
+				<BIE>
+					<IBI>
+						<DEL>13</DEL>
+						<MUN>20</MUN>
+						<TIP>RU</TIP>
+						<RCA>
+							<PCA>13020A00100123</PCA>
+							<CAR>0000</CAR>
+							<CDC1>H</CDC1>
+							<CDC2>A</CDC2>
+						</RCA>
+						<USO>Agrario</USO>
+						<SUP></SUP>
+					</IBI>
+					<DTR>Polígono 1 Parcela 123 SERNA. ARGAMASILLA DE CALATRAVA (CIUDAD
+						REAL)</DTR>
+					<DT>
+						<LOINE>
+							<CP>13</CP>
+							<CM>20</CM>
+						</LOINE>
+						<CMC>20</CMC>
+						<NP>CIUDAD REAL</NP>
+						<NM>ARGAMASILLA DE CALATRAVA</NM>
+						<LOCS>
+							<LORS>
+								<LORUS>
+									<CZC>0</CZC>
+									<CPP>
+										<CPO>1</CPO>
+										<CPA>123</CPA>
+									</CPP>
+									<NPA>SERNA</NPA>
+									<CPAJ>130</CPAJ>
+								</LORUS>
+							</LORS>
+						</LOCS>
+					</DT>
+					<FIN>
+						<LFI>Polígono 1 Parcela 123 SERNA. ARGAMASILLA DE CALATRAVA
+							(CIUDAD REAL)</LFI>
+						<SUCF>0</SUCF>
+						<SUPF>193</SUPF>
+						<TIF></TIF>
+					</FIN>
+					<LSU>
+						<SPA>
+							<SUB> 0</SUB>
+							<CUL>I- - Improductivo</CUL>
+							<INT>00</INT>
+							<SUP>0,0193</SUP>
+							<VCS>0,00</VCS>
+						</SPA>
+					</LSU>
+					<LEC>
+					</LEC>
+					<LIT>
+						<TIT>
+							<NIF>Q2801660H</NIF>
+							<APN>ADMINISTRADOR DE INFRAESTRUCTURAS FERROVIARIAS</APN>
+							<DER>PR</DER>
+							<PDE>100,00</PDE>
+							<SUF></SUF>
+							<DFT1>CL HIEDRA ESTACION DE CHAMARTIN EDI</DFT1>
+							<DFT2>28036 MADRID (MADRID)</DFT2>
+							<CBI></CBI>
+						</TIT>
+					</LIT>
+					<DEB>
+						<AAC>2014</AAC>
+						<VCA>0,00</VCA>
+						<VSU>0,00</VSU>
+						<VCO>0,00</VCO>
+					</DEB>
+					<FR>
+						<PROVFR></PROVFR>
+						<REGFR></REGFR>
+						<FINFR></FINFR>
+					</FR>
+					<CPA>100</CPA>
+					<LER2></LER2>
+				</BIE>
+			</LBI>
+		</DSA>
+		<DSA>
+			<NIF></NIF>
+			<APE></APE>
+			<RC>6379412VH0867N</RC>
+			<PROV></PROV>
+			<MUN></MUN>
+			<POL></POL>
+			<PAR></PAR>
+			<ERR></ERR>
+			<LBI>
+				<BIE>
+					<IBI>
+						<DEL>13</DEL>
+						<MUN>20</MUN>
+						<TIP>UR</TIP>
+						<RCA>
+							<PCA>6379412VH0867N</PCA>
+							<CAR>0001</CAR>
+							<CDC1>T</CDC1>
+							<CDC2>H</CDC2>
+						</RCA>
+						<USO>Suelo sin edif.</USO>
+						<SUP></SUP>
+					</IBI>
+					<DTR>CL POLIGONO P2 SU Suelo 13440 ARGAMASILLA DE CALATRAVA (CIUDAD
+						REAL)</DTR>
+					<DT>
+						<LOINE>
+							<CP>13</CP>
+							<CM>20</CM>
+						</LOINE>
+						<CMC>20</CMC>
+						<NP>CIUDAD REAL</NP>
+						<NM>ARGAMASILLA DE CALATRAVA</NM>
+						<LOCS>
+							<LOUS>
+								<LOURB>
+									<DIR>
+										<CV>122</CV>
+										<TV>CL</TV>
+										<NV>POLIGONO P2 SU</NV>
+									</DIR>
+									<LOINT>
+										<ES>S</ES>
+										<PT>UE</PT>
+										<PU>LO</PU>
+									</LOINT>
+									<DP>13440</DP>
+									<DM>1</DM>
+								</LOURB>
+							</LOUS>
+						</LOCS>
+					</DT>
+					<FIN>
+						<LFI>CL POLIGONO P2 SU ARGAMASILLA DE CALATRAVA (CIUDAD REAL)
+						</LFI>
+						<SUCF></SUCF>
+						<SUPF>1.172</SUPF>
+						<TIF>Suelo sin edificar</TIF>
+					</FIN>
+					<LSU>
+					</LSU>
+					<LEC>
+					</LEC>
+					<LIT>
+						<TIT>
+							<NIF>05891240C</NIF>
+							<APN>SANTOS VELA RAFAEL</APN>
+							<DER>PR</DER>
+							<PDE>100,00</PDE>
+							<SUF></SUF>
+							<DFT1>CL ADUANA 11 Pl:02 Pt:A</DFT1>
+							<DFT2>13500 PUERTOLLANO (CIUDAD REAL)</DFT2>
+							<CBI></CBI>
+						</TIT>
+					</LIT>
+					<DEB>
+						<AAC>2014</AAC>
+						<VCA>5.874,79</VCA>
+						<VSU>5.874,79</VSU>
+						<VCO>0,00</VCO>
+					</DEB>
+					<FR>
+						<PROVFR></PROVFR>
+						<REGFR></REGFR>
+						<FINFR></FINFR>
+					</FR>
+					<CPA>100</CPA>
+					<LER2></LER2>
+				</BIE>
+			</LBI>
+		</DSA>
+		<DSA>
+			<NIF></NIF>
+			<APE></APE>
+			<RC></RC>
+			<PROV></PROV>
+			<MUN>1</MUN>
+			<POL></POL>
+			<PAR></PAR>
+			<ERR>
+				<COD>6</COD>
+				<DES>No existen valores de consulta</DES>
+			</ERR>
+			<LBI>
+			</LBI>
+		</DSA>
+		<DSA>
+			<NIF></NIF>
+			<APE></APE>
+			<RC></RC>
+			<PROV></PROV>
+			<MUN></MUN>
+			<POL></POL>
+			<PAR></PAR>
+			<ERR>
+				<COD>6</COD>
+				<DES>No existen valores de consulta</DES>
+			</ERR>
+			<LBI>
+			</LBI>
+		</DSA>
+		<DSA>
+			<NIF></NIF>
+			<APE></APE>
+			<RC>5780301VH0858S</RC>
+			<PROV></PROV>
+			<MUN></MUN>
+			<POL></POL>
+			<PAR></PAR>
+			<ERR></ERR>
+			<LBI>
+				<BIE>
+					<IBI>
+						<DEL>13</DEL>
+						<MUN>20</MUN>
+						<TIP>UR</TIP>
+						<RCA>
+							<PCA>5780301VH0858S</PCA>
+							<CAR>0001</CAR>
+							<CDC1>S</CDC1>
+							<CDC2>F</CDC2>
+						</RCA>
+						<USO>Suelo sin edif.</USO>
+						<SUP></SUP>
+					</IBI>
+					<DTR>CL JOSE MARIA RODRIGUEZ MARI 122 13440 ARGAMASILLA DE
+						CALATRAVA (CIUDAD REAL)</DTR>
+					<DT>
+						<LOINE>
+							<CP>13</CP>
+							<CM>20</CM>
+						</LOINE>
+						<CMC>20</CMC>
+						<NP>CIUDAD REAL</NP>
+						<NM>ARGAMASILLA DE CALATRAVA</NM>
+						<LOCS>
+							<LOUS>
+								<LOURB>
+									<DIR>
+										<CV>28</CV>
+										<TV>CL</TV>
+										<NV>JOSE MARIA RODRIGUEZ MARI</NV>
+										<PNP>122</PNP>
+									</DIR>
+									<LOINT>
+										<ES>T</ES>
+										<PT>OD</PT>
+										<PU>OS</PU>
+									</LOINT>
+									<DP>13440</DP>
+									<DM>1</DM>
+								</LOURB>
+							</LOUS>
+						</LOCS>
+					</DT>
+					<FIN>
+						<LFI>CL JOSE MARIA RODRIGUEZ MARI 122 ARGAMASILLA DE CALATRAVA
+							(CIUDAD REAL)</LFI>
+						<SUCF></SUCF>
+						<SUPF>3.650</SUPF>
+						<TIF>Suelo sin edificar</TIF>
+					</FIN>
+					<LSU>
+					</LSU>
+					<LEC>
+					</LEC>
+					<LIT>
+						<TIT>
+							<NIF>P1302000C</NIF>
+							<APN>AYUNTAMIENTO DE ARGAMASILLA DE CALATRAVA</APN>
+							<DER>PR</DER>
+							<PDE>100,00</PDE>
+							<SUF></SUF>
+							<DFT1>CL PLAZA 1</DFT1>
+							<DFT2>13440 ARGAMASILLA DE CALATRAVA (CIUDAD REAL)</DFT2>
+							<CBI></CBI>
+						</TIT>
+					</LIT>
+					<DEB>
+						<AAC>2014</AAC>
+						<VCA>79.427,59</VCA>
+						<VSU>79.427,59</VSU>
+						<VCO>0,00</VCO>
+					</DEB>
+					<FR>
+						<PROVFR></PROVFR>
+						<REGFR></REGFR>
+						<FINFR></FINFR>
+					</FR>
+					<CPA>100</CPA>
+					<LER2></LER2>
+				</BIE>
+			</LBI>
+		</DSA>
+		<DSA>
+			<NIF></NIF>
+			<APE></APE>
+			<RC></RC>
+			<PROV>13</PROV>
+			<MUN>20</MUN>
+			<POL>1</POL>
+			<PAR>124</PAR>
+			<ERR></ERR>
+			<LBI>
+				<BIE>
+					<IBI>
+						<DEL>13</DEL>
+						<MUN>20</MUN>
+						<TIP>RU</TIP>
+						<RCA>
+							<PCA>13020A00100124</PCA>
+							<CAR>0000</CAR>
+							<CDC1>H</CDC1>
+							<CDC2>B</CDC2>
+						</RCA>
+						<USO>Agrario</USO>
+						<SUP></SUP>
+					</IBI>
+					<DTR>Polígono 1 Parcela 124 SERNA. ARGAMASILLA DE CALATRAVA (CIUDAD
+						REAL)</DTR>
+					<DT>
+						<LOINE>
+							<CP>13</CP>
+							<CM>20</CM>
+						</LOINE>
+						<CMC>20</CMC>
+						<NP>CIUDAD REAL</NP>
+						<NM>ARGAMASILLA DE CALATRAVA</NM>
+						<LOCS>
+							<LORS>
+								<LORUS>
+									<CZC>0</CZC>
+									<CPP>
+										<CPO>1</CPO>
+										<CPA>124</CPA>
+									</CPP>
+									<NPA>SERNA</NPA>
+									<CPAJ>130</CPAJ>
+								</LORUS>
+							</LORS>
+						</LOCS>
+					</DT>
+					<FIN>
+						<LFI>Polígono 1 Parcela 124 SERNA. ARGAMASILLA DE CALATRAVA
+							(CIUDAD REAL)</LFI>
+						<SUCF>0</SUCF>
+						<SUPF>735</SUPF>
+						<TIF></TIF>
+					</FIN>
+					<LSU>
+						<SPA>
+							<SUB> 0</SUB>
+							<CUL>I- - Improductivo</CUL>
+							<INT>00</INT>
+							<SUP>0,0735</SUP>
+							<VCS>0,00</VCS>
+						</SPA>
+					</LSU>
+					<LEC>
+					</LEC>
+					<LIT>
+						<TIT>
+							<NIF>Q2801660H</NIF>
+							<APN>ADMINISTRADOR DE INFRAESTRUCTURAS FERROVIARIAS</APN>
+							<DER>PR</DER>
+							<PDE>100,00</PDE>
+							<SUF></SUF>
+							<DFT1>CL HIEDRA ESTACION DE CHAMARTIN EDI</DFT1>
+							<DFT2>28036 MADRID (MADRID)</DFT2>
+							<CBI></CBI>
+						</TIT>
+					</LIT>
+					<DEB>
+						<AAC>2014</AAC>
+						<VCA>0,00</VCA>
+						<VSU>0,00</VSU>
+						<VCO>0,00</VCO>
+					</DEB>
+					<FR>
+						<PROVFR></PROVFR>
+						<REGFR></REGFR>
+						<FINFR></FINFR>
+					</FR>
+					<CPA>100</CPA>
+					<LER2></LER2>
+				</BIE>
+			</LBI>
+		</DSA>
+		<DSA>
+			<NIF></NIF>
+			<APE></APE>
+			<RC></RC>
+			<PROV>13</PROV>
+			<MUN>20</MUN>
+			<POL>3</POL>
+			<PAR>124</PAR>
+			<ERR></ERR>
+			<LBI>
+				<BIE>
+					<IBI>
+						<DEL>13</DEL>
+						<MUN>20</MUN>
+						<TIP>RU</TIP>
+						<RCA>
+							<PCA>13020A00300124</PCA>
+							<CAR>0000</CAR>
+							<CDC1>H</CDC1>
+							<CDC2>R</CDC2>
+						</RCA>
+						<USO>Agrario</USO>
+						<SUP></SUP>
+					</IBI>
+					<DTR>Polígono 3 Parcela 124 L.TORRE. ARGAMASILLA DE CALATRAVA
+						(CIUDAD REAL)</DTR>
+					<DT>
+						<LOINE>
+							<CP>13</CP>
+							<CM>20</CM>
+						</LOINE>
+						<CMC>20</CMC>
+						<NP>CIUDAD REAL</NP>
+						<NM>ARGAMASILLA DE CALATRAVA</NM>
+						<LOCS>
+							<LORS>
+								<LORUS>
+									<CZC>0</CZC>
+									<CPP>
+										<CPO>3</CPO>
+										<CPA>124</CPA>
+									</CPP>
+									<NPA>L.TORRE</NPA>
+									<CPAJ>85</CPAJ>
+								</LORUS>
+							</LORS>
+						</LOCS>
+					</DT>
+					<FIN>
+						<LFI>Polígono 3 Parcela 124 L.TORRE. ARGAMASILLA DE CALATRAVA
+							(CIUDAD REAL)</LFI>
+						<SUCF>0</SUCF>
+						<SUPF>2.945</SUPF>
+						<TIF></TIF>
+					</FIN>
+					<LSU>
+						<SPA>
+							<SUB> 0</SUB>
+							<CUL>C- - Labor o Labradío secano</CUL>
+							<INT>02</INT>
+							<SUP>0,2945</SUP>
+							<VCS>298,14</VCS>
+						</SPA>
+					</LSU>
+					<LEC>
+					</LEC>
+					<LIT>
+						<TIT>
+							<NIF>30175611W</NIF>
+							<APN>COLETO TORIL JUANA</APN>
+							<DER>PR</DER>
+							<PDE>50,00</PDE>
+							<SUF></SUF>
+							<DFT1>CL GOYA 47</DFT1>
+							<DFT2>13500 PUERTOLLANO (CIUDAD REAL)</DFT2>
+							<CBI></CBI>
+						</TIT>
+						<TIT>
+							<NIF>29941231S</NIF>
+							<APN>PALOMO ROMERO BARTOLOME</APN>
+							<DER>PR</DER>
+							<PDE>50,00</PDE>
+							<SUF></SUF>
+							<DFT1>CL GOYA 47</DFT1>
+							<DFT2>13500 PUERTOLLANO (CIUDAD REAL)</DFT2>
+							<CBI></CBI>
+						</TIT>
+					</LIT>
+					<DEB>
+						<AAC>2014</AAC>
+						<VCA>298,14</VCA>
+						<VSU>298,14</VSU>
+						<VCO>0,00</VCO>
+					</DEB>
+					<FR>
+						<PROVFR></PROVFR>
+						<REGFR></REGFR>
+						<FINFR></FINFR>
+					</FR>
+					<CPA>100</CPA>
+					<LER2></LER2>
+				</BIE>
+			</LBI>
+		</DSA>
+	</LDS>
+</DS>

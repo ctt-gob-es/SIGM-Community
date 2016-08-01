@@ -146,6 +146,20 @@ Los componentes desarrollados por parte del inisterio de Industria, Energia y Tu
 - sigem_utilidadesAdministracion-3.0.jar
 - sigem_utilidadesSesionUsuario-3.0.jar
 
+Los componentes desarrollados por parte de la Diputación Provincial de Ciudad Real se encuentran en las siguientes carpetas y se distribuyen bajo la misma licencia (EUPL1.1 o posteriores):
+
+- BDNS-3.0.jar
+- Contratacion-3.0.jar
+- DipucrFuncionesComunes-3.0.jar
+- DipucrRules-3.0.jar
+- Expropiaciones-3.0.jar
+- invesdoc-admin-firma-0.1.jar
+- PortaFirmasExterno-3.0.jar
+- RendicionCuentas-1.0.jar
+- SIGEM_Telefonica_Procedimientos-2.0.0.6.jar
+- SIGEM_TramitacionSecretariaDipucr-3.0.jar
+- Subvenciones-3.0.jar
+- TablonEdictalBOE-1.0.jar
 
 Este programa incluye los siguientes programas de terceros bajo su respectivas licencias:
 
@@ -162,12 +176,24 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - asm-attrs-1.5.3.jar BSD3
 - aspectjrt-1.6.8.jar EPL 1.0
 - aspectjweaver-1.6.8.jar EPL 1.0
+- axiom-api-1.2.15.jar
+- axiom-dom-1.2.15.jar ASF 2.0
+- axiom-impl-1.2.15.jar ASF 2.0
+- axis-1.3.jar ASF 2.0
+- axis-jaxrpc-1.3.jar ASF 2.0
+- axis-saaj-1.3.jar ASF 2.0
+- axis2-adb-1.6.3.jar ASF 2.0
+- axis2-kernel-1.6.3.jar ASF 2.0
+- axis2-transport-http-1.6.3.jar ASF 2.0
+- axis2-transport-local-1.6.3.jar ASF 2.0
 - backport-util-concurrent-3.1.jar Public domine
 - bcmail-jdk14-138.jar IT X11 (Bouncy Castle)
 - bcmail-jdk15-140.jar IT X11 (Bouncy Castle)
 - bcprov-jdk15-140.jar IT X11 (Bouncy Castle)
 - bctsp-jdk14-138.jar IT X11 (Bouncy Castle)
-- bsh-2.0b4.jar  LGPL/Sun Public License
+- bind-2.2.0.v201004141950.jar CDDL 1.1
+- bind-2.2.0.v201005080402.jar CDDL 1.1
+- bsh-2.0b4.jar LGPL/Sun Public License
 - c3p0-0.9.1.jar LGPLv2
 - castor-core-1.3.1.jar ASF 2.0
 - castor-xml-1.3.1.jar ASF 2.0
@@ -182,10 +208,13 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - commons-collections-3.2.1.jar ASF 2.0
 - commons-dbcp-1.4.jar ASF 2.0
 - commons-digester-1.8.1.jar ASF 2.0
+- commons-discovery-0.2.jar ASF 2.0
 - commons-fileupload-1.2.1.jar ASF 2.0
+- commons-httpclient-3.0.jar ASF 2.0
 - commons-io-1.4.jar ASF 2.0
 - commons-lang-2.3.jar ASF 2.0
 - commons-lang-2.5.jar ASF 2.0
+- commons-logging-1.0.4.jar ASF 2.0
 - commons-logging-1.1.1.jar ASF 2.0
 - commons-logging-api-1.1.jar ASF 2.0
 - commons-net-3.1.jar ASF 2.0
@@ -222,6 +251,7 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - dwr-3.0.1.jar ASF 2.0
 - ehcache-1.2.3.jar ASF 2.0
 - ehcache-1.5.0.jar ASF 2.0
+- fop-0.95.jar ASF 2.0
 - freemarker-2.3.8.jar BSD original (BSD4)
 - geronimo-activation_1.1_spec-1.1.jar ASF 2.0
 - geronimo-annotation_1.0_spec-1.1.1.jar ASF 2.0
@@ -250,14 +280,19 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - hibernate-tools-3.2.0.ga.jar LGPL 2.1
 - hibernate-validator-4.0.2.GA.jar ASF 2.0
 - hibernate-validator-annotation-processor-4.1.0.Final.jar ASF 2.0
+- httpcore-4.4.1.jar ASF 2.0
 - i18nlog-1.0.9.jar LGPL 2.1
 - ibatis-sqlmap-2.3.4.726.jar ASF 2.0
 - infinispan-core-4.0.0.FINAL.jar LGPL 2.1+
 - itext-2.1.0.jar PL
 - itext-2.1.7.jar PL
+- jackrabbit-jcr-commons-2.1.0.jar ASF 2.0
+- jackrabbit-webdav-2.1.0.jar ASF 2.0
 - jasperreports-3.5.3.jar LGPL 2.1
 - jasperreports-3.7.6.jar LGPL 3
 - javassist-3.9.0.GA.jar PL
+- java-unrar-master-1.7.0.jar (The source code of UnRAR utility is freeware)
+- javax.servlet-api-3.0.1.jar CDDL/GPLv2
 - jaxb1-impl-2.2.4-1.jar CDDL 1.1
 - jaxb-api-2.1.jar CDDL 1.0
 - jaxb-impl-2.1.13.jar CDDL 1.0
@@ -268,13 +303,16 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - jboss-common-core-2.2.14.GA.jar LGPL 2.1+
 - jboss-logging-spi-2.0.5.GA.jar LGPL 2.1+
 - jboss-transaction-api-1.0.1.GA.jar LGPL 2.1+
+- jcl-over-slf4j-1.5.8.jar MIT
 - jcommon-1.0.15.jar LGPL 2.1+
 - jetty-util-6.1.4.jar ASF 2.0
+- jxl-2.6.jar LGPL
 - jfreechart-1.0.12.jar LGPL 2.1+
 - jgroups-2.6.13.GA.jar LGPL 2.1
 - jgroups-all-2.2.8.jar LGPL 2.1
 - joda-time-1.6.2.jar ASF 2.0
 - joda-time-1.6.jar ASF 2.0
+- jsoup-1.7.3.jar MIT
 - jsqlparser-0.4.0.jar LGPL 2.1+
 - jsr107cache-1.0.jar ASF 2.0
 - jsr250-api-1.0.jar CDDL 1.0
@@ -283,10 +321,12 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - jta-1.0.1B.jar CDDL 1.0
 - jtidy-r8-20060801.jar JTidy Software License
 - jug-2.0.0-lgpl.jar ASL2/LGPL2.1
+- junit-4.8.1.jar BDS License
 - LITE_j5_afirma5_core__V3.2.jar GPL2/EUPL 1.1
 - LITE_j6_afirma5_core__V3.2.jar GPL2/EUPL 1.1
 - log4j-1.2.14.jar ASF 2.0
 - log4j-1.2.9.jar ASF 1.1
+- mail-1.0.jar EUPL1.1
 - marshalling-api-1.2.0.GA.jar LGPL 2.1+
 - EDIA_j5_afirma5_core__V3.2.jar GPL2/EUPL 1.1
 - EDIA_j6_afirma5_core__V3.2.jar GPL2/EUPL 1.1
@@ -294,6 +334,7 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - mime-util-2.1.3.jar ASL2
 - neethi-2.0.4.jar ASL2
 - neethi-3.0.1.jar ASL2
+- neethi-3.0.3.jar ASL2
 - opensaml-2.5.1-1.jar ASL2
 - openws-1.4.2-1.jar ASL2
 - oscache-2.1.jar ASF 1.1 derivated
@@ -308,7 +349,14 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - saaj-api-1.3.4.jar CDDL/GPLv2
 - saaj-impl-1.3.12.jar CDDL/GPLv2
 - saaj-impl-1.3.2.jar CDDL 1.0
+- servlet-api-2.4.jar 
 - simplecaptcha-1.2.jar BSD 3
+- SILCALWIN-1.0.jar EUPL1.1
+- RecubrimientoSVD-1.0.jar EUPL1.1
+- scsp-beans-3.2.1.jar EUPL1.1
+- scsp-cliente-ligero-1.0.jar EUPL1.1
+- scsp-core-3.2.1.jar EUPL1.1
+- verificacionDatosSW-1.0.jar EUPL1.1
 - slf4j-api-1.5.6.jar IT
 - slf4j-api-1.5.8.jar IT
 - slf4j-jdk14-1.5.6.jar IT
@@ -361,6 +409,7 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - velocity-tools-2.0-beta4.jar ASL2
 - woodstox-core-asl-4.0.8.jar ASL2
 - woodstox-core-asl-4.1.1.jar ASL2
+- wsdl4j-1.5.1.jar CPL
 - wsdl4j-1.6.1.jar CPL
 - wsdl4j-1.6.2.jar CPL
 - wsit-rt-1.1.jar CDDL 1.0
@@ -369,6 +418,7 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - wss4j-1.5.8.jar ASL2
 - wss4j-1.6.4.jar ASL2
 - xercesImpl-2.9.1.jar ASL2
+- xjc-2.2.0.jar (FreeWare)
 - xml-resolver-1.2.jar ASL2
 - XmlSchema-1.4.7.jar ASL2
 - xmlschema-core-2.0.1.jar ASL2
@@ -380,3 +430,4 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - xpp3_min-1.1.4c.jar ASF 1.1
 - xstream-1.3.1.jar BSD3
 - xws-security-1.3.1.jar CDDL 1.0
+- zip4j-1.3.2.jar ASF 2.0

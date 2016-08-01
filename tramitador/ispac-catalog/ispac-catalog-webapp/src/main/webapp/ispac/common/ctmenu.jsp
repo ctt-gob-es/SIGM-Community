@@ -5,6 +5,18 @@
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
 <%@ page import="ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr" %>
 
+<!-- [Manu #814] INICIO - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+
+<%@page import="ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion" %>
+<%@page import="ieci.tecdoc.sgm.core.services.LocalizadorServicios" %>
+
+<% 
+	String entidad = AutenticacionAdministracion.obtenerDatosEntidad(request).getIdEntidad();
+	String descEntidad = LocalizadorServicios.getServicioEntidades().obtenerEntidad(entidad).getNombreCorto();
+%>
+
+<!-- [Manu #814] FIN- SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+
 <ispac:hasFunction var="inventario" functions="FUNC_INV_PROCEDURES_READ, FUNC_INV_PROCEDURES_EDIT, FUNC_INV_STAGES_READ, FUNC_INV_STAGES_EDIT, FUNC_INV_TASKS_READ, FUNC_INV_TASKS_EDIT, FUNC_INV_DOCTYPES_READ, FUNC_INV_DOCTYPES_EDIT, FUNC_INV_TEMPLATES_READ, FUNC_INV_TEMPLATES_EDIT, FUNC_INV_SUBPROCESS_READ, FUNC_INV_SUBPROCESS_EDIT, FUNC_INV_SIGN_CIRCUITS_READ, FUNC_INV_SIGN_CIRCUITS_EDIT"/>
 <ispac:hasFunction var="componentes" functions="FUNC_COMP_ENTITIES_READ, FUNC_COMP_ENTITIES_EDIT, FUNC_COMP_VALIDATION_TABLES_READ, FUNC_COMP_VALIDATION_TABLES_EDIT, FUNC_COMP_HIERARCHICAL_TABLES_READ, FUNC_COMP_HIERARCHICAL_TABLES_EDIT, FUNC_COMP_RULES_READ, FUNC_COMP_RULES_EDIT, FUNC_COMP_SEARCH_FORMS_READ, FUNC_COMP_SEARCH_FORMS_EDIT, FUNC_COMP_CALENDARS_READ, FUNC_COMP_CALENDARS_EDIT, FUNC_COMP_REPORTS_READ, FUNC_COMP_REPORTS_EDIT, FUNC_COMP_SYSTEM_VARS_READ, FUNC_COMP_SYSTEM_VARS_EDIT, FUNC_COMP_HELPS_READ, FUNC_COMP_HELPS_EDIT"/>
 <ispac:hasFunction var="publicador" functions="FUNC_PUB_ACTIONS_READ, FUNC_PUB_ACTIONS_EDIT, FUNC_PUB_APPLICATIONS_READ, FUNC_PUB_APPLICATIONS_EDIT, FUNC_PUB_CONDITIONS_READ, FUNC_PUB_CONDITIONS_EDIT, FUNC_PUB_RULES_READ, FUNC_PUB_RULES_EDIT, FUNC_PUB_MILESTONES_READ, FUNC_PUB_MILESTONES_EDIT"/>
@@ -28,7 +40,9 @@
 		<div id="usuario">
 			<div id="barra_usuario">
 				<p class="usuario">
-			            <bean:write name="User"/>
+					<span style="font-weight:normal">Entidad: <%=descEntidad%></span>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<bean:write name="User"/>
 				</p>
 			</div>
 		</div>
@@ -203,6 +217,16 @@
 				  			</html:link>
             			</li>
 						</ispac:hasFunction>
+						
+						<!-- [eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento. -->
+						<ispac:hasFunction functions="FUNC_COMP_REPORTS_READ, FUNC_COMP_REPORTS_EDIT">
+            			<li>
+							<html:link action="showCTManualesUsuarioList">
+								<bean:message key="menu.manualesUsuario"/>
+				  			</html:link>
+            			</li>
+						</ispac:hasFunction>
+            			<!-- [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento. -->
             			
 						<ispac:hasFunction functions="FUNC_COMP_HELPS_READ, FUNC_COMP_HELPS_EDIT">
             			<li>
@@ -285,8 +309,13 @@
 			<c:set var="useOdtTemplates"><%=ConfigurationMgr.getVarGlobalBoolean((ieci.tdw.ispac.ispaclib.context.ClientContext)request.getAttribute("ClientContext"), ConfigurationMgr.USE_ODT_TEMPLATES, false)%></c:set>
 			
 			<div id="configLink">
-				<ispac:rewrite id="configPage" page="config.jsp"/>
-				<a href='javascript:;' onclick="javascript:window.open('<%=configPage%>','configFrame','status=no,scrollbars=no,location=no,toolbar=no,');">
+			<!-- [Manu Ticket #97] INICIO - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java. -->		
+				<!--<ispac:rewrite id="configPage" page="config.jsp"/>
+				<a href='javascript:;' onclick="javascript:window.open('<%=configPage%>','','status=no,scrollbars=no,location=no,toolbar=no,');">-->
+				<ispac:rewrite id="configPage" page="configurarEditores.jsp"/>
+				<a href='javascript:;' onclick="javascript:showFrameConfigurarEditores('<%=configPage%>','configFrame','', '' ,'', false);">
+			<!-- [Manu Ticket #97] FIN - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java. -->		
+
 					<img src='<ispac:rewrite href="img/config.gif"/>' style='vertical-align:middle' border='0'/>
 					<bean:message key="title.config"/>
 				</a>
@@ -300,7 +329,7 @@
 							document.getElementById("configLink").style.display = "none";
 						}
 					</script>				
-				</c:if>			
+				</c:if>	
 			</nobr>
 		</td>
 		<td>
@@ -312,4 +341,159 @@
 	</tr>
 </table>
 </div>
-<iframe src='' id='configFrame' name='configFrame' style='visibility:hidden;width:0px;height:0px;margin:0px;padding:0px;'></iframe>
+
+<!-- [Manu Ticket #97] INICIO - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java. -->		
+<script>
+	function showFrameConfigurarEditores(action, target, width, height, msgConfirm, doSubmit, needToConfirm, form) {
+
+		if (needToConfirm != null) {
+
+			if (typeof ispac_needToConfirm != 'undefined') {
+				ispac_needToConfirm = needToConfirm;
+			}
+		}
+
+		if ((msgConfirm != null) && (msgConfirm != ''))
+			if (confirm(msgConfirm) == false)
+				return;
+
+		if ((form == null) && (document.forms.length > 0)) {
+			form = document.forms[0];
+		}
+
+		var element;
+		/*if (width == null)
+			width = 640;
+		if (height == null)
+			height = 480;*/
+
+			width=getWidthWindow();
+			height=getHeightWindow();
+
+		eval('element = document.getElementById("' + target + '")');
+
+		if (element != null) {
+
+			showLayer();
+
+			height='500';
+			width='750';
+
+			var x = (document.body.clientWidth - width) / 2;
+			//var y = (document.body.clientHeight - height) / 2;
+			var y = document.body.scrollTop + (document.body.clientHeight - height) / 2;
+			if (y < 10) {
+				y = 10;
+			}
+
+			element.style.height = height;
+			element.style.width = width;
+			element.style.position = "absolute";
+			element.style.left = x;
+			element.style.top = y;
+			element.style.visibility = "visible";
+
+			if (document.forms.length > 0) {
+
+				var oldTarget = form.target;
+				var oldAction = form.action;
+
+				eval('form.target = "' + target + '"');
+
+				if (action.substring(0,4) == 'http')
+					form.action = action;
+				else if (action.substring(0,1) != '/')
+					form.action = replaceActionForm(form.action, action);
+				else
+					form.action = action;
+
+				// Hacer un submit al workframe o abrir una url
+				if ((doSubmit != null) && (!doSubmit)) {
+					window.frames[target].location = form.action;;
+				}
+				else {
+					form.submit();
+				}
+
+				form.target = oldTarget;
+				form.action = oldAction;
+			}
+			else {
+
+				eval("frames['" + target + "'].location.href='" + action + "'");
+
+			}
+		}
+	}
+
+	function showLayer(id){
+	  var element;
+	  var elements;
+	  var i;
+
+	  if (id == null) {
+		id = "layer";
+	  }
+
+	  element = document.getElementById(id);
+
+	  if (element != null)
+	  {
+		// Deshabilitar el scroll
+		document.body.style.overflow = "hidden";
+
+		element.style.position = "absolute";
+		//element.style.height = document.body.clientHeight;
+		element.style.height = document.body.scrollHeight + 1200;
+		element.style.width = document.body.clientWidth + 1200;
+		element.style.left = -600;
+		element.style.top = -600;
+
+		element.style.display = "block";
+
+		if (isIE())
+		{
+		  elements = document.getElementsByTagName("SELECT");
+
+		  for (i = 0; i < elements.length; i++)
+		  {
+			elements[i].style.visibility = "hidden";
+		  }
+		}
+	  }
+	}
+
+	function getWidthWindow(){
+		var width= 630;
+		if (parseInt(navigator.appVersion)>3) {
+			 if (navigator.appName=="Netscape") {
+			  width = window.innerWidth;
+			 }
+			 if (navigator.appName.indexOf("Microsoft")!=-1) {
+			  width = document.body.offsetWidth;
+
+			 }
+			}
+		return width;
+	}
+
+	function getHeightWindow(){
+
+		var height = 460;
+
+			if (parseInt(navigator.appVersion)>3) {
+			 if (navigator.appName=="Netscape") {
+			  height = window.innerHeight;
+			 }
+			 if (navigator.appName.indexOf("Microsoft")!=-1) {
+			  height = document.body.offsetHeight;
+			 }
+			}
+		return height;
+	}
+</script>
+
+<div id="layer" style="display:none;z-index:1000;background:white;filter:alpha(opacity=80);-moz-opacity:.80;opacity:.80;"/></div>
+<iframe src='' id='configFrame' name='configFrame' style='visibility:hidden;z-index:1024;border:none;height:0px' allowtransparency='true' scrolling="no"></iframe>
+<!--<iframe src='' id='configFrame' name='configFrame' style='visibility:hidden;width:0px;height:0px;margin:0px;padding:0px;'></iframe>-->
+<!-- [Manu Ticket #97] FIN - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java. -->		

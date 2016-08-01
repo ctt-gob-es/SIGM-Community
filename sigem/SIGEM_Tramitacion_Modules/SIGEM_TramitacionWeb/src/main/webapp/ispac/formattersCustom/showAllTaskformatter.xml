@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='FECHA_INICIO' 
+				 titleKey='forms.exp.title.fclose' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 />
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE' 
+				 columnClass='width50percent'
+				 titleKey='formatter.tasks.nombre' 
+				 fieldType='LINK' 
+				 fieldLink='ID_CTTASK'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='FECHA_CIERRE' 
+				 titleKey='formatter.process.fechaInicio' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 />
+				 
+</beanformatter>

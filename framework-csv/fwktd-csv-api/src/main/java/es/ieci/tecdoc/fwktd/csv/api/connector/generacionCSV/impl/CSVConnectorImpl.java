@@ -110,6 +110,18 @@ public class CSVConnectorImpl extends BaseConnector implements CSVConnector {
 		logger.info("Paso 3 - código hash truncado a 15 bytes en base64: {}", hashBase64);
 
 		logger.info("CSV: {}", hashBase64);
+		
+		/*
+		 * Paso 4: [dipucr-Felipe #1172]
+		 * Eliminamos los caracteres que dan lugar a confusión a los usuarios
+		 * - Las "eles minúscula" se sustituirán por "eles mayúscula" :: l -> L
+		 * - Las "i mayúscula" se sustituirán por "i minúscula" :: I -> i
+		 * - Las "o mayúscula" se sustituirán por "o mayúscula" :: O -> o
+		 */
+		hashBase64 = hashBase64.replace("l", "L");
+		hashBase64 = hashBase64.replace("I", "i");
+		hashBase64 = hashBase64.replace("O", "o");
+		logger.info("CSV final: {}", hashBase64);
 
 		return hashBase64;
 	}

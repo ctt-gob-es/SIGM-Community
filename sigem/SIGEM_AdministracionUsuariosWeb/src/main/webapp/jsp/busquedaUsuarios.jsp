@@ -50,6 +50,19 @@ function nuevo(){
 
 <div id="contenedora">
   <!-- Inicio Cabecera -->
+  
+<!-- [Manu #814] INICIO - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+
+<%@page import="ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion" %>
+<%@page import="ieci.tecdoc.sgm.core.services.LocalizadorServicios" %>
+
+<% 
+	String entidad = AutenticacionAdministracion.obtenerDatosEntidad(request).getIdEntidad();
+	String descEntidad = LocalizadorServicios.getServicioEntidades().obtenerEntidad(entidad).getNombreCorto();
+%>
+
+<!-- [Manu #814] FIN- SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+  
   <div id="cabecera">
   	
     <div id="logo">
@@ -64,6 +77,9 @@ function nuevo(){
       <p><bean:message key="ieci.tecdoc.sgm.autenticacion.admin.struts.title"/></p>
     </div>
     <div class="usuarioright">
+	    <!-- [Manu #814] INICIO - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+	  	<p> Entidad: <%=descEntidad%></p>
+		<!-- [Manu #814] FIN - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
     </div>
   </div>
   <div id="migas">

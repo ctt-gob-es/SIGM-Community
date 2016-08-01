@@ -21,7 +21,7 @@ public class BaseTerceroVO extends Entity {
 	 */
 	@Size(max = 30)
 	protected String nombre;
-
+	
 	/**
 	 * Constructor por defecto.
 	 */

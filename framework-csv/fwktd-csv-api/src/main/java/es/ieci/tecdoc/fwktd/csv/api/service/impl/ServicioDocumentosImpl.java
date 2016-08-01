@@ -161,6 +161,17 @@ public class ServicioDocumentosImpl implements ServicioDocumentos {
 					"No existe ninguna aplicación con el código: "
 							+ infoDocumentoForm.getCodigoAplicacion());
 		}
+		
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
+		documento.setNumeroRegistro(infoDocumentoForm.getNumeroRegistro());
+		documento.setFechaRegistro(infoDocumentoForm.getFechaRegistro());
+		documento.setOrigenRegistro(infoDocumentoForm.getOrigenRegistro());
+		documento.setDestinoRegistro(infoDocumentoForm.getDestinoRegistro());
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
 
 		//Guardar la información del documento
 		documento = getDocumentoManager().save(documento);

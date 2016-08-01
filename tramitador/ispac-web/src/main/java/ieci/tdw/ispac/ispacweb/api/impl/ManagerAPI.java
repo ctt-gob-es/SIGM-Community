@@ -12,6 +12,7 @@ import ieci.tdw.ispac.ispacweb.api.IManagerAPI;
 import ieci.tdw.ispac.ispacweb.api.IScheme;
 import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.ispacweb.api.IWorklist;
+import ieci.tdw.ispac.ispacweb.api.ManagerState;
 
 import java.util.Map;
 
@@ -73,6 +74,11 @@ public class ManagerAPI implements IManagerAPI
 
 		IState currentState = statefact.createState(stateticket);
 		IState newState = statefact.createState(newstateID, params, mcct);
+		
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		if(newState.getState() != ManagerState.PROCESSESLIST){
+			newState.setAnio(currentState.getAnio());
+		}
 		
 		// Comprobar si el estado de tramitación ha cambiado
 		if (currentState.equals(newState)) {

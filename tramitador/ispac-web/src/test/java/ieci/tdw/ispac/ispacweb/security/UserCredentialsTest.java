@@ -1,10 +1,13 @@
-package ieci.tdw.ispac.ispacweb.security;
+package java.ieci.tdw.ispac.ispacweb.security;
+
+
 
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.impl.InvesflowAPI;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.resp.User;
 import ieci.tdw.ispac.ispaclib.utils.CollectionUtils;
+import ieci.tdw.ispac.ispacweb.security.UserCredentials;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

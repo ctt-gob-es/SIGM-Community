@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:ns="http://boletinoficial.ws.igae.minhap.es" 
+xmlns:peticionAnuncio="http://BDNS/peticionAnuncio" 
+xmlns:respuestaAnuncio="http://BDNS/respuestaAnuncio" 
+xmlns:publicacionAnuncio="http://BDNS/publicacionAnuncio" 
+xmlns:confirmacionAnuncio="http://BDNS/confirmacionAnuncio" 
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+name="BDNSBOLETINOFI" targetNamespace="http://boletinoficial.ws.igae.minhap.es">
+	<wsdl:types>
+		<xs:schema>
+			<xs:import namespace="http://BDNS/peticionAnuncio" schemaLocation="../BDNS/boletinoficial/peticionAnuncio.xsd"/>
+			<xs:import namespace="http://BDNS/respuestaAnuncio" schemaLocation="../BDNS/boletinoficial/respuestaAnuncio.xsd"/>
+			<xs:import namespace="http://BDNS/publicacionAnuncio" schemaLocation="../BDNS/boletinoficial/publicacionAnuncio.xsd"/>
+			<xs:import namespace="http://BDNS/confirmacionAnuncio" schemaLocation="../BDNS/boletinoficial/confirmacionAnuncio.xsd"/>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="peticionAnuncioMessage">
+		<wsdl:part name="peticionAnuncio" element="peticionAnuncio:PeticionAnuncio"/>
+	</wsdl:message>
+	<wsdl:message name="respuestaAnuncioMessage">
+		<wsdl:part name="respuestaAnuncio" element="respuestaAnuncio:RespuestaAnuncio"/>
+	</wsdl:message>
+	<wsdl:message name="publicacionAnuncioMessage">
+		<wsdl:part name="publicacionAnuncio" element="publicacionAnuncio:PublicacionAnuncio"/>
+	</wsdl:message>
+	<wsdl:message name="confirmacionAnuncioMessage">
+		<wsdl:part name="confirmacionAnuncio" element="confirmacionAnuncio:ConfirmacionAnuncio"/>
+	</wsdl:message>
+	<wsdl:portType name="BoletinOficial">
+		<wsdl:operation name="peticionAnuncio">
+			<wsdl:input message="ns:peticionAnuncioMessage"/>
+			<wsdl:output message="ns:respuestaAnuncioMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="publicacionAnuncio">
+			<wsdl:input message="ns:publicacionAnuncioMessage"/>
+			<wsdl:output message="ns:confirmacionAnuncioMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="BoletinOficialSoap11" type="ns:BoletinOficial">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="peticionAnuncio">
+			<soap:operation soapAction="peticionAnuncio" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="publicacionAnuncio">
+			<soap:operation soapAction="publicacionAnuncio" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BoletinOficialService">
+		<wsdl:port name="BoletinOficialSoap11" binding="ns:BoletinOficialSoap11">
+			<soap:address location="http://cerezo:7110/teseonet/services/BDNSBOLETINOFI"/>
+		</wsdl:port>
+	
+	</wsdl:service>
+</wsdl:definitions>

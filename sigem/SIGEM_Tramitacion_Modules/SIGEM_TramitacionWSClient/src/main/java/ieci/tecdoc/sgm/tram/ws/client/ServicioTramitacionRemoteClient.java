@@ -947,6 +947,32 @@ public class ServicioTramitacionRemoteClient implements ServicioTramitacion {
 
 		return documento;
 	}
+	
+    /**
+     * [DipuCR-Agustin #781]
+     * Obtiene el contenido del documento temporal.
+     * @param guid GUID del documento
+     * @return Contenido del documento.
+     * @throws TramitacionException si ocurre algún error.
+     */
+	public byte[] getFicheroTemp(String idEntidad, String guid)
+			throws TramitacionException {
+		ieci.tecdoc.sgm.tram.ws.client.dto.Binario ret = service.getFicheroTemp(idEntidad, guid);
+		if (ServiciosUtils.isReturnOK((IRetornoServicio)ret)) {
+			return ret.getContenido();
+		} else {
+			throw getTramitacionException((IRetornoServicio)ret);
+		}
+	}
+	
+	/**
+     * [DipuCR-Agustin #781]
+     */
+	public boolean setFicheroTemp(String idEntidad, String guid, byte[] data)
+			throws TramitacionException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 
 }

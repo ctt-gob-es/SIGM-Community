@@ -71,8 +71,11 @@ public class OpenOfficeHelper {
 	private final int BACKGROUND_COLOR_TITLE_COLUMN =  16777215;
 	private final static int BACKGROUND_WHITE_COLOR =  0;
 
-	private final int DEFAULT_BACKGROUND_COLOR_TABLE = 13421823;
-	private final int DEFAULT_BACKGROUND_COLOR_TABLEROW = 6710932;
+	//private final int DEFAULT_BACKGROUND_COLOR_TABLE = 13421823;
+	//private final int DEFAULT_BACKGROUND_COLOR_TABLEROW = 6710932;
+	
+	private final int DEFAULT_BACKGROUND_COLOR_TABLE = 16777215;
+	private final int DEFAULT_BACKGROUND_COLOR_TABLEROW = 10263708;
 	
 	private static final int OO_WRITER = 0;
 	private static final int OO_CALC = 1;
@@ -100,6 +103,10 @@ public class OpenOfficeHelper {
 		FILTER_NAMES_MAP.put("application/rtf", "Rich Text Format");
 		FILTER_NAMES_MAP.put("application/vnd.ms-excel", "MS Excel 97");
 		//FILTER_NAMES_MAP.put("application/pdf", "writer_pdf_Export");
+		
+//		[Manu Ticket #475] Modificaciones para que reconozca los ODS
+		FILTER_NAMES_MAP.put("application/vnd.oasis.opendocument.spreadsheet", "Calc8");
+//		[Manu Ticket #475] Modificaciones para que reconozca los ODS
 	}
 
 	private String cnt = null;
@@ -119,7 +126,41 @@ public class OpenOfficeHelper {
 	}
 
 	public synchronized static OpenOfficeHelper getInstance() throws ISPACException {
-		String cnt = ISPACConfiguration.getInstance().get(ISPACConfiguration.OPEN_OFFICE_CONNECT);
+		//[Manu Ticket #86] INICIO - ALSIGM3 Usar varias instancias de OpenOffice
+		//String cnt = ISPACConfiguration.getInstance().get(ISPACConfiguration.OPEN_OFFICE_CONNECT);
+	
+		ISPACConfiguration config = ISPACConfiguration.getInstance();
+		String cnt = config.get( ISPACConfiguration.OPEN_OFFICE_CONNECT);
+		try {
+			XComponentContext xcomponentcontext = Bootstrap.createInitialComponentContext(null);
+			XMultiComponentFactory xLocalServiceManager = xcomponentcontext.getServiceManager();
+			Object xUrlResolver = xLocalServiceManager.createInstanceWithContext(	"com.sun.star.bridge.UnoUrlResolver", xcomponentcontext);
+			XUnoUrlResolver urlResolver =
+					(XUnoUrlResolver) UnoRuntime.queryInterface( XUnoUrlResolver.class, xUrlResolver);
+			urlResolver.resolve(cnt);
+		}catch (java.lang.Exception e){
+			logger.warn("Error al establecer la conexión con OpenOffice (OPEN_OFFICE_CONNECT): " + cnt + ". " + e.getMessage(), e);
+		
+			String parameter = config.get( ISPACConfiguration.OPEN_OFFICE_ADDITIONAL_INSTANCES);
+			if (parameter != null){
+				int count = Integer.parseInt( parameter);
+				for (int i = 0; i < count; i++){
+					cnt = config.get( ISPACConfiguration.OPEN_OFFICE_CONNECT + "_" + i);
+					try {
+						XComponentContext xcomponentcontext = Bootstrap.createInitialComponentContext(null);
+						XMultiComponentFactory xLocalServiceManager = xcomponentcontext.getServiceManager();
+						Object xUrlResolver = xLocalServiceManager.createInstanceWithContext(	"com.sun.star.bridge.UnoUrlResolver", xcomponentcontext);
+	
+						XUnoUrlResolver urlResolver = (XUnoUrlResolver) UnoRuntime.queryInterface( XUnoUrlResolver.class, xUrlResolver);
+						urlResolver.resolve(cnt);
+					}catch (java.lang.Exception e1){
+						logger.warn("Error al establecer la conexión con OpenOffice (OPEN_OFFICE_CONNECT_" + i +"): " + cnt + ". " + e1.getMessage(), e);
+					}
+				}
+			}
+		}
+		//[Manu Ticket #86] FIN - ALSIGM3 Usar varias instancias de OpenOffice
+		
 		return new OpenOfficeHelper(cnt);
 	}
 
@@ -172,11 +213,12 @@ public class OpenOfficeHelper {
 
 	public XDesktop getDeskTop() throws ISPACException {
 
-		if (mxDesktop == null) {
+		//[Manu Ticket #86] INICIO - ALSIGM3 Usar varias instancias de OpenOffice
+		//if (mxDesktop == null) {
 			try {
-				if (xFactory == null) {
+				//if (xFactory == null) {
 					xFactory = connect(cnt);
-				}
+				//}
 				mxDesktop = getDesktop(xFactory);
 			} catch (ISPACException e) {
 				logger.error("Error al obtener el DeskTop", e);
@@ -185,7 +227,8 @@ public class OpenOfficeHelper {
 				logger.error("Error al obtener el DeskTop", e);
 				throw new ISPACException(e);
 			}
-		}
+		//}
+		//[Manu Ticket #86] FIN - ALSIGM3 Usar varias instancias de OpenOffice
 		return mxDesktop;
 	}
 
@@ -253,7 +296,7 @@ public class OpenOfficeHelper {
             
         // write Text in the Table headers
         for(int i=0; i<columns; i++){
-            insertIntoCell(""+((char)(65+i))+"1",tableInfo.getTitleColumns()[i], xTextTable, BACKGROUND_COLOR_TITLE_COLUMN);
+            insertIntoCell(""+((char)(65+i))+"1",tableInfo.getTitleColumns()[i], xTextTable, BACKGROUND_WHITE_COLOR);
         }
         int i = 2;
         for (Iterator iterator = tableInfo.getResults().iterator(); iterator.hasNext();i++) {
@@ -271,6 +314,7 @@ public class OpenOfficeHelper {
 		XPropertySet xTPS = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xTC);
 		if (charColor != BACKGROUND_WHITE_COLOR)
 			xTPS.setPropertyValue("CharColor", new Integer(charColor));
+		xTPS.setPropertyValue("CharHeight", new Float(8.0));
 		// inserting some Text
 		xTableText.setString(theText);
 	}	

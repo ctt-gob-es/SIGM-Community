@@ -12,6 +12,8 @@ import ieci.tdw.ispac.audit.business.manager.impl.IspacAuditoriaManagerImpl;
 import ieci.tdw.ispac.audit.business.vo.AuditContext;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventEntidadBajaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventTramiteModificacionVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.app.EntityApp;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
@@ -35,7 +37,7 @@ import org.apache.struts.action.ActionMapping;
  */
 public class DeleteRegEntityAction extends BaseAction {
 	
-	IspacAuditoriaManager auditoriaManager = new IspacAuditoriaManagerImpl();
+	IspacAuditoriaManager auditoriaManager = null;
 
     public ActionForward executeAction(ActionMapping mapping,
     								   ActionForm form,
@@ -75,7 +77,8 @@ public class DeleteRegEntityAction extends BaseAction {
 			EntityApp entityapp = defaultForm.getEntityApp();
 			entityapp.delete(cct);
 			
-			//Auditoría: Añadir en el ThreadLocal el objeto AuditContext.
+			//Auditoría: Añadir en el ThreadLocal el objeto AuditContext.		
+
 			AuditContext auditContext = new AuditContext();
 			auditContext.setUserHost(request.getRemoteHost());
 			auditContext.setUserIP(request.getRemoteAddr());						
@@ -150,32 +153,38 @@ public class DeleteRegEntityAction extends BaseAction {
 	 * @param entityapp
 	 */
 	private void auditDeleteEntidad(ClientContext cct, int regId, EntityApp entityapp, String numExp) {
-		IspacAuditEventEntidadBajaVO evento = new IspacAuditEventEntidadBajaVO();
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
 		
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		
-		evento.setIdUser(cct.getUser().getUID());
-		evento.setUser(cct.getUser().getName());
-		
-		evento.setEntidadAppName(entityapp.getAppName());
-		evento.setEntidadAppId(String.valueOf(entityapp.getAppId()));
-		
-		//TODO: ¿Añadir también el número de expediente del trámite?
-		evento.setNumExpediente(numExp);
-		evento.setId(String.valueOf(regId));
-				
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la modificación de la entidad");
-		auditoriaManager.audit(evento);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+	    		
+			IspacAuditEventEntidadBajaVO evento = new IspacAuditEventEntidadBajaVO();
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+			
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			
+			evento.setIdUser(cct.getUser().getUID());
+			evento.setUser(cct.getUser().getName());
+			
+			evento.setEntidadAppName(entityapp.getAppName());
+			evento.setEntidadAppId(String.valueOf(entityapp.getAppId()));
+			
+			//TODO: ¿Añadir también el número de expediente del trámite?
+			evento.setNumExpediente(numExp);
+			evento.setId(String.valueOf(regId));
+					
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la modificación de la entidad");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 }

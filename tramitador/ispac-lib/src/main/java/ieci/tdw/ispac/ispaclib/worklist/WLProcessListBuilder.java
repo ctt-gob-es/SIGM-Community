@@ -1,12 +1,16 @@
 package ieci.tdw.ispac.ispaclib.worklist;
 
 import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.ispaclib.catalog.procedure.element.StageElement;
 import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.join.TableJoinFactoryDAO;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -45,11 +49,22 @@ public class WLProcessListBuilder
         objdeflist.add(wldef);
     }
 
+	//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
     public CollectionDAO getWorklist(DbCnt cnt,int idStagePCD, String resplist) throws ISPACException {
-    	return getWorklist(cnt, 0, idStagePCD, resplist);
+    	return getWorklist(cnt, idStagePCD, resplist, 0);
     }
     
+	//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+    public CollectionDAO getWorklist(DbCnt cnt,int idStagePCD, String resplist, int anio) throws ISPACException {
+    	return getWorklist(cnt, 0, idStagePCD, resplist, anio);
+    }
+    
+	//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
     public CollectionDAO getWorklist(DbCnt cnt,int parentPcdId, int idStagePCD, String resplist) throws ISPACException {
+    	return getWorklist(cnt, parentPcdId, idStagePCD, resplist, 0);
+    }
+    	
+    public CollectionDAO getWorklist(DbCnt cnt,int parentPcdId, int idStagePCD, String resplist, int anio) throws ISPACException {
 
         worklistdef.setStageIdPCD(idStagePCD);
         worklistdef.setRespList(resplist);
@@ -98,6 +113,14 @@ public class WLProcessListBuilder
         		.append(worklistdef.getName()).append(".NUMEXP IN (SELECT NUMEXP FROM SPAC_EXPEDIENTES WHERE ID_PCD=") 
         		.append(parentPcdId).append(")");
         }
+        
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        if (anio > 0) {
+            if (sqljoinquery.length()!=0)
+                sqljoinquery.append(" AND ");
+            sqljoinquery.append("EXTRACT(YEAR FROM EXPED.FAPERTURA) = '" + anio + "'");
+        }
+        
 
         return joinfactory.queryTableJoin(cnt,"WHERE "+sqljoinquery.toString());
     }

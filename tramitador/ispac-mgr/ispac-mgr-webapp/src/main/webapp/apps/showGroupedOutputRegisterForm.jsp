@@ -182,6 +182,22 @@
 								- <bean:write name="doc" property="String(NOMBRE)"/>, <bean:write name="doc" property="String(DESCRIPCION)"/><br/>
 							</logic:iterate>
 						</logic:notEmpty>
+						<!--[Manu Ticket #107] - INICIO - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes-->
+						<logic:notEmpty name="documentsRechazados">
+							<br/><bean:message key="forms.errors.register.rechazados"/>:<br/>
+							<logic:iterate name="documentsRechazados" id="doc" type="ieci.tdw.ispac.api.item.IItem">
+								- <bean:write name="doc" property="String(NOMBRE)"/>, <bean:write name="doc" property="String(DESCRIPCION)"/><br/>
+							</logic:iterate>
+						</logic:notEmpty>
+						<!--[Manu Ticket #107] - FIN - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes-->
+						<!--[Manu Ticket #111] - INICIO - ALSIGM3 No registrar de salida documentos NO firmados -->
+						<logic:notEmpty name="documentsNoFirmados">
+							<br/><bean:message key="forms.errors.register.noFirmados"/>:<br/>
+							<logic:iterate name="documentsNoFirmados" id="doc" type="ieci.tdw.ispac.api.item.IItem">
+								- <bean:write name="doc" property="String(NOMBRE)"/>, <bean:write name="doc" property="String(DESCRIPCION)"/><br/>
+							</logic:iterate>
+						</logic:notEmpty>
+						<!--[Manu Ticket #111] - FIN - ALSIGM3 No registrar de salida documentos NO firmados -->
 					</div>					
 					
 					<html:form action="insertGroupedOutputRegistry.do" method="post">

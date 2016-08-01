@@ -241,5 +241,24 @@ public interface ServicioTramitacion {
      * @throws TramitacionException
      */
     public String recibirDocumentoFirmado(String idEntidad, String numExp, String idDocumento)throws TramitacionException;
+    
+    /**
+     * Obtiene el contenido del documento temporal.
+     * @param guid GUID del documento
+     * @param idEntidad codigo de entidad de sigem
+     * @return Contenido del documento.
+     * @throws TramitacionException si ocurre algún error.
+     */
+    public byte [] getFicheroTemp(String idEntidad, String guid) throws TramitacionException;
+    
+    /**
+     * Guarda el contenido de un byte array en un fichero temporal.
+     * @param data array de bytes que representa el documento a guardar. 
+     * @param guid GUID del documento.
+     * @param idEntidad codigo de entidad de sigem.
+     * @return path temporal donde se ha guardado el documento.
+     * @throws TramitacionException si ocurre algún error.
+     */
+    public boolean setFicheroTemp(String idEntidad, String guid, byte[] data) throws TramitacionException;
 
 }

@@ -125,4 +125,29 @@ public interface IThirdPartyAPI {
 	 */
 	public IElectronicAddressAdapter getElectronicAddress(String addressId) throws ISPACException;
 	
+	/**
+	 * [eCenpri-Felipe #477] Inserta un nuevo tercero en la BBDD
+	 * 
+	 * @param nif
+	 * @param tipoDoc
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @param tipo
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @param tfnoFijo
+	 * @param tfnoMovil
+	 * @param email
+	 * @return
+	 * @throws ISPACException
+	 */
+	public boolean insertThirdParty(String nif, int tipoDoc, String nombre,
+			String ape1, String ape2, String tipo, String provincia,
+			String municipio, String cpostal, String direccion,
+			String tfnoFijo, String tfnoMovil, String email)
+			throws ISPACException;
+
 }

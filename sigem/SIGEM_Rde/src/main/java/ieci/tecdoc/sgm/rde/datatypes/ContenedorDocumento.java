@@ -97,5 +97,11 @@ public interface ContenedorDocumento
     * Devuelve los valores de la instancia en una cadena de caracteres.
     */
    public abstract String toString();
+   
+   //[Tere # 1014] INICIO
+   public String getFileRegistroPresencial();
+   
+   public void setFileRegistroPresencial(String fileRegistroPresencial);
+//   [Tere # 1014] fin
 
 }

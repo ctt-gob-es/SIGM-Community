@@ -284,8 +284,11 @@ public boolean execute(String sql) throws ISPACException {
 		}
 		
 		try {
+			if(mcnt==null){
+				getConnection();
+			}			
 			stmt = mcnt.createStatement();
-			ok = stmt.execute(sql);
+			ok = stmt.execute(sql);		
 		} catch (SQLException e) {
 			throw new ISPACException("Error SQL Query: "+sql,e);
 		}

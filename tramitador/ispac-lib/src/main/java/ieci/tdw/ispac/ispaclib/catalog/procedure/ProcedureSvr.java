@@ -21,11 +21,13 @@ import ieci.tdw.ispac.ispaclib.dao.ObjectDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTApplicationDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTEntityDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTHelpDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.CTManualUsuarioDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTRuleDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTStageDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTStageTaskDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTTaskDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTTpDocDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.PManualUsuarioDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.PcdTemplateDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.TemplateDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PDepTramiteDAO;
@@ -591,11 +593,19 @@ public class ProcedureSvr {
         Map ctValidationTableNames = new HashMap();
         Map ctRuleIds = new HashMap();
         Map ctHierarchicalTableNames = new HashMap();
+        
+        //[eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+        Map ctManualUsuarioIds = new HashMap();
+        
         Map ctHelpIds = new HashMap();
 
     	// Procedimiento
     	StringBuffer procedures = new StringBuffer();
-    	procedures.append(procedure.toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds,ctHelpIds));
+
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+    	List manualesUsuario = new ArrayList();
+    	
+    	procedures.append(procedure.toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds, ctManualUsuarioIds, manualesUsuario, ctHelpIds));
     	// Subprocesos asociados a los trámites del procedimiento
     	if (!subPcdIds.isEmpty()) {
 
@@ -603,7 +613,8 @@ public class ProcedureSvr {
     		while (it.hasNext()) {
 
     			Integer idSubPcd = (Integer) it.next();
-    			procedures.append(getXpdl(cnt, idSubPcd.intValue(), ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds,ctHelpIds));
+				//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+    			procedures.append(getXpdl(cnt, idSubPcd.intValue(), ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, ctManualUsuarioIds, manualesUsuario, ctHelpIds));
     		}
     	}
     	// XPDL de procesos (procedimiento y subprocesos)
@@ -623,6 +634,10 @@ public class ProcedureSvr {
     	List templates = new ArrayList();
     	catalog.append(XmlTag.newTag(ExportProcedureMgr.TAG_TP_DOCS, ExportProcedureMgr.ctTpDocsToXml(cnt, ctTpDocIds, procedureid, templates)));
 
+        //[eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+    	// Tipos de documento con plantillas asociadas
+//    	List manualesUsuario = new ArrayList();
+//    	catalog.append(XmlTag.newTag(ExportProcedureMgr.TAG_MANUALES_USUARIO, ExportProcedureMgr.ctManualesUsuarioToXml(cnt, ctManualUsuarioIds, procedureid, manualesUsuario)));
 
     	// Entidades con formularios y recursos asociados
     	Map formatters = new HashMap();
@@ -646,10 +661,11 @@ public class ProcedureSvr {
 							   		 ExportProcedureMgr.getXpdlPackageHeader(cnt) + workflowProcesses + catalog.toString(),
 							   		 ExportProcedureMgr.getXpdlPackageAttributes(procedure.getId(), procedure.getName()));
 
-		return ExportProcedureMgr.createProcedureZipFile(cnt, sXpdl, templates, path, formatters, entityClasses, ruleClasses, ctValidationTableNames, ctHierarchicalTableNames, ctx.getAppLanguage());
+		return ExportProcedureMgr.createProcedureZipFile(cnt, sXpdl, templates, manualesUsuario, path, formatters, entityClasses, ruleClasses, ctValidationTableNames, ctHierarchicalTableNames, ctx.getAppLanguage());
     }
 
 
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
     private String getXpdl(DbCnt cnt,
 			   int procedureid,
 			   Map ctStageIds,
@@ -657,12 +673,14 @@ public class ProcedureSvr {
 			   Map ctRuleIds,
 			   Map ctEntityIds,
 			   Map ctTpDocIds,
+			   Map ctManualUsuarioIds,
+			   List manualesUsuario, 
 			   Map ctHelpIds) throws ISPACException {
 
 		PcdElementBuilder pcdbuilder = new PcdElementBuilder();
 		ProcedureElement procedure = pcdbuilder.buildProcedureElement(ctx, cnt,	procedureid);
 
-		return procedure.toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, null,ctHelpIds);
+		return procedure.toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, null, ctManualUsuarioIds, manualesUsuario, ctHelpIds);
     }
 
     public boolean importProcedure(TransactionContainer txContainer,
@@ -786,6 +804,10 @@ public class ProcedureSvr {
 		            Map ctTaskDAOs = new HashMap();
 		            Map ctStageDAOs = new HashMap();
 		            Map subPcds = new HashMap();
+	            
+		            //[eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+		            Map ctManualUsuarioDAOs = new HashMap();
+
 		            Map ctHelpDAOs = new HashMap();
 
 		            importLog.append(ExportProcedureMgr.RETORNO);
@@ -812,6 +834,10 @@ public class ProcedureSvr {
 		    		// Importar fases
 		    		ImportProcedureMgr.importStages(ctx, cnt, packageNode, ctStageDAOs, importLog, test);
 
+		            //[eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+		            // Importar Manuales de usuario
+		            ImportProcedureMgr.importManualesUsuario(ctx, cnt, pcdNode, ctManualUsuarioDAOs, importLog, test, zipFile, language);
+		            
 		    		// Importar Ayudas
 		            ImportProcedureMgr.importHelps(ctx, cnt, pcdNode, ctHelpDAOs, importLog, test, language);
 
@@ -839,7 +865,7 @@ public class ProcedureSvr {
 
 		    				if (!test) {
 
-			    				ProcedureElement subPcdElement = importProcedure(txContainer, 0, null, subPcdNode, subPcdName, IPcdElement.TYPE_SUBPROCEDURE, importLog, ctRuleDAOs, ctEntityDAOs, ctFormDAOs, ctTpDocDAOs, ctTemplateDAOs, ctTaskDAOs, ctStageDAOs,ctHelpDAOs);
+			    				ProcedureElement subPcdElement = importProcedure(txContainer, 0, null, subPcdNode, subPcdName, IPcdElement.TYPE_SUBPROCEDURE, importLog, ctRuleDAOs, ctEntityDAOs, ctFormDAOs, ctTpDocDAOs, ctTemplateDAOs, ctTaskDAOs, ctStageDAOs, ctManualUsuarioDAOs, ctHelpDAOs);
 
 			    				// Metemos en el map de subprocesos [clave=id del xml, valor=el nuevo subproceso en BD]
 			    				subPcds.put(xmlSubPcdId, subPcdElement.getProcdao());
@@ -888,7 +914,7 @@ public class ProcedureSvr {
     				if (!test) {
 
 			    		// Importar el procedimiento
-			    		importProcedure(txContainer, parentPcdId, parentPcd, pcdNode, pcdName, IPcdElement.TYPE_PROCEDURE, importLog, ctRuleDAOs, ctEntityDAOs, ctFormDAOs, ctTpDocDAOs, ctTemplateDAOs, ctTaskDAOs, ctStageDAOs, ctHelpDAOs);
+			    		importProcedure(txContainer, parentPcdId, parentPcd, pcdNode, pcdName, IPcdElement.TYPE_PROCEDURE, importLog, ctRuleDAOs, ctEntityDAOs, ctFormDAOs, ctTpDocDAOs, ctTemplateDAOs, ctTaskDAOs, ctStageDAOs, ctManualUsuarioDAOs, ctHelpDAOs);
 
 			    		// El procedimiento / nueva versión se ha importado correctamente
 			    		importLog.append(ExportProcedureMgr.RETORNO);
@@ -978,6 +1004,7 @@ public class ProcedureSvr {
 											 Map ctTemplateDAOs,
 											 Map ctTaskDAOs,
 											 Map ctStageDAOs,
+											 Map ctManualUsuarioDAOs,
 											 Map ctHelpDAOs) throws ISPACException {
 
 		DbCnt cnt = txContainer.getConnection();
@@ -1060,6 +1087,10 @@ public class ProcedureSvr {
 
 		// Procesar las plantillas específicas <Templates>
 		importProcedureTemplates(cnt, node, procedure.getId(), ctTemplateDAOs);
+		
+		//[eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+		// Procesar las plantillas específicas <Templates>
+		importProcedureManualesUsuario(cnt, node, procedure.getId(), ctManualUsuarioDAOs);
 
 		importHelps(cnt, procedure.getId(),ctHelpDAOs);
 
@@ -1618,4 +1649,33 @@ public class ProcedureSvr {
 		}
     }
 
+    /**
+     *
+     * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+     * 
+     */
+    private void importProcedureManualesUsuario(DbCnt cnt, Node node, int pcdId, Map ctManualUsuarioDAOs) throws ISPACException {
+
+		// Procesar las plantillas <ManualesUsuario>
+		NodeIterator itManualUsuario = XmlFacade.getNodeIterator(node, ImportProcedureMgr.PATH_MANUAL_USUARIO);
+		for (Node manualUsuarioNode = itManualUsuario.nextNode(); manualUsuarioNode != null; manualUsuarioNode = itManualUsuario.nextNode()) {
+
+			// Obtener la plantilla en BD
+			Integer xmlManualUsuarioId = Integer.valueOf(XmlFacade.getAttributeValue(manualUsuarioNode, ExportProcedureMgr.ATR_ID));
+			CTManualUsuarioDAO manualUsuarioDAO = (CTManualUsuarioDAO) ctManualUsuarioDAOs.get(xmlManualUsuarioId);
+			if (manualUsuarioDAO != null) {
+
+				PManualUsuarioDAO pManualUsuario = new PManualUsuarioDAO(cnt);
+				pManualUsuario.createNew(cnt);
+
+				pManualUsuario.set(PManualUsuarioDAO.IDOBJ, pcdId);
+				pManualUsuario.set(PManualUsuarioDAO.TPOBJ, 1);
+
+				// Establecer el Id del manual de usuario en BD
+				pManualUsuario.set(PManualUsuarioDAO.IDMANUAL, manualUsuarioDAO.getKeyInt());
+
+				pManualUsuario.store(cnt);
+			}
+		}
+	}
 }

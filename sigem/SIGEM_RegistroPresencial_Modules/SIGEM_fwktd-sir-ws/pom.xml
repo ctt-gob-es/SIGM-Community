@@ -30,6 +30,14 @@
 		<warSourceExcludes>META-INF/context.xml</warSourceExcludes>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 	
 		<dependency>
@@ -103,7 +111,17 @@
 			<type>zip</type>
 		</dependency>
 
-	
+		<dependency>
+			<groupId>org.opensymphony.quartz</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.6.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>3.0.2.RELEASE</version>
+		</dependency>
 
 	</dependencies>
 

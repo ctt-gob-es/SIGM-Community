@@ -144,6 +144,27 @@ public class UserDataImpl implements UserData {
 	public String getApelliidos() {
 		return apellidos;
 	}
+	
+	/**
+	 * 	[Manu Ticket #175] + Crear un campo DNI
+	 * {@inheritDoc}
+	 * 
+	 * @see ieci.tecdoc.idoc.admin.api.user.UserData#setDni(java.lang.String)
+	 */
+	public void setDni(String dni) {
+		this.dni = dni;
+
+	}
+
+	/**
+	 * [Manu Ticket #175] + Crear un campo DNI
+	 * {@inheritDoc}
+	 * 
+	 * @see ieci.tecdoc.idoc.admin.api.user.UserData#getDni()
+	 */
+	public String getDni() {
+		return dni;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -231,6 +252,7 @@ public class UserDataImpl implements UserData {
 		idCert = statement.getLongText(index++);
 		nombre = statement.getLongText(index++);
 		apellidos = statement.getLongText(index++);
+		dni = statement.getLongText(index++);
 
 		return new Integer(index);
 	}
@@ -257,6 +279,8 @@ public class UserDataImpl implements UserData {
 		statement.setLongText(index++, idCert);
 		statement.setLongText(index++, nombre);
 		statement.setLongText(index++, apellidos);
+		//[Manu Ticket #175] + Crear un campo DNI
+		statement.setLongText(index++, dni);
 
 		return new Integer(index);
 	}
@@ -284,6 +308,8 @@ public class UserDataImpl implements UserData {
 		statement.setLongText(index++, idCert);
 		statement.setLongText(index++, nombre);
 		statement.setLongText(index++, apellidos);
+		//[Manu Ticket #175] + Crear un campo DNI
+		statement.setLongText(index++, dni);
 
 		return new Integer(index);
 	}
@@ -442,6 +468,8 @@ public class UserDataImpl implements UserData {
 		bdr.addSimpleElement("Email", email);
 		bdr.addSimpleElement("TfnoMovil", tfnoMovil);
 		bdr.addSimpleElement("IdCert", idCert);
+		//[Manu Ticket #175] + Crear un campo DNI
+		bdr.addSimpleElement("DNI", dni);
 		bdr.addClosingTag(tagName);
 
 		return bdr.getText();
@@ -455,6 +483,10 @@ public class UserDataImpl implements UserData {
 	String idCert;
 	String nombre;
 	String apellidos;
+	
+	//[Manu Ticket #175] + Crear un campo DNI
+	String dni;
+	   
 	private static final Logger _logger = Logger.getLogger(UserDataImpl.class);
 
 }

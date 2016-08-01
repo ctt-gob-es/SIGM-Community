@@ -45,7 +45,7 @@
 		<xsl:variable name="lang.provinciaANotificacion" select="'Provincia'"/>
 		<xsl:variable name="lang.plantaANotificacion" select="'Planta'"/>
 		<xsl:variable name="lang.escaleraANotificacion" select="'Reto'"/>
-		<xsl:variable name="lang.puertaANotificacion" select="'Porta"/>
+		<xsl:variable name="lang.puertaANotificacion" select="'Porta'"/>
 		<xsl:variable name="lang.emailANotificacion" select="'E_mail'"/>
 
 </xsl:stylesheet>

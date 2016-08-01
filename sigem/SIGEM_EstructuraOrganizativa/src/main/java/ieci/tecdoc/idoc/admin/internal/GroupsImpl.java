@@ -62,8 +62,10 @@ public class GroupsImpl
          rowInfo.setValuesMethod("loadIdNameValues");
          rowsInfo.add(rowInfo);
          
-         DynamicFns.selectMultiple(dbConn, "", false, tableInfo, 
+         //[Manu Ticket #1047] * INICIO - SIGEM Ordenar grupos en la Estructura Organizativa.
+         DynamicFns.selectMultiple(dbConn, " ORDER BY NAME ", false, tableInfo, 
                                  rowsInfo);
+         //[Manu Ticket #1047] * FIN - SIGEM Ordenar grupos en la Estructura Organizativa.
          
          for (counter = 0; counter < rowInfo.getRowCount(); counter++)
          {

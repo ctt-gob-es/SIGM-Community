@@ -22,10 +22,10 @@ public class ShowSignedDocumentAction extends ShowDocumentAction {
     	return super.executeAction(mapping, form, request, response, session);
     }
 
-	
-	protected String getDocRef(IItem entity) throws ISPACException{
-    	return entity.getString("INFOPAG_RDE");
-    }
+  //[Manu Ticket #1060] * SIGEM Error al recuperar los documentos firmados en ShowSignedDocumentAction.
+//	protected String getDocRef(IItem entity) throws ISPACException{
+//    	return entity.getString("INFOPAG_RDE");
+//    }
 
 
 	protected void isResponsible(IItem entity, SessionAPI session) throws ISPACException {

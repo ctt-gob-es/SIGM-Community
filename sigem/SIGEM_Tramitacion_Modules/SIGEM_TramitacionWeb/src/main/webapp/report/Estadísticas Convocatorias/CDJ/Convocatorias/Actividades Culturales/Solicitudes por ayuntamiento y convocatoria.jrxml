@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Solicitudes por ayuntamiento y convocatoria"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="782"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["K:\\Documentos\\Imágenes"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select 
+case when upper(convocatoria) like '%EMPLEO%' or upper(convocatoria) like '%APOYO A MUNICIPIOS%' then solicitud.subvencion when upper(convocatoria.asunto) like '%GÉNERO%' then 'SÍ' else 
+(+ (case when resolucion.importe is null then 0 else resolucion.importe end) + (case when resolucion.importeproyecto1 is null then 0 else resolucion.importeproyecto1 end) + (case when resolucion.importeproyecto2 is null then 0 else resolucion.importeproyecto2 end))::varchar(255)
+end as concedida
+, solicitud.numexp, solicitud.numexp_padre, convocatoria.asunto, expediente.identidadtitular
+from dpcr_sol_conv_sub solicitud
+left join spac_expedientes expediente on expediente.numexp = solicitud.numexp and expediente.estadoadm in ('RS','AP','NT','NE','JF') and (expediente.fcierre is null or expediente.fcierre::varchar(255)='')
+left join spac_exp_relacionados relacion on solicitud.numexp = relacion.numexp_hijo
+left join dpcr_resol_sol_conv_sub resolucion on solicitud.numexp = resolucion.numexp
+left join spac_expedientes convocatoria on convocatoria.numexp = relacion.numexp_padre
+where convocatoria.asunto is not null and expediente.identidadtitular is not null]]></queryString>
+
+	<field name="concedida" class="java.lang.String"/>
+	<field name="numexp" class="java.lang.String"/>
+	<field name="numexp_padre" class="java.lang.String"/>
+	<field name="asunto" class="java.lang.String"/>
+	<field name="identidadtitular" class="java.lang.String"/>
+
+	<variable name="num_SI" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{concedida}.equals("SÍ")?new Double(1.0):
+new Double(0.0)]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+	</variable>
+		<background>
+			<band height="555"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="362"
+						y="0"
+						width="420"
+						height="555"
+						key="image-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="210"  isSplitAllowed="true" >
+				<crosstab >
+					<reportElement
+						x="0"
+						y="0"
+						width="782"
+						height="210"
+						key="crosstab-1"/>
+
+					<crosstabParameter name="IMAGES_REPOSITORY_PATH" class="java.lang.String" >						<parameterValueExpression><![CDATA[$P{IMAGES_REPOSITORY_PATH}]]></parameterValueExpression>
+					</crosstabParameter>
+					<crosstabParameter name="num_SI" class="java.lang.Double" >						<parameterValueExpression><![CDATA[$V{num_SI}]]></parameterValueExpression>
+					</crosstabParameter>
+					<crosstabHeaderCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<image  vAlign="Middle" hAlign="Center" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="89"
+						height="35"
+						key="image-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoCabecera.gif"]]></imageExpression>
+				</image>
+						</cellContents>
+					</crosstabHeaderCell>					<rowGroup name="identidadtitular" width="89" totalPosition="End">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{identidadtitular}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="1Point" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="1"
+						y="0"
+						width="87"
+						height="18"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{identidadtitular}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="1Point" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="89"
+						height="19"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Total por Convocatoria"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="convocatoria" height="35" totalPosition="End" headerPosition="Center">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{asunto}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="1Point" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="2"
+						y="0"
+						width="74"
+						height="32"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{convocatoria}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="1Point" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="76"
+						height="32"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Total por Ayuntamiento"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+
+					<measure name="concedida_Count" class="java.lang.Double" calculation="Sum">
+						<measureExpression><![CDATA[new Double(Double.parseDouble(
+		($F{concedida}==null || $F{concedida}.trim().equals(""))?"0"
+			:
+			($F{concedida}.trim().equals("SÍ"))?"-999999999.99"
+				:
+				($F{concedida}.trim().split(" ").length>1 || !$F{concedida}.trim().replace(',','.').matches("((-|\\+)?[0-9]+(\\.[0-9]+)?)+"))?"-1":
+
+				$F{concedida}.trim().replace(',','.').replace('.','#').split("#").length==1?
+					$F{concedida}.trim()
+					:
+					($F{concedida}.trim().replace(',','.').replace('.','#').split("#").length==2?
+						$F{concedida}.trim().replace(',','.')
+						:
+						($F{concedida}.trim().replace(',','.').replace('.','#').split("#").length>2?
+							"-1"
+							:
+							"0"
+						)
+					)
+))]]></measureExpression>
+					</measure>
+					<crosstabCell width="77" height="18">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="77"
+						height="18"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" isStyledText="true">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{concedida_Count}.doubleValue() == new Double("-999999999.99").doubleValue()?
+"SÍ":
+$V{concedida_Count}.doubleValue()==0?"":
+($V{concedida_Count}.doubleValue()<0)?"<font color='red'>"+(new DecimalFormat("#,##0.00")).format($V{concedida_Count})+"</font>":
+"<font color='black'>"+(new DecimalFormat("#,##0.00")).format($V{concedida_Count})+"</font>"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="76" height="18" columnTotalGroup="convocatoria">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="76"
+						height="18"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" isStyledText="true">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{concedida_Count}.doubleValue() > 0?
+"<font color='black'>"+(new DecimalFormat("#,##0.00")).format($V{concedida_Count})+"</font>"
+:
+$V{concedida_Count}.doubleValue() < -999999.99 ?
+	(($V{concedida_Count}.doubleValue()+ 999999999.99) <= 0?
+	"<font color='red'>"+(new DecimalFormat("#,##0.00")).format(new Double($V{concedida_Count}.doubleValue()+ 999999999.99))+"</font>"
+	:
+	"<font color='black'>"+(new DecimalFormat("#,##0.00")).format(new Double($V{concedida_Count}.doubleValue()+ 999999999.99))+"</font>")
+:
+"<font color='red'>"+(new DecimalFormat("#,##0.00")).format($V{concedida_Count})+"</font>"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="77" height="19" rowTotalGroup="identidadtitular">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="77"
+						height="19"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{convocatoria}.toUpperCase().contains( "GÉNERO" )?
+new Double(0):$V{concedida_Count}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="76" height="19" rowTotalGroup="identidadtitular" columnTotalGroup="convocatoria">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="76"
+						height="19"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($V{concedida_Count}.doubleValue() + ($P{num_SI}.doubleValue()*new Double("999999999.99").doubleValue()))]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<whenNoDataCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</whenNoDataCell>					</crosstab>
+			</band>
+		</summary>
+</jasperReport>

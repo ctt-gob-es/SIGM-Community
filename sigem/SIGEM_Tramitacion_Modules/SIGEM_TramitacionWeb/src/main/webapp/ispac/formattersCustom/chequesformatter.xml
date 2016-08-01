@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+
+	<!-- Ponemos 2 veces la propiedad Nombre, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CODIGO' 
+				 titleKey='DPCR_SERSO_CHEQUES_RECIBIDOS:CODIGO' 
+				 fieldType='LINK'
+				 columnClass='width10percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='FACTURA' 
+				 titleKey='DPCR_SERSO_CHEQUES_RECIBIDOS:FACTURA' 
+				 fieldType='LINK'
+				 columnClass='width10percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='PROVEEDOR' 
+				 titleKey='DPCR_SERSO_CHEQUES_RECIBIDOS:PROVEEDOR' 
+				 fieldType='LINK'
+				 columnClass='width10percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CIF' 
+				 titleKey='DPCR_SERSO_CHEQUES_RECIBIDOS:CIF' 
+				 fieldType='LINK'
+				 columnClass='width10percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='LOCALIDAD' 
+				 titleKey='DPCR_SERSO_CHEQUES_RECIBIDOS:LOCALIDAD' 
+				 fieldType='LINK'
+				 columnClass='width10percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='FECHA' 
+				 titleKey='DPCR_SERSO_CHEQUES_RECIBIDOS:FECHA' 
+				 fieldType='LINK'
+				 columnClass='width10percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='IMPORTE' 
+				 titleKey='DPCR_SERSO_CHEQUES_RECIBIDOS:IMPORTE' 
+				 fieldType='LINK'
+				 columnClass='width10percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+				 
+</beanformatter>

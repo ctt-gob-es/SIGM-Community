@@ -2,6 +2,17 @@
 <%@taglib prefix="bean" uri="/WEB-INF/struts-bean.tld" %>
 <%@taglib prefix="logic" uri="/WEB-INF/struts-logic.tld" %>
 
+<!-- [Manu #814] INICIO - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+
+<%@page import="ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion" %>
+<%@page import="ieci.tecdoc.sgm.core.services.LocalizadorServicios" %>
+
+<% 
+	String entidad = AutenticacionAdministracion.obtenerDatosEntidad(request).getIdEntidad();
+	String descEntidad = LocalizadorServicios.getServicioEntidades().obtenerEntidad(entidad).getNombreCorto();
+%>
+<!-- [Manu #814] FIN - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+
 	<div id="cabecera">
 		<img src="img/minetur.jpg" alt="GOBIERNO DE ESPAÃ‘A. MINISTERIO DE INDUSTRIA, ENERGÃA Y TURISMO " />
 		<p class="logoSIGM"><img alt="sigem" src="img/logo.gif"></p>
@@ -12,6 +23,9 @@
 		<div id="barra_usuario">
 			<h3><bean:message key="procedures.title"/></h3>
 			<p class="ayuda">
+			<!-- [Manu #814] INICIO - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->			
+				Entidad: <%=descEntidad%>
+			<!-- [Manu #814] FIN - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
 				<a href="#" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
 			</p>
 		</div>

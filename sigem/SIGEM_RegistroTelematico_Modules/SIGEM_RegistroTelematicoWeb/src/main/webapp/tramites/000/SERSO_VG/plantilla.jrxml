@@ -1,0 +1,2713 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="plantilla"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false"
+		 whenResourceMissingType="Empty">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="SUBREPORT_DIR" isForPrompting="true" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[".\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="xPath"><![CDATA[<?xml version="1.0" encoding="UTF-8" ?> 
+<Solicitud_Registro>
+<Version>1.1</Version> 
+<Datos_Registro>
+<Numero_Registro>201099900000022</Numero_Registro> 
+<Fecha_Presentacion>2010-02-22</Fecha_Presentacion> 
+<Hora_Presentacion>11:43:40</Hora_Presentacion> 
+<Fecha_Efectiva>2010-02-22</Fecha_Efectiva> 
+<Hora_Efectiva>11:43:40</Hora_Efectiva> 
+</Datos_Registro>
+<Datos_Firmados>
+<Datos_Genericos>
+<Organismo>Entidad por defecto</Organismo> 
+<Idioma>es</Idioma> 
+<Remitente>
+<Nombre>Usuario Perez</Nombre> 
+<Documento_Identificacion>
+<Tipo>1</Tipo> 
+<Numero>11111111H</Numero> 
+</Documento_Identificacion>
+<Correo_Electronico>usuario@prueba.es</Correo_Electronico> 
+</Remitente>
+<Asunto>
+<Codigo>TLAAC</Codigo> 
+<Descripcion>Solicitud de Licencia de Actividad sujeta al RAMINP</Descripcion> 
+</Asunto>
+<Destino>
+<Codigo>001</Codigo> 
+</Destino>
+<Numero_Expediente /> 
+</Datos_Genericos>
+<Datos_Especificos>
+<Domicilio_Notificacion>calle de la prueba</Domicilio_Notificacion> 
+<Localidad>boecillo</Localidad> 
+<Provincia>valladolid</Provincia> 
+<Codigo_Postal>47009</Codigo_Postal> 
+<Telefono>983 555 555</Telefono> 
+<nif_repr>12345678Z</nif_repr> 
+<nombre_repr>Perez y Cía.</nombre_repr> 
+<calle>Santiago</calle> 
+<numero>12</numero> 
+<municipio>Valladolid</municipio> 
+<actividad>Mina de carbón</actividad> 
+<observaciones>Nada</observaciones> 
+<cod_organo>001</cod_organo> 
+<descr_organo>Servicio de Relaciones con el Ciudadano</descr_organo> 
+</Datos_Especificos>
+<Documentos>
+<Documento>
+<Nombre>Paquete.zip</Nombre> 
+<Codigo>CR_URB_RAMINP_D3</Codigo> 
+<Extension>zip</Extension> 
+<Descripcion>Fichero comprimido ZIP</Descripcion> 
+<Hash>c05d8003f09d96d2b8c4f51c1e78a6c0</Hash> 
+<Firma /> 
+<Contenido /> 
+</Documento>
+<Documento>
+<Nombre>Word2.zip</Nombre> 
+<Codigo>CR_URB_RAMINP_D2</Codigo> 
+<Extension>zip</Extension> 
+<Descripcion>Fichero comprimido ZIP</Descripcion> 
+<Hash>bb40306f62b9d04975e321a141bf28ba</Hash> 
+<Firma /> 
+<Contenido /> 
+</Documento>
+<Documento>
+<Nombre>Word.zip</Nombre> 
+<Codigo>CR_URB_RAMINP_D1</Codigo> 
+<Extension>zip</Extension> 
+<Descripcion>Fichero comprimido ZIP</Descripcion> 
+<Hash>922068d81674ab4ad43fbe02fb8350de</Hash> 
+<Firma /> 
+<Contenido /> 
+</Documento>
+</Documentos>
+</Datos_Firmados>
+<Firma>MIIDkgYJKoZIhvcNAQcCoIIDgzCCA38CAQExCzAJBgUrDgMCGgUAMAsGCSqGSIb3DQEHAaCCAfww ggH4MIIBZaADAgECAhBxo2piRryhrUV+/KAOwF3jMAkGBSsOAwIdBQAwEjEQMA4GA1UEAxMHcXVl dmVkbzAgFw0wODAxMjUxMzUwMzlaGA8yMTA4MDEwMTEzNTAzOVowEjEQMA4GA1UEAxMHcXVldmVk bzCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAs3tvBZcAmBos0jIDozYIOAx6TBSOK2IeH6cs 4aTV3QaIZXLwxqW3ySUQ7wyK1+PbcWw7QSfvHDU20J9y5kElefFggDgPP9x6Q7E9FHQbXxYFKC0x 4yXNTlZCbAZ7EJEJoFGBW2D6QzQ2lKrqSfhAh/u7upQguyZHlDXkpbIqfvkCAwEAAaNVMFMwFQYD VR0lBA4wDAYKKwYBBAGCNwoDBDAvBgNVHREEKDAmoCQGCisGAQQBgjcUAgOgFgwUcXVldmVkb0B0 ZWNzaWRlbC5lcwAwCQYDVR0TBAIwADAJBgUrDgMCHQUAA4GBAFNSHFw8st274WH8VZONGxJca+Vw NVuxYfbwEgFZxAvN0NHB/FC9v0vYwBUM4e7cK9Y9jUrmdAuiK5L6pcCikL1kGOCMnguwUvuFT/SF uJsSjMuTa7p4qkpICGaAdoCoCeMQjmD0NkuzJFa+1pVj60VfggWgDJfJCwpuPl07Thl6MYIBXjCC AVoCAQEwJjASMRAwDgYDVQQDEwdxdWV2ZWRvAhBxo2piRryhrUV+/KAOwF3jMAkGBSsOAwIaBQCg gY8wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTAwMjIyMTA0MzI0 WjAjBgkqhkiG9w0BCQQxFgQUz1/40wpNNhh8QftP3iGmxN5e9yQwMAYDVQQFMSkTJzE1MTA1MTI2 NTYzMzMwNjU3NjI1NTQzMDU4MDc0OTU1MTU1ODExNTANBgkqhkiG9w0BAQEFAASBgIuHzok7VCBj 3T+pEkJtsqcWTJN4CMTLdLq/sn2WbXDuCgOoV6jFejAo1wHg9XVRHe3WrMGhN/2jqqD/vnJphyxb Yi3Sj3BeQspxIPTPq3fKUGuvDizMByMJtflhKY9ZAg38b7iIm1hJeEZ8lXPRKmfu4kS3bjogn4SK BxTeWNjw</Firma> 
+</Solicitud_Registro>]]></queryString>
+
+	<field name="Numero_Registro" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Registro/Numero_Registro]]></fieldDescription>
+	</field>
+	<field name="Fecha_Registro" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Registro/Fecha_Registro]]></fieldDescription>
+	</field>
+	<field name="Hora_Registro" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Registro/Hora_Registro]]></fieldDescription>
+	</field>
+	<field name="Nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Genericos/Remitente/Nombre]]></fieldDescription>
+	</field>
+	<field name="NIF" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Genericos/Remitente/Documento_Identificacion/Numero]]></fieldDescription>
+	</field>
+	<field name="Correo_Electronico" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Genericos/Remitente/emailSolicitante]]></fieldDescription>
+	</field>
+	<field name="Descripcion" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Genericos/Asunto/Descripcion]]></fieldDescription>
+	</field>
+	<field name="Fecha_Presentacion" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Registro/Fecha_Presentacion]]></fieldDescription>
+	</field>
+	<field name="Hora_Presentacion" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Registro/Hora_Presentacion]]></fieldDescription>
+	</field>
+	<field name="Fecha_Efectiva" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Registro/Fecha_Efectiva]]></fieldDescription>
+	</field>
+	<field name="Hora_Efectiva" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Registro/Hora_Efectiva]]></fieldDescription>
+	</field>
+	<field name="cargo" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/cargo]]></fieldDescription>
+	</field>
+	<field name="ayuntamiento" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/ayuntamiento]]></fieldDescription>
+	</field>
+	<field name="nif_repre" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/nif_repre]]></fieldDescription>
+	</field>
+	<field name="nombre_repre" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/nombre_repre]]></fieldDescription>
+	</field>
+	<field name="cargo_repre" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/cargo_repre]]></fieldDescription>
+	</field>
+	<field name="domicilio_repre" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/domicilio_repre]]></fieldDescription>
+	</field>
+	<field name="ciudad_repre" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/ciudad_repre]]></fieldDescription>
+	</field>
+	<field name="c_postal_repre" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c_postal_repre]]></fieldDescription>
+	</field>
+	<field name="region_repre" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/region_repre]]></fieldDescription>
+	</field>
+	<field name="movil_repre" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/movil_repre]]></fieldDescription>
+	</field>
+	<field name="d_email_repre" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d_email_repre]]></fieldDescription>
+	</field>
+	<field name="nombreCentro1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/nombreCentro1]]></fieldDescription>
+	</field>
+	<field name="direccionCentro1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/direccionCentro1]]></fieldDescription>
+	</field>
+	<field name="telefonoCentro1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/telefonoCentro1]]></fieldDescription>
+	</field>
+	<field name="faxCentro1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/faxCentro1]]></fieldDescription>
+	</field>
+	<field name="emailCentro1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/emailCentro1]]></fieldDescription>
+	</field>
+	<field name="contactoCentro1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/contactoCentro1]]></fieldDescription>
+	</field>
+	<field name="cargoCentro1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/cargoCentro1]]></fieldDescription>
+	</field>
+	<field name="publico1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/publico1]]></fieldDescription>
+	</field>
+	<field name="concertado1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/concertado1]]></fieldDescription>
+	</field>
+	<field name="privado1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/privado1]]></fieldDescription>
+	</field>
+	<field name="numGrupos1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numGrupos1]]></fieldDescription>
+	</field>
+	<field name="a1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a1]]></fieldDescription>
+	</field>
+	<field name="b1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b1]]></fieldDescription>
+	</field>
+	<field name="c1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c1]]></fieldDescription>
+	</field>
+	<field name="d1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d1]]></fieldDescription>
+	</field>
+	<field name="e1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e1]]></fieldDescription>
+	</field>
+	<field name="numTotalIgualdad1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIgualdad1]]></fieldDescription>
+	</field>
+	<field name="numCursos41" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos41]]></fieldDescription>
+	</field>
+	<field name="a41" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a41]]></fieldDescription>
+	</field>
+	<field name="b41" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b41]]></fieldDescription>
+	</field>
+	<field name="c41" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c41]]></fieldDescription>
+	</field>
+	<field name="d41" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d41]]></fieldDescription>
+	</field>
+	<field name="e41" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e41]]></fieldDescription>
+	</field>
+	<field name="numCursos51" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos51]]></fieldDescription>
+	</field>
+	<field name="a51" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a51]]></fieldDescription>
+	</field>
+	<field name="b51" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b51]]></fieldDescription>
+	</field>
+	<field name="c51" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c51]]></fieldDescription>
+	</field>
+	<field name="d51" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d51]]></fieldDescription>
+	</field>
+	<field name="e51" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e51]]></fieldDescription>
+	</field>
+	<field name="numCursos61" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos61]]></fieldDescription>
+	</field>
+	<field name="a61" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a61]]></fieldDescription>
+	</field>
+	<field name="b61" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b61]]></fieldDescription>
+	</field>
+	<field name="c61" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c61]]></fieldDescription>
+	</field>
+	<field name="d61" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d61]]></fieldDescription>
+	</field>
+	<field name="e61" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e61]]></fieldDescription>
+	</field>
+	<field name="numTotalIntercultura1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIntercultura1]]></fieldDescription>
+	</field>
+	<field name="nombreCentro2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/nombreCentro2]]></fieldDescription>
+	</field>
+	<field name="direccionCentro2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/direccionCentro2]]></fieldDescription>
+	</field>
+	<field name="telefonoCentro2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/telefonoCentro2]]></fieldDescription>
+	</field>
+	<field name="faxCentro2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/faxCentro2]]></fieldDescription>
+	</field>
+	<field name="emailCentro2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/emailCentro2]]></fieldDescription>
+	</field>
+	<field name="contactoCentro2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/contactoCentro2]]></fieldDescription>
+	</field>
+	<field name="cargoCentro2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/cargoCentro2]]></fieldDescription>
+	</field>
+	<field name="publico2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/publico2]]></fieldDescription>
+	</field>
+	<field name="concertado2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/concertado2]]></fieldDescription>
+	</field>
+	<field name="privado2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/privado2]]></fieldDescription>
+	</field>
+	<field name="numGrupos2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numGrupos2]]></fieldDescription>
+	</field>
+	<field name="a2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a2]]></fieldDescription>
+	</field>
+	<field name="b2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b2]]></fieldDescription>
+	</field>
+	<field name="c2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c2]]></fieldDescription>
+	</field>
+	<field name="d2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d2]]></fieldDescription>
+	</field>
+	<field name="e2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e2]]></fieldDescription>
+	</field>
+	<field name="numTotalIgualdad2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIgualdad2]]></fieldDescription>
+	</field>
+	<field name="numCursos42" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos42]]></fieldDescription>
+	</field>
+	<field name="a42" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a42]]></fieldDescription>
+	</field>
+	<field name="b42" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b42]]></fieldDescription>
+	</field>
+	<field name="c42" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c42]]></fieldDescription>
+	</field>
+	<field name="d42" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d42]]></fieldDescription>
+	</field>
+	<field name="e42" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e42]]></fieldDescription>
+	</field>
+	<field name="numCursos52" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos52]]></fieldDescription>
+	</field>
+	<field name="a52" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a52]]></fieldDescription>
+	</field>
+	<field name="b52" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b52]]></fieldDescription>
+	</field>
+	<field name="c52" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c52]]></fieldDescription>
+	</field>
+	<field name="d52" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d52]]></fieldDescription>
+	</field>
+	<field name="e52" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e52]]></fieldDescription>
+	</field>
+	<field name="numCursos62" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos62]]></fieldDescription>
+	</field>
+	<field name="a62" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a62]]></fieldDescription>
+	</field>
+	<field name="b62" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b62]]></fieldDescription>
+	</field>
+	<field name="c62" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c62]]></fieldDescription>
+	</field>
+	<field name="d62" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d62]]></fieldDescription>
+	</field>
+	<field name="e62" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e62]]></fieldDescription>
+	</field>
+	<field name="numTotalIntercultura2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIntercultura2]]></fieldDescription>
+	</field>
+	<field name="nombreCentro3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/nombreCentro3]]></fieldDescription>
+	</field>
+	<field name="direccionCentro3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/direccionCentro3]]></fieldDescription>
+	</field>
+	<field name="telefonoCentro3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/telefonoCentro3]]></fieldDescription>
+	</field>
+	<field name="faxCentro3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/faxCentro3]]></fieldDescription>
+	</field>
+	<field name="emailCentro3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/emailCentro3]]></fieldDescription>
+	</field>
+	<field name="contactoCentro3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/contactoCentro3]]></fieldDescription>
+	</field>
+	<field name="cargoCentro3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/cargoCentro3]]></fieldDescription>
+	</field>
+	<field name="publico3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/publico3]]></fieldDescription>
+	</field>
+	<field name="concertado3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/concertado3]]></fieldDescription>
+	</field>
+	<field name="privado3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/privado3]]></fieldDescription>
+	</field>
+	<field name="numGrupos3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numGrupos3]]></fieldDescription>
+	</field>
+	<field name="a3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a3]]></fieldDescription>
+	</field>
+	<field name="b3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b3]]></fieldDescription>
+	</field>
+	<field name="c3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c3]]></fieldDescription>
+	</field>
+	<field name="d3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d3]]></fieldDescription>
+	</field>
+	<field name="e3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e3]]></fieldDescription>
+	</field>
+	<field name="numTotalIgualdad3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIgualdad3]]></fieldDescription>
+	</field>
+	<field name="numCursos43" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos43]]></fieldDescription>
+	</field>
+	<field name="a43" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a43]]></fieldDescription>
+	</field>
+	<field name="b43" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b43]]></fieldDescription>
+	</field>
+	<field name="c43" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c43]]></fieldDescription>
+	</field>
+	<field name="d43" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d43]]></fieldDescription>
+	</field>
+	<field name="e43" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e43]]></fieldDescription>
+	</field>
+	<field name="numCursos53" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos53]]></fieldDescription>
+	</field>
+	<field name="a53" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a53]]></fieldDescription>
+	</field>
+	<field name="b53" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b53]]></fieldDescription>
+	</field>
+	<field name="c53" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c53]]></fieldDescription>
+	</field>
+	<field name="d53" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d53]]></fieldDescription>
+	</field>
+	<field name="e53" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e53]]></fieldDescription>
+	</field>
+	<field name="numCursos63" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos63]]></fieldDescription>
+	</field>
+	<field name="a63" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a63]]></fieldDescription>
+	</field>
+	<field name="b63" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b63]]></fieldDescription>
+	</field>
+	<field name="c63" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c63]]></fieldDescription>
+	</field>
+	<field name="d63" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d63]]></fieldDescription>
+	</field>
+	<field name="e63" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e63]]></fieldDescription>
+	</field>
+	<field name="numTotalIntercultura3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIntercultura3]]></fieldDescription>
+	</field>
+	<field name="nombreCentro4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/nombreCentro4]]></fieldDescription>
+	</field>
+	<field name="direccionCentro4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/direccionCentro4]]></fieldDescription>
+	</field>
+	<field name="telefonoCentro4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/telefonoCentro4]]></fieldDescription>
+	</field>
+	<field name="faxCentro4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/faxCentro4]]></fieldDescription>
+	</field>
+	<field name="emailCentro4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/emailCentro4]]></fieldDescription>
+	</field>
+	<field name="contactoCentro4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/contactoCentro4]]></fieldDescription>
+	</field>
+	<field name="cargoCentro4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/cargoCentro4]]></fieldDescription>
+	</field>
+	<field name="publico4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/publico4]]></fieldDescription>
+	</field>
+	<field name="concertado4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/concertado4]]></fieldDescription>
+	</field>
+	<field name="privado4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/privado4]]></fieldDescription>
+	</field>
+	<field name="numGrupos4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numGrupos4]]></fieldDescription>
+	</field>
+	<field name="a4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a4]]></fieldDescription>
+	</field>
+	<field name="b4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b4]]></fieldDescription>
+	</field>
+	<field name="c4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c4]]></fieldDescription>
+	</field>
+	<field name="d4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d4]]></fieldDescription>
+	</field>
+	<field name="e4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e4]]></fieldDescription>
+	</field>
+	<field name="numTotalIgualdad4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIgualdad4]]></fieldDescription>
+	</field>
+	<field name="numCursos44" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos44]]></fieldDescription>
+	</field>
+	<field name="a44" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a44]]></fieldDescription>
+	</field>
+	<field name="b44" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b44]]></fieldDescription>
+	</field>
+	<field name="c44" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c44]]></fieldDescription>
+	</field>
+	<field name="d44" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d44]]></fieldDescription>
+	</field>
+	<field name="e44" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e44]]></fieldDescription>
+	</field>
+	<field name="numCursos54" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos54]]></fieldDescription>
+	</field>
+	<field name="a54" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a54]]></fieldDescription>
+	</field>
+	<field name="b54" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b54]]></fieldDescription>
+	</field>
+	<field name="c54" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c54]]></fieldDescription>
+	</field>
+	<field name="d54" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d54]]></fieldDescription>
+	</field>
+	<field name="e54" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e54]]></fieldDescription>
+	</field>
+	<field name="numCursos64" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos64]]></fieldDescription>
+	</field>
+	<field name="a64" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a64]]></fieldDescription>
+	</field>
+	<field name="b64" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b64]]></fieldDescription>
+	</field>
+	<field name="c64" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c64]]></fieldDescription>
+	</field>
+	<field name="d64" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d64]]></fieldDescription>
+	</field>
+	<field name="e64" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e64]]></fieldDescription>
+	</field>
+	<field name="numTotalIntercultura4" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIntercultura4]]></fieldDescription>
+	</field>
+	<field name="nombreCentro5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/nombreCentro5]]></fieldDescription>
+	</field>
+	<field name="direccionCentro5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/direccionCentro5]]></fieldDescription>
+	</field>
+	<field name="telefonoCentro5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/telefonoCentro5]]></fieldDescription>
+	</field>
+	<field name="faxCentro5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/faxCentro5]]></fieldDescription>
+	</field>
+	<field name="emailCentro5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/emailCentro5]]></fieldDescription>
+	</field>
+	<field name="contactoCentro5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/contactoCentro5]]></fieldDescription>
+	</field>
+	<field name="cargoCentro5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/cargoCentro5]]></fieldDescription>
+	</field>
+	<field name="publico5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/publico5]]></fieldDescription>
+	</field>
+	<field name="concertado5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/concertado5]]></fieldDescription>
+	</field>
+	<field name="privado5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/privado5]]></fieldDescription>
+	</field>
+	<field name="numGrupos5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numGrupos5]]></fieldDescription>
+	</field>
+	<field name="a5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a5]]></fieldDescription>
+	</field>
+	<field name="b5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b5]]></fieldDescription>
+	</field>
+	<field name="c5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c5]]></fieldDescription>
+	</field>
+	<field name="d5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d5]]></fieldDescription>
+	</field>
+	<field name="e5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e5]]></fieldDescription>
+	</field>
+	<field name="numTotalIgualdad5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIgualdad5]]></fieldDescription>
+	</field>
+	<field name="numCursos45" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos45]]></fieldDescription>
+	</field>
+	<field name="a45" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a45]]></fieldDescription>
+	</field>
+	<field name="b45" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b45]]></fieldDescription>
+	</field>
+	<field name="c45" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c45]]></fieldDescription>
+	</field>
+	<field name="d45" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d45]]></fieldDescription>
+	</field>
+	<field name="e45" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e45]]></fieldDescription>
+	</field>
+	<field name="numCursos55" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos55]]></fieldDescription>
+	</field>
+	<field name="a55" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a55]]></fieldDescription>
+	</field>
+	<field name="b55" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b55]]></fieldDescription>
+	</field>
+	<field name="c55" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c55]]></fieldDescription>
+	</field>
+	<field name="d55" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d55]]></fieldDescription>
+	</field>
+	<field name="e55" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e55]]></fieldDescription>
+	</field>
+	<field name="numCursos65" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos65]]></fieldDescription>
+	</field>
+	<field name="a65" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a65]]></fieldDescription>
+	</field>
+	<field name="b65" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b65]]></fieldDescription>
+	</field>
+	<field name="c65" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c65]]></fieldDescription>
+	</field>
+	<field name="d65" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d65]]></fieldDescription>
+	</field>
+	<field name="e65" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e65]]></fieldDescription>
+	</field>
+	<field name="numTotalIntercultura5" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIntercultura5]]></fieldDescription>
+	</field>
+	<field name="nombreCentro6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/nombreCentro6]]></fieldDescription>
+	</field>
+	<field name="direccionCentro6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/direccionCentro6]]></fieldDescription>
+	</field>
+	<field name="telefonoCentro6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/telefonoCentro6]]></fieldDescription>
+	</field>
+	<field name="faxCentro6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/faxCentro6]]></fieldDescription>
+	</field>
+	<field name="emailCentro6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/emailCentro6]]></fieldDescription>
+	</field>
+	<field name="contactoCentro6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/contactoCentro6]]></fieldDescription>
+	</field>
+	<field name="cargoCentro6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/cargoCentro6]]></fieldDescription>
+	</field>
+	<field name="publico6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/publico6]]></fieldDescription>
+	</field>
+	<field name="concertado6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/concertado6]]></fieldDescription>
+	</field>
+	<field name="privado6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/privado6]]></fieldDescription>
+	</field>
+	<field name="numGrupos6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numGrupos6]]></fieldDescription>
+	</field>
+	<field name="a6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a6]]></fieldDescription>
+	</field>
+	<field name="b6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b6]]></fieldDescription>
+	</field>
+	<field name="c6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c6]]></fieldDescription>
+	</field>
+	<field name="d6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d6]]></fieldDescription>
+	</field>
+	<field name="e6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e6]]></fieldDescription>
+	</field>
+	<field name="numTotalIgualdad6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIgualdad6]]></fieldDescription>
+	</field>
+	<field name="numCursos46" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos46]]></fieldDescription>
+	</field>
+	<field name="a46" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a46]]></fieldDescription>
+	</field>
+	<field name="b46" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b46]]></fieldDescription>
+	</field>
+	<field name="c46" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c46]]></fieldDescription>
+	</field>
+	<field name="d46" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d46]]></fieldDescription>
+	</field>
+	<field name="e46" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e46]]></fieldDescription>
+	</field>
+	<field name="numCursos56" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos56]]></fieldDescription>
+	</field>
+	<field name="a56" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a56]]></fieldDescription>
+	</field>
+	<field name="b56" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b56]]></fieldDescription>
+	</field>
+	<field name="c56" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c56]]></fieldDescription>
+	</field>
+	<field name="d56" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d56]]></fieldDescription>
+	</field>
+	<field name="e56" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e56]]></fieldDescription>
+	</field>
+	<field name="numCursos66" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos66]]></fieldDescription>
+	</field>
+	<field name="a66" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a66]]></fieldDescription>
+	</field>
+	<field name="b66" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b66]]></fieldDescription>
+	</field>
+	<field name="c66" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c66]]></fieldDescription>
+	</field>
+	<field name="d66" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d66]]></fieldDescription>
+	</field>
+	<field name="e66" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e66]]></fieldDescription>
+	</field>
+	<field name="numTotalIntercultura6" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIntercultura6]]></fieldDescription>
+	</field>
+	<field name="nombreCentro7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/nombreCentro7]]></fieldDescription>
+	</field>
+	<field name="direccionCentro7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/direccionCentro7]]></fieldDescription>
+	</field>
+	<field name="telefonoCentro7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/telefonoCentro7]]></fieldDescription>
+	</field>
+	<field name="faxCentro7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/faxCentro7]]></fieldDescription>
+	</field>
+	<field name="emailCentro7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/emailCentro7]]></fieldDescription>
+	</field>
+	<field name="contactoCentro7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/contactoCentro7]]></fieldDescription>
+	</field>
+	<field name="cargoCentro7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/cargoCentro7]]></fieldDescription>
+	</field>
+	<field name="publico7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/publico7]]></fieldDescription>
+	</field>
+	<field name="concertado7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/concertado7]]></fieldDescription>
+	</field>
+	<field name="privado7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/privado7]]></fieldDescription>
+	</field>
+	<field name="numGrupos7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numGrupos7]]></fieldDescription>
+	</field>
+	<field name="a7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a7]]></fieldDescription>
+	</field>
+	<field name="b7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b7]]></fieldDescription>
+	</field>
+	<field name="c7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c7]]></fieldDescription>
+	</field>
+	<field name="d7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d7]]></fieldDescription>
+	</field>
+	<field name="e7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e7]]></fieldDescription>
+	</field>
+	<field name="numTotalIgualdad7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIgualdad7]]></fieldDescription>
+	</field>
+	<field name="numCursos47" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos47]]></fieldDescription>
+	</field>
+	<field name="a47" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a47]]></fieldDescription>
+	</field>
+	<field name="b47" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b47]]></fieldDescription>
+	</field>
+	<field name="c47" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c47]]></fieldDescription>
+	</field>
+	<field name="d47" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d47]]></fieldDescription>
+	</field>
+	<field name="e47" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e47]]></fieldDescription>
+	</field>
+	<field name="numCursos57" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos57]]></fieldDescription>
+	</field>
+	<field name="a57" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a57]]></fieldDescription>
+	</field>
+	<field name="b57" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b57]]></fieldDescription>
+	</field>
+	<field name="c57" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c57]]></fieldDescription>
+	</field>
+	<field name="d57" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d57]]></fieldDescription>
+	</field>
+	<field name="e57" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e57]]></fieldDescription>
+	</field>
+	<field name="numCursos67" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos67]]></fieldDescription>
+	</field>
+	<field name="a67" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a67]]></fieldDescription>
+	</field>
+	<field name="b67" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b67]]></fieldDescription>
+	</field>
+	<field name="c67" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c67]]></fieldDescription>
+	</field>
+	<field name="d67" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d67]]></fieldDescription>
+	</field>
+	<field name="e67" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e67]]></fieldDescription>
+	</field>
+	<field name="numTotalIntercultura7" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIntercultura7]]></fieldDescription>
+	</field>
+	<field name="nombreCentro8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/nombreCentro8]]></fieldDescription>
+	</field>
+	<field name="direccionCentro8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/direccionCentro8]]></fieldDescription>
+	</field>
+	<field name="telefonoCentro8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/telefonoCentro8]]></fieldDescription>
+	</field>
+	<field name="faxCentro8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/faxCentro8]]></fieldDescription>
+	</field>
+	<field name="emailCentro8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/emailCentro8]]></fieldDescription>
+	</field>
+	<field name="contactoCentro8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/contactoCentro8]]></fieldDescription>
+	</field>
+	<field name="cargoCentro8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/cargoCentro8]]></fieldDescription>
+	</field>
+	<field name="publico8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/publico8]]></fieldDescription>
+	</field>
+	<field name="concertado8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/concertado8]]></fieldDescription>
+	</field>
+	<field name="privado8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/privado8]]></fieldDescription>
+	</field>
+	<field name="numGrupos8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numGrupos8]]></fieldDescription>
+	</field>
+	<field name="a8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a8]]></fieldDescription>
+	</field>
+	<field name="b8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b8]]></fieldDescription>
+	</field>
+	<field name="c8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c8]]></fieldDescription>
+	</field>
+	<field name="d8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d8]]></fieldDescription>
+	</field>
+	<field name="e8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e8]]></fieldDescription>
+	</field>
+	<field name="numTotalIgualdad8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIgualdad8]]></fieldDescription>
+	</field>
+	<field name="numCursos48" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos48]]></fieldDescription>
+	</field>
+	<field name="a48" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a48]]></fieldDescription>
+	</field>
+	<field name="b48" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b48]]></fieldDescription>
+	</field>
+	<field name="c48" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c48]]></fieldDescription>
+	</field>
+	<field name="d48" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d48]]></fieldDescription>
+	</field>
+	<field name="e48" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e48]]></fieldDescription>
+	</field>
+	<field name="numCursos58" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos58]]></fieldDescription>
+	</field>
+	<field name="a58" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a58]]></fieldDescription>
+	</field>
+	<field name="b58" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b58]]></fieldDescription>
+	</field>
+	<field name="c58" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c58]]></fieldDescription>
+	</field>
+	<field name="d58" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d58]]></fieldDescription>
+	</field>
+	<field name="e58" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e58]]></fieldDescription>
+	</field>
+	<field name="numCursos68" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numCursos68]]></fieldDescription>
+	</field>
+	<field name="a68" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/a68]]></fieldDescription>
+	</field>
+	<field name="b68" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/b68]]></fieldDescription>
+	</field>
+	<field name="c68" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/c68]]></fieldDescription>
+	</field>
+	<field name="d68" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/d68]]></fieldDescription>
+	</field>
+	<field name="e68" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/e68]]></fieldDescription>
+	</field>
+	<field name="numTotalIntercultura8" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numTotalIntercultura8]]></fieldDescription>
+	</field>
+	<field name="declaro1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/declaro1]]></fieldDescription>
+	</field>
+	<field name="texto_declaro1" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/texto_declaro1]]></fieldDescription>
+	</field>
+	<field name="declaro2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/declaro2]]></fieldDescription>
+	</field>
+	<field name="texto_declaro2" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/texto_declaro2]]></fieldDescription>
+	</field>
+	<field name="declaro3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/declaro3]]></fieldDescription>
+	</field>
+	<field name="texto_declaro3" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/texto_declaro3]]></fieldDescription>
+	</field>
+	<field name="convocatoria" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/convocatoria]]></fieldDescription>
+	</field>
+	<field name="numColegios" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/numColegios]]></fieldDescription>
+	</field>
+	<field name="Descripcion_convocatoria" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/Descripcion_convocatoria]]></fieldDescription>
+	</field>
+	<field name="Descripcion_ayuntamiento" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/Descripcion_ayuntamiento]]></fieldDescription>
+	</field>
+
+		<background>
+			<band height="658"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="108"
+						y="0"
+						width="402"
+						height="657"
+						key="image-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "logodipuFondo.png"]]></imageExpression>
+				</image>
+			</band>
+		</background>
+		<title>
+			<band height="14"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="101"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="5"
+						width="168"
+						height="91"
+						forecolor="#CCCCCC"
+						key="image-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "logoCabecera-ServiciosSociales.png"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="177"
+						y="5"
+						width="357"
+						height="91"
+						backcolor="#CCCCCC"
+						key="staticText-22"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="12"/>
+					</textElement>
+				<text><![CDATA[Solicitud Convocatoria de Subvención para E.E.L.L]]></text>
+				</staticText>
+				<rectangle radius="1" >
+					<reportElement
+						mode="Opaque"
+						x="335"
+						y="25"
+						width="199"
+						height="49"
+						forecolor="#CCCCCC"
+						backcolor="#EEEEEE"
+						key="rectangle-11"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle>
+					<reportElement
+						x="335"
+						y="45"
+						width="199"
+						height="51"
+						forecolor="#CCCCCC"
+						backcolor="#FAFAFA"
+						key="rectangle-2"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<line direction="TopDown">
+					<reportElement
+						x="335"
+						y="61"
+						width="199"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-1"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="335"
+						y="78"
+						width="199"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-2"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<staticText>
+					<reportElement
+						x="339"
+						y="48"
+						width="96"
+						height="18"
+						key="staticText-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Número de registro:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="339"
+						y="65"
+						width="96"
+						height="18"
+						key="staticText-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Fecha de presentación:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="425"
+						y="48"
+						width="99"
+						height="17"
+						key="textField-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Verdana" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{Numero_Registro}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="425"
+						y="65"
+						width="109"
+						height="11"
+						key="textField-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Verdana" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[(($F{Fecha_Registro}==null || $F{Fecha_Registro}=="")?$F{Fecha_Presentacion} + " " +$F{Hora_Presentacion}:$F{Fecha_Registro})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="401"
+						y="30"
+						width="126"
+						height="18"
+						key="staticText-19"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right">
+						<font fontName="Verdana" pdfFontName="Helvetica-Bold" size="8" isBold="true" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Datos de registro:]]></text>
+				</staticText>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="319"  isSplitAllowed="true" >
+				<rectangle radius="1" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="130"
+						width="535"
+						height="37"
+						forecolor="#CCCCCC"
+						backcolor="#EEEEEE"
+						key="rectangle-16"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle>
+					<reportElement
+						x="0"
+						y="159"
+						width="535"
+						height="136"
+						forecolor="#CCCCCC"
+						backcolor="#FFFFFF"
+						key="rectangle-17"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle radius="1" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="76"
+						width="535"
+						height="24"
+						forecolor="#CCCCCC"
+						backcolor="#EEEEEE"
+						key="rectangle-5"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle>
+					<reportElement
+						x="0"
+						y="92"
+						width="535"
+						height="36"
+						forecolor="#CCCCCC"
+						backcolor="#FFFFFF"
+						key="rectangle-15"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle radius="1" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="0"
+						width="535"
+						height="39"
+						forecolor="#CCCCCC"
+						backcolor="#EEEEEE"
+						key="rectangle-9"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle>
+					<reportElement
+						x="0"
+						y="16"
+						width="534"
+						height="54"
+						forecolor="#CCCCCC"
+						backcolor="#FFFFFF"
+						key="rectangle-10"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<staticText>
+					<reportElement
+						x="6"
+						y="2"
+						width="136"
+						height="13"
+						key="staticText-9"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[DATOS PETICIONARIO]]></text>
+				</staticText>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="34"
+						width="534"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-3"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="52"
+						width="534"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-4"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<staticText>
+					<reportElement
+						x="7"
+						y="18"
+						width="96"
+						height="15"
+						key="staticText-10"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Apellidos y Nombre:]]></text>
+				</staticText>
+				<line direction="TopDown">
+					<reportElement
+						x="104"
+						y="16"
+						width="1"
+						height="19"
+						forecolor="#CCCCCC"
+						key="line-7"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="119"
+						y="34"
+						width="1"
+						height="18"
+						forecolor="#CCCCCC"
+						key="line-8"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<staticText>
+					<reportElement
+						x="6"
+						y="78"
+						width="504"
+						height="13"
+						key="staticText-7"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[DATOS DE LA SOLICITUD]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="108"
+						y="18"
+						width="424"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{Nombre}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="7"
+						y="36"
+						width="111"
+						height="15"
+						key="staticText-26"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Documento de identidad:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="125"
+						y="36"
+						width="407"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NIF}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="7"
+						y="53"
+						width="33"
+						height="15"
+						key="staticText-27"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Cargo:]]></text>
+				</staticText>
+				<line direction="TopDown">
+					<reportElement
+						x="43"
+						y="52"
+						width="1"
+						height="18"
+						forecolor="#CCCCCC"
+						key="line-13"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="46"
+						y="53"
+						width="486"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{cargo}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="7"
+						y="94"
+						width="114"
+						height="15"
+						key="staticText-28"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Convocatoria seleccionada:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="123"
+						y="94"
+						width="409"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{Descripcion_convocatoria}]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="110"
+						width="535"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-14"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<staticText>
+					<reportElement
+						x="7"
+						y="112"
+						width="97"
+						height="15"
+						key="staticText-29"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Ayuntamiento / EATIM:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="107"
+						y="112"
+						width="425"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{Descripcion_ayuntamiento}]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="105"
+						y="110"
+						width="1"
+						height="18"
+						forecolor="#CCCCCC"
+						key="line-15"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="121"
+						y="93"
+						width="1"
+						height="18"
+						forecolor="#CCCCCC"
+						key="line-16"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<staticText>
+					<reportElement
+						x="6"
+						y="132"
+						width="521"
+						height="13"
+						key="staticText-30"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Persona de contacto responsable de la actividad en el ayuntamiento / EATIM]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="145"
+						width="124"
+						height="13"
+						key="staticText-31"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" pdfFontName="Helvetica-Bold" size="6" isBold="true"/>
+					</textElement>
+				<text><![CDATA[(Servicios Sociales o Centro Mujer)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="160"
+						width="40"
+						height="15"
+						key="staticText-32"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[NIF/CIF:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="175"
+						width="86"
+						height="15"
+						key="staticText-33"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Nombre y Apellidos:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="190"
+						width="34"
+						height="15"
+						key="staticText-34"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Cargo:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="205"
+						width="44"
+						height="15"
+						key="staticText-35"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Domicilio:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="235"
+						width="63"
+						height="15"
+						key="staticText-36"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Código Postal:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="250"
+						width="63"
+						height="15"
+						key="staticText-37"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Región / País:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="265"
+						width="44"
+						height="15"
+						key="staticText-38"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Teléfono:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="280"
+						width="83"
+						height="15"
+						key="staticText-39"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Correo electrónico:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="50"
+						y="160"
+						width="482"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nif_repre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="97"
+						y="175"
+						width="435"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nombre_repre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="46"
+						y="190"
+						width="486"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{cargo_repre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="53"
+						y="205"
+						width="479"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{domicilio_repre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="60"
+						y="220"
+						width="472"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ciudad_repre}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="6"
+						y="220"
+						width="50"
+						height="15"
+						key="staticText-40"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Localidad:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="69"
+						y="235"
+						width="463"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{c_postal_repre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="69"
+						y="250"
+						width="463"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{region_repre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="56"
+						y="265"
+						width="476"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{movil_repre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="95"
+						y="280"
+						width="437"
+						height="15"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{d_email_repre}]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="175"
+						width="535"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-17"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="190"
+						width="535"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-18"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="205"
+						width="535"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-19"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="220"
+						width="535"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-20"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="235"
+						width="535"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-21"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="250"
+						width="535"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-22"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="265"
+						width="535"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-23"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="280"
+						width="535"
+						height="1"
+						forecolor="#CCCCCC"
+						key="line-24"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="93"
+						y="175"
+						width="1"
+						height="15"
+						forecolor="#CCCCCC"
+						key="line-25"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="43"
+						y="190"
+						width="1"
+						height="15"
+						forecolor="#CCCCCC"
+						key="line-26"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="51"
+						y="205"
+						width="1"
+						height="15"
+						forecolor="#CCCCCC"
+						key="line-27"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="56"
+						y="220"
+						width="1"
+						height="15"
+						forecolor="#CCCCCC"
+						key="line-28"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="66"
+						y="235"
+						width="1"
+						height="15"
+						forecolor="#CCCCCC"
+						key="line-29"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="66"
+						y="250"
+						width="1"
+						height="15"
+						forecolor="#CCCCCC"
+						key="line-30"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="50"
+						y="265"
+						width="1"
+						height="15"
+						forecolor="#CCCCCC"
+						key="line-31"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="89"
+						y="280"
+						width="1"
+						height="15"
+						forecolor="#CCCCCC"
+						key="line-32"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="47"
+						y="159"
+						width="1"
+						height="16"
+						forecolor="#CCCCCC"
+						key="line-33"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<rectangle radius="1" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="299"
+						width="535"
+						height="18"
+						forecolor="#CCCCCC"
+						backcolor="#EEEEEE"
+						key="rectangle-18"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<staticText>
+					<reportElement
+						x="6"
+						y="301"
+						width="504"
+						height="13"
+						key="staticText-41"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[CENTROS SOLICITADOS]]></text>
+				</staticText>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="141"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="534"
+						height="4"
+						key="textField-14"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font fontName="Verdana" size="8" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["<style backcolor=\"#BEE8F9\" size=\"12\"><b>    Centro Escolar 1    </b></style>\n" + 
+"Nombre del Centro Escolar: \n" +
+($F{nombreCentro1} == null || $F{nombreCentro1}.equals("null") ? "" : $F{nombreCentro1}) + "\n" +
+"Dirección: \n " +
+($F{direccionCentro1} == null || $F{direccionCentro1}.equals("null") ? "" : $F{direccionCentro1}) + "\n" +
+"Teléfono: " + ($F{telefonoCentro1} == null || $F{telefonoCentro1}.equals("null") ? "" : $F{telefonoCentro1}) + "\n" +
+"Fax: " + ($F{faxCentro1} == null || $F{faxCentro1}.equals("null") ? "" : $F{faxCentro1}) + "\n" +
+"Correo Electrónico: " + ($F{emailCentro1} == null || $F{emailCentro1}.equals("null") ? "" : $F{emailCentro1}) + "\n" +
+"Nombre del/a responsable o persona de contacto del colegio o I.E.S.: " + "\n" + 
+($F{contactoCentro1} == null || $F{contactoCentro1}.equals("null") ? "" : $F{contactoCentro1}) + "\n" +
+"Cargo: " +($F{cargoCentro1} == null || $F{cargoCentro1}.equals("null") ? "" : $F{cargoCentro1}) + "\n" +
+"El centro es: " + 
+($F{publico1}.equals("Si") ? "Público" : ($F{concertado1}.equals("Si") ? "Concertado" : ($F{privado1}.equals("Si") ? "Privado" : ""))) + "\n" +
+"\n" +
+"<style backcolor=\"#F8E0F7\" size=\"10\">    Actividades Solicitadas del Centro   </style>\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>A) TALLERES DE EDUCACIÓN EN LA IGUALDAD:</b></style>\n" +
+"\tNº Total de Grupos de 1º de la E.S.O.: " + ($F{numGrupos1} == null || $F{numGrupos1}.equals("null") ? "" : $F{numGrupos1}) + "\n" +
+"\tNº de Alumnos/as de cada gruo de 1º de la E.S.O.: \n"+
+"\t\tA: " + ($F{a1} == null || $F{a1}.equals("null") ? "" : $F{a1}) + " - B: " + ($F{b1} == null || $F{b1}.equals("null") ? "" : $F{b1}) + " - C: " + ($F{c1} == null || $F{c1}.equals("null") ? "" : $F{c1}) + " - D: " + ($F{d1} == null || $F{d1}.equals("null") ? "" : $F{d1}) + " - E: " + ($F{e1} == null || $F{e1}.equals("null") ? "" : $F{e1}) + "\n" +
+"\tNº Total de Talleres solicitados en Igualdad: " + ($F{numTotalIgualdad1} == null || $F{numTotalIgualdad1}.equals("null") ? "" : $F{numTotalIgualdad1}) + "\n" +
+"\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>B) TALLERES DE EDUCACIÓN EN INTERCULTURALIDAD:</b></style>\n" +
+"\tNº de cursos de 4º " +($F{numCursos41} == null || $F{numCursos41}.equals("null") ? "" : $F{numCursos41})  + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a41} == null || $F{a41}.equals("null") ? "" : $F{a41}) + " - B: " + ($F{b41} == null || $F{b41}.equals("null") ? "" : $F{b41}) + " - C: " + ($F{c41} == null || $F{c41}.equals("null") ? "" : $F{c41}) + " - D: " + ($F{d41} == null || $F{d41}.equals("null") ? "" : $F{d41}) + " - E: " + ($F{e41} == null || $F{e41}.equals("null") ? "" : $F{e41}) + "\n" +
+"\tNº de cursos de 5º " + ($F{numCursos51} == null || $F{numCursos51}.equals("null") ? "" : $F{numCursos51}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a51} == null || $F{a51}.equals("null") ? "" : $F{a51}) + " - B: " + ($F{b51} == null || $F{b51}.equals("null") ? "" : $F{b51}) + " - C: " + ($F{c51} == null || $F{c51}.equals("null") ? "" : $F{c51}) + " - D: " + ($F{d51} == null || $F{d51}.equals("null") ? "" : $F{d51}) + " - E: " + ($F{e51} == null || $F{e51}.equals("null") ? "" : $F{e51}) + "\n" +
+"\tNº de cursos de 6º " + ($F{numCursos61} == null || $F{numCursos61}.equals("null") ? "" : $F{numCursos61}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a61} == null || $F{a61}.equals("null") ? "" : $F{a61}) + " - B: " + ($F{b61} == null || $F{b61}.equals("null") ? "" : $F{b61}) + " - C: " + ($F{c61} == null || $F{c61}.equals("null") ? "" : $F{c61}) + " - D: " + ($F{d61} == null || $F{d61}.equals("null") ? "" : $F{d61}) + " - E: " +($F{e61} == null || $F{e61}.equals("null") ? "" : $F{e61})  + "\n" +
+"\tNº Total de Talleres solicitados en Interculturalidad: " + ($F{numTotalIntercultura1} == null || $F{numTotalIntercultura1}.equals("null") ? "" : $F{numTotalIntercultura1}) ]]></textFieldExpression>
+				</textField>
+				<rectangle radius="1" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="94"
+						width="534"
+						height="39"
+						forecolor="#CCCCCC"
+						backcolor="#EEEEEE"
+						key="rectangle-13"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle>
+					<reportElement
+						x="0"
+						y="107"
+						width="533"
+						height="33"
+						forecolor="#CCCCCC"
+						backcolor="#FFFFFF"
+						key="rectangle-14"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<staticText>
+					<reportElement
+						x="0"
+						y="94"
+						width="177"
+						height="13"
+						key="staticText-20"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Verdana" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[DOCUMENTOS APORTADOS]]></text>
+				</staticText>
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Transparent"
+						x="0"
+						y="111"
+						width="534"
+						height="20"
+						key="subreport-1"
+						positionType="Float"/>
+					<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JRXmlDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("/Solicitud_Registro/Datos_Firmados/Documentos/Documento")]]></dataSourceExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "documentos.jasper"]]></subreportExpression>
+				</subreport>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="5"
+						width="534"
+						height="4"
+						key="textField-16"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean($F{nombreCentro2}!= null && !$F{nombreCentro2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font fontName="Verdana" size="8" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["<style backcolor=\"#BEE8F9\" size=\"12\"><b>    Centro Escolar 2    </b></style>\n" + 
+"Nombre del Centro Escolar: \n" +
+($F{nombreCentro2} == null || $F{nombreCentro2}.equals("null") ? "" : $F{nombreCentro2}) + "\n" +
+"Dirección: \n " +
+($F{direccionCentro2} == null || $F{direccionCentro2}.equals("null") ? "" : $F{direccionCentro2}) + "\n" +
+"Teléfono: " + ($F{telefonoCentro2} == null || $F{telefonoCentro2}.equals("null") ? "" : $F{telefonoCentro2}) + "\n" +
+"Fax: " + ($F{faxCentro2} == null || $F{faxCentro2}.equals("null") ? "" : $F{faxCentro2}) + "\n" +
+"Correo Electrónico: " + ($F{emailCentro2} == null || $F{emailCentro2}.equals("null") ? "" : $F{emailCentro2}) + "\n" +
+"Nombre del/a responsable o persona de contacto del colegio o I.E.S.: " + "\n" + 
+($F{contactoCentro2} == null || $F{contactoCentro2}.equals("null") ? "" : $F{contactoCentro2}) + "\n" +
+"Cargo: " +($F{cargoCentro2} == null || $F{cargoCentro2}.equals("null") ? "" : $F{cargoCentro2}) + "\n" +
+"El centro es: " + 
+($F{publico2}.equals("Si") ? "Público" : ($F{concertado2}.equals("Si") ? "Concertado" : ($F{privado2}.equals("Si") ? "Privado" : ""))) + "\n" +
+"\n" +
+"<style backcolor=\"#F8E0F7\" size=\"10\">    Actividades Solicitadas del Centro   </style>\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>A) TALLERES DE EDUCACIÓN EN LA IGUALDAD:</b></style>\n" +
+"\tNº Total de Grupos de 1º de la E.S.O.: " + ($F{numGrupos2} == null || $F{numGrupos2}.equals("null") ? "" : $F{numGrupos2}) + "\n" +
+"\tNº de Alumnos/as de cada gruo de 1º de la E.S.O.: \n"+
+"\t\tA: " + ($F{a2} == null || $F{a2}.equals("null") ? "" : $F{a2}) + " - B: " + ($F{b2} == null || $F{b2}.equals("null") ? "" : $F{b2}) + " - C: " + ($F{c2} == null || $F{c2}.equals("null") ? "" : $F{c2}) + " - D: " + ($F{d2} == null || $F{d2}.equals("null") ? "" : $F{d2}) + " - E: " + ($F{e2} == null || $F{e2}.equals("null") ? "" : $F{e2}) + "\n" +
+"\tNº Total de Talleres solicitados en Igualdad: " + ($F{numTotalIgualdad2} == null || $F{numTotalIgualdad2}.equals("null") ? "" : $F{numTotalIgualdad2}) + "\n" +
+"\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>B) TALLERES DE EDUCACIÓN EN INTERCULTURALIDAD:</b></style>\n" +
+"\tNº de cursos de 4º " +($F{numCursos42} == null || $F{numCursos42}.equals("null") ? "" : $F{numCursos42})  + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a42} == null || $F{a42}.equals("null") ? "" : $F{a42}) + " - B: " + ($F{b42} == null || $F{b42}.equals("null") ? "" : $F{b42}) + " - C: " + ($F{c42} == null || $F{c42}.equals("null") ? "" : $F{c42}) + " - D: " + ($F{d42} == null || $F{d42}.equals("null") ? "" : $F{d42}) + " - E: " + ($F{e42} == null || $F{e42}.equals("null") ? "" : $F{e42}) + "\n" +
+"\tNº de cursos de 5º " + ($F{numCursos52} == null || $F{numCursos52}.equals("null") ? "" : $F{numCursos52}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a52} == null || $F{a52}.equals("null") ? "" : $F{a52}) + " - B: " + ($F{b52} == null || $F{b52}.equals("null") ? "" : $F{b52}) + " - C: " + ($F{c52} == null || $F{c52}.equals("null") ? "" : $F{c52}) + " - D: " + ($F{d52} == null || $F{d52}.equals("null") ? "" : $F{d52}) + " - E: " + ($F{e52} == null || $F{e52}.equals("null") ? "" : $F{e52}) + "\n" +
+"\tNº de cursos de 6º " + ($F{numCursos62} == null || $F{numCursos62}.equals("null") ? "" : $F{numCursos62}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a62} == null || $F{a62}.equals("null") ? "" : $F{a62}) + " - B: " + ($F{b62} == null || $F{b62}.equals("null") ? "" : $F{b62}) + " - C: " + ($F{c62} == null || $F{c62}.equals("null") ? "" : $F{c62}) + " - D: " + ($F{d62} == null || $F{d62}.equals("null") ? "" : $F{d62}) + " - E: " +($F{e62} == null || $F{e62}.equals("null") ? "" : $F{e62})  + "\n" +
+"\tNº Total de Talleres solicitados en Interculturalidad: " + ($F{numTotalIntercultura2} == null || $F{numTotalIntercultura2}.equals("null") ? "" : $F{numTotalIntercultura2}) 
+
+]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="10"
+						width="534"
+						height="4"
+						key="textField-17"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean($F{nombreCentro3}!= null && !$F{nombreCentro3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font fontName="Verdana" size="8" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["<style backcolor=\"#BEE8F9\" size=\"12\"><b>    Centro Escolar 3    </b></style>\n" + 
+"Nombre del Centro Escolar: \n" +
+($F{nombreCentro3} == null || $F{nombreCentro3}.equals("null") ? "" : $F{nombreCentro3}) + "\n" +
+"Dirección: \n " +
+($F{direccionCentro3} == null || $F{direccionCentro3}.equals("null") ? "" : $F{direccionCentro3}) + "\n" +
+"Teléfono: " + ($F{telefonoCentro3} == null || $F{telefonoCentro3}.equals("null") ? "" : $F{telefonoCentro3}) + "\n" +
+"Fax: " + ($F{faxCentro3} == null || $F{faxCentro3}.equals("null") ? "" : $F{faxCentro3}) + "\n" +
+"Correo Electrónico: " + ($F{emailCentro3} == null || $F{emailCentro3}.equals("null") ? "" : $F{emailCentro3}) + "\n" +
+"Nombre del/a responsable o persona de contacto del colegio o I.E.S.: " + "\n" + 
+($F{contactoCentro3} == null || $F{contactoCentro3}.equals("null") ? "" : $F{contactoCentro3}) + "\n" +
+"Cargo: " +($F{cargoCentro3} == null || $F{cargoCentro3}.equals("null") ? "" : $F{cargoCentro3}) + "\n" +
+"El centro es: " + 
+($F{publico3}.equals("Si") ? "Público" : ($F{concertado3}.equals("Si") ? "Concertado" : ($F{privado3}.equals("Si") ? "Privado" : ""))) + "\n" +
+"\n" +
+"<style backcolor=\"#F8E0F7\" size=\"10\">    Actividades Solicitadas del Centro   </style>\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>A) TALLERES DE EDUCACIÓN EN LA IGUALDAD:</b></style>\n" +
+"\tNº Total de Grupos de 1º de la E.S.O.: " + ($F{numGrupos3} == null || $F{numGrupos3}.equals("null") ? "" : $F{numGrupos3}) + "\n" +
+"\tNº de Alumnos/as de cada gruo de 1º de la E.S.O.: \n"+
+"\t\tA: " + ($F{a3} == null || $F{a3}.equals("null") ? "" : $F{a3}) + " - B: " + ($F{b3} == null || $F{b3}.equals("null") ? "" : $F{b3}) + " - C: " + ($F{c3} == null || $F{c3}.equals("null") ? "" : $F{c3}) + " - D: " + ($F{d3} == null || $F{d3}.equals("null") ? "" : $F{d3}) + " - E: " + ($F{e3} == null || $F{e3}.equals("null") ? "" : $F{e3}) + "\n" +
+"\tNº Total de Talleres solicitados en Igualdad: " + ($F{numTotalIgualdad3} == null || $F{numTotalIgualdad3}.equals("null") ? "" : $F{numTotalIgualdad3}) + "\n" +
+"\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>B) TALLERES DE EDUCACIÓN EN INTERCULTURALIDAD:</b></style>\n" +
+"\tNº de cursos de 4º " +($F{numCursos43} == null || $F{numCursos43}.equals("null") ? "" : $F{numCursos43})  + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a43} == null || $F{a43}.equals("null") ? "" : $F{a43}) + " - B: " + ($F{b43} == null || $F{b43}.equals("null") ? "" : $F{b43}) + " - C: " + ($F{c43} == null || $F{c43}.equals("null") ? "" : $F{c43}) + " - D: " + ($F{d43} == null || $F{d43}.equals("null") ? "" : $F{d43}) + " - E: " + ($F{e43} == null || $F{e43}.equals("null") ? "" : $F{e43}) + "\n" +
+"\tNº de cursos de 5º " + ($F{numCursos53} == null || $F{numCursos53}.equals("null") ? "" : $F{numCursos53}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a53} == null || $F{a53}.equals("null") ? "" : $F{a53}) + " - B: " + ($F{b53} == null || $F{b53}.equals("null") ? "" : $F{b53}) + " - C: " + ($F{c53} == null || $F{c53}.equals("null") ? "" : $F{c53}) + " - D: " + ($F{d53} == null || $F{d53}.equals("null") ? "" : $F{d53}) + " - E: " + ($F{e53} == null || $F{e53}.equals("null") ? "" : $F{e53}) + "\n" +
+"\tNº de cursos de 6º " + ($F{numCursos63} == null || $F{numCursos63}.equals("null") ? "" : $F{numCursos63}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a63} == null || $F{a63}.equals("null") ? "" : $F{a63}) + " - B: " + ($F{b63} == null || $F{b63}.equals("null") ? "" : $F{b63}) + " - C: " + ($F{c63} == null || $F{c63}.equals("null") ? "" : $F{c63}) + " - D: " + ($F{d63} == null || $F{d63}.equals("null") ? "" : $F{d63}) + " - E: " +($F{e63} == null || $F{e63}.equals("null") ? "" : $F{e63})  + "\n" +
+"\tNº Total de Talleres solicitados en Interculturalidad: " + ($F{numTotalIntercultura3} == null || $F{numTotalIntercultura3}.equals("null") ? "" : $F{numTotalIntercultura3}) 
+
+]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="15"
+						width="534"
+						height="4"
+						key="textField-18"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean($F{nombreCentro4}!= null && !$F{nombreCentro4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font fontName="Verdana" size="8" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["<style backcolor=\"#BEE8F9\" size=\"12\"><b>    Centro Escolar 4    </b></style>\n" + 
+"Nombre del Centro Escolar: \n" +
+($F{nombreCentro4} == null || $F{nombreCentro4}.equals("null") ? "" : $F{nombreCentro4}) + "\n" +
+"Dirección: \n " +
+($F{direccionCentro4} == null || $F{direccionCentro4}.equals("null") ? "" : $F{direccionCentro4}) + "\n" +
+"Teléfono: " + ($F{telefonoCentro4} == null || $F{telefonoCentro4}.equals("null") ? "" : $F{telefonoCentro4}) + "\n" +
+"Fax: " + ($F{faxCentro4} == null || $F{faxCentro4}.equals("null") ? "" : $F{faxCentro4}) + "\n" +
+"Correo Electrónico: " + ($F{emailCentro4} == null || $F{emailCentro4}.equals("null") ? "" : $F{emailCentro4}) + "\n" +
+"Nombre del/a responsable o persona de contacto del colegio o I.E.S.: " + "\n" + 
+($F{contactoCentro4} == null || $F{contactoCentro4}.equals("null") ? "" : $F{contactoCentro4}) + "\n" +
+"Cargo: " +($F{cargoCentro4} == null || $F{cargoCentro4}.equals("null") ? "" : $F{cargoCentro4}) + "\n" +
+"El centro es: " + 
+($F{publico4}.equals("Si") ? "Público" : ($F{concertado4}.equals("Si") ? "Concertado" : ($F{privado4}.equals("Si") ? "Privado" : ""))) + "\n" +
+"\n" +
+"<style backcolor=\"#F8E0F7\" size=\"10\">    Actividades Solicitadas del Centro   </style>\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>A) TALLERES DE EDUCACIÓN EN LA IGUALDAD:</b></style>\n" +
+"\tNº Total de Grupos de 1º de la E.S.O.: " + ($F{numGrupos4} == null || $F{numGrupos4}.equals("null") ? "" : $F{numGrupos4}) + "\n" +
+"\tNº de Alumnos/as de cada gruo de 1º de la E.S.O.: \n"+
+"\t\tA: " + ($F{a4} == null || $F{a4}.equals("null") ? "" : $F{a4}) + " - B: " + ($F{b4} == null || $F{b4}.equals("null") ? "" : $F{b4}) + " - C: " + ($F{c4} == null || $F{c4}.equals("null") ? "" : $F{c4}) + " - D: " + ($F{d4} == null || $F{d4}.equals("null") ? "" : $F{d4}) + " - E: " + ($F{e4} == null || $F{e4}.equals("null") ? "" : $F{e4}) + "\n" +
+"\tNº Total de Talleres solicitados en Igualdad: " + ($F{numTotalIgualdad4} == null || $F{numTotalIgualdad4}.equals("null") ? "" : $F{numTotalIgualdad4}) + "\n" +
+"\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>B) TALLERES DE EDUCACIÓN EN INTERCULTURALIDAD:</b></style>\n" +
+"\tNº de cursos de 4º " +($F{numCursos44} == null || $F{numCursos44}.equals("null") ? "" : $F{numCursos44})  + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a44} == null || $F{a44}.equals("null") ? "" : $F{a44}) + " - B: " + ($F{b44} == null || $F{b44}.equals("null") ? "" : $F{b44}) + " - C: " + ($F{c44} == null || $F{c44}.equals("null") ? "" : $F{c44}) + " - D: " + ($F{d44} == null || $F{d44}.equals("null") ? "" : $F{d44}) + " - E: " + ($F{e44} == null || $F{e44}.equals("null") ? "" : $F{e44}) + "\n" +
+"\tNº de cursos de 5º " + ($F{numCursos54} == null || $F{numCursos54}.equals("null") ? "" : $F{numCursos54}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a54} == null || $F{a54}.equals("null") ? "" : $F{a54}) + " - B: " + ($F{b54} == null || $F{b54}.equals("null") ? "" : $F{b54}) + " - C: " + ($F{c54} == null || $F{c54}.equals("null") ? "" : $F{c54}) + " - D: " + ($F{d54} == null || $F{d54}.equals("null") ? "" : $F{d54}) + " - E: " + ($F{e54} == null || $F{e54}.equals("null") ? "" : $F{e54}) + "\n" +
+"\tNº de cursos de 6º " + ($F{numCursos64} == null || $F{numCursos64}.equals("null") ? "" : $F{numCursos64}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a64} == null || $F{a64}.equals("null") ? "" : $F{a64}) + " - B: " + ($F{b64} == null || $F{b64}.equals("null") ? "" : $F{b64}) + " - C: " + ($F{c64} == null || $F{c64}.equals("null") ? "" : $F{c64}) + " - D: " + ($F{d64} == null || $F{d64}.equals("null") ? "" : $F{d64}) + " - E: " +($F{e64} == null || $F{e64}.equals("null") ? "" : $F{e64})  + "\n" +
+"\tNº Total de Talleres solicitados en Interculturalidad: " + ($F{numTotalIntercultura4} == null || $F{numTotalIntercultura4}.equals("null") ? "" : $F{numTotalIntercultura4}) 
+
+]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="20"
+						width="534"
+						height="4"
+						key="textField-19"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean($F{nombreCentro5}!= null && !$F{nombreCentro5}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font fontName="Verdana" size="8" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["<style backcolor=\"#BEE8F9\" size=\"12\"><b>    Centro Escolar 5    </b></style>\n" + 
+"Nombre del Centro Escolar: \n" +
+($F{nombreCentro5} == null || $F{nombreCentro5}.equals("null") ? "" : $F{nombreCentro5}) + "\n" +
+"Dirección: \n " +
+($F{direccionCentro5} == null || $F{direccionCentro5}.equals("null") ? "" : $F{direccionCentro5}) + "\n" +
+"Teléfono: " + ($F{telefonoCentro5} == null || $F{telefonoCentro5}.equals("null") ? "" : $F{telefonoCentro5}) + "\n" +
+"Fax: " + ($F{faxCentro5} == null || $F{faxCentro5}.equals("null") ? "" : $F{faxCentro5}) + "\n" +
+"Correo Electrónico: " + ($F{emailCentro5} == null || $F{emailCentro5}.equals("null") ? "" : $F{emailCentro5}) + "\n" +
+"Nombre del/a responsable o persona de contacto del colegio o I.E.S.: " + "\n" + 
+($F{contactoCentro5} == null || $F{contactoCentro5}.equals("null") ? "" : $F{contactoCentro5}) + "\n" +
+"Cargo: " +($F{cargoCentro5} == null || $F{cargoCentro5}.equals("null") ? "" : $F{cargoCentro5}) + "\n" +
+"El centro es: " + 
+($F{publico5}.equals("Si") ? "Público" : ($F{concertado5}.equals("Si") ? "Concertado" : ($F{privado5}.equals("Si") ? "Privado" : ""))) + "\n" +
+"\n" +
+"<style backcolor=\"#F8E0F7\" size=\"10\">    Actividades Solicitadas del Centro   </style>\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>A) TALLERES DE EDUCACIÓN EN LA IGUALDAD:</b></style>\n" +
+"\tNº Total de Grupos de 1º de la E.S.O.: " + ($F{numGrupos5} == null || $F{numGrupos5}.equals("null") ? "" : $F{numGrupos5}) + "\n" +
+"\tNº de Alumnos/as de cada gruo de 1º de la E.S.O.: \n"+
+"\t\tA: " + ($F{a5} == null || $F{a5}.equals("null") ? "" : $F{a5}) + " - B: " + ($F{b5} == null || $F{b5}.equals("null") ? "" : $F{b5}) + " - C: " + ($F{c5} == null || $F{c5}.equals("null") ? "" : $F{c5}) + " - D: " + ($F{d5} == null || $F{d5}.equals("null") ? "" : $F{d5}) + " - E: " + ($F{e5} == null || $F{e5}.equals("null") ? "" : $F{e5}) + "\n" +
+"\tNº Total de Talleres solicitados en Igualdad: " + ($F{numTotalIgualdad5} == null || $F{numTotalIgualdad5}.equals("null") ? "" : $F{numTotalIgualdad5}) + "\n" +
+"\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>B) TALLERES DE EDUCACIÓN EN INTERCULTURALIDAD:</b></style>\n" +
+"\tNº de cursos de 4º " +($F{numCursos45} == null || $F{numCursos45}.equals("null") ? "" : $F{numCursos45})  + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a45} == null || $F{a45}.equals("null") ? "" : $F{a45}) + " - B: " + ($F{b45} == null || $F{b45}.equals("null") ? "" : $F{b45}) + " - C: " + ($F{c45} == null || $F{c45}.equals("null") ? "" : $F{c45}) + " - D: " + ($F{d45} == null || $F{d45}.equals("null") ? "" : $F{d45}) + " - E: " + ($F{e45} == null || $F{e45}.equals("null") ? "" : $F{e45}) + "\n" +
+"\tNº de cursos de 5º " + ($F{numCursos55} == null || $F{numCursos55}.equals("null") ? "" : $F{numCursos55}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a55} == null || $F{a55}.equals("null") ? "" : $F{a55}) + " - B: " + ($F{b55} == null || $F{b55}.equals("null") ? "" : $F{b55}) + " - C: " + ($F{c55} == null || $F{c55}.equals("null") ? "" : $F{c55}) + " - D: " + ($F{d55} == null || $F{d55}.equals("null") ? "" : $F{d55}) + " - E: " + ($F{e55} == null || $F{e55}.equals("null") ? "" : $F{e55}) + "\n" +
+"\tNº de cursos de 6º " + ($F{numCursos65} == null || $F{numCursos65}.equals("null") ? "" : $F{numCursos65}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a65} == null || $F{a65}.equals("null") ? "" : $F{a65}) + " - B: " + ($F{b65} == null || $F{b65}.equals("null") ? "" : $F{b65}) + " - C: " + ($F{c65} == null || $F{c65}.equals("null") ? "" : $F{c65}) + " - D: " + ($F{d65} == null || $F{d65}.equals("null") ? "" : $F{d65}) + " - E: " +($F{e65} == null || $F{e65}.equals("null") ? "" : $F{e65})  + "\n" +
+"\tNº Total de Talleres solicitados en Interculturalidad: " + ($F{numTotalIntercultura5} == null || $F{numTotalIntercultura5}.equals("null") ? "" : $F{numTotalIntercultura5}) 
+
+
+]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="25"
+						width="534"
+						height="4"
+						key="textField-20"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean($F{nombreCentro6}!= null && !$F{nombreCentro6}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font fontName="Verdana" size="8" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["<style backcolor=\"#BEE8F9\" size=\"12\"><b>    Centro Escolar 6    </b></style>\n" + 
+"Nombre del Centro Escolar: \n" +
+($F{nombreCentro6} == null || $F{nombreCentro6}.equals("null") ? "" : $F{nombreCentro6}) + "\n" +
+"Dirección: \n " +
+($F{direccionCentro6} == null || $F{direccionCentro6}.equals("null") ? "" : $F{direccionCentro6}) + "\n" +
+"Teléfono: " + ($F{telefonoCentro6} == null || $F{telefonoCentro6}.equals("null") ? "" : $F{telefonoCentro6}) + "\n" +
+"Fax: " + ($F{faxCentro6} == null || $F{faxCentro6}.equals("null") ? "" : $F{faxCentro6}) + "\n" +
+"Correo Electrónico: " + ($F{emailCentro6} == null || $F{emailCentro6}.equals("null") ? "" : $F{emailCentro6}) + "\n" +
+"Nombre del/a responsable o persona de contacto del colegio o I.E.S.: " + "\n" + 
+($F{contactoCentro6} == null || $F{contactoCentro6}.equals("null") ? "" : $F{contactoCentro6}) + "\n" +
+"Cargo: " +($F{cargoCentro6} == null || $F{cargoCentro6}.equals("null") ? "" : $F{cargoCentro6}) + "\n" +
+"El centro es: " + 
+($F{publico6}.equals("Si") ? "Público" : ($F{concertado6}.equals("Si") ? "Concertado" : ($F{privado6}.equals("Si") ? "Privado" : ""))) + "\n" +
+"\n" +
+"<style backcolor=\"#F8E0F7\" size=\"10\">    Actividades Solicitadas del Centro   </style>\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>A) TALLERES DE EDUCACIÓN EN LA IGUALDAD:</b></style>\n" +
+"\tNº Total de Grupos de 1º de la E.S.O.: " + ($F{numGrupos6} == null || $F{numGrupos6}.equals("null") ? "" : $F{numGrupos6}) + "\n" +
+"\tNº de Alumnos/as de cada gruo de 1º de la E.S.O.: \n"+
+"\t\tA: " + ($F{a6} == null || $F{a6}.equals("null") ? "" : $F{a6}) + " - B: " + ($F{b6} == null || $F{b6}.equals("null") ? "" : $F{b6}) + " - C: " + ($F{c6} == null || $F{c6}.equals("null") ? "" : $F{c6}) + " - D: " + ($F{d6} == null || $F{d6}.equals("null") ? "" : $F{d6}) + " - E: " + ($F{e6} == null || $F{e6}.equals("null") ? "" : $F{e6}) + "\n" +
+"\tNº Total de Talleres solicitados en Igualdad: " + ($F{numTotalIgualdad6} == null || $F{numTotalIgualdad6}.equals("null") ? "" : $F{numTotalIgualdad6}) + "\n" +
+"\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>B) TALLERES DE EDUCACIÓN EN INTERCULTURALIDAD:</b></style>\n" +
+"\tNº de cursos de 4º " +($F{numCursos46} == null || $F{numCursos46}.equals("null") ? "" : $F{numCursos46})  + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a46} == null || $F{a46}.equals("null") ? "" : $F{a46}) + " - B: " + ($F{b46} == null || $F{b46}.equals("null") ? "" : $F{b46}) + " - C: " + ($F{c46} == null || $F{c46}.equals("null") ? "" : $F{c46}) + " - D: " + ($F{d46} == null || $F{d46}.equals("null") ? "" : $F{d46}) + " - E: " + ($F{e46} == null || $F{e46}.equals("null") ? "" : $F{e46}) + "\n" +
+"\tNº de cursos de 5º " + ($F{numCursos56} == null || $F{numCursos56}.equals("null") ? "" : $F{numCursos56}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a56} == null || $F{a56}.equals("null") ? "" : $F{a56}) + " - B: " + ($F{b56} == null || $F{b56}.equals("null") ? "" : $F{b56}) + " - C: " + ($F{c56} == null || $F{c56}.equals("null") ? "" : $F{c56}) + " - D: " + ($F{d56} == null || $F{d56}.equals("null") ? "" : $F{d56}) + " - E: " + ($F{e56} == null || $F{e56}.equals("null") ? "" : $F{e56}) + "\n" +
+"\tNº de cursos de 6º " + ($F{numCursos66} == null || $F{numCursos66}.equals("null") ? "" : $F{numCursos66}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a66} == null || $F{a66}.equals("null") ? "" : $F{a66}) + " - B: " + ($F{b66} == null || $F{b66}.equals("null") ? "" : $F{b66}) + " - C: " + ($F{c66} == null || $F{c66}.equals("null") ? "" : $F{c66}) + " - D: " + ($F{d66} == null || $F{d66}.equals("null") ? "" : $F{d66}) + " - E: " +($F{e66} == null || $F{e66}.equals("null") ? "" : $F{e66})  + "\n" +
+"\tNº Total de Talleres solicitados en Interculturalidad: " + ($F{numTotalIntercultura6} == null || $F{numTotalIntercultura6}.equals("null") ? "" : $F{numTotalIntercultura6}) 
+
+
+]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="30"
+						width="534"
+						height="4"
+						key="textField-21"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean($F{nombreCentro7}!= null && !$F{nombreCentro7}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font fontName="Verdana" size="8" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["<style backcolor=\"#BEE8F9\" size=\"12\"><b>    Centro Escolar 7    </b></style>\n" + 
+"Nombre del Centro Escolar: \n" +
+($F{nombreCentro7} == null || $F{nombreCentro7}.equals("null") ? "" : $F{nombreCentro7}) + "\n" +
+"Dirección: \n " +
+($F{direccionCentro7} == null || $F{direccionCentro7}.equals("null") ? "" : $F{direccionCentro7}) + "\n" +
+"Teléfono: " + ($F{telefonoCentro7} == null || $F{telefonoCentro7}.equals("null") ? "" : $F{telefonoCentro7}) + "\n" +
+"Fax: " + ($F{faxCentro7} == null || $F{faxCentro7}.equals("null") ? "" : $F{faxCentro7}) + "\n" +
+"Correo Electrónico: " + ($F{emailCentro7} == null || $F{emailCentro7}.equals("null") ? "" : $F{emailCentro7}) + "\n" +
+"Nombre del/a responsable o persona de contacto del colegio o I.E.S.: " + "\n" + 
+($F{contactoCentro7} == null || $F{contactoCentro7}.equals("null") ? "" : $F{contactoCentro7}) + "\n" +
+"Cargo: " +($F{cargoCentro7} == null || $F{cargoCentro7}.equals("null") ? "" : $F{cargoCentro7}) + "\n" +
+"El centro es: " + 
+($F{publico7}.equals("Si") ? "Público" : ($F{concertado7}.equals("Si") ? "Concertado" : ($F{privado7}.equals("Si") ? "Privado" : ""))) + "\n" +
+"\n" +
+"<style backcolor=\"#F8E0F7\" size=\"10\">    Actividades Solicitadas del Centro   </style>\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>A) TALLERES DE EDUCACIÓN EN LA IGUALDAD:</b></style>\n" +
+"\tNº Total de Grupos de 1º de la E.S.O.: " + ($F{numGrupos7} == null || $F{numGrupos7}.equals("null") ? "" : $F{numGrupos7}) + "\n" +
+"\tNº de Alumnos/as de cada gruo de 1º de la E.S.O.: \n"+
+"\t\tA: " + ($F{a7} == null || $F{a7}.equals("null") ? "" : $F{a7}) + " - B: " + ($F{b7} == null || $F{b7}.equals("null") ? "" : $F{b7}) + " - C: " + ($F{c7} == null || $F{c7}.equals("null") ? "" : $F{c7}) + " - D: " + ($F{d7} == null || $F{d7}.equals("null") ? "" : $F{d7}) + " - E: " + ($F{e7} == null || $F{e7}.equals("null") ? "" : $F{e7}) + "\n" +
+"\tNº Total de Talleres solicitados en Igualdad: " + ($F{numTotalIgualdad7} == null || $F{numTotalIgualdad7}.equals("null") ? "" : $F{numTotalIgualdad7}) + "\n" +
+"\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>B) TALLERES DE EDUCACIÓN EN INTERCULTURALIDAD:</b></style>\n" +
+"\tNº de cursos de 4º " +($F{numCursos47} == null || $F{numCursos47}.equals("null") ? "" : $F{numCursos47})  + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a47} == null || $F{a47}.equals("null") ? "" : $F{a47}) + " - B: " + ($F{b47} == null || $F{b47}.equals("null") ? "" : $F{b47}) + " - C: " + ($F{c47} == null || $F{c47}.equals("null") ? "" : $F{c47}) + " - D: " + ($F{d47} == null || $F{d47}.equals("null") ? "" : $F{d47}) + " - E: " + ($F{e47} == null || $F{e47}.equals("null") ? "" : $F{e47}) + "\n" +
+"\tNº de cursos de 5º " + ($F{numCursos57} == null || $F{numCursos57}.equals("null") ? "" : $F{numCursos57}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a57} == null || $F{a57}.equals("null") ? "" : $F{a57}) + " - B: " + ($F{b57} == null || $F{b57}.equals("null") ? "" : $F{b57}) + " - C: " + ($F{c57} == null || $F{c57}.equals("null") ? "" : $F{c57}) + " - D: " + ($F{d57} == null || $F{d57}.equals("null") ? "" : $F{d57}) + " - E: " + ($F{e57} == null || $F{e57}.equals("null") ? "" : $F{e57}) + "\n" +
+"\tNº de cursos de 6º " + ($F{numCursos67} == null || $F{numCursos67}.equals("null") ? "" : $F{numCursos67}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a67} == null || $F{a67}.equals("null") ? "" : $F{a67}) + " - B: " + ($F{b67} == null || $F{b67}.equals("null") ? "" : $F{b67}) + " - C: " + ($F{c67} == null || $F{c67}.equals("null") ? "" : $F{c67}) + " - D: " + ($F{d67} == null || $F{d67}.equals("null") ? "" : $F{d67}) + " - E: " +($F{e67} == null || $F{e67}.equals("null") ? "" : $F{e67})  + "\n" +
+"\tNº Total de Talleres solicitados en Interculturalidad: " + ($F{numTotalIntercultura7} == null || $F{numTotalIntercultura7}.equals("null") ? "" : $F{numTotalIntercultura7}) 
+
+]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="35"
+						width="534"
+						height="4"
+						key="textField-22"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean($F{nombreCentro8}!= null && !$F{nombreCentro8}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font fontName="Verdana" size="8" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["<style backcolor=\"#BEE8F9\" size=\"12\"><b>    Centro Escolar 8    </b></style>\n" + 
+"Nombre del Centro Escolar: \n" +
+($F{nombreCentro8} == null || $F{nombreCentro8}.equals("null") ? "" : $F{nombreCentro8}) + "\n" +
+"Dirección: \n " +
+($F{direccionCentro8} == null || $F{direccionCentro8}.equals("null") ? "" : $F{direccionCentro8}) + "\n" +
+"Teléfono: " + ($F{telefonoCentro8} == null || $F{telefonoCentro8}.equals("null") ? "" : $F{telefonoCentro8}) + "\n" +
+"Fax: " + ($F{faxCentro8} == null || $F{faxCentro8}.equals("null") ? "" : $F{faxCentro8}) + "\n" +
+"Correo Electrónico: " + ($F{emailCentro8} == null || $F{emailCentro8}.equals("null") ? "" : $F{emailCentro8}) + "\n" +
+"Nombre del/a responsable o persona de contacto del colegio o I.E.S.: " + "\n" + 
+($F{contactoCentro8} == null || $F{contactoCentro8}.equals("null") ? "" : $F{contactoCentro8}) + "\n" +
+"Cargo: " +($F{cargoCentro8} == null || $F{cargoCentro8}.equals("null") ? "" : $F{cargoCentro8}) + "\n" +
+"El centro es: " + 
+($F{publico8}.equals("Si") ? "Público" : ($F{concertado8}.equals("Si") ? "Concertado" : ($F{privado8}.equals("Si") ? "Privado" : ""))) + "\n" +
+"\n" +
+"<style backcolor=\"#F8E0F7\" size=\"10\">    Actividades Solicitadas del Centro   </style>\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>A) TALLERES DE EDUCACIÓN EN LA IGUALDAD:</b></style>\n" +
+"\tNº Total de Grupos de 1º de la E.S.O.: " + ($F{numGrupos8} == null || $F{numGrupos8}.equals("null") ? "" : $F{numGrupos8}) + "\n" +
+"\tNº de Alumnos/as de cada gruo de 1º de la E.S.O.: \n"+
+"\t\tA: " + ($F{a8} == null || $F{a8}.equals("null") ? "" : $F{a8}) + " - B: " + ($F{b8} == null || $F{b8}.equals("null") ? "" : $F{b8}) + " - C: " + ($F{c8} == null || $F{c8}.equals("null") ? "" : $F{c8}) + " - D: " + ($F{d8} == null || $F{d8}.equals("null") ? "" : $F{d8}) + " - E: " + ($F{e8} == null || $F{e8}.equals("null") ? "" : $F{e8}) + "\n" +
+"\tNº Total de Talleres solicitados en Igualdad: " + ($F{numTotalIgualdad8} == null || $F{numTotalIgualdad8}.equals("null") ? "" : $F{numTotalIgualdad8}) + "\n" +
+"\n" +
+"<style isBold=\"true\" isItalic=\"true\"><b>B) TALLERES DE EDUCACIÓN EN INTERCULTURALIDAD:</b></style>\n" +
+"\tNº de cursos de 4º " +($F{numCursos48} == null || $F{numCursos48}.equals("null") ? "" : $F{numCursos48})  + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a48} == null || $F{a48}.equals("null") ? "" : $F{a48}) + " - B: " + ($F{b48} == null || $F{b48}.equals("null") ? "" : $F{b48}) + " - C: " + ($F{c48} == null || $F{c48}.equals("null") ? "" : $F{c48}) + " - D: " + ($F{d48} == null || $F{d48}.equals("null") ? "" : $F{d48}) + " - E: " + ($F{e48} == null || $F{e48}.equals("null") ? "" : $F{e48}) + "\n" +
+"\tNº de cursos de 5º " + ($F{numCursos58} == null || $F{numCursos58}.equals("null") ? "" : $F{numCursos58}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a58} == null || $F{a58}.equals("null") ? "" : $F{a58}) + " - B: " + ($F{b58} == null || $F{b58}.equals("null") ? "" : $F{b58}) + " - C: " + ($F{c58} == null || $F{c58}.equals("null") ? "" : $F{c58}) + " - D: " + ($F{d58} == null || $F{d58}.equals("null") ? "" : $F{d58}) + " - E: " + ($F{e58} == null || $F{e58}.equals("null") ? "" : $F{e58}) + "\n" +
+"\tNº de cursos de 6º " + ($F{numCursos68} == null || $F{numCursos68}.equals("null") ? "" : $F{numCursos68}) + " especificar nº de alumnos/as por grupo:\n" +
+"\t\tA: " + ($F{a68} == null || $F{a68}.equals("null") ? "" : $F{a68}) + " - B: " + ($F{b68} == null || $F{b68}.equals("null") ? "" : $F{b68}) + " - C: " + ($F{c68} == null || $F{c68}.equals("null") ? "" : $F{c68}) + " - D: " + ($F{d68} == null || $F{d68}.equals("null") ? "" : $F{d68}) + " - E: " +($F{e68} == null || $F{e68}.equals("null") ? "" : $F{e68})  + "\n" +
+"\tNº Total de Talleres solicitados en Interculturalidad: " + ($F{numTotalIntercultura8} == null || $F{numTotalIntercultura8}.equals("null") ? "" : $F{numTotalIntercultura8}) 
+
+
+
+]]></textFieldExpression>
+				</textField>
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="3"
+						y="46"
+						width="13"
+						height="11"
+						key="image-4"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "checkVerde.png"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="18"
+						y="46"
+						width="515"
+						height="12"
+						key="textField"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Justified">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{texto_declaro1}]]></textFieldExpression>
+				</textField>
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="3"
+						y="62"
+						width="13"
+						height="11"
+						key="image-5"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "checkVerde.png"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="18"
+						y="62"
+						width="515"
+						height="12"
+						key="textField-23"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Justified">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{texto_declaro2}]]></textFieldExpression>
+				</textField>
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="3"
+						y="78"
+						width="13"
+						height="11"
+						key="image-6"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "checkVerde.png"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="18"
+						y="78"
+						width="515"
+						height="12"
+						key="textField-24"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Justified">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{texto_declaro3}]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						mode="Transparent"
+						x="0"
+						y="58"
+						width="535"
+						height="0"
+						forecolor="#BEE8F9"
+						backcolor="#BEE8F9"
+						key="line-34"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						mode="Transparent"
+						x="0"
+						y="74"
+						width="535"
+						height="0"
+						forecolor="#BEE8F9"
+						backcolor="#BEE8F9"
+						key="line-35"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="2"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="108"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="74"
+						width="535"
+						height="34"
+						key="image-8"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "logoPieSinPag.jpg"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="481"
+						y="81"
+						width="18"
+						height="22"
+						forecolor="#FFFFFF"
+						key="textField-26"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Verdana" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="435"
+						y="81"
+						width="46"
+						height="21"
+						forecolor="#FFFFFF"
+						key="staticText-44"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Verdana" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Página ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="535"
+						height="74"
+						key="textField-27"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Justified">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Los datos personales, identificativos y de contacto, aportados mediante esta comunicación se entienden facilitados voluntariamente, y serán incorporados a un fichero cuya finalidad es la de mantener con Vd. relaciones dentro del ámbito de las competencias de esta Administración Pública así como informarle de nuestros servicios presentes y futuros ya sea por correo ordinario o por medios telemáticos y enviarle invitaciones para eventos y felicitaciones en fechas señaladas. Entenderemos que presta su consentimiento tácito para este tratamiento de datos si en el plazo de un mes no expresa su voluntad en contra. Podrá ejercer sus derechos de acceso, rectificación, cancelación y oposición ante el Responsable del Fichero, la Diputación Provincial de Ciudad Real en C/ Toledo, 17, 13071 Ciudad Real - España, siempre acreditando conforme a Derecho su identidad en la comunicación. En cumplimiento de la L.O. 34/2002 le informamos de que puede revocar en cualquier momento el consentimiento que nos otorga dirigiéndose a la dirección citada ut supra o bien al correo electrónico lopd@dipucr.es o bien por telefono al numero gratuito 900 714 080. "]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageFooter>
+		<lastPageFooter>
+			<band height="117"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="83"
+						width="535"
+						height="34"
+						key="image-9"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "logoPieSinPag.jpg"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="480"
+						y="90"
+						width="18"
+						height="22"
+						forecolor="#FFFFFF"
+						key="textField-28"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Verdana" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="434"
+						y="90"
+						width="46"
+						height="21"
+						forecolor="#FFFFFF"
+						key="staticText-45"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Verdana" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Página ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="535"
+						height="83"
+						key="textField-29"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Justified">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Los datos personales, identificativos y de contacto, aportados mediante esta comunicación se entienden facilitados voluntariamente, y serán incorporados a un fichero cuya finalidad es la de mantener con Vd. relaciones dentro del ámbito de las competencias de esta Administración Pública así como informarle de nuestros servicios presentes y futuros ya sea por correo ordinario o por medios telemáticos y enviarle invitaciones para eventos y felicitaciones en fechas señaladas. Entenderemos que presta su consentimiento tácito para este tratamiento de datos si en el plazo de un mes no expresa su voluntad en contra. Podrá ejercer sus derechos de acceso, rectificación, cancelación y oposición ante el Responsable del Fichero, la Diputación Provincial de Ciudad Real en C/ Toledo, 17, 13071 Ciudad Real - España, siempre acreditando conforme a Derecho su identidad en la comunicación. En cumplimiento de la L.O. 34/2002 le informamos de que puede revocar en cualquier momento el consentimiento que nos otorga dirigiéndose a la dirección citada ut supra o bien al correo electrónico lopd@dipucr.es o bien por telefono al numero gratuito 900 714 080. "]]></textFieldExpression>
+				</textField>
+			</band>
+		</lastPageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

@@ -1,6 +1,7 @@
 package ieci.tdw.ispac.ispacmgr.action;
 
 import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.item.IStage;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
@@ -38,28 +39,51 @@ public class SendTrashAction extends BaseAction {
 			int nidstage = 0;
 			int nIdProcess = 0;
 			String[] stageids = idsStage.split("-");
-			for (int i = 0; i < stageids.length; i++) {
+			
+			boolean bContinuar = true; //[dipucr-Felipe #226]
+			for (int i = 0; i < stageids.length && bContinuar; i++) {
 				IStage stage = null;
 				nidstage = Integer.parseInt(stageids[i]);
 				stage = invesflowAPI.getStage(nidstage);				
 				nIdProcess = stage.getInt("ID_EXP");
-				invesflowAPI.getTransactionAPI().sendProcessToTrash(nIdProcess);
+				
+				//INICIO [dipucr-Felipe #226]
+				if (!invesflowAPI.getTransactionAPI().sendProcessToTrash(nIdProcess)){
+					showBlockedDocumentsMessage(request);
+					bContinuar = false;
+				}
+				//FIN [dipucr-Felipe #226]
 			}
 			return NextActivity.refresh(request, mapping, state);
 		}
 	
 		else{
-			
-				invesflowAPI.getTransactionAPI().sendProcessToTrash(state.getProcessId());
+			//INICIO [dipucr-Felipe #226]
+			if (!invesflowAPI.getTransactionAPI().sendProcessToTrash(state.getProcessId())){
+				showBlockedDocumentsMessage(request);
+		    	ActionForward showexp =mapping.findForward("showexp");		
+				return new ActionForward(showexp.getName(), showexp.getPath() + "?stageId=" + state.getStageId(), true);
+			}
+			//FIN [dipucr-Felipe #226]
 		}
 	
-			if (logger.isInfoEnabled()) {
-				logger.info("Expediente [" 
-						+ cct.getStateContext().getNumexp() + "] enviado a la papelera");
-			}
-
-			return mapping.findForward("success");
+		if (logger.isInfoEnabled()) {
+			logger.info("Expediente [" 
+					+ cct.getStateContext().getNumexp() + "] enviado a la papelera");
 		}
+
+		return mapping.findForward("success");
+	}
+
+	/**
+	 * [dicpur-Felipe #226]
+	 * @param request
+	 */
+	private void showBlockedDocumentsMessage(HttpServletRequest request) {
+		ISPACInfo info=null;
+		info=new ISPACInfo(getResources(request).getMessage("exception.exception.sendtrash"));
+		request.getSession().setAttribute("infoAlert", info);
+	}
 		
 
 }

@@ -510,6 +510,65 @@ public class ShowComponentsUseListAction extends BaseAction
 
 				break;
 			}
+			
+			//[eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+			case ICatalogAPI.ENTITY_CT_MANUALES_USUARIO:
+			{
+				action = new StringBuffer("/showCTEntityUp.do?entityId=")
+					.append(entityId).append("&regId=").append(keyId)
+					.toString();
+
+				argument = item.getString("NOMBRE");
+
+				// Procedimientos relacionados con el informe
+				collection = procedureAPI.getManualUsuarioProceduresUse(keyId);
+		        list = CollectionBean.getBeanList(collection);
+		        if (!list.isEmpty())
+		        {
+					formatter = factory.getFormatter(getISPACPath("/formatters/cmproceduresformatter.xml"));
+					request.setAttribute("proceduresformatter", formatter);
+					request.setAttribute("procedures", list);
+		        	inUse = true;
+		        }
+
+				// Fases relacionadas con el informe
+				collection = procedureAPI.getManualUsuarioStagesUse(keyId);
+		        list = CollectionBean.getBeanList(collection);
+		        if (!list.isEmpty())
+		        {
+					formatter = factory.getFormatter(getISPACPath("/formatters/cmstagesformatter.xml"));
+					request.setAttribute("stagesformatter", formatter);
+					request.setAttribute("stages", list);
+		        	inUse = true;
+		        }
+
+				// Trámites relacionados con el informe
+				collection = procedureAPI.getManualUsuarioTasksUse(keyId);
+		        list = CollectionBean.getBeanList(collection);
+		        if (!list.isEmpty())
+		        {
+					formatter = factory.getFormatter(getISPACPath("/formatters/cmtasksformatter.xml"));
+					request.setAttribute("tasksformatter", formatter);
+		        	request.setAttribute("tasks", list);
+		        	inUse = true;
+		        }
+
+				// Actividades relacionadas con el informe
+				collection = procedureAPI.getManualUsuarioActivitiesUse(keyId);
+		        list = CollectionBean.getBeanList(collection);
+		        if (!list.isEmpty())
+		        {
+					formatter = factory.getFormatter(getISPACPath("/formatters/cmactivitiesformatter.xml"));
+					request.setAttribute("activitiesformatter", formatter);
+					request.setAttribute("activities", list);
+		        	inUse = true;
+		        }
+
+				title = (inUse ? "component.manualUsuario.title" : "component.manualUsuario.title.notInUse");
+
+				break;
+			}
+			//[eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 		}
 
 		// Título

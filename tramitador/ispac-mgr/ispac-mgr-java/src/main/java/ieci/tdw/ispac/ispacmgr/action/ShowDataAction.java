@@ -19,6 +19,7 @@ import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
 import ieci.tdw.ispac.ispacweb.api.ManagerState;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -132,8 +133,12 @@ public class ShowDataAction extends BaseAction {
 		// Menus
         request.setAttribute("menus", MenuFactory.getExpMenu(cct, state,  getResources(request), returnToSearch));
         
-		// Cargamos enlaces para los expedientes relacionados
-		SpacMgr.loadRelatedExpedient(session, request, state.getNumexp(), SpacMgr.ALL_EXPEDIENTS );
+        //[Manut Eickt #707] INICIO - SIGEM Problemas de rendimiento
+        //Cargamos enlaces para los expedientes relacionados
+        //SpacMgr.loadRelatedExpedient(session, request, state.getNumexp(), SpacMgr.ALL_EXPEDIENTS );
+        request.setAttribute("supExp",new ArrayList());
+        request.setAttribute("subExp",new ArrayList());
+        //[Manut Eickt #707] FIN - SIGEM Problemas de rendimiento
                         
         return mapping.findForward("success");
     }

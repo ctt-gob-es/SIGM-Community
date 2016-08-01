@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>es.ieci.tecdoc.iflow</groupId>
+		<artifactId>ispac-main</artifactId>
+		<!--<version>6.0</version>-->
+		 <version>6.4.1</version> 
+	</parent>
+	
+	<groupId>es.dipucr.rendicioncuentas</groupId>
+	<artifactId>RendicionCuentas</artifactId>
+	<version>1.0</version>
+	<name>RendicionCuentas</name>
+	<packaging>jar</packaging>
+	
+	<properties>	
+		<project.build.sourceEncoding>LATIN9</project.build.sourceEncoding>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+	
+		<dependency>
+			<groupId>es.dipucr.contratacion</groupId>
+			<artifactId>Contratacion</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.tools</groupId>
+			<artifactId>xjc</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.sun.xml</groupId>
+			<artifactId>bind</artifactId>
+			<version>2.2.0.v201004141950</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.xml</groupId>
+			<artifactId>bind</artifactId>
+			<version>2.2.0.v201005080402</version>
+		</dependency>
+
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>mygrid-repository</id>
+			<repositories>
+				<repository>
+					<id>mygrid-repository</id>
+					<name>myGrid Repository</name>
+					<url>http://www.mygrid.org.uk/maven/repository</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>mygrid-repository</id>
+					<name>myGrid Repository</name>
+					<url>http://build.mygrid.org.uk/maven/repository</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+
+		<profile>
+			<id>mvnrepository</id>
+			<repositories>
+				<repository>
+					<id>mvnrepository</id>
+					<name>mvnrepository</name>
+					<url>http://mvnrepository.com</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>mvnrepository</id>
+					<name>mvnrepository Repository</name>
+					<url>http://mvnrepository.com</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+
+		<profile>
+			<id>maven2</id>
+			<repositories>
+				<repository>
+					<id>maven2</id>
+					<name>maven2</name>
+					<url>http://repo1.maven.org/maven2</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>maven2</id>
+					<name>maven2</name>
+					<url>http://repo1.maven.org/maven2</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+	</profiles>
+</project>

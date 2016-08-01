@@ -9,7 +9,12 @@ public class NumexpComparator implements Comparator {
 	
 	public static final int NUMERO_MAYOR = 1;
 	public static final int NUMERO_MENOR = -1;
-	public static final int NUMERO_IGUAL = 0;	
+	public static final int NUMERO_IGUAL = 0;
+	
+	//[eCenpri-Felipe Ticket #268]
+	//Problemas al comparar expedientes de distinto año y con distinto número de cifras
+	public static final int LONGITUD_NUMERO = 6;
+	public static final String SEPARATOR = "/";
 	
 	private Collator collator;
 
@@ -39,6 +44,10 @@ public class NumexpComparator implements Comparator {
 			numexp2 = (String) object2;
 		}
 		
+		//[eCenpri-Felipe Ticket #268]
+		numexp1 = rellenarCeros(numexp1);
+		numexp2 = rellenarCeros(numexp2);
+		
 		Long lnumexp1 = new Long(numexp1.replaceAll("\\D", ""));
 		Long lnumexp2 = new Long(numexp2.replaceAll("\\D", ""));
 		
@@ -53,6 +62,34 @@ public class NumexpComparator implements Comparator {
 			return NUMERO_MENOR;
 		else
 			return NUMERO_IGUAL;
+	}
+	
+	/**
+	 * Rellena el numero con ceros para la comparación
+	 * @param numexp
+	 * [eCenpri-Felipe Ticket #268]
+	 */
+	private String rellenarCeros(String numexp) {
+
+		String [] numexpPartido = numexp.split(SEPARATOR);
+		StringBuffer sbResult = new StringBuffer();
+		String sResult = null;
+		
+		if(numexpPartido.length == 2){
+			sbResult.append(numexpPartido[0]); 
+			sbResult.append(SEPARATOR);
+			int numCeros = LONGITUD_NUMERO - numexpPartido[1].length();
+			for (int i=0; i<numCeros; i++){
+				sbResult.append("0");
+			}
+			sbResult.append(numexpPartido[1]);
+			sResult = sbResult.toString();
+		}
+		else{
+			sResult = numexp;
+		}
+		
+		return sResult;
 	}
 	
 	/**

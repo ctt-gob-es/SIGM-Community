@@ -11,6 +11,14 @@
 	<packaging>jar</packaging>
 	<name>fwktd-dm-invesdoc</name>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<!-- Framework dependencies -->
@@ -30,8 +38,9 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.invesdoc</groupId>
 			<artifactId>invesdoc-business</artifactId>
-			<version>${invesdoc.version}</version>
+			<version>11.1</version>
 		</dependency>
+
 		<!--
 		<dependency>
 			<groupId>es.ieci.tecdoc.invesdoc</groupId>

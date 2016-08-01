@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Gráficas Registro"
+		 columnCount="1"
+		 printOrder="Horizontal"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="782"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["DPCR2012/20838"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["K:\\Documentos\\Imágenes"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select tabla1.tiempo, tabla1.num_reg_e_t, tabla2.num_reg_e_p, tabla3.num_reg_s_s, tabla4.num_reg_s_ns, 
+tabla1.num_reg_e_t + tabla2.num_reg_e_p as totale, tabla3.num_reg_s_s + tabla4.num_reg_s_ns as totals from  
+((select * from dblink('dbname=registro_005 port=5432', '
+select substr(a.fld2::varchar,0,11)::timestamp as tiempo, count(*)::int as num_reg_e_t
+from a1sf a left join scr_orgs b on b.id = a.fld8
+where substr(a.fld1,5,3) like '||(E'\'')||'999'||(E'\'')||'  group by tiempo
+'
+)
+as tabla1 (tiempo timestamp,  num_reg_e_t integer)) as tabla1
+join
+(select * from dblink('dbname=registro_005 port=5432', '
+select substr(a.fld2::varchar,0,11)::timestamp as tiempo, count(*)::int as num_reg_e_p
+from a1sf a left join scr_orgs b on b.id = a.fld8
+where substr(a.fld1,5,3) not like '||(E'\'')||'999'||(E'\'')||' group by tiempo
+'
+)
+as tabla2 (tiempo timestamp,  num_reg_e_p integer)) as tabla2
+on tabla1.tiempo = tabla2.tiempo
+join
+(select * from dblink('dbname=registro_005 port=5432', '
+select substr(a.fld2::varchar,0,11)::timestamp as tiempo, count(*)::int as num_reg_s_s
+from a2sf a left join scr_orgs b on b.id = a.fld7
+where upper(a.fld13) like '||(E'\'')||'%REF.EXP.%'||(E'\'')||' group by tiempo
+'
+)
+as tabla3 (tiempo timestamp,  num_reg_s_s integer)) as tabla3
+on tabla2.tiempo = tabla3.tiempo
+join
+(select * from dblink('dbname=registro_005 port=5432', '
+select substr(a.fld2::varchar,0,11)::timestamp as tiempo, count(*)::int as num_reg_s_ns
+from a2sf a left join scr_orgs b on b.id = a.fld7
+where upper(a.fld13) not like '||(E'\'')||'%REF.EXP.%'||(E'\'')||' group by tiempo
+'
+)
+as tabla4 (tiempo timestamp,  num_reg_s_ns integer)) as tabla4 
+on tabla3.tiempo = tabla4.tiempo)
+where tabla1.tiempo  >= (select fecha_ini from DPCR_ESTADISTICAS_REGISTRO where numexp = $P{NUM_EXP}) 
+and tabla1.tiempo <= (select fecha_fin from DPCR_ESTADISTICAS_REGISTRO where numexp = $P{NUM_EXP}) 
+order by tabla1.tiempo]]></queryString>
+
+	<field name="tiempo" class="java.sql.Timestamp"/>
+	<field name="num_reg_e_t" class="java.lang.Integer"/>
+	<field name="num_reg_e_p" class="java.lang.Integer"/>
+	<field name="num_reg_s_s" class="java.lang.Integer"/>
+	<field name="num_reg_s_ns" class="java.lang.Integer"/>
+	<field name="totale" class="java.lang.Integer"/>
+	<field name="totals" class="java.lang.Integer"/>
+
+		<background>
+			<band height="555"  isSplitAllowed="true" >
+				<image  scaleImage="RetainShape" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="404"
+						y="0"
+						width="378"
+						height="555"
+						key="image-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+			</band>
+		</background>
+		<title>
+			<band height="63"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="168"
+						height="63"
+						key="image-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoNominaPeque.gif"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						x="0"
+						y="0"
+						width="782"
+						height="63"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="24" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Estadísticas de Registro]]></text>
+				</staticText>
+				<line direction="TopDown">
+					<reportElement
+						x="184"
+						y="53"
+						width="450"
+						height="0"
+						key="line-1"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="492"  isSplitAllowed="true" >
+				<timeSeriesChart>
+					<chart  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="782"
+						height="232"
+						key="element-1"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						<chartTitle color="#000000" >
+								<titleExpression><![CDATA[(Comparable)"Registro de Entrada"]]></titleExpression>
+					</chartTitle>
+						<chartLegend textColor="#000000" backgroundColor="#FFFFFF" >
+					</chartLegend>
+					</chart>
+					<timeSeriesDataset>
+						<dataset >
+						</dataset>
+						<timeSeries>
+							<seriesExpression><![CDATA[(Comparable)"Entrada Telemática"]]></seriesExpression>
+							<timePeriodExpression><![CDATA[(Comparable)$F{tiempo}]]></timePeriodExpression>
+							<valueExpression><![CDATA[(Comparable)$F{num_reg_e_t}]]></valueExpression>
+				<itemHyperlink >
+				</itemHyperlink>
+						</timeSeries>
+						<timeSeries>
+							<seriesExpression><![CDATA[(Comparable)"Entrada Presencial"]]></seriesExpression>
+							<timePeriodExpression><![CDATA[(Comparable)$F{tiempo}]]></timePeriodExpression>
+							<valueExpression><![CDATA[(Comparable)$F{num_reg_e_p}]]></valueExpression>
+				<itemHyperlink >
+				</itemHyperlink>
+						</timeSeries>
+						<timeSeries>
+							<seriesExpression><![CDATA[(Comparable)"Total Entradas"]]></seriesExpression>
+							<timePeriodExpression><![CDATA[(Comparable)$F{tiempo}]]></timePeriodExpression>
+							<valueExpression><![CDATA[(Comparable)$F{totale}]]></valueExpression>
+				<itemHyperlink >
+				</itemHyperlink>
+						</timeSeries>
+					</timeSeriesDataset>
+					<timeSeriesPlot isShowShapes="false" >
+						<plot />
+						<timeAxisFormat>
+							<axisFormat >
+							</axisFormat>
+						</timeAxisFormat>
+						<valueAxisFormat>
+							<axisFormat >
+							</axisFormat>
+						</valueAxisFormat>
+					</timeSeriesPlot>
+				</timeSeriesChart>
+				<timeSeriesChart>
+					<chart  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="260"
+						width="782"
+						height="232"
+						key="element-2"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						<chartTitle color="#000000" >
+								<titleExpression><![CDATA[(Comparable)"Registro de Salida"]]></titleExpression>
+					</chartTitle>
+						<chartLegend textColor="#000000" backgroundColor="#FFFFFF" >
+					</chartLegend>
+					</chart>
+					<timeSeriesDataset>
+						<dataset >
+						</dataset>
+						<timeSeries>
+							<seriesExpression><![CDATA[(Comparable)"Salida Telemática"]]></seriesExpression>
+							<timePeriodExpression><![CDATA[(Comparable)$F{tiempo}]]></timePeriodExpression>
+							<valueExpression><![CDATA[(Comparable)$F{num_reg_s_s}]]></valueExpression>
+				<itemHyperlink >
+				</itemHyperlink>
+						</timeSeries>
+						<timeSeries>
+							<seriesExpression><![CDATA[(Comparable)"Salida Presencial"]]></seriesExpression>
+							<timePeriodExpression><![CDATA[(Comparable)$F{tiempo}]]></timePeriodExpression>
+							<valueExpression><![CDATA[(Comparable)$F{num_reg_s_ns}]]></valueExpression>
+				<itemHyperlink >
+				</itemHyperlink>
+						</timeSeries>
+						<timeSeries>
+							<seriesExpression><![CDATA[(Comparable)"Total Salidas"]]></seriesExpression>
+							<timePeriodExpression><![CDATA[(Comparable)$F{tiempo}]]></timePeriodExpression>
+							<valueExpression><![CDATA[(Comparable)$F{totals}]]></valueExpression>
+				<itemHyperlink >
+				</itemHyperlink>
+						</timeSeries>
+					</timeSeriesDataset>
+					<timeSeriesPlot isShowShapes="false" >
+						<plot />
+						<timeAxisFormat>
+							<axisFormat >
+							</axisFormat>
+						</timeAxisFormat>
+						<valueAxisFormat>
+							<axisFormat >
+							</axisFormat>
+						</valueAxisFormat>
+					</timeSeriesPlot>
+				</timeSeriesChart>
+			</band>
+		</summary>
+</jasperReport>

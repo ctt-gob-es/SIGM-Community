@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.rpc.ServiceException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -40,7 +41,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 import org.w3c.dom.Node;
 
-import sun.misc.BASE64Encoder;
 import es.ieci.scsp.verifdata.model.dao.Servicio;
 import es.ieci.scsp.verifdata.services.ClienteLigero;
 import es.ieci.scsp.verifdata.services.ClienteLigeroServiceLocator;
@@ -87,10 +87,8 @@ public class ObtenerServiciosIntermediacionAction extends BaseAction {
 			
 			//Validacion del certificado
 			ServicioCriptoValidacion servicioCriptoValidacion = LocalizadorServicios.getServicioCriptoValidacion();
-			BASE64Encoder encoder = new BASE64Encoder();
-	
-			String psB64Certificate = encoder.encodeBuffer(certificate.getEncoded());
-	
+			
+			String psB64Certificate = Base64.encodeBase64String(certificate.getEncoded());
 	
 			ResultadoValidacion resultado = servicioCriptoValidacion.validateCertificate(psB64Certificate);
 			if (ResultadoValidacion.VALIDACION_ERROR.equals(resultado.getResultadoValidacion())) {

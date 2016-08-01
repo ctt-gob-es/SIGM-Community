@@ -86,11 +86,19 @@ public class EnviarSolicitudAction extends RegistroWebAction {
 	    	String refresco = (String)request.getParameter(Defs.REFRESCO);
 	    	boolean bRefresco = true;
 	    	if (refresco !=null && !"".equals(refresco))
-	    		bRefresco = new Boolean(refresco).booleanValue();
-
+	    		bRefresco = new Boolean(refresco).booleanValue();	    	
+	    	
 	    	if (bRefresco) {
 
 	    		FormularioSolicitudForm formulario = (FormularioSolicitudForm)form;
+	    		
+	    		//INICIO [dipucr-Felipe #1055] Errores por lanzar el action dos veces debidos a IE y Java 7.55
+		    	String specificData = formulario.getDatosEspecificos();
+		    	boolean bEjecucionRepetida = (null == specificData || "".equals(specificData));
+		    	if (bEjecucionRepetida){
+		    		return mapping.findForward("success");
+		    	}
+		    	//FIN [dipucr-Felipe #1055]
 
 	    		ServicioCatalogoTramites oServicioCatalogoTramites = LocalizadorServicios.getServicioCatalogoTramites();
 		    	ServicioRegistroTelematico oServicioRegistroTelematico = LocalizadorServicios.getServicioRegistroTelematico();
@@ -192,6 +200,10 @@ public class EnviarSolicitudAction extends RegistroWebAction {
 			   	int index2 = strSolicitud.indexOf("</"+Definiciones.SIGNED_DATA+">");
 			   	String strSolicitudFirma = strSolicitud.substring(index1 + ("<"+Definiciones.SIGNED_DATA+">").length(), index2);
 			   	session.setAttribute(Defs.DATOS_A_FIRMAR, formatear(Base64Util.encode(Goodies.fromStrToUTF8(strSolicitudFirma))));
+			   	//INICIO [eCenpri-Felipe #457]
+			   	//Obtenemos el hash de la solicitud
+			   	session.setAttribute(Defs.HASH_SOLICITUD, Utilities.getHash(solicitud));
+			   	//FIN [eCenpri-Felipe #457]
 	    	}
 	    	else {
 			   	byte[] solicitud = Base64Util.decode((String)session.getAttribute(Defs.REQUEST));

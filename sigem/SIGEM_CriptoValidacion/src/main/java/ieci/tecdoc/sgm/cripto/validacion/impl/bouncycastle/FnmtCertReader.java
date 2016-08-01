@@ -70,6 +70,29 @@ public class FnmtCertReader implements IReaderCert {
 
         InfoCertificado infoCertificado = new InfoCertificado();
         
+        if (cif!=null){        
+        	cif = cif.replace("\"", "");
+        	cif = cif.replace("DNI", "");
+	    }
+        
+	    if (issuer!=null) 
+	    	issuer = issuer.replace("\"", "");
+	    
+	    if (nombre!=null) 
+	    	nombre = nombre.replace("\"", "");
+	    
+	    if (nif!=null){
+	        nif = nif.replace("\"", "");
+	        nif = nif.replace("DNI", "");
+	    }
+	    
+	    if (numeroSerie!=null)
+	    	numeroSerie = numeroSerie.replace("\"", "");
+	    
+	    if (asunto!=null)
+	    	asunto = asunto.replace("\"", "");        
+        
+        
         infoCertificado.setCif(cif);
         infoCertificado.setCorporateName(razonSocial);
 	    infoCertificado.setIssuer(issuer);

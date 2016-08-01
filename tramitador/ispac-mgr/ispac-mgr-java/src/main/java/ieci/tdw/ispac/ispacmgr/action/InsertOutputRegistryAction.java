@@ -11,6 +11,7 @@ import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.sicres.ISicresConnector;
+import ieci.tdw.ispac.ispaclib.sicres.RegisterHelper;
 import ieci.tdw.ispac.ispaclib.sicres.vo.DocumentInfo;
 import ieci.tdw.ispac.ispaclib.sicres.vo.Organization;
 import ieci.tdw.ispac.ispaclib.sicres.vo.Register;
@@ -23,10 +24,12 @@ import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacmgr.action.form.EntityForm;
-import ieci.tdw.ispac.ispaclib.sicres.RegisterHelper;
 import ieci.tdw.ispac.ispacweb.api.IManagerAPI;
 import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
+import ieci.tecdoc.sgm.core.exception.SigemException;
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.gestioncsv.ServicioGestionCSV;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -42,6 +45,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
 
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+import es.dipucr.sigem.sellar.action.SellarDocumentos;
+import es.ieci.tecdoc.fwktd.csv.core.vo.InfoDocumentoCSV;
+
 /**
  * Action para crear registros de salida en SICRES.
  *
@@ -50,7 +57,8 @@ public class InsertOutputRegistryAction extends RegistryBaseAction {
 	
     protected final static String ERROR_VAR = "ERROR";
     protected final static String ERROR_REGISTRO = "ERROR_REGISTRO";
-	
+    
+
 	public ActionForward defaultExecute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response,
 			SessionAPI session) throws Exception {
@@ -136,94 +144,142 @@ public class InsertOutputRegistryAction extends RegistryBaseAction {
   		// Obtener el documento
   		IItem document = entitiesAPI.getEntity(SpacEntities.SPAC_DT_DOCUMENTOS,	Integer.parseInt(documentId));
   		
-  		List docIds = new ArrayList();
-  		docIds.add(String.valueOf(document.getKeyInt()));
-  		DocumentInfo[] documentInfo = getDocuments(session, docIds);
+		//[Manu Ticket #913] SIGEM firma registro rechazado
+  		if(document != null && StringUtils.isNotEmpty(document.getString("ESTADOFIRMA")) && !document.getString("ESTADOFIRMA").equals("04")){
   		
-  		
-		String destinyId = defaultForm.getProperty("SPAC_DT_DOCUMENTOS:DESTINO_ID");
-		String destinyName = defaultForm.getProperty("SPAC_DT_DOCUMENTOS:DESTINO");
-		ThirdPerson destiny = new ThirdPerson(destinyId, destinyName);
+	  		List<String> docIds = new ArrayList<String>();
+	  		docIds.add(String.valueOf(document.getKeyInt()));
+	  		DocumentInfo[] documentInfo = getDocuments(session, docIds);
+	  		
+	  		
+			String destinyId = defaultForm.getProperty("SPAC_DT_DOCUMENTOS:DESTINO_ID");
+			String destinyName = defaultForm.getProperty("SPAC_DT_DOCUMENTOS:DESTINO");
+			ThirdPerson destiny = new ThirdPerson(destinyId, destinyName);
+	
+			/**
+			 * [Teresa Ticket #607] INICIO Adjuntar en el registro el asunto del expediente.
+			 * **/	
+			
+			IItem expediente = ExpedientesUtil.getExpediente(cct, currentState.getNumexp());
+			String asuntoExpediente = expediente.getString("ASUNTO");
+	       
+			/**
+			 * [Teresa Ticket #607] FIN Adjuntar en el registro el asunto del expediente.
+			 * **/
+	
+			String summary = defaultForm.getProperty("SPAC_DT_DOCUMENTOS:NOMBRE") + "  -  Ref.Exp.: " + currentState.getNumexp() + " - Asunto Exp.: " + asuntoExpediente;
+	    	// Generar el registro de salida
+	        Register register = generateRegister(defaultForm, currentState, documentInfo, destiny, summary);
+	        RegisterInfo registerInfo = registerAPI.insertRegister(register);
+	        
+	        if (registerInfo != null) {
+	        	List<IItem> documentList = new ArrayList<IItem>();
+	        	documentList.add(document);
+	        	setDocumentsData(session, documentList, registerInfo, false);      
+	        	
+				//[Manu Ticket #107] - INICIO - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
+		        SellarDocumentos sellarDocumentos = new SellarDocumentos(cct, document.getInt("ID_TRAMITE"), documentId);
+		        sellarDocumentos.sellarDocumentos();
+	        	//[Manu Ticket #107] - FIN - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
 
-
-		String summary = defaultForm.getProperty("SPAC_DT_DOCUMENTOS:NOMBRE") + "  -  Ref.Exp.: " + currentState.getNumexp();
-    	// Generar el registro de salida
-        Register register = generateRegister(defaultForm, currentState, documentInfo, destiny, summary);
-        RegisterInfo registerInfo = registerAPI.insertRegister(register);
-        
-        if (registerInfo != null) {
-        	List documentList = new ArrayList();
-        	documentList.add(document);
-        	setDocumentsData(session, documentList, registerInfo, false);        	
-        	
-        	register = registerAPI.readRegister(registerInfo);
-        	
-        	//Se crea el registro en la entidad que contiene el listado de apuntes vinculados con un expediente  
-        	RegisterHelper.insertRegistroES(cct, register, destiny, document.getString("NUMEXP"), document.getInt("ID_TRAMITE"));
-        	
-        	
-            // Establecer los datos para la vista
-            viewRegister(request, register);
-            request.setAttribute("NUMERO_REGISTRO", registerInfo.getRegisterNumber());
-            
-        } else {
-            request.setAttribute(ERROR_VAR, ERROR_REGISTRO);
-        }
-		
-		/*
-		 * Nombre de la variable de sesión que mantiene los parámetros
-		 * del tag
-		 */
-		String parameters = request.getParameter("parameters");
-    	
-        // Obtiene los parametros del tag y los salva en la request
-        Map sParameters = (Map)request.getSession().getAttribute(parameters);
-        if (sParameters != null) {
-            request.setAttribute("parameters", sParameters);
-        }
+	        	register = registerAPI.readRegister(registerInfo);
+	        	
+	        	//Se crea el registro en la entidad que contiene el listado de apuntes vinculados con un expediente  
+	        	RegisterHelper.insertRegistroES(cct, register, destiny, document.getString("NUMEXP"), document.getInt("ID_TRAMITE"));
+	        	
+	        	
+	            // Establecer los datos para la vista
+	            viewRegister(request, register);
+	            request.setAttribute("NUMERO_REGISTRO", registerInfo.getRegisterNumber());
+	            
+	        } else {
+	            request.setAttribute(ERROR_VAR, ERROR_REGISTRO);
+	            //[Manu Ticket #110] - INICIO - ALSIGM3 Cambiar registro de salida para que actualice el campo ESTADONOTIFICACION
+	      		document.set("ESTADONOTIFICACION", "ER");
+	      		//[Manu Ticket #110] - FIN - ALSIGM3 Cambiar registro de salida para que actualice el campo ESTADONOTIFICACION	      		
+	        }
+			
+			/*
+			 * Nombre de la variable de sesión que mantiene los parámetros
+			 * del tag
+			 */
+			String parameters = request.getParameter("parameters");
+	    	
+	        // Obtiene los parametros del tag y los salva en la request
+	        Map<?, ?> sParameters = (Map<?, ?>)request.getSession().getAttribute(parameters);
+	        if (sParameters != null) {
+	            request.setAttribute("parameters", sParameters);
+	        }
+  		}
+		//[Manu Ticket #913] SIGEM firma registro rechazado
+  		else{
+  			throw new ISPACInfo("errors.register.rechazado");
+  		}
 
         return mapping.findForward("success");
 	}
 
 	
-	protected void setDocumentsData(SessionAPI session, List documents, RegisterInfo registerInfo, boolean updateDestiny) throws ISPACException{
+	protected void setDocumentsData(SessionAPI session, List<IItem> documents, RegisterInfo registerInfo, boolean updateDestiny) throws ISPACException{
 		ClientContext cct = session.getClientContext();
 		
-  	    IInvesflowAPI invesFlowAPI = session.getAPI();
-		IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
-		IRegisterAPI registerAPI = invesFlowAPI.getRegisterAPI();		
-
-    	// Obtener toda la información del registro generado
-  		Register register = registerAPI.readRegister(registerInfo);
-  		ThirdPerson destiny = null;
-        if (updateDestiny && register.getRegisterData().getParticipants() != null && register.getRegisterData().getParticipants().length > 0){
-        	destiny = register.getRegisterData().getParticipants()[0];
-        }
-
+		//[Manu # 625] SIGEM CVE Consulta de documentos - Añadir campos para registros de salida
+		ServicioGestionCSV servicioGestionCSV;
+		try {
+			servicioGestionCSV = LocalizadorServicios.getServicioGestionCSV();
 		
-		for (Iterator iterator = documents.iterator(); iterator.hasNext();) {
-			IItem document = (IItem) iterator.next();
+	  	    IInvesflowAPI invesFlowAPI = session.getAPI();
+			IRegisterAPI registerAPI = invesFlowAPI.getRegisterAPI();		
+	
+	    	// Obtener toda la información del registro generado
+	  		Register register = registerAPI.readRegister(registerInfo);
+	  		ThirdPerson destiny = null;
+	        if (updateDestiny && register.getRegisterData().getParticipants() != null && register.getRegisterData().getParticipants().length > 0){
+	        	destiny = register.getRegisterData().getParticipants()[0];
+	        }
+	
 			
-      		// Obtener el documento
-      		document.set("NREG", registerInfo.getRegisterNumber());
-      		document.set("FREG", registerInfo.getRegisterDate().getTime());
-      		
-      		
-            // ORIGEN
-            if (register.getOriginOrganization() != null) {
-            	document.set("ORIGEN_ID", (register.getOriginOrganization().getId() == null) ? "" : register.getOriginOrganization().getId());
-            	document.set("ORIGEN", (register.getOriginOrganization().getName() == null) ? "" : register.getOriginOrganization().getName());
-            	document.set("ORIGEN_TIPO", ISicresConnector.ORGANIZATION_TYPE);
-            }
-    
-            if (destiny != null){
-            	document.set("DESTINO_ID", destiny.getId());
-            	document.set("DESTINO", destiny.getName());
-            }
-      		
-      		// Guardar el documento con los datos de registro
-      		document.store(cct);			
+			for (Iterator<IItem> iterator = documents.iterator(); iterator.hasNext();) {
+				IItem document = (IItem) iterator.next();
+				
+	      		// Obtener el documento
+	      		document.set("NREG", registerInfo.getRegisterNumber());
+	      		document.set("FREG", registerInfo.getRegisterDate().getTime());
+	      		
+	      		//[Manu Ticket #110] - INICIO - ALSIGM3 Cambiar registro de salida para que actualice el campo ESTADONOTIFICACION
+	      		document.set("ESTADONOTIFICACION", "PR");
+	      		//[Manu Ticket #110] - FIN - ALSIGM3 Cambiar registro de salida para que actualice el campo ESTADONOTIFICACION	      		
+	      		
+	            // ORIGEN
+	            if (register.getOriginOrganization() != null) {
+	            	document.set("ORIGEN_ID", (register.getOriginOrganization().getId() == null) ? "" : register.getOriginOrganization().getId());
+	            	document.set("ORIGEN", (register.getOriginOrganization().getName() == null) ? "" : register.getOriginOrganization().getName());
+	            	document.set("ORIGEN_TIPO", ISicresConnector.ORGANIZATION_TYPE);
+	            }
+	    
+	            if (destiny != null){
+	            	document.set("DESTINO_ID", destiny.getId());
+	            	document.set("DESTINO", destiny.getName());
+	            }
+	            
+	          //[Manu # 625] SIGEM CVE Consulta de documentos - Añadir campos para registros de salida
+		        InfoDocumentoCSV docCSV = servicioGestionCSV.getServicioDocumentos().getInfoDocumentoByCSV(document.getString("COD_COTEJO"));
+		        docCSV.setNumeroRegistro(registerInfo.getRegisterNumber());
+		        docCSV.setFechaRegistro(registerInfo.getRegisterDate().getTime());
+		        docCSV.setOrigenRegistro( (register.getOriginOrganization().getName() == null) ? "" : register.getOriginOrganization().getName());
+		        docCSV.setDestinoRegistro(document.getString("DESTINO"));
+		        servicioGestionCSV.getServicioDocumentos().updateInfoDocumento(docCSV);
+		      //[Manu # 625] SIGEM CVE Consulta de documentos - Añadir campos para registros de salida
+		        
+	      		// Guardar el documento con los datos de registro
+	      		document.store(cct);			
+			}
+		} catch (SigemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+	      //[Manu # 625] SIGEM CVE Consulta de documentos - Añadir campos para registros de salida
+
 	}
 	
 	protected void checkRegisterInfo(EntityForm defaultForm) {
@@ -279,7 +335,7 @@ public class InsertOutputRegistryAction extends RegistryBaseAction {
 		return register;
 	}
 	
-	protected DocumentInfo[] getDocuments(SessionAPI session, List documentIds) throws NumberFormatException, ISPACException{
+	protected DocumentInfo[] getDocuments(SessionAPI session, List<String> documentIds) throws NumberFormatException, ISPACException{
   	    if (documentIds == null || documentIds.size() == 0){
   	    	return null;
   	    }
@@ -297,11 +353,12 @@ public class InsertOutputRegistryAction extends RegistryBaseAction {
 			try {
 				connectorSession = genDocAPI.createConnectorSession();
 				int i = 0;
-				for (Iterator iterator = documentIds.iterator(); iterator.hasNext();i++) {
+				for (Iterator<String> iterator = documentIds.iterator(); iterator.hasNext();i++) {
 					IItem document = entitiesAPI.getEntity(SpacEntities.SPAC_DT_DOCUMENTOS,	Integer.parseInt((String)iterator.next()));
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					genDocAPI.getDocument(connectorSession, document.getString("INFOPAG"), out);
-					String mimetype = genDocAPI.getMimeType(connectorSession, document.getString("INFOPAG"));
+					//[DipuCR-Agustin] #149 registrar salida pdf no odt, indicar INFOPAG_RDE					
+					genDocAPI.getDocument(connectorSession, document.getString("INFOPAG_RDE"), out);
+					String mimetype = genDocAPI.getMimeType(connectorSession, document.getString("INFOPAG_RDE"));
 					documentInfo[i] = new DocumentInfo(String.valueOf(document.getKeyInt()),String.valueOf(document.getKeyInt()) +"."+MimetypeMapping.getExtension(mimetype),out.toByteArray(), document.getDate("FDOC"));        	
 				}
 			

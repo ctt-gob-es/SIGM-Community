@@ -302,10 +302,6 @@
 				</exclusion>
 				<exclusion>
 					<groupId>org.openoffice</groupId>
-					<artifactId>juh</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.openoffice</groupId>
 					<artifactId>unoil</artifactId>
 				</exclusion>
 				<exclusion>
@@ -423,6 +419,57 @@
 			<version>2.6.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.openoffice</groupId>
+			<artifactId>unoil</artifactId>
+			<version>${unoil.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>${ant.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.ant</groupId>
+					<artifactId>ant-launcher</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>ant</groupId>
+					<artifactId>ant-optional</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>SIGEM_MensajesCortos</artifactId>
+			<version>${pom.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.mail</groupId>
+					<artifactId>mail</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>DipucrFuncionesComunes</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>DipucrRules</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.dipucr.subvenciones</groupId>
+			<artifactId>Subvenciones</artifactId>
+			<version>3.0</version>
+		</dependency>
 
 	</dependencies>
 

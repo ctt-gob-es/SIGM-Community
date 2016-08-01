@@ -477,11 +477,18 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			statement = connection.createStatement();
 			statement.executeUpdate(sentence);
 		} catch (SQLException e) {
-			log.warn("Error ejecutando [" + sentence + "]", e);
-			throw e;
+			//[Manu Ticket #945] INICIO - SIGEM Error en la distribución.
+			if(e != null && (!e.getMessage().toUpperCase().contains("LA RELACIÓN") && !e.getMessage().toUpperCase().contains("YA EXISTE"))){
+				log.warn("Error ejecutando [" + sentence + "]", e);		
+				throw e;
+			}
+			
 		} catch (Throwable e) {
-			log.warn("Error ejecutando [" + sentence + "]", e);
-			throw new SQLException("Error ejecutando [" + sentence + "]");
+			if(e != null && (!e.getMessage().toUpperCase().contains("LA RELACIÓN") && !e.getMessage().toUpperCase().contains("YA EXISTE"))){
+				log.warn("Error ejecutando [" + sentence + "]", e);
+				throw new SQLException("Error ejecutando [" + sentence + "]");
+			}
+			//[Manu Ticket #945] F- SIGEM Error en la distribución.
 		} finally {
 			BBDDUtils.close(statement);
 			BBDDUtils.close(connection);

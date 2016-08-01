@@ -49,6 +49,16 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 	
 	private static final String TYPE_DIR_DOMICILIO="0";
 	
+	
+	/**INICIO [eCenpri-Felipe #477] Tipos de dirección telemática */
+	private static final int TYPE_DT_MAIL=2;
+	private static final int TYPE_DT_TLFN_FIJO=1;
+	private static final int TYPE_DT_TLFN_MOVIL=5;
+	private static final String TABLAS_PFIS_PJUR="PERSONS";
+	private static final String TABLA_ADDRESS="SCR_ADDRESS";
+	/**FIN [eCenpri-Felipe #477]*/
+	
+	
 	/**
 	 * Constructor.
 	 * @exception ISPACException si ocurre algún error.
@@ -761,7 +771,9 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 			.append(" AND BOUND.TYPE="+TYPE_DIR_ELECTRONICA)
 			.append(" AND BOUND.ID=ADDRTEL.ID")
 			.append(" AND ADDRTEL.TYPE=TYPEADDRESS.ID")
-			.append(" AND (TYPEADDRESS.CODE='"+TYPE_DEU+"' OR TYPEADDRESS.CODE='"+TYPE_TLFN_MOVIL+"')")
+			//[dipucr-Felipe 3#166] Incluir mail en direcciones electrónicas
+//			.append(" AND (TYPEADDRESS.CODE='"+TYPE_DEU+"' OR TYPEADDRESS.CODE='"+TYPE_TLFN_MOVIL+"')")
+			.append(" AND (TYPEADDRESS.CODE='"+TYPE_MAIL+"' OR TYPEADDRESS.CODE='"+TYPE_DEU+"' OR TYPEADDRESS.CODE='"+TYPE_TLFN_MOVIL+"')")
 			.append(" ORDER BY ADDRTEL.PREFERENCE DESC, BOUND.ID")
 			.toString();
 
@@ -783,7 +795,9 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 			.append(" AND BOUND.TYPE="+TYPE_DIR_ELECTRONICA)
 			.append(" AND BOUND.ID=ADDRTEL.ID")
 			.append(" AND ADDRTEL.TYPE=TYPEADDRESS.ID")
-			.append(" AND (TYPEADDRESS.CODE='"+TYPE_DEU+"' OR TYPEADDRESS.CODE='"+TYPE_TLFN_MOVIL+"')")
+			//[dipucr-Felipe 3#166] Incluir mail en direcciones electrónicas
+//			.append(" AND (TYPEADDRESS.CODE='"+TYPE_DEU+"' OR TYPEADDRESS.CODE='"+TYPE_TLFN_MOVIL+"')")
+			.append(" AND (TYPEADDRESS.CODE='"+TYPE_MAIL+"' OR TYPEADDRESS.CODE='"+TYPE_DEU+"' OR TYPEADDRESS.CODE='"+TYPE_TLFN_MOVIL+"')")
 		   .append(" AND ADDRTEL.PREFERENCE=1")
 			.toString();
 
@@ -881,6 +895,284 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 			.toString();
 
 		return sql;
+	}
+	
+	
+	/**
+	 * [eCenpri-Felipe #477] Inserta un nuevo tercero en la BBDD
+	 * 
+	 * @param nif
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @param tipo
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @param tfnoFijo
+	 * @param tfnoMovil
+	 * @param email
+	 * @return
+	 * @throws ISPACException
+	 */
+	public boolean insertThirdParty(String nif, int tipoDoc, String nombre,
+			String ape1, String ape2, String tipo, String provincia,
+			String municipio, String cpostal, String direccion,
+			String tfnoFijo, String tfnoMovil, String email)
+			throws ISPACException {
+
+		String strQuery = null;
+		int idPerson = Integer.MIN_VALUE;
+		// boolean continuar = true;
+
+		DbCnt cnt = new DbCnt(dsName);
+		DbQuery dbQuery = null;
+
+		try {
+
+			cnt.getConnection();
+
+			// [eCenpri-Felipe] Escapar caracteres SQL
+			nif = StringUtils.escapeSql(nif);
+			nombre = StringUtils.escapeSql(nombre);
+			ape1 = StringUtils.escapeSql(ape1);
+			ape2 = StringUtils.escapeSql(ape2);
+			provincia = StringUtils.escapeSql(provincia);
+			municipio = StringUtils.escapeSql(municipio);
+			direccion = StringUtils.escapeSql(direccion);
+
+			// Obtenemos el nuevo id de la persona
+			idPerson = getContador(cnt, TABLAS_PFIS_PJUR) + 1;
+
+			if (idPerson != Integer.MIN_VALUE) {
+				if (tipo.toUpperCase().startsWith(
+						IThirdPartyAdapter.TIPO_PERSONA_FISICA)) {
+					strQuery = getInsertPfisSQLQuery(idPerson, tipoDoc, nif,
+							nombre, ape1, ape2);
+				} else {
+					strQuery = getInsertPjurSQLQuery(idPerson, tipoDoc, nif,
+							nombre);
+				}
+				cnt.execute(strQuery);
+				updateContador(cnt, TABLAS_PFIS_PJUR, idPerson);
+
+				// Obtenemos el id en scr_address
+				int idAddress = getContador(cnt, TABLA_ADDRESS) + 1;
+				strQuery = getInsertScrDomSQLQuery(idAddress, direccion,
+						municipio, cpostal, "ESPAÑA", 1);
+				cnt.execute(strQuery);
+
+				strQuery = getInsertScrAddressSQLQuery(idAddress, idPerson,
+						Integer.valueOf(TYPE_DIR_DOMICILIO).intValue());
+				cnt.execute(strQuery);
+
+				updateContador(cnt, TABLA_ADDRESS, idAddress);
+
+				// Insertamos las direcciones telemáticas
+				int preferencia = 1;
+
+				// Email
+				if (StringUtils.isNotEmpty(email)) {
+					insertDireccionTelematica(cnt, idPerson, email,
+							TYPE_DT_MAIL, preferencia);
+					preferencia = 0;
+				}
+				// Tfono móvil
+				if (StringUtils.isNotEmpty(tfnoMovil)) {
+					insertDireccionTelematica(cnt, idPerson, tfnoMovil,
+							TYPE_DT_TLFN_MOVIL, preferencia);
+					preferencia = 0;
+				}
+				// Tfono fijo
+				if (StringUtils.isNotEmpty(tfnoFijo)) {
+					insertDireccionTelematica(cnt, idPerson, tfnoFijo,
+							TYPE_DT_TLFN_FIJO, preferencia);
+				}
+			}
+
+		} catch (ISPACException e) {
+			logger.error(
+					"Error en la búsqueda de la dirección electrónica por defecto",
+					e);
+			throw e;
+		} catch (Exception e) {
+			logger.error(
+					"Error en la búsqueda de la dirección electrónica por defecto",
+					e);
+			throw new ISPACException(
+					"Error en la búsqueda de la dirección electrónica por defecto",
+					e);
+		} finally {
+			if (dbQuery != null) {
+				dbQuery.close();
+			}
+			cnt.closeConnection();
+		}
+
+		return true;
+	}
+
+	/**
+	 * [eCenpri-Felipe #477] Devuelve el contador de la tabla SCR_CONTADOR
+	 * 
+	 * @param idTabla
+	 * @return
+	 * @throws ISPACException
+	 */
+	private static int getContador(DbCnt cnt, String idTabla)
+			throws ISPACException {
+
+		StringBuffer sbQuery = new StringBuffer()
+				.append("SELECT CONTADOR FROM SCR_CONTADOR WHERE TABLAID = '")
+				.append(idTabla).append("'");
+		DbQuery dbQuery = cnt.executeDbQuery(sbQuery.toString());
+		dbQuery.next();
+		return dbQuery.getInt("CONTADOR");
+	}
+
+	/**
+	 * [eCenpri-Felipe #477] Actualiza el contador de la tabla SCR_CONTADOR
+	 * 
+	 * @param contador
+	 * @return
+	 * @throws ISPACException
+	 */
+	private static boolean updateContador(DbCnt cnt, String idTabla,
+			int contador) throws ISPACException {
+
+		StringBuffer sbQuery = new StringBuffer()
+				.append("UPDATE SCR_CONTADOR SET CONTADOR=").append(contador)
+				.append(" WHERE TABLAID = '").append(idTabla).append("'");
+		return cnt.execute(sbQuery.toString());
+	}
+
+	/**
+	 * [eCenpri-Felipe #477] Obtiene la consulta SQL para crear un registro en
+	 * SCR_PFIS
+	 * 
+	 * @param thirdPartyId
+	 *            Identificador del tercero.
+	 * @return Consulta SQL.
+	 */
+	private static String getInsertPfisSQLQuery(int idPerson, int tipoDoc,
+			String nif, String nombre, String ape1, String ape2) {
+
+		String sql = new StringBuffer()
+				.append("INSERT INTO SCR_PFIS (ID, TYPE_DOC, NIF, FIRST_NAME, SECOND_NAME, SURNAME) VALUES (")
+				.append(idPerson).append(",").append(tipoDoc).append(",'")
+				.append(nif).append("','").append(ape1).append("','")
+				.append(ape2).append("','").append(nombre).append("')")
+				.toString();
+
+		return sql;
+	}
+
+	/**
+	 * [eCenpri-Felipe #477] Obtiene la consulta SQL para crear un registro en
+	 * SCR_PJUR
+	 * 
+	 * @param thirdPartyId
+	 *            Identificador del tercero.
+	 * @return Consulta SQL.
+	 */
+	private static String getInsertPjurSQLQuery(int idPerson, int tipoDoc,
+			String nif, String nombre) {
+
+		String sql = new StringBuffer()
+				.append("INSERT INTO SCR_PJUR(ID, TYPE_DOC, CIF, NAME) VALUES (")
+				.append(idPerson).append(",").append(1).append(",'")
+				.append(nif).append("','").append(nombre).append("')")
+				.toString();
+
+		return sql;
+	}
+
+	/**
+	 * [eCenpri-Felipe #477] Obtiene la consulta SQL para crear un registro en
+	 * SCR_PFIS
+	 * 
+	 * @param thirdPartyId
+	 *            Identificador del tercero.
+	 * @return Consulta SQL.
+	 */
+	private static String getInsertScrDomSQLQuery(int idAddress,
+			String direccion, String ciudad, String cpostal, String pais,
+			int preferencia) {
+
+		String sql = new StringBuffer()
+				.append("INSERT INTO SCR_DOM (ID, ADDRESS, CITY, ZIP, COUNTRY, PREFERENCE) VALUES (")
+				.append(idAddress).append(",'").append(direccion).append("','")
+				.append(ciudad).append("','").append(cpostal).append("','")
+				.append(pais).append("',").append(preferencia).append(")")
+				.toString();
+
+		return sql;
+	}
+
+	/**
+	 * [eCenpri-Felipe #477] Obtiene la consulta SQL para crear un registro en
+	 * SCR_ADDRESS
+	 * 
+	 * @param thirdPartyId
+	 *            Identificador del tercero.
+	 * @return Consulta SQL.
+	 */
+	private static String getInsertScrAddressSQLQuery(int idAddress,
+			int idPerson, int tipoDireccion) {
+
+		String sql = new StringBuffer()
+				.append("INSERT INTO SCR_ADDRESS (ID, ID_PERSON, TYPE) VALUES (")
+				.append(idAddress).append(",").append(idPerson).append(",")
+				.append(tipoDireccion).append(")").toString();
+
+		return sql;
+	}
+
+	/**
+	 * [eCenpri-Felipe #477] Inserta una dirección en la BBDD
+	 * 
+	 * @param thirdPartyId
+	 *            Identificador del tercero.
+	 * @return Consulta SQL.
+	 * @throws ISPACException
+	 */
+	private static boolean insertDireccionTelematica(DbCnt cnt, int idPerson,
+			String address, int tipo, int preferencia) throws ISPACException {
+
+		int idAddress = getContador(cnt, TABLA_ADDRESS) + 1;
+		String strQuery = getInsertScrAddrtelSQLQuery(address, tipo,
+				preferencia, idAddress);
+		cnt.execute(strQuery);
+
+		strQuery = getInsertScrAddressSQLQuery(idAddress, idPerson, Integer
+				.valueOf(TYPE_DIR_ELECTRONICA).intValue());
+		cnt.execute(strQuery);
+
+		updateContador(cnt, TABLA_ADDRESS, idAddress);
+
+		return true;
+	}
+
+	/**
+	 * [eCenpri-Felipe #477] Devuelve la sentencia SQL de la inserción en la
+	 * dirección telemática
+	 * 
+	 * @param address
+	 * @param tipo
+	 * @param preferencia
+	 * @param idAddress
+	 * @return
+	 */
+	private static String getInsertScrAddrtelSQLQuery(String address, int tipo,
+			int preferencia, int idAddress) {
+
+		String strQuery = new StringBuffer()
+				.append("INSERT INTO SCR_ADDRTEL(ID, ADDRESS, TYPE, PREFERENCE) VALUES (")
+				.append(idAddress).append(",'").append(address).append("',")
+				.append(tipo).append(",").append(preferencia).append(")")
+				.toString();
+		return strQuery;
 	}
 
 //	/**

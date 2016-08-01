@@ -4,6 +4,6 @@
 		Valores posibles: true  - Habilita la auditoría
 						  false - Deshabilita la auditoría
 	-->
-	<EnableAudit>true</EnableAudit>
+	<EnableAudit>false</EnableAudit>
 
 </ISicres-Audit>

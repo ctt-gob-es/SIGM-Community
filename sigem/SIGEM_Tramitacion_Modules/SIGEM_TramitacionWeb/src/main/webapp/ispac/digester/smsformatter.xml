@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+
+	<!-- Ponemos 2 veces la propiedad Nombre, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE' 
+				 titleKey='TSOL_SMS:NOMBRE' 
+				 fieldType='LINK'
+				 columnClass='width25percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE' 
+				 titleKey='TSOL_SMS:NOMBRE' 
+				 fieldType='LIST'
+				 columnClass='width25percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='TFNO_MOVIL' 
+				 titleKey='TSOL_SMS:TFNO_MOVIL' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='TEXTO' 
+				 titleKey='TSOL_SMS:TEXTO' 
+				 fieldType='LIST' 
+				 columnClass='width30percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='ENVIAR_SMS' 
+				 titleKey='TSOL_SMS:ENVIAR_SMS' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='ENVIADO_SMS' 
+				 titleKey='TSOL_SMS:ENVIADO_SMS' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='COMPROBANTE_SMS' 
+				 titleKey='TSOL_SMS:COMPROBANTE_SMS' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+				 
+</beanformatter>

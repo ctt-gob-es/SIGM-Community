@@ -12,7 +12,10 @@
 	<meta http-equiv="Content Type" content="text/html; charset=iso-8859-1" />
 	<meta name="author" content='<fmt:message key="head.author"/>' />
 
-	<link rel="stylesheet" type="text/css" href="css/estilos_portal.css">
+<!--  [eCenpri-Manu Ticket #133] - INICIO - ALSIGM3 Problema con Apache tomcat 8 y la pantalla de inicio. -->
+<!--  <link rel="stylesheet" type="text/css" href="css/estilos_portal.css">-->
+	<link rel="stylesheet" type="text/css" href="/portal/css/estilos_portal.css"/>
+<!--  [eCenpri-Manu Ticket #133] - FIN - ALSIGM3 Problema con Apache tomcat 8 y la pantalla de inicio. -->
 
 	<!--[if IE 6]>
 		<link rel="stylesheet" type="text/css" href="css/estilos_portal_ie6.css">
@@ -228,6 +231,16 @@
 							</ul>
 						</div>
 					</div> <!-- fin seccion -->
+				<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto Árbol Documental.-->
+					<div class="seccion">
+						<div class="encabezado_sec"><fmt:message key="apps.bo.arbolDocumental.title"/></div>
+						<div class="cuerpo_sec">
+							<ul>
+								<li><a href="../SIGEM_ArbolDocumentalWeb"><fmt:message key="apps.bo.arbolDocumental.name"/></a></li>
+							</ul>
+						</div>
+					</div> <!-- fin seccion -->
+				<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto Árbol Documental.-->
 
 					<div class="clear">
 					</div> <!-- fin clear -->
@@ -287,18 +300,100 @@
 								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=TRAM_18"><fmt:message key="apps.citizen.registroTelematico.TRAM_18"/></a></li>
 
 								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=TRAM_19"><fmt:message key="apps.citizen.registroTelematico.TRAM_19"/></a></li>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SECR_1"><fmt:message key="apps.citizen.registroTelematico.SECR_1"/></a></li>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=DPCR_SRS"><fmt:message key="apps.citizen.registroTelematico.DPCR_SRS"/></a></li>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SUBV_1"><fmt:message key="apps.citizen.registroTelematico.SUBV_1"/></a></li>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=BOP_1"><fmt:message key="apps.citizen.registroTelematico.BOP_1"/></a></li>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SUBV-INT"><fmt:message key="apps.citizen.registroTelematico.SUBV_INT"/></a></li>
+							</ul>
+						</div>
+						<div class="encabezado_sec"><fmt:message key="apps.citizen.registroTelematico.title.dipucr.viasobras"/></div>
+							<div class="cuerpo_sec _inner">
+								<ul>
+									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=VYO_USOSEXCP">Solicitud de Autorización de Usos Excepcionales</a></li>						
+								</ul>
+							</div>
 
+						<div class="encabezado_sec"><fmt:message key="apps.citizen.registroTelematico.title.dipucr.imprentabop"/></div>
+						<div class="cuerpo_sec _inner">
+							<ul>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SOL_TRAB_IMPR_ASO">Solicitud de Trabajos a Imprenta de Asociaciones</a></li>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SOL_TRAB_IMPR_AYTO">Solicitud de Trabajos a Imprenta de Ayuntamientos</a></li>
+							</ul>
+						</div>
+						
+						<div class="encabezado_sec"><fmt:message key="apps.citizen.registroTelematico.title.dipucr.serso"/></div>
+						<div class="cuerpo_sec _inner">
+							<ul>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SERSO_PE"><fmt:message key="apps.citizen.registroTelematico.SERSO_PE"/></a></li>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SERSO_VG"><fmt:message key="apps.citizen.registroTelematico.SERSO_VG"/></a></li>									
+							</ul>
+						</div>
+						
+						<div class="encabezado_sec"><fmt:message key="apps.citizen.registroTelematico.title.dipucr.subvenciones"/></div>
+						<div class="cuerpo_sec _inner">
+							<ul>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=CONVSUB_01">Convocatoria de Subvenciones a EELL</a></li>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=CONVSUB_ASO">Convocatoria de Subvenciones para Asociaciones</a></li>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=CONVSUB_CIU">Convocatoria de Subvenciones para Personas Físicas</a></li>									
+							</ul>
+						</div>
+						
+						<div class="encabezado_sec"><fmt:message key="apps.citizen.registroTelematico.title.dipucr.cdj"/></div>
+						<div class="cuerpo_sec _inner">
+							<ul>
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=CDJ_INSCRCC"><fmt:message key="apps.citizen.registroTelematico.CDJ_INSCRCC"/></a></li>
 							</ul>
 						</div>
 					</div> <!-- fin seccion -->
 
 					<div class="seccion">
 						<div class="cuerpo_sec _outter">
+						
+						<div class="encabezado_sec"><fmt:message key="apps.citizen.registroTelematico.title.dipucr"/></div>
+							<div class="cuerpo_sec _inner">
+								<ul>
+									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=CONTRATACION">Solicitud Contratación</a></li>
+									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=CR_ASES_01"><fmt:message key="apps.citizen.registroTelematico.CR_ASES_01"/></a></li>																							
+									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SUBSANACION_JUSTIFICACION">Solicitud de Subsanación, Modificación o Justificación para Ayuntamientos</a></li>
+									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SUBSANACION_JUST_REPRESENT">Solicitud de Subsanación o Modificación para Ciudadanos</a></li>
+									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SUBSANACION_JUST_REPRESENT">Solicitud de Subsanación o Modificación para Asociaciones</a></li>
+									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=ACCTELEXPAYTOS">Acceso Telemático a Expedientes - AYUNTAMIENTOS</a></li>
+									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=ACCTELEXPCIU">Acceso Telemático a Expedientes - CIUDADANOS</a></li>									
+									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=ACCTELEXPEMP">Acceso Telemático a Expedientes - OTROS</a></li>
+									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SOLALTMODBAJCOMP">Solicitud de alta, modificación y baja de terceros en Comparece para ayuntamientos, asociaciones y empresas</a></li>									
+								</ul>
+							</div>
+							
+							<div class="encabezado_sec"><fmt:message key="apps.citizen.registroTelematico.title.dipucr.gtr"/></div>
+								<div class="cuerpo_sec _inner">
+									<ul>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_FRAC_IBI"><fmt:message key="apps.citizen.registroTelematico.REC_FRAC_IBI"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_02_VOL"><fmt:message key="apps.citizen.registroTelematico.REC_02_VOL"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_02_EJE"><fmt:message key="apps.citizen.registroTelematico.REC_02_EJE"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_DOMI"><fmt:message key="apps.citizen.registroTelematico.REC_DOMI"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_05_I_INTERNO"><fmt:message key="apps.citizen.registroTelematico.REC_05_I_INTERNO"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_05_II_INTERNO"><fmt:message key="apps.citizen.registroTelematico.REC_05_II_INTERNO"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_05_III_INTERNO"><fmt:message key="apps.citizen.registroTelematico.REC_05_III_INTERNO"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_05_IV_INTERNO"><fmt:message key="apps.citizen.registroTelematico.REC_05_IV_INTERNO"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_05_V_INTERNO"><fmt:message key="apps.citizen.registroTelematico.REC_05_V_INTERNO"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_06_EJE"><fmt:message key="apps.citizen.registroTelematico.REC_06_EJE"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_01"><fmt:message key="apps.citizen.registroTelematico.REC_01"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_10"><fmt:message key="apps.citizen.registroTelematico.REC_10"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_03"><fmt:message key="apps.citizen.registroTelematico.REC_03"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_ESP"><fmt:message key="apps.citizen.registroTelematico.REC_ESP"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_04"><fmt:message key="apps.citizen.registroTelematico.REC_04"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_OTR_SOL"><fmt:message key="apps.citizen.registroTelematico.REC_OTR_SOL"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_OTR_SOL_AYTO"><fmt:message key="apps.citizen.registroTelematico.REC_OTR_SOL_AYTO"/></a></li>
+										<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=REC_OTR_SOL_CIUD"><fmt:message key="apps.citizen.registroTelematico.REC_OTR_SOL_CIUD"/></a></li>
+									</ul>
+								</div>					
 
 							<div class="encabezado_sec"><fmt:message key="apps.citizen.consultaExpedientes.title"/></div>
 							<div class="cuerpo_sec _inner">
 								<ul>
 									<li><a href="../SIGEM_ConsultaWeb"><fmt:message key="apps.citizen.consultaExpedientes.name"/></a></li>
+									<li><a href="../SIGEM_ConsultaWebMiembros">Portal del Diputado</a></li>
 									<li><a href="../SIGEM_ConsultaRegistroTelematicoWeb"><fmt:message key="apps.citizen.consultaRegistros.name"/></a></li>
 								</ul>
 							</div>

@@ -2,8 +2,6 @@ package com.tsol.modulos.buscador.actions;
 
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.impl.SessionAPIFactory;
-import ieci.tdw.ispac.audit.business.vo.AuditContext;
-import ieci.tdw.ispac.audit.context.AuditContextHolder;
 
 import java.io.IOException;
 
@@ -22,6 +20,7 @@ import org.apache.struts.action.ActionMapping;
 import com.tsol.modulos.buscador.beans.SearchBean;
 import com.tsol.modulos.buscador.beans.SearchForm;
 import com.tsol.modulos.buscador.dao.SearchDAO;
+import com.tsol.modulos.buscador.utils.BuscadorDocsUtils;
 
 public class SearchResultAction extends Action {
 
@@ -50,7 +49,7 @@ public class SearchResultAction extends Action {
 			SessionAPI sessionAPI = SessionAPIFactory.getSessionAPI(request, response);
 
 	        // Contexto para la auditoría
-			setAuditContext(request, sessionAPI);
+			BuscadorDocsUtils.setAuditContext(request, sessionAPI);//[dipucr-Felipe #828 #1216]
 
 			// Obtener la información del documento
 			SearchBean searchBean = SearchDAO.searchDocument(sessionAPI.getClientContext(), codCotejo);
@@ -66,17 +65,5 @@ public class SearchResultAction extends Action {
 		}
 
 		return mapping.findForward("success");
-	}
-
-	/**
-	 * @param request
-	 */
-    protected void setAuditContext(HttpServletRequest request, SessionAPI session) {
-		AuditContext auditContext = new AuditContext();
-		auditContext.setUserHost(request.getRemoteHost());
-		auditContext.setUserIP(request.getRemoteAddr());
-		auditContext.setUser(session.getUserName());
-		auditContext.setUserId(session.getClientContext().getUser().getUID());
-		AuditContextHolder.setAuditContext(auditContext);
 	}
 }

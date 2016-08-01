@@ -8,7 +8,10 @@
 			<columnname>NOMBREPROCEDIMIENTO</columnname>
 			<description>Procedimiento:</description>
 			<datatype>string</datatype>
-			<controltype size='30' maxlength='30' tipo='validate' table='SPAC_P_PROCEDIMIENTOS' field='spac_expedientes:NOMBREPROCEDIMIENTO' label='NOMBRE'  value='NOMBRE' clause='WHERE TIPO=1 AND ESTADO=2'>text</controltype>
+			<!--  [Manu Ticket #712] SIGEM Ordenar procedimientos en la búsqueda al relacionar expedientes -->
+			<!-- <controltype size='30' maxlength='30' tipo='validate' table='SPAC_P_PROCEDIMIENTOS' field='spac_expedientes:NOMBREPROCEDIMIENTO' label='NOMBRE'  value='NOMBRE' clause='WHERE TIPO=1 AND ESTADO=2'>text</controltype>-->
+			<controltype size='30' maxlength='30' tipo='validate' table='SPAC_P_PROCEDIMIENTOS' field='spac_expedientes:NOMBREPROCEDIMIENTO' label='NOMBRE'  value='NOMBRE' clause='WHERE TIPO=1 AND ESTADO=2' orderBy=' NOMBRE'>text</controltype>
+			<!--  [Manu Ticket #712] SIGEM Ordenar procedimientos en la búsqueda al relacionar expedientes -->			
 		</field>
 		<field type="query">
 			<columnname>NUMEXP</columnname>

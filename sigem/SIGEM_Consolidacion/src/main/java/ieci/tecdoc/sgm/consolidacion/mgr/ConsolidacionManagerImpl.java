@@ -7,10 +7,13 @@ import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.dto.Entidad;
 import ieci.tecdoc.sgm.core.services.mensajes_cortos.MensajesCortosException;
 import ieci.tecdoc.sgm.core.services.mensajes_cortos.ServicioMensajesCortos;
+import ieci.tecdoc.sgm.core.services.registro.Document;
 import ieci.tecdoc.sgm.core.services.registro.DocumentInfo;
 import ieci.tecdoc.sgm.core.services.registro.FieldInfo;
+import ieci.tecdoc.sgm.core.services.registro.Page;
 import ieci.tecdoc.sgm.core.services.registro.PersonInfo;
 import ieci.tecdoc.sgm.core.services.registro.RegisterInfo;
+import ieci.tecdoc.sgm.core.services.registro.RegisterWithPagesInfoPersonInfo;
 import ieci.tecdoc.sgm.core.services.registro.ServicioRegistro;
 import ieci.tecdoc.sgm.core.services.registro.UserInfo;
 import ieci.tecdoc.sgm.core.services.repositorio.ContenedorDocumento;
@@ -29,12 +32,13 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.jconfig.ConfigurationLoader;
 
 public class ConsolidacionManagerImpl implements ConsolidacionManager {
 
@@ -67,6 +71,13 @@ public class ConsolidacionManagerImpl implements ConsolidacionManager {
 	 * Configuración con soporte multientidad.
 	 */
 	protected ConsolidacionConfig config=new ConsolidacionConfig();
+	
+	//[Ticket 1014 Teresa]
+	/**
+	 * Servicio de Repositorio de documentos tramitación
+	 * **/
+	private ServicioRepositorioDocumentosTramitacion servicioDocumentos = null;
+	
 
 	/**
 	 * Locale de usuario presencial
@@ -87,6 +98,9 @@ public class ConsolidacionManagerImpl implements ConsolidacionManager {
 		this.servicioRegistroTelemático = LocalizadorServicios.getServicioRegistroTelematico();
 		this.servicioRegistro = LocalizadorServicios.getServicioRegistro();
 		this.servicioRde = LocalizadorServicios.getServicioRepositorioDocumentosTramitacion();
+		//[Ticket 1014 Teresa]
+		this.servicioDocumentos = LocalizadorServicios.getServicioRepositorioDocumentosTramitacion();
+
 
 		// Formateador de fechas en formato largo
 		longFormatter = new SimpleDateFormat(RBUtil.getInstance(null).getProperty(
@@ -197,6 +211,46 @@ public class ConsolidacionManagerImpl implements ConsolidacionManager {
 			// consolidado
 			servicioRegistroTelemático.establecerEstadoRegistro(registro.getRegistryNumber(),
 					RegistroEstado.STATUS_CONSOLIDATED, entidad);
+			
+			/**
+			 * [Ticket 1014 Teresa] Eliminar de la tabla sgmrdedocumentos el
+			 * campo contenido y añadir el identificador del documento que se
+			 * obtiene del repositorio documental a1pageh -> fileid que luego se
+			 * utiliza en la tabla ivolfilehdr
+			 * **/
+			// [**1]Obtengo los id de cada uno de los documentos en el registro
+			// presencial
+			RegisterWithPagesInfoPersonInfo inforRegPresencial = servicioRegistro
+					.getInputRegister(userInfo, regInfo.getNumber(), entidad);
+
+			Document[] docRegistroPresencial = inforRegPresencial.getDocInfo();
+			for (int docRegPresen = 0; docRegPresen < docRegistroPresencial.length; docRegPresen++) {
+				Document docReg = docRegistroPresencial[docRegPresen];
+				// identificador del documento.
+
+				List listadoInformacion = docReg.getPages();
+	        	for (Iterator it2 = listadoInformacion.iterator(); it2.hasNext();) {
+					Page page = (Page) it2.next();
+					
+					logger.warn("- Registro Presencial:");
+		        	logger.warn("Identificador del documento. "+docReg.getDocID());
+		        	logger.warn("Identificador del fichero en registo. "+page.getFileID());
+		        	logger.warn("Nombre del documento. "+docReg.getDocumentName());
+		        	logger.warn("Número registro. "+regInfo.getNumber());
+		        	RegistroDocumento docRegTelema = servicioRegistroTelemático.obtenerDocumentoRegistro("", registro.getRegistryNumber(), docReg.getDocumentName(), entidad);
+		        	logger.warn("- Registro Telemático:");
+	        		logger.warn("guid: "+docRegTelema.getGuid());
+	        		logger.warn("Nombre: "+docRegTelema.getCode());	        	
+		        	//[**2]Almacenar ese identificador en la tabla sgmrdedocumentos. 
+		        	//Hay que crear un servicio web que elimine el contenido y añada el identificador.
+	        		servicioDocumentos.insertarIdFileBorrarContenido(docRegTelema.getGuid(), page.getFileID(), entidad);
+	        		logger.warn("MODIFICADO ");
+	        	}
+			}
+
+			/**
+			 * [Ticket 1014 Teresa] FIN
+			 * **/
 
 			if (logger.isInfoEnabled()) {
 				logger.info("Fin del proceso de consolidación del registro ["

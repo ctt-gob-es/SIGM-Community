@@ -1,6 +1,7 @@
 package ieci.tdw.ispac.ispacmgr.action.form;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import org.apache.struts.validator.ValidatorForm;
 
@@ -13,6 +14,43 @@ public class SignForm extends BatchForm {
 	private String sign;
 	private String signs;
 	private String documentId;
+	
+	private String listaDocs = null; 
+	private String codEntidad = null;
+	private String serialNumber = null;
+	private HashMap<String, String> infoFirma =null;
+
+	public String getListaDocs() {
+		return listaDocs;
+	}
+
+	public void setListaDocs(String listaDocs) {
+		this.listaDocs = listaDocs;
+	}
+
+	public String getCodEntidad() {
+		return codEntidad;
+	}
+
+	public void setCodEntidad(String codEntidad) {
+		this.codEntidad = codEntidad;
+	}
+
+	public String getSerialNumber() {
+		return serialNumber;
+	}
+
+	public void setSerialNumber(String serialNumber) {
+		this.serialNumber = serialNumber;
+	}
+
+	public HashMap<String, String> getInfoFirma() {
+		return infoFirma;
+	}
+
+	public void setInfoFirma(HashMap<String, String> infoFirma) {
+		this.infoFirma = infoFirma;
+	}
 
 	//Propiedades del proceso de firma
     private String subject;

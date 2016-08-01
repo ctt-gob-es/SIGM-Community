@@ -11,7 +11,13 @@
 	<artifactId>ISicresAdmin-EstructuraCore</artifactId>
 	<packaging>jar</packaging>
 
-
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		 <dependency>
@@ -64,9 +70,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk14</artifactId>
-			<version>138</version>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk16</artifactId>
+			<version>1.46</version>
 		</dependency>
 
 		<dependency>
@@ -78,6 +84,12 @@
 		<dependency>
 			<groupId>xtom</groupId>
 			<artifactId>xtom</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>fplibrary</groupId>
+			<artifactId>fplibrary</artifactId>
 			<version>1.0</version>
 		</dependency>
 

@@ -208,6 +208,59 @@ public class TramitacionWebService {
 		
 		return (Binario) ServiciosUtils.completeReturnOK(binario);	
     }
+    
+    /**
+     * [Dipucr-Agustin #781]
+     * Obtiene el contenido del documento.
+     * @param guid GUID del documento
+     * @return Contenido del documento.
+     */
+    public Binario getFicheroTemp(String idEntidad, String guid) {
+		Binario binario = new Binario();
+		
+		try {
+			ServicioTramitacion service = getServicioTramitacion();	
+			binario.setContenido(service.getFicheroTemp(idEntidad, guid));
+			
+		} catch (TramitacionException e) {
+			logger.error("Error al obtener el fichero.", e);
+			return (Binario) 
+				ServiciosUtils.completeReturnError(binario, e.getErrorCode());
+		} catch (SigemException e) {
+			logger.error("Error al obtener el fichero.", e);
+			return (Binario) 
+				ServiciosUtils.completeReturnError(binario, e.getErrorCode());
+		} catch (Throwable e){
+			logger.error("Error al obtener el fichero.", e);
+			return (Binario) ServiciosUtils.completeReturnError(binario);
+		}
+		
+		return (Binario) ServiciosUtils.completeReturnOK(binario);	
+    }
+    
+    
+    /**
+     * [Dipucr-Agustin #781]
+     * Escribe el contenido del documento.
+     * @param guid GUID del documento
+     * @return Resultado de la operacion.
+     * @throws Exception 
+     */
+    public boolean setFicheroTemp(String idEntidad, String guid, byte[] data) {
+    	
+    	boolean result = false;
+		
+		try {
+			ServicioTramitacion service = getServicioTramitacion();	
+			result = service.setFicheroTemp(idEntidad, guid, data);
+			
+		} catch (Exception e) {
+			logger.error("Error al guardar el fichero el fichero.", e);
+		} 
+		
+		return result;	
+    }
+    
 
 	/**
 	 * Obtiene la información de origen e integridad del documento.

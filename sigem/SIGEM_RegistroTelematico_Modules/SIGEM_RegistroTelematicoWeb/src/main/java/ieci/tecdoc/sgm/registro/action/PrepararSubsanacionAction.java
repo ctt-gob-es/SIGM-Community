@@ -212,21 +212,31 @@ public class PrepararSubsanacionAction extends PrepararSolicitudRegistroAction {
 	        String numRegistroInicial = "";
 	        String fechaRegistroInicial = "";
 	        String horaRegistroInicial = "";
-
+	        
+			//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
+	        String fechaEfectiva = "";
+ 	        String horaEfectiva = "";
+			//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
+ 	        
 	        if (registro != null) {
 
 	        	// Obtener el número de registro telemático que generó el expediente
 	        	numRegistroInicial = registro.getRegistryNumber();
 	        	fechaRegistroInicial = DateTimeUtil.getDateTime(registro.getRegistryDate(), "dd-MM-yyyy");
 	        	horaRegistroInicial = DateTimeUtil.getDateTime(registro.getRegistryDate(), "HH:mm:ss");
+	        	
+				//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
+	        	fechaEfectiva = DateTimeUtil.getDateTime(registro.getEffectiveDate(), "dd-MM-yyyy");
+	 	        horaEfectiva = DateTimeUtil.getDateTime(registro.getEffectiveDate(), "HH:mm:ss");
+				//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.	      
 	        }
 
 	        bdr.addOpeningTag(Definiciones.REGISTRY_DATA);
 	        bdr.addSimpleElement(Definiciones.REGISTRY_NUMBER, numRegistroInicial);
 	        bdr.addSimpleElement(Definiciones.REGISTRY_DATE, fechaRegistroInicial);
 	        bdr.addSimpleElement(Definiciones.REGISTRY_HOUR, horaRegistroInicial);
-	        bdr.addSimpleElement(Definiciones.REGISTRY_EFFECTIVE_DATE, "");
-	        bdr.addSimpleElement(Definiciones.REGISTRY_EFFECTIVE_HOUR, "");
+	        bdr.addSimpleElement(Definiciones.REGISTRY_EFFECTIVE_DATE, fechaEfectiva);
+	        bdr.addSimpleElement(Definiciones.REGISTRY_EFFECTIVE_HOUR, horaEfectiva);
 	        bdr.addClosingTag(Definiciones.REGISTRY_DATA);
 
 

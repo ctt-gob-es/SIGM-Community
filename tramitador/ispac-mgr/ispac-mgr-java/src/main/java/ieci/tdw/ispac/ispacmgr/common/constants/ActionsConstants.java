@@ -82,6 +82,7 @@ public class ActionsConstants {
 	public static final String PARAMETER_METHOD = "method";
 	public static final String FORMATTER = getKey("formatter");
 	public static final String SIGN_CIRCUIT_LIST = getKey("signCircuitList");
+	public static final String SIGN_CIRCUITTRAM_LIST = getKey("signCircuitTramList"); //[eCenpri-Felipe #592]
 	public static final String SIGN_CIRCUIT_ID = getKey("signCircuitId");
 	public static final String SIGN_HISTORICS_DATE_ERROR = getKey("sighHistoricsDateError");
 
@@ -124,5 +125,9 @@ public class ActionsConstants {
 	public static final String CURRENT_STATE = "_currentState";
 
 	public static final String LOAD_NOT_ASSOCIATED = "loadNotAssociated";
-
+	
+    //[MQE Ticket #31] Añadimos la opcion de Rechazar firma
+	public static final String RECHAZAR_FIRMA = "rechazarFirma";
+	public static final String CONFIRMAR_RECHAZO = "confirmaRechazo";
+    //[MQE Ticket #31] Fin Rechazar firma
 }

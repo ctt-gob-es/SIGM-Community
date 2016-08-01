@@ -1,5 +1,9 @@
 package ieci.tdw.ispac.ispaclib.util;
 
+import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
+import ieci.tdw.ispac.ispaclib.session.OrganizationUserInfo;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -493,8 +497,19 @@ public class FileDirContext extends BaseDirContext {
         in = (InputStream) object;
       
       if (in != null) {
-        
-        File file = File.createTempFile( "ispac", null, base);
+    	  // [eCenpri-Manu Ticket #240] * Evitar que los dos Tomcats generen documentos con el mismo nombre.
+    	  String entityId = "";
+    	  OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+    	  if (info != null) {
+    		  entityId = info.getOrganizationId();
+    		  }
+    	  if(null == entityId){
+    		  entityId = "";
+    	  }
+    	  File file = File.createTempFile( "ispac" + entityId, null, base);
+    	  //File file = File.createTempFile( "ispac", null, base);
+    	  // [eCenpri-Manu Ticket #240] * Evitar que los dos Tomcats generen documentos con el mismo nombre.
+    	  
         sFileName = file.getName();
         FileOutputStream out = null;
 
@@ -546,8 +561,20 @@ public class FileDirContext extends BaseDirContext {
         in = (InputStream) object;
       
       if (in != null) {
+                
+        // [eCenpri-Manu Ticket #240] * Evitar que los dos Tomcats generen documentos con el mismo nombre.
+        String entityId = "";
+        OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+        if (info != null) {
+        	entityId = info.getOrganizationId();
+        }
+        if(null == entityId){
+        	entityId = "";
+        	}
+        File file = File.createTempFile( "ispac" + entityId, null, base);
+        //File file = File.createTempFile( "ispac", null, base);
+        // [eCenpri-Manu Ticket #240] * Evitar que los dos Tomcats generen documentos con el mismo nombre.
         
-        File file = File.createTempFile( "ispac", null, base);
         sFileName = file.getName();
         FileOutputStream out = null;
 
@@ -874,9 +901,33 @@ public class FileDirContext extends BaseDirContext {
 
     try 
 	{
-    	File file = File.createTempFile( "ispac", suffix, base);
-        return file.getName();
-    }
+    	// [eCenpri-Manu Ticket #240] * Evitar que los dos Tomcats generen documentos con el mismo nombre.
+    	String entityId = "";
+    	OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+    	if (info != null) {
+    		entityId = info.getOrganizationId();
+    	}
+    	if(null == entityId){
+    		entityId = "";
+    	}
+    	File file = File.createTempFile( "ispac" + entityId, suffix, base);
+    	//  File file = File.createTempFile( "ispac", suffix, base);
+    	// [eCenpri-Manu Ticket #240] * Evitar que los dos Tomcats generen documentos con el mismo nombre.
+
+    	//[Manu Ticket #826] SIGEM La aplicación deja miles de archivos abandonados en la carpeta temporary y el log está saturado de mensajes. Apadrina un fichero
+  	  	String name = "";
+        //return file.getName();    	
+    	if(file!= null){
+    		name = file.getName();
+    		try{
+    			if(file.exists())
+    				file.delete();
+    		}
+    		catch(Exception e){}
+    	}    	
+        return name;
+	}
+    	//[Manu Ticket #826] SIGEM La aplicación deja miles de archivos abandonados en la carpeta temporary y el log está saturado de mensajes. Apadrina un fichero    }
     catch (IOException e) 
     { throw new NamingException( sm.getString( "resources.notFound", e));}
   }
@@ -888,8 +939,19 @@ public class FileDirContext extends BaseDirContext {
    */
   public File newFile(String suffix) throws NamingException {
     try 
-	{
-    	File file = File.createTempFile( "ispac", suffix, base);
+	{    	
+    	// [eCenpri-Manu Ticket #240] * Evitar que los dos Tomcats generen documentos con el mismo nombre.
+    	String entityId = "";
+    	OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+    	if (info != null) {
+    		entityId = info.getOrganizationId();
+    	}
+    	if(null == entityId){
+    		entityId = "";
+    	}
+    	File file = File.createTempFile( "ispac" + entityId, suffix, base);
+    	// File file = File.createTempFile( "ispac", suffix, base);
+    	// [eCenpri-Manu Ticket #240] * Evitar que los dos Tomcats generen documentos con el mismo nombre.
         return file;
     }
     catch (IOException e) 

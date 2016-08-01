@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter pageSize='50'>
+
+	<!-- Ponemos 2 veces la propiedad Asunto, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='ORDEN' 
+				 titleKey='SECR_PROPUESTA:ORDEN' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='EXTRACTO' 
+				 titleKey='SECR_PROPUESTA:EXTRACTO' 
+				 fieldType='LINK'
+				 columnClass='width90percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='EXTRACTO' 
+				 titleKey='SECR_PROPUESTA:EXTRACTO' 
+				 fieldType='LIST'
+				 columnClass='width90percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+</beanformatter>

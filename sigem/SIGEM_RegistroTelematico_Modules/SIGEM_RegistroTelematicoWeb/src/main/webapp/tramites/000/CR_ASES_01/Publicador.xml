@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+
+<!-- CT-Establecer Hito Actual -->
+
+<attributes>
+<attribute name='DESCRIPCION'>
+<labels>
+	<label locale='es'>Expediente de Solicitud Informe Jurídico Servicio Asesoramiento Iniciado</label>
+	<label locale='eu'>Expediente de Solicitud Informe Jurídico Servicio Asesoramiento Iniciado</label>
+	<label locale='ca'>Expediente de Solicitud Informe Jurídico Servicio Asesoramiento Iniciado</label>
+	<label locale='gl'>Expediente de Solicitud Informe Jurídico Servicio Asesoramiento Iniciado</label>
+</labels>
+</attribute>
+<attribute name='PASO_A_HISTORICO'>S</attribute>
+<attribute name='CODIGO'>Inicio</attribute>
+<attribute name='ENVIAR_DOCUMENTOS'>N</attribute>
+</attributes>
+
+<!-- CT-Solicitud Subsanación -->
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<attributes>
+	<attribute name='MENSAJE_SUBSANACION'>
+	<labels>
+		<label locale='es'>Se le ha notificado la necesidad de realizar una subsanación de la documentación aportada.</label>
+		<label locale='eu'>[EU]Se le ha notificado la necesidad de realizar una subsanación de la documentación aportada.</label>
+		<label locale='ca'>[CA]Se le ha notificado la necesidad de realizar una subsanación de la documentación aportada.</label>
+		<label locale='gl'>[GL]Se le ha notificado la necesidad de realizar una subsanación de la documentación aportada.</label>
+	</labels>
+	</attribute>
+</attributes>
+
+<!-- CT-Anexar Ficheros Hito Actual -->

@@ -8,6 +8,7 @@ import ieci.tdw.ispac.api.errors.ISPACNullObject;
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.item.IProcess;
+import ieci.tdw.ispac.ispaclib.dao.tx.TXProcesoDAO;
 import ieci.tdw.ispac.ispaclib.resp.Responsible;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispactx.TXConstants;
@@ -19,6 +20,8 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import es.dipucr.sigem.api.action.historico.GestionTablasHistorico;
 
 /**
  * Redirige la selección sobre una lista de resultados de búsqueda a la presentación del expediente.
@@ -85,6 +88,14 @@ public class SelectAnActivity extends BaseAction
 			}
 		//Si el expediente no se encuentra abierto
 			else if (process.getInt ("ESTADO") != TXConstants.STATUS_OPEN ) {
+				
+				//MQE #1023 Tablas de Histórico
+				if (process.getInt ("ESTADO") == TXConstants.STATUS_CLOSED) {
+					GestionTablasHistorico gh = new GestionTablasHistorico(session.getClientContext(), (TXProcesoDAO) process);
+					gh.recuperaDeHistorico();
+				}
+				//MQE #1023 Fin TAblas de histórico
+				
 			String sUID = process.getString("ID_RESP");
 			if (StringUtils.isNotBlank(sUID)) {
 				isResponsible = invesflowAPI.getWorkListAPI().isInResponsibleList(sUID, ISecurityAPI.SUPERV_ANY, process);

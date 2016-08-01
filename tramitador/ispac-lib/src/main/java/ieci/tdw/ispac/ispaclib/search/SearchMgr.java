@@ -12,6 +12,7 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.item.IProcess;
 import ieci.tdw.ispac.api.item.IStage;
 import ieci.tdw.ispac.api.item.Property;
+import ieci.tdw.ispac.api.item.util.ListCollection;
 import ieci.tdw.ispac.ispaclib.bean.SearchResourceListFactory;
 import ieci.tdw.ispac.ispaclib.common.constants.InformationMilestonesConstants;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
@@ -62,6 +63,8 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.validator.GenericValidator;
 import org.apache.log4j.Logger;
+
+import es.dipucr.sigem.api.action.historico.GestionTablasHistorico;
 
 
 /*
@@ -434,7 +437,108 @@ public class SearchMgr
 				results.query(cnt, conditions);
 			}
 
-			searchResultVO.setResultados(results.disconnect());
+			// INICIO [dipucr-Felipe] MQE #1023 Tablas de Histórico
+			// Esta mejora estaba añadida en el getSearchResults pero no en getLimitedSearchResults
+			// Concatenamos los resultados normales con los de la tablas de los históricos
+			IItemCollection resultados = results.disconnect();
+			List lista = resultados.toList();
+			GestionTablasHistorico gh = new GestionTablasHistorico();
+			ListCollection listaConHistorico = gh.buscaEnHistorico(cnt, tableNames, fromClause, columns, conditions, lista);
+//			searchResultVO.setResultados(results.disconnect());
+			searchResultVO.setResultados(listaConHistorico);			
+			// FIN [dipucr-Felipe] MQE #1023
+			
+			int tamLista=searchResultVO.getResultados().toList().size();
+			searchResultVO.setNumTotalRegistros(tamLista);
+
+			// Crear hito de búsqueda
+			mcctx.getAPI().getTransactionAPI().newMilestone(0, 0, 0,
+					InformationMilestonesConstants.SEARCH_MILESTONE,
+					new StringBuffer("<?xml version='1.0' encoding='ISO-8859-1'?>")
+						.append("<infoaux>")
+						.append(getFormValuesXML(searchinfo))
+						.append("</infoaux>")
+						.toString(),
+					"Búsqueda avanzada");
+
+			//Si la lista resultante de la búsqueda es igual al número maximo de resultados permitidos
+			//realizamos un consulta count para saber cuantos registros satisfacen la consulta
+			if(searchResultVO.getNumMaxRegistros()!=SearchResultVO.NO_LIMITED){
+				if(tamLista==searchResultVO.getNumMaxRegistros()){
+					searchResultVO.setNumTotalRegistros(results.count(cnt, conditions));
+				}
+			}
+
+		}catch(ISPACException e){
+			logger.error("Error al ejecutar la búsqueda avanzada", e);
+			throw new ISPACInfo("exception.searchforms.resultSearch");
+		}finally {
+			mcctx.releaseConnection(cnt);
+		}
+
+		return searchResultVO;
+	}
+	
+	/**
+	 * Lleva a cabo la búsqueda a partir de objeto searchinfo.
+	 * El número de registros resultantes puede estar limitada por parámetros de configuración
+	 * MAX_SEARCH_FRM_RESULTS , en caso de estar activado dicho parámetro. De otro modo la búsqueda
+	 * no está limitada
+	 * @param searchinfo
+	 * @return Objeto con la lista de Items ,
+	 * 		   el número máximo de registros permitidos,
+	 * 		   y el número total de registros que satisfacen la búsqueda
+	 * @throws ISPACException
+	 */
+	public SearchResultVO getLimitedSearchResultsRelateExpedient(SearchInfo searchinfo) throws ISPACException {
+
+		DbCnt cnt = null;
+		SearchResultVO searchResultVO= new SearchResultVO();
+
+		try {
+
+			Map joins = calculateKindOfJoinForEntities(searchinfo);
+			String[] tableNames = getTableNames(searchinfo);
+			String fromClause = getFromClause(searchinfo, joins);
+
+			Property[] columns = getSelectClause(searchinfo);
+			//MQE modificamos el where para que no tenga en cuenta los permisos del usuario
+			String conditions = getWhereClauseRelateExpedient(searchinfo, joins );
+			String order = getOrder(searchinfo, columns);
+
+			CollectionDAO results = TableDAO.newCollectionDAO(TableDAO.class, tableNames, fromClause, columns);
+
+			cnt = mcctx.getConnection();
+			String sMaxResultados = ISPACConfiguration.getInstance().get(ISPACConfiguration.MAX_SEARCH_FRM_RESULTS);
+			int max=0;
+			if(StringUtils.isNotBlank(sMaxResultados)){
+				max=TypeConverter.parseInt(sMaxResultados.trim(),0);
+				if(max>0){
+					searchResultVO.setNumMaxRegistros(max);
+					results.query(cnt, conditions, order ,max);
+				}
+			}
+
+			if(max==0){
+
+				if (StringUtils.isNotBlank(order)) {
+					conditions += " ORDER BY " + order;
+				}
+
+				results.query(cnt, conditions);
+			}
+
+			// INICIO [dipucr-Felipe] MQE #1023 Tablas de Histórico
+			// Esta mejora estaba añadida en el getSearchResults pero no en getLimitedSearchResults
+			// Concatenamos los resultados normales con los de la tablas de los históricos
+			IItemCollection resultados = results.disconnect();
+			List lista = resultados.toList();
+			GestionTablasHistorico gh = new GestionTablasHistorico();
+			ListCollection listaConHistorico = gh.buscaEnHistorico(cnt, tableNames, fromClause, columns, conditions, lista);
+//			searchResultVO.setResultados(results.disconnect());
+			searchResultVO.setResultados(listaConHistorico);			
+			// FIN [dipucr-Felipe] MQE #1023
+
 			int tamLista=searchResultVO.getResultados().toList().size();
 			searchResultVO.setNumTotalRegistros(tamLista);
 
@@ -507,8 +611,19 @@ public class SearchMgr
 						.append("</infoaux>")
 						.toString(),
 					"Búsqueda avanzada");
-
-			return results.disconnect();
+			
+			//MQE #1023 Tablas de Histórico
+			//MQE concatenamos los resultados normales con los de la tablas de los históricos
+			
+			IItemCollection resultados = results.disconnect();
+			
+			List lista = resultados.toList();
+						
+			GestionTablasHistorico gh = new GestionTablasHistorico();
+			
+			return gh.buscaEnHistorico(cnt, tableNames, fromClause, columns, conditions, lista);			
+			
+			//MQE #1023 fin modificaciones tablas de histórico
 
 		} catch(ISPACException e) {
 			logger.error("Error al realizar la búsqueda avanzada", e);
@@ -770,38 +885,47 @@ public class SearchMgr
     {
         StringBuffer outerJoinsSQL = new StringBuffer();
         int nEntities = searchinfo.getNumEntities();
-        if (nEntities <= 1)
-            return null;
+        
+        //[dipucr-Felipe #1118] - INICIO - SIGEM Busqueda Avanzada - Error con los campos cargados de tablas de validación cuando sólo tenemos una entidad
+        //Si se devuelve un null porque sólo tenemos la entidad principal
+        //no hace las comprobaciones de los campos con sustituto y da error
+        //if (nEntities <= 1)
+        //	return null;
+        if (nEntities > 1){
+        	//[dipucr-Felipe #1118] - FIN - SIGEM Busqueda Avanzada - Error con los campos cargados de tablas de validación cuando sólo tenemos una entidad      
 
-        for (int i = 0; i < nEntities; i++)
-        {
-            IEntity entity = searchinfo.getEntity(i);
-            String table = entity.getTable();
-            if (!table.equalsIgnoreCase(SearchMgr.MAIN_ENTITY))
-            {
-                Boolean join = (Boolean)joins.get(table.toUpperCase());
-                if (join != null && join.booleanValue())
-                {
-
-//                	if (conditions.length() != 0) {
-//						//conditions.append(" , ");
-//					}
-                	if(outerJoinsSQL.length() == 0) {
-						outerJoinsSQL.append(SearchMgr.MAIN_ENTITY);
-					}
-                    outerJoinsSQL.append(" LEFT OUTER JOIN ");
-                    outerJoinsSQL.append(table);
-                    outerJoinsSQL.append(" ON ");
-                    outerJoinsSQL.append(SearchMgr.MAIN_ENTITY);
-                    outerJoinsSQL.append(".");
-                    outerJoinsSQL.append(SearchMgr.BINDFIELD_MAINENTITY);
-                    outerJoinsSQL.append(" = ");
-					outerJoinsSQL.append(table);
-					outerJoinsSQL.append(".");
-					outerJoinsSQL.append(entity.getBindField());
-                }
-            }
+	        for (int i = 0; i < nEntities; i++)
+	        {
+	            IEntity entity = searchinfo.getEntity(i);
+	            String table = entity.getTable();
+	            if (!table.equalsIgnoreCase(SearchMgr.MAIN_ENTITY))
+	            {
+	                Boolean join = (Boolean)joins.get(table.toUpperCase());
+	                if (join != null && join.booleanValue())
+	                {
+	
+	//                	if (conditions.length() != 0) {
+	//						//conditions.append(" , ");
+	//					}
+	                	if(outerJoinsSQL.length() == 0) {
+							outerJoinsSQL.append(SearchMgr.MAIN_ENTITY);
+						}
+	                    outerJoinsSQL.append(" LEFT OUTER JOIN ");
+	                    outerJoinsSQL.append(table);
+	                    outerJoinsSQL.append(" ON ");
+	                    outerJoinsSQL.append(SearchMgr.MAIN_ENTITY);
+	                    outerJoinsSQL.append(".");
+	                    outerJoinsSQL.append(SearchMgr.BINDFIELD_MAINENTITY);
+	                    outerJoinsSQL.append(" = ");
+						outerJoinsSQL.append(table);
+						outerJoinsSQL.append(".");
+						outerJoinsSQL.append(entity.getBindField());
+	                }
+	            }
+	        }
+	    //[dipucr-Felipe #1118] - INICIO - SIGEM Busqueda Avanzada - Error con los campos cargados de tablas de validación cuando sólo tenemos una entidad
         }
+        //[dipucr-Felipe #1118] - FIN - SIGEM Busqueda Avanzada - Error con los campos cargados de tablas de validación cuando sólo tenemos una entidad
 
 		int numPropertyFmt = searchinfo.getNumPropertyFmts();
 		for (int j=0; j<numPropertyFmt; j++)
@@ -1129,13 +1253,25 @@ public class SearchMgr
 
 					String operador=prepareOperator(value.toString(), type, operator);
 					if(!StringUtils.containsIgnoreCase(operador, "CONTAINS")){
+						//[eCenpri-Felipe #364] Evitamos distinguir entre mayúsculas y minúsculas en las
+						//comparaciones de cadena. Introducimos un UPPER a ambos lados de la equivalencia
+						if (type.equals("string")) condition.append( "UPPER(");//[eCenpri-Felipe #364]
 						condition.append( table);
 						condition.append( ".");
 						condition.append( nameField);
 						condition.append( " ");
+						
+						//[eCenpri-Felipe #364]
+						if (type.equals("string")) condition.append( ") ");
+						else condition.append( " ");
 						condition.append( operador);
 						condition.append( " ");
+						
+						//[eCenpri-Felipe #364]
+						if (type.equals("string")) condition.append( " UPPER(");
+						else condition.append( " ");
 						condition.append( prepareValue(cnt, value.toString(), type, operator));
+						if (type.equals("string")) condition.append( ")");//[eCenpri-Felipe #364]
 					}
 					//Busqueda documental
 					else{
@@ -1341,5 +1477,100 @@ public class SearchMgr
 		return XmlTag.newTag("searchinfo", conditions);
 	}
 
+	private String getWhereClauseRelateExpedient(SearchInfo searchinfo,
+			Map joins) throws ISPACException {
+
+		StringBuffer condition = new StringBuffer();
+
+		DbCnt cnt = mcctx.getConnection();
+
+		try {
+
+			String sql = SearchProduct.getJoinConditions(searchinfo, joins);
+			if (sql != null && sql.trim().length() != 0) {
+				condition.append("where ").append(sql);
+			}
+
+			sql = getConditionsFromInputFormValues(cnt, searchinfo);
+			if (sql != null && sql.trim().length() != 0) {
+				if (condition.length() == 0) {
+					condition.append("where ");
+				} else {
+					condition.append(" and ");
+				}
+				condition.append(sql);
+			}
+			// sql = getConditionsFromValidatedFields(searchinfo);
+			// if (sql != null && sql.trim().length() != 0) {
+			// if (condition.length() == 0) {
+			// condition.append( "where ");
+			// } else {
+			// condition.append( " and ");
+			// }
+			// condition.append( sql);
+			// }
+
+			// MQE Modificaciones ticket #142 tratamos a todos los usuarios como
+			// superusuarios para que muestre todos los expedientes
+			sql = "spac_expedientes.numexp in (select spac_procesos.numexp from spac_procesos)";
+			// sql = getResponsabilityCondition(searchinfo);
+			if (sql != null && sql.trim().length() != 0) {
+				if (condition.length() == 0) {
+					condition.append("where ");
+				} else {
+					condition.append(" and ");
+				}
+				condition.append(sql);
+			}
+
+				sql = getExpStateCondition(searchinfo);
+				if (sql != null && sql.trim().length() != 0) {
+					if (condition.length() == 0) {
+						condition.append( "where ");
+					} else {
+						condition.append( " and ");
+					}
+					condition.append( sql);
+				}
+			
+				//Filtramos para no mostrar los subprocesos
+				if (joins.get("SPAC_FASES") != null){
+					if (condition.length() == 0) {
+						condition.append( "where ");
+					} else {
+						condition.append( " and ");
+					}
+					condition.append("(spac_fases.tipo = "+IStage.STAGE_TYPE)
+					.append(" or spac_fases.tipo is null)");
+				}
+				if (joins.get("SPAC_PROCESOS") != null){
+					if (condition.length() == 0) {
+						condition.append( "where ");
+					} else {
+						condition.append( " and ");
+					}
+					condition.append( "spac_procesos.tipo = "+IProcess.PROCESS_TYPE);
+				}
+				
+				//[Manu Ticket #711] SIGEM relacionar expediente saca expediente cerrados
+				sql="spac_expedientes.fcierre is null";
+				//sql = getResponsabilityCondition(searchinfo);
+				if (sql != null && sql.trim().length() != 0) {
+					if (condition.length() == 0) {
+						condition.append( "where ");
+					} else {
+						condition.append( " and ");
+					}
+					condition.append( sql);
+				}
+				//[Manu Ticket #711] SIGEM relacionar expediente saca expediente cerrados
+			
+			} finally {
+			    mcctx.releaseConnection(cnt);
+			}
+			
+			return condition.toString();
+		}
+		//MQE Fin modificaciones ticket #142
 
 }

@@ -1,0 +1,88 @@
+<!DOCTYPE struts-config PUBLIC
+   "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+   "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+	<form-beans>
+		<form-bean
+			name="ListaExpedientes"
+			type="es.dipucr.tecdoc.sgm.ct.struts.form.ListaExpedientesForm"/>
+		<form-bean
+			name="BusquedaExpedientes"
+			type="es.dipucr.tecdoc.sgm.ct.struts.form.BusquedaExpedientesForm"/>
+		<form-bean
+			name="DetalleExpediente"
+			type="es.dipucr.tecdoc.sgm.ct.struts.form.DetalleExpedienteForm"/>
+		<form-bean
+			name="CargarDocumento"
+			type="es.dipucr.tecdoc.sgm.ct.struts.form.CargarDocumentoForm"/>
+		<form-bean
+			name="RecogerDocumento"
+			type="es.dipucr.tecdoc.sgm.ct.struts.form.RecogerDocumentoForm"/>
+		<!-- Ticket 858 Teresa -->
+		<form-bean
+			name="ListadoActasAudio"
+			type="es.dipucr.tecdoc.sgm.ct.struts.form.ActaForm"/>
+	</form-beans>
+
+	<action-mappings>
+		
+		<action path="/ListaExpedientes"
+				type="es.dipucr.tecdoc.sgm.ct.struts.action.ListaExpedientesAction"
+				name="ListaExpedientes">
+				<forward name="Busqueda" path="/BusquedaExpedientes.do"/>
+				<forward name="Success" path="/SeleccionExpedientes.jsp"/>
+				<forward name="Success_Search" path="/BusquedaExpedientes.do?rebuscar=true"/>
+				<forward name="NoAutenticado" path="/RedireccionAutenticacion.jsp"/>
+		</action>
+
+	   	<!-- Ticket 858 Teresa -->
+	   <action path="/ListadoActasAudio"
+			   type="es.dipucr.tecdoc.sgm.ct.struts.action.ListadoActasAudioAction"
+			   name="ListadoActasAudio"
+			   scope="request">
+			   <forward name="Failure" path="/MensajeError.jsp"/>
+			   <forward name="Success" path="/listadoActasAudio.jsp"/>
+			   <forward name="NoAutenticado" path="/RedireccionAutenticacion.jsp"/>
+		</action>		
+	<!-- Ticket 858 teresa FIN-->
+		
+		<action path="/DetalleExpediente"
+				type="es.dipucr.tecdoc.sgm.ct.struts.action.DetalleExpedienteAction"
+				name="DetalleExpediente"
+				scope="request">
+				<forward name="Failure" path="/DetalleExpediente.jsp"/>
+				<forward name="Success" path="/DetalleExpediente.jsp"/>
+				<forward name="NoAutenticado" path="/RedireccionAutenticacion.jsp"/>
+		</action>
+		
+		<action path="/CargarDocumento"
+				type="es.dipucr.tecdoc.sgm.ct.struts.action.CargarDocumentoAction"
+				name="CargarDocumento"
+				scope="request">
+				<forward name="Success" path="/CargarDocumento.jsp"/>
+		</action>
+
+		<action path="/ShowDocument"
+			type="es.dipucr.tecdoc.sgm.ct.struts.action.ShowDocumentAction"/>
+
+		
+		<action path="/RecogerDocumento"
+				type="es.dipucr.tecdoc.sgm.ct.struts.action.RecogerDocumentoAction"
+				name="RecogerDocumento"
+				scope="request">
+				<!--forward name="Failure" path="/DetalleExpediente.do"/-->
+		</action>
+		
+	</action-mappings>
+
+	<controller>
+		<set-property property="inputForward" value="true"/>
+	</controller>
+	<message-resources parameter="es.dipucr.tecdoc.sgm.ct.resources.lenguaje" />
+	
+<!--   <plug-in className="es.dipucr.tecdoc.sgm.ct.plugin.ConfigPlugin">
+		<set-property property="redirAutenticacion" value="SIGEM_AutenticacionWeb/?REDIRECCION=ConsultaMiembros" />
+		<set-property property="dirDesconectar" value="SIGEM_AutenticacionWeb/desconectar.do?SESION_ID=" />
+	</plug-in>  -->
+</struts-config>
+    

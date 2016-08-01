@@ -145,4 +145,34 @@ public interface ServicioTerceros {
 	 */
 	public DireccionElectronica getElectronicAddress(String entityId, String id) throws TercerosException;
 
+	/**
+	 * [eCenpri-Felipe #477]
+	 * Inserta un nuevo tercero en la BBDD
+	 * @param entityId
+	 * @param nif
+	 * @param tipoDoc
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @param tipo
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @param tfnoFijo
+	 * @param tfnoMovil
+	 * @param email
+	 * @return
+	 * @throws TercerosException
+	 */
+    public boolean insertThirdParty(String entityId, String nif, int tipoDoc, String nombre, String ape1, String ape2,
+    		String tipo, String provincia, String municipio, String cpostal, String direccion,
+    		String tfnoFijo, String tfnoMovil, String email) throws TercerosException;
+    
+    
+	/**
+	 * Establece el origen de datos.
+	 * @param dsName Origen de datos.
+	 */
+	public void setDsName(String dsName);
 }

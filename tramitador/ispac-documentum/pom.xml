@@ -15,6 +15,14 @@
 	<name>ispac-documentum</name>
 	<packaging>jar</packaging>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<!-- IECI dependencies -->
@@ -32,14 +40,12 @@
 			<groupId>documentum</groupId>
 			<artifactId>dctm</artifactId>
 			<version>${documentum.version}</version>
-			<scope>provided</scope>
     </dependency>
 
 		<dependency>
 			<groupId>documentum</groupId>
 			<artifactId>dfc</artifactId>
 			<version>${documentum.version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 

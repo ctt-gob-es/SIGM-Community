@@ -12,6 +12,14 @@
 	<name>Archidoc: Logica Web de Archidoc</name>
 	<description>Modulo de logica Web de ArchiDoc</description>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<build>
 		<sourceDirectory>../archidoc/src/main/java</sourceDirectory>
 		<plugins>
@@ -248,18 +256,18 @@
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jmx</groupId>
-      <artifactId>jmxri</artifactId>
-      <version>1.2.1</version>
+			<artifactId>jmxri</artifactId>
+			<version>1.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>jmxgrinder</groupId>
 			<artifactId>jmxgrinder</artifactId>
-      <version>1.2.1</version>
+		    <version>1.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>jmxtools</groupId>
 			<artifactId>jmxtools</artifactId>
-      <version>1.2.8</version>
+			<version>1.2.8</version>
 		</dependency>
 		<dependency>
 			<groupId>taglibs</groupId>

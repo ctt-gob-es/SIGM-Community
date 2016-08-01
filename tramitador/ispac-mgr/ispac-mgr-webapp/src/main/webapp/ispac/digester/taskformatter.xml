@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <beanformatter defaultSort="2"
-			   pageSize="10"
+			   pageSize="50"
 			   export="false">
 
 	<propertyfmt type="BeanPropertySimpleFmt" 
@@ -12,29 +12,14 @@
         		 headerClass='headerDisplay'
 				 />
         		 
-	<propertyfmt type="BeanPropertySimpleFmt" 
-				 property='NOMBRE' 
-				 readOnly='false'
-				 titleKey='formatter.tasks.documento'
-				 fieldType='LINK'
-				 fieldLink='ID'
-				 styleClass='displayLink'
-				 headerClass='sortable'
-				 sortable='true'
-				 media='html '
-				 decorator=''
-				 url='showTask.do'
-				 id='key'
-				 columnClass='width30percent'
-				 />
-				 
-	<propertyfmt type="BeanPropertySimpleFmt"
-				 property='INFOPAG' 
-				 readOnly='true'
-				 media='html'
-				 headerClass='headerDisplay'
-				 sortable='false'
-				 fieldType='SHOWDOCUMENT'
+	 <propertyfmt type="BeanPropertySimpleFmt" 
+	             property='NOMBRE' 
+	             readOnly='false'
+		         titleKey='formatter.tasks.documento' 
+		         fieldType='LISTNOMBRE' 
+		         columnClass='width30percent'
+		         headerClass='sortable'
+		         sortable='true'
 				 />
 				 
 	<propertyfmt type="BeanPropertySimpleFmt" 
@@ -47,37 +32,6 @@
 		         sortable='true'
 				 />	
 
-	<propertyfmt type="BeanPropertySimpleFmt" 
-	             property='TP_REG' 
-	             readOnly='false'
-		         titleKey='formatter.tasks.tipoRegistro' 
-		         fieldType='LIST' 
-		         columnClass='width45percent'
-		         headerClass='sortable'
-		         sortable='true'
-				 />	
-
-	<propertyfmt type="BeanPropertySimpleFmt" 
-	             property='NREG' 
-	             readOnly='false'
-		         titleKey='formatter.tasks.numeroRegistro' 
-		         fieldType='LIST' 
-		         columnClass='width45percent'
-		         headerClass='sortable'
-		         sortable='true'
-				 />	
-
-	<propertyfmt type="BeanPropertySimpleFmt" 
-	             property='DESTINO' 
-	             readOnly='false'
-		         titleKey='formatter.tasks.destino'
-		         fieldType='LIST' 
-		         columnClass='width45percent'
-		         headerClass='sortable'
-		         sortable='true'
-				 />	
-
-
 	<propertyfmt type="BeanPropertyDateFmt" 
 	             property='FAPROBACION' 
 	             readOnly='false'
@@ -88,5 +42,85 @@
 		         headerClass='sortable'
 		         sortable='true'
 				 />	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+	             property='TP_REG' 
+	             readOnly='false'
+		         titleKey='formatter.tasks.tipoRegistro' 
+		         fieldType='LIST' 
+		         columnClass='width7percent'
+		         headerClass='sortable'
+		         sortable='true'
+				 />	
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='ESTADOFIRMA' 
+				 titleKey='formatter.tasks.estadoFirma' 
+				 readOnly='false'
+				 fieldType='FIRMA' 
+				 columnClass="width10percent"
+				 sortable='true'
+				 />
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+	             property='NREG' 
+	             readOnly='false'
+		         titleKey='formatter.tasks.numeroRegistro' 
+		         fieldType='LIST' 
+		         columnClass='width10percent'
+		         headerClass='sortable'
+		         sortable='true'
+				 />
+	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='ESTADONOTIFICACION' 
+				 titleKey='formatter.tasks.estadoNotificacion' 
+				 readOnly='false'
+				 fieldType='NOTIFICACION' 
+				 columnClass="width10percent"
+				 sortable='true'
+				 />	 
+	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE'
+				 propertyValue=''
+				 readOnly='false'
+				 fieldType='SHOWPROPERTIES'
+				 fieldLink='ID'
+				 styleClass='displayLink'
+				 headerClass='sortable'
+				 sortable='false'
+				 media='html'
+				 decorator=''
+				 url='showTask.do'
+				 id='key'
+				 tooltip='true'
+				 tooltipTitle='Ver/Editar Propiedades'
+				 />
+	
+	<propertyfmt type="BeanPropertySimpleFmt"
+				 property='INFOPAG' 
+				 propertyValue=''
+				 readOnly='true'
+				 media='html'
+				 headerClass='headerDisplay'
+				 sortable='false'
+				 fieldType='EDITDOCUMENT'
+				 url='getDocument.do'
+				 urlTarget='workframe_document_inList'
+				 tooltip='true'
+				 tooltipTitle='Editar Documento Online'
+				 />
+	
+	<propertyfmt type="BeanPropertySimpleFmt"
+				 property='INFOPAG' 
+				 propertyValue=''
+				 readOnly='true'
+				 media='html'
+				 headerClass='headerDisplay'
+				 sortable='false'
+				 fieldType='SHOWDOCUMENT'
+				 tooltip='true'
+				 tooltipTitle='Ver Documento'
+				 />
 		         
 </beanformatter>

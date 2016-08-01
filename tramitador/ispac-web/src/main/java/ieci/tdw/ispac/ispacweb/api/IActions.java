@@ -353,4 +353,21 @@ public interface IActions
 			   MessageResources resources, Properties properties, Map mapParams) throws ISPACException;
 
 	
+	/**
+	 * [dipucr-Felipe #120]
+     * Devuelve si existen o no manuales de usuario en el estado actual
+     * @param state
+     * @return
+     * @throws ISPACException
+     */
+    public boolean hasManuales(IState state) throws ISPACException;
+    
+    
+    /**
+	 * [dipucr-Felipe #120]
+     * Indica si existe o no manuales de usuario globales
+     * @return
+     * @throws ISPACException
+     */
+    public boolean hasGlobalManuales() throws ISPACException;
 }

@@ -55,6 +55,11 @@ public class ISPACConfiguration extends PropertiesConfiguration {
 	public final static String MAX_TBL_SEARCH_VALUES="MAX_TBL_SEARCH_VALUES";
 
 	public final static String THIRDPARTY_SICRES_POOL_NAME_PATTERN = "THIRDPARTY_SICRES_POOL_NAME_PATTERN";
+	
+	/* =========================================================================
+	 * Configuración de edicion online
+	 * ====================================================================== */
+	public final static String COMPONETES_USUARIO_URL_DESCARGA = "COMPONETES_USUARIO_URL_DESCARGA";
 
 	/* =========================================================================
 	 * Configuración de SICRES.
@@ -194,6 +199,10 @@ public class ISPACConfiguration extends PropertiesConfiguration {
 
 	/** Nivel de anidamiento de marcadores de plantillas*/
 	public final static String PARSER_CONNECTOR_TAGS_NESTING_LEVEL = "PARSER_CONNECTOR_TAGS_NESTING_LEVEL";
+	
+	/** [dipucr-Felipe #304] Ruta de certificados**/
+	public final static String CERTIFICADOS_PATH = "CERTIFICADOS_PATH";
+	public static final String TRAMITES_RT_SUBPATH = "TRAMITES_RT_SUBPATH";
 
 
 	/**

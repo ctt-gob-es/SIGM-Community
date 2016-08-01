@@ -33,7 +33,10 @@ public class ConvertDocuments2PDFAction extends BaseAction {
 			intDocumentIds[i] = Integer.parseInt(documentIds[i]);
 		}
 		try{
-			String file = DocumentConverter.concatenate2PDF(session.getAPI(), intDocumentIds);
+			//[dipucr-Felipe #160]
+//			String file = DocumentConverter.concatenate2PDF(session.getAPI(), intDocumentIds);
+			String file = DocumentConverter.concatenate2PDF(session.getAPI(), intDocumentIds, false, true);
+			
 			File pdfFile = new File(file);
 			// Devolver el pdf al navegador
 	    	response.setHeader("Pragma", "public");

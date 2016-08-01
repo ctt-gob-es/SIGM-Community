@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter pageSize='50'>
+
+	<!-- Ponemos 2 veces la propiedad LIQUIDACION, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='LIQUIDACION' 
+				 titleKey='REC_DAT_LIQ:LIQUIDACION' 
+				 fieldType='LINK'
+				 columnClass='width20percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='LIQUIDACION' 
+				 titleKey='REC_DAT_LIQ:LIQUIDACION' 
+				 fieldType='LIST'
+				 columnClass='width20percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='ESTIMAR' 
+				 titleKey='REC_DAT_LIQ:ESTIMAR' 
+				 fieldType='LIST'
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='MUNICIPIO' 
+				 titleKey='REC_DAT_LIQ:MUNICIPIO' 
+				 fieldType='LIST'
+				 columnClass='width20percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='EPIGRAFE' 
+				 titleKey='REC_DAT_LIQ:EPIGRAFE' 
+				 fieldType='LIST'
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='REF_AEAT' 
+				 titleKey='REC_DAT_LIQ:REF_CAT' 
+				 fieldType='LIST'
+				 columnClass='width40percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+
+				 
+				 
+</beanformatter>

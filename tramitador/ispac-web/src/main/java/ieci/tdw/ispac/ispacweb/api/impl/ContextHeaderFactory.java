@@ -239,4 +239,34 @@ public class ContextHeaderFactory {
 		return contextHeader;	
 	}
 	
+	/**
+	 * [eCenpri-Felipe #467] 21.10.11
+	 * Función creada para insertar en la cabecera el asunto
+	 * @param state
+	 * @return
+	 * @throws ISPACException
+	 */
+	public ContextHeader createExpedientHeader (IState state) 
+	throws ISPACException
+	{
+		ContextHeader contextHeader ;
+		String numexp = state.getNumexp();
+		if (StringUtils.isEmpty(numexp))
+			return null;
+		
+		IItem itemExpediente = mcct.getAPI().getEntitiesAPI().getExpedient(numexp);
+		
+		String asunto = itemExpediente.getString("ASUNTO");
+		final int MAX_LENGHT = 50;
+		if (asunto.length() > MAX_LENGHT){
+			asunto = asunto.substring(0, MAX_LENGHT);
+			asunto += " ...";
+		}
+		contextHeader = new ContextHeader(asunto, "asunto", "");
+		
+		contextHeader.set(PROPERTY_CURRENTSTATE, 10);
+
+		return contextHeader;	
+	}
+	
 }

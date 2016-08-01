@@ -22,6 +22,8 @@ import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventDocumentoAltaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventDocumentoConsultaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventDocumentoModificacionVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventFicheroBajaVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.bean.CollectionBean;
 import ieci.tdw.ispac.ispaclib.bean.ItemBean;
@@ -86,7 +88,10 @@ public class GenDocAPI implements IGenDocAPI {
 	 */
 	public GenDocAPI(ClientContext context) {
 		this.m_clientCtx = context;
-		auditoriaManager = new IspacAuditoriaManagerImpl();
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
 	}
 
 	/**
@@ -791,16 +796,15 @@ public class GenDocAPI implements IGenDocAPI {
 			ITXTransaction txapi = m_clientCtx.getAPI().getTransactionAPI();
 			StateContext stateContext = m_clientCtx.getStateContext();
 
-			if (stateContext.getActivityId() != 0) {
-				txapi.executeEvents(EventsDefines.EVENT_OBJ_ACTIVITY, ctx.getStagePCD(),
-						EventsDefines.EVENT_DOCUMENT_NEW, ctx);
-			} else if (ctx.getTaskPCD() != 0) {
-				txapi.executeEvents(EventsDefines.EVENT_OBJ_TASK, ctx.getTaskPCD(),
-						EventsDefines.EVENT_DOCUMENT_NEW, ctx);
-			} else if (ctx.getStagePCD() != 0) {
-				txapi.executeEvents(EventsDefines.EVENT_OBJ_STAGE, ctx.getStagePCD(),
-						EventsDefines.EVENT_DOCUMENT_NEW, ctx);
+			//[Manu Ticket #891] SIGEM Error al iniciar expediente o anexar documento a expediente desde registros distribuidos			
+			if ((stateContext != null ) && (stateContext.getActivityId() != 0)) {
+				txapi.executeEvents(EventsDefines.EVENT_OBJ_ACTIVITY,ctx.getStagePCD(),EventsDefines.EVENT_DOCUMENT_NEW,ctx);
+			} else if ((ctx != null ) && (ctx.getTaskPCD() != 0)) {
+			    txapi.executeEvents(EventsDefines.EVENT_OBJ_TASK,ctx.getTaskPCD(),EventsDefines.EVENT_DOCUMENT_NEW,ctx);
+			} else if ((ctx != null ) && (ctx.getStagePCD()!= 0)) {
+			    txapi.executeEvents(EventsDefines.EVENT_OBJ_STAGE,ctx.getStagePCD(),EventsDefines.EVENT_DOCUMENT_NEW,ctx);
 			}
+			//[Manu Ticket #891] SIGEM Error al iniciar expediente o anexar documento a expediente desde registros distribuidos			
 
 			return document;
 		} finally {
@@ -938,16 +942,16 @@ public class GenDocAPI implements IGenDocAPI {
 				ITXTransaction txapi = m_clientCtx.getAPI().getTransactionAPI();
 				StateContext stateContext = m_clientCtx.getStateContext();
 
-				if (stateContext.getActivityId() != 0) {
-					txapi.executeEvents(EventsDefines.EVENT_OBJ_ACTIVITY, ctx.getStagePCD(),
-							EventsDefines.EVENT_TEMPLATE_USE, ctx);
-				} else if (ctx.getTaskPCD() != 0) {
-					txapi.executeEvents(EventsDefines.EVENT_OBJ_TASK, ctx.getTaskPCD(),
-							EventsDefines.EVENT_TEMPLATE_USE, ctx);
-				} else if (ctx.getStagePCD() != 0) {
-					txapi.executeEvents(EventsDefines.EVENT_OBJ_STAGE, ctx.getStagePCD(),
-							EventsDefines.EVENT_TEMPLATE_USE, ctx);
+				//[Manu Ticket #891] SIGEM Error al iniciar expediente o anexar documento a expediente desde registros distribuidos			
+				if ((stateContext != null ) && (stateContext.getActivityId() != 0)) {
+					txapi.executeEvents(EventsDefines.EVENT_OBJ_ACTIVITY,ctx.getStagePCD(),EventsDefines.EVENT_DOCUMENT_NEW,ctx);
+				} else if ((ctx != null ) && (ctx.getTaskPCD() != 0)) {
+				    txapi.executeEvents(EventsDefines.EVENT_OBJ_TASK,ctx.getTaskPCD(),EventsDefines.EVENT_DOCUMENT_NEW,ctx);
+				} else if ((ctx != null ) && (ctx.getStagePCD()!= 0)) {
+				    txapi.executeEvents(EventsDefines.EVENT_OBJ_STAGE,ctx.getStagePCD(),EventsDefines.EVENT_DOCUMENT_NEW,ctx);
 				}
+				//[Manu Ticket #891] SIGEM Error al iniciar expediente o anexar documento a expediente desde registros distribuidos			
+
 			} catch (ISPACException ie) {
 
 				// Eliminar el nuevo fichero
@@ -1079,16 +1083,16 @@ public class GenDocAPI implements IGenDocAPI {
 				ITXTransaction txapi = m_clientCtx.getAPI().getTransactionAPI();
 				StateContext stateContext = m_clientCtx.getStateContext();
 
-				if (stateContext.getActivityId() != 0) {
-					txapi.executeEvents(EventsDefines.EVENT_OBJ_ACTIVITY, ctx.getStagePCD(),
-							EventsDefines.EVENT_TEMPLATE_EXTERNAL, ctx);
-				} else if (ctx.getTaskPCD() != 0) {
-					txapi.executeEvents(EventsDefines.EVENT_OBJ_TASK, ctx.getTaskPCD(),
-							EventsDefines.EVENT_TEMPLATE_EXTERNAL, ctx);
-				} else if (ctx.getStagePCD() != 0) {
-					txapi.executeEvents(EventsDefines.EVENT_OBJ_STAGE, ctx.getStagePCD(),
-							EventsDefines.EVENT_TEMPLATE_EXTERNAL, ctx);
+				//[Manu Ticket #891] SIGEM Error al iniciar expediente o anexar documento a expediente desde registros distribuidos			
+				if ((stateContext != null ) && (stateContext.getActivityId() != 0)) {
+					txapi.executeEvents(EventsDefines.EVENT_OBJ_ACTIVITY,ctx.getStagePCD(),EventsDefines.EVENT_DOCUMENT_NEW,ctx);
+				} else if ((ctx != null ) && (ctx.getTaskPCD() != 0)) {
+				    txapi.executeEvents(EventsDefines.EVENT_OBJ_TASK,ctx.getTaskPCD(),EventsDefines.EVENT_DOCUMENT_NEW,ctx);
+				} else if ((ctx != null ) && (ctx.getStagePCD()!= 0)) {
+				    txapi.executeEvents(EventsDefines.EVENT_OBJ_STAGE,ctx.getStagePCD(),EventsDefines.EVENT_DOCUMENT_NEW,ctx);
 				}
+				//[Manu Ticket #891] SIGEM Error al iniciar expediente o anexar documento a expediente desde registros distribuidos			
+
 			} catch (ISPACException ie) {
 
 				// Eliminar el nuevo fichero
@@ -1112,7 +1116,6 @@ public class GenDocAPI implements IGenDocAPI {
 			}
 
 			// TODO: Auditar la creación del fichero
-
 			auditCreacionDocumento(document,docId,ctx.getNumExp(),ctx.getTask());
 			return document;
 		} finally {
@@ -1125,31 +1128,35 @@ public class GenDocAPI implements IGenDocAPI {
 	 * @throws ISPACException
 	 */
 	private void auditCreacionDocumento(EntityDAO document,int idDocumento, String numExpediente, int idTramite) throws ISPACException {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventDocumentoAltaVO evento = new IspacAuditEventDocumentoAltaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-		evento.setIdDocumento(String.valueOf(idDocumento));
-		evento.setNumExpediente(numExpediente);
-		evento.setValores(document.getXmlValues());
-		evento.setIdTramite(String.valueOf(idTramite));
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la creación del documento");
-		auditoriaManager.audit(evento);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventDocumentoAltaVO evento = new IspacAuditEventDocumentoAltaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			evento.setIdDocumento(String.valueOf(idDocumento));
+			evento.setNumExpediente(numExpediente);
+			evento.setValores(document.getXmlValues());
+			evento.setIdTramite(String.valueOf(idTramite));
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la creación del documento");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	private String createTemplate(ExpedientContext ctx, int docType, int templateId)
@@ -1274,8 +1281,6 @@ public class GenDocAPI implements IGenDocAPI {
 			}
 
 			//TODO: Auditar la modificación del documento
-
-
 			auditActualizacionDocumento(docId, sDocRef, numExp);
 
 		} catch (ISPACException ie) {
@@ -1353,91 +1358,107 @@ public class GenDocAPI implements IGenDocAPI {
 	 * @param sDocRef
 	 */
 	private void auditEliminacionDocumento(String sDocRef) {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventFicheroBajaVO evento = new IspacAuditEventFicheroBajaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-		evento.setIdDocumento(sDocRef);
-
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la eliminación del documento");
-		auditoriaManager.audit(evento);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+	    		
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventFicheroBajaVO evento = new IspacAuditEventFicheroBajaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			evento.setIdDocumento(sDocRef);
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la eliminación del documento");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	/**
 	 * @param sDocRef
 	 */
 	private void auditActualizacionDocumento(int docId, String sDocRef, String numExpediente) {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventDocumentoModificacionVO evento = new IspacAuditEventDocumentoModificacionVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-		evento.setIdDocumento(String.valueOf(docId));
-		evento.setNewValue(sDocRef);
-
-		evento.setNumExpediente(numExpediente);
-
-		//evento.setIdTramite(String.valueOf(idTramite));
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la creación del documento");
-		auditoriaManager.audit(evento);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+	    		
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventDocumentoModificacionVO evento = new IspacAuditEventDocumentoModificacionVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			evento.setIdDocumento(String.valueOf(docId));
+			evento.setNewValue(sDocRef);
+	
+			evento.setNumExpediente(numExpediente);
+	
+			//evento.setIdTramite(String.valueOf(idTramite));
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la creación del documento");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	/**
 	 * @param sDocRef
 	 */
 	private void auditConsultaDocumento(String sDocRef) {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventDocumentoConsultaVO evento = new IspacAuditEventDocumentoConsultaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-		evento.setIdDocumento(sDocRef);
 		
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la creación del documento");
-		auditoriaManager.audit(evento);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventDocumentoConsultaVO evento = new IspacAuditEventDocumentoConsultaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			evento.setIdDocumento(sDocRef);
+			
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la creación del documento");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	/**

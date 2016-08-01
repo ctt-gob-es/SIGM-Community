@@ -1,0 +1,136 @@
+package es.dipucr.contratacion.utils;
+
+import ieci.tdw.ispac.api.errors.ISPACRuleException;
+
+import org.apache.log4j.Logger;
+import org.dgpe.codice.common.caclib.DocumentReferenceType;
+import org.dgpe.codice.maindoc.callfortenders.CallForTendersType;
+import org.dgpe.codice.maindoc.contractawardnotice.ContractAwardNoticeType;
+import org.dgpe.codice.maindoc.contractnotice.ContractNoticeType;
+import org.dgpe.codice.maindoc.pin.PriorInformationNoticeType;
+
+import es.dgpe.place.client.beans.ConsultaBean;
+import es.dgpe.place.client.beans.DocumentoGeneralBean;
+import es.dgpe.place.client.beans.UtilidadesBean;
+import es.dgpe.place.client.constants.TipoDocumento;
+import es.dgpe.place.client.utils.ClienteLlamadas;
+import es.dgpe.place.client.utils.ConfigurationManager;
+import es.dgpe.place.client.utils.SessionDataManager;
+
+public class PlataformaContratEstadoEnvioServicioWeb {
+	
+	public static final Logger logger = Logger.getLogger(PlataformaContratEstadoEnvioServicioWeb.class);
+	
+	public void realizarLlamadaWebService(String tipoDocumento) throws ISPACRuleException {
+		int tipoDoc = TipoDocumento.obtenerTipoDocumento(tipoDocumento);
+		switch (tipoDoc) {
+		case 1: // Anuncio Previo
+			try {
+				ClienteLlamadas client = new ClienteLlamadas();
+				//----------------------------
+				ConfigurationManager configuracion = null;
+				configuracion.getInstance();
+				client.llamarPIN(new PriorInformationNoticeType ());
+				//-------------------
+				
+				//client.llamarPIN((PriorInformationNoticeType) client.getDocSerializado());
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+		case 2: // Anuncio de Licitación
+			try {
+				ClienteLlamadas client = new ClienteLlamadas();
+				client.llamarCN((ContractNoticeType) client.getDocSerializado());
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+		case 3: // Pliego
+			try {
+				ClienteLlamadas client = new ClienteLlamadas();
+				client
+						.llamarCD((CallForTendersType) client
+								.getDocSerializado());
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+		case 4: // Anuncio de Adjudicación
+			try {
+				ClienteLlamadas client = new ClienteLlamadas();
+				client.llamarCAN((ContractAwardNoticeType) client
+						.getDocSerializado());
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+		case 5: // Documentos Generales
+			try {
+				DocumentoGeneralBean docGen = (DocumentoGeneralBean) SessionDataManager
+						.getInstance().getDocumentoGeneral();
+				ClienteLlamadas client = new ClienteLlamadas();
+				
+				client.llamarDOCGEN(docGen.getPublicationId(), docGen
+						.getExpedientNumber(), docGen.getBuyerProfileId(),
+						(DocumentReferenceType) client.getDocSerializado());
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+
+		case 6: // Consulta Estado Expediente
+			try {
+				ConsultaBean consultaExp = (ConsultaBean) SessionDataManager
+						.getInstance().getDatosConsulta();
+				ClienteLlamadas client = new ClienteLlamadas();
+				client.llamarConsultaExp(consultaExp.getExpedientNumber(),
+						consultaExp.getBuyerProfileId());
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+
+		case 7: // Consulta datos Órgano Contratación
+			try {
+				ConsultaBean consultaExp = (ConsultaBean) SessionDataManager
+						.getInstance().getDatosConsulta();
+				ClienteLlamadas client = new ClienteLlamadas();
+				client.llamarConsultaBuyerProfile(consultaExp
+						.getBuyerProfileId());
+
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+
+		case 8: // Validación
+			try {
+				UtilidadesBean utilidades = (UtilidadesBean) SessionDataManager
+						.getInstance().getDatosUtilidades();
+				ClienteLlamadas client = new ClienteLlamadas();
+				client.llamarUtilidadValidacion(TipoDocumento
+						.obtenerTipoDocumento(utilidades.getTipoDoc()));
+
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+
+		case 9: // Previsualización
+			try {
+				UtilidadesBean utilidades = (UtilidadesBean) SessionDataManager
+						.getInstance().getDatosUtilidades();
+				ClienteLlamadas client = new ClienteLlamadas();
+				client.llamarUtilidadPrevisualizacion(TipoDocumento
+						.obtenerTipoDocumento(utilidades.getTipoDoc()));
+
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+
+		}
+	}
+
+}

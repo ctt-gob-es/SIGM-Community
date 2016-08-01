@@ -11,6 +11,14 @@
 	<packaging>jar</packaging>
 	<name>fwktd-sir-api</name>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<!-- fwktd-sir dependencies -->
@@ -196,7 +204,6 @@
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc14</artifactId>
 			<version>${oracle.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xbean</groupId>

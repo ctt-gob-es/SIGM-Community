@@ -69,6 +69,9 @@
 		<axis.version>1.4</axis.version>
 		<bcmail.version>140</bcmail.version>
 		<bcprov.version>140</bcprov.version>
+		<bcmail16.version>1.46</bcmail16.version>
+		<bcprov16.version>1.46</bcprov16.version>
+		<bctsp16.version>1.46</bctsp16.version>
 		<commons.beanutils.version>1.7.0</commons.beanutils.version>
 		<commons.codec.version>1.5</commons.codec.version>
 		<commons.collections.version>3.2</commons.collections.version>
@@ -109,12 +112,17 @@
 		<eclipse.plugin.version>2.5.1</eclipse.plugin.version>
 
 		<!-- maven assembly plugin -->
-		<assembly.plugin.version>2.2-beta-3</assembly.plugin.version>
+		<assembly.plugin.version>2.5.3</assembly.plugin.version>
 
 		<buildnumber-maven-plugin.version>1.0-beta-4</buildnumber-maven-plugin.version>
 		<maven-war-plugin.version>2.1-alpha-1</maven-war-plugin.version>
 
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		
+		<unoil.version>2.2.1</unoil.version>
+		<ant.version>1.7.0</ant.version>
+		
+		<rendicion.version>1.0</rendicion.version>
 
 	</properties>
 

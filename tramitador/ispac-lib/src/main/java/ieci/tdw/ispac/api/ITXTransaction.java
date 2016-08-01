@@ -112,14 +112,14 @@ public interface ITXTransaction {
 	 * @param params Parámetros para las reglas
 	 * @throws ISPACException
 	 */
-	public void sendProcessToTrash(int nIdProc, Map params)throws ISPACException;
+	public boolean sendProcessToTrash(int nIdProc, Map params)throws ISPACException;
 	/**
 	 * Envia a la papelera el proceso. 
 	 * Enviar a la papelera supone cambiar el estado del proceso, de las fases activas y de los trámites a eliminados
 	 * @param nIdProc Identificador del proceso a eliminar
 	 * @throws ISPACException
 	 */
-	public void sendProcessToTrash(int nIdProc) throws ISPACException;
+	public boolean sendProcessToTrash(int nIdProc) throws ISPACException;
 	
 	/**
 	 * Restaura un proceso enviado a la papelera

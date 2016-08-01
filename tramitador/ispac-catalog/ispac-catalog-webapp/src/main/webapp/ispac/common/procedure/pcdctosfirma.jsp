@@ -13,10 +13,11 @@
 	<ispac:hasFunction functions="FUNC_INV_PROCEDURES_EDIT">
 	<ul class="tabButtonList">
 		<li>
+			<!-- [eCenpri-Felipe #592] Añadimos parámetro entityId -->
 			<ispac:linkframe id="CTOSFIRMAMANAGER"
 				styleClass=""
      			target="workframe"
-				action='<%="selectObject.do?codetable=SPAC_CTOS_FIRMA_CABECERA&codefield=ID&caption=select.signProcess.specific.caption&sqlquery="+sqlquery+"&valuefield=DESCRIPCION&decorator=/formatters/ctosfirma/choosectofirmaformatter.xml&pcdId=" + pcdId %>'
+				action='<%="selectObject.do?codetable=SPAC_CTOS_FIRMA_CABECERA&codefield=ID&caption=select.signProcess.specific.caption&sqlquery="+sqlquery+"&valuefield=DESCRIPCION&decorator=/formatters/ctosfirma/choosectofirmaformatter.xml&pcdId=" + pcdId + "&entityId=" + entityId %>'
 				titleKey="catalog.add"
 				width="640"
 				height="480"

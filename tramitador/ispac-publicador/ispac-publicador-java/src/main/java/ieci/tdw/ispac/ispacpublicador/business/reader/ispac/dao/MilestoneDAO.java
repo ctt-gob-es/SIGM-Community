@@ -26,7 +26,11 @@ public class MilestoneDAO extends BaseDAO {
 	public static List getNewMilestoneList(DbCnt cnt, int infLimitId) 
 			throws ISPACException {
 		
-	    final String sql = "SELECT HITOS.*, PROCS.ID_PCD, PROCS.NUMEXP FROM SPAC_HITOS HITOS, SPAC_PROCESOS PROCS WHERE PROCS.ID = HITOS.ID_EXP AND HITOS.ID > ? ORDER BY HITOS.ID ASC";
+	    //[Manu Ticket #1090] - INICIO Poner en marcha la opción Consulta de Expedientes.
+	    //final String sql = "SELECT HITOS.*, PROCS.ID_PCD, PROCS.NUMEXP FROM SPAC_HITOS HITOS, SPAC_PROCESOS PROCS WHERE PROCS.ID = HITOS.ID_EXP AND HITOS.ID > ? ORDER BY HITOS.ID ASC";
+	    final String sql = "SELECT * FROM (SELECT HITOS.*, PROCS.ID_PCD, PROCS.NUMEXP FROM SPAC_HITOS HITOS, SPAC_PROCESOS PROCS WHERE PROCS.ID = HITOS.ID_EXP UNION ALL SELECT HITOS.*, PROCS.ID_PCD, PROCS.NUMEXP FROM SPAC_HITOS_H HITOS, SPAC_PROCESOS PROCS WHERE PROCS.ID = HITOS.ID_EXP) AS HITOS WHERE HITOS.ID > ? ORDER BY HITOS.ID ASC";
+		//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
+
 
 	    return getVOs(cnt, sql, new Object[] { new Integer(infLimitId) }, 
 	    		MilestoneVO.class);

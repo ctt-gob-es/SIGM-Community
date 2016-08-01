@@ -1,11 +1,11 @@
 /*
- * Este fichero forma parte del Cliente @firma. 
- * El Cliente @firma es un applet de libre distribución cuyo código fuente puede ser consultado
+ * Este fichero forma parte del Cliente @firma, el cliente de @firma queda en desuso al utilizar el Miniapplet (aunque se mantiene el cÃ³digo que lo integra)  
+ * El Cliente @firma es un applet de libre distribuciÃ³n cuyo cÃ³digo fuente puede ser consultado
  * y descargado desde www.ctt.map.es.
- * Copyright 2009,2010 Ministerio de la Presidencia, Gobierno de España (opcional: correo de contacto)
- * Este fichero se distribuye bajo las licencias EUPL versión 1.1  y GPL versión 3  según las
- * condiciones que figuran en el fichero 'licence' que se acompaña.  Si se   distribuyera este 
- * fichero individualmente, deben incluirse aquí las condiciones expresadas allí.
+ * Copyright 2009,2010 Ministerio de la Presidencia, Gobierno de EspaÃ±a (opcional: correo de contacto)
+ * Este fichero se distribuye bajo las licencias EUPL versiÃ³n 1.1  y GPL versiÃ³n 3  segÃºn las
+ * condiciones que figuran en el fichero 'licence' que se acompaÃ±a.  Si se   distribuyera este 
+ * fichero individualmente, deben incluirse aquÃ­ las condiciones expresadas allÃ­.
  */
 
 /*
@@ -148,7 +148,7 @@ function isFireFox2()
 	if(window.navigator.appName == 'Netscape') {
 		var userAgent = window.navigator.userAgent;
 		
-		//posición de la cadena que coge la parte  de la versión de Firefox
+		//posiciÃ³n de la cadena que coge la parte  de la versiÃ³n de Firefox
 		posfinal = userAgent.lastIndexOf('/') + 2; 
 		//posicion de la cadena que devuelve si realmente es Firefox
 		posinicial=  userAgent.lastIndexOf('/') - 7;

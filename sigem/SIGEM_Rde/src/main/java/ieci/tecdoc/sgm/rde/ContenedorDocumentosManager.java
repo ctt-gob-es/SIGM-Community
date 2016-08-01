@@ -9,6 +9,8 @@ package ieci.tecdoc.sgm.rde;
 
 import ieci.tecdoc.sgm.base.guid.Guid;
 import ieci.tecdoc.sgm.base.miscelanea.Goodies;
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.tramitacion.ServicioTramitacion;
 import ieci.tecdoc.sgm.rde.database.*;
 import ieci.tecdoc.sgm.rde.database.util.*;
 import ieci.tecdoc.sgm.rde.datatypes.ContenedorDocumentoImpl;
@@ -19,11 +21,16 @@ import ieci.tecdoc.sgm.rde.exception.GuidIncorrectoCodigosError;
 import ieci.tecdoc.sgm.rde.exception.GuidIncorrectoExcepcion;
 
 
+
+
+
 import java.io.*;
 import java.sql.Timestamp;
 import java.util.*;
 
 import org.apache.log4j.Logger;
+
+import com.ieci.tecdoc.isicres.repository.RepositoryFactory;
 
 /**
  * Case que implementa el mánager relacionado con el repositorio de 
@@ -45,6 +52,87 @@ public class ContenedorDocumentosManager {
     isDebugeable = Configuracion.getIsDebugeable();
   }
   
+	/**
+	 * [Ticket 1014 Teresa] Recupera la información del documento cuyo guid es
+	 * el pasado como parámetro
+	 * 
+	 * @param sessionId
+	 *            Identificador de sesión de la aplicación llamante
+	 * @param guid
+	 *            Identificador del documento a recuperar
+	 * @return DocumentInfo Objeto que contiene el documento (en binario), la
+	 *         extensión y el tipo MIME asociado a esa extensión (en caso de
+	 *         estar definida)
+	 * @throws GuidIncorrectoExcepcion
+	 * @throws RepositorioDocumentosExcepcion
+	 */
+	public boolean insertarIdFileBorrarContenido(String guid,
+			String idFileRegistroEnt, String entidad)
+			throws GuidIncorrectoExcepcion, RepositorioDocumentosExcepcion {
+		ContenedorDocumentoDatos docData = new ContenedorDocumentoDatos();
+
+		boolean info = true;
+
+		try {
+			docData.setGuid(guid);
+			docData.setContent("".getBytes());
+			docData.setFileRegistroPresencial(idFileRegistroEnt);
+			docData.insertFicheroDeleteContenido(entidad);
+		} catch (GuidIncorrectoExcepcion e) {
+			logger.error(
+					"Error al recuperar informacion de documento [retrieveDocument][GuidIncorrectoException][Entidad:"
+							+ entidad + "]", e.fillInStackTrace());
+			throw new GuidIncorrectoExcepcion(
+					GuidIncorrectoCodigosError.EC_INCORRECT_GUID);
+		} catch (Exception e) {
+			logger.error(
+					"Error al recuperar informacion de documento [retrieveDocument][Exception][Entidad:"
+							+ entidad + "]", e.fillInStackTrace());
+			throw new RepositorioDocumentosExcepcion(
+					RepositorioDocumentosCodigosError.EC_RETRIEVE_DOCUMENT);
+		}
+
+		return info;
+	}
+
+	/**
+	 * Almacena un documento
+	 * 
+	 * @param sessionId
+	 *            Identificador de sesión de la aplicación llamante
+	 * @param idInfoPagFile
+	 *            Documento a almacenar (infopag de la tabla spac_dt_documentos)
+	 * @param extension
+	 *            Extensión del documento
+	 * @return String Identificador único asignado al documento
+	 * @throws RepositorioDocumentosExcepcion
+	 */
+	public String storeDocumentInfoPag(String sessionId, String entidad, String idInfoPagFile, String extension)
+			throws RepositorioDocumentosExcepcion {
+		ContenedorDocumentoDatos docData = new ContenedorDocumentoDatos();
+		String guid = "";
+
+		try {
+			guid = new Guid().toString();
+			docData.setGuid(guid);
+			docData.setContent("".getBytes());
+			docData.setExtension(extension.toUpperCase());
+			docData.setHash("");
+			docData.setTimestamp(new Timestamp(System.currentTimeMillis()));
+			docData.setFileRegistroPresencial(idInfoPagFile);
+			docData.add(entidad);
+		} catch (Exception e) {
+			logger.error(
+					"Error al almacenar documento [storeDocument][Exception][Entidad:"
+							+ entidad + "]", e.fillInStackTrace());
+			throw new RepositorioDocumentosExcepcion(
+					RepositorioDocumentosCodigosError.EC_STORE_DOCUMENT);
+		}
+
+		return guid;
+	}
+
+	// [Tere #1014] FIN
   
   /**
    * Recupera la información del documento cuyo guid es el pasado como parámetro
@@ -111,14 +199,47 @@ public class ContenedorDocumentosManager {
     		cExt = docData.getExtension().toLowerCase();
     	}
       mimeData.load(cExt, entidad);
+      
+      /**
+       *  [Ticket 1014 Teresa INICIO] Recupera la información del documento cuyo guid es
+	   * el pasado como parámetro
+       * **/
+    //Obtengo el documento del registro Presencial
+      byte [] contenido = null;
+      logger.warn("docData.getFileRegistroPresencial() "+docData.getFileRegistroPresencial());
+      if(docData.getFileRegistroPresencial()!=null){
+    	  //Compruebo si está en registro presencial
+    	  contenido = RepositoryFactory.getCurrentPolicy().retrieveDocument(docData.getFileRegistroPresencial(), entidad);
+    	  
+    	  if(contenido!=null){
+    		  logger.warn("esta en registro");
+    		  info.setContent(contenido);
+    	  }
+    	  else{
+    		  logger.warn("esta en tramitador");
+    		  ServicioTramitacion consulta = LocalizadorServicios.getServicioTramitacion();
+        	  contenido = consulta.getFichero(entidad, docData.getFileRegistroPresencial());
+        	  info.setContent(contenido);
+    	  }
+      }
+      else{
+    	 
+    	  info.setContent(docData.getContent());
+      }
+	  
+
+      
+      info.setExtension(docData.getExtension());
+      info.setMimeType(mimeData.getMimeType());
+      info.setGuid(docData.getGuid());
+      /**
+       *  [Ticket 1014 Teresa FIN] Recupera la información del documento cuyo guid es
+	   * el pasado como parámetro
+       * **/
+      
     }catch (Exception e) {
     	logger.error("Error al recuperar tipo mime de documento [retrieveDocument][Exception][Entidad:"+entidad+"]", e.fillInStackTrace());
     }
-
-    info.setContent(docData.getContent());
-    info.setExtension(docData.getExtension());
-    info.setMimeType(mimeData.getMimeType());
-    info.setGuid(docData.getGuid());
 
     return info;
   }

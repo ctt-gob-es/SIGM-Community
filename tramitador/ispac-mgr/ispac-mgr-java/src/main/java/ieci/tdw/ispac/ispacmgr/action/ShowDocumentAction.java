@@ -23,6 +23,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+
 public class ShowDocumentAction extends BaseAction {
 
     public ActionForward executeAction(ActionMapping mapping, 
@@ -39,7 +41,8 @@ public class ShowDocumentAction extends BaseAction {
         IInvesflowAPI invesflowAPI = session.getAPI();
         IEntitiesAPI entityAPI = invesflowAPI.getEntitiesAPI();
 
-        IItem entity = entityAPI.getDocument(Integer.parseInt(sDocument));
+        //[Manu Ticket #1060] * SIGEM Error al recuperar los documentos firmados en ShowSignedDocumentAction.
+        IItem entity = DocumentosUtil.getDocumento(entityAPI, Integer.parseInt(sDocument));
         if (entity == null) {
             return null;
         }
@@ -192,7 +195,9 @@ public class ShowDocumentAction extends BaseAction {
     	if (task != null) {
         	String sUID = task.getString("ID_RESP");
 		  	if (!((invesflowAPI.getWorkListAPI().isInResponsibleList(sUID, ISecurityAPI.SUPERV_ANY , task)) ||
-		  		  (invesflowAPI.getSignAPI().isResponsible(entity.getKeyInt(), uid)))) {
+		  		  (invesflowAPI.getSignAPI().isResponsible(entity.getKeyInt(), uid))
+		  		  || (invesflowAPI.getSignAPI().isResponsibleSubstitute(entity.getKeyInt(), uid)))){ //[eCenpri-Felipe #425]
+
 		  		throw new ISPACInfo("exception.documents.noResponsability",false);
 		  	}
 		}

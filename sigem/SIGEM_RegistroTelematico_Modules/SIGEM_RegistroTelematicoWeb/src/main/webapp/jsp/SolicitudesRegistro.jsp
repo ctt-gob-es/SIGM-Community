@@ -14,11 +14,8 @@ if (rutaImagenes == null) rutaImagenes = "";
 <html:html locale="true">
 	<head>
 		<%String afirma = "jsp/AFirma";//(String)request.getSession().getServletContext().getAttribute(Defs.PLUGIN_AFIRMA);%>
-		<script type="text/javascript" language="javascript" src="<%= afirma %>/install_files/common-js/time.js"></script>
-		<script type="text/javascript" language="javascript" src="<%= afirma %>/install_files/common-js/appletHelper.js"></script>
-		<script type="text/javascript" language="javascript" src="<%= afirma %>/install_files/common-js/instalador.js"></script>
-		<script type="text/javascript" language="javascript" src="<%= afirma %>/install_files/common-js/firma.js"></script>
-		<script type="text/javascript" language="javascript" src="<%= afirma %>/install_files/constantes.js"></script>
+		<script type="text/javascript" language="javascript" src="<%= afirma %>/install_files/common-js/time.js"></script>		
+		<iframe id="iframe_descarga_autofirma" style="display:none;">
 		<script language="Javascript">
 			function install()
 			{
@@ -35,6 +32,12 @@ if (rutaImagenes == null) rutaImagenes = "";
 					install();
 				}
 			}
+			
+			function descargarAutofirma()
+			{
+				document.getElementById('iframe_descarga_autofirma').src = "https://cloud.dipucr.es/owncloud/index.php/s/BT7tN8BfI58CUKg/download";
+			}
+			
 			
 			function getBase()
 			{
@@ -82,7 +85,7 @@ if (rutaImagenes == null) rutaImagenes = "";
 			<div class="cuerporightbt">
 				<div class="cuerpomidbt">
 					<input type="submit" class="ok" value="<bean:message key="solicitudes.aceptar"/>" />	
-		          		<input class="ok" type="button" id="instalarButton" value="<bean:message key="solicitudes.instalar"/>" onClick="javascript:comprobarInstalacion()">
+		          		<input class="ok" type="button" id="instalarButton" value="<bean:message key="solicitudes.instalar"/>" onClick="javascript:descargarAutofirma()">
 				</div>
 			</div>
 			</div>

@@ -78,61 +78,57 @@ public class MenuExpRelatedTag extends BodyTagSupport {
         return EVAL_PAGE;
     }
 
-    
-   private void drawExpRelated()throws IOException,ISPACException{
+	//[Manut Eickt #707] INICIO - SIGEM Problemas de rendimiento
+    private void drawExpRelated()throws IOException,ISPACException{
   	  
 	 HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 	 String context =request.getContextPath();
-	 String buffer="";
- 	 List subExp = (List)pageContext.findAttribute(getHijos());
- 	 List supExp = (List)pageContext.findAttribute(getPadres());
+	 StringBuffer buffer = new StringBuffer();
+
+	 //List subExp = (List)pageContext.findAttribute(getHijos());
+	 //List supExp = (List)pageContext.findAttribute(getPadres());
+	 
  	 ClientContext cct =((SessionAPI)getSession()).getClientContext();
- 	 buffer+="<ul class=\"menu_grupo\">";
+ 	 buffer.append("<ul class=\"menu_grupo\">");
  	 ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME,cct.getLocale());
  	  
-	 buffer+="<li id=\"itemExpRelated\" class=\"item_plegado\"> <a href=\"#\" onclick=\"javascript:showItem('ExpRelated');return false;\"> ";
-	 buffer+=bundle.getString("menu.expRelacionados")+"</a>";
-	 buffer+="<ul>";
-	  
+	 buffer.append("<li id=\"itemExpRelated\" class=\"item_plegado\"> <a href=\"#\" onclick=\"javascript:showItem('ExpRelated');return false;\"> ");
+	 buffer.append(bundle.getString("menu.expRelacionados")+"</a>");
+	 buffer.append("<ul>");
 	 
-	 buffer=generateHtmlExpsRelated(buffer, "expRel", subExp);
-	 buffer=generateHtmlExpsRelated(buffer,"expRelPadre", supExp);
-	
-		 
+//	 buffer=generateHtmlExpsRelated(buffer, "expRel", subExp);
+//	 buffer=generateHtmlExpsRelated(buffer,"expRelPadre", supExp);
 	 
 	 String url=context+"/showRelatedExpedients.do";
 	 String urlImg = StaticContext.rewriteHref(pageContext, context, "img/search-mg.gif");
 	 //Ver todos
-	 buffer+="<li  class=\"menuBold\">"+bundle.getString("menu.expRel.verTodos");
-	 buffer+="<a href=\"javascript: showFrame(\'workframe\', \'"+url+"\', '', '', '', false, false);\">";
-	 buffer+="<img title=\""+bundle.getString("menu.expRel.verTodos")+"\"  src=\""+urlImg+"\"/>";
-	 buffer+="</a></li>";
+	 buffer.append("<li  class=\"menuBold\">"+bundle.getString("menu.expRel.verTodos"));
+	 buffer.append("<a href=\"javascript: showFrame(\'workframe\', \'"+url+"\', '', '', '', false, false);\">");
+	 buffer.append("<img title=\""+bundle.getString("menu.expRel.verTodos")+"\"  src=\""+urlImg+"\"/>");
+	 buffer.append("</a></li>");
 
      //Relacionar expediente, solo si no estamos en modo solo lectura
 	 //Object readOnly= request.getAttribute("readOnly");
-	//if(readOnly==null || StringUtils.isEmpty(readOnly.toString())){
+	 //if(readOnly==null || StringUtils.isEmpty(readOnly.toString())){
 	 String readonlyState = (String)request.getAttribute(ActionsConstants.READONLYSTATE);
 	 if (readonlyState == null){
 		 url=context+"/relateExpedient.do?method=enter";
 		 
-		 buffer+="<li  class=\"menuBold\">"+bundle.getString("menu.expRelacionar");
-		 buffer+="<a href=\"javascript: showFrame(\'workframe\', \'"+url+"\', '', '', '', false, false);\">";
-		 buffer+="<img title=\""+bundle.getString("menu.expRelacionar")+"\"  src=\""+urlImg+"\"/>";
-		 buffer+="</a></li>";
-		 
-		
+		 buffer.append("<li  class=\"menuBold\">"+bundle.getString("menu.expRelacionar"));
+		 buffer.append("<a href=\"javascript: showFrame(\'workframe\', \'"+url+"\', '', '', '', false, false);\">");
+		 buffer.append("<img title=\""+bundle.getString("menu.expRelacionar")+"\"  src=\""+urlImg+"\"/>");
+		 buffer.append("</a></li>");
 	 }
 
-
-	 buffer+="</ul>";
-     buffer+="</li>";
-     buffer+="</ul>";
+	 buffer.append("</ul>");
+     buffer.append("</li>");
+     buffer.append("</ul>");
      JspWriter out = pageContext.getOut();
-     out.println(buffer);
+     out.println(buffer.toString());
  
     }
-
- 	
+  
+ /*	
    private String   generateHtmlExpsRelated(String buffer, String tipo, List lista) throws NumberFormatException, ISPACException{
 	   
 		 
@@ -165,8 +161,9 @@ public class MenuExpRelatedTag extends BodyTagSupport {
 	 
 			 }
 	   }
-	   return buffer;
-   }
+	 */
+   //[Manut Eickt #707] FIN - SIGEM Problemas de rendimiento
+   
     /**
      * @return Devuelve el valor de <code>hijos</code>.
      */

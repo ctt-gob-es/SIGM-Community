@@ -1,11 +1,19 @@
 package ieci.tdw.ispac.ispacmgr.action;
 
+import ieci.tdw.ispac.api.IEntitiesAPI;
+import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.impl.SessionAPIFactory;
+import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
+import ieci.tdw.ispac.audit.business.manager.impl.IspacAuditoriaManagerImpl;
 import ieci.tdw.ispac.audit.business.vo.AuditContext;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.search.objects.impl.SearchInfo;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacmgr.action.form.SearchForm;
@@ -87,6 +95,16 @@ public abstract class BaseAction extends Action
 			return mapping.findForward("fail");
 		}
 		
+		//[Manu Ticket #129] INICIO - SIGEM Avisos Avisos_usuarios Sistema de avisos.
+		String idMensaje = getMensaje(sesion);
+		if( StringUtils.isNotEmpty(idMensaje)){	
+				ActionForward forwardMensaje = new ActionForward("/mensajes/" + idMensaje);
+				if(forwardMensaje != null)
+					return forwardMensaje;
+		}
+		
+		//[Manu Ticket #129] FIN - SIGEM Avisos Avisos_usuarios Sistema de avisos.
+				
 		String username = sesion.getRespName();
 		request.setAttribute("User", username);
 		try {
@@ -95,6 +113,7 @@ public abstract class BaseAction extends Action
 				saveErrors(request, errors);
 				request.getSession().removeAttribute(Globals.ERROR_KEY);
 			}
+
 			setAuditContext(request, sesion);
 			ActionForward forward = executeAction(mapping, form, request, response, sesion);
 			
@@ -127,6 +146,35 @@ public abstract class BaseAction extends Action
 		}
 	}
 
+	//[Manu Ticket #129] INICIO - SIGEM Avisos Avisos_usuarios Sistema de avisos.
+	public String getMensaje(SessionAPI sesion){
+		String idMensaje = "";
+		try{
+			IClientContext cct = sesion.getClientContext();
+			IInvesflowAPI invesflowAPI = cct.getAPI();
+			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
+			
+			String idSesion = sesion.getTicket();
+			
+			//[Manu Ticket #133] INICIO - SIGEM Avisos modulo avisos modulo para avisos electronicos.
+			String usuario = sesion.getUserName();
+			IItemCollection sesionesCollection = entitiesAPI.queryEntities("SPAC_S_SESION_MENSAJE", "WHERE ID_SESION = '" + idSesion + "' OR USUARIO = '" +usuario+ "'");
+			//[Manu Ticket #133] FIN - SIGEM Avisos modulo avisos modulo para avisos electronicos.
+
+			Iterator sesionesIterator = sesionesCollection.iterator();
+			if(sesionesIterator.hasNext()){
+				IItem sesiones = (IItem) sesionesIterator.next();
+				idMensaje = sesiones.getString("ID_MENSAJE");
+				sesiones.delete(cct);
+			}
+		}
+		catch(Exception e){
+			logger.error("ERROR al recuperar el mensaje de la sesion: " + sesion.getTicket(), e);
+		}
+		return idMensaje;
+	}
+	//[Manu Ticket #129] FIN - SIGEM Avisos Avisos_usuarios Sistema de avisos.
+		
 //	public void setOrganizationInfo(HttpServletRequest request){
 //		OrganizationUserInfo info =(OrganizationUserInfo)request.getSession()
 //			.getAttribute(ScopeConstants.ORGANIZATION_USER_INFO);
@@ -302,12 +350,16 @@ public abstract class BaseAction extends Action
 	 * @param request
 	 */
 	private void setAuditContext(HttpServletRequest request, SessionAPI session) {
-		AuditContext auditContext = new AuditContext();
-		auditContext.setUserHost(request.getRemoteHost());
-		auditContext.setUserIP(request.getRemoteAddr());
-		auditContext.setUser(session.getUserName());
-		auditContext.setUserId(session.getClientContext().getUser().getUID());
-		AuditContextHolder.setAuditContext(auditContext);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+	    		
+			AuditContext auditContext = new AuditContext();
+			auditContext.setUserHost(request.getRemoteHost());
+			auditContext.setUserIP(request.getRemoteAddr());
+			auditContext.setUser(session.getUserName());
+			auditContext.setUserId(session.getClientContext().getUser().getUID());
+			AuditContextHolder.setAuditContext(auditContext);
+    	}
 	}
 
 }

@@ -604,13 +604,15 @@ public class StageElement implements IPcdElement
         return buffer.toString();
     }
 
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
     public String toXpdl(DbCnt cnt,
     					 Map ctStageIds,
 			  			 Map ctTaskIds,
 			  			 Map ctRuleIds,
 			  			 Map ctEntityIds,
 			  			 Map ctTpDocIds,
-			  			 Map subPcdIds) throws ISPACException {
+			  			 Map subPcdIds,
+			  			 Map ctManualUsuarioIds, List manualesUsuario) throws ISPACException {
 
     	// Fase en el catálogo
     	if (getCatalogId() != ISPACEntities.ENTITY_NULLREGKEYID) {
@@ -671,7 +673,7 @@ public class StageElement implements IPcdElement
         buffer.append(ExportProcedureMgr.tpDocsToXml(tpdoclist, ctTpDocIds));
 
         // Trámites asociados a la fase
-        buffer.append(XmlTag.newTag(ExportProcedureMgr.TAG_TASKS, ExportProcedureMgr.elementsToXpdl(cnt, taskdefmap.values().iterator(), ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds)));
+        buffer.append(XmlTag.newTag(ExportProcedureMgr.TAG_TASKS, ExportProcedureMgr.elementsToXpdl(cnt, taskdefmap.values().iterator(), ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, ctManualUsuarioIds, manualesUsuario, subPcdIds)));
 
         StringBuffer attributes = new StringBuffer();
         attributes.append(XmlTag.newAttr(ExportProcedureMgr.ATR_ID, String.valueOf(getId())))
@@ -683,10 +685,11 @@ public class StageElement implements IPcdElement
     }
 
 
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 	public String toXpdl(DbCnt cnt, Map ctStageIds, Map ctTaskIds,
-			Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds,
+			Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds, Map ctManualUsuarioIds, List manualesUsuario,
 			Map ctHelpsIds) throws ISPACException {
-		return toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds);
+		return toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds, ctManualUsuarioIds, manualesUsuario);
 	}
 
 }

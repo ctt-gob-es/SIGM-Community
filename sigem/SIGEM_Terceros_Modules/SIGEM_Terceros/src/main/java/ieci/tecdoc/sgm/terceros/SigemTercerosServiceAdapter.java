@@ -456,4 +456,44 @@ public class SigemTercerosServiceAdapter implements ServicioTerceros {
 		return dir; 
 	}
 
+	/**
+	 * [eCenpri-Felipe #477]
+	 * Inserta un nuevo tercero en la BBDD
+	 * @param entityId
+	 * @param nif
+	 * @param tipoDoc
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @param tipo
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @param tfnoFijo
+	 * @param tfnoMovil
+	 * @param email
+	 * @return
+	 * @throws TercerosException
+	 */
+	public boolean insertThirdParty(String entityId, String nif, int tipoDoc,
+			String nombre, String ape1, String ape2, String tipo,
+			String provincia, String municipio, String cpostal,
+			String direccion, String tfnoFijo, String tfnoMovil, String email)
+			throws TercerosException {
+
+		try {
+			setOrganizationUserInfo(entityId);
+			String poolName = OrganizationUser.getOrganizationUserInfo().getThirdPartyPoolName(dsName);
+
+			SicresThirdPartyAPI sicresThirdPartyAPI = new SicresThirdPartyAPI(poolName);
+
+			return sicresThirdPartyAPI.insertThirdParty(nif, tipoDoc, nombre, ape1, ape2,
+					tipo, provincia, municipio, cpostal, direccion, tfnoFijo, tfnoMovil, email);
+
+		} catch (Throwable e){
+			logger.error("Error inesperado al crear el tercero [" + nif + "]", e);
+			throw new TercerosException(TercerosException.EXC_GENERIC_EXCEPCION, e);
+		}
+	}
 }

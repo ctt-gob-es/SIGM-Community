@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter pageSize='100'>
+
+	<!-- Ponemos 2 veces la propiedad Asunto, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+		 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CRIT_SOLVENCIA' 
+				 titleKey='CONTRATACION_SOLVENCIA_TECN:CRIT_SOLVENCIA' 
+				 fieldType='LINK'
+				 columnClass='width50percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CRIT_SOLVENCIA' 
+				 titleKey='CONTRATACION_SOLVENCIA_TECN:CRIT_SOLVENCIA' 
+				 fieldType='LIST'
+				 columnClass='width50percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CRIT_SOLVENCIA_ECO' 
+				 titleKey='CONTRATACION_SOLVENCIA_TECN:CRIT_SOLVENCIA_ECO' 
+				 fieldType='LINK'
+				 columnClass='width50percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CRIT_SOLVENCIA_ECO' 
+				 titleKey='CONTRATACION_SOLVENCIA_TECN:CRIT_SOLVENCIA_ECO' 
+				 fieldType='LIST'
+				 columnClass='width50percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 			 
+				 
+</beanformatter>

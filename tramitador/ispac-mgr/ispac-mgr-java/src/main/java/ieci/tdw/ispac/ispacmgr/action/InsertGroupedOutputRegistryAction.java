@@ -9,6 +9,7 @@ import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.sicres.RegisterHelper;
 import ieci.tdw.ispac.ispaclib.sicres.vo.DocumentInfo;
 import ieci.tdw.ispac.ispaclib.sicres.vo.Register;
 import ieci.tdw.ispac.ispaclib.sicres.vo.RegisterInfo;
@@ -16,7 +17,6 @@ import ieci.tdw.ispac.ispaclib.sicres.vo.RegisterType;
 import ieci.tdw.ispac.ispaclib.sicres.vo.ThirdPerson;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacmgr.action.form.EntityForm;
-import ieci.tdw.ispac.ispaclib.sicres.RegisterHelper;
 import ieci.tdw.ispac.ispacweb.api.IManagerAPI;
 import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
@@ -33,6 +33,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
+
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+import es.dipucr.sigem.sellar.action.SellarDocumentos;
 
 public class InsertGroupedOutputRegistryAction extends InsertOutputRegistryAction {
 
@@ -66,30 +69,73 @@ public class InsertGroupedOutputRegistryAction extends InsertOutputRegistryActio
 		List<IItem> documentsRegistered = new ArrayList<IItem>();
 		List<IItem> documentsEntrada =  new ArrayList<IItem>();
 		
-		String query = "WHERE ID IN ("+StringUtils.join(multibox, ',')+")";
+		//[Manu Ticket #913] SIGEM firma registro rechazado        		
+		List<IItem> documentsRechazados =  new ArrayList<IItem>();
+		//[Manu Ticket #913] SIGEM firma registro rechazado 
+
+		//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados
+		List<IItem> documentsNoFirmados =  new ArrayList<IItem>();
+		//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados
+		
+		String query = "WHERE ID IN ("+StringUtils.join(multibox, ',')+") ";
+		
 		IItemCollection itemcol = entitiesAPI.queryEntities(SpacEntities.SPAC_DT_DOCUMENTOS, query);
         
-		for (Iterator<IItem> it = itemcol.iterator(); it.hasNext();) {
-        	IItem itemDoc = it.next();
+		for (Iterator<?> it = itemcol.iterator(); it.hasNext();) {
+        	IItem itemDoc = (IItem) it.next();
         	//Si el tipo de registro del documento no es de salida o ya está registrado no se tienen en cuenta en la operacion
-        	if (StringUtils.equals(itemDoc.getString("TP_REG"), RegisterType.SALIDA) && itemDoc.get("NREG") == null){
+        	if (StringUtils.equals(itemDoc.getString("TP_REG"), RegisterType.SALIDA) && itemDoc.get("NREG") == null 
+        			//[Manu Ticket #913] SIGEM firma registro rechazado
+        			&& !itemDoc.getString("ESTADOFIRMA").equals("04")
+            		//[Manu Ticket #913] SIGEM firma registro rechazado
+        			//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados
+        			&& itemDoc.getString("ESTADOFIRMA").equals("02")
+        			//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados   
+        			){
         		documentIds.add(String.valueOf(itemDoc.getKeyInt()));
         	}else{
         		if (itemDoc.get("NREG") != null){
         			documentsRegistered.add(itemDoc);
         		}else if(StringUtils.equals(itemDoc.getString("TP_REG"), RegisterType.ENTRADA)){
         			documentsEntrada.add(itemDoc);
-        		}        		
+        		} 
+        		//[Manu Ticket #913] SIGEM firma registro rechazado        		
+	        	else if (itemDoc.getString("ESTADOFIRMA").equals("04")){
+	    			documentsRechazados.add(itemDoc);	
+	    		}
+        		//[Manu Ticket #913] SIGEM firma registro rechazado
+    			//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados       			
+	        	else if (!itemDoc.getString("ESTADOFIRMA").equals("02")){
+	        		documentsNoFirmados.add(itemDoc);	
+	    		}
+    			//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados  
         	}
         }
 
 		if (documentIds.isEmpty()){
-        	throw new ISPACInfo("exception.sicres.notDocuments",false);	
+			//[Manu Ticket #107] - INICIO - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
+			SellarDocumentos sellarDocumentos = new SellarDocumentos(session.getClientContext(), managerAPI.currentState(getStateticket(request)).getTaskId());				
+	        sellarDocumentos.sellarDocumentos();
+	        
+			return mapping.findForward("refresh");
+			
+			//throw new ISPACInfo("exception.sicres.notDocuments",false);	
+			//[Manu Ticket #107] - FIN - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
         }
 		
 		request.setAttribute("docIds", StringUtils.join(documentIds.toArray(), ','));
 		request.setAttribute("documentsRegistered", documentsRegistered);
 		request.setAttribute("documentsEntrada", documentsEntrada);
+		//[Manu Ticket #913] SIGEM firma registro rechazado
+		//[Manu Ticket #107] - INICIO - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
+		request.setAttribute("documentsRechazados", documentsRechazados);		
+		//[Manu Ticket #107] - FIN - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
+		//[Manu Ticket #913] SIGEM firma registro rechazado
+		
+		//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados
+		request.setAttribute("documentsNoFirmados", documentsNoFirmados);		
+		//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados
+		
 		request.setAttribute("numExp", managerAPI.currentState(getStateticket(request)).getNumexp());
         	        
 		return mapping.findForward("form");
@@ -153,12 +199,25 @@ public class InsertGroupedOutputRegistryAction extends InsertOutputRegistryActio
         // DESTINO
         String[] documentNames = new String[itemcol.toList().size()]; 
         int i = 0;
-        for (Iterator<IItem> iterator = itemcol.iterator(); iterator.hasNext(); i++) {
-			IItem itemDoc = iterator.next();
+        for (Iterator<?> iterator = itemcol.iterator(); iterator.hasNext(); i++) {
+			IItem itemDoc = (IItem) iterator.next();
 			documentNames[i] =itemDoc.getString("NOMBRE");
 		}
         
-        String summary = StringUtils.join(documentNames, ", ") + "  -  Ref.Exp.: " + currentState.getNumexp();
+        /**
+		 * [Teresa Ticket #607] INICIO Adjuntar en el registro el asunto del expediente.
+		 * **/	
+		
+		IItem expediente = ExpedientesUtil.getExpediente(cct, currentState.getNumexp());
+		String asuntoExpediente = expediente.getString("ASUNTO");
+       
+        String summary = StringUtils.join(documentNames, ", ") + "  -  Ref.Exp.: " + currentState.getNumexp() + " - Asunto Exp.: " + asuntoExpediente;
+        
+        /**
+		 * [Teresa Ticket #607] FIN Adjuntar en el registro el asunto del expediente.
+		 * **/
+        
+        
     	// Generar el registro de salida
         Register register = generateRegister(defaultForm, currentState, documentInfo, destiny, summary);
         RegisterInfo registerInfo = registerAPI.insertRegister(register);
@@ -179,6 +238,10 @@ public class InsertGroupedOutputRegistryAction extends InsertOutputRegistryActio
             request.setAttribute(ERROR_VAR, ERROR_REGISTRO);
         }
         
+		//[Manu Ticket #107] - INICIO - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
+        SellarDocumentos sellarDocumentos = new SellarDocumentos(cct, managerAPI.currentState(getStateticket(request)).getTaskId());				
+        sellarDocumentos.sellarDocumentos();
+		//[Manu Ticket #107] - FIN - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
         
 		return mapping.findForward("success");
 	}

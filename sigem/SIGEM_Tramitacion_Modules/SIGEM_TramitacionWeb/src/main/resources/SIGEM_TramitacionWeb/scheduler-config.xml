@@ -22,4 +22,10 @@
 		class="ieci.tdw.ispac.ispacmgr.scheduler.OutdatedSchedulerTask"
 		time="23:00:00"  period="1d">
 	</task>
+	
+	<!-- Tarea que recupera los anuncios de la BBDD de subvenciones y genera un nuevo expediente -->
+	<task
+		class="es.dipucr.sigem.scheduler.GetAnunciosBopBDNSTask"
+		time="21:00:00"  period="1d">
+	</task>
 </scheduler>

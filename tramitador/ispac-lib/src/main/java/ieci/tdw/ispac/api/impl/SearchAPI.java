@@ -13,6 +13,8 @@ import ieci.tdw.ispac.audit.business.IspacAuditoriaManager;
 import ieci.tdw.ispac.audit.business.manager.impl.IspacAuditoriaManagerImpl;
 import ieci.tdw.ispac.audit.business.vo.AuditContext;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventBusquedaVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.search.SearchMgr;
@@ -41,6 +43,7 @@ public class SearchAPI implements ISearchAPI {
 	 */
 	private final ClientContext context;
 
+	//[Manu #93] * ALSIGM3 Modificaciones Auditoría
 	private IspacAuditoriaManager auditoriaManager;
 
 	/**
@@ -51,7 +54,9 @@ public class SearchAPI implements ISearchAPI {
 	 */
 	public SearchAPI(ClientContext context) {
 		this.context = context;
-		auditoriaManager = new IspacAuditoriaManagerImpl();
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+		if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
 	}
 
 	/**
@@ -314,6 +319,30 @@ public class SearchAPI implements ISearchAPI {
 		return mgr.getSearchResults(searchinfo);
 	}
 
+	//MQE #142 Modificamos para que muestre todos los expedietes sin tener en cuenta los permisos
+	/**
+	 * Lleva a cabo la búsqueda a partir de objeto searchinfo. El número de
+	 * registros resultantes puede estar limitada por parámetros de
+	 * configuración MAX_SEARCH_FRM_RESULTS , en caso de estar activado dicho
+	 * parámetro. De otro modo la búsqueda no está limitada
+	 * 
+	 * @param searchinfo
+	 * @return Objeto con la lista de Items , el número máximo de registros
+	 *         permitidos, y el número total de registros que satisfacen la
+	 *         búsqueda
+	 * @throws ISPACException
+	 */
+	public SearchResultVO getLimitedSearchResultsRelateExpedient(SearchInfo searchinfo)
+			throws ISPACException {
+		SearchMgr mgr = new SearchMgr(context);
+		SearchResultVO result = mgr.getLimitedSearchResultsRelateExpedient(searchinfo);
+
+		auditSearch(searchinfo);
+
+		return result;
+
+	}
+	
 	/**
 	 * Lleva a cabo la búsqueda a partir de objeto searchinfo. El número de
 	 * registros resultantes puede estar limitada por parámetros de
@@ -332,6 +361,7 @@ public class SearchAPI implements ISearchAPI {
 		SearchResultVO result = mgr.getLimitedSearchResults(searchinfo);
 
 		auditSearch(searchinfo);
+
 		return result;
 
 	}
@@ -342,34 +372,38 @@ public class SearchAPI implements ISearchAPI {
 	 * @param searchinfo
 	 */
 	private void auditSearch(SearchInfo searchinfo) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("auditSearch(SearchInfo, AuditContext) - start");
-		}
-
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventBusquedaVO evento = new IspacAuditEventBusquedaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setConsulta(searchinfo.toXml());
-		evento.setFecha(new Date());
-		evento.setIdUser("");
-		evento.setUser("");
-
-		if (auditContext != null) {					
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-
-		auditoriaManager.audit(evento);
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("auditSearch(SearchInfo, AuditContext) - end");
-		}
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+			if (logger.isDebugEnabled()) {
+				logger.debug("auditSearch(SearchInfo, AuditContext) - start");
+			}
+	
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventBusquedaVO evento = new IspacAuditEventBusquedaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setConsulta(searchinfo.toXml());
+			evento.setFecha(new Date());
+			evento.setIdUser("");
+			evento.setUser("");
+	
+			if (auditContext != null) {					
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+	
+			auditoriaManager.audit(evento);
+	
+			if (logger.isDebugEnabled()) {
+				logger.debug("auditSearch(SearchInfo, AuditContext) - end");
+			}
+    	}
 	}
 
 }

@@ -108,5 +108,8 @@ public interface ConfigurationKeys {
 	public static final String KEY_WS_DISTRIBUTION_AUTODISTRIBUTION_REGISTER_IMPORT = "/ISicres-Configuration/ISicres-WS/Distribution/AutoDistributionRegisterImport";
 	public static final String KEY_WS_FIRST_COLLECTIONS_INIT_VALUE = "/ISicres-Configuration/ISicres-WS/FirstCollectionsInitValue";
 	
+	// Configuración de la actualización del 
+	public static final String KEY_COMPONETES_USUARIO_URL_DESCARGA = "";
+	
 
 }

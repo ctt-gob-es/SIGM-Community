@@ -233,6 +233,21 @@ public class InvesDocRepositoryManager extends GenericRepositoryManager {
 
 		return retrieveVO;
 	}
+	//[Teresa # 1014] INICIO
+	@Override
+	public ISicresAbstractDocumentVO getRetrieveDocumentParams(
+			String documentUID, String entidad) {
+		ISicresBasicDocumentVO documentVO = new ISicresBasicDocumentVO();
+
+	    InvesDocDatosEspecificosVO datosEspecificosVO = new InvesDocDatosEspecificosVO();
+	    datosEspecificosVO.setEntidad(entidad);
+
+	    documentVO.setId(documentUID);
+	    documentVO.setDatosEspecificos(datosEspecificosVO);
+
+	    return documentVO;
+	}
+	//[Teresa # 1014] FIN
 
 
 }

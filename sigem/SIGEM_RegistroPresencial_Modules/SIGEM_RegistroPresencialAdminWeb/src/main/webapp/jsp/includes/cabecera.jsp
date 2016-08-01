@@ -1,6 +1,20 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@page import="ieci.tecdoc.sgm.core.web.locale.LocaleFilterHelper"%>
+
+<!-- [Manu #814] INICIO - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+
+<%@page import="ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion" %>
+<%@page import="ieci.tecdoc.sgm.core.services.LocalizadorServicios" %>
+
+<% 
+
+	String entidad = AutenticacionAdministracion.obtenerDatosEntidad(request).getIdEntidad();
+	String descEntidad = LocalizadorServicios.getServicioEntidades().obtenerEntidad(entidad).getNombreCorto();
+%>
+
+<!-- [Manu #814] FIN- SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+
 <script>
 	function abreAyuda( url ) {
 	
@@ -13,7 +27,7 @@
 
 <div id="cabecera">
 	<div id="logo">
-		<img src="<html:rewrite page="/img/minetur.jpg"/>" alt="GOBIERNO DE ESPAÑ‘A. MINISTERIO DE INDUSTRIA, ENERGÍA Y TURISMO " />
+		<img src="<html:rewrite page="/img/minetur.jpg"/>" alt="GOBIERNO DE ESPAÑA. MINISTERIO DE INDUSTRIA, ENERGÍA Y TURISMO " />
 		<img src="<html:rewrite page="/img/logo.gif"/>" alt="sigem" />
 	</div>
 	<div class="salir">
@@ -30,7 +44,9 @@
  		<table>
 	   		<tr>
 				<td>
-				   	<p>	<bean:write name="datosSesion" property="usuario"/>	</p>
+				   	<!-- [Manu #814] INICIO - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+				   	<p> Entidad: <%=descEntidad%>&nbsp;-&nbsp; <bean:write name="datosSesion" property="usuario"/>	</p>
+				<!-- [Manu #814] FIN - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
 				</td>	
 				<td>
 					<p>

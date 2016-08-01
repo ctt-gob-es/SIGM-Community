@@ -3,6 +3,8 @@ package ieci.tdw.ispac.ispactx.tx;
 import ieci.tdw.ispac.api.IBPMAPI;
 import ieci.tdw.ispac.api.ITXTransaction;
 import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.item.IResponsible;
 import ieci.tdw.ispac.api.rule.EventManager;
 import ieci.tdw.ispac.api.rule.EventsDefines;
@@ -12,7 +14,6 @@ import ieci.tdw.ispac.ispaclib.dao.procedure.PFaseDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PNodoDAO;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXFaseDAO;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXProcesoDAO;
-import ieci.tdw.ispac.ispaclib.resp.Responsible;
 import ieci.tdw.ispac.ispactx.ITXAction;
 import ieci.tdw.ispac.ispactx.TXConstants;
 import ieci.tdw.ispac.ispactx.TXDAOGen;
@@ -22,6 +23,7 @@ import ieci.tdw.ispac.ispactx.TXProcedureMgr;
 import ieci.tdw.ispac.ispactx.TXTransactionDataContainer;
 import ieci.tdw.ispac.resp.ResponsibleHelper;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -110,6 +112,40 @@ public class TXOpenPreviousStage implements ITXAction {
 		stageInstanced.set("ID_FASE_BPM", processStageUID);
 		stageInstanced.set("RESP", processStageRespName);
 		//stageInstanced.set("ID_RESP", processStageRespId);
+		
+		//[Manu Ticket #965] INICIO SIGEM Muestra Trámites al retorceder fase
+		// Comprobamos si la fase anterior tenía trámites, si es así recuperamos el id de la fase, 
+		//para que no los muestre como de fases anteriores
+		int id_fase_anterior = 0;
+		
+		IItemCollection tramitesCollection = cs.getAPI().getEntitiesAPI().getEntities("SPAC_DT_TRAMITES", process.getString("NUMEXP"));
+		Iterator<?> tramitesIterator = tramitesCollection.iterator();
+		int id_fase_stage = stageInstanced.getIdFase();
+		
+		boolean encontrado = false;
+		
+		while (tramitesIterator.hasNext() && !encontrado){
+			IItem tramite = (IItem) tramitesIterator.next();
+			int id_fase_pcd = tramite.getInt("ID_FASE_PCD");			
+			if(id_fase_pcd == id_fase_stage){
+				id_fase_anterior = tramite.getInt("ID_FASE_EXP");
+				encontrado = true;
+			}
+		}
+
+		if(id_fase_anterior != 0 && encontrado){
+			cs.endTX(true);
+			cs.beginTX();
+			try{
+				cs.getConnection().execute("update spac_fases set id = " + id_fase_anterior + ", id_fase_bpm = '"+id_fase_anterior+"' where id = " + stageInstanced.getKeyInt());
+				cs.endTX(true);
+			}
+			catch(ISPACException e){
+				//Se captura la excepción, en caso de que de algún error no hace nada y se comporta como siempre.
+				cs.endTX(false);
+			}
+		}
+		//[Manu Ticket #965] FIN - SIGEM Muestra Trámites al retorceder fase
 		
 		int eventObjectType = EventsDefines.EVENT_OBJ_PROCEDURE;
 		if (process.isSubProcess())

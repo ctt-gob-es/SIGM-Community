@@ -142,7 +142,9 @@ public class MessageTag extends TagSupport {
 	    	   StringBuffer code = new StringBuffer();
 	    	   String codeString="";
 	    	   if(generateTagScript.equalsIgnoreCase("TRUE")){
-	    		  codeString+="<script> ";
+	    		   //[eCenpri-Manu Ticket#164] - INICIO - ALSIGM3 No muestra el mensaje de cheque duplicado.
+	    		  codeString+="<script id='scriptMensaje'> ";
+	    		   //[eCenpri-Manu Ticket#164] - FIN - ALSIGM3 No muestra el mensaje de cheque duplicado.
 	    	   }
 	    	   //El código se lanza cuando la página haya sido totalmente recargada evento ready de jquery
 	    	   codeString+="$(document).ready(function() {";

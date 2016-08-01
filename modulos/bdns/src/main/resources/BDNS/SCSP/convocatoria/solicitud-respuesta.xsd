@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns="http://intermediacion.redsara.es/scsp/esquemas/V3/solicitudRespuesta" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://intermediacion.redsara.es/scsp/esquemas/V3/solicitudRespuesta" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="CodigoCertificado">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="64"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="CodigoEstado">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="4"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="CodigoEstadoSecundario">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="16"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Estado">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="CodigoEstado" minOccurs="0"/>
+				<xs:element ref="CodigoEstadoSecundario" minOccurs="0"/>
+				<xs:element ref="LiteralError" minOccurs="0"/>
+				<xs:element ref="TiempoEstimadoRespuesta" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="IdPeticion">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="26"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="LiteralError">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="NumElementos">
+		<xs:simpleType>
+			<xs:restriction base="xs:int">
+				<xs:totalDigits value="7"/>
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="SolicitudRespuesta">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="Atributos"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TiempoEstimadoRespuesta">
+		<xs:simpleType>
+			<xs:restriction base="xs:int">
+				<xs:totalDigits value="4"/>
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="TimeStamp">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="29"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Atributos">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="IdPeticion"/>
+				<xs:element ref="NumElementos"/>
+				<xs:element ref="TimeStamp"/>
+				<xs:element ref="Estado" minOccurs="0"/>
+				<xs:element ref="CodigoCertificado"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

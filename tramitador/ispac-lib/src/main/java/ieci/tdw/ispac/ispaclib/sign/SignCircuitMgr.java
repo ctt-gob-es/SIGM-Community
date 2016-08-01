@@ -84,43 +84,82 @@ public class SignCircuitMgr {
 		return instancedCircuitId;
 	}
 
-	public boolean signStep(SignDocument signDocument, int instancedStepId) throws ISPACException {
+	//INICIO [dipucr-Felipe #1059]
+		//Sobrecargamos el método para que se pueda introducir el estado
+		/**
+		 * Método con el código principal de firma de un paso del circuito
+		 * @param signDocument
+		 * @param instancedStepId
+		 * @param estado
+		 * @return
+		 * @throws ISPACException
+		 */
+		public boolean signStep(SignDocument signDocument, int instancedStepId, int estado) throws ISPACException {
+			
+			// Se debe comprobar si es el ultimo paso del circuito de firma para activar el siguiente
+			DbCnt cnt = mcontext.getConnection();
+			
+			try {
+				
+				// Finalizar el paso de firma
+				SignCircuitInstanceDAO signCircuitInstanceDAO = new SignCircuitInstanceDAO(cnt, instancedStepId);
+//				signCircuitInstanceDAO.set("ESTADO", SignCircuitStates.FINALIZADO); //[dipucr-Felipe #1059]
+				signCircuitInstanceDAO.set("ESTADO", estado); //[dipucr-Felipe #1059]
+				
+				// Comprobar si el firmante del paso de firma no es el mismo que el usuario conectado 
+				// (sustituto)
+				if (!signCircuitInstanceDAO.getString("ID_FIRMANTE").equals(mcontext.getRespId())) {
+				
+					signCircuitInstanceDAO.set("ID_FIRMANTE", mcontext.getRespId());
+					signCircuitInstanceDAO.set("NOMBRE_FIRMANTE", mcontext.getResponsible().getRespName());
+				}
+				
+				signCircuitInstanceDAO.store(cnt);
+				
+				// EVENTO: Fin de paso de circuito de firmas
+				processCircuitStepEvents(cnt, EventsDefines.EVENT_EXEC_END_CIRCUIT_STEP, signCircuitInstanceDAO);
 
-		// Se debe comprobar si es el ultimo paso del circuito de firma para activar el siguiente
-		DbCnt cnt = mcontext.getConnection();
-
-		try {
-
-			// Finalizar el paso de firma
-			SignCircuitInstanceDAO signCircuitInstanceDAO = new SignCircuitInstanceDAO(cnt, instancedStepId);
-			signCircuitInstanceDAO.set("ESTADO", SignCircuitStates.FINALIZADO);
-			signCircuitInstanceDAO.set("FECHA", new Date());
-
-			// Comprobar si el firmante del paso de firma no es el mismo que el usuario conectado
-			// (sustituto)
-			if (!signCircuitInstanceDAO.getString("ID_FIRMANTE").equals(mcontext.getRespId())) {
-
-				signCircuitInstanceDAO.set("ID_FIRMANTE", mcontext.getRespId());
-				signCircuitInstanceDAO.set("NOMBRE_FIRMANTE", mcontext.getResponsible().getRespName());
+				// Instanciar el paso siguiente
+				instanceNextStep(cnt, signCircuitInstanceDAO.getInt("ID_CIRCUITO"), 
+						signCircuitInstanceDAO.getInt("ID_INSTANCIA_CIRCUITO"), 
+						signDocument.getItemDoc().getKeyInt());
+				
+			} finally {
+				mcontext.releaseConnection(cnt);
 			}
-
-			signCircuitInstanceDAO.store(cnt);
-
-			// EVENTO: Fin de paso de circuito de firmas
-			processCircuitStepEvents(cnt, EventsDefines.EVENT_EXEC_END_CIRCUIT_STEP, signCircuitInstanceDAO);
-
-			// Instanciar el paso siguiente
-			instanceNextStep(cnt, signCircuitInstanceDAO.getInt("ID_CIRCUITO"),
-					signCircuitInstanceDAO.getInt("ID_INSTANCIA_CIRCUITO"),
-					signDocument.getItemDoc().getKeyInt());
-
-		} finally {
-			mcontext.releaseConnection(cnt);
+			
+			return true;
 		}
-
-		return true;
-	}
-
+		
+		/**
+		 * Firma normal. Estado = FIRMADO/FINALIZADO
+		 * @param signDocument
+		 * @param instancedStepId
+		 * @return
+		 * @throws ISPACException
+		 */
+		public boolean signStep(SignDocument signDocument, int instancedStepId) throws ISPACException {
+			
+			return signStep(signDocument, instancedStepId, SignCircuitStates.FINALIZADO);
+		}
+		
+		/**
+		 * Firma normal. Estado = FIRMADO CON REPAROS
+		 * 
+		 * El estado con valor 3 se correspondía con la firma con reparo pero esa opción se eliminó
+		 *  
+		 * @param signDocument
+		 * @param instancedStepId
+		 * @return
+		 * @throws ISPACException
+		 */
+		/**
+		public boolean signStepReparo(SignDocument signDocument, int instancedStepId) throws ISPACException {
+			
+			return signStep(signDocument, instancedStepId, SignCircuitStates.FIRMADO_REPARO);
+		}
+		//FIN [dipucr-Felipe #1059]
+**/
 	protected void instanceNextStep(DbCnt cnt, int circuitId, int instancedCircuitId, int documentId)
 			throws ISPACException {
 

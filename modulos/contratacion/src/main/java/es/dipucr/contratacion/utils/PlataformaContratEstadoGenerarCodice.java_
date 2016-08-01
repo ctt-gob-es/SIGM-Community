@@ -1,0 +1,373 @@
+package es.dipucr.contratacion.utils;
+
+import ieci.tdw.ispac.api.IEntitiesAPI;
+import ieci.tdw.ispac.api.IGenDocAPI;
+import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.errors.ISPACRuleException;
+import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
+import ieci.tdw.ispac.api.rule.IRuleContext;
+import ieci.tdw.ispac.ispaclib.context.ClientContext;
+
+import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Vector;
+
+import org.apache.log4j.Logger;
+import org.dgpe.codice.common.cbclib.ContractFolderIDType;
+import org.dgpe.codice.common.cbclib.IssueDateType;
+import org.dgpe.codice.common.cbclib.IssueTimeType;
+import org.dgpe.codice.common.cbclib.PlannedDateType;
+import org.dgpe.codice.maindoc.callfortenders.CallForTendersType;
+import org.dgpe.codice.maindoc.contractawardnotice.ContractAwardNoticeType;
+import org.dgpe.codice.maindoc.contractnotice.ContractNoticeType;
+import org.dgpe.codice.maindoc.pin.PriorInformationNoticeType;
+
+import es.dgpe.place.client.beans.AnuncioAdjudicacionBean;
+import es.dgpe.place.client.beans.AnuncioLicitacionBean;
+import es.dgpe.place.client.beans.PliegoBean;
+import es.dgpe.place.client.codice.Code;
+import es.dgpe.place.client.codice.Contractingauthorityparty;
+import es.dgpe.place.client.constants.ConstantsGC;
+import es.dgpe.place.client.constants.TipoDocumento;
+import es.dgpe.place.client.utils.ClienteLlamadas;
+import es.dgpe.place.client.utils.ConfigurationManager;
+import es.dgpe.place.client.utils.DocumentGeneratorCommon;
+import es.dgpe.place.client.utils.DocumentsGenerator;
+import es.dgpe.place.client.utils.SessionDataManager;
+
+public class PlataformaContratEstadoGenerarCodice extends DocumentGeneratorCommon {
+
+	public static final Logger logger = Logger
+			.getLogger(PlataformaContratEstadoGenerarCodice.class);
+	public static ConfigurationManager configuracion = null;
+
+	public String generarDocumentoCODICE(String tipoDocumento,
+			IRuleContext rulectx) throws ISPACRuleException {
+		
+		logger.warn("INICIO PlataformaContratEstado");
+		String resultado = "";
+		int tipoDoc = TipoDocumento.obtenerTipoDocumento(tipoDocumento);
+		switch (tipoDoc) {
+		case 1: // Anuncio Previo
+			logger.warn("Anuncio Previo");
+			PriorInformationNoticeType pin = generateDocumentAnuncioPrevio(rulectx, "000001", "000001");
+			
+			ClienteLlamadas.setTipoDocumento(tipoDocumento);
+			ClienteLlamadas.setDocSerializado(pin);
+
+			try {
+				ByteArrayOutputStream docXML = (ByteArrayOutputStream) cs
+						.serializePriorInformationNotice(pin);
+				logger.warn("Documento serializado correctamente");
+				resultado = docXML.toString("UTF-8");
+
+			} catch (Exception e) {
+				 throw new ISPACRuleException("Error.", e);
+			}
+			break;
+		case 2: // Anuncio de Licitación
+			logger.warn("Anuncio de Licitación");
+			AnuncioLicitacionBean anuncioLicitacion = SessionDataManager
+					.getInstance().getAnuncioLicitacion();
+			ContractNoticeType contractnotice = DocumentsGenerator
+					.generateDocumentContractNotice(anuncioLicitacion,
+							"000001", "000001");
+
+			try {
+				ByteArrayOutputStream docXML = (ByteArrayOutputStream) cs
+						.serializeContractNotice(contractnotice);
+				logger.warn("Documento serializado correctamente");
+				resultado = docXML.toString("UTF-8");
+
+				ClienteLlamadas.setDocSerializado(contractnotice);
+				ClienteLlamadas.setTipoDocumento(tipoDocumento);
+
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+		case 3: // Pliego
+			logger.warn("Pliego");
+			PliegoBean pliego = SessionDataManager.getInstance().getPliego();
+			CallForTendersType callforTender = DocumentsGenerator
+					.generateDocumentContractDocuments(pliego, "000001",
+							"000001");
+
+			try {
+
+				ByteArrayOutputStream docXML = (ByteArrayOutputStream) cs
+						.serializeCallForTender(callforTender);
+				logger.warn("Documento serializado correctamente");
+				resultado = docXML.toString("UTF-8");
+
+				ClienteLlamadas.setDocSerializado(callforTender);
+				ClienteLlamadas.setTipoDocumento(tipoDocumento);
+
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+
+		case 4: // Anuncio de Adjudicacion
+			logger.warn("Anuncio de Adjudicacion");
+			AnuncioAdjudicacionBean adjudicacion = SessionDataManager
+					.getInstance().getAnuncioAdjudicacion();
+			ContractAwardNoticeType can = DocumentsGenerator
+					.generateDocumentContractAwardNotice(adjudicacion,
+							"000001", "000001");
+			try {
+
+				ByteArrayOutputStream docXML = (ByteArrayOutputStream) cs
+						.serializeContractAwardNotice(can);
+				logger.warn("Documento serializado correctamente");
+				resultado = docXML.toString("UTF-8");
+
+				ClienteLlamadas.setDocSerializado(can);
+				ClienteLlamadas.setTipoDocumento(tipoDocumento);
+
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error.", e);
+			}
+			break;
+
+/*		case 5: // Documentos Generales
+
+			DocumentoGeneralBean docGeneral = SessionDataManager.getInstance()
+					.getDocumentoGeneral();
+			// PublishGeneralContractDocument
+			// docgen=generateGeneralDocument(docGeneral );
+			try {
+				Documentreference docref = new Documentreference();
+
+				String idTipoDoc = ComboBoxUtils
+						.getComboBoxByConstant(ConstantsGC.GENERALCONTRACTDOCCODE)[docGeneral
+						.getIdTypeDoc()][1];
+				Code tipoDocCode = DocumentsGenerator.crearCode(idTipoDoc,
+						docGeneral.getTypeDoc(),
+						ConstantsGC.GENERALCONTRACTDOCCODE,
+						ConstantsGC.GENERALCONTRACTDOCCODE_VER);
+				docref.setDocumenttypecode(tipoDocCode);
+
+				DocumentReferenceType dr = DocumentsGenerator
+						.createDocumentReference(docref, docGeneral
+								.getUrlDocument(), docGeneral.getNameDocument());
+
+				ByteArrayOutputStream docXML = (ByteArrayOutputStream) cs
+						.serialize_DocumentReferenceType(dr);
+				logger.warn("Documento serializado correctamente");
+				resultado = docXML.toString("UTF-8");
+
+				ClienteLlamadas.setDocSerializado(dr);
+				ClienteLlamadas.setTipoDocumento(tipoDocumento);
+
+			} catch (Exception e) {
+				throw new ISPACRuleException("Error. ", e);
+			}
+			break;*/
+
+		default:
+			logger.warn("Tipo de documento no reconocido");
+			break;
+		}
+		logger.warn("FIN PlataformaContratEstado");
+		return resultado;
+	}
+
+	private PriorInformationNoticeType generateDocumentAnuncioPrevio(
+			IRuleContext rulectx, String id, String noticeid) throws ISPACRuleException {
+		
+		PriorInformationNoticeType documento = null;
+		try {
+			configuracion.getInstance();
+			
+			documento = cs.getPinFactory().createPriorInformationNoticeType();
+			IssueDateType issuedate = cs.getCbcFactory().createIssueDateType();
+
+			// Generación del versionado Codice:
+			documento.setUBLVersionID(getUBLVersionID());
+			documento.setCustomizationID(getCustomizationID());
+			documento.setProfileID(getProfileID());
+			documento.setID(getID(id));
+			documento.setUUID(getUUID(id));
+
+			// --------------------------------------------------------------------
+			ClientContext cct = (ClientContext) rulectx.getClientContext();
+			IInvesflowAPI invesFlowAPI = cct.getAPI();
+			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+			IGenDocAPI genDocAPI = cct.getAPI().getGenDocAPI();
+			// --------------------------------------------------------------------
+
+			String strQuery = "WHERE NUMEXP='" + rulectx.getNumExp() + "'";
+			IItemCollection collection = entitiesAPI.queryEntities(
+					"CONTRATACION_DATOS_CONTRATO", strQuery);
+			Iterator<IItem> it = collection.iterator();
+			if (it.hasNext()) {
+				IItem datosContrato = (IItem) it.next();
+				
+				//Fecha terminación plazo de presentación de proposiciones o ofertas
+				strQuery = "WHERE NUMEXP='" + rulectx.getNumExp() + "'";
+				IItemCollection itcDatosTram = entitiesAPI.queryEntities("CONTRATACION_DATOS_TRAMIT", strQuery);
+				Iterator<IItem> iDatosTram = itcDatosTram.iterator();
+				Date termPlazoOfer = null;
+				if(iDatosTram.hasNext()){
+					IItem itDatosTram = iDatosTram.next();
+					termPlazoOfer = itDatosTram.getDate("F_TERM_PAZO_PRESEN_PROP");
+				}
+
+
+				PlannedDateType plannedDate = cs.getCbcFactory().createPlannedDateType();
+				plannedDate.setValue(datetoXMLGregorianCalendar(termPlazoOfer));
+				documento.setPlannedDate(plannedDate);
+
+				// se asignan los datos del documento, no componentes agregados
+				issuedate.setValue(generatePublishDateXMLGregorianCalendar());
+				documento.setIssueDate(issuedate);
+				IssueTimeType issuetime = cs.getCbcFactory().createIssueTimeType();
+				issuetime.setValue(generatePublishTimeXMLGregorianCalendar());
+				documento.setIssueTime(issuetime);
+
+				// contractfileid es el expedient number del espacio virtual de
+				// licitación
+				ContractFolderIDType contractfileid = cs.getCbcFactory().createContractFolderIDType();
+				contractfileid.setValue(rulectx.getNumExp());
+				documento.setContractFolderID(contractfileid);
+
+				Contractingauthorityparty cap = crearContractingParty();
+				// se asignan los componentes agregados al documento
+				documento.setContractingParty(crearContractingPartyType(cap));
+
+				// Tipo de contrato
+				String tipoContratoBD = datosContrato.getString("TIPO_CONTRATO");
+				String [] vTipoContrato = tipoContratoBD.split(" - ");
+				String idTipoContrato = "0";
+				Code tipoContrato = null;
+				if(vTipoContrato.length >0){
+					idTipoContrato = vTipoContrato[0];
+					tipoContrato = crearCode(idTipoContrato, vTipoContrato[1], ConstantsGC.TENDERING_CONTRACT,ConstantsGC.TENDERING_CONTRACT_VER);
+
+				}		
+				// Subtipo de contrato
+				String subTipoContratoBD = datosContrato.getString("CONTRATO_SUMIN");
+				String [] vsUBTipoContrato = subTipoContratoBD.split(" - ");
+				String idSubTipoContrato = "0";
+				Code subtipoContrato = null;
+				if(vsUBTipoContrato.length >0){
+					idSubTipoContrato = vsUBTipoContrato[0];
+					if (idTipoContrato.equalsIgnoreCase("1")) {
+						subtipoContrato = crearCode(idSubTipoContrato, vsUBTipoContrato[1], ConstantsGC.GOODS_CONTRACT,ConstantsGC.GOODS_CONTRACT_VER);
+					} else if (idTipoContrato.equalsIgnoreCase("2")) {
+						subtipoContrato = crearCode(idSubTipoContrato, vsUBTipoContrato[1], ConstantsGC.TENDERING_SERVICE_CONTRACT, ConstantsGC.TENDERING_SERVICE_CONTRACT_VER);
+					} else if (idTipoContrato.equalsIgnoreCase("3")) {
+						subtipoContrato = crearCode(idSubTipoContrato, vsUBTipoContrato[1], ConstantsGC.WORKS_CONTRACT, ConstantsGC.WORKS_CONTRACT_VER);
+					}
+				}
+				
+				//Objeto del contrato
+				String objetoContrato = datosContrato.getString("OBJETO_CONTRATO");
+
+				// CPV
+				strQuery = "WHERE NUMEXP='" + rulectx.getNumExp() + "'";
+				IItemCollection collectionCodiceEmpresa = entitiesAPI.queryEntities("DPCR_CODICE_EMPRESA", strQuery);
+				Iterator<IItem> itCodiceEmpresa = collectionCodiceEmpresa.iterator();
+				String valorCPV = "";
+				if (itCodiceEmpresa.hasNext()) {
+					IItem iCodiceEmpresa = itCodiceEmpresa.next();
+					int idCodiceEmpresa = iCodiceEmpresa.getInt("ID");
+					strQuery="SELECT FIELD,REG_ID,VALUE FROM DPCR_CODICE_EMPRESA_S WHERE REG_ID = "+idCodiceEmpresa+"";
+			        ResultSet datos = cct.getConnection().executeQuery(strQuery).getResultSet();
+			        String field = "";
+			        Vector<String[]> valores = new Vector<String[]> ();
+			        if(datos!=null)
+			      	{
+			        	while(datos.next()){
+			        		String [] vDatos = new String [2];
+			          		if (datos.getString("FIELD")!=null) field = datos.getString("FIELD"); else field="";
+			          		if (datos.getString("VALUE")!=null) valorCPV = datos.getString("VALUE"); else valorCPV="";
+			          		vDatos[0] = field;
+			          		vDatos[1] = valorCPV;
+			          		valores.add(vDatos);
+			          	}
+			      	}
+				}
+				String [] vCpv = valorCPV.split(" - ");
+				String idcpv = "0";
+				Code cpv = null;
+				if(vCpv.length >0){
+					idcpv = vCpv[0];
+					String nombreCPV = vCpv[1];
+					cpv = crearCode(idcpv, nombreCPV, ConstantsGC.CPV, ConstantsGC.CPV_VER);
+
+				}
+				
+				
+				//Importe de la petición
+				strQuery = "WHERE NUMEXP='" + rulectx.getNumExp() + "'";
+				IItemCollection itcImporte = entitiesAPI.queryEntities("CONTRATACION_PETICION", strQuery);
+				Iterator<IItem> iImporte = itcImporte.iterator();
+				BigDecimal importeSin = null;
+				BigDecimal importeCon = null;
+				
+				if(iImporte.hasNext()){
+					IItem itImporte = iImporte.next();
+					importeSin = new BigDecimal(itImporte.getString("PRESUPUESTO"));
+					importeCon = new BigDecimal(itImporte.getString("TOTAL"));
+				}
+				
+				documento.setProcurementProject(crearProcurementProject(
+						tipoContrato, subtipoContrato, objetoContrato, cpv, importeSin,
+						importeCon));
+				
+				//Procedimiento contratación
+				String tipoProcBD = datosContrato.getString("PROC_ADJ");
+				String [] vsTipoProc = tipoProcBD.split(" - ");
+				String idTipoProc = "0";
+				Code tipoProcedimiento = null;
+				if(vsTipoProc.length >0){
+					idTipoProc = vsTipoProc[0];
+					tipoProcedimiento = crearCode(idTipoProc, vsTipoProc[1], ConstantsGC.TENDERING_PROCESS,
+						ConstantsGC.TENDERING_PROCESS);
+				}
+
+				
+				// Preparación de TenderingProcess
+				documento.setTenderingProcess(crearTenderingProcess(tipoProcedimiento, termPlazoOfer,null));
+			}
+
+			// documento.setProcurementProject(procuringProject2Codice(objeto.getProcuringproject()));
+		} catch (Exception e) {
+			 throw new ISPACRuleException("Error.", e);
+		}
+
+		return documento;
+	}
+	
+	private Contractingauthorityparty crearContractingParty()
+	{
+		
+		Contractingauthorityparty cap = new Contractingauthorityparty();
+			
+		cap.setPartyname(ConfigurationManager.getInstance().leerPropiedadBP("partyName"));
+		
+		cap.setCif(ConfigurationManager.getInstance().leerPropiedadBP("documentType.value"));
+		cap.setIdPlataforma(ConfigurationManager.getInstance().leerPropiedadBP("idPlataforma"));	
+		
+		cap.setContractingauthoritytypecode(crearCode(ConfigurationManager.getInstance().leerPropiedadBP("contractingAutority.code"),null,ConstantsGC.CONTRACTING_AUTHORITY_TYPE,null));
+
+		return cap;
+	}
+	
+	private Code crearCode(String codevalue,String name, String nombreLista, String versionId)
+	{
+		Code res = new Code();
+		res.setCodevalue(String.valueOf(codevalue));
+		res.setListUri(nombreLista);
+		res.setDescription(name);
+		res.setListVersionId(versionId);
+		
+		return res;
+	}
+}

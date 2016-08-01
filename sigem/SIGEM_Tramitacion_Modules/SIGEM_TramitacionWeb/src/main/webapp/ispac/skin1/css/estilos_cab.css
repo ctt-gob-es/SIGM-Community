@@ -73,6 +73,17 @@ img {
 	border:none;
 }
 
+/*[eCenpri-Manu Ticket#267] + ALSIGM3 Logotipo de la entidad sale feas en registro presencial y tramitador */
+#cabecera_int_left img {
+	margin: 0px 0px 0px 8px;
+
+	width: auto; 
+	max-width: 200px; 
+	height: 59px; 
+	max-height: 200px;
+}
+/* [eCenpri-Manu Ticket#267] + ALSIGM3 Logotipo de la entidad sale feas en registro presencial y tramitador */
+
 #cabecera_int_right h3 {
 	position: absolute;
 	top: 7px;
@@ -450,3 +461,11 @@ input.login {
 	margin-top: 10%;
 	text-align: center;
 }
+
+/* INICIO [eCenpri-Felipe #467] */
+#barra_usuario .asunto {
+	color:#3F48CC;
+	margin-left:8px;
+	font-weight:bold;
+}
+/* FIN [eCenpri-Felipe #467] */

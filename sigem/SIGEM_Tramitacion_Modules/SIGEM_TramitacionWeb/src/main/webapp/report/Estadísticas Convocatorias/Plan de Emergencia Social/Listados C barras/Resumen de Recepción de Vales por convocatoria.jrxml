@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Resumen de Recepción de Vales por convocatoria"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["C:\\Users\\Ordenador viejo\\Documentos\\Imágenes"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select (regexp_split_to_array(a.codigo,'-'))[5]||'-'||(regexp_split_to_array(a.codigo,'-'))[6] as resolucion
+,(regexp_split_to_array(a.codigo,'-'))[6]::integer as anioResol, substring((regexp_split_to_array(a.codigo,'-'))[5], 2, (regexp_split_to_array(a.codigo,'-'))[5].length)::integer as numeroResol
+,a.codigo as codigo_generado, b.codigo as codigo_recibido
+, (regexp_split_to_array(a.codigo,'-'))[3] as numCheque, (regexp_split_to_array(a.codigo,'-'))[4] as totalCheques
+, b.factura
+from dpcr_serso_cheques_generados a 
+left join dpcr_serso_cheques_recibidos b on a.codigo = b.codigo
+order by anioResol, numeroResol, numCheque]]></queryString>
+
+	<field name="resolucion" class="java.lang.String"/>
+	<field name="anioresol" class="java.lang.Integer"/>
+	<field name="numeroresol" class="java.lang.Integer"/>
+	<field name="codigo_generado" class="java.lang.String"/>
+	<field name="codigo_recibido" class="java.lang.String"/>
+	<field name="numcheque" class="java.lang.String"/>
+	<field name="totalcheques" class="java.lang.String"/>
+	<field name="factura" class="java.lang.String"/>
+
+	<variable name="NUM_CHEQUES_GENERADOS" class="java.lang.Integer" resetType="Group" resetGroup="resolucion" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{codigo_generado}]]></variableExpression>
+	</variable>
+	<variable name="NUM_CHEQUES_RECIBIDOS" class="java.lang.Integer" resetType="Group" resetGroup="resolucion" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{codigo_generado}!=null && $F{codigo_recibido}!= null && $F{codigo_generado}.equals($F{codigo_recibido})&& !$F{factura}.equals("CHEQUES ANULADOS")?$F{codigo_recibido}:null]]></variableExpression>
+	</variable>
+	<variable name="NUM_CHEQUES_FALSOS" class="java.lang.Integer" resetType="Group" resetGroup="resolucion" calculation="Count">
+		<variableExpression><![CDATA[$F{codigo_generado}==null && $F{codigo_recibido}!= null?"FALSO":null]]></variableExpression>
+	</variable>
+	<variable name="NUM_CHEQUES_ANULADOS" class="java.lang.Integer" resetType="Group" resetGroup="resolucion" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{factura}.equals("CHEQUES ANULADOS")?$F{codigo_recibido}:null]]></variableExpression>
+	</variable>
+
+		<group  name="resolucion" >
+			<groupExpression><![CDATA[$F{resolucion}]]></groupExpression>
+			<groupHeader>
+			<band height="18"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="535"
+						height="18"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Resolución parcial: <b>" + $F{resolucion} + "</b>"]]></textFieldExpression>
+				</textField>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="97"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="57"
+						y="0"
+						width="478"
+						height="18"
+						key="textField-1"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["\t\tVales GENERADOS : <b>"+ new DecimalFormat("#,##0;-#,##0").format($V{NUM_CHEQUES_GENERADOS}) + "</b>, por un importe de: <b>" + new DecimalFormat("#,##0.00;-#,##0.00").format($V{NUM_CHEQUES_GENERADOS}.intValue()*30) + " euros</b>."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="57"
+						y="18"
+						width="478"
+						height="18"
+						key="textField-2"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["\t\tVales RECIBIDOS: <b>" + new DecimalFormat("#,##0;-#,##0").format($V{NUM_CHEQUES_RECIBIDOS}) + "</b>, por un importe de: <b>" + new DecimalFormat("#,##0.00;-#,##0.00").format($V{NUM_CHEQUES_RECIBIDOS}.intValue()*30) + " euros</b>."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="57"
+						y="54"
+						width="478"
+						height="18"
+						key="textField-3"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($V{NUM_CHEQUES_GENERADOS}.intValue() - ($V{NUM_CHEQUES_RECIBIDOS}.intValue()+$V{NUM_CHEQUES_ANULADOS}.intValue()) == 0)?
+"\t\t<font color='#04B404'>Vales PENDIENTES de recibir: <b>" + new DecimalFormat("#,##0;-#,##0").format($V{NUM_CHEQUES_GENERADOS}.intValue() - ($V{NUM_CHEQUES_RECIBIDOS}.intValue()+$V{NUM_CHEQUES_ANULADOS}.intValue())) + "</b>, por un importe de: <b>"+new DecimalFormat("#,##0.00;-#,##0.00").format(($V{NUM_CHEQUES_GENERADOS}.intValue() - ($V{NUM_CHEQUES_RECIBIDOS}.intValue()+$V{NUM_CHEQUES_ANULADOS}.intValue()))*30)+" euros</b>.</font>"
+:
+"\t\t<font color='#0000FF'>Vales PENDIENTES de recibir: <b>" + new DecimalFormat("#,##0;-#,##0").format($V{NUM_CHEQUES_GENERADOS}.intValue() - ($V{NUM_CHEQUES_RECIBIDOS}.intValue()+$V{NUM_CHEQUES_ANULADOS}.intValue())) + "</b>, por un importe de: <b>"+new DecimalFormat("#,##0.00;-#,##0.00").format(($V{NUM_CHEQUES_GENERADOS}.intValue() - ($V{NUM_CHEQUES_RECIBIDOS}.intValue()+$V{NUM_CHEQUES_ANULADOS}.intValue()))*30)+" euros</b>.</font>"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="57"
+						y="72"
+						width="478"
+						height="18"
+						key="textField-4"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean($V{NUM_CHEQUES_FALSOS}.intValue()>0)]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($V{NUM_CHEQUES_FALSOS}.intValue()>0)?
+"\t\t<font color='#FF0000'>Vales ERRÓNEOS: <b>" + new DecimalFormat("#,##0;-#,##0").format($V{NUM_CHEQUES_FALSOS}) + "</b>, por un importe de: <b>" +new DecimalFormat("#,##0.00;-#,##0.00").format($V{NUM_CHEQUES_FALSOS}.intValue()*30)+" euros</b>.</font>"
+:
+"\t\tVales ERRÓNEOS: <b>" + new DecimalFormat("#,##0;-#,##0").format($V{NUM_CHEQUES_FALSOS}) + "</b>, por un importe de: <b>" +new DecimalFormat("#,##0.00;-#,##0.00").format($V{NUM_CHEQUES_FALSOS}.intValue()*30)+" euros</b>."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="57"
+						y="36"
+						width="478"
+						height="18"
+						key="textField-7"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement isStyledText="true">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["\t\tVales ANULADOS: <b>" + new DecimalFormat("#,##0;-#,##0").format($V{NUM_CHEQUES_ANULADOS}) + "</b>, por un importe de: <b>" + new DecimalFormat("#,##0.00;-#,##0.00").format($V{NUM_CHEQUES_ANULADOS}.intValue()*30) + " euros</b>."]]></textFieldExpression>
+				</textField>
+			</band>
+			</groupFooter>
+		</group>
+		<background>
+			<band height="802"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="118"
+						y="217"
+						width="417"
+						height="585"
+						key="image-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+			</band>
+		</background>
+		<title>
+			<band height="3"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="89"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="168"
+						height="73"
+						key="image-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoCabecera - Servicios Sociales.png"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="181"
+						y="0"
+						width="347"
+						height="73"
+						backcolor="#CCCCCC"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="16" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Resumen del Estado de las Resoluciones Parciales]]></text>
+				</staticText>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="4"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="8"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="32"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="1"
+						width="535"
+						height="31"
+						key="image-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoPie.jpg"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="482"
+						y="6"
+						width="28"
+						height="15"
+						forecolor="#FFFFFF"
+						key="textField-5"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Calibri" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageFooter>
+		<lastPageFooter>
+			<band height="31"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="535"
+						height="31"
+						key="image-4"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoPie.jpg"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="482"
+						y="5"
+						width="28"
+						height="15"
+						forecolor="#FFFFFF"
+						key="textField-6"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Calibri" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</band>
+		</lastPageFooter>
+		<summary>
+			<band height="2"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

@@ -19,4 +19,11 @@ public class ConstantesGestionUsuariosBackOffice {
 	public static final String APLICACION_BUSCADOR_DOCUMENTOS = "DOC";
 	public static final String APLICACION_CONSULTA_EXPEDIENTES = "CE";
 	public static final String APLICACION_CONSULTA_REGISTROS_TELEMATICOS = "CRT";
+	
+	//[eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.
+	public static final String APLICACION_ARBOL_DOCUMENTAL_MANAGER = "AD";
+	
+//	public static final String PARAMETRO_AUTENTICACION = "autenticacion";
+//	public static final String AUTENTICACION = "true";
+//	public static final String NO_AUTENTICACION= "false";
 }

@@ -170,10 +170,10 @@ public abstract class ConectorAutenticacionManager {
 		   
 		   conectores = ConectorManager.getMultipleHooks(hookIds, entidad);
 	   } catch (CatalogoTramitesExcepcion exc) {
-		   logger.error("Error al obtener los conector de un tramite [getHooksForProcedure][CatalogoTramitesExcepcion]", exc.fillInStackTrace());
+		   logger.error("Error al obtener los conector de un tramite [getHooksForProcedure][CatalogoTramitesExcepcion]"+" - TRAMITE:"+tramiteId+" ENTIDAD: "+entidad+" - "+exc.getMessage(), exc);
 		   throw exc;
 	   } catch (Exception e) {
-		   logger.error("Error al obtener los conector de un tramite [getHooksForProcedure][Excepcion]", e.fillInStackTrace());
+		   logger.error("Error al obtener los conector de un tramite [getHooksForProcedure][Excepcion]"+" - TRAMITE:"+tramiteId+" ENTIDAD: "+entidad+" - "+e.getMessage(), e);
 		   throw new CatalogoTramitesExcepcion(CatalogoTramitesCodigosError.EC_GET_AUTENTICATION_HOOKS);
 	   }
       

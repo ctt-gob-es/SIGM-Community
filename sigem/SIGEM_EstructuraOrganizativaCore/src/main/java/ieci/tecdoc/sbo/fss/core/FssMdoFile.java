@@ -170,9 +170,15 @@ public final class FssMdoFile
 	         }
 	         catch (Exception e)
 	         {
-	
-	            log.warn(e.getMessage());
-	
+	         	 //[Manu Ticket #826] SIGEM La aplicación deja miles de archivos abandonados en la carpeta temporary y el log está saturado de mensajes. Apadrina un fichero
+	        	 //log.warn(e.getMessage());
+	        	 if(e instanceof IeciTdException)
+	        		 if(((IeciTdException) e).getErrorCode().equals(FssError.EM_VOL_IS_FULL) || ((IeciTdException) e).getErrorCode().equals(FssError.EM_VOL_IS_READONLY))
+	        			 log.info(e.getMessage());
+	        		 else
+	        			 log.error(e.getMessage());
+	        	 else log.error(e.getMessage());
+	         	//[Manu Ticket #826] SIGEM La aplicación deja miles de archivos abandonados en la carpeta temporary y el log está saturado de mensajes. Apadrina un fichero
 	         }
 	         
 	         writeFile(repInfo, fileFullPath, fileCont);
@@ -234,7 +240,15 @@ public final class FssMdoFile
          }
          catch (Exception e)
          {
-            log.warn(e.getMessage());
+        	 //[Manu Ticket #826] SIGEM La aplicación deja miles de archivos abandonados en la carpeta temporary y el log está saturado de mensajes. Apadrina un fichero
+        	 //log.warn(e.getMessage());
+        	 if(e instanceof IeciTdException)
+        		 if(((IeciTdException) e).getErrorCode().equals(FssError.EM_VOL_IS_FULL) || ((IeciTdException) e).getErrorCode().equals(FssError.EM_VOL_IS_READONLY))
+        			 log.info(e.getMessage());
+        		 else
+        			 log.error(e.getMessage());
+        	 else log.error(e.getMessage());
+         	 //[Manu Ticket #826] SIGEM La aplicación deja miles de archivos abandonados en la carpeta temporary y el log está saturado de mensajes. Apadrina un fichero
          }
 
       }

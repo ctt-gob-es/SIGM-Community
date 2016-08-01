@@ -10,11 +10,24 @@
 	<artifactId>sigem_consultaWeb</artifactId>
 	<packaging>war</packaging>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
+	
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>SIGEM_Tramitacion</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
 
 		<dependency>
-			<groupId>activation</groupId>
+			<groupId>javax.activation</groupId>
 			<artifactId>activation</artifactId>
 			<version>1.0.2</version>
 		</dependency>
@@ -71,6 +84,20 @@
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
 			<version>${itext.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>bctsp-jdk14</artifactId>
+					<groupId>bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcprov-jdk14</artifactId>
+					<groupId>bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcmail-jdk14</artifactId>
+					<groupId>bouncycastle</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

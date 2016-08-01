@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Peticiones por ayuntamiento y mes"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="782"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["K:\\Documentos\\Imágenes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["DPCR2012/13000"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select sustituto , substr, numexpconvocatoria, asunto, sum(cuenta) as count
+from
+(
+select b.sustituto , 
+case when substr(c.freg::varchar(255),6,2) is null then 
+(select min(substr(c.freg::varchar(255),6,2)) from rec_vldtbl_municipios b left join dpcr_serso_plan_emer a  
+on a.ciudad = b.valor and a.convocatoria = $P{NUM_EXP}
+left join spac_expedientes c on a.numexp = c.numexp) 
+ else substr(c.freg::varchar(255),6,2) end ,
+ d.numexpconvocatoria,
+ e.asunto,
+ case when substr(c.freg::varchar(255),6,2) is null then 0 else count(*) end 
+ 
+from rec_vldtbl_municipios b 
+left join dpcr_serso_plan_emer a on a.ciudad = b.valor 
+left join spac_expedientes c on a.numexp = c.numexp
+left join dpcr_serso_estadisticas d on d.numexp = $P{NUM_EXP}
+left join spac_expedientes e on e.numexp = d.numexpconvocatoria
+
+where b.valor != '999' and b.valor != '000' 
+and sustituto not like '%REGANTES%'
+and sustituto not like '%MAN.%'
+and sustituto not like '%MANCOMUNI%'
+and sustituto not like '%CUOTAS%'
+and sustituto not like '%COMERCIO%'
+and sustituto not like '%ESTADOS%'
+and sustituto not like '%HUERTEZUE%'
+and sustituto not like '%CONSOLACI%'
+and sustituto not like 'LOS BALLESTER%'
+and sustituto not like '%MIRONES%'
+and sustituto not like '%POZO%SERNA%'
+and sustituto not like '%SANTA QUITERIA%'
+and sustituto not like '%VENTA%CARDENAS%'
+and sustituto not like '%VILLANUEVA%FRANCO%'
+and sustituto not like '%CAMPO%CALATRAVA%'
+and sustituto not like '%FONTANOSAS%ABENOJAR%'
+and sustituto not like '%PUEBLO%NUEVO%'
+
+and (a.convocatoria = d.numexpconvocatoria or (d.numexpconvocatoria is not null and d.numexpconvocatoria != '' and a.convocatoria is null))
+group by b.sustituto, substr(c.freg::varchar(255),6,2),  d.numexpconvocatoria, e.asunto
+
+union all
+
+select b.sustituto , 
+case when substr(c.freg::varchar(255),6,2) is null then 
+(select min(substr(c.freg::varchar(255),6,2)) from rec_vldtbl_municipios b left join dpcr_serso_plan_emer a  
+on a.ciudad = b.valor and a.convocatoria = $P{NUM_EXP}
+left join spac_expedientes_h c on a.numexp = c.numexp) 
+ else substr(c.freg::varchar(255),6,2) end ,
+ d.numexpconvocatoria,
+ e.asunto,
+ case when substr(c.freg::varchar(255),6,2) is null then 0 else count(*) end 
+ 
+from rec_vldtbl_municipios b 
+left join dpcr_serso_plan_emer a on a.ciudad = b.valor 
+left join spac_expedientes_h c on a.numexp = c.numexp
+left join dpcr_serso_estadisticas d on d.numexp = $P{NUM_EXP}
+left join spac_expedientes_h e on e.numexp = d.numexpconvocatoria
+
+where b.valor != '999' and b.valor != '000' 
+and sustituto not like '%REGANTES%'
+and sustituto not like '%MAN.%'
+and sustituto not like '%MANCOMUNI%'
+and sustituto not like '%CUOTAS%'
+and sustituto not like '%COMERCIO%'
+and sustituto not like '%ESTADOS%'
+and sustituto not like '%HUERTEZUE%'
+and sustituto not like '%CONSOLACI%'
+and sustituto not like 'LOS BALLESTER%'
+and sustituto not like '%MIRONES%'
+and sustituto not like '%POZO%SERNA%'
+and sustituto not like '%SANTA QUITERIA%'
+and sustituto not like '%VENTA%CARDENAS%'
+and sustituto not like '%VILLANUEVA%FRANCO%'
+and sustituto not like '%CAMPO%CALATRAVA%'
+and sustituto not like '%FONTANOSAS%ABENOJAR%'
+and sustituto not like '%PUEBLO%NUEVO%'
+
+and (a.convocatoria = d.numexpconvocatoria or (d.numexpconvocatoria is not null and d.numexpconvocatoria != '' and a.convocatoria is null))
+group by b.sustituto, substr(c.freg::varchar(255),6,2),  d.numexpconvocatoria, e.asunto
+) as foo (sustituto, substr, numexpconvocatoria, asunto, cuenta)
+group by sustituto, substr, numexpconvocatoria, asunto
+order by sustituto, substr]]></queryString>
+
+	<field name="sustituto" class="java.lang.String"/>
+	<field name="substr" class="java.lang.String"/>
+	<field name="numexpconvocatoria" class="java.lang.String"/>
+	<field name="asunto" class="java.lang.String"/>
+	<field name="count" class="java.math.BigDecimal"/>
+
+		<background>
+			<band height="555"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="365"
+						y="0"
+						width="417"
+						height="555"
+						key="image-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="109"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="192"
+						height="103"
+						key="image-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoCabecera - Servicios Sociales.png"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						x="192"
+						y="0"
+						width="590"
+						height="68"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="24" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Peticiones por Ayuntamiento y mes al Plan de Emergencia]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="449"
+						y="74"
+						width="326"
+						height="18"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{numexpconvocatoria}+" - "+$F{asunto}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="372"
+						y="74"
+						width="77"
+						height="18"
+						key="staticText-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Convocatoria:]]></text>
+				</staticText>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="71"  isSplitAllowed="true" >
+				<crosstab >
+					<reportElement
+						x="0"
+						y="0"
+						width="782"
+						height="71"
+						key="crosstab-1"/>
+					<crosstabHeaderCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabHeaderCell>					<rowGroup name="sustituto" width="81" totalPosition="End">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{sustituto}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="1Point" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="3"
+						y="0"
+						width="75"
+						height="30"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{sustituto}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="1Point" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="0"
+						width="81"
+						height="30"
+						backcolor="#CCCCFF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Total mensual"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="substr" height="25" totalPosition="End" headerPosition="Center">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{substr}!=null&&!$F{substr}.equals("sn")?$F{substr}:""]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="1Point" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="47"
+						height="25"
+						key="textField">
+							<printWhenExpression><![CDATA[new Boolean($V{substr}!=null&&!$V{substr}.equals("sn"))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="6" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{substr}.equals("01")?"ENERO":
+$V{substr}.equals("02")?"FEBRERO":
+$V{substr}.equals("03")?"MARZO":
+$V{substr}.equals("04")?"ABRIL":
+$V{substr}.equals("05")?"MAYO":
+$V{substr}.equals("06")?"JUNIO":
+$V{substr}.equals("07")?"JULIO":
+$V{substr}.equals("08")?"AGOSTO":
+$V{substr}.equals("09")?"SEPTIEMBRE":
+$V{substr}.equals("10")?"OCTUBRE":
+$V{substr}.equals("11")?"NOVIEMBRE":
+$V{substr}.equals("12")?"DICIEMBRE":"SIN PETICIONES"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+						<cellContents backcolor="#CCCCFF" mode="Transparent">
+					<box topBorder="1Point" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="0"
+						width="57"
+						height="25"
+						backcolor="#CCCCFF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Total Ayuntamiento"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+
+					<measure name="sustituto_Count" class="java.math.BigDecimal" calculation="Sum">
+						<measureExpression><![CDATA[$F{count}]]></measureExpression>
+					</measure>
+					<crosstabCell width="47" height="30">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="47"
+						height="30"
+						key="textField">
+							<printWhenExpression><![CDATA[new Boolean($V{substr}!=null&&!$V{substr}.equals("sn"))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{sustituto_Count}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="57" height="30" columnTotalGroup="substr">
+						<cellContents backcolor="#CCCCFF" mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="0"
+						width="57"
+						height="30"
+						backcolor="#CCCCFF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{sustituto_Count}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="47" height="30" rowTotalGroup="sustituto">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="0"
+						width="47"
+						height="30"
+						backcolor="#CCCCFF"
+						key="textField">
+							<printWhenExpression><![CDATA[new Boolean($V{substr}!=null&&!$V{substr}.equals("sn"))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{sustituto_Count}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="57" height="30" rowTotalGroup="sustituto" columnTotalGroup="substr">
+						<cellContents backcolor="#CCCCFF" mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="0"
+						width="57"
+						height="30"
+						backcolor="#9999FF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{sustituto_Count}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<whenNoDataCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</whenNoDataCell>					</crosstab>
+			</band>
+		</summary>
+</jasperReport>

@@ -14,6 +14,14 @@
 		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<!-- Dependencias de InvesSicres -->
 		<dependency>
@@ -83,6 +91,11 @@
 			<artifactId>fwktd-dir3-api</artifactId>
 			<version>${fwktd.dir3.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dir3</groupId>
+			<artifactId>fwktd-dir3-core</artifactId>
+			<version>${fwktd.dir3.version}</version>
+		</dependency>
 		<!--
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
@@ -94,6 +107,12 @@
 
 
 		<!-- 3rd Party -->
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>3.7.6</version>
+		</dependency>
 
 		<dependency>
 			<groupId>asm</groupId>

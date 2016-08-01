@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter pageSize='50'>
+
+	<!-- Ponemos 2 veces la propiedad Nombre, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE' 
+				 titleKey='SECR_ORGANO:NOMBRE' 
+				 fieldType='LINK'
+				 columnClass='width100percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE' 
+				 titleKey='SECR_ORGANO:NOMBRE' 
+				 fieldType='LIST'
+				 columnClass='width100percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+</beanformatter>

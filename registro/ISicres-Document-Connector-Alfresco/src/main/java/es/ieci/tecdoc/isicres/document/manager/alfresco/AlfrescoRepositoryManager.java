@@ -10,8 +10,8 @@ import com.ieci.tecdoc.common.repository.GenericRepositoryManager;
 
 import es.ieci.tecdoc.isicres.document.connector.alfresco.AlfrescoDocumentConnector;
 import es.ieci.tecdoc.isicres.document.connector.alfresco.vo.AlfrescoConnectorConfigurationVO;
-import es.ieci.tecdoc.isicres.document.connector.alfresco.vo.AlfrescoDatosEspecificosValueVO;
 import es.ieci.tecdoc.isicres.document.connector.alfresco.vo.AlfrescoDatosEspecificosVO;
+import es.ieci.tecdoc.isicres.document.connector.alfresco.vo.AlfrescoDatosEspecificosValueVO;
 import es.ieci.tecdoc.isicres.document.connector.alfresco.vo.AlfrescoDocumentVO;
 import es.ieci.tecdoc.isicres.document.connector.vo.ISicresAbstractDocumentVO;
 import es.ieci.tecdoc.isicres.document.connector.vo.ISicresBasicDatosEspecificosVO;
@@ -238,4 +238,21 @@ public class AlfrescoRepositoryManager extends GenericRepositoryManager {
 		alfrescoDocumentVO.setId(documentVO.getId());
 		return alfrescoDocumentVO;
 	}
+	
+	//[Teresa # 1014] INICIO
+		@Override
+		public ISicresAbstractDocumentVO getRetrieveDocumentParams(
+				String documentUID, String entidad) {
+			//TODO queda por implementar este método para el repositorio alfresco
+			AlfrescoDocumentVO alfrescoDocumentVO = new AlfrescoDocumentVO();
+
+			AlfrescoDatosEspecificosVO alfrescoDatosEspecifivosVO = new AlfrescoDatosEspecificosVO();
+			//alfrescoDatosEspecifivosVO.setEntidad(entidad);
+
+			alfrescoDocumentVO.setId(documentUID);
+			alfrescoDocumentVO.setDatosEspecificos(alfrescoDatosEspecifivosVO);
+
+		    return alfrescoDocumentVO;
+		}
+		//[Teresa # 1014] FIN
 }

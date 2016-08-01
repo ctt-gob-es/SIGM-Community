@@ -9,6 +9,7 @@ import ieci.tdw.ispac.ispacweb.api.ManagerState;
 
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 
 public class ProcessListState extends BaseState {
 
@@ -26,6 +27,10 @@ public class ProcessListState extends BaseState {
 			IClientContext cct) throws ISPACException {
 		String[] stagePcdIdstr = (String[])params.get(ManagerState.PARAM_STAGEPCDID);
 		int stagePcdId = 0;
+		
+		//[eCenpri-Manu Ticket #131] - INICIO - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		int iAnio = 0;
+
 		try
         {
             if (stagePcdIdstr != null)
@@ -34,24 +39,39 @@ public class ProcessListState extends BaseState {
         {
             throw new ISPACException("ProcessListState: Parámetros incorrectos.",e);
         }
-		getStateContext(state, stagePcdId, cct);
+		
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		String[] anios = (String[]) params.get("anio");
+		if(anios != null){
+			String anio = anios[0];
+			if(StringUtils.isNotEmpty(anio) && StringUtils.isNumeric(anio)){
+				iAnio = Integer.parseInt(anio);
+			}
+		}
+		
+		getStateContext(state, stagePcdId, iAnio, cct);
+		//[eCenpri-Manu Ticket #131] - FIN - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 	}
 
 	/**
 	 * Obtiene el stateContext correcto
 	 * @param state identificador del estado
 	 * @param stagePcdId identificador de la fase en el procedimiento
+	 * @param iAnio Filtro de año de inicio de expediente
 	 * @param cct ClientContext
 	 * @throws ISPACException
 	 */
 	private void getStateContext(int state,
-			int stagePcdId, IClientContext cct) throws ISPACException {
+			int stagePcdId, int iAnio, IClientContext cct) throws ISPACException {
 		IItem item = cct.getAPI().getProcedureStage(stagePcdId);
 		int pcdId = item.getInt(FIELD_IDPCD);
 		mStateContext = new StateContext();
 		mStateContext.setState(state);
 		mStateContext.setPcdId(pcdId);
 		mStateContext.setStagePcdId(stagePcdId);
+
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		mStateContext.setAnio(iAnio);
 	}
 
 	public void exit() {

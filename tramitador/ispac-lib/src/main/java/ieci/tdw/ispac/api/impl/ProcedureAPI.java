@@ -20,11 +20,13 @@ import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.TableDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTEntityDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTFrmBusquedaDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.CTManualUsuarioDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTProcedureDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTReportDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTReportOrgDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTTaskTpDocDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.FrmBusquedaReportDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.PManualUsuarioDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.PReportDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.TemplateDAO;
 import ieci.tdw.ispac.ispaclib.dao.join.TableJoinFactoryDAO;
@@ -3186,4 +3188,427 @@ public class ProcedureAPI implements IProcedureAPI {
 		}
 	}
 
+	
+	
+	 /**
+	  * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	  * 
+	  * Obtiene la lista de procedimientos relacionados con el manual de usuario.
+	  * @param manualUsuarioId Identificador del manual de usuario.
+	  * @return Lista de procedimientos.
+	  * @throws ISPACException si ocurre algún error.
+	  **/
+   	public IItemCollection getManualUsuarioProceduresUse(int manualUsuarioId) throws ISPACException {
+
+		DbCnt cnt = mcontext.getConnection();
+		try {
+			String where = "WHERE PROCD.ID=CTPCD.ID AND PROCD.ID= " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.IDOBJ + " AND " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.TPOBJ + "="
+				+ EventsDefines.EVENT_OBJ_PROCEDURE
+				+ " AND " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.IDMANUAL + " = " + manualUsuarioId + " ORDER BY PROCD.ID";
+
+			TableJoinFactoryDAO factory = new TableJoinFactoryDAO();
+			factory.addTable("SPAC_CT_PROCEDIMIENTOS", "CTPCD");
+			factory.addTable("SPAC_P_PROCEDIMIENTOS", "PROCD");
+			factory.addTable(PManualUsuarioDAO.TABLENAME, PManualUsuarioDAO.TABLENAME);
+
+			CollectionDAO collection = factory.queryTableJoin(cnt, where);
+			return collection.disconnect();
+
+		} catch (ISPACException ie) {
+			logger.error("Error en ProcedureAPI:getManualUsuarioProceduresUse(" + manualUsuarioId + ")",ie);
+			throw new ISPACException("Error en ProcedureAPI:getManualUsuarioProceduresUse(" + manualUsuarioId + ")", ie);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+
+   	/**
+   	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+   	 * 
+   	 * Obtiene la lista de fases relacionadas con el manual de usuario.
+   	 *
+   	 * @param manualUsuarioId Identificador del informe.
+   	 * @return Lista de fases.
+   	 * @throws ISPACException si ocurre algún error.
+   	 */
+   	public IItemCollection getManualUsuarioStagesUse(int manualUsuarioId) throws ISPACException {
+
+		DbCnt cnt = mcontext.getConnection();
+
+		try {
+			String where = "WHERE PROCD.ID=CTPCD.ID AND PROCD.ID = STAGE.ID_PCD AND STAGE.ID = " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.IDOBJ + " AND " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.TPOBJ + " = "
+				+ EventsDefines.EVENT_OBJ_STAGE
+				+ " AND " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.IDMANUAL + " = " + manualUsuarioId + " ORDER BY PROCD.ID";
+
+			TableJoinFactoryDAO factory = new TableJoinFactoryDAO();
+			factory.addTable("SPAC_CT_PROCEDIMIENTOS", "CTPCD");
+			factory.addTable("SPAC_P_PROCEDIMIENTOS", "PROCD");
+			factory.addTable("SPAC_P_FASES", "STAGE");
+			factory.addTable( PManualUsuarioDAO.TABLENAME, PManualUsuarioDAO.TABLENAME);
+
+			CollectionDAO collection = factory.queryTableJoin(cnt, where);
+			return collection.disconnect();
+
+		} catch (ISPACException ie) {
+			logger.error("Error en ProcedureAPI:getReportStagesUse(" + manualUsuarioId + ")",ie);
+			throw new ISPACException("Error en ProcedureAPI:getReportStagesUse(" + manualUsuarioId + ")", ie);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+
+   	/**
+   	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+   	 * 
+   	 * Obtiene la lista de trámites relacionados con el manual de usuario.
+   	 *
+   	 * @param manualUsuarioId Identificador del informe.
+   	 * @return Lista de trámites.
+   	 * @throws ISPACException si ocurre algún error.
+   	 */
+   	public IItemCollection getManualUsuarioTasksUse(int manualUsuarioId) throws ISPACException {
+
+		DbCnt cnt = mcontext.getConnection();
+
+		try {
+			String where = "WHERE PROCD.ID=CTPCD.ID AND PROCD.ID = STAGE.ID_PCD AND STAGE.ID = TASK.ID_FASE AND TASK.ID = " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.IDOBJ + " AND " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.TPOBJ + " = "
+				+ EventsDefines.EVENT_OBJ_TASK
+				+ " AND " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.IDMANUAL + " = " + manualUsuarioId + " ORDER BY PROCD.ID";
+
+			TableJoinFactoryDAO factory = new TableJoinFactoryDAO();
+			factory.addTable("SPAC_CT_PROCEDIMIENTOS", "CTPCD");
+			factory.addTable("SPAC_P_PROCEDIMIENTOS", "PROCD");
+			factory.addTable("SPAC_P_FASES", "STAGE");
+			factory.addTable("SPAC_P_TRAMITES", "TASK");
+			factory.addTable( PManualUsuarioDAO.TABLENAME, PManualUsuarioDAO.TABLENAME);
+
+			CollectionDAO collection = factory.queryTableJoin(cnt, where);
+			return collection.disconnect();
+
+		} catch (ISPACException ie) {
+			logger.error("Error en ProcedureAPI:getReportTasksUse(" + manualUsuarioId + ")",ie);
+			throw new ISPACException("Error en ProcedureAPI:getReportTasksUse(" + manualUsuarioId + ")", ie);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+
+   	/**
+   	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+   	 * 
+   	 * Obtiene la lista de actividades relacionadas con el manual de usuario.
+   	 *
+   	 * @param manualUsuarioId Identificador del informe.
+   	 * @return Lista de actividades.
+   	 * @throws ISPACException si ocurre algún error.
+   	 */
+   	public IItemCollection getManualUsuarioActivitiesUse(int manualUsuarioId) throws ISPACException {
+
+		DbCnt cnt = mcontext.getConnection();
+		try {
+			String where = "WHERE SUBPCD.ID = ACTIVITY.ID_PCD AND SUBPCD.TIPO = "
+					+ IPcdElement.TYPE_SUBPROCEDURE
+					+ " AND ACTIVITY.ID = " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.IDOBJ + " AND " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.TPOBJ + " = "
+					+ EventsDefines.EVENT_OBJ_ACTIVITY
+					+ " AND " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.IDMANUAL + " = " + manualUsuarioId + " ORDER BY SUBPCD.ID";
+
+			TableJoinFactoryDAO factory = new TableJoinFactoryDAO();
+			factory.addTable("SPAC_P_PROCEDIMIENTOS", "SUBPCD");
+			factory.addTable("SPAC_P_FASES", "ACTIVITY");
+			factory.addTable( PManualUsuarioDAO.TABLENAME, PManualUsuarioDAO.TABLENAME);
+
+			CollectionDAO collection = factory.queryTableJoin(cnt, where);
+			return collection.disconnect();
+
+		} catch (ISPACException ie) {
+			logger.error("Error en ProcedureAPI:getReportActivitiesUse(" + manualUsuarioId + ")",ie);
+			throw new ISPACException(
+					"Error en ProcedureAPI:getReportActivitiesUse(" + manualUsuarioId + ")", ie);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+   	
+   	/**
+   	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+  	 * 
+	 * Obtiene los manuales de usuario relacionados con un objeto.
+	 * @param objectId Identificador del objeto.
+	 * @param objectType Tipo de objeto.
+	 * @return IItemCollection Lista de informes.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public IItemCollection getPManualesUsuario(int objectId , int objectType) throws ISPACException {
+		return getPManualesUsuario(objectId, objectType, -1);
+	}
+	
+	/**
+   	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+   	 * 
+	 * Obtiene los manuales de usuario relacionados con un objeto.
+	 * @param objectId Identificador del objeto.
+	 * @param objectType Tipo de objeto.
+	 * @param manualUsuarioId Identificador del manual de usuario.
+	 * @return IItemCollection Lista de informes.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public IItemCollection getPManualesUsuario(int objectId , int objectType, int manualUsuarioId) throws ISPACException {
+		String where= "WHERE SPAC_CT_MANUALES_USUARIO.TIPO = 2 and " 
+				+ PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.IDMANUAL + " = SPAC_CT_MANUALES_USUARIO.ID AND " 
+				+ PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.IDOBJ + " = " + objectId 
+				+ " AND " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.TPOBJ + " = " + objectType;
+		
+		if(manualUsuarioId > -1){
+			where += "AND " + PManualUsuarioDAO.TABLENAME + "." + PManualUsuarioDAO.IDMANUAL + " = " + manualUsuarioId;
+		}
+		DbCnt cnt = mcontext.getConnection();
+		
+		try {
+			TableJoinFactoryDAO factory = new TableJoinFactoryDAO();
+			factory.addTable("SPAC_CT_MANUALES_USUARIO", "SPAC_CT_MANUALES_USUARIO");
+			factory.addTable("SPAC_P_MANUALES_USUARIO", "SPAC_P_MANUALES_USUARIO");
+			CollectionDAO collection = factory.queryTableJoin(cnt, where);
+			return collection.disconnect();
+		} catch (ISPACException ie) {
+			logger.error("Error al obtener los manuales de usuario relacionados con el objeto ("
+					+ objectId + ", " + objectType + ")",ie);
+			throw new ISPACException("Error al obtener los manuales de usuario relacionados con el objeto ("
+					+ objectId + ", " + objectType + ")", ie);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+	
+	/**
+	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	 * 
+	 * Relaciona un manual de usuario con el objeto indicado.
+	 *
+	 * @param objectType Tipo de objeto.
+	 * @param objectId Identificador de objeto.
+	 * @param manualUsuarioId Identificador del informe.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public void addPManualUsuario(int objectType, int objectId, int manualUsuarioId)
+			throws ISPACException {
+
+		DbCnt cnt = mcontext.getConnection();
+
+		try {			
+			if(!getPManualesUsuario(objectId, objectType, manualUsuarioId).next()){
+				PManualUsuarioDAO objevent = new PManualUsuarioDAO(cnt);
+				objevent.createNew(cnt);
+				objevent.set(PManualUsuarioDAO.TPOBJ, objectType);
+				objevent.set(PManualUsuarioDAO.IDOBJ, objectId);
+				objevent.set(PManualUsuarioDAO.IDMANUAL, manualUsuarioId);
+				objevent.store(cnt);
+			}
+		} catch (Exception e) {
+			logger.error("Error al relacionar el manual de usuario (" + objectType + ", " + objectId + "," + manualUsuarioId + ")",e);
+			throw new ISPACException("Error al relacionar el manual de usuario (" + objectType + ", " + objectId + "," + manualUsuarioId + ")", e);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+
+	/**
+	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	 * 
+	 * Elimina la relación entre el manual de usuario y el objeto seleccionado.
+	 *
+	 * @param objectType Tipo de objeto.
+	 * @param objectId Identificador de objeto.
+	 * @param manualUsuarioId Identificador del informe.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public void deletePManualUsuario(int objectType, int objectId, int manualUsuarioId)
+			throws ISPACException {
+
+		DbCnt cnt = mcontext.getConnection();
+
+		try {
+			PManualUsuarioDAO.delete(cnt, objectType, objectId, manualUsuarioId);
+		} catch (Exception e) {
+			logger.error("Error al eliminar la relación del manual de usuario(" + objectType + ", " + objectId + "," + manualUsuarioId + ")",e);
+			throw new ISPACException("Error al eliminar la relación del manual de usuario(" + objectType + ", " + objectId + "," + manualUsuarioId + ")", e);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+
+	/**
+	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	 * 
+	 * Elimina todas las relaciones del manual de usuario.
+	 *
+	 * @param manualUsuarioId Identificador del informe.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public void deletePManualUsuario(int manualUsuarioId) throws ISPACException {
+
+		DbCnt cnt = mcontext.getConnection();
+
+		try {
+			PManualUsuarioDAO.delete(cnt, manualUsuarioId);
+		} catch (Exception e) {
+			logger.error("Error al eliminar las relaciones del manual de usuario(" + manualUsuarioId + ")",e);
+			throw new ISPACException("Error al eliminar las relaciones del manual de usuario(" + manualUsuarioId + ")", e);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+	
+	// INICIO [dipucr-Felipe #120] Manuales de Ayuda
+	/**
+	 * [dipucr-Felipe #120]
+	 * Obtiene la lista de manuales de usuario relacionados en el contexto del expediente.
+	 * @param stateContext Contexto del expediente.
+	 * @return Lista de manuales de usuario disponibles para la fase o trámite actual ( generales + los del proc+ los propios de la fase o trámite)
+	 * @throws ISPACException
+	 */
+	public IItemCollection getManuales(StateContext stateContext) throws ISPACException {
+
+		DbCnt cnt = mcontext.getConnection();
+		try {
+
+			CollectionDAO collection = new CollectionDAO(CTManualUsuarioDAO.class);
+			collection.query(cnt, getStateManualesSQL(stateContext, true));
+			return collection.disconnect();
+
+		} catch (ISPACException ie) {
+			logger.error("Error al obtener los manuales de usuario disponibles",ie);
+			throw new ISPACException("Error al obtener los manuales de usuario disponibles", ie);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+
+	}
+	
+
+	/**
+	 * [dipucr-Felipe #120]
+	 * Obtiene la lista de manuales de usuario globales
+	 * @return
+	 * @throws ISPACException
+	 */
+	public IItemCollection getGlobalManuales() throws ISPACException {
+
+		DbCnt cnt = mcontext.getConnection();
+		String whereTipo="WHERE TIPO = " + CTManualUsuarioDAO.GLOBAL_TYPE ;
+
+		try{
+			CollectionDAO collection = new CollectionDAO(CTManualUsuarioDAO.class);
+			collection.query(cnt,  whereTipo +" ORDER BY NOMBRE" );
+			return collection.disconnect();
+		} catch (ISPACException ie) {
+			logger.error("Error al obtener los manuales de usuario globales disponibles",ie);
+			throw new ISPACException("Error al obtener los manuales de usuario globales disponibles", ie);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+	
+	/**
+	 * [dipucr-Felipe #120]
+	 * Devuelve la consulta sql para recuperar los manuales que cumplan con las condiciones definidas
+	 * @param stateContext
+	 * @param ordered
+	 * @return
+	 */
+	private String getStateManualesSQL(StateContext stateContext, boolean ordered) {
+		String sql = "WHERE (TIPO=" + CTManualUsuarioDAO.GENERIC_TYPE;
+
+		if (stateContext != null) {
+
+			String pconds = "";
+
+			if (stateContext.getPcdId() > 0) {
+				pconds += "(TP_OBJ=" + EventsDefines.EVENT_OBJ_PROCEDURE
+					+ " AND ID_OBJ=" + stateContext.getPcdId() + ")";
+			}
+
+			if (stateContext.getStagePcdId() > 0) {
+				pconds += " OR (TP_OBJ=" + EventsDefines.EVENT_OBJ_STAGE
+					+ " AND ID_OBJ=" + stateContext.getStagePcdId() + ")";
+			}
+
+			if (stateContext.getTaskPcdId() > 0) {
+				pconds += " OR (TP_OBJ=" + EventsDefines.EVENT_OBJ_TASK
+					+ " AND ID_OBJ=" + stateContext.getTaskPcdId() + ")";
+			}
+
+			if (stateContext.getSubPcdId() > 0) {
+				pconds += " OR (TP_OBJ=" + EventsDefines.EVENT_OBJ_SUBPROCEDURE
+					+ " AND ID_OBJ=" + stateContext.getSubPcdId() + ")";
+			}
+
+			if (stateContext.getActivityPcdId() > 0) {
+				pconds += " OR (TP_OBJ=" + EventsDefines.EVENT_OBJ_ACTIVITY
+					+ " AND ID_OBJ=" + stateContext.getActivityPcdId() + ")";
+			}
+
+			if (StringUtils.isNotBlank(pconds)) {
+				sql += " OR "+ CTManualUsuarioDAO.TABLENAME + ".ID IN "
+					+  " (SELECT " + PManualUsuarioDAO.IDMANUAL + " FROM " + PManualUsuarioDAO.TABLENAME + " WHERE "
+					+ pconds
+					+ "))";
+			}
+		}
+
+		if (ordered) {
+			sql += " ORDER BY NOMBRE";
+		}
+
+		return sql;
+	}
+	
+	/**
+	 * [dipucr-Felipe #120]
+	 * Indica si el hay manuales de usuario relacionados en el contexto del expediente
+	 * @param stateContext Contexto del expediente.
+	 * @return True si hay algun manual disponible, false en caso contrario.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public boolean hasManuales(StateContext stateContext) throws ISPACException {
+		String where = getStateManualesSQL(stateContext, false);
+		DbCnt cnt = mcontext.getConnection();
+		try {
+
+			CollectionDAO collection = new CollectionDAO(CTManualUsuarioDAO.class);
+			int count = collection.count(cnt, where );
+			return (count > 0);
+
+		} catch (ISPACException ie) {
+			logger.error("Error al comprobar si hay manuales de usuario disponibles",ie);
+			throw new ISPACException("Error al comprobar si hay manuales de usuario disponibles", ie);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+	
+	/**
+	 * [dipucr-Felipe #120]
+     * Indica si existe o no manuales de usuario globales para el usuario conectado
+     * @return
+     * @throws ISPACException
+     */
+	public boolean hasGlobalManuales() throws ISPACException{
+
+		String where="WHERE TIPO=" + CTManualUsuarioDAO.GLOBAL_TYPE;
+		
+		DbCnt cnt = mcontext.getConnection();
+		try {
+
+			CollectionDAO collection = new CollectionDAO(CTManualUsuarioDAO.class);
+			int count = collection.count(cnt, where );
+			return (count > 0);
+
+		} catch (ISPACException ie) {
+			logger.error("Error al comprobar si hay manuales globales disponibles",ie);
+			throw new ISPACException("Error al comprobar si hay manuales globales disponibles", ie);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+	// FIN [dipucr-Felipe #120]
 }

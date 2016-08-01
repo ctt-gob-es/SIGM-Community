@@ -318,7 +318,7 @@ public class RegisterManager {
             _logger.error("Impossible obtain the folder: " + folderNumber, e);
             throw new BookException(BookException.ERROR_CANNOT_FIND_REGISTERS);
         } catch (Exception e) {
-            _logger.error("Impossible obtain the folder: " + folderNumber, e);
+            _logger.error("Impossible obtain the folder: " + folderNumber + e.getMessage(), e);
             throw new BookException(BookException.ERROR_CANNOT_FIND_REGISTERS);
         }
         return result;

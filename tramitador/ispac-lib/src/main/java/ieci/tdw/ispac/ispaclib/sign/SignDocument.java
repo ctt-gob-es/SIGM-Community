@@ -50,7 +50,11 @@ public class SignDocument {
 	private List sign;
 	private String mimetype;
 	private IItem itemDoc;
-	private Date fechaCreacion;
+	private Date fechaCreacion;	
+	private String numDecreto; //[eCenpri-Felipe #781]
+	private String entityId;	
+	private String datosFirmante; //[eCenpri-Felipe #436]
+
 	
 	private InputStream document;
 	private int length;
@@ -92,6 +96,13 @@ public class SignDocument {
 	public void setSignCertificate(List signCertificate) {
 		this.signCertificate = signCertificate;
 	}
+	
+	// #781 Modificaciones de la firma
+	//Metodo para consultar info del numero de serie del certificado
+	public void addFirmante(InfoFirmante infoFirmante){
+		this.signCertificate.add(infoFirmante);
+	}
+	
 	public SignDocument(IItem itemDoc) throws ISPACException{
 		this.itemDoc = itemDoc;
 		
@@ -326,6 +337,31 @@ public class SignDocument {
 	public String getSignPropertyName() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	//[Dipucr-Agustin] #781 Modificaciones de la firma
+	public String getEntityId() {
+		return entityId;
+	}
+
+	public void setEntityId(String entityId) {
+		this.entityId = entityId;
+	}
+	
+	public String getDatosFirmante() {
+		return datosFirmante;
+	}
+	
+	public void setDatosFirmante(String datosFirmante) {
+		this.datosFirmante = datosFirmante;
+	}
+	
+	public String getNumDecreto() {
+		return numDecreto;
+	}
+	
+	public void setNumDecreto(String numDecreto) {
+		this.numDecreto = numDecreto;
 	}
 
 }

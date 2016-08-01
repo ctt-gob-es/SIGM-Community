@@ -23,23 +23,58 @@
 		document.defaultForm.action = "storeEntity.do";
 		document.defaultForm.name = '<c:out value="${formName}"/>';
 
-		<logic:notEmpty scope="request" name="displayTagOrderParams">
-			document.defaultForm.action = document.defaultForm.action + "?" + '<bean:write scope="request" name="displayTagOrderParams" filter="false"/>';
-		</logic:notEmpty>
+		//INICIO [eCenpri-Felipe #735]
+				
+// 		<logic:notEmpty scope="request" name="displayTagOrderParams">
+// 			document.defaultForm.action = document.defaultForm.action + "?" + '<bean:write scope="request" name="displayTagOrderParams" filter="false"/>';
+// 		</logic:notEmpty>
 
-		// Detalle de documento
-		freg = document.defaultForm.elements['property(SPAC_DT_DOCUMENTOS:FREG)'];
-		if ((typeof freg != 'undefined') &&
-			(freg.value == '')) {
+// 		// Detalle de documento
+// 		freg = document.defaultForm.elements['property(SPAC_DT_DOCUMENTOS:FREG)'];
+// 		if ((typeof freg != 'undefined') &&
+// 			(freg.value == '')) {
 
-			// Limpiar el numero de registro cuando no ha sido buscado ni generado
-			document.defaultForm.elements[ 'property(SPAC_DT_DOCUMENTOS:NREG)' ].value = '';
+// 			// Limpiar el numero de registro cuando no ha sido buscado ni generado
+// 			document.defaultForm.elements[ 'property(SPAC_DT_DOCUMENTOS:NREG)' ].value = '';
+// 		}
+
+// 		if (validate<c:out value="${formName}"/>(document.defaultForm))
+// 			document.defaultForm.submit();
+
+// 		ispac_needToConfirm = true;
+
+		var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+		var form;
+		if (is_chrome){
+			form = document.<c:out value="${formName}"/>;
 		}
+		else{
+			form = document.defaultForm;
+		}
+		
+		<logic:notEmpty scope="request" name="displayTagOrderParams">
+			form.action = form.action + "?" + '<bean:write scope="request" name="displayTagOrderParams" filter="false"/>';
+		</logic:notEmpty>
+		
+		// Detalle de documento
+		freg = form.elements['property(SPAC_DT_DOCUMENTOS:FREG)'];
+		if ((typeof freg != 'undefined') && 
+			(freg.value == '')) {
+		
+			// Limpiar el numero de registro cuando no ha sido buscado ni generado
+			form.elements[ 'property(SPAC_DT_DOCUMENTOS:NREG)' ].value = '';			
+		}
+	
+		if (validate<c:out value="${formName}"/>(form))
+			form.submit();
 
-		if (validate<c:out value="${formName}"/>(document.defaultForm))
-			document.defaultForm.submit();
-
-		ispac_needToConfirm = true;
+		if (is_chrome){
+			ispac_needToConfirm = false;
+		}
+		else{
+			ispac_needToConfirm = true;
+		}
+		//FIN [eCenpri-Felipe #735]
 	}
 
 	function deleteDocument() {

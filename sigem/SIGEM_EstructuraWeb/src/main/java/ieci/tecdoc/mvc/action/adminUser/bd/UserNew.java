@@ -155,6 +155,8 @@ public class UserNew extends BaseAction {
         user.getUserDataImpl().setTfnoMovil(userForm.getTfnoMovil());
         user.getUserDataImpl().setApellidos(userForm.getApellidos());
 		user.getUserDataImpl().setNombre(userForm.getNombrePersonal());
+		//[Manu Ticket#175] Crear un campo con dni en el usuario
+		user.getUserDataImpl().setDni(userForm.getDni());
         
         //Almacenamos el usuario en BD
         user.store(entidad);

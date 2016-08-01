@@ -308,7 +308,15 @@ UserDTO: <bean:write name="userDTO" property="profiles"/>
 										<bean:message key="message.usuario.etiqueta.cargo"/>
 									</label>
 									<html:text property="cargo" styleId="user.cargo" maxlength="256" style="width:320px;"/>									
-							    </div>    
+							    </div>
+							    
+							    <!-- [Manu Ticket #175] Crear un campo DNI -->
+							    <div class="col" style="width: 490px;">
+									<label class="gr" style="width:140px;" for="user.dni">
+										<bean:message key="es.dipucr.estructura.usuario.dni"/>
+									</label>
+									<html:text property="dni" styleId="user.dni" maxlength="256" style="width:320px;"/>									
+							    </div>     
 							    
 							    <div class="col" style="width: 490px;">
 									<label class="gr" style="width:140px;" for="user.email">

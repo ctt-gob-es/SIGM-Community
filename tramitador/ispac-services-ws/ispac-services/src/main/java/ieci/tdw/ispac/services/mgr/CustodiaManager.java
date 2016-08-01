@@ -61,6 +61,29 @@ public class CustodiaManager extends ServiceManager {
 
 		return info;
 	}
+	
+    /**
+     * [Dipucr-Agustin #781]
+     * Obtiene el contenido del documento temporal.
+     * @param guid GUID del documento
+     * @return Contenido del documento.
+     * @throws ISPACException si ocurre algún error.
+     */
+    public byte [] getFicheroTemp(String guid) throws ISPACException {
+	    return DocumentsHelper.getContenidoDocumentoTemp(getContext(), guid);
+    }
+    
+    /**
+     * [Dipucr-Agustin #781]
+     * Obtiene el contenido del documento temporal.
+     * @param guid GUID del documento
+     * @param array de bytes a cargar
+     * @return resultado de la operacion.
+     * @throws ISPACException si ocurre algún error.
+     */
+    public boolean setFicheroTemp(String guid, byte[] data) throws ISPACException {
+	    return DocumentsHelper.setContenidoDocumentoTemp(getContext(), guid, data);
+    }
 
 	/**
 	 * Obtiene la información de ocupación del repositorio.

@@ -4,7 +4,9 @@ package ieci.tecdoc.sgm.autenticacion.action;
  */
 import ieci.tecdoc.sgm.autenticacion.AutenticacionManager;
 import ieci.tecdoc.sgm.autenticacion.util.SesionInfo;
+import ieci.tecdoc.sgm.autenticacion.util.TipoAutenticacionCodigos;
 import ieci.tecdoc.sgm.autenticacion.utils.Defs;
+import ieci.tecdoc.sgm.autenticacion.utils.LectorPropiedades;
 import ieci.tecdoc.sgm.core.admin.web.AdministracionHelper;
 import ieci.tecdoc.sgm.core.config.ports.PortsConfig;
 import ieci.tecdoc.sgm.core.services.dto.Entidad;
@@ -37,6 +39,14 @@ public class SeleccionEntidadAction extends Action{
 			ArrayList idiomas = LectorIdiomas.getIdiomas();
 			session.setAttribute(Defs.IDIOMAS_DISPONIBLES, idiomas);
 
+			//INICIO [dipucr-Felipe #206 3#108]
+			String webEmpleado = (String)request.getParameter(Defs.ADMIN);
+			if (!Defs.isNuloOVacio(webEmpleado)){
+				String xmlDataSpecific = (String)request.getParameter(Defs.DATOS_ESPECIFICOS);
+				session.setAttribute(Defs.DATOS_ESPECIFICOS, xmlDataSpecific);
+			}
+			//FIN [dipucr-Felipe #206 3#108]
+			
 			String redireccion = (String)request.getParameter(Defs.REDIRECCION);
 			if (Defs.isNuloOVacio(redireccion)){
 				redireccion = (String)request.getSession().getAttribute(Defs.REDIRECCION);
@@ -111,19 +121,31 @@ public class SeleccionEntidadAction extends Action{
 
 			SesionInfo sessionInfo;
 			if (!Defs.isNuloOVacio(sessionId)){
-				sessionInfo = AutenticacionManager.getLogin(sessionId, tramiteId, entidadId);
-				if (sessionInfo != null){
-					String sn = sessionInfo.getSender().getCertificateSN();
-					String url = (String)request.getSession().getServletContext().getAttribute("redir" + redireccion);
-					String port;
-					if (!Defs.isNuloOVacio(sn))
-						port = PortsConfig.getCertPort();
-					else
-						port = PortsConfig.getHttpsPort();
-					session.setAttribute(Defs.URL_REDIRECCION, url);
-					session.setAttribute(Defs.URL_PUERTO, port);
+			
+				int tipoAceptado = -1;
 
-					return mapping.findForward("logged");
+				String strTipo = LectorPropiedades.getPropiedad(redireccion + ".acceso");
+				if (Defs.isNuloOVacio(strTipo))
+					strTipo = "0";
+				tipoAceptado = new Integer(strTipo).intValue();
+				//[eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.
+				if (tipoAceptado == TipoAutenticacionCodigos.SIN_AUTENTICACION){
+				}
+				else{
+					sessionInfo = AutenticacionManager.getLogin(sessionId, tramiteId, entidadId);
+					if (sessionInfo != null){
+						String sn = sessionInfo.getSender().getCertificateSN();
+						String url = (String)request.getSession().getServletContext().getAttribute("redir" + redireccion);
+						String port;
+						if (!Defs.isNuloOVacio(sn))
+							port = PortsConfig.getCertPort();
+						else
+							port = PortsConfig.getHttpsPort();
+						session.setAttribute(Defs.URL_REDIRECCION, url);
+						session.setAttribute(Defs.URL_PUERTO, port);
+	
+						return mapping.findForward("logged");
+					}
 				}
 			}
 

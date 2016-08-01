@@ -3,7 +3,79 @@
 
 <log4j:configuration debug="false" xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-	<appender name="fichero" class="org.apache.log4j.RollingFileAppender">
+	<appender name="loggerRegistroAppender" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
+		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}RegistroSalida.log"/>
+		<param name="MaxFileSize" value="5000KB"/>
+		<param name="MaxBackupIndex" value="10"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+		</layout>
+	</appender>
+
+	<appender name="loggerFirmaAppender" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
+		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}Firma.log"/>
+		<param name="MaxFileSize" value="5000KB"/>
+		<param name="MaxBackupIndex" value="10"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+		</layout>
+	</appender>
+
+	<appender name="loggerSecretariaAppender" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
+		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}Secretaria.log"/>
+		<param name="MaxFileSize" value="5000KB"/>
+		<param name="MaxBackupIndex" value="10"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+		</layout>
+	</appender>
+
+	<appender name="loggerContratacionAppender" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
+		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}Contratacion.log"/>
+		<param name="MaxFileSize" value="5000KB"/>
+		<param name="MaxBackupIndex" value="10"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+		</layout>
+	</appender>
+
+	<appender name="loggerBOPAppender" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
+		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}BOP.log"/>
+		<param name="MaxFileSize" value="5000KB"/>
+		<param name="MaxBackupIndex" value="3"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+		</layout>
+	</appender>
+
+	<appender name="loggerCommonUtilsAppender" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
+		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}CommonsUtil.log"/>
+		<param name="MaxFileSize" value="5000KB"/>
+		<param name="MaxBackupIndex" value="10"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+		</layout>
+	</appender>
+	
+	<appender name="templatesAppender" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
+		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}AuditoriaPlantillas.log"/>
+		<param name="MaxFileSize" value="5000KB"/>
+		<param name="MaxBackupIndex" value="20"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+		</layout>
+	</appender>
+
+	<appender name="soap" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
+		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}SIGEM_TramitacionWebSOAP.log"/>
+		<param name="MaxFileSize" value="5000KB"/>
+		<param name="MaxBackupIndex" value="10"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+		</layout>
+	</appender>
+
+	<appender name="fichero" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
 		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}SIGEM_TramitacionWeb.log"/>
 		<param name="MaxFileSize" value="5000KB"/>
 		<param name="MaxBackupIndex" value="10"/>
@@ -13,14 +85,74 @@
 	</appender>
 
 	<appender name="consola" class="org.apache.log4j.ConsoleAppender">
-      <param name="Target" value="System.out"/>
-      <layout class="org.apache.log4j.PatternLayout">
-	      <param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
-      </layout>
+		<param name="Target" value="System.out"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+		</layout>
 	</appender>
 
+	<category name="loggerRegistro" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerRegistroAppender" />  
+	</category>
+
+	<category name="es.dipucr.sigem.sellar.action" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerRegistroAppender" />  
+	</category>
+
+	<category name="loggerFirma" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerFirmaAppender" />  
+	</category>
+
+	<category name="ieci.tdw.ispac.ispaclib.sign" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerFirmaAppender" />  
+	</category>
+
+	<category name="es.dipucr.sigem.api.rule.procedures.secretaria" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerSecretariaAppender" />  
+	</category>
+
+	<category name="ieci.tdw.ispac.api.rule.procedures.secretaria" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerSecretariaAppender" />  
+	</category>
+
+	<category name="es.dipucr.contratacion" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerContratacionAppender" />  
+	</category>
+
+	<category name="ieci.tdw.ispac.api.rule.procedures.bop" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerBOPAppender" />  
+	</category>
+
+	<category name="es.dipucr.sigem.api.rule.procedures.bop" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerBOPAppender" />  
+	</category>
+
+	<category name="es.dipucr.sigem.api.rule.common.utils" additivity="false">  
+		<level value="DEBUG"/>
+		<appender-ref ref="loggerCommonUtilsAppender" />  
+	</category>
+	
+	<category name="es.dipucr.sigem.actions.ayuda.templates" additivity="false">  
+		<level value="INFO"/>
+		<appender-ref ref="templatesAppender" />  
+	</category>
+
+	<category name="org.apache.axis.transport.http.HTTPSender" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="soap" />  
+	</category>
+
 	<root>
-		<priority value='warn'/>
+		<priority value='WARN'/>
 		<appender-ref ref='fichero'/>
 	</root>
 

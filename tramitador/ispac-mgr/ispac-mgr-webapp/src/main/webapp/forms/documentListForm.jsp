@@ -47,12 +47,36 @@
 
 		document.defaultForm.name = "ListaDocumentos";
 
-		if (validateListaDocumentos(document.defaultForm)) {
+// 		if (validateListaDocumentos(document.defaultForm)) {
 
-			document.defaultForm.submit();
+// 			document.defaultForm.submit();
+// 		}
+
+// 		ispac_needToConfirm = true;
+
+		//INICIO [eCenpri-Felipe #735]
+		var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+		var form;
+		if (is_chrome){
+			form = document.ListaDocumentos;
+		}
+		else{
+			form = document.defaultForm;
 		}
 
-		ispac_needToConfirm = true;
+
+		if (validateListaDocumentos(form)) {
+		
+			form.submit();
+		}
+			
+		if (is_chrome){
+			ispac_needToConfirm = false;
+		}
+		else{
+			ispac_needToConfirm = true;
+		}
+		//FIN [eCenpri-Felipe #735]	
 	}
 
 	function downloadDocuments() {

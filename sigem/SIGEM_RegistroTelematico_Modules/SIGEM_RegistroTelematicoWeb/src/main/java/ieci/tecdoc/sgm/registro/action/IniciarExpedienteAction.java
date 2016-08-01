@@ -1,7 +1,18 @@
 package ieci.tecdoc.sgm.registro.action;
 
+import ieci.tdw.ispac.api.IGenDocAPI;
+import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.api.impl.InvesflowAPI;
+import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.audit.business.vo.AuditContext;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
+import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import ieci.tdw.ispac.ispaclib.utils.TypeConverter;
+import ieci.tecdoc.sgm.base.guid.Guid;
 import ieci.tecdoc.sgm.base.xml.core.XmlDocument;
 import ieci.tecdoc.sgm.base.xml.core.XmlElement;
 import ieci.tecdoc.sgm.base.xml.core.XmlElements;
@@ -9,6 +20,11 @@ import ieci.tecdoc.sgm.core.exception.SigemException;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.catalogo.ServicioCatalogoTramites;
 import ieci.tecdoc.sgm.core.services.catalogo.Tramite;
+import ieci.tecdoc.sgm.core.services.consulta.FicheroHito;
+import ieci.tecdoc.sgm.core.services.consulta.FicherosHito;
+import ieci.tecdoc.sgm.core.services.consulta.HitoExpediente;
+import ieci.tecdoc.sgm.core.services.consulta.HitosExpediente;
+import ieci.tecdoc.sgm.core.services.consulta.ServicioConsultaExpedientes;
 import ieci.tecdoc.sgm.core.services.dto.Entidad;
 import ieci.tecdoc.sgm.core.services.mensajes_cortos.ServicioMensajesCortos;
 import ieci.tecdoc.sgm.core.services.repositorio.DocumentoInfo;
@@ -24,9 +40,6 @@ import ieci.tecdoc.sgm.registro.util.Definiciones;
 import ieci.tecdoc.sgm.registro.utils.Defs;
 import ieci.tecdoc.sgm.registro.utils.Misc;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +56,8 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 
 public class IniciarExpedienteAction extends RegistroWebAction {
 
@@ -75,17 +90,37 @@ public class IniciarExpedienteAction extends RegistroWebAction {
 			Entidad entidad = Misc.obtenerEntidad(request);
 
 			/***** ANEXADO DE FICHEROS EN UN EXPEDIENTE YA CREADO: SUBSANACION ******/
-			if (tramiteId != null && "SUBSANACION".equals(tramiteId)) {
+			//[Manu] Modificaciones para que se adjunten los documentos al subsanar directamente al expediente
+			//if (tramiteId != null && "SUBSANACION".equals(tramiteId)) {
+			if (tramiteId != null && tramiteId.contains("SUBSANACION")) {
 
 				ServicioTramitacion oServicio = LocalizadorServicios.getServicioTramitacion();
-				String numExpediente = (String)session.getAttribute(Defs.NUMERO_EXPEDIENTE);
-				ArrayList docs = new ArrayList();
+				//String numExpediente = (String)session.getAttribute(Defs.NUMERO_EXPEDIENTE);
+				specificData = root.getDescendantElement(Definiciones.XPATH_SPECIFIC_DATA);
+
+				String numExpediente = "";
+				if( specificData.getChildElement(Defs.NUMERO_EXPEDIENTE) == null ||  specificData.getChildElement(Defs.NUMERO_EXPEDIENTE).getValue().trim().length() == 0){
+
+					int indexBeginNumExp = justificante.indexOf("<Numero_Expediente>");
+			        int indexEndNumExp = justificante.indexOf("</Numero_Expediente>");
+			        
+			        numExpediente = justificante.substring(indexBeginNumExp + "<Numero_Expediente>".length(), indexEndNumExp);
+				}
+				else{
+					numExpediente = specificData.getChildElement(Defs.NUMERO_EXPEDIENTE).getValue();
+				}
+				
+//				ArrayList docs = new ArrayList();
+		        List<DocumentoExpediente> documents = new ArrayList<DocumentoExpediente>();
+		        
+				genericData = root.getDescendantElement(Definiciones.XPATH_GENERIC_DATA + "/" + Definiciones.TOPIC);
+		        String asunto = genericData.getChildElement(Definiciones.DESCRIPTION).getValue();
 
 				registryData = root.getDescendantElement(Definiciones.XPATH_REGISTRY_DATA);
 		        numRegistro = registryData.getChildElement(Definiciones.REGISTRY_NUMBER).getValue();
 
 				// Obtener los documentos del justificante
-				Map docsMap = new HashMap();
+				Map<String, String> docsMap = new HashMap<String, String>();
 
 				XmlElement docsElement = root.getDescendantElement(Definiciones.XPATH_DOCUMENTS);
 				XmlElements xmlElements = docsElement.getChildElements();
@@ -107,34 +142,98 @@ public class IniciarExpedienteAction extends RegistroWebAction {
 					RegistroDocumento rd = (RegistroDocumento)reg.get(i);
 					String codigo = rd.getCode();
 					DocumentoInfo di = oServicioRde.retrieveDocument(sessionId, rd.getGuid(), entidad);
+					String extension = di.getExtension();
 
-					if (!codigo.equals(Definiciones.REGISTRY_RECEIPT_CODE) &&
-							!codigo.equals(Definiciones.REGISTRY_REQUEST_CODE) &&
-							!codigo.equals(Definiciones.REGISTRY_REQUEST_NOTSIGNED_CODE)){
+					boolean insertar = true;
+					if (codigo.equals(Definiciones.REGISTRY_RECEIPT_CODE))
+						codigo = "Justificante";
+					else if (codigo.equals(Definiciones.REGISTRY_REQUEST_CODE))
+						codigo = "Solicitud Registro";
+					else if (!codigo.equals(Definiciones.REGISTRY_REQUEST_NOTSIGNED_CODE))
+						codigo = "Anexo a Solicitud";
+					else insertar = false;
 
+					if (insertar){
+						
+						if (extension.equalsIgnoreCase("xml"))
+							extension = "txt";
+						
 						DocumentoExpediente docExpediente = new DocumentoExpediente();
 
-						docExpediente.setCode("Anexo a Solicitud");
+						docExpediente.setCode(codigo);
 						docExpediente.setContent(di.getContent());
-						docExpediente.setExtension(di.getExtension());
+						docExpediente.setExtension(extension);
 						docExpediente.setId(idDocumento);
 						docExpediente.setLenght(di.getContent().length);
-						docExpediente.setName((String) docsMap.get(codigo));
+						
+						String docName = (String) docsMap.get(rd.getCode());
+						if (docName != null) {
+							docExpediente.setName(docName);
+						}
+						else {
+							docExpediente.setName(asunto);
+						}
 
-						docs.add(docExpediente);
+						documents.add(docExpediente);
 					}
 				}
 
-				DocumentoExpediente[] docsExpediente = new DocumentoExpediente[docs.size()];
-				for(int i=0; i<docs.size(); i++)
-					docsExpediente[i] = (DocumentoExpediente)docs.get(i);
+				DocumentoExpediente[] docsExpediente = new DocumentoExpediente[documents.size()];
+				for(int i=0; i<documents.size(); i++)
+					docsExpediente[i] = (DocumentoExpediente)documents.get(i);		
 
-				if(oServicio.anexarDocsExpediente(entidad.getIdentificador(), numExpediente, numRegistro, new Date(), docsExpediente))
+				if(oServicio.anexarDocsExpediente(entidad.getIdentificador(), numExpediente, numRegistro, new Date(), docsExpediente)){
+				//Publicamos el hito de subsanación, justificación o modificación.
+					try{
+						ServicioConsultaExpedientes consulta = LocalizadorServicios.getServicioConsultaExpedientes();
+	
+						HitosExpediente hitos = consulta.obtenerHistoricoExpediente(numExpediente, entidad);
+						FicherosHito ficherosExistentes  = new FicherosHito();
+				        FicherosHito ficheros = null;
+				        
+						StringBuffer textoHito = new StringBuffer();
+						textoHito.append("<labels><label locale=\"es\">");
+						textoHito.append("Se ha presentado una solicitud de Subsanación, Modificación o Justificación al expediente.");
+						textoHito.append("\n");
+						textoHito.append("Fecha: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
+						textoHito.append("</label></labels>");
+						
+						boolean pasoAHistorico = true;
+								 
+				    	HitoExpediente hito = new HitoExpediente();
+						hito.setGuid(new Guid().toString());
+						hito.setNumeroExpediente(numExpediente);
+						hito.setCodigo(StringUtils.nullToEmpty(""));
+						hito.setFecha(TypeConverter.toString(new Date(), "yyyy-MM-dd"));
+						hito.setDescripcion(StringUtils.nullToEmpty(textoHito.toString()));
+						hito.setInformacionAuxiliar("");
+						
+						consulta.establecerHitoActual(hito, ficheros, pasoAHistorico, entidad);
+						
+						HitoExpediente hitoNuevo = consulta.obtenerHitoEstado(numExpediente, entidad);
+						
+						for(Object oHito: hitos.getHitosExpediente())
+							ficherosExistentes.getFicheros().addAll(consulta.obtenerFicherosHito(((HitoExpediente)oHito).getGuid(), entidad).getFicheros());
+				    	
+						IClientContext cct = new ClientContext();
+						((ClientContext) cct).setAPI(new InvesflowAPI((ClientContext) cct));
+						IItemCollection docs = DocumentosUtil.getDocumentos(cct, numExpediente, " (ID_TRAMITE = 0) ", " FDOC");
+						ficheros =  getFicheros(cct, hitoNuevo.getGuid(), docs, ficherosExistentes, entidad);
+						
+				        if ((ficheros != null) && ficheros.count() > 0) {
+				        	consulta.anexarFicherosHitoActual(ficheros, entidad);
+				        }
+					}
+					catch(Exception e){
+						logger.debug("Si da error no ha publicado el hito");
+					}
+			        
 					return mapping.findForward("success");
+				}
 				else
 					return mapping.findForward("failure");
 			}
-
+		
 			Tramite tramite = oServicioCatalogo.getProcedure(tramiteId, false, entidad);
 			if (tramite.getIdProcedimiento() != null && !"".equals(tramite.getIdProcedimiento())) {
 
@@ -486,4 +585,84 @@ public class IniciarExpedienteAction extends RegistroWebAction {
 		AuditContextHolder.setAuditContext(auditContext);
 	}
 
+	protected FicherosHito getFicheros(IClientContext cct, String guidHito, IItemCollection docs, FicherosHito ficherosExistentes, Entidad entidad ) throws ISPACException, SigemException {
+    	
+    	// Ficheros asociados al hito
+        FicherosHito ficheros = new FicherosHito();
+        
+        // Documentos
+        if ((docs != null) && docs.next()) {
+        	
+			// Llamada al API de RDE
+			ServicioRepositorioDocumentosTramitacion rde = LocalizadorServicios.getServicioRepositorioDocumentosTramitacion();
+
+			IItem doc;
+			FicheroHito fichero;
+			String guid;
+			String guidRDE;
+			
+			do {
+				doc = docs.value();
+				String titulo = doc.getInt("ID") + " - " + doc.getString("NOMBRE") + " - " +doc.getString("DESCRIPCION");
+				if(titulo.length()>128) titulo = titulo.substring(0,127);
+				
+				boolean existe = false;
+				
+				for(int i = 0; i< ficherosExistentes.getFicheros().size() && !existe; i++ ){
+		    		FicheroHito ficheroExistente = (FicheroHito)ficherosExistentes.getFicheros().get(i);
+		    		
+		    		if(ficheroExistente.getTitulo().equals(titulo)){
+		    			existe = true;
+		    		}
+				}
+				if(!existe){
+	    			// GUID del fichero en el tramitador
+					if(doc.getString("INFOPAG_RDE") == null || doc.getString("INFOPAG_RDE").equals(""))
+						guid = doc.getString("INFOPAG");
+					else
+						guid = doc.getString("INFOPAG_RDE");
+					
+					if (guid != null && !guid.equals("")) {
+						
+						// Almacenar el fichero en RDE
+						guidRDE = rde.storeDocumentInfoPag(null, entidad, guid, getDocExt(cct, guid));
+		
+						// Información del fichero
+						fichero = new FicheroHito();
+						fichero.setGuid(guidRDE);
+						fichero.setGuidHito(guidHito);
+						fichero.setTitulo(titulo);
+						
+						// Añadir el fichero a la lista
+						ficheros.add(fichero);
+					}
+				}
+			} while (docs.next());
+        }
+        
+        return ficheros;
+    }
+	
+	private String getDocExt(IClientContext cct, String guid) throws ISPACException {
+
+		String ext = null;
+
+		IGenDocAPI genDocAPI = cct.getAPI().getGenDocAPI();
+		Object connectorSession = null;
+
+		try {
+			connectorSession = genDocAPI.createConnectorSession();
+			String mimeType = genDocAPI.getMimeType(connectorSession, guid);
+			if (mimeType != null && !mimeType.equals("")) {
+				ext = MimetypeMapping.getExtension(mimeType);
+			}
+		} finally {
+			if (connectorSession != null) {
+				genDocAPI.closeConnectorSession(connectorSession);
+			}
+    	}		        	
+
+		return ext;
+	}
+	
 }

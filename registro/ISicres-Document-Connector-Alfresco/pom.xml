@@ -10,6 +10,13 @@
 	<packaging>jar</packaging>
 	<description>Modulo de gestion documental para Alfresco</description>
 	
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
 	
 	<dependencies>
 		<!-- Dependencias de InvesSicres -->

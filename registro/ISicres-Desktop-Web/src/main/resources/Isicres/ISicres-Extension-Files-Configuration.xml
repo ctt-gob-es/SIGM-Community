@@ -29,6 +29,28 @@
 			-->
 			<showDialogDownloadFile>true</showDialogDownloadFile>
 		</extension-configuration>
+		
+		<!-- [Manu Ticket #505]  -->
+		<extension-configuration>
+			<extension>DOC</extension>
+			<showDialogDownloadFile>true</showDialogDownloadFile>
+		</extension-configuration>
+
+		<extension-configuration>
+			<extension>ODT</extension>
+			<showDialogDownloadFile>true</showDialogDownloadFile>
+		</extension-configuration>
+
+		<extension-configuration>
+			<extension>ODS</extension>
+			<showDialogDownloadFile>true</showDialogDownloadFile>
+		</extension-configuration>
+
+		<extension-configuration>
+			<extension>XLS</extension>
+			<showDialogDownloadFile>true</showDialogDownloadFile>
+		</extension-configuration>
+		<!-- [Manu Ticket #505]  -->
 
 		<!-- Ejemplo de configuracion de mas extensiones
 		<extension-configuration>

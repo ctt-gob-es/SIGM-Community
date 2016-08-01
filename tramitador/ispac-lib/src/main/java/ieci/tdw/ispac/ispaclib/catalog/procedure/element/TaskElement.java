@@ -342,13 +342,15 @@ public class TaskElement implements IPcdElement
     	return model;
     }
 
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
     public String toXpdl(DbCnt cnt,
     					 Map ctStageIds,
  			 			 Map ctTaskIds,
  			 			 Map ctRuleIds,
  			 			 Map ctEntityIds,
  			 			 Map ctTpDocIds,
- 			 			 Map subPcdIds) throws ISPACException {
+ 			 			 Map subPcdIds,
+ 			 			 Map ctManualUsuarioIds, List manualesUsuario) throws ISPACException {
 
     	// Trámite en el catálogo
         Integer idCatalog = new Integer(getCatalogId());
@@ -389,8 +391,9 @@ public class TaskElement implements IPcdElement
         return sXpdl;
     }
 
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 	public String toXpdl(DbCnt cnt, Map ctStageIds, Map ctTaskIds,
-			Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds,
+			Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds, Map ctManualUsuarioIds, List manualesUsuario, 
 			Map ctHelpsIds) throws ISPACException {
 		return null;
 	}

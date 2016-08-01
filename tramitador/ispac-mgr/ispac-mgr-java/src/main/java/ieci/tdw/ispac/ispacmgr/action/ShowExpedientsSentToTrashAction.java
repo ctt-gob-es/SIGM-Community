@@ -69,7 +69,8 @@ public class ShowExpedientsSentToTrashAction extends BaseDispatchAction {
 		storeStateticket(state,response);
 
 		// Menú
-		request.setAttribute("menus", MenuFactory.getSingleMenu(cct, getResources(request)));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		request.setAttribute("menus", MenuFactory.getSingleMenu(cct, getResources(request), state));
 
 		///////////////////////////////////////////////
 		// Formateador

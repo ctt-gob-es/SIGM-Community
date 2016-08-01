@@ -1093,5 +1093,32 @@ public abstract class ObjectDAO implements IItem
 		DBColumn column = member.getColumn();
 		return column.getType() == Types.VARCHAR;
 	}
+
 	
+	//MQE #1023 INICIO modificaciones tablas de histórico
+	public void loadHistorico(ResultSet rs) throws ISPACException {
+		processRowDataHistorico(rs);
+	}
+	
+	protected void processRowDataHistorico(ResultSet rs) throws ISPACException {
+		this.mbNewObject = false;
+		
+		Iterator it = this.mTableDesc.iterator();
+		while (it.hasNext()){
+			DBColumn col = this.mTableDesc.getColumn(it);
+			if (col.isMultivalue())
+				continue;
+			int hashCode = col.getRawName().replaceAll("SPAC_EXPEDIENTES", "SPAC_EXPEDIENTES_H").replaceAll("SPAC_DT_TRAMITES", "SPAC_DT_TRAMITES_H").replaceAll("SPAC_DT_DOCUMENTOS", "SPAC_DT_DOCUMENTOS_H").replaceAll("SPAC_DT_INTERVINIENTES", "SPAC_DT_INTERVINIENTES_H").hashCode();
+			
+			String prefix = "A_0";
+			
+			if (hashCode > 0)
+				prefix = "A_1";
+			String alias = prefix + Math.abs(hashCode);
+			
+			setMemberDAO(col.getName(), col.getMember(rs, alias), true);
+		}
+	}
+	//MQE #1023 fin modificaciones tablas de histórico
+
 }

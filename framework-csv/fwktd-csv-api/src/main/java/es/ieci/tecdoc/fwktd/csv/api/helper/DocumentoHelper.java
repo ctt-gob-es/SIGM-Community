@@ -50,6 +50,17 @@ public class DocumentoHelper {
 			infoDocumentoCSV.setCsv(documentoVO.getCsv());
 			infoDocumentoCSV.setFechaCSV(documentoVO.getFechaCSV());
 			infoDocumentoCSV.setDisponible(documentoVO.isDisponible());
+			
+			/**
+			 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+			 */
+			infoDocumentoCSV.setNumeroRegistro(documentoVO.getNumeroRegistro());
+			infoDocumentoCSV.setFechaRegistro(documentoVO.getFechaRegistro());
+			infoDocumentoCSV.setOrigenRegistro(documentoVO.getOrigenRegistro());
+			infoDocumentoCSV.setDestinoRegistro(documentoVO.getDestinoRegistro());
+			/**
+			 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+			 */
 
 			AplicacionVO aplicacion = documentoVO.getAplicacion();
 			if (aplicacion != null) {
@@ -109,6 +120,17 @@ public class DocumentoHelper {
 			documentoVO.setCsv(infoDocumentoCSV.getCsv());
 			documentoVO.setFechaCSV(infoDocumentoCSV.getFechaCSV());
 			documentoVO.setDisponible(infoDocumentoCSV.isDisponible());
+			
+			/**
+			 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+			 */
+			documentoVO.setNumeroRegistro(infoDocumentoCSV.getNumeroRegistro());
+			documentoVO.setFechaRegistro(infoDocumentoCSV.getFechaRegistro());
+			documentoVO.setOrigenRegistro(infoDocumentoCSV.getOrigenRegistro());
+			documentoVO.setDestinoRegistro(infoDocumentoCSV.getDestinoRegistro());
+			/**
+			 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+			 */
 
 			// Añadir la información de la aplicación
 			AplicacionVO aplicacion = aplicacionManager.getAplicacionByCodigo(infoDocumentoCSV.getCodigoAplicacion());
@@ -168,7 +190,7 @@ public class DocumentoHelper {
         Element rootNode = doc.addElement("labels");
 
         Map<String, String> descripciones = form.getDescripciones();
-        if (MapUtils.isNotEmpty(descripciones)) {
+        if (!(descripciones == null || descripciones.isEmpty())) {
         	for (String locale : descripciones.keySet()) {
 
         		String descripcion = descripciones.get(locale);

@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+   "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+   "http://struts.apache.org/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+  <definition name="ispac_modallayout" path="/ispac/layouts/modalLayout.jsp">
+    <put name="body" value="/ispac/common/empty.jsp"/>
+  </definition>
+
+  <definition name="ispac_mainlayout" path="/ispac/layouts/mainLayout.jsp">
+  	<put name="header" value="/ispac/common/header.jsp"/>  	
+    <put name="body" value="/ispac/common/empty.jsp"/>
+  </definition>
+
+<!--   Tiles para el catálogo -->
+<!--   <definition name="ct.procedureslist" extends="ispac_mainlayout"> -->
+<!--     <put name="body" value="/ispac/common/ctproceduresList.jsp"/> -->
+<!--   </definition> -->
+  
+  <definition name="ct.proceduresTree" extends="ispac_mainlayout">
+    <put name="body" value="/ispac/common/ctproceduresTree.jsp"/>
+  </definition>
+  
+</tiles-definitions>

@@ -74,7 +74,9 @@
     <alias name="DATASOURCE_MULTIENTIDAD" alias="DEFAULT_DATASOURCE"/>
     <alias name="DATASOURCE_MULTIENTIDAD" alias="SIGEM_MULTIENTIDAD_DATASOURCE"/>
     <alias name="DATASOURCE_BACKOFFICE" alias="SIGEM_BACKOFFICE_DATASOURCE"/>
-
+	<!-- [INICIO Teresa #431] SIGEM nuevo proyecto para la visualización de los expedientes de organos colegiados-->
+	<alias name="DATASOURCE_TRAMITADOR" alias="SIGEM_TRAMITADOR_ENTIDAD_DATASOURCE"/>
+	<!-- [FIN Teresa #431] -->
     <!--
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations" value="classpath:database.properties"/>
@@ -105,6 +107,12 @@
 	<bean id="DATASOURCE_BACKOFFICE" class="ieci.tecdoc.sgm.core.db.impl.MultipleDatasourceImpl" lazy-init="true">
 		<property name="raizNombreJNDI" value="${sigem.backoffice.jndiDatasource.jndiName}"/>
     </bean>
+    
+    <!-- [INICIO Teresa #431] SIGEM nuevo proyecto para la visualización de los expedientes de organos colegiados-->
+	<bean id="DATASOURCE_TRAMITADOR" class="ieci.tecdoc.sgm.core.db.impl.MultipleDatasourceImpl" lazy-init="true">
+		<property name="raizNombreJNDI" value="${sigem.tramitador.jndiDatasource.jndiName}"/>
+	</bean>
+	<!-- [FIN Teresa #431] -->
 
 	<!-- UTILIDADES SQL PARA CADA IMPLEMENTACIÓN ESPECÍFICA DE BASE DATOS -->
 	<alias name="PostgresSQLUtils" alias="SQL_UTILS_IMPL"/>

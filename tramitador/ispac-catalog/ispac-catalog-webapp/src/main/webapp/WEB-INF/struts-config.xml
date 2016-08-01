@@ -725,6 +725,9 @@
 			<forward name="success" path="ct.entity" />
 			<forward name="ShowEntity4" path="/showCTSearchForm.do" redirect="true" />
 			<forward name="ShowEntity61" path="/showReport.do" redirect="true" />
+						
+			<forward name="ShowEntity65" path="/showManualUsuario.do" redirect="true" /> 			<!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->
+			<forward name="reloadShowEntity65" path="/showCTEntityUp.do" redirect="true" /> 		<!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->					
 
 		</action>
 
@@ -791,6 +794,9 @@
 	        <forward name="show62" path="/showCTVbleSystemList.do" redirect="true" />
 	        <forward name="show63" path="/showCTHelpList.do" redirect="true" />
 	        <forward name="use" path="/showComponentsUseList.do" redirect="false" />
+	        
+	        <forward name="show65" path="/showCTManualesUsuarioList.do" redirect="true" />	 			<!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->
+	        
 		</action>
 
 		<action path="/showEntityWizard"
@@ -860,6 +866,9 @@
 			<!-- <forward name="graph33" path="subpcd.graph" /> -->
 			<forward name="flows" path="flows" />
 			<forward name="dependencies23" path="task.dependencies" />
+			<forward name="ctosfirma23" path="task.ctosfirma" /> <!-- [eCenpri-Felipe #592] -->
+			<forward name="datosEspecif" path="task.datosEspecif" /> 			<!--  [eCenpri-Manu #909] SIGEM Pestaña Datos Específicos del Trámite-->
+			<forward name="manualUsuario" path="pcd.manualUsuario" /> 			<!--  [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->
 		</action>
 
 		<action path="/producers"
@@ -878,6 +887,8 @@
 			<forward name="card" path="/showProcedureEntity.do?method=card" />
 			<forward name="properties" path="/showProcedureEntity.do?method=properties" />
 			<forward name="deadlines" path="/showProcedureEntity.do?method=deadlines" />
+			<!--  [eCempri-Manu #909] SIGEM Pestaña Datos Específicos del Trámite-->
+			<forward name="datosEspecif" path="/showProcedureEntity.do?method=datosEspecif" />
 		</action>
 
 		<action path="/actionsProcedure"
@@ -1479,13 +1490,65 @@
 				validate="false">
 	        <forward name="success" path="/showCTEntity.do" redirect="false" />
 		</action>
+		
+		<!-- [Manu Ticket #97] INICIO - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java. -->		
+		<action path="/seleccionarEditor" type="es.dipucr.ispacmgr.action.SeleccionarEditorAction"
+			name="/seleccionarEditor">
+			<forward name="success" path="seleccionarEditor" redirect="false" />
+		</action>
+		<!-- [Manu Ticket #97] FIN - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java. -->
 
+		<!--  [eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->	
+			
+		<action path="/showCTManualesUsuarioList"
+			type="es.dipucr.sigem.actions.manualesUsuario.catalogo.ShowCTManualesUsuarioListAction"
+			name="defaultForm" scope="request" validate="false" parameter="method" >
+			<forward name="success" path="ct.manualesUsuarioList"/>
+		</action>
+		
+		<action path="/showManualUsuario"
+		 type="es.dipucr.sigem.actions.manualesUsuario.catalogo.ShowManualUsuarioAction"
+			name="uploadForm" scope="request" validate="false">
+			<forward name="success" path="ct.entity" />
+		</action>
+		
+		<action path="/storeCTManualUsuario"
+			type="es.dipucr.sigem.actions.manualesUsuario.catalogo.StoreManualUsuarioAction"
+			name="uploadForm" scope="request" validate="true" input="/showManualUsuario.do">
+			<forward name="success" path="/showManualUsuario.do" redirect="true"/>
+		</action>
+		
+		<action path="/deleteManualUsuario"
+				type="es.dipucr.sigem.actions.manualesUsuario.catalogo.DeleteManualUsuarioAction"
+				name="defaultForm"
+				scope="request"
+				validate="false">			
+			<forward name="success" path="/showCTManualesUsuarioList.do" redirect="true"/>
+		</action>
+		
+		<action path="/getManualUsuario"
+			type="es.dipucr.sigem.actions.manualesUsuario.catalogo.GetManualUsuarioAction"
+		 	name="upload2Form" scope="request" validate="false" />
+		 	
+		<action path="/frmSearchManualUsuarioAction"
+			name="defaultForm" scope="request" validate="false" parameter="method"
+			type="ieci.tdw.ispac.ispaccatalog.action.FrmSearchManualUsuarioAction">
+			<forward name="show" path="ct.fmrsearchmanualUsuario" redirect="true" />
+		</action>
+		
+		<!--Pantallas para la asignacion de Manuales de Usuario a Procedimientos-->
+		<action path="/manualesUsuario"
+				type="es.dipucr.sigem.actions.manualesUsuario.catalogo.ManualesUsuarioAction"
+				name="batchForm" scope="request" validate="false"
+				parameter="method">
+		</action>		
+		<!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->
+		
 	</action-mappings>
 
 	<controller nocache="true"
 		processorClass="org.apache.struts.tiles.TilesRequestProcessor"
-		maxFileSize="10M"/>
-	<message-resources
+		maxFileSize="25M"/> <!-- [eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento. -->	<message-resources
 		parameter="ieci.tdw.ispac.ispaccatalog.resources.ApplicationResources"
 		null="false"/>
 

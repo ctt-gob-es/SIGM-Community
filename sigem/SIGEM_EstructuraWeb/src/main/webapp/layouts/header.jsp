@@ -14,6 +14,16 @@
 	pageContext.setAttribute("params", params);
 %>
 <%@page import="ieci.tecdoc.sgm.core.services.LocalizadorServicios"%>
+
+<!-- [Manu #814] INICIO - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+<%@page import="ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion" %>
+
+<% 
+	String entidad = AutenticacionAdministracion.obtenerDatosEntidad(request).getIdEntidad();
+	String descEntidad = LocalizadorServicios.getServicioEntidades().obtenerEntidad(entidad).getNombreCorto();
+%>
+<!-- [Manu #814] FIN - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+
 <html:html>
 	<head>
 	    <ieci:baseInvesDoc/>
@@ -97,7 +107,9 @@
 		    		<table>
 			    		<tr>
 							<td>
-							   	<p><logic:present name="user" >
+							   	<!-- [Manu #814] INICIO - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+								<p>Entidad: <%=descEntidad%><logic:present name="user" >&nbsp;-&nbsp;
+							<!-- [Manu #814] FIN - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
 									<bean:write name="user" property="userName"/>
 								</logic:present></p>
 							</td>			    		

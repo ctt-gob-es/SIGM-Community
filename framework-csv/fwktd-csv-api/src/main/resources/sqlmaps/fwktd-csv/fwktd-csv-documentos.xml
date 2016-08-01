@@ -17,6 +17,13 @@
 		<result property="fechaCSV" column="fecha_csv" />
 		<result property="disponible" column="disponibilidad" />
 		<result property="aplicacion" column="id_aplicacion" select="AplicacionVO.getAplicacionVO" />
+		
+		<!-- [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida --> 
+		<result property="numeroRegistro" column="numero_registro"  />
+		<result property="fechaRegistro" column="fecha_registro" />
+		<result property="origenRegistro" column="origen_registro" />
+		<result property="destinoRegistro" column="destino_registro" />
+		<!-- [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida -->
 	</resultMap>
 
 	<sql id="table">csv_documentos</sql>
@@ -30,7 +37,13 @@
 		csv,
 		fecha_csv,
 		disponibilidad,
-		id_aplicacion
+		id_aplicacion,
+		<!-- [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida -->
+		numero_registro,
+		fecha_registro,
+		origen_registro,
+		destino_registro
+		<!-- [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida -->
 	</sql>
 	<sql id="insert">
 		#id:INTEGER#,
@@ -42,7 +55,13 @@
 		#csv#,
 		#fechaCSV#,
 		#disponible:INTEGER#,
-		#aplicacion.id:INTEGER#
+		#aplicacion.id:INTEGER#,
+		<!-- [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida -->
+		#numeroRegistro#,
+		#fechaRegistro#,
+		#origenRegistro#,
+		#destinoRegistro#
+		<!-- [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida -->
 	</sql>
 	<sql id="update">
 		nombre=#nombre#,
@@ -53,7 +72,13 @@
 		csv=#csv#,
 		fecha_csv=#fechaCSV#,
 		disponibilidad=#disponible:INTEGER#,
-		id_aplicacion=#aplicacion.id:INTEGER#
+		id_aplicacion=#aplicacion.id:INTEGER#,
+		<!-- [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida -->
+		numero_registro=#numeroRegistro#,
+		fecha_registro=#fechaRegistro#,
+		origen_registro=#origenRegistro#,
+		destino_registro=#destinoRegistro#
+		<!-- [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida -->
 	</sql>
 
 	<select id="getDocumentoVOs" resultMap="documento">

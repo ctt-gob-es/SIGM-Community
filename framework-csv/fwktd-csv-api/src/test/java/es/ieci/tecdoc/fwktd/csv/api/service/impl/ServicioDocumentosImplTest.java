@@ -334,6 +334,17 @@ public class ServicioDocumentosImplTest extends
 		infoDocumento.setDisponible(true);
 		infoDocumento.setCsv(CSV_NO_EXISTENTE);
 		infoDocumento.setFechaCSV(new Date());
+		
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
+		infoDocumento.setNumeroRegistro("123456789");
+		infoDocumento.setFechaRegistro(new Date());
+		infoDocumento.setOrigenRegistro("ORIGEN");
+		infoDocumento.setDestinoRegistro("DESTINO");
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
 
 		infoDocumento.addDescripcion(null, "Descripción por defecto");
 		infoDocumento.addDescripcion(new Locale("es"), "[es] Descripción del documento");

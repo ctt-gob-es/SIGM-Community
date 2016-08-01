@@ -26,9 +26,13 @@ public class ExpedienteDAO extends BaseDAO {
     public static ExpedienteVO getExpediente(DbCnt cnt, String numExp) 
     		throws ISPACException {
     	
-	    final String sql = "SELECT * FROM SPAC_EXPEDIENTES WHERE NUMEXP=?";
-
-	    return (ExpedienteVO) getVO(cnt, sql, new Object[] { numExp }, 
+    	//[Manu Ticket #1023] - INICIO  Históricos de expedientes, trámites, documentos e intervinientes.
+	    //final String sql = "SELECT * FROM SPAC_EXPEDIENTES WHERE NUMEXP=?";
+	    final String sql = "SELECT * FROM SPAC_EXPEDIENTES WHERE NUMEXP=? UNION ALL SELECT * FROM SPAC_EXPEDIENTES_H WHERE NUMEXP=?";
+		//
+	    return (ExpedienteVO) getVO(cnt, sql, new Object[] { numExp, numExp },
+	    //return (ExpedienteVO) getVO(cnt, sql, new Object[] { numExp }, 
+   		//[Manu Ticket #1023] - FIN Históricos de expedientes, trámites, documentos e intervinientes
 	    		ExpedienteVO.class);
     }
     
@@ -43,10 +47,14 @@ public class ExpedienteDAO extends BaseDAO {
     		String numExp) throws ISPACException {
 
     	InteresadoExpedienteVO interesado = null;
-    	
-	    final String sql = "SELECT * FROM SPAC_EXPEDIENTES WHERE NUMEXP=?";
+	    //[Manu Ticket #1023] - INICIO  Históricos de expedientes, trámites, documentos e intervinientes.
+	    //final String sql = "SELECT * FROM SPAC_EXPEDIENTES WHERE NUMEXP=?";	    
+	    final String sql = "SELECT * FROM SPAC_EXPEDIENTES WHERE NUMEXP=? UNION ALL SELECT * FROM SPAC_EXPEDIENTES_H WHERE NUMEXP=?";
+		
 	    interesado = (InteresadoExpedienteVO) getVO(cnt, sql, 
-	    		new Object[] { numExp }, InteresadoExpedienteVO.class);
+	    		//new Object[] { numExp }, InteresadoExpedienteVO.class);
+	    		new Object[] { numExp, numExp }, InteresadoExpedienteVO.class);
+	    //[Manu Ticket #1023] - FIN Históricos de expedientes, trámites, documentos e intervinientes.
 	    
 	    if ((interesado != null) && StringUtils.isBlank(interesado.getCnif())) {
 	    	interesado = null;
@@ -65,9 +73,13 @@ public class ExpedienteDAO extends BaseDAO {
     public static List getInteresados(DbCnt cnt, String numExp)
 			throws ISPACException {
 
-		final String sql = "SELECT * FROM SPAC_DT_INTERVINIENTES WHERE NUMEXP=?";
+    	//[Manu Ticket #1023] - INICIO  Históricos de expedientes, trámites, documentos e intervinientes.
+    	//final String sql = "SELECT * FROM SPAC_DT_INTERVINIENTES WHERE NUMEXP=?";
+    	final String sql = "SELECT * FROM SPAC_DT_INTERVINIENTES WHERE NUMEXP=? UNION ALL SELECT * FROM SPAC_DT_INTERVINIENTES_H WHERE NUMEXP=?";
 
-		return getVOs(cnt, sql, new Object[] { numExp }, InteresadoVO.class);
-	}
+		//return getVOs(cnt, sql, new Object[] { numExp }, InteresadoVO.class);
+		return getVOs(cnt, sql, new Object[] { numExp, numExp }, InteresadoVO.class);
+		//[Manu Ticket #1023] - FIN Históricos de expedientes, trámites, documentos e intervinientes.
+    }
     
 }

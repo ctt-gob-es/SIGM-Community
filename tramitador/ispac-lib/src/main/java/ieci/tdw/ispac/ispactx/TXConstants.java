@@ -23,6 +23,8 @@ public class TXConstants
 	public static final int MILESTONE_STAGE_END_RELOCATED	= 20;
 	public static final int MILESTONE_TASK_START 			= 5;
 	public static final int MILESTONE_TASK_END 				= 6;
+	//[Teresa Ticket#434#]Inicio Reabrir tramite
+	public static final int MILESTONE_TASK_RESTART			= 45;
 	public static final int MILESTONE_EXPED_RELOCATED		= 7;
 	public static final int MILESTONE_INFORMATIVE			= 8;
 	public static final int MILESTONE_EXPED_CANCELED		= 9;

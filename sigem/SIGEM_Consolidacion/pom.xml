@@ -11,6 +11,14 @@
 	<artifactId>sigem_consolidacion</artifactId>
 	<name>SIGEM_Consolidacion</name>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<!-- SIGEM dependencies -->

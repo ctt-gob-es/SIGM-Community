@@ -30,8 +30,16 @@ if (rutaImagenes == null) rutaImagenes = "";
 		Locale locale = (Locale)request.getSession().getAttribute("org.apache.struts.action.LOCALE");
 		String lang = locale.getLanguage();
 		String country = locale.getCountry();
+		String xmlDataSpecific = (String)session.getAttribute(Defs.DATOS_ESPECIFICOS);//[dipucr-Felipe #206 3#108]
+		
 		//String url_completa = "https://"+request.getServerName()+":"+puerto+"/"+url+"?"+Defs.ENTIDAD_ID+"="+entidadId+"&"+Defs.TRAMITE_ID+"="+tramiteId+"&"+Defs.SESION_ID+"="+sesionId+"&"+Defs.LANG+"="+lang+"&"+Defs.COUNTRY+"="+country;
 		String url_completa = "../"+url+"?"+Defs.ENTIDAD_ID+"="+entidadId+"&"+Defs.TRAMITE_ID+"="+tramiteId+"&"+Defs.SESION_ID+"="+sesionId+"&"+Defs.LANG+"="+lang+"&"+Defs.COUNTRY+"="+country;
+		//INICIO [dipucr-Felipe #206 3#108]
+		if (!Defs.isNuloOVacio(xmlDataSpecific)){
+			url_completa += ("&" + Defs.DATOS_ESPECIFICOS + "=" + xmlDataSpecific);
+		}
+		//FIN [dipucr-Felipe #206 3#108]
+		
 		%>
 		<script language="Javascript">
 			document.location.href = '<%= url_completa%>';

@@ -40,6 +40,8 @@
 
 		<!-- Environment properties -->
 		<jdk.version>1.5</jdk.version>
+		<!--MQE ticket #408-->
+		<sigem.version>3.0.1-M2</sigem.version>
 
 		<!-- IECI dependencies -->
 		<fwktd.version>0.7</fwktd.version>
@@ -53,11 +55,14 @@
 		<axis.version>1.4</axis.version>
 		<bcmail.version>139</bcmail.version>
 		<bcprov.version>140</bcprov.version>
+		<bcmail16.version>1.46</bcmail16.version>
+		<bcprov16.version>1.46</bcprov16.version>
+		<bctsp16.version>1.46</bctsp16.version>
 		<castor.version>0.9.5.3</castor.version>
 		<commons.beanutils.version>1.7.0</commons.beanutils.version>
 		<commons.collections.version>3.1</commons.collections.version>
 		<commons.digester.version>1.6</commons.digester.version>
-		<commons.fileupload.version>1.0</commons.fileupload.version>
+		<commons.fileupload.version>1.2</commons.fileupload.version>
 		<commons.jxpath.version>1.2</commons.jxpath.version>
 		<commons.httpclient.version>3.1</commons.httpclient.version>
 		<commons.lang.version>2.4</commons.lang.version>

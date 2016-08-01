@@ -133,7 +133,13 @@ public class RegisterServicesUtil extends RegisterServicesUtilPrivate {
 			List badCtrls = validateFolder(sessionID, user, bookId, -1, atts,
 					documents, entidad, isConsolidacion);
 			if (!badCtrls.isEmpty()) {
+				//INICIO [eCenpri-Felipe #870] SIGEM CONSOLIDACIÓN Añadir traza de log para los errores al consolidar registros
+				String numReg = ((FlushFdrField) atts.get(0)).getValue();
 				log.error("Error en la validación de los datos del registro");
+				log.error("[CONSOLIDACIÓN ENTIDAD " + entidad + 
+						"] Error al consolidar el registro " + numReg + 
+						" " + badCtrls);
+				//FIN [eCenpri-Felipe #870] SIGEM CONSOLIDACIÓN Añadir traza de log para los errores al consolidar registros
 				throw new ValidationException(
 						BookException.ERROR_CANNOT_CREATE_NEW_FOLDER);
 			}

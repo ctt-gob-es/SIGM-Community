@@ -82,4 +82,8 @@ public class Definiciones
    public static final String XPATH_DOCUMENTS = "Datos_Firmados/Documentos";
    public static final String XPATH_SENDER_DATA = XPATH_GENERIC_DATA + "/" + SENDER;
    public static final String TAG_INICIAR_EXPEDIENTE_DATOS_ESPECIFICOS = "datos_especificos";
+   
+   public static final String ID_TRANSACCION = "Id_Transaccion";//[dipucr-Felipe #457]
+   public static final String NUMERO_EXPEDIENTE = "numExpediente";//[dipucr-Felipe #1354]
+   
 }

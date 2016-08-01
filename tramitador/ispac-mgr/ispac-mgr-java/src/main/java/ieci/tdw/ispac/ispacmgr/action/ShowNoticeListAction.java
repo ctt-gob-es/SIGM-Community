@@ -46,7 +46,8 @@ public class ShowNoticeListAction extends BaseAction {
     	storeStateticket(state,response);
 
 	    // Menú
-	    request.setAttribute("menus", MenuFactory.getSingleMenu(cct, getResources(request)));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+	    request.setAttribute("menus", MenuFactory.getSingleMenu(cct, getResources(request), state));
 
         // Avisos del usuario
 		IItemCollection collection = inbox.getNotices();

@@ -561,7 +561,42 @@
 				schemaexpr='NOMBRE'
 				keynumexp=''
 				appid='63'
-				type='0'/>					
+				type='0'/>
+				
+<!-- [Manu Ticket #909] SIGEM Pestaña Datos Específicos del Trámite -->
+<!-- Datos específicos de trámites -->
+	<entitydef	id='64'
+				name='SPAC_P_TRAM_DATOSESPECIFICOS'
+				keyfield='ID'
+				sequence='SPAC_SQ_ID_PTRAM_DATOSESPECIFICOS'
+				description='Datos Específicos de un Trámite'
+				schemaexpr=''
+				keynumexp=''
+				appid='64'
+				type='0'/>
+				
+<!--  [eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->
+<!-- Manuales de Usuario -->	
+		<entitydef	id='65'
+				name='SPAC_CT_MANUALES_USUARIO'
+				keyfield='ID'
+				sequence='SPAC_SQ_ID_CTMANUALESUSUARIO'
+				description='Manuales de Usuario'
+				schemaexpr='NOMBRE'
+				keynumexp=''
+				appid='65'
+				type='0'/>
+				
+		<entitydef	id='66'
+				name='SPAC_P_MANUALES_USUARIO'
+				keyfield='ID'
+				sequence='SPAC_SQ_ID_PMANUALESUSUARIO'
+				description='Plantillas del procedimiento'
+				schemaexpr=''
+				keynumexp=''
+				appid='0'
+				type='0'/>
+<!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->	
 <!--
 	====================================
 		Definición de las aplicaciones
@@ -815,5 +850,25 @@
 					class='ieci.tdw.ispac.ispaccatalog.app.CTHelpApp'
 					page='/forms/catalog/cthelpform.jsp'
 					parameters=''
-					formatter='' />					
+					formatter='' />		
+					
+	<!-- [Manu Ticket #909] SIGEM Pestaña Datos Específicos del Trámite -->
+	<applicationdef	id='64'
+					name='datosEspecif'
+					description='Datos específicos de los trámites'
+					class=''
+					page=''
+					parameters=''
+					formatter='' />
+					
+	<!--  [eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->
+	<!-- Manuales de Usuario -->	
+	<applicationdef	id='65'
+				name='EditCTManualesUsuario'
+				description='Formulario para editar manuales de usuario'
+				class='ieci.tdw.ispac.ispaclib.app.SimpleEntityApp'
+				page='/forms/catalog/ctmanualusuarioform.jsp'
+				parameters=''
+				formatter='' />
+	<!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->		
 </catalogdef>

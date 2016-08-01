@@ -89,4 +89,7 @@ public interface TramitacionWebService extends Remote {
 
 	public Cadena recibirDocumentoFirmado(String idEntidad, String numExp,
 			String idDocumento) throws RemoteException;
+	
+	//[DipuCR-Agustin #781]
+	public Binario getFicheroTemp(String idEntidad, String guid);
 }

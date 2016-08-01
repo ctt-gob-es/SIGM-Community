@@ -36,6 +36,8 @@ import org.bouncycastle.util.encoders.Base64;
 
 
 /**
+ * [DipuCr-Agustin #781] En vez de implementar los métodos vacios, marco la clase
+ * como abstracta, nunca se instancian objetos de esta clase, comparte código con las que heredan de ella
  * Conector de firma con @firma.
  *
  */
@@ -321,5 +323,17 @@ public class AFirmaSignSimpleVerifyConnector extends DefaultSignConnector {
 			}
 		}		
 	}
+
+	public String presign(boolean changeState) throws ISPACException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String postsign(String pathFicheroTempFirmado, boolean changeState)
+			throws ISPACException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
+
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SPAC_DT_TRAMITES:FECHA_INICIO' 
+				 titleKey='formatter.process.fechaInicio' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 />
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SPAC_P_FASES:NOMBRE' 
+				 titleKey='es.dipucr.tram.ant.fase' 
+				 fieldType='LIST' 
+				 columnClass='width20percent'
+				 />
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SPAC_DT_TRAMITES:NOMBRE' 
+				 columnClass='width50percent'
+				 titleKey='formatter.tasks.nombre' 
+				 fieldType='LINK' 
+				 fieldLink='ID_CTTASK'/>
+	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SPAC_DT_TRAMITES:FECHA_CIERRE' 
+				 titleKey='forms.exp.title.fclose' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 />
+				 
+</beanformatter>

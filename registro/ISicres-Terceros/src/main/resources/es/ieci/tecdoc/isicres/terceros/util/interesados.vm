@@ -1,4 +1,5 @@
 #set($separator="#")
+#set($guion=" - ")
 #if($interesado.tercero.id eq "0")
 $!{interesado.tercero.id}${separator}$!{interesado.nombre}${separator}${separator}${separator}${separator}${separator}${separator}${separator}${separator}## Cadena que identifica a un tercero no validado
 #else

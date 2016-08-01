@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+		<form-bean name="defaultForm"
+			type="ieci.tdw.ispac.ispaccatalog.action.form.EntityForm" />
+	</form-beans>
+	<global-forwards>
+	</global-forwards>
+	<action-mappings>
+		<action path="/arbolDocumental"
+				name="defaultForm" 
+				type="es.dipucr.sigem.arbolDocumental.actions.ArbolDocumentalAction" 
+				scope="request"
+				validate="false"> 
+				<forward name="success" path="ct.proceduresTree" />
+				<forward name="error" path="/jsp/RedireccionEntidad.jsp"/> <!-- seleccionarEntidad.do -->
+		</action>
+		
+		<!-- [Manu Ticket #119] INCIO - ALSIGM3 Añadir opción de ayuda.-->
+		<action path="/showProcedimiento"
+			type="es.dipucr.sigem.arbolDocumental.actions.ShowProcedimientoAction" scope="request"
+			validate="false">
+			<forward name="home" path="/arbolVistaCuadroProcedimiento.do?method=home" />		
+		</action>
+		
+		<action path="/arbolVistaCuadroProcedimiento"
+			type="es.dipucr.sigem.arbolDocumental.actions.ArbolVistaCuadroProcedimiento"
+			name="defaultForm" scope="request" validate="false" parameter="method">
+			<forward name="success" path="/ispac/common/procedure/showTreeView.jsp" />
+			<forward name="done" path="/ispac/common/procedure/showTreeView.jsp" />
+		    <forward name="home" path="/arbolVistaCuadroProcedimiento.do?method=home" />
+		</action>		
+			
+		<action path="/showTemplateArbolDocumentalAction"
+			type="es.dipucr.sigem.arbolDocumental.actions.templates.ShowTemplateArbolDocumentalAction"
+			scope="request"
+			validate="false"/>
+		
+		<!-- [Manu Ticket #119] FIN - ALSIGM3 Añadir opción de ayuda.-->
+		
+		<action path="/exit" type="es.dipucr.sigem.arbolDocumental.actions.ExitAction"
+				scope="request"
+				validate="false">
+			<forward name="success" path="/ispac/exit.jsp" redirect="false" />
+		</action>
+		
+	</action-mappings>
+	
+	<message-resources parameter="es.dipucr.sigem.arbolDocumental.resources.SIGEM_ArbolDocumentalMessage" />
+	
+	<!-- Configuración rewrite de ISPAC -->
+	<plug-in className="ieci.tdw.ispac.ispacweb.plugin.ParametersPlugin">
+		<set-property property="ISPACBase" value="ispac" />
+		<set-property property="skin" value="skin1" />
+	</plug-in>	
+	
+	<!-- Tiles plugin -->
+	<plug-in className="org.apache.struts.tiles.TilesPlugin">
+		<set-property property="definitions-config"
+			value="/WEB-INF/tiles-defs.xml" />
+	</plug-in>
+		
+</struts-config>

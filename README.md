@@ -1,60 +1,87 @@
-#SIGM
+#SIGM4.0-QUIJOTE
 
-SIGM (Sistema Integrado de Gestión Modular) es una aplicación desarrollada para el inicio, tramitación, resolución y archivado del procedimiento administrativo. SIGM es un proyecto de modernización y actualización de las administraciones públicas, dotándolas de un sistema que puede reunir en formato electrónico toda la documentación de un expediente, integrando los tradicionales subsistemas de Registro, Motor de Expedientes (Flujos de procedimientos) y Archivo.
-
-Este repositorio se ha creado en el espacio del CTT de Github desde <a href="https://github.com/e-admin/alsigm">el antiguo repositorio creado en su momento por CENATIC</a>.
-
-####Descarga SIGM
-
-**SIGM 3.0.1:** VM no completa, contiene fuentes y wars de los módulos modificados respecto de la 3.0.
-
-**SIGM 3.0:** VM completa, incluye Postgres, Tomcat y Wars desplegados. Contiene trámites y procedimientos modelados.
-
-Descarga las <a href="https://github.com/Cenatic/alsigm/releases" target="_new">VMs y el código</a>
+SIGM4.0-QUIJOTE es una rama creada a partir de la última versión de SIGM (Sistema Integrado de Gestión Modular) donde se incluyen el código desarrollado por la Diputación Provincial de Ciudad Real (en adelante Dipucr).
 
 ####Configuración del entorno de desarrollo (Instalación y compilación)
 
-Aquí tienes disponibles las instrucciones de configuración del entorno Maven de desarrollo así como las instrucciones de compilación e instalación.
+El documento **README.txt** contiene las instrucciones de configuración del entorno Maven de desarrollo así como las instrucciones para realizar la **primera compilación e instalación** del código fuente recién descargado.
+Dicho fichero se encuentran en el directorio raiz del proyecto.
 
-<a href="https://github.com/Cenatic/alsigm/wiki/Configuraci%C3%B3n-del-entorno-de-desarrollo-(Instalaci%C3%B3n-y-compilaci%C3%B3n)">Instrucciones</a>
-
-##Documentación histórica y nueva documentación
-
-Hay disponible un archivo .rar con documentación de SIGM en <a href="https://github.com/e-admin/alsigm/releases">la página de Releases de este proyecto</a>.
-
-##Bugs, foros y petición de nuevas funcionalidades
-
-Actualmente el proyecto no está ya auspiciado por el Ministerio de Industria, Energía y Turismo. Diversas organismos continuan utilizando SIGM y han decidido liberar el código resultante de su esfuerzo en este proyecto de Github. Si tienes sugerencias, incidencias, etc, puedes utilizar la seccion de issues pero has de tener en cuenta que ninguno de estos organismos ofrece garantías de ningún tipo de soporte.
-
-##Versionado, tags y releases
-
-Con el objetivo principal de asegurar transparencia entre nuestro ciclo de lanzamiento y el esfuerzo por mantener la compatibilidad con versiones anteriores, este proyecto se mantendrá bajo las directrices de versiones semánticas. A veces cuesta un poco mantener un orden en el versionado, pero vamos a adherimos a estas reglas siempre que sea posible.
-
-Se numerarán Releases con el siguiente formato:
-
-"major". "menor". "parche"
-
-Y será construido con las siguientes pautas:
-
-* Romper la compatibilidad hacia atrás choca con el principal al restablecer menor y parche
-
-* Nuevos añadidos sin romper la compatibilidad hacia atrás choca con el menor mientras se restaura el parche
-
-* Corregir errores, y cambios en general, choca sólo con el parche
-
-Para obtener más información sobre Versionamiento Semántico visita <a href="http://semver.org/lang/es/" target="_new">Versionado Semántico 2.0.0-rc.2</a>
-
-####Tags y releases
-
-Tenéis disponibles los tags, las releases de las versiones 3.0 y 3.0.1 en este <a href="https://github.com/Cenatic/alsigm/releases" target="_new">enlace.</a>
-
-##Contribuye
-
-Toda aportación de código o documentación es bienvenida, puedes utilizar las herramietnas de Github como en cualquier otro proyecto.
-
-Con el objetivo de homogeneizar el estilo del código de SIGM escrito en distintos IDEs recomendamos seguir las pautas que nos proponen desde <a href="editorconfig.org" target="_new">editorconfig.org</a>
-
-Y muy importante, respeta nuestro <a href="https://github.com/Cenatic/alsigm/wiki/C%C3%B3digo-conducta" target="_new">código de conducta y buenas prácticas</a>
+##Mejoras incluidas en la rama
+###Mejoras Técnicas
+* Rendimiento en general:
+  * Lista de trabajo.
+  * Datos de trámites.
+  * Expedientes relacionados.
+  * Auditorías.
+* Eliminación de java:
+  * En la edición de documentos.
+  * En la firma de documentos desde el tramitador.
+  * En la firma de solicitudes del registro telemático.
+* Firma 3 fases en servidor externo.
+* Histórico de expedientes, trámites, participantes, documentos e hitos.
+* Registro Telemático, no almacenar los documentos anexos y justificantes de registro en BD, almacenarlos en repositorio.
+* Solucionado el problema al trabajar con varios OpenOffice.
+* Conexiones con aplicaciones externas:
+  * Comparece.
+  * Servicio de Verificación de Datos.
+  * Plataforma de Contratación del Estado.
+  * Factura Electrónica.
+  * Boletín Oficial de la Provincia.
+  * Tablón de anuncios electrónico.
+  * TEU.
+  * OwnCloud.
+  * Web del Empleado.
+  * Web del Diputado.
+  * PortaFirmas - MINHAP.
+  * BDNS
+  * …
+* Compilación del código y despliegue de las aplicaciones mediante maven, tanto para linux como para windows.
+* Indicar en el log la entidad a la que se corresponde la traza.
+* Adaptación para trabajar con ODSs.
+###Mejoras Funcionales
+* **Tramitador**:
+  * Lista de trabajo.
+  * Cambios apariencia Avisos electrónicos.
+  * Registros distribuidos, añadir pestaña para consultar los documentos del registro.
+  * Filtro de año de inicio de los expedientes.
+  * Ordenación de los procedimientos alfabéticamente.
+  * Manuales de usuario globales
+* Expediente:
+  * Reabrir expediente.
+  * Manuales de usuario.
+  * Árbol de ayuda.
+  * Legislación y jurisprudencia.
+  * Datos de trámite mostrar únicamente los abiertos y/o los 5 últimos trámites. Añadir opción ver todos.
+  * Datos de trámites anteriores mostrar la fase a la que pertenecían los trámites anteriores.
+  * Expedientes relacionados mostrar opción de ver todos.
+  * Indicar el asunto del expediente en la cabecera de la página.
+  * Edición de documentos desde el tramitador controlado por permisos al usuario.
+* Trámite:
+  * Reabrir Trámite
+  * Datos de Trámite oculto por defecto.
+  * Cambios en la botonera (Registrar Todo, Firmar Todo, etc.)
+  * Cambios en la apariencia del listado de documentos (Universidad de Cartagena).
+* Datos del Documento:
+  * Mostrar el CVE.
+  * Mostrar el motivo de rechazo de la firma.
+  * Anular circuito de firma.
+* Participantes:
+  * Importar participantes de otros expedientes.
+  * Borrar todos los participantes.
+* Firma:
+  * Rechazo de firma.
+  * Histórico de firmas rechazadas.
+* Módulo de avisos a todos los usuarios o a todos los usuarios conectados.
+* **Catálogo de Procedimientos**:
+* Inventario / Procedimientos:
+  * Asociación de manuales de usuarios específicos por procedimiento.
+  * Circuitos de firma específicos por trámite.
+  * Datos específicos y plantilla por defecto de un trámite.
+  * Nuevo evento al Relacionar expedientes.
+* Componentes:
+  * Mantenimiento de Manuales de Usuario.
+* Consulta de documentos por CVE, mostrar los datos del registro de salida.
 
 ##Licencia
 

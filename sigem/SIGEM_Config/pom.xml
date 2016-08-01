@@ -319,7 +319,7 @@
 		<!-- SIGEM_Consolidacion -->
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
-			<artifactId>SIGEM_Consolidacion</artifactId>
+			<artifactId>sigem_consolidacion</artifactId>
 			<version>${pom.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
@@ -356,13 +356,13 @@
 
 
 		<!-- SIGEM_ServicioIntermediacionClienteLigeroWS -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_ServicioIntermediacionClienteLigeroWS-resources-configurable</artifactId>
 			<version>${pom.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
-		</dependency>
+		</dependency> -->
 
 		<!-- SIGEM_PortafirmasNotificacionWS -->
 		<dependency>
@@ -376,6 +376,15 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_SignoWS-configurable-resources</artifactId>
+			<version>${pom.version}</version>
+			<type>zip</type>
+			<classifier>configurableSigem</classifier>
+		</dependency>
+
+		<!--[eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.-->
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>SIGEM_ArbolDocumentalWeb</artifactId>
 			<version>${pom.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>

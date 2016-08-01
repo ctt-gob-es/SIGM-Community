@@ -52,7 +52,6 @@
 				<module>SIGEM_RegistroTelematicoWeb</module>
 				<module>SIGEM_RegistroTelematicoWS</module>
 				<module>SIGEM_RegistroTelematicoDefaultTercerosConnectorWS</module>
-				<module>SIGEM_RegistroTelematicoWS</module>
 			</modules>
 		</profile>
 	</profiles>

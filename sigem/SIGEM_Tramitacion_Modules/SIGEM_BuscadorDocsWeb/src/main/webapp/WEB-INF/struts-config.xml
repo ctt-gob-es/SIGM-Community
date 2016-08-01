@@ -32,6 +32,20 @@
 				validate="false"> 
 				<forward name="success" path="/searchResult.jsp"/> 
 		</action>
+		<!-- INICIO [eCenpri-Felipe #828] -->
+		<action path="/getDocument" 
+				type="com.tsol.modulos.buscador.actions.GetDocumentAction"
+				scope="request"
+				validate="false">
+		</action>
+		<!-- FIN [eCenpri-Felipe #828] -->
+		<!-- INICIO [eCenpri-Felipe #1216] -->
+		<action path="/getResolucionPersonal" 
+				type="com.tsol.modulos.buscador.actions.GetResolucionPersonalAction"
+				scope="request"
+				validate="false">
+		</action>
+		<!-- FIN [eCenpri-Felipe #1216] -->
 	</action-mappings>
 	
 	<message-resources parameter="com.tsol.modulos.buscador.resources.BuscadorDocsMessage" />

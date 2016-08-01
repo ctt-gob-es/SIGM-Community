@@ -49,7 +49,7 @@
 			</div>
 
 			<div class="cuerpo_ficha">
-				<div class="seccion_ficha">
+				<div class="seccion_ficha">					
 
 					<logic:notEmpty name="SIGN_ERROR">
 						<p class="fila_sub clearfix">
@@ -103,6 +103,30 @@
 								<li><bean:write name="documento" property="property(NOMBRE)"/> [<bean:write name="documento" property="property(DESCRIPCION)"/>]: <bean:write name="info" property="error"/></li>
 							</logic:iterate>
 							</ul>
+						</p>
+					</logic:notEmpty>
+					<logic:notEmpty name="FIRMAR_TODO_OK">
+						<p class="fila_sub clearfix">
+							<p class="fila_sub clearfix">
+							<label class="mid"><nobr><bean:message key="sign.documents.sign.firmatodo.circuito.ok"/>:</nobr></label>
+							<br/><br/>	
+							<ul>
+							<logic:iterate name="FIRMAR_TODO_OK" id="document">
+								<li><bean:write name="document" property="property(NOMBRE)"/> [<bean:write name="document" property="property(DESCRIPCION)"/>]</li>
+							</logic:iterate>
+							</ul>						
+						</p>
+					</logic:notEmpty>
+					<logic:notEmpty name="FIRMAR_TODO_KO">
+						<p class="fila_sub clearfix">
+							<label class="mid"><nobr><bean:message key="sign.documents.sign.firmatodo.circuito.ko"/>:</nobr></label>
+							<br/><br/>	
+							<ul>
+							<logic:iterate name="FIRMAR_TODO_KO" id="info">
+								<bean:define id="documento" name="info" property="documento"/>
+								<li><bean:write name="documento" property="property(NOMBRE)"/> [<bean:write name="documento" property="property(DESCRIPCION)"/>]: <bean:write name="info" property="error"/></li>
+							</logic:iterate>
+							</ul>						
 						</p>
 					</logic:notEmpty>
 				</div> <!-- fin seccion ficha-->

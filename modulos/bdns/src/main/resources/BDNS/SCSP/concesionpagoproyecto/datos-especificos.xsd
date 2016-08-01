@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://intermediacion.redsara.es/scsp/esquemas/V3/datosEspecificos" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://intermediacion.redsara.es/scsp/esquemas/V3/datosEspecificos" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="DatosEspecificos" type="DatosEspecificos"/>
+	<xs:complexType name="DatosEspecificos">
+		<xs:choice>
+			<xs:element name="DatosEspecificosPeticion" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DatosGenerales">
+							<xs:complexType>
+								<xs:all>
+									<xs:element ref="OrganoGestor"/>
+									<xs:element ref="TipoMovimiento"/>
+								</xs:all>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Envio">
+							<xs:complexType>
+								<xs:choice>
+									<xs:element name="Concesion">
+										<xs:complexType>
+											<xs:all>
+												<xs:element ref="IdConcesion"/>
+												<xs:element name="InstrumentoAyuda" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="5"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="FechaConcesion" type="xs:date" minOccurs="0"/>
+												<xs:element name="CosteConcesion" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:totalDigits value="18"/>
+															<xs:fractionDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="SubvencionConcesion" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:totalDigits value="18"/>
+															<xs:fractionDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="PrestamoConcesion" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:totalDigits value="18"/>
+															<xs:fractionDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="AyudaConcesion" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:totalDigits value="18"/>
+															<xs:fractionDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="AyudaEquivalenteConcesion" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:totalDigits value="18"/>
+															<xs:fractionDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="RegionConcesion" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="5"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="EntidadEncargada" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="50"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="IntermediarioFinanciero" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="50"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="ObjetivoConcesion" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="3"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element ref="DatosAnualidades" minOccurs="0"/>
+											</xs:all>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="Pago">
+										<xs:complexType>
+											<xs:all>
+												<xs:element ref="IdPago"/>
+												<xs:element name="FechaPago" type="xs:date" minOccurs="0"/>
+												<xs:element name="ImportePagado" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:fractionDigits value="2"/>
+															<xs:totalDigits value="18"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="Retencion" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:enumeration value="0"/>
+															<xs:enumeration value="1"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+											</xs:all>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="Proyecto">
+										<xs:complexType>
+											<xs:all>
+												<xs:element ref="IdProyecto"/>
+												<xs:element name="DescripcionProyecto" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="255"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="CosteProyecto" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:totalDigits value="18"/>
+															<xs:fractionDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="SubvencionProyecto" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:totalDigits value="18"/>
+															<xs:fractionDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="PrestamoProyecto" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:totalDigits value="18"/>
+															<xs:fractionDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="AyudaEquivalenteProyecto" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:totalDigits value="18"/>
+															<xs:fractionDigits value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="RegionProyecto" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="5"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="DatosEjecutores" minOccurs="0">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="Ejecutores" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:all>
+																		<xs:element ref="IdEjecutor"/>
+																		<xs:element name="AnualidadEjecutor">
+																			<xs:simpleType>
+																				<xs:restriction base="xs:positiveInteger">
+																					<xs:totalDigits value="4"/>
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="CosteEjecutor">
+																			<xs:simpleType>
+																				<xs:restriction base="xs:decimal">
+																					<xs:totalDigits value="18"/>
+																					<xs:fractionDigits value="2"/>
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="SubvencionEjecutor" minOccurs="0">
+																			<xs:simpleType>
+																				<xs:restriction base="xs:decimal">
+																					<xs:totalDigits value="18"/>
+																					<xs:fractionDigits value="2"/>
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="PrestamoEjecutor" minOccurs="0">
+																			<xs:simpleType>
+																				<xs:restriction base="xs:decimal">
+																					<xs:totalDigits value="18"/>
+																					<xs:fractionDigits value="2"/>
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="AyudaEquivalenteEjecutor">
+																			<xs:simpleType>
+																				<xs:restriction base="xs:decimal">
+																					<xs:totalDigits value="18"/>
+																					<xs:fractionDigits value="2"/>
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																	</xs:all>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:all>
+										</xs:complexType>
+									</xs:element>
+								</xs:choice>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="DatosEspecificosRespuesta" minOccurs="0">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="DatosIdentificacion">
+							<xs:complexType>
+								<xs:choice>
+									<xs:element ref="IdConcesion"/>
+									<xs:element ref="IdPago"/>
+									<xs:element ref="IdProyecto"/>
+								</xs:choice>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="CodigoEstadoSo">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="4"/>
+									<xs:minLength value="4"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="CodigoEstadoSecundarioSo" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="16"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="LiteralErrorSo">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="255"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="IdConvocatoria">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="18"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="OrganoGestor">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="9"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="TipoMovimiento">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="A"/>
+				<xs:enumeration value="M"/>
+				<xs:enumeration value="B"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="PaisBen" default="ES">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="2"/>
+				<xs:minLength value="2"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="PaisEjecutor" default="ES">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="2"/>
+				<xs:minLength value="2"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="IdPersonaBen">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="25"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="IdPersonaEjecutor">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="25"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="IdConcesion">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="IdConvocatoria"/>
+				<xs:element name="IdBeneficiario">
+					<xs:complexType>
+						<xs:all>
+							<xs:element ref="PaisBen"/>
+							<xs:element ref="IdPersonaBen"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="DiscriminadorConcesion">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="50"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="IdPago">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="IdConcesion"/>
+				<xs:element name="DiscriminadorPago">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="50"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="IdProyecto">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="IdConcesion"/>
+				<xs:element name="DiscriminadorProyecto">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="50"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DatosAnualidades">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Anualidades" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="TipoAnualidad">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="P"/>
+										<xs:enumeration value="S"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Anualidad">
+								<xs:simpleType>
+									<xs:restriction base="xs:positiveInteger">
+										<xs:totalDigits value="4"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Aplicacion">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="50"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="ImporteAnualporApli">
+								<xs:simpleType>
+									<xs:restriction base="xs:decimal">
+										<xs:totalDigits value="18"/>
+										<xs:fractionDigits value="2"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="IdEjecutor">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="PaisEjecutor"/>
+				<xs:element ref="IdPersonaEjecutor"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -10,6 +10,13 @@
 	<artifactId>sigem_pagoElectronico</artifactId>
 	<packaging>jar</packaging>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -111,13 +118,31 @@
 		</dependency>
 
 		<!-- INICIO Dependencias pasarela pagos euskadi -->
-		<dependency>
+		<!--<dependency>
 			<groupId>net.euskadi.pasarelapago</groupId>
 			<artifactId>pasarelapago-all</artifactId>
 			<version>3.1</version>
-			<scope>provided</scope>
 			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>-->
+		<dependency>
+			<groupId>net.euskadi.pasarelapago</groupId>
+			<artifactId>p12d</artifactId>
+			<version>3.1</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>net.euskadi.pasarelapago</groupId>
+			<artifactId>p12f</artifactId>
+			<version>3.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.euskadi.pasarelapago</groupId>
+			<artifactId>r01f</artifactId>
+			<version>3.1</version>
+		</dependency>
+
 		<!-- FIN Dependencias pasarela pagos euskadi -->
 
 		<dependency>

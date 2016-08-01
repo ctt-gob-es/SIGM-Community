@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter pageSize='50'>
+
+	<!-- Ponemos 2 veces la propiedad LIQUIDACION, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='AYUNTAMIENTO' 
+				 titleKey='REC_DAT_DEVOL:AYUNTAMIENTO' 
+				 fieldType='LINK'
+				 columnClass='width30percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='AYUNTAMIENTO' 
+				 titleKey='REC_DAT_DEVOL:AYUNTAMIENTO' 
+				 fieldType='LIST'
+				 columnClass='width30percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NIF' 
+				 titleKey='REC_DAT_DEVOL:NIF' 
+				 fieldType='LIST'
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='TITULAR' 
+				 titleKey='REC_DAT_DEVOL:TITULAR' 
+				 fieldType='LIST'
+				 columnClass='width60percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+</beanformatter>

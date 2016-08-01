@@ -84,7 +84,12 @@
 													<bean:define id="iniciable" name="object" property="property(INICIABLE)"/>
 													<c:choose>
 														<c:when test="${iniciable}">
-															<nobr><a href='<c:out value="${link}"/>' class="displayLink"><%=format.formatProperty(object)%></a></nobr>
+															<nobr>
+															<!-- [Manu Ticket #845] * SIGEM Mensaje '''En Proceso...''' al generar trámites -->
+															<!--<a href='<c:out value="${link}"/>' class="displayLink">-->
+																<a href="<c:out value="${link}"/>" class="displayLink" onclick="javascript:showFrame('workframe','/SIGEM_TramitacionWeb/ispac/wait.jsp');">
+															<!-- [Manu Ticket #845] * SIGEM Mensaje '''En Proceso...''' al generar trámites -->
+															<%=format.formatProperty(object)%></a></nobr>
 														</c:when>
 														<c:otherwise>
 															<nobr><%=format.formatProperty(object)%></nobr>

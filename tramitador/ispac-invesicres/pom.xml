@@ -23,6 +23,16 @@
       <groupId>es.ieci.tecdoc.iflow</groupId>
       <artifactId>ispac-lib</artifactId>
       <version>${pom.version}</version>
+      <exclusions>	
+				<exclusion>
+					<groupId>es.ieci.tecdoc.sigem</groupId>
+					<artifactId>sigem_estructuraOrganizativa</artifactId>
+				</exclusion>			
+				<exclusion>
+					<groupId>es.ieci.tecdoc.sigem</groupId>
+					<artifactId>sigem_estructuraOrganizativaCore</artifactId>
+				</exclusion>
+			</exclusions>
     </dependency>
 
 		<dependency>

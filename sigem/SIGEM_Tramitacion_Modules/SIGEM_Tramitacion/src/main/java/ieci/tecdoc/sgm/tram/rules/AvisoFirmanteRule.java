@@ -20,6 +20,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.utils.MailUtil;
+
 /**
  * Regla para el aviso a un firmante de circuito de firmas en el momento
  * que le llegue el turno. Esta regla soporta los siguientes avisos:

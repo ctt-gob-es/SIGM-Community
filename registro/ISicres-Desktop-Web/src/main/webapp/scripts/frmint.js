@@ -90,6 +90,12 @@ function LoadFrame()
 		}
 		LoadFrameText(cadena, Mode);
 	}
+	
+	//[Teresa-felipe-ecenpri Ticket#71]
+	if (top.g_ArchiveId == 1)
+	{
+		document.body.className = 'registroEntrada';
+	}
 
 }
 

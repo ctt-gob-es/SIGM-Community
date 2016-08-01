@@ -10,6 +10,13 @@ public class Defs {
 	public static final String PLUGIN_REDIRREGISTROTELEMATICO = "redirRegistroTelematico";
 	public static final String PLUGIN_REDIRCERTIFICACION = "redirCertificacion";
 	public static final String PLUGIN_REDIRCONSULTAREGISTROTELEMATICO = "redirConsultaRegistroTelematico";
+	//INICIO [Teresa Ticket 431 SIGEM nuevo proyecto para la visualización de los expedientes de organos colegiados]
+	public static final String PLUGIN_REDIRCONSULTAMIEMBRO = "redirConsultaMiembro";
+	//FIN
+
+	//INICIO - [eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.
+	public static final String PLUGIN_REDIRARBOLDOCUMENTAL = "redirArbolDocumental";
+	//FIN
 	
 	public static final String ACCESO_SEL = "ACCESO_SEL";
 	public static final String TIPO_ACCESO = "TIPO_ACCESO";
@@ -53,6 +60,11 @@ public class Defs {
 	
 	//public static final String DEFAULT_SERVER_PORT = "defaultServerPort";
 	public static final String IDIOMAS_DISPONIBLES = "IdiomasDisponibles";
+	
+	//INICIO [dipucr-Felipe #206 3#108]
+	public static final String ADMIN = "WEB_EMPLEADO";
+	public static final String DATOS_ESPECIFICOS = "DATOS_ESPECIFICOS";
+	//FIN [dipucr-Felipe #206 3#108]
 	
 	public static boolean isNuloOVacio(Object cadena) {
 		if((cadena == null) || ("".equals(cadena)) || ("null".equals(cadena))) {

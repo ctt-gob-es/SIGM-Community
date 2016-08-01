@@ -35,6 +35,12 @@ p.desplegar{margin-top:10px;background: url(../img/ico_desplegar.gif) no-repeat 
 }
 .usuarioleft p{margin-left:15px;margin-top:10px;
 }
+
+/* [Manu #814] FIN- SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos.*/
+.usuarioright p{margin-right:15px;margin-top:10px;
+}
+/* [Manu #814] FIN- SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. */
+
 .margen{margin-left:15px; margin-right:5px; 
 }
 #migas{padding-top:10px; padding-bottom:10px; 

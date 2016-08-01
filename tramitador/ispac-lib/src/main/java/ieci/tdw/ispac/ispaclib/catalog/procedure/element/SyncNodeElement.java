@@ -283,13 +283,16 @@ public class SyncNodeElement implements IPcdElement
         return sXml;
     }
     
+
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
     public String toXpdl(DbCnt cnt,
     					 Map ctStageIds,
 			  			 Map ctTaskIds,
 			  			 Map ctRuleIds,
 			  			 Map ctEntityIds,
 			  			 Map ctTpDocIds,
-			  			 Map subPcdIds) throws ISPACException {
+			  			 Map subPcdIds,
+			  			 Map ctManualUsuarioIds, List manualesUsuario) throws ISPACException {
     	
         String sXpdl = null;
         StringBuffer buffer = new StringBuffer();
@@ -329,11 +332,12 @@ public class SyncNodeElement implements IPcdElement
         return sXpdl;
     }
 
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 	public String toXpdl(DbCnt cnt, Map ctStageIds, Map ctTaskIds,
-			Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds,
+			Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds, Map ctManualUsuarioIds, List manualesUsuario, 
 			Map ctHelpsIds) throws ISPACException {
 		
-		return toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds);
+		return toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds, ctManualUsuarioIds, manualesUsuario);
 	}
 	
 

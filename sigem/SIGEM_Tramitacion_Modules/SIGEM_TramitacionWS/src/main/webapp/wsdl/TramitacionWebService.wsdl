@@ -115,6 +115,40 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      </sequence>
     </complexType>
    </element>
+   
+   <element name="getFicheroTemp">
+<complexType>
+<sequence>
+<element name="idEntidad" type="xsd:string"/>
+<element name="guid" type="xsd:string"/>
+</sequence>
+</complexType>
+</element>
+<element name="getFicheroTempResponse">
+<complexType>
+<sequence>
+<element name="getFicheroTempReturn" type="impl:Binario"/>
+</sequence>
+</complexType>
+</element>
+
+<element name="setFicheroTemp">
+<complexType>
+<sequence>
+<element name="idEntidad" type="xsd:string"/>
+<element name="guid" type="xsd:string"/>
+<element name="data" type="xsd:base64Binary"/>
+</sequence>
+</complexType>
+</element>
+<element name="setFicheroTempResponse">
+<complexType>
+<sequence>
+<element name="setFicheroTempReturn" type="xsd:boolean"/>
+</sequence>
+</complexType>
+</element>
+
    <complexType name="Binario">
     <complexContent>
      <extension base="tns1:RetornoServicio">
@@ -806,6 +840,16 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
       <wsdl:part element="impl:getFicheroResponse" name="parameters"/>
 
    </wsdl:message>
+   
+   
+   <wsdl:message name="getFicheroTempResponse">
+<wsdl:part element="impl:getFicheroTempResponse" name="parameters"/>
+</wsdl:message>
+
+<wsdl:message name="setFicheroTempResponse">
+<wsdl:part element="impl:setFicheroTempResponse" name="parameters"/>
+</wsdl:message>
+   
 
    <wsdl:message name="archivarExpedientesRequest">
 
@@ -836,6 +880,13 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
       <wsdl:part element="impl:getFichero" name="parameters"/>
 
    </wsdl:message>
+   
+   <wsdl:message name="getFicheroTempRequest">
+<wsdl:part element="impl:getFicheroTemp" name="parameters"/>
+</wsdl:message>
+<wsdl:message name="setFicheroTempRequest">
+<wsdl:part element="impl:setFicheroTemp" name="parameters"/>
+</wsdl:message>
 
    <wsdl:message name="busquedaAvanzadaRequest">
 
@@ -930,6 +981,15 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
          <wsdl:output message="impl:getFicheroResponse" name="getFicheroResponse"/>
 
       </wsdl:operation>
+      
+      <wsdl:operation name="getFicheroTemp">
+<wsdl:input message="impl:getFicheroTempRequest" name="getFicheroTempRequest"/>
+<wsdl:output message="impl:getFicheroTempResponse" name="getFicheroTempResponse"/>
+</wsdl:operation>
+<wsdl:operation name="setFicheroTemp">
+<wsdl:input message="impl:setFicheroTempRequest" name="setFicheroTempRequest"/>
+<wsdl:output message="impl:setFicheroTempResponse" name="setFicheroTempResponse"/>
+</wsdl:operation>
 
       <wsdl:operation name="getInfoFichero">
 
@@ -1144,6 +1204,27 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
          </wsdl:output>
 
       </wsdl:operation>
+      
+      
+      <wsdl:operation name="getFicheroTemp">
+<wsdlsoap:operation soapAction=""/>
+<wsdl:input name="getFicheroTempRequest">
+<wsdlsoap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="getFicheroTempResponse">
+<wsdlsoap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="setFicheroTemp">
+<wsdlsoap:operation soapAction=""/>
+<wsdl:input name="setFicheroTempRequest">
+<wsdlsoap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="setFicheroTempResponse">
+<wsdlsoap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+      
 
       <wsdl:operation name="getInfoFichero">
 

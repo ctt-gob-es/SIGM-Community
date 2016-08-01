@@ -121,6 +121,68 @@ public class IdSequenceMgr
 			}
 		}
 	}
+	
+	//[INICIO - eCenpri-Felipe #781] FIRMA 3 FASES
+	static public int setVal(DbCnt cnt,String sequence, int value)
+			throws ISPACException
+			{
+				//si la base de datos es postgree la invocacion al procedimiento almacenado se hace mediante sentencia SELECT
+				if (cnt.isPostgreSQLDbEngine()){
+					StringBuffer sql = new StringBuffer("SELECT SPAC_SETVAL('");
+					sql.append(sequence);
+					sql.append("', ");
+					sql.append(value);
+					sql.append(")");
+					DbResultSet rs = cnt.executeQuery(sql.toString());
+					try {
+						if (rs.getResultSet().next()){
+							return rs.getResultSet().getBigDecimal(1).intValue();
+						}else{
+							throw new ISPACException("Nombre de secuencia no existente");
+						}
+					} catch (SQLException e) {
+						throw new ISPACException(e);
+					}
+					
+				}else{
+					String callquery = "{ CALL SPAC_SETVAL( ? , ? ) }";
+				    DbCallableStatement callstmt=cnt.prepareCall(callquery);
+				    callstmt.setString(1,sequence);
+				    callstmt.setInt(1,value);
+				    callstmt.registerOutputParameter(2,Types.INTEGER);
+				    callstmt.execute();
+				    return callstmt.getInt(2);
+				}
+			}
+
+	static public int currVal(DbCnt cnt, String sequence) throws ISPACException {
+		// si la base de datos es postgree la invocacion al procedimiento
+		// almacenado se hace mediante sentencia SELECT
+		if (cnt.isPostgreSQLDbEngine()) {
+			StringBuffer sql = new StringBuffer("SELECT SPAC_CURRVAL('");
+			sql.append(sequence);
+			sql.append("')");
+			DbResultSet rs = cnt.executeQuery(sql.toString());
+			try {
+				if (rs.getResultSet().next()) {
+					return rs.getResultSet().getBigDecimal(1).intValue();
+				} else {
+					throw new ISPACException("Nombre de secuencia no existente");
+				}
+			} catch (SQLException e) {
+				throw new ISPACException(e);
+			}
+
+		} else {
+			String callquery = "{ CALL SPAC_CURRVAL( ? , ? ) }";
+			DbCallableStatement callstmt = cnt.prepareCall(callquery);
+			callstmt.setString(1, sequence);
+			callstmt.registerOutputParameter(2, Types.INTEGER);
+			callstmt.execute();
+			return callstmt.getInt(2);
+		}
+	}
+	//[FIN - eCenpri-Felipe #781] FIRMA 3 FASES
 
 /*
 	static public int getIdSequenceOracle(DbCnt cnt,String sequence)

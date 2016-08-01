@@ -300,8 +300,10 @@ public class ConectorAutenticacionDatos extends ConectorAutenticacionImpl implem
          }
          
       } catch (CatalogoTramitesExcepcion e) {
+    	  logger.error(CatalogoTramitesCodigosError.EC_GET_AUTENTICATION_HOOKS+" - TRAMITE:"+tramiteId+" ENTIDAD: "+entidad+" - "+e.getMessage(),e);
     	 throw new CatalogoTramitesExcepcion(CatalogoTramitesCodigosError.EC_GET_AUTENTICATION_HOOKS);
       } catch (Exception e) {
+    	  logger.error(CatalogoTramitesCodigosError.EC_ERR_DB+" - TRAMITE:"+tramiteId+" ENTIDAD: "+entidad+" - "+e.getMessage(),e);
     	 throw new CatalogoTramitesExcepcion(CatalogoTramitesCodigosError.EC_ERR_DB);
       } finally {
        	 if (dbConn.existConnection())

@@ -736,7 +736,14 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys,
 
 			boolean distributeRegInAccepted = false;
 			if(!isImport){
-				distributeRegInAccepted = true;
+				//INICIO [dipucr-Felipe #168]
+				if (consolidacion){
+					distributeRegInAccepted = false;
+				}
+				else{
+					distributeRegInAccepted = true;
+				}
+				//FIN [dipucr-Felipe #168]
 			} else {
 				distributeRegInAccepted = Configurator
 						.getInstance()

@@ -14,6 +14,8 @@ import ieci.tdw.ispac.audit.business.IspacAuditoriaManager;
 import ieci.tdw.ispac.audit.business.manager.impl.IspacAuditoriaManagerImpl;
 import ieci.tdw.ispac.audit.business.vo.AuditContext;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventEntidadConsultaVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.app.EntityApp;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
@@ -34,6 +36,7 @@ import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
 import ieci.tdw.ispac.ispacweb.api.ManagerState;
 import ieci.tdw.ispac.ispacweb.api.impl.states.ExpedientState;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +51,7 @@ import org.apache.struts.action.ActionMapping;
 
 public class ShowExpedientAction extends BaseAction {
 
-	IspacAuditoriaManager auditoriaManager = new IspacAuditoriaManagerImpl();
+	IspacAuditoriaManager auditoriaManager;
 
 	public ActionForward executeAction(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response, SessionAPI session)
@@ -58,46 +61,8 @@ public class ShowExpedientAction extends BaseAction {
 		IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(cct);
 		IInvesflowAPI invesFlowAPI = cct.getAPI();
 		request.getSession().removeAttribute("docEntidad");
-		// ----
-		// BPM
-		// ----
-		// Se adquiere el expediente
-		IBPMAPI bpmAPI = null;
-		boolean commit = true;
-		try {
-			bpmAPI = invesFlowAPI.getBPMAPI();
-			// Iniciamos la sesion con el BPM
-			bpmAPI.initBPMSession();
-			request.getSession().setAttribute("stageId",
-					request.getParameter(ManagerState.PARAM_STAGEID));
-			IStage stage = invesFlowAPI.getStage(Integer.parseInt(request
-					.getParameter(ManagerState.PARAM_STAGEID)));
-			// Se invoca al BPM para adquirir la fase del expediente, si es
-			// necesario
-			if (!bpmAPI.acquireStage(stage.getString("ID_FASE_BPM"), cct.getRespId())) {
-				// Si no se puede adquirir la fase se da la opcion de capturarla
-				// de forma explícita
-				request.setAttribute("menus", MenuFactory.getSingleMenu(cct, getResources(request)));
-				request.setAttribute(ManagerState.PARAM_STAGEID, "" + stage.getKeyInt());
-				return mapping.findForward("capture");
-			}
-
-		} catch (ISPACNullObject inoe) {
-
-			ISPACInfo info = new ISPACInfo("exception.expedients.noStage");
-
-			// Redireccionar a la página principal con el mensaje de aviso
-			request.setAttribute(Globals.MESSAGE_KEY, info);
-			request.setAttribute("refresh", "/showProcedureList.do");
-			return mapping.findForward("refresh");
-		} catch (ISPACException e) {
-			commit = false;
-			throw e;
-		} finally {
-			if (bpmAPI != null)
-				bpmAPI.closeBPMSession(commit);
-		}
-
+		
+		//[eCenpri-Manu Ticket #131] -INICIO - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 		// Se cambia el estado de tramitación
 		IState state = null;
 		Map params = request.getParameterMap();
@@ -127,7 +92,52 @@ public class ShowExpedientAction extends BaseAction {
 			request.setAttribute("refresh", "/showProcedureList.do");
 			return mapping.findForward("refresh");
 		}
+		
+		//[eCenpri-Manu Ticket #131] - FIN - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		// ----
+		// BPM
+		// ----
+		// Se adquiere el expediente
+		IBPMAPI bpmAPI = null;
+		boolean commit = true;
+		try {
+			bpmAPI = invesFlowAPI.getBPMAPI();
+			// Iniciamos la sesion con el BPM
+			bpmAPI.initBPMSession();
+			request.getSession().setAttribute("stageId",
+					request.getParameter(ManagerState.PARAM_STAGEID));
+			IStage stage = invesFlowAPI.getStage(Integer.parseInt(request
+					.getParameter(ManagerState.PARAM_STAGEID)));
+			// Se invoca al BPM para adquirir la fase del expediente, si es
+			// necesario
+			if (!bpmAPI.acquireStage(stage.getString("ID_FASE_BPM"), cct.getRespId())) {
+				// Si no se puede adquirir la fase se da la opcion de capturarla
+				// de forma explícita
+				//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+				request.setAttribute("menus", MenuFactory.getSingleMenu(cct, getResources(request), state));
+				request.setAttribute(ManagerState.PARAM_STAGEID, "" + stage.getKeyInt());
+				return mapping.findForward("capture");
+			}
 
+		} catch (ISPACNullObject inoe) {
+
+			ISPACInfo info = new ISPACInfo("exception.expedients.noStage");
+
+			// Redireccionar a la página principal con el mensaje de aviso
+			request.setAttribute(Globals.MESSAGE_KEY, info);
+			request.setAttribute("refresh", "/showProcedureList.do");
+			return mapping.findForward("refresh");
+		} catch (ISPACException e) {
+			commit = false;
+			throw e;
+		} finally {
+			if (bpmAPI != null)
+				bpmAPI.closeBPMSession(commit);
+		}
+
+		//[eCenpri-Manu Ticket #131] - INICIO - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		//Se mueve el código al principio para mantener el año en el estado.
+		//[eCenpri-Manu Ticket #131] - FIN - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 		IProcess process = invesFlowAPI.getProcess(state.getNumexp());
 		if (process.getInt("ESTADO") == TXConstants.STATUS_DELETED) {
 			state.setReadonly(true);
@@ -255,8 +265,15 @@ public class ShowExpedientAction extends BaseAction {
 				MenuFactory.getExpMenu(cct, state, getResources(request), returnToSearch, resp));
 
 		// Cargamos enlaces para los expedientes relacionados
-		SpacMgr.loadRelatedExpedient(session, request, state.getNumexp(), SpacMgr.ALL_EXPEDIENTS);
-
+		//SpacMgr.loadRelatedExpedient(session, request, state.getNumexp(), SpacMgr.ALL_EXPEDIENTS);
+		
+		//[Manut Eickt #707] INICIO - SIGEM Problemas de rendimiento
+		// Cargamos enlaces para los expedientes relacionados
+	    //SpacMgr.loadRelatedExpedient(session, request, state.getNumexp(), SpacMgr.ALL_EXPEDIENTS );
+	    request.setAttribute("supExp",new ArrayList());
+	    request.setAttribute("subExp",new ArrayList());
+	    //[Manut Eickt #707] FIN - SIGEM Problemas de rendimiento
+	    
 		// Cargamos las aplicaciones de gestion asociadas
 		SpacMgr.loadAppGestion(session, state, request);
 
@@ -264,7 +281,6 @@ public class ShowExpedientAction extends BaseAction {
 
 		logger.info("Auditando la consulta de la entidad");
 		String numExpediente = state.getNumexp();
-		
 		auditConsultaEntidad(request, cct, entityapp,numExpediente);
 
 		return mapping.findForward("success");
@@ -279,31 +295,37 @@ public class ShowExpedientAction extends BaseAction {
 	 */
 	private void auditConsultaEntidad(HttpServletRequest request, ClientContext cct,
 			EntityApp entityapp, String numExpediente) throws ISPACException {
-		if (entityapp != null) {
-			IspacAuditEventEntidadConsultaVO evento = new IspacAuditEventEntidadConsultaVO();
-			AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-			evento.setAppId(IspacAuditConstants.getAppId());
-
-			evento.setIdUser(cct.getUser().getUID());
-			evento.setUser(cct.getUser().getName());
-
-			// TODO: Al avanzar la fase entityapp es nulo!!!
-			evento.setEntidadAppName(entityapp.getAppName());
-			evento.setEntidadAppId(String.valueOf(entityapp.getAppId()));
-
-			// TODO: ¿Añadir también el número de expediente del trámite?
-			evento.setNumExpediente(numExpediente);
-			int id = entityapp.getEntityRegId();
-			evento.setId(Integer.toString(id));
-
-			evento.setFecha(new Date());
-
-			evento.setUserHostName(request.getRemoteHost());
-			evento.setUserIp(request.getRemoteAddr());
-			if (id!=-1){
-				auditoriaManager.audit(evento);
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+			if (entityapp != null) {
+				IspacAuditEventEntidadConsultaVO evento = new IspacAuditEventEntidadConsultaVO();
+				AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+				evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+				evento.setAppId(IspacAuditConstants.getAppId());
+	
+				evento.setIdUser(cct.getUser().getUID());
+				evento.setUser(cct.getUser().getName());
+	
+				// TODO: Al avanzar la fase entityapp es nulo!!!
+				evento.setEntidadAppName(entityapp.getAppName());
+				evento.setEntidadAppId(String.valueOf(entityapp.getAppId()));
+	
+				// TODO: ¿Añadir también el número de expediente del trámite?
+				evento.setNumExpediente(numExpediente);
+				int id = entityapp.getEntityRegId();
+				evento.setId(Integer.toString(id));
+	
+				evento.setFecha(new Date());
+	
+				evento.setUserHostName(request.getRemoteHost());
+				evento.setUserIp(request.getRemoteAddr());
+				if (id!=-1){
+					auditoriaManager.audit(evento);
+				}
 			}
 		}
 	}

@@ -106,7 +106,16 @@ public class Conversor {
     public static void tratarSalidaValidar(ValidarCertificado vc, String xml) throws DocumentException,  ExcepcionAFirma, Exception {
 	xml=Util.cambiarCabeceraXml(xml);
 	//java.io.InputStream is=new java.io.ByteArrayInputStream(new String(xml.getBytes(), "utf-8").getBytes());
-	InputStream is = new ByteArrayInputStream(xml.getBytes("utf-8"));
+	
+		//[Manu Ticket #681] SIGEM Problema con certificado trabajador social La Solana	
+		String stringTmp = new String(xml.getBytes("utf-8")); 
+		stringTmp = stringTmp.replace("/valorCampo>", "</valorCampo>");
+		stringTmp = stringTmp.replace("<</valorCampo>", "</valorCampo>");
+
+		//InputStream is = new ByteArrayInputStream(xml.getBytes("utf-8"));
+		InputStream is = new ByteArrayInputStream(stringTmp.getBytes());
+	
+		//[Manu Ticket #681] SIGEM Problema con certificado trabajador social La Solana
 	SAXReader reader=new SAXReader();
 
 	Document document=reader.read(is);

@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -7,15 +9,18 @@
 		<artifactId>sigem_main_web</artifactId>
 		<version>3.0.1-M2</version>
 	</parent>
-	
+
 	<artifactId>SIGEM_PublicadorWeb</artifactId>
 	<name>SIGEM_PublicadorWeb</name>
 	<packaging>war</packaging>
-	
+
+	<properties>
+		<log4j.version>1.2.13</log4j.version>
+	</properties>
+
 	<dependencies>
 
 		<!-- SIGEM dependencies -->
-		
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_core</artifactId>
@@ -43,7 +48,7 @@
 			<artifactId>sigem_consultaWsClient</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_Terceros</artifactId>
@@ -67,7 +72,7 @@
 			<artifactId>sigem_entidadesWsClient</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_notificacion</artifactId>
@@ -91,7 +96,7 @@
 			<artifactId>sigem_rdeWsClient</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_MensajesCortos</artifactId>
@@ -125,7 +130,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_Tramitacion</artifactId>
@@ -151,8 +156,6 @@
 			<artifactId>ispac-publicador-java</artifactId>
 			<version>${ispac.version}</version>
 		</dependency>
-		
-		
 
 		<dependency>
 			<groupId>es.ieci.tecdoc.iflow</groupId>
@@ -201,7 +204,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.iflow</groupId>
 			<artifactId>ispac-web</artifactId>
@@ -227,7 +230,7 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>${commons.beanutils.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -240,8 +243,21 @@
 			<version>1.4.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.7.0</version>
+			<scope>runtime</scope>
+		</dependency>
+
 	</dependencies>
-	
+
 	<build>
 		<finalName>SIGEM_PublicadorWeb</finalName>
 		<filters>
@@ -252,7 +268,7 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
-		</resources>		
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -279,8 +295,44 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											dependency-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0,)
+										</versionRange>
+										<goals>
+											<goal>unpack</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
-	
+
 	<profiles>
 		<!-- Perfiles de construccion en funcion del S.O. -->
 		<profile>
@@ -305,7 +357,7 @@
 			<properties>
 				<filter.generic.system>${project.basedir}/../../SIGEM_Config/src/main/filters/system/windows.properties</filter.generic.system>
 			</properties>
-		</profile>	
+		</profile>
 	</profiles>
-	
+
 </project>

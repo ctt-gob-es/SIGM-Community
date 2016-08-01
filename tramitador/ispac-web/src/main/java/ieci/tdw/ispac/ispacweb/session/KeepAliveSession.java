@@ -52,8 +52,9 @@ public class KeepAliveSession extends HttpServlet {
 			}
 			
 		} catch (ISPACException e) {
-			logger.warn("Error en el keepAlive", e);
-			
+        	//[Manu Ticket #826] SIGEM La aplicación deja miles de archivos abandonados en la carpeta temporary y el log está saturado de mensajes. Apadrina un fichero
+			logger.info("Error en el keepAlive", e);
+        	//[Manu Ticket #826] SIGEM La aplicación deja miles de archivos abandonados en la carpeta temporary y el log está saturado de mensajes. Apadrina un fichero
 		}
 	}
 

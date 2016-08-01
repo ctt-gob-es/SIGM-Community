@@ -23,6 +23,8 @@ import ieci.tdw.ispac.audit.business.manager.impl.IspacAuditoriaManagerImpl;
 import ieci.tdw.ispac.audit.business.vo.AuditContext;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventDocumentoBajaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventDocumentoConsultaVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.app.EntityApp;
 import ieci.tdw.ispac.ispaclib.app.EntityAppFactory;
@@ -74,7 +76,10 @@ public class EntitiesAPI implements IEntitiesAPI
     public EntitiesAPI(ClientContext context)
     {
         mcontext = context;
-        auditoriaManager = new IspacAuditoriaManagerImpl();
+        
+        //[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
     }
 
     /* (non-Javadoc)
@@ -1220,7 +1225,6 @@ public class EntitiesAPI implements IEntitiesAPI
         IItem document = getEntity(ISPACEntities.DT_ID_DOCUMENTOS, id);
 
         //Auditar consulta del documento
-
         auditConsultaDocumento(id, document);
 
     	return document;
@@ -1232,32 +1236,38 @@ public class EntitiesAPI implements IEntitiesAPI
 	 * @throws ISPACException
 	 */
 	private void auditConsultaDocumento(int id, IItem document) throws ISPACException {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
 
-		IspacAuditEventDocumentoConsultaVO evento = new IspacAuditEventDocumentoConsultaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-
-		evento.setUserHostName("");
-		evento.setUserIp("");
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setIdDocumento(String.valueOf(id));
-		String numExpediente = document.getString("NUMEXP");
-		evento.setNumExpediente(numExpediente);
-
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la creación del documento");
-		auditoriaManager.audit(evento);
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventDocumentoConsultaVO evento = new IspacAuditEventDocumentoConsultaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+	
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setIdDocumento(String.valueOf(id));
+			String numExpediente = document.getString("NUMEXP");
+			evento.setNumExpediente(numExpediente);
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la creación del documento");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
     /* (non-Javadoc)
@@ -3312,6 +3322,7 @@ public class EntitiesAPI implements IEntitiesAPI
 
 	    	String numExpediente = document.getString("NUMEXP");
 	    	String idDoc = String.valueOf(document.getKeyInt());
+	    		    	
 	    	auditEliminacionDocumento(idDoc, numExpediente);
 			// Si todo ha sido correcto se hace commit de la transacción
 			bCommit = true;
@@ -3328,30 +3339,36 @@ public class EntitiesAPI implements IEntitiesAPI
 	 * @param sDocRef
 	 */
 	private void auditEliminacionDocumento(String idDoc, String numExp) {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventDocumentoBajaVO evento = new IspacAuditEventDocumentoBajaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-		evento.setIdDocumento(idDoc);
-		evento.setNumExpediente(numExp);
-
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la creación del documento");
-		auditoriaManager.audit(evento);
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventDocumentoBajaVO evento = new IspacAuditEventDocumentoBajaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			evento.setIdDocumento(idDoc);
+			evento.setNumExpediente(numExp);
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la creación del documento");
+			auditoriaManager.audit(evento);
+	    }
 	}
 
 	/**

@@ -26,7 +26,75 @@ public class ServicioRepositorioDocumentosTramitacionAdapter implements
 	private static final Logger logger = Logger.getLogger(ServicioRepositorioDocumentosTramitacionAdapter.class);
 	
 	private ContenedorDocumentosManager manager;
-	
+
+	/**
+	 * [Ticket 1014 Teresa] Inserta el valor del identificador del fichero y
+	 * borrar los datos de la columna 'contenido'
+	 * 
+	 * @param sessionId
+	 *            Identificador de sesión de la aplicación llamante
+	 * @param guid
+	 *            Identificador del documento a recuperar
+	 * @param idFileRegistroEnt
+	 *            Identificador del file en el registro presencial
+	 * @throws GuidIncorrectoExcepcion
+	 * @throws RepositorioDocumentosExcepcion
+	 */
+	public boolean insertarIdFileBorrarContenido(String guid,
+			String idFileRegistroEnt, Entidad entidad)
+			throws GuidIncorrectoRdeExcepcion,
+			RepositorioDocumentosRdeExcepcion {
+		try {
+			ContenedorDocumentosManager oManager = getManager();
+			return oManager.insertarIdFileBorrarContenido(guid,
+					idFileRegistroEnt, entidad.getIdentificador());
+		} catch (GuidIncorrectoExcepcion e) {
+			logger.error("Error al obtener fichero: guid incorrecto.", e);
+			throw getGuidIncorrectoExcepcion(e,
+					GuidIncorrectoCodigosError.EC_INCORRECT_GUID);
+		} catch (RepositorioDocumentosExcepcion e) {
+			logger.error("Error al obtener fichero.", e);
+			throw getRepositorioDocumentosExcepcion(e, e.getErrorCode());
+		} catch (Throwable e) {
+			logger.error("Error inesperado al obtener fichero.", e);
+			throw new RepositorioDocumentosRdeExcepcion(
+					RepositorioDocumentosCodigosError.EC_RETRIEVE_DOCUMENT);
+		}
+	}
+
+	/**
+	 * Almacena un documento
+	 * 
+	 * @param sessionId
+	 *            Identificador de sesión de la aplicación llamante
+	 * @param extension
+	 *            Extensión del documento
+	 * @param idInfoPagFile
+	 *            Documento a almacenar (infopag de la tabla spac_dt_documentos)
+	 *            *
+	 * @return String Identificador único asignado al documento
+	 * @throws RepositorioDocumentosExcepcion
+	 */
+	public String storeDocumentInfoPag(String sessionId, Entidad entidad,
+			String idInfoPagFile, String extension)
+			throws GuidIncorrectoRdeExcepcion,
+			RepositorioDocumentosRdeExcepcion {
+		try {
+			ContenedorDocumentosManager oManager = getManager();
+			return oManager.storeDocumentInfoPag(sessionId,
+					entidad.getIdentificador(), idInfoPagFile, extension);
+		} catch (RepositorioDocumentosExcepcion e) {
+			logger.error("Error al obtener fichero.", e);
+			throw getRepositorioDocumentosExcepcion(e, e.getErrorCode());
+		} catch (Throwable e) {
+			logger.error("Error inesperado al obtener fichero.", e);
+			throw new RepositorioDocumentosRdeExcepcion(
+					RepositorioDocumentosCodigosError.EC_RETRIEVE_DOCUMENT);
+		}
+	}
+
+	// [Tere #1014] FIN
+
 	  /**
 	   * Recupera la información del documento cuyo guid es el pasado como parámetro
 	   * @param sessionId Identificador de sesión de la aplicación llamante

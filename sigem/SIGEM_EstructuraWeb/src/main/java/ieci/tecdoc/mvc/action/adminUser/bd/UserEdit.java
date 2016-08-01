@@ -146,6 +146,8 @@ public class UserEdit extends BaseAction {
 		user.getUserDataImpl().setIdCert(userForm.getIdCert());
 		user.getUserDataImpl().setApellidos(userForm.getApellidos());
 		user.getUserDataImpl().setNombre(userForm.getNombrePersonal());
+		//[Manu Ticket#175] Crear un campo con dni en el usuario
+		user.getUserDataImpl().setDni(userForm.getDni());
 
 		// Perfiles del usuario
 		// user.resetProfiles();
@@ -281,6 +283,8 @@ public class UserEdit extends BaseAction {
 			userForm.setIdCert(userData.getIdCert());
 			userForm.setApellidos(userData.getApelliidos());
 			userForm.setNombrePersonal(userData.getNombre());
+			//[Manu Ticket#175] Crear un campo con dni en el usuario
+			userForm.setDni(userData.getDni());
 
 		}
 

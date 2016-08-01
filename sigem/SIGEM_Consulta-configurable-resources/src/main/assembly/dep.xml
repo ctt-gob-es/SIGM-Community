@@ -29,6 +29,20 @@
 				<include>log4j.*</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>../SIGEM_ConsultaWebMiembros/src/main/resources/SIGEM_ConsultaWebMiembros</directory>
+			<outputDirectory>/SIGEM_ConsultaWebMiembros</outputDirectory>
+			<includes>
+				<include>log4j.*</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>../SIGEM_ConsultaWebMiembros/src/main/resources/SIGEM_ConsultaWebMiembros</directory>
+			<outputDirectory>/SIGEM_ConsultaWebMiembros</outputDirectory>
+			<includes>
+				<include>skin*/</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 
 </assembly>

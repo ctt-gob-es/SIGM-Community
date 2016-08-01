@@ -21,7 +21,7 @@
 				</property>
 			</activation>
 			<modules>
-				<module>SIGEM_Core</module>
+				<!--module>SIGEM_Core</module-->
 				<module>SIGEM_FirmaDigital</module>
 				<module>SIGEM_CriptoValidacion</module>
 				<module>SIGEM_Consolidacion</module>
@@ -33,7 +33,12 @@
 				<module>SIGEM_RegistroTelematico_Modules</module>
 				<module>SIGEM_Tramitacion_Modules</module>
 				<module>SIGEM_Archivo_Modules</module>
-				<module>SIGEM_Scheduler_Modules</module>
+
+			<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto 햞bol Documental.-->
+				<module>SIGEM_ArbolDocumentalWeb</module>
+			<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto 햞bol Documental.-->
+				<!-- [Teresa]Ticket#1020 -->
+				<!-- <module>SIGEM_Scheduler_Modules</module> -->
 				<module>SIGEM_Terceros_Modules</module>
 				<module>SIGEM_GestionCSV_Modules</module>
 				<module>SIGEM_SignoWS_Modules</module>
@@ -77,10 +82,10 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<modules>
-				<module>sigem_main</module>
+				<!--<module>sigem_main</module>-->
 				<module>SIGEM_TestResources</module>
 				<module>SIGEM_ConfigLocation</module>
-				<module>SIGEM_Core</module>
+				<!--module>SIGEM_Core</module-->
 				<module>SIGEM_Tiempos</module>
 				<module>SIGEM_Calendario</module>
 				<module>SIGEM_CalendarioWSClient</module>
@@ -175,7 +180,7 @@
 				</property>
 			</activation>
 			<modules>
-				<module>sigem_main</module>
+				<!--<module>sigem_main</module>-->
 				<module>SIGEM_TestResources</module>
 				<module>SIGEM_AdministracionSesionesAdmWS</module>   <!--WAR-->
 				<module>SIGEM_AdministracionSesionesBackOfficeWS</module>   <!--WAR-->
@@ -194,6 +199,7 @@
 				<module>SIGEM_CertificacionWeb</module>  <!--WAR-***** muchas dependencias transitivas nuevas -->
 				<module>SIGEM_CertificacionWS</module>  <!--WAR-->
 				<module>SIGEM_ConsultaWeb</module>    <!--WAR-->
+				<module>SIGEM_ConsultaWebMiembros</module>    <!--WAR-->
 				<module>SIGEM_ConsultaWS</module>    <!--WAR-->
 				<module>SIGEM_CriptoValidacionWS</module>   <!--WAR-->
 				<module>SIGEM_EntidadesWS</module>   <!--WAR-->
@@ -220,6 +226,10 @@
 				<module>SIGEM_ConsultaExpedienteBackOfficeWeb</module>
 				<module>SIGEM_GestionCSV_Modules</module>
 				<module>SIGEM_SignoWS_Modules</module>
+
+			<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto 햞bol Documental.-->
+				<module>SIGEM_ArbolDocumentalWeb</module>
+			<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto 햞bol Documental.-->
 
 				<module>SIGEM_Config_Fwktd</module>
 				<module>SIGEM_Config</module>
@@ -300,8 +310,11 @@
 									<tasks>
 										<property name="dist.dir" value="${basedir}/SIGEM_DIST"/>
 
-										<delete dir="${dist.dir}"/>
-										<mkdir dir="${dist.dir}"/>
+										<delete>
+											<fileset dir="${dist.dir}" includes="*.*"/>
+										</delete>
+										<!--<delete dir="${dist.dir}"/>
+										<mkdir dir="${dist.dir}"/>-->
 
 										<copy overwrite="true" todir="${dist.dir}" verbose="true">
 											<fileset dir="${basedir}\SIGEM_AdministracionSesionesAdmWS\target" includes="*.war"/>
@@ -321,6 +334,7 @@
 											<fileset dir="${basedir}\SIGEM_CertificacionWeb\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_CertificacionWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_ConsultaWeb\target" includes="*.war"/>
+											<fileset dir="${basedir}\SIGEM_ConsultaWebMiembros\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_ConsultaWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_CriptoValidacionWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_EntidadesWS\target" includes="*.war"/>
@@ -363,6 +377,11 @@
 											<fileset dir="${basedir}\SIGEM_GestionCSV_Modules\SIGEM_GestionCSVWeb\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_GestionCSV_Modules\SIGEM_GestionCSVWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_SignoWS_Modules\SIGEM_SignoWS\target" includes="*.war"/>
+
+										<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto 햞bol Documental.-->
+											<fileset dir="${basedir}\SIGEM_ArbolDocumentalWeb\target" includes="*.war"/>
+										<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto 햞bol Documental.-->
+
 											<fileset dir="${basedir}\SIGEM_Config\target" includes="*.zip"/>
 											<fileset dir="${basedir}\SIGEM_BD_DIST\target" includes="*.zip"/>
 										</copy>

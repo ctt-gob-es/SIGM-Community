@@ -6,13 +6,16 @@ import ieci.tdw.ispac.api.graph.GInfo;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.ispaclib.dao.ObjectDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.CTManualUsuarioDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.TemplateDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.xml.XmlCTEntityDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.xml.XmlCTHierarchyDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.xml.XmlCTManualUsuarioDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.xml.XmlCTRuleDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.xml.XmlCTStageDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.xml.XmlCTTaskDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.xml.XmlCTTpDocDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.xml.XmlManualUsuarioDAO;
 import ieci.tdw.ispac.ispaclib.dao.system.InfoSistemaDAO;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
@@ -183,6 +186,22 @@ public class ExportProcedureMgr {
 	public static final String TAG_HIERARCHICAL_FIELD_TIPO = "Tipo";
 	public static final String TAG_HIERARCHICAL_FIELD_DESCRIPCION = "Descripcion";
 
+    //[eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	public static final String TAG_MANUALES_USUARIO = "ManualesUsuario";
+	public static final String TAG_MANUAL_USUARIO = "ManualUsuario";
+	public static final String TAG_MANUAL_USUARIO_NAME = "Nombre";
+	public static final String TAG_MANUAL_USUARIO_DESCRIPCION = "Descripcion";
+	public static final String TAG_MANUAL_USUARIO_URL = "Url";
+	public static final String TAG_MANUAL_USUARIO_FECHA = "Fecha";
+	public static final String TAG_MANUAL_USUARIO_VERSION = "Version";
+	public static final String TAG_MANUAL_USUARIO_VISIBILIDAD = "Visibilidad";
+	public static final String TAG_MANUAL_USUARIO_TIPO = "Tipo";
+
+	public static final String MANUAL_USUARIO_FILE_EXTENSION = ".tmp";
+	public static final String MANUAL_USUARIO_FILE_PREFIX = "MU-";
+	//[eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+
+	
 
 	public static final String TAG_HELPS="Helps";
 	public static final String TAG_HELP="Help";
@@ -253,6 +272,8 @@ public class ExportProcedureMgr {
 	 * @param ctRuleIds
 	 * @param ctEntityIds
 	 * @param ctTpDocIds
+	 * @param ctManualesUsuarioIds
+	 * @param manualesusuario
 	 * @param subPcdIds
 	 * @return
 	 * @throws ISPACException
@@ -264,6 +285,7 @@ public class ExportProcedureMgr {
     									Map ctRuleIds,
     									Map ctEntityIds,
     									Map ctTpDocIds,
+    									Map ctManualesUsuarioIds, List manualesUsuario,
     									Map subPcdIds) throws ISPACException {
 
     	StringBuffer buffer = new StringBuffer();
@@ -271,7 +293,7 @@ public class ExportProcedureMgr {
     	while (it.hasNext()) {
 
     		IPcdElement el = (IPcdElement) it.next();
-    		buffer.append(el.toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds));
+    		buffer.append(el.toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds, ctManualesUsuarioIds, manualesUsuario));
     	}
 
     	return buffer.toString();
@@ -711,6 +733,7 @@ public class ExportProcedureMgr {
      *
      * @param cnt
      * @param xpdl
+     * @param manualesUsuario
      * @param templates
      * @param path
      * @param formatters
@@ -724,7 +747,8 @@ public class ExportProcedureMgr {
      */
     public static File createProcedureZipFile(DbCnt cnt,
     										  String xpdl,
-    										  List templates,
+    										  List templates,    										  
+    										  List manualesUsuario,
     										  String path,
     										  Map formatters,
     										  List entityClasses,
@@ -765,6 +789,23 @@ public class ExportProcedureMgr {
 					out.closeEntry();
 				}
 			}
+			
+			// [eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+			if (!manualesUsuario.isEmpty()) {
+
+				Iterator it = manualesUsuario.iterator();
+				while (it.hasNext()) {
+
+					CTManualUsuarioDAO manualUsuarioDAO = (CTManualUsuarioDAO) it.next();
+
+					// Plantilla
+					out.putNextEntry(new ZipEntry(String.valueOf(ExportProcedureMgr.MANUAL_USUARIO_FILE_PREFIX + manualUsuarioDAO.getKeyInt()) + ExportProcedureMgr.MANUAL_USUARIO_FILE_EXTENSION));
+					manualUsuarioDAO.getManualUsuario(cnt, out);
+					// Finalizar entrada
+					out.closeEntry();
+				}
+			}
+			//[eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 
 			// Readme con instrucciones
 			StringBuffer readme = new StringBuffer();
@@ -912,5 +953,37 @@ public class ExportProcedureMgr {
 
 		return XmlTag.newTag(ExportProcedureMgr.TAG_DEPENDENCIES, buffer.toString());
 	}
-  
+ 
+	/**
+    *
+    * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+    * @param cnt
+    * @param ctTpDocIds
+    * @param procedureId
+    * @param templates
+    * @return
+    * @throws ISPACException
+    */
+   public static String ctManualesUsuarioToXml(DbCnt cnt,
+   								   Map ctManualUsuarioIds,
+   								   int procedureId,
+   								   List manualesUsuario) throws ISPACException {
+
+   	StringBuffer buffer = new StringBuffer();
+
+   	if (!ctManualUsuarioIds.isEmpty()) {
+
+   		IItemCollection ctManualesUsuario = ObjectDAO.getByIds(cnt, XmlCTManualUsuarioDAO.class, ctManualUsuarioIds, null).disconnect();
+   		while (ctManualesUsuario.next()) {
+
+   			XmlCTManualUsuarioDAO xmlCTManualUsuarioDAO = (XmlCTManualUsuarioDAO) ctManualesUsuario.value();
+//   			buffer.append(xmlCTManualUsuarioDAO.export(cnt, procedureId, manualesUsuario));
+   			buffer.append(xmlCTManualUsuarioDAO.export(cnt));
+   			manualesUsuario.add(xmlCTManualUsuarioDAO);
+   		}
+   	}
+
+   	return buffer.toString();
+   }
+	
 }

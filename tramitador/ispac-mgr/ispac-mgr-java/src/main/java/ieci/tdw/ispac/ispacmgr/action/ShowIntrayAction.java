@@ -10,11 +10,15 @@ import ieci.tdw.ispac.api.item.Properties;
 import ieci.tdw.ispac.api.item.Property;
 import ieci.tdw.ispac.api.item.util.ListCollection;
 import ieci.tdw.ispac.ispaclib.bean.CollectionBean;
+import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.item.GenericItem;
 import ieci.tdw.ispac.ispaclib.sicres.vo.Annexe;
 import ieci.tdw.ispac.ispaclib.sicres.vo.Intray;
 import ieci.tdw.ispac.ispaclib.utils.ArrayUtils;
 import ieci.tdw.ispac.ispacmgr.menus.MenuFactory;
+import ieci.tdw.ispac.ispacweb.api.IManagerAPI;
+import ieci.tdw.ispac.ispacweb.api.IState;
+import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
 
 import java.sql.Types;
 import java.util.ArrayList;
@@ -40,8 +44,12 @@ public class ShowIntrayAction extends BaseAction {
 		String intrayId = request.getParameter("id");
 
 	    // Menú
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		ClientContext cct = session.getClientContext();
+		IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(cct);
+		IState state = managerAPI.currentState(getStateticket(request));
 	    request.setAttribute("menus", MenuFactory.getIntrayMenu(session.getClientContext(), 
-	    		getResources(request)));
+	    		getResources(request), state));
 
         // Datos asociados al registro de entrada
 		Intray intray = inboxAPI.getIntray(intrayId);

@@ -31,6 +31,14 @@
 		<invesdoc.sigia.version>8.6.1</invesdoc.sigia.version>
 
 	</properties>
+	
+	<pluginRepositories>
+		<pluginRepository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<build>
 		<finalName>${warName}</finalName>
@@ -75,7 +83,7 @@
 							<goal>unpack-dependencies</goal>
 						</goals>
 						<configuration>
-							<classifier>configurable</classifier>
+							<!--<classifier>configurable</classifier>-->
 							<includeTypes>zip</includeTypes>
 							<excludeTypes>jar</excludeTypes>
 							<type>zip</type>
@@ -133,6 +141,14 @@
 			<plugin>
 				<groupId>es.ieci.maven.plugins</groupId>
 				<artifactId>maven-generate-resources-archivo-plugin</artifactId>
+				<version>1.0</version>
+				<dependencies>
+					<dependency>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+						<version>${commons-logging.version}</version>
+					</dependency>
+				</dependencies>
 				<executions>
 					<execution>
 						<id>modified-resources</id>
@@ -173,6 +189,7 @@
 								<param>${basedir}/../archidoc_specific_resources/archidoc_specific_resources_${name}/application/ApplicationResources_eu_ES.properties
 								</param>
 							</pathFicherosEspecificos>
+							<source>${project.basedir}/lib/maven-generate-resources-archivo-plugin-1.0.jar</source>
 						</configuration>
 					</execution>
 				</executions>
@@ -225,7 +242,11 @@
 			<scope>provided</scope>
 		</dependency>
 
-
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${commons-logging.version}</version>
+		</dependency>
 
 	</dependencies>
 	<profiles>

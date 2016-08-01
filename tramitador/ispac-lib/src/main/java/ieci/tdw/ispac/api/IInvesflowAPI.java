@@ -385,4 +385,13 @@ public interface IInvesflowAPI extends Serializable
 	 */
 	public IRegisterAPI getRegisterAPI()  throws ISPACException;
 	
+	/**
+	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	 * 
+	 * Obtiene el interface {@link ITemplateAPI}
+	 * @return el interface IManualUsuarioAPI
+	 * @throws ISPACException
+	 */
+	public IManualUsuarioAPI getManualUsuarioAPI() throws ISPACException;
+	
 }

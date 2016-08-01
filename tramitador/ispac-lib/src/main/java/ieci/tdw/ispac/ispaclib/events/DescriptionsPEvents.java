@@ -75,6 +75,9 @@ public class DescriptionsPEvents {
         DESCEVENT_MAP.put(new Integer(EventsDefines.EVENT_EXEC_AFTER_RESTORE), "events.exec.after.restore");
         DESCEVENT_MAP.put(new Integer(EventsDefines.EVENT_EXEC_BEFORE_DELETE), "events.exec.before.delete");
         DESCEVENT_MAP.put(new Integer(EventsDefines.EVENT_EXEC_AFTER_DELETE), "events.exec.after.delete");
+        
+        //[eCenpri-Manu Ticket#129] ALSIGM3 Crear nuevo evento al relacionar expediente.        
+        DESCEVENT_MAP.put(new Integer(EventsDefines.EVENT_EXEC_RELACIONAR), "events.exec.relacionar");
 
         //Carga del mapa con todos los eventos existentes
         DescriptionsPEvents.buildEventBeanList();
@@ -98,6 +101,7 @@ public class DescriptionsPEvents {
 		                EventsDefines.EVENT_EXEC_DELEGATE
                 		}));
 
+        //[eCenpri-Manu Ticket#129] ALSIGM3 Crear nuevo evento al relacionar expediente.        
         DESCEVENT_BEAN_TPOBJ_MAP.put(new Integer(EventsDefines.EVENT_OBJ_PROCEDURE),buildListDescription(new int[]{
 		                EventsDefines.EVENT_EXEC_START,
 		                EventsDefines.EVENT_EXEC_START_AFTER,
@@ -118,7 +122,8 @@ public class DescriptionsPEvents {
 		                EventsDefines.EVENT_EXEC_BEFORE_RESTORE,
 		                EventsDefines.EVENT_EXEC_AFTER_RESTORE,
 		                EventsDefines.EVENT_EXEC_BEFORE_DELETE,
-		                EventsDefines.EVENT_EXEC_AFTER_DELETE
+		                EventsDefines.EVENT_EXEC_AFTER_DELETE,
+		                EventsDefines.EVENT_EXEC_RELACIONAR
             			}));
 
         DESCEVENT_BEAN_TPOBJ_MAP.put(new Integer(EventsDefines.EVENT_OBJ_SUBPROCEDURE),buildListDescription(new int[]{

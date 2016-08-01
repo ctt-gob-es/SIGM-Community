@@ -4,6 +4,13 @@
 <%@ taglib uri="/WEB-INF/ispac-util.tld" prefix="ispac" %>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
 
+<c:set var="_listaDocs" value="${batchSignForm.listaDocs}"/>
+<jsp:useBean id="_listaDocs" type="java.lang.String"/>
+<c:set var="_codEntidad" value="${batchSignForm.codEntidad}"/>
+<jsp:useBean id="_codEntidad" type="java.lang.String"/>
+<c:set var="_serialNumber" value="${batchSignForm.serialNumber}"/>
+<jsp:useBean id="_serialNumber" type="java.lang.String"/>
+
 <!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 	<head>
@@ -13,27 +20,85 @@
 		<link rel="stylesheet" href='<ispac:rewrite href="css/estilos.css"/>'/>
 		<!--[if lte IE 5]>
 			<link rel="stylesheet" type="text/css" href='<ispac:rewrite href="css/estilos_ie5.css"/>'/>
-		<![endif]-->
+		<![endif]-->	
 
 		<!--[if IE 6]>
 			<link rel="stylesheet" type="text/css" href='<ispac:rewrite href="css/estilos_ie6.css"/>'>
-		<![endif]-->
+		<![endif]-->	
 
-		<!--[if gte IE 7]>
+		<!--[if IE 7]>
 			<link rel="stylesheet" type="text/css" href='<ispac:rewrite href="css/estilos_ie7.css"/>'>
 		<![endif]-->
+	
+	    	<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery-1.3.2.min.js"/>'></script>
+	 	<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery-ui-1.7.2.custom.min.js"/>'></script>
+	 	<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery.alerts.js"/>'></script>
+		<script type="text/javascript" src='<ispac:rewrite href="../scripts/utilities.js"/>'></script>
+		
+		<script type="text/javascript" language="javascript" src="ispac/applets/afirma/common-js/deployJava.js"></script>
+		<script type="text/javascript" language="javascript" src="ispac/applets/afirma/common-js/miniapplet.js"></script>
+		<script type="text/javascript" language="javascript" src="ispac/applets/afirma/common-js/firma3f.js"></script>
+	</head>
 
-   <script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery-1.3.2.min.js"/>'></script>
- 	<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery-ui-1.7.2.custom.min.js"/>'></script>
- 	<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery.alerts.js"/>'></script>
-	<script type="text/javascript" src='<ispac:rewrite href="../scripts/utilities.js"/>'></script>
-	<ispac:javascriptLanguage/>
-</head>
-<body>
+	<body>
+		
+		<script type="text/javascript">					 
+						var secs = 0;
+						var timerID = null;
+						var timerRunning = false;
+						var delay = 1000;
+						 
+						function Delay()
+						{
+						    // seteo el tiempo del delay				    	    
+						    secs = 1;
+						    StopTheClock();
+						    StartTheTimer();
+						}
+						 
+						function StopTheClock()
+						{
+						    if(timerRunning)
+						        clearTimeout(timerID);
+						    timerRunning = false;
+						}
+						 
+						function StartTheTimer()
+						{
+						    if (secs==0)
+						    {
+						        StopTheClock();
+						        document.getElementById('etiqueta_applet').style.display='none';
+						        document.getElementById('btn_firma').style.display=''; 
+						    }
+						    else
+						    {
+						        self.status = secs;
+						        secs = secs - 1;
+						        timerRunning = true;
+						        timerID = self.setTimeout("StartTheTimer()", delay);
+						    }
+						}			 
+		</script>		
+		
+		<%@ page import = "es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration"%>
+		<%@ page import = "ieci.tdw.ispac.ispaclib.session.OrganizationUser"%>
+		<%@ page import = "ieci.tdw.ispac.ispaclib.session.OrganizationUserInfo"%>
+		<% 
+				   OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+				   String entityId = info.getOrganizationId();
+				   FirmaConfiguration fc = FirmaConfiguration.getInstanceNoSingleton(entityId);
+				   String host = fc.getProperty("firmar.ip.https");
+		%> 
+					
+		<script type="text/javascript">
+								cargarMiniApplet3f("<%=host %>");
+		</script>   		
+	
 	<html:form action="/batchSign">
 	<div id="contenido" class="move">
-		<div class="ficha">
-			<div class="encabezado_ficha">
+			<div class="ficha">
+				<div class="encabezado_ficha">
 				<div class="titulo_ficha">
 					<div class="acciones_ficha">
 						<a href="#" id="btnCancel" onclick='<ispac:hideframe/>' class="btnCancel">
@@ -45,31 +110,44 @@
 
 			<div class="cuerpo_ficha">
 				<div class="seccion_ficha">
-
+				
 					<logic:messagesPresent>
 						<div class="infoError">
 							<bean:message key="forms.errors.messagesPresent" />
 						</div>
-					</logic:messagesPresent>
-
+					</logic:messagesPresent> 
+					
 					<html:hidden property="method" value="batchSign"/>
 					<html:hidden property="signs" styleId="sign"/>
+					<input type="hidden" id="listaDocs" value='<%=_listaDocs%>'/>
+					<input type="hidden" id="codEntidad" value='<%=_codEntidad%>'/>
+					<input type="hidden" id="serialNumber" value='<%=_serialNumber%>'/>
 					<html:hidden property="signCertificate" styleId="signCertificate" />
-					<html:hidden property="signFormat" styleId="signFormat" />
-					<div class="firma">
-					 <html:submit styleId="submit" styleClass="form_button_white" onclick="return doSign();">
-							<bean:message key="forms.button.sign"/>
-					</html:submit>
-					<p  id="enCurso"   class="center" style="display:none;" >
-								<label class="boldlabel"   >
-									<bean:message key="msg.layer.signOperationInProgress"/>
-								</label>
-					</p>
-					</div>
-					<%-- Llamada al componente de firma --%>
-					<c:set var="hashCodes" value="${batchSignForm.hashs}"/>
-					<ispac:sign var="hashCodes" massive="true"/>
+					
 
+							<div id='etiqueta_applet' style='display:none;text-align:center;color:#0033FF;font-size:13px'>
+										<label>Cargando programa de firma...</label>
+										<br/><br/>
+										<img src="apps/sign/ajax-loader.gif" alt='En proceso...'/>
+							</div>								
+								
+							<div id='etiqueta' style='display:none;text-align:center;color:#0033FF;font-size:13px'>
+										<label>Realizando proceso firma...</label>
+										<br/><br/>
+										<img src="apps/sign/ajax-loader.gif" alt='En proceso...'/>
+							</div>		
+
+							<div id='btn_firma' style='display:none;' class="firma">
+								 		<a href="#" id="btnSubmit"
+												class="form_button_white"
+												onclick="javascript:
+													this.style.visibility='hidden';
+													document.getElementById('etiqueta').style.display='';
+													document.getElementById('btnCancel').style.display='none';
+													setTimeout('firmar3f()', 100);">
+												<bean:message key="forms.button.sign"/>
+										</a>		
+							</div>			
 				</div>
 			</div>
 		</div>
@@ -79,26 +157,16 @@
 </html>
 
 <script type="text/javascript" language="javascript">
-//<!--
-	function doInitSign() {
-		if (typeof initSign != 'undefined') {
-			initSign();
-		}
-	}
-
-	function doSign() {
-		if (typeof sign != 'undefined') {
-			document.getElementById("submit").style.display='none';
-			document.getElementById("enCurso").style.display='block';
-			return sign();
-		}
-		return false;
-	}
-
-	positionMiddleScreen('contenido');
-	$(document).ready(function(){
-		$("#contenido").draggable();
-	});
-	doInitSign();
-//--!>
+		//<!--
+			positionMiddleScreen('contenido');
+			$(document).ready(
+				function(){
+					$("#contenido").draggable();
+				}
+			);
+		//--!>
+</script>
+<script>						
+		document.getElementById('etiqueta_applet').style.display='';
+		Delay();									
 </script>

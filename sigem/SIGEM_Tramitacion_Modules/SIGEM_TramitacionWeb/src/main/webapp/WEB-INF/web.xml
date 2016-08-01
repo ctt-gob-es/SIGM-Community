@@ -9,6 +9,10 @@
 	  <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>   
 	  <param-value>ieci.tdw.ispac.ispacmgr.resources.ApplicationResources</param-value>
 	</context-param>
+	
+	<listener>
+		<listener-class>es.dipucr.tablonEdictalUnico.quartz.listener.SchedulerInitializerListener</listener-class>
+	</listener>
 	    
 	<filter>
 		<filter-name>EncodingFilter</filter-name>
@@ -152,7 +156,31 @@
 			<param-value>false</param-value>
 		</init-param>
 	</servlet>
+	
+	<servlet>
+        <servlet-name>template</servlet-name>
+        <servlet-class>ieci.tdw.ispac.ispacweb.webdav.servlets.TemplateServlet</servlet-class>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>999</param-value>
+        </init-param>
+    </servlet>
    
+<!--    [eCenpri-Manu Ticket #307] - INICIO - ALSIGM3 Logotipo Entidad en Documentos -->
+   <servlet>
+    	<servlet-name>ImagenesServlet</servlet-name>
+    	<servlet-class>es.dipucr.sigem.servlets.ImagenesServlet</servlet-class>
+    	<init-param>
+    		<param-name>subdir</param-name>
+    		<param-value>/SIGEM_TramitacionWeb</param-value>
+    	</init-param>
+    	<init-param>
+    		<param-name>defaultSkin</param-name>
+    		<param-value>skinDefecto</param-value>
+    	</init-param>
+    </servlet>
+<!--     [eCenpri-Manu Ticket #307] - FIN - ALSIGM3 Logotipo Entidad en Documentos -->
+    
     <servlet-mapping>
         <servlet-name>action</servlet-name>
         <url-pattern>*.do</url-pattern>
@@ -185,6 +213,18 @@
 		<servlet-name>dwr-invoker</servlet-name>
 		<url-pattern>/dwr/*</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+        <servlet-name>template</servlet-name>
+        <url-pattern>/template/*</url-pattern>
+    </servlet-mapping>
+    
+<!--     [eCenpri-Manu Ticket #307] - INICIO - ALSIGM3 Logotipo Entidad en Documentos -->
+    <servlet-mapping>
+		<servlet-name>ImagenesServlet</servlet-name>
+		<url-pattern>/imagenesServlet/*</url-pattern>
+	</servlet-mapping>
+<!-- 	[eCenpri-Manu Ticket #307] - FIN - ALSIGM3 Logotipo Entidad en Documentos -->
 	
     <session-config>
         <session-timeout>30</session-timeout>

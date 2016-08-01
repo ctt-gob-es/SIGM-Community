@@ -42,7 +42,7 @@
 				 fieldType='LIST'
 				 headerClass='sortable'
 				 media='html'
-				 columnClass="width15percent"
+				 columnClass="width10percent"
 				 sortable='true'
 				 />
 
@@ -62,7 +62,7 @@
 				 fieldType='LIST'
 				 headerClass='sortable'
 				 media='html'
-				 columnClass="width15percent"
+				 columnClass="width10percent"
 				 sortable='true'
 				 />
 				 
@@ -83,7 +83,7 @@
 				 fieldType='LIST'
 				 headerClass='sortable'
 				 media='html'
-				 columnClass="width15percent"
+				 columnClass="width10percent"
 				 sortable='true'
 				 comparator='ieci.tdw.ispac.ispacweb.comparators.DateComparator'
 				 />
@@ -106,7 +106,7 @@
 				 fieldType='LIST_FROMRESOURCES'
 				 headerClass='sortable'
 				 media='html'
-				 columnClass="width15percent"
+				 columnClass="width10percent"
 				 sortable='true'
 				 />
 				 
@@ -139,6 +139,28 @@
 				 fieldType='LIST_EXPORTFROMRESOURCES'
 				 headerClass='sortable'
 				 media='csv excel xml pdf'
+				 sortable='true'
+				 />
+				 
+	<propertyfmt type="BeanPropertySimpleFmt"
+				 property='SPAC_AVISOS_ELECTRONICOS:MENSAJE'
+				 readOnly='false'
+				 titleKey='formatter.notices.mensaje'
+				 fieldType='LIST_EXPORTFROMRESOURCES'
+				 headerClass='sortable'
+				 media='html'
+				 columnClass="width30percent"
+				 sortable='true'
+				 />
+				 
+	<propertyfmt type="BeanPropertySimpleFmt"
+				 property='SPAC_AVISOS_ELECTRONICOS:MENSAJE'
+				 readOnly='false'
+				 titleKey='formatter.notices.mensaje'
+				 fieldType='LIST_EXPORTFROMRESOURCES'
+				 headerClass='sortable'
+				 media='csv excel xml pdf'
+				 columnClass="width30percent"				 
 				 sortable='true'
 				 />
 

@@ -12,6 +12,14 @@
 	<packaging>jar</packaging>
 	<name>fwktd-dir3-api</name>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<!-- fwktd-dir3 dependencies -->
@@ -69,7 +77,6 @@
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc14</artifactId>
 			<version>${oracle.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>postgresql</groupId>

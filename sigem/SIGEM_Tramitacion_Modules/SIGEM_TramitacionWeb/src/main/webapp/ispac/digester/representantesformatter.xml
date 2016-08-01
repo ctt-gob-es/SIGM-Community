@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+
+	<!-- Ponemos 2 veces la propiedad Nombre, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE' 
+				 titleKey='SPAC_DT_INTERVINIENTES:NOMBRE' 
+				 fieldType='LINK'
+				 columnClass='width30percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE' 
+				 titleKey='SPAC_DT_INTERVINIENTES:NOMBRE' 
+				 fieldType='LIST'
+				 columnClass='width30percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NDOC' 
+				 titleKey='SPAC_DT_INTERVINIENTES:NUMDOCUMENTO' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='TIPO_PODER' 
+				 titleKey='SPAC_DT_INTERVINIENTES:TIPO_PODER' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='FECHA_INI' 
+				 titleKey='SPAC_DT_INTERVINIENTES:FECHA_INI' 
+				 fieldType='LIST' 
+				 columnClass='width20percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='FECHA_FIN' 
+				 titleKey='SPAC_DT_INTERVINIENTES:FECHA_FIN' 
+				 fieldType='LIST' 
+				 columnClass='width20percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+</beanformatter>

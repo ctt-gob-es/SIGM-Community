@@ -19,6 +19,14 @@
 		<dwr.version>2.0.10</dwr.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -97,6 +105,42 @@
 				<exclusion>
 					<groupId>jfree</groupId>
 					<artifactId>jcommon</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.ws.commons.schema</groupId>
+					<artifactId>XmlSchema</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.iflow</groupId>
+			<artifactId>ispac-lib</artifactId>
+			<version>${ispac.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.ws.commons.schema</groupId>
+					<artifactId>XmlSchema</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>es.dipucr</groupId>
+					<artifactId>itext</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>es.dipucr.itext</groupId>
+					<artifactId>itextpdf</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>es.dipucr.itext2</groupId>
+					<artifactId>itextpdf</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.itextpdf</groupId>
+					<artifactId>itextpdf</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>jasperreports</groupId>
+					<artifactId>jasperreports</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -350,6 +394,18 @@
 			<groupId>axis</groupId>
 			<artifactId>axis</artifactId>
 			<version>1.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>wsdl4j</groupId>
+					<artifactId>wsdl4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.6.2</version>
 		</dependency>
 
 		<dependency>
@@ -427,10 +483,6 @@
 			<version>${pom.version}</version>
 			<exclusions>
 				<exclusion>
-					<groupId>org.apache.ant</groupId>
-					<artifactId>ant</artifactId>
-				</exclusion>
-				<exclusion>
 					<groupId>es.ieci.tecdoc.sigem</groupId>
 					<artifactId>sigem_registroPresencial</artifactId>
 				</exclusion>
@@ -449,10 +501,6 @@
 				<exclusion>
 					<groupId>org.openoffice</groupId>
 					<artifactId>juh</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.openoffice</groupId>
-					<artifactId>unoil</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>struts</groupId>
@@ -477,6 +525,27 @@
 				<exclusion>
 					<groupId>xalan</groupId>
 					<artifactId>xalan</artifactId>
+				</exclusion>
+				
+				<exclusion>
+					<groupId>es.dipucr</groupId>
+					<artifactId>itext</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>es.dipucr.itext</groupId>
+					<artifactId>itextpdf</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>es.dipucr.itext2</groupId>
+					<artifactId>itextpdf</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.itextpdf</groupId>
+					<artifactId>itextpdf</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>jasperreports</groupId>
+					<artifactId>jasperreports</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -528,7 +597,45 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!-- [Manu Ticket #1090] - INICIO Poner en marcha la opción Consulta de Expedientes.-->		
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>SIGEM_Terceros</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+		<!-- [Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.-->
 
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>DipucrFuncionesComunes</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr.contratacion</groupId>
+			<artifactId>Contratacion</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>DipucrRules</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.dipucr.subvenciones</groupId>
+			<artifactId>Subvenciones</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>xtom</groupId>
+			<artifactId>xtom</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

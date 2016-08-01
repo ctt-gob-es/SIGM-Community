@@ -32,6 +32,10 @@ public class UserForm extends ActionForm{
     String descripcion;
     String nombrePersonal;
     String apellidos;
+    
+	//[Manu Ticket#175] Crear un campo con dni en el usuario
+    String dni;
+    
     boolean pwdmbc;
     boolean pwdvpcheck;
 
@@ -72,6 +76,8 @@ public class UserForm extends ActionForm{
         if (logger.isDebugEnabled())
             logger.debug("#User Form Reset!");
         int id = -1 ;
+
+        //[Manu Ticket#175] Crear un campo con dni en el usuario
         nombre =
         descripcion =
         pwd =
@@ -85,6 +91,7 @@ public class UserForm extends ActionForm{
         tfnoMovil =
         nombrePersonal=
         apellidos=
+        dni =
         "";
 
 
@@ -400,6 +407,24 @@ public class UserForm extends ActionForm{
 	 */
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
+	}
+	
+	
+	/**
+	 * [Manu Ticket#175] Crear un campo con dni en el usuario
+	 * @return el apellidos
+	 */
+	public String getDni() {
+		return dni;
+	}
+
+
+	/**
+	 * [Manu Ticket#175] Crear un campo con dni en el usuario
+	 * @param apellidos el apellidos a fijar
+	 */
+	public void setDni(String dni) {
+		this.dni = dni;
 	}
 
 

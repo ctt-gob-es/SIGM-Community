@@ -646,8 +646,16 @@
 					<div class="seccion">
 						<p class="fila">
 							<label class="sml sub"><bean:message key="procedures.prococedures"/></label>
-							<div class="barraHz mdl">
-							<select class="multiple minmdl" id="procedures" name="procedures" size="6" onchange="loadProcedure()" >
+							<!-- [Manu Ticket #946] INICIO - SIGEM Ampliar campo trámites en catálogo de trámites.-->
+							<div class="barraHz mdl" style="width:350 px;">
+							<!-- <div class="barraHz mdl">-->
+							<br>							
+						
+							<!-- <select class="multiple minmdl" id="procedures" name="procedures" size="6" onchange="loadProcedure()" > -->
+							<select class="multiple minmdl" id="procedures" name="procedures" size="15" onchange="loadProcedure()" >
+
+						<!-- [Manu Ticket #946] FIN - SIGEM Ampliar campo trámites en catálogo de trámites.-->
+
 							                <%
 									ServicioCatalogoTramites oServicio = LocalizadorServicios.getServicioCatalogoTramites();
 

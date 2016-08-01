@@ -88,6 +88,10 @@ public class DocumentParser
 	 * Documento de salida en formato <code>Microsoft Excel</code>
 	 */
 	public static final int MicrosoftExcel = 5;
+	
+	//[Manu Ticket #475] Modificaciones para que reconozca los ODS
+	public static final int Calc = 6;
+//	[Manu Ticket #475] Modificaciones para que reconozca los ODS
 
 
 	/**
@@ -178,6 +182,11 @@ public class DocumentParser
 		case DocumentParser.PDFWriter:
 			strFilter = "writer_pdf_Export";
 			break;
+//		[Manu Ticket #475] Modificaciones para que reconozca los ODS
+		case DocumentParser.Calc:
+			strFilter = "Calc8";
+			break;
+//		[Manu Ticket #475] Modificaciones para que reconozca los ODS
 		default:
 		    /* OpenOffice */
 			strFilter = "";
@@ -216,7 +225,8 @@ public class DocumentParser
 				logger.debug("Generando documento...");
 			}
 
-			if ("MS Excel 97".equalsIgnoreCase(strFilter)) {
+//			[Manu Ticket #475] Modificaciones para que reconozca los ODS
+			if ("MS Excel 97".equalsIgnoreCase(strFilter) || "Calc8".equalsIgnoreCase(strFilter)) {
 				generateDocumentExcel(xComponent,tagtranslator);
 			} else {
 				generateDocument(xComponent,tagtranslator);
@@ -269,6 +279,11 @@ public class DocumentParser
 				|| mimetype.equalsIgnoreCase("application/excel")
 				|| mimetype.equalsIgnoreCase("application/vndms-excel"))
 			return DocumentParser.MicrosoftExcel;
+//		[Manu Ticket #475] Modificaciones para que reconozca los ODS
+		//MQE si es ods no queremos que tire del parseador de odt, hacemos que utilice el del excell, 
+		//ya que hemos configurado para que arranque ODS con scalc.exe
+		else if(mimetype.equals("application/vnd.oasis.opendocument.spreadsheet"))
+			return DocumentParser.Calc;
 
 		return OpenOffice;
 	}

@@ -61,28 +61,28 @@
     </appender>
 
     <logger name="com" additivity="false">
-        <level value="info"/>
+        <level value="WARN"/>
         <appender-ref ref="ISicresFileWeb"/>
         <appender-ref ref="ISicresFileHTMLWeb"/>
         <appender-ref ref="ISicresFileXMLWeb"/>
     </logger>
 
     <logger name="ieci" additivity="false">
-        <level value="info"/>
+        <level value="WARN"/>
         <appender-ref ref="ISicresFileWeb"/>
         <appender-ref ref="ISicresFileHTMLWeb"/>
         <appender-ref ref="ISicresFileXMLWeb"/>
     </logger>
 
     <logger name="es" additivity="false">
-        <level value="info"/>
+        <level value="WARN"/>
         <appender-ref ref="ISicresFileWeb"/>
         <appender-ref ref="ISicresFileHTMLWeb"/>
         <appender-ref ref="ISicresFileXMLWeb"/>
     </logger>
 
     <logger name="net" additivity="false">
-        <level value="info"/>
+        <level value="WARN"/>
         <appender-ref ref="ISicresReportsFileWeb"/>
         <appender-ref ref="ISicresReportsFileHTMLWeb"/>
         <appender-ref ref="ISicresReportsFileXMLWeb"/>

@@ -4,6 +4,7 @@ import ieci.tecdoc.idoc.admin.api.user.LdapUser;
 import ieci.tecdoc.idoc.admin.api.user.LdapUsers;
 import ieci.tecdoc.idoc.admin.api.user.User;
 import ieci.tecdoc.idoc.admin.api.user.Users;
+import ieci.tecdoc.idoc.admin.internal.UserImpl;
 
 public class EstructuraOrganizativaUsuarioManager {
 
@@ -16,7 +17,7 @@ public class EstructuraOrganizativaUsuarioManager {
 	}
 
 	public User getUsuario(String nameUser, String entidad) throws Exception{
-		User user= ObjFactory.createUser();
+		UserImpl user=(UserImpl) ObjFactory.createUser();
 		user.load(nameUser, entidad);
 
 		return user;

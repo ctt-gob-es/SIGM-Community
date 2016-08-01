@@ -431,4 +431,49 @@ public class SigemThirdPartyAPI extends BasicThirdPartyAPI {
 		return direccion;
 	}
 
+	/**
+	 * [eCenpri-Felipe #477] Inserta un nuevo tercero en la BBDD
+	 * 
+	 * @param nif
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @param tipo
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @param tfnoFijo
+	 * @param tfnoMovil
+	 * @param email
+	 * @return
+	 * @throws ISPACException
+	 */
+	public boolean insertThirdParty(String nif, int tipoDoc, String nombre,
+			String ape1, String ape2, String tipo, String provincia,
+			String municipio, String cpostal, String direccion,
+			String tfnoFijo, String tfnoMovil, String email)
+			throws ISPACException {
+		
+		boolean bResult = false;
+		
+		try {
+			String entityId = null;
+			OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+			if (info != null)
+				entityId = info.getOrganizationId();
+
+			bResult = servicioTerceros.insertThirdParty
+					(entityId, nif, tipoDoc, nombre, ape1, ape2, tipo, provincia, municipio, cpostal, direccion, tfnoFijo, tfnoMovil, email);
+			
+		} catch (TercerosException e) {
+			String message = "Error en la inserción del tercero " + nif + ". " + e.getMessage();
+			logger.error(message, e);
+			throw new ISPACException(message, e);
+		}
+		
+		return bResult;
+		
+	}
+	
 }

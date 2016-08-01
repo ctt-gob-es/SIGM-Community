@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Datos Plan Emergencia"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="SUBREPORT_DIR" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["C:/Users/Manu/Desktop/Servicios Sociales/Carpeta nueva/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["M:\\Documentos\\Imágenes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["DPCR2012/13000"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select NUMEXPCONVOCATORIA, CONVOCATORIAEXCEP, (select fecha_ini from DPCR_ESTADISTICAS_REGISTRO where numexp = $P{NUM_EXP}) as FECHA_INI, 
+(select fecha_fin from DPCR_ESTADISTICAS_REGISTRO where numexp = $P{NUM_EXP}) AS FECHA_FIN
+  from DPCR_SERSO_ESTADISTICAS where numexp = $P{NUM_EXP}]]></queryString>
+
+	<field name="numexpconvocatoria" class="java.lang.String"/>
+	<field name="convocatoriaexcep" class="java.lang.String"/>
+	<field name="fecha_ini" class="java.sql.Timestamp"/>
+	<field name="fecha_fin" class="java.sql.Timestamp"/>
+
+		<background>
+			<band height="771"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="71"
+						y="0"
+						width="464"
+						height="763"
+						key="image-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+			</band>
+		</background>
+		<title>
+			<band height="17"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="127"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="1"
+						width="173"
+						height="93"
+						key="image-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoCabeceraServicios Sociales.png"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						x="173"
+						y="1"
+						width="362"
+						height="78"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="20" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Estadísticas del Plan de Emergencia
+Solicitudes Excepcionales por Suministro]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="194"
+						y="79"
+						width="75"
+						height="20"
+						key="staticText-4"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica" size="12" isBold="false"/>
+					</textElement>
+				<text><![CDATA[Fecha Inicio:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="269"
+						y="79"
+						width="241"
+						height="20"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica" size="12" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{fecha_ini}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="269"
+						y="99"
+						width="241"
+						height="20"
+						key="textField-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica" size="12" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{fecha_fin}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="194"
+						y="99"
+						width="75"
+						height="20"
+						key="staticText-5"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica" size="12" isBold="false"/>
+					</textElement>
+				<text><![CDATA[Fecha Fin:]]></text>
+				</staticText>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="2"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="261"  isSplitAllowed="true" >
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Transparent"
+						x="0"
+						y="1"
+						width="535"
+						height="24"
+						key="subreport-1"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+					<subreportParameter  name="FECHA_INI">
+						<subreportParameterExpression><![CDATA[$F{fecha_ini}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="FECHA_FIN">
+						<subreportParameterExpression><![CDATA[$F{fecha_fin}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NUMEXPCONVOCATORIA">
+						<subreportParameterExpression><![CDATA[$F{numexpconvocatoria}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="CONVOCATORIAEXCEP">
+						<subreportParameterExpression><![CDATA[$F{convocatoriaexcep}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "SERSO/PlanEmergencia/Datos/Datos Colectivos - Otros.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="0"
+						y="29"
+						width="535"
+						height="22"
+						key="subreport-2"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+					<subreportParameter  name="FECHA_INI">
+						<subreportParameterExpression><![CDATA[$F{fecha_ini}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="FECHA_FIN">
+						<subreportParameterExpression><![CDATA[$F{fecha_fin}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NUMEXPCONVOCATORIA">
+						<subreportParameterExpression><![CDATA[$F{numexpconvocatoria}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="CONVOCATORIAEXCEP">
+						<subreportParameterExpression><![CDATA[$F{convocatoriaexcep}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "SERSO/PlanEmergencia/Datos/Datos Colectivos - Varias Situaciones.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement
+						x="0"
+						y="27"
+						width="535"
+						height="0"
+						key="element-1"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+				</break>
+				<break>
+					<reportElement
+						x="0"
+						y="53"
+						width="535"
+						height="0"
+						key="element-2"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+				</break>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="0"
+						y="55"
+						width="535"
+						height="22"
+						key="subreport-3"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+					<subreportParameter  name="FECHA_INI">
+						<subreportParameterExpression><![CDATA[$F{fecha_ini}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="FECHA_FIN">
+						<subreportParameterExpression><![CDATA[$F{fecha_fin}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NUMEXPCONVOCATORIA">
+						<subreportParameterExpression><![CDATA[$F{numexpconvocatoria}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="CONVOCATORIAEXCEP">
+						<subreportParameterExpression><![CDATA[$F{convocatoriaexcep}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "SERSO/PlanEmergencia/Datos/Datos Tipo Vivienda - Varias Situaciones.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement
+						x="0"
+						y="79"
+						width="535"
+						height="0"
+						key="element-3"/>
+				</break>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="0"
+						y="81"
+						width="534"
+						height="22"
+						key="subreport-4"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+					<subreportParameter  name="FECHA_INI">
+						<subreportParameterExpression><![CDATA[$F{fecha_ini}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="FECHA_FIN">
+						<subreportParameterExpression><![CDATA[$F{fecha_fin}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NUMEXPCONVOCATORIA">
+						<subreportParameterExpression><![CDATA[$F{numexpconvocatoria}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="CONVOCATORIAEXCEP">
+						<subreportParameterExpression><![CDATA[$F{convocatoriaexcep}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "SERSO/PlanEmergencia/Datos/Medias de Alquiler e Hipotecas.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement
+						x="-1"
+						y="105"
+						width="535"
+						height="0"
+						key="element-4"/>
+				</break>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="1"
+						y="107"
+						width="534"
+						height="22"
+						key="subreport-5"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+					<subreportParameter  name="FECHA_INI">
+						<subreportParameterExpression><![CDATA[$F{fecha_ini}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="FECHA_FIN">
+						<subreportParameterExpression><![CDATA[$F{fecha_fin}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NUMEXPCONVOCATORIA">
+						<subreportParameterExpression><![CDATA[$F{numexpconvocatoria}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="CONVOCATORIAEXCEP">
+						<subreportParameterExpression><![CDATA[$F{convocatoriaexcep}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "SERSO/PlanEmergencia/Datos/Número de Familias.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement
+						x="-1"
+						y="131"
+						width="535"
+						height="0"
+						key="element-5"/>
+				</break>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="0"
+						y="133"
+						width="534"
+						height="22"
+						key="subreport-6"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+					<subreportParameter  name="FECHA_INI">
+						<subreportParameterExpression><![CDATA[$F{fecha_ini}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="FECHA_FIN">
+						<subreportParameterExpression><![CDATA[$F{fecha_fin}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NUMEXPCONVOCATORIA">
+						<subreportParameterExpression><![CDATA[$F{numexpconvocatoria}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="CONVOCATORIAEXCEP">
+						<subreportParameterExpression><![CDATA[$F{convocatoriaexcep}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "SERSO/PlanEmergencia/Datos/Ingresos por Miembros.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement
+						x="0"
+						y="157"
+						width="535"
+						height="0"
+						key="element-6"/>
+				</break>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="1"
+						y="159"
+						width="534"
+						height="22"
+						key="subreport-7"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+					<subreportParameter  name="FECHA_INI">
+						<subreportParameterExpression><![CDATA[$F{fecha_ini}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="FECHA_FIN">
+						<subreportParameterExpression><![CDATA[$F{fecha_fin}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NUMEXPCONVOCATORIA">
+						<subreportParameterExpression><![CDATA[$F{numexpconvocatoria}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="CONVOCATORIAEXCEP">
+						<subreportParameterExpression><![CDATA[$F{convocatoriaexcep}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "SERSO/PlanEmergencia/Datos/Ingreso Medio Pensión Alimenticia.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement
+						x="0"
+						y="183"
+						width="535"
+						height="0"
+						key="element-7"/>
+				</break>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="1"
+						y="185"
+						width="534"
+						height="22"
+						key="subreport-8"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+					<subreportParameter  name="FECHA_INI">
+						<subreportParameterExpression><![CDATA[$F{fecha_ini}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="FECHA_FIN">
+						<subreportParameterExpression><![CDATA[$F{fecha_fin}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NUMEXPCONVOCATORIA">
+						<subreportParameterExpression><![CDATA[$F{numexpconvocatoria}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="CONVOCATORIAEXCEP">
+						<subreportParameterExpression><![CDATA[$F{convocatoriaexcep}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "SERSO/PlanEmergencia/Datos/Número de Familias por Importe.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement
+						x="0"
+						y="209"
+						width="535"
+						height="0"
+						key="element-8"/>
+				</break>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="1"
+						y="211"
+						width="534"
+						height="22"
+						key="subreport-9"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+					<subreportParameter  name="FECHA_INI">
+						<subreportParameterExpression><![CDATA[$F{fecha_ini}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="FECHA_FIN">
+						<subreportParameterExpression><![CDATA[$F{fecha_fin}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NUMEXPCONVOCATORIA">
+						<subreportParameterExpression><![CDATA[$F{numexpconvocatoria}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="CONVOCATORIAEXCEP">
+						<subreportParameterExpression><![CDATA[$F{convocatoriaexcep}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "SERSO/PlanEmergencia/Datos/Beneficiarios que han agotado 6 solicitudes.jasper"]]></subreportExpression>
+				</subreport>
+				<break>
+					<reportElement
+						x="-10"
+						y="235"
+						width="535"
+						height="0"
+						key="element-9"/>
+				</break>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="1"
+						y="237"
+						width="534"
+						height="22"
+						key="subreport-10"
+						positionType="Float"
+						isPrintRepeatedValues="false"/>
+					<subreportParameter  name="FECHA_INI">
+						<subreportParameterExpression><![CDATA[$F{fecha_ini}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="FECHA_FIN">
+						<subreportParameterExpression><![CDATA[$F{fecha_fin}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="NUMEXPCONVOCATORIA">
+						<subreportParameterExpression><![CDATA[$F{numexpconvocatoria}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter  name="CONVOCATORIAEXCEP">
+						<subreportParameterExpression><![CDATA[$F{convocatoriaexcep}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "SERSO/PlanEmergencia/Datos/Solicitudes Excepcionales por Suministro.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="32"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="1"
+						width="535"
+						height="31"
+						key="image-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoPie.jpg"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="482"
+						y="7"
+						width="28"
+						height="15"
+						forecolor="#FFFFFF"
+						key="textField-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Calibri" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageFooter>
+		<lastPageFooter>
+			<band height="31"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="535"
+						height="31"
+						key="image-4"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoPie.jpg"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="482"
+						y="6"
+						width="28"
+						height="15"
+						forecolor="#FFFFFF"
+						key="textField-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Calibri" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</band>
+		</lastPageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

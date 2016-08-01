@@ -14,26 +14,34 @@
 		document.defaultForm.target = "ParentWindow";
 		document.defaultForm.action = "storeEntity.do";
 		document.defaultForm.name = "Intervinientes";
-		
+
+		//INICIO [eCenpri-Felipe #735]
+		var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+		var form;
+		if (is_chrome){
+			form = document.Intervinientes;
+		}
+		else{
+			form = document.defaultForm;
+		}
+
 		<logic:notEmpty scope="request" name="displayTagOrderParams">
-			document.defaultForm.action = document.defaultForm.action + "?" + '<bean:write scope="request" name="displayTagOrderParams" filter="false"/>';
+			form.action = form.action + "?" + '<bean:write scope="request" name="displayTagOrderParams" filter="false"/>';
 		</logic:notEmpty>
+
+		if (validateIntervinientes(form)) {
 		
-		/*
-		idext = document.defaultForm.elements[ 'property(SPAC_DT_INTERVINIENTES:ID_EXT)' ];
-		if (idext.value == '') {
-    	
-			document.defaultForm.elements[ 'property(SPAC_DT_INTERVINIENTES:NDOC)' ].value = '';
+			form.submit();
 		}
-		*/
-		
-		
-		if (validateIntervinientes(document.defaultForm)) {
-			
-			document.defaultForm.submit();
+
+		if (is_chrome){
+			ispac_needToConfirm = false;
 		}
+		else{
+			ispac_needToConfirm = true;
+		}
+		//FIN [eCenpri-Felipe #735]
 		
-		ispac_needToConfirm = true;
 	}
 	
 	function selectThirdParty(target, action) {
@@ -393,6 +401,47 @@
 															</logic:equal>
 															
 															<td height="28px"><img height="1" src='<ispac:rewrite href="img/pixel.gif"/>'/></td>
+															
+															<!--MQE #127 añadimos la opción copiar los participantes de otro expediente-->
+																	<td class="formaction" height="28px" width="75px">
+
+																	<c:url value="/importarParticipantes.do" var="link">
+																		<c:if test="${!empty param.stageId}">
+																			<c:param name="stageId" value='${param.stageId}'/>
+																		</c:if>
+																		<c:if test="${!empty param.taskId}">
+																			<c:param name="taskId" value='${param.taskId}'/>
+																		</c:if>
+																		<c:if test="${!empty param.activityId}">
+																			<c:param name="activityId" value='${param.activityId}'/>
+																		</c:if>
+																		<c:param name="entity" value="${defaultForm.entity}"/>
+																		<c:param name="key" value="${ENTITY_NULLREGKEYID}"/>
+																		<c:param name="method" value="expedienteAction"/>
+																	</c:url>
+																<a class="formaction" href="javascript:showFrame('workframe','<c:out value="${link}"/>', '', false);"><bean:message key="es.dipucr.importarParticipantes.boton.importar"/></a>
+															</td>
+															<!--MQE fin modificaciones ticket #127-->
+															
+															<!--MQE #511 añadimos la opción copiar los participantes de otro expediente-->
+																	<td class="formaction" height="28px" width="100%">
+																	<c:url value='borrarParticipantes.do' var="link">
+																			<c:if test="${!empty param.stageId}">
+																				<c:param name="stageId" value='${param.stageId}'/>
+																			</c:if>
+																			<c:if test="${!empty param.taskId}">
+																				<c:param name="taskId" value='${param.taskId}'/>
+																			</c:if>
+																			<c:if test="${!empty param.activityId}">
+																				<c:param name="activityId" value='${param.activityId}'/>
+																			</c:if>
+																			<c:param name="entity" value="${defaultForm.entity}"/>
+																			<c:param name="key" value="${defaultForm.key}"/>
+																			<c:param name="method" value="borrarParticipantes"/>
+																		</c:url>
+																<a class="formaction" href="javascript: _confirm('<c:out value="${link}"/>', '<bean:message key="es.dipucr.borrarParticipantes.confirmacionBorrar"/>', true , '<bean:message key="common.confirm"/>','<bean:message key="common.message.ok"/>','<bean:message key="common.message.cancel"/>');"><bean:message key="es.dipucr.borrarParticipantes.boton.borrar"/></a>
+															</td>
+															<!--MQE fin modificaciones ticket #511-->
 														</tr>
 														
 													</table>

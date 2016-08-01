@@ -1,0 +1,797 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://rpc.meh.es/dgpe-declaracionContratosV1.2" elementFormDefault="qualified" attributeFormDefault="unqualified" version="">
+	<xs:element name="dgp_declaracion">
+		<xs:annotation>
+			<xs:documentation>declaración contratos estado, c.autonomas autonomas y entidades locales</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="cabecera">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="usuario">
+								<xs:annotation>
+									<xs:documentation>datos del usuario que hace el envío</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="dni" minOccurs="0" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>dni del usuario (formato: 12345678Z) </xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="nombre" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Nombre del usuario que envía la información</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="apellido1" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Primer apellido del usuario</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="apellido2" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Segundo apellido del usuario</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="cargo" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Cargo del usuario</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="direccion" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Dirección postal del organismo</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="provincia">
+											<xs:annotation>
+												<xs:documentation>Código de la provincia del remitente</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="2"/>
+													<xs:pattern value="[0-9][0-9]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="municipio">
+											<xs:annotation>
+												<xs:documentation>Código de 4 dígitos del municipio, dentro de la provincia segun codificación INE</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="4"/>
+													<xs:pattern value="[0-9][0-9][0-9][0-9]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="codPostal" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Código postal. Desde 01xxx hasta 52xxx</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="5"/>
+													<xs:pattern value="[0-9][0-9][0-9][0-9][0-9]"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="telefono" type="xs:string"/>
+										<xs:element name="fax" type="xs:string" minOccurs="0"/>
+										<xs:element name="mail" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Correo electrónico</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="RegistrosEnviados" type="xs:positiveInteger">
+								<xs:annotation>
+									<xs:documentation>Número de registros que se envían en la remesa</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="tipoAdmin">
+								<xs:annotation>
+									<xs:documentation>Código correspondiente al tipo de administración. (ver tabla)</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="1"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="tipoAdminLocal" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Código correspondiente al tipo de administración local (ver tabla). Sólo aplicable a administraciones locales</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="1"/>
+										<xs:pattern value="[A-Z]"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="enteContratante">
+					<xs:annotation>
+						<xs:documentation>Administración o Entidad contratante</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="codEnteContratante">
+								<xs:annotation>
+									<xs:documentation>Código de la Administración o Entidad contratante. Ver tablas</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="8"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="nombreEnteContratante" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Denominación oficial de la Administración pública o Entidad contratante. Para óganos de la Administración General del Estado, se tomará el valor "Estado".</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="NIF" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>NIF de la Administración o Entidad contratante.</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="9"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="departamento" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Departamento ministerial, consejería o concejalía</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="codigoDepartamento" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Código de Ministerio, consejería, concejalía, etc. Obligatorio en Estado y Comunidades autonomas</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:maxLength value="2"/>
+													<xs:minLength value="2"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="nombreDepartamento" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Nombre del Ministerio, Consejería o Concejalía Obligatorio en Estado y C.Autonomas</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="NIF" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>NIF del departamento ministerial, consejería o concejalía</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:length value="9"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="organoContratante" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>Órgano contratante del departamento ministerial o consejería</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="codigoOrganoContratante">
+														<xs:annotation>
+															<xs:documentation>Código del órgano contratante. Ver tablas</xs:documentation>
+														</xs:annotation>
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:maxLength value="10"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+													<xs:element name="nombreOrganoContratante" type="xs:string">
+														<xs:annotation>
+															<xs:documentation>Denominación oficial del órgano contratante.</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="NIF" minOccurs="0">
+														<xs:annotation>
+															<xs:documentation>NIF del órgano contratante</xs:documentation>
+														</xs:annotation>
+														<xs:simpleType>
+															<xs:restriction base="xs:string">
+																<xs:length value="9"/>
+															</xs:restriction>
+														</xs:simpleType>
+													</xs:element>
+													<xs:element name="contrato" maxOccurs="unbounded">
+														<xs:annotation>
+															<xs:documentation>datos del contrato que se declara</xs:documentation>
+														</xs:annotation>
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="tipoContrato">
+																	<xs:annotation>
+																		<xs:documentation>ver tabla "Tipo de contrato"</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="1"/>
+																			<xs:pattern value="[A-Z]"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="provincia">
+																	<xs:annotation>
+																		<xs:documentation>Código de la provincia donde se realiza el contrato: ver tabla "codigo provincias"</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="2"/>
+																			<xs:pattern value="[0-9][0-9]"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="modalidad" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Modalidad de la contratación. Sólo en contratos de gestión de servicios públicos: ver tabla "Modalidad"</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="1"/>
+																			<xs:pattern value="^*|[A-Z]"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="objeto" type="xs:string">
+																	<xs:annotation>
+																		<xs:documentation>objeto del contrato</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="cpa" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation> CPA del objeto del contrato.</xs:documentation>
+																	</xs:annotation>
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="codigo">
+																				<xs:annotation>
+																					<xs:documentation>Código CPA del objeto del contrato.</xs:documentation>
+																				</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string">
+																						<xs:minLength value="2"/>
+																						<xs:maxLength value="6"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																			</xs:element>
+																			<xs:element name="version" default="2002">
+																				<xs:annotation>
+																					<xs:documentation>versión del CPA</xs:documentation>
+																				</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:gYear">
+																						<xs:pattern value="2002|2008"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="CPV">
+																	<xs:annotation>
+																		<xs:documentation>Si el contrato tiene varios CPVs, poner solo el principal</xs:documentation>
+																	</xs:annotation>
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="codigoCPV">
+																				<xs:annotation>
+																					<xs:documentation>Código CPV del objeto del contrato.</xs:documentation>
+																				</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string">
+																						<xs:minLength value="5"/>
+																						<xs:maxLength value="8"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																			</xs:element>
+																			<xs:element name="version" default="2008">
+																				<xs:annotation>
+																					<xs:documentation>Valores admisibles: 2003, 2008</xs:documentation>
+																				</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:gYear">
+																						<xs:pattern value="2003|2008"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="caracteristicaBienes" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Sólo para contratos de suministros. ver tabla "caracteristicas de los bienes"</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="1"/>
+																			<xs:pattern value="[0-9]"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="preciosUnitarios" minOccurs="0" maxOccurs="unbounded">
+																	<xs:annotation>
+																		<xs:documentation>Bienes o servicios con sus precios unitarios.</xs:documentation>
+																	</xs:annotation>
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="CPV">
+																				<xs:annotation>
+																					<xs:documentation>CPV del bien o servicio</xs:documentation>
+																				</xs:annotation>
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element name="codigoCPV">
+																							<xs:annotation>
+																								<xs:documentation>Código CPV del bien o servicio</xs:documentation>
+																							</xs:annotation>
+																							<xs:simpleType>
+																								<xs:restriction base="xs:string">
+																									<xs:minLength value="5"/>
+																									<xs:maxLength value="8"/>
+																								</xs:restriction>
+																							</xs:simpleType>
+																						</xs:element>
+																						<xs:element name="version" default="2008">
+																							<xs:annotation>
+																								<xs:documentation>Valores admisibles: 2003, 2008</xs:documentation>
+																							</xs:annotation>
+																							<xs:simpleType>
+																								<xs:restriction base="xs:gYear">
+																									<xs:pattern value="2003|2008"/>
+																								</xs:restriction>
+																							</xs:simpleType>
+																						</xs:element>
+																					</xs:sequence>
+																				</xs:complexType>
+																			</xs:element>
+																			<xs:element name="precioUnitario" type="xs:decimal">
+																				<xs:annotation>
+																					<xs:documentation>precio unitario del bien o servicio. IVA incluido</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="conPorLotes" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Contratación por lotes: si/no</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="2"/>
+																			<xs:enumeration value="si"/>
+																			<xs:enumeration value="SI"/>
+																			<xs:enumeration value="NO"/>
+																			<xs:enumeration value="no"/>
+																			<xs:enumeration value="No"/>
+																			<xs:enumeration value="Si"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="conMixto" default="no" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Contrato mixto: si/no.</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="2"/>
+																			<xs:enumeration value="si"/>
+																			<xs:enumeration value="SI"/>
+																			<xs:enumeration value="NO"/>
+																			<xs:enumeration value="no"/>
+																			<xs:enumeration value="No"/>
+																			<xs:enumeration value="Si"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="conMarco" default="no" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>acuerdo marco: si/no</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="2"/>
+																			<xs:enumeration value="si"/>
+																			<xs:enumeration value="Si"/>
+																			<xs:enumeration value="SI"/>
+																			<xs:enumeration value="no"/>
+																			<xs:enumeration value="No"/>
+																			<xs:enumeration value="NO"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="complementario" default="no" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Contrato complementario: si/no. Sólo en contratos que resulte aplicable.</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="2"/>
+																			<xs:enumeration value="si"/>
+																			<xs:enumeration value="Si"/>
+																			<xs:enumeration value="SI"/>
+																			<xs:enumeration value="no"/>
+																			<xs:enumeration value="No"/>
+																			<xs:enumeration value="NO"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="publicidad" default="no">
+																	<xs:annotation>
+																		<xs:documentation>si/no. En el caso de que sea si, indicar al menos una fecha de anuncio</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="2"/>
+																			<xs:enumeration value="si"/>
+																			<xs:enumeration value="Si"/>
+																			<xs:enumeration value="SI"/>
+																			<xs:enumeration value="no"/>
+																			<xs:enumeration value="No"/>
+																			<xs:enumeration value="NO"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="anuncioBoe" type="xs:date" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Fecha de anuncio en BOE: AAAA-MM-DD</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="anuncioDOUE" type="xs:date" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Fecha de anuncio Diario Oficial Unión Europea: AAAA-MM-DD</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="anuncioBoca" type="xs:date" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Fecha de anuncio Boletín Oficial Comunidad Autónoma: AAAA-MM-DD</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="anuncioBop" type="xs:date" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Fecha anuncio Boletín Oficial de la Provincia: AAAA-MM-DD</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="anuncioPerfilContratante" type="xs:date" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Fecha de anuncio del perfil de contratante: AAAA-MM-DD</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="anuncioPrensa" type="xs:date" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Fecha de anuncio en prensa: AAAA-MM-DD</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="anuncioInternet" type="xs:date" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Fecha de anuncio en Internet: AAAA-MM-DD</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="tramite">
+																	<xs:annotation>
+																		<xs:documentation>Tipo de tramitación del expediente. ver tabla "Tramite"</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="1"/>
+																			<xs:pattern value="[A-Z]"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="procedimientoAdjud">
+																	<xs:annotation>
+																		<xs:documentation>Procedimiento de adjudicación: ver tabla "procedimiento adjudicación"</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="1"/>
+																			<xs:pattern value="[A-Z]"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="procNegArticulo" type="xs:string" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Para contratos sujetos a la Ley de Contratos de las Administraciones Públicas. Artículo y apartado de la Ley por el que se aplica el procedimiento negociado</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="procNegSubapartado" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Para contratos sujetos a la Ley de Contratos de las Administraciones Públicas. Subapartado de la Ley por el que se aplica el procedimiento negociado</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:pattern value="[A-L]"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="procNegCausa" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Código del supuesto para la utilización de procedimiento negociado. Ver tabla "procedimiento negociado causa"</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="2"/>
+																			<xs:pattern value="[0-9][0-9]"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="invitaciones" type="xs:nonNegativeInteger" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Número de invitaciones cursadas. Sólo para los contratos a los que resulta aplicable</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="formaAdjud">
+																	<xs:annotation>
+																		<xs:documentation>Criterio utilizado para la adjudicación del contrato. ver tabla "criterios de adjudicacion"</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="1"/>
+																			<xs:pattern value="[A-Z]"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="importePresupuesto" type="xs:nonNegativeInteger">
+																	<xs:annotation>
+																		<xs:documentation>Importe de licitación en EUROS, sin decimales. IVA incluido</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="plazo" type="xs:nonNegativeInteger">
+																	<xs:annotation>
+																		<xs:documentation>Plazo de ejecucion en meses: (0 a 14 dias = cero meses) (15 a 31 dias = un mes) ...</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="plazoConcesion" type="xs:nonNegativeInteger" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Plazo de la concesion en meses (sólo para contratos en los que resulte aplicable)</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="plurianual" default="no">
+																	<xs:annotation>
+																		<xs:documentation>Carácter plurianual: si/no. En el caso de que sea si, indicar al menos una anualidad</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="2"/>
+																			<xs:enumeration value="no"/>
+																			<xs:enumeration value="No"/>
+																			<xs:enumeration value="NO"/>
+																			<xs:enumeration value="si"/>
+																			<xs:enumeration value="Si"/>
+																			<xs:enumeration value="SI"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="anualidad" minOccurs="0" maxOccurs="unbounded">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="anio">
+																				<xs:annotation>
+																					<xs:documentation>año</xs:documentation>
+																				</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:gYear">
+																						<xs:minInclusive value="2000"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																			</xs:element>
+																			<xs:element name="importe" type="xs:nonNegativeInteger">
+																				<xs:annotation>
+																					<xs:documentation>Importe en EUROS, sin decimales. IVA incluido</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="revisionPrecios" default="no">
+																	<xs:annotation>
+																		<xs:documentation>Revisión de precios establecida: si/no</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="2"/>
+																			<xs:enumeration value="no"/>
+																			<xs:enumeration value="No"/>
+																			<xs:enumeration value="NO"/>
+																			<xs:enumeration value="si"/>
+																			<xs:enumeration value="Si"/>
+																			<xs:enumeration value="SI"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="formulaTipo" type="xs:string" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Número o código de la fórmula de revisión de precios establecida para el contrato. Sólo para contratos sujetos a revisión de precios mediante fórmula.</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="clasificacionExigida" minOccurs="0" maxOccurs="unbounded">
+																	<xs:annotation>
+																		<xs:documentation>Sólo aplicable a contratos sujetos al requisito de clasificación</xs:documentation>
+																	</xs:annotation>
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="grupo" type="xs:string"/>
+																			<xs:element name="subgrupo" type="xs:string" minOccurs="0"/>
+																			<xs:element name="categoria" type="xs:string"/>
+																		</xs:sequence>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="contratista" maxOccurs="unbounded">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="descripcion" type="xs:string">
+																				<xs:annotation>
+																					<xs:documentation>Nombre del contratista</xs:documentation>
+																				</xs:annotation>
+																			</xs:element>
+																			<xs:element name="nacionalidad" default="es" minOccurs="0">
+																				<xs:annotation>
+																					<xs:documentation>Código de pais de 2 letras, según tabla ISO 3166 de 2 letras</xs:documentation>
+																				</xs:annotation>
+																				<xs:simpleType>
+																					<xs:restriction base="xs:string">
+																						<xs:length value="2"/>
+																						<xs:pattern value="^*|[a-zA-Z][a-zA-Z]"/>
+																					</xs:restriction>
+																				</xs:simpleType>
+																			</xs:element>
+																		</xs:sequence>
+																		<xs:attribute name="nif" type="xs:string" use="required">
+																			<xs:annotation>
+																				<xs:documentation>Código de identificación del contratista</xs:documentation>
+																			</xs:annotation>
+																		</xs:attribute>
+																	</xs:complexType>
+																</xs:element>
+																<xs:element name="paisOrigen" default="es" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Código del país de origen de los productos en los contratos de suministros. tabla ISO 3166 de 2 letras</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="2"/>
+																			<xs:pattern value="^*|[a-zA-Z][a-zA-Z]"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="fechaAdjudicacion">
+																	<xs:annotation>
+																		<xs:documentation>Fecha de adjudicación definitiva del contrato. AAAA-MM-DD</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:date">
+																			<xs:minInclusive value="2000-01-01"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="importeAdjudicacion" type="xs:nonNegativeInteger">
+																	<xs:annotation>
+																		<xs:documentation>Importe de adjudicación. (en EUROS, sin decimales y con IVA incluido)</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="esIngreso" default="no" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>si/no .Sólo en contratos que generen ingresos para la administración contratante.</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="2"/>
+																			<xs:enumeration value="si"/>
+																			<xs:enumeration value="SI"/>
+																			<xs:enumeration value="NO"/>
+																			<xs:enumeration value="no"/>
+																			<xs:enumeration value="No"/>
+																			<xs:enumeration value="Si"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="modalidadImporte" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Sólo en contratos en que resulte de aplicación. Ver tabla "modalidad importe"</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="1"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="valorModalidad" type="xs:nonNegativeInteger" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Sólo en contratos en que resulte de aplicación</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="unidadModalidad" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Sólo en contratos en que resulte de aplicación. Ej:euros, euros/hora, %de lo recaudado...</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:minLength value="0"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="aportacionAdministracion" type="xs:nonNegativeInteger" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Aportaciones públicas. Sólo en contratos en que resulte de aplicación. (en EUROS, sin decimales y con IVA incluido)</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="modalidadDeterminacionPrecio" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Sólo para contratos de servicios. Ver tabla "modalidad determinación del precio"</xs:documentation>
+																	</xs:annotation>
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string">
+																			<xs:length value="1"/>
+																			<xs:pattern value="[A-Z]"/>
+																		</xs:restriction>
+																	</xs:simpleType>
+																</xs:element>
+																<xs:element name="fechaFormalizacion" type="xs:date">
+																	<xs:annotation>
+																		<xs:documentation>Fecha de formalización del contrato. AAAA-MM-DD</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="fechaFinalizacion" type="xs:date" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Fecha de finalización del contrato. AAAA-MM-DD</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="observaciones" minOccurs="0">
+																	<xs:simpleType>
+																		<xs:restriction base="xs:string"/>
+																	</xs:simpleType>
+																</xs:element>
+															</xs:sequence>
+															<xs:attribute name="numero" use="required">
+																<xs:annotation>
+																	<xs:documentation>Código identificador del contrato</xs:documentation>
+																</xs:annotation>
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:minLength value="1"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:attribute>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="anio" use="required">
+				<xs:annotation>
+					<xs:documentation>Año de adjudicación</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:gYear">
+						<xs:minInclusive value="2000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

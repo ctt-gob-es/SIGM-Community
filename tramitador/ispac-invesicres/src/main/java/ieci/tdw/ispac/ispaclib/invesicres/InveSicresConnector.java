@@ -415,6 +415,27 @@ public class InveSicresConnector implements ISicresConnector {
 		return registerInfo;
 	}
 	
+	/** MQE Ticket #108 metodo nuevo para guardar el documento en su registro de salida.
+	 * Realmente no hace nada nuevo, es el mismo que el polimorfoseado, no hace nada nuevo, 
+	 * porque no se dónde se usa, y no lo necesito.
+	 *
+	 * 
+	 * @param register
+	 * @param docInfos
+	 * @return
+	 */
+	public RegisterInfo insertRegister(Register register,
+			ieci.tecdoc.sgm.core.services.registro.DocumentInfo[] docInfos){
+	    try {
+			return insertRegister(register);
+		} catch (ISPACException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	//MQE fin modificaciones ticket #108
+	
     private RegistroSalidaVO populateRegistroSalida(Register register) throws ISPACException {
     	
         RegisterInfo originalRegister = register.getOriginalRegister();
@@ -864,8 +885,6 @@ public class InveSicresConnector implements ISicresConnector {
         	getInvesDocConnection().Disconnect();
         }
 	}
-
-
-
-
+	
+	
 }

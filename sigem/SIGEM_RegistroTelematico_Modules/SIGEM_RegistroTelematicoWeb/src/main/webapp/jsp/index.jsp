@@ -20,6 +20,12 @@
 	String tramiteId = (String)request.getParameter("tramiteId");
 	if (tramiteId == null || tramiteId.equals(""))
 		tramiteId = (String)request.getSession().getAttribute("tramiteId");
+	//INICIO [dipucr-Felipe #206 3#108]
+	String xmlDataSpecific = (String)request.getParameter(Defs.DATOS_ESPECIFICOS);
+	if (xmlDataSpecific == null || xmlDataSpecific.equals(""))
+		xmlDataSpecific = (String)request.getSession().getAttribute(Defs.DATOS_ESPECIFICOS);
+	//FIN [dipucr-Felipe #206 3#108]
+	
 	String lang = (String)request.getParameter(Defs.LANG);
 	if (lang == null || lang.equals(""))
 		lang = (String)request.getSession().getAttribute(Defs.LANG);
@@ -50,7 +56,7 @@
 			session.setAttribute("PARAMETRO_RUTA_ESTILOS", "");
 	}
 	%>
-    <META HTTP-EQUIV="Refresh" CONTENT="0;URL=realizarSolicitudRegistro.do?ENTIDAD_ID=<%=entidadId%>&SESION_ID=<%=sessionId%>&tramiteId=<%=tramiteId%>&idioma=<%=idioma%>"/>
+    <META HTTP-EQUIV="Refresh" CONTENT="0;URL=realizarSolicitudRegistro.do?ENTIDAD_ID=<%=entidadId%>&SESION_ID=<%=sessionId%>&tramiteId=<%=tramiteId%>&idioma=<%=idioma%>&DATOS_ESPECIFICOS=<%=xmlDataSpecific%>"/>
 </head>
 
 <body>

@@ -21,6 +21,8 @@ import ieci.tdw.ispac.ispaclib.dao.ObjectDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTHelpDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTProcedureDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTTaskDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.PManualUsuarioDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.xml.XmlPcdManualUsuarioDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.xml.XmlPcdTemplateDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PEventoDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PProcedimientoDAO;
@@ -66,11 +68,15 @@ final public class ProcedureElement implements IPcdElement
 
     private List otherpermissionlist;
 
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+    private List manualUsuarioList;
+    
     private List helplist;
 
 
     private final ClientContext ctx;
 
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 	private ProcedureElement(ClientContext ctx,PProcedimientoDAO procdao,
 	        CTProcedureDAO ctprocdao,
 	        FlowNodeMgr flownodemgr,
@@ -79,11 +85,13 @@ final public class ProcedureElement implements IPcdElement
 			List deadlinelist,
 			List permissionlist ,
 			List otherpermissionList,
-			List pubrulelist)
+			List pubrulelist,
+			List manualUsuarioList)
 	{
-		this(ctx,procdao,ctprocdao,flownodemgr,entitylist,eventlist,deadlinelist,permissionlist,null, otherpermissionList, pubrulelist);
+		this(ctx,procdao,ctprocdao,flownodemgr,entitylist,eventlist,deadlinelist,permissionlist,null, otherpermissionList, pubrulelist, manualUsuarioList);
 	}
 
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 	private ProcedureElement(ClientContext ctx,PProcedimientoDAO procdao,
 	        CTProcedureDAO ctprocdao,
 	        FlowNodeMgr flownodemgr,
@@ -93,7 +101,8 @@ final public class ProcedureElement implements IPcdElement
 			List permissionlist,
 			List helplist,
 			List otherpermissionList,
-			List pubrulelist)
+			List pubrulelist,
+			List manualUsuarioList)
 	{
 	    this.ctx=ctx;
 
@@ -108,6 +117,8 @@ final public class ProcedureElement implements IPcdElement
 	    this.helplist=helplist;
 	    this.otherpermissionlist=otherpermissionList;
 	    this.pubrulelist = pubrulelist;
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	    this.manualUsuarioList = manualUsuarioList;
 
 	}
 
@@ -130,6 +141,9 @@ final public class ProcedureElement implements IPcdElement
 	    this.deadlinelist = null;
 	    this.permissionlist = null;
 	    this.pubrulelist = null;
+
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	    this.manualUsuarioList = null;
 	}
 
 	public ProcedureElement(ClientContext ctx,PProcedimientoDAO procdao,
@@ -148,6 +162,9 @@ final public class ProcedureElement implements IPcdElement
 
 	    this.deadlinelist=null;
 	    this.permissionlist=null;
+
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	    this.manualUsuarioList = null;
 	}
 
 	public ProcedureElement(ClientContext ctx,PProcedimientoDAO procdao,
@@ -166,6 +183,9 @@ final public class ProcedureElement implements IPcdElement
 
 	    this.deadlinelist=null;
 	    this.permissionlist=null;
+
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	    this.manualUsuarioList = null;
 	}
 
 	public void load(DbCnt cnt) throws ISPACException {
@@ -185,6 +205,9 @@ final public class ProcedureElement implements IPcdElement
 	    helplist=CTHelpDAO.getProcedureHelps(cnt, procedureId).toList();
 
 	    pubrulelist = PubReglaDAO.getRulesAsignedOnlyProcedure(cnt, getId()).toList();
+	    
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	    manualUsuarioList = PManualUsuarioDAO.getProcedureManualesUsuario(cnt, getId()).toList();
 	}
 
 	public void modify(DbCnt cnt, String newName, List ctstages,
@@ -455,6 +478,11 @@ final public class ProcedureElement implements IPcdElement
         List newpubrulelist = ProcedureUtil.duplicate(cnt, pubrulelist);
         ProcedureUtil.setProperty(newpubrulelist, "ID_PCD", newpprocdao.getKey());
 
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+        List newManualUsuarioList = ProcedureUtil.duplicate(cnt, manualUsuarioList);
+        ProcedureUtil.setProperty(newManualUsuarioList, "ID_OBJ", newpprocdao.getKey());
+
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
         return new ProcedureElement(
         		ctx, newpprocdao,
 				newctprocdao,
@@ -464,7 +492,8 @@ final public class ProcedureElement implements IPcdElement
 				newdeadlinelist,
 				newpermissionlist,
 				otherpermissionlist,
-				newpubrulelist);
+				newpubrulelist,
+				newManualUsuarioList);
 	}
 
     /* (non-Javadoc)
@@ -632,6 +661,9 @@ final public class ProcedureElement implements IPcdElement
         ProcedureUtil.store(cnt,permissionlist);
         ProcedureUtil.store(cnt, otherpermissionlist);
         ProcedureUtil.store(cnt, pubrulelist);
+
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+        ProcedureUtil.store(cnt, manualUsuarioList);
     }
 
 
@@ -674,6 +706,9 @@ final public class ProcedureElement implements IPcdElement
         ProcedureUtil.delete(cnt,eventlist);
         ProcedureUtil.delete(cnt,permissionlist);
         ProcedureUtil.delete(cnt, pubrulelist);
+
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+        ProcedureUtil.delete(cnt, manualUsuarioList);
         
 
         flownodemgr.delete(cnt);
@@ -688,6 +723,9 @@ final public class ProcedureElement implements IPcdElement
 	    this.deadlinelist=null;
 	    this.permissionlist=null;
 	    this.pubrulelist = null;
+
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	    this.manualUsuarioList = null;
     }
 
     /* (non-Javadoc)
@@ -818,13 +856,16 @@ final public class ProcedureElement implements IPcdElement
                 XmlTag.newAttr("id",Integer.toString(getId())));
         return sXml;
     }
+
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 	public String toXpdl(DbCnt cnt, Map ctStageIds, Map ctTaskIds,
-			Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds)
+			Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds, Map ctManualesUsuarioIds, List manualesUsuario)
 			throws ISPACException {
 
-		return toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds,new HashMap());
+		return toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds, ctManualesUsuarioIds, manualesUsuario, new HashMap());
 	}
 
+	//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
     public String toXpdl(DbCnt cnt,
     					 Map ctStageIds,
     					 Map ctTaskIds,
@@ -832,6 +873,8 @@ final public class ProcedureElement implements IPcdElement
     					 Map ctEntityIds,
     					 Map ctTpDocIds,
     					 Map subPcdIds,
+    					 Map ctManualesUsuarioIds,
+    					 List manualesUsuario,
     					 Map ctHelpsIds) throws ISPACException {
 
     	String sXpdl = null;
@@ -881,7 +924,9 @@ final public class ProcedureElement implements IPcdElement
     	}
 
     	// Flujo con actividades y transiciones (XPDL)
-    	buffer.append(flownodemgr.toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds));
+
+		//[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+    	buffer.append(flownodemgr.toXpdl(cnt, ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, ctManualesUsuarioIds, manualesUsuario, subPcdIds));
 
         // Eventos
         buffer.append(ExportProcedureMgr.eventsToXml(eventlist, ctRuleIds));
@@ -963,6 +1008,25 @@ final public class ProcedureElement implements IPcdElement
     		templates.append(xmlPcdTemplateDAO.export());
     	}
     	buffer.append(XmlTag.newTag(ExportProcedureMgr.TAG_TEMPLATES, templates.toString()));
+    	
+    	//[eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+    	// Plantillas específicas
+//    	StringBuffer manualesUsuario = new StringBuffer();
+    	IItemCollection collectionManuales = XmlPcdManualUsuarioDAO.getManualesUsuario(cnt, getId()).disconnect();
+    	while (collectionManuales.next()) {
+
+    		XmlPcdManualUsuarioDAO xmlPcdManualUsuarioDAO = (XmlPcdManualUsuarioDAO) collectionManuales.value();
+//    		manualesUsuario.append(xmlPcdManualUsuarioDAO.export());
+    		if (!ctManualesUsuarioIds.containsKey(xmlPcdManualUsuarioDAO.getInt(XmlPcdManualUsuarioDAO.IDMANUAL))) {
+    			ctManualesUsuarioIds.put(xmlPcdManualUsuarioDAO.getInt(XmlPcdManualUsuarioDAO.IDMANUAL), null);
+			}
+    	}
+//    	buffer.append(XmlTag.newTag(ExportProcedureMgr.TAG_MANUALES_USUARIO, manualesUsuario.toString()));
+    	
+    	buffer.append(XmlTag.newTag(ExportProcedureMgr.TAG_MANUALES_USUARIO, ExportProcedureMgr.ctManualesUsuarioToXml(cnt, ctManualesUsuarioIds, getId(), manualesUsuario)));
+
+    	
+    	
 
     	 //Ayuda
         buffer.append(ExportProcedureMgr.ctHelpsToXml(helplist, ctHelpsIds));

@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Estadisticas Registro"
+		 columnCount="1"
+		 printOrder="Horizontal"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="832"
+		 columnSpacing="0"
+		 leftMargin="5"
+		 rightMargin="5"
+		 topMargin="5"
+		 bottomMargin="5"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<subDataset name="EntradaTelematica" >
+
+		<parameter name="FECHA_INI" isForPrompting="false" class="java.sql.Timestamp"/>
+		<parameter name="FECHA_FIN" isForPrompting="false" class="java.sql.Timestamp"/>
+		<queryString><![CDATA[select tipo_reg, substr(fecha::varchar(255),0, 5) as anio, substr(fecha::varchar(255),6, 2) as mes, nombre_dep, telematico, num_reg from  
+dblink('dbname=registro_005 port=5432', '
+select 1, a.fld2 as fecha, b.name, substr(a.fld1,5, 3) as telematico, count(*)
+from a1sf a left join scr_orgs b on b.id = a.fld8
+where substr(a.fld1,5,3) like '||(E'\'')||'999'||(E'\'')||'
+and fld2 >= '||(E'\'')||$P{FECHA_INI}||(E'\'')||'
+and fld2 <= '||(E'\'')||$P{FECHA_FIN}||(E'\'')||'
+group by 1, fecha, 3, telematico'
+) 
+as tabla (tipo_reg integer, fecha timestamp, nombre_dep varchar, telematico varchar, num_reg integer)
+order by tipo_reg, anio, mes, nombre_dep, telematico]]></queryString>
+
+		<field name="tipo_reg" class="java.lang.Integer"/>
+		<field name="anio" class="java.lang.String"/>
+		<field name="mes" class="java.lang.Integer"/>
+		<field name="nombre_dep" class="java.lang.String"/>
+		<field name="telematico" class="java.lang.String"/>
+		<field name="num_reg" class="java.lang.Integer"/>
+
+	</subDataset>
+
+	<subDataset name="EntradaPresencial" >
+
+		<parameter name="FECHA_INI" isForPrompting="false" class="java.sql.Timestamp"/>
+		<parameter name="FECHA_FIN" isForPrompting="false" class="java.sql.Timestamp"/>
+		<queryString><![CDATA[select tipo_reg, substr(fecha::varchar(255),0, 5) as anio, substr(fecha::varchar(255),6, 2) as mes, nombre_dep, telematico, num_reg from  
+dblink('dbname=registro_005 port=5432', '
+select 1, a.fld2 as fecha, b.name, substr(a.fld1,5, 3) as telematico, count(*)
+from a1sf a left join scr_orgs b on b.id = a.fld8
+where substr(a.fld1,5,3) not like '||(E'\'')||'999'||(E'\'')||'
+and fld2 >= '||(E'\'')||$P{FECHA_INI}||(E'\'')||'
+and fld2 <= '||(E'\'')||$P{FECHA_FIN}||(E'\'')||'
+group by 1, fecha, 3, telematico'
+) 
+as tabla (tipo_reg integer, fecha timestamp, nombre_dep varchar, telematico varchar, num_reg integer)
+order by tipo_reg, anio, mes, nombre_dep, telematico]]></queryString>
+
+		<field name="tipo_reg" class="java.lang.Integer"/>
+		<field name="anio" class="java.lang.String"/>
+		<field name="mes" class="java.lang.Integer"/>
+		<field name="nombre_dep" class="java.lang.String"/>
+		<field name="telematico" class="java.lang.String"/>
+		<field name="num_reg" class="java.lang.Integer"/>
+
+	</subDataset>
+
+	<subDataset name="salidaSigem" >
+
+		<queryString><![CDATA[select * from  
+dblink('dbname=registro_005 port=5432', '
+select 2, substr('||(E'\'\'')||'||a.fld2,0, 5) as anio, substr('||(E'\'\'')||'||a.fld2,6, 2) as mes, b.name, count(*)
+from a2sf a left join scr_orgs b on b.id = a.fld7
+where (a.fld1 like '||(E'\'')||'2011%'||(E'\'')||' or a.fld1 like '||(E'\'')||'2012%'||(E'\'')||') 
+and upper(a.fld13) like '||(E'\'')||'%REF.EXP.%'||(E'\'')||' group by 1,anio, mes, 4'
+) 
+as tabla (tipo_reg integer, anio varchar, mes integer, nombre_dep varchar, num_reg integer)
+order by tipo_reg, anio, mes, nombre_dep]]></queryString>
+
+		<field name="tipo_reg" class="java.lang.Integer"/>
+		<field name="anio" class="java.lang.String"/>
+		<field name="mes" class="java.lang.Integer"/>
+		<field name="nombre_dep" class="java.lang.String"/>
+		<field name="num_reg" class="java.lang.Integer"/>
+
+	</subDataset>
+
+	<subDataset name="salidaNoSigem" >
+
+		<queryString><![CDATA[select * from  
+dblink('dbname=registro_005 port=5432', '
+select 2, substr('||(E'\'\'')||'||a.fld2,0, 5) as anio, substr('||(E'\'\'')||'||a.fld2,6, 2) as mes, b.name, count(*)
+from a2sf a left join scr_orgs b on b.id = a.fld7
+where (a.fld1 like '||(E'\'')||'2011%'||(E'\'')||' or a.fld1 like '||(E'\'')||'2012%'||(E'\'')||') 
+and upper(a.fld13) not like '||(E'\'')||'%REF.EXP.%'||(E'\'')||' group by 1,anio, mes, 4'
+) 
+as tabla (tipo_reg integer, anio varchar, mes integer, nombre_dep varchar, num_reg integer)
+order by tipo_reg, anio, mes, nombre_dep]]></queryString>
+
+		<field name="tipo_reg" class="java.lang.Integer"/>
+		<field name="anio" class="java.lang.String"/>
+		<field name="mes" class="java.lang.Integer"/>
+		<field name="nombre_dep" class="java.lang.String"/>
+		<field name="num_reg" class="java.lang.Integer"/>
+
+	</subDataset>
+
+	<subDataset name="serieTiempo" >
+
+		<queryString><![CDATA[select * from  
+dblink('dbname=registro_005 port=5432', '
+select 1,substr(a.fld2::varchar,0,11) as tiempo , substr('||(E'\'\'')||'||a.fld2,0, 5) as anio, substr('||(E'\'\'')||'||a.fld2,6, 2) as mes, b.name, substr(a.fld1,5, 3) as telematico, count(*)
+from a1sf a left join scr_orgs b on b.id = a.fld8
+where a.fld1 like '||(E'\'')||'2012999%'||(E'\'')||' or a.fld1 like '||(E'\'')||'2012999%'||(E'\'')||' group by 1, tiempo, anio, mes, b.name, telematico'
+) 
+as tabla (tipo_reg integer, tiempo timestamp,  anio varchar, mes integer, nombre_dep varchar, telematico varchar, num_reg integer)
+order by tipo_reg, anio, mes, nombre_dep, telematico]]></queryString>
+
+		<field name="tipo_reg" class="java.lang.Integer"/>
+		<field name="tiempo" class="java.sql.Timestamp"/>
+		<field name="anio" class="java.lang.String"/>
+		<field name="mes" class="java.lang.Integer"/>
+		<field name="nombre_dep" class="java.lang.String"/>
+		<field name="telematico" class="java.lang.String"/>
+		<field name="num_reg" class="java.lang.Integer"/>
+
+	</subDataset>
+
+	<subDataset name="SeriesDeTiempo" >
+
+		<queryString><![CDATA[select tabla1.tiempo, tabla1.num_reg_e_t, tabla2.num_reg_e_p, tabla3.num_reg_s_s, tabla4.num_reg_s_ns from  
+((select * from dblink('dbname=registro_005 port=5432', '
+select substr(a.fld2::varchar,0,11)::timestamp as tiempo, count(*)::int as num_reg_e_t
+from a1sf a left join scr_orgs b on b.id = a.fld8
+where a.fld1 like '||(E'\'')||'2012999%'||(E'\'')||' or a.fld1 like '||(E'\'')||'2012999%'||(E'\'')||' group by tiempo
+'
+)
+as tabla1 (tiempo timestamp,  num_reg_e_t integer)) as tabla1
+join
+(select * from dblink('dbname=registro_005 port=5432', '
+select substr(a.fld2::varchar,0,11)::timestamp as tiempo, count(*)::int as num_reg_e_p
+from a1sf a left join scr_orgs b on b.id = a.fld8
+where (a.fld1 like '||(E'\'')||'2012%'||(E'\'')||' or a.fld1 like '||(E'\'')||'2012%'||(E'\'')||' )
+and a.fld1 not like '||(E'\'')||'2012999%'||(E'\'')||' and a.fld1 not like '||(E'\'')||'2012999%'||(E'\'')||' group by tiempo
+'
+)
+as tabla2 (tiempo timestamp,  num_reg_e_p integer)) as tabla2
+on tabla1.tiempo = tabla2.tiempo
+join
+(select * from dblink('dbname=registro_005 port=5432', '
+select substr(a.fld2::varchar,0,11)::timestamp as tiempo, count(*)::int as num_reg_s_s
+from a2sf a left join scr_orgs b on b.id = a.fld7
+where (a.fld1 like '||(E'\'')||'2012%'||(E'\'')||' or a.fld1 like '||(E'\'')||'2012%'||(E'\'')||') 
+and upper(a.fld13) like '||(E'\'')||'%REF.EXP.%'||(E'\'')||' group by tiempo
+'
+)
+as tabla3 (tiempo timestamp,  num_reg_s_s integer)) as tabla3
+on tabla2.tiempo = tabla3.tiempo
+join
+(select * from dblink('dbname=registro_005 port=5432', '
+select substr(a.fld2::varchar,0,11)::timestamp as tiempo, count(*)::int as num_reg_s_ns
+from a2sf a left join scr_orgs b on b.id = a.fld7
+where (a.fld1 like '||(E'\'')||'2012%'||(E'\'')||' or a.fld1 like '||(E'\'')||'2012%'||(E'\'')||') 
+and upper(a.fld13) not like '||(E'\'')||'%REF.EXP.%'||(E'\'')||' group by tiempo
+'
+)
+as tabla4 (tiempo timestamp,  num_reg_s_ns integer)) as tabla4 
+on tabla3.tiempo = tabla4.tiempo)
+order by tabla1.tiempo]]></queryString>
+
+		<field name="tiempo" class="java.sql.Timestamp"/>
+		<field name="num_reg_e_t" class="java.lang.Integer"/>
+		<field name="num_reg_e_p" class="java.lang.Integer"/>
+		<field name="num_reg_s_s" class="java.lang.Integer"/>
+		<field name="num_reg_s_ns" class="java.lang.Integer"/>
+
+	</subDataset>
+
+	<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["DPCR2012/20838"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["K:\\Documentos\\Imágenes"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select *, fecha_ini::varchar(255) as fecha_ini2, fecha_fin::varchar(255) as fecha_fin2
+ from DPCR_ESTADISTICAS_REGISTRO where numexp = $P{NUM_EXP}]]></queryString>
+
+	<field name="id" class="java.lang.Integer"/>
+	<field name="numexp" class="java.lang.String"/>
+	<field name="fecha_ini" class="java.sql.Timestamp"/>
+	<field name="fecha_fin" class="java.sql.Timestamp"/>
+	<field name="fecha_ini2" class="java.lang.String"/>
+	<field name="fecha_fin2" class="java.lang.String"/>
+
+		<background>
+			<band height="585"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="415"
+						y="0"
+						width="417"
+						height="585"
+						key="image-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="73"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="0"
+						y="0"
+						width="832"
+						height="73"
+						key="staticText-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="24" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Estadísticas de Registro]]></text>
+				</staticText>
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="17"
+						y="3"
+						width="168"
+						height="63"
+						key="image-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoNominaPeque.gif"]]></imageExpression>
+				</image>
+				<line direction="TopDown">
+					<reportElement
+						x="204"
+						y="69"
+						width="450"
+						height="0"
+						key="line-2"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="6"  isSplitAllowed="false" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="95"  isSplitAllowed="true" >
+				<crosstab >
+					<reportElement
+						x="0"
+						y="25"
+						width="832"
+						height="36"
+						key="crosstab-4"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"
+						isPrintWhenDetailOverflows="true"/>
+
+					<crosstabParameter name="FECHA_INI" class="java.sql.Timestamp" >						<parameterValueExpression><![CDATA[$F{fecha_ini}]]></parameterValueExpression>
+					</crosstabParameter>
+					<crosstabParameter name="FECHA_FIN" class="java.sql.Timestamp" >						<parameterValueExpression><![CDATA[$F{fecha_fin}]]></parameterValueExpression>
+					</crosstabParameter>
+					<crosstabDataset>
+						<dataset >
+							<datasetRun subDataset="EntradaTelematica">
+								<datasetParameter  name="FECHA_INI">
+									<datasetParameterExpression><![CDATA[$F{fecha_ini}]]></datasetParameterExpression>
+								</datasetParameter>
+								<datasetParameter  name="FECHA_FIN">
+									<datasetParameterExpression><![CDATA[$F{fecha_fin}]]></datasetParameterExpression>
+								</datasetParameter>
+							</datasetRun>
+						</dataset>
+					</crosstabDataset>
+					<crosstabHeaderCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="2Point" rightBorderColor="#000000" bottomBorder="2Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabHeaderCell>					<rowGroup name="nombre_dep" width="50" totalPosition="End">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{nombre_dep}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="2Point" leftBorderColor="#000000" rightBorder="2Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="47"
+						height="14"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="5" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{nombre_dep}==null?"Indeterminado":$V{nombre_dep}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabRowHeader>
+						<crosstabTotalRowHeader>
+						<cellContents backcolor="#CCFFFF" mode="Opaque">
+					<box topBorder="2Point" topBorderColor="#000000" leftBorder="2Point" leftBorderColor="#000000" rightBorder="2Point" rightBorderColor="#000000" bottomBorder="2Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="47"
+						height="14"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="5" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Total mensual"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabTotalRowHeader>
+					</rowGroup>
+					<columnGroup name="anio" height="25" totalPosition="End" headerPosition="Center">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{anio}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="2Point" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="2Point" rightBorderColor="#000000" bottomBorder="2Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="58"
+						height="12"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{anio}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+						<cellContents backcolor="#FFCCCC" mode="Opaque">
+					<box topBorder="2Point" topBorderColor="#000000" leftBorder="2Point" leftBorderColor="#000000" rightBorder="2Point" rightBorderColor="#000000" bottomBorder="2Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="33"
+						height="29"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="5" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Total"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+					<columnGroup name="mes" height="25" totalPosition="End" headerPosition="Center">
+						<bucket>
+							<bucketExpression class="java.lang.Integer"><![CDATA[$F{mes}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="2Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="28"
+						height="17"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="5" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($V{mes} == null )?"":
+$V{mes}.intValue()==1?"Enero":
+$V{mes}.intValue()==2?"Fegrero":
+$V{mes}.intValue()==3?"Marzo":
+$V{mes}.intValue()==4?"Abril":
+$V{mes}.intValue()==5?"Mayo":
+$V{mes}.intValue()==6?"Junio":
+$V{mes}.intValue()==7?"Julio":
+$V{mes}.intValue()==8?"Agosto":
+$V{mes}.intValue()==9?"Septiembre":
+$V{mes}.intValue()==10?"Octubre":
+$V{mes}.intValue()==11?"Noviembre":
+$V{mes}.intValue()==12?"Diciembre":""]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabColumnHeader>
+						<crosstabTotalColumnHeader>
+						<cellContents backcolor="#CCFFFF" mode="Opaque">
+					<box topBorder="2Point" topBorderColor="#000000" leftBorder="2Point" leftBorderColor="#000000" rightBorder="2Point" rightBorderColor="#000000" bottomBorder="2Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="30"
+						height="17"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="5" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Total anual por dep."]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+
+					<measure name="mes_Count" class="java.lang.Integer" calculation="Sum">
+						<measureExpression><![CDATA[$F{num_reg}]]></measureExpression>
+					</measure>
+					<crosstabCell width="28" height="14">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="28"
+						height="14"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="6" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{mes_Count}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="30" height="14" columnTotalGroup="mes">
+						<cellContents backcolor="#CCCCFF" mode="Opaque">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="2Point" leftBorderColor="#000000" rightBorder="2Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="30"
+						height="14"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{mes_Count}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="33" height="14" columnTotalGroup="anio">
+						<cellContents backcolor="#9999FF" mode="Opaque">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="1Point" leftBorderColor="#000000" rightBorder="2Point" rightBorderColor="#000000" bottomBorder="2Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="33"
+						height="14"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{mes_Count}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="28" height="14" rowTotalGroup="nombre_dep">
+						<cellContents backcolor="#CCCCFF" mode="Opaque">
+					<box topBorder="2Point" topBorderColor="#000000" leftBorder="1Point" leftBorderColor="#000000" rightBorder="2Point" rightBorderColor="#000000" bottomBorder="2Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="28"
+						height="14"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{mes_Count}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="30" height="14" rowTotalGroup="nombre_dep" columnTotalGroup="mes">
+						<cellContents backcolor="#9999FF" mode="Opaque">
+					<box topBorder="2Point" topBorderColor="#000000" leftBorder="2Point" leftBorderColor="#000000" rightBorder="2Point" rightBorderColor="#000000" bottomBorder="2Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="30"
+						height="14"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{mes_Count}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="33" height="14" rowTotalGroup="nombre_dep" columnTotalGroup="anio">
+						<cellContents backcolor="#FFCCCC" mode="Opaque">
+					<box topBorder="2Point" topBorderColor="#000000" leftBorder="1Point" leftBorderColor="#000000" rightBorder="2Point" rightBorderColor="#000000" bottomBorder="2Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="33"
+						height="14"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{mes_Count}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<whenNoDataCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</whenNoDataCell>					</crosstab>
+				<staticText>
+					<reportElement
+						x="17"
+						y="-5"
+						width="385"
+						height="25"
+						key="staticText-7"
+						positionType="Float"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Registros de Entrada Telemática]]></text>
+				</staticText>
+			</band>
+		</summary>
+</jasperReport>

@@ -1,5 +1,7 @@
 package ieci.tecdoc.sgm.registro.action;
 
+import ieci.tdw.ispac.api.errors.ISPACRuleException;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tecdoc.sgm.autenticacion.AutenticacionManager;
 import ieci.tecdoc.sgm.autenticacion.util.SesionInfo;
 import ieci.tecdoc.sgm.autenticacion.util.Solicitante;
@@ -11,6 +13,7 @@ import ieci.tecdoc.sgm.core.services.catalogo.OrganoDestinatario;
 import ieci.tecdoc.sgm.core.services.catalogo.ServicioCatalogoTramites;
 import ieci.tecdoc.sgm.core.services.catalogo.TipoConector;
 import ieci.tecdoc.sgm.core.services.catalogo.Tramite;
+import ieci.tecdoc.sgm.core.services.dto.Entidad;
 import ieci.tecdoc.sgm.registro.form.SolicitudesRegistroForm;
 import ieci.tecdoc.sgm.registro.util.Definiciones;
 import ieci.tecdoc.sgm.registro.utils.Defs;
@@ -24,11 +27,39 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
+
 public class RealizarSolicitudRegistroAction extends RegistroWebAction{
 
 	public ActionForward executeAction(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 
+		//INICIO [eCenpri-Felipe #818]
+		try{
+			Entidad entidad = Misc.obtenerEntidad(request);
+			String entityId = entidad.getIdentificador();
+			FirmaConfiguration fc = FirmaConfiguration.getInstanceNoSingleton(entityId);
+			
+			String sDeshabilitarFirma = fc.getProperty("rt.firmar.deshabilitar");
+			boolean bDeshabilitarFirma = false;
+			if (StringUtils.isNotEmpty(sDeshabilitarFirma)){
+				bDeshabilitarFirma = Boolean.valueOf(sDeshabilitarFirma).booleanValue();
+			}
+			if (bDeshabilitarFirma){
+	
+				String titulo = fc.getProperty("rt.firmar.titulo");
+				String texto = fc.getProperty("rt.firmar.texto");
+				request.setAttribute(Defs.MENSAJE_ERROR, titulo);
+		    	request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, texto);
+				return mapping.findForward("nofirmar");
+			}
+		} catch (ISPACRuleException e1) {
+			request.setAttribute(Defs.MENSAJE_ERROR, "Error al recuperar la configuración de la firma");
+	    	request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, "Error al recuperar la configuración de la firma");
+			return mapping.findForward("nofirmar");
+		}
+		//FIN [eCenpri-Felipe #818]
+				
 		//ActionErrors errors = null;
 		SolicitudesRegistroForm solicitudBean = (SolicitudesRegistroForm)form;
 		String tramiteId = null;
@@ -47,7 +78,8 @@ public class RealizarSolicitudRegistroAction extends RegistroWebAction{
 		String sessionId = null;
 		boolean certificado = true;
 		HttpSession session = request.getSession();
-		session.removeAttribute(Defs.DATOS_ESPECIFICOS);
+		//[dipucr-Felipe #206 3#108]
+//		session.removeAttribute(Defs.DATOS_ESPECIFICOS);
 
 		try{
 			ServicioCatalogoTramites oServicioCatalogo = LocalizadorServicios.getServicioCatalogoTramites();
@@ -79,14 +111,31 @@ public class RealizarSolicitudRegistroAction extends RegistroWebAction{
 			/*############### FALTA COMPROBAR SI EL CONECTOR ES VÁLIDO ########*/
 			session.setAttribute(Defs.SESION_ID, sessionId);
 			session.setAttribute(Defs.SENDER_NIF, sessionInfo.getSender().getId());
-			String xml = prepararSolicitud(sessionInfo.getSender());
-			session.setAttribute(Defs.XML_DATA, xml);
-
+			String xml ="";
+			
+			//INICIO [DipuCR-Agustin 3#235]
 			//conector seleccionado por el usuario
 			Conector hook = oServicioCatalogo.getHook(sessionInfo.getHookId(), Misc.obtenerEntidad(request));
 			if (hook.getType() == TipoConector.WEB_USER_AUTH || hook.getType() == TipoConector.CERTIFICATE_WEB_AUTH){
 				certificado = false;
 			}
+			
+			if(certificado)
+				xml = prepararSolicitudCertificado(sessionInfo.getSender());
+			else
+				xml = prepararSolicitud(sessionInfo.getSender());
+			
+			session.setAttribute(Defs.XML_DATA, xml);
+			//FIN [DipuCR-Agustin 3#235]
+			
+			//INICIO [dipucr-Felipe #206 3#108]
+			String xmlDataSpecific = (String)request.getParameter(Defs.DATOS_ESPECIFICOS);
+			if (null != xmlDataSpecific && !xmlDataSpecific.equals("")){
+				session.setAttribute(Defs.DATOS_ESPECIFICOS, xmlDataSpecific);
+			}
+			//FIN [dipucr-Felipe #206 3#108]
+
+			
 	   	}catch(Exception e){
 	   		request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_REALIZAR_SOLICITUD);
 	    	request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, e.toString());
@@ -120,6 +169,23 @@ public class RealizarSolicitudRegistroAction extends RegistroWebAction{
    		//return mapping.findForward("success_web_change_port");
 	}
 
+	//[DipuCR-Agustin #235]
+	private String prepararSolicitudCertificado(Solicitante solicitante){
+
+		XmlTextBuilder bdr = new XmlTextBuilder();
+
+        bdr.setStandardHeader();
+        bdr.addOpeningTag(Definiciones.REGISTRY_DATA);
+
+        // Incluir en el XML de la solicitud
+        // la información de los datos del solicitante
+        Misc.addInfoSolicitanteCertificado(bdr, solicitante);
+
+        bdr.addClosingTag(Definiciones.REGISTRY_DATA);
+
+        return bdr.getText();
+	}
+	
 	private String prepararSolicitud(Solicitante solicitante){
 
 		XmlTextBuilder bdr = new XmlTextBuilder();
@@ -135,4 +201,5 @@ public class RealizarSolicitudRegistroAction extends RegistroWebAction{
 
         return bdr.getText();
 	}
+	
 }

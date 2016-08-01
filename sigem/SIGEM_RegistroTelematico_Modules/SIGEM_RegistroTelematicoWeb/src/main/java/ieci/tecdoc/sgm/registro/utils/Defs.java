@@ -134,4 +134,9 @@ public class Defs {
 	public static final String REFRESCO = "refresco";
 	public static final String EMPTY_STRING = "";
 	public static final String MENSAJE_ERROR_DOCUMENT_MAX_LENGTH = "mensaje_error.envio_solicitud.document_max_length";
+	
+	//[eCenpri-Felipe #457] SIGEM IncluiridTransaccion en el registro telemático
+	public static final String HASH_SOLICITUD = "HASH_SOLICITUD";
+	//[eCenpri-Felipe #457] SIGEM IncluiridTransaccion en el registro telemático
+
 }

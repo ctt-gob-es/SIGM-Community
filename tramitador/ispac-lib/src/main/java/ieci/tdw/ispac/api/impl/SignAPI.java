@@ -25,9 +25,11 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.ExpedientContext;
 import ieci.tdw.ispac.ispaclib.context.StateContext;
 import ieci.tdw.ispac.ispaclib.dao.security.SustitucionDAO;
+import ieci.tdw.ispac.ispaclib.dao.session.BloqueosFirmaDocsDAO;
 import ieci.tdw.ispac.ispaclib.dao.sign.SignCircuitDetailDAO;
 import ieci.tdw.ispac.ispaclib.dao.sign.SignCircuitHeaderDAO;
 import ieci.tdw.ispac.ispaclib.dao.sign.SignCircuitInstanceDAO;
+import ieci.tdw.ispac.ispaclib.dao.sign.SignTransactionDAO;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.gendoc.sign.SignDocumentMgr;
 import ieci.tdw.ispac.ispaclib.sign.ISignConnector;
@@ -64,6 +66,8 @@ import org.apache.log4j.Logger;
 import org.bouncycastle.util.encoders.Base64;
 
 import com.lowagie.text.pdf.PdfReader;
+
+import es.dipucr.sigem.api.rule.common.utils.GestorMetadatos;
 
 public class SignAPI implements ISignAPI {
 
@@ -324,7 +328,8 @@ public class SignAPI implements ISignAPI {
 			try {
 				ISignConnector signConnector = SignConnectorFactory
 						.getSignConnector();
-				String nameFirmante = signConnector.getInfoCert(x509CertString);
+				//String nameFirmante = signConnector.getInfoCert(x509CertString);
+				String nameFirmante = "POR HACER, RECUPERAR EL NOMBRE DEL FIRMANTE DE LA SESIÓN";
 				params.put("FIRMANTE", nameFirmante);
 
 			} catch (Exception e) {
@@ -352,7 +357,39 @@ public class SignAPI implements ISignAPI {
 			}
 		}
 	}
-
+	
+	
+	/**
+	 * [Dipucr-Agustin #781] 
+	 * Fase de prefirma en firma 3 fases 
+	 * @param SignDocument
+	 * @param boolean changeState
+	 * @return String path
+	 * @throws ISPACException
+	 */
+	public String presign(SignDocument signDocument, boolean changeState) throws ISPACException
+	  {
+		  boolean ongoingTX = this.mcontext.ongoingTX();
+		  boolean bCommit = false;
+		  try
+		  {
+		      if (!ongoingTX) {
+		        this.mcontext.beginTX();
+		      }
+		      
+		      ISignConnector signConnector = SignConnectorFactory.getSignConnector();
+		      signConnector.initializate(signDocument, this.mcontext);
+		      String path = signConnector.presign(changeState);   
+		      bCommit = true;
+		  	
+			  return path;		  
+		  }
+		  finally {
+		      if (!ongoingTX)
+		        this.mcontext.endTX(bCommit);
+		  }
+	  }
+	
 	public void sign(SignDocument signDocument, boolean changeState)throws ISPACException {
 
 		// Ejecucion en un contexto transaccional
@@ -402,6 +439,62 @@ public class SignAPI implements ISignAPI {
 			}
         }
 	}
+	
+	/**
+	 * [Dipucr-Agustin #781] 
+	 * Fase de postfirma en firma 3 fases 
+	 * @param SignDocument
+	 * @param String pathFicheroTemporalFirmado
+	 * @param boolean changeState
+	 * @return String "OK"
+	 * @throws ISPACException
+	 */
+	public String postsign(SignDocument signDocument,
+			String pathFicheroTemporalFirmado, boolean changeState)
+			throws ISPACException {
+
+		boolean ongoingTX = this.mcontext.ongoingTX();
+	    boolean bCommit = false;
+	    try
+	    {
+	      if (!ongoingTX) {
+	        this.mcontext.beginTX();
+	      }
+
+	      ISignConnector signConnector = SignConnectorFactory.getSignConnector();
+	      signConnector.initializate(signDocument, this.mcontext);
+	      signConnector.postsign(pathFicheroTemporalFirmado, changeState);
+
+	      IItem doc = signDocument.getItemDoc();
+
+	      ExpedientContext expCtx = new ExpedientContext(this.mcontext);
+	      ITXTransaction tx = this.mcontext.getAPI().getTransactionAPI();
+
+	      StateContext stateContext = this.mcontext.getStateContext();
+	      if (stateContext.getActivityId() > 0) {
+	        expCtx.setStage(stateContext.getStageId());
+	        expCtx.setTask(doc.getInt("ID_TRAMITE"));
+	        expCtx.setActivity(stateContext.getActivityId(), doc.getInt("ID_TRAMITE"), doc.getInt("ID_TRAMITE_PCD"));
+	        tx.executeEvents(8, doc.getInt("ID_FASE_PCD"), 33, expCtx);
+	      } else if (doc.getInt("ID_TRAMITE") > 0) {
+	        expCtx.setStage(doc.getInt("ID_FASE"));
+	        expCtx.setTask(doc.getInt("ID_TRAMITE"));
+	        tx.executeEvents(3, doc.getInt("ID_TRAMITE_PCD"), 33, expCtx);
+	      } else if (doc.getInt("ID_FASE") > 0) {
+	        expCtx.setStage(doc.getInt("ID_FASE"));
+	        tx.executeEvents(2, doc.getInt("ID_FASE_PCD"), 33, expCtx);
+	      }
+
+	      bCommit = true;
+	    }
+	    finally {
+	      if (!ongoingTX)
+	        this.mcontext.endTX(bCommit);
+	    }
+	    
+	    return "OK";
+		
+	}
 
 	public IItem getCircuitStep(int circuitId, int stepId) throws ISPACException {
         DbCnt cnt = mcontext.getConnection();
@@ -438,6 +531,26 @@ public class SignAPI implements ISignAPI {
 		}
 	}
 
+	public boolean isResponsibleSubstitute(int documentId, String substituteId)
+			throws ISPACException {
+		DbCnt cnt = this.mcontext.getConnection();
+		boolean bIsRespSubstitute = false;
+		try {
+			IItemCollection sustituidos = SustitucionDAO.getSustituidos(cnt,
+					substituteId).disconnect();
+
+			while ((sustituidos.next()) && (!bIsRespSubstitute)) {
+				IItem sustituido = sustituidos.value();
+				String sustituidoId = sustituido.getString("UID_SUSTITUIDO");
+				bIsRespSubstitute = SignCircuitInstanceDAO.isResponsible(cnt,
+						sustituidoId, documentId);
+			}
+			return bIsRespSubstitute;
+		} finally {
+			this.mcontext.releaseConnection(cnt);
+		}
+	}
+	
 	/**
     * Obtiene los pasos del circuito de firma en funcion del
 	 * identificador del documento a firmar o firmado en dicho circuito de firma.
@@ -493,13 +606,13 @@ public class SignAPI implements ISignAPI {
 	 * @return Lista de documentos firmados
 	 * @throws ISPACException
 	 */
-	public List batchSignSteps(String[] stepIds, String[] signs, String certificado) throws ISPACException {
+	public List batchSignSteps(String[] stepIds, String[] signs, String certificado, String entityId) throws ISPACException {
 
 		//Se comprubea la validez del certificado
 		IInvesflowAPI invesflowAPI = mcontext.getAPI();
 		IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 
-		List signDocuments = new ArrayList();
+		List<SignDocument> signDocuments = new ArrayList();
 
 		// Ejecucion en un contexto transaccional
 		boolean ongoingTX = mcontext.ongoingTX();
@@ -514,29 +627,39 @@ public class SignAPI implements ISignAPI {
 			for (int i = 0; i < stepIds.length; i++) {
 
 				// Paso del circuito
-				IItem stepCircuit = getStepInstancedCircuit(Integer.parseInt(stepIds[i]));
-
+				int idpaso = Integer.parseInt(stepIds[i]);
+				IItem stepCircuit = getStepInstancedCircuit(idpaso);
+				
+				
 				// Documento asociado al paso
 				IItem document = entitiesAPI.getDocument(stepCircuit.getInt("ID_DOCUMENTO"));
+		 	    String infoPage = document.getString("INFOPAG");
+		 		String infoPageRDE = document.getString("INFOPAG_RDE");
+				
 
 				// Expediente del documento
 				String numExp = document.getString("NUMEXP");
-				int idPcd = entitiesAPI.getExpedient(numExp).getInt("ID_PCD");
+				int idPcd = entitiesAPI.getExpedient(numExp).getInt("ID_PCD");				
 
 				// Documento a firmar
 				SignDocument signDocument = new SignDocument(document);
+				
+				signDocument.setEntityId(entityId);
 
 				signDocument.setIdPcd(idPcd);
 				signDocument.setNumExp(numExp);
 				signDocument.addCertificate(certificado);
 				signDocument.setHash(generateHashCode(signDocument));
+				
+				//if(i<signs.length)
 				signDocument.addSign(signs[i]);
+				
 				signDocument.setNumSigner(stepCircuit.getInt("ID_PASO"));
 
 
 				// Firma asociada al paso del circuito
 				signStep(signDocument, stepCircuit.getKeyInt());
-
+				
 				signDocuments.add(signDocument);
 			}
 
@@ -1164,5 +1287,105 @@ public class SignAPI implements ISignAPI {
 		ResultadoValidacionCertificado resultado = signConnector.validateCertificate(certificado);
 		return resultado;
 	}
+	
+	
+	/**
+	 * [eCenpri-Felipe #592]
+	 * Devuelve todos los circuitos de firma definidos en el tramite
+	 * @param filter Filtro a aplicar.
+	 * @return Lista de circuitos de firma definidos en el sistema aplicando el filtro.
+	 * @throws ISPACException
+	 */	
+	public IItemCollection getCircuitsTramite(SignCircuitFilter filter) throws ISPACException {
+        DbCnt cnt = mcontext.getConnection();
+		try {
+			return SignCircuitHeaderDAO.getCircuitsTramite(cnt, filter).disconnect();
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+	
+	/**
+	 * [eCenpri-Felipe #871] 19.04.2013
+	 * Devuelve el bloqueo de firmas para un cierto tipo de documento
+	 * @param tipoDoc
+	 * @param estado
+	 * @return
+	 * @throws ISPACException
+	 */
+	public IItemCollection getBloqueoFirmaDocs(String tipoDoc, int estado) throws ISPACException {
+        DbCnt cnt = mcontext.getConnection();
+		try {
+			return BloqueosFirmaDocsDAO.getBloqueoFirmas(cnt, tipoDoc, estado).disconnect();
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+	
+	
+	/**
+	 * [eCenpri-Felipe #871] 19.04.2013
+	 * Insert un nuevo bloqueo para el tipo de documento en la BBDD
+	 * @param tipoDoc
+	 * @param usuario
+	 * @param fecha
+	 * @param estado
+	 * @return
+	 * @throws ISPACException
+	 */
+	public void insertBloqueoFirmaDocs(String tipoDoc, String usuario, Date fecha, int estado) throws ISPACException {
+        DbCnt cnt = mcontext.getConnection();
+		try {
+			BloqueosFirmaDocsDAO.insert(cnt, tipoDoc, usuario, fecha, estado);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+	
+	/**
+	 * [eCenpri-Felipe #871] 19.04.2013
+	 * Actualiza el bloqueo para el tipo de documento en la BBDD
+	 * @param tipoDoc
+	 * @param usuario
+	 * @param fecha
+	 * @param estado
+	 * @return
+	 * @throws ISPACException
+	 */
+	public void updateBloqueoFirmaDocs(String tipoDoc, String usuario, Date fecha, int estado) throws ISPACException {
+        DbCnt cnt = mcontext.getConnection();
+		try {
+			BloqueosFirmaDocsDAO.update(cnt, tipoDoc, usuario, fecha, estado);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
+	
+	/**
+	 * [eCenpri-Felipe #871] 19.04.2013
+	 * Borra el bloqueo para el tipo de documento en la BBDD
+	 * @param tipoDoc
+	 * @return
+	 * @throws ISPACException
+	 */
+	public void deleteBloqueoFirmaDocs(String tipoDoc) throws ISPACException {
+        DbCnt cnt = mcontext.getConnection();
+		try {
+			BloqueosFirmaDocsDAO.delete(cnt, tipoDoc);
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
 
+
+	public IItemCollection getTransactionsByDocument(int documentId)
+			throws ISPACException {
+		
+		DbCnt cnt = this.mcontext.getConnection();
+	    try {
+	      return SignTransactionDAO.getTransactionsByDocument(cnt, documentId).disconnect();
+	    } finally {
+	      this.mcontext.releaseConnection(cnt);
+	    }
+	}
 }

@@ -6,15 +6,15 @@
  */
 package ieci.tdw.ispac.ispaclib.dao.tx;
 
-import org.apache.commons.lang.StringUtils;
-
 import ieci.tdw.ispac.api.errors.ISPACException;
-import ieci.tdw.ispac.ispaclib.dao.ActionDAO;
 import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.ObjectDAO;
+import ieci.tdw.ispac.ispaclib.dao.historico.TXHitoHDAO;
 import ieci.tdw.ispac.ispaclib.dao.idsequences.IdSequenceMgr;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -89,6 +89,13 @@ public class TXHitoDAO extends ObjectDAO
 
 		CollectionDAO objlist=new CollectionDAO(TXHitoDAO.class);
 		objlist.query(cnt,sql);
+		//[Manu Ticket #1090] - INICIO Poner en marcha la opción Consulta de Expedientes.
+		if(objlist == null || objlist.toList().size() == 0){
+			objlist=new CollectionDAO(TXHitoHDAO.class);
+			objlist.query(cnt,sql);
+		}
+		//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
+		
 		return objlist;
 	}
 
@@ -99,6 +106,13 @@ public class TXHitoDAO extends ObjectDAO
 
 		CollectionDAO objlist=new CollectionDAO(TXHitoDAO.class);
 		objlist.query(cnt,sql);
+		//[Manu Ticket #1090] - INICIO Poner en marcha la opción Consulta de Expedientes.
+		if(objlist == null || objlist.toList().size() == 0){
+			objlist=new CollectionDAO(TXHitoHDAO.class);
+			objlist.query(cnt,sql);
+		}
+		//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
+
 		return objlist;
 	}
 
@@ -107,6 +121,12 @@ public class TXHitoDAO extends ObjectDAO
 
 		CollectionDAO objlist=new CollectionDAO(TXHitoDAO.class);
 		objlist.query(cnt,sql);
+		//[Manu Ticket #1090] - INICIO Poner en marcha la opción Consulta de Expedientes.
+		if(objlist == null || objlist.toList().size() == 0){
+			objlist=new CollectionDAO(TXHitoHDAO.class);
+			objlist.query(cnt,sql);
+		}
+		//[Manu Ticket #1090] - FIN  Poner en marcha la opción Consulta de Expedientes.
 		return objlist;
 	}
 	

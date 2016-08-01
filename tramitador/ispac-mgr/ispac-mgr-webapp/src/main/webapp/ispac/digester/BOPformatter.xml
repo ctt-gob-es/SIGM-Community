@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+
+	<!-- Ponemos 2 veces la propiedad Nombre, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='ORDEN' 
+				 titleKey='BOP_ANUNCIOS:ORDEN' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CLASIFICACION' 
+				 titleKey='BOP_ANUNCIOS:CLASIFICACION' 
+				 fieldType='LIST' 
+				 columnClass='width25percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='ENTIDAD' 
+				 titleKey='BOP_ANUNCIOS:ENTIDAD' 
+				 fieldType='LIST' 
+				 columnClass='width25percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SUMARIO' 
+				 titleKey='BOP_ANUNCIOS:SUMARIO' 
+				 fieldType='LINK'
+				 columnClass='width30percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SUMARIO' 
+				 titleKey='BOP_ANUNCIOS:SUMARIO' 
+				 fieldType='LIST'
+				 columnClass='width30percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='URGENCIA' 
+				 titleKey='BOP_ANUNCIOS:URGENCIA' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+</beanformatter>

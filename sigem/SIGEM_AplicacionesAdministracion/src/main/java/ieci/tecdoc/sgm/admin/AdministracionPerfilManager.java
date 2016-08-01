@@ -1,6 +1,7 @@
 package ieci.tecdoc.sgm.admin;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -263,13 +264,43 @@ public class AdministracionPerfilManager {
 			for (int i = 0; i< entidadesDif.size();i++){
 				entidades[i] = service.obtenerEntidad((String)entidadesDif.get(i));
 			}
+			//[Manu Ticket #997] INICIO SIGEM Ordenar las entidades en el acceso del administrador.
+			entidades = ordenarEntidades(entidades);
+			//[Manu Ticket #997] FIN SIGEM Ordenar las entidades en el acceso del administrador.
+
 		}catch(Exception e){
 			
 		}
 		return entidades;
 	}
 
-	
+	//[Manu Ticket #997] INICIO SIGEM Ordenar las entidades en el acceso del administrador.
+	public Entidad[] ordenarEntidades(Entidad[] entidades){
+		Entidad[] resultado = new Entidad[entidades.length];
+		if(entidades.length == 1){
+			resultado = entidades;
+		}
+		else{
+			try{
+				List entidadesPerfil = Arrays.asList(entidades);
+				List entidadesOrdenadas = LocalizadorServicios.getServicioEntidades().obtenerEntidades();
+				for(int i = 0; i< entidadesOrdenadas.size(); i++){
+					for(int j = 0; j < entidadesPerfil.size(); j++){
+						if(((Entidad)entidadesPerfil.get(j)).getIdentificador().equals(((Entidad)entidadesOrdenadas.get(i)).getIdentificador())){
+							resultado[i] = (Entidad) entidadesOrdenadas.get(i);
+						}
+					}
+				}
+			}
+			catch(Exception e){
+				resultado = entidades;
+			}			
+		}
+		
+		return resultado;
+	}
+	//[Manu Ticket #997] FIN SIGEM Ordenar las entidades en el acceso del administrador.
+
 
 	
 }

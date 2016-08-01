@@ -510,10 +510,19 @@ public class AutenticacionManager  {
             sender.setSurName2(cert.getSurName2());
             sender.setCertificateIssuer(cert.getIssuer());
             sender.setCertificateSN(cert.getSerialNumber());
-            if (!cert.isLegalEntity())
-               sender.setInQuality(String.valueOf(TipoSolicitante.INDIVIDUAL));
-            else
-               sender.setInQuality(String.valueOf(TipoSolicitante.LEGAL_REPRESENTATIVE));
+            
+            //[DipuCR-Agustin #221] INICIO
+            //Para los certificados de persona juridica a la hora de consultar los registro actuamos como si fueran
+            //certificados de persona fisica. Al registrar con este certificado el registro se asocia al dni no el cif de la empresa
+            //por tanto a la hora de consultar haremos lo mismo
+            
+            //if (!cert.isLegalEntity())
+            //   sender.setInQuality(String.valueOf(TipoSolicitante.INDIVIDUAL));
+            //else
+            //   sender.setInQuality(String.valueOf(TipoSolicitante.LEGAL_REPRESENTATIVE));
+            sender.setInQuality(String.valueOf(TipoSolicitante.INDIVIDUAL));            
+            //[DipuCR-Agustin #221] FIN
+            
             sender.setSocialName(cert.getSocialName());
             sender.setCIF(cert.getCIF());
             //########## FALTA ESTE PARAMETRO ##########

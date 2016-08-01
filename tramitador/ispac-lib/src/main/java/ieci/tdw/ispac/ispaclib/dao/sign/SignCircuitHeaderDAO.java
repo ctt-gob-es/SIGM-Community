@@ -99,6 +99,28 @@ public class SignCircuitHeaderDAO extends ObjectDAO
 	}
 
 	/**
+	 * [eCenpri-Felipe #592]
+	 * Devuelve los circuitos asociados al trámite
+	 * @param cnt
+	 * @param filter
+	 * @return
+	 * @throws ISPACException
+	 */
+	public static CollectionDAO getCircuitsTramite(DbCnt cnt, SignCircuitFilter filter) throws ISPACException {
+    	StringBuffer sql = new StringBuffer();
+    	
+    	if ((filter != null) && (filter.getTaskPcdId() > 0)) {
+    		sql.append("WHERE (TIPO=2 AND ID_CIRCUITO IN (SELECT ID_CIRCUITO FROM SPAC_P_CTOSFIRMATRAMITE WHERE ID_TRAM_PCD=")
+	    		.append(filter.getTaskPcdId())
+	    		.append(")) ORDER BY DESCRIPCION");
+    	}
+    	
+		CollectionDAO objlist = new CollectionDAO(SignCircuitHeaderDAO.class);
+		objlist.query(cnt, sql.toString());
+		return objlist;
+	}
+	
+	/**
 	 * Obtiene el circuito de firmas a partir de su identificador
 	 * @param cnt Conexi&oacute;n a BD
 	 * @return Lista de todos los circuitos de firma definidos en el sistema.

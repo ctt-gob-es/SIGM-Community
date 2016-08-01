@@ -1,0 +1,973 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="ChequesSERSO-PE"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="782"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["."]]></defaultValueExpression>
+	</parameter>
+
+	<field name="codigo1" class="java.lang.String">
+		<fieldDescription><![CDATA[codigo1]]></fieldDescription>
+	</field>
+	<field name="nombre1" class="java.lang.String">
+		<fieldDescription><![CDATA[nombre1]]></fieldDescription>
+	</field>
+	<field name="importe1" class="java.lang.String">
+		<fieldDescription><![CDATA[importe1]]></fieldDescription>
+	</field>
+	<field name="fecha1" class="java.lang.String">
+		<fieldDescription><![CDATA[fecha1]]></fieldDescription>
+	</field>
+	<field name="codigo2" class="java.lang.String">
+		<fieldDescription><![CDATA[codigo2]]></fieldDescription>
+	</field>
+	<field name="nombre2" class="java.lang.String">
+		<fieldDescription><![CDATA[nombre2]]></fieldDescription>
+	</field>
+	<field name="importe2" class="java.lang.String">
+		<fieldDescription><![CDATA[importe2]]></fieldDescription>
+	</field>
+	<field name="fecha2" class="java.lang.String">
+		<fieldDescription><![CDATA[fecha2]]></fieldDescription>
+	</field>
+	<field name="codigo3" class="java.lang.String">
+		<fieldDescription><![CDATA[codigo3]]></fieldDescription>
+	</field>
+	<field name="nombre3" class="java.lang.String">
+		<fieldDescription><![CDATA[nombre3]]></fieldDescription>
+	</field>
+	<field name="importe3" class="java.lang.String">
+		<fieldDescription><![CDATA[importe3]]></fieldDescription>
+	</field>
+	<field name="fecha3" class="java.lang.String">
+		<fieldDescription><![CDATA[fecha3]]></fieldDescription>
+	</field>
+	<field name="codigo4" class="java.lang.String">
+		<fieldDescription><![CDATA[codigo4]]></fieldDescription>
+	</field>
+	<field name="nombre4" class="java.lang.String">
+		<fieldDescription><![CDATA[nombre4]]></fieldDescription>
+	</field>
+	<field name="importe4" class="java.lang.String">
+		<fieldDescription><![CDATA[importe4]]></fieldDescription>
+	</field>
+	<field name="fecha4" class="java.lang.String">
+		<fieldDescription><![CDATA[fecha4]]></fieldDescription>
+	</field>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="528"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="410"
+						y="0"
+						width="372"
+						height="528"
+						key="image-15"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="410"
+						height="528"
+						key="image-14"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+				<rectangle>
+					<reportElement
+						x="414"
+						y="6"
+						width="363"
+						height="241"
+						key="rectangle-4">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle>
+					<reportElement
+						x="414"
+						y="250"
+						width="363"
+						height="241"
+						key="rectangle-5">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle>
+					<reportElement
+						x="42"
+						y="250"
+						width="363"
+						height="241"
+						key="rectangle-2">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<rectangle>
+					<reportElement
+						x="42"
+						y="6"
+						width="363"
+						height="241"
+						key="rectangle-1">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="229"
+						y="260"
+						width="169"
+						height="225"
+						key="image-9">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="229"
+						y="16"
+						width="169"
+						height="225"
+						key="image-8">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="599"
+						y="16"
+						width="169"
+						height="225"
+						key="image-11">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="599"
+						y="260"
+						width="169"
+						height="225"
+						key="image-12">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+				<image  scaleImage="FillFrame" hAlign="Center" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="88"
+						y="9"
+						width="269"
+						height="79"
+						key="image-1"
+						stretchType="RelativeToTallestObject">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="RelativeToTallestObject"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoCabecera3.gif"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						x="50"
+						y="119"
+						width="44"
+						height="17"
+						key="staticText-1">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Código:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="50"
+						y="136"
+						width="86"
+						height="17"
+						key="staticText-2">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+				<text><![CDATA[Nombre y Apellidos: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="50"
+						y="153"
+						width="49"
+						height="17"
+						key="staticText-3">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Importe:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="50"
+						y="170"
+						width="348"
+						height="17"
+						key="staticText-4">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Fecha, sello y firma Trabajador/a Social:]]></text>
+				</staticText>
+				<image  scaleImage="FillFrame" hAlign="Center" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="88"
+						y="253"
+						width="269"
+						height="79"
+						key="image-2"
+						stretchType="RelativeToTallestObject">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="RelativeToTallestObject"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoCabecera3.gif"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						x="50"
+						y="363"
+						width="44"
+						height="17"
+						key="staticText-5">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Código:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="50"
+						y="380"
+						width="86"
+						height="17"
+						key="staticText-6">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+				<text><![CDATA[Nombre y Apellidos: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="50"
+						y="414"
+						width="348"
+						height="17"
+						key="staticText-8">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Fecha, sello y firma Trabajador/a Social:]]></text>
+				</staticText>
+				<image  scaleImage="FillFrame" hAlign="Center" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="461"
+						y="9"
+						width="269"
+						height="79"
+						key="image-4"
+						stretchType="RelativeToTallestObject">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="RelativeToTallestObject"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoCabecera3.gif"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						x="422"
+						y="119"
+						width="44"
+						height="17"
+						key="staticText-13">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Código:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="422"
+						y="136"
+						width="86"
+						height="17"
+						key="staticText-14">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+				<text><![CDATA[Nombre y Apellidos: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="422"
+						y="170"
+						width="348"
+						height="17"
+						key="staticText-16">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Fecha, sello y firma Trabajador/a Social:]]></text>
+				</staticText>
+				<image  scaleImage="FillFrame" hAlign="Center" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="461"
+						y="253"
+						width="269"
+						height="79"
+						key="image-5"
+						stretchType="RelativeToTallestObject">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="RelativeToTallestObject"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoCabecera3.gif"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						x="422"
+						y="363"
+						width="44"
+						height="17"
+						key="staticText-17">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Código:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="422"
+						y="380"
+						width="86"
+						height="17"
+						key="staticText-18">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8"/>
+					</textElement>
+				<text><![CDATA[Nombre y Apellidos: ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="422"
+						y="414"
+						width="348"
+						height="17"
+						key="staticText-20">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Fecha, sello y firma Trabajador/a Social:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="659"
+						y="503"
+						width="97"
+						height="15"
+						key="staticText-25"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true" isUnderline="false"/>
+					</textElement>
+				<text><![CDATA[CORTAR VALES]]></text>
+				</staticText>
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="747"
+						y="498"
+						width="30"
+						height="24"
+						key="image-7"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/tijeras.png"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="136"
+						y="136"
+						width="262"
+						height="17"
+						key="textField-7">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nombre1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="508"
+						y="136"
+						width="262"
+						height="17"
+						key="textField-8">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nombre2}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="136"
+						y="380"
+						width="262"
+						height="17"
+						key="textField-9">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nombre3}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="508"
+						y="380"
+						width="262"
+						height="17"
+						key="textField-10">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nombre4}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="50"
+						y="187"
+						width="348"
+						height="17"
+						key="textField-13">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{fecha1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="422"
+						y="187"
+						width="348"
+						height="17"
+						key="textField-14">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{fecha2}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="50"
+						y="431"
+						width="348"
+						height="17"
+						key="textField-15">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{fecha3}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="422"
+						y="431"
+						width="348"
+						height="17"
+						key="textField-16">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{fecha4}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="99"
+						y="153"
+						width="299"
+						height="17"
+						key="textField-19">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{importe1} + " €"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="422"
+						y="153"
+						width="49"
+						height="17"
+						key="staticText-26">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Importe:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="471"
+						y="153"
+						width="299"
+						height="17"
+						key="textField-20">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{importe2} + " €"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="50"
+						y="397"
+						width="49"
+						height="17"
+						key="staticText-27">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Importe:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="99"
+						y="397"
+						width="299"
+						height="17"
+						key="textField-21">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{importe3} + " €"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="422"
+						y="397"
+						width="49"
+						height="17"
+						key="staticText-28">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<text><![CDATA[Importe:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="471"
+						y="397"
+						width="299"
+						height="17"
+						key="textField-22">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{importe4} + " €"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="44"
+						y="461"
+						width="361"
+						height="13"
+						key="staticText-29">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8" isUnderline="true"/>
+					</textElement>
+				<text><![CDATA[El uso indebido del presente cheque, dará lugar a la pérdida de condición de beneficiario/a.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="44"
+						y="474"
+						width="361"
+						height="13"
+						key="staticText-30">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8" isUnderline="true"/>
+					</textElement>
+				<text><![CDATA[Caducidad: Al día siguiente de la entrega al beneficiario/a.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="416"
+						y="461"
+						width="361"
+						height="13"
+						key="staticText-31">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8" isUnderline="true"/>
+					</textElement>
+				<text><![CDATA[El uso indebido del presente cheque, dará lugar a la pérdida de condición de beneficiario/a.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="416"
+						y="474"
+						width="361"
+						height="13"
+						key="staticText-32">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8" isUnderline="true"/>
+					</textElement>
+				<text><![CDATA[Caducidad: Al día siguiente de la entrega al beneficiario/a.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="44"
+						y="216"
+						width="361"
+						height="13"
+						key="staticText-33">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8" isUnderline="true"/>
+					</textElement>
+				<text><![CDATA[El uso indebido del presente cheque, dará lugar a la pérdida de condición de beneficiario/a.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="44"
+						y="229"
+						width="361"
+						height="13"
+						key="staticText-34">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8" isUnderline="true"/>
+					</textElement>
+				<text><![CDATA[Caducidad: Al día siguiente de la entrega al beneficiario/a.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="416"
+						y="217"
+						width="361"
+						height="13"
+						key="staticText-35">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8" isUnderline="true"/>
+					</textElement>
+				<text><![CDATA[El uso indebido del presente cheque, dará lugar a la pérdida de condición de beneficiario/a.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="416"
+						y="230"
+						width="361"
+						height="13"
+						key="staticText-36">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial" size="8" isUnderline="true"/>
+					</textElement>
+				<text><![CDATA[Caducidad: Al día siguiente de la entrega al beneficiario/a.]]></text>
+				</staticText>
+				<image  scaleImage="RetainShape" vAlign="Middle" hAlign="Center" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="79"
+						y="88"
+						width="287"
+						height="31"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="barcode-1">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
+					<imageExpression class="java.awt.Image"><![CDATA[it.businesslogic.ireport.barcode.BcImage.getBarcodeImage(26,$F{codigo1}.toString(),false,false,null,0,0)]]></imageExpression>
+				</image>
+				<image  scaleImage="RetainShape" vAlign="Middle" hAlign="Center" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="451"
+						y="88"
+						width="287"
+						height="31"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="barcode-2">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
+					<imageExpression class="java.awt.Image"><![CDATA[it.businesslogic.ireport.barcode.BcImage.getBarcodeImage(26,$F{codigo2}.toString(),false,false,null,0,0)]]></imageExpression>
+				</image>
+				<image  scaleImage="RetainShape" vAlign="Middle" hAlign="Center" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="79"
+						y="332"
+						width="287"
+						height="31"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="barcode-3">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
+					<imageExpression class="java.awt.Image"><![CDATA[it.businesslogic.ireport.barcode.BcImage.getBarcodeImage(26,$F{codigo3}.toString(),false,false,null,0,0)]]></imageExpression>
+				</image>
+				<image  scaleImage="RetainShape" vAlign="Middle" hAlign="Center" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="451"
+						y="332"
+						width="287"
+						height="31"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="barcode-4">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
+					<imageExpression class="java.awt.Image"><![CDATA[it.businesslogic.ireport.barcode.BcImage.getBarcodeImage(26,$F{codigo4}.toString(),false,false,null,0,0)]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="94"
+						y="119"
+						width="304"
+						height="17"
+						key="textField-23">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo1}!=null && !$F{codigo1}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{codigo1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="466"
+						y="119"
+						width="302"
+						height="17"
+						key="textField-24">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo2}!=null && !$F{codigo2}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{codigo2}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="94"
+						y="363"
+						width="304"
+						height="17"
+						key="textField-25">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo3}!=null && !$F{codigo3}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{codigo3}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="466"
+						y="363"
+						width="302"
+						height="17"
+						key="textField-26">
+							<printWhenExpression><![CDATA[new Boolean($F{codigo4}!=null && !$F{codigo4}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{codigo4}]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

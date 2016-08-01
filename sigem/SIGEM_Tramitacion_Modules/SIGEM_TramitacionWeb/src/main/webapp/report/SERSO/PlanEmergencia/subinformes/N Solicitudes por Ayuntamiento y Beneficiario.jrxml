@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="N Solicitudes por Ayuntamiento y Beneficiario" pageWidth="595" pageHeight="842" columnWidth="565" leftMargin="0" rightMargin="30" topMargin="0" bottomMargin="0">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="NUM_EXP" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DPCR2012/13000"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select b.sustituto , nif, count(*) from
+rec_vldtbl_municipios b
+left join dpcr_serso_plan_emer a on a.ciudad = b.valor
+left join spac_expedientes c on a.numexp = c.numexp
+left join dpcr_serso_estadisticas d on d.numexp = $P{NUM_EXP} and d.numexpconvocatoria = a.convocatoria
+left join spac_expedientes e on e.numexp = d.numexpconvocatoria
+
+where a.convocatoria = d.numexpconvocatoria
+and b.valor != '999' and b.valor != '000'
+and sustituto not like '%REGANTES%'
+and sustituto not like '%MAN.%'
+and sustituto not like '%MANCOMUNI%'
+and sustituto not like '%CUOTAS%'
+and sustituto not like '%COMERCIO%'
+and sustituto not like '%ESTADOS%'
+and sustituto not like '%HUERTEZUE%'
+and sustituto not like '%CONSOLACI%'
+and sustituto not like 'LOS BALLESTER%'
+and sustituto not like '%MIRONES%'
+and sustituto not like '%POZO%SERNA%'
+and sustituto not like '%SANTA QUITERIA%'
+and sustituto not like '%VENTA%CARDENAS%'
+and sustituto not like '%VILLANUEVA%FRANCO%'
+and sustituto not like '%CAMPO%CALATRAVA%'
+and sustituto not like '%FONTANOSAS%ABENOJAR%'
+and sustituto not like '%PUEBLO%NUEVO%'
+and c.estadoadm in ('NT','NE','AP','RS')
+
+and (a.convocatoria = d.numexpconvocatoria or (d.numexpconvocatoria is not null and d.numexpconvocatoria != '' and a.convocatoria is null))
+group by sustituto, nif
+order by sustituto, nif ]]>
+	</queryString>
+	<field name="sustituto" class="java.lang.String"/>
+	<field name="nif" class="java.lang.String"/>
+	<field name="count" class="java.lang.Long"/>
+	<variable name="totalSolicitudes" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{count}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-2" x="0" y="0" width="276" height="22"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[AYUNTAMIENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-3" x="276" y="0" width="100" height="22"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[BENEFICIARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-4" x="376" y="0" width="100" height="22"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Nº DE PETICIONES]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="0" y="0" width="276" height="20"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{sustituto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="276" y="0" width="100" height="20"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nif}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="376" y="0" width="100" height="20"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{count}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="1" splitType="Stretch"/>
+	</summary>
+</jasperReport>

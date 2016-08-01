@@ -1,6 +1,7 @@
 package ieci.tecdoc.sgm.registro.utils;
 
 import ieci.tecdoc.sgm.autenticacion.util.Solicitante;
+import ieci.tecdoc.sgm.autenticacion.util.TipoAutenticacionCodigos;
 import ieci.tecdoc.sgm.autenticacion.util.TipoSolicitante;
 import ieci.tecdoc.sgm.autenticacion.util.utilities.Validador;
 import ieci.tecdoc.sgm.base.xml.core.XmlDocument;
@@ -77,6 +78,64 @@ public class Misc {
 		return documentsWithVirus;
 	}
 
+	//INICIO [DipuCR-Agustin #235] Creo otro método para diferenciar la entrada por certificado
+	public static void addInfoSolicitanteCertificado(XmlTextBuilder bdr, Solicitante solicitante) {
+
+        bdr.addOpeningTag(Definiciones.SENDER);
+
+        // Persona fisica o juridica
+        if (solicitante.getInQuality().equals(String.valueOf(TipoSolicitante.INDIVIDUAL))) {
+
+        	// Persona fisica (individual)
+        	// Nombre completo
+	        bdr.addSimpleElement(Definiciones.SENDER_NAME, solicitante.getName(), true);
+	        // Nombre y apellidos segregados
+	        if (StringUtils.isNotBlank(solicitante.getSurName())) {
+	        	bdr.addOpeningTag(Definiciones.SENDER_NAME_SURNAMES);
+	        	bdr.addSimpleElement(Definiciones.SENDER_NAME, solicitante.getFirstName(), true);
+	        	bdr.addSimpleElement(Definiciones.SENDER_SURNAME, solicitante.getSurName(), true);
+	        	bdr.addSimpleElement(Definiciones.SENDER_SURNAME2, solicitante.getSurName2(), true);
+	        	bdr.addClosingTag(Definiciones.SENDER_NAME_SURNAMES);
+	        }
+	        bdr.addOpeningTag(Definiciones.ID);
+	        bdr.addSimpleElement(Definiciones.SENDER_ID_TYPE, ""+Validador.validateDocumentType(solicitante.getId()));
+	        bdr.addSimpleElement(Definiciones.SENDER_ID, solicitante.getId());
+	        bdr.addClosingTag(Definiciones.ID);
+        }
+        else {
+        	// Persona juridica (representante legal)
+	        bdr.addSimpleElement(Definiciones.SENDER_NAME, solicitante.getName(), true);
+	        bdr.addOpeningTag(Definiciones.ID);
+	        bdr.addSimpleElement(Definiciones.SENDER_ID_TYPE, ""+Validador.validateDocumentType(solicitante.getId()));
+	        bdr.addSimpleElement(Definiciones.SENDER_ID, solicitante.getId());
+	        bdr.addClosingTag(Definiciones.ID);
+        }
+
+        bdr.addSimpleElement(Definiciones.SENDER_EMAIL, solicitante.getEmail(), true);
+        bdr.addClosingTag(Definiciones.SENDER);
+
+        // Representante legal de la persona juridica
+        if (solicitante.getInQuality().equals(String.valueOf(TipoSolicitante.LEGAL_REPRESENTATIVE))) {
+
+        	bdr.addOpeningTag(Definiciones.LEGAL_REPRESENTATIVE);
+        	// Nombre completo
+	        bdr.addSimpleElement(Definiciones.SENDER_NAME, solicitante.getName(), true);
+	        // Nombre y apellidos segregados
+	        if (StringUtils.isNotBlank(solicitante.getSurName())) {
+	        	bdr.addOpeningTag(Definiciones.SENDER_NAME_SURNAMES);
+	        	bdr.addSimpleElement(Definiciones.SENDER_NAME, solicitante.getFirstName(), true);
+	        	bdr.addSimpleElement(Definiciones.SENDER_SURNAME, solicitante.getSurName(), true);
+	        	bdr.addSimpleElement(Definiciones.SENDER_SURNAME2, solicitante.getSurName2(), true);
+	        	bdr.addClosingTag(Definiciones.SENDER_NAME_SURNAMES);
+	        }
+	        bdr.addOpeningTag(Definiciones.ID);
+	        bdr.addSimpleElement(Definiciones.SENDER_ID_TYPE, ""+Validador.validateDocumentType(solicitante.getId()));
+	        bdr.addSimpleElement(Definiciones.SENDER_ID, solicitante.getId());
+	        bdr.addClosingTag(Definiciones.ID);
+	        bdr.addClosingTag(Definiciones.LEGAL_REPRESENTATIVE);
+        }
+	}//FIN [DipuCR-Agustin #235]	
+	
 	public static void addInfoSolicitante(XmlTextBuilder bdr, Solicitante solicitante) {
 
         bdr.addOpeningTag(Definiciones.SENDER);

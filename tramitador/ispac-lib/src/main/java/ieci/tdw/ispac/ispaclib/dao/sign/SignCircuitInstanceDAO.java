@@ -18,6 +18,8 @@ import org.apache.commons.lang.time.DateUtils;
 
 public class SignCircuitInstanceDAO extends ObjectDAO
 {
+	private static final long serialVersionUID = 1L;
+	
 	static final String TABLENAME = "SPAC_CTOS_FIRMA";
 	static final String IDSEQUENCE = "SPAC_SQ_ID_CTOS_FIRMA";
 	static final String IDKEY = "ID";
@@ -80,7 +82,7 @@ public class SignCircuitInstanceDAO extends ObjectDAO
 
 	public static CollectionDAO getStepsByDocument(DbCnt cnt, int documentId) throws ISPACException {
 
-	    String sql="WHERE ID_DOCUMENTO = " + documentId;
+	    String sql="WHERE ID_DOCUMENTO = " + documentId + " ORDER BY ID_PASO";
 		CollectionDAO objlist=new CollectionDAO(SignCircuitInstanceDAO.class);
 		objlist.query(cnt,sql);
 
@@ -124,6 +126,8 @@ public class SignCircuitInstanceDAO extends ObjectDAO
 		tableJoinFactoryDAO.addTable("SPAC_DT_DOCUMENTOS", "SPAC_DT_DOCUMENTOS");
 		tableJoinFactoryDAO.addTable("SPAC_TBL_008", "SPAC_TBL_008");
 		tableJoinFactoryDAO.addTable("SPAC_PROCESOS", "SPAC_PROCESOS");
+		//[eCenpri-Felipe #382] 17.05.11 - Añadido JOIN a SPAC_EXPEDIENTES
+		tableJoinFactoryDAO.addTable("SPAC_EXPEDIENTES", "SPAC_EXPEDIENTES");
 
 		//Un circuito de firma sólo puede estar pendiente en un expediente ABIERTO
 		String sql = " WHERE "
@@ -132,12 +136,14 @@ public class SignCircuitInstanceDAO extends ObjectDAO
 				   + " AND " + TABLENAME + ".ID_DOCUMENTO = SPAC_DT_DOCUMENTOS.ID "
 				   + " AND SPAC_DT_DOCUMENTOS.ESTADOFIRMA = SPAC_TBL_008.VALOR"
 				   + " AND SPAC_PROCESOS.ESTADO="+TXConstants.STATUS_OPEN
-				   + " AND SPAC_PROCESOS.NUMEXP=SPAC_DT_DOCUMENTOS.NUMEXP" ;
+				   + " AND SPAC_PROCESOS.NUMEXP=SPAC_DT_DOCUMENTOS.NUMEXP"
+				   + " AND SPAC_EXPEDIENTES.NUMEXP = SPAC_DT_DOCUMENTOS.NUMEXP"; //[eCenpri-Felipe #382]
 
 		CollectionDAO objlist = tableJoinFactoryDAO.queryTableJoin(cnt, sql);
 		return objlist;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static CollectionDAO getHistorics(DbCnt cnt, String respId, Date init, Date end, int state) throws ISPACException {
 
 		String dateFilter = "";
@@ -167,6 +173,20 @@ public class SignCircuitInstanceDAO extends ObjectDAO
 				+ " ORDER BY " + TABLENAME + ".FECHA DESC";
 
 		CollectionDAO objlist = tableJoinFactoryDAO.queryTableJoin(cnt, filtro);
+		
+		//INICIO [dipucr-Felipe 3#266 #1023]
+		//Adaptamos el histórico de firmas al histórico
+		TableJoinFactoryDAO tableJoinFactoryDAOh = new TableJoinFactoryDAO();
+		tableJoinFactoryDAOh.addTable(TABLENAME, TABLENAME);
+		tableJoinFactoryDAOh.addTable("SPAC_DT_DOCUMENTOS_H", "SPAC_DT_DOCUMENTOS");
+		tableJoinFactoryDAOh.addTable("SPAC_TBL_008", "SPAC_TBL_008");
+		
+		CollectionDAO objlisth = tableJoinFactoryDAOh.queryTableJoin(cnt, filtro);
+		
+		//Unimos las dos listas
+		objlist.toList().addAll(objlisth.toList());
+		//FIN [dipucr-Felipe 3#266 #1023]
+		
 		return objlist;
 	}
 

@@ -74,6 +74,12 @@
 			<version>${hibertane.version}</version>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-jbosscache</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jboss.cache</groupId>
+					<artifactId>jbosscache-core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<version>${hibertane.version}</version>
@@ -83,6 +89,10 @@
 				<exclusion>
 					<groupId>jgroups</groupId>
 					<artifactId>jgroups</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.infinispan</groupId>
+					<artifactId>infinispan-core</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

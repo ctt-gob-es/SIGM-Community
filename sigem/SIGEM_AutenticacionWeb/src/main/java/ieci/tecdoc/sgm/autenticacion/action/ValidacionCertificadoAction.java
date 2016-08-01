@@ -34,6 +34,13 @@ public class ValidacionCertificadoAction extends Action {
 		HttpSession session = request.getSession();
 		String entidadId = (String)request.getSession().getAttribute(Defs.ENTIDAD_ID);
 
+		//INICIO [dipucr-Felipe #206 3#108]
+		String xmlDataSpecific = (String)session.getAttribute(Defs.DATOS_ESPECIFICOS);
+		if (!Defs.isNuloOVacio(xmlDataSpecific)){
+			session.setAttribute(Defs.DATOS_ESPECIFICOS, xmlDataSpecific);
+		}
+		//FIN [dipucr-Felipe #206 3#108]
+		
 		Collection certificados = new ArrayList();
 		BigInteger certId = new BigInteger("-1");
 

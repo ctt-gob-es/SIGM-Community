@@ -619,4 +619,18 @@ public class CollectionDAO implements Serializable
 
 		return sXml;
 	}
+	
+	// MQE #1023 Tablas de Histórico
+	public DbResultSet querySinToList(DbCnt cnt, String sqlWhere)
+			throws ISPACException {
+		ObjectDAO objdao = getObjDAO(cnt);
+		String sql = "SELECT " + objdao.getColsSQL() + " FROM "
+				+ objdao.getTableName();
+		if (sqlWhere != null) {
+			sql += " " + sqlWhere;
+		}
+
+		return cnt.executeQuery(sql);
+	}
+	// MQE #1023 fin Tablas de Histórico
 }

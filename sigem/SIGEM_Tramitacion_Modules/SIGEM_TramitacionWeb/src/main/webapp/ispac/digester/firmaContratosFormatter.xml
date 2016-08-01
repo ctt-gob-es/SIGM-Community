@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter pageSize='50'>
+
+	<!-- Ponemos 2 veces la propiedad Asunto, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+		 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='DNI' 
+				 titleKey='FIRMA_DOC_EXTERNO:DNI' 
+				 fieldType='LINK'
+				 columnClass='width70percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='DNI' 
+				 titleKey='FIRMA_DOC_EXTERNO:DNI' 
+				 fieldType='LIST'
+				 columnClass='width50percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CARGO' 
+				 titleKey='FIRMA_DOC_EXTERNO:CARGO' 
+				 fieldType='LIST' 
+				 columnClass='width35percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='ORDEN_FIRMA' 
+				 titleKey='FIRMA_DOC_EXTERNO:ORDEN_FIRMA' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 headerClass='sortable'
+				 sortable='true'/>				 
+</beanformatter>

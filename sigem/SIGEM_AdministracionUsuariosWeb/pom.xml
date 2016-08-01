@@ -72,10 +72,6 @@
 				</exclusion>
 				<exclusion>
 					<groupId>es.ieci.tecdoc.sigem</groupId>
-					<artifactId>sigem_entidades</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>es.ieci.tecdoc.sigem</groupId>
 					<artifactId>sigem_estructuraOrganizativa</artifactId>
 				</exclusion>
 				<exclusion>
@@ -134,6 +130,11 @@
 				<exclusion>
 					<groupId>xml-apis</groupId>
 					<artifactId>xml-apis</artifactId>
+				</exclusion>
+				
+				<exclusion>
+					<groupId>commons-digester</groupId>
+					<artifactId>commons-digester</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

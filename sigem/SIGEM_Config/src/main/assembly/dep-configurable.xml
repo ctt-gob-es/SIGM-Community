@@ -1,4 +1,5 @@
-<assembly>	
+<assembly>
+	<id>configurableSigem</id>
 	<formats>
 		<format>zip</format>
 	</formats>

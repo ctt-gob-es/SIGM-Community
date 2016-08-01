@@ -53,7 +53,7 @@ import org.bouncycastle.util.encoders.Base64;
  * Conector de firma por defecto.
  *
  */
-public class DefaultSignConnector implements ISignConnector {
+public abstract class DefaultSignConnector implements ISignConnector {
 
 	/**
 	 * Logger
@@ -361,7 +361,13 @@ public class DefaultSignConnector implements ISignConnector {
 		itemDoc.set("FFIRMA", new Date());
 		itemDoc.set("FAPROBACION", new Date());
 		// Bloqueamos el documento para la edicion
-		itemDoc.set("BLOQUEO", DocumentLockStates.EDIT_LOCK);
+		
+		//[Manu Ticket #584] INICIO - SIGEM regla decretos evitar borrado tramite y documento.
+		String bloqueo = itemDoc.getString("BLOQUEO");
+		if(StringUtils.isEmpty(bloqueo) || (StringUtils.isNotEmpty(bloqueo) && !bloqueo.trim().equals(DocumentLockStates.TOTAL_LOCK)))
+			itemDoc.set("BLOQUEO", DocumentLockStates.EDIT_LOCK);
+		//[Manu Ticket #584] FIN - SIGEM regla decretos evitar borrado tramite y documento.
+				
 		itemDoc.store(clientContext);
 	}
 
@@ -415,8 +421,14 @@ public class DefaultSignConnector implements ISignConnector {
 		String firmante = null;
 		try {
 			X509Certificate x509cer = getX509Certificate(x509CertString);
-			firmante = x509cer.getSubjectDN().getName();
-
+			
+			//[DipuCR-Agustin] Firma 3 fases INICIO
+			if(x509cer!=null)
+				firmante = x509cer.getSubjectDN().getName();
+			else
+				return firmante;
+			//[DipuCR-Agustin] Firma 3 fases FIN
+			
 			int posComa = firmante.indexOf(",");
 			if (posComa > 0)
 				firmante = firmante.substring(firmante.indexOf("=") + 1,

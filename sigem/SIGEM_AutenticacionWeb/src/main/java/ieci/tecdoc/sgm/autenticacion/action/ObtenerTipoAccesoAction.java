@@ -7,6 +7,8 @@ import ieci.tecdoc.sgm.autenticacion.form.TipoAccesoForm;
 import ieci.tecdoc.sgm.autenticacion.util.TipoAutenticacionCodigos;
 import ieci.tecdoc.sgm.autenticacion.utils.Defs;
 import ieci.tecdoc.sgm.autenticacion.utils.LectorPropiedades;
+import ieci.tecdoc.sgm.base.miscelanea.Goodies;
+import ieci.tecdoc.sgm.core.config.ports.PortsConfig;
 import ieci.tecdoc.sgm.core.services.dto.Entidad;
 
 import java.io.IOException;
@@ -33,6 +35,13 @@ public class ObtenerTipoAccesoAction extends Action{
 		String	redireccion = (String)request.getSession().getAttribute(Defs.REDIRECCION);
 		String tramiteId = (String)request.getSession().getAttribute(Defs.TRAMITE_ID);
 
+		//INICIO [dipucr-Felipe #206 3#108]
+		String xmlDataSpecific = (String)session.getAttribute(Defs.DATOS_ESPECIFICOS);
+		if (!Defs.isNuloOVacio(xmlDataSpecific)){
+			session.setAttribute(Defs.DATOS_ESPECIFICOS, xmlDataSpecific);
+		}
+		//FIN [dipucr-Felipe #206 3#108]
+		
 		TipoAccesoForm oform = (TipoAccesoForm)form;
 		String entidadId = oform.getEntidadId();
 		if(entidadId != null){
@@ -78,7 +87,18 @@ public class ObtenerTipoAccesoAction extends Action{
 			else if (tipoAceptado == TipoAutenticacionCodigos.WEB_USER_AND_CERTIFICATE){
 				tiposAcceso.add(new TipoAccesoForm(TipoAutenticacionCodigos.X509_CERTIFICATE, "autenticacion.tipo_certificado"));
 				tiposAcceso.add(new TipoAccesoForm(TipoAutenticacionCodigos.WEB_USER, "autenticacion.tipo_login"));
-			}else{
+			}else if (tipoAceptado == TipoAutenticacionCodigos.SIN_AUTENTICACION){
+				//[eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.
+				session.setAttribute(Defs.SESION_ID, Goodies.getUniqueId());
+				
+				String url = (String)request.getSession().getServletContext().getAttribute("redir" + redireccion);
+				String port = PortsConfig.getHttpPort();
+				session.setAttribute(Defs.URL_REDIRECCION, url);
+				session.setAttribute(Defs.URL_PUERTO, port);
+				
+				return mapping.findForward("sin_autenticacion");
+			}
+			else{
 		    	request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_OBTENER_TIPO_ACCESO);
 		    	request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, "Error: Al obtener los tipos de acceso");
 				return mapping.findForward("failure");

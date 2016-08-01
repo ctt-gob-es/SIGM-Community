@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="deploy" name="awwExpropiacionesRules20" >
+	<import file="build.xml"/>
+	<property name="deploy.name" value="ExpropiacionesRules" />
+	<property name="project.dir" location="." />
+	<property name="deploy.dir" location="/home/sigem/SIGEM/tomcat/webapps" />
+	<property name="i18n.dir" value="src" />
+	<property name="src.dir" value="src" />
+
+	<target name="dist" depends="build" description="Crea el paquete Jar">
+		<mkdir dir="dist"/>
+		<mkdir dir="dist/i18n"/>
+		
+		<copy includeemptydirs="false" todir="dist/i18n">
+		     <fileset dir="i18n" excludes="**/*.launch, **/*.java"/>
+		</copy>
+		
+		<jar destfile="dist/${deploy.name}.jar"
+					duplicate="fail"	>
+			<fileset dir="bin" />
+		</jar>       
+
+	</target>
+
+
+	<target name="cleandist" depends="clean">
+		<delete dir="dist"/>
+	</target>
+	
+	<target name="deploy" depends="dist" description="Copia el paquete Jar en el servidor">
+			
+		<copy file="dist/${deploy.name}.jar" todir="${deploy.dir}/SIGEM_TramitacionWeb/WEB-INF/lib" overwrite="true"/>	
+		<copy todir="${deploy.dir}/SIGEM_TramitacionWeb/WEB-INF/classes/ieci/tdw/ispac/ispacmgr/resources" overwrite="true">
+		       <fileset dir="dist/i18n"/>
+		</copy>
+	</target>
+
+
+
+
+
+</project>

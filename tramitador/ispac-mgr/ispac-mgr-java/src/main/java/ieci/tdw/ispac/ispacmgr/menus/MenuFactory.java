@@ -9,6 +9,7 @@ import ieci.tdw.ispac.ispaclib.bean.ActionBean;
 import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.StateContext;
+import ieci.tdw.ispac.ispaclib.dao.cat.CTManualUsuarioDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTReportDAO;
 import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
@@ -42,29 +43,34 @@ public class MenuFactory {
 	private static final String BUNDLE_NAME = "ieci.tdw.ispac.ispacmgr.resources.ApplicationResources";
 
 	static ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME);
-    /**
+    	
+	/**
+     * //[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
      * Compone el menú sencillo.
      * @param resources Fichero de recursos
      * @return una lista con los menús de Inicio y Salir.
      * @throws ISPACException
      */
-    public static List getSingleMenu(ClientContext context, MessageResources resources)
+    public static List getSingleMenu(ClientContext context, MessageResources resources, IState state)
     		throws ISPACException {
 
         List listMenus = new ArrayList();
 
-        listMenus.add(createInitOptionMenu(context, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+//        listMenus.add(createInitOptionMenu(context, resources));
+        listMenus.add(createInitOptionMenu(context, resources, state));
         //listMenus.add(createExitOptionMenu(context, resources));
 
 	    return listMenus;
     }
 
-    public static List getSingHistoric(ClientContext context, MessageResources resources)
+    public static List getSingHistoric(ClientContext context, MessageResources resources, IState state)
 	throws ISPACException {
 
 		List listMenus = new ArrayList();
 
-		listMenus.add(createInitOptionMenu(context, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		listMenus.add(createInitOptionMenu(context, resources, state));
 
 		listMenus.add(createMenu(
 				resources.getMessage(context.getLocale(), "menu.volver"),
@@ -76,21 +82,24 @@ public class MenuFactory {
     }
 
     /**
+     * //[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
      * Compone el menú de la bandeja de entrada.
      * @param context
      * @param resources Fichero de recursos
      * @return una lista con los menús de Inicio y Salir.
      * @throws ISPACException
      */
-    public static List getInboxMenu(ClientContext context, MessageResources resources)
+    public static List getInboxMenu(ClientContext context, MessageResources resources, IState state)
     		throws ISPACException {
 
-    	return getInboxMenu(context, resources,null);
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+    	return getInboxMenu(context, resources,null, state);
 
     }
 
 
     /**
+     * //[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
      * Compone el menú de la bandeja de entrada.
      * @param context
      * @param resources Fichero de recursos
@@ -98,43 +107,62 @@ public class MenuFactory {
      * @return una lista con los menús de Inicio y Salir.
      * @throws ISPACException
      */
-    public static List getInboxMenu(ClientContext context, MessageResources resources, String resp)
+    public static List getInboxMenu(ClientContext context, MessageResources resources, String resp, IState state)
 	throws ISPACException {
 
 		List listMenus = new ArrayList();
 		IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(context);
 		IActions actions = managerAPI.getActionsAPI();
+		
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		String paramAnio = "";
+    	if(state != null){
+    		int anio = state.getAnio();
+    		if(anio > 0){
+    			paramAnio = "&anio=" + anio;
+    		}
+    	}
 
 		listMenus.add(createMenu(
 				resources.getMessage(context.getLocale(), "menu.iniciarExpediente"),
 				"/showCreateProcess.do"));
 
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 		listMenus.add(createMenu(
 				resources.getMessage(context.getLocale(), "menu.busquedaAvanzada"),
-				"/showProcedureList.do?search=true"));
+				"/showProcedureList.do?search=true" + paramAnio));
 
 		if (actions.hasGlobalReports(resp)) {
 			listMenus.add(createMenu(resources.getMessage(context.getLocale(), "menu.reports"),
 					"javascript: showFrame(\"workframe\", \"showReports.do?tipo="+CTReportDAO.GLOBAL_TYPE+"\", \"\", \"\", \"\", false);"));
 		}
 
+		//INICIO [dipucr-Felipe #120] Manuales de usuario
+		if (actions.hasGlobalManuales()) {
+			listMenus.add(createMenu(resources.getMessage(context.getLocale(), "menu.manuales"),
+					"javascript: showFrame(\"workframe\", \"showManualesList.do?tipo=" + 
+							CTManualUsuarioDAO.GLOBAL_TYPE+"\", \"\", \"\", \"\", false);"));
+		}
+        //FIN [dipucr-Felipe #120]
 
 		//  listMenus.add(createExitOptionMenu(context, resources));
 
 		return listMenus;
 		}
     /**
+     * //[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
      * Compone el menú de la vista de un registro distribuido.
      * @param resources Fichero de recursos
      * @return una lista con los menús de la pantalla de registro distribuido.
      * @throws ISPACException
      */
-    public static List getIntrayMenu(ClientContext context, MessageResources resources)
+    public static List getIntrayMenu(ClientContext context, MessageResources resources, IState state)
     		throws ISPACException {
 
         List listMenus = new ArrayList();
 
-        listMenus.add(createInitOptionMenu(context, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        listMenus.add(createInitOptionMenu(context, resources, state));
 
         listMenus.add(createMenu(
         		resources.getMessage(context.getLocale(), "menu.registrosDistribuidos"),
@@ -147,6 +175,7 @@ public class MenuFactory {
 
 
     /**
+     * //[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
      * Compone el menú del resultado de la búsqueda.
      * @param ctx Contexto del cliente
      * @param resources Fichero de recursos
@@ -158,8 +187,8 @@ public class MenuFactory {
     public static List getSearchResultMenu(ClientContext ctx,
     									   MessageResources resources,
     									   Properties properties, List searchActions,
-    									   Map mapParams, int idFormulario) throws ISPACException {
-    	return getSearchResultMenu(ctx, resources,searchActions,properties, mapParams,idFormulario,null);
+    									   Map mapParams, int idFormulario, IState state) throws ISPACException {
+    	return getSearchResultMenu(ctx, resources,searchActions,properties, mapParams,idFormulario,null, state);
     }
 
     /**
@@ -175,10 +204,11 @@ public class MenuFactory {
     public static List getSearchResultMenu(ClientContext ctx,
 			   MessageResources resources,
 			   Properties properties, List searchActions,
-			   Map mapParams, int idFormulario,String resp) throws ISPACException {
-    	return getSearchResultMenu(ctx, resources,searchActions,properties, mapParams,idFormulario,resp);
+			   Map mapParams, int idFormulario,String resp, IState state) throws ISPACException {
+    	return getSearchResultMenu(ctx, resources,searchActions,properties, mapParams,idFormulario,resp, state);
 }
     /**
+     * //[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
      * Compone el menú del resultado de la búsqueda.
      * @param ctx Contexto del cliente
      * @param resources Fichero de recursos
@@ -195,13 +225,14 @@ public class MenuFactory {
     									   Properties properties,
     									   Map mapParams,
     									   int idFormulario,
-    									   String resp) throws ISPACException {
+    									   String resp, IState state) throws ISPACException {
 
         List listMenus = new ArrayList();
 
         IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(ctx);
         IActions actions = managerAPI.getActionsAPI();
-        listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        listMenus.add(createInitOptionMenu(ctx, resources, state));
 
 
         listMenus.add(createMenu(
@@ -216,14 +247,28 @@ public class MenuFactory {
 	        listMenus.add(menu);
 		}
 
+		//[eCenpri-Manu Ticket #131] - INICIO - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		String paramAnio = "";
+    	if(state != null){
+    		int anio = state.getAnio();
+    		if(anio > 0){
+    			paramAnio = "&anio=" + anio;
+    		}
+    	}
+
         listMenus.add(createMenu(
         		resources.getMessage(ctx.getLocale(), "menu.busquedaAvanzada"),
-        		"/showProcedureList.do?search=true"));
+        		"/showProcedureList.do?search=true" + paramAnio));
+
+		//[eCenpri-Manu Ticket #131] - FIN - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 
         if(actions.hasSearchReport(idFormulario,resp)){
 			listMenus.add(createMenu(resources.getMessage(ctx.getLocale(), "menu.reports"),
 					"javascript: showFrame(\"workframe\", \"showReports.do?idFrm="+idFormulario+"\", \"\", \"\", \"\", false);"));
         }
+        
+        //TODO: [dipucr-Felipe ALSIGM3 #120] Aplicación de la mejora de manuales de ayuda para los formularios de búsqueda 
+        
        // listMenus.add(createExitOptionMenu(ctx, resources));
 
 	    return listMenus;
@@ -242,7 +287,9 @@ public class MenuFactory {
 
         List listMenus = new ArrayList();
 
-        listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+//        listMenus.add(createInitOptionMenu(ctx, resources));
+        listMenus.add(createInitOptionMenu(ctx, resources, state));
 
         IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(ctx);
         IActions actions = managerAPI.getActionsAPI();
@@ -304,7 +351,8 @@ public class MenuFactory {
         IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(ctx);
         IActions actions = managerAPI.getActionsAPI();
 
-        listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        listMenus.add(createInitOptionMenu(ctx, resources, state));
         addReturnToSearchOptionMenu(ctx, resources, returnToSearch, listMenus);
 
         // Se crean los menús cuando se tiene el control del trámite
@@ -316,6 +364,25 @@ public class MenuFactory {
 	        menu.addItems(stateActions);
 		    listMenus.add(menu);
 		}
+        else{
+        	//[Teresa Ticket#434#]Inicio Reabrir tramite
+        	//Stage 6
+        	//Voy a crear un stage nuevo que es = que el int TASK = 6; pero para tramites cerrados
+        	//Compruebo que esa persona sea responsable
+//        	StateContext stateContext = ctx.getStateContext();
+//        	Responsible resp = ctx.getUser();
+//        	IResponsible dep = resp.getRespOrgUnit();
+        	//if(state.isResponsible()){
+        		String message = resources.getMessage(ctx.getLocale(), "menu.acciones");
+    		    Menu menu=new Menu(message,ActionBean.TITLE ,"idsTask", ActionBean.ID);
+    	   	    List stateActions = getTaskOpenActions(ctx, state, resources);
+    	   	    BeanResourceFilter.translateActionKeys(stateActions, ctx.getLocale(), resources);
+    	        menu.addItems(stateActions);
+    		    listMenus.add(menu);
+        	//}
+
+		    //[Teresa Ticket#434#]Fin Reabrir tramite
+        }
 
 		listMenus.add(createViewExpedientOptionMenu(ctx, state, resources, stageId));
 
@@ -328,12 +395,62 @@ public class MenuFactory {
 			listMenus.add(createMenu(resources.getMessage(ctx.getLocale(), "menu.reports"),
 					"javascript: showFrame(\"workframe\", \"showReports.do\", \"\", \"\", \"\", false);"));
 		}
-
-        listMenus.add(createConfigEditorsOptionMenu(ctx, ispacbase, resources));
+		
+		//[Manu Ticket #97] INICIO - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java.
+		listMenus.add(createMenu(resources.getMessage(ctx.getLocale(), "menu.configEditores"),
+				"javascript: showFrame(\"workframe\", \"configurarEditores.do\", \"\", \"\", \"\", false);"));
+		
+        //listMenus.add(createConfigEditorsOptionMenu(ctx, ispacbase, resources));
+		//[Manu Ticket #97] FIN - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java.
+		
         //listMenus.add(createExitOptionMenu(ctx, resources));
+        
+        //INICIO [dipucr-Felipe #120] Manuales de usuario
+		if (actions.hasManuales(state)) {
+			listMenus.add(createMenu(resources.getMessage(ctx.getLocale(), "menu.manuales"),
+					"javascript: showFrame(\"workframe\", \"showManualesList.do\", \"\", \"\", \"\", false);"));
+		}
+        //FIN [dipucr-Felipe #120]
+        
+		//[Manu Ticket #119] INCIO - ALSIGM3 Añadir opción de ayuda.
+        listMenus.add(createMenu(resources.getMessage(ctx.getLocale(),
+				"menu.ayuda"),
+				"javascript:showFrame(\"workframe\",\"showAyuda.do?processId=" + state.getProcessId() 
+						+ "&regId=" + state.getPcdId()
+						+ "&entityId=" + state.getEntityId()
+						+ "&stageId=" + state.getStageId()
+						+ "&taskId=" + state.getTaskId()
+						+ "&locale=" + ctx.getAppLanguage() 
+						+ "\", \"\", \"\", \"\", false);"));
+        //[Manu Ticket #119] FIN - ALSIGM3 Añadir opción de ayuda.
+        
+        //[eCenpri-Felipe #861] SIGEM Añadir enlaces de Legislación y Jurisprudencia en la tramitación
+        listMenus.add(createMenuLegislacionJurisprudencia(ctx, resources));
+        //[eCenpri-Felipe #861] SIGEM Añadir enlaces de Legislación y Jurisprudencia en la tramitación
 
         return listMenus;
     }
+    
+    /***
+     * Tere #434 Reabrir trámite
+     * @param mccnt
+     * @param state
+     * @param resources
+     * @return
+     * @throws ISPACException
+     */
+    private static List getTaskOpenActions(ClientContext mccnt, IState state, MessageResources resources) 
+    		throws ISPACException {
+    			List list = new ArrayList();
+    			
+    			if (state.getTaskId() != 0) {
+    				list.add(new ActionBean(resources.getMessage(mccnt.getLocale(), "ispac.action.task.open"), 
+    						"/openTask.do?numexp=" + state.getNumexp() +"&taskid="+ state.getTaskId() +"&stagePcdIdActual="+ state.getStagePcdId()));
+    			
+    			}
+    			
+    			return list;
+    		}
 
     /**
      * Compone el menú para la pantalla de tramitación agrupada
@@ -349,9 +466,15 @@ public class MenuFactory {
 
         List listMenus = new ArrayList();
 
-
-        listMenus.add(createInitOptionMenu(ctx, resources));
-        listMenus.add(createConfigEditorsOptionMenu(ctx, ispacbase, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        listMenus.add(createInitOptionMenu(ctx, resources,state));
+        //[Manu Ticket #97] INICIO - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java.
+   		listMenus.add(createMenu(resources.getMessage(ctx.getLocale(), "menu.configEditores"),
+      				"javascript: showFrame(\"workframe\", \"configurarEditores.do\", \"\", \"\", \"\", false);"));
+      		
+             //listMenus.add(createConfigEditorsOptionMenu(ctx, ispacbase, resources));
+      	//[Manu Ticket #97] FIN - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java.
+        
 
         listMenus.add(createMenu(
         		resources.getMessage(ctx.getLocale(), "menu.tramitacionesAgrupadas"),
@@ -367,7 +490,8 @@ public class MenuFactory {
 
         List listMenus = new ArrayList();
 
-        listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        listMenus.add(createInitOptionMenu(ctx, resources, state));
 
 		//se crean los menús adecuados
 //		if (!state.getReadonly())
@@ -399,6 +523,7 @@ public class MenuFactory {
     }
 
     /**
+     * //[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
      * Compone el menú para un nuevo trámite.
      * @param resources Fichero de recursos
      * @param stageId Identificador del expediente.
@@ -406,11 +531,12 @@ public class MenuFactory {
      * @throws ISPACException
      */
     public static List getNewTaskMenu(ClientContext ctx, MessageResources resources,
-    		int stageId) throws ISPACException {
+    		int stageId, IState state) throws ISPACException {
 
         List listMenus = new ArrayList();
 
-        listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        listMenus.add(createInitOptionMenu(ctx, resources, state));
 
         //Si el id del expediente no es 0, incluimos el enlace para
         //situarnos en el expediente
@@ -430,7 +556,8 @@ public class MenuFactory {
 
         List listMenus = new ArrayList();
 
-        listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        listMenus.add(createInitOptionMenu(ctx, resources, state));
 
         if (state instanceof ExpedientState) {
 
@@ -479,7 +606,8 @@ public class MenuFactory {
 
         List listMenus = new ArrayList();
 
-   	    listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+   	    listMenus.add(createInitOptionMenu(ctx, resources, state));
 
    	    String message = resources.getMessage(ctx.getLocale(), "menu.acciones");
    	    Menu menu=new Menu(message, ActionBean.TITLE , "idsTask", ActionBean.ID);
@@ -505,7 +633,9 @@ public class MenuFactory {
     		MessageResources resources) throws ISPACException {
 
         List listMenus = new ArrayList();
-   	    listMenus.add(createInitOptionMenu(ctx, resources));
+
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+   	    listMenus.add(createInitOptionMenu(ctx, resources, state));
 
    	    return listMenus;
     }    
@@ -546,7 +676,8 @@ public class MenuFactory {
         List listMenus = new ArrayList();
         Menu menu;
 
-   	    listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+   	    listMenus.add(createInitOptionMenu(ctx, resources, state));
    	    addReturnToSearchOptionMenu(ctx, resources, returnToSearch, listMenus);
 
         // Se crean los menús cuando se tiene el control de la fase
@@ -618,6 +749,12 @@ public class MenuFactory {
 								+ state.getStageId() + "&locale="
 								+ ctx.getAppLanguage() + "\",10,10);"));
 			} else {
+				
+				// El expediente está cerrado o archivado
+				//[Manu Ticket #1054] INICIO SIGEM Opción Reabrir Expediente
+				listMenus.add(createMenu(resources.getMessage(ctx.getLocale(),"menu.reabrirExpediente"), "javascript:sure(\"reabrirExpediente.do?processId=" + state.getProcessId() + "&numexp=" + state.getNumexp() + "&locale=" + ctx.getAppLanguage() 
+						+"\", \""+resources.getMessage(ctx.getLocale(),"ispac.action.stage.reopen.msg")+"\")"));
+				//[Manu Ticket #1054] FIN - SIGEM Opción Reabrir Expediente
 
 				// El expediente está cerrado o archivado
 				listMenus.add(createMenu(resources.getMessage(ctx.getLocale(),
@@ -633,8 +770,31 @@ public class MenuFactory {
         listMenus.add(createMenu(
    	    		resources.getMessage(ctx.getLocale(), "menu.historico"),
    	    		"/showMilestone.do"));
-
-       // listMenus.add(createExitOptionMenu(ctx, resources));
+        
+        //INICIO [dipucr-Felipe #120] Manuales de usuario
+  		if (actions.hasManuales(state)) {
+  			listMenus.add(createMenu(resources.getMessage(ctx.getLocale(), "menu.manuales"),
+  					"javascript: showFrame(\"workframe\", \"showManualesList.do\", \"\", \"\", \"\", false);"));
+  		}
+          //FIN [dipucr-Felipe #120]
+        
+        //[Manu Ticket #119] INCIO - ALSIGM3 Añadir opción de ayuda.
+        listMenus.add(createMenu(resources.getMessage(ctx.getLocale(),
+				"menu.ayuda"),
+				"javascript:showFrame(\"workframe\",\"showAyuda.do?processId=" + state.getProcessId() 
+						+ "&regId=" + state.getPcdId()
+						+ "&entityId=" + state.getEntityId()
+						+ "&stageId=" + state.getStageId()
+						+ "&taskId=" + state.getTaskId()
+						+ "&locale=" + ctx.getAppLanguage() 
+						+ "\", \"\", \"\", \"\", false);"));
+        //[Manu Ticket #119] FIN - ALSIGM3 Añadir opción de ayuda.
+               
+        // listMenus.add(createExitOptionMenu(ctx, resources));
+        
+        //[eCenpri-Felipe #861] SIGEM Añadir enlaces de Legislación y Jurisprudencia en la tramitación
+        listMenus.add(createMenuLegislacionJurisprudencia(ctx, resources));
+        //[eCenpri-Felipe #861] SIGEM Añadir enlaces de Legislación y Jurisprudencia en la tramitación
 
         return listMenus;
     }
@@ -656,7 +816,8 @@ public class MenuFactory {
         List listMenus = new ArrayList();
         Menu menu;
 
-   	    listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+   	    listMenus.add(createInitOptionMenu(ctx, resources, state));
 
         // Se crean los menús cuando se tiene el control de la actividad
         if (state.isLockByCurrentSession()) {
@@ -805,7 +966,8 @@ public class MenuFactory {
 
         List listMenus = new ArrayList();
 
-        listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        listMenus.add(createInitOptionMenu(ctx, resources, state));
 
         String message = resources.getMessage(ctx.getLocale(), "menu.acciones");
         Menu menu=new Menu(message,ActionBean.TITLE ,"idsStage", ActionBean.ID);
@@ -822,12 +984,29 @@ public class MenuFactory {
 				"(\"batchSign.do?" + ActionsConstants.PARAMETER_METHOD + "=" + ActionsConstants.CALCULATE_DOCUMENTS_HASH + "\", \"\"," +
 						" \"defaultForm\"  , \""+bundle.getString("element.noSelect")+"\" , \""+bundle.getString("common.alert")+"\", \""+bundle.getString("common.message.ok")+"\", \""+bundle.getString("common.message.cancel")+"\");"));
 	    BeanResourceFilter.translateActionKeys(stateActions, ctx.getLocale(), resources);
+	    
+	    //[MQE Ticket #31] Añadimos la opcion de Rechazar firma
+        stateActions.add(new ActionBean(resources.getMessage(ctx.getLocale(), "ispac.action.batchsign.rechazar"),
+				"javascript:takeElementInFormWorkFrame" +
+				"(\"batchSignRechazar.do?" + ActionsConstants.PARAMETER_METHOD + "=" + ActionsConstants.CONFIRMAR_RECHAZO + "\", \"\"," +
+						" \"defaultForm\"  , \""+bundle.getString("element.noSelect")+"\" , \""+bundle.getString("common.alert")+"\", \""+bundle.getString("common.message.ok")+"\", \""+bundle.getString("common.message.cancel")+"\");"));
+	    BeanResourceFilter.translateActionKeys(stateActions, ctx.getLocale(), resources);
+	    //[MQE Ticket #31] Fin Rechazar firma
+	    
+	    
         menu.addItems(stateActions);
         listMenus.add(menu);
 
         listMenus.add(createMenu(
    	    		resources.getMessage(ctx.getLocale(), "ispac.action.sing.historic"),
    				"/showSignHistoric.do"));
+        
+        
+        //[MQE Ticket #41] Añadimos la opción Histórico de Rechazos
+        listMenus.add(createMenu(
+   	    		resources.getMessage(ctx.getLocale(), "es.dipucr.rechazo.historico"),
+   				"/showSignRechazoHistoric.do"));
+        //[MQE Ticket #41] Fin Histórico de Rechazos
 
         //listMenus.add(createExitOptionMenu(ctx, resources));
 
@@ -835,11 +1014,13 @@ public class MenuFactory {
     }
 
 	public static Object getSignedDocumentListMenu(ClientContext cct, IState state, MessageResources resources) throws ISPACException {
-		return getSingleMenu(cct, resources);
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		return getSingleMenu(cct, resources, state);
 	}
 
 	public static Object getCloneExpedientMenu(ClientContext cct, IState state, MessageResources resources) throws ISPACException {
-		List listMenus = getSingleMenu(cct, resources);
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		List listMenus = getSingleMenu(cct, resources, state);
         listMenus.add(createMenu(
         		resources.getMessage(cct.getLocale(), "menu.verExpediente"),
         		"/showExpedient.do?stageId="+state.getStageId()));
@@ -850,17 +1031,19 @@ public class MenuFactory {
 	}
 
     /**
+     * //[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
      * Compone el menú para la vista de delegación.
      * @param resources Fichero de recursos
      * @return Lista de menús.
      * @throws ISPACException si ocurre algún error.
      */
-    public static List getDelegateMenu(ClientContext ctx, MessageResources resources)
+    public static List getDelegateMenu(ClientContext ctx, MessageResources resources, IState state)
     		throws ISPACException {
 
         List listMenus = new ArrayList();
 
-        listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        listMenus.add(createInitOptionMenu(ctx, resources, state));
         //listMenus.add(createExitOptionMenu(ctx, resources));
 
 	    return listMenus;
@@ -878,7 +1061,8 @@ public class MenuFactory {
 
         List listMenus = new ArrayList();
 
-   	    listMenus.add(createInitOptionMenu(ctx, resources));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+   	    listMenus.add(createInitOptionMenu(ctx, resources, state));
 
        	listMenus.add(createMenu(
    	    		resources.getMessage(ctx.getLocale(), "menu.volverExpediente"),
@@ -889,11 +1073,25 @@ public class MenuFactory {
         return listMenus;
     }
 
-    private static Menu createInitOptionMenu(ClientContext ctx, MessageResources resources) throws ISPACException {
-
+		//[eCenpri-Manu Ticket #131] - INICIO - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+//    private static Menu createInitOptionMenu(ClientContext ctx, MessageResources resources) throws ISPACException {
+//
+//    	return createInitOptionMenu(ctx, resources, null);
+//    }
+    
+    private static Menu createInitOptionMenu(ClientContext ctx, MessageResources resources, IState state) throws ISPACException {
+    	String paramAnio = "";
+    	if(state != null){
+    		int anio = state.getAnio();
+    		if(anio > 0){
+    			paramAnio = "?anio=" + anio;
+    		}
+    	}
+    	
     	return createMenu(resources.getMessage(ctx.getLocale(), "menu.inicio"),
-    					  "/showProcedureList.do");
+			  	"/showProcedureList.do" + paramAnio);
     }
+		//[eCenpri-Manu Ticket #131] - FIN - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 
     private static void addReturnToSearchOptionMenu(ClientContext ctx, MessageResources resources, String returnToSearch, List listMenus) throws ISPACException {
 
@@ -963,5 +1161,37 @@ public class MenuFactory {
     	return createMenu(resources.getMessage(ctx.getLocale(), "menu.configEditores"),
     					  StaticContext.rewritePage(ispacbase, "config.jsp"), "configFrame", jsFunction);
     }
+    
+    /**
+     * [eCenpri-Felipe #861] 14.03.13
+     * @author Felipe
+     * Devuelve los enlaces a las páginas de Legislación y Jurisprudencia
+     * 
+     * @param ctx
+     * @param ispacbase
+     * @param resources
+     * @return
+     * @throws ISPACException
+     */
+    private static Menu createMenuLegislacionJurisprudencia(ClientContext ctx, MessageResources resources) 
+    		throws ISPACException
+    {
+    	
+    	Menu menu = new Menu(resources.getMessage(ctx.getLocale(), "menu.legisjuri"), 
+        		ActionBean.TITLE, "legisjuri", ActionBean.ID);
+    	
+    	//Para Internet Explorer y Firefox, ha sido necesario meter un refresh después de abrir el popup
+    	ActionBean opcionLegis = new ActionBean
+    			(resources.getMessage(ctx.getLocale(), "menu.legislacion"), 
+    			"javascript:window.open(\"http://www.boe.es/legislacion/codigos/\");document.location.reload(true)");
+    	ActionBean opcionJuris = new ActionBean
+    			(resources.getMessage(ctx.getLocale(), "menu.jurisprudencia"), 
+    			"javascript:window.open(\"http://www.poderjudicial.es/search/indexAN.jsp\");document.location.reload(true)");
+    	
+    	menu.addItem(opcionLegis);
+    	menu.addItem(opcionJuris);
+    	
+    	return menu;
+	}
 
 }

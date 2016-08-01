@@ -4,7 +4,13 @@ import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.graph.GInfo;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
+import ieci.tdw.ispac.api.rule.EventsDefines;
 import ieci.tdw.ispac.ispaclib.context.StateContext;
+import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.CTManualUsuarioDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.PManualUsuarioDAO;
+import ieci.tdw.ispac.ispaclib.db.DbCnt;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.io.File;
 import java.util.List;
@@ -744,5 +750,141 @@ public interface IProcedureAPI
      */
     public int countExpedientesByPcd( int idPcd)throws ISPACException;
 
+    
+    /**
+     * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+     * 
+   	 * Obtiene la lista de procedimientos relacionados con el manual de usuario.
+   	 *
+   	 * @param manualUsuarioId Identificador del manual de usuario.
+   	 * @return Lista de procedimientos.
+   	 * @throws ISPACException si ocurre algún error.
+   	 */
+   	public IItemCollection getManualUsuarioProceduresUse(int manualUsuarioId) throws ISPACException;
 
+   	/**
+   	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+   	 * 
+   	 * Obtiene la lista de fases relacionadas con el manual de usuario.
+   	 *
+   	 * @param manualUsuarioId Identificador del informe.
+   	 * @return Lista de fases.
+   	 * @throws ISPACException si ocurre algún error.
+   	 */
+   	public IItemCollection getManualUsuarioStagesUse(int manualUsuarioId) throws ISPACException;
+
+   	/**
+   	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+   	 * 
+   	 * Obtiene la lista de trámites relacionados con el manual de usuario.
+   	 *
+   	 * @param manualUsuarioId Identificador del informe.
+   	 * @return Lista de trámites.
+   	 * @throws ISPACException si ocurre algún error.
+   	 */
+   	public IItemCollection getManualUsuarioTasksUse(int manualUsuarioId) throws ISPACException;
+
+   	/**
+   	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+   	 * 
+   	 * Obtiene la lista de actividades relacionadas con el manual de usuario.
+   	 *
+   	 * @param manualUsuarioId Identificador del informe.
+   	 * @return Lista de actividades.
+   	 * @throws ISPACException si ocurre algún error.
+   	 */
+   	public IItemCollection getManualUsuarioActivitiesUse(int manualUsuarioId) throws ISPACException;
+   	
+   	/**
+   	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+   	 * 
+	 * Obtiene los manuales de usuario relacionados con un objeto.
+	 * @param objectId Identificador del objeto.
+	 * @param objectType Tipo de objeto.
+	 * @return IItemCollection Lista de informes.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public IItemCollection getPManualesUsuario(int objectId , int objectType) throws ISPACException;
+	
+	/**
+   	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+   	 * 
+	 * Obtiene los manuales de usuario relacionados con un objeto.
+	 * @param objectId Identificador del objeto.
+	 * @param objectType Tipo de objeto.
+	 * @param manualUsuarioId Identificador del manual de usuario.
+	 * @return IItemCollection Lista de informes.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public IItemCollection getPManualesUsuario(int objectId , int objectType, int manualUsuarioId) throws ISPACException;
+
+	/**
+	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	 * 
+	 * Relaciona un manual de usuario con el objeto indicado.
+	 *
+	 * @param objectType Tipo de objeto.
+	 * @param objectId Identificador de objeto.
+	 * @param manualUsuarioId Identificador del informe.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public void addPManualUsuario(int objectType, int objectId, int manualUsuarioId) throws ISPACException;
+
+	/**
+	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	 * 
+	 * Elimina la relación entre el manual de usuario y el objeto seleccionado.
+	 *
+	 * @param objectType Tipo de objeto.
+	 * @param objectId Identificador de objeto.
+	 * @param manualUsuarioId Identificador del informe.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public void deletePManualUsuario(int objectType, int objectId, int manualUsuarioId) throws ISPACException;
+
+	/**
+	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	 * 
+	 * Elimina todas las relaciones del manual de usuario.
+	 *
+	 * @param manualUsuarioId Identificador del informe.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public void deletePManualUsuario(int manualUsuarioId) throws ISPACException;
+
+	// INICIO [dipucr-Felipe #120] Manuales de Ayuda
+	/**
+	  * Obtiene la lista de manuales de usuario relacionados en el contexto del expediente.
+	  * @param stateContext Contexto del expediente.
+	  * @return Lista de manuales de usuario disponibles para la fase o trámite actual ( generales + los del proc+ los propios de la fase o trámite)
+	  * @throws ISPACException
+	  * @author [dipucr-Felipe #120]
+	  */
+	public IItemCollection getManuales(StateContext stateContext) throws ISPACException;
+	
+	/**
+	 * Obtiene la lista de manuales de usuario globales en función de la responsabilidad asociada a los informes
+     * @param resp Responsabilidades del usuario conectado (supervisar y sustituir)
+	 * @return
+	 * @throws ISPACException
+	 */
+	public IItemCollection getGlobalManuales() throws ISPACException;
+	
+	/**
+	 * [dipucr-Felipe #120]
+	 * Indica si el hay informes relacionados en el contexto del expediente
+	 * @param stateContext Contexto del expediente.
+	 * @return True si hay algun informe disponible, false en caso contrario.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public boolean hasManuales(StateContext stateContext) throws ISPACException;
+	
+	/**
+	 * [dipucr-Felipe #120]
+     * Indica si existe o no manuales de usuario globales para el usuario conectado
+     * @return
+     * @throws ISPACException
+     */
+	public boolean hasGlobalManuales() throws ISPACException;
+	// FIN [dipucr-Felipe #120]
 }

@@ -124,8 +124,10 @@ public class SelectNewTaskAction extends BaseAction {
         if (request.getParameter("multibox")== null) {
 	        stageId = state.getStageId();
         }
+
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
         request.setAttribute("menus", MenuFactory.getNewTaskMenu(cct, 
-        		getResources(request), stageId));
+        		getResources(request), stageId, state));
         
         
         return mapping.findForward("success");

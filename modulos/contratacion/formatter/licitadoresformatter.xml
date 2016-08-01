@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter pageSize='100'>
+
+	<!-- Ponemos 2 veces la propiedad Asunto, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+		 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE' 
+				 titleKey='CONTRATACION_LICITADORES:NOMBRE' 
+				 fieldType='LINK'
+				 columnClass='width70percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE' 
+				 titleKey='CONTRATACION_LICITADORES:NOMBRE' 
+				 fieldType='LIST'
+				 columnClass='width70percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+				 
+
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SUBS_DOCUMENTOS' 
+				 titleKey='CONTRATACION_LICITADORES:SUBS_DOCUMENTOS' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='VAL_ANOR_DESPROPOR' 
+				 titleKey='CONTRATACION_LICITADORES:VAL_ANOR_DESPROPOR' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+				 
+				 
+</beanformatter>

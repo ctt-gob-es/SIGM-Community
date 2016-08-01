@@ -6,6 +6,45 @@ import java.io.InputStream;
 import java.util.Vector;
 
 public interface ServicioRepositorioDocumentosTramitacion {
+	
+	/**
+	 * [Ticket 1014 Teresa] Inserta el valor del identificador del fichero y
+	 * borrar los datos de la columna 'contenido'
+	 * 
+	 * @param sessionId
+	 *            Identificador de sesión de la aplicación llamante
+	 * @param guid
+	 *            Identificador del documento a recuperar
+	 * @param idFileRegistroEnt
+	 *            Identificador del file en el registro presencial
+	 * @throws GuidIncorrectoExcepcion
+	 * @throws RepositorioDocumentosExcepcion
+	 */
+	public boolean insertarIdFileBorrarContenido(String guid,
+			String idFileRegistroEnt, Entidad entidad)
+			throws GuidIncorrectoRdeExcepcion,
+			RepositorioDocumentosRdeExcepcion;
+
+	/**
+	 * Almacena un documento
+	 * 
+	 * @param sessionId
+	 *            Identificador de sesión de la aplicación llamante
+	 * @param extension
+	 *            Extensión del documento
+	 * @param idInfoPagFile
+	 *            Documento a almacenar (infopag de la tabla spac_dt_documentos)
+	 *            *
+	 * @return String Identificador único asignado al documento
+	 * @throws RepositorioDocumentosExcepcion
+	 */
+	public String storeDocumentInfoPag(String sessionId, Entidad entidad,
+			String idInfoPagFile, String extension)
+			throws GuidIncorrectoRdeExcepcion,
+			RepositorioDocumentosRdeExcepcion;
+
+	// [Tere #1014] FIN
+	  
 
   /**
    * Recupera la información del documento cuyo guid es el pasado como parámetro

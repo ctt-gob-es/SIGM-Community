@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+
+	<!-- Ponemos 2 veces la propiedad Nombre, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='DESCRIPCION_MUNICIPIO' 
+				 titleKey='DPCR_SERSO_PE_CANT_ACUM:DESCRIPCION_MUNICIPIO' 
+				 fieldType='LINK'
+				 columnClass='width40percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+
+	 <propertyfmt type="BeanPropertySimpleFmt" 
+				 property='TRIMESTRAL' 
+				 titleKey='DPCR_SERSO_PE_CANT_ACUM:TRIMESTRAL' 
+				 fieldType='LINK'
+				 columnClass='width20percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NUMEXPCONVOCATORIA' 
+				 titleKey='DPCR_SERSO_PE_CANT_ACUM:NUMEXPCONVOCATORIA' 
+				 fieldType='LIST' 
+				 columnClass='width40percent'
+				 headerClass='headerDisplay'
+				 sortable='true'/>
+			 				 
+</beanformatter>

@@ -246,5 +246,20 @@ public interface IState
 	 * @return
 	 */
 	public StateContext getStateContext();
+	
+	/**
+	 * //[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+	 * Se obtiene el año del filtro por año
+	 * @return
+	 */
+	public int getAnio();
+
+	/**
+	 * //[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+	 * Se setea el año del filtro por año
+	 * @param anio Filtro de año de inicio de expediente
+	 * @return
+	 */
+	public void setAnio(int anio);
 
 }

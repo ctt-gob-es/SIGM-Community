@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Formato XSD para el env?o automatizado de anuncios de notificaci?n a publicar en el Tablon Edictal Unico-->
+<!--La version 1.1 añade los maxlength y los length de: id_emisor,id_remitente,id_anuncio,url,email-->
+<!--La version 1.2 añade el atributo rowspan y colspan a tr -->
+<!--La version 1.3 añade el required al atributo class de span, quita el default del parrafo -->
+<!--La version 1.4 corrige la version 1.2 y añade colspan y rowpan al td -->
+<!--La version 1.5 cambiamos el all por el sequence unbounded entre la relacion p y span-->
+<!--La version 1.6 añade el tipoContenido y el nuevo elemento contenidoCoof-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:element name="urlSW">
+		<xs:annotation>
+			<xs:documentation>Direccion del servicio web a la que se informara de la
+				fecha de publicacion de los anuncios.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:anyURI">
+				<xs:maxLength value="200"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="td">
+		<xs:annotation>
+			<xs:documentation>Celda de la tabla.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute ref="colspan"/>
+					<xs:attribute ref="rowspan"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="lugar">
+		<xs:annotation>
+			<xs:documentation>Poblacion en que tiene lugar la firma.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string"/>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="lgt">
+		<xs:annotation>
+			<xs:documentation>El valor sera S si el anuncio debe publicarse
+				conforme a lo dispuesto en el articulo 112 de la Ley 58/2003 (Ley
+				General Tributaria).
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="S"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="id">
+		<xs:annotation>
+			<xs:documentation>Identificador unico del anuncio en los sistemas de
+				informacion del organo emisor.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="formPub">
+		<xs:annotation>
+			<xs:documentation>Forma de publicacion.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="E"/>
+				<xs:enumeration value="I"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="firmante" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Cargo y nombre y dos apellidos del firmante.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="fechaPub">
+		<xs:annotation>
+			<xs:documentation>Fecha de publicacion solicitada para los anuncios.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:date"/>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="fecha">
+		<xs:annotation>
+			<xs:documentation>Fecha de la firma en formato ISO 8601:2004
+				(aaaa-mm-dd).
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:date"/>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="email">
+		<xs:annotation>
+			<xs:documentation>Direccion de correo electronico a efectos de
+				comunicar
+				las incidencias que se generen en el proceso de la
+				informacion.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="100"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="datosPersonales">
+		<xs:annotation>
+			<xs:documentation>Informa sobre si el anuncio contiene datos de
+				caracter
+				personal.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="S"/>
+				<xs:enumeration value="N"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="metadatos">
+		<xs:annotation>
+			<xs:documentation>Informacion para el tratamiento de los anuncios y
+				la
+				forma de publicarlos.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="id" minOccurs="0"/>
+				<xs:element ref="formPub"/>
+				<xs:element ref="datosPersonales"/>
+				<xs:element ref="materias" minOccurs="0"/>
+				<xs:element ref="lgt" minOccurs="0"/>
+				<xs:element ref="procedimiento" minOccurs="0"/>
+				<xs:element ref="notificados" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="envio">
+		<xs:annotation>
+			<xs:documentation>Nodo raiz del envio.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="version"/>
+				<xs:element ref="anuncios"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="infPub">
+		<xs:annotation>
+			<xs:documentation>Direccion del servicio web del organo emisor al que
+				se informara de la fecha de publicacion.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="urlSW" minOccurs="0"/>
+				<xs:element ref="email"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="contenido" type="tipoContenido"/>
+	<xs:complexType name="tipoContenido">
+		<xs:sequence>
+			<xs:element ref="texto"/>
+			<xs:element ref="pieFirma"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="colgroup">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="col" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="col">
+		<xs:complexType>
+			<xs:attribute name="class">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="index:CCC"/>
+						<xs:enumeration value="index:NAF"/>
+						<xs:enumeration value="index:NIF"/>
+						<xs:enumeration value="index:NOMBRE"/>
+						<xs:enumeration value="index:EXP"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="caption" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Titulo de la tabla.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="anuncios">
+		<xs:annotation>
+			<xs:documentation>Grupo de anuncios.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="remitente"/>
+				<xs:element ref="fechaPub" minOccurs="0"/>
+				<xs:element ref="infPub"/>
+				<xs:element ref="anuncio" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="anuncio">
+		<xs:annotation>
+			<xs:documentation>Anuncio Individual.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="emisor"/>
+				<xs:element ref="metadatos"/>
+				<xs:element ref="contenido"/>
+				<xs:element name="contenidoCoof" type="tipoContenido" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="materia">
+		<xs:annotation>
+			<xs:documentation>Materia.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="idMat" type="xs:string" use="required"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="materias">
+		<xs:annotation>
+			<xs:documentation>Tipo de anuncio.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element ref="materia" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="procedimiento">
+		<xs:annotation>
+			<xs:documentation>Identificacion del procedimiento.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="plural" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="N"/>
+								<xs:enumeration value="S"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="notificado">
+		<xs:annotation>
+			<xs:documentation>Cada elemento notificado.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="id" type="xs:string" use="required"/>
+					<xs:attribute name="tipId" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="CCC"/>
+								<xs:enumeration value="NAF"/>
+								<xs:enumeration value="NIF"/>
+								<xs:enumeration value="EXP"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="notificados">
+		<xs:annotation>
+			<xs:documentation>Lista con los datos de los notificados.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="notificado" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="span">
+		<xs:annotation>
+			<xs:documentation>Elementos span con el atributo class (tipo de dato
+				string) con el valor index:NIF, index:NAF.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="class" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="index:NIF"/>
+								<xs:enumeration value="index:NOMBRE"/>
+								<xs:enumeration value="index:EXP"/>
+								<xs:enumeration value="index:CCC"/>
+								<xs:enumeration value="index:NAF"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="p">
+		<xs:annotation>
+			<xs:documentation>Parrafo de texto.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="true">
+			<xs:sequence minOccurs="0">
+				<xs:element ref="span" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="class" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="pieFirma"/>
+						<xs:enumeration value="titulo"/>
+						<xs:enumeration value="parrafo"/>
+						<xs:enumeration value="page-break"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tfoot">
+		<xs:annotation>
+			<xs:documentation>Pie de la tabla.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="tr" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:all>
+							<xs:element ref="th"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="thead">
+		<xs:annotation>
+			<xs:documentation>Cabecera de la tabla.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="tr" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element ref="th" maxOccurs="unbounded"/>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="th">
+		<xs:annotation>
+			<xs:documentation>Celda de la cabecera.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute ref="colspan"/>
+					<xs:attribute ref="rowspan"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="texto">
+		<xs:annotation>
+			<xs:documentation>Texto del anuncio</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element ref="p" maxOccurs="unbounded"/>
+				<xs:element ref="table" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:choice>
+			<xs:attribute name="content-type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="application/xml"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tbody">
+		<xs:annotation>
+			<xs:documentation>Cuerpo de la tabla.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="tr" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:choice maxOccurs="unbounded">
+							<xs:element ref="td" maxOccurs="unbounded"/>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="table">
+		<xs:annotation>
+			<xs:documentation>Tabla con informacion.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="caption" minOccurs="0"/>
+				<xs:element ref="colgroup" minOccurs="0"/>
+				<xs:element ref="thead" minOccurs="0"/>
+				<xs:element ref="tbody"/>
+				<xs:element ref="tfoot" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="pieFirma">
+		<xs:annotation>
+			<xs:documentation>Pie de firma del anuncio.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="lugar"/>
+				<xs:element ref="fecha"/>
+				<xs:element ref="firmante"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="nodoRemitente">
+		<xs:annotation>
+			<xs:documentation>Organismo o unidad remitente de los anuncios.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute ref="idDir3" use="required"/>
+					<xs:attribute ref="nivel" use="required"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="version">
+		<xs:annotation>
+			<xs:documentation>Codigo que indica la version utilizada.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="remitente">
+		<xs:annotation>
+			<xs:documentation>Organismo o unidad remitente de los anuncios.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="nodoRemitente" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:attribute name="idDir3">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:length value="9"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:attribute>
+	<xs:attribute name="nivel" type="xs:int"/>
+	<xs:attribute name="colspan" type="xs:int"/>
+	<xs:attribute name="rowspan" type="xs:int"/>
+	<xs:element name="emisor">
+		<xs:annotation>
+			<xs:documentation>Organismo o unidad autor del anuncio
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="nodoEmisor" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="nodoEmisor">
+		<xs:annotation>
+			<xs:documentation>Organismo o unidad remitente de los anuncios.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:anySimpleType">
+					<xs:attribute ref="idDir3" use="required"/>
+					<xs:attribute ref="nivel" use="required"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

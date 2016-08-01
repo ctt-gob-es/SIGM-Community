@@ -139,6 +139,8 @@ public class Worklist implements IWorklist
     public IItemCollection getProcesses(IState state, InputStream istream) throws ISPACException
     {
 	    int idstagePCD=state.getStagePcdId();
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+	    int anio = state.getAnio();
 
 	    //No hay fase del procedimiento. Se devuelve una colección vacía.
 	    if (idstagePCD==0)
@@ -146,7 +148,8 @@ public class Worklist implements IWorklist
 
 	    IInvesflowAPI invesflowAPI = mcct.getAPI();
 		IWorklistAPI wl = invesflowAPI.getWorkListAPI();
-		return wl.getProcesses(idstagePCD,istream);
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		return wl.getProcesses(idstagePCD, istream, anio);
     }
 
 

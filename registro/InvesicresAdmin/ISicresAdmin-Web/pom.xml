@@ -84,7 +84,23 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Common</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
 
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-ServerCore</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Server</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
 
 		<!-- -->
 		<dependency>
@@ -173,6 +189,17 @@
 			<exclusions>
 
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dir3</groupId>
+			<artifactId>fwktd-dir3-core</artifactId>
+			<version>${fwktd.dir3.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk16</artifactId>
+			<version>1.46</version>
 		</dependency>
 
 	</dependencies>

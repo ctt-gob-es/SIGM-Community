@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='ANIO' 
+				 titleKey='REC_DAT_ESP_2:ANIO' 
+				 fieldType='LINK'
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='VALOR_CATASTRAL' 
+				 titleKey='REC_DAT_ESP_2:VALOR_CATASTRAL' 
+				 fieldType='LIST'
+				 columnClass='width25percent'
+				 headerClass='sortable'
+				 media='html csv excel xml pdf'				 
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='BASE_LIQUIDABLE' 
+				 titleKey='REC_DAT_ESP_2:BASE_LIQUIDABLE' 
+				 fieldType='LIST'
+				 columnClass='width25percent'
+				 headerClass='sortable'
+				 media='html csv excel xml pdf'				 
+				 sortable='true'/>
+				 			 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='BONIFICACION'
+				 titleKey='REC_DAT_ESP_2:BONIFICACION' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='TIPO'
+				 titleKey='REC_DAT_ESP_2:TIPO' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html csv excel xml pdf'/>
+	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CUOTA'
+				 titleKey='REC_DAT_ESP_2:CUOTA' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html csv excel xml pdf'/>
+</beanformatter>

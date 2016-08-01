@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter pageSize='100'>
+
+	<!-- Ponemos 2 veces la propiedad Asunto, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+		 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRESOBRE' 
+				 titleKey='CONTRATACION_DOC_PRESENTAR:NOMBRESOBRE' 
+				 fieldType='LINK'
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRESOBRE' 
+				 titleKey='CONTRATACION_DOC_PRESENTAR:NOMBRESOBRE' 
+				 fieldType='LIST'
+				 columnClass='width10percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+				 
+
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='TIPO_DOC' 
+				 titleKey='CONTRATACION_DOC_PRESENTAR:TIPO_DOC' 
+				 fieldType='LIST' 
+				 columnClass='width70percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='F_APERTURA' 
+				 titleKey='CONTRATACION_DOC_PRESENTAR:F_APERTURA' 
+				 fieldType='LIST' 
+				 columnClass='width20percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+				 
+				 
+</beanformatter>

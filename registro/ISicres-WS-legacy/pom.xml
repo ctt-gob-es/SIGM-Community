@@ -33,6 +33,12 @@
 
 
 		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>ISicres-Document-Connector-Invesdoc</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-Api</artifactId>
 			<version>${pom.version}</version>
@@ -50,6 +56,26 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-Terceros</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Common</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Server</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-ServerCore</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Desktop-Jar</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
 		<dependency>

@@ -132,6 +132,50 @@ public class DocumentConverter {
 
 		return convert2PDF(invesflowAPI, guids, exts);
 	}
+	
+	/**
+	 * [dipucr-Felipe #160]
+	 * Convierte documentos a PDF.
+	 * @param invesflowAPI API de invesFlow.
+	 * @param documentIds Identificadores de documentos.
+	 * @param sign [dipucr-Felipe #160] Elimino el parámetro
+	 * @return Rutas de los ficheros de salida.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public static String[] convert2PDFKeepSignedDocuments(IInvesflowAPI invesflowAPI, int[] documentIds) throws ISPACException {
+
+		// Obtener la información de los documentos
+		IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
+		String ids = "";
+		String separator = "";
+		for (int i = 0; i < documentIds.length; i++) {
+			ids += separator + documentIds[i];
+			separator = " , ";
+		}
+
+		Map docs = entitiesAPI.queryEntities(SpacEntities.SPAC_DT_DOCUMENTOS, "WHERE ID IN ( " + ids + " )").toMap();
+
+		String[] guids = new String[docs.size()];
+		String[] exts = new String[docs.size()];
+
+		//En vez de discenir por el parámetro de firma sign miro si tiene INFOPAG_RDE,
+		//y en este caso saco el firmado, y si no, el no firmado
+		for (int i = 0; i < documentIds.length; i++) {
+			IItem doc = (IItem) docs.get(new Integer(documentIds[i]));
+			
+			String infopag = doc.getString("INFOPAG_RDE");
+			String extension = doc.getString("EXTENSION_RDE");
+			if (StringUtils.isEmpty(infopag)){
+				infopag = doc.getString("INFOPAG");
+				extension = doc.getString("EXTENSION");
+			}
+			
+			guids[i] = infopag;
+			exts[i] = extension;
+		}
+
+		return convert2PDF(invesflowAPI, guids, exts);
+	}
 
 
 	/**
@@ -269,6 +313,14 @@ public class DocumentConverter {
 		if (StringUtils.isBlank(mimeType)
 				|| !(mimeType.equalsIgnoreCase("application/msword")
 						|| StringUtils.containsIgnoreCase(mimeType, "application/excel")
+						
+						//INICIO [eCenpri-Felipe #449]
+						//Metemos todos los alias posibles del Excel. El último es el oficial
+						|| StringUtils.containsIgnoreCase(mimeType, "application/x-excel")						 
+						|| StringUtils.containsIgnoreCase(mimeType, "application/vndms-excel") 
+						|| StringUtils.containsIgnoreCase(mimeType, "application/vnd.ms-excel") 
+						//FIN [eCenpri-Felipe #449]
+
 						|| StringUtils.containsIgnoreCase(mimeType, "application/pdf")
 						|| StringUtils.containsIgnoreCase(mimeType, "application/rtf")
 						|| StringUtils.containsIgnoreCase(mimeType, "application/powerpoint")
@@ -316,7 +368,21 @@ public class DocumentConverter {
 	 */
 	public static String concatenate2PDF(IInvesflowAPI invesflowAPI, int[] docIds) throws ISPACException{
 
-		return concatenate2PDF(invesflowAPI, docIds, false);
+		return concatenate2PDF(invesflowAPI, docIds, false, false);
+	}
+	
+	/**
+	 * [dipucr-Felipe #160]
+	 * Concatena varios documentos en un único PDF.
+	 * @param invesflowAPI API de invesFlow.
+	 * @param docIds Identificadores de los documentos a concatenar.
+	 * @param sign  Indica si se trabaja con los documentos firmados o no
+	 * @return Ruta del fichero de salida.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public static String concatenate2PDF(IInvesflowAPI invesflowAPI, int[] docIds, boolean sign) throws ISPACException{
+
+		return concatenate2PDF(invesflowAPI, docIds, sign, false);
 	}
 
 
@@ -325,13 +391,21 @@ public class DocumentConverter {
 	 * @param invesflowAPI API de invesFlow.
 	 * @param docIds Identificadores de los documentos a concatenar.
 	 * @param sign  Indica si se trabaja con los documentos firmados o no
+	 * @param bKeepSignedDocs [dipucr-Felipe #160] Mantiene los documentos firmados, sin recuperar el documento anterior a la firma
 	 * @return Ruta del fichero de salida.
 	 * @throws ISPACException si ocurre algún error.
 	 */
-	public static String concatenate2PDF(IInvesflowAPI invesflowAPI, int[] docIds , boolean sign ) throws ISPACException{
+	public static String concatenate2PDF(IInvesflowAPI invesflowAPI, int[] docIds , boolean sign , boolean bKeepSignedDocs) throws ISPACException{
 
 		// Convertir los documentos a PDF
-		String[] files = convert2PDF(invesflowAPI, docIds, sign);
+		String[] files;
+		//INICIO [dipucr-Felipe #160]
+		if (bKeepSignedDocs){
+			files = convert2PDFKeepSignedDocuments(invesflowAPI, docIds);
+		}
+		else{//FIN [dipucr-Felipe #160]
+			files= convert2PDF(invesflowAPI, docIds, sign);
+		}
 
 		if (ArrayUtils.isEmpty(files)){
 			return null;

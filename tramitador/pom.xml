@@ -132,7 +132,7 @@
 				</property>
 			</activation>
 			<modules>
-				<module>ispac-src</module>
+				<!--<module>ispac-src</module>-->
 				<module>ispac-docs</module>
 			</modules>
 			<build>
@@ -145,7 +145,7 @@
 								<phase>package</phase>
 								<configuration>
 									<tasks>
-										<property name="dist.dir" value="/invesFlow/${pom.version}"/>
+										<property name="dist.dir" value="${basedir}/invesFlow/${pom.version}"/>
 
 										<delete dir="${dist.dir}"/>
 										<mkdir dir="${dist.dir}" />
@@ -158,7 +158,7 @@
 										<mkdir dir="${dist.dir}/war" />
 
 										<unzip src="${basedir}/ispac-config/target/ispac-config-${pom.version}.zip" dest="${dist.dir}/config"/>
-										<unzip src="${basedir}/ispac-docs/target/ispac-docs-${pom.version}-documentacion.zip" dest="${dist.dir}/docs"/>
+										<!--<unzip src="${basedir}/ispac-docs/target/ispac-docs-${pom.version}-documentacion.zip" dest="${dist.dir}/docs"/>-->
 
 										<copy todir="${dist.dir}/database" overwrite="true" verbose="true">
 											<fileset dir="${basedir}/ispac-db" excludes="**/*svn"/>
@@ -194,9 +194,9 @@
 											<fileset file="${basedir}/ispac-services-ws/ispac-services-ws-ear/target/ispacservicesws.ear"/>
 										</copy>
 
-										<copy todir="${dist.dir}/src" overwrite="true" verbose="true">
+										<!--<copy todir="${dist.dir}/src" overwrite="true" verbose="true">
 											<fileset file="${basedir}/ispac-src/target/*.zip"/>
-										</copy>
+										</copy>-->
 
 									</tasks>
 								</configuration>

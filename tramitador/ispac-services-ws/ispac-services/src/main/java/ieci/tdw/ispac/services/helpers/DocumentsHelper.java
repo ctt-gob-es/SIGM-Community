@@ -8,6 +8,7 @@ import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.sign.ISignConnector;
 import ieci.tdw.ispac.ispaclib.sign.SignConnectorFactory;
 import ieci.tdw.ispac.ispaclib.sign.SignDocument;
+import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 import ieci.tdw.ispac.ispaclib.utils.ArrayUtils;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispaclib.utils.TypeConverter;
@@ -19,6 +20,7 @@ import ieci.tdw.ispac.services.dto.Firma;
 import ieci.tdw.ispac.services.dto.InfoOcupacion;
 import ieci.tdw.ispac.services.vo.DocumentoVO;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -324,6 +326,87 @@ public class DocumentsHelper {
     	}		
 
 		return info;
+    }
+    
+    /**
+     * [Dipucr-Agustin S2#781]
+     * Obtiene el contenido del documento temporal pasando el nombre.
+     * @param context Contexto de cliente.
+     * @param guid nombre del documento.
+     * @return Contenido del documento.
+     * @throws ISPACException si ocurre algún error.
+     */
+    public static byte [] getContenidoDocumentoTemp(IClientContext context, 
+    		String path) throws ISPACException {
+
+    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+    	
+    	if (logger.isInfoEnabled()) {
+    		logger.info("Se va a obtener el contenido del documento temporal: " + path);
+    	}
+
+		IGenDocAPI genDocAPI = context.getAPI().getGenDocAPI();
+		Object connectorSession = null;
+		try {
+			
+			connectorSession = genDocAPI.createConnectorSession();
+			//genDocAPI.getDocument(connectorSession, path, out);
+			FileTemporaryManager.getInstance().get(out, path);
+				
+			out.close();
+    	} catch (Exception e) {
+    		logger.error(
+    				"Error al obtener el contenido del documento temporal: " + path, e);
+    		throw new ISPACException(
+    				"Error al obtener el contenido del documento temporal: " + path, e);
+		} finally {
+			if (connectorSession != null) {
+				genDocAPI.closeConnectorSession(connectorSession);
+			}
+    	}		        	
+
+		return out.toByteArray();
+    }
+    
+    
+    /**
+     * [Dipucr-Agustin #781]
+     * Guarda el contenido del documento temporal pasando byte array.
+     * @param context Contexto de cliente.
+     * @param guid nombre del documento.
+     * @return Contenido del documento.
+     * @throws ISPACException si ocurre algún error.
+     */
+    public static boolean setContenidoDocumentoTemp(IClientContext context, 
+    		String path, byte[] data) throws ISPACException {
+    	
+    	boolean result = false;
+    	ByteArrayInputStream in = new ByteArrayInputStream(data);
+    	    	
+    	if (logger.isInfoEnabled()) {
+    		logger.info("Se va a obtener el contenido del documento temporal: " + path);
+    	}
+
+		IGenDocAPI genDocAPI = context.getAPI().getGenDocAPI();
+		Object connectorSession = null;
+		try {
+			
+			connectorSession = genDocAPI.createConnectorSession();
+			result = FileTemporaryManager.getInstance().put(in,path);
+				
+			in.close();
+    	} catch (Exception e) {
+    		logger.error(
+    				"Error al guardar el contenido del documento temporal: " + path, e);
+    		throw new ISPACException(
+    				"Error al guardar el contenido del documento temporal: " + path, e);
+		} finally {
+			if (connectorSession != null) {
+				genDocAPI.closeConnectorSession(connectorSession);
+			}
+    	}		        	
+
+		return result;
     }
 
 }

@@ -539,4 +539,46 @@ public class SigemTramitacionServiceAdapter implements ServicioTramitacion {
 		}
 	}
 
+	/**
+	 * [DipuCR-Agustin #781]
+     * Obtiene el contenido del documento temporal.
+     * @param guid GUID del documento
+     * @return Contenido del documento.
+     * @throws TramitacionException si ocurre algún error.
+     */
+	public byte[] getFicheroTemp(String idEntidad, String guid)
+			throws TramitacionException {
+		try {
+			setOrganizationUserInfo(idEntidad);
+			return CustodiaManager.getInstance().getFicheroTemp(guid);
+		} catch (Throwable e){
+			logger.error("Error inesperado al obtener el contenido del fichero[guid="
+					+ guid + "]", e);
+			throw new TramitacionException(
+					TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+
+	}
+	
+    /**
+     * [DipuCR-Agustin #781]
+     * Guarda el contenido del documento temporcd al.
+     * @param guid GUID del documento
+     * @return Path donde se ha guardado el fichero temporal.
+     * @throws TramitacionException si ocurre algún error.
+     */
+	public boolean setFicheroTemp(String idEntidad, String guid, byte[] data)
+			throws TramitacionException {
+		try {
+			setOrganizationUserInfo(idEntidad);
+			return CustodiaManager.getInstance().setFicheroTemp(guid, data); 			
+		} catch (Throwable e){
+			logger.error("Error inesperado al obtener el contenido del fichero[guid="
+					+ guid + "]", e);
+			throw new TramitacionException(
+					TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+
+	}	
+
 }

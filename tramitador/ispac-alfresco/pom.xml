@@ -15,6 +15,14 @@
 	<name>ispac-alfresco</name>
 	<packaging>jar</packaging>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<!-- IECI dependencies -->
@@ -40,13 +48,30 @@
 			</exclusions>
 		</dependency>
 
-		<!--
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Document-Connector</artifactId>
+			<version>${invesicres.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.alfresco</groupId>
 			<artifactId>alfresco-web-service-client</artifactId>
-			<version>3.0</version>
+			<version>4.0.d</version>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>${commons.httpclient.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+<!--
 		<dependency>
 			<groupId>org.alfresco</groupId>
 			<artifactId>alfresco-repository</artifactId>

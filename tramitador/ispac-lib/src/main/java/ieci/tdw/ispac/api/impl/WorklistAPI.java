@@ -431,17 +431,36 @@ public class WorklistAPI implements IWorklistAPI
 		}
 	}
 
-	/* (non-Javadoc)
+	/**
+    * [eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+    * (non-Javadoc)
+    * @see ieci.tdw.ispac.api.IWorklistAPI#getProcesses(int, InputStream)
+	*/
+	public IItemCollection getProcesses(int idStagePCD, InputStream processlistxml) throws ISPACException
+	{		
+		return getProcesses(idStagePCD, processlistxml, 0);
+
+	}
+	
+	/** 
+    * [eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+    * (non-Javadoc)
     * @see ieci.tdw.ispac.api.IWorklistAPI#getProcesses(int, InputStream)
 	 */
-	public IItemCollection getProcesses(int idStagePCD, InputStream processlistxml) throws ISPACException
+	public IItemCollection getProcesses(int idStagePCD, InputStream processlistxml, int anio) throws ISPACException
 	{
 		String resp = getRespString();
-		return getProcesses(idStagePCD, processlistxml, resp);
+		return getProcesses(idStagePCD, processlistxml, resp, anio);
 
 	}
 
+	//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 	private IItemCollection getProcesses(int idStagePCD, InputStream processlistxml, String resp) throws ISPACException {
+
+		return getProcesses(idStagePCD, processlistxml, resp, 0);
+	}
+	
+	private IItemCollection getProcesses(int idStagePCD, InputStream processlistxml, String resp, int anio) throws ISPACException {
 
 		DbCnt cnt=null;
 		try
@@ -453,7 +472,8 @@ public class WorklistAPI implements IWorklistAPI
             if (wlbuilder==null)
                 throw new ISPACException("No se ha podido construir WLProcessListBuilder");
 
-            CollectionDAO coldao = wlbuilder.getWorklist(cnt, idStagePCD, resp);
+	//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+            CollectionDAO coldao = wlbuilder.getWorklist(cnt, idStagePCD, resp, anio);
             return coldao.disconnect();
 		}
 		catch (ISPACException ie)

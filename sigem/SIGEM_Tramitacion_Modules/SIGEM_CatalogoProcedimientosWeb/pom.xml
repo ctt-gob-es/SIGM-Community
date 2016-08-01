@@ -92,10 +92,14 @@
 					<groupId>es.ieci.tecdoc.sigem</groupId>
 					<artifactId>sigem_administracionSesionesBackOfficeWsClient</artifactId>
 				</exclusion>
-				<exclusion>
+				<!-- [Manu #814] INICIO - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+				<!-- <exclusion>
 					<groupId>es.ieci.tecdoc.sigem</groupId>
 					<artifactId>sigem_entidades</artifactId>
 				</exclusion>
+				-->
+				<!-- [Manu #814] FIN - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
+				
 				<exclusion>
 					<groupId>es.ieci.tecdoc.sigem</groupId>
 					<artifactId>sigem_estructuraOrganizativa</artifactId>
@@ -230,6 +234,18 @@
 			<artifactId>servlet-api</artifactId>
 			<version>${servlet-api.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>DipucrFuncionesComunes</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>DipucrRules</artifactId>
+			<version>3.0</version>
 		</dependency>
 
 	</dependencies>

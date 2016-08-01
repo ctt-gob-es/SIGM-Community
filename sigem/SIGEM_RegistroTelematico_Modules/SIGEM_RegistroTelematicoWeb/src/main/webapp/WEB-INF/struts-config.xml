@@ -115,6 +115,7 @@
 				<forward name="success_web" path="/prepararSolicitudRegistro.do"/>
 				<forward name="success_web_change_port" path="/jsp/RedireccionUsuarios.jsp"/> <!-- Nuevo -->
 				<forward name="error_login" path="/jsp/RedireccionAutenticacion.jsp"/> <!-- obtenerTipoAcceso.do -->
+				<forward name="nofirmar" path="/jsp/noFirmar.jsp"/> <!-- [eCenpri-Felipe #818] -->				
 				<forward name="failure" path="/jsp/MensajeError.jsp"/>
 		</action>
 		<!-- Sesión -->
@@ -159,7 +160,12 @@
 		</action>
 
 	</action-mappings>
-	<controller maxFileSize="4M" inputForward="true" />
+	
+	<!-- [Manu Ticket #734] SIGEM Tramitador  Anexar documento: Ampliar máximo tamaño de archivo -->
+	<!-- <controller maxFileSize="50M" inputForward="true" />-->
+	<controller maxFileSize="200M" inputForward="true" />
+	<!-- [Manu Ticket #734] SIGEM Tramitador  Anexar documento: Ampliar máximo tamaño de archivo -->
+	
 	<message-resources parameter="resources.application" />
 	<plug-in className="ieci.tecdoc.sgm.registro.plugin.ConfigPlugin">
 

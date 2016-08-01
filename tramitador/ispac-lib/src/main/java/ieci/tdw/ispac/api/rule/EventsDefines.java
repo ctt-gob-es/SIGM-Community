@@ -85,5 +85,8 @@ public class EventsDefines
 	public static final int EVENT_EXEC_AFTER_RESTORE		=43;
 	public static final int EVENT_EXEC_BEFORE_DELETE		=44;
 	public static final int EVENT_EXEC_AFTER_DELETE			=45;
+	
+    //[eCenpri-Manu Ticket#129] ALSIGM3 Crear nuevo evento al relacionar expediente.        
+	public static final int EVENT_EXEC_RELACIONAR			=46;
 
 }

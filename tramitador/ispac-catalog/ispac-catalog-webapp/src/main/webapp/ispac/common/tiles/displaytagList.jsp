@@ -246,6 +246,51 @@
 				</display:column>
 
 			</logic:equal>
+			
+			<!--  [eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento. -->
+			<logic:equal name="format" property="fieldType" value="MANUAL_USUARIO_TYPE">
+
+				<display:column titleKey='<%=format.getTitleKey()%>'
+								media='<%=format.getMedia()%>'
+								headerClass='<%=format.getHeaderClass()%>'
+								class='<%=format.getColumnClass()%>'
+								sortable='<%=format.getSortable()%>'
+								decorator='<%=format.getDecorator()%>'>
+
+						<% if ("1".equals(format.formatProperty(item))) { %>
+							<bean:message key="form.report.propertyLabel.generico"/>
+						<% } else if ("2".equals(format.formatProperty(item))) { %>
+							<bean:message key="form.report.propertyLabel.especifico"/>
+						<% } else if ("3".equals(format.formatProperty(item))) { %>
+							<bean:message key="form.report.propertyLabel.global"/>
+						<% } else{%>
+							<bean:message key="form.report.propertyLabel.busqueda"/>
+						<% }%>
+
+				</display:column>
+
+			</logic:equal>
+			
+			<logic:equal name="format" property="fieldType" value="MANUAL_USUARIO_VISIBILIDAD">
+
+				<display:column titleKey='<%=format.getTitleKey()%>'
+								media='<%=format.getMedia()%>'
+								headerClass='<%=format.getHeaderClass()%>'
+								class='<%=format.getColumnClass()%>'
+								sortable='<%=format.getSortable()%>'
+								decorator='<%=format.getDecorator()%>'>
+
+						<% if ("1".equals(format.formatProperty(item))) { %>
+							<bean:message key="catalog.manualusuario.visibilidad.publica"/>
+						<% } else if ("0".equals(format.formatProperty(item))) { %>
+							<bean:message key="catalog.manualusuario.visibilidad.restringida"/>
+						<% } %>
+
+				</display:column>
+
+			</logic:equal>
+
+			<!-- [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento. -->
 
 			<logic:equal name="format" property="fieldType" value="MSG_RESOURCES_DATA">
 

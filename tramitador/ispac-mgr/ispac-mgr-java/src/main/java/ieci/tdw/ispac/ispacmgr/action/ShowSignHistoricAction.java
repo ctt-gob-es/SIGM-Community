@@ -14,6 +14,7 @@ import ieci.tdw.ispac.ispacmgr.action.form.EntityForm;
 import ieci.tdw.ispac.ispacmgr.common.constants.ActionsConstants;
 import ieci.tdw.ispac.ispacmgr.menus.MenuFactory;
 import ieci.tdw.ispac.ispacweb.api.IManagerAPI;
+import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
 import ieci.tdw.ispac.ispacweb.api.ManagerState;
 
@@ -69,7 +70,9 @@ public class ShowSignHistoricAction extends BaseAction {
 		
 	    ///////////////////////////////////////////////
 	    // Menus
-		request.setAttribute("menus", MenuFactory.getSingHistoric(cct, getResources(request)));    		
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		IState state = managerAPI.currentState(getStateticket(request));
+		request.setAttribute("menus", MenuFactory.getSingHistoric(cct, getResources(request), state));    		
 		///////////////////////////////////////////////
 	    // Formateador
 		CacheFormatterFactory factory = CacheFormatterFactory.getInstance();

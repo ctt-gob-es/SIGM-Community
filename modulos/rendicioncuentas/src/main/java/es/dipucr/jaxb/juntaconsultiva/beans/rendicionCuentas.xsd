@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="dgp_sitt_schema">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="cabecera"/>
+        <xs:element ref="enteContratante"/>
+      </xs:sequence>
+      <xs:attribute name="anio" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cabecera">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="usuario"/>
+        <xs:element ref="RegistrosEnviados"/>
+        <xs:element ref="tipoAdmin"/>
+        <xs:element ref="tipoAdminLocal"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="usuario">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="nombre"/>
+        <xs:element ref="apellido1"/>
+        <xs:element ref="apellido2"/>
+        <xs:element ref="cargo"/>
+        <xs:element ref="direccion"/>
+        <xs:element ref="provincia"/>
+        <xs:element ref="municipio"/>
+        <xs:element ref="codPostal"/>
+        <xs:element ref="telefono"/>
+        <xs:element ref="fax"/>
+        <xs:element ref="mail"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="nombre">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="apellido1">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="apellido2">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="cargo">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="direccion">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="municipio">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="codPostal">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="telefono">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="fax">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="mail">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="RegistrosEnviados">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="tipoAdmin">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="tipoAdminLocal">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="enteContratante">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="departamento"/>
+      </xs:sequence>
+      <xs:attribute name="codEnteContratante" use="required"/>
+      <xs:attribute name="nombreEnteContratante" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="departamento">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="organoContratante"/>
+      </xs:sequence>
+      <xs:attribute name="codigoDepartamento" use="required"/>
+      <xs:attribute name="nombreDepartamento" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="organoContratante">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="contrato"/>
+      </xs:sequence>
+      <xs:attribute name="codigoOrganoContratante" use="required"/>
+      <xs:attribute name="nombreOrganoContratante" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="contrato">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tipoContrato"/>
+        <xs:element ref="provincia"/>
+        <xs:element ref="modalidad"/>
+        <xs:element ref="objeto"/>
+        <xs:element ref="codigoCpa"/>
+        <xs:element ref="caracteristicaBienes"/>
+        <xs:element ref="conMixto"/>
+        <xs:element ref="conMarco"/>
+        <xs:element ref="complementario"/>
+        <xs:element ref="publicidad"/>
+        <xs:element ref="anuncioBoe"/>
+        <xs:element ref="anuncioDOUE"/>
+        <xs:element ref="anuncioBoca"/>
+        <xs:element ref="anuncioBop"/>
+        <xs:element ref="tramite"/>
+        <xs:element ref="procedimientoAdjud"/>
+        <xs:element ref="procNegArticulo"/>
+        <xs:element ref="procNegSubapartado"/>
+        <xs:element ref="invitaciones"/>
+        <xs:element ref="formaAdjud"/>
+        <xs:element ref="importePresupuesto"/>
+        <xs:element ref="plazo"/>
+        <xs:element ref="plazoConcesion"/>
+        <xs:element ref="plurianual"/>
+        <xs:element ref="anualidad1"/>
+        <xs:element ref="anualidad2"/>
+        <xs:element ref="anualidad3"/>
+        <xs:element ref="anualidad4"/>
+        <xs:element ref="anualidad5"/>
+        <xs:element ref="revisionPrecios"/>
+        <xs:element ref="formulaTipo"/>
+        <xs:element ref="contratista"/>
+        <xs:element ref="paisOrigen"/>
+        <xs:element ref="fechaAdjudicacion"/>
+        <xs:element ref="importeAdjudicacion"/>
+        <xs:element ref="esIngreso"/>
+        <xs:element ref="modalidadImporte"/>
+        <xs:element ref="valorModalidad"/>
+        <xs:element ref="unidadModalidad"/>
+        <xs:element ref="aportacionAdministracion"/>
+        <xs:element ref="fechaFormalizacion"/>
+        <xs:element ref="observaciones"/>
+      </xs:sequence>
+      <xs:attribute name="numero" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tipoContrato">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="modalidad">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="objeto">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="codigoCpa">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="caracteristicaBienes">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="conMixto">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="conMarco">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="complementario">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="publicidad">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="anuncioBoe">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="anuncioDOUE">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="anuncioBoca">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="anuncioBop">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="tramite">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="procedimientoAdjud">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="procNegArticulo">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="procNegSubapartado">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="invitaciones">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="formaAdjud">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="importePresupuesto">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="plazo">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="plazoConcesion">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="plurianual">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="anualidad1">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="anualidad2">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="anualidad3">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="anualidad4">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="anualidad5">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="revisionPrecios">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="formulaTipo">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="contratista">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="descripcion"/>
+        <xs:element ref="nacionalidad"/>
+      </xs:sequence>
+      <xs:attribute name="nif" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="descripcion">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="nacionalidad">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="paisOrigen">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="fechaAdjudicacion">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="importeAdjudicacion">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="esIngreso">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="modalidadImporte">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="valorModalidad">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="unidadModalidad">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="aportacionAdministracion">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="fechaFormalizacion">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="observaciones">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="provincia">
+    <xs:complexType/>
+  </xs:element>
+</xs:schema>

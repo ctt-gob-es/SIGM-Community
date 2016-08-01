@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='REC_DAT_ESP_1:APELLIDOS_NOMBRE' 
+				 titleKey='REC_DAT_ESP_1:APELLIDOS_NOMBRE' 
+				 fieldType='LINK'
+				 columnClass='width50percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='REC_DAT_ESP_1:NIF' 
+				 titleKey='REC_DAT_ESP_1:NIF' 
+				 fieldType='LIST'
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 media='html csv excel xml pdf'				 
+				 sortable='true'/>
+				 			 
+	<propertyfmt type="BeanPropertyValidationFmt"
+				property='DERECHO:REC_DAT_ESP_1:SUSTITUTO'
+				validatedField='DERECHO'
+				validationTable='REC_VLDTBL_DERECHO'
+				titleKey='REC_DAT_ESP_1:DERECHO' 
+				fieldType='LIST'
+				columnClass='width30percent'
+				headerClass='sortable'
+				sortable='true'
+				media='html csv excel xml pdf'/>		 
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='REC_DAT_ESP_1:PORCENTAJE' 
+				 titleKey='REC_DAT_ESP_1:PORCENTAJE' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html csv excel xml pdf'/>
+</beanformatter>

@@ -9,6 +9,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.sun.star.bridge.XUnoUrlResolver;
+import com.sun.star.comp.helper.Bootstrap;
+import com.sun.star.lang.XMultiComponentFactory;
+import com.sun.star.uno.UnoRuntime;
+import com.sun.star.uno.XComponentContext;
+
 /**
  * Gestor que mantiene un conjunto de componentes de combinaci&oacute;n de documentos (DocumentParser) previamente
  * conectados para conseguir dos objetivos:
@@ -27,6 +35,7 @@ import java.util.Map;
  */
 public class DocumentParserPool
 {
+	private static Logger logger = Logger.getLogger(DocumentParserPool.class);
 
 	private static DocumentParserPool mInstance = null;
 
@@ -43,8 +52,13 @@ public class DocumentParserPool
 		String connection = config.get( ISPACConfiguration.OPEN_OFFICE_CONNECT);
 		DocumentParserPooled parserpooled = new DocumentParserPooled( connection);
 		DocumentParser documentparser = parserpooled.getDocument();
-		mParserPool.put( documentparser, parserpooled);
-
+		
+		//[Manu Ticket #86] INICIO - ALSIGM3 Usar varias instancias de OpenOffice
+		if(compruebaConn(connection)){
+			mParserPool.put( documentparser, parserpooled);
+		}
+		//[Manu Ticket #86] FIN - ALSIGM3 Usar varias instancias de OpenOffice
+		
 		String parameter = config.get( ISPACConfiguration.OPEN_OFFICE_ADDITIONAL_INSTANCES);
 		if (parameter != null)
 		{
@@ -54,7 +68,12 @@ public class DocumentParserPool
 				connection = config.get( ISPACConfiguration.OPEN_OFFICE_CONNECT + "_" + i);
 				parserpooled = new DocumentParserPooled( connection);
 				documentparser = parserpooled.getDocument();
-				mParserPool.put( documentparser, parserpooled);
+				
+				//[Manu Ticket #86] INICIO - ALSIGM3 Usar varias instancias de OpenOffice
+				if(compruebaConn(connection)){
+					mParserPool.put( documentparser, parserpooled);
+				}
+				//[Manu Ticket #86] FIN - ALSIGM3 Usar varias instancias de OpenOffice				
 			}
 		}
 
@@ -72,6 +91,34 @@ public class DocumentParserPool
 
 		mSemaphore = new Semaphore( mParserPool.size());
 	}
+	
+	/**
+	 * [Manu Ticket #86] INICIO - ALSIGM3 Usar varias instancias de OpenOffice
+	 * 
+	 * Comprueba si el servidor de OpenOffice está aceptando conexiones, para evitar que luego intente conectar con él y falle.
+	 * @param connection - Cadena de conexión con el servidor de OpenOffice 
+	 * @return
+	 */
+	public boolean compruebaConn(String connection){
+		boolean resultado = false;
+		
+		try {
+			XComponentContext xcomponentcontext = Bootstrap.createInitialComponentContext(null);
+			XMultiComponentFactory xLocalServiceManager = xcomponentcontext.getServiceManager();
+	
+			Object xUrlResolver = xLocalServiceManager.createInstanceWithContext(	"com.sun.star.bridge.UnoUrlResolver", xcomponentcontext);
+			XUnoUrlResolver urlResolver =
+					(XUnoUrlResolver) UnoRuntime.queryInterface( XUnoUrlResolver.class, xUrlResolver);
+			urlResolver.resolve(connection);
+			resultado = true;
+		}catch (java.lang.Exception e){
+			logger.warn("Error al establecer la conexión con OpenOffice: " + connection + ". " + e.getMessage(), e);
+			resultado = false;
+		}
+		return resultado;
+	}
+	//[Manu Ticket #86] FIN - ALSIGM3 Usar varias instancias de OpenOffice
+	
 
 	/**
 	 * Devuelve la &uacute;nica instancia posible del gestor de parsers.
@@ -82,8 +129,12 @@ public class DocumentParserPool
 	public static synchronized DocumentParserPool getInstance()
 	throws ISPACException
 	{
-		if (mInstance == null)
+		//[Manu Ticket #86] INICIO - ALSIGM3 Usar varias instancias de OpenOffice 
+		//(Se elimina para que siempre recupere las conexiones para ver si se ha caído algún servidor de OO)
+		//if (mInstance == null)
 			mInstance = new DocumentParserPool();
+		//[Manu Ticket #86] FIN - ALSIGM3 Usar varias instancias de OpenOffice
+
 
 		return mInstance;
 	}

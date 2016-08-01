@@ -101,5 +101,7 @@ public class SpacEntities {
 
 	public static final String SPAC_REGISTROS_ES_NAME = "SPAC_REGISTROS_ES";
 	
+	// [eCenpri-Felipe #436]
+	public static final int SPAC_ID_TRANSACCION_FIRMA=10;
 	
 }

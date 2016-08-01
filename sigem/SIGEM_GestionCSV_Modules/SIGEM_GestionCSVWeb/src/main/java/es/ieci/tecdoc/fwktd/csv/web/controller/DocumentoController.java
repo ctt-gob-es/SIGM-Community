@@ -140,11 +140,16 @@ public class DocumentoController extends MultiActionController {
 		HttpSession session = request.getSession();
 		session.removeAttribute(INFO_DOCUMENTO_SESSION_KEY);
 
+		//[dipucr-Felipe #290]
+		String idEntidad = request.getParameter(PARAMETRO_ID_ENTIDAD);
+		
 		List listaEntidades = obtenerListaEntidades();
 		ModelAndView mav = new ModelAndView(getViewName());
 		if (listaEntidades.size() == 1) {
 			Entidad oEntidad = (Entidad) listaEntidades.get(0);
 			mav.addObject(PARAMETRO_ID_ENTIDAD, oEntidad.getIdentificador());
+		} else if (!StringUtils.isEmpty(idEntidad)) {//[dipucr-Felipe #290]
+			mav.addObject(PARAMETRO_ID_ENTIDAD, idEntidad);
 		} else {
 			mav.addObject(PARAMETRO_LISTA_ENTIDADES, listaEntidades);
 		}

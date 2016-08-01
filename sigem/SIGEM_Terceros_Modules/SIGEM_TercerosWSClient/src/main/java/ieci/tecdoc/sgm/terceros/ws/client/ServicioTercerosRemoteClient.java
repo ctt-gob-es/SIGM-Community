@@ -471,4 +471,17 @@ public class ServicioTercerosRemoteClient implements ServicioTerceros {
 		
 		return direccionElectronica;
 	}
+	
+	public boolean insertThirdParty(String entityId, String nif, int tipoDoc,
+			String nombre, String ape1, String ape2, String tipo,
+			String provincia, String municipio, String cpostal,
+			String direccion, String tfnoFijo, String tfnoMovil, String email)
+			throws TercerosException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void setDsName(String dsName) {
+		// TODO Auto-generated method stub
+	}
 }

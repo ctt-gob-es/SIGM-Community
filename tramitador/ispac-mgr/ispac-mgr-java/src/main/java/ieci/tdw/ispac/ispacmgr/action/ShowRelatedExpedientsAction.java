@@ -66,6 +66,25 @@ public class ShowRelatedExpedientsAction extends BaseAction {
         SpacMgr.organizeRelation(itemCol, "EXP_REL:RELACION", 1);
         //request.setAttribute("ParentValueList", CollectionBean.getBeanList(itemCol));
         expRelacionados.addAll(CollectionBean.getBeanList(itemCol));
+        
+      //MQE #1023 Tablas de Histórico
+        Map map2 = new LinkedHashMap();
+        map2.put("EXP", "SPAC_EXPEDIENTES_H");
+        map2.put("EXP_REL", "SPAC_EXP_RELACIONADOS");
+        
+        // Obtenemos los expedientes descendientes del actual
+       itemCol = entitiesAPI.queryEntities(map2,"WHERE EXP_REL.NUMEXP_HIJO = EXP.NUMEXP AND EXP_REL.NUMEXP_PADRE = '" + DBUtil.replaceQuotes(numExp) + "'"); 
+        //request.setAttribute("ChildValueList", CollectionBean.getBeanList(itemCol));
+       expRelacionados.addAll(CollectionBean.getBeanList(itemCol));
+        
+        // Obtenemos los expedientes antecesores del actual
+        itemCol = entitiesAPI.queryEntities(map2,"WHERE EXP_REL.NUMEXP_PADRE = EXP.NUMEXP AND EXP_REL.NUMEXP_HIJO = '" + DBUtil.replaceQuotes(numExp) + "'");
+        //request.setAttribute("ParentValueList", CollectionBean.getBeanList(itemCol));
+        SpacMgr.organizeRelation(itemCol, "EXP_REL:RELACION", 1);
+        expRelacionados.addAll(CollectionBean.getBeanList(itemCol));
+        //MQE #1023 Fin Tablas Histórico
+        
+        
         request.setAttribute("ValueList", expRelacionados);
         
         // Cargamos el formateador

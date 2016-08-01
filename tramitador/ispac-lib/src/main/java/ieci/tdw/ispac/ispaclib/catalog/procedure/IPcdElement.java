@@ -59,7 +59,9 @@ public interface IPcdElement {
     public void addDestElement(IPcdElement element) throws ISPACException;
 
     public String toXml() throws ISPACException;
-    public String toXpdl(DbCnt cnt, Map ctStageIds, Map ctTaskIds, Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds) throws ISPACException;
-    public String toXpdl(DbCnt cnt, Map ctStageIds, Map ctTaskIds, Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds, Map ctHelpsIds) throws ISPACException;
+
+    //[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+    public String toXpdl(DbCnt cnt, Map ctStageIds, Map ctTaskIds, Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds, Map ctManualesUsuarioIds, List manualesUsuario) throws ISPACException;
+    public String toXpdl(DbCnt cnt, Map ctStageIds, Map ctTaskIds, Map ctRuleIds, Map ctEntityIds, Map ctTpDocIds, Map subPcdIds, Map ctManualesUsuarioIds, List manualesUsuario, Map ctHelpsIds) throws ISPACException;
     
 }

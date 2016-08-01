@@ -27,6 +27,27 @@ public interface IRepositoryManager {
 	 */
 	ISRepositoryRetrieveDocumentVO retrieveDocument(
 			ISRepositoryRetrieveDocumentVO retrieveVO) throws Exception;
+	
+	/**
+	 * [Ticket 1014 Teresa INICIO] Recupera la información del documento cuyo guid es
+	 * el pasado como parámetro
+	 */
+	
+	/**
+	 * Método que realiza las operaciones necesarias para recuperar un fichero
+	 * de un repositorio
+	 * 
+	 * @param docUID
+	 *            identificador del documento
+	 * @param entidad
+	 * @return
+	 * @throws Exception
+	 */
+	public byte[] retrieveDocument(String docUID, String entidad) throws Exception;
+	
+	/**
+	 * [Ticket 1014 Teresa FIN]
+	 */
 
 	/**
 	 * Método que realiza las operaciones necesarias para añadir un fichero en

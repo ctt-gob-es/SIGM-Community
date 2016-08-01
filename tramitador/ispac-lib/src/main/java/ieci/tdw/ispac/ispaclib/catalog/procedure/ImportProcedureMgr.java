@@ -14,6 +14,7 @@ import ieci.tdw.ispac.ispaclib.dao.cat.CTApplicationDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTEntityDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTHelpDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTHierarchyDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.CTManualUsuarioDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTRuleDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTStageDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTTaskDAO;
@@ -66,6 +67,10 @@ public class ImportProcedureMgr {
 	public static final String PATH_TASK = ExportProcedureMgr.TAG_TASKS + "/" + ExportProcedureMgr.TAG_TASK;
 	public static final String PATH_STAGE = ExportProcedureMgr.TAG_STAGES + "/" + ExportProcedureMgr.TAG_STAGE;
 	public static final String PATH_RULE = ExportProcedureMgr.TAG_RULES + "/" + ExportProcedureMgr.TAG_RULE;
+	
+    //[eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	public static final String PATH_MANUAL_USUARIO = ExportProcedureMgr.TAG_MANUALES_USUARIO + "/" + ExportProcedureMgr.TAG_MANUAL_USUARIO;
+	
 	public static final String PATH_HELP = ExportProcedureMgr.TAG_HELPS + "/" + ExportProcedureMgr.TAG_HELP;
 	/**
 	 *
@@ -1781,7 +1786,169 @@ public class ImportProcedureMgr {
 
     	return StringUtils.unescapeXml(value);
     }
+    
+    /**
+	 * 
+	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	 *
+	 * @param ctx
+	 * @param cnt
+	 * @param node
+	 * @param ctManualesUsuarioDAOs
+	 * @param importLog
+	 * @param test
+	 * @param language
+	 * @throws ISPACException
+	 * @throws IOException
+	 */
+	public static void importManualesUsuario(ClientContext ctx,
+			   						   DbCnt cnt,
+			   						   Node node,
+			   						   Map ctManualesUsuarioDAOs,
+			   						   StringBuffer importLog,
+			   						   boolean test,
+	   								   ZipFile zipFile,
+			   						   String language) throws ISPACException, IOException {
 
+ 		importLog.append(ExportProcedureMgr.RETORNO);
+		ProcedureUtil.generateLog(importLog, language, "import.procedure.log.subtitle.manualesUsuario");
+		importLog.append(ExportProcedureMgr.RETORNO);
+
+		// Procesar los manuales de usuario asociados
+		NodeIterator itManualUsuario = XmlFacade.getNodeIterator(node, PATH_MANUAL_USUARIO);
+        for (Node manualUsuarioNode = itManualUsuario.nextNode(); manualUsuarioNode != null; manualUsuarioNode = itManualUsuario.nextNode()) {
+
+        	String xmlManualUsuarioId = XmlFacade.getAttributeValue(manualUsuarioNode, ExportProcedureMgr.ATR_ID);
+        	String xmlManualUsuarioName = importName(XmlFacade.getAttributeValue(manualUsuarioNode, ExportProcedureMgr.ATR_NAME));
+        	
+        	String manualUsuarioName=  XmlFacade.get(manualUsuarioNode, ExportProcedureMgr.TAG_MANUAL_USUARIO_NAME);
+
+        	// Crear la plantilla con su documento
+        	CTManualUsuarioDAO manualUsuarioDAO = (CTManualUsuarioDAO) ObjectDAO.getByName(cnt, CTManualUsuarioDAO.class, xmlManualUsuarioName);
+        	if(manualUsuarioDAO == null){
+        		manualUsuarioDAO = createManualUsuario(cnt, xmlManualUsuarioId, manualUsuarioNode, importLog, zipFile, xmlManualUsuarioName, test);
+
+        		ProcedureUtil.generateLog(importLog, language, "import.procedure.log.manualUsuario.create", new String[] {manualUsuarioName});
+
+        		// Metemos en el map de plantillas [clave=id del xml, valor=la nueva plantilla en BD]
+        		ctManualesUsuarioDAOs.put(Integer.valueOf(xmlManualUsuarioId), manualUsuarioDAO);
+        	}
+           	else {
+           		ProcedureUtil.generateLog(importLog, language, "import.procedure.log.manualUsuario.exists", new String[] {manualUsuarioName});
+
+           		ctManualesUsuarioDAOs.put(Integer.valueOf(xmlManualUsuarioId), manualUsuarioDAO);
+           	}
+        }
+        
+	}
+	
+//   /**
+//   *
+//   * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+//   *
+//   * @param cnt
+//   * @param node
+//   * @param test
+//   * @return
+//   * @throws ISPACException
+//   */
+//   private static void setManualUsuario(DbCnt cnt, Node node,Map ctManualUsuarioDAOs ) throws ISPACException {
+//
+//
+//		   String nombre = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_NAME);
+//		   String descripcion = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_DESCRIPCION);
+//		   String url = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_URL);
+//		   String fecha = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_FECHA);
+//		   String version = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_VERSION);
+//		   String visibilidad = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_VISIBILIDAD);
+//		   String tipo = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_TIPO);		   
+//		   
+//		   CTManualUsuarioDAO cManualUsuarioDAO = new CTManualUsuarioDAO(cnt);
+//		   cManualUsuarioDAO.createNew(cnt);
+//		   cManualUsuarioDAO.set("NOMBRE", nombre);
+//		   cManualUsuarioDAO.set("DESCRIPCION", descripcion);
+//		   cManualUsuarioDAO.set("URL", url);
+//		   cManualUsuarioDAO.set("FECHA", fecha);
+//		   cManualUsuarioDAO.set("VERSION", version);
+//		   cManualUsuarioDAO.set("VISIBILIDAD", visibilidad);
+//		   cManualUsuarioDAO.set("TIPO", tipo);
+//
+//		   ctManualUsuarioDAOs.put(new Integer(cManualUsuarioDAO.getKeyInt()), cManualUsuarioDAO);
+//
+//   }
+ 
+   /**
+   *
+   * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+   *
+   * @param cnt
+   * @param xmlManualUsuarioId
+   * @param node
+   * @param importLog
+   * @param zipFile
+   * @param name
+   * @param test
+   * @return
+   * @throws ISPACException
+   * @throws IOException
+   */
+  private static CTManualUsuarioDAO createManualUsuario(DbCnt cnt, String xmlManualUsuarioId, Node node, StringBuffer importLog, ZipFile zipFile, String name, boolean test) throws ISPACException, IOException {
+
+	   String nbytes = XmlFacade.get(node, ExportProcedureMgr.TAG_NBYTES);
+	   String mimeType = XmlFacade.get(node, ExportProcedureMgr.TAG_MIMETYPE);
+	   
+	   String nombre = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_NAME);
+	   String descripcion = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_DESCRIPCION);
+	   String url = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_URL);
+	   String version = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_VERSION);
+	   String visibilidad = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_VISIBILIDAD);
+	   String tipo = XmlFacade.get(node, ExportProcedureMgr.TAG_MANUAL_USUARIO_TIPO);		   
+
+
+	   // Al validar la importación no se creará la plantilla
+	   // sólo se leen los datos del XML
+	   if (!test) {
+
+		   // Crear la plantilla
+		   CTManualUsuarioDAO manualUsuarioDAO = new CTManualUsuarioDAO(cnt);
+		   manualUsuarioDAO.createNew(cnt);
+
+		   // Establecer los datos de la plantilla
+		   manualUsuarioDAO.set("NOMBRE", nombre);
+		   manualUsuarioDAO.set("DESCRIPCION", descripcion);
+		   manualUsuarioDAO.set("URL", url);
+	  	   manualUsuarioDAO.set("FECHA", new Date(System.currentTimeMillis()));
+	  	   manualUsuarioDAO.set("VERSION", version);
+	  	   manualUsuarioDAO.set("VISIBILIDAD", visibilidad);
+	  	   manualUsuarioDAO.set("TIPO", tipo);
+
+	  	   // Guardar la plantilla
+	  	   manualUsuarioDAO.store(cnt);
+
+	  	   // Obtener el documento de la plantilla
+	  	   ZipEntry zipEntry = (ZipEntry) zipFile.getEntry(ExportProcedureMgr.MANUAL_USUARIO_FILE_PREFIX + xmlManualUsuarioId + ExportProcedureMgr.MANUAL_USUARIO_FILE_EXTENSION);
+	  	   if (zipEntry != null) {
+
+	  		   // Crear el documento de la plantilla
+	  		   InputStream zipEntryInputStream = null;
+	  		   try {
+	  			   zipEntryInputStream = zipFile.getInputStream(zipEntry);
+	  			   manualUsuarioDAO.setManualUsuario(cnt, zipEntryInputStream, Integer.parseInt(nbytes), mimeType);
+	  		   } finally {
+	  			   if (zipEntryInputStream != null) {
+	  				   try {
+	  					   zipEntryInputStream.close();
+	  				   } catch (Exception e) {
+	  				   }
+	  			   }
+	  		   }
+	  	   }
+
+	   	   return manualUsuarioDAO;
+	   }
+
+	   return null;
+  }
 
 
 }

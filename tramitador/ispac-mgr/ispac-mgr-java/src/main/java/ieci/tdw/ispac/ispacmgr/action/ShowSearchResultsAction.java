@@ -171,12 +171,14 @@ public class ShowSearchResultsAction extends BaseAction {
 		// Responsabilidades del usuario conectado
 		IWorklist managerwl = managerAPI.getWorklistAPI();
 		String resp = managerwl.getRespString(state);
+
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 		request.setAttribute("menus", MenuFactory.getSearchResultMenu(session.getClientContext(),
 																	  getResources(request),
 																	  properties,
 																	  ltSearchAction,
 																	  request.getParameterMap(),item.getInt("ID"),
-																	  resp));
+																	  resp, state));
 		
 	//Almacenamos en sesión la lista de los expedientes que cumplen el frm de busqueda
 		if(lResults!=null && lResults.size()>0 ){

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<beanformatter defaultSort="2">
+<beanformatter defaultSort="2" pageSize="50" >
 
 	<propertyfmt type="BeanPropertySimpleFmt" 
 				 property='SPAC_CTOS_FIRMA:ID' 
@@ -11,15 +11,24 @@
 				 columnClass='width5percent'
 				 />
 				 
+	<!-- INICIO [eCenpri-Felipe Ticket#102] Acceso al expediente para los firmantes -->
 	<propertyfmt type="BeanPropertySimpleFmt" 
 				 property='SPAC_DT_DOCUMENTOS:NUMEXP'
 				 readOnly='false'
 				 titleKey='formatter.batchSign.numExp' 
-				 fieldType='LIST' 
-				 columnClass="width15percent"
+				 fieldType='LINK' 
+				 fieldLink='SPAC_DT_DOCUMENTOS:ID_FASE'
+				 styleClass='displayLink'
+				 media='html '
+				 decorator=''
+				 url='showExpedient'
+				 id='stageId'
+				 columnClass="width5percent"
+				 headerClass='sortable'
 				 sortable='true'
 				 comparator='ieci.tdw.ispac.ispacweb.comparators.NumexpComparator'
 				 />
+	<!-- FIN [eCenpri-Felipe Ticket#102] -->
 				 
 	<propertyfmt type="BeanPropertySimpleFmt" 
 				 property='SPAC_DT_DOCUMENTOS:NOMBRE'
@@ -49,7 +58,7 @@
 				 format='dd/MM/yyyy' 
 				 titleKey='formatter.batchSign.fechaGeneracion' 
 				 fieldType='LIST' 
-				 columnClass="width15percent"
+				 columnClass="width5percent"
 				 sortable='true'
 				 comparator='ieci.tdw.ispac.ispacweb.comparators.DateComparator'
 				 />
@@ -59,10 +68,33 @@
 				 readOnly='false' 
 				 titleKey='formatter.batchSign.autor' 
 				 fieldType='LIST' 
-				 columnClass="width15percent"
+				 columnClass="width5percent"
+				 sortable='true'
+				 />
+				 
+	<!-- INICIO [eCenpri-Felipe #382] 17.05.11
+		 Se añade una nueva columna Asunto del expediente, tamaño 30%
+		 Se eliminan los campos estado_firma, fecha_estado y firmante, que no daban información
+	-->
+	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SPAC_DT_DOCUMENTOS:DESCRIPCION' 
+				 titleKey='formatter.batchSign.descripcion' 
+				 readOnly='false'
+				 fieldType='LIST' 
+				 columnClass="width30percent"
 				 sortable='true'
 				 />
 	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SPAC_EXPEDIENTES:ASUNTO' 
+				 titleKey='formatter.batchSign.asunto' 
+				 readOnly='false'
+				 fieldType='LIST' 
+				 columnClass="width30percent"
+				 sortable='true'
+				 />
+	<!-- 
 	<propertyfmt type="BeanPropertySimpleFmt" 
 				 property='SPAC_TBL_008:SUSTITUTO' 
 				 titleKey='formatter.batchSign.estadoFirma' 
@@ -91,5 +123,5 @@
 				 columnClass="width10percent"
 				 sortable='true'
 				 />
-	
+	-->
 </beanformatter>

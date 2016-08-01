@@ -11,6 +11,8 @@ public class SignCircuitFilter {
 	//Indica si el circuito pertenece al portafirmas por defecto
 	boolean defaultPortafirmas=false;
 
+	int taskPcdId; //INICIO [eCenpri-Felipe #592]
+
 
 	public int getPcdId() {
 		return pcdId;
@@ -37,10 +39,12 @@ public class SignCircuitFilter {
 		this.defaultPortafirmas = defaultPortafirmas;
 	}
 
-
-
-
-
-
-
+	//INICIO [eCenpri-Felipe #592]
+	public int getTaskPcdId() {
+		return taskPcdId;
+	}
+	public void setTaskPcdId(int taskPcdId) {
+		this.taskPcdId = taskPcdId;
+	}
+	//FIN [eCenpri-Felipe #592]
 }

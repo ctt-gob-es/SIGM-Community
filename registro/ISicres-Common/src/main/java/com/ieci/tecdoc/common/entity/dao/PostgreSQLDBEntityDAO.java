@@ -160,25 +160,24 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 	public String getSelectAditionFields(int bookType) {
 		StringBuffer result = new StringBuffer();
 		if (bookType == 1) {
-			result
-					.append(",(SELECT NAME FROM SCR_OFIC B WHERE B.ID=A.FLD5) AS FLD5_TEXT,");
-			result
-					.append("(SELECT code || '-' || name FROM SCR_ORGS B WHERE B.ID=A.FLD7) AS FLD7_TEXT,");
-			result
-					.append("(SELECT code || '-' || name FROM SCR_ORGS B WHERE B.ID=A.FLD8) AS FLD8_TEXT,");
-			result
-					.append("(SELECT CODE FROM SCR_ORGS B WHERE B.ID=A.FLD13) AS FLD13_TEXT,");
-			result
-					.append("(SELECT code|| '-'|| matter FROM SCR_CA B WHERE B.ID=A.FLD16) AS FLD16_TEXT");
+			result.append(",(SELECT NAME FROM SCR_OFIC B WHERE B.ID=A.FLD5) AS FLD5_TEXT,");
+			result.append("(SELECT code || '-' || name FROM SCR_ORGS B WHERE B.ID=A.FLD7) AS FLD7_TEXT,");
+			result.append("(SELECT code || '-' || name FROM SCR_ORGS B WHERE B.ID=A.FLD8) AS FLD8_TEXT,");
+			result.append("(SELECT CODE FROM SCR_ORGS B WHERE B.ID=A.FLD13) AS FLD13_TEXT,");
+			result.append("(SELECT code|| '-'|| matter FROM SCR_CA B WHERE B.ID=A.FLD16) AS FLD16_TEXT,");
+			result.append("(SELECT text FROM A"+bookType+"XF a1xf WHERE a1xf.fdrid=A.fdrid) AS COMENTARIOS");
 		} else {
-			result
-					.append(",(SELECT NAME FROM SCR_OFIC B WHERE B.ID=A.FLD5) AS FLD5_TEXT,");
-			result
-					.append("(SELECT code || '-' || name FROM SCR_ORGS B WHERE B.ID=A.FLD7) AS FLD7_TEXT,");
-			result
-					.append("(SELECT code || '-' || name FROM SCR_ORGS B WHERE B.ID=A.FLD8) AS FLD8_TEXT,");
-			result
-					.append("(SELECT code|| '-'|| matter FROM SCR_CA B WHERE B.ID=A.FLD12) AS FLD12_TEXT");
+			result.append(",(SELECT NAME FROM SCR_OFIC B WHERE B.ID=A.FLD5) AS FLD5_TEXT,");
+			result.append("(SELECT code || '-' || name FROM SCR_ORGS B WHERE B.ID=A.FLD7) AS FLD7_TEXT,");
+			result.append("(SELECT code || '-' || name FROM SCR_ORGS B WHERE B.ID=A.FLD8) AS FLD8_TEXT,");
+			result.append("(SELECT code|| '-'|| matter FROM SCR_CA B WHERE B.ID=A.FLD12) AS FLD12_TEXT,");
+			/**
+			 * INICIO [Ticket 134#Teresa]ALSIM3 Añadir el campo comentario dentro de los informes del registro presencial
+			 * **/
+			result.append("(SELECT text FROM A"+bookType+"XF a1xf WHERE a1xf.fdrid=A.fdrid) AS COMENTARIOS");
+			/**
+			 * FIN [Ticket 134#Teresa]ALSIM3 Añadir el campo comentario dentro de los informes del registro presencial
+			 * **/
 		}
 		return result.toString();
 	}

@@ -14,7 +14,6 @@
 
 	<dependencies>
 
-
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_core</artifactId>
@@ -93,6 +92,12 @@
 					<artifactId>xml-apis</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>sigem_rde</artifactId>
+			<version>${pom.version}</version>
 		</dependency>
 
 		<dependency>

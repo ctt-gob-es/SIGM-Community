@@ -201,4 +201,25 @@
   	<put name="body" value="/apps/selectEntity.jsp"/>
   </definition>
   
+  <!-- [MQE Ticket #41] Opción Históricos de Rechazados -->
+  <definition name="signRechazoHistoric" extends="ispac_listlayout">
+    <put name="body" value="/ispac/common/signRechazoHistoric.jsp"/>
+  </definition>
+  <!-- [MQE Ticket #41] Fin modificaciones -->
+  
+  <!-- [Manu Ticket #97] INICIO - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java. -->
+  <definition name="configurarEditores"  extends="ispac_simplelayout">
+  	<put name="body" value="/ispac/configurarEditores.jsp"/>
+  </definition>
+
+  <definition name="seleccionarEditor"  extends="ispac_simplelayout">
+  	<put name="body" value="/ispac/seleccionarEditor.jsp"/>
+  </definition>
+  <!-- [Manu Ticket #97] FIN - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java. -->
+  
+  <!-- INICIO [dipucr-Felipe #120] Manuales de Ayuda -->
+  <definition name="manualesList" extends="ispac_simplelayout">
+  	<put name="body" value="/ispac/common/manuales.jsp"/>
+  </definition>  
+  <!-- FIN [dipucr-Felipe #120] -->
 </tiles-definitions>

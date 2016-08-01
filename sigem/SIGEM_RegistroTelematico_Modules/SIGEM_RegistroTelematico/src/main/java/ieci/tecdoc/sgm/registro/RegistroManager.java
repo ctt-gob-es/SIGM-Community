@@ -36,6 +36,7 @@ import ieci.tecdoc.sgm.core.services.repositorio.ServicioRepositorioDocumentosTr
 import ieci.tecdoc.sgm.core.services.sesion.InfoUsuario;
 import ieci.tecdoc.sgm.core.services.sesion.ServicioSesionUsuario;
 import ieci.tecdoc.sgm.core.services.telematico.RegistroTelematicoException;
+import ieci.tecdoc.sgm.core.services.telematico.ServicioRegistroTelematico;
 import ieci.tecdoc.sgm.core.services.tiempos.ServicioTiempos;
 import ieci.tecdoc.sgm.core.services.tramitacion.ServicioTramitacion;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.DatosComunesExpediente;
@@ -133,6 +134,11 @@ public class RegistroManager {
     	  setRegistryData(bdr);
     	  setSignedData(procedure, sessionId, requestInfo, bdr, idiom, organismo, numeroExpediente, entidad);
     	  bdr.addSimpleElement(Definiciones.SIGNATURE, "");
+    	  
+    	  //[eCenpri-Felipe #457] SIGEM IncluiridTransaccion en el registro telemático
+    	  bdr.addSimpleElement(Definiciones.ID_TRANSACCION, "");
+    	  //[eCenpri-Felipe #457] SIGEM IncluiridTransaccion en el registro telemático
+
     	  bdr.addClosingTag(Definiciones.REQUEST_HEADER);
     	  request = Goodies.fromStrToUTF8(bdr.getText());
 
@@ -258,14 +264,15 @@ public class RegistroManager {
 	         bdr.addSimpleElement(Definiciones.SENDER_ID, sender.getId());
 	         bdr.addClosingTag(Definiciones.ID);
          }
-         else {
-        	// Persona juridica (representante legal)
-	         bdr.addSimpleElement(Definiciones.SENDER_NAME, sender.getSocialName(), true);
-	         bdr.addOpeningTag(Definiciones.ID);
-	         bdr.addSimpleElement(Definiciones.SENDER_ID_TYPE, ""+Validador.validateDocumentType(sender.getCIF()));//requestInfo.getSenderIdType());
-	         bdr.addSimpleElement(Definiciones.SENDER_ID, sender.getCIF());
-	         bdr.addClosingTag(Definiciones.ID);
-         }
+         
+         else { //[DipuCR-Agustin #235] para el caso de la factura electronica dejo esto como estaba
+         	// Persona juridica (representante legal)
+ 	         bdr.addSimpleElement(Definiciones.SENDER_NAME, sender.getSocialName(), true);
+ 	         bdr.addOpeningTag(Definiciones.ID);
+ 	         bdr.addSimpleElement(Definiciones.SENDER_ID_TYPE, ""+Validador.validateDocumentType(sender.getCIF()));//requestInfo.getSenderIdType());
+ 	         bdr.addSimpleElement(Definiciones.SENDER_ID, sender.getCIF());
+ 	         bdr.addClosingTag(Definiciones.ID);
+          }
 
          bdr.addSimpleElement(Definiciones.SENDER_EMAIL, requestInfo.getEmail(), true);
          bdr.addClosingTag(Definiciones.SENDER);
@@ -1710,7 +1717,7 @@ public class RegistroManager {
          }
          //Log.setQuery(sessionId, query);
       } catch (Exception e) {
-    	  logger.error("Error al obtener resultados de busqueda [query][Excepcion]", e.fillInStackTrace());
+    	  logger.error("Error al obtener resultados de busqueda [query][Excepcion]"+e.getMessage(), e);
     	  throw new RegistroExcepcion(RegistroCodigosError.EC_NO_REGISTRY);
       }
       return basicRegs;
@@ -1819,11 +1826,16 @@ public class RegistroManager {
 
     	  // Para obtener el justificante el usuario en sesión tiene que ser el solicitante del registro
     	  if (registro.getSenderId().equals(infoUsuario.getId())) {
-
 	    	  receipt = getDocument(registryNumber, Definiciones.REGISTRY_RECEIPT_CODE, entidad);
 	    	  //Log.setGetRegistryReceipt(sessionId, registryNumber);
     	  } else {
-    		  throw new RegistroExcepcion(RegistroCodigosError.EC_JUSTIFICANTE_SIN_PERMISOS);
+    		  //[Teresa Ticket#157] INICIO ALSIGM3 Error al obtener el justificante de registro cuando el usuario que ha hecho la petición es una entidad.
+    		  if (registro.getSenderId().equals(infoUsuario.getCIF())) {
+    			  receipt = getDocument(registryNumber, Definiciones.REGISTRY_RECEIPT_CODE, entidad);
+    		  }//[Teresa Ticket#157] FIN ALSIGM3 Error al obtener el justificante de registro cuando el usuario que ha hecho la petición es una entidad.
+    		  else{
+    			  throw new RegistroExcepcion(RegistroCodigosError.EC_JUSTIFICANTE_SIN_PERMISOS);
+    		  }    		  
     	  }
       } catch (RegistroExcepcion re) {
     	  logger.error("Error al obtener justificante de registro [getRegistryReceipt][Excepcion]", re);
@@ -2011,17 +2023,31 @@ public class RegistroManager {
     */
    public static byte[] getDocument(String registryNumber, String code, String entidad)
    throws RegistroExcepcion {
-      byte[] receipt = null;
-      try {
-    	  ServicioRepositorioDocumentosTramitacion oServicio = LocalizadorServicios.getServicioRepositorioDocumentosTramitacion();
-    	  RegistroDocumentoDatos rdd = new RegistroDocumentoDatos();
-    	  rdd.load(registryNumber, code, entidad);
-    	  DocumentoInfo di = oServicio.retrieveDocument(null, rdd.getGuid(), getEntidad(entidad));
-    	  receipt = di.getContent();
-      } catch (Exception e) {
-    	  logger.error("Error al obtener documento [getDocument][Excepcion]", e.fillInStackTrace());
-    	  throw new RegistroExcepcion(RegistroCodigosError.EC_BAD_REGISTRY_NUMBER);
-      }
+	   byte[] receipt = null;
+	      try {
+	    	  ServicioRepositorioDocumentosTramitacion oServicio = LocalizadorServicios.getServicioRepositorioDocumentosTramitacion();
+	    	  RegistroDocumentoDatos rdd = new RegistroDocumentoDatos();
+	    	  rdd.load(registryNumber, code, entidad);
+	    	  logger.warn("rdd.getGuid() "+rdd.getGuid());
+	    	  DocumentoInfo di = oServicio.retrieveDocument(null, rdd.getGuid(), getEntidad(entidad));
+	    	  logger.warn(di.getContent().length+"");
+	    	  if(di.getContent().length>0){
+	    		  receipt = di.getContent();
+	    	  }
+	    	  /**
+	    	   * [Ticket#1048 Teresa ] (SIGEM Error cuando se va a obtener el Justificante de Registro en una solicitud Telemática)
+	    	   * **/
+	    	  else{
+	    		  logger.warn("contenido vacio");
+	    		  ServicioRepositorioDocumentosTramitacion repositorio = LocalizadorServicios.getServicioRepositorioDocumentosTramitacion();
+	    		  DocumentoInfo docInfo = repositorio.retrieveDocument("", rdd.getGuid(), getEntidad(entidad));
+	    		  receipt = docInfo.getContent();
+	    	  }
+	    	  
+	      } catch (Exception e) {
+	    	  logger.error("Error al obtener documento [getDocument][Excepcion]", e.fillInStackTrace());
+	    	  throw new RegistroExcepcion(RegistroCodigosError.EC_BAD_REGISTRY_NUMBER);
+	      }     
       return receipt;
    }
 
@@ -2162,7 +2188,7 @@ public class RegistroManager {
     * @throws RegistroExcepcion En caso de producirse algún error
     */
    public static boolean iniciarExpediente(String sessionId, String justificante, String tramiteId,
-		   String datosEspecificos, String idProcedimiento, String entidad)
+		   String datosEspecificos, String idProcedimiento, String idEntidad)
 	throws RegistroExcepcion {
 		try {
 			XmlDocument xmlDoc = new XmlDocument();
@@ -2172,185 +2198,331 @@ public class RegistroManager {
 
 			ServicioRepositorioDocumentosTramitacion oServicioRde = LocalizadorServicios.getServicioRepositorioDocumentosTramitacion();
 			ServicioTramitacion oServicioTramitacion = LocalizadorServicios.getServicioTramitacion();
+			ServicioRegistroTelematico oServicioRegistro = LocalizadorServicios.getServicioRegistroTelematico();//[dipucr-Felipe #1354]
+			ServicioCatalogoTramites oServicioCatalogo = LocalizadorServicios.getServicioCatalogoTramites();//[dipucr-Felipe #1354]
 
-	        genericData = root.getDescendantElement(Definiciones.XPATH_SENDER_DATA);
-	        String name = genericData.getChildElement(Definiciones.SENDER_NAME).getValue();
-	        String mail = genericData.getChildElement(Definiciones.SENDER_EMAIL).getValue();
-	        //String surname = genericData.getChildElement(Definiciones.SENDER_SURNAME).getValue();
-	        genericData = root.getDescendantElement(Definiciones.XPATH_SENDER_DATA + "/" + Definiciones.ID);
-	        String id = genericData.getChildElement(Definiciones.SENDER_ID).getValue();
-	        specificData = root.getDescendantElement(Definiciones.XPATH_SPECIFIC_DATA);
+			//INICIO [dipucr-Felipe #1354 PE#105]
+			Entidad entidad = getEntidad(idEntidad);
+			String numRegistro = null;
+			if (tramiteId != null && tramiteId.contains("SUBSANACION")) {
+				
+				ServicioTramitacion oServicio = LocalizadorServicios.getServicioTramitacion();
+				specificData = root.getDescendantElement(Definiciones.XPATH_SPECIFIC_DATA);
+				
+				String numExpediente = "";
+				if(specificData.getChildElement(Definiciones.NUMERO_EXPEDIENTE) == null
+						|| specificData.getChildElement(Definiciones.NUMERO_EXPEDIENTE).getValue().trim().length() == 0){
 
-	        String domicilio="", localidad="", provincia="", pais = "", telefono = "", movil = "", cp="", solicitar = "", deu = "";
-	        boolean presencial = true;
-	        try{
-	        	if (specificData.getChildElement(Definiciones.DOMICILIO_NOTIFICACION) != null)
-	        		domicilio = specificData.getChildElement(Definiciones.DOMICILIO_NOTIFICACION).getValue();
-	        	if (specificData.getChildElement(Definiciones.LOCALIDAD) != null)
-	        		localidad = specificData.getChildElement(Definiciones.LOCALIDAD).getValue();
-	        	if (specificData.getChildElement(Definiciones.PROVINCIA) != null)
-	        		provincia = specificData.getChildElement(Definiciones.PROVINCIA).getValue();
-	        	if (specificData.getChildElement(Definiciones.PAIS) != null) {
-	        		pais = specificData.getChildElement(Definiciones.PAIS).getValue();
-	        	}
-	        	else {
-	        		pais = "España";
-	        	}
-	        	if (specificData.getChildElement(Definiciones.TELEFONO) != null)
-	        		telefono = specificData.getChildElement(Definiciones.TELEFONO).getValue();
-	        	if (specificData.getChildElement(Definiciones.TELEFONO_MOVIL) != null)
-	        		movil = specificData.getChildElement(Definiciones.TELEFONO_MOVIL).getValue();
-	        	if (specificData.getChildElement(Definiciones.SOLICITAR_ENVIO) != null)
-	        		solicitar = specificData.getChildElement(Definiciones.SOLICITAR_ENVIO).getValue();
-	        	if (specificData.getChildElement(Definiciones.DEU) != null)
-	        		deu = specificData.getChildElement(Definiciones.DEU).getValue();
-	        	if (specificData.getChildElement(Definiciones.CP) != null)
-	        		cp = specificData.getChildElement(Definiciones.CP).getValue();
-	        	if (solicitar.equals("Si") && !isBlank(deu))
-	        		presencial = false;
-	        }catch(Exception ex){
-	        	presencial = false;
-	        }
+					int indexBeginNumExp = justificante.indexOf("<Numero_Expediente>");
+			        int indexEndNumExp = justificante.indexOf("</Numero_Expediente>");
+			        
+			        numExpediente = justificante.substring(indexBeginNumExp + "<Numero_Expediente>".length(), indexEndNumExp);
+				}
+				else{
+					numExpediente = specificData.getChildElement(Definiciones.NUMERO_EXPEDIENTE).getValue();
+				}
+				
+				genericData = root.getDescendantElement(Definiciones.XPATH_GENERIC_DATA + "/" + Definiciones.TOPIC);
+		        String asunto = genericData.getChildElement(Definiciones.DESCRIPTION).getValue();
+				registryData = root.getDescendantElement(Definiciones.XPATH_REGISTRY_DATA);
+		        numRegistro = registryData.getChildElement(Definiciones.REGISTRY_NUMBER).getValue();
+		        
+				// Obtener los documentos del justificante
+				Map docsMap = new HashMap();
+				
+				XmlElement docsElement = root.getDescendantElement(Definiciones.XPATH_DOCUMENTS);
+				XmlElements xmlElements = docsElement.getChildElements();
+				for(int i = 1; i <= xmlElements.getCount(); i++) {
+				
+					XmlElement docElement = xmlElements.getItem(i);
+					
+					String code = docElement.getChildElement(Definiciones.CODE).getValue();
+					String name = docElement.getChildElement(Definiciones.NAME).getValue()
+								+ " (" + docElement.getChildElement(Definiciones.DESCRIPTION).getValue() + ")";
+					docsMap.put(code, name);
+				}
+				
+				RegistroDocumentos reg = RegistroDocumentoManager.getRegistryDocuments(numRegistro, idEntidad);
 
-	        InteresadoExpediente[] interested = new InteresadoExpediente[1];
-	        InteresadoExpediente interestedPerson;
-	        //InterestedPerson interestedPerson;
-	        interestedPerson = new InteresadoExpediente();
-	        interestedPerson.setIndPrincipal(InteresadoExpediente.IND_PRINCIPAL);
-        	//interestedPerson.setName(name.trim() + " " + surname);
-	        interestedPerson.setName(name);
-        	interestedPerson.setNifcif(id);
-        	interestedPerson.setThirdPartyId(null);
-        	if (movil != null && !"".equals(movil))
-        		interestedPerson.setMobilePhone(movil);
-        	if (telefono != null && !"".equals(telefono))
-        		interestedPerson.setPhone(telefono);
-
-	        if (!presencial){
-	           	interestedPerson.setNotificationAddressType(InteresadoExpediente.IND_TELEMATIC);
-	        	interestedPerson.setTelematicAddress(deu);
-	        }else{
-	        	interestedPerson.setNotificationAddressType(InteresadoExpediente.IND_POSTAL);
-	        	if (mail != null && !"".equals(mail))
-	        		interestedPerson.setTelematicAddress(mail);
-
-	        }
-
-	        interestedPerson.setPlaceCity(localidad);
-	        interestedPerson.setPostalCode(cp);
-	        interestedPerson.setPostalAddress(domicilio);
-	        if (isBlank(pais)) {
-	        	interestedPerson.setRegionCountry(provincia);
-	        }
-	        else {
-	        	interestedPerson.setRegionCountry(provincia + " / " + pais);
-	        }
-
-			interested[0] = interestedPerson;
-
-			genericData = root.getDescendantElement(Definiciones.XPATH_GENERIC_DATA + "/" + Definiciones.TOPIC);
-	        String asunto = genericData.getChildElement(Definiciones.DESCRIPTION).getValue();
-	        registryData = root.getDescendantElement(Definiciones.XPATH_REGISTRY_DATA);
-	        String numero_registro = registryData.getChildElement(Definiciones.REGISTRY_NUMBER).getValue();
-	        String fecha = registryData.getChildElement(Definiciones.REGISTRY_DATE).getValue() + " " +
-	        				registryData.getChildElement(Definiciones.REGISTRY_HOUR).getValue();
-	        String pattern = Definiciones.DEFAULT_DATE_FORMAT + " " + Definiciones.DEFAULT_HOUR_FORMAT;
-	        SimpleDateFormat myDateFormat = new SimpleDateFormat(pattern);
-	        Date date = myDateFormat.parse(fecha);
-
-	        String cod = tramiteId;
-	        DatosComunesExpediente commonData = new DatosComunesExpediente();
-	        commonData.setFechaRegistro(date);
-	        commonData.setInteresados(interested);
-	        commonData.setNumeroRegistro(numero_registro);
-	        commonData.setTipoAsunto(cod);
-
-			genericData = root.getDescendantElement(Definiciones.XPATH_GENERIC_DATA + "/" + Definiciones.ADDRESSEE);
-
-			// Datos específicos del procedimiento
-			String specificDataXML = "<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>" +
-								"<" + Definiciones.TAG_INICIAR_EXPEDIENTE_DATOS_ESPECIFICOS + ">" +
-								datosEspecificos +
-								"</" + Definiciones.TAG_INICIAR_EXPEDIENTE_DATOS_ESPECIFICOS + ">";
-
-			// Obtener los documentos del justificante
-			Map docsMap = new HashMap();
-
-			XmlElement docsElement = root.getDescendantElement(Definiciones.XPATH_DOCUMENTS);
-			XmlElements xmlElements = docsElement.getChildElements();
-			for(int i = 1; i <= xmlElements.getCount(); i++) {
-
-				XmlElement docElement = xmlElements.getItem(i);
-
-				String code = docElement.getChildElement(Definiciones.CODE).getValue();
-				String docName = docElement.getChildElement(Definiciones.NAME).getValue();
-				docsMap.put(code, docName);
+		        List documents = new ArrayList();
+		        
+				for(int i=0; i<reg.count(); i++) {
+					
+					RegistroDocumento rd = (RegistroDocumento)reg.get(i);
+					String codigo = rd.getCode();
+					DocumentoInfo di = oServicioRde.retrieveDocument(sessionId, rd.getGuid(), entidad);
+					String extension = di.getExtension();
+					boolean insertar = true;
+					if (codigo.equals(Definiciones.REGISTRY_RECEIPT_CODE))
+						codigo = "Justificante";
+					else if (codigo.equals(Definiciones.REGISTRY_REQUEST_CODE))
+						codigo = "Solicitud Registro";
+					else if (!codigo.equals(Definiciones.REGISTRY_REQUEST_NOTSIGNED_CODE))
+						codigo = "Anexo a Solicitud";
+					else insertar = false;
+					
+					if (insertar){
+						if (extension.equalsIgnoreCase("xml"))
+							extension = "txt";
+						
+						DocumentoExpediente document = new DocumentoExpediente();
+						
+						document.setCode(codigo);
+						document.setContent(di.getContent());
+						document.setExtension(extension);
+						document.setId(null);
+						document.setLenght(di.getContent().length);
+						
+						String docName = (String) docsMap.get(rd.getCode());
+						if (docName != null) {
+							document.setName(docName);
+						}
+						else {
+							document.setName(asunto);
+						}
+						
+						documents.add(document);
+					}
+				}
+				
+				DocumentoExpediente[] docsExpediente = new DocumentoExpediente[documents.size()];
+				for(int i=0; i<documents.size(); i++){
+					docsExpediente[i] = (DocumentoExpediente)documents.get(i);
+				}
+		        
+				//TODO: Hitos - No funciona de momento por completo - Manu: Consulta Expedientes (#1090)
+				oServicio.anexarDocsExpediente(idEntidad, numExpediente, numRegistro, new Date(), docsExpediente);
+//				if(oServicio.anexarDocsExpediente(idEntidad, numExpediente, numRegistro, new Date(), docsExpediente)){
+//					//Publicamos el hito de subsanación, justificación o modificación.
+//					try{
+//						ServicioConsultaExpedientes consulta = LocalizadorServicios.getServicioConsultaExpedientes();
+//	
+//						HitosExpediente hitos = consulta.obtenerHistoricoExpediente(numExpediente, entidad);
+//						FicherosHito ficherosExistentes  = new FicherosHito();
+//				        FicherosHito ficheros = null;
+//				        
+//						StringBuffer textoHito = new StringBuffer();
+//						textoHito.append("<labels><label locale=\"es\">");
+//						textoHito.append("Se ha presentado una solicitud de Subsanación, Modificación o Justificación al expediente.");
+//						textoHito.append("\n");
+//						textoHito.append("Fecha: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
+//						textoHito.append("</label></labels>");
+//						
+//						boolean pasoAHistorico = true;
+//								 
+//				    	HitoExpediente hito = new HitoExpediente();
+//						hito.setGuid(new Guid().toString());
+//						hito.setNumeroExpediente(numExpediente);
+//						hito.setCodigo(StringUtils.nullToEmpty(""));
+//						hito.setFecha(TypeConverter.toString(new Date(), "yyyy-MM-dd"));
+//						hito.setDescripcion(StringUtils.nullToEmpty(textoHito.toString()));
+//						hito.setInformacionAuxiliar("");
+//						
+//						consulta.establecerHitoActual(hito, ficheros, pasoAHistorico, entidad);
+//						
+//						HitoExpediente hitoNuevo = consulta.obtenerHitoEstado(numExpediente, entidad);
+//						List listHitosExpediente = hitos.getHitosExpediente();
+//						for (int i = 0; i < hitos.count(); i++){
+//							HitoExpediente oHito = hitos.get(i);
+//							ficherosExistentes.getFicheros().addAll(consulta.obtenerFicherosHito((oHito).getGuid(), entidad).getFicheros());
+//						}
+//				    	
+//						IItemCollection docs = DocumentosUtil.getDocumentos(cct, numExpediente, " (ID_TRAMITE = 0) ", " FDOC");
+//						ficheros =  getFicheros(cct, hitoNuevo.getGuid(), docs, ficherosExistentes, idEntidad);
+//						
+//				        if ((ficheros != null) && ficheros.count() > 0) {
+//				        	consulta.anexarFicherosHitoActual(ficheros, entidad);
+//				        }
+//					}
+//					catch(Exception e){
+//						logger.debug("Si da error no ha publicado el hito");
+//					}
+//				}
+				
+				return true;
 			}
-
-			// Lista de documentos del expediente
-			List documents = new ArrayList();
-
-			// Si en el trámite existe la solicitud firmada (requerida), con este documento se iniciará el expediente,
-			// y si al contrario, el trámite no ha requerido que se firme la solicitud, se enviará la solicitud sin firmar
-			boolean solicitudFirmada = false;
-			DocumentoExpediente solicitudNoFirmada = null;
-
-			RegistroDocumentos rds = RegistroDocumentoManager.getRegistryDocuments(numero_registro, entidad);
-			for(int i=0; i<rds.count(); i++) {
-
-				RegistroDocumento rd = (RegistroDocumento)rds.get(i);
-				String codigo = rd.getCode();
-				DocumentoInfo di = oServicioRde.retrieveDocument(sessionId, rd.getGuid(), getEntidad(entidad));
-				String extension = di.getExtension();
-
-				DocumentoExpediente document = new DocumentoExpediente();
-
-				if (codigo.equals(Definiciones.REGISTRY_RECEIPT_CODE)) {
-					codigo = "Justificante";
+			else{ //FIN [dipucr-Felipe #1354 PE#105]
+			
+		        genericData = root.getDescendantElement(Definiciones.XPATH_SENDER_DATA);
+		        String name = genericData.getChildElement(Definiciones.SENDER_NAME).getValue();
+		        String mail = genericData.getChildElement(Definiciones.SENDER_EMAIL).getValue();
+		        //String surname = genericData.getChildElement(Definiciones.SENDER_SURNAME).getValue();
+		        genericData = root.getDescendantElement(Definiciones.XPATH_SENDER_DATA + "/" + Definiciones.ID);
+		        String id = genericData.getChildElement(Definiciones.SENDER_ID).getValue();
+		        specificData = root.getDescendantElement(Definiciones.XPATH_SPECIFIC_DATA);
+	
+		        String domicilio="", localidad="", provincia="", pais = "", telefono = "", movil = "", cp="", solicitar = "", deu = "";
+		        boolean presencial = true;
+		        try{
+		        	if (specificData.getChildElement(Definiciones.DOMICILIO_NOTIFICACION) != null)
+		        		domicilio = specificData.getChildElement(Definiciones.DOMICILIO_NOTIFICACION).getValue();
+		        	if (specificData.getChildElement(Definiciones.LOCALIDAD) != null)
+		        		localidad = specificData.getChildElement(Definiciones.LOCALIDAD).getValue();
+		        	if (specificData.getChildElement(Definiciones.PROVINCIA) != null)
+		        		provincia = specificData.getChildElement(Definiciones.PROVINCIA).getValue();
+		        	if (specificData.getChildElement(Definiciones.PAIS) != null) {
+		        		pais = specificData.getChildElement(Definiciones.PAIS).getValue();
+		        	}
+		        	else {
+		        		pais = "España";
+		        	}
+		        	if (specificData.getChildElement(Definiciones.TELEFONO) != null)
+		        		telefono = specificData.getChildElement(Definiciones.TELEFONO).getValue();
+		        	if (specificData.getChildElement(Definiciones.TELEFONO_MOVIL) != null)
+		        		movil = specificData.getChildElement(Definiciones.TELEFONO_MOVIL).getValue();
+		        	if (specificData.getChildElement(Definiciones.SOLICITAR_ENVIO) != null)
+		        		solicitar = specificData.getChildElement(Definiciones.SOLICITAR_ENVIO).getValue();
+		        	if (specificData.getChildElement(Definiciones.DEU) != null)
+		        		deu = specificData.getChildElement(Definiciones.DEU).getValue();
+		        	if (specificData.getChildElement(Definiciones.CP) != null)
+		        		cp = specificData.getChildElement(Definiciones.CP).getValue();
+		        	if (solicitar.equals("Si") && !isBlank(deu))
+		        		presencial = false;
+		        }catch(Exception ex){
+		        	presencial = false;
+		        }
+	
+		        InteresadoExpediente[] interested = new InteresadoExpediente[1];
+		        InteresadoExpediente interestedPerson;
+		        //InterestedPerson interestedPerson;
+		        interestedPerson = new InteresadoExpediente();
+		        interestedPerson.setIndPrincipal(InteresadoExpediente.IND_PRINCIPAL);
+	        	//interestedPerson.setName(name.trim() + " " + surname);
+		        interestedPerson.setName(name);
+	        	interestedPerson.setNifcif(id);
+	        	interestedPerson.setThirdPartyId(null);
+	        	if (movil != null && !"".equals(movil))
+	        		interestedPerson.setMobilePhone(movil);
+	        	if (telefono != null && !"".equals(telefono))
+	        		interestedPerson.setPhone(telefono);
+	
+		        if (!presencial){
+		           	interestedPerson.setNotificationAddressType(InteresadoExpediente.IND_TELEMATIC);
+		        	interestedPerson.setTelematicAddress(deu);
+		        }else{
+		        	interestedPerson.setNotificationAddressType(InteresadoExpediente.IND_POSTAL);
+		        	if (mail != null && !"".equals(mail))
+		        		interestedPerson.setTelematicAddress(mail);
+	
+		        }
+	
+		        interestedPerson.setPlaceCity(localidad);
+		        interestedPerson.setPostalCode(cp);
+		        interestedPerson.setPostalAddress(domicilio);
+		        if (isBlank(pais)) {
+		        	interestedPerson.setRegionCountry(provincia);
+		        }
+		        else {
+		        	interestedPerson.setRegionCountry(provincia + " / " + pais);
+		        }
+	
+				interested[0] = interestedPerson;
+	
+				genericData = root.getDescendantElement(Definiciones.XPATH_GENERIC_DATA + "/" + Definiciones.TOPIC);
+		        String asunto = genericData.getChildElement(Definiciones.DESCRIPTION).getValue();
+		        registryData = root.getDescendantElement(Definiciones.XPATH_REGISTRY_DATA);
+		        String numero_registro = registryData.getChildElement(Definiciones.REGISTRY_NUMBER).getValue();
+		        String fecha = registryData.getChildElement(Definiciones.REGISTRY_DATE).getValue() + " " +
+		        				registryData.getChildElement(Definiciones.REGISTRY_HOUR).getValue();
+		        String pattern = Definiciones.DEFAULT_DATE_FORMAT + " " + Definiciones.DEFAULT_HOUR_FORMAT;
+		        SimpleDateFormat myDateFormat = new SimpleDateFormat(pattern);
+		        Date date = myDateFormat.parse(fecha);
+	
+		        String cod = tramiteId;
+		        DatosComunesExpediente commonData = new DatosComunesExpediente();
+		        commonData.setFechaRegistro(date);
+		        commonData.setInteresados(interested);
+		        commonData.setNumeroRegistro(numero_registro);
+	//	        commonData.setTipoAsunto(cod); //[dipucr-Felipe #1099] Se está pasando por error el código del trámite
+		        commonData.setTipoAsunto(idProcedimiento);
+	
+				genericData = root.getDescendantElement(Definiciones.XPATH_GENERIC_DATA + "/" + Definiciones.ADDRESSEE);
+	
+				// Datos específicos del procedimiento
+				String specificDataXML = "<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>" +
+									"<" + Definiciones.TAG_INICIAR_EXPEDIENTE_DATOS_ESPECIFICOS + ">" +
+									datosEspecificos +
+									"</" + Definiciones.TAG_INICIAR_EXPEDIENTE_DATOS_ESPECIFICOS + ">";
+	
+				// Obtener los documentos del justificante
+				Map docsMap = new HashMap();
+	
+				XmlElement docsElement = root.getDescendantElement(Definiciones.XPATH_DOCUMENTS);
+				XmlElements xmlElements = docsElement.getChildElements();
+				for(int i = 1; i <= xmlElements.getCount(); i++) {
+	
+					XmlElement docElement = xmlElements.getItem(i);
+	
+					String code = docElement.getChildElement(Definiciones.CODE).getValue();
+					String docName = docElement.getChildElement(Definiciones.NAME).getValue();
+					docsMap.put(code, docName);
 				}
-				else if (codigo.equals(Definiciones.REGISTRY_REQUEST_CODE)) {
-					codigo = "Solicitud Registro";
-					solicitudFirmada = true;
+	
+				// Lista de documentos del expediente
+				List documents = new ArrayList();
+	
+				// Si en el trámite existe la solicitud firmada (requerida), con este documento se iniciará el expediente,
+				// y si al contrario, el trámite no ha requerido que se firme la solicitud, se enviará la solicitud sin firmar
+				boolean solicitudFirmada = false;
+				DocumentoExpediente solicitudNoFirmada = null;
+	
+				RegistroDocumentos rds = RegistroDocumentoManager.getRegistryDocuments(numero_registro, idEntidad);
+				for(int i=0; i<rds.count(); i++) {
+	
+					RegistroDocumento rd = (RegistroDocumento)rds.get(i);
+					String codigo = rd.getCode();
+					DocumentoInfo di = oServicioRde.retrieveDocument(sessionId, rd.getGuid(), getEntidad(idEntidad));
+					String extension = di.getExtension();
+	
+					DocumentoExpediente document = new DocumentoExpediente();
+	
+					if (codigo.equals(Definiciones.REGISTRY_RECEIPT_CODE)) {
+						codigo = "Justificante";
+					}
+					else if (codigo.equals(Definiciones.REGISTRY_REQUEST_CODE)) {
+						codigo = "Solicitud Registro";
+						solicitudFirmada = true;
+					}
+					else if (codigo.equals(Definiciones.REGISTRY_REQUEST_NOTSIGNED_CODE)) {
+						codigo = "Solicitud Registro";
+						solicitudNoFirmada = document;
+					}
+					else {
+						codigo = "Anexo a Solicitud";
+					}
+	
+					if (extension.equalsIgnoreCase("xml"))
+						extension = "txt";
+	
+					document.setCode(codigo);
+					document.setContent(di.getContent());
+					document.setExtension(extension);
+					document.setId(null);
+					document.setLenght(di.getContent().length);
+	
+					String docName = (String) docsMap.get(rd.getCode());
+					if (docName != null) {
+						document.setName(docName);
+					}
+					else {
+						document.setName(asunto);
+					}
+	
+					documents.add(document);
 				}
-				else if (codigo.equals(Definiciones.REGISTRY_REQUEST_NOTSIGNED_CODE)) {
-					codigo = "Solicitud Registro";
-					solicitudNoFirmada = document;
+	
+				// Si la solicitud firmada existe
+				// eliminar la solicitud no firmada de los documentos que se envían para iniciar expediente
+				if (solicitudFirmada) {
+					documents.remove(solicitudNoFirmada);
 				}
-				else {
-					codigo = "Anexo a Solicitud";
-				}
-
-				if (extension.equalsIgnoreCase("xml"))
-					extension = "txt";
-
-				document.setCode(codigo);
-				document.setContent(di.getContent());
-				document.setExtension(extension);
-				document.setId(null);
-				document.setLenght(di.getContent().length);
-
-				String docName = (String) docsMap.get(rd.getCode());
-				if (docName != null) {
-					document.setName(docName);
-				}
-				else {
-					document.setName(asunto);
-				}
-
-				documents.add(document);
+	
+				DocumentoExpediente[] documentsExpediente = new DocumentoExpediente[documents.size()];
+				for(int j=0; j<documents.size(); j++)
+					documentsExpediente[j] = (DocumentoExpediente)documents.get(j);
+	
+				return oServicioTramitacion.iniciarExpediente(idEntidad, commonData, specificDataXML, documentsExpediente);
 			}
-
-			// Si la solicitud firmada existe
-			// eliminar la solicitud no firmada de los documentos que se envían para iniciar expediente
-			if (solicitudFirmada) {
-				documents.remove(solicitudNoFirmada);
-			}
-
-			DocumentoExpediente[] documentsExpediente = new DocumentoExpediente[documents.size()];
-			for(int j=0; j<documents.size(); j++)
-				documentsExpediente[j] = (DocumentoExpediente)documents.get(j);
-
-			return oServicioTramitacion.iniciarExpediente(entidad, commonData, specificDataXML, documentsExpediente);
 		}
 		catch (Exception e) {
 

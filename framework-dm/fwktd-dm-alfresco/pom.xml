@@ -11,6 +11,14 @@
 	<packaging>jar</packaging>
 	<name>fwktd-dm-alfresco</name>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<!-- Framework dependencies -->

@@ -40,6 +40,9 @@ public class StateContext implements Serializable {
 	private int activityPcdId;
 	private int activityId;	
 	private int subProcessId;
+	
+	//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+	private int anio;
 		
 
 	/*
@@ -70,6 +73,9 @@ public class StateContext implements Serializable {
 		this.setActivityPcdId(Integer.parseInt(values[i++]));
 		this.setActivityId(Integer.parseInt(values[i++]));
 		this.setSubProcessId(Integer.parseInt(values[i++]));
+		
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		this.setAnio(Integer.parseInt(values[i++]));
 	}
 
 	public StateContext() 
@@ -93,7 +99,10 @@ public class StateContext implements Serializable {
 		this.subPcdId=0;
 		this.activityPcdId=0;
 		this.activityId=0;
-		this.subProcessId=0;		
+		this.subProcessId=0;
+		
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		this.anio = 0;
 	}
 
 	/*
@@ -120,8 +129,10 @@ public class StateContext implements Serializable {
 			getSubPcdId()+StateContext.TICKET_SEPARATOR+
 			getActivityPcdId()+StateContext.TICKET_SEPARATOR+
 			getActivityId()+StateContext.TICKET_SEPARATOR+
-			getSubProcessId()
-			;
+
+			//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+			getSubProcessId()+StateContext.TICKET_SEPARATOR+
+			getAnio();
 		return stateticket;
 	}
 
@@ -379,5 +390,15 @@ public class StateContext implements Serializable {
 
 	public void setSubProcessId(int subProcessId) {
 		this.subProcessId = subProcessId;
+	}
+	
+	//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+	public int getAnio() {
+		return anio;
+	}
+
+	//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+	public void setAnio(int anio) {
+		this.anio= anio;
 	}
 }

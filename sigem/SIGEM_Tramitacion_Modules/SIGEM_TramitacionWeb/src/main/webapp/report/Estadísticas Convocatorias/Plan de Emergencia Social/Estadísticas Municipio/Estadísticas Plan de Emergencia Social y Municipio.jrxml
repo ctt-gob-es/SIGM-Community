@@ -1,0 +1,792 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Estadísticas Plan de Emergencia Social y Municipio"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<subDataset name="MediasGastosViviendas" >
+
+		<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String"/>
+		<queryString><![CDATA[select 'Media gasto en hipotecas' as titulo, sum(cantidad)/count(cantidad) as media, sum(cantidad) as suma, count(cantidad) as solicitudes
+from (select 
+case when viviendaeuros2 is null then 0 when viviendaeuros2 = '' then 0 when upper(viviendaeuros2) LIKE '%NO%' then 0 else replace(viviendaeuros2,',','.')::float end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+and upper(vivienda2) = 'SI'
+union all 
+select 
+case when viviendaeuros2 is null then 0 when viviendaeuros2 = '' then 0 when upper(viviendaeuros2) LIKE '%NO%' then 0 else replace(viviendaeuros2,',','.')::float end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+and upper(vivienda2) = 'SI'
+) as hipoteca (cantidad)
+union all
+select 'Media gasto en alquileres' as titulo, sum(cantidad)/count(cantidad) as media, sum(cantidad) as suma, count(cantidad) as solicitudes
+from (select 
+case when viviendaeuros3 is null then 0 when viviendaeuros3 = '' then 0 when upper(viviendaeuros3) LIKE '%NO%' then 0 else replace(viviendaeuros3,',','.')::float end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+and upper(vivienda3) = 'SI'
+union all 
+select 
+case when viviendaeuros3 is null then 0 when viviendaeuros3 = '' then 0 when upper(viviendaeuros3) LIKE '%NO%' then 0 else replace(viviendaeuros3,',','.')::float end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and  datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+and upper(vivienda3) = 'SI'
+
+union all
+
+select 
+case when viviendaeuros2 is null then 0 when viviendaeuros2 = '' then 0 when upper(viviendaeuros2) LIKE '%NO%' then 0 else replace(viviendaeuros2,',','.')::float end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+and upper(vivienda2) = 'SI'
+union all 
+select 
+case when viviendaeuros2 is null then 0 when viviendaeuros2 = '' then 0 when upper(viviendaeuros2) LIKE '%NO%' then 0 else replace(viviendaeuros2,',','.')::float end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+and upper(vivienda2) = 'SI'
+) as hipoteca (cantidad)
+union all
+select 'Media gasto en alquileres' as titulo, sum(cantidad)/count(cantidad) as media, sum(cantidad) as suma, count(cantidad) as solicitudes
+from (select 
+case when viviendaeuros3 is null then 0 when viviendaeuros3 = '' then 0 when upper(viviendaeuros3) LIKE '%NO%' then 0 else replace(viviendaeuros3,',','.')::float end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+and upper(vivienda3) = 'SI'
+union all 
+select 
+case when viviendaeuros3 is null then 0 when viviendaeuros3 = '' then 0 when upper(viviendaeuros3) LIKE '%NO%' then 0 else replace(viviendaeuros3,',','.')::float end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and  datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+and upper(vivienda3) = 'SI'
+) as alquiler (cantidad)
+order by titulo desc]]></queryString>
+
+		<field name="titulo" class="java.lang.String"/>
+		<field name="media" class="java.lang.Double"/>
+		<field name="suma" class="java.lang.Double"/>
+		<field name="solicitudes" class="java.lang.Long"/>
+
+	</subDataset>
+
+	<subDataset name="Ingresos Familiares" >
+
+		<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String"/>
+		<queryString><![CDATA[select nfamiliar::int, 
+sum(case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 
+	else trim(replace(TOTAL,',','.'))::float end) as ingresos ,
+count(nfamiliar::int),
+sum(case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0
+	else trim(replace(TOTAL,',','.'))::float end)/
+count(nfamiliar::int) as media
+from 
+(select total, nfamiliar 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+union all
+select total, nfamiliar 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+
+	union all
+
+	select total, nfamiliar 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+union all
+select total, nfamiliar 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+)
+as datos(total, nfamiliar)
+group by nfamiliar::int
+order by nfamiliar::int]]></queryString>
+
+		<field name="nfamiliar" class="java.lang.Integer"/>
+		<field name="ingresos" class="java.lang.Double"/>
+		<field name="count" class="java.lang.Long"/>
+		<field name="media" class="java.lang.Double"/>
+
+	</subDataset>
+
+	<subDataset name="IngresosMenoresDe" >
+
+		<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String"/>
+		<queryString><![CDATA[select 'Nº de Familias con Ingresos de 0 €' as titulo, count(ingresos) as familias from 
+(select nfamiliar::int, 
+case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end as ingresos 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+union all
+select nfamiliar::int, 
+case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end as ingresos 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP}  and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+) as ingresosCero
+where ingresosCero.ingresos = 0
+union all
+select 'Nº de Familias con Ingresos menores de 500 €' as titulo, count(ingresos) as familias from 
+(select nfamiliar::int, 
+case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end as ingresos 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+union all
+select nfamiliar::int, 
+case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end as ingresos 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP}  and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+
+	union all
+	
+	select nfamiliar::int, 
+case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end as ingresos 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+union all
+select nfamiliar::int, 
+case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end as ingresos 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP}  and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+) as ingresosCero
+where ingresosCero.ingresos = 0
+union all
+select 'Nº de Familias con Ingresos menores de 500 €' as titulo, count(ingresos) as familias from 
+(select nfamiliar::int, 
+case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end as ingresos 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+union all
+select nfamiliar::int, 
+case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end as ingresos 
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP}  and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+) as ingresosCero
+where ingresosCero.ingresos < 500]]></queryString>
+
+		<field name="titulo" class="java.lang.String"/>
+		<field name="familias" class="java.lang.Long"/>
+
+	</subDataset>
+
+	<parameter name="SUBREPORT_DIR" isForPrompting="true" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["/sigem/app/SIGEM/temp/reports/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["M:\\Documentos\\Imágenes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["DPCR2013/43521"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select sum(total) as total from (
+	select count(*) as total
+	from 
+	dpcr_serso_estadisticas a
+	join dpcr_serso_plan_emer datos_solicitud on a.numexp = $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and datos_solicitud.ciudad = a.municipio
+	left join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp
+	where (exp_solicitud.estadoadm  = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+	union all
+	select count(*) as total
+	from 
+	dpcr_serso_estadisticas a
+	left join dpcr_serso_plan_emer datos_solicitud on a.numexp = $P{NUM_EXP} and datos_solicitud.ciudad = a.municipio
+	left join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep 	
+	where (exp_solicitud.estadoadm  = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+	union all 
+	select count(*) as total
+	from 
+	dpcr_serso_estadisticas a
+	join dpcr_serso_plan_emer datos_solicitud on a.numexp = $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and datos_solicitud.ciudad = a.municipio
+	left join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp
+	where (exp_solicitud.estadoadm  = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+	union all
+	select count(*) as total
+	from 
+	dpcr_serso_estadisticas a
+	left join dpcr_serso_plan_emer datos_solicitud on a.numexp = $P{NUM_EXP} and datos_solicitud.ciudad = a.municipio
+	left join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep	
+	where (exp_solicitud.estadoadm  = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+) as tabla (total)]]></queryString>
+
+	<field name="total" class="java.math.BigDecimal"/>
+
+		<background>
+			<band height="802"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="71"
+						y="39"
+						width="464"
+						height="763"
+						key="image-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="99"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="6"
+						width="173"
+						height="93"
+						key="image-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoCabeceraServicios Sociales.png"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						x="173"
+						y="13"
+						width="362"
+						height="68"
+						key="staticText-4"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="24" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Estadísticas del Plan de Emergencia]]></text>
+				</staticText>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="3"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="217"  isSplitAllowed="true" >
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="0"
+						y="86"
+						width="535"
+						height="17"
+						key="subreport-1"
+						positionType="Float"/>
+					<subreportParameter  name="NUM_EXP">
+						<subreportParameterExpression><![CDATA[$P{NUM_EXP}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Solicitudes por Tipo de Familia y Municipio.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="0"
+						y="44"
+						width="535"
+						height="15"
+						key="subreport-2"
+						positionType="Float"/>
+					<subreportParameter  name="NUM_EXP">
+						<subreportParameterExpression><![CDATA[$P{NUM_EXP}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Solicitudes por Colectivo y Municipio.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="0"
+						y="59"
+						width="535"
+						height="15"
+						key="subreport-3"
+						positionType="Float"/>
+					<subreportParameter  name="NUM_EXP">
+						<subreportParameterExpression><![CDATA[$P{NUM_EXP}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Solicitudes por Vivienda y Municipio.jasper"]]></subreportExpression>
+				</subreport>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="7"
+						width="535"
+						height="18"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Total de Solicitudes: " + $F{total}]]></textFieldExpression>
+				</textField>
+				<crosstab >
+					<reportElement
+						x="0"
+						y="75"
+						width="535"
+						height="8"
+						key="crosstab-4"
+						positionType="Float"/>
+					<crosstabDataset>
+						<dataset >
+							<datasetRun subDataset="MediasGastosViviendas">
+								<datasetParameter  name="NUM_EXP">
+									<datasetParameterExpression><![CDATA[$P{NUM_EXP}]]></datasetParameterExpression>
+								</datasetParameter>
+								<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+							</datasetRun>
+						</dataset>
+					</crosstabDataset>
+					<crosstabHeaderCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabHeaderCell>					<rowGroup name="titulo" width="240" totalPosition="End">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{titulo}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="240"
+						height="17"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{titulo}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabRowHeader>
+					</rowGroup>
+					<columnGroup name="titulo1" height="0" totalPosition="End" headerPosition="Center">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{titulo}]]></bucketExpression>
+						</bucket>
+					</columnGroup>
+
+					<measure name="media_Nothing" class="java.lang.Double">
+						<measureExpression><![CDATA[$F{media}]]></measureExpression>
+					</measure>
+					<crosstabCell width="0" height="17">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="136" height="17" columnTotalGroup="titulo1">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="136"
+						height="17"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new DecimalFormat("#,##0.00").format($V{media_Nothing}.doubleValue()) + " Euros"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="0" rowTotalGroup="titulo">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="136" height="0" rowTotalGroup="titulo" columnTotalGroup="titulo1">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<whenNoDataCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</whenNoDataCell>					</crosstab>
+				<crosstab >
+					<reportElement
+						x="143"
+						y="149"
+						width="391"
+						height="8"
+						key="crosstab-5"
+						positionType="Float"/>
+					<crosstabDataset>
+						<dataset >
+							<datasetRun subDataset="Ingresos Familiares">
+								<datasetParameter  name="NUM_EXP">
+									<datasetParameterExpression><![CDATA[$P{NUM_EXP}]]></datasetParameterExpression>
+								</datasetParameter>
+								<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+							</datasetRun>
+						</dataset>
+					</crosstabDataset>
+					<crosstabHeaderCell>						<cellContents mode="Transparent">
+					<box topBorder="1Point" topBorderColor="#000000" leftBorder="1Point" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<staticText>
+					<reportElement
+						x="0"
+						y="0"
+						width="135"
+						height="25"
+						key="staticText-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<text><![CDATA[Número de Miembros de la Unidad Familiar]]></text>
+				</staticText>
+						</cellContents>
+					</crosstabHeaderCell>					<rowGroup name="nfamiliar" width="135" totalPosition="End">
+						<bucket>
+							<bucketExpression class="java.lang.Integer"><![CDATA[$F{nfamiliar}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="1Point" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="135"
+						height="16"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{nfamiliar}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabRowHeader>
+					</rowGroup>
+					<columnGroup name="ingresos" height="25" totalPosition="End" headerPosition="Center">
+						<bucket>
+							<bucketExpression class="java.lang.Double"><![CDATA[$F{ingresos}]]></bucketExpression>
+						</bucket>
+						<crosstabTotalColumnHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="1Point" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="95"
+						height="25"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Media de Ingresos"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabTotalColumnHeader>
+					</columnGroup>
+
+					<measure name="ingresos_Count" class="java.lang.Double">
+						<measureExpression><![CDATA[$F{media}]]></measureExpression>
+					</measure>
+					<crosstabCell width="0" height="16">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="95" height="16" columnTotalGroup="ingresos">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="95"
+						height="16"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[new DecimalFormat("#,##0.00").format($V{ingresos_Count}) + " Euros"]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="0" rowTotalGroup="nfamiliar">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="95" height="0" rowTotalGroup="nfamiliar" columnTotalGroup="ingresos">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<whenNoDataCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</whenNoDataCell>					</crosstab>
+				<staticText>
+					<reportElement
+						x="0"
+						y="136"
+						width="535"
+						height="13"
+						key="staticText-1"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[INGRESOS FAMILIARES]]></text>
+				</staticText>
+				<crosstab >
+					<reportElement
+						x="0"
+						y="157"
+						width="535"
+						height="15"
+						key="crosstab-6"
+						positionType="Float"/>
+					<crosstabDataset>
+						<dataset >
+							<datasetRun subDataset="IngresosMenoresDe">
+								<datasetParameter  name="NUM_EXP">
+									<datasetParameterExpression><![CDATA[$P{NUM_EXP}]]></datasetParameterExpression>
+								</datasetParameter>
+								<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+							</datasetRun>
+						</dataset>
+					</crosstabDataset>
+					<crosstabHeaderCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabHeaderCell>					<rowGroup name="titulo" width="218" totalPosition="End">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{titulo}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="218"
+						height="18"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{titulo}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabRowHeader>
+					</rowGroup>
+					<columnGroup name="familias" height="0" totalPosition="End" headerPosition="Center">
+						<bucket>
+							<bucketExpression class="java.lang.Long"><![CDATA[$F{familias}]]></bucketExpression>
+						</bucket>
+					</columnGroup>
+
+					<measure name="familias_Nothing" class="java.lang.Long">
+						<measureExpression><![CDATA[$F{familias}]]></measureExpression>
+					</measure>
+					<crosstabCell width="0" height="18">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="85" height="18" columnTotalGroup="familias">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="85"
+						height="18"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{familias_Nothing}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="0" rowTotalGroup="titulo">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="85" height="0" rowTotalGroup="titulo" columnTotalGroup="familias">
+						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</crosstabCell>
+					<whenNoDataCell>						<cellContents mode="Transparent">
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
+						</cellContents>
+					</whenNoDataCell>					</crosstab>
+				<subreport  isUsingCache="true">
+					<reportElement
+						x="0"
+						y="193"
+						width="535"
+						height="17"
+						key="subreport-4"
+						positionType="Float"/>
+					<subreportParameter  name="NUM_EXP">
+						<subreportParameterExpression><![CDATA[$P{NUM_EXP}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Peticiones por ayuntamiento y mes y Municipio.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement
+						x="0"
+						y="174"
+						width="535"
+						height="13"
+						key="staticText-2"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[NÚMERO DE SOLICITUDES POR AYUNTAMIENTO Y MES]]></text>
+				</staticText>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="33"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="2"
+						width="535"
+						height="31"
+						key="image-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoPie.jpg"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="482"
+						y="8"
+						width="28"
+						height="15"
+						forecolor="#FFFFFF"
+						key="textField-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Calibri" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageFooter>
+		<lastPageFooter>
+			<band height="32"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="1"
+						width="535"
+						height="31"
+						key="image-4"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoPie.jpg"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="482"
+						y="7"
+						width="28"
+						height="15"
+						forecolor="#FFFFFF"
+						key="textField-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Calibri" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</band>
+		</lastPageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

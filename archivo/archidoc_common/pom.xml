@@ -16,6 +16,14 @@
 		<maven>2.0.9</maven>
 	</prerequisites>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<build>
 		<resources>
 			<resource>

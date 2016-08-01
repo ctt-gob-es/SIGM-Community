@@ -22,6 +22,8 @@ import ieci.tdw.ispac.ispactx.TXTransactionDataContainer;
 import java.util.Date;
 import java.util.Map;
 
+import es.dipucr.sigem.api.action.historico.GestionTablasHistorico;
+
 /**
  * Acción para cerrar un proceso.
  */
@@ -200,6 +202,12 @@ public class TXCloseProcess implements ITXAction {
 			TXHitoDAO hitoexp=dtc.newMilestone(process.getKeyInt(),0,0, milestoneType);
 	
 			hitoexp.set("FECHA_LIMITE",process.getDate("FECHA_LIMITE"));
+			
+			//MQE #1023 Tablas de Histórico
+			//Pasamos al histórico spac_expedientes, spac_dt_documentos, spac_dt_intervinientes y spac_dt_tramites
+			GestionTablasHistorico gh = new GestionTablasHistorico(cs, process);
+			gh.pasaAHistorico(dtc);
+			//MQE #1023 Fin Tablas de histórico
 	}
 
 	/**

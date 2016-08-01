@@ -36,6 +36,11 @@
 								   <bean:write name="contextHeader" property="property(NAME)"/>
 								 </a>
 				  			</logic:equal>
+				  			<%-- INICIO [eCenpri-Felipe #467] Ponemos el asunto, valor 10 --%>
+							<logic:equal name="contextHeader" property="property(CURRENTSTATE)" value="10">
+				  				<span class="asunto">ASUNTO: <bean:write name="contextHeader" property="property(NAME)"/></span>
+				  			</logic:equal>
+				  			<%-- FIN [eCenpri-Felipe #467] Ponemos el asunto, valor 10 --%>
 				  		</logic:iterate>
 				  	</logic:present>
 					<p class="bloqueo">
@@ -59,7 +64,12 @@
 										 > <a class="navigation" href='<html:rewrite forward='<%= url %>'/><%= queryString%>'>
 										   <bean:write name="contextHeader" property="property(NAME)"/>
 										 </a>
-					  				</logic:equal>
+					  				</logic:equal>					  				
+					  				<%-- INICIO [eCenpri-Felipe #467] Ponemos el asunto, valor 10 --%>
+									<logic:equal name="contextHeader" property="property(CURRENTSTATE)" value="10">
+						  				<span class="asunto">ASUNTO: <bean:write name="contextHeader" property="property(NAME)"/></span>
+						  			</logic:equal>
+						  			<%-- FIN [eCenpri-Felipe #467] Ponemos el asunto, valor 10 --%>
 					  			</logic:iterate>
 					  		</logic:present>
 		  		</c:otherwise>

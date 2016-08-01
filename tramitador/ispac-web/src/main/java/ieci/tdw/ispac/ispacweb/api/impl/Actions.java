@@ -858,5 +858,29 @@ public class Actions implements IActions {
 
 		return list;
 	}
+	
+	/**
+	 * [dipucr-Felipe #120]
+	 * Indica si existe o no manuales de usuario a los que tenga acceso desde el contexto
+	 * @param state
+	 * @return
+	 * @throws ISPACException
+	 */
+	public boolean hasManuales(IState state) throws ISPACException {
+		IProcedureAPI procedureAPI = mccnt.getAPI().getProcedureAPI();
+		return procedureAPI.hasManuales(mccnt.getStateContext());
+	}
+	
+	/**
+	 * [dipucr-Felipe #120]
+     * Indica si existe o no manuales de usuario globales
+     * @return
+     * @throws ISPACException
+     */
+    public boolean hasGlobalManuales() throws ISPACException{
+    	
+    	IProcedureAPI procedureAPI = mccnt.getAPI().getProcedureAPI();
+		return procedureAPI.hasGlobalManuales();
+    }
 
 }

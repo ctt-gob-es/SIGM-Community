@@ -15,12 +15,25 @@
 		document.defaultForm.action = "cloneExpedient.do";
 		document.defaultForm.name = "Clonacion";
 		
-		if (validateClonacion(document.defaultForm)) {
-		
-			showLayer("wait");
-			document.defaultForm.action = document.defaultForm.action + "?unidades=" + document.defaultForm.unidades.value;
-			document.defaultForm.submit();
+		//INICIO [eCenpri-Felipe #972]
+		var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+		var form;
+		var defaultForm = document.defaultForm;
+		if (is_chrome || defaultForm === undefined){
+			form = document.Clonacion;
 		}
+		else{
+			form = document.defaultForm;
+		}
+
+		//Donde se llamaba a 'document.defaultForm' ponemos la variable 'form'
+		if (validateClonacion(form)) {
+			
+			showLayer("wait");
+			form.action = form.action + "?unidades=" + form.unidades.value;
+			form.submit();
+		}
+		//FIN [eCenpri-Felipe #972]
 	}
 	
 //--></script>

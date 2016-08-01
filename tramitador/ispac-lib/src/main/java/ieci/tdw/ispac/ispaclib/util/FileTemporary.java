@@ -154,6 +154,31 @@ public class FileTemporary {
 
     return sName;
   }
+  
+  /**
+   * [Dipucr-Agustin #781]
+   * Salva el contenido de un input stream en un fichero temporal pasando el nombre destino.
+   * @param in  input stream.
+   * @param ficheroDestino nombre del fichero temporal destino
+   * @return nombre del fichero.
+   * @exception ISPACException.
+   */
+  public boolean put( InputStream in, String ficheroDestino)
+  throws ISPACException {
+	  
+	    String sName = null;
+	    
+	    try {
+	      Resource resource = new Resource( in);	      
+	      sName = mFileDirContext.bind( resource);
+	      mFileDirContext.rename(sName, ficheroDestino);
+	    } 
+	    catch(NamingException e) 
+		{ throw new ISPACException( e);}
+
+	    return true;    
+
+  }
 
   /**
    * Copia el contenido de un fichero en output stream.
@@ -225,7 +250,7 @@ public class FileTemporary {
     try {
       
       inbuffer = new BufferedInputStream( in, CHUNK_SIZE);
-      byte buffer[] = new byte[CHUNK_SIZE];
+      byte buffer[] = new	 byte[CHUNK_SIZE];
       int length = buffer.length;
       
       while (true) {

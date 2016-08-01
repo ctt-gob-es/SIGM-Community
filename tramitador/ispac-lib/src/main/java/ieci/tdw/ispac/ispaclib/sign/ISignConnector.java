@@ -58,6 +58,23 @@ public interface ISignConnector {
 	public void sign(boolean changeState) throws ISPACException;
 	
 	/**
+	 * [Dipucr-Agustin #781]
+	 * Realiza la prefirma
+	 * @param changeState Indica si hay que cambiar el estado de la firma del documento
+	 * @throws ISPACException
+	 */
+	public String presign(boolean changeState) throws ISPACException;
+	
+	/**
+	 * [Dipucr-Agustin #781]
+	 * Realiza la postfirma
+	 * @param changeState Indica si hay que cambiar el estado de la firma del documento
+	 * @param path del fichero temporal firmado
+	 * @throws ISPACException
+	 */
+	public String postsign(String pathFicheroTempFirmado, boolean changeState) throws ISPACException;
+	
+	/**
 	 * Inicializa el conector con el documento a firmar y el contexto del cliente
 	 * @param signDocument
 	 * @param clientContext

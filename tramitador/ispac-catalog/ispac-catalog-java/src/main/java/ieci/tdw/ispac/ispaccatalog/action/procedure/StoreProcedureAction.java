@@ -130,6 +130,43 @@ public class StoreProcedureAction extends BaseDispatchAction {
 		return storeEntity(mapping, form, request, session,
 				"deadlines", entityId, keyId, entityId, keyId);
 	}
+	
+	/**
+	 * [Manu Ticket #909] SIGEM Pestaña Datos Específicos del Trámite
+	 * Muestra los Datos Específicos
+	 * @param mapping
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return
+	 * @throws ISPACException
+	 */
+	public ActionForward datosEspecif(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response,
+			SessionAPI session) throws ISPACException {
+
+		// Identificador de la entidad
+		//int entityId = ICatalogAPI.ENTITY_CT_PROCEDURE;
+		int entityId = Integer.parseInt(request.getParameter("entity"));
+		
+		// Indentificador del registro
+		int keyId = Integer.parseInt(request.getParameter("key"));
+		
+		ActionForward forward = storeEntityDatosEspecifTramite(mapping, form, request, session, 
+				"datosEspecif", ICatalogAPI.ENTITY_P_TRAM_DATOSESPECIFICOS, keyId, entityId, keyId);
+		
+		// Mostrar el bloque adecuado
+		String block = request.getParameter("block");
+		if (StringUtils.isNotBlank(block)) {
+			String path = new StringBuffer(forward.getPath())
+				.append("&block=").append(block).toString();
+			forward = new ActionForward(forward.getName(), path, 
+					forward.getRedirect());
+		}
+		
+		return forward;
+	}
 
 	private ActionForward storeEntity(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, SessionAPI session,
@@ -246,4 +283,113 @@ public class StoreProcedureAction extends BaseDispatchAction {
 			.toString();
 		return new ActionForward(forward.getName(), url, redirect);
 	}
+	
+	/**
+	 * [Manu Ticket #909] SIGEM Pestaña Datos Específicos del Trámite
+	 * Muestra los Datos Específicos
+	 * @param mapping
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return
+	 * @throws ISPACException
+	 */
+	private ActionForward storeEntityDatosEspecifTramite(ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, SessionAPI session, 
+			String forwardName, int entityId, int keyId,
+			int retEntityId, int retKeyId) throws ISPACException {
+			
+			ClientContext cct = session.getClientContext();
+			
+			IInvesflowAPI invesFlowAPI = session.getAPI();
+	        ICatalogAPI catalogAPI = invesFlowAPI.getCatalogAPI();
+
+			// Formulario asociado a la acción
+			EntityForm defaultForm = (EntityForm) form;
+
+			EntityApp entityapp = null;
+			String path = getRealPath("");
+			
+			int id_tram = 0;
+			
+			// Ejecución en un contexto transaccional
+			boolean bCommit = false;
+			
+			try {
+		        // Abrir transacción
+		        cct.beginTX();
+			
+		        // Obtener la aplicación que gestiona la entidad
+				if (keyId == ISPACEntities.ENTITY_NULLREGKEYID) {
+				    entityapp = catalogAPI.newCTDefaultEntityApp(entityId, path);
+				    keyId  = entityapp.getEntityRegId();
+				} else {
+				    entityapp = catalogAPI.getCTDefaultEntityApp(entityId, path);
+				}
+				
+				//Se le asigna la clave del registro. Es necesario ya que el
+				//item al que hace referencia puede estar recien creado y por tanto
+				//tendría su campo clave a -1 (ISPACEntities.ENTITY_REGKEYID)
+				entityapp.getItem().setKey(keyId);
+				
+				id_tram = Integer.parseInt(request.getParameter("id_tram"));
+				String plantilla_defecto = request.getParameter("plantilla_defecto");
+				String otros_datos = request.getParameter("otros_datos");
+				
+				entityapp.getItem().set("PLANTILLA_DEFECTO", plantilla_defecto.trim());
+				entityapp.getItem().set("OTROS_DATOS", otros_datos.trim());
+				entityapp.getItem().set("ID_TRAM_PCD", id_tram);
+				
+				// Validación
+				if (entityapp.validate()) {
+
+					// Guardar la entidad
+					entityapp.store();
+
+					// Si todo ha sido correcto se hace commit de la transacción
+					bCommit = true;
+				}
+				else {
+					ActionMessages errors = new ActionMessages();
+					List errorList = entityapp.getErrors();
+					Iterator iteError = errorList.iterator();
+					while (iteError.hasNext()) {
+						ValidationError error = (ValidationError) iteError.next();
+						errors.add(ActionMessages.GLOBAL_MESSAGE, 
+								new ActionMessage(error.getErrorKey(), 
+										error.getArgs()));
+					}
+					saveAppErrors(request, errors);
+					
+					return getActionForward(mapping, forwardName, retEntityId, 
+							retKeyId, false);
+				}
+			} 
+			catch(ISPACException e) {
+				
+				if (entityapp != null) {
+				
+					// Establecer la aplicación para acceder a los valores extra en el formulario
+					defaultForm.setValuesExtra(entityapp);
+			        
+					// Página jsp asociada a la presentación de la entidad
+					request.setAttribute("application", entityapp.getURL());
+					request.setAttribute("EntityId",Integer.toString(entityId));
+					request.setAttribute("KeyId", Integer.toString(keyId));
+								
+					throw new ISPACInfo(e.getMessage());
+				}
+				else {	
+					// Suele producirse error en las secuencias al estar mal inicializadas
+					// provocando una duplicación de keys
+					throw e;
+				}
+			}
+			finally {
+				cct.endTX(bCommit);
+			}
+
+			return getActionForward(mapping, forwardName, retEntityId, id_tram, true);
+		}
 }

@@ -40,6 +40,10 @@ public class GestionURLsBackOffice {
 			config.put(KEY_URL + ConstantesGestionUsuariosBackOffice.APLICACION_CONSULTA_EXPEDIENTES, aux);
 			aux = propiedades.getString(ConstantesGestionUsuariosBackOffice.APLICACION_CONSULTA_REGISTROS_TELEMATICOS);
 			config.put(KEY_URL + ConstantesGestionUsuariosBackOffice.APLICACION_CONSULTA_REGISTROS_TELEMATICOS, aux);
+			//[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto Árbol Documental.
+			aux = propiedades.getString(ConstantesGestionUsuariosBackOffice.APLICACION_ARBOL_DOCUMENTAL_MANAGER);
+			config.put(KEY_URL + ConstantesGestionUsuariosBackOffice.APLICACION_ARBOL_DOCUMENTAL_MANAGER, aux);
+			//[eCenpri-Manu Ticket #295] - FIN  -ALSIGM3 Nuevo proyecto Árbol Documental.
 			aux = propiedades.getString(KEY_LOGIN);
 			config.put(KEY_LOGIN, aux);
 			aux = propiedades.getString(KEY_LOGOUT);

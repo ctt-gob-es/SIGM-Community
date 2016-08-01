@@ -5,7 +5,6 @@ package com.ieci.tecdoc.common.repository;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,6 +93,17 @@ public abstract class GenericRepositoryManager implements IRepositoryManager {
 	 */
 	protected abstract ISicresAbstractDocumentVO getEspecificRepositoryDataForUpdate(
 			ISicresBasicDocumentVO iSicresDocumentVO);
+	
+	//[Teresa # 1014] INICIO
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ieci.tecdoc.common.adapter.IRepositoryManager#getRetrieveDocumentParams(java.lang.String,
+	 *      java.lang.String)
+	 */
+	public abstract ISicresAbstractDocumentVO getRetrieveDocumentParams(
+			String documentUID, String entidad);
+	//[Teresa # 1014] FIN
 
 	/*
 	 * (non-Javadoc)
@@ -541,5 +551,45 @@ public abstract class GenericRepositoryManager implements IRepositoryManager {
 			log.error("Error actualizando el documentUID", e);
 		}
 	}
+	/**
+	 * [Ticket 1014 Teresa INICIO] Recupera la información del documento cuyo guid es
+	 * el pasado como parámetro
+	 */
+	public byte[] retrieveDocument(String docUID, String entidad) {
+		ISicresAbstractDocumentVO documentVO = null;
+
+		byte[] file = null;
+		try {
+			if(docUID!=null){
+				documentVO = getRetrieveDocumentParams(docUID, entidad);
+				log.warn(documentVO.getId());
+				log.warn(documentVO.getName());
+				documentVO = connector.retrieve(documentVO);
+		
+				if (documentVO != null) {
+					file = documentVO.getContent();
+					//Se obtiene la ruta donde esta almacenado el documento
+					//String ruta = new String(file);
+					//file = FileUtils.readFileToByteArray(new File(ruta));
+				}
+			}
+
+			
+		}catch(Exception e){
+			if(documentVO!=null){
+				log.error("El identificador del documento es erroneo: "+documentVO.getId()+" - "+e.getMessage(), e);
+			}
+			else{
+				log.error(e.getMessage(), e);
+			}
+			
+		}
+
+		return file;
+	}
+	
+	/**
+	 * [Ticket 1014 Teresa FIN]
+	 */
 
 }

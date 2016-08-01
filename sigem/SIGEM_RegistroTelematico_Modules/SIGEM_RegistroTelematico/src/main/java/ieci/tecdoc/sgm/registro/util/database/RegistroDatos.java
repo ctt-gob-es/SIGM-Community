@@ -294,6 +294,7 @@ public class RegistroDatos extends RegistroImpl {
          DynamicFns.selectMultiple(dbConn, table.getByQuery(dbConn, queryList, operator), false, tableInfo, rowsInfo);
 
       } catch (Exception e) {
+    	  logger.error("Error al realizar la consulta [query][Excepcion]"+e.getMessage(), e);
          throw new RegistroExcepcion(RegistroCodigosError.EC_ERR_DB);
       } finally {
     	  if (dbConn.existConnection())

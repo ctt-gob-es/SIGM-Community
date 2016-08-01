@@ -11,6 +11,14 @@
 	<artifactId>SIGEM_SchedulerWeb</artifactId>
 	<name>SIGEM_SchedulerWeb</name>
 	<packaging>war</packaging>
+
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
 	
 	<dependencies>
 	
@@ -30,7 +38,7 @@
 
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
-			<artifactId>SIGEM_Consolidacion</artifactId>
+			<artifactId>sigem_consolidacion</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
 

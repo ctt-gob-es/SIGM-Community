@@ -1952,6 +1952,12 @@ public class TramitacionWebServiceSoapBindingStub extends Stub implements
 			throw axisFaultException;
 		}
 	}
+	
+	//[DipuCR-Agustín #781]
+	public Binario getFicheroTemp(String idEntidad, String guid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 	
 }

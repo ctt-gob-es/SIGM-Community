@@ -64,19 +64,36 @@
 											%>
 										</td>
 									</tr>
+									<!-- [eCenpri-Manu #301] - INICIO - ALSIGM3 Modificar la pantalla de excepción -->
 									<tr>
-						 				<td class='titleBig' align='left'>
+										<td>
+											<img src="<ispac:rewrite href="img/ico_t_mas.gif"/>" id="imgMasMenos" onclick="if(document.getElementById('trError').style.display=='none'){
+														document.getElementById('trTituloError').style.display='';
+														document.getElementById('trError').style.display='';
+														document.getElementById('imgMasMenos').src='<ispac:rewrite href="img/ico_t_menos.gif"/>';
+														document.getElementById('imgMasMenos').title='<bean:message key="pageError.contraer"/>';
+													     }else{
+														document.getElementById('trTituloError').style.display='none';
+														document.getElementById('trError').style.display='none';
+														document.getElementById('imgMasMenos').src='<ispac:rewrite href="img/ico_t_mas.gif"/>';
+														document.getElementById('imgMasMenos').title='<bean:message key="pageError.contraer"/>';
+													     }" title="<bean:message key="pageError.expandir"/>" alt="<bean:message key="pageError.altExpandirContraer"/>"/>
+										</td>
+									</tr>
+									<tr>
+						 				<td class='titleBig' style="display:none" align='left' id="trTituloError">
 						 					<bean:message key="pageError.trace.exception"/>
 						 				</td>
 									</tr>
 									<tr>
-										<td class="traza">
+										<td class="traza" style="display:none" id="trError">
 											<%
 											if (e != null)	
 												e.printStackTrace(new java.io.PrintWriter(out));
 											%>
 										</td>
 									</tr>
+									<!-- [eCenpri-Manu #301] - FIN - ALSIGM3 Modificar la pantalla de excepción -->
 									<tr>
 						 				<td>
 											<a href='javascript:history.back();' class='schema'><bean:message key="pageError.back"/></a>

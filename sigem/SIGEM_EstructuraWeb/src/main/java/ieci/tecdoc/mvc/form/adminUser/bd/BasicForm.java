@@ -34,6 +34,9 @@ public class BasicForm extends ActionForm{
     String updaterName;
     String managerName;
     String creatorName;
+    
+	//[Manu Ticket#175] Crear un campo con dni en el usuario
+    String dni;
 
     String managerId;
     String belongToDept; // Nombre del depto al que pertenece en caso de que sea usuario
@@ -64,6 +67,9 @@ public class BasicForm extends ActionForm{
         managerName = 
         creatorName =
         managerId = "";
+        
+		//[Manu Ticket#175] Crear un campo con dni en el usuario
+        dni = "";         
         
         idocConsulta= 
         idocModificacion= 

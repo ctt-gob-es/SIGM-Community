@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns="http://intermediacion.redsara.es/scsp/esquemas/V3/respuesta" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:especificos="http://intermediacion.redsara.es/scsp/esquemas/V3/datosEspecificos" targetNamespace="http://intermediacion.redsara.es/scsp/esquemas/V3/respuesta" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:import namespace="http://intermediacion.redsara.es/scsp/esquemas/V3/datosEspecificos" schemaLocation="datos-especificos.xsd"/>		
+
+	<xs:element name="Atributos">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="IdPeticion"/>
+				<xs:element ref="NumElementos"/>
+				<xs:element ref="TimeStamp"/>
+				<xs:element ref="Estado" minOccurs="0"/>
+				<xs:element ref="CodigoCertificado"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CodigoCertificado">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="64"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="CodigoEstado">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="4"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="CodigoEstadoSecundario">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="16"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="DatosGenericos">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="Emisor"/>
+				<xs:element ref="Solicitante"/>
+				<xs:element ref="Titular" minOccurs="0"/>
+				<xs:element ref="Transmision"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Emisor">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="NifEmisor"/>
+				<xs:element ref="NombreEmisor"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Estado">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="CodigoEstado" minOccurs="0"/>
+				<xs:element ref="CodigoEstadoSecundario" minOccurs="0"/>
+				<xs:element ref="LiteralError" minOccurs="0"/>
+				<xs:element ref="TiempoEstimadoRespuesta" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FechaGeneracion">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="29"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="IdentificadorSolicitante">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="10"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="IdPeticion">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="26"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="IdSolicitud">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="40"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="IdTransmision">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="29"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="LiteralError">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="255"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="NifEmisor">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="10"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	
+	<xs:element name="NombreEmisor">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="NombreSolicitante">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="NumElementos">
+		<xs:simpleType>
+			<xs:restriction base="xs:int">
+				<xs:totalDigits value="7"/>
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Respuesta">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Atributos"/>
+				<!-- Las transmisiones son opcionales en caso de que la repuesta no este preparada y se devuelva un TER -->
+				<xs:element ref="Transmisiones" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Solicitante">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="IdentificadorSolicitante"/>
+				<xs:element ref="NombreSolicitante"/>
+				<xs:element name="Finalidad" type="xs:string"
+					maxOccurs="1" minOccurs="0">
+				</xs:element>
+				<xs:element name="Consentimiento" type="xs:string"
+					maxOccurs="1" minOccurs="0">
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TiempoEstimadoRespuesta">
+		<xs:simpleType>
+			<xs:restriction base="xs:int">
+				<xs:totalDigits value="4"/>
+				<xs:minInclusive value="0"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="TimeStamp">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="29"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Transmision">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="CodigoCertificado"/>
+				<xs:element ref="IdSolicitud"/>
+				<xs:element ref="IdTransmision"/>
+				<xs:element ref="FechaGeneracion"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TransmisionDatos">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="DatosGenericos"/>
+				<xs:element ref="especificos:DatosEspecificos"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Transmisiones" nillable="false">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="TransmisionDatos" maxOccurs="1000"/>
+			</xs:sequence>
+			<xs:attribute name="Id" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="Titular">
+		<xs:complexType>
+			<xs:all>
+
+				<xs:element name="TipoDocumentacion" type="xs:string"
+					maxOccurs="1" minOccurs="0">
+				</xs:element>
+				<xs:element name="Documentacion" type="xs:string" maxOccurs="1" minOccurs="0"></xs:element>
+			</xs:all>
+		</xs:complexType>
+	
+	
+	</xs:element>
+	
+</xs:schema>

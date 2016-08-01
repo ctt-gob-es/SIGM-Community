@@ -7,6 +7,8 @@ import ieci.tecdoc.sgm.core.services.dto.Entidad;
 
 import java.io.OutputStream;
 
+import es.ieci.tecdoc.fwktd.csv.core.service.ServicioDocumentos;
+
 /**
  * @author IECISA
  * 
@@ -98,4 +100,16 @@ public interface ServicioGestionCSV {
 	 * 
 	 */
 	public void writeDocumento(Entidad entidad, String id, OutputStream outputStream) throws CSVException;
+
+	/**
+	 * @return el servicioDocumentos
+	 */
+	public ServicioDocumentos getServicioDocumentos();
+
+	/**
+	 * @param servicioDocumentos
+	 *            el servicioDocumentos a fijar
+	 */
+	public void setServicioDocumentos(ServicioDocumentos servicioDocumentos);
+	
 }

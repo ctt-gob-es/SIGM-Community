@@ -238,14 +238,23 @@
 	<table cellspacing="0" cellpadding="0" align="center" width="90%">
 
 		<tr>
-			<td height="10px"><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" height="10px" /></td>
+			<td height="10px" colspan="3"><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" height="10px" /></td>
+			<!-- [eCenpri-Felipe #467] Añadido colspan="3" -->
 		</tr>
 		<tr>
-			<td class="textbar">
+			<!-- [eCenpri-Felipe #467] Se separa en 3 td
+				Se da el estilo "caja_documento" y se pone imagen "documento2.gif" delante -->
+			<td style="max-width:20px"><img src='<ispac:rewrite href="img/subopcion.gif"/>' border="0" width="20px" /></td>
+			<td class="textbar" style="margin-left:10px">
 
-				<table border="0" cellspacing="0" cellpadding="0" width="100%">
-
+				<table border="0" cellspacing="0" cellpadding="0" class="caja_documento" >
+	
 					<tr>
+						<td>
+							<img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" width="5px"/>
+							<img src='<ispac:rewrite href="img/documento2.gif"/>' border="0" />
+							<img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" width="10px"/>
+						</td>
 						<td class="textbar"><bean:message key="forms.tasks.document" />:</td>
 						<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0"
 							width="10px" /></td>
@@ -253,12 +262,19 @@
 							property="property(SPAC_DT_DOCUMENTOS:NOMBRE)" /></nobr></td>
 						<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0"
 							width="10px" /></td>
-						<td class="textbar" align="right" width="80%">
-
+					</tr>
+	
+				</table>
+			</td>
+			<td>
+				<table border="0" width="100%" >
+					<tr>
+						<td class="textbar" align="right" >
+						
 						<%-- Si el documento esta asociado a la fase no se muestra enlace para ir al tramite --%>
 						<logic:equal name="documentAsotiation" value="Task">
 							<logic:equal name="_entryPoint" value="Task">
-
+	
 								<c:url value="showTask.do" var="_link">
 									<c:param name="taskId">
 										<bean:write name="defaultForm"
@@ -273,25 +289,26 @@
 										<c:param name="readonly" value='${param.readonly}' />
 									</c:if>
 								</c:url>
-
+	
 								<a href='<c:out value="${_link}"/>' class="tdlink"><bean:message
 									key="forms.tasks.return.document.list" /></a>
-
+	
 							</logic:equal>
-						</logic:equal></td>
+						</logic:equal>
+						</td>
 					</tr>
-
 				</table>
-
 			</td>
 		</tr>
 		<tr>
 			<td width="100%" valign="bottom" height="5px"
-				style="font-size:4px;">&nbsp;</td>
+				style="font-size:4px;" colspan="3">&nbsp;</td>
+				<!-- [eCenpri-Felipe #467] Añadido colspan="3" -->
 		</tr>
 		<tr>
-			<td valign="top">
 
+			<td valign="top" colspan="3"> <!-- [eCenpri-Felipe #467] Añadido colspan="3" -->
+		
 			<table class="caja" cellspacing="0" cellpadding="0" width="100%">
 
 				<tr>
@@ -378,15 +395,17 @@
 													<%--
 													<logic:equal name="defaultForm" property="property(SPAC_DT_DOCUMENTOS:TP_REG)" value="ENTRADA">
 													--%>
-
+													
 													<%-- Documento no bloqueado --%>
-													<c:if
+													
+													<!-- [eCenpri-Felipe #467] Eliminados todos los botones de "Sustituir documento" -->													
+													<!--<c:if
 														test="${(empty _lockState) || (_lockState == appConstants.documentLockStates.UNLOCK)}">
 
 														<table border="0" cellspacing="0" cellpadding="0">
 															<tr>
 																<td class="formsTitle">
-																	<!-- SUSTITUIR DOCUMENTO -->
+																	<!-- SUSTITUIR DOCUMENTO ->
 																	<logic:equal value="false" property="readonly" name="defaultForm">
 																		<bean:message key="forms.tasks.replace.document" />:
 																	</logic:equal>
@@ -435,7 +454,7 @@
 															</tr>
 														</table>
 
-													</c:if>
+													</c:if>-->
 
 													<table border="0" cellspacing="0" cellpadding="0">
 														<tr>
@@ -493,13 +512,16 @@
 														<c:when test="${empty numRegistro || empty sicresConnectorClass}">
 
 															<!-- DOCUMENTO NO REGISTRADO -->
+															
+															<!-- [eCenpri-Felipe #467] Eliminados todos los botones de "Sustituir documento" -->
+															<!-- 
 															<c:if
 																test="${(empty _lockState) || (_lockState == appConstants.documentLockStates.UNLOCK)}">
 
 																<table border="0" cellspacing="0" cellpadding="0">
 																	<tr>
 																		<td class="formsTitle">
-																			<!-- SUSTITUIR DOCUMENTO -->
+																			<!-- SUSTITUIR DOCUMENTO ->
 																			<logic:equal value="false" property="readonly" name="defaultForm">
 																				<bean:message key="forms.tasks.replace.document" />:
 																			</logic:equal>
@@ -548,7 +570,7 @@
 																	</tr>
 																</table>
 
-															</c:if>
+															</c:if>-->
 
 															<table border="0" cellspacing="0" cellpadding="0">
 																<tr>
@@ -627,14 +649,17 @@
 													<logic:empty name="defaultForm"
 														property="property(SPAC_DT_DOCUMENTOS:INFOPAG)">
 
+
+														<!-- [eCenpri-Felipe #467] Eliminados todos los botones de "Sustituir documento" -->
+														<!-- 
 														<c:if
 															test="${(empty _lockState) || (_lockState == appConstants.documentLockStates.UNLOCK)}">
 
-															<!-- SUSTITUIR DOCUMENTO -->
+															<!-- SUSTITUIR DOCUMENTO ->
 															<table border="0" cellspacing="0" cellpadding="0">
 																<tr>
 																	<td class="formsTitle">
-																		<!-- SUSTITUIR DOCUMENTO -->
+																		<!-- SUSTITUIR DOCUMENTO ->
 																		<logic:equal value="false" property="readonly" name="defaultForm">
 																			<bean:message key="forms.tasks.replace.document" />:
 																		</logic:equal>
@@ -684,6 +709,7 @@
 															</table>
 
 														</c:if>
+														-->
 
 														<!-- BORRAR DOCUMENTO -->
 														<%-- Documento no bloqueado --%>
@@ -727,11 +753,14 @@
 
 													<c:if test="${(empty _lockState) || (_lockState == appConstants.documentLockStates.UNLOCK)}">
 
-														<!-- SUSTITUIR DOCUMENTO -->
+													<!-- [eCenpri-Felipe #467] Eliminados todos los botones de "Sustituir documento" -->
+													<!-- 
+
+														<!-- SUSTITUIR DOCUMENTO ->
 														<table border="0" cellspacing="0" cellpadding="0">
 															<tr>
 																<td class="formsTitle">
-																	<!-- SUSTITUIR DOCUMENTO -->
+																	<!-- SUSTITUIR DOCUMENTO ->
 																	<logic:equal value="false" property="readonly" name="defaultForm">
 																		<bean:message key="forms.tasks.replace.document" />:
 																	</logic:equal>
@@ -779,6 +808,7 @@
 																	border="0" height="5px" /></td>
 															</tr>
 														</table>
+														-->
 
 														<!-- DOCUMENTO FÍSICO CREADO -->
 														<logic:notEmpty name="defaultForm"
@@ -895,7 +925,24 @@
 											src='<ispac:rewrite href="img/pixel.gif"/>' border="0"
 											height="4px" /></td>
 									</tr>
-
+						<!--  [Manu Ticket #112] - INICIO - ALSIGM3 Mostrar el Código de verificación en la ventana de datos del documento -->
+									<tr>
+										<!-- Codigo cotejo -->
+										<td height="25" class="formsTitleB" valign="middle"
+											width="160px"><nobr><bean:message
+											key="documento.etiqueta.codVerificacion"/>:</nobr></td>
+										<td colspan="3" height="25"><html:text
+											property="property(SPAC_DT_DOCUMENTOS:COD_COTEJO)"
+											styleClass="inputReadOnly" size="40" readonly="false"/>
+										</td>
+									</tr>
+									
+									<tr>
+										<td colspan="4"><img
+											src='<ispac:rewrite href="img/pixel.gif"/>' border="0"
+											height="4px" /></td>
+									</tr>
+						<!--  [Manu Ticket #112] - FIN - ALSIGM3 Mostrar el Código de verificación en la ventana de datos del documento -->
 									<tr>
 										<!-- Fecha Aprobacion -->
 										<td height="20" class="formsTitleB" width="160px"><nobr><bean:message
@@ -908,6 +955,47 @@
 											image='<%= buttoncalendar %>' format="dd/mm/yyyy"
 											enablePast="true" /> </nobr></td>
 									</tr>
+									
+									<!-- MQE Ticket #176 añadir el motivo de rechazo y el motivo de reparo -->
+									<!-- INICIO [eCenpri-Felipe #467] Se muestran motivo rechazo o reparo sólo si no son vacíos 
+												Se pone el texto del motivo en color rojo -->
+									<!--<logic:notEmpty name="defaultForm"	property="property(SPAC_DT_DOCUMENTOS:MOTIVO_REPARO)">
+									<tr>
+										<td colspan="4"><img
+											src='<ispac:rewrite href="img/pixel.gif"/>' border="0"
+											height="8px" /></td>
+									</tr>
+									
+									<tr>										
+										<td height="25" class="formsTitleB" valign="middle"
+											width="160px"><nobr><bean:message
+											key="es.dipucr.reparo.motivo"/>:</nobr></td>
+										<td colspan="3" height="25"><html:textarea
+											property="property(SPAC_DT_DOCUMENTOS:MOTIVO_REPARO)"
+											styleClass="inputReadOnly" readonly="true" rows="3" cols="130" style="color:red"/>
+										</td>
+									</tr>
+									</logic:notEmpty>-->
+									
+									<logic:notEmpty name="defaultForm"	property="property(SPAC_DT_DOCUMENTOS:MOTIVO_RECHAZO)">
+									<tr>
+										<td colspan="4"><img
+											src='<ispac:rewrite href="img/pixel.gif"/>' border="0"
+											height="8px" /></td>
+									</tr>
+									<tr>
+										<td height="25" class="formsTitleB" valign="middle"
+											width="160px"><nobr><bean:message
+											key="es.dipucr.rechazo.motivo"/>:</nobr></td>
+										<td colspan="3" height="25"><html:textarea
+											property="property(SPAC_DT_DOCUMENTOS:MOTIVO_RECHAZO)"
+											styleClass="inputReadOnly" readonly="true" rows="3" cols="130" style="color:red"/>
+										</td>
+									</tr>
+									</logic:notEmpty>
+									<!-- FIN [eCenpri-Felipe #467] -->
+									<!--  MQE fin modificaciones ticket #176 -->
+
 
 									<tr>
 										<td colspan="4"><img
@@ -1287,7 +1375,7 @@
 
 															<table border="0" cellspacing="0" cellpadding="0">
 																<tr>
-																	<td class="formsTitleB" height="20px">
+																	<td class="formsTitleB" height="20px" width="100%" style="text-align:right">
 
 																		<c:set var="_method" value="${appConstants.actions.SELECT_OPTION}" />
 																		<jsp:useBean id="_method" type="java.lang.String" />
@@ -1325,22 +1413,22 @@
 
 										</logic:equal>
 
-											<logic:notEmpty name="defaultForm" property="property(SPAC_DT_DOCUMENTOS:INFOPAG)">
-
-											<c:if test="${(_signState == appConstants.signStates.PENDIENTE_CIRCUITO_FIRMA)&& empty sessionScope['defaultPortafirmas']}">
-
+									<!--MQE Modificaciones ticket #111-->
+										<logic:notEmpty name="defaultForm" property="property(SPAC_DT_DOCUMENTOS:INFOPAG)">
+<%-- 											<c:if test="${(_signState == appConstants.signStates.PENDIENTE_CIRCUITO_FIRMA) && empty sessionScope['defaultPortafirmas']}"> --%>
+											<c:if test="${((_signState == appConstants.signStates.PENDIENTE_CIRCUITO_FIRMA) || (_signState == appConstants.signStates.PENDIENTE_FIRMA))}">
+												<tr>
+														<td colspan="4" height="4px"
+															style="font-size:4px; border-bottom:1px dotted #5C65A0;">&nbsp;</td>
+												</tr>
 												<tr>
 														<td colspan="4" style="text-align:right">
-
 															<table border="0" cellspacing="0" cellpadding="0">
 																<tr>
-																	<td class="formsTitleB" height="20px">
-
-
+																<!--  MQE esto conectza con el portafirmas externo creo -->
+																	<!-- <td class="formsTitleB" height="20px">
 																		<c:set var="_metodo" value="${appConstants.actions.GET_STATE_DOCUMENT_IN_PORTAFIRMAS}" />
 																		<jsp:useBean id="_metodo" type="java.lang.String" />
-
-
 																		<ispac:linkframe
 																			target="workframe"
 																			action='<%="signDocument.do?method="+_metodo%>'
@@ -1349,29 +1437,48 @@
 																			showFrame="false" styleClass="tdlink" height="480"
 																			width="640" needToConfirm="true">
 																		</ispac:linkframe>
-
+																	</td>-->
+																	<!-- Fin de la concexión con el portafirmas externo -->
+																	<!--MQE Detalles del circuito de firma-->
+																	<td class="formsTitleB" height="20px">
+																		<ispac:linkframe
+																			target="workframe"
+																			action='<%="showSignDetailCustom.do?"%>'
+																			titleKey="forms.tasks.detailSign"
+																			inputField="SPAC_DT_DOCUMENTOS:ID"
+																			showFrame="true" styleClass="tdlink" height="480"
+																			width="640" needToConfirm="true">															
+																		</ispac:linkframe>																	
 																	</td>
 																	<td><img src='<ispac:rewrite href="img/pixel.gif"/>'
 																		border="0" width="10px" /></td>
+																    <!--MQE fin de la opción Detalles del circuito-->
+																	<!--MQE Anular el circuito de firma-->
+																	<td  class="alignRight">
+																		<ispac:linkframe
+																			target="workframe"
+																			action='<%="anularCircuitoFirma.do?method=anularCircuito"%>'
+																			titleKey="es.dipucr.forms.anularCircuitoFirma"
+																			inputField="SPAC_DT_DOCUMENTOS:ID"
+																			showFrame="true" styleClass="tdlink" height="480"
+																			width="640" needToConfirm="true">
+																		</ispac:linkframe>
+																	</td>
+																	<td>
+																		<img src='<ispac:rewrite href="img/pixel.gif"/>'border="0" width="10px" />
+																	</td>
 																</tr>
 															</table>
-
 														</td>
-													</tr>
-													<tr>
-														<td colspan="4" height="4px"
-															style="font-size:4px; border-bottom:1px dotted #5C65A0;">&nbsp;</td>
-													</tr>
-
+													</tr>													
 													<tr>
 														<td colspan="4"><img
 															src='<ispac:rewrite href="img/pixel.gif"/>' border="0"
 															height="4px" /></td>
 													</tr>
-
 												</c:if>
 											</logic:notEmpty>
-
+										<!--MQE fin de la opción anular circuito de firma-->
 
 										<logic:equal value="false" name="_localReadonly">
 
@@ -1384,23 +1491,16 @@
 
 															<table border="0" cellspacing="0" cellpadding="0">
 																<tr>
+																	<!--MQE Detalles del circuito de firma-->
 																	<td class="formsTitleB" height="20px">
-
-
 																		<ispac:linkframe
 																			target="workframe"
-																			action='<%="showSignDetail.do?"%>'
+																			action='<%="showSignDetailCustom.do?"%>'
 																			titleKey="forms.tasks.detailSign"
 																			inputField="SPAC_DT_DOCUMENTOS:ID"
 																			showFrame="true" styleClass="tdlink" height="480"
-																			width="640" needToConfirm="true">
-																			<ispac:parameter
-																			name="field"
-																			id="property(SPAC_DT_DOCUMENTOS:DESTINO_ID)"
-																			property="ID" />
-
-																		</ispac:linkframe>
-
+																			width="640" needToConfirm="true">															
+																		</ispac:linkframe>																	
 																	</td>
 																	<td><img src='<ispac:rewrite href="img/pixel.gif"/>'
 																		border="0" width="10px" /></td>
@@ -1510,78 +1610,83 @@
 
 											</logic:equal>
 											--%>
-
+						
 											<!-- DOCUMENTO SALIDA -->
-											<logic:equal name="defaultForm"
-												property="property(SPAC_DT_DOCUMENTOS:TP_REG)"
-												value="SALIDA">
-
-												<!-- DOCUMENTO FÍSICO CREADO -->
-												<logic:notEmpty name="defaultForm"
-													property="property(SPAC_DT_DOCUMENTOS:INFOPAG)">
-
-													<tr>
-														<td colspan="4" style="text-align:right">
-
-															<table border="0" cellspacing="0" cellpadding="0">
-																<tr>
-																	<td class="formsTitleB" height="20px">
-
-																		<!-- DOCUMENTO NO REGISTRADO -->
-																		<c:if test="${empty numRegistro && !empty sicresConnectorClass}">
-
-																			<!-- REGISTRAR SALIDA -->
-																			<div id="outputRegisterDiv" class="visible">
-
-																				<html:hidden property="property(SPAC_DT_DOCUMENTOS:NOMBRE)"/>
-																				<ispac:linkframe id="DOCUMENT_INSERT_OUTPUT_REGISTRY"
-																					target="workframe" action="insertOutputRegistry.do"
-																					titleKey="registro.salida.crear" showFrame="true"
-																					inputField="property(SPAC_DT_DOCUMENTOS:ID);property(SPAC_DT_DOCUMENTOS:DESTINO)"
-																					styleClass="tdlink" width="700" height="400"
-																					needToConfirm="true"
-																					>
-																				</ispac:linkframe>
-
-																			</div>
-																		</c:if>
-
-																		<!-- DOCUMENTO REGISTRADO QUE SE PUEDE SELLAR -->
-																		<c:if test="${!empty numRegistro && !empty sicresConnectorClass}">
-
-																			<!-- SELLADO -->
-																			<ispac:rewrite id="stampDocument"
-																				action="stampDocumentAction.do" />
-																			<a class="tdlink"
-																				onclick="javascript:ispac_needToConfirm=false;"
-																				href="javascript:confirmAction('<%=stampDocument%>?documentId=<bean:write name="defaultForm" property="property(SPAC_DT_DOCUMENTOS:ID)"/>', '<bean:message key="forms.task.confirm.stamp.document"/>', '<bean:message key="common.confirm"/>',  '<bean:message key="common.message.ok"/>' , '<bean:message key="common.message.cancel"/>');">
-																			<bean:message key="forms.tasks.mark.document" /> </a>
-																		</c:if>
-																	</td>
-																	<td><img src='<ispac:rewrite href="img/pixel.gif"/>'
-																		border="0" width="10px" /></td>
-																</tr>
-															</table>
-
-														</td>
-													</tr>
-
-													<tr>
-														<td colspan="4" height="4px"
-															style="font-size:4px; border-bottom:1px dotted #5C65A0;">&nbsp;</td>
-													</tr>
-
-													<tr>
-														<td colspan="4"><img
-															src='<ispac:rewrite href="img/pixel.gif"/>' border="0"
-															height="4px" /></td>
-													</tr>
-
-												</logic:notEmpty>
-												<!-- FIN DOCUMENTO FÍSICO CREADO -->
-
-											</logic:equal>
-											<!-- FIN DOCUMENTO SALIDA -->
+												<logic:equal name="defaultForm"
+													property="property(SPAC_DT_DOCUMENTOS:TP_REG)"
+													value="SALIDA">
+	
+													<!-- DOCUMENTO FÍSICO CREADO -->
+													<logic:notEmpty name="defaultForm"
+														property="property(SPAC_DT_DOCUMENTOS:INFOPAG)">
+												<!--  [Manu Ticket #111] - INICIO - ALSIGM3 No registrar de salida documentos NO firmados -->
+													<c:if test="${(_signState == appConstants.signStates.FIRMADO)}">
+	
+														<tr>
+															<td colspan="4" style="text-align:right">
+	
+																<table border="0" cellspacing="0" cellpadding="0">
+																	<tr>
+																		<td class="formsTitleB" height="20px">
+	
+																			<!-- DOCUMENTO NO REGISTRADO -->
+																			<c:if test="${empty numRegistro && !empty sicresConnectorClass}">
+	
+																				<!-- REGISTRAR SALIDA -->
+																				<div id="outputRegisterDiv" class="visible">
+	
+																					<html:hidden property="property(SPAC_DT_DOCUMENTOS:NOMBRE)"/>
+																					<ispac:linkframe id="DOCUMENT_INSERT_OUTPUT_REGISTRY"
+																						target="workframe" action="insertOutputRegistry.do"
+																						titleKey="registro.salida.crear" showFrame="true"
+																						inputField="property(SPAC_DT_DOCUMENTOS:ID);property(SPAC_DT_DOCUMENTOS:DESTINO)"
+																						styleClass="tdlink" width="700" height="400"
+																						needToConfirm="true"
+																						>
+																					</ispac:linkframe>
+	
+																				</div>
+																			</c:if>
+	
+																			<!-- DOCUMENTO REGISTRADO QUE SE PUEDE SELLAR -->
+																			<c:if test="${!empty numRegistro && !empty sicresConnectorClass}">
+	
+																				<!-- SELLADO -->
+																				<ispac:rewrite id="stampDocument"
+																					action="stampDocumentAction.do" />
+																				<a class="tdlink"
+																					onclick="javascript:ispac_needToConfirm=false;"
+																					href="javascript:confirmAction('<%=stampDocument%>?documentId=<bean:write name="defaultForm" property="property(SPAC_DT_DOCUMENTOS:ID)"/>', '<bean:message key="forms.task.confirm.stamp.document"/>', '<bean:message key="common.confirm"/>',  '<bean:message key="common.message.ok"/>' , '<bean:message key="common.message.cancel"/>');">
+																				<bean:message key="forms.tasks.mark.document" /> </a>
+																			</c:if>
+																		</td>
+																		<td><img src='<ispac:rewrite href="img/pixel.gif"/>'
+																			border="0" width="10px" /></td>
+																	</tr>
+																</table>
+	
+															</td>
+														</tr>
+														
+													</c:if>
+											<!-- [Manu Ticket #111] - FIN - ALSIGM3 No registrar de salida documentos NO firmados -->
+	
+														<tr>
+															<td colspan="4" height="4px"
+																style="font-size:4px; border-bottom:1px dotted #5C65A0;">&nbsp;</td>
+														</tr>
+	
+														<tr>
+															<td colspan="4"><img
+																src='<ispac:rewrite href="img/pixel.gif"/>' border="0"
+																height="4px" /></td>
+														</tr>
+	
+													</logic:notEmpty>
+													<!-- FIN DOCUMENTO FÍSICO CREADO -->
+	
+												</logic:equal>
+											<!-- FIN DOCUMENTO SALIDA -->						
 
 										</logic:equal>
 
@@ -2019,7 +2124,8 @@
 		</tr>
 		<tr>
 			<td height="4px"><img src='<ispac:rewrite href="img/pixel.gif"/>'
-				border="0" height="4px" /></td>
+				border="0" height="4px" colspan="3" /></td>
+				<!-- [eCenpri-Felipe #467] Añadido colspan="3" -->
 		</tr>
 
 

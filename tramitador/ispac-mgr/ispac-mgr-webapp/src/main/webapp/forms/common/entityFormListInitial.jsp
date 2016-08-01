@@ -29,9 +29,18 @@
 
 			document.defaultForm.action = document.defaultForm.action + '<bean:write scope="request" name="displayTagOrderParams" filter="false"/>';
 		</logic:notEmpty>
-		
+
 		document.defaultForm.submit();
-		ispac_needToConfirm = true;
+		
+		//INICIO [eCenpri-Felipe #735]
+		var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+		if (is_chrome){
+			ispac_needToConfirm = false;
+		}
+		else{
+			ispac_needToConfirm = true;
+		}
+		//FIN [eCenpri-Felipe #735]
 	}
 
 //--></script>

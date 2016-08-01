@@ -13,18 +13,22 @@ import ieci.tdw.ispac.audit.business.IspacAuditoriaManager;
 import ieci.tdw.ispac.audit.business.manager.impl.IspacAuditoriaManagerImpl;
 import ieci.tdw.ispac.audit.business.vo.AuditContext;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventInformeVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.bean.CollectionBean;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTReportOrgDAO;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.resp.Responsible;
+import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
 import ieci.tdw.ispac.ispaclib.util.FileReportManager;
 import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.ArrayUtils;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.DateUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigFilePathResolver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -79,7 +83,10 @@ public class ReportsAPI implements IReportsAPI {
 	 */
 	public ReportsAPI(ClientContext context) {
 		this.context = context;
-		this.auditoriaManager = new IspacAuditoriaManagerImpl();
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))
+    		this.auditoriaManager = new IspacAuditoriaManagerImpl();
 	}
 
 	/**
@@ -237,26 +244,31 @@ public class ReportsAPI implements IReportsAPI {
 	 * @param params
 	 */
 	private void auditGeneracionInforme(Map params) {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventInformeVO evento = new IspacAuditEventInformeVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setInformeEjecutado(params.toString());
-		evento.setFecha(new Date());
-		evento.setUser("");
-		evento.setIdUser("");
-
-		if (auditContext != null) {
-			evento.setIdUser(auditContext.getUserId());
-			evento.setUser(auditContext.getUser());
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la ejecución del informe");
-		auditoriaManager.audit(evento);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+	    	auditoriaManager = new IspacAuditoriaManagerImpl();
+	    		
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventInformeVO evento = new IspacAuditEventInformeVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setInformeEjecutado(params.toString());
+			evento.setFecha(new Date());
+			evento.setUser("");
+			evento.setIdUser("");
+	
+			if (auditContext != null) {
+				evento.setIdUser(auditContext.getUserId());
+				evento.setUser(auditContext.getUser());
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la ejecución del informe");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	/**
@@ -433,8 +445,10 @@ public class ReportsAPI implements IReportsAPI {
 			// Parámetros para la generación de informes
 			Map params = new HashMap();
 			params.put(JRParameter.REPORT_LOCALE, locale);
-			params.put("IMAGES_REPOSITORY_PATH",
-					parameters.get(ISPACConfiguration.IMAGES_REPOSITORY_PATH));
+			//Modificación para que tire de la carpeta skinEntidad
+			params.put("IMAGES_REPOSITORY_PATH", SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + OrganizationUser.getOrganizationUserInfo().getOrganizationId(), "/SIGEM_TramitacionWeb"));
+			/**Ticket 59 [ALSIGM3 incluir la carpeta report del SIGEM 2.0 dentro del proyecto SIGEM_TramitacionWeb del ALSIGM 3.0] **/
+			params.put("SUBREPORT_DIR",Thread.currentThread().getContextClassLoader().getResource("../../report").getPath());
 			params.put("NUM_EXP", numExp);
 			params.put("STAGE_ID", String.valueOf(stageId));
 			params.put("TASK_ID", String.valueOf(taskId));

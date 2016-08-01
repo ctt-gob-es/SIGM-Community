@@ -218,7 +218,7 @@ public class ISicresAuditHelper {
 		} else {
 			eventoAcceso.setUserHostName(getStringInfoIPHost(null));
 			eventoAcceso.setUserIp(getStringInfoIPHost(null));
-			log.warn("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría. Faltan los siguientes valores por auditar: userHost y userIp");
+			//log.warn("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría. Faltan los siguientes valores por auditar: userHost y userIp");
 		}
 
 		return eventoAcceso;
@@ -252,7 +252,7 @@ public class ISicresAuditHelper {
 		} else {
 			evento.setUserHostName(getStringInfoIPHost(null));
 			evento.setUserIp(getStringInfoIPHost(null));
-			log.warn("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría. Faltan los siguientes valores por auditar: userHost y userIp");
+			//log.warn("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría. Faltan los siguientes valores por auditar: userHost y userIp");
 		}
 
 		AuthenticationUser user = null;
@@ -276,7 +276,7 @@ public class ISicresAuditHelper {
 			}
 
 		} catch (TecDocException e) {
-			log.warn("ERROR EN LA AUDITORÍA. No están disponibles todos los datos. Faltan los siguientes valores por auditar: usuario y oficina");
+			//log.warn("ERROR EN LA AUDITORÍA. No están disponibles todos los datos. Faltan los siguientes valores por auditar: usuario y oficina");
 		}
 
 		evento.setIdRegistro(Integer.toString(folderId));
@@ -380,7 +380,7 @@ public class ISicresAuditHelper {
 		} else {
 			evento.setUserHostName(getStringInfoIPHost(null));
 			evento.setUserIp(getStringInfoIPHost(null));
-			log.warn("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría. Faltan los siguientes valores por auditar: userHost y userIp");
+			//log.warn("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría. Faltan los siguientes valores por auditar: userHost y userIp");
 		}
 
 		//Datos del registro
@@ -518,7 +518,7 @@ public class ISicresAuditHelper {
 		} else {
 			evento.setUserHostName(getStringInfoIPHost(null));
 			evento.setUserIp(getStringInfoIPHost(null));
-			log.warn("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría. Faltan los siguientes valores por auditar: userHost y userIp");
+			//log.warn("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría. Faltan los siguientes valores por auditar: userHost y userIp");
 		}
 
 		//Datos del registro
@@ -711,7 +711,7 @@ public class ISicresAuditHelper {
 		if(!StringUtils.isBlank(cadena)){
 			return cadena;
 		}else{
-			log.warn("No se ha podido obtener la información de IP/HOST");
+			//log.warn("No se ha podido obtener la información de IP/HOST");
 			return MENSAJE_NOT_FOUND_DATA_HOST_OR_IP;
 		}
 	}

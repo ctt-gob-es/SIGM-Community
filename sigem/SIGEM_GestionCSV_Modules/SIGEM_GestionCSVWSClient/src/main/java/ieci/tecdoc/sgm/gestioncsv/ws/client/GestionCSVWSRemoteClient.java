@@ -28,6 +28,7 @@ import java.util.GregorianCalendar;
 
 import org.apache.log4j.Logger;
 
+import es.ieci.tecdoc.fwktd.csv.core.service.ServicioDocumentos;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -497,6 +498,15 @@ public class GestionCSVWSRemoteClient implements ServicioGestionCSV {
 			logger.debug("getEntidadWS(Entidad) - end");
 		}
 		return oEntidad;
+	}
+
+	public ServicioDocumentos getServicioDocumentos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setServicioDocumentos(ServicioDocumentos servicioDocumentos) {
+		// TODO Auto-generated method stub
 	}
 
 }

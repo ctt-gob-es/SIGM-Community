@@ -18,6 +18,7 @@ import ieci.tecdoc.sgm.core.services.telematico.PeticionDocumentos;
 import ieci.tecdoc.sgm.core.services.telematico.Registro;
 import ieci.tecdoc.sgm.core.services.telematico.ServicioRegistroTelematico;
 import ieci.tecdoc.sgm.core.web.locale.LocaleFilterHelper;
+import ieci.tecdoc.sgm.rde.database.util.Utilities;
 import ieci.tecdoc.sgm.registro.form.FormularioSubsanacionForm;
 import ieci.tecdoc.sgm.registro.util.Definiciones;
 import ieci.tecdoc.sgm.registro.utils.Defs;
@@ -198,6 +199,9 @@ public class EnviarSubsanacionAction extends EnviarSolicitudAction {
 			   	int index2 = strSolicitud.indexOf("</"+Definiciones.SIGNED_DATA+">");
 			   	String strSolicitudFirma = strSolicitud.substring(index1 + ("<"+Definiciones.SIGNED_DATA+">").length(), index2);
 			   	session.setAttribute(Defs.DATOS_A_FIRMAR, formatear(Base64Util.encode(Goodies.fromStrToUTF8(strSolicitudFirma))));
+			    //[Manu Ticket #1090] - INICIO Poner en marcha la opción Consulta de Expedientes.
+			   	session.setAttribute(Defs.HASH_SOLICITUD, Utilities.getHash(xmlDocs.getBytes()));
+				//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
 	    	}
 	    	else {
 			   	byte[] solicitud = Base64Util.decode((String)session.getAttribute(Defs.REQUEST));

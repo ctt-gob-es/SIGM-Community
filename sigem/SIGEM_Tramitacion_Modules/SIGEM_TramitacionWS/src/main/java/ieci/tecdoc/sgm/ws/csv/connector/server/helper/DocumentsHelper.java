@@ -1,12 +1,12 @@
 package ieci.tecdoc.sgm.ws.csv.connector.server.helper;
 
-import ieci.tdw.ispac.api.entities.SpacEntities;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 
 public class DocumentsHelper {
 
@@ -30,8 +30,13 @@ public class DocumentsHelper {
 		// Consulta
 		String sqlQuery = "WHERE COD_COTEJO = '" + DBUtil.replaceQuotes(csv)
 				+ "'";
-		int count = context.getAPI().getEntitiesAPI().countEntities(
-				SpacEntities.SPAC_DT_DOCUMENTOS, sqlQuery);
+		
+		//INICIO [dipucr-Felipe #204] Recuperar documentos del histórico
+//		int count = context.getAPI().getEntitiesAPI().countEntities(
+//				SpacEntities.SPAC_DT_DOCUMENTOS, sqlQuery);
+		int count = DocumentosUtil.queryDocumentos(context, sqlQuery).toList().size();
+		//FIN [dipucr-Felipe #204]
+		
 		if (count > 0) {
 			existe = true;
 		}
@@ -59,8 +64,12 @@ public class DocumentsHelper {
 		// Consulta
 		String sqlQuery = "WHERE COD_COTEJO = '" + DBUtil.replaceQuotes(csv)
 				+ "'";
-		IItemCollection documents = context.getAPI().getEntitiesAPI()
-				.queryEntities(SpacEntities.SPAC_DT_DOCUMENTOS, sqlQuery);
+		//INICIO [dipucr-Felipe #204] Recuperar documentos del histórico
+//		IItemCollection documents = context.getAPI().getEntitiesAPI()
+//				.queryEntities(SpacEntities.SPAC_DT_DOCUMENTOS, sqlQuery);
+		IItemCollection documents = DocumentosUtil.queryDocumentos(context, sqlQuery);
+		//FIN [dipucr-Felipe #204] Recuperar documentos del histórico
+		
 		if (documents.next()) {
 
 			IItem document = documents.value();

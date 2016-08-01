@@ -19,11 +19,11 @@
 		<!-- Esta dependencia es obligatoria para la clase LdapName() ya que en la jdk1.4 no esta incluida
 			 para la jdk1.5 no es necesaria esta dependencia
 		 -->
-		<dependency>
+		<!--<dependency>
 			<groupId>com.sun.jndi</groupId>
 			<artifactId>ldap</artifactId>
 			<version>1.2.4</version>
-		</dependency>
+		</dependency>-->
 		
 		<!--  -->	
 	
@@ -129,7 +129,11 @@
 			<version>${fwktd.version}</version>
 		</dependency>
 		
-		
+		<dependency>
+			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-csv</groupId>
+			<artifactId>fwktd-csv-core</artifactId>
+			<version>${fwktd.csv.version}</version>
+		</dependency>		
 		
 		<dependency>
 			<groupId>javax.servlet</groupId>

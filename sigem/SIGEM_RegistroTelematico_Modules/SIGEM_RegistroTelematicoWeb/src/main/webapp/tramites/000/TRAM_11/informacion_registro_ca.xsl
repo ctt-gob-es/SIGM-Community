@@ -9,5 +9,5 @@
 	<xsl:variable name="lang.fechaPresentacion" select="'CAT-Fecha de presentación'"/>
 	<xsl:variable name="lang.fechaEfectiva" select="'CAT-Fecha efectiva'"/>
 	<xsl:variable name="lang.asunto" select="'CAT-Asunto'"/>
-	<xsl:variable name="lang.destino" select="CAT-'Destino'"/>
+	<xsl:variable name="lang.destino" select="'CAT-Destino'"/>
 </xsl:stylesheet>

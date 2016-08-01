@@ -253,6 +253,23 @@ public interface IWorklistAPI extends Serializable
 	 */
 	public IItemCollection getProcesses(int idStagePCD,InputStream processlistxml)
 			throws ISPACException;
+	
+	/**
+	 * [eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+	 * Devuelve una lista de expedientes de la fase indicada los cuales son responsabilidad
+	 * del usuario conectado. Opcionalmente los relaciona con otras entidades seg&uacute;n el
+	 * xml de definici&oacute;n de listas de procesos.
+	 *
+	 * La descripción del XML se encuentra en {@link getProcesses(int idStagePCD,String processlistfmtpath)}
+	 *
+	 * @param idStagePCD identificador de la fase
+	 * @param processlistxml stream con la definici&oacute;n del formato para la lista de procesos.
+	 * @param anio Filtro del año de inicio de los expedientes.
+	 * @return lista de expedientes
+	 * @throws ISPACException
+	 */
+	public IItemCollection getProcesses(int idStagePCD, InputStream processlistxml, int anio)
+			throws ISPACException;
 
 	/**
 	 * Devuelve una lista de subprocesos de la actividad indicada los cuales son responsabilidad

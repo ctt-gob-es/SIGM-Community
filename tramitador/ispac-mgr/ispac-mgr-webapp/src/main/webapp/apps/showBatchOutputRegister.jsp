@@ -77,13 +77,7 @@
 						</div>
 					
 						<!-- NÚMEROS DE REGISTRO -->
-						<p class="fila_sub clearfix">
-							<label class="mid"><nobr><bean:message key="registro.salida.registros.enBloque.ok"/></nobr></label>
-							<logic:iterate name="REGISTERS_OK" id="register">
-								<br/><br/><bean:write name="register"/>
-							</logic:iterate>
-						</p>
-						
+						<!-- [eCenpri-Manu Ticket #211] - ALSIGM3 Registro de salida, mostrar primero los erróneos. -->
 						<logic:notEmpty name="REGISTERS_KO">
 							<p class="fila_sub clearfix">
 								<label class="mid"><nobr><bean:message key="registro.salida.registros.enBloque.ko"/></nobr></label>
@@ -92,6 +86,14 @@
 								</logic:iterate>
 							</p>
 						</logic:notEmpty>
+						
+						<p class="fila_sub clearfix">
+							<label class="mid"><nobr><bean:message key="registro.salida.registros.enBloque.ok"/></nobr></label>
+							<logic:iterate name="REGISTERS_OK" id="register">
+								<br/><br/><bean:write name="register"/>
+							</logic:iterate>
+						</p>
+
 					</div> <!-- fin seccion ficha-->
 				</logic:notPresent>
 

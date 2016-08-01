@@ -159,6 +159,18 @@ public class DocumentoManagerImplTest extends BaseManagerTest {
 		documento.setFechaCSV(new Date());
 		documento.setDisponible(true);
 		documento.setAplicacion(getAplicacionManager().get(ID_APLICACION_EXISTENTE));
+		
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
+		documento.setNumeroRegistro("123456789");
+		documento.setFechaRegistro(new Date());
+		documento.setOrigenRegistro("ORIGEN");
+		documento.setDestinoRegistro("DESTINO");
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
+
 
 		return documento;
 	}

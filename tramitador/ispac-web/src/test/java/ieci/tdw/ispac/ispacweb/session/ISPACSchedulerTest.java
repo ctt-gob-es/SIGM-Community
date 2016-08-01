@@ -1,5 +1,8 @@
-package ieci.tdw.ispac.ispacweb.session;
+package java.ieci.tdw.ispac.ispacweb.session;
 
+
+
+import ieci.tdw.ispac.ispacweb.session.ISPACScheduler;
 import junit.framework.TestCase;
 
 /**

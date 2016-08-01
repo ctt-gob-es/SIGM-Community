@@ -41,16 +41,30 @@ public class CtosFirmaAction extends BaseDispatchAction {
         IInvesflowAPI invesFlowAPI = cct.getAPI();
 		ICatalogAPI catalogAPI= invesFlowAPI.getCatalogAPI();
 		
-		String sPcdId = request.getParameter("pcdId");
+		//INICIO [eCenpri-Felipe #592]
+		int entityId = Integer.parseInt(request.getParameter("entityId"));
+		String sRegId = request.getParameter("pcdId");
+
 		String ctofirmasId = request.getParameter("ctofirmasId");
 		
-		if (StringUtils.isNotBlank(sPcdId)) {
+		if (StringUtils.isNotBlank(sRegId)) {
 			
-			int pcdId = Integer.parseInt(sPcdId);
-
+			int regId = Integer.parseInt(sRegId);
+			
 			request.setAttribute("Refresh","true");
 	
-			catalogAPI.addCtoFirmas(pcdId, Integer.parseInt(ctofirmasId));
+			//INICIO [eCenpri-Felipe #592]
+			if (entityId == ICatalogAPI.ENTITY_P_PROCEDURE){ 
+				catalogAPI.addCtoFirmas(regId, Integer.parseInt(ctofirmasId));
+			}
+			else if (entityId == ICatalogAPI.ENTITY_P_TASK){
+				catalogAPI.addCtoFirmasTramite(regId, Integer.parseInt(ctofirmasId));
+			}
+			else{
+	        	throw new ISPACException("CtosFirmaAction.add:" +
+	        			"El entityId " + entityId + " no es válido");
+	        }
+			//FIN [eCenpri-Felipe #592]		
 		}
 
 		return mapping.findForward("closeIFrame");
@@ -79,11 +93,26 @@ public class CtosFirmaAction extends BaseDispatchAction {
         IInvesflowAPI invesFlowAPI = cct.getAPI();
 		ICatalogAPI catalogAPI= invesFlowAPI.getCatalogAPI();
 
-		int pcdId = Integer.parseInt(request.getParameter("regId"));
+//		[eCenpri-Felipe #592]
+		int regId = Integer.parseInt(request.getParameter("regId"));
 		String delId = request.getParameter("delId");
 		
-		if (delId != null) 
-			catalogAPI.dropCtoFirmas(pcdId, Integer.parseInt(delId));
+		//INICIO [eCenpri-Felipe #592]
+		int entityId = Integer.parseInt(request.getParameter("entityId"));
+		
+		if (delId != null){
+			if (entityId == ICatalogAPI.ENTITY_P_PROCEDURE){ 
+				catalogAPI.dropCtoFirmas(regId, Integer.parseInt(delId));
+			}
+			else if (entityId == ICatalogAPI.ENTITY_P_TASK){
+				catalogAPI.dropCtoFirmasTramite(regId, Integer.parseInt(delId));
+			}
+			else{
+	        	throw new ISPACException("CtosFirmaAction.add:" +
+	        			"El entityId " + entityId + " no es válido");
+	        }
+		}
+		//FIN [eCenpri-Felipe #592]
 		    		
 		return new ActionForward(new StringBuffer()
    	 			.append("/showProcedureEntity.do?method=ctosfirma&entityId=")

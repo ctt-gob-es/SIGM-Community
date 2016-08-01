@@ -14,6 +14,14 @@
 		<spring-ws.version>2.0.3.RELEASE</spring-ws.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
   <dependencies>
   		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
@@ -72,11 +80,11 @@
 		</dependency>
 
 		<!-- Librerias para JAXB1 -->
-	    <!-- <dependency>
+	    <dependency>
 	      <groupId>com.sun.xml.bind</groupId>
 	      <artifactId>jaxb-impl</artifactId>
-	      <version>1.0.6</version>
-	    </dependency>-->
+	      <version>2.1.13</version>
+	    </dependency>
 	    <dependency>
 	      <groupId>com.sun.xml.bind</groupId>
 	      <artifactId>jaxb1-impl</artifactId>
@@ -195,12 +203,12 @@
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
-			<artifactId>SIGEM_PagoElectronicoWSClient</artifactId>
+			<artifactId>sigem_pagoElectronicoWsClient</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
-			<artifactId>SIGEM_RegistroTelematico</artifactId>
+			<artifactId>sigem_registroTelematico</artifactId>
 			<version>${pom.version}</version>
 			<exclusions>
 				<exclusion>
@@ -222,6 +230,13 @@
 	      <artifactId>jaxen</artifactId>
 	      <version>1.1-beta-6</version>	      
 	    </dependency>
+
+		<dependency>
+	      <groupId>javax.transaction</groupId>
+	      <artifactId>jta</artifactId>
+	      <version>1.0.1B</version>
+	    </dependency>
+
 	    
 	    <!--  Conector Badajoz -->
 		<!-- <dependency>

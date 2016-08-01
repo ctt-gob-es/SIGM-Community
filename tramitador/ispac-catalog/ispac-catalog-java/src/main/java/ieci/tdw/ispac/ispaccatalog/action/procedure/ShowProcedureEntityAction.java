@@ -383,22 +383,39 @@ public class ShowProcedureEntityAction extends BaseDispatchAction {
 				ISecurityAPI.FUNC_INV_PROCEDURES_EDIT });
 
 		int entityId = Integer.parseInt(request.getParameter("entityId"));
-		int pcdId = Integer.parseInt(request.getParameter("regId"));
+//		int pcdId = Integer.parseInt(request.getParameter("regId")); [eCenpri-Felipe #592]
+		int regId = Integer.parseInt(request.getParameter("regId"));		
 
 		IClientContext cct = session.getClientContext();
 	    IInvesflowAPI invesFlowAPI = cct.getAPI();
 		ICatalogAPI catalogAPI= invesFlowAPI.getCatalogAPI();
 		
-		// Recoje los circuitos de firmas asociados al procedimiento
-		IItemCollection collection = catalogAPI.getCtosFirmasProcedure(pcdId);
-        List ctosfirmaList = CollectionBean.getBeanList(collection);
-        
-//        String query = "WHERE TIPO = 2 AND ID_CIRCUITO NOT IN ( SELECT ID_CIRCUITO FROM SPAC_P_CTOSFIRMA AS PCF " +
-//		"WHERE PCF.ID_CIRCUITO = SPAC_CTOS_FIRMA_CABECERA.ID_CIRCUITO AND PCF.ID_PCD =" +pcdId+")";
-        String query = "WHERE TIPO = 2 AND ID_CIRCUITO NOT IN ( SELECT ID_CIRCUITO FROM SPAC_P_CTOSFIRMA WHERE ID_PCD =" +pcdId+")";
-        
+		//INICIO [eCenpri-Felipe #592]
+		IItemCollection collection = null;
+		List ctosfirmaList = null;
+		String query = null;
+        if (entityId == ICatalogAPI.ENTITY_P_PROCEDURE){
+        	// Recoje los circuitos de firmas asociados al procedimiento
+    		collection = catalogAPI.getCtosFirmasProcedure(regId);
+        	query = "WHERE TIPO = 2 AND ID_CIRCUITO NOT IN " +
+        			"( SELECT ID_CIRCUITO FROM SPAC_P_CTOSFIRMA WHERE ID_PCD =" + regId + ")";
+        	request.setAttribute("isTask", "false");
+        }
+        else if (entityId == ICatalogAPI.ENTITY_P_TASK){
+        	collection = catalogAPI.getCtosFirmasTaskPcd(regId);
+        	query = "WHERE TIPO = 2 AND ID_CIRCUITO NOT IN " +
+					"( SELECT ID_CIRCUITO FROM SPAC_P_CTOSFIRMATRAMITE WHERE ID_TRAM_PCD =" + regId + ")";
+        	request.setAttribute("isTask", "true");
+        }
+        else{
+        	logger.error("El entityId no es válido: " + entityId);
+        	return mapping.findForward("empty");
+        }
+        ctosfirmaList = CollectionBean.getBeanList(collection);
+        //FIN [eCenpri-Felipe #592]
+		
 		request.setAttribute("CtosFirmaList", ctosfirmaList);
-		request.setAttribute("pcdId", String.valueOf(pcdId));
+		request.setAttribute("pcdId", String.valueOf(regId)); // [eCenpri-Felipe #592]
 		request.setAttribute("entityId", String.valueOf(entityId));
 		request.setAttribute("sqlquery", query);
 
@@ -1161,5 +1178,92 @@ public class ShowProcedureEntityAction extends BaseDispatchAction {
 		}
 		
 		return producerList;
+	}
+	
+	/**
+	 * [Manu Ticket #909] SIGEM Pestaña Datos Específicos del Trámite
+	 * Muestra los Datos Específicos
+	 * @param mapping
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return
+	 * @throws ISPACException
+	 */
+	public ActionForward datosEspecif(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response,
+			SessionAPI session) throws ISPACException {
+		
+		int entityId = ICatalogAPI.ENTITY_P_TRAM_DATOSESPECIFICOS;
+		int regId = Integer.parseInt(request.getParameter("regId"));
+		ClientContext cct = session.getClientContext();
+		IInvesflowAPI invesFlowAPI = cct.getAPI();
+		ICatalogAPI catalogAPI= invesFlowAPI.getCatalogAPI();				
+		
+		int keyId = -1;
+		IItem datos = null;
+        datos = catalogAPI.getDatosEspecificosTramite(regId);
+
+        keyId = datos.getInt("ID");        	
+        String plantilla_defecto = datos.getString("PLANTILLA_DEFECTO");
+        String otros_datos = datos.getString("OTROS_DATOS");
+	
+		setEntityAppInForm(request, session, (EntityForm) form, entityId, keyId);
+		
+		request.setAttribute("pcdId", String.valueOf(regId));
+		request.setAttribute("entityId", String.valueOf(entityId));
+		request.setAttribute("regId", String.valueOf(regId));
+		request.setAttribute("keyId", String.valueOf(keyId));
+		request.setAttribute("plantilla_defecto", plantilla_defecto);
+		request.setAttribute("otros_datos", otros_datos);
+
+        return mapping.findForward("datosEspecif");
+	}
+	
+	/**
+	 * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	 * Muestra el manual de usuario.
+	 * @param mapping
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return
+	 * @throws ISPACException
+	 */
+	public ActionForward manualUsuario(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response,
+			SessionAPI session) throws ISPACException {
+		
+		// Comprobar si el usuario tiene asignadas las funciones adecuadas
+		FunctionHelper.checkFunctions(request, session.getClientContext(), new int[] {
+				ISecurityAPI.FUNC_INV_PROCEDURES_READ,
+				ISecurityAPI.FUNC_INV_PROCEDURES_EDIT });
+
+		int entityId = Integer.parseInt(request.getParameter("entityId"));
+		int id = Integer.parseInt(request.getParameter("regId"));
+		
+		ClientContext cct = session.getClientContext();
+		
+	    IInvesflowAPI invesFlowAPI = cct.getAPI();
+		IProcedureAPI procedureAPI = invesFlowAPI.getProcedureAPI();
+		
+		// Recoje los informes asociados al procedimiento
+		IItemCollection collection = procedureAPI.getPManualesUsuario(id, getTipoObj(entityId));
+        List manualesUsuaroList = CollectionBean.getBeanList(collection);
+        
+		request.setAttribute("manualesUsuarioList", manualesUsuaroList);
+		request.setAttribute("TpObj", String.valueOf(getTipoObj(entityId)));
+		request.setAttribute("pcdId", String.valueOf(id));
+		request.setAttribute("entityId", String.valueOf(entityId));
+
+		if (FunctionHelper.userHasFunction(request, session.getClientContext(), ISecurityAPI.FUNC_INV_PROCEDURES_EDIT)) {
+			setFormatter(request, "Formatter", "/formatters/manualesUsuario/manualesusuarioformatter.xml");
+		} else {
+			setFormatter(request, "Formatter", "/formatters/manualesUsuario/manualesusuarioreadonlyformatter.xml");
+		}
+
+        return mapping.findForward("manualUsuario");
 	}
 }

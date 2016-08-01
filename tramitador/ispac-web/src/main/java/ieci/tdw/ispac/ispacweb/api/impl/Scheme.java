@@ -1288,6 +1288,11 @@ public class Scheme implements IScheme
         context = contHeaderFact.createStageHeader(state);
         if (context != null) list.add(context);
         
+        //INICIO [eCenpri-Felipe #467]
+        context = contHeaderFact.createExpedientHeader(state);
+        if (context != null) list.add(context);
+        //FIN [eCenpri-Felipe #467]
+        
         return new ListCollection(list);
     }
     public IItemCollection getContextHeader(IState state, Locale locale, MessageResources resources, String stagePcdId)
@@ -1319,6 +1324,11 @@ public class Scheme implements IScheme
         
         context = contHeaderFact.createStageHeader(state);
         if (context != null) list.add(context);
+        
+        //INICIO [eCenpri-Felipe #467]
+        context = contHeaderFact.createExpedientHeader(state);
+        if (context != null) list.add(context);
+        //FIN [eCenpri-Felipe #467]
         
         return new ListCollection(list);
     }

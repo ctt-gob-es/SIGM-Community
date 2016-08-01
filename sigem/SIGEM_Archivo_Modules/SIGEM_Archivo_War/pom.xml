@@ -10,6 +10,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>war</packaging>
 	<description>SIGEM Archivo War</description>
+	
+	<repositories>
+	
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<properties>
 		<warName>SIGEM_ArchivoWeb</warName>
@@ -20,7 +32,7 @@
 		<version_ispac>Version Ispac: ${ispac.version}</version_ispac>
 		<jstl.version>1.0.2</jstl.version>
 		<standard.version>1.0.4</standard.version>
-	</properties>
+	</properties>	
 
 	<build>
 
@@ -58,6 +70,7 @@
 									<groupId>es.ieci.tecdoc.sigem</groupId>
 									<artifactId>sigem_archivoResources</artifactId>
 									<version>${pom.version}</version>
+									<classifier>configurableSigem</classifier>
 									<type>zip</type>
 								</artifactItem>
 							</artifactItems>
@@ -102,6 +115,7 @@
 									<groupId>es.ieci.tecdoc.sigem</groupId>
 									<artifactId>sigem_archivoWebapp</artifactId>
 									<version>${pom.version}</version>
+									<classifier>configurableSigem</classifier>
 									<type>zip</type>
 								</artifactItem>
 							</artifactItems>
@@ -129,6 +143,7 @@
 									<groupId>es.ieci.tecdoc.sigem</groupId>
 									<artifactId>sigem_archivoWebapp</artifactId>
 									<version>${pom.version}</version>
+									<classifier>configurableSigem</classifier>
 									<type>zip</type>
 								</artifactItem>
 							</artifactItems>
@@ -151,7 +166,7 @@
 						<goals>
 							<goal>run</goal>
 						</goals>
-						<configuration>
+						<configuration>						
 			             	<pathFicherosRecursos>
 			             		<param>${basedir}/target/resources-gen/resources/ApplicationResources.properties</param>
 			             		<param>${basedir}/target/resources-gen/resources/ApplicationResources_gl.properties</param>
@@ -170,6 +185,7 @@
 			             		<param>${basedir}/../SIGEM_Archivo_Specific_Resources/ApplicationResources_eu.properties</param>
 			             		<param>${basedir}/../SIGEM_Archivo_Specific_Resources/ApplicationResources_eu_ES.properties</param>
 			             	</pathFicherosEspecificos>
+			             	<source>${project.basedir}/lib/maven-generate-resources-archivo-plugin-1.0.jar</source>
 						</configuration>
 					</execution>
 				</executions>
@@ -229,6 +245,22 @@
   			<version>${pom.version}</version>
   			<classifier>configurableSigem</classifier>
   			<type>zip</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>sigem_archivoResources</artifactId>
+			<version>${pom.version}</version>
+			<classifier>configurableSigem</classifier>
+			<type>zip</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>sigem_archivoWebapp</artifactId>
+			<version>${pom.version}</version>
+			<classifier>configurableSigem</classifier>
+			<type>zip</type>
 		</dependency>
 	</dependencies>
 </project>

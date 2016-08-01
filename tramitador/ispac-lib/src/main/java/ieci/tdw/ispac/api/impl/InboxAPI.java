@@ -27,6 +27,8 @@ import ieci.tdw.ispac.audit.business.vo.AuditContext;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventAvisoConsultaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventRegDistConsultaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventRegDistModificacionVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
@@ -81,7 +83,8 @@ public class InboxAPI implements IInboxAPI {
 
 	private IRegisterAPI registerAPI;
 
-	private final IspacAuditoriaManager auditoriaManager;
+	//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+	private IspacAuditoriaManager auditoriaManager;
 
 	/**
 	 * Constructor.
@@ -91,7 +94,10 @@ public class InboxAPI implements IInboxAPI {
 	public InboxAPI(ClientContext context) throws ISPACException {
 		this.m_ctx = context;
 		registerAPI = context.getAPI().getRegisterAPI();
-		auditoriaManager = new IspacAuditoriaManagerImpl();
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
 	}
 
 	/* (non-Javadoc)
@@ -214,36 +220,41 @@ public class InboxAPI implements IInboxAPI {
 	 * @throws ISPACException
 	 */
 	private void auditConsultaAvisos(IItemCollection result) throws ISPACException {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventAvisoConsultaVO evento = new IspacAuditEventAvisoConsultaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		Iterator iterResults = result.iterator();
-		Map avisos = new HashMap();
-		while (iterResults.hasNext()) {
-			IItem item = (IItem) iterResults.next();
-			avisos.put(item.getString("SPAC_AVISOS_ELECTRONICOS:ID_AVISO"), item.getXmlValues());
-		}
-
-		evento.setAvisos(avisos);
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la consulta del aviso");
-		auditoriaManager.audit(evento);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+	    		
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventAvisoConsultaVO evento = new IspacAuditEventAvisoConsultaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			Iterator iterResults = result.iterator();
+			Map avisos = new HashMap();
+			while (iterResults.hasNext()) {
+				IItem item = (IItem) iterResults.next();
+				avisos.put(item.getString("SPAC_AVISOS_ELECTRONICOS:ID_AVISO"), item.getXmlValues());
+			}
+	
+			evento.setAvisos(avisos);
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la consulta del aviso");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 
@@ -267,6 +278,7 @@ public class InboxAPI implements IInboxAPI {
 		Intray intray = registerAPI.getIntray(register);
 		List intrays = new ArrayList();
 		intrays.add(intray);
+
 		auditarConsultaRegistrosDistribuidos(intrays);
 		return intray;
 	}
@@ -284,6 +296,8 @@ public class InboxAPI implements IInboxAPI {
 		// TODO: Auditar la consulta de registros distribuidos
 
 		List intrays = registerAPI.getIntrays();
+		if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))
+
 		auditarConsultaRegistrosDistribuidos(intrays);
 
 		return intrays;
@@ -294,38 +308,42 @@ public class InboxAPI implements IInboxAPI {
 	 * @param intrays
 	 */
 	private void auditarConsultaRegistrosDistribuidos(List intrays) {
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
 
-		Map registrosDistribuidosMap = new HashMap();
-		Iterator iterIntrays = intrays.iterator();
-		while (iterIntrays.hasNext()) {
-			Intray intray = (Intray) iterIntrays.next();
-			intray.getId();
-			registrosDistribuidosMap.put(intray.getId(), intray.toString());
-		}
-
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventRegDistConsultaVO evento = new IspacAuditEventRegDistConsultaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setUserHostName("");
-		evento.setUserIp("");
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setRegistros(registrosDistribuidosMap);
-
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la consulta de los registros distribuidos");
-		auditoriaManager.audit(evento);
+			Map registrosDistribuidosMap = new HashMap();
+			Iterator iterIntrays = intrays.iterator();
+			while (iterIntrays.hasNext()) {
+				Intray intray = (Intray) iterIntrays.next();
+				intray.getId();
+				registrosDistribuidosMap.put(intray.getId(), intray.toString());
+			}
+	
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventRegDistConsultaVO evento = new IspacAuditEventRegDistConsultaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setRegistros(registrosDistribuidosMap);
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la consulta de los registros distribuidos");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 	/**
@@ -333,28 +351,32 @@ public class InboxAPI implements IInboxAPI {
 	 * @param intrays
 	 */
 	private void auditarModificacionRegistroDistribuidos(String intrayId) {
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
 
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-
-		IspacAuditEventRegDistModificacionVO evento = new IspacAuditEventRegDistModificacionVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setUserHostName("");
-		evento.setUserIp("");
-		evento.setUser("");
-		evento.setIdUser("");
-		evento.setIdRegistroDistribuido(intrayId);
-		evento.setNewValue("ARCHIVADO");
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la consulta de los registros distribuidos");
-		auditoriaManager.audit(evento);
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+	
+			IspacAuditEventRegDistModificacionVO evento = new IspacAuditEventRegDistModificacionVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			evento.setUser("");
+			evento.setIdUser("");
+			evento.setIdRegistroDistribuido(intrayId);
+			evento.setNewValue("ARCHIVADO");
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la consulta de los registros distribuidos");
+			auditoriaManager.audit(evento);
+    	}
 	}
 
 

@@ -13,25 +13,49 @@
 		<link rel="stylesheet" href='<ispac:rewrite href="css/estilos.css"/>'/>
 		<!--[if lte IE 5]>
 			<link rel="stylesheet" type="text/css" href='<ispac:rewrite href="css/estilos_ie5.css"/>'/>
-		<![endif]-->
+		<![endif]-->	
 
 		<!--[if IE 6]>
 			<link rel="stylesheet" type="text/css" href='<ispac:rewrite href="css/estilos_ie6.css"/>'>
-		<![endif]-->
+		<![endif]-->	
 
-		<!--[if gte IE 7]>
+		<!--[if IE 7]>
 			<link rel="stylesheet" type="text/css" href='<ispac:rewrite href="css/estilos_ie7.css"/>'>
 		<![endif]-->
-
+	
    	<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery-1.3.2.min.js"/>'></script>
  	<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery-ui-1.7.2.custom.min.js"/>'></script>
  	<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery.alerts.js"/>'></script>
 	<script type="text/javascript" src='<ispac:rewrite href="../scripts/utilities.js"/>'></script>
-	<ispac:javascriptLanguage/>
+	
+	<script type="text/javascript">
+	
+		
 
+		$(document).ready(function() {
+			$("a").click(function() {
+				muestraEnProceso();
+			});	
+
+		});
+		function muestraEnProceso(){
+			if(document.getElementById('btCircFirma')!=null){
+				document.getElementById('btCircFirma').style.display='none';
+				}
+			if(document.getElementById('btCircFirmaRojo')!=null){
+				document.getElementById('btCircFirmaRojo').style.display='none';
+				}
+			
+			document.getElementById('etiqueta').style.display='';
+			document.getElementById('formulario').style.display='none';
+			document.getElementById('espere').style.display='';
+		}
+		
+	</script>
+	
 	</head>
 	<body>
-
+	
 		<div id="contenido" class="move">
 		<div class="ficha">
 			<div class="encabezado_ficha">
@@ -52,43 +76,43 @@
 						<div class="infoError">
 							<bean:message key="forms.errors.messagesPresent" />
 						</div>
-					</logic:messagesPresent>
+					</logic:messagesPresent> 
 					<p>
-
-					<c:set var="action"><c:out value="${requestScope.action}" default="signDocument.do"/></c:set>
-					
-					<c:choose>
-						<c:when test="${!empty requestScope[appConstants.actions.SIGN_CIRCUIT_LIST]}">
-							<c:forEach items="${requestScope[appConstants.actions.SIGN_CIRCUIT_LIST]}" var="circuit">
-							<c:choose>
-								<c:when test="${!empty sessionScope['defaultPortafirmas']}">
+					<c:choose>		
+						<c:when test="${!empty requestScope[appConstants.actions.SIGN_CIRCUIT_LIST]
+										or !empty requestScope[appConstants.actions.SIGN_CIRCUITTRAM_LIST]}">
+							<c:forEach items="${requestScope[appConstants.actions.SIGN_CIRCUITTRAM_LIST]}" var="circuit">
 									<c:url var="_link" value="${action}">
 										<c:param name="method" value="${appConstants.actions.INIT_SIGN_CIRCUIT}"/>
 										<c:param name="${appConstants.actions.SIGN_CIRCUIT_ID}"><bean:write name="circuit" property="property(ID_CIRCUITO)" /></c:param>
 									</c:url>
-									<a class="linkRight" href='<c:out value="${_link}"/>'><bean:write name="circuit" property="property(DESCRIPCION)"/></a><br/><br/>
-								</c:when>
-								<c:otherwise>
+									<a class="linkRight" style="color:#990100" id="btCircFirmaRojo" href='<c:out value="${_link}"/>'>* <bean:write name="circuit" property="property(DESCRIPCION)"/></a><br/><br/>
+							</c:forEach>
+							<c:forEach items="${requestScope[appConstants.actions.SIGN_CIRCUIT_LIST]}" var="circuit">
 									<c:url var="_link" value="${action}">
-										<c:param name="method" value="${appConstants.actions.SET_PROPERTIES_SIGN_CIRCUIT}"/>
+										<c:param name="method" value="${appConstants.actions.INIT_SIGN_CIRCUIT}"/>
 										<c:param name="${appConstants.actions.SIGN_CIRCUIT_ID}"><bean:write name="circuit" property="property(ID_CIRCUITO)" /></c:param>
 									</c:url>
-
-									<a class="linkRight" href='<c:out value="${_link}"/>'><bean:write name="circuit" property="property(DESCRIPCION)"/></a><br/><br/>
-
-								</c:otherwise>
-								</c:choose>
+									<a class="linkRight" id="btCircFirma" href='<c:out value="${_link}"/>'><bean:write name="circuit" property="property(DESCRIPCION)"/></a><br/><br/>
 							</c:forEach>
 						</c:when>
 						<c:otherwise>
 							<label class="popUp"><bean:message key="sign.document.circuits.empty"/></label>
 							<br/><br/>
 						</c:otherwise>
-
+									
 					</c:choose>
 					</p>
 				</div>
 				</form>
+				
+				<div id='etiqueta'
+					style='display: none; text-align: center; color: #0033FF; font-size: 13px'
+					class="seccion_ficha">
+					<label>En proceso...</label> <br />
+					<br /> <img src="apps/sign/ajax-loader.gif" alt='En proceso...' />
+				</div>
+				
 	   		</div>
 		</div>
 	</div>

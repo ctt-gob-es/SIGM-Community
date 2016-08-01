@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Version 1.0 Version inicial -->
+<!-- Version 2.0 Se incluyen las operaciones de consulta -->
+<wsdl:definitions 
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:tns="http://www.boe.es/ServicioNotificaciones/" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	name="ServicioNotificaciones" 
+	targetNamespace="http://www.boe.es/ServicioNotificaciones/">
+	
+	<wsdl:documentation>WSDL del servicio WEB de envio de anuncios de notificacion para publicar en el 
+	                    Tablon Edictal Unico
+	</wsdl:documentation>
+	
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://www.boe.es/ServicioNotificaciones/">
+		
+			<xsd:element name="Envio" type="tns:Envio">
+				<xsd:annotation>
+					<xsd:documentation>Entrada del servicio de proceso de envios. Informacion de los anuncios para publicar</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			
+			<xsd:element name="IdEnvio" type="tns:IdEnvio">
+				<xsd:annotation>
+					<xsd:documentation>Entrada del servicio de consulta de envios. Identificador del envio a publicar</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			
+			<xsd:element name="IdAnuncio" type="tns:IdAnuncio">
+				<xsd:annotation>
+					<xsd:documentation>Entrada del servicio de consulta de anuncios. Identificador del anuncio a publicar</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			
+			<xsd:element name="Respuesta" type="tns:Respuesta">
+				<xsd:annotation>
+					<xsd:documentation>Respuesta del servicio. Indicara el resultado de la operacion</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			
+			<xsd:complexType name="Respuesta">
+                <xsd:annotation>
+                	<xsd:documentation>Resultado de la operacion</xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+					<xsd:element name="fecha" type="tns:Fecha"></xsd:element>
+					<xsd:element name="resultado" type="tns:Resultado"></xsd:element>
+					<xsd:element name="idEnvio" type="tns:IdEnvio"	maxOccurs="1" minOccurs="0"></xsd:element>
+					<xsd:element name="anuncios" type="tns:ListaAnuncios" maxOccurs="1"	minOccurs="0"></xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ListaAnuncios">
+                <xsd:annotation>
+                	<xsd:documentation>Lista de anuncios que se quieren publicar</xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+					<xsd:element name="anuncio" type="tns:Anuncio" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="Anuncio">
+                <xsd:annotation>
+                	<xsd:documentation>Datos de un anuncio</xsd:documentation>
+                </xsd:annotation>
+            
+                <xsd:sequence>
+                	<xsd:element name="idBoe" type="tns:IdAnuncio"
+                		maxOccurs="1" minOccurs="0">
+                	</xsd:element>
+                	<xsd:element name="avisos" type="tns:ListaAvisos"
+                		maxOccurs="unbounded" minOccurs="0">
+                	</xsd:element>
+                	<xsd:element name="errores" type="tns:ListaErrores"
+                		maxOccurs="unbounded" minOccurs="0">
+                	</xsd:element>
+                	<xsd:element name="estadoBoe" type="tns:Estado"
+                		maxOccurs="1" minOccurs="0">
+                	</xsd:element>
+
+                	<xsd:element name="nbo" type="tns:NBO" maxOccurs="1"
+                		minOccurs="0">
+                	</xsd:element>
+                	<xsd:element name="cve" type="tns:CVE" maxOccurs="1"
+                		minOccurs="0">
+                	</xsd:element>
+                	<xsd:element name="url" type="xsd:anyURI"
+                		maxOccurs="1" minOccurs="0">
+                	</xsd:element>
+                	<xsd:element name="fechaPub" type="tns:Fecha"
+                		maxOccurs="1" minOccurs="0">
+                	</xsd:element>
+                </xsd:sequence>
+                <xsd:attribute name="id" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>Identificador del anuncio dentro del SI de la entidad remitente</xsd:documentation>
+					</xsd:annotation></xsd:attribute>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ListaAvisos">
+                <xsd:annotation>
+                	<xsd:documentation>Lista de avisos que se han producido durante el proceso de un anuncio</xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+					<xsd:element name="aviso" type="tns:Aviso" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ListaErrores">
+                <xsd:annotation>
+                	<xsd:documentation>Lista de errores que se han producido durante el proceso de un anuncio</xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+					<xsd:element name="error" type="tns:Error"
+					maxOccurs="unbounded" minOccurs="1"></xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="Aviso">
+                <xsd:annotation>
+                	<xsd:documentation>Aviso acerca del proceso del anuncio. No impide que el anuncio se pueda procesar</xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string"></xsd:element>
+					<xsd:element name="descripcion" type="xsd:string"></xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="Error">
+                <xsd:annotation>
+                	<xsd:documentation>Error ocurrido durante el proceso del anuncio. Impide que se procese todo el envio</xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string"></xsd:element>
+					<xsd:element name="descripcion" type="xsd:string"></xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>			<xsd:simpleType name="Envio">
+                <xsd:annotation>
+                	<xsd:documentation>XML codificado en Base 64</xsd:documentation>
+                </xsd:annotation>
+                <xsd:restriction base="xsd:string"></xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:complexType name="Resultado">
+                <xsd:annotation>
+                	<xsd:documentation>Resultado de un envio</xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+					<xsd:element name="codigo" type="xsd:string"></xsd:element>
+					<xsd:element name="descripcion" type="xsd:string"></xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:simpleType name="IdEnvio">
+                <xsd:annotation>
+                	<xsd:documentation>Identificador del envio para la AEBOE</xsd:documentation>
+                </xsd:annotation>
+                <xsd:restriction base="xsd:string"></xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:simpleType name="IdAnuncio">
+                <xsd:annotation>
+                	<xsd:documentation>Identificador del anuncio para la AEBOE</xsd:documentation>
+                </xsd:annotation>
+                <xsd:restriction base="xsd:string"></xsd:restriction>
+			</xsd:simpleType>
+
+			<xsd:simpleType name="Fecha">
+                <xsd:annotation>
+                	<xsd:documentation>Fecha de recepcion del envio. Formato AAAA-MM-DDTHH:MM:SS</xsd:documentation>
+                </xsd:annotation>
+                <xsd:restriction base="xsd:string"></xsd:restriction>
+			</xsd:simpleType>        
+            <xsd:simpleType name="Estado">
+            	<xsd:restriction base="xsd:string">
+            	</xsd:restriction>
+            </xsd:simpleType>
+		
+            <xsd:simpleType name="NBO">
+            	<xsd:restriction base="xsd:string"></xsd:restriction>
+            </xsd:simpleType>		
+        
+            <xsd:simpleType name="CVE">
+            	<xsd:restriction base="xsd:string"></xsd:restriction>
+            </xsd:simpleType>
+            
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="envioAnunciosRequest">
+		<wsdl:part element="tns:Envio" name="Envio"/>
+	</wsdl:message>
+	<wsdl:message name="envioAnunciosResponse">
+		<wsdl:part element="tns:Respuesta" name="Respuesta"/>
+	</wsdl:message>
+
+	<wsdl:message name="consultaEnvioRequest">
+		<wsdl:part element="tns:IdEnvio"  name="IdEnvio" ></wsdl:part>
+	</wsdl:message>
+	
+	<wsdl:message name="consultaEnvioResponse">
+		<wsdl:part element="tns:Respuesta" name="Respuesta"/>
+	</wsdl:message>
+	
+	<wsdl:message name="consultaAnuncioRequest">
+		<wsdl:part element="tns:IdAnuncio"  name="IdAnuncio" ></wsdl:part>
+	</wsdl:message>
+	
+	<wsdl:message name="consultaAnuncioResponse">
+		<wsdl:part element="tns:Respuesta" name="Respuesta"/>
+	</wsdl:message>
+	
+	<wsdl:portType name="ServicioNotificaciones">
+		<wsdl:operation name="envioAnuncios">
+			<wsdl:input message="tns:envioAnunciosRequest"/>
+			<wsdl:output message="tns:envioAnunciosResponse"/>		</wsdl:operation>		<wsdl:operation name="consultaEnvio">			<wsdl:input message="tns:consultaEnvioRequest"></wsdl:input>			<wsdl:output message="tns:consultaEnvioResponse"></wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="consultaAnuncio">
+			<wsdl:input message="tns:consultaAnuncioRequest"></wsdl:input>
+			<wsdl:output message="tns:consultaAnuncioResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="ServicioNotificacionesSOAP"
+		type="tns:ServicioNotificaciones">
+
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		
+		<wsdl:operation name="envioAnuncios">
+
+			<soap:operation
+				soapAction="http://www.boe.es/ServicioNotificaciones/envioAnuncios" />
+			<wsdl:input>
+
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="consultaEnvio">
+
+			<soap:operation
+				soapAction="http://www.boe.es/ServicioNotificaciones/consultaEnvio" />
+			<wsdl:input>
+
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="consultaAnuncio">
+
+			<soap:operation
+				soapAction="http://www.boe.es/ServicioNotificaciones/consultaAnuncio" />
+			<wsdl:input>
+
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="ServicioNotificacionesBOE">
+		<wsdl:port binding="tns:ServicioNotificacionesSOAP" name="ServicioNotificacionesPort">
+			<soap:address location="https://extranet.boe.es/notificaciones/ws/index.php"/>  
+		</wsdl:port>
+	</wsdl:service>
+	
+</wsdl:definitions>

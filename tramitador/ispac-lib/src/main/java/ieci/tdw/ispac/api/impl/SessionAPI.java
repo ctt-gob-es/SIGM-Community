@@ -9,6 +9,8 @@ import ieci.tdw.ispac.audit.business.IspacAuditoriaManager;
 import ieci.tdw.ispac.audit.business.manager.impl.IspacAuditoriaManagerImpl;
 import ieci.tdw.ispac.audit.business.vo.AuditContext;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventAccesoAplicacionVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.directory.IDirectoryEntry;
@@ -39,10 +41,13 @@ public class SessionAPI implements ISessionAPI {
 
 	private final SessionMgr mgr;
 	private Session sesion;
-	private IspacAuditoriaManager auditoriaManager = new IspacAuditoriaManagerImpl();
+	private IspacAuditoriaManager auditoriaManager;
 
 	public SessionAPI() {
 		mgr = new SessionMgr();
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
 	}
 
 	public IDirectoryEntry validate(String user, String password) throws ISPACException {
@@ -60,34 +65,37 @@ public class SessionAPI implements ISessionAPI {
 	 * @param user
 	 */
 	private void auditLogin(String user) {
-		IspacAuditEventAccesoAplicacionVO eventoAcceso = new IspacAuditEventAccesoAplicacionVO();
-		
-		logger.info("Se procede a auditar el acceso a la aplicacion del usuario: " + user);
-		
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-		eventoAcceso.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		eventoAcceso.setAppId(IspacAuditConstants.getAppId());
-		eventoAcceso.setFecha(new Date());		
-		eventoAcceso.setUser(user);
-		eventoAcceso.setIdUser("");
-		eventoAcceso.setUserHostName("");
-		eventoAcceso.setUserIp("");
-		
-		if (auditContext != null){
-		eventoAcceso.setIdUser(auditContext.getUserId());
-		eventoAcceso.setUserHostName(auditContext.getUserHost());
-		eventoAcceso.setUserIp(auditContext.getUserIP());
-		}else{
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		auditoriaManager.audit(eventoAcceso);
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+			IspacAuditEventAccesoAplicacionVO eventoAcceso = new IspacAuditEventAccesoAplicacionVO();
+			
+			logger.info("Se procede a auditar el acceso a la aplicacion del usuario: " + user);
+			
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+			eventoAcceso.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			eventoAcceso.setAppId(IspacAuditConstants.getAppId());
+			eventoAcceso.setFecha(new Date());		
+			eventoAcceso.setUser(user);
+			eventoAcceso.setIdUser("");
+			eventoAcceso.setUserHostName("");
+			eventoAcceso.setUserIp("");
+			
+			if (auditContext != null){
+			eventoAcceso.setIdUser(auditContext.getUserId());
+			eventoAcceso.setUserHostName(auditContext.getUserHost());
+			eventoAcceso.setUserIp(auditContext.getUserIP());
+			}else{
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			auditoriaManager.audit(eventoAcceso);
+    	}
 	}
 
 	public void login(String remoteHost, String user, IDirectoryEntry userEntry, String aplicacion,
 			Locale locale) throws ISPACException {
 		sesion = mgr.login(remoteHost, user, userEntry, aplicacion);
 		init(locale);
-		
 		auditLogin(user);
 	}
 

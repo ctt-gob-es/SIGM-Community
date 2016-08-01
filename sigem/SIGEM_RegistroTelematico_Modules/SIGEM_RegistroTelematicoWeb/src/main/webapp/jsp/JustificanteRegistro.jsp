@@ -95,9 +95,22 @@ if (rutaImagenes == null) rutaImagenes = "";
       			<div class="cuerporightbt">
         			<div class="cuerpomidbt">
 					<input type="button" value="<bean:message key="justificante.descargar"/>" class="ok" id="aceptar_justificante" onclick="obtenerJustificante();"/>
+					<!-- [dipucr-Felipe #428] 01.10.14 -->
+					<!-- 
 					<input type="button" value="<bean:message key="justificante.aceptar"/>" class="ok" id="aceptar_justificante" onclick="document.location.href='<%=request.getContextPath()%>/jsp/RedireccionPortal.jsp'"/>
+					-->
+					<!-- [dipucr-Felipe #428] 01.10.14 -->
         			</div>
       			</div>
+      			<div class="cuerporightbt"><!-- [dipucr-Felipe #428] 01.10.14 -->
+					<span style="font-weight:bold; color: #444;">
+						<bean:message key="justificante.texto_ok_1"/>
+						<br/>
+						<bean:message key="justificante.texto_ok_2"/>
+						<br/><br/>
+					</span>
+				</div>  
+				<!-- [dipucr-Felipe #428] 01.10.14 -->    			
 			</div>
 
 			</form>

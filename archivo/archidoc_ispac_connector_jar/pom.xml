@@ -88,6 +88,10 @@
 					<groupId>es.ieci.tecdoc.archidoc.archidoc_organization</groupId>
 					<artifactId>archidoc_organization_connector</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>javax.sql</groupId>
+					<artifactId>jdbc-stdext</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>

@@ -210,6 +210,17 @@ public class DistributionSession extends DistributionSessionUtil implements
 
 				finalWhere.append(getDistributionFinalWhere(idArchs, regWhere,
 						querySize.toString(), tableName, entidad));
+				
+				//[Manu Ticket #945] INICIO - SIGEM Error en la distribución.
+				try{
+					HibernateUtil.commitTransaction(tran);
+				}
+				catch(Exception e){
+					HibernateUtil.rollbackTransaction(tran);
+				}
+				tran = session.beginTransaction();
+				//[Manu Ticket #945] FIN - SIGEM Error en la distribución.
+				
 			} else {
 				finalWhere.append(querySize.toString());
 				finalWhere.append(" order by id");
@@ -244,8 +255,12 @@ public class DistributionSession extends DistributionSessionUtil implements
 			throw sE;
 		} catch (Exception e) {
 			HibernateUtil.rollbackTransaction(tran);
-			log.error("Impossible to obtain the distribution for the session ["
-					+ sessionID + "]", e);
+			//[Manu Ticket #945] INICIO - SIGEM Error en la distribución.
+			if(e != null && (!e.getMessage().toUpperCase().contains("LA RELACIÓN") && !e.getMessage().toUpperCase().contains("YA EXISTE"))){
+				log.error("Impossible to obtain the distribution for the session ["
+						+ sessionID + "]", e);			
+			}
+			//[Manu Ticket #945] FIN - SIGEM Error en la distribución.
 			throw new DistributionException(
 					DistributionException.ERROR_CANNOT_OBTAIN_DISTRIBUTION);
 		} finally {

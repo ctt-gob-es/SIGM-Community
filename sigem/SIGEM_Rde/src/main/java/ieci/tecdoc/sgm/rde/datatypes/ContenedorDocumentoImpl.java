@@ -22,6 +22,8 @@ public class ContenedorDocumentoImpl implements ContenedorDocumento
      extension = null;
      timestamp = null;
      contentSize = 0;
+   //[Ticket 1014 Teresa]
+     fileRegistroPresencial = null;
    }
    
     /**
@@ -121,6 +123,16 @@ public class ContenedorDocumentoImpl implements ContenedorDocumento
     public void setContentSize(int contentSize){
       this.contentSize = contentSize;
     }
+    
+    //[Ticket 1014 Teresa]
+    public String getFileRegistroPresencial() {
+    	return fileRegistroPresencial;
+    }
+
+    public void setFileRegistroPresencial(String fileRegistroPresencial) {
+    	this.fileRegistroPresencial = fileRegistroPresencial;
+    }
+    
 
    /**
     * Recoge los valores de la instancia en una cadena xml
@@ -161,6 +173,7 @@ public class ContenedorDocumentoImpl implements ContenedorDocumento
    protected String extension;
    protected Date timestamp;
    protected int contentSize;
-
    
+   //[Ticket 1014 Teresa]
+   protected String fileRegistroPresencial;
 }

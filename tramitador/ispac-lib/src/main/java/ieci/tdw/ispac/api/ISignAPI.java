@@ -52,6 +52,7 @@ public interface ISignAPI {
 	public static final String INTEGRIDAD_STRANGER				="sign.detail.integrity.sign.stranger";
 	public static final String INTEGRIDAD_PORTAFIRMAS			="sign.detail.integrity.sign.portafirmas";
 	public static final String INTEGRIDAD_NO_APLICA				="sign.detail.integrity.sign.no.aplica";
+	public static final String INTEGRIDAD_VALIDE				="sign.detail.integrity.sign.valide";
 
 
 
@@ -162,7 +163,7 @@ public interface ISignAPI {
 	 * @return Lista de documentos firmados
 	 * @throws ISPACException
 	 */
-	public List batchSignSteps(String[] stepIds, String[] signs, String certificado) throws ISPACException;
+	public List batchSignSteps(String[] stepIds, String[] signs, String certificado, String entityId) throws ISPACException;
 
 	/**
 	 * Obtiene los datos de un paso de un circuito de firmas.
@@ -189,6 +190,27 @@ public interface ISignAPI {
 	 * @throws ISPACException
 	 */
 	void sign(SignDocument signDocument, boolean changeState) throws ISPACException;
+	
+	/**
+	 * [DipuCR-Agustin #781]
+	 * Incluya la prefirma en el documento, almacenando el documento y la firma en el 
+	 * repositorio de documentos electr&oacute;nicos
+	 * @param signDocument Documento de firma
+	 * @param changeState Indica si se debe cambiar el estado del documento a firmado.
+	 * @throws ISPACException
+	 */
+	String presign(SignDocument signDocument, boolean changeState) throws ISPACException;
+
+	/**
+	 * [DipuCR-Agustin #781]
+	 * Incluya la postfirma en el documento, almacenando el documento y la firma en el 
+	 * repositorio de documentos electr&oacute;nicos
+	 * @param signDocument Documento de firma
+	 * @param changeState Indica si se debe cambiar el estado del documento a firmado.
+	 * @param path del fichero temporal en el que se ha guardado la firma.
+	 * @throws ISPACException
+	 */
+	String postsign(SignDocument signDocument, String pathFicheroTemporalFirmado, boolean changeState) throws ISPACException;
 
 	/**
 	 * Calcula el Hash para el documento a firmar
@@ -207,6 +229,17 @@ public interface ISignAPI {
 	 * @throws ISPACException
 	 */
 	boolean isResponsible(int documentId, String respId) throws ISPACException;
+	
+	/**
+	 * [eCenpri-Felipe #425]
+	 * @param documentId Id del documento
+	 * @param sustitutoId UID de un usuario sustituto
+	 * @return true si el usuario identificado por '<code>UID</code>' es sustituto del
+	 * responsable de firmar el documento identificado por '<code>documentId</code>', 
+	 * false en caso contrario
+	 * @throws ISPACException
+	 */
+	boolean isResponsibleSubstitute(int documentId, String sustitutoId) throws ISPACException;
 
 	/**
 	 * Obtiene los pasos del circuito de firma en función del
@@ -357,5 +390,67 @@ public interface ISignAPI {
 
 
 	public ResultadoValidacionCertificado validateCertificate(String X509Certificate) throws ISPACException;
+	
+	/**
+	 * [eCenpri-Felipe #592]
+	 * Devuelve todos los circuitos de firma definidos en el tramite
+	 * @param filter Filtro a aplicar.
+	 * @return Lista de circuitos de firma definidos en el sistema aplicando el filtro.
+	 * @throws ISPACException
+	 */
+	IItemCollection getCircuitsTramite(SignCircuitFilter filter) throws ISPACException;
+	
+	/**
+	 * [eCenpri-Felipe #871] 19.04.2013
+	 * Devuelve el bloqueo de firmas para un cierto tipo de documento
+	 * @param tipoDoc
+	 * @param estado
+	 * @return
+	 * @throws ISPACException
+	 */
+	public IItemCollection getBloqueoFirmaDocs(String tipoDoc, int estado) throws ISPACException;
+	
+	/**
+	 * [eCenpri-Felipe #871] 19.04.2013
+	 * Insert un nuevo bloqueo para el tipo de documento en la BBDD
+	 * @param tipoDoc
+	 * @param usuario
+	 * @param fecha
+	 * @param estado
+	 * @return
+	 * @throws ISPACException
+	 */
+	public void insertBloqueoFirmaDocs(String tipoDoc, String usuario, Date fecha, int estado) throws ISPACException;
+	
+	/**
+	 * [eCenpri-Felipe #871] 19.04.2013
+	 * Actualiza el bloqueo para el tipo de documento en la BBDD
+	 * @param tipoDoc
+	 * @param usuario
+	 * @param fecha
+	 * @param estado
+	 * @return
+	 * @throws ISPACException
+	 */
+	public void updateBloqueoFirmaDocs(String tipoDoc, String usuario, Date fecha, int estado) throws ISPACException;
+	
+	/**
+	 * [eCenpri-Felipe #871] 19.04.2013
+	 * Borra el bloqueo para el tipo de documento en la BBDD
+	 * @param tipoDoc
+	 * @return
+	 * @throws ISPACException
+	 */
+	public void deleteBloqueoFirmaDocs(String tipoDoc) throws ISPACException;
+	
+	/**
+	 * [eCenpri-Felipe #436]
+	 * Obtiene las transacciones de firma de un documento a partir de su id
+	 * 
+	 * @param documentId Identificador del documento
+	 * @return
+	 * @throws ISPACException
+	 */
+	public IItemCollection getTransactionsByDocument(int documentId) throws ISPACException;	
 
 }

@@ -209,4 +209,7 @@ public interface ISearchAPI
 	 */
 	public SearchResultVO getLimitedSearchResults(SearchInfo searchinfo) throws ISPACException;
 	
+	//MQE #142 Modificamos para que muestre todos los expedietes sin tener en cuenta los permisos
+	public SearchResultVO getLimitedSearchResultsRelateExpedient(SearchInfo searchinfo) throws ISPACException;
+	
 }

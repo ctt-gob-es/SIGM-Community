@@ -78,6 +78,15 @@ public interface ICatalogAPI
 
     public int ENTITY_SIGNPROCESS=59;
     public int ENTITY_P_EVENTOS=60;
+    
+    //[eCenpri-Manu #909] SIGEM Pestaña Datos Específicos del Trámite
+    public int ENTITY_P_TRAM_DATOSESPECIFICOS = 64;
+    //[eCenpri-Manu #909] SIGEM Pestaña Datos Específicos del Trámite
+    
+    //[eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.    
+    public int ENTITY_CT_MANUALES_USUARIO = 65;
+    public int ENTITY_P_MANUALES_USUARIO = 66;
+    //[eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 
     public static String ID_FIELD_NAME 			= "id";
     public static String NUMEXP_FIELD_NAME 		= "numexp";
@@ -492,6 +501,16 @@ public interface ICatalogAPI
 	 */
 	public IItemCollection getCtosFirmasProcedure(int pcdId)
 	throws ISPACException;
+	
+	/**
+	 * [eCenpri-Felipe #592]
+	 * Obtiene la colección de circuitos de firma asociados a un determinado trámite
+	 * @param  taskPcdId
+	 * @return IItemCollection
+	 * @throws ISPACException
+	 */
+	public IItemCollection getCtosFirmasTaskPcd(int taskPcdId)
+	throws ISPACException;
 
 	/**
 	 * Añade un circuito de firmas al procedimiento seleccionado
@@ -501,6 +520,16 @@ public interface ICatalogAPI
 	 */
 	public void addCtoFirmas(int pcdId, int ctofirmaId)
 	throws ISPACException;
+	
+	/**
+	  * [eCenpri-Felipe #592] Para añadir un circuito de firmas al trámite
+	  * seleccionado
+	  * @param taskPcdId
+	  * @param ctofirmaId
+	  * @throws ISPACException
+	  */
+	 public void addCtoFirmasTramite(int taskPcdId, int ctofirmaId)
+	 throws ISPACException;
 
 	/**
 	 * Borra el circuito de firmas asociado al procedimiento que se le pasa como parametro
@@ -509,6 +538,16 @@ public interface ICatalogAPI
 	 * @throws ISPACException
 	 */
 	public void dropCtoFirmas(int pcdId, int ctofirmaId)
+	throws ISPACException;
+	
+	/**
+	 * [eCenpri-Felipe #592]
+	 * Borra el circuito de firmas asociado al trámite que se le pasa como parametro
+	 * @param taskPcdId
+	 * @param ctofirmaId
+	 * @throws ISPACException
+	 */
+	public void dropCtoFirmasTramite(int taskPcdId, int ctofirmaId) 
 	throws ISPACException;
 
 	/**
@@ -1071,8 +1110,47 @@ public interface ICatalogAPI
 	 */
 	public IItem getCTHelp (String tipoObj, String idObj, String idioma)throws ISPACException;
 
+	/**
+	 * [eCenpri-Manu #909] SIGEM Pestaña Datos Específicos del Trámite
+	 * Obtiene los datos específicos de un trámite
+	 * @param  taskPcdId
+	 * @return IItemCollection
+	 * @throws ISPACException
+	 */
+	public IItem getDatosEspecificosTramite(int taskPcdId)
+	throws ISPACException;
 
+	
+	
+	//[eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	
+	/**
+	 * Obtiene los manuales de usuario del catálogo a partir del nombre.
+    *
+	 * @param pattern
+	 *            Patrón del nombre del informe.
+	 * @return Lista de informes del catálogo.
+	 * @throws ISPACException
+	 *             si ocurre algún error.
+	 */
+	public IItemCollection getPManualesUsuario(String pattern) throws ISPACException;
 
+	/**
+	 * Obtiene los informes de un tipo determinado
+	 * @param type Tipo del informe 1-Genérico 2-Específico 3-Global 4-Busqueda
+	 * @return
+	 */
+	public IItemCollection getManualesUsuarioByType(int type) throws ISPACException;
 
+	/**
+	 * Obtiene los identificadores de los informes que estan asociados al formulario de búsqueda
+	 * @param idFrm Identificador del formulario de búsqueda
+	 * @return Colección con los informes asociados al formulario de búsqueda
+	 * @throws ISPACException
+	 */
+	public IItemCollection getAsociateMaualesUsuario(int idFrm)throws ISPACException;	
+	
+	//[eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 
+	
 }

@@ -2,27 +2,18 @@ package ieci.tecdoc.sgm.cripto.firma.ws.server;
 
 
 
-import java.util.List;
-
 import ieci.tecdoc.sgm.base.base64.Base64Util;
 import ieci.tecdoc.sgm.core.config.impl.spring.MultiEntityContextHolder;
 import ieci.tecdoc.sgm.core.exception.SigemException;
-import ieci.tecdoc.sgm.core.services.ConstantesServicios;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.ServiciosUtils;
-import ieci.tecdoc.sgm.core.services.cripto.firma.Firmante;
 import ieci.tecdoc.sgm.core.services.cripto.firma.ServicioFirmaDigital;
-import ieci.tecdoc.sgm.core.services.dto.RetornoServicio;
-import ieci.tecdoc.sgm.core.ws.axis.UtilAxis;
 
-
-
+import java.util.List;
 
 import javax.xml.soap.SOAPException;
 
-import org.apache.axis.MessageContext;
 import org.apache.log4j.Logger;
-import org.bouncycastle.jce.provider.JCEBlockCipher.IDEA;
 
 
 public class ServicioFirmaDigitalWebService {

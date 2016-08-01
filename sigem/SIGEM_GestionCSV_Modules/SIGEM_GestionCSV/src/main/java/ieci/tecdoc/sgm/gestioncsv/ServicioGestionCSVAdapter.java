@@ -294,6 +294,17 @@ public class ServicioGestionCSVAdapter implements ServicioGestionCSV {
 		documentoCSV.setNombre(documentoFWKTD.getNombre());
 		documentoCSV.setNombreAplicacion(documentoFWKTD.getNombreAplicacion());
 		documentoCSV.setTipoMime(documentoFWKTD.getTipoMime());
+		
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
+		documentoCSV.setNumeroRegistro(documentoFWKTD.getNumeroRegistro());
+		documentoCSV.setFechaRegistro(documentoFWKTD.getFechaRegistro());
+		documentoCSV.setOrigenRegistro(documentoFWKTD.getOrigenRegistro());
+		documentoCSV.setDestinoRegistro(documentoFWKTD.getDestinoRegistro());
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("getDocumentoCSV(es.ieci.tecdoc.fwktd.csv.core.vo.DocumentoCSV) - end");
@@ -323,6 +334,17 @@ public class ServicioGestionCSVAdapter implements ServicioGestionCSV {
 		infoDocCSV.setNombre(infoDocFWKTDCSV.getNombre());
 		infoDocCSV.setNombreAplicacion(infoDocFWKTDCSV.getNombreAplicacion());
 		infoDocCSV.setTipoMime(infoDocFWKTDCSV.getTipoMime());
+		
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
+		infoDocCSV.setNumeroRegistro(infoDocFWKTDCSV.getNumeroRegistro());
+		infoDocCSV.setFechaRegistro(infoDocFWKTDCSV.getFechaRegistro());
+		infoDocCSV.setOrigenRegistro(infoDocFWKTDCSV.getOrigenRegistro());
+		infoDocCSV.setDestinoRegistro(infoDocFWKTDCSV.getDestinoRegistro());
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("getInfoDocFWKTDCSV(es.ieci.tecdoc.fwktd.csv.core.vo.InfoDocumentoCSV) - end");

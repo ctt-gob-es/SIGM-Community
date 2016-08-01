@@ -9,6 +9,7 @@ import ieci.tdw.ispac.api.item.IStage;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.ObjectDAO;
+import ieci.tdw.ispac.ispaclib.dao.historico.TXHitoHDAO;
 import ieci.tdw.ispac.ispaclib.dao.idsequences.IdSequenceMgr;
 import ieci.tdw.ispac.ispaclib.dao.join.TableJoinFactoryDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PPlazoDAO;
@@ -155,6 +156,12 @@ public class TXProcesoDAO extends ObjectDAO implements IProcess
 		String sql="WHERE ID_EXP = "+getInt(IDKEY);
 		CollectionDAO objlist=new CollectionDAO(TXHitoDAO.class);
 		objlist.query(cnt,sql);
+		//[Manu Ticket #1090] - INICIO Poner en marcha la opción Consulta de Expedientes.
+		if(objlist == null || objlist.toList().size() == 0){
+			objlist=new CollectionDAO(TXHitoHDAO.class);
+			objlist.query(cnt,sql);
+		}
+		//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
 		return objlist;
 	}
 

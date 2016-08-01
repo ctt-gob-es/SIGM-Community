@@ -737,6 +737,38 @@
        <rtexprvalue>true</rtexprvalue>
       </attribute>
    	</tag>
+   	<!-- INICIO [eCenpri-Felipe #504] -->
+   	<tag>
+     <name>updatefieldsonchange</name>
+      <tagclass>es.dipucr.ispacweb.tag.UpdateFieldsOnChangeTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      <attribute>
+       <name>name</name>
+       <required>true</required>
+       <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+       <name>parameters</name>
+       <required>false</required>
+       <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+       <name>function</name>
+       <required>false</required>
+       <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+       <name>formName</name>
+       <required>false</required>
+       <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+       <name>multivalueId</name>
+       <required>false</required>
+       <rtexprvalue>true</rtexprvalue>
+      </attribute>      
+   </tag>
+   <!-- FIN [eCenpri-Felipe #504] -->
  	<tag>
 		<name>calendar</name>
 		<tagclass>ieci.tdw.ispac.ispacweb.tag.CalendarTag</tagclass>

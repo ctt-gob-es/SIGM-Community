@@ -84,6 +84,17 @@ public class DocumentoHelperTest extends AbstractDbUnitTransactionalJUnit4Spring
 		aplicacionVO.setCodigo("APP1");
 		aplicacionVO.setNombre("Aplicación 1");
 		documentoVO.setAplicacion(aplicacionVO);
+		
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
+		documentoVO.setNumeroRegistro("123456789");
+		documentoVO.setFechaRegistro(new Date());
+		documentoVO.setOrigenRegistro("ORIGEN");
+		documentoVO.setDestinoRegistro("DESTINO");
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
 
 		return documentoVO;
 	}
@@ -107,6 +118,17 @@ public class DocumentoHelperTest extends AbstractDbUnitTransactionalJUnit4Spring
 		infoDocumentoCSV.addDescripcion(new Locale("es"), "[es] Descripción del documento");
 		infoDocumentoCSV.addDescripcion(new Locale("eu"), "[eu] Descripción del documento");
 		infoDocumentoCSV.addDescripcion(new Locale("gl"), "[gl] Descripción del documento");
+		
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
+		infoDocumentoCSV.setNumeroRegistro("123456789");
+		infoDocumentoCSV.setFechaRegistro(new Date());
+		infoDocumentoCSV.setOrigenRegistro("ORIGEN");
+		infoDocumentoCSV.setDestinoRegistro("DESTINO");
+		/**
+		 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
+		 */
 
 		return infoDocumentoCSV;
 	}

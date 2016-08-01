@@ -13,6 +13,14 @@
 
 	<description>Sigem aplicaciones administracion </description>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<dependency>
@@ -101,16 +109,22 @@
 			<version>${axis.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>bouncycastle</groupId>
-			<artifactId>bcmail-jdk15</artifactId>
-			<version>${bcmail.version}</version>
+		<dependency>	
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcmail-jdk16</artifactId>
+			<version>${bcmail16.version}</version>
 		</dependency>
-
+		
 		<dependency>
-			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk15</artifactId>
-			<version>${bcprov.version}</version>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk16</artifactId>
+			<version>${bcprov16.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bctsp-jdk16</artifactId>
+		    <version>${bctsp16.version}</version>
 		</dependency>
 
 		<dependency>
@@ -183,7 +197,6 @@
 			<groupId>ibmjsseprovider</groupId>
 			<artifactId>ibmjsseprovider</artifactId>
 			<version>1.0.3</version>
-			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>

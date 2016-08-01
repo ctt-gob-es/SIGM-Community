@@ -83,10 +83,26 @@ public class UploadFileAction extends BaseAction {
 			request.setAttribute("CTReportOrgListFormatter", formatter);
 
 	   	 	request.setAttribute("CTReportOrgList", permissionObjectOrganizactionList);			
-        	
-        	
-        	
         }
+        
+        // [eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+        else if(idEntity == ICatalogAPI.ENTITY_CT_MANUALES_USUARIO) {
+        	        	
+        	jspDest = "/forms/catalog/ctmanualusuarioform.jsp";
+        	
+        	IReportsAPI reportsAPI=	session.getAPI().getReportsAPI();
+	   		// Responsables asignados al informe
+			List permissionObjectOrganizactionList = reportsAPI.getReportOrganization(Integer.parseInt(uForm.getKey()));
+	        
+			// Cargar el formateador de la lista de responsables
+	   	 	CacheFormatterFactory factory = CacheFormatterFactory.getInstance();
+	   	 	BeanFormatter formatter = factory.getFormatter(getISPACPath("/formatters/ctmanualesusuariolistformatter.xml"));
+			request.setAttribute("CTManualesUsuarioListFormatter", formatter);
+			request.setAttribute("CTManualesUsuarioList", permissionObjectOrganizactionList);
+			
+        }        
+        //[eCenpri-Manu #120] FIN- ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+        
         else if(idEntity == ICatalogAPI.ENTITY_CT_HELPS){
         	property="CONTENIDO";
         	jspDest = "/forms/catalog/cthelpform.jsp";

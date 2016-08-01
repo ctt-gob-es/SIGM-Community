@@ -7,6 +7,7 @@ import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.IInboxAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.IManualUsuarioAPI;
 import ieci.tdw.ispac.api.IProcedureAPI;
 import ieci.tdw.ispac.api.IPublisherAPI;
 import ieci.tdw.ispac.api.IRegisterAPI;
@@ -36,7 +37,6 @@ import ieci.tdw.ispac.ispaclib.dao.procedure.PNodoDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PProcedimientoDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PTramiteDAO;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXFaseDAO;
-import ieci.tdw.ispac.ispaclib.dao.tx.TXHitoDAO;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXProcesoDAO;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXTramiteDAO;
 import ieci.tdw.ispac.ispaclib.dao.wl.WLBatchTaskDAO;
@@ -48,6 +48,7 @@ import ieci.tdw.ispac.ispaclib.utils.TypeConverter;
 import ieci.tdw.ispac.ispactx.TXConstants;
 import ieci.tdw.ispac.ispactx.TXProcedureMgr;
 import ieci.tdw.ispac.ispactx.TXTransaction;
+import es.dipucr.sigem.api.rule.common.utils.HitosUtils;
 
 /**
  * API para la gestión del workflow.
@@ -338,8 +339,11 @@ public class InvesflowAPI implements IInvesflowAPI {
 		DbCnt cnt = null;
 
 		try {
-			cnt = mcontext.getConnection();
-			return TXHitoDAO.getMilestones(cnt, nIdProc).disconnect();
+			//[Manu Ticket #1090] - INICIO Poner en marcha la opción Consulta de Expedientes.
+			//cnt = mcontext.getConnection();
+			//return TXHitoDAO.getMilestones(cnt, nIdProc).disconnect();
+			return HitosUtils.getHitos(mcontext, nIdProc);
+			//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
 		} catch (ISPACException ie) {
 			throw new ISPACException("Error en invesflowAPI:getMilestones("
 					+ nIdProc + ")", ie);
@@ -355,8 +359,11 @@ public class InvesflowAPI implements IInvesflowAPI {
 				        " AND HITO = "+milestone +
 				        " AND INFO LIKE '%<id_tramite>" + taskId + "</id_tramite>%'";
 		try {
-			cnt = mcontext.getConnection();
-			return TXHitoDAO.getMilestones(cnt, nIdProc, query).disconnect();
+			//[Manu Ticket #1090] - INICIO Poner en marcha la opción Consulta de Expedientes.
+			//cnt = mcontext.getConnection();
+			//return TXHitoDAO.getMilestones(cnt, nIdProc, query).disconnect();
+			return HitosUtils.getHitos(mcontext, nIdProc, query);
+			//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
 		} catch (ISPACException ie) {
 			throw new ISPACException("Error en invesflowAPI:getMilestones("+ nIdProc + ")", ie);
 		} finally {
@@ -366,8 +373,11 @@ public class InvesflowAPI implements IInvesflowAPI {
 	public IItemCollection getMilestones(String numexp) throws ISPACException {
 		DbCnt cnt = null;
 		try {
-			cnt = mcontext.getConnection();
-			return TXHitoDAO.getMilestones(cnt, numexp).disconnect();
+			//[Manu Ticket #1090] - INICIO Poner en marcha la opción Consulta de Expedientes.
+			//cnt = mcontext.getConnection();
+			//return TXHitoDAO.getMilestones(cnt, numexp).disconnect();
+			return HitosUtils.getHitos(mcontext, numexp);
+			//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
 		} catch (ISPACException ie) {
 			throw new ISPACException("Error en invesflowAPI:getMilestones("
 					+ numexp + ")", ie);
@@ -539,5 +549,16 @@ public class InvesflowAPI implements IInvesflowAPI {
 	 * @throws ISPACException si ocurre algún error.
 	 */	public IRegisterAPI getRegisterAPI() throws ISPACException {
 		return new RegisterAPI(mcontext);
+	}
+	
+	 /**
+	  * [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	  * 
+	  * Obtiene el API de los manuales de usuario.
+	  * @return API de los manuales de usuario.
+	  * @throws ISPACException si ocurre algún error.
+	  **/
+	public IManualUsuarioAPI getManualUsuarioAPI() throws ISPACException {
+		return new ManualUsuarioAPI(mcontext);
 	}
 }

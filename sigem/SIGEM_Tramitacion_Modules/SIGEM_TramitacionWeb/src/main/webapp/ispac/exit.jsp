@@ -18,6 +18,15 @@
 	session.removeAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD);
 	session.removeAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_USUARIO);
 	session.removeAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_PASSWORD);
+	
+	// [eCenpri-Manu Ticket #125] - INICIO - ALSIGM3 - Modifcar la opción salir para que no lleve a la pantalla del portal de AL-SIGM 
+	String key = (String)session.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO);
+	session.removeAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO);
+	if (!ieci.tdw.ispac.ispaclib.utils.StringUtils.isEmpty(key)) {
+		ieci.tecdoc.sgm.core.services.admsesion.backoffice.ServicioAdministracionSesionesBackOffice oClient = ieci.tecdoc.sgm.core.services.LocalizadorServicios.getServicioAdministracionSesionesBackOffice();
+		oClient.caducarSesion(key);
+	}
+	// [eCenpri-Manu Ticket #125] - FIN - ALSIGM3 - Modifcar la opción salir para que no lleve a la pantalla del portal de AL-SIGM 
 %>
 
 <html>
@@ -41,7 +50,9 @@
   <script>
 		window.name="ParentWindow";
 		function redirigir(){
-			document.forms[0].submit();			
+			<!-- [eCenpri-Manu Ticket #125] - INICIO - ALSIGM3 - Modifcar la opción salir para que no lleve a la pantalla del portal de AL-SIGM  -->
+			//document.forms[0].submit();
+	       	<!-- [eCenpri-Manu Ticket #125] - FIN - ALSIGM3 - Modifcar la opción salir para que no lleve a la pantalla del portal de AL-SIGM  -->			
 		}
   </script>
 </head>
@@ -66,7 +77,10 @@
 							        </td>
 							        <td>
 							        	<html:errors/>
-						        		<bean:message key="message.redirect"/>
+							        	<!-- [eCenpri-Manu Ticket #125] - INICIO - ALSIGM3 - Modifcar la opción salir para que no lleve a la pantalla del portal de AL-SIGM  -->
+						        		<!--<bean:message key="message.redirect"/>-->
+						        		<bean:message key="message.cerrarVentana"/>
+							        	<!-- [eCenpri-Manu Ticket #125] - FIN - ALSIGM3 - Modifcar la opción salir para que no lleve a la pantalla del portal de AL-SIGM  -->
 										<form action="<html:rewrite href="<%=url%>"/>" method="POST">
 										</form>
 							        </td>

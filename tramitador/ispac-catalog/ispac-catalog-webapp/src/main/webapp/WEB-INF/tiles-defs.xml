@@ -310,6 +310,7 @@
 		<add type="string">ctosfirma</add>
 		<add type="string">reports</add>
 		<!-- <add type="string">graph</add>  -->
+		<add type="string">manualUsuario</add> <!--  [eCenpri-Manu #120] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->		
 	</putList>
   </definition>
 
@@ -561,6 +562,8 @@
 		<add type="string">deadlines</add>
 		<add type="string">reports</add>
 		<add type="string">dependencies</add>
+		<add type="string">ctosfirma</add> <!-- [eCenpri-Felipe #592] -->
+		<add type="string">datosEspecif</add> <!-- [eCenpri-Manu #909] -->
 	</putList>
   </definition>
 
@@ -613,6 +616,20 @@
     <put name="currentTabName" value="dependencies"/>
     <put name="body" value="/ispac/common/procedure/taskdependencies.jsp"/>
   </definition>
+
+   <!-- INICIO [eCenpri-Felipe #592] -->
+  <definition name="task.ctosfirma" extends="pcd.taskpage">
+    <put name="currentTabName" value="ctosfirma"/>
+    <put name="body" value="/ispac/common/procedure/pcdctosfirma.jsp"/>
+  </definition>
+  <!-- FIN [eCenpri-Felipe #592] -->
+
+  <!-- INICIO [eCenpri-Manu #909] -->
+  <definition name="task.datosEspecif" extends="pcd.taskpage">
+    <put name="currentTabName" value="datosEspecif"/>
+    <put name="body" value="/ispac/common/procedure/tramDatosEspecif.jsp"/>
+  </definition>
+  <!-- FIN [eCenpri-Manu #909] -->
 
   <definition name="entity.events" extends="ispac_modallayout">
     <put name="body" value="/ispac/common/procedure/pcdentityevents.jsp"/>
@@ -880,5 +897,30 @@
   <definition name="select.signer" extends="ispac_modallayout">
   	<put name="body" value="/ispac/common/signprocess/selectsigner.jsp"/>
   </definition>
+    
+  <!-- [Manu Ticket #97] INICIO - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java. -->
+  <definition name="ispac_simplelayout" path="/ispac/layouts/simpleLayout.jsp">
+    <put name="body" value="/ispac/common/empty.jsp"/>
+  </definition>
 
+   <definition name="seleccionarEditor"  extends="ispac_simplelayout">
+  	<put name="body" value="/ispac/seleccionarEditor.jsp"/>
+  </definition>
+   <!-- [Manu Ticket #97] FIN - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java. -->
+ 
+  <!--  [eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->
+  <definition name="ct.manualesUsuarioList" extends="ispac_mainlayout">
+    <put name="body" value="/ispac/common/ctManualesUsuarioList.jsp"/>
+  </definition>
+  
+  <definition name="ct.fmrsearchmanualUsuario" extends="ispac_mainlayout">
+    <put name="body" value="/ispac/common/searchform/manualeUsuarioSearch.jsp"/>
+  </definition>
+  
+  <definition name="pcd.manualUsuario" extends="pcd.pcdpage">
+    <put name="currentTabName" value="manualUsuario"/>
+    <put name="body" value="/ispac/common/procedure/pcdManualUsuario.jsp"/>
+  </definition>
+  <!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->
+  
 </tiles-definitions>

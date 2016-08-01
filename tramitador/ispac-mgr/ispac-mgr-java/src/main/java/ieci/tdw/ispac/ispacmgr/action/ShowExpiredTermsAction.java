@@ -94,7 +94,8 @@ public class ShowExpiredTermsAction extends BaseAction{
         
         ////////////////////////////
         // Menú
-        request.setAttribute("menus", MenuFactory.getSingleMenu(cct, getResources(request)));        
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        request.setAttribute("menus", MenuFactory.getSingleMenu(cct, getResources(request), state));        
         
 	    // Formateador
 		CacheFormatterFactory factory = CacheFormatterFactory.getInstance();

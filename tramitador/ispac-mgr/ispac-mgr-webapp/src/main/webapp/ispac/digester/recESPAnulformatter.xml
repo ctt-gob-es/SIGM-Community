@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NUMERO_LIQUIDACION' 
+				 titleKey='REC_DAT_ESP_ANULACION:NUMERO_LIQUIDACION' 
+				 fieldType='LINK'
+				 columnClass='width34percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='EJERCICIO' 
+				 titleKey='REC_DAT_ESP_ANULACION:EJERCICIO' 
+				 fieldType='LIST'
+				 columnClass='width33percent'
+				 headerClass='sortable'
+				 media='html csv excel xml pdf'				 
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CUOTA' 
+				 titleKey='REC_DAT_ESP_ANULACION:CUOTA' 
+				 fieldType='LIST'
+				 columnClass='width33percent'
+				 headerClass='sortable'
+				 media='html csv excel xml pdf'				 
+				 sortable='true'/>
+
+</beanformatter>

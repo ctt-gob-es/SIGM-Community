@@ -358,9 +358,20 @@ public class Expedients {
 			IInvesflowAPI invesFlowAPI = mcontext.getAPI();
 			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 			IGenDocAPI genDocAPI = invesFlowAPI.getGenDocAPI();
+			
+			//[eCenpri-Manu Ticket #303] - INICIO - ALSIGM3 Dar información de los documentos anexados a los expedientes.
+			IItem expediente = invesFlowAPI.getEntitiesAPI().getExpedient(numExp);
+			String asunto = "";
+			if(null != expediente){
+				asunto = expediente.getString("ASUNTO");
+				if(StringUtils.isNotEmpty(asunto)){
+					asunto = "<b>Expediente: </b>" + asunto;
+				}
+			}			
+			//[eCenpri-Manu Ticket #303] - FIN - ALSIGM3 Dar información de los documentos anexados a los expedientes.
 
 			// Obtener el responsable del expediente
-			IProcess exp = invesFlowAPI.getProcess(numExp);
+			IProcess exp = invesFlowAPI.getProcess(numExp);			
 			Responsible responsible = RespFactory.createResponsible(
 					exp.getString("ID_RESP"));
 
@@ -426,12 +437,25 @@ public class Expedients {
 
 					// Añadir el GUID del documento a la lista
 					documentRefs.add(docEntity.getString("INFOPAG"));
+					//[eCenpri-Manu Ticket #303] - INICIO - ALSIGM3 Dar información de los documentos anexados a los expedientes.
+					String tipo = doc.getCode();
+					if(null != tipo && !tipo.equals("Solicitud Registro")){
+						String nombreDoc = doc.getName();
+						asunto = asunto + ",<br/><b>Documento Anexado: </b>" + nombreDoc + ",<br/> <b>Tipo de documento: </b>" + tipo;			//Se recorta si excede los caracteres, ya que da error y no puede insertar.
+						//Se recorta si excede los caracteres, ya que da error y no puede insertar.
+						if(null != expediente && asunto.length() > 252){
+							asunto = asunto.substring(0, 250);
+						}
+						Notices.generateNotice(mcontext, exp.getInt("ID"), 0, 0, numExp, asunto, mcontext.getAPI().getProcess(exp.getInt("ID")).getString("ID_RESP"), Notices.TIPO_AVISO_DOCS_ANEXADOS_WS);
+					}
+					//[eCenpri-Manu Ticket #303] - FIN - ALSIGM3 Dar información de los documentos anexados a los expedientes.
 				}
 
-				// Generar un aviso en la bandeja de avisos electrónicos
-				//generateNotice(entitiesAPI, exp.getInt("ID"), numExp, "notice.addDocuments", null);
-				Notices.generateNotice(mcontext, exp.getInt("ID"), 0, 0, numExp, "notice.addDocuments", mcontext.getAPI().getProcess(exp.getInt("ID")).getString("ID_RESP"), Notices.TIPO_AVISO_DOCS_ANEXADOS_WS);
-
+				//[eCenpri-Manu Ticket #303] - INICIO - ALSIGM3 Dar información de los documentos anexados a los expedientes.
+//				// Generar un aviso en la bandeja de avisos electrónicos
+//				//generateNotice(entitiesAPI, exp.getInt("ID"), numExp, "notice.addDocuments", null);
+//				Notices.generateNotice(mcontext, exp.getInt("ID"), 0, 0, numExp, "notice.addDocuments", mcontext.getAPI().getProcess(exp.getInt("ID")).getString("ID_RESP"), Notices.TIPO_AVISO_DOCS_ANEXADOS_WS);
+				//[eCenpri-Manu Ticket #303] - FIN - ALSIGM3 Dar información de los documentos anexados a los expedientes.
 
 				// Si todo ha sido correcto se hace commit de la transacción
 				bCommit = true;

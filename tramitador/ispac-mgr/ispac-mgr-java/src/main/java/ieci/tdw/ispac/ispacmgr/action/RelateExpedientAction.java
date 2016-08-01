@@ -8,15 +8,21 @@ import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
+import ieci.tdw.ispac.api.item.IProcess;
+import ieci.tdw.ispac.api.rule.EventManager;
+import ieci.tdw.ispac.api.rule.EventsDefines;
 import ieci.tdw.ispac.ispaclib.bean.BeanFormatter;
 import ieci.tdw.ispac.ispaclib.bean.CacheFormatterFactory;
 import ieci.tdw.ispac.ispaclib.bean.CollectionBean;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.dao.tx.TXFaseDAO;
+import ieci.tdw.ispac.ispaclib.dao.tx.TXProcesoDAO;
 import ieci.tdw.ispac.ispaclib.search.objects.impl.SearchExpState;
 import ieci.tdw.ispac.ispaclib.search.objects.impl.SearchInfo;
 import ieci.tdw.ispac.ispaclib.search.vo.SearchResultVO;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacmgr.action.form.SearchForm;
+import ieci.tdw.ispac.ispactx.TXTransactionDataContainer;
 import ieci.tdw.ispac.ispacweb.api.IManagerAPI;
 import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
@@ -34,6 +40,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 
 public class RelateExpedientAction extends BaseDispatchAction {
 	
@@ -92,7 +100,10 @@ public class RelateExpedientAction extends BaseDispatchAction {
 	//		searchinfo.setFieldValueForEntity("spac_expedientes", "ID_PCD", String.valueOf(state.getPcdId()));
 	//		searchinfo.setFieldOperatorForEntity("spac_expedientes", "ID_PCD", "=");
 			
-			SearchResultVO searchResultVO= searchAPI.getLimitedSearchResults(searchinfo);
+			//MQE #142 Modificamos para que muestre todos los expedietes sin tener en cuenta los permisos
+//			SearchResultVO searchResultVO= searchAPI.getLimitedSearchResults(searchinfo);
+			SearchResultVO searchResultVO= searchAPI.getLimitedSearchResultsRelateExpedient(searchinfo);
+			//MQE fin modificaciones ticket #142
 			List lResults = CollectionBean.getBeanList(searchResultVO.getResultados());
 			if(lResults.size()< searchResultVO.getNumTotalRegistros()){ 
 					request.setAttribute("maxResultados", String.valueOf(searchResultVO.getNumMaxRegistros())); 
@@ -154,7 +165,8 @@ public class RelateExpedientAction extends BaseDispatchAction {
 		String numexp = state.getNumexp();
 
 		// Validar el formulario
-		ActionMessages errors = validate(searchForm, entitiesAPI, numexp);
+		//#1023 * SIGEM Históricos de expedientes, trámites, documentos e intervinientes.
+		ActionMessages errors = validate(searchForm, entitiesAPI, numexp, session);
 		if (errors.isEmpty()) {
 
 			// Ejecución en un contexto transaccional
@@ -190,6 +202,33 @@ public class RelateExpedientAction extends BaseDispatchAction {
 			finally {
 				cct.endTX(bCommit);
 			}
+			
+		    //[eCenpri-Manu Ticket#129] INICIO - ALSIGM3 Crear nuevo evento al relacionar expediente.
+			//Ejecutar evento de sistema al relacionar expedientes.
+			
+			//Se construye el contexto de ejecución de eventos.
+			EventManager eventmgr = new EventManager(cct, null);
+			
+			eventmgr.newContext();
+			TXTransactionDataContainer dataContainer = new TXTransactionDataContainer(cct);
+			//Buscamos el expediente
+        	int idProcess = state.getProcessId();
+        	int idProcedure = state.getPcdId();
+        	int idStage = state.getStageId();
+        	
+			TXProcesoDAO process = dataContainer.getProcess(idProcess);
+			TXFaseDAO txStage = dataContainer.getStage(idStage);
+			
+			eventmgr.getRuleContextBuilder().addContext(process);
+			eventmgr.getRuleContextBuilder().addContext(txStage);
+			
+			int eventObjectType = EventsDefines.EVENT_OBJ_PROCEDURE;
+			
+			eventmgr.processSystemEvents( eventObjectType, EventsDefines.EVENT_EXEC_RELACIONAR);
+	
+			//Ejecutar evento al iniciar proceso.
+			eventmgr.processEvents( eventObjectType, idProcedure, EventsDefines.EVENT_EXEC_RELACIONAR);
+		    //[eCenpri-Manu Ticket#129] FIN - ALSIGM3 Crear nuevo evento al relacionar expediente.
 
 			return mapping.findForward("success");
 		}
@@ -207,8 +246,18 @@ public class RelateExpedientAction extends BaseDispatchAction {
 		}
 	}
 
+    /**
+	 * #1023 SIGEM Históricos de expedientes, trámites, documentos e intervinientes.
+	 * 
+	 * @param entityForm
+	 * @param entitiesAPI
+	 * @param numexp
+	 * @param session
+	 * @return
+	 * @throws Exception
+	 */
 	private ActionMessages validate(SearchForm entityForm,
-			IEntitiesAPI entitiesAPI, String numexp) throws Exception {
+			IEntitiesAPI entitiesAPI, String numexp, SessionAPI session) throws Exception {
 
 		ActionMessages errors = new ActionMessages();
 
@@ -223,7 +272,7 @@ public class RelateExpedientAction extends BaseDispatchAction {
 			errors.add("", new ActionMessage(
 					"forms.expRelacionar.error.expedient.repeated"));
 		} else {
-			IItem expedient = entitiesAPI.getExpedient(numexpHijo);
+			IItem expedient = ExpedientesUtil.getExpediente(session.getClientContext(), numexpHijo);
 			if (expedient == null) {
 
 				errors.add("", new ActionMessage(
@@ -246,5 +295,4 @@ public class RelateExpedientAction extends BaseDispatchAction {
 
 		return errors;
 	}
-
 }

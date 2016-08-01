@@ -320,7 +320,9 @@ public class ServicioRegistroTelematicoAdapter implements ServicioRegistroTelema
 			String strJustificante = Goodies.fromUTF8ToStr(justificante);
 			ServicioCatalogoTramites oServicioCatalogo = LocalizadorServicios.getServicioCatalogoTramites();
 			Tramite tramite = oServicioCatalogo.getProcedure(tramiteId, false, entidad);
-			if (tramite.getIdProcedimiento() != null && !"".equals(tramite.getIdProcedimiento())) {
+			if (tramite.getIdProcedimiento() != null && !"".equals(tramite.getIdProcedimiento())
+					|| (tramiteId != null && tramiteId.contains("SUBSANACION"))) //[dipucr-Felipe #1354]
+			{
 				if (!RegistroManager.iniciarExpediente(sessionId, strJustificante, tramiteId, additionalInfo,
 						tramite.getIdProcedimiento(), entidad.getIdentificador())) {
 					String numReg = RegistroManager.getNumeroRegistro(strJustificante);
@@ -364,7 +366,9 @@ public class ServicioRegistroTelematicoAdapter implements ServicioRegistroTelema
 			String strJustificante = Goodies.fromUTF8ToStr(justificante);
 			ServicioCatalogoTramites oServicioCatalogo = LocalizadorServicios.getServicioCatalogoTramites();
 			Tramite tramite = oServicioCatalogo.getProcedure(tramiteId, false, entidad);
-			if (tramite.getIdProcedimiento() != null && !"".equals(tramite.getIdProcedimiento())) {
+			if (tramite.getIdProcedimiento() != null && !"".equals(tramite.getIdProcedimiento())
+					|| (tramiteId != null && tramiteId.contains("SUBSANACION"))) //[dipucr-Felipe #1354]
+			{
 				if (!RegistroManager.iniciarExpediente(sessionId, strJustificante, tramiteId, additionalInfo,
 						tramite.getIdProcedimiento(), entidad.getIdentificador())) {
 					String numReg = RegistroManager.getNumeroRegistro(strJustificante);

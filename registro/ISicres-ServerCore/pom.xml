@@ -14,6 +14,15 @@
 	<properties>
 		<invesdoc.version>9.2.3.1</invesdoc.version>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<!-- Dependencias de Inves Sicres -->
 		<dependency>
@@ -56,15 +65,15 @@
 			<artifactId>xercesImpl</artifactId>
 			<version>2.4.0</version>
 		</dependency>
-		<dependency>
+		 <dependency>
 			<groupId>com.sun.media</groupId>
 			<artifactId>jai-codec</artifactId>
 			<version>1.1.3</version>
 		</dependency>
 		<dependency>
-			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk14</artifactId>
-			<version>138</version>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk16</artifactId>
+			<version>1.46</version>
 		</dependency>
 	</dependencies>
 </project>

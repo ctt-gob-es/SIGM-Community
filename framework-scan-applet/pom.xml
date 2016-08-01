@@ -11,6 +11,14 @@
 	<version>0.7</version>
 	<name>fwktd-scanApplet</name>
 	
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.sun.media</groupId>
@@ -28,7 +36,6 @@
 			<groupId>java</groupId>
 			<artifactId>java-plugin</artifactId>
 			<version>jre-1.4.2_14</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

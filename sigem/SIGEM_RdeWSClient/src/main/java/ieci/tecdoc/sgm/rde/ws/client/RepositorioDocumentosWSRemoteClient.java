@@ -433,4 +433,22 @@ public class RepositorioDocumentosWSRemoteClient implements ServicioRepositorioD
 		oEntidad.setIdentificador(poEntidad.getIdentificador());
 		return oEntidad;
 	}
+	
+	/*[Ticket 1014 Teresa] Inserta el valor del identificador del fichero y
+	 * borrar los datos de la columna 'contenido'
+	 * */
+	public boolean insertarIdFileBorrarContenido(String guid,
+			String idFileRegistroEnt, Entidad entidad)
+			throws GuidIncorrectoRdeExcepcion,
+			RepositorioDocumentosRdeExcepcion {
+		return false;
+	}
+
+	public String storeDocumentInfoPag(String sessionId, Entidad entidad,
+			String idInfoPagFile, String extension)
+			throws GuidIncorrectoRdeExcepcion,
+			RepositorioDocumentosRdeExcepcion {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -1601,3 +1601,15 @@ ul.list {
 ul.list li {
 	list-style: none;
 }
+
+/* INICIO [eCenpri-Felipe #467] */
+.caja_tramite {
+	border:1px solid #9EA4C7;
+	background-color:#D7EDFA;
+}
+
+.caja_documento {
+	border:1px solid #9EA4C7;
+	background-color:#FEFBDA;
+}
+/* FIN [eCenpri-Felipe #467] */

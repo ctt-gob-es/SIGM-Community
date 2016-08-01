@@ -53,11 +53,19 @@ public class ContenedorDocumentoDatos extends ContenedorDocumentoImpl implements
      int index = idx.intValue();
      
      try{
-       guid = statement.getShortText(index ++);
-       content = statement.getBytes(index++);//BinaryStream(index ++);
-       hash = statement.getShortText(index ++);
-       extension = statement.getShortText(index ++);
-       timestamp = statement.getDateTime(index ++);
+    	 guid = statement.getShortText(index ++);
+         content = statement.getBytes(index++);//BinaryStream(index ++);
+         if(content==null){
+      	   content="".getBytes();
+         }
+   
+         hash = statement.getShortText(index ++);
+         extension = statement.getShortText(index ++);
+         timestamp = statement.getDateTime(index ++);
+       
+     //[Ticket 1014 Teresa]
+       fileRegistroPresencial = statement.getShortText(index ++);
+       
      }catch(Exception e){
        throw new DbExcepcion(DbCodigosError.EC_GET_ALL_VALUES, e.getCause());
      }
@@ -86,6 +94,8 @@ public class ContenedorDocumentoDatos extends ContenedorDocumentoImpl implements
       statement.setShortText(index++, hash);
       statement.setShortText(index++, extension);
       statement.setDateTime(index++, timestamp);
+    //[Ticket 1014 Teresa]
+      statement.setShortText(index++, fileRegistroPresencial);
     }catch(Exception e){
       throw new DbExcepcion(DbCodigosError.EC_INSERT_ALL_VALUES);
     }
@@ -143,6 +153,81 @@ public class ContenedorDocumentoDatos extends ContenedorDocumentoImpl implements
          throw new GuidIncorrectoExcepcion(GuidIncorrectoCodigosError.EC_INCORRECT_GUID);
     }
   }
+  
+  /**
+   * [Ticket 1014 Teresa INICIO]
+   * Realiza la consulta por guid y elimina el contenido y añade el identificador del documento.
+   *
+   * @param guid GUID del documento.
+   * @param idFichero identificador del documento del registro presencial.
+   * @throws DbExcepcion Si se produce algún error.
+   */
+  public void insertFicheroDeleteContenido(String entidad)
+     throws GuidIncorrectoExcepcion, RepositorioDocumentosExcepcion {
+     
+    if (guid == null || guid.equals(""))
+      throw new GuidIncorrectoExcepcion(GuidIncorrectoCodigosError.EC_INCORRECT_GUID);
+    DynamicTable tableInfo = new DynamicTable();
+    DynamicRows rowsInfo = new DynamicRows();
+    DynamicRow rowInfo = new DynamicRow();
+    ContenedorDocumentoTabla table = new ContenedorDocumentoTabla();
+    DbConnection dbConn = new DbConnection();
+     
+    logger.debug("Load Document Content <-- Guid: " + guid);
+    
+    boolean incorrectGuid = false;
+    
+    try {
+       dbConn.open(DBSessionManager.getSession(entidad));
+       tableInfo.setTableObject(table);
+       tableInfo.setClassName(ContenedorDocumentoTabla.class.getName());
+       tableInfo.setTablesMethod("getTableName");
+       tableInfo.setColumnsMethod("getUpdateContenidoIdfileregistropres");
+        
+       rowInfo.addRow(this);
+       rowInfo.setClassName(ContenedorDocumentoDatos.class.getName());
+       rowInfo.setValuesMethod("updateContenidoIdfileregistropres");
+       rowsInfo.add(rowInfo);
+       
+       DynamicFns.update(dbConn, table.getByGuidQual(guid), tableInfo, rowsInfo);
+       
+
+    } catch (Exception e) {
+    	logger.error(e.getMessage(), e);
+    	throw new RepositorioDocumentosExcepcion(RepositorioDocumentosCodigosError.EC_RETRIEVE_DOCUMENT);       
+    } finally {
+       try{
+         if (dbConn.existConnection())
+           dbConn.close();
+       }catch(Exception ee){}
+       
+       if (incorrectGuid)
+         throw new GuidIncorrectoExcepcion(GuidIncorrectoCodigosError.EC_INCORRECT_GUID);
+    }
+  }
+  
+  /**
+   * Genera la sentencia de actualización
+   * del contenido y de Idfileregistropres.
+   *
+   * @param statement Sentencia sql precompilada.
+   * @param idx Indice de posición del primer parámetro que se recoge
+   * de la consulta.
+   * @return Indice de posición del último parámtro recogido
+   * @throws Exception Si se produce algún error.
+   */
+  public Integer updateContenidoIdfileregistropres(DbInputStatement statement, Integer idx) throws Exception {
+     int index = idx.intValue();
+     
+     statement.setBytes(index ++, content);
+     statement.setShortText(index++, fileRegistroPresencial);
+     
+     return new Integer(index);
+  }
+  
+  /**
+   * [Ticket 1014 Teresa FIN]
+  */
   
   
   /**

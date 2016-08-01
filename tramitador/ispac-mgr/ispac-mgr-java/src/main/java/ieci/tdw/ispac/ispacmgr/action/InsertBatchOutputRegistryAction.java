@@ -8,7 +8,6 @@ import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
-import ieci.tdw.ispac.ispaclib.bean.ItemBean;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.sicres.RegisterHelper;
 import ieci.tdw.ispac.ispaclib.sicres.vo.DocumentInfo;
@@ -34,6 +33,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
+
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+import es.dipucr.sigem.sellar.action.SellarDocumentos;
 
 
 public class InsertBatchOutputRegistryAction extends InsertOutputRegistryAction {
@@ -68,18 +70,32 @@ public class InsertBatchOutputRegistryAction extends InsertOutputRegistryAction 
 		List<IItem> documentsRegistered = new ArrayList<IItem>();
 		List<IItem> documentsEntrada =  new ArrayList<IItem>();
 		List<IItem> documentsSinDestino =  new ArrayList<IItem>();
-		
+
+		//[Manu Ticket #913] SIGEM firma registro rechazado        		
+		List<IItem> documentsRechazados =  new ArrayList<IItem>();
+		//[Manu Ticket #913] SIGEM firma registro rechazado
+
+		//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados
+		List<IItem> documentsNoFirmados =  new ArrayList<IItem>();
+		//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados
 		
 		String query = "WHERE ID IN ("+StringUtils.join(multibox, ',')+")";
+
 		IItemCollection itemcol = entitiesAPI.queryEntities(SpacEntities.SPAC_DT_DOCUMENTOS, query);
         
-		for (Iterator<IItem> it = itemcol.iterator(); it.hasNext();) {
-        	IItem itemDoc = it.next();
+		for (Iterator<?> it = itemcol.iterator(); it.hasNext();) {
+        	IItem itemDoc = (IItem) it.next();
         	//Si el tipo de registro del documento no es de salida o ya está registrado no se tienen en cuenta en la operacion
         	if (StringUtils.equals(itemDoc.getString("TP_REG"), RegisterType.SALIDA) 
         			&& itemDoc.get("NREG") == null
         			&& StringUtils.isNotEmpty(itemDoc.getString("DESTINO"))
-        	   ){
+        			//[Manu Ticket #913] SIGEM firma registro rechazado
+        			&& !itemDoc.getString("ESTADOFIRMA").equals("04")
+            		//[Manu Ticket #913] SIGEM firma registro rechazado
+        			//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados
+        			&& itemDoc.getString("ESTADOFIRMA").equals("02")
+        			//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados   
+        			){
         		documentIds.add(String.valueOf(itemDoc.getKeyInt()));
         	}else{
         		if (itemDoc.get("NREG") != null){
@@ -89,18 +105,43 @@ public class InsertBatchOutputRegistryAction extends InsertOutputRegistryAction 
         		}else if (StringUtils.isEmpty(itemDoc.getString("DESTINO"))){
         			documentsSinDestino.add(itemDoc);	
         		}
+        		//[Manu Ticket #913] SIGEM firma registro rechazado        		
+	        	else if (itemDoc.getString("ESTADOFIRMA").equals("04")){
+	    			documentsRechazados.add(itemDoc);	
+	    		}
+        		//[Manu Ticket #913] SIGEM firma registro rechazado
+    			//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados       			
+	        	else if (!itemDoc.getString("ESTADOFIRMA").equals("02")){
+	        		documentsNoFirmados.add(itemDoc);	
+	    		}
+    			//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados  
+
         	}
         }
 
 		if (documentIds.isEmpty()){
-        	throw new ISPACInfo("exception.sicres.notDocuments",false);	
+			//[Manu Ticket #107] - INICIO - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
+			SellarDocumentos sellarDocumentos = new SellarDocumentos(session.getClientContext(), managerAPI.currentState(getStateticket(request)).getTaskId());				
+	        sellarDocumentos.sellarDocumentos();
+	        
+			return mapping.findForward("refresh");
+			
+			//throw new ISPACInfo("exception.sicres.notDocuments",false);
+			//[Manu Ticket #107] - FIN - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
         }
 		
 		request.setAttribute("docIds", StringUtils.join(documentIds.toArray(), ','));
 
 		request.setAttribute("documentsRegistered", documentsRegistered);
 		request.setAttribute("documentsEntrada", documentsEntrada);
-		request.setAttribute("documentsSinDestino", documentsSinDestino);		
+		request.setAttribute("documentsSinDestino", documentsSinDestino);	
+		//[Manu Ticket #913] SIGEM firma registro rechazado
+		request.setAttribute("documentsRechazados", documentsRechazados);		
+		//[Manu Ticket #913] SIGEM firma registro rechazado
+
+		//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados
+		request.setAttribute("documentsNoFirmados", documentsNoFirmados);		
+		//[Manu Ticket #111] ALSIGM3 No registrar de salida documentos NO firmados
 		
 		request.setAttribute("numExp", managerAPI.currentState(getStateticket(request)).getNumexp());
 		request.setAttribute("action", "insertBatchOutputRegistry.do");
@@ -152,14 +193,26 @@ public class InsertBatchOutputRegistryAction extends InsertOutputRegistryAction 
 
         List<String> registers_ok = new ArrayList<String>();
         List<String> registers_ko = new ArrayList<String>();
-        for (Iterator<IItem> iterator = itemcol.iterator(); iterator.hasNext();) {
-			IItem itemDoc = iterator.next();
-			try{			
+        for (Iterator<?> iterator = itemcol.iterator(); iterator.hasNext();) {
+			IItem itemDoc = (IItem) iterator.next();
+			try{
 				DocumentInfo[] documentInfo = getDocuments(session, Arrays.asList(new String[]{String.valueOf(itemDoc.getKeyInt())}));
 				
 				ThirdPerson destiny = new ThirdPerson(itemDoc.getString("DESTINO_ID"), itemDoc.getString("DESTINO"));
-				String summary = itemDoc.getString("NOMBRE") + "  -  Ref.Exp.: " + currentState.getNumexp();
 				
+				 /**
+				 * [Teresa Ticket #607] INICIO Adjuntar en el registro el asunto del expediente.
+				 * **/	
+				
+				IItem expediente = ExpedientesUtil.getExpediente(cct, currentState.getNumexp());
+				String asuntoExpediente = expediente.getString("ASUNTO");
+		       
+				String summary = itemDoc.getString("NOMBRE") + "  -  Ref.Exp.: " + currentState.getNumexp() + " - Asunto Exp.: " + asuntoExpediente;
+		        
+		        /**
+				 * [Teresa Ticket #607] FIN Adjuntar en el registro el asunto del expediente.
+				 * **/
+		        
 		        Register register = generateRegister(defaultForm, currentState, documentInfo, destiny, summary);
 		        RegisterInfo registerInfo = registerAPI.insertRegister(register);
 		        List<IItem> documentList = null;
@@ -183,6 +236,11 @@ public class InsertBatchOutputRegistryAction extends InsertOutputRegistryAction 
 			}
         }
         
+		//[Manu Ticket #107] - INICIO-  ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
+		SellarDocumentos sellarDocumentos = new SellarDocumentos(cct, managerAPI.currentState(getStateticket(request)).getTaskId());				
+        sellarDocumentos.sellarDocumentos();
+        //[Manu Ticket #107] - FIN -ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes
+
         request.setAttribute("REGISTERS_OK", registers_ok);
         request.setAttribute("REGISTERS_KO", registers_ko);
         

@@ -14,6 +14,14 @@
 		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 	<!-- ISICRES -->
@@ -111,6 +119,13 @@
 			<scope>compile</scope>
 		</dependency>
 
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Desktop-Jar</artifactId>
+			<version>${isicres.version}</version>
+		</dependency>
+
 		<!--  -->
 
 		<dependency>
@@ -197,6 +212,12 @@
 			<version>${fwktd.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>hibernate</groupId>
+			<artifactId>hibernate</artifactId>
+			<version>2.1.6</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -220,7 +241,7 @@
 			<resource>
 				<filtering>true</filtering>
 				<directory>${unpack.config.directory}/SIGEM_RegistroPresencial/Isicres</directory>
-				<targetPath>/SIGEM_RegistroPresencial</targetPath>
+				<targetPath>${unpack.config.directory}/SIGEM_RegistroPresencial</targetPath>
 				<excludes>
 					<exclude>**/log4j.xml</exclude>
 				</excludes>

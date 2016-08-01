@@ -10,6 +10,9 @@ public class UserDataTable {
 	private static final String CN_ID_CERTIFICADO = "id_certificado";
 	private static final String CN_NOMBRE = "nombre";
 	private static final String CN_APELLIDOS = "apellidos";
+	
+	//[Manu Ticket #175] + Crear un campo DNI
+	private static final String CN_DNI = "dni";
 
 	public static final String GET_UPDATE_COLUMN_NAMES_METHOD = "getUpdateBaseColumnNames";
 	public static final String GET_INSERT_COLUMN_NAMES_METHOD = "getInsertBaseColumnNames";
@@ -28,7 +31,7 @@ public class UserDataTable {
 	 */
 	public String getAllColumnNames() {
 		String val = CN_ID + ", " + CN_CARGO + ", " + CN_EMAIL + ", " + CN_TFNO_MOVIL + ", "
-				+ CN_ID_CERTIFICADO + ", " + CN_NOMBRE + ", " + CN_APELLIDOS;
+				+ CN_ID_CERTIFICADO + ", " + CN_NOMBRE + ", " + CN_APELLIDOS + ", " + CN_DNI;
 		return val;
 	}
 
@@ -44,7 +47,7 @@ public class UserDataTable {
 	 */
 	public String getUpdateBaseColumnNames() {
 		String val = CN_CARGO + ", " + CN_EMAIL + ", " + CN_TFNO_MOVIL + ", " + CN_ID_CERTIFICADO
-				+ ", " + CN_NOMBRE + ", " + CN_APELLIDOS;
+				+ ", " + CN_NOMBRE + ", " + CN_APELLIDOS + ", " + CN_DNI;
 		return val;
 	}
 

@@ -16,8 +16,23 @@
 		<log4j.version>1.2.13</log4j.version>
 	</properties>
 
-	<dependencies>
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
 
+	<dependencies>
+		
+		<!-- [DipuCR-Agustin #94] jar de invesdoc-admin sin las clases repetidas en SIGEM_EstructuraOrganizativa, subido directamente al nexus -->
+		<dependency>
+  		<groupId>es.ieci.tecdoc.invesdoc</groupId>
+  		<artifactId>invesdoc-admin-firma</artifactId>
+  		<version>0.1</version>
+    </dependency>
+		
 		<!--  Servicio de Intermediacion -->
 	    <dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
@@ -30,7 +45,7 @@
 			<version>${pom.version}</version>
 			<artifactId>SIGEM_ServicioIntermediacionRecubrimientoWSClient</artifactId>
 		</dependency>
-
+		
 		<!-- SIGEM dependencies -->
 
 		<dependency>
@@ -53,6 +68,28 @@
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_entidades</artifactId>
 			<version>${pom.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>es.dipucr</groupId>
+					<artifactId>itext</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>es.dipucr.itext</groupId>
+					<artifactId>itextpdf</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>es.dipucr.itext2</groupId>
+					<artifactId>itextpdf</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.itextpdf</groupId>
+					<artifactId>itextpdf</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>jasperreports</groupId>
+					<artifactId>jasperreports</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -61,13 +98,9 @@
 			<version>${pom.version}</version>
 			<exclusions>
 				<exclusion>
-					<groupId>es.ieci.tecdoc.sigem</groupId>
-					<artifactId>sigem_estructuraOrganizativa</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>es.ieci.tecdoc.sigem</groupId>
-					<artifactId>sigem_estructuraOrganizativaCore</artifactId>
-				</exclusion>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+					<artifactId>invesdoc-admin</artifactId>
+				</exclusion>				
 				<exclusion>
 					<groupId>xml-apis</groupId>
 					<artifactId>xml-apis</artifactId>
@@ -84,6 +117,13 @@
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_notificacion</artifactId>
 			<version>${pom.version}</version>
+			<!-- Agustin excluir invesdoc-admin #94 -->
+			<exclusions>
+				<exclusion>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+					<artifactId>invesdoc-admin</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!--
@@ -127,6 +167,15 @@
 				<exclusion>
 				    <groupId>wss4j</groupId>
     				<artifactId>wss4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.ws.commons.schema</groupId>
+					<artifactId>XmlSchema</artifactId>
+				</exclusion>
+				<!-- Agustin excluir invesdoc-admin #94 -->			
+				<exclusion>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+					<artifactId>invesdoc-admin</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -249,11 +298,11 @@
 			<version>${archidoc.version}</version>
 		</dependency>
 
-		<!-- Librería utilizada en el registro de salida -->
+		<!-- Librer쟠utilizada en el registro de salida -->
 		<dependency>
 			<groupId>com.sun.media</groupId>
 			<artifactId>jai-codec</artifactId>
-			<version>1.1.3</version>
+			<version>1.1.3</version>	
 		</dependency>
 
 		<!-- Provided dependencies -->
@@ -272,6 +321,84 @@
 			<scope>provided</scope>
 		</dependency>
 
+<!-- 		<dependency> -->
+<!-- 			<groupId>verificacionDatosClient</groupId> -->
+<!-- 			<artifactId>verificacionDatosClient</artifactId> -->
+<!-- 			<version>1.0</version> -->
+<!-- 		</dependency> -->
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>DipucrFuncionesComunes</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>DipucrRules</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr.tablonedictal</groupId>
+			<artifactId>TablonEdictalBOE</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr.rendicioncuentas</groupId>
+			<artifactId>RendicionCuentas</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>SIGEM_TramitacionSecretariaDipucr</artifactId>
+			<version>3.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.ws.commons.axiom</groupId>
+					<artifactId>axiom-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr.contratacion</groupId>
+			<artifactId>Expropiaciones</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr.portafirmas</groupId>
+			<artifactId>PortaFirmasExterno</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr.contratacion</groupId>
+			<artifactId>Contratacion</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>telefonica.sigem</groupId>
+			<artifactId>SIGEM_Telefonica_Procedimientos</artifactId>
+			<version>2.0.0.6</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>es.dipucr.bdns</groupId>
+			<artifactId>BDNS</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.dipucr.subvenciones</groupId>
+			<artifactId>Subvenciones</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
@@ -369,6 +496,41 @@
 				</dependencies>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-antrun-plugin
+										</artifactId>
+										<versionRange>
+											[1.3,)
+										</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<profiles>

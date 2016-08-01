@@ -115,7 +115,8 @@ public class DelegateOrgAction extends BaseAction {
         SchemeMgr.loadContextHeader(state, request, getResources(request), session);
 
     	// Establecer el menu
-        request.setAttribute("menus", MenuFactory.getDelegateMenu(cct, getResources(request)));
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+        request.setAttribute("menus", MenuFactory.getDelegateMenu(cct, getResources(request), state));
 
 		////////////////////////////
 		// RESPONSABLES

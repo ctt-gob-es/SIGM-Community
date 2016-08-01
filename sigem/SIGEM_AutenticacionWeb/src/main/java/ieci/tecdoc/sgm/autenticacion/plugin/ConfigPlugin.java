@@ -30,6 +30,28 @@ public class ConfigPlugin extends BasePlugin
   private String m_redirCertificacion = null;
   private String m_redirConsultaRegistroTelematico = null;
   
+  //INICIO [Teresa Ticket 431 SIGEM nuevo proyecto para la visualización de los expedientes de organos colegiados]
+  private String m_redirConsultaMiembro = null;
+  public String getRedirConsultaMiembro() {
+		return m_redirConsultaMiembro;
+	  }
+
+	  public void setRedirConsultaMiembro(String redirConsultaMiembro) {
+		this.m_redirConsultaMiembro = redirConsultaMiembro;
+	  }
+  //FIN
+	  
+  //[eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.
+  private String m_redirArbolDocumental = null;
+  public String getRedirArbolDocumental() {
+	  return m_redirArbolDocumental;
+  }
+
+  public void setRedirArbolDocumental(String redirArbolDocumental) {
+	  this.m_redirArbolDocumental = redirArbolDocumental;
+  }
+  //FIN
+  
   /*
    * Métodos 
    */
@@ -94,6 +116,11 @@ public class ConfigPlugin extends BasePlugin
     m_servlet.getServletContext().removeAttribute(Defs.PLUGIN_REDIRREGISTROTELEMATICO);
     m_servlet.getServletContext().removeAttribute(Defs.PLUGIN_REDIRCERTIFICACION);
     m_servlet.getServletContext().removeAttribute(Defs.PLUGIN_REDIRCONSULTAREGISTROTELEMATICO);
+    //INICIO [Teresa Ticket 431 SIGEM nuevo proyecto para la visualización de los expedientes de organos colegiados]
+    m_servlet.getServletContext().removeAttribute(Defs.PLUGIN_REDIRCONSULTAMIEMBRO);
+    //FIN
+    m_servlet.getServletContext().removeAttribute(Defs.PLUGIN_REDIRARBOLDOCUMENTAL);
+
     
     m_servlet = null;
     //m_config = null;
@@ -119,6 +146,12 @@ public class ConfigPlugin extends BasePlugin
     m_servlet.getServletContext().setAttribute(Defs.PLUGIN_REDIRREGISTROTELEMATICO, this.m_redirRegistroTelematico);
     m_servlet.getServletContext().setAttribute(Defs.PLUGIN_REDIRCERTIFICACION, this.m_redirCertificacion);
     m_servlet.getServletContext().setAttribute(Defs.PLUGIN_REDIRCONSULTAREGISTROTELEMATICO, this.m_redirConsultaRegistroTelematico);
+    //INICIO [Teresa Ticket 431 SIGEM nuevo proyecto para la visualización de los expedientes de organos colegiados]
+    m_servlet.getServletContext().setAttribute(Defs.PLUGIN_REDIRCONSULTAMIEMBRO, this.m_redirConsultaMiembro);
+    //FIN
+    m_servlet.getServletContext().setAttribute(Defs.PLUGIN_REDIRARBOLDOCUMENTAL, this.m_redirArbolDocumental);
+
+    
     
     if (logger.isDebugEnabled())
     {
@@ -128,6 +161,8 @@ public class ConfigPlugin extends BasePlugin
       logger.debug("Defs.PLUGIN_REDIRREGISTROTELEMATICO: " + this.m_redirRegistroTelematico);
       logger.debug("Defs.PLUGIN_REDIRCERTIFICACION: " + this.m_redirCertificacion);
       logger.debug("Defs.PLUGIN_REDIRCONSULTAREGISTROTELEMATICO: " + this.m_redirConsultaRegistroTelematico);
+      logger.debug("Defs.PLUGIN_REDIRCONSULTAMIEMBRO: " + this.m_redirConsultaMiembro);
+      logger.debug("Defs.PLUGIN_REDIRARBOLDOCUMENTAL: " + this.m_redirArbolDocumental);
     }
   }
 }

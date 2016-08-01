@@ -168,6 +168,21 @@
 								- <bean:write name="doc" property="String(NOMBRE)"/>, <bean:write name="doc" property="String(DESCRIPCION)"/><br/>
 							</logic:iterate>
 						</logic:notEmpty>
+						<logic:notEmpty name="documentsRechazados">
+							<br/><bean:message key="forms.errors.register.rechazados"/>:<br/>
+							<logic:iterate name="documentsRechazados" id="doc" type="ieci.tdw.ispac.api.item.IItem">
+								- <bean:write name="doc" property="String(NOMBRE)"/>, <bean:write name="doc" property="String(DESCRIPCION)"/><br/>
+							</logic:iterate>
+						</logic:notEmpty>
+						
+						<!--[Manu Ticket #111] - INICIO - ALSIGM3 No registrar de salida documentos NO firmados -->
+						<logic:notEmpty name="documentsNoFirmados">
+							<br/><bean:message key="forms.errors.register.noFirmados"/>:<br/>
+							<logic:iterate name="documentsNoFirmados" id="doc" type="ieci.tdw.ispac.api.item.IItem">
+								- <bean:write name="doc" property="String(NOMBRE)"/>, <bean:write name="doc" property="String(DESCRIPCION)"/><br/>
+							</logic:iterate>
+						</logic:notEmpty>
+						<!--[Manu Ticket #111] - FIN - ALSIGM3 No registrar de salida documentos NO firmados -->
 					</div>
 
 

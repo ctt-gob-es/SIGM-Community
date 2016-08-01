@@ -9,7 +9,29 @@
 
 <script language='JavaScript' type='text/javascript'><!--
 
+	var block = 1;
 	var idContenido="";
+	
+	//INICIO [eCenpri-Felipe #735]
+	function showTab(i) {
+		
+		if (document.getElementById('block'+ i) != undefined) {
+		
+			document.getElementById('block'+ block).style.display='none';
+			document.getElementById('tdlink'+ block).className="unselect";
+			document.getElementById('block'+ i).style.display='block';
+			document.getElementById('tdlink'+ i).className = 'select';
+			block = i;
+		}
+		else {
+			document.getElementById('block'+ block).style.display='block';
+			document.getElementById('tdlink'+ block).className = 'select';
+		}
+		
+		// Guardar la solapa que se muestra
+		document.defaultForm.block.value = block;
+	}
+	//FIN [eCenpri-Felipe #735]
 	
 	function save()	{
 	
@@ -35,18 +57,33 @@
 		document.defaultForm.action = "storeEntity.do";
 		document.defaultForm.name = "Expedientes";
 
-		if (validateExpedientes(document.defaultForm)) {
-		
-			document.defaultForm.submit();
-			//Mostramos el mensaje de operación en progreso si se ha establecido un numero de registro, ya que si se incorporan documentos vinculados puede ser una operacion costosa
-			if ( (document.defaultForm.elements[ 'property(SPAC_EXPEDIENTES:NREG)' ].value != '') && (_nreg != document.defaultForm.elements[ 'property(SPAC_EXPEDIENTES:NREG)' ].value) ){
-				showLayer('waitOperationInProgress');
-			}		
+		//INICIO [eCenpri-Felipe #735]
 
+		var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+		var form;
+		if (is_chrome){
+			form = document.Expedientes;
+		}
+		else{
+			form = document.defaultForm;
 		}
 
+		if (validateExpedientes(form)) {
 		
-		ispac_needToConfirm = true;
+			form.submit();
+			if ( (document.defaultForm.elements[ 'property(SPAC_EXPEDIENTES:NREG)' ].value != '') && (_nreg != document.defaultForm.elements[ 'property(SPAC_EXPEDIENTES:NREG)' ].value) ){
+				showLayer('waitOperationInProgress');
+			}
+		}
+
+		if (is_chrome){
+			ispac_needToConfirm = false;
+		}
+		else{
+			ispac_needToConfirm = true;
+		}
+		//FIN [eCenpri-Felipe #735]
+		
 	}
 
 	function newThirParty()	{

@@ -42,12 +42,14 @@ import ieci.tdw.ispac.ispaclib.dao.entity.MultivalueTable;
 import ieci.tdw.ispac.ispaclib.dao.idsequences.IdSequenceMgr;
 import ieci.tdw.ispac.ispaclib.dao.join.TableJoinFactoryDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PCtoFirmaDAO;
+import ieci.tdw.ispac.ispaclib.dao.procedure.PCtoFirmaTramiteDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PEntidadDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PEventoDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PFrmFaseDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PFrmTramiteDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PPlazoDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PRelPlazoDAO;
+import ieci.tdw.ispac.ispaclib.dao.procedure.PTramDatosEspecificosDAO;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.db.DbColDef;
 import ieci.tdw.ispac.ispaclib.db.DbIndexDefinition;
@@ -1159,6 +1161,40 @@ public class CatalogAPI implements ICatalogAPI
 			mcontext.releaseConnection(cnt);
 		}
     }
+    
+    /**
+     * [eCenpri-Felipe #592]
+	 * Obtener los circuitos de firmas disponibles para un trámite
+	 * 
+	 * @param taskPcdId
+	 * @return IItemCollection
+	 * @throws ISPACException
+	 */
+    public IItemCollection getCtosFirmasTaskPcd(int taskPcdId)
+    throws ISPACException
+    {
+    	DbCnt cnt = mcontext.getConnection();
+    	
+		try
+		{
+			String sql = "WHERE CFC.ID_CIRCUITO = PCTOSFIRMATRAM.ID_CIRCUITO " +
+					"AND PCTOSFIRMATRAM.ID_TRAM_PCD  = " + taskPcdId;
+			TableJoinFactoryDAO factory = new TableJoinFactoryDAO();
+			factory.addTable( "SPAC_CTOS_FIRMA_CABECERA", "CFC");
+			factory.addTable( "SPAC_P_CTOSFIRMATRAMITE", "PCTOSFIRMATRAM");
+			
+	   		CollectionDAO collection = factory.queryTableJoin(cnt, sql);
+			return collection.disconnect();
+		}
+		catch (ISPACException ie)
+		{
+			throw new ISPACException("Error en CatalogAPI:getCtosFirmasTaskPcd("+ taskPcdId + ")", ie);
+		}
+		finally
+		{
+			mcontext.releaseConnection(cnt);
+		}	
+    }
 
 	/**
 	 * Para añadir un circuito de firmas al procedimiento seleccionado
@@ -1189,6 +1225,34 @@ public class CatalogAPI implements ICatalogAPI
 			mcontext.releaseConnection(cnt);
 		 }
 	}
+	 
+	 /**
+	  * [eCenpri-Felipe #592] Para añadir un circuito de firmas al trámite
+	  * seleccionado
+	  * 
+	  * @param taskPcdId
+	  * @param ctofirmaId
+	  * @throws ISPACException
+	  */
+	 public void addCtoFirmasTramite(int taskPcdId, int ctofirmaId)
+	 		throws ISPACException
+	 {
+
+		 DbCnt cnt = mcontext.getConnection();
+
+		 try {
+			 PCtoFirmaTramiteDAO pcftdao = new PCtoFirmaTramiteDAO(cnt);
+			 pcftdao.createNew(cnt);
+			 pcftdao.set("ID_CIRCUITO", ctofirmaId);
+			 pcftdao.set("ID_TRAM_PCD", taskPcdId);
+			 pcftdao.store(cnt);
+		 } catch (Exception e) {
+			 throw new ISPACException("Error en CatalogAPI:addCtoFirmasTramite("
+					 + taskPcdId + ", " + ctofirmaId + ")", e);
+		 } finally {
+			 mcontext.releaseConnection(cnt);
+		 }
+	 }
 
 	/**
 	 * Para borrar circuito de firmas asociado a un procedimiento
@@ -1216,6 +1280,34 @@ public class CatalogAPI implements ICatalogAPI
 			mcontext.releaseConnection(cnt);
 		 }
 	}
+	 
+	 /**
+	  * [eCenpri-Felipe #592]
+	  * Borra el circuito de firmas asociado al trámite que se le pasa como parametro
+	  * 
+	  * @param taskPcdId
+	  * @param ctofirmaId
+	  * @throws ISPACException
+	  */	
+	 public void dropCtoFirmasTramite(int taskPcdId, int ctofirmaId)
+	 	throws ISPACException
+	 {
+		 DbCnt cnt = mcontext.getConnection();
+		 
+		 try {
+			 CollectionDAO collection = new CollectionDAO(PCtoFirmaTramiteDAO.class);
+			 collection.delete(cnt, "WHERE ID_CIRCUITO=" + ctofirmaId + " AND ID_TRAM_PCD=" + taskPcdId);						
+		 }
+		 catch (Exception e)
+		 {
+			 throw new ISPACException("Error en CatalogAPI:dropCtoFirmas("
+					 + taskPcdId + ", " + ctofirmaId + ")",e);
+		 }
+		 finally
+		 {
+			 mcontext.releaseConnection(cnt);
+		 }
+	 }
 
     /* (non-Javadoc)
      * @see ieci.tdw.ispac.api.ICatalogAPI#incOrderPEntity(int, int)
@@ -4113,5 +4205,113 @@ public class CatalogAPI implements ICatalogAPI
 		return null;
 	}
 
+	/**
+	 * [eCenpri-Manu #909] SIGEM Pestaña Datos Específicos del Trámite
+	 * Obtiene los datos específicos de un trámite
+	 * @param  taskPcdId
+	 * @return IItemCollection
+	 * @throws ISPACException
+	 */
+	public IItem getDatosEspecificosTramite(int taskPcdId) throws ISPACException{
+		DbCnt cnt = mcontext.getConnection();
+		try
+		{
+			String sql = "WHERE ID_TRAM_PCD  = " + taskPcdId;
+			
+	   		PTramDatosEspecificosDAO entidad = new PTramDatosEspecificosDAO(cnt);
+	   			   		
+	   		try{
+	   			entidad.load(cnt, sql);
+	   		}
+	   		catch(ISPACNullObject e){
+	   			entidad.newObject(cnt);
+				entidad.setKey(ISPACEntities.ENTITY_NULLREGKEYID);
+	   		}
+	   		
+			return entidad;
+		}
+		catch (ISPACException ie)
+		{
+			throw new ISPACException("Error en getDatosEspecificosTramite("+ taskPcdId + ")", ie);
+		}
+		finally
+		{
+			mcontext.releaseConnection(cnt);
+		}	
+	}
 
+	
+	//[eCenpri-Manu #120] INICIO - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	
+	/**
+	 * Obtiene los informes del catálogo.
+	 *
+	 * @return Lista de informes del catálogo.
+	 * @throws ISPACException
+	 *             si ocurre algún error.
+	 */
+	public IItemCollection getPManualesUsuario() throws ISPACException {
+		return getPManualesUsuario(null);
+	}
+	
+	/**
+	 * Obtiene los informes del catálogo a partir del nombre.
+	 *
+	 * @param pattern
+	 *            Patrón del nombre del informe.
+	 * @return Lista de informes del catálogo.
+	 * @throws ISPACException
+	 *             si ocurre algún error.
+	 */
+	public IItemCollection getPManualesUsuario(String pattern) throws ISPACException {
+
+		StringBuffer sql = new StringBuffer();
+
+        if (StringUtils.isNotBlank(pattern)) {
+        	sql.append("WHERE NOMBRE LIKE '%")
+        		.append(DBUtil.replaceQuotes(pattern.trim()))
+        		.append("%'");
+        }
+
+        sql.append(" ORDER BY NOMBRE");
+
+		return queryCTEntities(ICatalogAPI.ENTITY_CT_MANUALES_USUARIO, sql.toString());
+	}
+	
+	/**
+	 * Obtiene los manuales de usuario de un tipo determinado
+	 * @param type Tipo del informe 1-Genérico 2-Específico 3-Global 4-Busqueda
+	 * @return
+	 */
+	public IItemCollection getManualesUsuarioByType(int type) throws ISPACException{
+		StringBuffer sql = new StringBuffer();
+
+        sql.append("WHERE TIPO= "+type);
+        sql.append(" ORDER BY NOMBRE");
+
+		return queryCTEntities(ICatalogAPI.ENTITY_CT_MANUALES_USUARIO, sql.toString());
+	}
+	
+	/**
+	 * Obtiene los identificadores de los manuales de usuario que estan asociados al formulario de búsqueda
+	 * @param idFrm Identificador del formulario de búsqueda
+	 * @return Colección con los informes asociados al formulario de búsqueda
+	 * @throws ISPACException
+	 */
+	public IItemCollection getAsociateMaualesUsuario(int idFrm)throws ISPACException{
+		DbCnt cnt= null ;
+
+		 try{
+			 cnt=mcontext.getConnection();
+			 return FrmBusquedaReportDAO.getReportByIdFormSearch(cnt, idFrm).disconnect();
+
+		 }catch (ISPACException ie) {
+				throw new ISPACException("Error en CatalogPI:getAsociateReports(" + idFrm
+						+ ")", ie);
+			} finally {
+				mcontext.releaseConnection(cnt);
+			}
+	}
+	
+	//[eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 }

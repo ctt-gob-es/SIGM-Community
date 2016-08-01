@@ -2,6 +2,7 @@ package es.ieci.tecdoc.fwktd.core.spring.configuration.jdbc.datasource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +113,12 @@ public class MultiEntityDataSource extends AbstractDataSource {
 		Connection result = multiEntityDatasourceHelper.getDatasource()
 				.getConnection(username, password);
 		return result;
+	}
+
+	public java.util.logging.Logger getParentLogger()
+			throws SQLFeatureNotSupportedException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

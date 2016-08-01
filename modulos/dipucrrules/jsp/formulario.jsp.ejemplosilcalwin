@@ -1,0 +1,107 @@
+<%@ taglib uri="/WEB-INF/struts-tiles.tld" prefix="tiles" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/ispac-util.tld" prefix="ispac" %>
+<%@ taglib uri="/WEB-INF/c.tld" prefix="c1" %>
+<%@page import="org.apache.log4j.Logger"%>
+<c1:set var="aux0"><bean:write name="defaultForm" property="entityApp.label(SUBV_SICALWIN:SUBV_SICALWIN)" /></c1:set>
+
+<jsp:useBean id="aux0" type="java.lang.String"/> <ispac:tabs><ispac:tab  title='<%=aux0%>'>
+<div id="dataBlock_SUBV_SICALWIN" style="position: relative; height: 185px; width: 600px">
+
+<div id="label_SUBV_SICALWIN:PGA_EJE" style="position: absolute; top: 10px; left: 10px; width: 110px;" class="formsTitleB">
+<bean:write name="defaultForm" property="entityApp.label(SUBV_SICALWIN:PGA_EJE)" />:</div>
+<div id="data_SUBV_SICALWIN:PGA_EJE" style="position: absolute; top: 10px; left: 130px; width:100% ;" >
+
+	<nobr>
+		<ispac:htmlTextImageFrame property="property(SUBV_SICALWIN:PGA_EJE)" readonly="true" readonlyTag="false" 
+		propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" size="80" id="SEARCH_SICALWIN_EJE" 
+		target="workframe" action="selectValueSicalwin.do?entity=SUBV_SICALWIN" image="img/search-mg.gif" 
+		titleKeyLink="title.link.data.selection" imageDelete="img/borrar.gif" titleKeyImageDelete="title.delete.data.selection" 
+		styleClassDeleteLink="tdlink" confirmDeleteKey="msg.delete.data.selection" showDelete="true" showFrame="true" width="640" height="480" >
+		<ispac:parameter name="SEARCH_SICALWIN_EJE" id="property(SUBV_SICALWIN:PGA_EJE)" property="EJERCICIO" />
+		<ispac:parameter name="SEARCH_SICALWIN_EJE" id="property(SUBV_SICALWIN:PGA_ORG)" property="ORGANIZACION" />
+		<ispac:parameter name="SEARCH_SICALWIN_EJE" id="property(SUBV_SICALWIN:PGA_FUN)" property="FUNCIONAL" />
+		<ispac:parameter name="SEARCH_SICALWIN_EJE" id="property(SUBV_SICALWIN:PGA_ECO)" property="ECONOMICO" />
+		<ispac:parameter name="SEARCH_SICALWIN_EJE" id="property(SUBV_SICALWIN:PGA_DES)" property="DESCRIPCION" />
+		</ispac:htmlTextImageFrame>
+	</nobr>
+</div>
+
+<div id="label_SUBV_SICALWIN:PGA_ORG" style="position: absolute; top: 35px; left: 10px; width: 110px;" class="formsTitleB">
+<bean:write name="defaultForm" property="entityApp.label(SUBV_SICALWIN:PGA_ORG)" />:</div>
+<div id="data_SUBV_SICALWIN:PGA_ORG" style="position: absolute; top: 35px; left: 130px; width:100% ;" >
+
+
+	<nobr>
+		<ispac:htmlTextImageFrame property="property(SUBV_SICALWIN:PGA_ORG)" readonly="true" readonlyTag="false" 
+		propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" size="80" id="SEARCH_SICALWIN_ORG" 
+		target="workframe" action="selectValueSicalwin.do?entity=SUBV_SICALWIN" image="img/search-mg.gif"
+		captionKey="&ejerPartida='+document.forms[0].elements[ 'property(SUBV_SICALWIN:PGA_EJE)' ].value+'" 
+		titleKeyLink="title.link.data.selection" imageDelete="img/borrar.gif" titleKeyImageDelete="title.delete.data.selection" 
+		styleClassDeleteLink="tdlink" confirmDeleteKey="msg.delete.data.selection" showDelete="true" showFrame="true" width="640" height="480" >
+		<ispac:parameter name="SEARCH_SICALWIN_ORG" id="property(SUBV_SICALWIN:PGA_ORG)" property="ORGANIZACION" />
+		<ispac:parameter name="SEARCH_SICALWIN_ORG" id="property(SUBV_SICALWIN:PGA_FUN)" property="FUNCIONAL" />
+		<ispac:parameter name="SEARCH_SICALWIN_ORG" id="property(SUBV_SICALWIN:PGA_ECO)" property="ECONOMICO" />
+		<ispac:parameter name="SEARCH_SICALWIN_ORG" id="property(SUBV_SICALWIN:PGA_DES)" property="DESCRIPCION" />
+		</ispac:htmlTextImageFrame>
+	</nobr>
+
+</div>
+
+<div id="label_SUBV_SICALWIN:PGA_FUN" style="position: absolute; top: 60px; left: 10px; width: 110px;" class="formsTitleB">
+<bean:write name="defaultForm" property="entityApp.label(SUBV_SICALWIN:PGA_FUN)" />:</div>
+<div id="data_SUBV_SICALWIN:PGA_FUN" style="position: absolute; top: 60px; left: 130px; width:100% ;" >
+
+	<nobr>
+		<ispac:htmlTextImageFrame property="property(SUBV_SICALWIN:PGA_FUN)" readonly="true" readonlyTag="false" 
+		propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" size="80" id="SEARCH_SICALWIN_FUN" 
+		target="workframe" action="selectValueSicalwin.do?entity=SUBV_SICALWIN" image="img/search-mg.gif"
+		captionKey="&ejerPartida='+document.forms[0].elements[ 'property(SUBV_SICALWIN:PGA_EJE)' ].value+'&codOrgan='+document.forms[0].elements[ 'property(SUBV_SICALWIN:PGA_ORG)' ].value+'" 
+		titleKeyLink="title.link.data.selection" imageDelete="img/borrar.gif" titleKeyImageDelete="title.delete.data.selection" 
+		styleClassDeleteLink="tdlink" confirmDeleteKey="msg.delete.data.selection" showDelete="true" showFrame="true" width="640" height="480" >
+		<ispac:parameter name="SEARCH_SICALWIN_FUN" id="property(SUBV_SICALWIN:PGA_FUN)" property="FUNCIONAL" />
+		<ispac:parameter name="SEARCH_SICALWIN_FUN" id="property(SUBV_SICALWIN:PGA_ECO)" property="ECONOMICO" />
+		<ispac:parameter name="SEARCH_SICALWIN_FUN" id="property(SUBV_SICALWIN:PGA_DES)" property="DESCRIPCION" />
+		</ispac:htmlTextImageFrame>	
+	</nobr>
+</div>
+
+<div id="label_SUBV_SICALWIN:PGA_ECO" style="position: absolute; top: 85px; left: 10px; width: 110px;" class="formsTitleB">
+<bean:write name="defaultForm" property="entityApp.label(SUBV_SICALWIN:PGA_ECO)" />:</div>
+<div id="data_SUBV_SICALWIN:PGA_ECO" style="position: absolute; top: 85px; left: 130px; width:100% ;" >
+
+	<nobr>
+		<ispac:htmlTextImageFrame property="property(SUBV_SICALWIN:PGA_ECO)" readonly="true" readonlyTag="false" 
+		propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" size="80" id="SEARCH_SICALWIN_ECO" 
+		target="workframe" action="selectValueSicalwin.do?entity=SUBV_SICALWIN" image="img/search-mg.gif"
+		captionKey="&ejerPartida='+document.forms[0].elements[ 'property(SUBV_SICALWIN:PGA_EJE)' ].value+'&codOrgan='+document.forms[0].elements[ 'property(SUBV_SICALWIN:PGA_ORG)' ].value+'&codFuncional='+document.forms[0].elements[ 'property(SUBV_SICALWIN:PGA_FUN)' ].value+'" 
+		titleKeyLink="title.link.data.selection" imageDelete="img/borrar.gif" titleKeyImageDelete="title.delete.data.selection" 
+		styleClassDeleteLink="tdlink" confirmDeleteKey="msg.delete.data.selection" showDelete="true" showFrame="true" width="640" height="480" >
+		<ispac:parameter name="SEARCH_SICALWIN_ECO" id="property(SUBV_SICALWIN:PGA_ECO)" property="ECONOMICO" />
+		<ispac:parameter name="SEARCH_SICALWIN_ECO" id="property(SUBV_SICALWIN:PGA_DES)" property="DESCRIPCION" />
+		</ispac:htmlTextImageFrame>
+	</nobr>
+
+</div>
+
+<div id="label_SUBV_SICALWIN:PGA_DES" style="position: absolute; top: 110px; left: 10px; width: 110px;" class="formsTitleB">
+<bean:write name="defaultForm" property="entityApp.label(SUBV_SICALWIN:PGA_DES)" />:</div>
+<div id="data_SUBV_SICALWIN:PGA_DES" style="position: absolute; top: 110px; left: 130px; width:100% ;" >
+
+	<nobr>
+		<ispac:htmlTextImageFrame property="property(SUBV_SICALWIN:PGA_DES)" readonly="true" readonlyTag="false" 
+		propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" size="80" id="SEARCH_SICALWIN_DES" 
+		target="workframe" action="selectValueSicalwin.do?entity=SUBV_SICALWIN" image="img/search-mg.gif"
+		captionKey="&ejerPartida='+document.forms[0].elements[ 'property(SUBV_SICALWIN:PGA_EJE)' ].value+'&codOrgan='+document.forms[0].elements[ 'property(SUBV_SICALWIN:PGA_ORG)' ].value+'&codFuncional='+document.forms[0].elements[ 'property(SUBV_SICALWIN:PGA_FUN)' ].value+'&ejerContab='+document.forms[0].elements[ 'property(SUBV_SICALWIN:PGA_ECO)' ].value+'" 
+		titleKeyLink="title.link.data.selection" imageDelete="img/borrar.gif" titleKeyImageDelete="title.delete.data.selection" 
+		styleClassDeleteLink="tdlink" confirmDeleteKey="msg.delete.data.selection" showDelete="true" showFrame="true" width="640" height="480" >
+		<ispac:parameter name="SEARCH_SICALWIN_DES" id="property(SUBV_SICALWIN:PGA_DES)" property="DESCRIPCION" />
+		</ispac:htmlTextImageFrame>
+	</nobr>
+	
+</div>
+
+</div>
+</ispac:tab></ispac:tabs>

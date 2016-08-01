@@ -36,10 +36,10 @@
 		<xsl:variable name="lang.nombreANotificacion" select="'Nom'"/>
 		<xsl:variable name="lang.documentoIdentidadANotificacion" select="'D.N.I '"/>
 		<xsl:variable name="lang.tipoviaANotificacion" select="'Via del domicili'"/>
-		<xsl:variable name="lang.domicilioANotificacion" select="'Domicili"/>
+		<xsl:variable name="lang.domicilioANotificacion" select="'Domicili'"/>
 		<xsl:variable name="lang.numeroANotificacion" select="'Nº del domicili'"/>
 		<xsl:variable name="lang.cpANotificacion" select="'Codi postal'"/>
-		<xsl:variable name="lang.telefonoANotificacion" select="'Teléfon"/>
+		<xsl:variable name="lang.telefonoANotificacion" select="'Teléfon'"/>
 		<xsl:variable name="lang.localidadANotificacion" select="'Localitat'"/>
 		<xsl:variable name="lang.provinciaANotificacion" select="'Provincia'"/>
 		<xsl:variable name="lang.plantaANotificacion" select="'Planta'"/>

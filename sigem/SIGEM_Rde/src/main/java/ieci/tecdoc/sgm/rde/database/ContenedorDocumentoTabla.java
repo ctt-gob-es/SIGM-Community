@@ -21,11 +21,15 @@ public class ContenedorDocumentoTabla extends ContenedorDocumentoImpl {
    private static final String CN_HASH = "FILEHASH";
    private static final String CN_EXTENSION = "EXTENSION";
    private static final String CN_TIMESTAMP = "FECHA";
+   //[Ticket 1014 Teresa]
+   private static final String CN_FILEREGISTROPRES = "IDFILEREGISTROPRES";
    private static final String ALL_COLUMN_NAMES = CN_GUID + ","
            + CN_CONTENT + ","
            + CN_HASH + ","
            + CN_EXTENSION + ","
-           + CN_TIMESTAMP;
+           + CN_TIMESTAMP+ ","
+         //[Ticket 1014 Teresa]
+            + CN_FILEREGISTROPRES;
 
    /**
     * Constructor de la clase ContenedorDocumentoTabla
@@ -110,5 +114,27 @@ public class ContenedorDocumentoTabla extends ContenedorDocumentoImpl {
 
       return qual;
    }
+   
+    //[Ticket 1014 Teresa INICIO]
+   /**
+    * Devuelve el nombre completo de las columnas mapeadas de la tabla
+    * para la fecha efectiva y el estado.
+    *
+    * @return Las columnas mencionadas.
+    */
+   public String getUpdateContenidoIdfileregistropres() {
+      String val = CN_CONTENT + "," 
+      			+ CN_FILEREGISTROPRES;
+      return val;
+   }
+
+   /**
+    * Devuelve el nombre de la columna file
+    * @return String Nombre de la columna file
+    */
+	public static String getCnFileregistropres() {
+		return CN_FILEREGISTROPRES;
+	}
+	//[Ticket 1014 Teresa FIN]
 
 }

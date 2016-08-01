@@ -682,21 +682,23 @@ public class FlowNodeMgr
         return buffer.toString();
     }
     
+    //[eCenpri-Manu #120] - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
     public String toXpdl(DbCnt cnt,
     					 Map ctStageIds,
 			 			 Map ctTaskIds,
 			 			 Map ctRuleIds,
 			 			 Map ctEntityIds,
 			 			 Map ctTpDocIds,
+			 			 Map ctManualesUsuarioIds, List manualesUsuario,
 			 			 Map subPcdIds) throws ISPACException
     {
         String sXpdl = null;
         StringBuffer buffer = new StringBuffer();
 
-        sXpdl = ExportProcedureMgr.elementsToXpdl(cnt, nodemap.values().iterator(), ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds);
+        sXpdl = ExportProcedureMgr.elementsToXpdl(cnt, nodemap.values().iterator(), ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, ctManualesUsuarioIds, manualesUsuario, subPcdIds);
         buffer.append(XmlTag.newTag(ExportProcedureMgr.TAG_ACTIVITIES, sXpdl));
         
-        sXpdl = ExportProcedureMgr.elementsToXpdl(cnt, flowmap.values().iterator(), ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, subPcdIds);
+        sXpdl = ExportProcedureMgr.elementsToXpdl(cnt, flowmap.values().iterator(), ctStageIds, ctTaskIds, ctRuleIds, ctEntityIds, ctTpDocIds, ctManualesUsuarioIds, manualesUsuario, subPcdIds);
         buffer.append(XmlTag.newTag(ExportProcedureMgr.TAG_TRANSITIONS, sXpdl));
 
         return buffer.toString();

@@ -61,19 +61,29 @@
 				<input type="text" id="csv" name="csv" class="small" value="${csv}" />
 			</p>
 
-
+			<!-- [eCenpri-Manu Ticket #280] - INICIO ALSIGM3 Incluir texto aclaratorio Consulta de documentos con CSV -->
+			<div>
+				<p style='text-align:justify;display:block;padding:0;margin: 0px 0px 0px 0px;color:#105CB6;font-family:helvetica;'>
+					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;NOTA: El código debe introducirse sin espacios.</br>
+					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;l = ele minúsucla</br>
+					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;I = i latina mayúscula</br>
+					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;0 = cero</br>
+					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;O = o mayúscula</br>
+				</p>
+			</div>			
 
 			<c:if test="${configProperties['fwktd-csv-webapp.useCaptcha']}">
-			<p>
-				<label for="captcha">
-					<spring:message code="label.form.csv.captcha" />
-				</label>
+			<p>	
+				<label for="captcha_answer">&nbsp;</label>		
 				<img id="captcha" src='<spring:url value="action/captcha" />' />
 				<br/>
-				<label for="captcha_answer">&nbsp;</label>
+				<label for="captcha">
+					Introduzca el texto de la imagen:
+				</label>
 				<input type="text" id="captcha_answer" name="captcha_answer" class="small" />
 			</p>
 			</c:if>
+			<!-- [eCenpri-Manu Ticket #280] - FIN ALSIGM3 Incluir texto aclaratorio Consulta de documentos con CSV -->
 		</div>
 	</form:form>
 
@@ -124,11 +134,43 @@
 			</dt>
 			<dd><fmt:formatDate pattern="yyyy-MM-dd" value="${infoDocumento.fechaCaducidad}" /></dd>
 			</c:if>
+			
+			<!-- [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida -->
+			
+			<c:if test="${!empty infoDocumento.numeroRegistro}">
+			<dt>
+				<spring:message code="label.document.numero_registro" />
+			</dt>
+			<dd>${infoDocumento.numeroRegistro}</dd>
+			
+			<dt>
+				<spring:message code="label.document.registro_date" />
+			</dt>
+			<dd><fmt:formatDate pattern="yyyy-MM-dd" value="${infoDocumento.fechaRegistro}" /></dd>
+			
+			<dt>
+				<spring:message code="label.document.origen_registro" />
+			</dt>
+			<dd>${infoDocumento.origenRegistro}</dd>
+			
+			<dt>
+				<spring:message code="label.document.destino_registro" />
+			</dt>
+			<dd>${infoDocumento.destinoRegistro}</dd>
+			</c:if>
+			
+			<!-- [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida -->
 		</dl>
 	</div>
 	</c:if>
 
-
+	<div class="infoDoc">
+		<!-- [Manu #65] + ALSIGM3 Añadir texto jurídico en formulario de búsqueda de documentos -->
+			<p style='text-align:justify;display:block;padding:0;margin: 0px 0px 0px 0px;color:#105CB6;'>
+De conformidad con lo dispuesto en el art. 18.1.b) de la ley 11/2007, de 22 de junio, de acceso electrónico de los ciudadanos a los Servicios Públicos, mediante la inserción del Código Seguro de Verificación (CVE) que aparece en la banda gris del documento electrónico, se permite al interesado la comprobación de la integridad del documento en esta sede electrónica.
+			</p>
+		<!-- [Manu #65] + ALSIGM3 Añadir texto jurídico en formulario de búsqueda de documentos -->
+	</div>
 
 <script type="text/javascript">
 //<!--

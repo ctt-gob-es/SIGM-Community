@@ -6,26 +6,29 @@
  */
 package ieci.tdw.ispac.api.rule;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
-import ieci.tdw.ispac.api.rule.EventsDefines;
-import ieci.tdw.ispac.api.rule.IRule;
-import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PEventoDAO;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author   juanin  To change the template for this generated type comment go to  Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class EventManager
 {
+	//[Manu Ticket #1186] Modificación de la clase EventManager para que muestre los errores en el logger
+	protected static final Logger logger = Logger.getLogger(EventManager.class);
+	//[Manu Ticket #1186] Modificación de la clase EventManager para que muestre los errores en el logger
+
 	private final IClientContext mcctx;
 	private final RuleContextBuilder mctxbuilder;
 
@@ -252,6 +255,9 @@ public class EventManager
 		}
 		catch(Exception e)
 		{
+			//[Manu Ticket #1186] Modificación de la clase EventManager para que muestre los errores en el logger
+			logger.error("Error ejecutando regla. " + e.getMessage(), e);
+			//[Manu Ticket #1186] Modificación de la clase EventManager para que muestre los errores en el logger
 			throw new ISPACException("Error ejecutando regla",e);
 		}
 	}
@@ -269,6 +275,9 @@ public class EventManager
 		}
 		catch(Exception e)
 		{
+			//[Manu Ticket #1186] Modificación de la clase EventManager para que muestre los errores en el logger
+			logger.error("Error ejecutando regla. " + e.getMessage(), e);
+			//[Manu Ticket #1186] Modificación de la clase EventManager para que muestre los errores en el logger
 			throw new ISPACException("Error ejecutando regla",e);
 		}
 	}
@@ -286,6 +295,9 @@ public class EventManager
 		}
 		catch(Exception e)
 		{
+			//[Manu Ticket #1186] Modificación de la clase EventManager para que muestre los errores en el logger
+			logger.error("Error ejecutando regla. " + e.getMessage(), e);
+			//[Manu Ticket #1186] Modificación de la clase EventManager para que muestre los errores en el logger
 			throw new ISPACException("Error ejecutando regla",e);
 		}
 	}

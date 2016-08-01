@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -11,25 +10,25 @@
 		<version>6.4.1</version>
 	</parent>
 
-  <artifactId>ispac-mgr-java</artifactId>
+	<artifactId>ispac-mgr-java</artifactId>
 	<name>ispac-mgr-java</name>
 	<packaging>jar</packaging>
 
-  <dependencies>
+	<dependencies>
 
 		<!-- IECI dependencies -->
 
-    <dependency>
-      <groupId>es.ieci.tecdoc.iflow</groupId>
-      <artifactId>ispac-lib</artifactId>
-      <version>${pom.version}</version>
-    </dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.iflow</groupId>
+			<artifactId>ispac-lib</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
 
-    <dependency>
-      <groupId>es.ieci.tecdoc.iflow</groupId>
-      <artifactId>ispac-web</artifactId>
-      <version>${pom.version}</version>
-    </dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.iflow</groupId>
+			<artifactId>ispac-web</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
 
 
 		<!-- Third party dependencies -->
@@ -40,11 +39,31 @@
 			<version>${commons.fileupload.version}</version>
 		</dependency>
 
-    <dependency>
-      <groupId>struts-menu</groupId>
-      <artifactId>struts-menu</artifactId>
-      <version>${struts.menu.version}</version>
-    </dependency>
+		<dependency>
+			<groupId>struts-menu</groupId>
+			<artifactId>struts-menu</artifactId>
+			<version>${struts.menu.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-beanutils</artifactId>
+					<groupId>commons-beanutils</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>velocity</artifactId>
+					<groupId>velocity</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>velocity-tools</artifactId>
+					<groupId>velocity-tools-view</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.7.0</version>
+		</dependency>
 
 
 		<!-- Provided dependencies -->
@@ -63,6 +82,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-  </dependencies>
+	</dependencies>
 
 </project>

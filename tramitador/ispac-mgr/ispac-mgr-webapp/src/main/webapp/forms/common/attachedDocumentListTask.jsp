@@ -131,6 +131,9 @@
 										</ispac:linkframe>
 									</td>
 									<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" width="10px"/></td>
+									<!-- INICIO [dipucr-Felipe 3#152] -->
+									<!-- Comento la opción desde repositorio y me traigo aquí la de "en bloque" -->
+									<!--
 									<td>
 										<ispac:linkframe id="GenerarDocumentoRepositorio"
 												 target="workframe"
@@ -144,6 +147,22 @@
 												 needToConfirm="true">
 										</ispac:linkframe>
 									</td>
+									 -->
+									<td>
+												<ispac:linkframe
+												id="GenerarDocumentoPlantilla"
+												target="workframe"
+												action="selectTemplateDocumentType.do?selectParticipantes=1"
+											    titleKey="forms.listdoc.generateDocsEnBloque"
+												showFrame="true"
+												inputField=""
+												styleClass="tdlink"
+												width="500"
+												height="300"
+												needToConfirm="true">
+										</ispac:linkframe>
+									</td>
+									<!-- FIN [dipucr-Felipe 3#152] -->
 									<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" width="10px"/></td>
 								</tr>
 								<tr>
@@ -166,12 +185,15 @@
 									<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" width="10px"/></td>
 								</tr>
 								<tr>
-									<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" height="5px"/></td>
+									<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" height="15px"/></td>
 								</tr>
 							</table>
 						</td>
 					</tr>
 
+			   <!-- INICIO [dipucr-Felipe 3#152] -->
+			   <!-- Paso esta opción al panel de arriba -->
+			   <!-- 
     	 	   <tr>
 		          <td align="right" class="formsTitleB">
 						<table border="0" cellspacing="0" cellpadding="0">
@@ -201,6 +223,8 @@
 						</table>
 					</td>
 		        </tr>
+		        -->
+		        <!-- FIN [dipucr-Felipe 3#152] -->
 
 				<tr>
 		          <td align="right" class="formsTitleB">
@@ -223,6 +247,23 @@
 									</ispac:linkframe>
 								</td>
 								<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" width="10px" /></td>
+								<!-- INICIO [eCenpri-Tere #97] Firmar todos -->
+								<td>
+									<c:set var="_method" value="${appConstants.actions.SELECT_OPTION}" /> 
+									<ispac:linkframe id="GenerarDocumentoFirmarTodos"
+											 target="workframe"
+											 action="signAllDocument.do?method=selectOption" 
+											 inputField="property(SPAC_DT_DOCUMENTOS:ID)"
+											 titleKey="forms.tasks.generate.document.from.firmarTodo" 
+											 showFrame="true" 
+											 styleClass="tdlink"
+											 width="640"
+											 height="480"
+											 needToConfirm="true">
+									</ispac:linkframe>
+								</td>
+								<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" width="10px"/></td>
+								<!-- FIN [eCenpri-Tere #97] -->
 							</tr>
 							<tr>
 								<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" height="5px"/></td>
@@ -253,6 +294,8 @@
 											needToConfirm="true">
 									</ispac:linkframe>
 								</td>
+								<!-- [dipucr-Felipe #200] -->
+								<!-- 
 								<td><img src='<ispac:rewrite href="img/pixel.gif"/>'
 									border="0" width="10px" /></td>
 								<td>
@@ -269,8 +312,47 @@
 											needToConfirm="true">
 									</ispac:linkframe>
 									</td>
+								 -->
 								<td><img src='<ispac:rewrite href="img/pixel.gif"/>'
 									border="0" width="10px" /></td>
+									
+									<!--[Manu Ticket #107] - INICIO - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes-->
+								<td>
+									<ispac:linkframe
+											id="RegistroAllMultiple"
+											target="workframe"
+											action="insertAllBatchOutputRegistry.do"
+											titleKey="forms.listdoc.registroAllMultiple"
+											showFrame="true"
+											inputField="multibox"
+											styleClass="tdlink"
+											width="500"
+											height="300"
+											needToConfirm="true">
+									</ispac:linkframe>
+								</td>
+								<!-- [dipucr-Felipe #200] -->
+								<!-- 
+								<td><img src='<ispac:rewrite href="img/pixel.gif"/>'
+									border="0" width="10px" /></td>
+								<td>
+									<ispac:linkframe
+										 	id="RegistroAllAgrupado"
+											target="workframe"
+											action="insertAllGroupedOutputRegistry.do"
+											titleKey="forms.listdoc.registroAllAgrupado"
+											showFrame="true"
+											inputField="multibox"
+											styleClass="tdlink"
+											width="500"
+											height="300"
+											needToConfirm="true">
+									</ispac:linkframe>
+									</td>
+								-->
+								<td><img src='<ispac:rewrite href="img/pixel.gif"/>'
+									border="0" width="10px" /></td>
+									<!--[Manu Ticket #107] - FIN - ALSIGM3 Registrar salida, comunicación con Comparece y Gestión de Representantes-->
 							</tr>
 							<tr>
 									<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" height="5px"/></td>
@@ -279,6 +361,9 @@
 					</td>
 		        </tr>
 
+				<!-- INICIO [dipucr-Felipe 3#152]-->
+				<!-- Comento esta opción pues no se usará -->
+				<!--
 				<tr>
 		          <td align="right" class="formsTitleB">
 						<table border="0" cellspacing="0" cellpadding="0">
@@ -309,6 +394,8 @@
 						</table>
 					</td>
 		        </tr>
+		        -->
+		        <!-- FIN [dipucr-Felipe 3#152]-->
 
 				</logic:equal>
 
@@ -371,27 +458,51 @@
 									   defaultorder='<%=formatter.getDefaultOrder()%>'
 									   defaultsort='<%=formatter.getDefaultSort()%>'
 									   requestURI="/showTask.do">
-
+							<!-- [Manu Ticket #109] - INICIO - ALSIGM3 Cambiar apariencia listado de documentos -->
 							<logic:iterate name="defaultForm" property="formatter" id="format" type="ieci.tdw.ispac.ispaclib.bean.BeanPropertyFmt">
 
 								<logic:equal name="format" property="fieldType" value="CHECKBOX">
 
 									<jsp:setProperty name="checkboxDecorator" property="id" value='<%=format.getPropertyName()%>' />
-
+							
 									<display:column title='<%="<input type=\'checkbox\' onclick=\'javascript:_checkAll(document.defaultForm.multibox, this);\' name=\'allbox\'/>"%>'
-													media='<%=format.getMedia()%>'
-													headerClass='<%=format.getHeaderClass()%>'
-													sortable='<%=format.getSortable()%>'
-													sortProperty='<%=format.getPropertyName()%>'
-													decorator='<%=format.getDecorator()%>'
-													class='<%=format.getColumnClass()%>'
-													comparator='<%=format.getComparator()%>'
-													property="checkbox">
-									</display:column>
+												media='<%=format.getMedia()%>'
+												headerClass='<%=format.getHeaderClass()%>'
+												sortable='<%=format.getSortable()%>'
+												sortProperty='<%=format.getPropertyName()%>'
+												decorator='<%=format.getDecorator()%>'
+												class='<%=format.getColumnClass()%>'
+												comparator='<%=format.getComparator()%>'>
+										<!-- INICIO [dipucr-Felipe #202] -->
+										<!-- No mostrar el check para documentos bloqueados o registrados de salida -->
+										<table cellpadding="0" cellspacing="0" border="0" width="100%">
+											<tr>
+												<td align="center" valign="middle">
+													<img src='<ispac:rewrite href="img/pixel.gif"/>' width="3" height="1" border="0" />
+												</td>
+												<td align="center" valign="middle">
+													<%-- Estado de Bloqueo del documento --%>
+													<c:set var="_lockState">
+														<bean:write name="document" property="property(BLOQUEO)" />
+													</c:set>
+													<%-- Se incluye check de seleccion para el documento, para su borrado, si esta desbloqueado--%>
+													<c:if test="${(empty _lockState) || (_lockState != appConstants.documentLockStates.TOTAL_LOCK)}">
+														<!-- Sólo mostramos el check si no tiene registro de salida -->
+														<logic:empty name="document" property="property(NREG)" >
+															<html:multibox property="multibox">
+																<%=format.formatProperty(document)%>
+															</html:multibox>
+														</logic:empty>
+													</c:if>
 
+												</td>
+											</tr>
+										</table>
+										<!-- FIN [dipucr-Felipe #202] -->
+									</display:column>
 							    </logic:equal>
 
-								<logic:equal name="format" property="fieldType" value="LINK">
+								<logic:equal name="format" property="fieldType" value="LISTNOMBRE">
 
 								  	<display:column titleKey='<%=format.getTitleKey()%>'
 								  					media='<%=format.getMedia()%>'
@@ -416,37 +527,9 @@
 											</logic:notEmpty>
 										</logic:empty>
 										<bean:define id="extension" name="extension" type="java.lang.String"/>
-										<bean:define id="_link" value='<%=format.getUrl()%>'></bean:define>
-										<c:url value="${_link}" var="link">
-											<c:if test="${!empty param.taskId}">
-												<c:param name="taskId" value='${param.taskId}'/>
-											</c:if>
-											<c:param name="key" value="${document.keyProperty}"/>
-											<c:param name="entity" value="2"/>
-											<c:if test="${!empty param.readonly}">
-												<c:param name="readonly" value='${param.readonly}'/>
-											</c:if>
-										</c:url>
-
-										<a href='<c:out value="${link}"/>' class='<%=format.getStyleClass()%>'>
-
-											<ispac:documenticon imageSrc="img/docs/" extension='<%=extension%>' styleClass="imgTextBottom"/>
-								  			<%=format.formatProperty(document)%>
-
-										</a>
-
-										<%--
-								  		<html:link href='<%=format.getUrl() + "?taskId=" + request.getParameter("taskId") + "&entity=2"%>'
-								  				   styleClass='<%=format.getStyleClass()%>'
-								  				   paramId='<%=format.getId()%>'
-								  				   paramName="document"
-								  				   paramProperty='<%=format.getPropertyLink() %>'>
-
-											<ispac:documenticon imageSrc="img/docs/" extension='<%=extension%>' styleClass="imgTextBottom"/>
-								  			<logic:notEmpty name="document" property='<%= format.getPropertyName() %>'>
-
-								  		</html:link>
-								  		--%>
+										
+										<ispac:documenticon imageSrc="img/docs/" extension='<%=extension%>' styleClass="imgTextBottom"/>
+								  		<%=format.formatProperty(document)%>
 
 								  	</display:column>
 
@@ -467,8 +550,205 @@
 
 									</display:column>
 
-								</logic:equal>
+								</logic:equal>								
+								
+								<logic:equal name="format" property="fieldType" value="FIRMA">
 
+									<display:column titleKey='<%=format.getTitleKey()%>'
+													media='<%=format.getMedia()%>'
+													headerClass='<%=format.getHeaderClass()%>'
+													sortable='<%=format.getSortable()%>'
+													sortProperty='<%=format.getPropertyName()%>'
+													decorator='<%=format.getDecorator()%>'
+													class='<%=format.getColumnClass()%>'
+													comparator='<%=format.getComparator()%>'>
+										
+										<c:set var="tipoRegistro" value="unknown"/>
+										<logic:notEmpty name="document" property="property(TP_REG)">
+											<c:set var="tipoRegistro">
+												<bean:write name="document" property="property(TP_REG)" />
+											</c:set>
+										</logic:notEmpty>
+										
+										<c:set var="_data" value="unknown"/>
+										<logic:notEmpty name="document" property="property(ESTADOFIRMA)">
+											<c:set var="_data">
+												<bean:write name="document" property="property(ESTADOFIRMA)" />
+											</c:set>
+										</logic:notEmpty>
+										<c:choose>
+											<c:when test="${_data == '00'}">Sin firma</c:when>
+											<c:when test="${_data == '01'}">Pendiente Firma</c:when>
+											<c:when test="${_data == '02'}"><font color="green"><b>Firmado</b></font></c:when>
+											<c:when test="${_data == '03'}">Firmado con reparos</c:when>
+											<c:when test="${_data == '04'}">Rechazado</c:when>
+											<c:when test="${_data == '05'}">Pendiente circuito de firma</c:when>
+											<c:otherwise>
+											    -
+											</c:otherwise>
+										</c:choose>					
+										
+									</display:column>
+
+								</logic:equal>
+								
+								<logic:equal name="format" property="fieldType" value="NOTIFICACION">
+
+									<display:column titleKey='<%=format.getTitleKey()%>'
+													media='<%=format.getMedia()%>'
+													headerClass='<%=format.getHeaderClass()%>'
+													sortable='<%=format.getSortable()%>'
+													sortProperty='<%=format.getPropertyName()%>'
+													decorator='<%=format.getDecorator()%>'
+													class='<%=format.getColumnClass()%>'
+													comparator='<%=format.getComparator()%>'>
+										
+										<c:set var="_data" value="unknown"/>
+										<logic:notEmpty name="document" property="property(ESTADONOTIFICACION)">
+											<c:set var="_data">
+												<bean:write name="document" property="property(ESTADONOTIFICACION)" />
+											</c:set>
+										</logic:notEmpty>
+										<c:choose>
+											<c:when test="${_data == 'PE'}">Pendiente</c:when>
+											<c:when test="${_data == 'PR'}"><b>En proceso</b></c:when>
+											<c:when test="${_data == 'OK'}"><font color="green"><b>Finalizada</b></font></c:when>
+											<c:when test="${_data == 'CA'}"><font color="red"><b>Caducada</b></c:when>
+											<c:when test="${_data == 'RE'}"><font color="red"><b>Rechazada</b></c:when>
+											<c:when test="${_data == 'ER'}"><font color="red"><b>Error</b></font></c:when>
+											<c:otherwise>
+											    -
+											</c:otherwise>
+										</c:choose>	
+
+									</display:column>
+
+								</logic:equal>
+								
+								<logic:equal name="format" property="fieldType" value="SHOWPROPERTIES">
+
+								  	<display:column titleKey='<%=format.getTitleKey()%>'
+								  					media='<%=format.getMedia()%>'
+								  					headerClass='<%=format.getHeaderClass()%>'
+								  					sortable='<%=format.getSortable()%>'
+								  					sortProperty='<%=format.getPropertyName()%>'
+								  					decorator='<%=format.getDecorator()%>'
+								  					class='<%=format.getColumnClass()%>'
+								  					comparator='<%=format.getComparator()%>'>
+
+										<bean:define id="_link" value='<%=format.getUrl()%>'></bean:define>
+										<c:url value="${_link}" var="link">
+											<c:if test="${!empty param.taskId}">
+												<c:param name="taskId" value='${param.taskId}'/>
+											</c:if>
+											<c:param name="key" value="${document.keyProperty}"/>
+											<c:param name="entity" value="2"/>
+											<c:if test="${!empty param.readonly}">
+												<c:param name="readonly" value='${param.readonly}'/>
+											</c:if>
+										</c:url>
+
+										<a href='<c:out value="${link}"/>' class='<%=format.getStyleClass()%> tooltip' title='<%=format.getTooltipTitle()%>'>
+											<img src='<ispac:rewrite href="img/info_doc.gif"/>'/>								
+										</a>
+								  	</display:column>
+								</logic:equal>
+								
+								<logic:equal name="format" property="fieldType" value="EDITDOCUMENT">
+									<logic:equal value="false" property="readonly" name="defaultForm">
+										<display:column	titleKey='<%=format.getTitleKey()%>'
+														media='<%=format.getMedia()%>'
+														headerClass='<%=format.getHeaderClass()%>'
+														sortable='<%=format.getSortable()%>'
+														sortProperty='<%=format.getPropertyName()%>'
+														decorator='<%=format.getDecorator()%>'
+														class='<%=format.getColumnClass()%>'
+														comparator='<%=format.getComparator()%>'>
+	
+												<c:set var="extension" value="unknown"/>
+												<logic:notEmpty name="document" property="property(EXTENSION_RDE)">
+													<c:set var="extension">
+														<bean:write name="document" property="property(EXTENSION_RDE)" />
+													</c:set>
+												</logic:notEmpty>
+												<logic:empty name="document" property="property(EXTENSION_RDE)">
+													<logic:notEmpty name="document" property="property(EXTENSION)">
+														<c:set var="extension">
+															<bean:write name="document" property="property(EXTENSION)" />
+														</c:set>
+													</logic:notEmpty>
+												</logic:empty>
+												<bean:define id="extension" name="extension" type="java.lang.String"/>
+												<bean:define id="_link" value='<%=format.getUrl()%>'></bean:define>
+												<c:url value="${_link}" var="link">
+													<c:param name="document" value="${document.keyProperty}"/>
+													<c:if test="${!empty param.readonly}">
+														<c:param name="readonly" value='${param.readonly}'/>
+													</c:if>
+												</c:url>
+												
+												<c:set var="tipoRegistro" value="unknown"/>
+												<logic:notEmpty name="document" property="property(TP_REG)">
+													<c:set var="tipoRegistro">
+														<bean:write name="document" property="property(TP_REG)" />
+													</c:set>
+												</logic:notEmpty>
+												
+												<c:set var="estadofirma" value="unknown"/>
+												<logic:notEmpty name="document" property="property(ESTADOFIRMA)">
+													<c:set var="estadofirma">
+														<bean:write name="document" property="property(ESTADOFIRMA)" />
+													</c:set>
+												</logic:notEmpty>
+												<bean:define id="estadofirma" name="estadofirma" type="java.lang.String"/>										
+												
+												<c:if test="${ tipoRegistro != 'ENTRADA' && (extension == 'doc' || extension == 'ppt' || extension == 'docx' || extension == 'xslx' || extension == 'pptx' || extension == 'odt' || extension == 'ods') && estadofirma == '00'}">
+													<a class="tooltip" href='<c:out value="${link}"/>' class='<%=format.getStyleClass()%>' title='<%=format.getTooltipTitle()%>' target='workframe_document'> 
+														<img src='<ispac:rewrite href="img/editDoc.gif"/>'/>
+													</a>
+												</c:if>
+												<c:if test="${tipoRegistro == 'ENTRADA' || not (extension == 'doc' || extension == 'ppt' || extension == 'docx' || extension == 'xslx' || extension == 'pptx' || extension == 'odt' || extension == 'ods') || estadofirma != '00'}">
+													<bean:define id="_link" value='showDocument.do'></bean:define>
+													<c:url value="${_link}" var="link">
+														<c:param name="document" value="${document.keyProperty}"/>
+													</c:url>
+		
+													<a target="_blank" href='<c:out value="${link}"/>' class='tooltip' title='Ver documento'>
+														<img class="tooltip" src='<ispac:rewrite href="img/viewDoc.gif"/>' title='Documento no editable Online'/>
+											  		</a>
+												</c:if>
+										</display:column>
+									</logic:equal>
+									<logic:equal value="true" property="readonly" name="defaultForm">
+										<display:column	titleKey='<%=format.getTitleKey()%>'
+														media='<%=format.getMedia()%>'
+														headerClass='<%=format.getHeaderClass()%>'
+														sortable='<%=format.getSortable()%>'
+														sortProperty='<%=format.getPropertyName()%>'
+														decorator='<%=format.getDecorator()%>'
+														class='<%=format.getColumnClass()%>'
+														comparator='<%=format.getComparator()%>'>
+	
+												<bean:define id="_link" value='<%=format.getUrl()%>'></bean:define>
+												<c:url value="${_link}" var="link">
+													<c:param name="document" value="${document.keyProperty}"/>
+													<c:if test="${!empty param.readonly}">
+														<c:param name="readonly" value='${param.readonly}'/>
+													</c:if>
+												</c:url>
+												
+												<bean:define id="_link" value='showDocument.do'></bean:define>
+												<c:url value="${_link}" var="link">
+													<c:param name="document" value="${document.keyProperty}"/>
+												</c:url>
+	
+												<a target="_blank" href='<c:out value="${link}"/>' class='tooltip' title='Ver documento'>
+													<img class="tooltip" src='<ispac:rewrite href="img/viewDoc.gif"/>' title='Documento no editable Online'/>
+										  		</a>
+										</display:column>
+									</logic:equal>
+								</logic:equal>
+								<!-- 
 								<logic:equal name="format" property="fieldType" value="SHOWDOCUMENT">
 
 									<display:column	titleKey='<%=format.getTitleKey()%>'
@@ -482,20 +762,185 @@
 
 										<logic:notEmpty name="document" property='<%= format.getPropertyName() %>'>
 
-											<c:set var="_documentId"><bean:write name="document" property="property(ID)"/></c:set>
-											<ispac:showdocument document='<%=(String)pageContext.getAttribute("_documentId")%>'
-																image='img/viewDoc.gif'
-																styleClass="menuhead"
-																titleKeyLink="forms.button.show.document"
-																message=""/>
+											<bean:define id="_link" value='showDocument.do'></bean:define>
+											<c:url value="${_link}" var="link">
+												<c:param name="document" value="${document.keyProperty}"/>
+											</c:url>
+	
+											<a target="_blank" href='<c:out value="${link}"/>' class='tooltip' title='Ver documento'>
+												<img src='<ispac:rewrite href="img/viewDoc.gif"/>'/>
+									  		</a>
 
 										</logic:notEmpty>
 
 									</display:column>
 
 								</logic:equal>
+								-->
+								<logic:equal name="format" property="fieldType" value="SIGNDOCUMENT">
+									<logic:equal value="false" property="readonly" name="defaultForm">
+										<display:column	titleKey='<%=format.getTitleKey()%>'
+														media='<%=format.getMedia()%>'
+														headerClass='<%=format.getHeaderClass()%>'
+														sortable='<%=format.getSortable()%>'
+														sortProperty='<%=format.getPropertyName()%>'
+														decorator='<%=format.getDecorator()%>'
+														class='<%=format.getColumnClass()%>'
+														comparator='<%=format.getComparator()%>'>
+	
+												<c:set var="extension" value="unknown"/>
+												<logic:notEmpty name="document" property="property(EXTENSION_RDE)">
+													<c:set var="extension">
+														<bean:write name="document" property="property(EXTENSION_RDE)" />
+													</c:set>
+												</logic:notEmpty>
+												<logic:empty name="document" property="property(EXTENSION_RDE)">
+													<logic:notEmpty name="document" property="property(EXTENSION)">
+														<c:set var="extension">
+															<bean:write name="document" property="property(EXTENSION)" />
+														</c:set>
+													</logic:notEmpty>
+												</logic:empty>
+												<bean:define id="extension" name="extension" type="java.lang.String"/>
+												<bean:define id="_link" value='<%=format.getUrl()%>'></bean:define>
+												<c:url value="${_link}" var="link">
+													<c:param name="document" value="${document.keyProperty}"/>
+													<c:if test="${!empty param.readonly}">
+														<c:param name="readonly" value='${param.readonly}'/>
+													</c:if>
+												</c:url>
+												
+												<c:set var="estadofirma" value="unknown"/>
+												<logic:notEmpty name="document" property="property(ESTADOFIRMA)">
+													<c:set var="estadofirma">
+														<bean:write name="document" property="property(ESTADOFIRMA)" />
+													</c:set>
+												</logic:notEmpty>
+												<bean:define id="estadofirma" name="estadofirma" type="java.lang.String"/>										
+												
+												<c:if test="${estadofirma == '00'}">
+													<c:url value="${_link}" var="link">
+														<c:param name="method" value="selectOption"/>
+														<c:param name="parameters" value="workframe"/>
+														<c:param name="field" value="${document.keyProperty}"/>
+													</c:url>
+																					
+												</c:if>
+												<c:if test="${estadofirma == '04'}">
+													<img src='<ispac:rewrite href="img/rechazoFirma.gif"/>' title='Firma Rechazada'/>
+												</c:if>
+												<c:if test="${estadofirma != '00' && estadofirma != '02' && estadofirma != '03' && estadofirma != '04'}">
+													<a class="tooltip" href="javascript:showFrame('workframe','showSignDetailCustom.do?parameters=workframe&document=<bean:write name="document" property="property(ID)" />',640,480,'',true);" title='<%=format.getTooltipTitle()%>' onclick='javascript:seleccionarDoc(document.defaultForm.multibox, <c:out value="${document.keyProperty}"/>); document.getElementsByName("property(SPAC_DT_DOCUMENTOS:ID)")[0].value=<c:out value="${document.keyProperty}"/>;'>
+														<img class="tooltip" src='<ispac:rewrite href="img/detalleFirma.gif"/>' title='Detalles de firma'/>
+													</a>
+												</c:if>
+												<c:if test="${estadofirma == '02' || estadofirma == '03'}">
+													<a class="tooltip" href="javascript:showFrame('workframe','showSignDetailCustom.do?parameters=workframe&document=<bean:write name="document" property="property(ID)" />',640,480,'',true);" title='<%=format.getTooltipTitle()%>' onclick='javascript:seleccionarDoc(document.defaultForm.multibox, <c:out value="${document.keyProperty}"/>); document.getElementsByName("property(SPAC_DT_DOCUMENTOS:ID)")[0].value=<c:out value="${document.keyProperty}"/>;'>
+														<img class="tooltip" src='<ispac:rewrite href="img/docFirmado.gif"/>' title='Documento firmado'/>
+													</a>
+												</c:if>
+												<c:if test="${estadofirma == '00'}">
+													<a class="tooltip" href="javascript:showFrame('workframe','<c:out value="${_link}"/>?field=multibox/>&parameters=workframe',640,480,'',true);" title='<%=format.getTooltipTitle()%>' onclick='javascript:seleccionarDoc(document.defaultForm.multibox, <c:out value="${document.keyProperty}"/>);'> 
+														<img class="tooltip" src='<ispac:rewrite href="img/firmarDoc.gif"/>' title='Firmar Documento'/>
+													</a>
+												</c:if>
+												<script>											
+													function seleccionarDoc(field, valor){
+														document.defaultForm.allbox.checked=false;
+														for (i = 0; i < field.length; i++){
+															if(field[i].value == valor){
+																field[i].checked = true;
+															}
+															else{
+																field[i].checked = false;
+															}
+														}
+														field.checked = true;
+													}
+												</script>
+										</display:column>
+									</logic:equal>
+									<logic:equal value="true" property="readonly" name="defaultForm">
+										<display:column	titleKey='<%=format.getTitleKey()%>'
+														media='<%=format.getMedia()%>'
+														headerClass='<%=format.getHeaderClass()%>'
+														sortable='<%=format.getSortable()%>'
+														sortProperty='<%=format.getPropertyName()%>'
+														decorator='<%=format.getDecorator()%>'
+														class='<%=format.getColumnClass()%>'
+														comparator='<%=format.getComparator()%>'>
+	
+												<c:set var="extension" value="unknown"/>
+												<logic:notEmpty name="document" property="property(EXTENSION_RDE)">
+													<c:set var="extension">
+														<bean:write name="document" property="property(EXTENSION_RDE)" />
+													</c:set>
+												</logic:notEmpty>
+												<logic:empty name="document" property="property(EXTENSION_RDE)">
+													<logic:notEmpty name="document" property="property(EXTENSION)">
+														<c:set var="extension">
+															<bean:write name="document" property="property(EXTENSION)" />
+														</c:set>
+													</logic:notEmpty>
+												</logic:empty>
+												<bean:define id="extension" name="extension" type="java.lang.String"/>
+												<bean:define id="_link" value='<%=format.getUrl()%>'></bean:define>
+												<c:url value="${_link}" var="link">
+													<c:param name="document" value="${document.keyProperty}"/>
+													<c:if test="${!empty param.readonly}">
+														<c:param name="readonly" value='${param.readonly}'/>
+													</c:if>
+												</c:url>
+												
+												<c:set var="estadofirma" value="unknown"/>
+												<logic:notEmpty name="document" property="property(ESTADOFIRMA)">
+													<c:set var="estadofirma">
+														<bean:write name="document" property="property(ESTADOFIRMA)" />
+													</c:set>
+												</logic:notEmpty>
+												<bean:define id="estadofirma" name="estadofirma" type="java.lang.String"/>										
+												
+												<c:if test="${estadofirma == '00'}">
+													<c:url value="${_link}" var="link">
+														<c:param name="method" value="selectOption"/>
+														<c:param name="parameters" value="workframe"/>
+														<c:param name="field" value="${document.keyProperty}"/>
+													</c:url>
+																					
+												</c:if>
+												<c:if test="${estadofirma == '04'}">
+													<img src='<ispac:rewrite href="img/rechazoFirma.gif"/>' title='Firma Rechazada'/>
+												</c:if>
+												<c:if test="${estadofirma != '00' && estadofirma != '02' && estadofirma != '03' && estadofirma != '04'}">
+													<a class="tooltip" href="javascript:showFrame('workframe','showSignDetailCustom.do?parameters=workframe&document=<bean:write name="document" property="property(ID)" />',640,480,'',true);" title='<%=format.getTooltipTitle()%>' onclick='javascript:seleccionarDoc(document.defaultForm.multibox, <c:out value="${document.keyProperty}"/>); document.getElementsByName("property(SPAC_DT_DOCUMENTOS:ID)")[0].value=<c:out value="${document.keyProperty}"/>;'>
+														<img class="tooltip" src='<ispac:rewrite href="img/detalleFirma.gif"/>' title='Detalles de firma'/>
+													</a>
+												</c:if>
+												<c:if test="${estadofirma == '02' || estadofirma == '03'}">
+													<a class="tooltip" href="javascript:showFrame('workframe','showSignDetailCustom.do?parameters=workframe&document=<bean:write name="document" property="property(ID)" />',640,480,'',true);" title='<%=format.getTooltipTitle()%>' onclick='javascript:seleccionarDoc(document.defaultForm.multibox, <c:out value="${document.keyProperty}"/>); document.getElementsByName("property(SPAC_DT_DOCUMENTOS:ID)")[0].value=<c:out value="${document.keyProperty}"/>;'>
+														<img class="tooltip" src='<ispac:rewrite href="img/docFirmado.gif"/>' title='Documento firmado'/>
+													</a>
+												</c:if>
+												<script>											
+													function seleccionarDoc(field, valor){
+														document.defaultForm.allbox.checked=false;
+														for (i = 0; i < field.length; i++){
+															if(field[i].value == valor){
+																field[i].checked = true;
+															}
+															else{
+																field[i].checked = false;
+															}
+														}
+														field.checked = true;
+													}
+												</script>
+										</display:column>
+									</logic:equal>
+								</logic:equal>
 
 							</logic:iterate>
+<!-- [Manu Ticket #109] - FIN - ALSIGM3 Cambiar apariencia listado de documentos -->
 
 						</display:table>
 
@@ -527,3 +972,6 @@
 	</script>
 
 </logic:equal>
+
+<iframe src='' id='workframe_document' name='workframe_document' style='visibility:visible;height:0px;margin:0px;padding:0px;border:none;' allowtransparency='true'></iframe>
+

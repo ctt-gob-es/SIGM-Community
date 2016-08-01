@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -463,30 +464,34 @@ public class TagTranslator implements ITagTranslator
 	
 	protected String getStringValue(ObjectDAO objdao, EntityField entityField, String property, String dateformat) throws ISPACException {
 		
-		if (StringUtils.isNotBlank(dateformat)) {
-			return TypeConverter.toString(objdao.getDate(property),dateformat);
-		} 
-
-		InternalDataType dataType = entityField.getType();
-		if (dataType != null) {
-			
-			if (InternalDataType.SHORT_INTEGER.equals(dataType) ||
-					InternalDataType.LONG_INTEGER.equals(dataType)) {
-    			
-    			// Entero con separador de miles
-    			BigInteger numeric = new BigInteger(objdao.getString(property));
-				return getNumberFormat(entityField).format(numeric.longValue());
-				
-    		} else if (InternalDataType.SHORT_DECIMAL.equals(dataType) ||
-    				 InternalDataType.LONG_DECIMAL.equals(dataType)) {
-    			
-    			// Decimal con separador de miles y decimales
-    			BigDecimal numeric = new BigDecimal(objdao.getDouble(property));
-				return getNumberFormat(entityField).format(numeric.doubleValue());
-    		}
-		}
 		
-		return objdao.getString(property);
+		if(!StringUtils.isEmpty(objdao.getString(property))){ //[dipucr-Manu #143]
+			if (StringUtils.isNotBlank(dateformat)) {
+				return TypeConverter.toString(objdao.getDate(property),dateformat);
+			} 
+	
+			InternalDataType dataType = entityField.getType();
+			if (dataType != null) {
+				
+				if (InternalDataType.SHORT_INTEGER.equals(dataType) ||
+						InternalDataType.LONG_INTEGER.equals(dataType)) {
+	    			
+	    			// Entero con separador de miles
+	    			BigInteger numeric = new BigInteger(objdao.getString(property));
+					return getNumberFormat(entityField).format(numeric.longValue());
+					
+	    		} else if (InternalDataType.SHORT_DECIMAL.equals(dataType) ||
+	    				 InternalDataType.LONG_DECIMAL.equals(dataType)) {
+	    			
+	    			// Decimal con separador de miles y decimales
+	    			BigDecimal numeric = new BigDecimal(objdao.getDouble(property));
+					return getNumberFormat(entityField).format(numeric.doubleValue());
+	    		}
+			}
+		
+			return objdao.getString(property);
+		}
+		return "";
 	}
 	
 	private NumberFormat getNumberFormat(EntityField entityField) {
@@ -497,6 +502,14 @@ public class TagTranslator implements ITagTranslator
 			pattern = "#,###." + StringUtils.leftPad("", entityField.getPrecision(), "0");
 		}
 		
-		return new DecimalFormat(pattern, new DecimalFormatSymbols(mcontext.getLocale()));
+		//INICIO [dipucr-Felipe #106]
+		Locale locale = mcontext.getLocale();
+		if (null == locale){
+			locale = Locale.getDefault();
+		}
+		//FIN [dipucr-Felipe #106]
+		
+		return new DecimalFormat(pattern, new DecimalFormatSymbols(locale));
+		
 	}
 }

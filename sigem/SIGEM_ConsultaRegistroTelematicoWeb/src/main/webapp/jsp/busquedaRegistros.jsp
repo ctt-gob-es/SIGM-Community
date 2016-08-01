@@ -298,7 +298,7 @@ if (rutaImagenes == null) rutaImagenes = "";
 								<option value="=" <%=("=".equals(op))?"selected":""%>><bean:message key="busqueda.fechaRegistro.operador.igual"/></option>
 								<option value="entre" <%=("entre".equals(op))?"selected":""%>><bean:message key="busqueda.fechaRegistro.operador.entre"/></option>
 								<option value=">" <%=(">".equals(op))?"selected":""%>><bean:message key="busqueda.fechaRegistro.operador.mayor_que"/></option>
-								<option value="<" <%=("<".equals(op))?"selected":""%>><bean:message key="busqueda.fechaRegistro.operador.menor_que"/></option>
+								<option value="&lt;" <%=("<".equals(op))?"selected":""%>><bean:message key="busqueda.fechaRegistro.operador.menor_que"/></option>
 							</select>
 
 							<%String fd = (String)session.getAttribute("fechaDesdeBusqueda"); %>
@@ -322,7 +322,7 @@ if (rutaImagenes == null) rutaImagenes = "";
 								<option value="=" <%=("=".equals(ope))?"selected":""%>><bean:message key="busqueda.fechaRegistro.operador.igual"/></option>
 								<option value="entre" <%=("entre".equals(ope))?"selected":""%>><bean:message key="busqueda.fechaRegistro.operador.entre"/></option>
 								<option value=">" <%=(">".equals(ope))?"selected":""%>><bean:message key="busqueda.fechaRegistro.operador.mayor_que"/></option>
-								<option value="<" <%=("<".equals(ope))?"selected":""%>><bean:message key="busqueda.fechaRegistro.operador.menor_que"/></option>
+								<option value="&lt;" <%=("<".equals(ope))?"selected":""%>><bean:message key="busqueda.fechaRegistro.operador.menor_que"/></option>
 							</select>
 
 
@@ -346,7 +346,7 @@ if (rutaImagenes == null) rutaImagenes = "";
 								<option value="" selected></option>
 								<option value="=" <%=("=".equals(opr))?"selected":""%>><bean:message key="busqueda.numeroRegistro.operador.igual"/></option>
 								<option value=">" <%=(">".equals(opr))?"selected":""%>><bean:message key="busqueda.numeroRegistro.operador.mayor_que"/></option>
-								<option value="<" <%=("<".equals(opr))?"selected":""%>><bean:message key="busqueda.numeroRegistro.operador.menor_que"/></option>
+								<option value="&lt;" <%=("<".equals(opr))?"selected":""%>><bean:message key="busqueda.numeroRegistro.operador.menor_que"/></option>
 								<option value="<%=RegistroConsulta.CONTIENE%>" <%=(RegistroConsulta.CONTIENE.equals(opr))?"selected":""%>><bean:message key="busqueda.numeroRegistro.operador.contiene"/></option>
 								<option value="<%=RegistroConsulta.EMPIEZA%>" <%=(RegistroConsulta.EMPIEZA.equals(opr))?"selected":""%>><bean:message key="busqueda.numeroRegistro.operador.empieza"/></option>
 								<option value="<%=RegistroConsulta.TERMINA%>" <%=(RegistroConsulta.TERMINA.equals(opr))?"selected":""%>><bean:message key="busqueda.numeroRegistro.operador.termina"/></option>

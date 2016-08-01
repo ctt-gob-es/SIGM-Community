@@ -24,6 +24,7 @@
         <job-name>ConsolidacionJob</job-name>
         <job-group>SIGEM_JOBS</job-group>
         <repeat-count>-1</repeat-count>
+        <!-- Ticket #986# SIGEM Actualizar el destino de los registros de entrada automáticamente. Consolide antes de que cree el expediente-->
         <repeat-interval>300000</repeat-interval>
       </simple>
     </trigger>

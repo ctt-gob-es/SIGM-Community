@@ -74,6 +74,9 @@ public class InteresadosCRUDController extends MultiActionController {
 		InteresadoVO interesado = new InteresadoVO();
 		interesado.setId(String.valueOf(interesados.size()));
 		interesado.setOrden(interesados.size());
+		
+		terceroValidadoVO.setNombre(terceroValidadoVO.getNumeroDocumento() + " - " + terceroValidadoVO.getNombre());
+
 		interesado.setTercero(terceroValidadoVO);
 
 		BaseDireccionVO direccionNotificacion = getDireccionNotificacion(terceroValidadoVO);

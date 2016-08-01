@@ -1,0 +1,3 @@
+[Dipucr-Manu] * Se genera este fichero ya que Git no sube carpetas vacías y en la primera generación no existe esta carpeta.
+Se modificó el pom para que tomara esta carpeta como referencia para poder compartirla con las máquinas de los servidores de aplicaciones
+y poder desplegar directamente. Al compartirla no podía borrarla la opción generate-distri. Ahora no necesita borrarla, borra el contenido nada más.

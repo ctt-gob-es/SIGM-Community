@@ -42,18 +42,18 @@
 			<version>${pom.version}</version>
 		</dependency>
 		
+		<!-- [Ticket 1014 Teresa INICIO] -->
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Server</artifactId>
+			<version>${isicres.version}</version>
+		</dependency>
+		<!-- [Ticket 1014 Teresa FIN] -->
 		
-		
-
-
 	</dependencies>
 	
 	<build>
 		
 	</build>
-
-
-
-
 
 </project>

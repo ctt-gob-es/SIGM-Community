@@ -48,6 +48,16 @@ public class ShowProcedureListAction extends BaseAction {
 		
 		Map params = request.getParameterMap();
 		
+		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+		int iAnio = 0;
+		String[] anios = (String[]) params.get("anio");
+		if(anios != null){
+			String anio = anios[0];
+			if(StringUtils.isNotEmpty(anio) && StringUtils.isNumeric(anio)){
+				iAnio = Integer.parseInt(anio);
+			}
+		}
+		
 		request.getSession().setAttribute("stageId", "0");
 		request.getSession().removeAttribute("stagePcdIdActual");
 		//Eliminamos la busqueda de expedientes de sesión
@@ -72,11 +82,16 @@ public class ShowProcedureListAction extends BaseAction {
 			///////////////////////////////////////////////
 			// Cambio del estado de tramitación
 			IState state = managerAPI.enterState(getStateticket(request), ManagerState.SEARCH, params);
+			//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+			if(anios != null){
+				state.setAnio(iAnio);
+			}
 			storeStateticket(state, response);
 			
 		    ///////////////////////////////////////////////
 		    //Menus
-			request.setAttribute("menus", MenuFactory.getSingleMenu(cct, getResources(request)));
+			//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+			request.setAttribute("menus", MenuFactory.getSingleMenu(cct, getResources(request), state));
 			
 			//////////////////////////////////////////////
 			// Formulario de búsqueda
@@ -91,6 +106,12 @@ public class ShowProcedureListAction extends BaseAction {
 					///////////////////////////////////////////////
 					// Cambio del estado de tramitación
 					state = managerAPI.enterState(getStateticket(request), ManagerState.PROCEDURELIST, params);
+
+					//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+					if(anios != null){
+						state.setAnio(iAnio);
+					}
+					
 					storeStateticket(state, response);
 					//Introducimos el ticket como atributo para que al recoger la excepción obtenga el estado 'PROCEDURELIST' en lugar de 'SEARCH'
 					setStateticket(request, state);
@@ -137,6 +158,12 @@ public class ShowProcedureListAction extends BaseAction {
 			///////////////////////////////////////////////
 			// Cambio del estado de tramitación
 			IState state = managerAPI.enterState(getStateticket(request), ManagerState.PROCEDURELIST, params);
+
+			//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
+			if(anios != null){
+				state.setAnio(iAnio);
+			}
+			
 			storeStateticket(state, response);
 
 
@@ -255,8 +282,9 @@ public class ShowProcedureListAction extends BaseAction {
 
 		    ///////////////////////////////////////////////
 		    //Menus
+			//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 			request.setAttribute("menus", 
-					MenuFactory.getInboxMenu(session.getClientContext(), getResources(request),resp));
+					MenuFactory.getInboxMenu(session.getClientContext(), getResources(request),resp, state));
 			
 //		    ///////////////////////////////////////////////
 //		    // Formateadores

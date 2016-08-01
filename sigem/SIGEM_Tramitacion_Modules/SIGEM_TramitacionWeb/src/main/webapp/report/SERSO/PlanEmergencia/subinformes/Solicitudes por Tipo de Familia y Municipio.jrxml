@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Solicitudes por Tipo de Familia y Municipio"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="551"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="44"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<subDataset name="GrafXTipoFam" >
+
+		<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String"/>
+		<queryString><![CDATA[select 
+case 
+when upper(datos)='SOLICITANTE HABITUAL DE AYUDAS ECONÓMICAS (USUARIOS/AS HABITUALES DE SERVICIOS SOCIALES)' then '1' 
+when upper(datos)='FAMILIA INCLUIDA EN EL PROGRAMA DE INTERVENCIÓN FAMILIAR' then '2' 
+when upper(datos)='FAMILIA NORMALIZADA EN SITUACIÓN DE NECESIDAD DERIVADA DE DESEMPLEO PROLONGADO' then '3' 
+else '4' end as orden,
+datos, count(datos) as valor from 
+(select case 
+when upper(totalfamilia1)='SI' then 'SOLICITANTE HABITUAL DE AYUDAS ECONÓMICAS (USUARIOS/AS HABITUALES DE SERVICIOS SOCIALES)' 
+when upper(totalfamilia2)='SI' then 'FAMILIA INCLUIDA EN EL PROGRAMA DE INTERVENCIÓN FAMILIAR' 
+when upper(totalfamilia3)='SI' then 'FAMILIA NORMALIZADA EN SITUACIÓN DE NECESIDAD DERIVADA DE DESEMPLEO PROLONGADO' 
+else 'FAMILIA NORMALIZADA QUE NECESITA UN APOYO ECONÓMICO PUNTUAL' end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+UNION ALL
+select case 
+when upper(totalfamilia1)='SI' then 'SOLICITANTE HABITUAL DE AYUDAS ECONÓMICAS (USUARIOS/AS HABITUALES DE SERVICIOS SOCIALES)' 
+when upper(totalfamilia2)='SI' then 'FAMILIA INCLUIDA EN EL PROGRAMA DE INTERVENCIÓN FAMILIAR' 
+when upper(totalfamilia3)='SI' then 'FAMILIA NORMALIZADA EN SITUACIÓN DE NECESIDAD DERIVADA DE DESEMPLEO PROLONGADO' 
+else 'FAMILIA NORMALIZADA QUE NECESITA UN APOYO ECONÓMICO PUNTUAL' end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and a.municipio = datos_solicitud.ciudad
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+union all
+select case 
+when upper(totalfamilia1)='SI' then 'SOLICITANTE HABITUAL DE AYUDAS ECONÓMICAS (USUARIOS/AS HABITUALES DE SERVICIOS SOCIALES)' 
+when upper(totalfamilia2)='SI' then 'FAMILIA INCLUIDA EN EL PROGRAMA DE INTERVENCIÓN FAMILIAR' 
+when upper(totalfamilia3)='SI' then 'FAMILIA NORMALIZADA EN SITUACIÓN DE NECESIDAD DERIVADA DE DESEMPLEO PROLONGADO' 
+else 'FAMILIA NORMALIZADA QUE NECESITA UN APOYO ECONÓMICO PUNTUAL' end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and  a.numexpconvocatoria = datos_solicitud.convocatoria and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+UNION ALL
+select case 
+when upper(totalfamilia1)='SI' then 'SOLICITANTE HABITUAL DE AYUDAS ECONÓMICAS (USUARIOS/AS HABITUALES DE SERVICIOS SOCIALES)' 
+when upper(totalfamilia2)='SI' then 'FAMILIA INCLUIDA EN EL PROGRAMA DE INTERVENCIÓN FAMILIAR' 
+when upper(totalfamilia3)='SI' then 'FAMILIA NORMALIZADA EN SITUACIÓN DE NECESIDAD DERIVADA DE DESEMPLEO PROLONGADO' 
+else 'FAMILIA NORMALIZADA QUE NECESITA UN APOYO ECONÓMICO PUNTUAL' end
+from dpcr_serso_estadisticas a
+join dpcr_serso_plan_emer datos_solicitud on a.numexp= $P{NUM_EXP} and a.municipio = datos_solicitud.ciudad
+join spac_expedientes_h exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp and datos_solicitud.convocatoria = a.convocatoriaexcep
+	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+
+)as datosXTipoFamilia (datos)
+group by datos
+order by orden]]></queryString>
+
+		<field name="orden" class="java.lang.String"/>
+		<field name="datos" class="java.lang.String"/>
+		<field name="valor" class="java.lang.Long"/>
+
+	</subDataset>
+
+	<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["DPCR2013/43521"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select now()]]></queryString>
+
+	<field name="now" class="java.sql.Timestamp"/>
+
+	<variable name="totalTipoFam" class="java.lang.Long" resetType="Report" calculation="Sum">
+	</variable>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="622"  isSplitAllowed="true" >
+				<pieChart>
+					<chart  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="551"
+						height="622"
+						key="element-2"
+						isPrintWhenDetailOverflows="true"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+						<chartTitle color="#000000" >
+								<titleExpression><![CDATA["Solicitudes por Tipo de Familia"]]></titleExpression>
+					</chartTitle>
+						<chartLegend textColor="#000000" backgroundColor="#FFFFFF" >
+					<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false" pdfEncoding="Cp1252"/>
+					</chartLegend>
+					</chart>
+					<pieDataset>
+						<dataset >
+							<datasetRun subDataset="GrafXTipoFam">
+								<datasetParameter  name="NUM_EXP">
+									<datasetParameterExpression><![CDATA[$P{NUM_EXP}]]></datasetParameterExpression>
+								</datasetParameter>
+							</datasetRun>
+						</dataset>
+						<keyExpression><![CDATA[$F{orden} + " - " + $F{datos}]]></keyExpression>
+						<valueExpression><![CDATA[$F{valor}]]></valueExpression>
+						<labelExpression><![CDATA[$F{orden}]]></labelExpression>
+				<sectionHyperlink >
+				</sectionHyperlink>
+					</pieDataset>
+					<piePlot 
+isCircular="true" >
+						<plot />
+					</piePlot>
+				</pieChart>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

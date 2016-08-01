@@ -3,6 +3,7 @@ package ieci.tdw.ispac.ispaclib.templates;
 import ieci.tdw.ispac.api.ICatalogAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.item.IItemCollection;
+import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTTemplate;
 import ieci.tdw.ispac.ispaclib.dao.cat.TemplateDAO;
@@ -24,6 +25,10 @@ public class TemplateMgr
 
 	private final String TEMPLATE = "ieci/tdw/ispac/ispaclib/templates/doc/empty.doc";
 	
+	//[Manu Ticket #124] Modificaciones para que se creen plantillas en blanco como odt
+	private final String TEMPLATEODT = "ieci/tdw/ispac/ispaclib/templates/doc/empty.odt";
+	//[Manu Ticket #124] Fin modificaciones
+	
 	private String msDefaultTemplate;
 
 	/**
@@ -38,7 +43,14 @@ public class TemplateMgr
 		msDefaultTemplate = config.get(ISPACConfiguration.DEFAULT_TEMPLATE);
 		if (msDefaultTemplate == null)
 		{
-			msDefaultTemplate = TEMPLATE;
+			//[Manu Ticket #124] Modificaciones para que se creen plantillas en blanco como odt
+
+			boolean useOdtTemplantes = ConfigurationMgr.getVarGlobalBoolean(context, ConfigurationMgr.USE_ODT_TEMPLATES, true);
+			if(useOdtTemplantes)
+				msDefaultTemplate = TEMPLATEODT;
+			else
+				msDefaultTemplate = TEMPLATE;
+			//[Manu Ticket #124] Fin modificaciones
 		}
 	}
 

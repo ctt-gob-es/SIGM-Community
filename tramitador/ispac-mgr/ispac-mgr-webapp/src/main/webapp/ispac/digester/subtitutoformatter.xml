@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter pageSize='1000'>
+
+	<!-- Ponemos 2 veces la propiedad VALOR, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SUSTITUTO' 
+				 titleKey='formatter.value.valor' 
+				 fieldType='LINK' 
+				 media='html'
+				 columnClass='width100percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 />
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SUSTITUTO' 
+				 titleKey='formatter.value.valor' 
+				 fieldType='LIST'
+				 media='xml excel csv pdf'
+				 />
+				 
+</beanformatter>

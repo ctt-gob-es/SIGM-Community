@@ -61,6 +61,12 @@
 			<version>${pom.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>es.ieci.tecdoc.iflow</groupId>
+			<artifactId>ispac-audit</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

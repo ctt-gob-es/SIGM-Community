@@ -53,6 +53,7 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
 import com.ieci.tecdoc.common.exception.ReportException;
+import com.ieci.tecdoc.common.isicres.ConfigFilePathResolverIsicres;
 import com.ieci.tecdoc.common.isicres.ReportResult;
 import com.ieci.tecdoc.common.keys.ConfigurationKeys;
 import com.ieci.tecdoc.common.utils.Configurator;
@@ -114,6 +115,10 @@ public class ReportDoc extends HttpServlet implements Keys {
 	private static final String ORDERBYDES = " ORDER BY FLD4,FLD8,FLD1";
 
 	private static final String ORDERBYORG = " ORDER BY FLD4,FLD7,FLD1";
+	
+	//[Manu Ticket #693] SIGEM Modificaciones en listados del registro de Tomelloso
+    private static final String ORDERBYDESTINATARIO = " ORDER BY FLD8_TEXT, FLD1";
+	//[Manu Ticket #693] SIGEM Modificaciones en listados del registro de Tomelloso
 
 	private static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
 			"dd-MM-yyyy HH:mm");
@@ -248,21 +253,33 @@ public class ReportDoc extends HttpServlet implements Keys {
 							reportResult = reportsUseCase.getOptionAQuery(
 									useCaseConf, bookID, idsList, opcion,
 									maxReportRegister);
-									reportResult.setOrderBy(ORDERBYFLD1);
+							//[Manu Ticket #693] SIGEM Modificaciones en listados del registro de Tomelloso
+							//reportResult.setOrderBy(ORDERBYFLD1);
+	                        if(reportId.intValue() == 9) reportResult.setOrderBy(ORDERBYDESTINATARIO);
+	                        else reportResult.setOrderBy(ORDERBYFLD1);
+	                        //[Manu Ticket #693] SIGEM Modificaciones en listados del registro de Tomelloso
 							break;
 						}
 						case 1: {
 							reportResult = reportsUseCase.getOptionAMultipleQuery(
 									useCaseConf, bookID, false, opcion,
 									maxReportRegister);
-									reportResult.setOrderBy(ORDERBYFLD1);
+							//[Manu Ticket #693] SIGEM Modificaciones en listados del registro de Tomelloso
+							//reportResult.setOrderBy(ORDERBYFLD1);
+	                        if(reportId.intValue() == 9) reportResult.setOrderBy(ORDERBYDESTINATARIO);
+	                        else reportResult.setOrderBy(ORDERBYFLD1);
+	                        //[Manu Ticket #693] SIGEM Modificaciones en listados del registro de Tomelloso
 							break;
 						}
 						case 2: {
 							reportResult = reportsUseCase.getOptionAMultipleQuery(
 									useCaseConf, bookID, true, opcion,
 									maxReportRegister);
-									reportResult.setOrderBy(ORDERBYFLD1);
+							//[Manu Ticket #693] SIGEM Modificaciones en listados del registro de Tomelloso
+							//reportResult.setOrderBy(ORDERBYFLD1);
+	                        if(reportId.intValue() == 9) reportResult.setOrderBy(ORDERBYDESTINATARIO);
+	                        else reportResult.setOrderBy(ORDERBYFLD1);
+	                        //[Manu Ticket #693] SIGEM Modificaciones en listados del registro de Tomelloso
 							break;
 						}
 						}
@@ -724,6 +741,13 @@ public class ReportDoc extends HttpServlet implements Keys {
 					parameters.put(subreport.getName().substring(0,
 							subreport.getName().lastIndexOf(PUNTO))
 							+ "_File", compiledSubreport);
+					
+					//[Manu Ticket #re] Se añade un parámetro para indicar la ruta con las imágenes.					
+					String dirImagenesRegistro = ConfigFilePathResolverIsicres.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "../SIGEM_RegistroPresencialWeb");
+
+		            parameters.put("IMAGES_REPOSITORY_PATH", dirImagenesRegistro);
+		            //[Mani Ticket #120] Fin modificaciones
+
 				}
 
 				if (_logger.isDebugEnabled()) {

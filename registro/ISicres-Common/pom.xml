@@ -9,6 +9,15 @@
 	<name>ISicres-Common</name>
 	<packaging>jar</packaging>
 	<description>Modulo de Acceso a Datos de Inves Sicres</description>
+
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
@@ -84,7 +93,6 @@
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc14</artifactId>
 			<version>10.2.0.5</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>

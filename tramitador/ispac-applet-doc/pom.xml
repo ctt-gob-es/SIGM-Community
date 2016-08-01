@@ -15,6 +15,14 @@
 	<name>ispac-applet-doc</name>
 	<packaging>jar</packaging>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<!-- Third party dependencies -->
@@ -43,7 +51,6 @@
 			<groupId>java</groupId>
 			<artifactId>java-plugin</artifactId>
 			<version>jre-1.4.2_14</version>
-			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>

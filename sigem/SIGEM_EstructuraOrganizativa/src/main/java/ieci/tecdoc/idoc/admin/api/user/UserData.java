@@ -38,6 +38,16 @@ public interface UserData {
 	
 	public String getApelliidos();
 	
+	/**
+	 * [Manu Ticket #175] + Crear un campo DNI
+	 */
+	public void setDni(String dni);
+
+	/**
+	 * [Manu Ticket #175] + Crear un campo DNI
+	 */
+	public String getDni();
+	
 
 	/**
 	 * Carga datos personales de un usuario.

@@ -17,6 +17,8 @@ import ieci.tdw.ispac.audit.business.vo.IspacAuditoriaValorModificado;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventEntidadAltaVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventEntidadModificacionVO;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventTramiteModificacionVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.app.EntityApp;
 import ieci.tdw.ispac.ispaclib.bean.ValidationError;
@@ -52,7 +54,7 @@ public class StoreEntityAction extends BaseAction {
 	 */
 	private static final Logger logger = Logger.getLogger(StoreEntityAction.class);
 
-	IspacAuditoriaManager auditoriaManager = new IspacAuditoriaManagerImpl();
+	IspacAuditoriaManager auditoriaManager;
 	
 	public ActionForward executeAction(ActionMapping mapping,
 									   ActionForm form,
@@ -185,7 +187,6 @@ public class StoreEntityAction extends BaseAction {
 														
 					// Si la validación es correcta se hace commit de la transacción
 					bCommit = true;
-					
 					List<IspacAuditoriaValorModificado> valoresModificados = getModifiedFields(entityapp,oldEntityapp);
 					//Modificación de un trámite
 					if (entityId==SpacEntities.SPAC_DT_TRAMITES){
@@ -211,8 +212,11 @@ public class StoreEntityAction extends BaseAction {
 				setStateticket(request, currentstate);
 
 				if (entityapp != null) {
-					
-					throw new ISPACInfo(e.getMessage());
+					//[Manu Ticket #1132] INICIO - SIGEM No aparecen los avisos de cheque falso y cheque duplicado.
+					String mensaje = e.getMessage();
+					mensaje = mensaje.replace("\n","\\n");
+					throw new ISPACInfo(mensaje);
+					//[Manu Ticket #1132] FIN - SIGEM No aparecen los avisos de cheque falso y cheque duplicado.
 				}
 				else {
 					// Suele producirse error en las secuencias al estar mal inicializadas
@@ -347,19 +351,25 @@ public class StoreEntityAction extends BaseAction {
 	 * @throws ISPACException 
 	 */
 	private void auditModificacionTramite(String numExp, ClientContext cct, List<IspacAuditoriaValorModificado> valoresModificados, EntityApp entityapp) throws ISPACException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("auditConsultaTramite(int, ClientContext) - start");
-		}
-
-		IspacAuditEventTramiteModificacionVO evento = new IspacAuditEventTramiteModificacionVO();
-		setCommonEventValues(numExp, cct, valoresModificados, entityapp, evento);
 		
-		logger.info("Auditando la modificación del trámite");
-		auditoriaManager.audit(evento);
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("auditConsultaTramite(int, ClientContext) - end");
-		}
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+	    		
+			if (logger.isDebugEnabled()) {
+				logger.debug("auditConsultaTramite(int, ClientContext) - start");
+			}
+	
+			IspacAuditEventTramiteModificacionVO evento = new IspacAuditEventTramiteModificacionVO();
+			setCommonEventValues(numExp, cct, valoresModificados, entityapp, evento);
+			
+			logger.info("Auditando la modificación del trámite");
+			auditoriaManager.audit(evento);
+	
+			if (logger.isDebugEnabled()) {
+				logger.debug("auditConsultaTramite(int, ClientContext) - end");
+			}
+    	}
 	}
 	
 	/**
@@ -368,18 +378,24 @@ public class StoreEntityAction extends BaseAction {
 	 * @throws ISPACException 
 	 */
 	private void auditModificacionEntidad(String numExp, ClientContext cct, List<IspacAuditoriaValorModificado> valoresModificados, EntityApp entityapp) throws ISPACException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("auditConsultaTramite(int, ClientContext) - start");
-		}
 		
-		IspacAuditEventEntidadModificacionVO evento = new IspacAuditEventEntidadModificacionVO();
-		setCommonEventValues(numExp, cct, valoresModificados, entityapp, evento);
-		logger.info("Auditando la modificación de la entidad");
-		auditoriaManager.audit(evento);
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("auditConsultaTramite(int, ClientContext) - end");
-		}
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+	    		
+			if (logger.isDebugEnabled()) {
+				logger.debug("auditConsultaTramite(int, ClientContext) - start");
+			}
+			
+			IspacAuditEventEntidadModificacionVO evento = new IspacAuditEventEntidadModificacionVO();
+			setCommonEventValues(numExp, cct, valoresModificados, entityapp, evento);
+			logger.info("Auditando la modificación de la entidad");
+			auditoriaManager.audit(evento);
+	
+			if (logger.isDebugEnabled()) {
+				logger.debug("auditConsultaTramite(int, ClientContext) - end");
+			}
+    	}
 	}
 	
 	/**
@@ -388,45 +404,51 @@ public class StoreEntityAction extends BaseAction {
 	 * @throws ISPACException 
 	 */
 	private void auditAltaEntidad(IItem newItem, ClientContext cct,EntityApp entityapp) throws ISPACException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("auditConsultaTramite(int, ClientContext) - start");
-		}
 		
-		IspacAuditEventEntidadAltaVO evento = new IspacAuditEventEntidadAltaVO();
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
-		
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		
-		evento.setIdUser("");
-		evento.setUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
-		
-		evento.setEntidadAppName(entityapp.getAppName());
-		evento.setEntidadAppId(String.valueOf(entityapp.getAppId()));
-		
-		//Añadir también el número de expediente del trámite
-		String numExp = newItem.getString("NUMEXP");
-		evento.setNumExpediente(numExp);
-		evento.setId(String.valueOf(newItem.getKeyInt()));
-
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la modificación de la entidad");
-		auditoriaManager.audit(evento);
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("auditConsultaTramite(int, ClientContext) - end");
-		}
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+	    		
+			if (logger.isDebugEnabled()) {
+				logger.debug("auditConsultaTramite(int, ClientContext) - start");
+			}
+			
+			IspacAuditEventEntidadAltaVO evento = new IspacAuditEventEntidadAltaVO();
+			AuditContext auditContext = AuditContextHolder.getAuditContext();
+			
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			
+			evento.setIdUser("");
+			evento.setUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+			
+			evento.setEntidadAppName(entityapp.getAppName());
+			evento.setEntidadAppId(String.valueOf(entityapp.getAppId()));
+			
+			//Añadir también el número de expediente del trámite
+			String numExp = newItem.getString("NUMEXP");
+			evento.setNumExpediente(numExp);
+			evento.setId(String.valueOf(newItem.getKeyInt()));
+	
+			evento.setFecha(new Date());
+	
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la modificación de la entidad");
+			auditoriaManager.audit(evento);
+	
+			if (logger.isDebugEnabled()) {
+				logger.debug("auditConsultaTramite(int, ClientContext) - end");
+			}
+    	}
 	}
 
 	/**
@@ -442,7 +464,10 @@ public class StoreEntityAction extends BaseAction {
 			List<IspacAuditoriaValorModificado> valoresModificados, EntityApp entityapp,
 			IspacAuditEventEntidadModificacionVO evento) throws ISPACException {
 		
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+		AuditContext auditContext = null;
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))    		
+    		auditContext = AuditContextHolder.getAuditContext();
 		
 		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
 		evento.setAppId(IspacAuditConstants.getAppId());
@@ -469,10 +494,8 @@ public class StoreEntityAction extends BaseAction {
 			evento.setUser(auditContext.getUser());
 			evento.setIdUser(auditContext.getUserId());
 		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
 		}
 	}
-
-
 
 }

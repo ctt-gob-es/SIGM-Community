@@ -79,10 +79,18 @@ public class DocumentUtil {
 				|| "application/x-mspowerpoint".equalsIgnoreCase(mimeType)
 				|| ("application/vnd.oasis.opendocument.text".equalsIgnoreCase(mimeType) && useOdtTemplantes)
 				|| "application/vnd.openxmlformats-officedocument.presentationml.presentation".equalsIgnoreCase(mimeType)
-				|| "application/vnd.openxmlformats-officedocument.presentationml.slideshow".equalsIgnoreCase(mimeType)) {
+				|| "application/vnd.openxmlformats-officedocument.presentationml.slideshow".equalsIgnoreCase(mimeType)
+//			[Manu Ticket #475] Modificaciones para que reconozca los ODS
+				|| "application/vnd.oasis.opendocument.spreadsheet".equalsIgnoreCase(mimeType)
+//			[Manu Ticket #475] Modificaciones para que reconozca los ODS
+	    		) {
 
 	    	//String htmlPage = generateHtmlPage(servletCtx, request.getContextPath(), url, mimeType, readonly, reloadTopWindow, useOdtTemplantes);
-	    	String htmlPage = generateHtmlPage(servletCtx, request, url, mimeType, readonly, reloadTopWindow, useOdtTemplantes);
+	    	//String htmlPage = generateHtmlPage(servletCtx, request, url, mimeType, readonly, reloadTopWindow, useOdtTemplantes);
+        	
+			// [Manu Ticket #97] ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java.
+	    	String htmlPage = generateHtmlPageNoJava(servletCtx, request.getContextPath(), url, mimeType, id, readonly, reloadTopWindow, useOdtTemplantes);
+
 
 	    	ServletOutputStream out = response.getOutputStream();
 	    	response.setHeader("Pragma", "public");
@@ -275,6 +283,76 @@ public class DocumentUtil {
         	.append("</body>")
         	.append("</html>")
         	.toString();
+	}
+	
+	/**
+	 * 		[Manu Ticket #97] ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java.
+	 * 
+	 * 		Método que genera la llamada a la edición de documentos por protocolo. 
+	 * 
+	 * @param servletCtx
+	 * @param context
+	 * @param url
+	 * @param mimeType
+	 * @param document
+	 * @param readOnly
+	 * @param reloadTopWindow
+	 * @param useOdtTemplates
+	 * @return
+	 * @throws Exception
+	 */
+	public static String generateHtmlPageNoJava(
+			ServletContext servletCtx, String context, String url, String mimeType, String document,
+			String readOnly, boolean reloadTopWindow, boolean useOdtTemplates) throws Exception {
+			
+        return new StringBuffer()
+        	.append("<html>\n")
+        	.append("	<head>\n")
+        	.append("		<script language='javascript'>\n")        	
+        	.append(getFunctionOfficeNoJavaProtocolo(servletCtx, context, url, reloadTopWindow, mimeType, document, readOnly))
+			.append("		</script>\n")
+        	.append("	</head>\n")
+        	.append("	<body onload=\"lazarOffice()\">\n")
+        	.append("	</body>\n")
+        	.append("</html>")
+        	.toString();
+	}
+	
+	/**
+	 * 		[Manu Ticket #97] FIN - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java.
+	 * 
+	 * 		Método que contiene el código que realiza la llamada a la edición de documentos sin java. Si no está asociada la extensión a una aplicación
+	 * llama al action que da la opción de seleccionar aplicación para abrir esa extensión. 
+	 * 
+	 * @param servletCtx
+	 * @param context
+	 * @param url
+	 * @param reloadTopWindow
+	 * @param mimeType
+	 * @param document
+	 * @param readonly
+	 * @return
+	 * @throws Exception
+	 */
+	private static String getFunctionOfficeNoJavaProtocolo(ServletContext servletCtx,
+			String context, String url, boolean reloadTopWindow, String mimeType, String document, String readonly)
+			throws Exception {
+		String ext = MimetypeMapping.getExtension(mimeType);
+		
+		return new StringBuffer()
+			.append("			function lazarOffice() {\n")
+			.append("				var protocolo = localStorage.getItem('" + ext + "');\n")
+			.append("				if(String(protocolo) == 'null'){\n")			
+			.append("					parent.showFrame(\"workframe\", \"seleccionarEditor.do?extension=" + ext + "&document=" + document + "&readonly=" + readonly + "\", \"\", \"\", \"\", false);")
+			.append("				}\n")
+			.append("				else{\n")
+			//[Manu Ticket #100] - ALSIGM3 Al generar un documento se queda la pantalla en blanco
+			.append(generateJSCodeReloadTopWindowWithTimeout(5000))
+			.append("					window.location.href = localStorage.getItem('" + ext + "') + \"" + url + "\";\n")		
+			.append("				}\n")
+			.append("				return true;\n")
+			.append("			}\n")
+			.toString();
 	}
 
 	/**

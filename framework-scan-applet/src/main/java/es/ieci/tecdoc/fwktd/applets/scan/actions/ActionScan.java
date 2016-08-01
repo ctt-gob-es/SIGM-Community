@@ -70,9 +70,15 @@ public class ActionScan{
 		int numImages = -1;
 		PerfilVO perfilVO = (PerfilVO) perfiles.getHashPerfiles().get(perfiles.getSelectName());
 		try {
-			try{
-				scanner.closeDS();
-			}catch(Exception e){}
+			/**
+			 * [Ticket#229] INICIO ALSIGM3 Error al escanear con el Windows 8/10
+			 * **/
+			//try{
+			//	scanner.closeDS();
+			//}catch(Exception e){}
+			/**
+			 * [Ticket#229] FIN ALSIGM3 Error al escanear con el Windows 8/10
+			 * **/
 			// Se abre la conexion
 			scanner.openDS (perfilVO.getDevice());
 
@@ -120,9 +126,15 @@ public class ActionScan{
 			if(device ==  null){
 				device = scanner.getDefaultDS();
 			}
-			try{
-				scanner.closeDS();
-			}catch(Exception e){}
+			/**
+			 * [Ticket#229] INICIO ALSIGM3 Error al escanear con el Windows 8/10
+			 * **/
+			//try{
+			//	scanner.closeDS();
+			//}catch(Exception e){}
+			/**
+			 * [Ticket#229] FIN ALSIGM3 Error al escanear con el Windows 8/10
+			 * **/
 
 			scanner.openDS (device);
 

@@ -18,6 +18,8 @@ import ieci.tdw.ispac.audit.business.IspacAuditoriaManager;
 import ieci.tdw.ispac.audit.business.manager.impl.IspacAuditoriaManagerImpl;
 import ieci.tdw.ispac.audit.business.vo.AuditContext;
 import ieci.tdw.ispac.audit.business.vo.events.IspacAuditEventTramiteConsultaVO;
+import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
+import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.app.EntityApp;
 import ieci.tdw.ispac.ispaclib.common.constants.DocumentLockStates;
@@ -40,6 +42,7 @@ import ieci.tdw.ispac.ispacweb.api.IWorklist;
 import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
 import ieci.tdw.ispac.ispacweb.api.ManagerState;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +57,7 @@ import org.apache.struts.action.ActionMapping;
 
 public class ShowTaskAction extends BaseAction
 {
-	IspacAuditoriaManager auditoriaManager = new IspacAuditoriaManagerImpl();
+	IspacAuditoriaManager auditoriaManager;
 
 	public ActionForward executeAction(ActionMapping mapping,
 									   ActionForm form,
@@ -83,7 +86,8 @@ public class ShowTaskAction extends BaseAction
 		auditContext.setUser(session.getUserName());
 		auditContext.setUserId(session.getClientContext().getUser().getUID());		
 		AuditContextHolder.setAuditContext(auditContext);
-    	try{
+
+		try{
     		bpmAPI = invesFlowAPI.getBPMAPI();
 			//Iniciamos la sesion con el BPM
 			bpmAPI.initBPMSession();
@@ -398,8 +402,13 @@ public class ShowTaskAction extends BaseAction
 		// Menús
 	    request.setAttribute("menus", MenuFactory.getTaskMenu(cct, state, (String) servlet.getServletContext().getAttribute("ispacbase"), getResources(request), stageId, returnToSearch,resp));
 
+		//[Manut Eickt #707] INICIO - SIGEM Problemas de rendimiento
         //Cargamos enlaces para los expedientes relacionados
-        SpacMgr.loadRelatedExpedient(session, request, state.getNumexp(), SpacMgr.ALL_EXPEDIENTS );
+        //SpacMgr.loadRelatedExpedient(session, request, state.getNumexp(), SpacMgr.ALL_EXPEDIENTS );
+        request.setAttribute("supExp",new ArrayList());
+        request.setAttribute("subExp",new ArrayList());
+        //[Manut Eickt #707] FIN - SIGEM Problemas de rendimiento
+      
 
         //Cargamos las aplicaciones de gestion asociadas
         SpacMgr.loadAppGestion(session, state, request);
@@ -500,32 +509,38 @@ public class ShowTaskAction extends BaseAction
 
 	
 	private void auditConsultaTramite(int idTask, String numExpediente, ClientContext cct) {
-		AuditContext auditContext = AuditContextHolder.getAuditContext();
+		
+		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
+    	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
+    		auditoriaManager = new IspacAuditoriaManagerImpl();
+    		
+    		AuditContext auditContext = AuditContextHolder.getAuditContext();
 
-		IspacAuditEventTramiteConsultaVO evento = new IspacAuditEventTramiteConsultaVO();
-		evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
-		evento.setAppId(IspacAuditConstants.getAppId());
-		evento.setIdUser("");
-		evento.setUser("");
-		evento.setUserHostName("");
-		evento.setUserIp("");
+			IspacAuditEventTramiteConsultaVO evento = new IspacAuditEventTramiteConsultaVO();
+			evento.setAppDescription(IspacAuditConstants.APP_DESCRIPTION);
+			evento.setAppId(IspacAuditConstants.getAppId());
+			evento.setIdUser("");
+			evento.setUser("");
+			evento.setUserHostName("");
+			evento.setUserIp("");
+		
+			//Añadir también el número de expediente del trámite
+			evento.setNumExpediente(numExpediente);
+			evento.setIdTramite(String.valueOf(idTask));
+							
+			evento.setFecha(new Date());
 	
-		//Añadir también el número de expediente del trámite
-		evento.setNumExpediente(numExpediente);
-		evento.setIdTramite(String.valueOf(idTask));
-						
-		evento.setFecha(new Date());
-
-		if (auditContext != null) {
-			evento.setUserHostName(auditContext.getUserHost());
-			evento.setUserIp(auditContext.getUserIP());
-			evento.setUser(auditContext.getUser());
-			evento.setIdUser(auditContext.getUserId());
-		} else {
-			logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
-		}
-		logger.info("Auditando la creación del trámite");
-		auditoriaManager.audit(evento);
+			if (auditContext != null) {
+				evento.setUserHostName(auditContext.getUserHost());
+				evento.setUserIp(auditContext.getUserIP());
+				evento.setUser(auditContext.getUser());
+				evento.setIdUser(auditContext.getUserId());
+			} else {
+				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
+			}
+			logger.info("Auditando la creación del trámite");
+			auditoriaManager.audit(evento);
+    	}
 	}
 	
 }
