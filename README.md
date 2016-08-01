@@ -39,6 +39,7 @@ Dicho fichero se encuentran en el directorio raiz del proyecto.
 * Compilación del código y despliegue de las aplicaciones mediante maven, tanto para linux como para windows.
 * Indicar en el log la entidad a la que se corresponde la traza.
 * Adaptación para trabajar con ODSs.
+
 ###Mejoras Funcionales
 * **Tramitador**:
   * Lista de trabajo.
