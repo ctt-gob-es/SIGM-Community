@@ -57,7 +57,7 @@ Dicho fichero se encuentran en el directorio raiz del proyecto.
   * Datos de trámites anteriores mostrar la fase a la que pertenecían los trámites anteriores.
   * Expedientes relacionados mostrar opción de ver todos.
   * Indicar el asunto del expediente en la cabecera de la página.
-  * Edición de documentos desde el tramitador controlado por permisos al usuario.
+  * Edición de plantillas desde el tramitador controlado por permisos al usuario.
 * Trámite:
   * Reabrir Trámite
   * Datos de Trámite oculto por defecto.
