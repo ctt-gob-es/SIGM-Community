@@ -9,7 +9,9 @@ Esta rama del repositorio contiene el código del módulo de Registro de SIGM de
 
 ## Nota importante
 
-El objetivo de esta liberación es ofrecer a los organismos interesados el código fuente de su aplicación para facilitar su reutilización. La aplicación como un todo no es completamente funcional dado que se conecta con elementos comunes de la infraestructura del MSSSI de los que el usuario no dispondrá:
+El objetivo de esta liberación es ofrecer a los organismos interesados el código fuente de la aplicación para facilitar su reutilización.
+
+Las modificaciones realizadas a la rama principal de SIGM no han conservado la multi-entidad. Además, la aplicación como un todo no es completamente funcional dado que se conecta con elementos comunes de la infraestructura del MSSSI de los que el usuario no dispondrá:
 
 - Plataforma de firma del MSSSI
 - Servicio de verificación de certificados del MSSSI
