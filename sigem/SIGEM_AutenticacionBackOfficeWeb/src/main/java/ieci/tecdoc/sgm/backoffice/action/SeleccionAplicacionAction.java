@@ -84,7 +84,7 @@ public class SeleccionAplicacionAction extends Action{
 							url = AutenticacionBackOffice.comprobarURL(request, url);
 							request.setAttribute(Defs.PARAMETRO_URL, url);
 							return mapping.findForward("redirigir"); 
-						} else {
+						} /*else {
 							ServicioAdministracionSesionesBackOffice oCliente = LocalizadorServicios.getServicioAdministracionSesionesBackOffice();
 							Sesion sesionBO = oCliente.obtenerSesion(key);
 							String especifico = sesionBO.getDatosEspecificos();
@@ -109,7 +109,7 @@ public class SeleccionAplicacionAction extends Action{
 								request.setAttribute("aplicaciones", oLista);
 						   		return mapping.findForward("aplicaciones");
 							}
-						}
+						}*/
 					} else {
 						return mapping.findForward("success"); 
 					}

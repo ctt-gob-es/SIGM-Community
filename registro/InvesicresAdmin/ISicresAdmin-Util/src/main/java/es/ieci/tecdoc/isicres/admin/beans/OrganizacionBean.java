@@ -17,7 +17,7 @@ public class OrganizacionBean {
 	public static final int TIPO_PROPIOS = 1;
 	private int id;
 	private String uid;
-	private int idPadre;
+	private Integer idPadre;
 	private String abreviatura;
 	private String nombre;
 	private Date fechaAlta;
@@ -213,14 +213,14 @@ public class OrganizacionBean {
 	/**
 	 * @return
 	 */
-	public int getIdPadre() {
+	public Integer getIdPadre() {
 		return idPadre;
 	}
 
 	/**
 	 * @param idPadre
 	 */
-	public void setIdPadre(int idPadre) {
+	public void setIdPadre(Integer idPadre) {
 		this.idPadre = idPadre;
 	}
 

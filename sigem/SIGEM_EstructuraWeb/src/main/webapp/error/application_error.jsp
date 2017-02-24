@@ -5,11 +5,13 @@
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci" %>
 <%@ page isErrorPage="true" autoFlush="true" %> 
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <html:html>
 <head>
 <ieci:baseInvesDoc/>
 	<title><bean:message key="message.common.title"/></title>
-  <link rel="stylesheet" type="text/css" href="include/css/error.css"/>
+  <link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/error.css"/>
 </head>
 <body>
 <%-- 

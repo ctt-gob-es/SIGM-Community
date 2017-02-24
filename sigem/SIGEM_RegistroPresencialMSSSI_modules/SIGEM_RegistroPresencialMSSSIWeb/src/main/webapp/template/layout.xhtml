@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"  xml:lang="es" lang="es">
+
+	<h:head>
+		<f:facet name="first">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		</f:facet>
+		<meta http-equiv="Pragma" content="no-cache" /> 
+		<meta http-equiv="Cache-Control" content="no-cache" />		
+		<meta content="Ministerio de Sanidad, Servicios Sociales e Igualdad" name="description"/>
+		<meta content="Ministerio de Sanidad, Servicios Sociales e Igualdad" name="keywords"/>
+		<title>Ministerio de Sanidad, Servicios Sociales e Igualdad</title>
+		<link rel="stylesheet" type="text/css" href="#{webParam.entryParameters['URLRoot']}/css/intranet-sigm.css" media="screen,projection"/>
+		<link rel="stylesheet" type="text/css" href="#{webParam.entryParameters['URLRoot']}/css/intranet-sigm-imprimir.css" media="print"/>
+		<link rel="stylesheet" type="text/css" href="#{webParam.entryParameters['URLRoot']}/css/primefaces.css" />
+		<ui:insert name="head"></ui:insert>
+		<script type="text/javascript" src="#{webParam.entryParameters['URLRoot']}/js/menu.js"></script>
+	</h:head>
+    
+    <h:body>
+		<f:view>
+			<div id="contenedor">
+				<!-- Cabecera -->
+				
+					<ui:insert name="header" >
+						<ui:include src="/template/header.xhtml" />
+					</ui:insert>
+			    <!-- Cabecera -->
+			   <div id="bloquecontenido">
+					  <div  id="apartadoOculto">
+							<a href="#" id="buttonshow">Mostrar menú </a>
+						</div>
+			   		<div class="menu menuOculto" id="menudiv">
+					   	<ui:insert name="menu">
+					   		<ui:include src="/template/menu.xhtml" />
+					   	</ui:insert>
+				    </div>
+				    <div class="contenido contenidogrande" id="contenidodiv">
+					   	<ui:insert name="content"></ui:insert>
+				    </div>
+			 	</div>
+			 	 <div class="incidencia">
+					<p>
+						<h:link value="#{msgs.reportTicket}" outcome="TICKET_PAGE" target="ticket" />
+					</p>
+				</div>
+			 </div>	    
+			 <div id="pie">
+			    	<ui:insert name="footer" >
+			    		<ui:include src="/template/footer.xhtml" />
+			    	</ui:insert>
+		     </div>   
+    	</f:view>
+    </h:body>
+
+</html>

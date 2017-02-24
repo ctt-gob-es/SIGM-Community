@@ -1,7 +1,7 @@
 Este programa se distribuye como un todo bajo la licencia EUPL1.1 o versiones posteriores.
 
 
-Los componentes desarrollados por parte del inisterio de Industria, Energia y Turismo se encuentran en las siguientes carpetas y se distribuyen bajo la misma licencia (EUPL1.1 o posteriores):
+Los componentes desarrollados por parte del Ministerio de Industria, Energia y Turismo se encuentran en las siguientes carpetas y se distribuyen bajo la misma licencia (EUPL1.1 o posteriores):
 
 - archidoc_common-5.0.jar
 - archidoc_ispac_connector_jar-5.0.jar
@@ -147,6 +147,41 @@ Los componentes desarrollados por parte del inisterio de Industria, Energia y Tu
 - sigem_utilidadesSesionUsuario-3.0.jar
 
 
+Los componentes desarrollados por parte del Ministerio de Sanidad, Servicios Sociales e Igualdad se encuentran en las siguientes carpetas y se distribuyen bajo la misma licencia (EUPL1.1 o posteriores):
+
+- fwktd-core-3.0.0-msssi2.0.0.jar
+- fwktd-server-3.0.0-msssi2.0.0.jar
+- fwktd-dir3-api-3.0.0-msssi2.0.0.jar
+- fwktd-dir3-core-3.0.0-msssi2.0.0.jar
+- fwktd-dir3-dco-wsclient-3.0.0-msssi2.0.0.jar
+- dir3-api-3.0.0-msssi2.0.0.jar
+- dir3-core-3.0.0-msssi2.0.0.jar
+- dir3-dco-wsclient-3.0.0-msssi2.0.0.jar
+- fwktd-sir-api-3.0.0-msssi2.0.0.jar
+- fwktd-sir-core-3.0.0-msssi2.0.0.jar
+- fwktd-sir-wsclient-3.0.0-msssi2.0.0.jar
+- invesdoc-stdbizobj-3.0.0-msssi2.0.0.jar
+- ISicresAdmin-Core-3.0.0-msssi2.0.0.jar
+- ISicresAdmin-Util-3.0.0-msssi2.0.0.jar
+- ISicres-Api-3.0.0-msssi2.0.0.jar
+- ISicres-Audit-3.0.0-msssi2.0.0.jar
+- ISicres-Common-3.0.0-msssi2.0.0.jar
+- ISicres-Desktop-Jar-3.0.0-msssi2.0.0.jar
+- ISicres-Document-Connector-Invesdoc-3.0.0-msssi2.0.0.jar
+- ISicres-Personanager-3.0.0-msssi2.0.0.jar
+- ISicres-Server-3.0.0-msssi2.0.0.jar
+- ISicres-ServerCore-3.0.0-msssi2.0.0.jar
+- ISicres-Terceros-3.0.0-msssi2.0.0.jar
+- SIGE_Core-3.0.0-msssi2.0.0.jar
+- sigem_estructuraOrganizativa-3.0.0-msssi2.0.0.jar
+- sigem_estructuraOrganizativaCore-3.0.0-msssi2.0.0.jar
+- sigem_gestionUsuariosBackOffice-3.0.0-msssi2.0.0.jar
+- sigem_init-3.0.0-msssi2.0.0.jar
+- sigem_registroPresencial-3.0.0-msssi2.0.0.jar
+- SIGEM_registroPresencialMSSSI-3.0.0-msssi2.0.0.jar
+- sigm.dao-3.0.0-msssi2.0.0.jar
+
+
 Este programa incluye los siguientes programas de terceros bajo su respectivas licencias:
 
 - afirma_5_java_5.jar EUPL/GPL2+
@@ -161,10 +196,14 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - asm-3.3.jar BSD3
 - asm-attrs-1.5.3.jar BSD3
 - aspectjrt-1.6.8.jar EPL 1.0
+- aspectjrt-1.8.2.jar EPL 1.0
 - aspectjweaver-1.6.8.jar EPL 1.0
+- axis-ant-1.4.jar ASF 2.0
+- axis-axis-1.4.jar ASF 2.0
 - backport-util-concurrent-3.1.jar Public domine
 - bcmail-jdk14-138.jar IT X11 (Bouncy Castle)
 - bcmail-jdk15-140.jar IT X11 (Bouncy Castle)
+- bcpkix-jdk15on-1.49.jar  (Bouncy Castle)
 - bcprov-jdk15-140.jar IT X11 (Bouncy Castle)
 - bctsp-jdk14-138.jar IT X11 (Bouncy Castle)
 - bsh-2.0b4.jar  LGPL/Sun Public License
@@ -177,13 +216,16 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - cometd-6.1.4.jar ASF 2.0
 - commons-beanutils-1.8.0.jar ASF 2.0
 - commons-beanutils-1.8.3.jar ASF 2.0
+- commons-codec-1.2.jar ASF 2.0
 - commons-codec-1.5.jar ASF 2.0
+- commons-collections-2.1.jar ASF 2.0
 - commons-collections-2.1.1.jar ASF 2.0
 - commons-collections-3.2.1.jar ASF 2.0
 - commons-dbcp-1.4.jar ASF 2.0
 - commons-digester-1.8.1.jar ASF 2.0
 - commons-fileupload-1.2.1.jar ASF 2.0
 - commons-io-1.4.jar ASF 2.0
+- commons-io-2.4.jar ASF 2.0
 - commons-lang-2.3.jar ASF 2.0
 - commons-lang-2.5.jar ASF 2.0
 - commons-logging-1.1.1.jar ASF 2.0
@@ -222,6 +264,8 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - dwr-3.0.1.jar ASF 2.0
 - ehcache-1.2.3.jar ASF 2.0
 - ehcache-1.5.0.jar ASF 2.0
+- ehcache-2.8.3.jar ASF 2.0
+- esapi-2.0.1.jar BSD
 - freemarker-2.3.8.jar BSD original (BSD4)
 - geronimo-activation_1.1_spec-1.1.jar ASF 2.0
 - geronimo-annotation_1.0_spec-1.1.1.jar ASF 2.0
@@ -229,6 +273,7 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - geronimo-jaxws_2.2_spec-1.1.jar ASF 2.0
 - geronimo-stax-api_1.0_spec-1.0.1.jar ASF 2.0
 - geronimo-ws-metadata_2.0_spec-1.1.3.jar ASF 2.0
+- groovy-all-1.7.5.jar ASF 2.0
 - hessian-3.1.5.jar ASF 1.1
 - hibernate-2.1.6.jar LGPL 2.1
 - hibernate-3.2.5.ga.jar LGPL 2.1
@@ -255,19 +300,28 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - infinispan-core-4.0.0.FINAL.jar LGPL 2.1+
 - itext-2.1.0.jar PL
 - itext-2.1.7.jar PL
+- jai_codec-1.1.3.jar JDL
+- jai_core-1.1.3.jar JDL
 - jasperreports-3.5.3.jar LGPL 2.1
 - jasperreports-3.7.6.jar LGPL 3
+- jasypt-1.9.2.jar ASF 2.0
+- javase-2.2.jar ASF 2.0
 - javassist-3.9.0.GA.jar PL
 - jaxb1-impl-2.2.4-1.jar CDDL 1.1
 - jaxb-api-2.1.jar CDDL 1.0
 - jaxb-impl-2.1.13.jar CDDL 1.0
 - jaxb-impl-2.1.3.jar CDDL 1.0
+- jaxrpc-api-1.1.jar ASF 2.0
 - jaxen-1.1-beta-6.jar Jaxen Version 1.0 Software License (BSD like)
 - jaxws-api-2.1-1.jar CDDL/GPLv2
 - jbosscache-core-3.2.1.GA.jar LGPL 2.1+
 - jboss-common-core-2.2.14.GA.jar LGPL 2.1+
 - jboss-logging-spi-2.0.5.GA.jar LGPL 2.1+
 - jboss-transaction-api-1.0.1.GA.jar LGPL 2.1+
+- jcabi-aspects-0.20.1.jar BSD
+- jcabi-immutable-1.3.jar BSD
+- jcabi-log-0.15.1.jar BSD
+- jcabi-xml-0.16.2.jar BSD
 - jcommon-1.0.15.jar LGPL 2.1+
 - jetty-util-6.1.4.jar ASF 2.0
 - jfreechart-1.0.12.jar LGPL 2.1+
@@ -275,14 +329,19 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - jgroups-all-2.2.8.jar LGPL 2.1
 - joda-time-1.6.2.jar ASF 2.0
 - joda-time-1.6.jar ASF 2.0
+- jsf-api-2.1.0-b03.jar GPL 2
+- jsf-impl-2.1.0-b03.jar GPL 2
+- json-simple-1.1.jar ASF 2.0
 - jsqlparser-0.4.0.jar LGPL 2.1+
 - jsr107cache-1.0.jar ASF 2.0
 - jsr250-api-1.0.jar CDDL 1.0
 - jstl.jar Sun Binary Code License Agreement
 - jstl-1.2.jar CDDL 1.0
 - jta-1.0.1B.jar CDDL 1.0
+- jta-1.1.jar CDDL 1.0
 - jtidy-r8-20060801.jar JTidy Software License
 - jug-2.0.0-lgpl.jar ASL2/LGPL2.1
+- junit-4.8.1.jar CPL
 - LITE_j5_afirma5_core__V3.2.jar GPL2/EUPL 1.1
 - LITE_j6_afirma5_core__V3.2.jar GPL2/EUPL 1.1
 - log4j-1.2.14.jar ASF 2.0
@@ -292,12 +351,19 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - EDIA_j6_afirma5_core__V3.2.jar GPL2/EUPL 1.1
 - mimepull-1.4.jar CDDL/GPLv2
 - mime-util-2.1.3.jar ASL2
+- mybatis-3.2.5.jar ASL2
+- mybatis-spring-1.2.2.jar ASL2
 - neethi-2.0.4.jar ASL2
 - neethi-3.0.1.jar ASL2
+- odmg-3.0.jar ODMG 2.0
 - opensaml-2.5.1-1.jar ASL2
+- opensaml-2.6.1.jar ASL2
 - openws-1.4.2-1.jar ASL2
+- openws-1.5.1.jar ASL2
+- oscache-2.0.2.jar  ASF 1.1 derivated
 - oscache-2.1.jar ASF 1.1 derivated
 - poi-3.7.jar ASL2
+- primefaces-4.0.jar ASL2
 - proxool-0.8.3.jar ASF 1.1 derivated
 - quartz-1.8.4.jar ASL2
 - quartz-jboss-1.8.4.jar ASL2
@@ -306,8 +372,10 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - rhq-pluginAnnotations-1.4.0.B01.jar LGPL 2.1+
 - river-1.2.0.GA.jar LGPL 2.1+
 - saaj-api-1.3.4.jar CDDL/GPLv2
+- saaj-api-1.3.5.jar CDDL/GPLv2
 - saaj-impl-1.3.12.jar CDDL/GPLv2
 - saaj-impl-1.3.2.jar CDDL 1.0
+- serializer-2.7.1.jar ASL2
 - simplecaptcha-1.2.jar BSD 3
 - slf4j-api-1.5.6.jar IT
 - slf4j-api-1.5.8.jar IT
@@ -355,6 +423,7 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - tiles-jsp-2.1.4.jar ASL2
 - tiles-servlet-2.1.2.jar ASL2
 - tiles-servlet-2.1.4.jar ASL2
+- trove-1.0.2.jar LGPL 2.1
 - validation-api-1.0.0.GA.jar ASL2
 - velocity-1.6.2.jar ASL2
 - velocity-1.7.jar ASL2
@@ -369,6 +438,7 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - wss4j-1.5.8.jar ASL2
 - wss4j-1.6.4.jar ASL2
 - xercesImpl-2.9.1.jar ASL2
+- xmlpull-1.1.3.1.jar Public domain
 - xml-resolver-1.2.jar ASL2
 - XmlSchema-1.4.7.jar ASL2
 - xmlschema-core-2.0.1.jar ASL2
@@ -376,7 +446,9 @@ Este programa incluye los siguientes programas de terceros bajo su respectivas l
 - xmlsec-1.4.3.jar ASL2
 - xmlsec-1.4.6.jar ASL2
 - xmltooling-1.3.2-1.jar ASL2
+- xmltooling-1.4.1.jar ASL2
 - xom-1.0b3.jar LGPL 2.1
+- xpp3_min-1.1.3.4.O.jar ASF 1.1
 - xpp3_min-1.1.4c.jar ASF 1.1
 - xstream-1.3.1.jar BSD3
 - xws-security-1.3.1.jar CDDL 1.0

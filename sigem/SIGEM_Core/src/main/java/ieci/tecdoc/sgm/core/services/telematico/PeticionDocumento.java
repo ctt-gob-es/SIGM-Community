@@ -1,6 +1,5 @@
 package ieci.tecdoc.sgm.core.services.telematico;
 
-
 /**
  * Bean con la información de un documento adjunto a la solicitud de registro.
  *
@@ -15,6 +14,10 @@ public class PeticionDocumento
    private String fileName;
    private String idioma;
    private byte[] fileContent;
+   private String fileContentBase64;
+   private String sizeFile;
+   private String signature;
+   private String hash;
 
    public PeticionDocumento()
    {
@@ -24,6 +27,10 @@ public class PeticionDocumento
       fileName = null;
       idioma = null;
       fileContent = null;
+      fileContentBase64 = null;
+      sizeFile = null;
+      signature = null;
+      hash = null;
    }
 
    /**
@@ -127,5 +134,70 @@ public class PeticionDocumento
 	public void setFileContent(byte[] fileContent) {
 		this.fileContent = fileContent;
 	}
+	
+	/**
+    * Devuelve el tamano del documento.
+    * @return String sizeFile del documento.
+    */
+   public String getSizeFile() {
+	   return sizeFile;
+   }
 
+   /**
+    * Establece el tamano del documento
+    * @param sizeFile tamano del documento
+    */
+   public void setSizeFile(String sizeFile) {
+	   this.sizeFile = sizeFile;
+   }
+   
+	/**
+    * Devuelve la firma del documento
+    * @return String firma del documento.
+    */
+	public String getSignature() {
+		return signature;
+	}
+
+	/**
+    * Establece la firma del documento
+    * @param signature documento
+    */
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+	
+	/**
+    * Devuelve el hash del documento
+    * @return String hash del documento.
+    */
+	public String getHash() {
+		return hash;
+	}
+
+	/**
+    * Establece la hash del documento
+    * @param hash documento
+    */
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+	
+	/**
+    * Devuelve el contenido del documento en base64
+    * @return String contenido del documento.
+    */
+	public String getFileContentBase64() {
+		return fileContentBase64;
+	}
+
+	/**
+    * Establece el contenido del documento en base64
+    * @param fileContentBase64 documento
+    */
+	public void setFileContentBase64(String fileContentBase64) {
+		this.fileContentBase64 = fileContentBase64;
+	}
+	
+	
 }

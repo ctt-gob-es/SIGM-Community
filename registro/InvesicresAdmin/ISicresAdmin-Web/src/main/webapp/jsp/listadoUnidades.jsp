@@ -4,6 +4,8 @@
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 <%@ page import="ieci.tecdoc.isicres.rpadmin.struts.util.AutenticacionAdministracion" %>
 <%@ page import="es.ieci.tecdoc.isicres.admin.core.services.ConstantesGestionUsuariosAdministracion" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
@@ -11,9 +13,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="IECISA" />
 <title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.sgm.rpadmin.unidades.titulo"/></title>
-<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-<link href="css/adminApp.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/common.js"></script>
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/adminApp.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
 <script>
 	function loading() {
 		if( document.getElementById('iframeUnidades').src != "null") {
@@ -45,12 +47,12 @@
 <body onload="loading()">
 <form name="frmListadoUsuarios" action="" method="post">
 <div id="contenedora">
-	<div id="wip" style="background-image:url('img/fondo.gif');display:none;z-index:100;position:absolute;width:900px;height:500px;top:110px;left:100px">
+	<div id="wip" style="background-image:url('<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/fondo.gif');display:none;z-index:100;position:absolute;width:900px;height:500px;top:110px;left:100px">
 		<div id="text-wip" style="position:absolute;top:240px;left:350px">
 			<bean:message key="cargando"/>
 		</div>
 		<div id="imagen-wip" style="position:absolute;top:225px;left:450px">
-			<img src="<html:rewrite page="/img/loading.gif"/>" />
+			<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/loading.gif" />
 		</div>
 	</div>
 
@@ -82,7 +84,7 @@
 					<tr>
 						<td><bean:message key="cargando"/></td>
 						<td align="center">
-							<img src="<html:rewrite page="/img/loading.gif"/>" />
+							<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/loading.gif" />
 						</td>
 					</tr>
 				</table>
@@ -109,7 +111,7 @@
 							</table>
 						</td>
 						<td valign="top">
-						    <iframe src="<html:rewrite page="/blank.htm"/>" id="iframeUnidades" frameborder="0" scrolling="auto" height="350" width="550" />
+						    <iframe src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/blank.htm" id="iframeUnidades" frameborder="0" scrolling="auto" height="350" width="550" />
 						</td>
 					</tr>
 				</table>

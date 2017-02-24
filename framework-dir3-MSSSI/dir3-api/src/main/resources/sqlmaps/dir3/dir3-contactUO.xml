@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+						"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ContactUOVO">
+
+	<typeAlias alias="contactUO"
+		type="es.msssi.dir3.api.vo.ContactUOVO" />
+
+	<resultMap id="contactUO" class="es.msssi.dir3.api.vo.ContactUOVO">
+		<result property="id" column="N_ID_CONTACTO" />
+		<result property="contactTypeId" column="N_ID_TIPO_CONTACTO" />
+		<result property="contactInfo" column="C_DATOS_CONTACTO" />
+		<result property="observations" column="C_OBSERV_CONTACTO" />
+		<result property="statusId" column="C_ID_ESTADO" />
+		<result property="unitId" column="C_ID_UD_ORGANICA" />
+	</resultMap>
+
+	<sql id="table">DIR_CONTACTO_UD_ORGANICA </sql>
+	<sql id="columns">
+		CONTUO.N_ID_CONTACTO,
+		CONTUO.N_ID_TIPO_CONTACTO,
+		C_DESC_TIPO_CONTACTO,
+		CONTUO.C_DATOS_CONTACTO,
+		CONTUO.C_OBSERV_CONTACTO,
+		CONTUO.C_ID_ESTADO,
+		CONTUO.C_ID_UD_ORGANICA
+	</sql>
+	<sql id="columns_insert">
+		N_ID_CONTACTO,
+		C_ID_UD_ORGANICA,
+		N_ID_TIPO_CONTACTO,
+		C_DATOS_CONTACTO,
+		C_OBSERV_CONTACTO,
+		C_ID_ESTADO,
+		D_INICIO_VIGENCIA,
+  		D_FECHA_ALTA,
+  		D_FECHA_MODIF
+	</sql>
+	<sql id="insert">
+		#id#,
+		#unitId#,
+		#contactTypeId#,
+		#contactInfo#,
+		#observations#,
+		#statusId#,
+		sysdate,
+		sysdate,
+		sysdate
+	</sql>
+	<sql id="update">
+		N_ID_TIPO_CONTACTO = #contactTypeId#,
+		C_ID_UD_ORGANICA= #unitId#,
+		C_DATOS_CONTACTO = #contactInfo#,
+		C_OBSERV_CONTACTO = #observations#,
+		C_ID_ESTADO = #statusId#,
+		<isEqual property="statusId"
+						compareValue="V">
+  			D_FIN_VIGENCIA = sysdate,
+  		</isEqual>
+  		D_FECHA_MODIF = sysdate
+	</sql>
+	
+	<select id="getContactUOVOs" resultMap="contactUO">
+		SELECT
+			<include refid="columns" /> 
+		FROM
+			<include refid="table" /> CONTUO
+			 LEFT OUTER JOIN CAT_TIPO_CONTACTO TCONT ON CONTUO.N_ID_TIPO_CONTACTO = TCONT.N_ID_TIPO_CONTACTO
+		ORDER BY N_ID_CONTACTO
+	</select>
+	
+	<select id="getActiveContactUOVOs" resultMap="contactUO">
+		SELECT
+			<include refid="columns" />
+		FROM
+			<include refid="table" /> CONTUO
+			 LEFT OUTER JOIN CAT_TIPO_CONTACTO TCONT ON CONTUO.N_ID_TIPO_CONTACTO = TCONT.N_ID_TIPO_CONTACTO
+			 WHERE
+			CONTUO.C_ID_UD_ORGANICA=#value# AND CONTUO.C_ID_ESTADO = 'V'
+		ORDER BY CONTUO.N_ID_CONTACTO
+	</select>
+
+	<select id="getContactUOVO" parameterClass="java.lang.String" resultMap="contactUO">
+		SELECT
+			<include refid="columns" />
+		FROM
+			<include refid="table" /> CONTUO
+			 LEFT OUTER JOIN CAT_TIPO_CONTACTO TCONT ON CONTUO.N_ID_TIPO_CONTACTO = TCONT.N_ID_TIPO_CONTACTO
+		WHERE
+			N_ID_CONTACTO=#value#
+	</select>
+	
+	<insert id="addContactUOVO" parameterClass="contactUO">
+		<selectKey keyProperty="id"
+             resultClass="java.lang.String">
+		    SELECT SEQDIR_CONTACTO_UO.NEXTVAL AS id FROM DUAL
+		  </selectKey>
+		INSERT INTO
+			<include refid="table" />
+		(<include refid="columns_insert" />)
+		VALUES (<include refid="insert" />)
+	</insert>
+	
+	<update id="updateContactUOVO" parameterClass="contactUO">
+		UPDATE
+			<include refid="table" />
+		SET
+			<include refid="update" />
+		WHERE N_ID_CONTACTO = #id#
+	</update>
+	
+	<delete id="deleteContactUOVO" parameterClass="java.lang.String">
+		DELETE
+			<include refid="table" />
+		WHERE C_ID_UD_ORGANICA = #value#
+	</delete>
+</sqlMap>

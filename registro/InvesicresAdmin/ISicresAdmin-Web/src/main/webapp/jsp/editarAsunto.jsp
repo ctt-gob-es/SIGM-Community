@@ -4,6 +4,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
 <%@ taglib uri="http://displaytag.sf.net" prefix="display"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%@ page
 	import="ieci.tecdoc.isicres.rpadmin.struts.util.AutenticacionAdministracion"%>
 <%@ page
@@ -14,14 +16,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="IECISA" />
 <title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.sgm.rpadmin.botones.asuntos" /></title>
-<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-<link href="css/adminApp.css" rel="stylesheet" type="text/css" />
-<link href="css/calendar-win2k-1.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/common.js"></script>
-<script type="text/javascript" src="js/tabsAsunto.js"></script>
-<script type="text/javascript" src="js/controlCambios.js"></script>
-<script type="text/javascript" src="js/calendar.js"></script>
-<script type="text/javascript" src="js/calendar-es.js"></script>
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/adminApp.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/calendar-win2k-1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/tabsAsunto.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/controlCambios.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/calendar.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/calendar-es.js"></script>
 </head>
 <body onload="init(<bean:write name="asuntoForm" property="activeTab"/>)">
 <html:form action="/editarAsunto.do">
@@ -70,9 +72,9 @@
 													<table summary="" border="0" cellpadding="0" cellspacing="0">
 													<tbody><tr>
 														<td class="tableft" height="17" width="7">
-															<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+															<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 														<td class="tabmiddle1" id="tabmiddle1" onclick="tabClick(1)"><bean:message key="ieci.tecdoc.sgm.rpadmin.asuntos.tipo.asunto"/></td>
-														<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+														<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 													</tr>
 													</tbody></table>
 												</div>
@@ -82,9 +84,9 @@
 													<table border="0" cellpadding="0" cellspacing="0">
 													<tbody><tr>
 														<td class="tableft" height="17" width="7">
-															<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+															<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 														<td class="tabmiddle2" id="tabmiddle2" onclick="tabClick(2)"><bean:message key="ieci.tecdoc.sgm.rpadmin.asuntos.oficinas.registro"/></td>
-														<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+														<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 													</tr>
 													</tbody></table>
 												</div>
@@ -94,9 +96,9 @@
 													<table border="0" cellpadding="0" cellspacing="0">
 													<tbody><tr>
 														<td class="tableft" height="17" width="7">
-															<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+															<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 														<td class="tabmiddle3" id="tabmiddle3" onclick="tabClick(3)"><bean:message key="ieci.tecdoc.sgm.rpadmin.asuntos.documentos"/></td>
-														<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+														<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 													</tr>
 													</tbody></table>
 												</div>
@@ -137,14 +139,14 @@
 														<html:text property="codigoUnidadAdministrativa" styleClass="textInputRO"  readonly="true" maxlength="5" size="5" style="width:35px"/>
 														<html:text property="nombreUnidadAdministrativa" readonly="true" styleClass="textInputRO" style="width:500px" />
 															<a href="#" onclick="javascript:chequearSessionBuscar('<html-el:rewrite page="/jsp/buscarUnidadesAsuntosPopup.jsp"/>','<html:rewrite page="/chequearSession.do"/>','<%=AutenticacionAdministracion.obtenerUrlLogin(request, ConstantesGestionUsuariosAdministracion.APLICACION_REGISTRO) %>')">
-																<img src="<html:rewrite page="/img/ico_buscar.gif"/>" border="0" align="top"/>
+																<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/ico_buscar.gif" border="0" align="top"/>
 															</a>
 													</td>
 												</tr>
 												<tr class="col">
 													<td class="txt" nowrap="nowrap" valign="top"><bean:message key="ieci.tecdoc.sgm.rpadmin.asuntos.fecha.creacion"/>&nbsp;&nbsp;</td>
 													<td class="txt" valign="top">
-														<html:text property="fechaCreacion" styleId="dat1" styleClass="textInput" maxlength="10" style="width:65px" /><img src='<html:rewrite page="/img/img_calendar.gif"/>' border="0" onclick="return showCalendar('dat1', '%d/%m/%Y', true);" style="cursor:hand" hspace="2"/>&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.texto.formato.fechas"/>
+														<html:text property="fechaCreacion" styleId="dat1" styleClass="textInput" maxlength="10" style="width:65px" /><img src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/img_calendar.gif' border="0" onclick="return showCalendar('dat1', '%d/%m/%Y', true);" style="cursor:hand" hspace="2"/>&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.texto.formato.fechas"/>
 													</td>
 												</tr>
 												<tr class="col">
@@ -152,7 +154,7 @@
 													<td class="txt" valign="top">
 														<html:checkbox property="deshabilitado" onclick="verificarHabilitado()"/>
 														<span id="divFechaBaja">
-															&nbsp;&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.asuntos.fecha.baja"/>&nbsp;&nbsp;<html:text property="fechaBaja" styleId="dat2" styleClass="textInput" maxlength="10" style="width:65px"/><img src='<html:rewrite page="/img/img_calendar.gif"/>' border="0" id="imgCalFechaBaja" onclick="return showCalendar('dat2', '%d/%m/%Y', true);" style="cursor:hand" hspace="2"/>&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.texto.formato.fechas"/>
+															&nbsp;&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.asuntos.fecha.baja"/>&nbsp;&nbsp;<html:text property="fechaBaja" styleId="dat2" styleClass="textInput" maxlength="10" style="width:65px"/><img src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/img_calendar.gif' border="0" id="imgCalFechaBaja" onclick="return showCalendar('dat2', '%d/%m/%Y', true);" style="cursor:hand" hspace="2"/>&nbsp;<bean:message key="ieci.tecdoc.sgm.rpadmin.texto.formato.fechas"/>
 														</span>
 													</td>
 												</tr>

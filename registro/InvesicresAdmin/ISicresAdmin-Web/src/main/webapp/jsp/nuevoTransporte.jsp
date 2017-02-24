@@ -2,14 +2,16 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="http://displaytag.sf.net" prefix="display"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<meta name="author" content="IECISA" />
 	<title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.sgm.rpadmin.botones.transportes" /></title>
-	<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="js/common.js"></script>
+	<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+	<script type="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/text/javascript" src="js/common.js"></script>
 </head>
 <body>
 <html:form action="/nuevoTransporte.do">

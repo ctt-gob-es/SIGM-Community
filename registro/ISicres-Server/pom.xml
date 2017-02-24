@@ -7,8 +7,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>ISicres-Server</artifactId>
 	<name>ISicres-Server</name>
+	<version>3.0.0-msssi2.0.0</version>	
 	<packaging>jar</packaging>
 	<description>Modulo de Lógica de Negocio de InveSicres</description>
+	<properties>
+		<isicres.version>8.0.1</isicres.version>
+	</properties>
 	<dependencies>
 		<!-- Dependencias de Inves Sicres -->
 		<dependency>
@@ -24,7 +28,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-EventsManager</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
@@ -36,6 +40,7 @@
 			<artifactId>ISicres-Terceros</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
+	
 		<!-- FWKTD -->
 
 		<dependency>

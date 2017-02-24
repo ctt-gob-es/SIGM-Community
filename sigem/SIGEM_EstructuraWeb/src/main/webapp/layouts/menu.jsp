@@ -4,7 +4,8 @@
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/struts-menu.tld" prefix="menu"%>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%
 response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -16,9 +17,9 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 	<title><bean:message key="message.common.title"/></title>
 	
     <ieci:baseInvesDoc/>
-	<link rel="stylesheet" type="text/css" href="include/css/menu.css"/>
-	<link rel="stylesheet" type="text/css" href="include/css/adminApp.css"/>
-	<link rel="stylesheet" type="text/css" href="include/css/estilos.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/menu.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/adminApp.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css"/>
 <script type="text/javascript" >
 var appBase = '<c:out value="${pageContext.request.contextPath}"/>';
 function cargaUsuarios()
@@ -41,10 +42,10 @@ function cargaVolumenes()
 
 function activaPestanhaUsuarios ()
 {
-	document.getElementById("img1").src='include/images/subme3_on.gif';
-	document.getElementById("img2").src='include/images/subme3_on_of.gif';
-	document.getElementById("img3").src='include/images/subme3_of_of.gif';
-	document.getElementById("img4").src='include/images/subme3_of_0.gif';
+	document.getElementById("img1").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on.gif';
+	document.getElementById("img2").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on_of.gif';
+	document.getElementById("img3").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_of.gif';
+	document.getElementById("img4").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_0.gif';
 	document.getElementById("lista1").className='submen1on';
 	document.getElementById("lista2").className='submen1off';
 	document.getElementById("lista3").className='submen1off';
@@ -52,10 +53,10 @@ function activaPestanhaUsuarios ()
 
 function activaPestanhaVolumenes ()
 {
-	document.getElementById("img1").src='include/images/subme3_off.gif';
-	document.getElementById("img2").src='include/images/subme3_of_on.gif';
-	document.getElementById("img3").src='include/images/subme3_on_of.gif';
-	document.getElementById("img4").src='include/images/subme3_of_0.gif';
+	document.getElementById("img1").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_off.gif';
+	document.getElementById("img2").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_on.gif';
+	document.getElementById("img3").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on_of.gif';
+	document.getElementById("img4").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_0.gif';
 	document.getElementById("lista1").className='submen1off';
 	document.getElementById("lista2").className='submen1on';
 	document.getElementById("lista3").className='submen1off';
@@ -63,10 +64,10 @@ function activaPestanhaVolumenes ()
 
 function activaPestanhaArchivadores ()
 {
-	document.getElementById("img1").src='include/images/subme3_off.gif';
-	document.getElementById("img2").src='include/images/subme3_of_of.gif';
-	document.getElementById("img3").src='include/images/subme3_of_on.gif';
-	document.getElementById("img4").src='include/images/subme3_on_0.gif';
+	document.getElementById("img1").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_off.gif';
+	document.getElementById("img2").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_of.gif';
+	document.getElementById("img3").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_on.gif';
+	document.getElementById("img4").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on_0.gif';
 	document.getElementById("lista1").className='submen1off';
 	document.getElementById("lista2").className='submen1off';
 	document.getElementById("lista3").className='submen1on';	
@@ -172,9 +173,9 @@ function carga(opcion)
         		<div class="cuerpomid">
         			<div class="submenu3">
            				<ul>
-        					<li id="lista1" class="submen1on" onclick="cargaUsuarios();"><img id="img1" src="include/images/subme3_on.gif" />
+        					<li id="lista1" class="submen1on" onclick="cargaUsuarios();"><img id="img1" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on.gif" />
         						<bean:message key="Usuarios"/>
-        						<img id="img4" src="include/images/subme3_on_0.gif" />
+        						<img id="img4" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on_0.gif" />
         					</li>
 						</ul>
 					</div>

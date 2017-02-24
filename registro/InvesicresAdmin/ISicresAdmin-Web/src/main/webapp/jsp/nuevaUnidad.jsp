@@ -4,6 +4,8 @@
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 <%@ page import="ieci.tecdoc.isicres.rpadmin.struts.util.AutenticacionAdministracion" %>
 <%@ page import="es.ieci.tecdoc.isicres.admin.core.services.ConstantesGestionUsuariosAdministracion" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
@@ -11,13 +13,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="IECISA" />
 <title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.sgm.rpadmin.unidades.titulo"/></title>
-<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-<link href="css/adminApp.css" rel="stylesheet" type="text/css" />
-<link href="css/calendar-win2k-1.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/common.js"></script>
-<script type="text/javascript" src="js/tabsUnidad.js"></script>
-<script type="text/javascript" src="js/calendar.js"></script>
-<script type="text/javascript" src="js/calendar-es.js"></script>
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/adminApp.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/calendar-win2k-1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/tabsUnidad.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/calendar.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/calendar-es.js"></script>
 <script>
 	function init() {
 		choosebox(1,2);
@@ -82,9 +84,9 @@
 									<table summary="" border="0" cellpadding="0" cellspacing="0">
 									<tbody><tr>
 										<td class="tableft" height="17" width="7">
-											<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+											<img src="vimg/dot.gif" alt="" border="0" height="17" width="7"/></td>
 										<td class="tabmiddle1" id="tabmiddle1" onclick="nuevaUnidadClick()"><bean:message key="ieci.tecdoc.sgm.rpadmin.unidades.pestana"/></td>
-										<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+										<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 									</tr>
 									</tbody></table>
 								</div>
@@ -94,9 +96,9 @@
 									<table summary="" border="0" cellpadding="0" cellspacing="0">
 									<tbody><tr>
 										<td class="tableft" height="17" width="7">
-											<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 										<td class="tabmiddle2" id="tabmiddle2" onclick="direccionUnidadClick()"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.oficina.direccion"/></td>
-										<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+										<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 									</tr>
 									</tbody></table>
 								</div>
@@ -112,9 +114,9 @@
 									<table summary="" border="0" cellpadding="0" cellspacing="0">
 									<tbody><tr>
 										<td class="tableft" height="17" width="7">
-											<img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+											<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 										<td class="tabmiddle3" id="tabmiddle3" onclick="intercambioRegUnidad()"><bean:message key="ieci.tecdoc.sgm.rpadmin.botones.intercambioRegistral"/></td>
-										<td class="tabright"><img src="img/dot.gif" alt="" border="0" height="17" width="7"/></td>
+										<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7"/></td>
 									</tr>
 									</tbody></table>
 								</div>
@@ -206,7 +208,7 @@
 												<html:text property="codEntidadReg" styleClass="textInput" maxlength="21" style="width:190px"/>&nbsp;&nbsp;
 											</td>
 											<td>
-												<a href="#" onclick="javascript:chequearSessionBusquedaDC('<html:rewrite page="/jsp/iFrameBusquedaOficinasDirectorioComun.jsp"/>', urlSessionExpired);"><img src="<html:rewrite page="/img/ico_buscar.gif"/>" border="0"/></a>
+												<a href="#" onclick="javascript:chequearSessionBusquedaDC('<html:rewrite page="/jsp/iFrameBusquedaOficinasDirectorioComun.jsp"/>', urlSessionExpired);"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/ico_buscar.gif" border="0"/></a>
 											</td>
 										</tr>
 									</table>
@@ -233,7 +235,7 @@
 												<html:text property="codeUnidadTramit" styleClass="textInput" maxlength="21" style="width:190px"/>&nbsp;&nbsp;
 											</td>
 											<td>
-												<a href="#" onclick="javascript:chequearSessionBusquedaDC('<html:rewrite page="/jsp/iFrameBusquedaUnidadesOrganicasDC.jsp"/>', urlSessionExpired);"><img src="<html:rewrite page="/img/ico_buscar.gif"/>" border="0"/></a>
+												<a href="#" onclick="javascript:chequearSessionBusquedaDC('<html:rewrite page="/jsp/iFrameBusquedaUnidadesOrganicasDC.jsp"/>', urlSessionExpired);"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/ico_buscar.gif" border="0"/></a>
 											</td>
 										</tr>
 									</table>

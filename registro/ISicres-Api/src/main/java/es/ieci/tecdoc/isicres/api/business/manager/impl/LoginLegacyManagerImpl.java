@@ -258,8 +258,9 @@ public class LoginLegacyManagerImpl implements LoginManager {
 	 */
 	public AuthenticationUser getUserInfo(String id, String entidad) {
 		AuthenticationUser authenticationUser = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 
 			Iuseruserhdr user = (Iuseruserhdr) session.load(Iuseruserhdr.class,
 					Integer.valueOf(id));
@@ -281,6 +282,9 @@ public class LoginLegacyManagerImpl implements LoginManager {
 			logger.error(sb.toString(), e);
 
 			throw new LoginException(sb.toString());
+		} finally {
+			hibernateUtil.closeSession(entidad);
+			
 		}
 
 		return authenticationUser;

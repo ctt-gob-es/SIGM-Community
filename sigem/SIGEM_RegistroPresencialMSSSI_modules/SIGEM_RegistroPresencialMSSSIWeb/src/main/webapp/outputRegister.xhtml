@@ -1,0 +1,1337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head />
+<h:body>
+	<ui:composition template="/template/layout.xhtml">
+		<ui:define name="head">
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/calendar.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/dialog.js"></script>
+					<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/distribution.js"></script>
+		<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/registerOutput.js"></script>
+		<link rel="stylesheet" type="text/css" href="#{webParam.entryParameters['URLRoot']}/css/applet.css"/>
+			<script type="text/javascript" src="#{webParam.entryParameters['URLRoot']}/js/appletSIGN.js"></script>
+			<script type="text/javascript" src="#{webParam.entryParameters['URLRoot']}/js/appletDIG.js"></script>
+				
+		</ui:define>
+		<ui:define name="breadcrumb">
+		<h:form id="bread">
+			<h:panelGroup id="panel" layout="block">
+				<ol>
+					<li><h:commandLink value="#{msgs.labelInicio}" action="goInicioForm" actionListener="#{booksAction.clean}" /></li>
+					<ui:fragment rendered="${outputRegisterAction.origen == 'B'}">
+						<li><h:commandLink value="#{J_BOOK.idocarchhdr.name}"
+								action="goSearchOutForm" actionListener="#{booksAction.clean}" /></li>
+					</ui:fragment>
+					<ui:fragment rendered="${outputRegisterAction.origen == 'D'}">
+						<li><h:commandLink value="#{msgs.labelDistribucion}"
+								action="goDistribucionForm" actionListener="#{booksAction.clean}" /></li>
+					</ui:fragment>
+					<ui:fragment rendered="${outputRegisterAction.origen == 'IR'}">
+						<li><h:commandLink value="#{msgs.labelIntRegistral}"
+								action="goSearchOutInterchangeForm" actionListener="#{booksAction.clean}" /></li>
+					</ui:fragment>
+					<ui:fragment rendered="${outputRegisterAction.origen == 'I'}">
+						<li><h:commandLink value="#{msgs.labelIntRegistral}"
+								action="goSearchOutInterchangeForm" actionListener="#{booksAction.clean}" /></li>
+					</ui:fragment>
+					<ui:fragment
+						rendered="${empty outputRegisterAction.outputRegisterBean.fld1}">
+						<li><h:outputText value="#{msgs.labelNuevoRegistroSalida}" /></li>
+					</ui:fragment>
+					<ui:fragment
+						rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 and (not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR)}">
+						<li><h:outputText
+								value="#{msgs.labelModificarRegistroSalida}" /></li>
+					</ui:fragment>
+					<ui:fragment
+						rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 and ( outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR)}">
+						<li><h:outputText
+								value="#{msgs.labelConsultarRegistroSalida}" /></li>
+					</ui:fragment>
+				</ol>
+			</h:panelGroup>
+			</h:form>
+		</ui:define>
+		<ui:define name="content">
+			<h:panelGroup id="panel1" layout="block">
+				<ui:fragment
+					rendered="${empty outputRegisterAction.outputRegisterBean.fld1}">
+					<h2>
+						<h:outputText value="#{msgs.labelNuevoRegistroSalida}" />
+						<ui:fragment rendered="${outputRegisterAction.origen == 'B'}">
+							<div class="bookStyle">
+								<img
+									src="#{webParam.entryParameters['URLRoot']}/img/books.png" />	
+								<div style="display: table-cell; padding: 0px; vertical-align: top;">
+									<h:outputText value="#{J_BOOK.idocarchhdr.name}" />
+								</div>
+							</div>
+					</ui:fragment>
+					</h2>
+				</ui:fragment>
+				<ui:fragment
+					rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 and (not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR)}">
+					<h2>
+						<h:outputText id="label"
+							value="#{msgs.labelModificarRegistroSalida}" />
+						<ui:fragment rendered="${outputRegisterAction.origen == 'B'}">
+							<div class="bookStyle">
+								<img
+									src="#{webParam.entryParameters['URLRoot']}/img/books.png" />	
+								<div style="display: table-cell; padding: 0px; vertical-align: top;">
+									<h:outputText value="#{J_BOOK.idocarchhdr.name}" />
+								</div>
+							</div>
+						</ui:fragment>
+					</h2>
+				</ui:fragment>
+				<ui:fragment
+					rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 and (outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR)}">
+					<h2>
+						<h:outputText id="labelC"
+							value="#{msgs.labelConsultarRegistroSalida}" />
+						<ui:fragment rendered="${outputRegisterAction.origen == 'B'}">
+							<div class="bookStyle">
+								<img
+									src="#{webParam.entryParameters['URLRoot']}/img/books.png" />	
+								<div style="display: table-cell; padding: 0px; vertical-align: top;">
+									<h:outputText value="#{J_BOOK.idocarchhdr.name}" />
+								</div>
+							</div>
+					</ui:fragment>
+					</h2>
+				</ui:fragment>
+				<div class="sombra"></div>
+				<div class="enlaces">
+					<h:form  id="formLink">
+					<p:remoteCommand update="formLink" name="linkRefresh"/>
+					<p:remoteCommand update=":accordion:outputRegisterAttachedDocumentsForm" name="docRefresh"/>
+					<p:remoteCommand update=":accordion:historicalForm" name="histRefresh"/>
+					<div style="text-align: center;">
+						<p:media id="pdfViewer" player="pdf" cache="false" rendered="#{not empty reportsLabelAction.file}" value="#{reportsLabelAction.file}" width="1px" height="1px" />
+					</div>
+						<ul>
+							<ui:fragment
+								rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 
+									and J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly 
+									 and outputRegisterAction.origen == 'B' and J_SESSIONINF.officeEnabled=='true'}">
+								<li><p:commandLink value="#{msgs.labelNuevoRegistroSalida}"
+										 immediate="true"
+										actionListener="#{outputRegisterAction.onRowSelectNavigateBottomNuevo}" />
+								</li>
+							</ui:fragment>
+							<ui:fragment rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 
+									and J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly 
+							 and outputRegisterAction.origen == 'B' and J_SESSIONINF.officeEnabled=='true'}">
+									<li><p:commandLink styleClass="copiar" id="copyButton"
+											title="copiar" 
+											value="#{msgs.labelBotonCopiarDetail}"
+											actionListener="#{outputRegisterAction.onRowSelectNavigateBottomCopy}">
+										</p:commandLink></li>
+								</ui:fragment>
+							<ui:fragment
+								rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 
+									and J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly 
+							 and outputRegisterAction.origen == 'B' and J_SESSIONINF.officeEnabled=='true'}">
+								<li><p:commandLink value="#{msgs.labelRecibo}" ajax="false"
+										onclick="PrimeFaces.monitorDownload(startRec, stopRec);"
+										actionListener="#{reportsOutputRegisterAction.buildCertificateReport}"
+										immediate="true">
+										<p:fileDownload value="#{reportsOutputRegisterAction.file}" />
+									</p:commandLink>
+								</li>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 and not empty outputRegisterAction.outputRegisterBean.fld1004
+									and J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly 
+							 and outputRegisterAction.origen == 'B' and J_SESSIONINF.officeEnabled=='true'}">
+								<li><p:commandLink value="#{msgs.labelActualizarRecibo}" ajax="false"
+										onclick="PrimeFaces.monitorDownload(startRec, stopRec);" 
+										actionListener="#{reportsOutputRegisterAction.reBuildCertificateReport}"
+										immediate="true">
+											<p:confirm header="Confirmation"  message="" icon="ui-icon-alert" />
+										<p:fileDownload value="#{reportsOutputRegisterAction.file}" />
+									</p:commandLink></li>
+									    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" id="confirmDialogReport">
+									        <f:facet name="message">
+												<h:outputText value="Se generará un nuevo Acuse de Recibo" />
+												<br />
+												<h:outputText value="con un CSV distino, desea continuar?" />
+												</f:facet>
+									        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									    </p:confirmDialog>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 
+									and J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly 
+							 and outputRegisterAction.origen == 'B' and J_SESSIONINF.officeEnabled=='true'}">
+								<li><p:commandLink value="#{msgs.labelEtiqueta}" ajax="false"
+										update="pdfViewer"  onclick="PF('statusDialogLabel').show();"
+										actionListener="#{reportsLabelAction.buildLabelReport}"
+										immediate="true">
+									</p:commandLink></li>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 and not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR and outputRegisterAction.origen == 'B'
+								 and J_PARAMBOOK.canDistRegistersDist and J_SESSIONINF.officeEnabled=='true' and outputRegisterAction.outputRegisterBean.fld6 != 1 and outputRegisterAction.canDistr}">
+								<li><p:commandLink value="#{msgs.labelDistribuir}"
+										action="#{outputRegisterAction.reinitDis}" process="@form"
+										update=":distribuirform:panelDigdlgRedistribuir,:distribuirform:messagesDis"
+										oncomplete="PF('dlgDistribuir').show()" immediate="true" /></li>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 and not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR and (outputRegisterAction.origen == 'B' or outputRegisterAction.origen == 'I' or outputRegisterAction.origen == 'IR') and J_PARAMBOOK.canOperationIR}">
+								<li><p:commandLink value="#{msgs.labelIntRegistral}" ajax="false"
+										actionListener="#{outputRegisterAction.goRegInterchangeForm}"
+										 /></li>
+							</ui:fragment>
+						</ul>
+					</h:form>
+					<h:form id="distribuirform">
+						<p:dialog header="Distribuir" widgetVar="dlgDistribuir"
+							id="dlgDistribuir" resizable="false" modal="true">
+							<ui:include src="dialog/dialogDistrOut.xhtml" />
+						</p:dialog>
+					</h:form>
+					<h:form id="interesadosform">
+
+						<!-- VENTANA PARA AÑADIR INTERESADO -->
+						<p:dialog header="#{msgs.fld9label}" widgetVar="intDialog"
+							resizable="false" id="intDlg" showEffect="fade" modal="true">
+							<ui:include src="dialog/dialogInterOutput.xhtml" />
+						</p:dialog>
+					</h:form>
+				</div>
+				<c:set var="origen"
+					value="#{(outputRegisterAction.origen == 'D')? 'distribucion': 'libros-salida'}" />
+				<div id="${origen}">
+					<h:form id="messagesform">
+						<p:messages id="messages" showDetail="false" closable="true" escape="false" />
+					</h:form>
+					<p:accordionPanel
+						activeIndex="#{outputRegisterAction.myCurrentTab}" dynamic="true"
+						id="accordion">
+						<p:ajax event="tabChange" onstart="PF('statusDialog').show();"
+							oncomplete="PF('statusDialog').hide();"
+							listener="#{outputRegisterAction.changeListener}" />
+						<c:set var="regDataNotEmptyTitle"
+							value="${msgs.labelFichaRegistroSalida} [ ${outputRegisterAction.outputRegisterBean.fld1} ]" />
+						<p:tab
+							title="#{(not empty outputRegisterAction.outputRegisterBean.fld1) ? regDataNotEmptyTitle : msgs.labelFichaRegistroSalida}"
+							id="outputRegisterData">
+							<fieldset>
+								<h:form id="outputRegisterDataForm">
+								<script type="text/javascript">
+									$(function(){
+										  $('form').on('keypress', function(event){
+										    if(event.which === 13 ){
+										        event.preventDefault();
+										        if ($(event.target).is('textarea')){
+										        	event.target.value = event.target.value +"\n";
+										        }
+										      return false;
+										    }
+										  });
+									});
+								</script>
+									<h:inputHidden id="fdrid"
+										value="#{outputRegisterAction.outputRegisterBean.fdrid}" />
+									<ui:fragment
+										rendered="${not empty outputRegisterAction.outputRegisterBean.fld1}">
+										<label for="form:fld1" class="general"> <span
+											class="label"><h:outputText id="fld1Label"
+													value="#{msgs.fld1label}" /></span> <p:inputText id="fld1"
+												value="#{outputRegisterAction.outputRegisterBean.fld1}"
+												readonly="true" label="#{msgs.fld1label}" />
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${not empty outputRegisterAction.outputRegisterBean.fld1}">
+										<label for="form:fld2" class="general"> <span
+											class="label"><h:outputText id="fld2Label"
+													value="#{msgs.fld2label}" /></span> <p:inputText id="fld2_1"
+												value="#{outputRegisterAction.outputRegisterBean.fld2}"
+												readonly="true" label="#{msgs.fld2label}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</p:inputText>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${not empty outputRegisterAction.outputRegisterBean.fld1}">
+										<label for="form:fld5" class="general"> <span
+											class="label"><h:outputText id="fld5Label"
+													value="#{msgs.fld5label}" /></span> <c:set var="ofic"
+												value="#{outputRegisterAction.outputRegisterBean.fld5.acron} #{outputRegisterAction.outputRegisterBean.fld5.name}" />
+											<p:inputText id="fld5"
+												value="#{(empty outputRegisterAction.outputRegisterBean.fld5) ? '' : ofic}"
+												readonly="true" label="#{msgs.fld5label}">
+											</p:inputText>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${not empty outputRegisterAction.outputRegisterBean.fld1}">
+										<label for="form:fld3" class="general"> <span
+											class="label"><h:outputText id="fld3Label"
+													value="#{msgs.fld3label}" /></span> <p:inputText id="fld3"
+												value="#{outputRegisterAction.outputRegisterBean.fld3}"
+												readonly="true" label="#{msgs.fld4label}" />
+										</label>
+									</ui:fragment>
+									<label for="form:fld7" class="general"> <span
+										class="label"><h:outputText id="fld7Label"
+												value="#{msgs.fld7label}" /> *</span> <c:set var="orgPadre"
+											value=" (#{org.nameOrgFather})" /> <c:set var="organismo"
+											value="#{org.code} #{org.name}" />
+
+										<p:autoComplete style="width:400"
+											value="#{outputRegisterAction.outputRegisterBean.fld7}"
+											id="fld7"
+											completeMethod="#{validationListAction.completeOrgOrigen}"
+											readonly="#{outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}"
+											minQueryLength="3" var="org" queryDelay="400" required="true"
+											itemLabel="#{(empty org) ? '' : fn:trim(organismo)}"
+											itemValue="#{org}" label="#{msgs.fld7label}"
+											converter="orgConverterOrigin" forceSelection="true"
+											scrollHeight="200" escape="false">
+											<p:column>
+												<h:outputText styleClass="organismo"
+													value="#{org.code} #{org.name}" />
+												<br />
+												<h:outputText styleClass="organismopadre"
+													value="#{orgPadre}" />
+												<div class="ut">
+													<ui:fragment rendered="${org.scrTypeadm.id == 1}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png" 
+																			title="#{msgs.isownOrg}" />														
+														</ui:fragment>
+										            	<ui:fragment rendered="${org.isTramUnit}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png" 
+																			title="#{msgs.isTramUnit}" />														
+														</ui:fragment>
+													</div>
+											</p:column>
+										</p:autoComplete>
+
+										<p:commandButton id="OriginButton"
+											styleClass="organismobusq" rendered="#{not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR}"
+											icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"  
+											inmediate="true" process="@this" actionListener="#{searchUnitsAction.chooseUnits}">
+											<p:ajax event="dialogReturn"
+											 process="@this fld7" inmediate="true" 
+											  listener="#{outputRegisterAction.updateOrigin}" update="fld7" oncomplete="document.getElementById('accordion:outputRegisterDataForm:fld7_input').focus()" />
+										</p:commandButton>
+									</label>
+									<label for="form:fld8" class="general"> <span
+										class="label"><h:outputText id="fld8Label"
+												value="#{msgs.fld8label}" /> **</span> <p:autoComplete
+											style="width:400"
+											value="#{outputRegisterAction.outputRegisterBean.fld8}"
+											label="#{msgs.fld8label}" id="fld8"
+											completeMethod="#{validationListAction.completeOrgDestino}"
+											readonly="#{outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}"
+											minQueryLength="3" var="org" queryDelay="400"
+											itemLabel="#{(empty org) ? '' : fn:trim(organismo)}"
+											itemValue="#{org}" converter="orgConverterDestination"
+											forceSelection="true" scrollHeight="200" escape="false">
+											<f:validator validatorId="registerUnitInterestedValidator" />
+											<f:attribute name="interested" value="#{interested}" />
+											<f:attribute name="type" value="S" />
+											<p:column>
+												<h:outputText styleClass="organismo"
+													value="#{org.code} #{org.name}" />
+												<br />
+												<h:outputText styleClass="organismopadre"
+													value="#{orgPadre}" />
+												<div class="ut">
+													<ui:fragment rendered="${org.scrTypeadm.id == 1}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png" 
+																			title="#{msgs.isownOrg}" />														
+														</ui:fragment>
+										            	<ui:fragment rendered="${org.isTramUnit}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png" 
+																			title="#{msgs.isTramUnit}" />														
+														</ui:fragment>
+													</div>
+											</p:column>
+											 <p:ajax event="itemSelect" listener="#{outputRegisterAction.handleSelectFld8}" immediate="true"></p:ajax>
+										</p:autoComplete>
+										<p:commandButton id="DestinationButton" 
+											styleClass="organismobusq" rendered="#{not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR }"
+											icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"
+											inmediate="true" process="@this" actionListener="#{searchUnitsAction.chooseUnits}">
+											<p:ajax event="dialogReturn"  process="@this fld8" inmediate="true" 
+											  listener="#{outputRegisterAction.updateDestination}" update="fld8" oncomplete="document.getElementById('accordion:outputRegisterDataForm:fld7_input').focus()" />
+										</p:commandButton>
+									</label>
+									<label for="form:fld9" class="general"> <span
+										class="label"><h:outputText id="fld9Label"
+												value="#{msgs.fld9label}" /></span>
+										<ui:fragment rendered="${not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR}">
+										<p>
+											**<p:commandLink styleClass="nuevo" id="btn_new"
+												value="#{msgs.labelBotonNuevoInt}" inmediate="true"
+												process="@this"  action="#{outputRegisterAction.reinit}"
+												update=":interesadosform:gridI,:interesadosform:gridR,:interesadosform:messagesInt,:interesadosform:botonesInt"
+												oncomplete="PF('intDialog').show()"
+												style="font-size:0.9em;width:70px;" />
+										</p> 
+										</ui:fragment> <!-- TABLA PARA MOSTRAR REPRESENTANTES -->
+										<p:dataTable id="TInteresados" binding="#{interested}"
+											value="#{outputRegisterAction.outputRegisterBean.interesados}"
+											var="int">
+											<p:column>
+												<f:facet name="header">
+													<h:outputText value="#{msgs.labelInteresados}" />
+												</f:facet>
+												<ui:fragment rendered="${int.tipo =='P'}">
+													<h:outputText
+														value="#{int.docIndentidad} #{int.nombre} #{int.papellido} #{int.sapellido}" />
+												</ui:fragment>
+												<ui:fragment rendered="${int.tipo =='J'}">
+													<h:outputText
+														value="#{int.docIndentidad} #{int.razonSocial}" />
+												</ui:fragment>
+											</p:column>
+											<p:column>
+												<f:facet name="header">
+													<h:outputText value="#{msgs.labelRepresentante}" />
+												</f:facet>
+												<ui:fragment rendered="${int.representante.tipo =='P'}">
+													<h:outputText
+														value="#{int.representante.docIndentidad} #{int.representante.nombre} #{int.representante.papellido} #{int.representante.sapellido}" />
+												</ui:fragment>
+												<ui:fragment rendered="${int.representante.tipo =='J'}">
+													<h:outputText
+														value="#{int.representante.docIndentidad} #{int.representante.razonSocial}" />
+												</ui:fragment>
+											</p:column>
+											<p:column style="width:7px">
+												<f:facet name="header">
+												</f:facet>
+												<p:commandLink value="#{msgs.labelBotonModificar}  "
+													rendered="${not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR}"
+													update=":interesadosform:gridI,:interesadosform:gridR,:interesadosform:botonesInt"
+													process="@form:TInteresados"
+													oncomplete="PF('intDialog').show()"
+													style="font-size:1.0em;">
+													<f:setPropertyActionListener value="#{int}"
+														target="#{outputRegisterAction.outputRegisterBean.interesado}" />
+												</p:commandLink>
+												<p:commandLink value="#{msgs.labelBotonBorrar}"
+													rendered="${not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR}"
+													update="@form:TInteresados" process="@form:TInteresados"
+													style="font-size:1.0em;">
+													<p:collector value="#{int}"
+														removeFrom="#{outputRegisterAction.outputRegisterBean.interesados}" />
+												</p:commandLink>
+											</p:column>
+										</p:dataTable> 
+										<p>&nbsp;&nbsp;</p>
+									</label>
+									<h:inputHidden id="fld9"
+										value="#{outputRegisterAction.outputRegisterBean.fld9}" />
+									
+									<label for="form:fld16" class="general"> <span
+										class="label"><h:outputText id="fld16Label"
+												value="#{msgs.fld16label}" /> ***</span> <c:set var="asunto"
+											value="#{asun.code} #{asun.matter}" /> <ui:fragment
+											rendered="${not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR}">
+											<p:selectOneMenu
+												value="#{outputRegisterAction.outputRegisterBean.fld12}"
+												id="fld12" label="#{msgs.fld16label}" binding="#{fld12}"
+												converter="asuntConverter" panelStyle="width:150px"
+												effect="fade" filter="true" filterMatchMode="contains">
+												<f:selectItem itemLabel="" itemValue="" />
+												<f:selectItems value="#{validationListAction.listAsuntos}"
+													var="asuntos" itemLabel="#{asuntos.code} #{asuntos.matter}"
+													itemValue="#{asuntos}" />
+											</p:selectOneMenu>
+										</ui:fragment> <ui:fragment rendered="${outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}">
+											<p:inputText id="fld12_1"
+												value="#{outputRegisterAction.outputRegisterBean.fld12.code} #{outputRegisterAction.outputRegisterBean.fld12.matter}"
+												readonly="#{outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}" />
+										</ui:fragment>
+									</label>
+									<label for="form:fld17" class="general"> <span
+										class="label"><h:outputText id="fld17Label"
+												value="#{msgs.fld17label}" /> ***</span> <p:inputTextarea id="fld13"
+											label="#{msgs.fld17label}"
+											value="#{outputRegisterAction.outputRegisterBean.fld13}"
+											autoResize="false" rows="5"  
+											readonly="#{outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}">
+											<f:validateLength maximum="240" />
+											<f:validator validatorId="registerSubjectSummaryValidator" />
+											<f:attribute name="fld16" value="#{fld12}" />
+										</p:inputTextarea>
+									</label>
+									<label for="form:fld14" class="general"> <span
+										class="label"><h:outputText id="fld14Label"
+												value="#{msgs.fld14label}" /></span> <ui:fragment
+											rendered="${not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR}">
+											<p:selectOneMenu id="fld10" label="#{msgs.fld14label}"
+												style="width: 126px;"
+												value="#{outputRegisterAction.outputRegisterBean.fld10}">
+												<f:selectItem itemValue="" itemLabel="" />
+												<f:selectItems
+													value="#{validationListAction.listTransportes}" var="trans"
+													itemValue="0#{trans.id}" itemLabel="#{trans.transport}" />
+											</p:selectOneMenu>
+										</ui:fragment> <ui:fragment rendered="${outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}">
+											<p:inputText id="fld10_1" label="#{msgs.fld14label}"
+												value="#{outputRegisterAction.outputRegisterBean.fld10Name}"
+												readonly="#{outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}" />
+										</ui:fragment>
+									</label>
+									<label for="form:fld15" class="general"> <span
+										class="label"><h:outputText id="fld15Label"
+												value="#{msgs.fld15label}" /></span> <p:inputText id="fld11"
+											label="#{msgs.fld15label}" 
+											value="#{outputRegisterAction.outputRegisterBean.fld11}"
+											readonly="#{outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}">
+											<f:validateLength maximum="20" />
+										</p:inputText>
+									</label>
+									<label for="outputRegisterDataForm:selectedDocSIR" class="general">
+										<span class="label"><h:outputText id="selectedDocSIRLabel"
+												value="#{msgs.selectedDocSIRLabel}" /></span> 
+											<p:outputPanel id="selectedDocSIRPanel"   style="margin-bottom: 12px;font-size: 0.85em;display: inline-block;">
+											<p:selectOneRadio
+												value="#{outputRegisterAction.selectedDocSIR}"
+												id="selectedDocSIR" label="#{msgs.selectedDocSIRlabel}"
+												  disabled="${outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}" layout="custom" columns="1">
+												<f:selectItem itemLabel="#{msgs.fld506Text}" itemValue="fld506" />
+												<f:selectItem itemLabel="#{msgs.fld505Text}" itemValue="fld505" />
+												<f:selectItem itemLabel="#{msgs.fld504Text}" itemValue="fld504" />
+											</p:selectOneRadio>
+											 <h:panelGrid columns="3" cellpadding="5">
+										            <p:radioButton id="opt506" for="selectedDocSIR" itemIndex="0" />
+										            <img
+														src="#{webParam.entryParameters['URLRoot']}/img/docfld506.png" />
+										            <h:outputLabel for="opt506" value="#{msgs.fld506Text}" />
+										            <p:radioButton id="opt505" for="selectedDocSIR" itemIndex="1" />
+										            <img
+														src="#{webParam.entryParameters['URLRoot']}/img/docfld505.png" />
+										            <h:outputLabel for="opt505" value="#{msgs.fld505Text}" />
+										            <p:radioButton id="opt504" for="selectedDocSIR" itemIndex="2" />
+										            <img
+														src="#{webParam.entryParameters['URLRoot']}/img/docfld504.png" />
+										            <h:outputLabel for="opt504" value="#{msgs.fld504Text}" />
+										      </h:panelGrid>
+										      </p:outputPanel>
+									</label>
+										<label for="form:fld18" class="general"> <span
+											class="label"><h:outputText id="fld18Label"
+													value="#{msgs.fld18label}" /></span> <p:inputTextarea id="fld14"
+												label="#{msgs.fld18label}" 
+												value="#{outputRegisterAction.outputRegisterBean.fld14}"
+												autoResize="false" rows="5"
+												readonly="#{outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}">
+												<f:validateLength maximum="50" />
+											</p:inputTextarea>
+										</label>
+
+										<label for="outputRegisterDataForm:fld501" class="general">
+											<span class="label"><h:outputText id="fld501Label"
+													value="#{msgs.fld501label}" /></span> <p:inputTextarea id="fld501"
+												label="#{msgs.fld501label}" 
+												value="#{outputRegisterAction.outputRegisterBean.fld501}"
+												autoResize="false" rows="5"
+												readonly="#{outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}">
+												<f:validateLength maximum="4000" />
+												<f:validator validatorId="registerExposesRequestsValidator" />
+												<f:attribute name="fld502" value="#{fld502}" />
+											</p:inputTextarea>
+										</label>
+										<label for="outputRegisterDataForm:fld502" class="general">
+											<span class="label"><h:outputText id="fld502Label"
+													value="#{msgs.fld502label}" /></span> <p:inputTextarea id="fld502"
+												label="#{msgs.fld502label}"  binding="#{fld502}"
+												value="#{outputRegisterAction.outputRegisterBean.fld502}"
+												autoResize="false" rows="5" 
+												readonly="#{outputRegisterAction.readOnly or outputRegisterAction.readOnlyIR}">
+												<f:validateLength maximum="4000" />
+											</p:inputTextarea>
+										</label>
+										<ui:fragment
+											rendered="${not empty outputRegisterAction.outputRegisterBean.fld507}">
+											<label for="outputRegisterDataForm:fld507" class="general">
+												<span class="label"><h:outputText id="fld507Label"
+														value="#{msgs.fld507labelForm}" /></span> <p:inputTextarea id="fld507"
+													label="#{msgs.fld507label}"
+													value="#{outputRegisterAction.outputRegisterBean.fld507}"
+													autoResize="false" rows="5"
+													readonly="true">
+												</p:inputTextarea>
+											</label>
+										</ui:fragment>
+									<div class="botones">
+										<ui:fragment
+											rendered="${empty outputRegisterAction.outputRegisterBean.fld1 and not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR}">
+											<p:commandButton styleClass="boton-nuevo" id="btnenviarN"
+												value="#{msgs.labelBotonNuevo}" ajax="false"  onclick="PrimeFaces.monitorDownload(startNew, stopNew);"
+												actionListener="#{outputRegisterAction.saveOutputRegister}" />
+
+										</ui:fragment>
+										<ui:fragment
+											rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 and not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR and outputRegisterAction.outputRegisterBean.fld6 != 5}">
+											<p:commandButton styleClass="boton-nuevo" id="btnenviarM"
+												value="#{msgs.labelBotonModificar}" ajax="false"
+												actionListener="#{outputRegisterAction.saveOutputRegister}" />
+
+										</ui:fragment>
+										<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											action="goBack" />
+									</div>
+								</h:form>
+							</fieldset>
+						</p:tab>
+						<p:tab title="#{msgs.labelAnexosRegister}"
+							rendered="${not empty outputRegisterAction.outputRegisterBean.fld1}"
+							id="outputRegisterAttachedDocuments">
+							<fieldset>
+								<h:form id="outputRegisterAttachedDocumentsForm"
+									enctype="multipart/form-data;charset=UTF-8">
+									<h:inputHidden id="listNameDocument"
+										value="#{outputRegisterAction.listNameDocument}" />
+									<p:dialog header="Adjuntar documentos"
+										widgetVar="dlgAttachDocuments" id="dlgAttachDocuments"
+										resizable="false" modal="true" styleClass="asociar">
+									</p:dialog>
+									<ui:fragment
+										rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 and (not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR) and J_PARAMBOOK.canModify}">
+											<br/>
+												<div id="alertApplet" style="display:none;width:90%;font-size: 0.8em;">
+													El navegador que está utilizando no permite la ejecución de applets. <br/>Para adjuntar documentación se recomienda utilizar <b>Internet Explorer</b> o <b>Mozilla Firefox</b>
+												</div>
+												<p:commandButton styleClass="boton-buscar"  actionListener="#{outputRegisterAction.deleteLabel }"  value="#{msgs.labelBotonAdjuntarCompulsar}"
+												oncomplete="begin();return false;" widgetVar="buttonAdjuntarCompulsar"   />
+												<p:commandButton styleClass="boton-buscar"  actionListener="#{outputRegisterAction.deleteLabel }"  value="#{msgs.labelBotonAdjuntar}"
+												oncomplete="beginOtherSign();return false;"  widgetVar="buttonAdjuntar" />
+												<p:commandButton styleClass="boton-buscar"  widgetVar="buttonDigitalizar" actionListener="#{outputRegisterAction.deleteLabel }" value="#{msgs.labelBotonDigitalizar}"
+												oncomplete="beginDIG();return false;"  />
+											<applet id="jsapplet" alt="Something is wrong. Java is not working."
+												codebase="https://sigmpreproduccion.msc.es/StaticRegistroPresencialMSSSIWeb/resources/applets/"
+												archive="jsignapplet-2.1.2-SNAPSHOT.jar"
+												code="miniSign.SignerApplet"
+												height="1px"
+												width="1px" border="0"></applet>
+											<applet id="jcofreapplet" alt="Something is wrong. Java is not working."
+												codebase="https://sigmpreproduccion.msc.es/StaticRegistroPresencialMSSSIWeb/resources/applets/"
+												archive="jcofre.applet-1.0.0-SNAPSHOT.jar"
+												code="core.jcofre.applet.Applet"
+												height="1px"
+												width="1px" border="0"></applet>
+												
+												<p:selectOneMenu widgetVar="validateDocument"   style="display:none"
+													value="#{outputRegisterAction.validateDocument}"
+													id="validateDocument" >
+													<f:selectItem itemLabel="COPIA" itemValue="01" />
+													<f:selectItem itemLabel="COPIA COMPULSADA" itemValue="02" />
+													<f:selectItem itemLabel="COPIA ORIGINAL" itemValue="03" />
+													<f:selectItem itemLabel="COPIA ELECTRÓNICA" itemValue="04" />
+												</p:selectOneMenu>
+												<p:inputTextarea id="observationDocument" style="display:none"
+														widgetVar="observationDocument"  
+														value="#{outputRegisterAction.documentoElectronico.comentario}"
+														rows="1" >
+													</p:inputTextarea>
+												<p:inputTextarea id="contentDocument" widgetVar="contentDocument"  
+														value="#{outputRegisterAction.contentDocument}"
+														rows="1"  style="display:none">
+													</p:inputTextarea>
+													<p:inputTextarea id="signDocument" widgetVar="signDocument"  
+														value="#{outputRegisterAction.signDocument}"
+														rows="1"  style="display:none">
+													</p:inputTextarea>
+												<p:inputTextarea id="nameDocument" style="display:none" widgetVar="nameDocument"  
+														value="#{outputRegisterAction.documentoElectronico.name}"
+														 rows="1" >
+													</p:inputTextarea>
+													<p:inputTextarea id="certificateDocument" style="display:none" widgetVar="certificateDocument"  
+														value="#{outputRegisterAction.certificateDocument}"
+														 rows="1" >
+													</p:inputTextarea>
+													
+										<p:dialog id="dialogAppletSign" name="dialogAppletSign" header="Adjuntar y Compulsar Documento" widgetVar="dialogAppletSign" modal="true" height="300" width="600">  
+										 	<div id="contentapplet" style="height:80%;width:95%">
+											</div>
+											<div id="contentDocument" style="display:none;width:90%;font-size: 0.8em;">
+											</div>
+											<div style="text-align: center;position: absolute;bottom: 10px;width: 90%;">
+												<p:commandButton id="buttonAddDocument" widgetVar="buttonAddDocument" 
+												 styleClass="boton-buscar" process="@this outputRegisterAttachedDocumentsForm"
+												actionListener="#{outputRegisterAction.upload}" style="display:none;font-size: 75%;"
+												 value="#{msgs.labelBotonAdjuntar}" update="outputRegisterAttachedDocumentsForm"
+												onclick="addDocument ();end();" />
+												<p:commandButton styleClass="boton-buscar" style="font-size: 75%;" value="#{msgs.labelBotonCancelar}"
+												onclick="end();" />
+											</div>
+										</p:dialog>
+										
+										<p:dialog id="dialogAppletDig" name="dialogAppletDig" header="Digitalizar y Compulsar Documento" widgetVar="dialogAppletDig" modal="true" height="300" width="600">  
+										 	<div id="contentjcofreapplet" style="height:80%;width:95%">
+										 	
+											</div>
+											<div style="text-align: center;position: absolute;bottom: 10px;width: 90%;">
+												<p:commandButton id="buttonDigDocument" widgetVar="buttonDigDocument" 
+												 styleClass="boton-buscar" process="@this outputRegisterAttachedDocumentsForm"
+												actionListener="#{outputRegisterAction.upload}" style="display:none;font-size: 75%;"
+												 value="#{msgs.labelBotonAdjuntar}" update="outputRegisterAttachedDocumentsForm"
+												onclick="endDIG();" />
+												<p:commandButton styleClass="boton-buscar" style="font-size: 75%;" value="#{msgs.labelBotonCancelar}"
+												onclick="endDIG();" />
+											</div>
+										</p:dialog>
+										<textarea id='documentDig' style="display:none"></textarea>
+										<p:dialog id="dialogOtherSign" name="dialogOtherSign" header="Adjuntar Documento" widgetVar="dialogOtherSign" modal="true" height="300" width="600">  
+										 	<div id="contentappletOtherSign" style="height:80%;width:95%">
+											</div>
+											<div id="contentDocumentOtherSign" style="display:none;width:90%;font-size: 0.8em;">
+											</div>
+											<div style="text-align: center;position: absolute;bottom: 10px;width: 90%;">
+												<p:commandButton id="buttonAddDocumentOtherSign" widgetVar="buttonAddDocumentOtherSign" 
+												 styleClass="boton-buscar" process="@this outputRegisterAttachedDocumentsForm"
+												actionListener="#{outputRegisterAction.upload}" style="display:none;font-size: 75%;"
+												 value="#{msgs.labelBotonAdjuntar}" update="outputRegisterAttachedDocumentsForm"
+												onclick="addDocument ();endOtherSign();" />
+												<p:commandButton styleClass="boton-buscar" style="font-size: 75%;" value="#{msgs.labelBotonCancelar}"
+												onclick="endUpload();" />
+											</div>
+										</p:dialog>
+										<script>
+											if (Chrome){
+												document.getElementById('alertApplet').style="display:block;width:90%;font-size: 0.8em;";
+												PF('buttonAdjuntarCompulsar').disable();
+												PF('buttonAdjuntar').disable();
+												PF('buttonDigitalizar').disable();
+											}
+											else{
+												initAppletSign('outputRegisterAttachedDocumentsForm');
+												initAppletOtherSign('outputRegisterAttachedDocumentsForm');
+												initDIG();
+											}
+										</script>
+										
+									</ui:fragment>
+	
+									<p:dataTable value="#{outputRegisterAction.listDocuments}" var="anexo" id="anexos"
+										style="font-size: 1.0em" summary="Tabla de Documentos Anexos" scrollable="true"
+											scrollHeight="250">
+												  <p:column headerText="Nombre" style="width: 290px;font-size: 0.95em;font-weight: normal;">
+												   	 	<div style="word-wrap: break-word;">
+													        <p:commandLink ajax="false"
+																value="#{anexo.pages[0].name}">
+																<f:setPropertyActionListener value="#{anexo.pages[0]}"
+																	target="#{documentDownloadController.page}" />
+																<p:fileDownload value="#{documentDownloadController.fileDownload}" />
+															</p:commandLink>
+														</div>
+												    </p:column>
+												  <p:column headerText="Tamaño (KB)" style="width: 50px;font-size: 0.95em;font-weight: normal;">
+												  		<h:outputText value="#{anexo.pages[0].fileSizeKB}" />
+												  </p:column>
+												  <p:column headerText="Validez" style="width: 60px;font-size: 0.95em;font-weight: normal;">
+													  <ui:fragment rendered="${not empty anexo.pages[0].validityType}">
+													  		<c:set var="messagevalidate"
+																value="validateDocument.#{anexo.pages[0].validityType}" />
+															<h:outputText value="#{msgs[messagevalidate]}" />
+														</ui:fragment>
+												  </p:column>
+												  <p:column headerText="Tipo" style="width: 100px;font-size: 0.95em;font-weight: normal;">
+												  	<ui:fragment rendered="${not empty anexo.pages[0].documentType}">
+												  		<c:set var="messageType"
+															value="typeDocument.#{anexo.pages[0].documentType}" />
+														<h:outputText value="#{msgs[messageType]}" />
+													</ui:fragment>
+												  </p:column>
+												  <p:column headerText="Comentario" style="width: 100px;font-size: 0.95em;font-weight: normal;">
+												  	<div style="word-wrap: break-word;">
+												  		<h:outputText value="#{anexo.pages[0].comments}" />
+												  	</div>
+												  </p:column>
+												   <p:column headerText="Firma" style="width: 180px;font-size: 0.95em;font-weight: normal;">
+												  	<ui:fragment rendered="${not empty anexo.pages[0].pageSigned}">
+													  	<div style="word-wrap: break-word;width: 180px;">
+													  		<p:commandLink ajax="false"
+																value="#{anexo.pages[0].pageSigned.name}">
+																<f:setPropertyActionListener value="#{anexo.pages[0].pageSigned}"
+																	target="#{documentDownloadController.page}" />
+																<p:fileDownload value="#{documentDownloadController.fileDownload}" />
+															</p:commandLink>
+													  	</div>
+													  </ui:fragment>
+												  </p:column>
+												  <p:column headerText="Borrar" rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 and (not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR) and J_PARAMBOOK.canModify}"
+												   style="width: 180px;font-size: 0.95em;font-weight: normal;">
+												  	<p:commandButton  value="Borrar" action="#{outputRegisterAction.deleteDocument}"
+												  	 process="@this" update=":accordion:outputRegisterAttachedDocumentsForm" >
+										                <f:setPropertyActionListener value="#{anexo}" target="#{outputRegisterAction.selectDocument}" />
+										            	 <p:confirm header="Borrar documento" message="Va a proceder a borrar el documento, está seguro?" icon="ui-icon-alert" />
+										            </p:commandButton>
+												  </p:column>
+									    </p:dataTable>
+									     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+										        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+										    </p:confirmDialog>
+									<div class="botones">
+										<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											action="goBack" />
+									</div>
+								</h:form>
+							</fieldset>
+						</p:tab>
+						<p:tab title="#{msgs.labelHistoricoMovimientos}"
+							rendered="${not empty outputRegisterAction.outputRegisterBean.fld1}"
+							id="outputRegisterHistorical">
+							<fieldset>
+								<h:form id="historicalForm">
+									<p:dataTable summary="Tabla de Históricos" var="update"
+										value="#{outputRegisterAction.listUpdates}"
+										emptyMessage="No hay registro de modificaciones"
+										scrollable="true" scrollHeight="250">
+										<p:column headerText="#{msgs.labelUsuario}">
+											<h:outputText value="#{update.scrModifReg.usr}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelFecha}">
+											<h:outputText value="#{update.scrModifReg.modifDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{msgs.labelCampo}">
+											<h:outputText value="#{update.nameFld}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelValorAnti}">
+											<h:outputText value="#{update.oldvalue}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelValorNuevo}">
+											<h:outputText value="#{update.value}" />
+										</p:column>
+									</p:dataTable>
+								</h:form>
+								<div class="botones">
+									<p:commandButton styleClass="boton-cancelar"
+										value="#{msgs.labelBotonCancelar}" process="@this"
+										action="goBack" />
+								</div>
+							</fieldset>
+						</p:tab>
+						<p:tab title="#{msgs.labelHistoricoDistribucion}"
+							rendered="${not empty outputRegisterAction.outputRegisterBean.fld1}"
+							id="outputRegisterDistributionHistorical">
+							<fieldset>
+								<h:form id="outputRegisterDistributionHistoricalForm">
+									<p:dataTable summary="Tabla de Distribución" id="tableHistDist"
+										var="dist" value="#{outputRegisterAction.listHistDistribution}"
+										emptyMessage="No hay movimientos de distribución"
+										scrollable="true" scrollHeight="250">
+										<p:column style="width:4%">
+											<p:rowToggler ajax="false" />
+										</p:column>
+										<p:column headerText="#{msgs.labelFchDistribucion}">
+											<h:outputText value="#{dist.scrDistReg.distDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{msgs.labelOrigenDistribucion}">
+											<h:outputText value="#{dist.sourceDescription}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelDestinoDistribucion}">
+											<h:outputText value="#{dist.targetDescription}" />
+										</p:column>
+										<p:column headerText="#{msgs.fld6label}">
+											<c:set var="messagefld6"
+												value="#{'distributionhistory.minuta.dist.state.'}#{dist.scrDistReg.state}" />
+											<h:outputText value="#{msgs[messagefld6]}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelFchEstado}">
+											<h:outputText value="#{dist.scrDistReg.stateDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{msgs.labelComentario}">
+											<h:outputText value="#{dist.scrDistReg.message}">
+											</h:outputText>
+										</p:column>
+										<p:rowExpansion>
+											<p:dataTable summary="Tabla de Distribución"
+												style="font-size:1.0em" var="movDist"
+												value="#{dist.scrDistRegState}"
+												emptyMessage="No hay movimientos de distribución"
+												scrollable="true" scrollHeight="250">
+												<p:column headerText="#{msgs.fld6label}">
+													<c:set var="messagefld6exp"
+														value="#{'distributionhistory.minuta.dist.state.'}#{movDist.state}" />
+													<h:outputText value="#{msgs[messagefld6exp]}" />
+												</p:column>
+												<p:column headerText="#{msgs.labelFchEstado}">
+													<h:outputText value="#{movDist.stateDate}">
+														<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+															type="date" locale="es_ES" timeZone="Europe/Paris" />
+													</h:outputText>
+												</p:column>
+												<p:column headerText="#{msgs.labelUsuario}">
+													<h:outputText value="#{movDist.username}" />
+												</p:column>
+											</p:dataTable>
+										</p:rowExpansion>
+									</p:dataTable>
+									<div class="botones">
+										<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											action="goBack" />
+									</div>
+								</h:form>
+							</fieldset>
+						</p:tab>
+
+						<p:tab title="#{msgs.labelHistoricoIntercambio}"
+							rendered="${not empty outputRegisterAction.outputRegisterBean.fld1}"
+							id="outputRegisterInterchangeHistorical">
+							<fieldset>
+								<ui:fragment>
+									<h:outputText styleClass="labelHistoricoIR"
+										value="#{msgs.labelHistoricoIntercambioEntrada}" />
+									<p:dataTable id="tableIntercambioEntrada"
+										summary="Tabla de Intercambio Registral Entrada" var="tire"
+										value="#{outputRegisterAction.listHistInputInterchange}"
+										emptyMessage="No hay movimientos de intercambio registral de entrada"
+										scrollable="true" scrollHeight="250">
+										<p:column style="width:4%">
+											<p:rowToggler ajax="false" />
+										</p:column>
+										<p:column headerText="#{msgs.labelFchIntercambio}">
+											<h:outputText value="#{tire.fechaIntercambio}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{msgs.fld6label}">
+											<h:outputText value="#{tire.estado.name}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelFchEstado}">
+											<h:outputText value="#{tire.fechaEstado}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{msgs.fld3label}">
+											<h:outputText value="#{tire.username}" />
+										</p:column>
+										<p:rowExpansion>
+											<p:dataTable summary="Tabla de Intercambio Registral Entrada"
+												style="font-size:1.0em" var="movTire" value="#{tire.trazas}"
+												emptyMessage="No hay movimientos de intercambio"
+												scrollable="true" scrollHeight="75px">
+												<p:column headerText="#{msgs.headercodigo}">
+													<h:outputText value="#{movTire.codigo}" />
+												</p:column>
+												<p:column headerText="#{msgs.headerdescripcion}">
+													<h:outputText value="#{movTire.descripcion}" />
+												</p:column>
+												<p:column headerText="#{msgs.headercodigoError}">
+													<h:outputText value="#{movTire.codigoError}" />
+												</p:column>
+												<p:column headerText="#{msgs.headercodigoErrorServicio}">
+													<h:outputText value="#{movTire.codigoErrorServicio}" />
+												</p:column>
+												<p:column headerText="#{msgs.headercodigoIntercambio}" style="width: 130px;">
+													<h:outputText value="#{movTire.codigoIntercambio}" />
+												</p:column>
+												<p:column headerText="#{msgs.headercodigoEntRegorigen}">
+													<a title="${movTirs.descripcionEntidadRegistralOrigen}">
+														<h:outputText
+															value="#{movTire.codigoEntidadRegistralOrigen}" />
+													</a>
+												</p:column>
+												<p:column headerText="#{msgs.headercodigoEntRegdestino}">
+													<a title="${movTirs.descripcionEntidadRegistralDestino}">
+														<h:outputText
+															value="#{movTire.codigoEntidadRegistralDestino}" />
+													</a>
+												</p:column>
+												<p:column headerText="#{msgs.headerestado}">
+													<c:set var="messageestadoTraza"
+														value="asientoRegitral.tipoEstado.#{movTire.codigoEstado}" />
+													<h:outputText value="#{msgs[messageestadoTraza]}" />
+												</p:column>
+												<p:column headerText="#{msgs.headernodo}">
+													<h:outputText value="#{movTire.codigoNodo}" />
+												</p:column>
+												<p:column headerText="#{msgs.headermotivoRechazo}">
+													<h:outputText value="#{movTire.motivoRechazo}" />
+												</p:column>
+												<p:column headerText="#{msgs.headerfechaAlta}">
+													<h:outputText value="#{movtire.fechaAlta}">
+														<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+															type="date" locale="es_ES" timeZone="Europe/Paris" />
+													</h:outputText>
+												</p:column>
+												<p:column headerText="#{msgs.headerfechaModificacion}">
+													<h:outputText value="#{movtire.fechaModificacion}">
+														<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+															type="date" locale="es_ES" timeZone="Europe/Paris" />
+													</h:outputText>
+												</p:column>
+											</p:dataTable>
+										</p:rowExpansion>
+									</p:dataTable>
+								</ui:fragment>
+								<ui:fragment>
+									<h:outputText styleClass="labelHistoricoIR"
+										value="#{msgs.labelHistoricoIntercambioSalida}" />
+									<p:dataTable summary="Tabla de Intercambio Registral Salida"
+										var="tirs"
+										value="#{outputRegisterAction.listHistOutputInterchange}"
+										emptyMessage="No hay movimientos de intercambio registral de salida"
+										scrollable="true" scrollHeight="250">
+										<p:column style="width:4%">
+											<p:rowToggler ajax="false" />
+										</p:column>
+										<p:column headerText="#{msgs.labelFchIntercambio}">
+											<h:outputText value="#{tirs.fechaIntercambio}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{msgs.labeloffice}">
+											<h:outputText value="#{tirs.nombreOfic}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelTipoOrigen}">
+											<c:set var="messageorigen"
+												value="intercambioRegistral.type.origen.#{tirs.tipoOrigen}" />
+											<h:outputText value="#{msgs[messageorigen]}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelEntidadDestino}">
+											<h:outputText
+												value="#{tirs.codeTramunit} #{tirs.nameTramunit}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelUnidadDestino}">
+											<h:outputText value="#{tirs.codeEntity} #{tirs.nameEntity}" />
+										</p:column>
+										<p:column headerText="#{msgs.fld6label}">
+											<h:outputText value="#{tirs.estado.name}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelFchEstado}">
+											<h:outputText value="#{tirs.fechaEstado}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</h:outputText>
+										</p:column>
+										<p:rowExpansion>
+											<p:dataTable summary="Tabla de Intercambio Registral Salida"
+												style="font-size:1.0em" var="movTirs" value="#{tirs.trazas}"
+												emptyMessage="No hay movimientos de intercambio"
+												scrollable="true" scrollHeight="250">
+												<p:column headerText="#{msgs.headercodigo}">
+													<h:outputText value="#{movTirs.codigo}" />
+												</p:column>
+												<p:column headerText="#{msgs.headerdescripcion}">
+													<h:outputText value="#{movTirs.descripcion}" />
+												</p:column>
+												<p:column headerText="#{msgs.headercodigoError}">
+													<h:outputText value="#{movTirs.codigoError}" />
+												</p:column>
+												<p:column headerText="#{msgs.headercodigoErrorServicio}">
+													<h:outputText value="#{movTirs.codigoErrorServicio}" />
+												</p:column>
+												<p:column headerText="#{msgs.headercodigoIntercambio}"  style="width: 130px;">
+													<h:outputText value="#{movTirs.codigoIntercambio}" />
+												</p:column>
+												<p:column headerText="#{msgs.headercodigoEntRegorigen}">
+													<a title="${movTirs.descripcionEntidadRegistralOrigen}">
+														<h:outputText
+															value="#{movTirs.codigoEntidadRegistralOrigen}" />
+													</a>
+												</p:column>
+												<p:column headerText="#{msgs.headercodigoEntRegdestino}">
+													<a title="${movTirs.descripcionEntidadRegistralDestino}">
+														<h:outputText
+															value="#{movTirs.codigoEntidadRegistralDestino}" />
+													</a>
+												</p:column>
+												<p:column headerText="#{msgs.headerestado}">
+													<c:set var="messageestadoTraza"
+														value="asientoRegitral.tipoEstado.#{movTirs.codigoEstado}" />
+													<h:outputText value="#{msgs[messageestadoTraza]}" />
+												</p:column>
+												<p:column headerText="#{msgs.headernodo}">
+													<h:outputText value="#{movTirs.codigoNodo}" />
+												</p:column>
+												<p:column headerText="#{msgs.headermotivoRechazo}">
+													<h:outputText value="#{movTirs.motivoRechazo}" />
+												</p:column>
+												<p:column headerText="#{msgs.headerfechaAlta}">
+													<h:outputText value="#{movTirs.fechaAlta}">
+														<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+															type="date" locale="es_ES" timeZone="Europe/Paris" />
+													</h:outputText>
+												</p:column>
+												<p:column headerText="#{msgs.headerfechaModificacion}">
+													<h:outputText value="#{movTirs.fechaModificacion}">
+														<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+															type="date" locale="es_ES" timeZone="Europe/Paris" />
+													</h:outputText>
+												</p:column>
+											</p:dataTable>
+										</p:rowExpansion>
+									</p:dataTable>
+								</ui:fragment>
+								<div class="botones">
+									<p:commandButton styleClass="boton-cancelar"
+										value="#{msgs.labelBotonCancelar}" process="@this"
+										action="goBack" />
+								</div>
+							</fieldset>
+						</p:tab>
+						<p:tab title="#{msgs.labelRegistrosAsociados}"
+							rendered="${not empty outputRegisterAction.outputRegisterBean.fld1}"
+							id="outputRegisterAssociatedRegisters">
+							<fieldset>
+								<h:form id="outputRegisterAssociatedRegistersForm">
+									<p:dialog id="dialog" widgetVar="dialog" draggable="false"
+										header="Validación" resizable="false" modal="true">
+										<p:messages id="dialogMessage" showDetail="true" />
+									</p:dialog>
+									<p:dialog header="Asociar Registros" widgetVar="dlgAsociar"
+										id="dlgAsociar" resizable="false" modal="true"
+										styleClass="asociar">
+										<p:panel widgetVar="panelAsocReg" id="panelAsocReg">
+											<label for="outputRegisterAssociatedRegistersForm:fld1Asoc"
+												class="general"> <span class="label"><h:outputText
+														id="fld1LabelAsoc" value="#{msgs.fld1label}" /></span> <p:inputText
+													id="fld1Asoc"
+													value="#{outputRegisterAction.asocRegisterBean.fld1}"
+													label="#{msgs.fld1Asoclabel}" />
+											</label>
+											<label for="outputRegisterAssociatedRegistersForm:libro"
+												class="general"> <span class="label"><h:outputText
+														id="libroLabel" value="#{msgs.librolabel}" /></span> <p:selectOneMenu
+													id="idLibro"
+													value="#{outputRegisterAction.asocRegisterBean.idLibro}"
+													label="#{msgs.librolabel}">
+													<f:selectItems value="#{booksAction.listBook.inList}"
+														var="lib" itemValue="#{lib.idocarchhdrId}"
+														itemLabel="#{lib.idocarchhdrName}" />
+													<f:selectItems value="#{booksAction.listBook.outList}"
+														var="lib" itemValue="#{lib.idocarchhdrId}"
+														itemLabel="#{lib.idocarchhdrName}" />
+												</p:selectOneMenu>
+											</label>
+											<div class="botonera">
+												<p:commandButton styleClass="boton-cancelar"
+													value="#{msgs.labelBotonAsociar}"
+													update="panelAsociados,:messagesform:messages"
+													process="panelAsocReg"
+													actionListener="#{outputRegisterAction.saveAsocRegister}"
+													oncomplete="PF('dlgAsociar').hide();" />
+												<p:commandButton styleClass="boton-cancelar"
+													value="#{msgs.labelBotonCancelar}" process="@this"
+													onclick="PF('dlgAsociar').hide();" />
+											</div>
+										</p:panel>
+									</p:dialog>
+									<ui:fragment
+										rendered="${not empty outputRegisterAction.outputRegisterBean.fld1 and not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR and J_PARAMBOOK.canModify}">
+										<p:commandButton value="#{msgs.labelNuevaAsociacion}"
+											onclick="PF('dlgAsociar').show();" />
+									</ui:fragment>
+									<p:outputPanel widgetVar="panelAsociados" id="panelAsociados">
+										<ui:fragment
+											rendered="${outputRegisterAction.asocRegPrim != null and outputRegisterAction.asocRegPrim.attributesValues.fld1 != null}">
+											<div class="registroAsociado">
+												<p:panel
+													header="#{msgs.labelRegistroPrincipal} #{outputRegisterAction.asocRegPrim.attributesValues.fld1}">
+													<ul>
+														<li><span><h:outputText
+																	value="#{msgs.labelNombreLibro}"></h:outputText></span> <h:outputText
+																value="#{outputRegisterAction.asocRegPrim.attributesValues.libro}" />
+														</li>
+														<li><span><h:outputText
+																	value="#{msgs.fld1label}"></h:outputText></span> <h:outputText
+																value="#{outputRegisterAction.asocRegPrim.attributesValues.fld1}" />
+														</li>
+														<li><span><h:outputText
+																	value="#{msgs.fld2label}"></h:outputText></span> <h:outputText
+																value="#{outputRegisterAction.asocRegPrim.attributesValues.fld2}">
+																<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+																	type="date" locale="es_ES" timeZone="Europe/Paris" />
+															</h:outputText></li>
+														<li><span><h:outputText
+																	value="#{msgs.fld6label}"></h:outputText></span> <h:outputText
+																value="#{(outputRegisterAction.asocRegPrim.attributesValues.fld6==1) ? 'Incompleto' : ((outputRegisterAction.asocRegPrim.attributesValues.fld6==0)?'Completo':'Cerrado')}" />
+														</li>
+														<li><span><h:outputText
+																	value="#{msgs.fld5label}"></h:outputText></span> <h:outputText
+																value="#{outputRegisterAction.asocRegPrim.fld5Name}" />
+														</li>
+														<ui:fragment
+															rendered="${outputRegisterAction.asocRegPrim != null and outputRegisterAction.asocRegPrim.attributesValues.fld7 != null}">
+															<li><span><h:outputText
+																		value="#{msgs.fld7label}"></h:outputText></span> <c:set
+																	var="organismo"
+																	value="#{outputRegisterAction.asocRegPrim.fld7.code} #{outputRegisterAction.asocRegPrim.fld7.name}" />
+																<h:outputText
+																	value="#{(empty outputRegisterAction.asocRegPrim.fld7) ? '' : organismo}" />
+															</li>
+														</ui:fragment>
+														<ui:fragment
+															rendered="${outputRegisterAction.asocRegPrim != null and outputRegisterAction.asocRegPrim.attributesValues.fld8 != null}">
+															<li><span><h:outputText
+																		value="#{msgs.fld8label}"></h:outputText></span> <c:set
+																	var="organismo"
+																	value="#{outputRegisterAction.asocRegPrim.fld8.code} #{outputRegisterAction.asocRegPrim.fld8.name}" />
+																<h:outputText
+																	value="#{(empty outputRegisterAction.asocRegPrim.fld8) ? '' : organismo}" />
+															</li>
+														</ui:fragment>
+														<ui:fragment
+															rendered="${outputRegisterAction.asocRegPrim != null  and ( (outputRegisterAction.asocRegPrim['class'].simpleName == 'AxSfIn' and outputRegisterAction.asocRegPrim.attributesValues.fld17 != null)  or (outputRegisterAction.asocRegPrim['class'].simpleName == 'AxSfOut' and outputRegisterAction.asocRegPrim.attributesValues.fld13 != null))}">
+															<li><span><h:outputText
+																		value="#{msgs.fld17label}"></h:outputText></span> <h:outputText
+																	value="#{outputRegisterAction.asocRegPrim.attributesValues.fld17}"
+																	renderer="outputRegisterAction.asocRegPrim['class'].simpleName == 'AxSfIn'" />
+																<h:outputText
+																	value="#{outputRegisterAction.asocRegPrim.attributesValues.fld13}"
+																	renderer="outputRegisterAction.asocRegPrim['class'].simpleName == 'AxSfOut'" />
+															</li>
+														</ui:fragment>
+													</ul>
+												</p:panel>
+											</div>
+											</ui:fragment>
+											<ui:fragment
+											rendered="${outputRegisterAction.asocReg != null }">
+											<ui:repeat var="item" value="#{outputRegisterAction.asocReg}">
+												<div class="registroAsociado">
+													<p:panel
+														header="#{msgs.labelRegistroAsociado} #{item.attributesValues.fld1}">
+														<ul>
+															<li><span><h:outputText
+																		value="#{msgs.labelNombreLibro}"></h:outputText></span> <h:outputText
+																	value="#{item.attributesValues.libro}" /></li>
+															<li><span><h:outputText
+																		value="#{msgs.fld1label}"></h:outputText></span> <h:outputText
+																	value="#{item.attributesValues.fld1}" /></li>
+															<li><span><h:outputText
+																		value="#{msgs.fld2label}"></h:outputText></span> <h:outputText
+																	value="#{item.attributesValues.fld2}">
+																	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+																		type="date" locale="es_ES" timeZone="Europe/Paris" />
+																</h:outputText></li>
+															<li><span><h:outputText
+																		value="#{msgs.fld6label}"></h:outputText></span> <h:outputText
+																	value="#{(item.attributesValues.fld6==1) ? 'Incompleto' : ((item.attributesValues.fld6==0)?'Completo':'Cerrado')}" />
+															</li>
+															<li><span><h:outputText
+																		value="#{msgs.fld5label}"></h:outputText></span> <h:outputText
+																	value="#{item.fld5Name}" /></li>
+															<ui:fragment
+																rendered="${item != null and item.attributesValues.fld7 != null}">
+																<li><span><h:outputText
+																			value="#{msgs.fld7label}"></h:outputText></span> <c:set
+																		var="organismo"
+																		value="#{item.fld7.code} #{item.fld7.name}" /> <h:outputText
+																		value="#{(empty item.fld7) ? '' : organismo}" /></li>
+															</ui:fragment>
+															<ui:fragment
+																rendered="${item != null and item.attributesValues.fld8 != null}">
+																<li><span><h:outputText
+																			value="#{msgs.fld8label}"></h:outputText></span> <c:set
+																		var="organismo"
+																		value="#{item.fld8.code} #{item.fld8.name}" /> <h:outputText
+																		value="#{(empty item.fld8) ? '' : organismo}" /></li>
+															</ui:fragment>
+															<ui:fragment
+																rendered="${item != null  and ( (item['class'].simpleName == 'AxSfIn' and item.attributesValues.fld17 != null)  or (outputRegisterAction.asocRegPrim['class'].simpleName == 'AxSfOut' and outputRegisterAction.asocRegPrim.attributesValues.fld13 != null))}">
+																<li><span><h:outputText
+																			value="#{msgs.fld17label}"></h:outputText></span> <h:outputText
+																		value="#{item.attributesValues.fld17}"
+																		renderer="item['class'].simpleName == 'AxSfIn'" /> <h:outputText
+																		value="#{item.attributesValues.fld13}"
+																		renderer="item['class'].simpleName == 'AxSfOut'" /></li>
+															</ui:fragment>
+														</ul>
+														<f:facet name="actions">
+															<ui:fragment
+																rendered="${(not outputRegisterAction.readOnly and not outputRegisterAction.readOnlyIR) and J_PARAMBOOK.canModify}">
+																<p:commandLink
+																	styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+																	update="@form:panelAsociados, :messagesform:messages"
+																	title="Eliminar Asociación"
+																	actionListener="#{outputRegisterAction.deleteAssociation}">
+																	<f:param name="idReg"
+																		value="#{item.attributesValues.fdrid}" />
+																	<f:param name="idLibro"
+																		value="#{item.attributesValues.idLibro}" />
+																	<h:outputText styleClass="ui-icon ui-icon-close" />
+																</p:commandLink>
+															</ui:fragment>
+														</f:facet>
+													</p:panel>
+												</div>
+											</ui:repeat>
+										</ui:fragment>
+									</p:outputPanel>
+									<div class="botones">
+										<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											action="goBack" />
+									</div>
+								</h:form>
+							</fieldset>
+						</p:tab>
+					</p:accordionPanel>
+				</div>
+			</h:panelGroup>
+			<p:dialog modal="true" widgetVar="statusDialog"
+				header="Cargando, espere por favor" draggable="false"
+				closable="false" resizable="false">
+				<img
+					src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+			</p:dialog>
+			<p:dialog modal="true" widgetVar="statusDialogRec"
+				header="Generando Recibo, espere por favor" draggable="false"
+				closable="false" resizable="false">
+				<img
+					src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+			</p:dialog>
+			<p:dialog modal="true" widgetVar="statusDialogLabel"
+				header="Generando Etiqueta, espere por favor" draggable="false"
+				closable="false" resizable="false">
+				<img
+					src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+			</p:dialog>
+			<p:dialog modal="true" widgetVar="statusDialogNew"
+				header="Generando el registro, espere por favor" draggable="false"
+				closable="false" resizable="false">
+				<img
+					src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

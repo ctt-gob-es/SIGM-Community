@@ -1,5 +1,6 @@
 package ieci.tecdoc.sgm.core.services.telematico;
 
+
 /**
  * Bean con la información de una solicitud de registro.
  * 
@@ -14,6 +15,7 @@ public class RegistroPeticion
    protected String email;		  // Correo electrónico
    protected String specificData; // Datos específicos.
    protected String senderIdType; // Tipo de documento de identidad
+   protected Solicitantes solicitantes;   // Solicitantes.
    protected PeticionDocumentos documents;   // Documentos.
    
    /**
@@ -28,6 +30,7 @@ public class RegistroPeticion
       folderId = null;
       specificData = null;
       senderIdType = null;
+      solicitantes = new Solicitantes();
       documents = new PeticionDocumentos();
    }
    
@@ -74,6 +77,15 @@ public class RegistroPeticion
    public void setSpecificData(String specificData)
    {
       this.specificData = specificData;
+   }
+   
+   /**
+    * Establece los solicitantes para el registro.
+    * @param specificData Información adicional para el registro.
+    */   
+   public void setSolicitantes(Solicitantes solicitantes)
+   {
+      this.solicitantes = solicitantes;
    }
    
    /**
@@ -135,6 +147,15 @@ public class RegistroPeticion
    public String getSpecificData()
    {
       return specificData;
+   }
+   
+   /**
+    * Devuelve los solicitantes de la solicitud de registro.
+    * @return String Información adicional de la solicitud.
+    */   
+   public Solicitantes getSolicitantes()
+   {
+      return solicitantes;
    }
 
    /**

@@ -3,6 +3,7 @@ package com.ieci.tecdoc.common.invesicres;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -70,7 +71,25 @@ public class ScrOrg implements Serializable {
 
     /** persistent field */
     private Set scrRelations;
-
+    
+    /** formula field */
+    private String nameOrgFather;
+    /** nullable persistent field */
+    private Integer hierarchicalLevel;
+    /** nullable persistent field */
+    private String adminLevel;
+    /** nullable persistent field */
+    private String entityType;
+    /** nullable persistent field */
+    private String uoType;
+    /** nullable persistent field */
+    private Integer idRoot;
+    /** nullable persistent field */
+    private String idCCAA;
+    /** nullable persistent field */
+    private Integer idProv;
+    private Boolean isTramUnit;
+    
     /** full constructor */
     public ScrOrg(Integer id, String code, Integer idFather, String acron, String name, Date creationDate, Date disableDate, int enabled, String cif, com.ieci.tecdoc.common.invesicres.ScrTypeadm scrTypeadm, Set scrSendmsgsBySender, Set scrSendmsgsByDestination, Set scrRecvmsgsBySender, Set scrRecvmsgsByDestination, Set scrRecvdistregs, Set scrRegorigdocs, Set scrOfics, Set scrSendregs, Set scrRelations) {
         this.id = id;
@@ -93,13 +112,36 @@ public class ScrOrg implements Serializable {
         this.scrSendregs = scrSendregs;
         this.scrRelations = scrRelations;
     }
+    
+    public ScrOrg(Integer id, String code, Integer idFather, String acron, String name, Date creationDate, Date disableDate, int enabled, String cif, com.ieci.tecdoc.common.invesicres.ScrTypeadm scrTypeadm, Set scrSendmsgsBySender, Set scrSendmsgsByDestination, Set scrRecvmsgsBySender, Set scrRecvmsgsByDestination, Set scrRecvdistregs, Set scrRegorigdocs, Set scrOfics, Set scrSendregs, Set scrRelations, String nameOrgFather) {
+        this.id = id;
+        this.code = code;
+        this.idFather = idFather;
+        this.acron = acron;
+        this.name = name;
+        this.creationDate = creationDate;
+        this.disableDate = disableDate;
+        this.enabled = enabled;
+        this.cif = cif;
+        this.scrTypeadm = scrTypeadm;
+        this.scrSendmsgsBySender = scrSendmsgsBySender;
+        this.scrSendmsgsByDestination = scrSendmsgsByDestination;
+        this.scrRecvmsgsBySender = scrRecvmsgsBySender;
+        this.scrRecvmsgsByDestination = scrRecvmsgsByDestination;
+        this.scrRecvdistregs = scrRecvdistregs;
+        this.scrRegorigdocs = scrRegorigdocs;
+        this.scrOfics = scrOfics;
+        this.scrSendregs = scrSendregs;
+        this.scrRelations = scrRelations;
+        this.nameOrgFather = nameOrgFather;
+    }
 
     /** default constructor */
     public ScrOrg() {
     }
 
     /** minimal constructor */
-    public ScrOrg(Integer id, String code, String acron, String name, Date creationDate, int enabled, com.ieci.tecdoc.common.invesicres.ScrTypeadm scrTypeadm, Set scrSendmsgsBySender, Set scrSendmsgsByDestination, Set scrRecvmsgsBySender, Set scrRecvmsgsByDestination, Set scrRecvdistregs, Set scrRegorigdocs, Set scrOfics, Set scrSendregs, Set scrRelations) {
+    public ScrOrg(Integer id, String code, String acron, String name, Date creationDate, int enabled, com.ieci.tecdoc.common.invesicres.ScrTypeadm scrTypeadm, Set scrSendmsgsBySender, Set scrSendmsgsByDestination, Set scrRecvmsgsBySender, Set scrRecvmsgsByDestination, Set scrRecvdistregs, Set scrRegorigdocs, Set scrOfics, Set scrSendregs, Set scrRelations, String nameOrgFather) {
         this.id = id;
         this.code = code;
         this.acron = acron;
@@ -116,6 +158,7 @@ public class ScrOrg implements Serializable {
         this.scrOfics = scrOfics;
         this.scrSendregs = scrSendregs;
         this.scrRelations = scrRelations;
+        this.nameOrgFather = nameOrgFather;
     }
 
     /** 
@@ -149,6 +192,8 @@ public class ScrOrg implements Serializable {
     }
 
     /** 
+     * 		  @hibernate.many-to-one 
+     *             cascade={CascadeType.ALL}
      *            @hibernate.property
      *             column="ID_FATHER"
      *             length="10"
@@ -482,12 +527,137 @@ public String toXML() {
 }
                                
 //************************************  
-                                                                                                                                                                   
+                                                                                                                                           
+public String getNameOrgFather() {
+    return nameOrgFather;
+}
+
+public void setNameOrgFather(
+    String nameOrgFather) {
+    this.nameOrgFather = nameOrgFather;
+}
+
+
+/** 
+ *            @hibernate.property
+ *             column="HIERARCHICAL_LEVEL"
+ *             length="6"
+ *             not-null="true"
+ *         
+ */
+public Integer getHierarchicalLevel() {
+    return hierarchicalLevel;
+}
+
+public void setHierarchicalLevel(
+    Integer hierarchicalLevel) {
+    this.hierarchicalLevel = hierarchicalLevel;
+}
+/** 
+ *            @hibernate.property
+ *             column="ADMIN_LEVEL"
+ *             length="2"
+ *             not-null="true"
+ *         
+ */
+public String getAdminLevel() {
+    return adminLevel;
+}
+
+public void setAdminLevel(
+    String adminLevel) {
+    this.adminLevel = adminLevel;
+}
+/** 
+ *            @hibernate.property
+ *             column="ENTITY_TYPE"
+ *             length="2"
+ *             not-null="true"
+ *         
+ */
+public String getEntityType() {
+    return entityType;
+}
+
+public void setEntityType(
+    String entityType) {
+    this.entityType = entityType;
+}
+/** 
+ *            @hibernate.property
+ *             column="UO_TYPE"
+ *             length="3"
+ *             not-null="true"
+ *         
+ */
+public String getUoType() {
+    return uoType;
+}
+
+public void setUoType(
+    String uoType) {
+    this.uoType = uoType;
+}
+
 public int hashCode() {
       
         return new HashCodeBuilder()
             .append(getId())
             .toHashCode();
     }
+
+/** 
+ *            @hibernate.property
+ *             column="ID_ROOT"
+ *             length="10"
+ *             not-null="true"
+ *         
+ */
+public Integer getIdRoot() {
+    return idRoot;
+}
+
+public void setIdRoot(
+    Integer idRoot) {
+    this.idRoot = idRoot;
+}
+/** 
+ *            @hibernate.property
+ *             column="ID_CCAA"
+ *             length="2"
+ *             not-null="true"
+ *         
+ */
+public String getIdCCAA() {
+    return idCCAA;
+}
+
+public void setIdCCAA(
+    String idCCAA) {
+    this.idCCAA = idCCAA;
+}
+/** 
+ *            @hibernate.property
+ *             column="ID_PROV"
+ *             length="10"
+ *             not-null="true"
+ *         
+ */
+public Integer getIdProv() {
+    return idProv;
+}
+
+public void setIdProv(
+    Integer idProv) {
+    this.idProv = idProv;
+}
+
+public Boolean getIsTramUnit() {
+    return isTramUnit;
+}
+
+public void setIsTramUnit(Boolean isTramUnit) {
+    this.isTramUnit = isTramUnit;
+}
 
 }

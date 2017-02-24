@@ -8,6 +8,7 @@ package es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo;
 public class InfoRegistroCamposExtendidosVO {
 
 	public static final int COMENTARIO_ID = 18;
+	public static final int COMENTARIOSALIDA_ID = 14;
 	public static final int EXPONE_ID = 501;
 	public static final int SOLICITA_ID = 502;
 

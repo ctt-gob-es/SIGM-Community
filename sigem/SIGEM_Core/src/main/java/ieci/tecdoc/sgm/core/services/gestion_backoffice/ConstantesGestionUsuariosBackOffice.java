@@ -8,6 +8,7 @@ public class ConstantesGestionUsuariosBackOffice {
 	public static final String PARAMETRO_USUARIO = "username";
 	public static final String PARAMETRO_PASSWORD = "password";
 	public static final String PARAMETRO_KEY_SESION_USUARIO = "keySesionUsuario";
+	public static final String PARAMETRO_DATOS_SESION = "datosSesion";
 
 	public static final String PARAMETRO_SSO_USER_DN = "userDn";
 

@@ -4,6 +4,8 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import es.ieci.tecdoc.fwktd.sir.core.service.ServicioIntercambioRegistral;
@@ -24,23 +26,24 @@ public class ComprobarTimeOutEnviosJob extends QuartzJobBean {
 	/**
 	 * Servicio de intercambio registral.
 	 */
-	private ServicioIntercambioRegistral servicioIntercambioRegistral = null;
+	private static ServicioIntercambioRegistral servicioIntercambioRegistral = null;
 
 	/**
 	 * Constructor.
 	 */
 	public ComprobarTimeOutEnviosJob() {
-		super();
+	    super();
+	    if (servicioIntercambioRegistral == null){
+	    ApplicationContext context = 
+		    	 new ClassPathXmlApplicationContext(new String[] {"classpath:/beans/fwktd-sir-api-applicationContext.xml"});
+	    servicioIntercambioRegistral = (ServicioIntercambioRegistral) context.getBean("fwktd_sir_servicioIntercambioRegistralImpl");
+	    }
 	}
 
 	public ServicioIntercambioRegistral getServicioIntercambioRegistral() {
 		return servicioIntercambioRegistral;
 	}
 
-	public void setServicioIntercambioRegistral(
-			ServicioIntercambioRegistral servicioIntercambioRegistral) {
-		this.servicioIntercambioRegistral = servicioIntercambioRegistral;
-	}
 
 	@Override
 	protected void executeInternal(JobExecutionContext context)

@@ -4,14 +4,17 @@
 	<parent>
 		<groupId>es.ieci.tecdoc.sigem</groupId>
 		<artifactId>sigem_main</artifactId>
-		<version>3.0.1-M2</version>
+		<version>3.0</version>
 	</parent>
 
 
 	<artifactId>sigem_core</artifactId>
 	<packaging>jar</packaging>
 	
-	
+	<version>3.0.0-msssi2.0.0</version>
+	<properties>
+		<fwktdMSSSI.version>3.0.0-msssi2.0.0</fwktdMSSSI.version>
+	</properties>
 
 
 	<dependencies>
@@ -126,7 +129,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd</groupId>
 			<artifactId>fwktd-core</artifactId>
-			<version>${fwktd.version}</version>
+			<version>${fwktdMSSSI.version}</version>
 		</dependency>
 		
 		
@@ -192,7 +195,6 @@
 				<property>
 					<name>unix</name>
 				</property>
-				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<filter.generic.system>${project.basedir}/../SIGEM_Config/src/main/filters/system/unix.properties</filter.generic.system>
@@ -209,15 +211,26 @@
 				<filter.generic.system>${project.basedir}/../SIGEM_Config/src/main/filters/system/windows.properties</filter.generic.system>
 			</properties>
 		</profile>
-		
+		<profile>
+			<id>msssi</id>
+			<activation>
+				<property>
+					<name>msssi</name>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<filter.generic.system>${project.basedir}/../SIGEM_Config/src/main/filters/system/msssi.properties</filter.generic.system>
+			</properties>
+		</profile>		
 		<!-- Perfiles de construccion en funcion del servidor de aplicaciones -->
+		
 		<profile>
 			<id>tomcat</id>
 			<activation>
 				<property>
 					<name>tomcat</name>
 				</property>
-				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<filter.generic.server>${project.basedir}/../SIGEM_Config/src/main/filters/server/tomcat.properties</filter.generic.server>
@@ -245,11 +258,23 @@
 				<filter.generic.server>${project.basedir}/../SIGEM_Config/src/main/filters/server/websphere.properties</filter.generic.server>
 			</properties>
 		</profile>	
-		
+		<profile>
+			<id>weblogic</id>
+			<activation>
+				<property>
+					<name>weblogic</name>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<filter.generic.server>${project.basedir}/../SIGEM_Config/src/main/filters/server/weblogic_msssi.properties</filter.generic.server>
+			</properties>
+		</profile>		
 		<!--Perfiles de construccion en funcion de la base de datos -->
 		<profile>
 			<id>oracle</id>
 			<activation>
+				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>oracle</name>
 				</property>
@@ -264,7 +289,6 @@
 				<property>
 					<name>postgres</name>
 				</property>
-				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
 				<filter.generic.database>${project.basedir}/../SIGEM_Config/src/main/filters/database/postgres.properties</filter.generic.database>

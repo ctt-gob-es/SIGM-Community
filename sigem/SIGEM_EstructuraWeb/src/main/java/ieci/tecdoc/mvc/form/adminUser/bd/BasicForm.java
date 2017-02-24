@@ -38,7 +38,8 @@ public class BasicForm extends ActionForm{
     String managerId;
     String belongToDept; // Nombre del depto al que pertenece en caso de que sea usuario
     boolean bloqueado;
-    
+    Integer idorg;
+    Integer idPadre;
     
     // Permisos Genéricos
     boolean idocConsulta;
@@ -54,6 +55,7 @@ public class BasicForm extends ActionForm{
             logger.debug("# BasicForm Reset!");
         
         id = -1; 
+        idorg = null;
         guid =
         nombre = 
         descripcion =
@@ -70,7 +72,6 @@ public class BasicForm extends ActionForm{
         idocCreacion =
         idocBorrado= 
         idocImpresion =
-        
         bloqueado = false;
         
     }
@@ -291,4 +292,29 @@ public class BasicForm extends ActionForm{
     public void setGuid(String guid) {
         this.guid = guid;
     }
+    /**
+     * @return Returns the idorg.
+     */
+    public Integer getIdorg() {
+        return idorg;
+    }
+    /**
+     * @param idorg The guid to set.
+     */
+    public void setIdorg(Integer idorg) {
+        this.idorg = idorg;
+    }
+    /**
+     * @return Returns the idPadre.
+     */
+    public Integer getIdPadre() {
+        return idPadre;
+    }
+    /**
+     * @param idPadre The guid to set.
+     */
+    public void setIdPadre(Integer idPadre) {
+        this.idPadre = idPadre;
+    }
+    
 }

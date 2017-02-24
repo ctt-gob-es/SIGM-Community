@@ -5,6 +5,8 @@
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
 <%@ page import="ieci.tecdoc.isicres.rpadmin.struts.util.AutenticacionAdministracion" %>
 <%@ page import="es.ieci.tecdoc.isicres.admin.core.services.ConstantesGestionUsuariosAdministracion" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 
 <%
 response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
@@ -15,12 +17,12 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="css/xtree.css">
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/xtree.css">
 <logic:equal name="borraCookies" value="true">
-    <script type="text/javascript" language="javaScript" src="js/cookies.js"></script>
+    <script type="text/javascript" language="javaScript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/cookies.js"></script>
 </logic:equal>
-<script type="text/javascript" language="JavaScript" src="js/tree.js"></script>
-<script type="text/javascript" language="JavaScript" src="js/common.js"></script>
+<script type="text/javascript" language="JavaScript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/tree.js"></script>
+<script type="text/javascript" language="JavaScript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
 <script>
 
 	function detectKey() {

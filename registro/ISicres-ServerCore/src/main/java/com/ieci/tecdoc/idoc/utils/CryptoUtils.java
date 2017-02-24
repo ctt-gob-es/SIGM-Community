@@ -167,7 +167,48 @@ public class CryptoUtils {
 
 		return encPwd;
 	}
+	/**
+	 * Devuelve el hash descifrado
+	 * @param encHash contenido cifrado, en base64
+	 * @return byte[] contenido descifrado codificado en base64
+	 * @throws Exception
+	 */
+	public static byte[] decryptHashDocument(String encHash) throws Exception {
+		String passwordToGenKey = "IUSER0";
 
+		byte byteArrayCypherHash[] = Base64Util.decode(encHash);
+				
+		// Obtener el texto que va a dar el hash inicial
+		byte buf[] = passwordToGenKey.getBytes("ISO-8859-1");
+		
+		Security.addProvider(new BouncyCastleProvider());
+
+		// Obtener el hash
+		MessageDigest md = MessageDigest.getInstance("MD5", "BC");
+
+		md.update(buf);
+		byte hash[] = md.digest();
+
+		// Aunque no lo diga en ninguna parte, el cryptoapi usa una clave de 128
+		// bits con todo ceros
+		// menos los 5 primeros bytes para cifrar....
+		byte newHash[] = { (byte) hash[0], (byte) hash[1], (byte) hash[2],
+				(byte) hash[3], (byte) hash[4], (byte) 0x00, (byte) 0x00,
+				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
+
+		// Obtener la key basada en ese hash
+		SecretKeySpec key = new SecretKeySpec(newHash, "RC4");
+
+		// Obtener el objeto Cipher e inicializarlo con la key
+		Cipher cipher = Cipher.getInstance("RC4", "BC");
+		cipher.init(Cipher.DECRYPT_MODE, key);
+
+		byte bufCipher[] = cipher.doFinal(byteArrayCypherHash);
+		
+		return bufCipher;
+	}
+	
 	public static String decryptPasswordLDAP(String pwdLdap) throws Exception {
 		String passwordToGenKey = "IDOCLDAP";
 

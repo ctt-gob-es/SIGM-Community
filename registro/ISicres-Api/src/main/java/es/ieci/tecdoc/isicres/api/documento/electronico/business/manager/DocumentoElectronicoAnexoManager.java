@@ -2,6 +2,7 @@ package es.ieci.tecdoc.isicres.api.documento.electronico.business.manager;
 
 import java.util.List;
 
+import es.ieci.tecdoc.isicres.api.business.vo.UsuarioVO;
 import es.ieci.tecdoc.isicres.api.documento.electronico.business.vo.ConfiguracionCreateDocumentoElectronicoAnexoVO;
 import es.ieci.tecdoc.isicres.api.documento.electronico.business.vo.DocumentoElectronicoAnexoVO;
 import es.ieci.tecdoc.isicres.api.documento.electronico.business.vo.IdentificadorDocumentoElectronicoAnexoVO;
@@ -39,4 +40,24 @@ public interface DocumentoElectronicoAnexoManager {
 	 */
 	public DocumentoElectronicoAnexoVO getDocumentoFirmado(Long idDocumentoFirma);
 
+	public DocumentoElectronicoAnexoVO create(DocumentoElectronicoAnexoVO documentoElectronico,
+		ConfiguracionCreateDocumentoElectronicoAnexoVO cfg, UsuarioVO usuarioRegistro);
+
+	/**
+	 * Metodo para copiar el registro origen en el registro destino los documentos electrónicos.
+	 * @param idLibroOrigen
+	 * 	id libro origen
+	 * @param idRegistroOrigen
+	 * 	id registro origen
+	 * @param idLibroDestino
+	 * 	id libro destino
+	 * @param idRegistroDestino
+	 * 	id registro destino
+	 * @param usuarioRegistro
+	 * 	usuario que hace la copia.
+	 */
+	public void copyDocumentosElectronicoAnexoByRegistro(Long idLibroOrigen, Long idRegistroOrigen
+			,Long idLibroDestino, Long idRegistroDestino, UsuarioVO usuarioRegistro);
+
+	
 }

@@ -2,15 +2,16 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="IECISA" />
 <title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.sgm.rpadmin.unidades.distribucion.seleccionar.destino"/></title>
-<link href="<html:rewrite page="/css/estilos.css"/>" rel="stylesheet" type="text/css" />
-<link href="css/adminApp.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/adminApp.css" rel="stylesheet" type="text/css" />
 <script language="Javascript">
 	var skipcycle = false;
 	var idSelect;
@@ -159,7 +160,7 @@
 														<tr>
 															<td><bean:message key="cargando"/></td>
 															<td align="center">
-																<img src="<html:rewrite page="/img/loading.gif"/>" />
+																<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/loading.gif" />
 															</td>
 														</tr>
 													</table>
@@ -197,7 +198,7 @@
 														<tr>
 															<td><bean:message key="cargando"/></td>
 															<td align="center">
-																<img src="<html:rewrite page="/img/loading.gif"/>" />
+																<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/loading.gif" />
 															</td>
 														</tr>
 													</table>
@@ -219,7 +220,7 @@
 										</tr>
 									</table>
 								</td>
-								<td width="20"><img src='<html:rewrite page="/img/dot.gif"/>' width="20" height="1" /></td>
+								<td width="20"><img src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif' width="20" height="1" /></td>
 								<td valign="top">
 									<table cellpadding="0" cellspacing="0" border="0" width="260">
 										<tr>
@@ -237,7 +238,7 @@
 														<tr>
 															<td><bean:message key="cargando"/></td>
 															<td align="center">
-																<img src="<html:rewrite page="/img/loading.gif"/>" />
+																<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/loading.gif" />
 															</td>
 														</tr>
 													</table>

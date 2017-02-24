@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="officeDaoImpl" name="officeDao"
+		class="es.msssi.dir3.api.dao.impl.OfficeDaoImpl">
+		<property name="sqlMapClient" ref="dir3_sqlMapClient" />
+	</bean>
+
+	<bean id="unitDaoImpl" name="unitDao"
+		class="es.msssi.dir3.api.dao.impl.UnitDaoImpl">
+		<property name="sqlMapClient" ref="dir3_sqlMapClient" />
+	</bean>
+
+	<bean id="updateStatusDaoImpl" name="updateStatusDao"
+		class="es.msssi.dir3.api.dao.impl.UpdateStatusDaoImpl">
+		<property name="sqlMapClient" ref="dir3_sqlMapClient" />
+	</bean>
+	<bean id="addressDaoImpl" name="addressDao"
+		class="es.msssi.dir3.api.dao.impl.AddressDaoImpl">
+		<property name="sqlMapClient" ref="dir3_sqlMapClient" />
+	</bean>
+	<bean id="contactOFIDaoImpl" name="contactOFIDao"
+		class="es.msssi.dir3.api.dao.impl.ContactOFIDaoImpl">
+		<property name="sqlMapClient" ref="dir3_sqlMapClient" />
+	</bean>
+	<bean id="contactUODaoImpl" name="contactUODao"
+		class="es.msssi.dir3.api.dao.impl.ContactUODaoImpl">
+		<property name="sqlMapClient" ref="dir3_sqlMapClient" />
+	</bean>
+	<bean id="serviceDaoImpl" name="serviceDao"
+		class="es.msssi.dir3.api.dao.impl.ServiceDaoImpl">
+		<property name="sqlMapClient" ref="dir3_sqlMapClient" />
+	</bean>
+	<bean id="historyUODaoImpl" name="historyUODao"
+		class="es.msssi.dir3.api.dao.impl.HistoryUODaoImpl">
+		<property name="sqlMapClient" ref="dir3_sqlMapClient" />
+	</bean>
+	<bean id="historyOFDaoImpl" name="historyOFDao"
+		class="es.msssi.dir3.api.dao.impl.HistoryOFDaoImpl">
+		<property name="sqlMapClient" ref="dir3_sqlMapClient" />
+	</bean>
+	<bean id="relationshipOFIUOORGDaoImpl" name="relationshipOFIUOORGDao"
+		class="es.msssi.dir3.api.dao.impl.RelationshipOFIUOORGDaoImpl">
+		<property name="sqlMapClient" ref="dir3_sqlMapClient" />
+	</bean>
+	<bean id="relationshipOFIUODaoSIRImpl" name="relationshipOFIUOSIRDao"
+		class="es.msssi.dir3.api.dao.impl.RelationshipOFIUOSIRDaoImpl">
+		<property name="sqlMapClient" ref="dir3_sqlMapClient" />
+	</bean>
+	<bean id="dir3_sqlMapClientImpl" name="dir3_sqlMapClient"
+		class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation"
+			value="classpath:sqlmaps/dir3/dir3-sqlmap-config.xml" />
+	</bean>
+
+</beans>

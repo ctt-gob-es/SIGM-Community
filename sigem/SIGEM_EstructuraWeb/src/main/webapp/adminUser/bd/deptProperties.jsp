@@ -2,7 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%@ page import="ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion" %>
 <%@ page import="ieci.tecdoc.sgm.core.services.gestion_administracion.ConstantesGestionUsuariosAdministracion" %>
 
@@ -16,11 +17,11 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 <html>
 <head>
 <ieci:baseInvesDoc/>
-<link rel="stylesheet" rev="stylesheet" href="include/css/tabs.css">
-<link rel="stylesheet" rev="stylesheet" href="include/css/estilos.css">
-<script src="include/js/docobj.js" type="text/javascript"></script>
-<script src="include/js/tabs.js" type="text/javascript"></script>
-<script src="include/js/validations.js" type="text/javascript"></script>
+<link rel="stylesheet" rev="stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/tabs.css">
+<link rel="stylesheet" rev="stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css">
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/docobj.js" type="text/javascript"></script>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/tabs.js" type="text/javascript"></script>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/validations.js" type="text/javascript"></script>
 
 <script type="text/javascript" >
 	function cancel(){
@@ -45,10 +46,10 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 					<h1><bean:message key="message.departamento.propiedades.titulo"/></h1>
 					<div class="submenu3">
            				<ul>
-        					<li class="submen1on" id="tab1"><img src="include/images/subme3_on.gif" />
+        					<li class="submen1on" id="tab1"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on.gif" />
         						<label id="tabmiddle1"><bean:message key="message.comun.pestana.general"/></label>
         					</li>
-        					<img src="include/images/subme3_on_0.gif">
+        					<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on_0.gif">
 						</ul>
 					</div>					
 					<div class="cuadro" style="height: 170px;">

@@ -50,7 +50,7 @@ public class EstructuraOrganizativaLdapManager {
 		try {
 			
 			  dbConn.open(DBSessionManager.getSession(entidad));
-		      CfgMdoConfig cfgLdapConfig=new CfgMdoConfig();
+			  CfgMdoConfig cfgLdapConfig=new CfgMdoConfig();
 		      CfgLdapConfig ldapCfg = cfgLdapConfig.loadDbLdapCfg(dbConn);	
 			  
 	          if( ldapCfg.getEngine() == CfgDefs.LDAP_ENGINE_NONE) {

@@ -86,6 +86,7 @@
 				scope="request"
 				validate="false">
 				<forward name="success" path="/jsp/Desconexion.jsp"/>
+				<forward name="sede" path="/jsp/RedireccionSede.jsp"/>
 		</action>
 		<action path="/almacenarDatosArchivo"
 				type="ieci.tecdoc.sgm.backoffice.action.AlmacenarDatosArchivoAction"

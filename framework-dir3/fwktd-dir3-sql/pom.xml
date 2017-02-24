@@ -5,7 +5,7 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dir3</groupId>
-		<artifactId>fwktd-dir3</artifactId>
+		<artifactId>fwktd-dir3-parent</artifactId>
 		<version>1.0</version>
 	</parent>
 
@@ -93,7 +93,7 @@
 				<dependencyDriverArtifactId>postgresql</dependencyDriverArtifactId>
 				<dependencyDriverVersionId>${postgresql.version}</dependencyDriverVersionId>
 				<driverJdbc>org.postgresql.Driver</driverJdbc>
-				<urlJdbc>jdbc:postgresql://10.228.75.106:5432/sigem3_reg</urlJdbc>
+				<urlJdbc>jdbc:postgresql://127.0.0.1:5432/sigem3_reg</urlJdbc>
 				<usernameJdbc>postgres</usernameJdbc>
 				<passwordJdbc>postgres</passwordJdbc>
 				<baseDirSql>${basedir}/src/main/sql/postgresql</baseDirSql>
@@ -108,7 +108,7 @@
 				<dependencyDriverArtifactId>jtds</dependencyDriverArtifactId>
 				<dependencyDriverVersionId>${sqlserver.version}</dependencyDriverVersionId>
 				<driverJdbc>net.sourceforge.jtds.jdbc.Driver</driverJdbc>
-				<!-- <urlJdbc>jdbc:jtds:sqlserver://10.228.75.75.corp:1433/FWKTDDIR3_0_7_DESA</urlJdbc>-->
+				<!-- <urlJdbc>jdbc:jtds:sqlserver://127.0.0.1:1433/FWKTDDIR3_0_7_DESA</urlJdbc>-->
 				<urlJdbc>jdbc:jtds:sqlserver://localhost:1433/FWKTDDIR3_0_7_DESA</urlJdbc>
 				<usernameJdbc>FWKTDDIR3_0_7_DESA</usernameJdbc>
 				<passwordJdbc>FWKTDDIR3_0_7_DESA</passwordJdbc>

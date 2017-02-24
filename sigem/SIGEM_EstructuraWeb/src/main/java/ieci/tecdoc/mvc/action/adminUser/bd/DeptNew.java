@@ -90,7 +90,7 @@ public class DeptNew extends BaseAction {
         
         dept.setName(form.getNombre());
         dept.setDescription(form.getDescripcion());
-        
+        dept.setIdorg(form.getIdorg());
         String managerId = form.getManagerId();
         dept.setManagerId(Integer.parseInt(managerId));
 

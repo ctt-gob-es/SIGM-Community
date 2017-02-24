@@ -27,8 +27,9 @@ public abstract class IsicresBaseHibernateDAOImpl {
 
 	public  Session getSession() throws HibernateException{
 		Session result=null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 	    String entity=MultiEntityContextHolder.getEntity();
-		result=HibernateUtil.currentSession(entity);
+		result=hibernateUtil.currentSession(entity);
 		return result;
 	  }
 	
@@ -37,11 +38,12 @@ public abstract class IsicresBaseHibernateDAOImpl {
 	        if(session != null)
 	        {
 	            logger.debug("Closing Hibernate Session");
+	            HibernateUtil hibernateUtil = new HibernateUtil();
 	            try
 	            {
 	                session.close();
 	                String entity=MultiEntityContextHolder.getEntity();
-	                HibernateUtil.closeSession(entity);
+	                hibernateUtil.closeSession(entity);
 	            }
 	            catch(HibernateException ex)
 	            {

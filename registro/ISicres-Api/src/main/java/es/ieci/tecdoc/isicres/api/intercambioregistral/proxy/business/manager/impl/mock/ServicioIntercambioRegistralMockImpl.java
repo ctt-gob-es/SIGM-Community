@@ -495,5 +495,44 @@ public class ServicioIntercambioRegistralMockImpl implements ServicioIntercambio
 		logger.warn("ESTÁ UTILIZANDO UNA IMPLEMENTACIÓN MOCK DEL SERVICIO: ServicioIntercambioRegistral");
 
 	}
+	public List<TrazabilidadVO> getHistoricoAsientoRegistralCode(String arg0, String arg1) {
+		logger.warn("ESTÁ UTILIZANDO UNA IMPLEMENTACIÓN MOCK DEL SERVICIO: ServicioIntercambioRegistral");
 
+		TrazabilidadVO traza1 = new TrazabilidadVO();
+		traza1.setCodigo("1");
+		traza1.setCodigoEntidadRegistralDestino("002");
+		traza1.setCodigoEntidadRegistralOrigen("001");
+		traza1.setCodigoError("0000");
+		traza1.setCodigoErrorServicio("00001");
+		traza1.setCodigoEstado("000");
+		traza1.setCodigoIntercambio(arg0);
+		traza1.setCodigoNodo("00");
+		traza1.setCodigoUnidadTramitacionDestino("");
+		traza1.setDescripcion("Descripción");
+		traza1.setDescripcionEntidadRegistralDestino("entidad registral destino");
+		traza1.setDescripcionEntidadRegistralOrigen("Entidad Regitral Origen");
+		traza1.setDescripcionErrorAlternativa("Error alternativa");
+		traza1.setDescripcionErrorServicio("Error del servicio");
+		traza1.setDescripcionUnidadTramitacionDestino("Unidad Tramitación Destino");
+		traza1.setDescripcionUnidadTramitacionOrigen("Origen");
+		traza1.setFechaAlta(new Date());
+		traza1.setFechaModificacion(new Date());
+		traza1.setMotivoRechazo("Motivo del rechazo");
+		traza1.setNombreFicheroIntercambio("fichero.xml");
+		traza1.setRegistro(true);
+
+
+		List<TrazabilidadVO> list = new LinkedList<TrazabilidadVO>();
+		list.add(traza1);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("getHistoricoAsientoRegistral(String) - end");
+		}
+		return list;
+	}
+
+	public EstadoAsientoRegistraVO getEstadoAsientoRegistralByCode(String code) {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
 }

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DestinationRelationsReport" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="40" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="205"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table" pattern="">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+			<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="table_Header" mode="Opaque" backcolor="#C0C0C0" fill="Solid">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+			<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+			<rightPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<subDataset name="RegistersTableDataSet">
+		<queryString language="xPath">
+			<![CDATA[/INFORME_RP/FLD7/REGISTRO]]>
+		</queryString>
+		<field name="FLD1" class="java.lang.String">
+			<fieldDescription><![CDATA[FLD1]]></fieldDescription>
+		</field>
+		<field name="FLD2" class="java.lang.String">
+			<fieldDescription><![CDATA[FLD2]]></fieldDescription>
+		</field>
+		<field name="FLD9" class="java.lang.String">
+			<fieldDescription><![CDATA[FLD9]]></fieldDescription>
+		</field>
+		<field name="FLD17" class="java.lang.String">
+			<fieldDescription><![CDATA[FLD17]]></fieldDescription>
+		</field>
+	</subDataset>
+	<queryString language="xPath">
+		<![CDATA[/INFORME_RP/FLD7]]>
+	</queryString>
+	<field name="FLD7_TEXT" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD7_TEXT]]></fieldDescription>
+	</field>
+	<field name="FLD7_ADDRESS" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD7_ADDRESS]]></fieldDescription>
+	</field>
+	<field name="FLD5_TEXT" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD5_TEXT]]></fieldDescription>
+	</field>
+	<field name="PROCEEDING" class="java.lang.String">
+		<fieldDescription><![CDATA[PROCEEDING]]></fieldDescription>
+	</field>
+	<field name="TOTAL_REGISTROS" class="java.lang.String">
+		<fieldDescription><![CDATA[TOTAL_REGISTROS]]></fieldDescription>
+	</field>
+	<field name="FLD7_FATHERNAME" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD7_FATHERNAME]]></fieldDescription>
+	</field>
+	<variable name="ORGANISM_AND_FATHER_NAME" class="java.lang.String" resetType="None">
+		<variableExpression><![CDATA[($F{FLD7_TEXT} == null)?"":$F{FLD7_TEXT} +( ($F{FLD7_FATHERNAME} != null)? " (" + $F{FLD7_FATHERNAME} + ")":"")]]></variableExpression>
+		<initialValueExpression><![CDATA[($F{FLD7_TEXT} == null)?"":$F{FLD7_TEXT} +( ($F{FLD7_FATHERNAME} != null)? " (" + $F{FLD7_FATHERNAME} + ")":"")]]></initialValueExpression>
+	</variable>
+	<pageHeader>
+		<band height="140" splitType="Stretch">
+			<rectangle>
+				<reportElement x="352" y="0" width="430" height="73" backcolor="#F0F0F0"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="365" y="22" width="47" height="14"/>
+				<textElement>
+					<font size="11" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Oficina:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="365" y="48" width="90" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+					<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="true" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Fecha petición:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm:ss" isBlankWhenNull="false">
+				<reportElement x="455" y="48" width="132" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="602" y="48" width="60" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+					<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="true" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Página:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="662" y="48" width="48" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="187" height="69"/>
+				<imageExpression class="java.lang.String"><![CDATA["images/logoMinisterio.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="53" width="192" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="15" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[REGISTRO DE ENTRADAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="16" y="90" width="94" height="14" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$V{ORGANISM_AND_FATHER_NAME} != null && !"".equals($V{ORGANISM_AND_FATHER_NAME})]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+					<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="true" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Órgano origen:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="16" y="121" width="94" height="14" forecolor="#000000" backcolor="#FFFFFF">
+					<printWhenExpression><![CDATA[$F{FLD7_ADDRESS} != null && !"".equals($F{FLD7_ADDRESS})]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+					<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="true" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Dirección:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="412" y="10" width="298" height="26"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD5_TEXT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Page" pattern="" isBlankWhenNull="true">
+				<reportElement x="110" y="73" width="672" height="31"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{ORGANISM_AND_FATHER_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Page" isBlankWhenNull="true">
+				<reportElement x="110" y="104" width="672" height="31"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD7_ADDRESS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="278" splitType="Stretch">
+			<componentElement>
+				<reportElement key="RegistersTable" style="table" stretchType="RelativeToBandHeight" x="0" y="0" width="782" height="278"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="RegistersTableDataSet">
+						<dataSourceExpression><![CDATA[$P{REPORT_DATA_SOURCE}.subDataSource("/FLD7/REGISTRO")]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="100">
+						<jr:columnHeader style="table_Header" height="15" rowSpan="1">
+							<staticText>
+								<reportElement style="table_Header" x="7" y="0" width="93" height="15"/>
+								<textElement>
+									<font size="10" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Núm. Registro]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table" height="60" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="7" y="0" width="93" height="60"/>
+								<textElement/>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD1}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="111">
+						<jr:columnHeader style="table_Header" height="15" rowSpan="1">
+							<staticText>
+								<reportElement x="8" y="0" width="103" height="15"/>
+								<textElement>
+									<font size="10" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Fecha Registro]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table" height="60" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="8" y="0" width="103" height="60"/>
+								<textElement/>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD2}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="222">
+						<jr:columnHeader style="table_Header" height="15" rowSpan="1">
+							<staticText>
+								<reportElement x="8" y="0" width="214" height="15"/>
+								<textElement>
+									<font size="10" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Interesados]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table" height="60" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="8" y="0" width="214" height="60"/>
+								<textElement/>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD9}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="347">
+						<jr:columnHeader style="table_Header" height="15" rowSpan="1">
+							<staticText>
+								<reportElement x="7" y="0" width="340" height="15"/>
+								<textElement>
+									<font size="10" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Resumen]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table" height="60" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="7" y="0" width="340" height="60"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD17}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="137" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="27" width="94" height="15">
+					<printWhenExpression><![CDATA[$F{PROCEEDING} != null && !"".equals($F{PROCEEDING})]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Diligencias:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" evaluationTime="Page" isBlankWhenNull="true">
+				<reportElement x="741" y="0" width="41" height="27"/>
+				<textElement verticalAlignment="Bottom">
+					<font isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TOTAL_REGISTROS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="664" y="13" width="77" height="14"/>
+				<textElement>
+					<font size="10" isBold="false" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Total registros:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="582" y="123" width="200" height="14"/>
+				<textElement textAlignment="Right">
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Paseo del Prado, 18-20. 28014 Madrid]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="42" width="782" height="48"/>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PROCEEDING}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

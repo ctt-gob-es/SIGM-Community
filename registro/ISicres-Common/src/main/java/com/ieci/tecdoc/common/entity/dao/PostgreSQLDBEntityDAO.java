@@ -60,7 +60,7 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 			String linkedColumnName[], String entidad) throws SQLException {
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		StringBuffer query = new StringBuffer();
 		query.append("UPDATE " + tableName + " AUX_TABLE SET ");
 		for (int i = 0; i < newColumnName.length; i++) {
@@ -77,7 +77,7 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 		}
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate(query.toString());
 		} catch (SQLException e) {
@@ -85,8 +85,8 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 		} catch (Throwable e) {
 			log.warn("Error ejecutando [" + query + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 			String newColumnName[], String entidad) throws SQLException {
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		StringBuffer query = new StringBuffer();
 		query.append("ALTER TABLE " + tableName + " ADD (");
 		for (int i = 0; i < newColumnName.length; i++) {
@@ -112,7 +112,7 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 		query.append(")");
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate(query.toString());
 		} catch (SQLException e) {
@@ -120,8 +120,8 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 		} catch (Throwable e) {
 			log.warn("Error ejecutando [" + query.toString() + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -134,9 +134,9 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 	public void dropTableOrView(String tableName, String entidad) {
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate("DROP TABLE " + tableName);
 
@@ -147,8 +147,8 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 			log.warn("Error ejecutando [DROP TABLE " + tableName + "]."
 					+ e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -478,9 +478,9 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 		ResultSet resultSet = null;
 		Connection connection = null;
 		int result = 0;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT NEXTVAL('SCR_SEQCNT')");
 
@@ -501,9 +501,9 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 			throw new SQLException(
 					"Resulta imposible obtener el identificador de la secuencia [SCR_SEQCNT]");
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return result;
@@ -566,21 +566,21 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 		ResultSet resultSet = null;
 		Connection connection = null;
 		int result = 0;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection
 					.prepareStatement("UPDATE SCR_CONTADOR SET CONTADOR=CONTADOR+1 WHERE TABLAID=?");
 			statement.setString(1, tableName);
 			int affected = statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			if (affected == 0) {
 				statement = connection
 						.prepareStatement("INSERT INTO SCR_CONTADOR(TABLAID,CONTADOR) VALUES (?,1)");
 				statement.setString(1, tableName);
 				affected = statement.executeUpdate();
-				BBDDUtils.close(statement);
+				bbddUtils.close(statement);
 			}
 
 			statement = connection
@@ -591,7 +591,7 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 			if (resultSet.next()) {
 				result = resultSet.getInt(1);
 			}
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 		} catch (SQLException e) {
 			log.warn("Resulta imposible obtener el identificador para ["
 					+ tableName + "]", e);
@@ -603,9 +603,9 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 					"Resulta imposible obtener el identificador para ["
 							+ tableName + "]");
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return result;

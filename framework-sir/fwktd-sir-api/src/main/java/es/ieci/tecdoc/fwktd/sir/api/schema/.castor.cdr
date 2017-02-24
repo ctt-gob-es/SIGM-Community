@@ -1,0 +1,10 @@
+#Fri Aug 07 16:06:06 CEST 2015
+es.ieci.tecdoc.fwktd.sir.api.schema.De_Mensaje=es.ieci.tecdoc.fwktd.sir.api.schema.descriptors.De_MensajeDescriptor
+es.ieci.tecdoc.fwktd.sir.api.schema.Fichero_Intercambio_SICRES_3=es.ieci.tecdoc.fwktd.sir.api.schema.descriptors.Fichero_Intercambio_SICRES_3Descriptor
+es.ieci.tecdoc.fwktd.sir.api.schema.De_Internos_Control=es.ieci.tecdoc.fwktd.sir.api.schema.descriptors.De_Internos_ControlDescriptor
+es.ieci.tecdoc.fwktd.sir.api.schema.De_Interesado=es.ieci.tecdoc.fwktd.sir.api.schema.descriptors.De_InteresadoDescriptor
+es.ieci.tecdoc.fwktd.sir.api.schema.De_Destino=es.ieci.tecdoc.fwktd.sir.api.schema.descriptors.De_DestinoDescriptor
+es.ieci.tecdoc.fwktd.sir.api.schema.De_Asunto=es.ieci.tecdoc.fwktd.sir.api.schema.descriptors.De_AsuntoDescriptor
+es.ieci.tecdoc.fwktd.sir.api.schema.De_Anexo=es.ieci.tecdoc.fwktd.sir.api.schema.descriptors.De_AnexoDescriptor
+es.ieci.tecdoc.fwktd.sir.api.schema.De_Formulario_Generico=es.ieci.tecdoc.fwktd.sir.api.schema.descriptors.De_Formulario_GenericoDescriptor
+es.ieci.tecdoc.fwktd.sir.api.schema.De_Origen_o_Remitente=es.ieci.tecdoc.fwktd.sir.api.schema.descriptors.De_Origen_o_RemitenteDescriptor

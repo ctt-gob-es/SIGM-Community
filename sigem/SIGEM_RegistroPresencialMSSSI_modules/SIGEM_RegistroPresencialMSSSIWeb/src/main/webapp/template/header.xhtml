@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xml:lang="es" lang="es">
+    <body>
+		    <ui:composition>
+		    <div id="cabecera">
+				<div id="escudo"><a title="Ministerio de Sanidad, Servicios Sociales e Igualdad - Gobierno de Espa&ntilde;a" href="#"><img alt="Ministerio de Sanidad, Servicios Sociales e Igualdad - Gobierno de Espa&ntilde;a" src="#{webParam.entryParameters['URLRoot']}/img/logo_ministerio.jpg"/></a></div>
+				<div id="titulo"><h1>Aplicación de Registro</h1></div>
+			</div>
+			<h:form>
+				<!-- Menu horizontal -->
+				<div id="menuhorizontal">
+					<div class="izquierdo">
+						<ul>
+							<li><h:outputText value="#{J_SESSIONINF.userName}" /></li>
+								<ui:fragment  rendered="${not empty J_SESSIONINF.officeCode}" >
+									<li><h:outputText value="#{J_SESSIONINF.officeName}" />
+									(<h:commandLink value="#{msgs.labelCambiar}" actionListener="#{changeOfficeAction.change }" action="goChangeOfficeForm" immediate="true" />)
+									</li>
+								</ui:fragment>
+								<ui:fragment  rendered="${empty J_SESSIONINF.officeCode and not empty J_SESSIONINF.departamentName}" >
+									<li><h:outputText value="#{J_SESSIONINF.departamentName}" />
+									</li>
+								</ui:fragment>
+						</ul>
+						</div>
+						<div class="derecho">
+							<ul>
+								<li><h:outputLink target="ayuda" value="#{webParam.entryParameters['URLRoot']}/ayuda/ManualUsuario.pdf" styleClass="ayuda"><h:outputText value="#{msgs.labelAyuda}"/></h:outputLink></li>
+								<li><h:commandLink value="#{msgs.labelSalir}" immediate="true" styleClass="salir" actionListener="#{logoutAction.logOut }"  /></li>
+							</ul>
+						</div>
+				</div>
+			</h:form>
+			<!-- Fin menu horizontal -->
+			<!-- Migas -->
+			<div id="migas">
+				<span>Ud. está aquí: </span>
+				<ui:insert name="breadcrumb" >
+				</ui:insert>
+			</div>
+			<!-- Fin migas -->
+		    </ui:composition>
+    </body>
+</html>

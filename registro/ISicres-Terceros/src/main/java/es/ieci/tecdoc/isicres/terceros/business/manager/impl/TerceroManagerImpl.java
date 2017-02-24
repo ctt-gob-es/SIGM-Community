@@ -31,8 +31,8 @@ public class TerceroManagerImpl extends
 	 */
 	@Override
 	public TerceroValidadoVO save(TerceroValidadoVO anEntity) {
-		TerceroValidadoVO tercero = super.save(anEntity);
-
+	    TerceroValidadoVO tercero = super.save(anEntity);
+		
 		for (BaseDireccionVO direccion : tercero.getDirecciones()) {
 			direccion.setTercero(tercero);
 			getDireccionManager().save(direccion);

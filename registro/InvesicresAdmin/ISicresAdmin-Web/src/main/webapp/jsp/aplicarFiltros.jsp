@@ -7,19 +7,20 @@
 <%@ page import="es.ieci.tecdoc.isicres.admin.core.services.ConstantesGestionUsuariosAdministracion" %>
 <%@ page import="es.ieci.tecdoc.isicres.admin.beans.Filtro" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="IECISA" />
 <title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.sgm.rpadmin.libros.titulo"/></title>
-<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-<link href="css/adminApp.css" rel="stylesheet" type="text/css" />
-<link href="css/calendar-win2k-1.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/common.js"></script>
-<script type="text/javascript" src="js/calendar.js"></script>
-<script type="text/javascript" src="js/calendar-es.js"></script>
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/adminApp.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/calendar-win2k-1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/calendar.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/calendar-es.js"></script>
 <script>
 
 	var urlSessionExpired = '<%=AutenticacionAdministracion.obtenerUrlLogin(request, ConstantesGestionUsuariosAdministracion.APLICACION_REGISTRO) %>';
@@ -351,7 +352,7 @@
 										 			<html-el:text property="filtros[${fila_rowNum-1}].valor" styleClass="textInput" style="width:150px" styleId="filtros_valor_${fila_rowNum-1}"/>
 										 		</logic:equal>
 										 		<logic:equal name='<%=_tipoCampo%>' value="B">
-										 			<html-el:text property="filtros[${fila_rowNum-1}].valor" styleClass="textInput" style="width:128px" maxlength="10" styleId="filtros_valor_${fila_rowNum-1}" readonly="true"/><img src='<html:rewrite page="/img/img_calendar.gif" />' border="0" onclick="return showCalendar('filtros_valor_<c:out value="${fila_rowNum-1}"/>', '%d/%m/%Y', true);" style="cursor:hand" hspace="3" />
+										 			<html-el:text property="filtros[${fila_rowNum-1}].valor" styleClass="textInput" style="width:128px" maxlength="10" styleId="filtros_valor_${fila_rowNum-1}" readonly="true"/><img src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/img_calendar.gif' border="0" onclick="return showCalendar('filtros_valor_<c:out value="${fila_rowNum-1}"/>', '%d/%m/%Y', true);" style="cursor:hand" hspace="3" />
 										 		</logic:equal>
 										 		<logic:equal name='<%=_tipoCampo%>' value="C">
 										 				<html-el:select property="filtros[${fila_rowNum-1}].valor" styleClass="textInput" style="width:150px" styleId="filtros_valor_${fila_rowNum-1}" >
@@ -362,21 +363,21 @@
 										 			<table cellpadding="0" cellspacing="0" border="0" >
 										 				<tr>
 										 					<td><html-el:text property="filtros[${fila_rowNum-1}].valor" styleClass="textInput" style="width:130px" styleId="filtros_valor_${fila_rowNum-1}"/></td>
-										 					<td><a href="#" onclick="checquearSessionBuscarOficinas('<html-el:rewrite page="/listadoOficinas.do?fila=${fila_rowNum-1}"/>')"><img src="<html:rewrite page="/img/ico_buscar.gif"/>" border="0"/></a></td>
+										 					<td><a href="#" onclick="checquearSessionBuscarOficinas('<html-el:rewrite page="/listadoOficinas.do?fila=${fila_rowNum-1}"/>')"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/ico_buscar.gif" border="0"/></a></td>
 										 				</tr>
 										 			</table>
 										 		</logic:equal>
 										 		<logic:equal name='<%=_tipoCampo%>' value="E">
 										 			<tr>
 										 					<td><html-el:text property="filtros[${fila_rowNum-1}].valor" styleClass="textInput" style="width:130px" styleId="filtros_valor_${fila_rowNum-1}"/></td>
-										 					<td><a href="#" onclick="checquearSessionBuscarUnidades('<html-el:rewrite page="/jsp/buscarUnidadesPopup.jsp?fila=${fila_rowNum-1}"/>')"><img src="<html:rewrite page="/img/ico_buscar.gif"/>" border="0"/></a></td>
+										 					<td><a href="#" onclick="checquearSessionBuscarUnidades('<html-el:rewrite page="/jsp/buscarUnidadesPopup.jsp?fila=${fila_rowNum-1}"/>')"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/ico_buscar.gif" border="0"/></a></td>
 										 				</tr>
 										 		</logic:equal>
 										 		<logic:equal name='<%=_tipoCampo%>' value="F">
 										 			<table cellpadding="0" cellspacing="0" border="0" >
 										 				<tr>
 										 					<td><html-el:text property="filtros[${fila_rowNum-1}].valor" styleClass="textInput" style="width:130px" styleId="filtros_valor_${fila_rowNum-1}"/></td>
-										 					<td><a href="#" onclick="checquearSessionBuscarTipoAsunto('<html-el:rewrite page="/listadoAsuntos.do?fila=${fila_rowNum-1}"/>')"><img src="<html:rewrite page="/img/ico_buscar.gif"/>" border="0"/></a></td>
+										 					<td><a href="#" onclick="checquearSessionBuscarTipoAsunto('<html-el:rewrite page="/listadoAsuntos.do?fila=${fila_rowNum-1}"/>')"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/ico_buscar.gif" border="0"/></a></td>
 										 				</tr>
 										 			</table>
 										 		</logic:equal>
@@ -406,17 +407,17 @@
 
 											<logic:equal name="filtrosSize" value='<%=_rowNum%>'>
 												<logic:equal name="filtrosSize" value="1">
-													<td onclick="javascript:anadirFiltro(<c:out value="${fila_rowNum-1}"/>)" style="cursor:hand"><img src="<html:rewrite page="/img/masFiltro.gif"/>" hspace="3" alt='<bean:message key="ieci.tecdoc.sgm.rpadmin.libros.anadir.filtro" />'/></td>
+													<td onclick="javascript:anadirFiltro(<c:out value="${fila_rowNum-1}"/>)" style="cursor:hand"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/masFiltro.gif" hspace="3" alt='<bean:message key="ieci.tecdoc.sgm.rpadmin.libros.anadir.filtro" />'/></td>
 													<td width="4">&nbsp;</td>
 												</logic:equal>
 												<logic:notEqual name="filtrosSize" value="1">
-													<td onclick="javascript:anadirFiltro(<c:out value="${fila_rowNum-1}"/>)" style="cursor:hand"><img src="<html:rewrite page="/img/masFiltro.gif"/>" hspace="3" alt='<bean:message key="ieci.tecdoc.sgm.rpadmin.libros.anadir.filtro" />'/></td>
+													<td onclick="javascript:anadirFiltro(<c:out value="${fila_rowNum-1}"/>)" style="cursor:hand"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/masFiltro.gif" hspace="3" alt='<bean:message key="ieci.tecdoc.sgm.rpadmin.libros.anadir.filtro" />'/></td>
 													<td width="4">&nbsp;</td>
-													<td onclick="javascript:eliminarFiltro(<c:out value="${fila_rowNum-1}"/>)" style="cursor:hand"><img src="<html:rewrite page="/img/menosFiltro.gif"/>" hspace="3" alt='<bean:message key="ieci.tecdoc.sgm.rpadmin.libros.eliminar.filtro" />'/></td>
+													<td onclick="javascript:eliminarFiltro(<c:out value="${fila_rowNum-1}"/>)" style="cursor:hand"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/menosFiltro.gif" hspace="3" alt='<bean:message key="ieci.tecdoc.sgm.rpadmin.libros.eliminar.filtro" />'/></td>
 												</logic:notEqual>
 											</logic:equal>
 											<logic:notEqual name="filtrosSize" value='<%=_rowNum%>'>
-												<td onclick="javascript:eliminarFiltro(<c:out value="${fila_rowNum-1}"/>)" style="cursor:hand"><img src="<html:rewrite page="/img/menosFiltro.gif"/>" hspace="3" alt='<bean:message key="ieci.tecdoc.sgm.rpadmin.libros.eliminar.filtro" />'/></td>
+												<td onclick="javascript:eliminarFiltro(<c:out value="${fila_rowNum-1}"/>)" style="cursor:hand"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/menosFiltro.gif" hspace="3" alt='<bean:message key="ieci.tecdoc.sgm.rpadmin.libros.eliminar.filtro" />'/></td>
 											</logic:notEqual>
 										</tr>
 									</table>

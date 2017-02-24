@@ -57,7 +57,7 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 			String linkedColumnName[], String entidad) throws SQLException {
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		StringBuffer query = new StringBuffer();
 		query.append("UPDATE " + tableName + " AUX_TABLE SET ");
 		for (int i = 0; i < newColumnName.length; i++) {
@@ -74,7 +74,7 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 		}
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate(query.toString());
 		} catch (SQLException e) {
@@ -82,8 +82,8 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 		} catch (Throwable e) {
 			log.warn("Error ejecutando [" + query + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -97,7 +97,7 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 			String newColumnName[], String entidad) throws SQLException {
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		StringBuffer query = new StringBuffer();
 		query.append("ALTER TABLE " + tableName + " ADD ");
 		int i = 0;
@@ -109,7 +109,7 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 		}
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate(query.toString());
 		} catch (SQLException e) {
@@ -117,8 +117,8 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 		} catch (Throwable e) {
 			log.warn("Error ejecutando [" + query + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -131,9 +131,9 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 	public void dropTableOrView(String tableName, String entidad) {
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate("DROP VIEW " + tableName);
 		} catch (SQLException e) {
@@ -143,8 +143,8 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 			log.warn("Error ejecutando [DROP VIEW " + tableName + "]."
 					+ e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -525,15 +525,15 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 		ResultSet resultSet = null;
 		Connection connection = null;
 		int result = 0;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 
 			statement = connection
 					.prepareStatement("INSERT INTO SCR_SEQCNT(USERID) VALUES (?)");
 			statement.setInt(1, userId);
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			statement = connection
 					.prepareStatement("SELECT MAX(ID) FROM SCR_SEQCNT WHERE USERID=?");
@@ -543,7 +543,7 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 			if (resultSet.next()) {
 				result = resultSet.getInt(1);
 			}
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 		} catch (SQLException e) {
 			log.warn("Resulta imposible obtener el identificador para ["
 					+ userId + "]", e);
@@ -555,9 +555,9 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 					"Resulta imposible obtener el identificador para ["
 							+ userId + "]");
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return result;
@@ -609,9 +609,9 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 	public void deleteIdsGenerationTable(Integer userId, String entidad) {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(DELETE_SCR_SEQCNT);
 			statement.setInt(1, userId.intValue());
 			statement.executeUpdate();
@@ -627,8 +627,8 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 					"Resulta imposible vaciar la tabla de generación de ids para el usuario ["
 							+ DELETE_SCR_SEQCNT + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 	}

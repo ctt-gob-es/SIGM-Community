@@ -24,22 +24,22 @@ public class Constantes {
     public static final byte DIRECTORY = 1;
     public static final byte ARCHIVE = 2;
     
-    public static final String TOKEN_ICON_PERSON_BD= "include/images/userBd.gif"; 
-    public static final String TOKEN_ICON_GROUP_BD= "include/images/groupBd.gif";
-    public static final String TOKEN_ICON_DEPARTAMENTS= "include/images/departament.gif";
+    public static final String TOKEN_ICON_PERSON_BD= "/StaticEstructuraWeb/resources/include/images/userBd.gif"; 
+    public static final String TOKEN_ICON_GROUP_BD= "/StaticEstructuraWeb/resources/include/images/groupBd.gif";
+    public static final String TOKEN_ICON_DEPARTAMENTS= "/StaticEstructuraWeb/resources/include/images/departament.gif";
     
-    public static final String TOKEN_ICON_PERSON_LDAP ="include/images/person.gif";
-    public static final String TOKEN_ICON_GROUP_LDAP ="include/images/group.gif";
-    public static final String TOKEN_ICON_ORGANIZATIONAL_UNIT="include/images/ou.gif";
-    public static final String TOKEN_ICON_OTHER="include/images/other.gif";
+    public static final String TOKEN_ICON_PERSON_LDAP ="/StaticEstructuraWeb/resources/include/images/person.gif";
+    public static final String TOKEN_ICON_GROUP_LDAP ="/StaticEstructuraWeb/resources/include/images/group.gif";
+    public static final String TOKEN_ICON_ORGANIZATIONAL_UNIT="/StaticEstructuraWeb/resources/include/images/ou.gif";
+    public static final String TOKEN_ICON_OTHER="/StaticEstructuraWeb/resources/include/images/other.gif";
 
-    public static final String TOKEN_ICON_REPOSITORIES = "include/images/repositorio.gif";
-    public static final String TOKEN_ICON_LIST = "include/images/lista.gif";
-    public static final String TOKEN_ICON_VOLUME = "include/images/volumen.gif";
+    public static final String TOKEN_ICON_REPOSITORIES = "/StaticEstructuraWeb/resources/include/images/repositorio.gif";
+    public static final String TOKEN_ICON_LIST = "/StaticEstructuraWeb/resources/include/images/lista.gif";
+    public static final String TOKEN_ICON_VOLUME = "/StaticEstructuraWeb/resources/include/images/volumen.gif";
     
-    public static final String TOKEN_ICON_ARCH_ROOT= "include/images/ArchRoot.gif";
-    public static final String TOKEN_ICON_ARCH_DIR= "include/images/ArchDir.gif";
-    public static final String TOKEN_ICON_ARCH_ARCH= "include/images/ArchArch.gif";
+    public static final String TOKEN_ICON_ARCH_ROOT= "/StaticEstructuraWeb/resources/include/images/ArchRoot.gif";
+    public static final String TOKEN_ICON_ARCH_DIR= "/StaticEstructuraWeb/resources/include/images/ArchDir.gif";
+    public static final String TOKEN_ICON_ARCH_ARCH= "/StaticEstructuraWeb/resources/include/images/ArchArch.gif";
     
     public static final String TOKEN_USER_CONNECTED = "user";
     

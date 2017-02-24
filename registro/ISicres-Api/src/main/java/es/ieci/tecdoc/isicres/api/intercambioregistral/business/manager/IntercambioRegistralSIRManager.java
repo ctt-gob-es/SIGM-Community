@@ -27,7 +27,9 @@ public interface IntercambioRegistralSIRManager {
 	public List<AsientoRegistralVO> findAsientosRegistrales(CriteriosVO criterios);
 
 	public void rechazarAsientoRegistral(String identificadorIntercambio, TipoRechazoEnum tipoRechazoEnum, String motivo);
-
+	
+	public void rechazarAsientoRegistral(String identificadorIntercambio, String usuario, String contacto, TipoRechazoEnum tipoRechazoEnum, String motivo);
+	
 	public AsientoRegistralVO getAsientoRegistral(String identificadorIntercambio);
 
 	public AsientoRegistralVO enviarAsientoRegistral(AsientoRegistralFormVO asiento);
@@ -47,5 +49,21 @@ public interface IntercambioRegistralSIRManager {
 	 * @return
 	 */
 	public List<TrazabilidadVO> getHistoricoAsientoRegistral(String id);
+
+	public int countAsientosRegistrales(CriteriosVO criteriosVO);
+	/**
+	 * Obtiene el histórico de un asiento registral.
+	 *
+	 * @param entity
+	 *            Identificador de la entidad.
+	 * @param code
+	 *            codigo del asiento registral.
+	 * @return Histórico del asiento registral.
+	 */
+	public List<TrazabilidadVO> getHistoricoAsientoRegistralCode(String entity, String code);
+
+	public EstadoAsientoRegistraVO
+		getEstadoAsientoRegistralByCode(String codigoIntercambioRegistral);
+
 
 }

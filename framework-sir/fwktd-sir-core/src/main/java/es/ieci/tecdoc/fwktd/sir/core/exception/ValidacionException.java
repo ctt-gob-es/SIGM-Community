@@ -35,6 +35,21 @@ public class ValidacionException extends SIRException {
 		setErrorException(errorException);
 	}
 
+	/**
+	 * Constructor.
+	 * @param error Error de validación.
+	 */
+	public ValidacionException(ErroresEnum error, Throwable errorException, String detail) {
+		super("error.sir." + error.getValue(), null, error.getName()+": "+detail);
+		setErrorValidacion(error);
+		setErrorException(errorException);
+	}
+	
+	public ValidacionException(ErroresEnum error, String detail) {
+	    super("error.sir." + error.getValue(), null, detail);
+		setErrorValidacion(error);
+	}
+
 	public ErroresEnum getErrorValidacion() {
 		return errorValidacion;
 	}

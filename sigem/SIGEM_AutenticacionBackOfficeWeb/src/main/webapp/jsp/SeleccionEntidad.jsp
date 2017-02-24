@@ -2,7 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <html:html>
 	<head>
 		<%
@@ -10,8 +11,8 @@
 		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 		%> 
 		<base href="<%= basePath %>" />
-		<link rel="stylesheet" href="css/estilos.css" type="text/css" />	
-		<script type="text/javascript" language="javascript" src="js/idioma.js"></script>
+		<link rel="stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" type="text/css" />	
+		<script type="text/javascript" language="javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/idioma.js"></script>
 	</head>
 	<body>
 
@@ -25,7 +26,7 @@
 		        	<div class="cuerpomid">
 		          		<h1><bean:message key="autenticacion.seleccioneEntidad"/></h1>
 		          		<div class="submenu3"></div>
-		          		<div class="cuadro" style="background: url(img/foto_carpetas.jpg) no-repeat; height: 231px">
+		          		<div class="cuadro" style="background: url(<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/foto_carpetas.jpg) no-repeat; height: 231px">
 		            		<html:form styleId="entidadAccesoBean" action="comprobarDatos.do" method="post">
 			            		<br/><br/>
 			            		<label for="entidadId" class="gr" style="position:relative; left:300px">

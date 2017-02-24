@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import es.ieci.tecdoc.fwktd.sir.core.vo.EstadoAsientoRegistraVO;
 import es.ieci.tecdoc.fwktd.sir.ws.manager.IntercambioRegistralManager;
 import es.ieci.tecdoc.fwktd.sir.ws.service.AnexoDTO;
 import es.ieci.tecdoc.fwktd.sir.ws.service.AnexoFormDTO;
@@ -12,7 +11,6 @@ import es.ieci.tecdoc.fwktd.sir.ws.service.AsientoRegistralDTO;
 import es.ieci.tecdoc.fwktd.sir.ws.service.AsientoRegistralFormDTO;
 import es.ieci.tecdoc.fwktd.sir.ws.service.CriteriosDTO;
 import es.ieci.tecdoc.fwktd.sir.ws.service.EstadoAsientoRegistralDTO;
-import es.ieci.tecdoc.fwktd.sir.ws.service.HashMapString;
 import es.ieci.tecdoc.fwktd.sir.ws.service.InfoBAsientoRegistralDTO;
 import es.ieci.tecdoc.fwktd.sir.ws.service.InfoRechazoDTO;
 import es.ieci.tecdoc.fwktd.sir.ws.service.InfoReenvioDTO;
@@ -395,7 +393,19 @@ public class IntercambioRegistralServiceImpl implements IntercambioRegistralWS {
 				xmlFicheroIntercambio, documentos);
 	}
 
-
+	/**
+	 * Obtiene el histórico de un asiento registral.
+	 *
+	 * @param entity
+	 *            Identificador de la entidad.
+	 * @param code
+	 *            Identificador del asiento registral.
+	 * @return Histórico del asiento registral.
+	 */
+	public List<TrazabilidadDTO> getHistoricoAsientoRegistralCode(String entity, String code) {
+		return getIntercambioRegistralManager()
+				.getHistoricoAsientoRegistralCode(entity, code);
+	}
 //	/**
 //	 * Valida los anexos de un asiento registral.
 //	 *

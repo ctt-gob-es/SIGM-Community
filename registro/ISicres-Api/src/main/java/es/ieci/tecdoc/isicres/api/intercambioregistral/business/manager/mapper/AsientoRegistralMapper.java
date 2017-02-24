@@ -5,17 +5,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-
 
 import es.ieci.tecdoc.fwktd.sir.core.types.CanalNotificacionEnum;
 import es.ieci.tecdoc.fwktd.sir.core.types.DocumentacionFisicaEnum;
 import es.ieci.tecdoc.fwktd.sir.core.types.EstadoAsientoRegistralEnum;
 import es.ieci.tecdoc.fwktd.sir.core.types.TipoDocumentoEnum;
 import es.ieci.tecdoc.fwktd.sir.core.types.TipoDocumentoIdentificacionEnum;
+import es.ieci.tecdoc.fwktd.sir.core.types.TipoDocumentoIdentificacionSIGMEnum;
+import es.ieci.tecdoc.fwktd.sir.core.types.TipoRegistroEnum;
+import es.ieci.tecdoc.fwktd.sir.core.types.TipoTransporteEnum;
+import es.ieci.tecdoc.fwktd.sir.core.types.ValidezDocumentoEnum;
 import es.ieci.tecdoc.fwktd.sir.core.vo.AnexoFormVO;
 import es.ieci.tecdoc.fwktd.sir.core.vo.AsientoRegistralFormVO;
 import es.ieci.tecdoc.fwktd.sir.core.vo.AsientoRegistralVO;
@@ -36,6 +41,7 @@ import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.InfoRegistroP
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.InfoRegistroVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.TipoRegistroEnumVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralVO;
+import es.ieci.tecdoc.fwktd.sir.core.types.ContentTypeEnum;
 
 /**
  * Clase que mapea los datos entre el modelo de datos del módulo intermedio y el
@@ -54,6 +60,7 @@ public class AsientoRegistralMapper {
 	private static final int TIPO_DIR_TELEMATICA_DEU = 4;
 
 	private static final String EXTENSION_XSIG = "XSIG";
+	private static final String EXTENSION_CSIG = "CSIG";
 	private static final String EXTENSION_XADES = "XADES";
 
 
@@ -73,9 +80,14 @@ public class AsientoRegistralMapper {
 				.getCodigoEntidadRegistralOrigen());
 		bandejaEntradaItem.setOrigenName(asientoRegistral
 				.getDescripcionEntidadRegistralOrigen());
+		bandejaEntradaItem.setNombreUnidadTramitacion(asientoRegistral.getDescripcionUnidadTramitacionOrigen());
+		bandejaEntradaItem.setCodigoUnidadTramitacion(asientoRegistral.getCodigoUnidadTramitacionOrigen());
 		bandejaEntradaItem.setFechaEstado(asientoRegistral.getFechaEstado());
+		
+		//bandejaEntradaItem.setFechaIntercambioRegistral(asientoRegistral
+		//		.getFechaEnvio());
 		bandejaEntradaItem.setFechaIntercambioRegistral(asientoRegistral
-				.getFechaEnvio());
+			.getFechaRecepcion());
 		bandejaEntradaItem
 				.setFechaRegistro(asientoRegistral.getFechaRegistro());
 		bandejaEntradaItem.setIdIntercambioRegistral(asientoRegistral
@@ -83,6 +95,8 @@ public class AsientoRegistralMapper {
 		// IdIntercambioInterno es el identificador del asiento registral
 		bandejaEntradaItem.setIdIntercambioInterno(asientoRegistral
 				.getIdAsLong());
+		bandejaEntradaItem.setCodigoAsunto(asientoRegistral.getCodigoAsunto());
+		bandejaEntradaItem.setResumen(asientoRegistral.getResumen());
 		// se realiza la correspondendia de estados entre el sir y los tipos de
 		// libro en sicres
 		bandejaEntradaItem.setTipoLibro(TipoRegistroEnumVO
@@ -90,6 +104,11 @@ public class AsientoRegistralMapper {
 				.getValue());
 		bandejaEntradaItem.setNumeroRegistroOriginal(asientoRegistral
 				.getNumeroRegistro());
+		if (asientoRegistral.getAnexos() != null && !asientoRegistral.getAnexos().isEmpty()){
+		    bandejaEntradaItem.setTieneAdjuntos(true);
+		} else {
+		    bandejaEntradaItem.setTieneAdjuntos(false);
+		}
 		bandejaEntradaItem
 				.setDocumentacionFisicaIntercambioRegistral(DocumentacionFisicaIntercambioRegistralEnum
 						.getDocumentacionFisica(asientoRegistral
@@ -99,6 +118,7 @@ public class AsientoRegistralMapper {
 			// Nosotros en realidad lo mostramos pendiente de aceptar
 			bandejaEntradaItem
 					.setEstado(EstadoIntercambioRegistralEntradaEnumVO.PENDIENTE);
+			
 		} else if (EstadoAsientoRegistralEnum.REENVIADO == asientoRegistral
 				.getEstado()) {
 			//Estado reenviado
@@ -150,9 +170,11 @@ public class AsientoRegistralMapper {
 		setCamposExtendidos(asientoRegistral, infoRegistro);
 
 		//TODO aqui se setearia el asunto
-
+		asientoRegistral.setCodigoAsunto(infoRegistro.getCodigoAsunto());
 		//TODO aqui se setearia los datos del tipo transporte
-
+		asientoRegistral.setTipoTransporte(infoRegistro.getTipoTransporte() != null ? TipoTransporteEnum.getTipoTransporte(infoRegistro.getTipoTransporte()) : null);
+		asientoRegistral.setNumeroTransporte(infoRegistro.getNumeroTransporte());
+		
 		// Seteamos la configuración de intercambio registral
 
 		UnidadTramitacionIntercambioRegistralVO unidadTramitacionDestino = infoRegistro
@@ -221,6 +243,132 @@ public class AsientoRegistralMapper {
 		return asientoRegistral;
 	}
 
+	/**
+	 * Mapea los datos de un registro a un intercambio registral del módulo
+	 * intermedio
+	 *
+	 * @param infoRegistro
+	 * @return
+	 */
+	public AsientoRegistralFormVO toAsientoRegistralFormVO(
+			InfoRegistroVO infoRegistro, TipoRegistroEnum tipoReg) {
+		
+	    AsientoRegistralFormVO asientoRegistral = null;
+
+		asientoRegistral = new AsientoRegistralFormVO();
+		// Seteamos info de registro
+
+		//no se van a enviar estos datos ya que son opcionales
+		if (infoRegistro.getContactoUsuario() != null 
+			&& infoRegistro.getContactoUsuario().length() <= 160){
+		    asientoRegistral.setContactoUsuario(infoRegistro.getContactoUsuario());
+		}else {
+		    asientoRegistral.setContactoUsuario(null);
+		}
+		if (infoRegistro.getNombreUsuario() != null 
+			&& infoRegistro.getNombreUsuario().length() <= 80){
+		    asientoRegistral.setNombreUsuario(infoRegistro.getNombreUsuario());
+		}
+		//asientoRegistral.setContactoUsuario(null);
+		//asientoRegistral.setNombreUsuario(null);
+
+		asientoRegistral.setFechaRegistro(infoRegistro.getFechaRegistro());
+
+		asientoRegistral
+				.setNumeroExpediente(infoRegistro.getNumeroExpediente());
+		asientoRegistral.setNumeroRegistro(infoRegistro.getNumeroRegistro());
+
+		asientoRegistral.setObservacionesApunte(infoRegistro
+				.getObservacionesApunte());
+		asientoRegistral.setResumen(infoRegistro.getResumen());
+		if (StringUtils.isEmpty(infoRegistro.getResumen())) {
+			asientoRegistral.setResumen(infoRegistro.getDescripcionAsunto());
+		}
+
+		setCamposExtendidos(asientoRegistral, infoRegistro, tipoReg);
+
+		//TODO aqui se setearia el asunto
+		asientoRegistral.setCodigoAsunto(infoRegistro.getCodigoAsunto());
+		//TODO aqui se setearia los datos del tipo transporte
+		asientoRegistral.setTipoTransporte(infoRegistro.getTipoTransporte() != null ? TipoTransporteEnum.getTipoTransporte(infoRegistro.getTipoTransporte()) : null);
+		asientoRegistral.setNumeroTransporte(infoRegistro.getNumeroTransporte());
+		
+		// Seteamos la configuración de intercambio registral
+
+		UnidadTramitacionIntercambioRegistralVO unidadTramitacionDestino = infoRegistro
+				.getUnidadTramitacionDestino();
+		asientoRegistral
+				.setCodigoEntidadRegistralDestino(unidadTramitacionDestino
+						.getCodeEntity());
+		asientoRegistral
+				.setDescripcionEntidadRegistralDestino(unidadTramitacionDestino
+						.getNameEntity());
+		if (unidadTramitacionDestino.getCodeTramunit() != null) {
+			asientoRegistral
+					.setCodigoUnidadTramitacionDestino(unidadTramitacionDestino
+							.getCodeTramunit());
+			asientoRegistral
+					.setDescripcionUnidadTramitacionDestino(unidadTramitacionDestino
+							.getNameTramunit());
+		}
+
+		EntidadRegistralVO entidadRegistralOrigen = infoRegistro
+				.getEntidadRegistralOrigen();
+		asientoRegistral.setCodigoEntidadRegistralOrigen(entidadRegistralOrigen
+				.getCode());
+		asientoRegistral
+				.setDescripcionEntidadRegistralOrigen(entidadRegistralOrigen
+						.getName());
+
+		asientoRegistral.setCodigoEntidadRegistralInicio(entidadRegistralOrigen
+				.getCode());
+		asientoRegistral
+				.setDescripcionEntidadRegistralInicio(entidadRegistralOrigen
+						.getName());
+
+		if (infoRegistro.getUnidadTramitacionOrigen() != null) {
+			asientoRegistral.setCodigoUnidadTramitacionOrigen(infoRegistro
+					.getUnidadTramitacionOrigen().getCodeTramunit());
+			asientoRegistral.setDescripcionUnidadTramitacionOrigen(infoRegistro
+					.getUnidadTramitacionOrigen().getNameTramunit());
+		}else {
+		    if (tipoReg.equals(TipoRegistroEnum.SALIDA)){
+			throw new IntercambioRegistralException(
+					"El registro no tiene Unidad Tramitadora Origen. En un registro de Salida es obligatorio tener Unidad Tramitadora Origen mapeada en el DCO..",
+					IntercambioRegistralExceptionCodes.ERROR_CODE_VALIDACION_INTERESADOS_U_ORIGEN);
+		}
+		}
+
+		asientoRegistral.setCodigoEntidadRegistral(entidadRegistralOrigen
+				.getCode());
+
+		// Si no tiene interesados validados validamos que tenga UNIDAD de
+		// origen mapeada
+		if (!setInteresados(asientoRegistral, infoRegistro)) {
+			logger.info("El registro a enviar NO tiene terceros, o no son terceros validados");
+			/*if (StringUtils.isEmpty(asientoRegistral
+					.getCodigoUnidadTramitacionOrigen())) {*/
+			if (tipoReg.equals(TipoRegistroEnum.ENTRADA)){
+				throw new IntercambioRegistralException(
+						"El registro no tiene interesados validados. En un registro de Entrada es obligatorio tener interesados.",
+						IntercambioRegistralExceptionCodes.ERROR_CODE_VALIDACION_INTERESADOS_U_ORIGEN);
+			}
+
+			logger.info("El registro se envía igualmente porque tiene mapeada la UT="
+					+ asientoRegistral.getCodigoUnidadTramitacionOrigen());
+
+		}
+
+		// ANEXOS
+		setAnexos(asientoRegistral, infoRegistro);
+
+		asientoRegistral
+				.setDocumentacionFisica(getDocumentacionFisica(infoRegistro));
+
+		return asientoRegistral;
+	}
+
+	
 	/**
 	 * Método que setea el tipo de asunto
 	 *
@@ -297,21 +445,28 @@ public class AsientoRegistralMapper {
 			anexo.setContenido(documento.getContent());
 			anexo.setNombreFichero(documento.getInfoDocumento().getNombre());
 			// TODO validar ext
-			anexo.setTipoMIME(MimeUtil.getExtensionMimeType(documento
-					.getInfoDocumento().getExtension()));
-
-			// comprobamos la extensión del fichero, para averiguar si es la firma del documento
-			if (EXTENSION_XADES.equalsIgnoreCase(documento.getInfoDocumento()
-					.getExtension())
-					|| EXTENSION_XSIG.equalsIgnoreCase(documento.getInfoDocumento()
-							.getExtension())) {
-				//si es la firma del documento, el tipo de documento es de tipo técnico interno
-				anexo.setTipoDocumento(TipoDocumentoEnum.FICHERO_TECNICO_INTERNO);
-			} else {
-				//para cualquier otra extensión se considera documento de tipo documento adjunto
-				anexo.setTipoDocumento(TipoDocumentoEnum.DOCUMENTO_ADJUNTO);
+			if (documento.getInfoDocumento().getExtension() != null){
+        			if (ContentTypeEnum.valueOf(documento
+        				.getInfoDocumento().getExtension().toUpperCase()) != null 
+        	        		   && ContentTypeEnum.valueOf(documento
+        						.getInfoDocumento().getExtension().toUpperCase()).getContentType().length() <= 20){
+        			    anexo.setTipoMIME(ContentTypeEnum.valueOf(documento
+        					.getInfoDocumento().getExtension().toUpperCase()).getContentType());
+        	        	   }
 			}
-
+			// comprobamos la extensión del fichero, para averiguar si es la firma del documento
+			if (documento.getTipoDocumentoAnexo() != null 
+				&& TipoDocumentoEnum.getTipoDocumento(documento.getTipoDocumentoAnexo().getName()) != null) {
+				//si es la firma del documento, el tipo de documento es de tipo técnico interno
+				anexo.setTipoDocumento(TipoDocumentoEnum.getTipoDocumento(documento.getTipoDocumentoAnexo().getName()));
+			}
+			
+			if (documento.getTipoValidez() !=null){
+			    anexo.setValidezDocumento(ValidezDocumentoEnum.getValidezDocumento( documento.getTipoValidez().getName()));
+			}
+			if (documento.getComentario() !=null){
+			    anexo.setObservaciones(documento.getComentario());
+			}
 			// comprobamos si el documento contiene firma
 			if (documento.getDatosFirma() != null) {
 				// si es asi, obtenemos el identificador del documento que
@@ -322,17 +477,23 @@ public class AsientoRegistralMapper {
 			}
 
 
-			if (documento.getDatosFirma() != null
-					&& documento.getDatosFirma().getFirma() != null) {
+			if (documento.getDatosFirma() != null) {
 				try {
 					//asignamos el certificado
-					anexo.setCertificado(documento
-							.getDatosFirma().getCertificado().getBytes());
-
+        				if (documento.getDatosFirma().getCertificado() != null) {
+        				    if (Base64.isBase64(documento.getDatosFirma().getCertificado())){
+        					anexo.setCertificado(Base64.decodeBase64(documento.getDatosFirma().getCertificado()));
+        				    } else {
+        					anexo.setCertificado(documento.getDatosFirma().getCertificado().getBytes());
+        				    }
+        				}
 					// identificador del documento que se ha firmado
-					anexo.setCodigoFicheroFirmado(documento.getDatosFirma()
+        				if (documento.getDatosFirma().getIdAttachmentFirmado() != null
+        					&& (!documento.getDatosFirma().getIdAttachment().equals(documento.getDatosFirma().getIdAttachmentFirmado())
+        					|| autoFirmado(listaDocumetnos, documento))) {
+        				    anexo.setCodigoFicheroFirmado(documento.getDatosFirma()
 							.getIdAttachmentFirmado().toString());
-
+        				}
 					if (documento.getDatosFirma().getSelloTiempo() != null) {
 						anexo.setTimestamp(documento
 								.getDatosFirma().getSelloTiempo().getBytes());
@@ -355,20 +516,54 @@ public class AsientoRegistralMapper {
 
 	}
 
+	/**
+	 * Metodo que comprueba si el fichero es autofirmado.
+	 * @param listaDocumetnos lista de todos los documentos.
+	 * @param documento el documento a comprobar.
+	 * @return false si no es autofirmado:true si es autofirmado.
+	 * */
+	private boolean autoFirmado(List<InfoRegistroPageRepositoryVO> listaDocumetnos,
+		InfoRegistroPageRepositoryVO documento) {
+	    boolean result = true;
+	    if (documento.getDatosFirma().getIdAttachment().equals(documento.getDatosFirma().getIdAttachmentFirmado())){
+		for (InfoRegistroPageRepositoryVO docTemp:listaDocumetnos){
+		    if (docTemp.getDatosFirma() != null && documento.getDatosFirma().getIdAttachment().equals(docTemp.getDatosFirma().getIdAttachmentFirmado())
+			  &&  !documento.getDatosFirma().getIdAttachment().equals(docTemp.getDatosFirma().getIdAttachment())   ){
+			result = false;
+		    }
+		}
+	    }
+	    return result;
+	}
+
 	private void validateAnexos(List<AnexoFormVO> anexos) {
 		ListIterator<AnexoFormVO> itr = anexos.listIterator();
 		Long maxSize = IntercambioRegistralConfiguration.getInstance()
 				.getFileMaxSize();
 		Integer maxFiles = IntercambioRegistralConfiguration.getInstance()
 				.getFileMaxNum();
-		if (anexos.size() > maxFiles) {
+		
+		Integer maxTotalFiles = 15728640;
+		int numAdjuntos = 0; // Número de adjuntos: documentos de tipo
+		int totalFiles = 0; // total de ficheros
+		
+		 // "02 - Documento Adjunto" que no son
+		 // firmas
+		
+		/*if (anexos.size() > maxFiles) {
 			throw new IntercambioRegistralException(
 					"No se permiten enviar más de " + maxFiles + " ficheros",
 					IntercambioRegistralExceptionCodes.ERROR_CODE_VALIDACION_MAX_NUM_FICHEROS);
-		}
+		}*/
 		while (itr.hasNext()) {
 			AnexoFormVO anexo = itr.next();
 			long size = anexo.getContenido().length / 1024;
+			// Si en documento es de tipo "02 - Documento Adjunto"
+			if (TipoDocumentoEnum.DOCUMENTO_ADJUNTO.equals(anexo.getTipoDocumento())) {
+			    numAdjuntos++;
+			    totalFiles += anexo.getContenido().length;
+			}
+			
 			if (size > maxSize) {
 				throw new IntercambioRegistralException(
 						"Los ficheros no pueden superar los " + maxSize
@@ -376,7 +571,21 @@ public class AsientoRegistralMapper {
 						IntercambioRegistralExceptionCodes.ERROR_CODE_VALIDACION_MAX_SIZE);
 			}
 		}
-
+		 // Comprobar si hay que aplicar filtro de número de ficheros
+		    if (maxFiles > 0) {
+			if (numAdjuntos > maxFiles) {
+				throw new IntercambioRegistralException(
+						"No se permiten enviar más de " + maxFiles + " ficheros",
+						IntercambioRegistralExceptionCodes.ERROR_CODE_VALIDACION_MAX_NUM_FICHEROS);
+			}
+		    }
+		    
+		    // Comprobar si hay que aplicar filtro de número de ficheros
+		    if (totalFiles > maxTotalFiles) {
+				throw new IntercambioRegistralException(
+						"No se permiten enviar más de 15 MB",
+						IntercambioRegistralExceptionCodes.ERROR_CODE_VALIDACION_MAX_SIZE_TOTAL);
+		    }
 	}
 
 	private boolean setInteresados(AsientoRegistralFormVO asientoRegistral,
@@ -393,7 +602,7 @@ public class AsientoRegistralMapper {
 			if (persona == null) {
 				tieneTercerosNoValidados = true;
 
-			} else if (StringUtils.isEmpty(persona.getPrimerApellido())) {
+			} else if ("J".equals(persona.getTipoPersona())) {
 				// Persona jurídica
 				interesadoIntercambioRegistral.setRazonSocialInteresado(persona
 						.getNombre());
@@ -401,10 +610,17 @@ public class AsientoRegistralMapper {
 						.setDocumentoIdentificacionInteresado(persona
 								.getDocumentoIdentificacion());
 
-				interesadoIntercambioRegistral
+				TipoDocumentoIdentificacionSIGMEnum tipoDoc = TipoDocumentoIdentificacionSIGMEnum
+					.getTipoDocumentoIdentificacion(persona
+						.getTipoDocumento());
+				if (tipoDoc != null){
+				    interesadoIntercambioRegistral
 						.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacionEnum
-								.getTipoDocumentoIdentificacion(persona
-										.getTipoDocumento()));
+							.getTipoDocumentoIdentificacion(tipoDoc.getName()));
+				}else{
+				    interesadoIntercambioRegistral
+					.setTipoDocumentoIdentificacionInteresado(null);
+				}
 			} else {
 				// Persona física
 				interesadoIntercambioRegistral.setNombreInteresado(persona
@@ -418,10 +634,17 @@ public class AsientoRegistralMapper {
 				interesadoIntercambioRegistral
 						.setDocumentoIdentificacionInteresado(persona
 								.getDocumentoIdentificacion());
-				interesadoIntercambioRegistral
+				TipoDocumentoIdentificacionSIGMEnum tipoDoc = TipoDocumentoIdentificacionSIGMEnum
+					.getTipoDocumentoIdentificacion(persona
+						.getTipoDocumento());
+				if (tipoDoc != null){
+				    interesadoIntercambioRegistral
 						.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacionEnum
-								.getTipoDocumentoIdentificacion(persona
-										.getTipoDocumento()));
+							.getTipoDocumentoIdentificacion(tipoDoc.getName()));
+				}else{
+				    interesadoIntercambioRegistral
+					.setTipoDocumentoIdentificacionInteresado(null);
+				}
 			}
 
 			if (interesado.getDireccion() != null) {
@@ -493,7 +716,7 @@ public class AsientoRegistralMapper {
 
 		InfoRegistroPersonaFisicaOJuridicaVO representante = interesado.getInfoRepresentante();
 		if(representante !=null){
-			if (StringUtils.isEmpty(representante.getPrimerApellido())) {
+			if ("J".equals(representante.getTipoPersona())) {
 				//Persona juridica
 				interesadoIntercambioRegistral.setRazonSocialRepresentante(representante
 						.getNombre());
@@ -501,10 +724,17 @@ public class AsientoRegistralMapper {
 						.setDocumentoIdentificacionRepresentante(representante
 								.getDocumentoIdentificacion());
 
-				interesadoIntercambioRegistral
+				TipoDocumentoIdentificacionSIGMEnum tipoDoc = TipoDocumentoIdentificacionSIGMEnum
+					.getTipoDocumentoIdentificacion(representante
+						.getTipoDocumento());
+				if (tipoDoc != null){
+				    interesadoIntercambioRegistral
 						.setTipoDocumentoIdentificacionRepresentante(TipoDocumentoIdentificacionEnum
-								.getTipoDocumentoIdentificacion(representante
-										.getTipoDocumento()));
+							.getTipoDocumentoIdentificacion(tipoDoc.getName()));
+				}else{
+				    interesadoIntercambioRegistral
+					.setTipoDocumentoIdentificacionRepresentante(null);
+				}
 			}else{
 				//Persona fisica
 				interesadoIntercambioRegistral.setNombreRepresentante(representante
@@ -518,10 +748,17 @@ public class AsientoRegistralMapper {
 				interesadoIntercambioRegistral
 						.setDocumentoIdentificacionRepresentante(representante
 								.getDocumentoIdentificacion());
-				interesadoIntercambioRegistral
+				TipoDocumentoIdentificacionSIGMEnum tipoDoc = TipoDocumentoIdentificacionSIGMEnum
+					.getTipoDocumentoIdentificacion(representante
+						.getTipoDocumento());
+				if (tipoDoc != null){
+				    interesadoIntercambioRegistral
 						.setTipoDocumentoIdentificacionRepresentante(TipoDocumentoIdentificacionEnum
-								.getTipoDocumentoIdentificacion(representante
-										.getTipoDocumento()));
+							.getTipoDocumentoIdentificacion(tipoDoc.getName()));
+				}else{
+				    interesadoIntercambioRegistral
+					.setTipoDocumentoIdentificacionRepresentante(null);
+				}
 			}
 
 			//Dirección Representante
@@ -613,6 +850,41 @@ public class AsientoRegistralMapper {
 
 	}
 
+	private void setCamposExtendidos(AsientoRegistralFormVO asientoRegistral,
+		InfoRegistroVO infoRegistro,TipoRegistroEnum tipoReg) {
+	// Campos extendidos
+	if (!CollectionUtils.isEmpty(infoRegistro.getCamposExtendidos())) {
+		ListIterator<InfoRegistroCamposExtendidosVO> camposExtendisoItr = infoRegistro
+				.getCamposExtendidos().listIterator();
+		Integer fldid;
+		while (camposExtendisoItr.hasNext()) {
+
+			InfoRegistroCamposExtendidosVO campoExtendido = camposExtendisoItr
+					.next();
+			fldid = campoExtendido.getFldid();
+			if (fldid != null
+				&& ( (tipoReg.equals(TipoRegistroEnum.ENTRADA) && InfoRegistroCamposExtendidosVO.COMENTARIO_ID == fldid
+							.intValue()
+					) || (tipoReg.equals(TipoRegistroEnum.SALIDA) && InfoRegistroCamposExtendidosVO.COMENTARIOSALIDA_ID == fldid
+							.intValue()
+					))) {
+				asientoRegistral.setObservacionesApunte(campoExtendido
+						.getValue());
+			} else if (fldid != null
+					&& InfoRegistroCamposExtendidosVO.SOLICITA_ID == fldid
+							.intValue()) {
+				asientoRegistral.setSolicita(campoExtendido.getValue());
+			} else if (fldid != null
+					&& InfoRegistroCamposExtendidosVO.EXPONE_ID == fldid
+							.intValue()) {
+				asientoRegistral.setExpone(campoExtendido.getValue());
+			}
+		}
+	}
+
+}
+
+	
 	private DocumentacionFisicaEnum getDocumentacionFisica(
 			InfoRegistroVO infoRegistro) {
 		Integer trueValue = new Integer("1");

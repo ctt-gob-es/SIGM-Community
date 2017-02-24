@@ -65,7 +65,7 @@
 	</wsdl:binding>
 	<wsdl:service name="WS_SIR7Service">
 		<wsdl:port binding="impl:WS_SIR7SoapBinding" name="WS_SIR7">
-			<wsdlsoap:address location="http://localhost/CIR_P2P/services/WS_SIR7" />
+			<wsdlsoap:address location="http://localhost:8380/services/WS_SIR7" />
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>

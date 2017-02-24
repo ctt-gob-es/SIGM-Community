@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jee="http://www.springframework.org/schema/jee" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+     http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+
+    <bean id="applicationContextProvider" class="core.config.ApplicationContextProvider"></bean>
+
+    <context:annotation-config />
+
+	<context:component-scan base-package="sigm.dao.dataaccess.service" />
+	
+    <tx:annotation-driven transaction-manager="SIGMTransactionManager"/>
+    
+    <jee:jndi-lookup id="dataSourceSIGM" resource-ref="true"
+                     jndi-name="jdbc/registroDS_000" expected-type="javax.sql.DataSource" />
+
+	<bean id="SIGMSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+		name="SIGMSqlSessionFactory">
+		<property name="dataSource" ref="dataSourceSIGM"></property>
+		<property name="mapperLocations"
+			value="classpath*:sigm/dao/dataaccess/persistence/*.xml" />
+		<property name="configLocation" value="classpath:sigm/conf/SIGM_MyBatis_Config.xml" />
+	</bean>
+
+    <!-- Mapper Definitions -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="sigm.dao.dataaccess.persistence" />
+		<property name="sqlSessionFactoryBeanName" value="SIGMSqlSessionFactory" />
+	</bean>
+		 
+	<bean id="SIGMTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSourceSIGM" />
+	</bean>
+
+</beans>

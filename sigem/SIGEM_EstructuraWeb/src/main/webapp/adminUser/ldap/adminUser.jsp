@@ -3,7 +3,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <html>
 <head>
 <%
@@ -13,9 +14,9 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 
 <ieci:baseInvesDoc/>
-<link rel="stylesheet" type="text/css" href="include/css/common.css"/>
-<link rel="stylesheet" type="text/css" href="include/css/error.css"/>
-<link rel="stylesheet" type="text/css" href="include/css/estilos.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/common.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/error.css"/>
+<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css"/>
 <style>
 	.menu0Ldap {
 		padding: 2 6 2 6;border-color: #D3D5DD;border-width: 1px;border-style: solid;color: #636DAD;
@@ -134,7 +135,7 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 																	</tr>
 																	<tr>
 																		<td align="center">
-																			<img src='<html:rewrite page="/include/images/loading.gif"/>' />
+																			<img src='<html:rewrite page="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>//include/images/loading.gif"/>' />
 																		</td>
 																	</tr>
 																	<tr><td height="100%"></td></tr>

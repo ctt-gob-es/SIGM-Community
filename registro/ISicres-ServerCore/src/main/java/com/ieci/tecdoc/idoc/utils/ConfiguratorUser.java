@@ -46,9 +46,9 @@ public class ConfiguratorUser {
 
 	public UserConf getUsrConf(AuthenticationUser user, String entidad) {
 		UserConf usrConf = new UserConf();
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 
 			List userConfigList = ISicresQueries.getUserConfig(session, user.getId());
 
@@ -67,6 +67,8 @@ public class ConfiguratorUser {
 			log.error("Impossible to load values for user configuration.", e);
 		} catch (Exception e) {
 			log.error("Impossible to load values for user configuration.", e);
+		} finally {
+			hibernateUtil.closeSession(entidad);
 		}
 		return usrConf;
 	}

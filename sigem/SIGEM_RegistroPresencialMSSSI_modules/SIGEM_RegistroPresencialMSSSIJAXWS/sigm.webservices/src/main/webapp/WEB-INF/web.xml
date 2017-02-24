@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>sigm.webservices</display-name>
+  
+	<!-- FICHEROS DE CONFIGURACION DE SPRING   
+		classpath:beans/ISicres-Terceros/applicationContext.xml -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:spring-sigm-mybatis-config.xml
+			classpath:beans/fwktd-sir-core-applicationContext.xml
+			classpath:beans/fwktd-sir-api-applicationContext.xml
+			classpath:beans/ISicres-Api/applicationContext.xml
+		</param-value>
+	</context-param>
+
+	<!-- LISTENER SPRING -->
+	<listener>
+		<listener-class>es.msssi.sigm.core.init.ApplicationListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<!-- LISTENER SIR -->
+	<listener>
+		<listener-class>com.ieci.tecdoc.isicres.listeners.IsicresServletContextListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>com.ieci.tecdoc.isicres.listeners.SessionListener</listener-class>
+	</listener>  
+ 
+  
+ 	<!-- SERVLET CONFIGURACION SIGM -->
+	<servlet>
+		<description>Servlet que introduce en las variables de sistema las rutas provenientes de los env-entry</description>
+		<servlet-name>InitServlet</servlet-name>
+		<servlet-class>es.msssi.tecdoc.sgm.registropresencial.servlet.InitPathServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+  
+	<!-- SERVLET CONFIGURACION LOG4J SIGM -->
+	<servlet>
+		<display-name>log4j-init</display-name>
+		<servlet-name>log4j-init</servlet-name>
+		<servlet-class>ieci.tecdoc.sgm.core.log.web.Log4jInitServlet</servlet-class>
+		<init-param>
+			<param-name>subdir</param-name>
+			<param-value>/SIGEM_RegistroPresencialMSSSIJAXWS</param-value>
+		</init-param>
+		<init-param>
+			<param-name>fileName</param-name>
+			<param-value>log4j.xml</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+  	<!-- SERVLET CONFIGURACION DIRECTORIO NFS DE SIGM -->
+	<servlet>
+		<servlet-name>ResourceDispatcherServlet</servlet-name>
+		<servlet-class>ieci.tecdoc.sgm.core.web.ResourceDispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>subdir</param-name>
+			<param-value>/SIGEM_RegistroPresencialMSSSIJAXWS</param-value>
+		</init-param>
+		<init-param>
+			<param-name>defaultSkin</param-name>
+			<param-value>skinDefecto</param-value>
+		</init-param>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<!-- MAPPING SERVLET CONFIGURACION DIRECTORIO NFS DE SIGM -->
+	<servlet-mapping>
+		<servlet-name>ResourceDispatcherServlet</servlet-name>
+		<url-pattern>/resourceServlet/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- MIME -->
+	<mime-mapping>
+		<extension>wsdl</extension>
+		<mime-type>text/xml</mime-type>
+	</mime-mapping>
+
+
+
+	<!-- RUTAS -->  
+	  <env-entry>
+	    <description>Ruta absoluta del repositorio NFS de la aplicacion</description>
+	    <env-entry-name>PATH_REPO</env-entry-name>
+	    <env-entry-type>java.lang.String</env-entry-type>
+	    <env-entry-value>${PATH_REPO}</env-entry-value>
+	  </env-entry>
+	<env-entry>
+		<description>PATH_SCHEMA</description>
+		<env-entry-name>PATH_SCHEMA</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>ficheros/schemas/</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>PATH_REPORTS</description>
+		<env-entry-name>PATH_REPORTS</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>ficheros/reports/</env-entry-value>
+	</env-entry>	
+	  
+	<!-- SERVICIO PFE -->
+	<service-ref>
+		<service-ref-name>service/SIGNSERVICE</service-ref-name>
+		<service-interface>core.ws.jsign.SignServiceService</service-interface>
+		<mapped-name>service/SIGNSERVICE</mapped-name>
+	</service-ref>
+
+	<!-- DATASOURCES -->
+	<resource-ref>
+		<res-ref-name>jdbc/registroDS_000</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<resource-ref>
+		<res-ref-name>jdbc/fwktd-auditDS_000</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<resource-ref>
+		<res-ref-name>jdbc/fwktd-sirDS_000</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref> 
+	
+	<!-- ENV-ENTRY ESTATICOS SIGM -->
+	<env-entry>
+		<description>Path del directorio general de logs</description>
+		<env-entry-name>MSSSIPATH_sigem.log.path</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>logs</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Path del directorio general de configuracion</description>
+		<env-entry-name>MSSSIPATH_SIGEM_CONFIG_DIR</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>config/</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Path del directorio general de logs</description>
+		<env-entry-name>MSSSIPATH_sigem.path</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value></env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Path donde se guardan los ficheros de las peticiones</description>
+		<env-entry-name>MSSSIPATH_sigem.ws.repository.path</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>ficheros/SIGEM_RegistroPresencialMSSSIJAXWS/requests/</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Ruta de los archivos de propiedades</description>
+		<env-entry-name>MSSSIPATH_regtel.properties.path</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>config/SIGEM_RegistroPresencialMSSSIJAXWS/properties</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Path del directorio general de configuracion</description>
+		<env-entry-name>MSSSIPATH_sigem.config.location.path</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>config/</env-entry-value>
+	</env-entry>
+
+
+	<!-- WS-SISTEMA CLIENTE PFE -->
+	<!-- WSSEC UserPass SOAP -->
+	<env-entry>
+		<description>Alias del certificado de firma</description>
+		<env-entry-name>cert_alias</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>${ALIAS_SIGN_CERT}</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Sistema de servicios web</description>
+		<env-entry-name>WSSEC_SYSTEM/PFE</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>${env.entry.SYSTEM_PFE}</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Modo (cliente) de los servicios web</description>
+		<env-entry-name>WSSEC_MODE_PFE</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>${env.entry.MODE_PFE}</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Tipo de autenticacion (usr/pss)</description>
+		<env-entry-name>WSSEC_TYPE_PFE</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>${env.entry.TYPE_PFE}</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Usuario de servicios web</description>
+		<env-entry-name>WSUSERNAME_PFE</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>${env.entry.WSUSERNAME_PFE}</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Password de usuario de servicios web</description>
+		<env-entry-name>WSUSERPASS_PFE</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>${env.entry.WSUSERPASS_PFE}</env-entry-value>
+	</env-entry>
+	<env-entry>
+		<description>Tipo de codificacion de password de usuario de servicios web</description>
+		<env-entry-name>WSUSERPASSTYPE_PFE</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>${env.entry.WSUSERPASSTYPE_PFE}</env-entry-value>
+	</env-entry>
+  	<!-- FIN WSSEC UserPass SOAP -->
+	<!-- FIN WS-SISTEMA CLIENTE PFE -->  
+</web-app>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+<!--  -->
+</h:head>
+
+<h:body>
+	<ui:composition>
+		<p:messages  id="messagesDis" closable="true"
+			autoUpdate="false" redisplay="false" />
+		<p:panel id="panelDigdlgRedistribuir" styleClass="ventanaDist">
+			<h:outputText id="labelDestRedistribuir"
+							value="#{msgs.labelDestRedistribuir}" /><br/>
+
+				<c:set var="departPadre" value=" (#{varDep.nameDepFather})" />
+				<c:set var="departamentoPadre" value=" (#{dep.nameDepFather})" />
+				
+				<p:selectOneMenu
+					value="#{outputRegisterAction.selectdestinoRedisDepartamentos}"
+					styleClass="selectdestinoRedisDepartamentos"
+					id="selectdestinoRedisDepartamentos" var="varDep"
+					label="#{msgs.labelSelectDepartamento}" converter="departConverter"
+					effect="fade" filter="true"  filterMatchMode="contains">
+					<f:selectItems value="#{outputRegisterAction.listDepartament}"
+						var="dep" itemLabel="#{dep.name}" itemValue="#{dep }" />
+					<p:column>
+						<h:outputText styleClass="departamentos" value="#{varDep.name}" />
+						<br />
+						<h:outputText styleClass="departamentospadre"
+							value="#{departPadre}" />
+					</p:column>
+				</p:selectOneMenu>
+			<br /><br />
+			<h:outputText id="labelMotivoDistribucion"
+				value="#{msgs.labelMotivoDistribucion}" />
+			<br />
+			<p:inputTextarea rows="5" id="motivoDistribucion" 
+				value="#{outputRegisterAction.motivoDistribucion}" cols="40"
+				label="#{msgs.labelMotivoDistribucion}" maxlength="250" autoResize="false">
+				<f:validateLength maximum="250" />
+			</p:inputTextarea>
+			<p class="botonera">
+				<p:commandButton styleClass="boton-buscar"
+					value="#{msgs.labelBotonAceptar}" ajax="true"
+					process="dlgDistribuir"
+					update="messagesDis,panelDigdlgRedistribuir,:accordion:outputRegisterDistributionHistoricalForm:tableHistDist"
+					action="#{outputRegisterAction.distribuir}"
+					oncomplete="handleDisRequest(xhr, status, args)" />
+				<p:commandButton styleClass="boton-buscar"
+					value="#{msgs.labelBotonCancelar}" immediate="true"
+					onclick="PF('dlgDistribuir').hide();" />
+			</p>
+		</p:panel>
+	</ui:composition>
+
+
+</h:body>
+
+</html>

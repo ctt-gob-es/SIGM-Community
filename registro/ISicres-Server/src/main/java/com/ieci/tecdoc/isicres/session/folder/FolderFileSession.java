@@ -95,11 +95,11 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		List result = new ArrayList();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -113,23 +113,23 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 
 			result = ISicresQueries.getScrRegOrigDoc(session, bookID, folderID);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to close the book [" + bookID
 					+ "] and fdrid [" + folderID + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_ORIG_DOC);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -140,10 +140,10 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -181,21 +181,21 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 			saveOrigDocs(session, datas, user.getId(), bookID, folderID, axsf,
 					scrofic, entidad);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to get the origin docs for the book ["
 					+ bookID + "] and fdrid [" + folderID
 					+ "] for the session [" + sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_SAVE_ORIG_DOC);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -205,62 +205,56 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
 		List result = new ArrayList();
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
+		log.warn("getBookFolderDocsWithPages - Transaccion creada");
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
+			log.warn("getBookFolderDocsWithPages - Sesion creada");
 			tran = session.beginTransaction();
-
+			log.warn("getBookFolderDocsWithPages - Transaccion iniciada con sesion");
 			// Recuperamos la sesión
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
 					sessionID);
-
 			// Es necesario tener el libro abierto para consultar su contenido.
 			if (!cacheBag.containsKey(bookID)) {
 				throw new BookException(BookException.ERROR_BOOK_NOT_OPEN);
 			}
-
 			AxDochEntity axDochEntity = new AxDochEntity();
 			AxPagehEntity axPagehEntity = new AxPagehEntity();
-
 			Collection pages = null;
 			Collection docs = axDochEntity.findByFdrid(bookID, fdrid, entidad);
-
 			for (Iterator it = docs.iterator(); it.hasNext();) {
 				AxPKById axPKById = (AxPKById) it.next();
 				axDochEntity.load(axPKById, entidad);
 				AxDoch axdoch = axDochEntity.getAxDoch();
-
 				pages = axPagehEntity.findByFdridDocid(bookID, fdrid, axdoch
 						.getId(), entidad);
-
 				for (Iterator it2 = pages.iterator(); it2.hasNext();) {
 					AxPKById axPKByIdPage = (AxPKById) it2.next();
 					axPagehEntity.load(axPKByIdPage, entidad);
 					axdoch.addPage(axPagehEntity.getAxPageh());
 				}
-
 				result.add(axdoch);
 			}
-
-			HibernateUtil.commitTransaction(tran);
-
+			log.warn("getBookFolderDocsWithPages - Commit de la transaccion");
+			hibernateUtil.commitTransaction(tran);
 			return result;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load the docs for book [" + bookID
 					+ "] and fdrid [" + fdrid + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_DOCS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -270,7 +264,7 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		byte[] file = null;
 		Transaction tran = null;
 
@@ -282,7 +276,7 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 					.getRepositoryRetrieveDocumentVO(bookID, regId, pageId,
 							entidad, true);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			ISRepositoryRetrieveDocumentVO retrieveVO = RepositoryFactory
@@ -307,22 +301,22 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return file;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load a file for the session [" + sessionID
 					+ "] and pageID [" + pageId + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_LOAD_FILE);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -376,8 +370,9 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 	public static void saveCompulFiles(ISicresCreateCompulsaVO compulsa,
 			String name) throws BookException {
 		Transaction tran = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(compulsa
+			Session session = hibernateUtil.currentSession(compulsa
 					.getEntidad());
 			tran = session.beginTransaction();
 
@@ -491,26 +486,29 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 									returnCompulsa.getEntidad());
 				}
 			}
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible to save compul files for the session ["
 							+ compulsa.getSessionID() + "] and bookID ["
 							+ compulsa.getBookId() + "]", e);
 			throw new BookException(BookException.ERROR_SAVE_COMPUL_FILES);
 		} finally {
-			HibernateUtil.closeSession(compulsa.getEntidad());
+			hibernateUtil.closeSession(compulsa.getEntidad());
 		}
 	}
 
 	public static Map createDocuments(Integer bookID, int folderId,
 			Map documents, Integer userId, String entidad) throws BookException {
 		Transaction tran = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
+		log.warn("createDocuments - Transaccion creada");
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
+			log.warn("createDocuments - Sesion creada");
 			tran = session.beginTransaction();
-
+			log.warn("createDocuments - Transaccion iniciada con sesion");
 			Timestamp timestamp = DBEntityDAOFactory.getCurrentDBEntityDAO()
 					.getDBServerDate(entidad);
 			for (Iterator it = documents.keySet().iterator(); it.hasNext();) {
@@ -540,14 +538,15 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 
 				document.setDocID(docID);
 			}
-			HibernateUtil.commitTransaction(tran);
+			log.warn("createDocuments - Commit de la transaccion");
+			hibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for bookID [" + bookID
 					+ "]", e);
 			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return documents;
@@ -572,38 +571,32 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 			int folderId, Map documents, BookTypeConf bookTypeConf,
 			BookConf bookConf, Integer userId, Locale locale, String entidad)
 			throws BookException {
-
 		Transaction tran = null;
+		HibernateUtil hibernateUtil = new HibernateUtil();
+		log.warn("saveDocuments - Transaccion creada");
 		try {
-
 			// obtenemos todos los documentos y ficheros del registro
 			List docsRegistro = getBookFolderDocsWithPages(sessionID, bookID,
 					folderId, entidad);
-
-			Session session = HibernateUtil.currentSession(entidad);
-
+			
+			Session session = hibernateUtil.currentSession(entidad);
+			log.warn("saveDocuments - Sesion creada");
 			// Recuperamos la sesión
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
 					sessionID);
-
 			AuthenticationUser user = (AuthenticationUser) cacheBag
 					.get(HIBERNATE_Iuseruserhdr);
-
 			ScrOfic scrofic = (ScrOfic) cacheBag.get(HIBERNATE_ScrOfic);
-
 			// Es necesario tener el libro abierto para consultar su contenido.
 			if (!cacheBag.containsKey(bookID)) {
 				throw new BookException(BookException.ERROR_BOOK_NOT_OPEN);
 			}
-
 			THashMap bookInformation = (THashMap) cacheBag.get(bookID);
 			Idocarchdet idoc = (Idocarchdet) bookInformation
 					.get(IDocKeys.IDOCARCHDET_FLD_DEF_ASOBJECT);
 			Idocarchdet idocMisc = (Idocarchdet) bookInformation
 					.get(IDocKeys.IDOCARCHDET_MISC_ASOBJECT);
-
 			MiscFormat miscFormat = new MiscFormat(idocMisc.getDetval());
-
 			AxSf axsf = getAxSf(session, bookID, new Integer(folderId), idoc,
 					locale.getLanguage(), entidad, true);
 
@@ -665,26 +658,26 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 					}
 
 					tran = session.beginTransaction();
-
+					log.warn("saveDocuments - Transaccion iniciada con sesion");
 					file = savePageData(session, bookID, new Integer(folderId),
 							userId, docUID, fileID, file, document, timestamp,
 							entidad);
-
-					HibernateUtil.commitTransaction(tran);
+					log.warn("saveDocuments - Commit de la transaccion");
+					hibernateUtil.commitTransaction(tran);
 				}
 			}
 		} catch (BookException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for bookID [" + bookID
 					+ "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_SAVE_FILE);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for bookID [" + bookID
 					+ "]", e);
 			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return documents;
@@ -924,7 +917,7 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 					file, bookTypeConf, bookConf, miscFormat, imageAuth,
 					totalNumPages, entidad);
 		} else {
-			docUID = saveExistDocument(file, bookID, entidad, false);
+			docUID = saveExistDocument(file, bookID, entidad, true);
 		}
 
 		return docUID;
@@ -999,7 +992,7 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 						new Integer(document.getDocID()),
 						file.getFileNameLog(), file.getFileNameFis(),
 						file.getExtension(), miscFormat.getId(), axsf,
-						inputStream, entidad, false);
+						inputStream, entidad, true);
 
 		ISRepositoryCreateDocumentVO documentCreatedVO = RepositoryFactory
 				.getCurrentPolicy().createDocument(createVO);

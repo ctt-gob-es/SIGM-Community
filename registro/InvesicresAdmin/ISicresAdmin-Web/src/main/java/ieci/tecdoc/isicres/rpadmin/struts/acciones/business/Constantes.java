@@ -2,17 +2,17 @@ package ieci.tecdoc.isicres.rpadmin.struts.acciones.business;
 
 public class Constantes {
 	   
-    public static final String TOKEN_ICON_PERSON_BD = "img/arbol/userBd.gif"; 
-    public static final String TOKEN_ICON_GROUP_BD = "img/arbol/groupBd.gif";
-    public static final String TOKEN_ICON_ORGANIZATIONAL_UNIT = "img/arbol/org.gif";
-    public static final String TOKEN_ICON_ORGANIZATIONAL_UNIT_OPEN = "img/arbol/orgOpen.gif";
-    public static final String TOKEN_ICON_DEPARTAMENTS = "img/arbol/departament.gif";
+    public static final String TOKEN_ICON_PERSON_BD = "/StaticRegistroPresencialAdminWeb/resources/img/arbol/userBd.gif"; 
+    public static final String TOKEN_ICON_GROUP_BD = "/StaticRegistroPresencialAdminWeb/resources/img/arbol/groupBd.gif";
+    public static final String TOKEN_ICON_ORGANIZATIONAL_UNIT = "/StaticRegistroPresencialAdminWeb/resources/img/arbol/org.gif";
+    public static final String TOKEN_ICON_ORGANIZATIONAL_UNIT_OPEN = "/StaticRegistroPresencialAdminWeb/resources/img/arbol/orgOpen.gif";
+    public static final String TOKEN_ICON_DEPARTAMENTS = "/StaticRegistroPresencialAdminWeb/resources/img/arbol/departament.gif";
     
-    public static final String TOKEN_ICON_PERSON_LDAP ="img/arbol/person.gif";
-    public static final String TOKEN_ICON_GROUP_LDAP ="img/arbol/group.gif";
-    public static final String TOKEN_ICON_ORGANIZATIONAL_UNIT_LDAP = "img/arbol/ou.gif";
+    public static final String TOKEN_ICON_PERSON_LDAP ="/StaticRegistroPresencialAdminWeb/resources/img/arbol/person.gif";
+    public static final String TOKEN_ICON_GROUP_LDAP ="/StaticRegistroPresencialAdminWeb/resources/img/arbol/group.gif";
+    public static final String TOKEN_ICON_ORGANIZATIONAL_UNIT_LDAP = "/StaticRegistroPresencialAdminWeb/resources/img/arbol/ou.gif";
     
-    public static final String TOKEN_ICON_OTHER = "img/arbol/other.gif";
+    public static final String TOKEN_ICON_OTHER = "/StaticRegistroPresencialAdminWeb/resources/img/arbol/other.gif";
     
     public static final String TOKEN_KEY_VALUE = ":";
     

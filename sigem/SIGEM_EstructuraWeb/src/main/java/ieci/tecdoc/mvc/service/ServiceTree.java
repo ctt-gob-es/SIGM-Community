@@ -208,7 +208,7 @@ public abstract class ServiceTree {
     public void anyadeTonto (StringBuffer sbuff, String id)
     {
         String sentencia =
-            "var tonto = new WebFXTreeItem('Cargando ...','','','include/images/clockani.gif','',''); \n" +
+            "var tonto = new WebFXTreeItem('Cargando ...','','','/StaticEstructuraWeb/resources/include/images/clockani.gif','',''); \n" +
         	"nodo"+id+".add(tonto); \n";
         sbuff.append(sentencia);
     }

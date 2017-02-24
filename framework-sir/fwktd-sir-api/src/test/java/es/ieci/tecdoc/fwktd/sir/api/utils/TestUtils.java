@@ -202,8 +202,8 @@ public class TestUtils extends AbstractJUnit4SpringContextTests {
         asiento.setNumeroRegistro("201000100000001");
         asiento.setFechaRegistro(new Date());
         asiento.setTimestampRegistro("***timestamp***".getBytes());
-        asiento.setResumen("Resumen");
-        asiento.setCodigoAsunto("ASUNTO0000000001");
+        asiento.setResumen("SIR-GE-PR-001");
+        asiento.setCodigoAsunto("SIR-GE-PR-001");
         asiento.setReferenciaExterna("REF0000000000001");
         asiento.setNumeroExpediente("EXP2010/00001");
         asiento.setTipoTransporte(TipoTransporteEnum.FAX);

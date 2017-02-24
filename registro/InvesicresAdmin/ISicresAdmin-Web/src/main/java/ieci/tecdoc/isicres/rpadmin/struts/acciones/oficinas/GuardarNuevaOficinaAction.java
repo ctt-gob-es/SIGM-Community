@@ -54,7 +54,7 @@ public class GuardarNuevaOficinaAction extends RPAdminWebAction {
 
 			OficinaBean nuevaOficina = new OficinaBean();
 			BeanUtils.copyProperties(nuevaOficina, oficinaForm);
-
+			nuevaOficina.setIdOrgs(1);
 			if( logger.isDebugEnabled() ) {
 				logger.debug("La oficina creada es: " + nuevaOficina.toString());
 			}

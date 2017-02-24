@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o –en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<xsd:schema 
+	targetNamespace="http://www.msssi.es/Regtel/2015/1"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+	xmlns:tns="http://www.msssi.es/Regtel/2015/1" 
+	elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	
+
+	<!-- SERVICIOS -->
+	<xsd:element name="peticionRegistro" type="tns:peticionRegistro"/>
+	<xsd:element name="peticionBusqueda" type="tns:peticionBusqueda"/>
+	<xsd:element name="peticionDetalle" type="tns:peticionDetalle"/>
+	<xsd:element name="peticionAdjuntarDocumento" type="tns:peticionAdjuntarDocumento"/>
+	<xsd:element name="peticionRecuperarDocumento" type="tns:peticionRecuperarDocumento"/>
+	<xsd:element name="peticionGenerarAcuse" type="tns:peticionGenerarAcuse"/>
+
+	<!-- SERVICIOS. SOLICITUD -->
+	<xsd:element name="elementoSolicitud" type="tns:elementoSolicitud"/>
+
+	<!-- SERVICIOS. ELEMENTOS BASE -->
+	<xsd:complexType name="peticionSigm">
+		<xsd:sequence/>
+	</xsd:complexType>
+
+	<xsd:complexType name="peticionRegistro">
+		<xsd:complexContent>
+			<xsd:extension base="tns:peticionSigm">
+				<xsd:all>
+					<xsd:element name="ficheros" type="tns:ficheros"/>
+					<xsd:element name="contenidoAcuse" type="tns:fieldBoolean" minOccurs="0" maxOccurs="1"/>
+				</xsd:all>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>	
+	
+	<xsd:complexType name="peticionAdjuntarDocumento">
+		<xsd:complexContent>
+			<xsd:extension base="tns:peticionSigm">
+				<xsd:all>
+					<xsd:element name="tipoRegistro" type="tns:tipoRegistro" minOccurs="1" maxOccurs="1"/>
+					<xsd:element name="numeroRegistro" type="tns:numeroRegistro" minOccurs="1" maxOccurs="1"/>
+					<xsd:element name="documento" type="tns:documento" minOccurs="1" maxOccurs="1"/>
+				</xsd:all>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="peticionRecuperarDocumento">
+		<xsd:complexContent>
+			<xsd:extension base="tns:peticionSigm">
+				<xsd:all>
+					<xsd:element name="tipoRegistro" type="tns:tipoRegistro" minOccurs="1" maxOccurs="1"/>
+					<xsd:element name="numeroRegistro" type="tns:numeroRegistro" minOccurs="1" maxOccurs="1"/>
+					<xsd:element name="nombreDocumento" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+				</xsd:all>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="peticionBusqueda">
+		<xsd:complexContent>
+			<xsd:extension base="tns:peticionSigm">
+				<xsd:all>
+					<xsd:element name="tipoRegistro" type="tns:tipoRegistro" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="numeroRegistro" type="tns:numeroRegistro" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="usuario" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="fechaDesde" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="fechaHasta" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="estadoRegistro" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="origen" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="destino" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="interesados" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+					<xsd:element name="asunto" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+				</xsd:all>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+
+	<xsd:complexType name="peticionDetalle">
+		<xsd:complexContent>
+			<xsd:extension base="tns:peticionSigm">
+				<xsd:sequence>
+					<xsd:element name="tipoRegistro" type="tns:tipoRegistro" minOccurs="1" maxOccurs="1"/>
+					<xsd:element name="numeroRegistro" type="tns:numeroRegistro" minOccurs="1" maxOccurs="1"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="peticionGenerarAcuse">
+		<xsd:complexContent>
+			<xsd:extension base="tns:peticionSigm">
+				<xsd:sequence>
+					<xsd:element name="tipoRegistro" type="tns:tipoRegistro" minOccurs="1" maxOccurs="1"/>
+					<xsd:element name="numeroRegistro" type="tns:numeroRegistro" minOccurs="1" maxOccurs="1"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- SERVICIOS. SOLICITUD -->
+	<xsd:complexType name="elementoSolicitud">
+		<xsd:sequence>
+			<xsd:element name="datos" type="tns:elementoDatos"/>
+            <xsd:element name="ficheros" type="tns:elementoFicherosSolicitud" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- SERVICIOS. OTROS ELEMENTOS -->
+
+	<xsd:complexType name="documento">
+		<xsd:all>
+			<xsd:element name="contenido" type="xsd:base64Binary" minOccurs="0"/>
+			<xsd:element name="nombre" type="xsd:string"/>
+		</xsd:all>
+	</xsd:complexType>
+	
+	<xsd:complexType name="ficheros">
+		<xsd:sequence>
+			<xsd:element name="fichero" type="tns:fichero" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="fichero">
+		<xsd:all>
+			<xsd:element name="contenido" type="xsd:base64Binary"/>
+			<xsd:element name="nombre" type="xsd:string"/>
+			<xsd:element name="formato" type="xsd:string"/>
+		</xsd:all>
+		<xsd:attribute name="tipo" type="tns:fileType"/>
+	</xsd:complexType>
+	
+	<xsd:complexType name="elementoFicherosSolicitud">
+		<xsd:sequence>
+			<xsd:element name="fichero" type="tns:elementoFicheroSolicitud" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="elementoFicheroSolicitud">
+		<xsd:all>
+			<xsd:element name="nombre" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="hashAlgorithm" type="tns:typeAlgorithm" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="hashValue" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="comentario" type="tns:comentarioDocumentoElectronico" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="tipoDocumento" type="tns:tipoDocumentoElectronico" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="validezDocumento" type="tns:tipoValidezDocumentoElectronico" minOccurs="0" maxOccurs="1"/>
+		</xsd:all>
+	</xsd:complexType>
+
+
+	<xsd:complexType name="elementoDatos">
+		<xsd:all>
+			<xsd:element name="tipoRegistro" type="tns:tipoRegistro"/>
+			<xsd:element name="oficina" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="origen" type="xsd:string"  minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="destino" type="xsd:string"  minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="interesados" type="tns:elementoDatosInteresados" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="fechaRegistroOriginal" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="numeroRegistroOriginal" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="tipoRegistroOriginal" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="tipoTransporte" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="numeroTransporte" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="tipoAsunto" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="resumen" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="refExpediente" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="datosExtendidos" type="tns:elementoDatosExtendidos" minOccurs="0" maxOccurs="1"/>
+		</xsd:all>
+	</xsd:complexType>
+
+	<!-- INTERESADOS -->
+	<xsd:complexType name="elementoDatosInteresados">
+		<xsd:sequence>
+			<xsd:choice maxOccurs="unbounded">
+				<xsd:element name="interesadoJuridico" type="tns:interesadoJuridico" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="interesadoFisico" type="tns:interesadoFisico" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="interesadoJuridico">
+		<xsd:all>
+			<xsd:element name="tipoDocumento" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="numeroDocumento" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="razonSocial" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="representante" type="tns:elementoRepresentante" minOccurs="0" maxOccurs="1"/>
+		</xsd:all>
+	</xsd:complexType>
+	<xsd:complexType name="interesadoFisico">
+		<xsd:all>
+			<xsd:element name="tipoDocumento" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="numeroDocumento" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="nombre" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="primerApellido" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="segundoApellido" type="xsd:string" maxOccurs="1"/>
+			<xsd:element name="representante" type="tns:elementoRepresentante" minOccurs="0" maxOccurs="1"/>
+		</xsd:all>
+	</xsd:complexType>
+
+	<!-- INTERESADOS. REPRESENTANTES -->
+	<xsd:complexType name="elementoRepresentante">
+		<xsd:sequence>
+			<xsd:choice>
+				<xsd:element name="representanteJuridico" type="tns:representanteJuridico" maxOccurs="1"/>
+				<xsd:element name="representanteFisico" type="tns:representanteFisico" maxOccurs="1"/>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="representanteJuridico">
+		<xsd:all>
+			<xsd:element name="tipoDocumento" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="numeroDocumento" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="razonSocial" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+		</xsd:all>
+	</xsd:complexType>
+	<xsd:complexType name="representanteFisico">
+		<xsd:all>
+			<xsd:element name="tipoDocumento" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="numeroDocumento" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="nombre" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="primerApellido" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="segundoApellido" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+		</xsd:all>
+	</xsd:complexType>
+	
+	<!-- DATOS EXTENDIDOS -->
+	<xsd:complexType name="elementoDatosExtendidos">
+		<xsd:sequence>
+			<xsd:element name="datoExtendido" type="tns:elementoDatoExtendido" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="elementoDatoExtendido">
+		<xsd:all>
+			<xsd:element name="campo" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="valor" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="descripcion" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+			<xsd:element name="seccion" type="xsd:string" minOccurs="0"/>
+		</xsd:all>
+	</xsd:complexType>
+
+	<!-- RESTRICCIONES -->
+	<xsd:simpleType name="numeroRegistro">
+		<xsd:restriction base="xsd:integer">
+			<xsd:totalDigits value="15"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoRegistro">
+		<xsd:restriction  base="xsd:string">
+			<xsd:pattern value="[E|S]"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoValidezDocumentoElectronico">
+		<xsd:restriction  base="xsd:string">
+			<xsd:enumeration value="01"/>
+			<xsd:enumeration value="02"/>
+			<xsd:enumeration value="03"/>
+			<xsd:enumeration value="04"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="tipoDocumentoElectronico">
+		<xsd:restriction  base="xsd:string">
+			<xsd:enumeration value="01"/>
+			<xsd:enumeration value="02"/>
+			<xsd:enumeration value="03"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="comentarioDocumentoElectronico">
+		<xsd:restriction  base="xsd:string">
+			<xsd:maxLength value="50"/>
+		</xsd:restriction>
+	</xsd:simpleType>	
+	<xsd:simpleType name="fieldBoolean">
+		<xsd:restriction  base="xsd:string">
+			<xsd:pattern value="SI|NO"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="fileType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="SOLICITUD"/>
+			<xsd:enumeration value="ADJUNTO"/>
+			<xsd:enumeration value="FIRMA"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="typeAlgorithm">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="SHA-1"/>
+			<xsd:enumeration value="SHA-256"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+</xsd:schema>

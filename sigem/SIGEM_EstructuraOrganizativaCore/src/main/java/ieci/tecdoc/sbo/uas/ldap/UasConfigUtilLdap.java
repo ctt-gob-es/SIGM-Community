@@ -69,7 +69,7 @@ public final class UasConfigUtilLdap
 
           fileName = IECI_LDAP_CFG_FILE_NAME;
           
-          fileLoc = CfgMisc.getConfigFilePath(fileName);
+          fileLoc =  ieci.tecdoc.sbo.config.CfgMisc.getConfigFilePath(fileName);
          if (fileLoc != null)
             fileText =  FileManager.readStringFromFile(fileLoc);
          else

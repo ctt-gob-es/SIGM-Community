@@ -14,7 +14,7 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.postgresql.Driver" />
 		<property name="url"
-			value="jdbc:postgresql://10.228.75.106:5432/ISicres_3_0" />
+			value="jdbc:postgresql://127.0.0.1:5432/ISicres_3_0" />
 		<property name="username" value="postgres" />
 		<property name="password" value="postgres" />
 	</bean>

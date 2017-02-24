@@ -21,10 +21,11 @@ public class DBSessionManager {
 	private static String CASE_SENSITIVE = "CS";
 	private static String CASE_INSENSITIVE = "CI";
 
-	public static Connection getSession(String entidad)
+	public Connection getSession(String entidad)
 			throws ISicresAdminDAOException {
 		try {
-			return DataSourceManager.getConnection(entidad);
+		    DataSourceManager dataSourceManager = new DataSourceManager();
+			return dataSourceManager.getConnection(entidad);
 
 		} catch (Exception e) {
 			logger.error("Error obteniendo conexión con la BBDD");
@@ -40,7 +41,7 @@ public class DBSessionManager {
 	 * @throws ISicresAdminDAOException
 	 * @throws SQLException
 	 */
-	public static String getDBCaseSensitive(String entidad)
+	public String getDBCaseSensitive(String entidad)
 			throws ISicresAdminDAOException, SQLException {
 		Connection con = getSession(entidad);
 
@@ -106,7 +107,7 @@ public class DBSessionManager {
 	 * @throws ISicresAdminDAOException
 	 * @throws SQLException
 	 */
-	public static int getDataBase(String entidad) throws ISicresAdminDAOException,
+	public  int getDataBase(String entidad) throws ISicresAdminDAOException,
 			SQLException {
 		Connection con = getSession(entidad);
 

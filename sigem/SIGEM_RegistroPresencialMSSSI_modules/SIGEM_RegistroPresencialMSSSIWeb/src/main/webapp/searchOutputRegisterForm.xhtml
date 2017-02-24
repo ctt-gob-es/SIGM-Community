@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/layout.xhtml">
+		<ui:define name="head">
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/jquery.ui.accordion.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/calendar.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/accordion.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/dialog.js"></script>
+						<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/distribution.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/report.js"></script>
+				<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/utilsDatatable.js"></script>
+
+		</ui:define>
+
+		<ui:define name="breadcrumb">
+			<ol>
+				<li><h:link value="#{msgs.labelInicio}" outcome="goInicioForm" /></li>
+				<li><h:outputText value="#{J_BOOK.idocarchhdr.name}" /></li>
+				<li><h:outputText value="#{msgs.labelBusquedaRegistrosSalida}" /></li>
+			</ol>
+		</ui:define>
+		<ui:define name="content">
+			<h2>
+				<h:outputText value="#{msgs.labelBusquedaRegistrosSalida}" />
+				<div class="bookStyle">
+					<img
+						src="#{webParam.entryParameters['URLRoot']}/img/books.png" />	
+					<div style="display: table-cell; padding: 0px; vertical-align: top;">
+						<h:outputText value="#{J_BOOK.idocarchhdr.name}" />
+					</div>
+				</div>
+			</h2>
+			<div class="sombra"></div>
+
+			<h:form id="form">
+			<p:remoteCommand name="updatePanel" update="panel"  />
+				<div class="enlaces">
+					<ul>
+						<ui:fragment
+							rendered="${J_PARAMBOOK.canCreate and not J_PARAMBOOK.readOnly and J_SESSIONINF.officeEnabled=='true'}">
+							<li><h:commandLink value="#{msgs.labelNuevoRegistroSalida}"
+									action="goNewOutputRegisterForm" immediate="true"
+									actionListener="#{searchOutputRegisterAction.onRowSelectNavigateBottomNuevo}" /></li>
+						</ui:fragment>
+						<li><p:commandLink value="#{msgs.labelInformes}"
+								action="goOutputRegisterRelationsReportForm" immediate="true"
+								oncomplete="showMessage(xhr, status, args)" /></li>
+					</ul>
+				</div>
+
+				<!--DIV PARA EL LIBRO DE SALIDA-->
+				<div id="libros-salida">
+					<div id="accordion">
+						<h3 onclick="updatePanel()">
+							<h:outputText value="#{msgs.labelCriteriosBusqueda}" />
+						</h3>
+						<fieldset>
+							<p:messages id="messages" showDetail="false" autoUpdate="true"
+								closable="true"  severity="error" />
+							<h:panelGroup id="panel" layout="block">
+								<label for="form:fld1Value" class="general"> <span
+									class="label"><h:outputText id="fld1Label"
+											value="#{msgs.fld1label}" /></span> <p:inputText id="fld1Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld1Value}"
+										label="#{msgs.fld1label}">
+										<f:validateLength maximum="20" />
+									</p:inputText>
+								</label>
+								<label for="form:fld2ValueDesde" class="general"> <span
+									class="label"><h:outputText id="fld2Label"
+											value="#{msgs.fld2label}" /></span> <p:calendar locale="es"
+										id="fld2ValueDesde" navigator="true" pattern="dd/MM/yyyy HH:mm:ss"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld2ValueDesde}"
+										showOn="button" label="#{msgs.fld2label}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" locale="es_ES"
+											timeZone="Europe/Paris" />
+									</p:calendar> <p:calendar locale="es" id="fld2ValueHasta" navigator="true"
+										pattern="dd/MM/yyyy HH:mm:ss"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld2ValueHasta}"
+										showOn="button" label="#{msgs.fld2label}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" locale="es_ES"
+											timeZone="Europe/Paris" />
+									</p:calendar>
+									<p:watermark for="fld2ValueDesde" value="#{msgs.fld2labelDesde}" /> 
+									<p:watermark for="fld2ValueHasta" value="#{msgs.fld2labelHasta}" /> 
+								</label>
+								<label for="form:fld3Value" class="general"> <span
+									class="label"><h:outputText id="fld3Label"
+											value="#{msgs.fld3label}" /></span> <p:inputText id="fld3Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld3Value}"
+										label="#{msgs.fld3label}">
+										<f:validateLength maximum="32" />
+									</p:inputText>
+								</label>
+
+								<label for="form:fld5Value" class="general"> <span
+									class="label"><h:outputText id="fld5Label"
+											value="#{msgs.fld5label}" /></span> <p:selectOneMenu id="fld5Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld5Value}"
+										label="#{msgs.fld5label}">
+										<f:selectItem itemValue="" itemLabel="" />
+										<f:selectItems value="#{validationListAction.listOficinas}"
+											var="of" itemValue="#{of.id}"
+											itemLabel="#{of.acron} - #{of.name}" />
+									</p:selectOneMenu>
+								</label>
+								<label for="form:fld7Value" class="general"> <span
+									class="label"><h:outputText id="fld7Label" 
+											value="#{msgs.fld7label}" /></span>
+											<c:set var="orgPadre"
+										value=" (#{org.nameOrgFather})" />
+										 <c:set var="organismo"
+										value="#{org.code} #{org.name}" />
+										
+										 <p:autoComplete
+										style="width:400px"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld7Value}"
+										id="fld7Value" label="#{msgs.fld7label}"
+										completeMethod="#{validationListAction.completeOrgOrigen}"  escape="false"
+										minQueryLength="3" var="org" queryDelay="400"
+										itemLabel="#{(empty org) ? '' : fn:trim(organismo)}" itemValue="#{org}" 
+										converter="orgConverterOrigin" forceSelection="true"
+										scrollHeight="200" >
+											<p:column>
+								                <h:outputText styleClass="organismo" value="#{org.code} #{org.name}"/>
+								                <br/>
+								                <h:outputText styleClass="organismopadre" value="#{orgPadre}" />
+								                <div class="ut">
+								               	 	<ui:fragment rendered="${org.scrTypeadm.id == 1}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png" 
+																			title="#{msgs.isownOrg}" />														
+														</ui:fragment>
+										            	<ui:fragment rendered="${org.isTramUnit}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png" 
+																			title="#{msgs.isTramUnit}" />														
+														</ui:fragment>
+														
+													</div>
+								            </p:column>
+										</p:autoComplete>
+										<p:commandButton id="OriginButton"
+											styleClass="organismobusq"
+											icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"
+											inmediate="true" process="@this" actionListener="#{searchUnitsAction.chooseUnits}">
+											<p:ajax event="dialogReturn" listener="#{searchOutputRegisterAction.updateOrigin}" update="fld7Value" 
+											 oncomplete="document.getElementById('form:fld7Value_input').focus()"  />
+										</p:commandButton>
+								</label>
+								<label for="form:fld8Value" class="general"> <span
+									class="label"><h:outputText id="fld8Label"
+											value="#{msgs.fld8label}" /></span> <p:autoComplete
+										style="width:400"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld8Value}"
+										id="fld8Value" label="#{msgs.fld8label}" escape="false"
+										completeMethod="#{validationListAction.completeOrgDestino}"
+										minQueryLength="3" var="org" queryDelay="400"
+										itemLabel="#{(empty org) ? '' : fn:trim(organismo)}" itemValue="#{org}"
+										converter="orgConverterDestination" forceSelection="true"
+										scrollHeight="200">
+											<p:column>
+								                <h:outputText styleClass="organismo" value="#{org.code} #{org.name}"/>
+								                <br/>
+								                <h:outputText styleClass="organismopadre" value="#{orgPadre}" />
+												<div class="ut">
+													<ui:fragment rendered="${org.scrTypeadm.id == 1}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png" 
+																			title="#{msgs.isownOrg}" />														
+														</ui:fragment>
+										            	<ui:fragment rendered="${org.isTramUnit}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png" 
+																			title="#{msgs.isTramUnit}" />														
+														</ui:fragment>
+													</div>
+								            </p:column>
+										</p:autoComplete>
+										<p:commandButton id="DestinationButton"
+											styleClass="organismobusq"
+											icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"
+											inmediate="true" process="@this" actionListener="#{searchUnitsAction.chooseUnits}">
+											<p:ajax event="dialogReturn" listener="#{searchOutputRegisterAction.updateDestination}" update="fld8Value" 
+											 oncomplete="document.getElementById('form:fld8Value_input').focus()"  />
+										</p:commandButton>
+
+								</label>
+								<label for="form:fld9Value" class="general"> <span
+									class="label"><h:outputText id="fld9LabelD"
+											value="#{msgs.fld9labelD}" /></span> <p:inputText id="fld9Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld9Value}"
+										label="#{msgs.fld9labelD}">
+										<f:validateLength maximum="80" />
+									</p:inputText>
+								</label>
+								<label for="form:fld12Value" class="general"> <span
+									class="label"><h:outputText id="fld16Label"
+											value="#{msgs.fld16label}" /></span> <c:set var="asunto"
+										value="#{asun.code} #{asun.matter}" /> <p:selectOneMenu
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld12Value}"
+										id="fld12Value" label="#{msgs.fld16label}"
+										converter="asuntConverter" panelStyle="width:150px"
+										effect="fade" filter="true" filterMatchMode="contains">
+										<f:selectItem itemLabel="" itemValue="" />
+										<f:selectItems value="#{validationListAction.listAsuntos}"
+											var="asuntos" itemLabel="#{asuntos.code} #{asuntos.matter}"
+											itemValue="#{asuntos}" />
+									</p:selectOneMenu>
+
+								</label>
+								<label for="form:fld13Value" class="general"> <span
+									class="label"><h:outputText id="fld17Label"
+											value="#{msgs.fld17label}" /></span> <p:inputText id="fld13Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld13Value}"
+										label="#{msgs.fld17label}">
+										<f:validateLength maximum="240" />
+									</p:inputText>
+								</label>
+								<label for="form:fld10Value" class="general"> <span
+									class="label"><h:outputText id="fld10Label"
+											value="#{msgs.fld14label}" /></span> <p:selectOneMenu
+										id="fld10Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld10Value}"
+										label="#{msgs.fld14label}">
+										<f:selectItem itemValue="" itemLabel="" />
+										<f:selectItems value="#{validationListAction.listTransportes}"
+											var="trans" itemValue="0#{trans.id}"
+											itemLabel="#{trans.transport}" />
+									</p:selectOneMenu>
+								</label>
+								<label for="form:fld11Value" class="general"> <span
+									class="label"><h:outputText id="fld15Label"
+											value="#{msgs.fld15label}" /></span> <p:inputText id="fld11Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld11Value}"
+										label="#{msgs.fld15label}">
+										<f:validateLength maximum="30" />
+										</p:inputText>
+								</label>
+								<label for="form:fld14Value" class="general"> <span
+									class="label"><h:outputText id="fld14Label"
+											value="#{msgs.fld18label}" /></span> <p:inputText id="fld14Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld14Value}"
+										label="#{msgs.fld18label}">
+										<f:validateLength maximum="240" />
+									</p:inputText>
+								</label>
+								<label for="form:fld503Value" class="general"> <span
+									class="label"><h:outputText id="fld503Label"
+											value="#{msgs.fld503LabelSearch}" /></span>
+									<p:selectOneMenu
+										id="fld503Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld503Value}"
+										label="#{msgs.fld503label}">
+										<f:selectItem itemValue="" itemLabel="" />
+										<f:selectItem itemValue="1" itemLabel="SIR" />
+										<f:selectItem itemValue="0" itemLabel="No SIR" />
+									</p:selectOneMenu>
+								</label>
+								<label for="form:fld504Value" class="general">
+								<span class="label"><h:outputText id="selectedDocSIRLabel"
+												value=" " /></span> 
+										<p:selectBooleanCheckbox
+										id="fld506Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld506Value}"
+										label="#{msgs.fld506Text}" /><span class="label sirSoporte">
+										  <img src="#{webParam.entryParameters['URLRoot']}/img/docfld506.png"  style="padding-right: 5px;" /><h:outputText
+											id="fld506label" 
+											value="#{msgs.fld506Text}" /></span> 
+										<p:selectBooleanCheckbox
+										id="fld505Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld505Value}"
+										label="#{msgs.fld505Text}" /><span class="label sirSoporte">
+										  <img src="#{webParam.entryParameters['URLRoot']}/img/docfld505.png" style="padding-right: 5px;" /><h:outputText
+											id="fld505label" value="#{msgs.fld505Text}" /></span>	
+										<p:selectBooleanCheckbox
+										id="fld504Value"
+										value="#{searchOutputRegisterAction.outputRegisterBo.searchOutputRegister.fld504Value}"
+										label="#{msgs.fld504Text}" />
+										<span class="label sirSoporte" >
+										  <img src="#{webParam.entryParameters['URLRoot']}/img/docfld504.png" style="padding-right: 5px;"  />
+										  <h:outputText
+											id="fld504label" value="#{msgs.fld504Text}" /></span>
+								</label>
+								<div class="botones">
+									<p:commandButton styleClass="boton-buscar" id="btnbuscar"
+										oncomplete="showResults(xhr, status, args)"
+										value="#{msgs.labelBotonBuscar}" update="panel,books,panelOpciones"
+										process="@form" onclick="tableBooks.getPaginator().setPage(0)"
+										actionListener="#{searchOutputRegisterAction.initRegisterQuery}" />
+									<p:commandButton styleClass="boton-limpiar"
+										value="#{msgs.labelBotonLimpiar}" process="@this"
+										update="panel,books,panelOpciones"
+										actionListener="#{searchOutputRegisterAction.limpiar}"
+										immediate="true" />
+									<p:commandButton styleClass="boton-buscarultimo"
+										oncomplete="$( '#accordion' ).accordion({active: 1});"
+										process="@this" value="#{msgs.labelBotonBuscarUltimo}"
+										update="@form,panelOpciones"
+										actionListener="#{searchOutputRegisterAction.lastRegister}"
+										immediate="true" onclick="tableBooks.getPaginator().setPage(0)">
+
+									</p:commandButton>
+								</div>
+							</h:panelGroup>
+						</fieldset>
+
+						<h3>
+							<h:outputText value="#{msgs.labelResultadosBusqueda}" />
+						</h3>
+						<fieldset>
+							<div class="opciones">
+								<h:panelGroup id="panelOpciones" layout="block">
+									<ui:fragment rendered="#{searchOutputRegisterAction.outputRegisterBo.rowCount > 0}">
+									<ul>
+										<li><p:commandLink id="exportXLSButton" ajax="false"
+												value="#{msgs.labelExportXLS}" styleClass="excel" onclick="if(isGenerateExport()){ PrimeFaces.monitorDownload(startExportExcel, stopOnlyExportExcel);}else{return false;}"
+												actionListener="#{exportAction.exportXLS}"></p:commandLink></li>
+										<li><p:commandLink id="exportPDFButton" ajax="false"
+												value="#{msgs.labelExportPDF}" styleClass="pdf" onclick="if(isGenerateExport()){ PrimeFaces.monitorDownload(startExportPDF, stopOnlyExportPDF);}else{return false;}"
+												actionListener="#{exportAction.exportPDF}"></p:commandLink></li>
+	
+										<ui:fragment
+											rendered="${J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly and J_SESSIONINF.officeEnabled=='true'}">
+											<li><p:commandLink styleClass="editar" id="editButton"
+													title="editar" update="dialogMessage"
+													value="#{msgs.labelBotonEditar}"
+													actionListener="#{searchOutputRegisterAction.onRowSelectNavigateBottomEdit}"
+													oncomplete="showMessage(xhr, status, args)">
+												</p:commandLink></li>
+										</ui:fragment>
+										<ui:fragment
+											rendered="${J_PARAMBOOK.canQuery and not J_PARAMBOOK.canModify}">
+											<li><p:commandLink styleClass="abrir" id="verButton"
+													title="#{msgs.labelBotonVer}" update="dialogMessage"
+													value="#{msgs.labelBotonVer}"
+													actionListener="#{searchOutputRegisterAction.onRowSelectNavigateBottomView}"
+													oncomplete="showMessage(xhr, status, args)">
+												</p:commandLink></li>
+										</ui:fragment>
+										<ui:fragment
+											rendered="${J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly and J_SESSIONINF.officeEnabled=='true'}">
+											<li><p:commandLink styleClass="copiar" id="copyButton"
+													title="copiar" update="dialogMessage"
+													value="#{msgs.labelBotonCopiar}"
+													actionListener="#{searchOutputRegisterAction.onRowSelectNavigateBottomCopy}"
+													oncomplete="showMessage(xhr, status, args)">
+												</p:commandLink></li>
+										</ui:fragment>
+										<li><p:commandLink styleClass="informes"  id="reportButton"
+													title="#{msgs.labelRecibos}" onclick="if(isGenerateRecibo()){ PrimeFaces.monitorDownload(start, stopOnly);}else{return false;}"
+													value="#{msgs.labelRecibos}"
+													actionListener="#{reportsOutputRegisterAction.onRowSelectNavigateBottomBuildReport}"
+													ajax="false">
+													<p:fileDownload value="#{reportsOutputRegisterAction.file}" />
+												</p:commandLink>
+										</li>
+										<ui:fragment
+												rendered="${J_PARAMBOOK.canDistRegistersDist and J_SESSIONINF.officeEnabled=='true'}">
+												<li><p:commandLink id="distribuir"
+														value="#{msgs.labelDistribuir}"
+														title="#{msgs.labelDistribuir}" process="@form"
+														update="dialogMessage,:distribuirform"
+														styleClass="distribuir"
+														actionListener="#{searchOutputRegisterAction.reinitDis}"
+														oncomplete="decideOpenningDis (xhr, status, args)"></p:commandLink></li>
+											</ui:fragment>
+										<ui:fragment rendered="${J_PARAMBOOK.canOpenReg}">
+											<li><p:commandLink styleClass="abrir" id="abrirButton"
+													title="#{msgs.labelBotonAbrir}"
+													update="dialogMessage,books"
+													value="#{msgs.labelBotonAbrir}"
+													actionListener="#{searchOutputRegisterAction.openReg}"
+													oncomplete="showMessage(xhr, status, args)">
+												</p:commandLink></li>
+										</ui:fragment>
+										<ui:fragment
+											rendered="${J_PARAMBOOK.canOpenReg and not J_PARAMBOOK.readOnly and J_SESSIONINF.officeEnabled=='true'}">
+											<li><p:commandLink styleClass="cerrar" id="cerrarButton"
+													title="#{msgs.labelBotonCerrar}"
+													update="dialogMessage,books"
+													value="#{msgs.labelBotonCerrar}"
+													actionListener="#{searchOutputRegisterAction.closeReg}"
+													oncomplete="showMessage(xhr, status, args)">
+												</p:commandLink></li>
+										</ui:fragment>
+										<p:dialog id="dialog" widgetVar="dialog" draggable="false"
+											header="Validación" resizable="false" modal="true">
+											<p:messages id="dialogMessage" showDetail="true" />
+										</p:dialog>
+										<p:dialog id="dialogRecibo" widgetVar="dialogRecibo" draggable="false"
+												header="Validación" resizable="false" modal="true">
+												<div class="ui-messages ui-widget" aria-live="polite">
+													<div class="ui-messages-warn ui-corner-all">
+														<span class="ui-messages-warn-icon"></span>
+														<ul><li>
+															<span class="ui-messages-warn-summary"></span>
+															<span class="ui-messages-warn-detail">Debe seleccionar un único registro</span>
+															</li></ul>
+													</div>
+												</div>
+											</p:dialog>
+											<p:dialog id="dialogExport" widgetVar="dialogExport" draggable="false"
+												header="Validación" resizable="false" modal="true">
+												<div class="ui-messages ui-widget" aria-live="polite">
+													<div class="ui-messages-warn ui-corner-all">
+														<span class="ui-messages-warn-icon"></span>
+														<ul><li>
+															<span class="ui-messages-warn-summary"></span>
+															<span class="ui-messages-warn-detail">No se pueden exportar mas de 2000 registros. Por favor, afine más la búsqueda</span>
+															</li></ul>
+													</div>
+												</div>
+											</p:dialog>
+											<p:dialog modal="true" widgetVar="statusDialog"
+												header="Generando Recibo, espere por favor" draggable="false"
+												closable="false" resizable="false" style="text-align: center;">
+												<img
+													src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+											</p:dialog>
+											<p:dialog modal="true" widgetVar="statusDialogExportExcel"
+												header="Exportando resultados a Excel, espere por favor" draggable="false"
+												closable="false" resizable="false" style="text-align: center;">
+												<img
+													src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+											</p:dialog>
+											<p:dialog modal="true" widgetVar="statusDialogExportPDF"
+												header="Exportando resultados a PDF, espere por favor" draggable="false"
+												closable="false" resizable="false" style="text-align: center;">
+												<img
+													src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+											</p:dialog>
+									</ul>
+									</ui:fragment>
+									</h:panelGroup>
+							</div>
+							<p>
+
+								<p:dataTable summary="Tabla de Resultados" var="reg"
+									value="#{searchOutputRegisterAction.outputRegisterBo}"
+									paginator="true" rows="10"
+									emptyMessage="No se encuentran registros"
+									paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}  {JumpToPageDropdown}"
+									paginatorPosition="bottom"
+									selection="#{searchOutputRegisterAction.selectedResults}"
+									dblClickSelect="true" rowIndexVar="rowIndex"
+									rowSelectListener="#{searchOutputRegisterAction.onRowSelectNavigate}"
+									id="books" lazy="true"  widgetVar="tableBooks">
+									<p:ajax event="rowDblselect"
+										listener="#{searchOutputRegisterAction.onRowSelectNavigateEdit}"
+										disabled="${not (J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly and J_SESSIONINF.officeEnabled=='true')}" />
+									<p:ajax event="rowDblselect"
+										listener="#{searchOutputRegisterAction.onRowSelectNavigateView}"
+										disabled="${not (J_PARAMBOOK.canQuery and not J_PARAMBOOK.canModify)}" />
+									<p:ajax event="page"
+										listener="#{searchOutputRegisterAction.pageButton}" />
+									<p:ajax event="sort"
+										listener="#{searchOutputRegisterAction.sortButton}" />
+									<f:facet name="header">
+									</f:facet>
+									<p:column selectionMode="multiple" style="width:1%"
+										exportable="false" />
+									<p:column sortBy="#{reg.fld1}" style="width:10%">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld1labelShort}" />
+										</f:facet>
+										<h:outputText value="#{reg.fld1}" />
+									</p:column>
+									<p:column sortBy="#{reg.fld2}" style="width:7%">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld2labelShort}" />
+										</f:facet>
+										<h:outputText value="#{reg.fld2}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+												locale="es_ES" timeZone="Europe/Paris" />
+										</h:outputText>
+									</p:column>
+									<p:column sortBy="#{reg.fld5}" style="width:9%">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld5labelShort}" />
+										</f:facet>
+										<h:outputText value="#{reg.fld5Name}" />
+									</p:column>
+									<p:column sortBy="#{reg.fld12}" style="width:12%"  exportable="false">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld16labelShort}/#{msgs.fld17label}" />
+										</f:facet>
+										<div style="width: 190px;word-wrap: break-word;" onclick="selectCurrentRow(PF('tableBooks'),#{rowIndex});"
+										ondblclick="dblclickCurrentRow(PF('tableBooks'),#{rowIndex})">
+											<ui:fragment rendered="#{not empty reg.fld12.matter}">
+												<c:set var="asunto" value="#{reg.fld12.matter}" />
+												<h:outputText value="#{(empty asunto) ? '' : asunto}" /><br/>
+											</ui:fragment>
+											<h:outputText value="#{reg.fld13}" />
+										</div>
+									</p:column>
+									<p:column style="width:1%; display:none" exportable="true">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld16labelShort}" />
+										</f:facet>
+												<h:outputText value="#{reg.fld12.matter}" />
+									</p:column>
+									<p:column style="width:1%; display:none" exportable="true">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld17label}" />
+										</f:facet>
+											<h:outputText value="#{reg.fld13}" />
+									</p:column>
+									<p:column sortBy="#{reg.fld7}" style="width:15%">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld7label}" />
+										</f:facet>
+										<h:outputText value="#{reg.fld7Name}" />
+									</p:column>
+									<p:column sortBy="#{reg.fld8}" style="width:15%">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld8label}" />
+										</f:facet>
+										<h:outputText value="#{reg.fld8Name}" />
+									</p:column>
+									<p:column  style="width:16%"  exportable="false">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld9label}" />
+										</f:facet>
+										<div style="width: 130px;word-wrap: break-word;">
+											<h:outputText value="#{reg.fld9}" />
+										</div>
+									</p:column>
+									<p:column  style="width:1%; display:none" exportable="true">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld9label}" />
+										</f:facet>
+										<h:outputText value="#{reg.fld9}" />
+									</p:column>
+									<p:column style="width:1%; text-align: center;" exportable="false">
+										<div style="display: inline-table;">
+												<ui:fragment rendered="${reg.fld504=='1'}">
+													<div style="display: table-cell;">
+														<img style="margin: 2px;zoom: 0.85;"
+														src="#{webParam.entryParameters['URLRoot']}/img/docfld504.png" 
+														title="#{msgs.fld504Text}" />
+													</div>
+												</ui:fragment>
+												<ui:fragment rendered="${reg.fld505=='1'}">
+													<div style="display: table-cell;">
+														<img style="margin: 2px;zoom: 0.85;"
+														src="#{webParam.entryParameters['URLRoot']}/img/docfld505.png" 
+														title="#{msgs.fld505Text}" />
+													</div>
+												</ui:fragment>
+												<ui:fragment rendered="${reg.fld506=='1'}">
+													<div style="display: table-cell;">
+														<img style="margin: 2px;zoom: 0.85;"
+														src="#{webParam.entryParameters['URLRoot']}/img/docfld506.png" 
+														title="#{msgs.fld506Text}" />
+													</div>
+												</ui:fragment>
+												<ui:fragment rendered="${not empty reg.stateDis}">
+												<div style="display: table-cell;">
+												<c:set var="messageDistri" value="#{'labelDistrib.'}#{reg.stateDis}" />
+												
+													<img style="margin: 2px;"
+													src="#{webParam.entryParameters['URLRoot']}/img/icon-dis#{reg.stateDis}.png" 
+													title="#{msgs[messageDistri]}" />
+												</div>
+											</ui:fragment>
+											<ui:fragment rendered="${not empty reg.stateOutput}">
+												<div style="display: table-cell;">
+												<c:set var="messagestateOutput" value="#{'labelStateOutput.'}#{reg.stateOutput}" />
+												
+													<img style="margin: 2px;"
+													src="#{webParam.entryParameters['URLRoot']}/img/icon-ir0#{reg.stateOutput}.png" 
+													title="#{msgs[messagestateOutput]}" />
+												</div>
+											</ui:fragment>
+											</div>
+									</p:column>
+									<p:column style="width:1%; text-align: center;display:none" exportable="true">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.selectedDocSIRLabel}" />
+										</f:facet>
+											<h:outputText value="#{msgs.fld504Text}" rendered="#{reg.fld504=='1'}" />
+											<h:outputText value="#{msgs.fld505Text}"  rendered="#{reg.fld505=='1'}"/>
+											<h:outputText value="#{msgs.fld506Text}" rendered="#{reg.fld506=='1'}" />
+									</p:column>
+									<p:column style="width:1%; text-align: center;display:none" exportable="true">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.labeldistribucion}" />
+										</f:facet>
+											<c:set var="messageExportDis" value="#{'distributionhistory.minuta.dist.state.'}#{reg.stateDis}" />
+											<h:outputText value="#{msgs[messageExportDis]}" />
+									</p:column>
+									<p:column style="width:1%; text-align: center;display:none" exportable="true">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.labelIntRegistral}" />
+										</f:facet>
+											<c:set var="messageExportIR" value="#{'asientoRegitral.estado.'}#{reg.stateOutput}" />
+											<h:outputText value="#{msgs[messageExportIR]}" />
+									</p:column>
+									<p:column  style="width:1%" exportable="false">
+										<f:facet name="header">
+										</f:facet>
+										<p:commandButton id="selectDocButton" styleClass="historico"
+											 process="@form" update=":form:panelDigdlgDocs"
+											action="#{searchOutputRegisterAction.viewDoc}"
+											oncomplete="PF('viewDocDialog').show()" icon="ui-icon-search"
+											title="Documentación Adjunta">
+											<f:setPropertyActionListener value="#{reg}"
+												target="#{searchOutputRegisterAction.selectedResult}" />
+
+										</p:commandButton>
+									</p:column>
+									<f:facet name="footer">  
+						            #{msgs.labelTotalResultados}: #{searchOutputRegisterAction.outputRegisterBo.rowCount} 
+						        </f:facet>
+								</p:dataTable>
+							</p>
+						</fieldset>
+					</div>
+				</div>
+				<p:dialog header="#{msgs.labelheaderViewDoc}"
+					widgetVar="viewDocDialog" resizable="false" id="viewDocDialog"
+					modal="true" style="max-height:600px;overflow-y:auto;width: 700px;">
+					<ui:include src="dialog/dialogDocsOutput.xhtml" />
+				</p:dialog>
+				<script type="text/javascript">
+					$( '#accordion' ).accordion({active: 1});
+				</script>
+			</h:form>
+			<h:form id="distribuirform">
+				<p:dialog header="Distribuir" widgetVar="dlgDistribuir"
+					id="dlgDistribuir" resizable="false" modal="true">
+					<p:messages  id="messagesDis" closable="true"
+						autoUpdate="false" redisplay="false" />
+					<p:panel id="panelDigdlgRedistribuir" styleClass="ventanaDist">
+						
+						<h:outputText id="labelDestRedistribuir"
+							value="#{msgs.labelDestRedistribuir}" />&nbsp;&nbsp;<br/>
+
+						<c:set var="departPadre"
+										value=" (#{varDep.nameDepFather})" />
+						<c:set var="departamentoPadre"
+								value=" (#{dep.nameDepFather})" />			
+							<p:selectOneMenu
+								value="#{searchOutputRegisterAction.selectdestinoRedisDepartamentos}"
+								styleClass="selectdestinoRedisDepartamentos"
+								id="selectdestinoRedisDepartamentos" var="varDep"
+								label="#{msgs.labelSelectDepartamento}" filterMatchMode="contains"
+								converter="departConverter" effect="fade" filter="true" escape="false">
+								<f:selectItems value="#{searchOutputRegisterAction.listDepartament}"
+									var="dep" itemLabel="#{dep.name}" itemValue="#{dep }" />
+									<p:column>
+						                <h:outputText styleClass="departamentos" value="#{varDep.name}"/>
+						                <br/>
+						                <h:outputText styleClass="departamentospadre" value="#{departPadre}" />
+						            </p:column>
+							</p:selectOneMenu>	
+						<br /><br/>
+						<h:outputText id="labelMotivoDistribucion"
+							value="#{msgs.labelMotivoDistribucion}" />
+						<br />
+						<p:inputTextarea rows="5" id="motivoDistribucion" 
+							value="#{searchOutputRegisterAction.motivoDistribucion}" cols="30"
+							label="labelMotivoRedirect" maxlength="250" autoResize="false">
+							<f:validateLength maximum="250" />
+						</p:inputTextarea>
+						<p class="botonera">
+							<p:commandButton styleClass="boton-buscar"
+								value="#{msgs.labelBotonAceptar}" 
+								ajax="true" process="distribuirform"
+								update="messagesDis,panelDigdlgRedistribuir,:form:books"
+								action="#{searchOutputRegisterAction.distribuir}"
+								oncomplete="handleDisRequest(xhr, status, args)" />
+							<p:commandButton styleClass="boton-buscar"
+								value="#{msgs.labelBotonCancelar}"
+								onclick="PF('dlgDistribuir').hide();" />
+						</p>
+					</p:panel>
+				</p:dialog>
+				
+			</h:form>
+		</ui:define>
+	</ui:composition>
+				
+</h:body>
+</html>

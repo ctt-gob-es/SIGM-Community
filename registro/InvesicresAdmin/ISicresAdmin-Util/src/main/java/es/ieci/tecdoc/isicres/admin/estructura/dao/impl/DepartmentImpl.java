@@ -697,7 +697,7 @@ public class DepartmentImpl implements Department
 	    DbConnection dbConn=new DbConnection();
 	    try{
 	      dbConn.open(DBSessionManager.getSession());
-	    	//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+	    	//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
 
 	      if (_id == ISicresAdminDefsKeys.NULL_ID)
 				count = DbSelectFns.selectCount(dbConn, table.getBaseTableName(), table
@@ -835,7 +835,7 @@ public class DepartmentImpl implements Department
       try
       {
     	 dbConn.open(DBSessionManager.getSession());
-    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
 
          dbConn.beginTransaction();
          inTrans = true;
@@ -880,7 +880,7 @@ public class DepartmentImpl implements Department
       DbConnection dbConn=new DbConnection();
       try{
       	  dbConn.open(DBSessionManager.getSession());
-    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
 
          tableInfo.setTableObject(table);
          tableInfo.setClassName(DepartmentsTable.class.getName());
@@ -1010,7 +1010,7 @@ public class DepartmentImpl implements Department
       DbConnection dbConn=new DbConnection();
       try{
       	 dbConn.open(DBSessionManager.getSession());
-    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
 
          tableInfo.setTableObject(table);
          tableInfo.setClassName(DepartmentsTable.class.getName());
@@ -1050,7 +1050,7 @@ public class DepartmentImpl implements Department
       DbConnection dbConn=new DbConnection();
       try{
     	  dbConn.open(DBSessionManager.getSession());
-    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
 
 	      // Comprobamos si para el productId se tiene el permiso o no.
 	      permis = _permsImpl._perms.getProductPermission(productId);
@@ -1106,7 +1106,7 @@ public class DepartmentImpl implements Department
       DbConnection dbConn=new DbConnection();
       try{
       	dbConn.open(DBSessionManager.getSession());
-    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
 
          tableInfo.setTableObject(usrTbl);
          tableInfo.setClassName(UsersTable.class.getName());

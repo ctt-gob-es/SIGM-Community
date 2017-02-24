@@ -30,7 +30,7 @@ public class EntityFilter implements Filter {
 			FilterChain filterChain) throws IOException, ServletException {
 		HttpServletRequest httpRequest =  (HttpServletRequest) request;
 
-		String entidad = null;
+ 		String entidad = null;
 
 		if(SesionHelper.authenticate(httpRequest)){
 			entidad = SesionHelper.getEntidad(httpRequest);
@@ -39,9 +39,9 @@ public class EntityFilter implements Filter {
 		if(entidad != null){
 			httpRequest.getSession().setAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD, entidad);
 		}
-
-		String oEntidad = (String) httpRequest.getSession().getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD);
-
+		
+		//String oEntidad = (String) httpRequest.getSession().getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD);
+		String oEntidad = "000";
 		//seteamos al thread local
 		MultiEntityContextHolder.setEntity(oEntidad);
 

@@ -3,14 +3,18 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
-		<artifactId>fwktd-sir</artifactId>
+		<artifactId>fwktd-sir-parent</artifactId>
 		<version>1.0.1</version>
 	</parent>
 
 	<artifactId>fwktd-sir-api</artifactId>
 	<packaging>jar</packaging>
 	<name>fwktd-sir-api</name>
-
+	<version>3.0.0-msssi2.0.0</version>
+	<properties>
+		<fwktdMSSSI.version>3.0.0-msssi2.0.0</fwktdMSSSI.version>
+	</properties>
+	
 	<dependencies>
 
 		<!-- fwktd-sir dependencies -->
@@ -24,7 +28,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd</groupId>
 			<artifactId>fwktd-core</artifactId>
-			<version>${fwktd.version}</version>
+			<version>${fwktdMSSSI.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-time</groupId>
@@ -222,7 +226,7 @@
 		</resources>
 
 		<plugins>
-			<plugin>
+			<!-- plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>castor-maven-plugin</artifactId>
 				<version>${castor.maven.plugin}</version>
@@ -237,7 +241,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin-->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>axistools-maven-plugin</artifactId>
@@ -399,6 +403,9 @@
 		<!-- ORACLE -->
 		<profile>
 			<id>oracle</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<build>
 				<filters>
 					<filter>${basedir}/src/main/filters/database/oracle.properties</filter>
@@ -415,7 +422,5 @@
 				</filters>
 			</build>
 		</profile>
-
 	</profiles>
-
 </project>

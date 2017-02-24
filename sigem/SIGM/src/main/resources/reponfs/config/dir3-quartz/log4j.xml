@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="DIR3FILE" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${sigm.log.path.quartz}/dir3-quartz.log"/>
+		<param name="MaxFileSize" value="5000KB"/>
+		<param name="MaxBackupIndex" value="10"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p %-40c{3} - %m%n"/>
+		</layout>
+	</appender>
+
+	 <logger name="es.msssi" additivity="false">
+	    <level value="error"/>
+		<appender-ref ref="DIR3FILE"/>        
+	  </logger>
+	<logger name="org.springframework">
+		<level value="OFF"/>
+		<appender-ref ref="DIR3FILE"/>
+	</logger>
+	<logger name="org.hibernate">
+		<level value="OFF"/>
+		<appender-ref ref="DIR3FILE"/>
+	</logger>
+	<logger name="net.sf.hibernate">
+		<level value="OFF"/>
+		<appender-ref ref="DIR3FILE"/>
+	</logger>
+	<logger name="core.log">
+		<level value="error"/>
+		<appender-ref ref="DIR3FILE"/>
+	</logger>
+</log4j:configuration>

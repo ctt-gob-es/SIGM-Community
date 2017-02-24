@@ -3,11 +3,13 @@
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci" %>
 <%@ page import="ieci.tecdoc.mvc.util.MvcDefs" session="false"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <html:html>
 <head>
 	<title><bean:message key="message.common.title"/></title>
 	<ieci:baseInvesDoc/>
-	<link rel="stylesheet" type="text/css" href="include/css/error.css"/>
+	<link rel="stylesheet" type="text/css" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/error.css"/>
 </head>
 <body>
 	<table class="tableBase" border="0">

@@ -56,6 +56,7 @@ import com.ieci.tecdoc.isicres.session.folder.FolderSession;
 import com.ieci.tecdoc.isicres.session.reports.ReportsSession;
 import com.ieci.tecdoc.isicres.usecase.UseCaseConf;
 import com.ieci.tecdoc.isicres.usecase.book.BookUseCase;
+import com.ieci.tecdoc.utils.HibernateUtil;
 
 import es.ieci.tecdoc.isicres.api.business.dao.ReportsDAO;
 import es.ieci.tecdoc.isicres.api.business.exception.ReportException;
@@ -475,7 +476,7 @@ public class ReportManagerImpl implements ReportManager {
 		JasperReport compileReport = JasperCompileManager
 				.compileReport(new ByteArrayInputStream(processReportTemplate
 						.asXML().getBytes("UTF-8")));
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		// Se compilan los subreports y se pasan como parámetros de nombre
 		Map parameters = new HashMap();
 		Iterator iterator = reportObjects.getSubreports().keySet().iterator();
@@ -497,7 +498,7 @@ public class ReportManagerImpl implements ReportManager {
 
 		// Se compone el report
 		JasperPrint fillReport = JasperFillManager.fillReport(compileReport,
-				parameters, BBDDUtils.getConnection(ISicresKeys.IS_INVESICRES));
+				parameters, bbddUtils.getConnection(ISicresKeys.IS_INVESICRES));
 
 		return fillReport;
 	}

@@ -142,11 +142,11 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 			ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		List books = new ArrayList();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos los libros de entrada o de salida
@@ -174,14 +174,14 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 				books.add(scrregstate);
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
 			// Por aqui pasa la HibernateException tambien.
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible recuperar los libros ", e);
 			throw new BookException(BookException.ERROR_CANNOT_OPEN_BOOK);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return books;
@@ -332,11 +332,11 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+		    	Session session = hibernateUtil.currentSession(entidad);
 			// Recuperamos la sesión
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
 					sessionID);
@@ -379,7 +379,17 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 					getQueryFilter(session, bookInformation, bookID, user
 							.getId(), scrofic);
 				}
-
+				if (!aPerms.isBookAdmin()){
+				   String filterBookIds = (String)bookInformation.get(QUERY_FILTER);
+					if ((filterBookIds == null) || (filterBookIds != null && filterBookIds.trim().length() == 0) ) {
+					    filterBookIds = " ";
+					}
+					else {
+					    filterBookIds += " AND ";
+					}
+					 filterBookIds += " (FLD1002 IS NULL OR FLD1002 != 2) ";
+					 bookInformation.put(QUERY_FILTER, filterBookIds);
+				}
 				// Introducimos en la informacion del libro el detalle del libro
 				getIdocarchdet(session, bookID, bookInformation);
 
@@ -388,33 +398,32 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 						.getDeptid(), iUserGroupUser, bookInformation);
 
 				// Cargamos la información sobre la estructura
-				AxSf axsf = BBDDUtils.getTableSchemaFromDatabase(bookID
+				AxSf axsf = bbddUtils.getTableSchemaFromDatabase(bookID
 						.toString(), entidad);
 				bookInformation.put(AXSF, axsf);
 
 				// Introducimos la informacion de libro en la sesion del usuario
 				cacheBag.put(bookID, bookInformation);
 			}
-
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (BookException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (HibernateException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to open the book [" + bookID
 					+ "] for the session [" + sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_OPEN_BOOK);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to open the book [" + bookID
 					+ "] for the session [" + sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_OPEN_BOOK);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -481,10 +490,10 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
 		String bookName = "";
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -509,17 +518,17 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 				bookName = scrregstate.getIdocarchhdr().getName();
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible cargar el libro [" + bookID
 					+ "] para la sesión [" + sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_REGISTERS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return bookName;
@@ -619,13 +628,13 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 				fields = "";
 			}
 		} catch (BookException bE) {
-			// HibernateUtil.rollbackTransaction(tran);
+			// hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			// HibernateUtil.rollbackTransaction(tran);
+			// hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			// HibernateUtil.rollbackTransaction(tran);
+			// hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible to save the persisted fields for the session ["
 							+ sessionID + "]", e);
@@ -640,11 +649,11 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 			ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		Integer userPersistFields = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -670,22 +679,22 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 			ISicresSaveQueries.saveScrUserconfig(session, userPersistFields,
 					cadena);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to save the persisted fields for the user ["
 					+ userPersistFields.intValue() + "] for the session ["
 					+ sessionID + "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_SAVE_PERSIST_FIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -695,11 +704,11 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		List privOrgs = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -740,22 +749,22 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return scrOrg;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for the session ["
 					+ sessionID + "] and bookID [" + bookID + "]", e);
 			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -765,11 +774,11 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		List result = new ArrayList();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -804,22 +813,22 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for the session ["
 					+ sessionID + "] and bookID [" + bookID + "]", e);
 			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -863,11 +872,11 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookId, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		UserConf usrConf = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -905,12 +914,12 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 						updateRegDate, fieldFormat.getFlddefs(), false, query,
 						locale);
 			}
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
 			log.error(
@@ -919,7 +928,7 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 			throw new BookException(
 					BookException.ERROR_CANNOT_LOAD_PERSIST_FIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 		return usrConf;
 	}
@@ -1000,7 +1009,7 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookId, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		Document result = null;
 		try {
@@ -1014,7 +1023,7 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 					.get(IDocKeys.IDOCARCHDET_FLD_DEF_ASOBJECT);
 			FieldFormat fieldFormat = new FieldFormat(idoc.getDetval());
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			UserConf usrConf = new UserConf();
@@ -1037,23 +1046,23 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 						.saveOrUpdateUserConfig(result.asXML(), user.getId(),
 								1, entidad);
 			}
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible to save the user configuration for the session ["
 							+ sessionID + "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_SAVE_PERSIST_FIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 		return result;
 	}
@@ -1065,7 +1074,7 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookId, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		Document result = null;
 		try {
@@ -1079,7 +1088,7 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 					.get(IDocKeys.IDOCARCHDET_FLD_DEF_ASOBJECT);
 			FieldFormat fieldFormat = new FieldFormat(idoc.getDetval());
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			UserConf usrConf = new UserConf();
@@ -1104,23 +1113,23 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 									user.getId(), 1, entidad);
 				}
 			}
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible to save the user configuration for the session ["
 							+ sessionID + "]", e);
 			throw new BookException(
 					BookException.ERROR_CANNOT_SAVE_PERSIST_FIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 		return result;
 	}
@@ -1134,11 +1143,11 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -1163,21 +1172,21 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for the session ["
 					+ sessionID + "] and bookID [" + bookID + "]", e);
 			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -1190,11 +1199,11 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -1219,21 +1228,21 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for the session ["
 					+ sessionID + "] and bookID [" + bookID + "]", e);
 			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -1246,10 +1255,10 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -1268,21 +1277,21 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 				unlock(session, bookID, folderID.intValue(), user);
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to update a folder for the session ["
 					+ sessionID + "] and bookID [" + bookID + "]", e);
 			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -1313,7 +1322,7 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 	 */
 	public static Date getMaxDateRegClose(String sessionID, String entidad,
 			Integer bookId) throws BookException{
-
+	    	BBDDUtils bbddUtils = new BBDDUtils();
 		Date date;
 		try {
 
@@ -1322,7 +1331,7 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 					sessionID);
 			ScrOfic scrofic = (ScrOfic) cacheBag.get(HIBERNATE_ScrOfic);
 
-			date = BBDDUtils
+			date = bbddUtils
 			.getDateFromTimestamp(DBEntityDAOFactory
 					.getCurrentDBEntityDAO().getMaxDateClose(bookId, entidad, scrofic.getId()));
 

@@ -19,8 +19,9 @@ import com.ieci.tecdoc.common.utils.BBDDUtils;
  */
 public class DataSourceManager {
 
-	public static Connection getConnection(String entidad) throws Exception {
-		return BBDDUtils.getConnection(entidad);
+	public Connection getConnection(String entidad) throws Exception {
+	    BBDDUtils bBDDUtils = new BBDDUtils();
+	    return bBDDUtils.getConnection(entidad);
 	}
 
 }

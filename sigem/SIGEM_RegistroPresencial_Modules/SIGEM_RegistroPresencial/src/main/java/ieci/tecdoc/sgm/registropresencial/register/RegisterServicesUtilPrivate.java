@@ -53,6 +53,8 @@ public class RegisterServicesUtilPrivate {
 
 	private static final String DEFAULT_FLD = ieci.tecdoc.sgm.registropresencial.utils.Keys.FLD;
 
+	public static final int DOCUMENT_NAME_MAX_LENGTH = 80;
+
 	/**
 	 * Añadimos al registro los atributos que son sustitutos
 	 *
@@ -201,8 +203,8 @@ public class RegisterServicesUtilPrivate {
 				String key = (String) itDoc.next();
 				FlushFdrDocument document = (FlushFdrDocument) documents.get(key);
 
-					//validamos el nombre del documento no sea mayor a 32 caracteres
-				if(document.getDocumentName().length() > 32){
+					//validamos el nombre del documento no sea mayor a 80 caracteres
+				if(document.getDocumentName().length() > DOCUMENT_NAME_MAX_LENGTH){
 					if(log.isDebugEnabled()){
 						log.debug("Error en la longitud del nombre del documento ["+ document.getDocumentName() +"]");
 					}
@@ -229,8 +231,8 @@ public class RegisterServicesUtilPrivate {
 			for(Iterator itPages = pages.iterator(); itPages.hasNext();){
 				FlushFdrPage flushFdrPage = (FlushFdrPage) itPages.next();
 
-				//validamos el nombre de las paginas del documento para que no sean mayor a 32 caracteres
-				if(flushFdrPage.getPageName().length() > 64){
+				//validamos el nombre de las paginas del documento para que no sean mayor a 80 caracteres
+				if(flushFdrPage.getPageName().length() > DOCUMENT_NAME_MAX_LENGTH){
 					if(log.isDebugEnabled()){
 						log.debug("Error en la longitud del nombre de la pagina ["+ flushFdrPage.getPageName() +"]");
 					}

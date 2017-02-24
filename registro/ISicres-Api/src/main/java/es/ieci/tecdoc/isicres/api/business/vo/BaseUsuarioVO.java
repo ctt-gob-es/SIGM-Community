@@ -20,7 +20,9 @@ public class BaseUsuarioVO extends BaseIsicresApiVO {
 	protected String fullName;
 
 	protected String password;
-
+	
+	protected String userContact;
+	
 	public String getLoginName() {
 		return loginName;
 	}
@@ -52,4 +54,13 @@ public class BaseUsuarioVO extends BaseIsicresApiVO {
 	public void setId(String id) {
 		this.id = id;
 	}
+
+	public String getUserContact() {
+	    return userContact;
+	}
+
+	public void setUserContact(String userContact) {
+	    this.userContact = userContact;
+	}
+	
 }

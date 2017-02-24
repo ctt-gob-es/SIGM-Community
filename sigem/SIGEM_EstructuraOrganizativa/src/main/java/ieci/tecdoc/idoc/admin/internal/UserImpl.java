@@ -1559,7 +1559,7 @@ public class UserImpl implements User {
 		try {
 			dbConn.open(DBSessionManager.getSession(entidad));
 			// dbConn.open("org.postgresql.Driver",
-			// "jdbc:postgresql://128.90.111.90/registro_001", "postgres",
+			// "jdbc:postgresql://127.0.0.1/registro_001", "postgres",
 			// "postgres");
 			tableInfo.setTableObject(table);
 			tableInfo.setClassName(UsersTable.class.getName());

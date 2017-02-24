@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "dtd/log4j.dtd">
+<!-- Fichero de configuración del sistema de trazas log4j -->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <!-- Parte genérica de Sicres -->
+    <appender name="FICHEROsirsir" class="org.apache.log4j.RollingFileAppender">
+        <!-- Configurar ruta -->
+        <param name="File" value="${sigem.log.path}/fwktd-sir-ws/fwktd-sir.log"/>
+        <param name="MaxFileSize" value="3072KB"/>
+        <param name="MaxBackupIndex" value="3"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+        </layout>
+    </appender>
+	<logger name="org.hibernate">
+	    <level value="ERROR"/>
+	 </logger>
+	 <logger name="org.springframework">
+	    <level value="ERROR"/>
+	 </logger>
+
+	 <logger name="com.opensymphony.oscache">
+	    <level value="OFF"/>
+	 </logger>
+	  <logger name="com.ieci.tecdoc">
+	    <level value="INFO"/>
+		 <appender-ref ref="FICHEROsirsir"/>
+	 </logger>
+    <logger name="ieci" additivity="false">
+		<level value="INFO"/>
+		 <appender-ref ref="FICHEROsirsir"/>
+    </logger>
+    <logger name="es">
+            <level value="INFO"/>
+		  <appender-ref ref="FICHEROsirsir"/>
+    </logger>
+
+    <logger name="com" >
+           <level value="INFO"/>
+		 <appender-ref ref="FICHEROsirsir"/>
+    </logger>
+	<root>
+		<priority value="INFO"/>
+		<appender-ref ref="FICHEROsirsir"/>
+	</root>
+</log4j:configuration>
+

@@ -342,6 +342,14 @@ public class IeciSystemConfigurationResourceLoaderImpl implements
 
 			if (props != null) {
 				result = props.getProperty(configLocationPropertyName);
+				/*
+				 * Solución al problema de tener una ruta en el configLocation que
+				 *  tubiese una variable de sistema. Si el path viene con una variable de sistema la reemplaza.
+				 * */
+				if (result.indexOf("${") != -1){
+				    String systemVar = System.getProperty( result.substring(result.indexOf("${")+2, result.indexOf("}")));
+				    result = result.replace(result.substring(result.indexOf("${"), result.indexOf("}")+1), systemVar);
+				}
 			}
 
 		}

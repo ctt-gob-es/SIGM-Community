@@ -43,14 +43,14 @@ import es.ieci.tecdoc.fwktd.sir.ws.utils.TrazasUtils;
 import es.ieci.tecdoc.fwktd.util.date.DateUtils;
 import es.ieci.tecdoc.fwktd.util.file.FileUtils;
 import es.ieci.tecdoc.fwktd.util.mime.MimeUtil;
-
+ 
 /**
  * @author Iecisa
  * @version $Revision$
  * 
  */
 @ContextConfiguration( {
-		"classpath*:/beans/fwktd-sir-api-applicationContext.xml",
+
 		"/beans/fwktd-sir-ws-test-beans.xml" })
 public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 		AbstractWSTest {
@@ -58,12 +58,12 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 	protected static final Logger logger = LoggerFactory.getLogger("TEST");
 			
 	//SIGEM
-	protected static final String CODIGO_ENTIDAD_REGISTRAL_SORIA = "O00002061";
-	protected static final String DESCRIPCION_ENTIDAD_REGISTRAL_SORIA = "REGISTRO GENERAL DE LA DIPUTACIÓN PROVINCIAL DE SORIA";
-	protected static final String CODIGO_UNIDAD_TRAMITACION_SORIA = "L02000042";
-	protected static final String DESCRIPCION_UNIDAD_TRAMITACION_SORIA = "Diputación Provincial de Soria";
-	protected static final String CONTACTO_ENTIDAD_REGISTRAL_SORIA="contacto soria";
-	protected static final String USUARIO_ENTIDAD_REGISTRAL_SORIA="usaurio soria";
+	protected static final String CODIGO_ENTIDAD_REGISTRAL_SORIA = "O00000322";
+	protected static final String DESCRIPCION_ENTIDAD_REGISTRAL_SORIA = "REG. ADMINISTRACIÓN GENERAL DEL ESTADO";
+	protected static final String CODIGO_UNIDAD_TRAMITACION_SORIA = "EA0000000";
+	protected static final String DESCRIPCION_UNIDAD_TRAMITACION_SORIA = "ADMINISTRACIÓN GENERAL DEL ESTADO";
+	protected static final String CONTACTO_ENTIDAD_REGISTRAL_SORIA="contacto admin";
+	protected static final String USUARIO_ENTIDAD_REGISTRAL_SORIA="usaurio admin";
 	protected static final InfoEntidadRegistral INFO_SORIA=new InfoEntidadRegistral(
 			CODIGO_ENTIDAD_REGISTRAL_SORIA,
 			DESCRIPCION_ENTIDAD_REGISTRAL_SORIA,
@@ -71,12 +71,12 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 			USUARIO_ENTIDAD_REGISTRAL_SORIA);
 	
 	//sigem
-	protected static final String CODIGO_ENTIDAD_REGISTRAL_COLINDRES="O00002062";
-	protected static final String DESCRIPCION_ENTIDAD_COLINDRES="REGISTRO GENERAL DEL AYUNTAMIENTO DE COLINDRES";
-	protected static final String CODIGO_UNIDAD_TRAMITACION_COLINDRES="L01390232";
-	protected static final String DESCRIPCION_UNIDAD_TRAMITACION_COLINDRES= "Ayuntamiento de Colindres";
-	protected static final String CONTACTO_ENTIDAD_REGISTRAL_COLINDRES="usercoli";
-	protected static final String USUARIO_ENTIDAD_REGISTRAL_COLINDRES="usercolin";
+	protected static final String CODIGO_ENTIDAD_REGISTRAL_COLINDRES="O00000250";
+	protected static final String DESCRIPCION_ENTIDAD_COLINDRES="REGISTRO GENERAL DEL MINISTERIO DE SANIDAD, SERVICIOS SOCIALES E IGUALDAD";
+	protected static final String CODIGO_UNIDAD_TRAMITACION_COLINDRES="E04921901";
+	protected static final String DESCRIPCION_UNIDAD_TRAMITACION_COLINDRES= "MINISTERIO DE SANIDAD, SERVICIOS SOCIALES E IGUALDAD";
+	protected static final String CONTACTO_ENTIDAD_REGISTRAL_COLINDRES="userMSSSI";
+	protected static final String USUARIO_ENTIDAD_REGISTRAL_COLINDRES="userMSSSI";
 	
 	//CAMBIAMOS COLINDRES POR CR	
 //	protected static final String CODIGO_ENTIDAD_REGISTRAL_COLINDRES=CODIGO_ENTIDAD_REGISTRAL_4;
@@ -1031,7 +1031,7 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 	@Test
 	public void testEnviarAsientoRegistralesFuncional_001_008() {
 		logger.info("Enviando asiento registral...");
-		for (int i = 1; i <= 8; i++) {
+		for (int i = 1; i <= 1; i++) {
 			try {
 				String methodName = "createAsientoRegistralFormParaTest" + i;
 				Method m = this.getClass().getDeclaredMethod(methodName, (Class[])null);
@@ -1088,7 +1088,7 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 	 * @return un AsientoRegistralFormDTO con toda la información necesaria
 	 */
 	protected AsientoRegistralFormDTO createAsientoRegistralFormParaTest1() {
-		String numeroRegistro = "201200100000001";
+		String numeroRegistro = "201500100000074";
 		AsientoRegistralFormDTO asientoForm = createAsientoRegistralFormDTONumeroRegistro(
 				numeroRegistro, CODIGO_ENTIDAD_REGISTRAL_COLINDRES,
 				DESCRIPCION_ENTIDAD_COLINDRES,
@@ -1103,8 +1103,7 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 		TestUtils.vaciarRepresentante(asientoForm.getInteresados().get(0));
 		
 		asientoForm.getAnexos().clear();
-		AnexoFormDTO anexo=TestUtils.createAnexoFormDTO("1");
-		asientoForm.getAnexos().add(anexo);	
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("Justificante"));
 		return asientoForm;
 	}
 	
@@ -1133,7 +1132,7 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 				DESCRIPCION_ENTIDAD_COLINDRES);
 		asientoForm.getAnexos().clear();
 		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("1"));
-		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("2"));	
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("Justificante"));
 		return asientoForm;
 	}
 	
@@ -1162,11 +1161,13 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 				DESCRIPCION_ENTIDAD_COLINDRES);
 		InteresadoFormDTO interesado=TestUtils.createInteresadoFormDTO("2");
 		asientoForm.getInteresados().add(interesado);
-		
+		TestUtils.vaciarRepresentante(asientoForm.getInteresados().get(0));
+		TestUtils.vaciarRepresentante(asientoForm.getInteresados().get(1));
 		asientoForm.getAnexos().clear();
 		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("1"));
 		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("2"));
 		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("3"));
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("Justificante"));
 		return asientoForm;
 	}
 	
@@ -1200,8 +1201,7 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("2"));
 		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("3"));
 		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("4"));
-		
-		asientoForm.setTipoRegistro(TipoRegistroEnum.SALIDA.getValue());
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("Justificante"));
 		return asientoForm;
 	}
 	
@@ -1230,6 +1230,9 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 				DESCRIPCION_ENTIDAD_COLINDRES);
 		
 		TestUtils.vaciarRepresentante(asientoForm.getInteresados().get(0));
+		asientoForm.getAnexos().clear();
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("Justificante"));
+		asientoForm.setTipoRegistro(TipoRegistroEnum.SALIDA.getValue());
 		return asientoForm;
 	}
 	
@@ -1256,8 +1259,8 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO_MUFACE,
 				CODIGO_ENTIDAD_REGISTRAL_COLINDRES,
 				DESCRIPCION_ENTIDAD_COLINDRES);
-
-		TestUtils.vaciarRepresentante(asientoForm.getInteresados().get(0));
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("Justificante"));
+		asientoForm.setTipoRegistro(TipoRegistroEnum.SALIDA.getValue());
 		return asientoForm;
 	}
 	
@@ -1288,6 +1291,14 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 		
 		InteresadoFormDTO interesado=TestUtils.createInteresadoFormDTO("2");
 		asientoForm.getInteresados().add(interesado);
+		TestUtils.vaciarRepresentante(asientoForm.getInteresados().get(0));
+		TestUtils.vaciarRepresentante(asientoForm.getInteresados().get(1));
+		asientoForm.getAnexos().clear();
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("1"));
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("2"));
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("3"));
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("Justificante"));
+		asientoForm.setTipoRegistro(TipoRegistroEnum.SALIDA.getValue());
 		return asientoForm;
 	}
 	
@@ -1314,8 +1325,18 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO_MUFACE,
 				CODIGO_ENTIDAD_REGISTRAL_COLINDRES,
 				DESCRIPCION_ENTIDAD_COLINDRES);
+		InteresadoFormDTO interesado=TestUtils.createInteresadoFormDTO("2");
+		asientoForm.getInteresados().add(interesado);
+		asientoForm.getAnexos().clear();
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("1"));
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("2"));
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("3"));
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("4"));
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("5"));
+		asientoForm.getAnexos().add(TestUtils.createAnexoFormDTO("Justificante"));
 		
 		asientoForm.setTipoRegistro(TipoRegistroEnum.SALIDA.getValue());
+		
 		return asientoForm;
 	}
 	
@@ -1419,7 +1440,7 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 	@Test
 	public void testConfirmacionAsientosRegistralesFuncional_001_008() {
 		logger.info("Enviando confirmacion asiento registral...");
-		for(int i=2;i<=8;i++){	//casos de prueba
+		for(int i=1;i<=1;i++){	//casos de prueba
 			try{
 				String methodName = "createConfirmacionAsientoRegistralParaTest" + i;
 				Method m = this.getClass().getDeclaredMethod(methodName, (Class[])null);
@@ -1558,7 +1579,7 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 	@Test
 	public void testConfirmacionAsientosRegistralesFuncional_009_014() {
 		logger.info("Enviando confirmacion asiento registral...");
-		for(int i=9;i<=14;i++){	//casos de prueba
+		for(int i=9;i<=9;i++){	//casos de prueba
 			try{
 				String methodName = "createConfirmacionAsientoRegistralParaTest" + i;
 				Method m = this.getClass().getDeclaredMethod(methodName, (Class[])null);
@@ -1581,8 +1602,8 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 	 * Tipo de Registro:	Entrada
 	 */
 	 public void createConfirmacionAsientoRegistralParaTest9() {
-		String numeroRegistro = "201200100000009";
-		String identificadorIntercambio= getIdentificadorIntercambioRegistral(9);	
+		String numeroRegistro = "201500100000092";
+		String identificadorIntercambio= "O00001028_15_00000390";	
 		try{
 			confirmarAsientoRegistral(CODIGO_ENTIDAD_REGISTRAL_COLINDRES,
 					identificadorIntercambio,numeroRegistro);
@@ -2556,7 +2577,7 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 			}
 		}
 		
-		IdentificadoresIntercambioTestHelper.save();	
+		//IdentificadoresIntercambioTestHelper.save();	
 	}
 	
 	/**
@@ -2776,17 +2797,17 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 				Assert.assertTrue(EstadoAsientoRegistralEnum.ENVIADO
 								.getValue() == asiento.getEstado());
 				logger.info("Asiento registral enviado: {}", toString(asiento));
-				IdentificadoresIntercambioTestHelper.put(
+				/*IdentificadoresIntercambioTestHelper.put(
 						PREFIJO_CODIGO_PRUEBA_INTERCAMBIO+
 							StringUtils.leftPad(String.valueOf(i),3,'0'),
-						asiento.getIdentificadorIntercambio());
+						asiento.getIdentificadorIntercambio());*/
 			}catch(Exception e){
 				String mensaje="Error ejecutando test RechazoInicioAsiento "+
 						"iteracion:"+i;
 				logger.error(mensaje,e);
 			}
 		}
-		IdentificadoresIntercambioTestHelper.save();	
+		//IdentificadoresIntercambioTestHelper.save();	
 	}
 	
 	
@@ -3197,7 +3218,7 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 	 * Tipo de Registro:	Entrada
 	 */
 	protected AsientoRegistralFormDTO createAsientoRegistralParaTest35(){
-		String numeroRegistro = "201200100000035";
+		String numeroRegistro = "201500100000071";
 		AsientoRegistralFormDTO asientoForm = createAsientoRegistralFormDTONumeroRegistro(
 				numeroRegistro, CODIGO_ENTIDAD_REGISTRAL_COLINDRES,
 				DESCRIPCION_ENTIDAD_COLINDRES,
@@ -3230,7 +3251,7 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 	 * Tipo de Registro:	Entrada
 	 */
 	protected AsientoRegistralFormDTO createAsientoRegistralParaTest36(){
-		String numeroRegistro = "201200100000036";
+		String numeroRegistro = "201500100000072";
 		AsientoRegistralFormDTO asientoForm = createAsientoRegistralFormDTONumeroRegistro(
 				numeroRegistro, CODIGO_ENTIDAD_REGISTRAL_COLINDRES,
 				DESCRIPCION_ENTIDAD_COLINDRES,
@@ -4134,7 +4155,7 @@ public class IntercambioRegistralWSIntegracionCiclosInteraccionWSTest extends
 				logger.error(mensaje,e);
 			}
 		}
-		IdentificadoresIntercambioTestHelper.save();	
+		//IdentificadoresIntercambioTestHelper.save();	
 	}
 	
 	/**

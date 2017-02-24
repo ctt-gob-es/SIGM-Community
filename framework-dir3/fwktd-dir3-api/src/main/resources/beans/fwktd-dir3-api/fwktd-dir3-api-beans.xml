@@ -21,7 +21,7 @@
 	</bean>
 
 
-	<bean id="fwktd_dir3_api_servicioActualizacionnDirectorioComunImpl"
+	<bean id="fwktd_dir3_api_servicioActualizacionDirectorioComunImpl"
 		class="es.ieci.tecdoc.fwktd.dir3.api.service.impl.ServicioActualizacionDirectorioComunImpl">
 		<property name="datosBasicosOficinaManager" ref="fwktd_dir3_datosBasicosOficinaManager" />
 		<property name="datosBasicosUnidadOrganicaManager" ref="fwktd_dir3_datosBasicosUnidadOrganicaManager" />

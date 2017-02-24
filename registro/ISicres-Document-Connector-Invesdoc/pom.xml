@@ -7,16 +7,21 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>ISicres-Document-Connector-Invesdoc</artifactId>
 	<name>ISicres-Document-Connector-Invesdoc</name>
+	<version>3.0.0-msssi2.0.0</version>
 	<packaging>jar</packaging>
 	<description>Modulo de gestion documental para Invesdoc</description>
 	
+	<properties>
+		<isicres.version>8.0.1</isicres.version>
+		<invesdocMSSSI.version>3.0.0-msssi2.0.0</invesdocMSSSI.version>
+	</properties>
 	
 	<dependencies>
 		<!-- Dependencias de InvesSicres -->
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-Document-Connector</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
@@ -38,7 +43,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.invesdoc</groupId>
 			<artifactId>invesdoc-stdbizobj</artifactId>
-			<version>${invesdoc.version}</version>
+			<version>${invesdocMSSSI.version}</version>
 		</dependency>
 
 		<!-- 3rd Party -->

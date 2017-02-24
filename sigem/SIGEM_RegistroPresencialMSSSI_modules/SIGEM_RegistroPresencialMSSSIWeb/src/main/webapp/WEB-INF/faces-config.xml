@@ -1,0 +1,1070 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+    http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+	version="2.0">
+	<application>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+		<resource-bundle>
+			<base-name>RPMSSSImessages</base-name>
+			<var>msgs</var>
+			<message-bundle>customMessagesValidation</message-bundle>
+		</resource-bundle>
+	</application>
+	<application>
+		<action-listener>org.primefaces.application.DialogActionListener</action-listener>
+		<navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+		<view-handler>org.primefaces.application.DialogViewHandler</view-handler>
+	</application>
+	<!-- Managed beans -->
+	<managed-bean>
+		<managed-bean-name>searchDistributionAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.SearchDistributionAction</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>alertAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.AlertAction</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>searchInputRegisterAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.SearchInputRegisterFormAction</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>searchOutputRegisterAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.SearchOutputRegisterFormAction</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>inputRegisterAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.InputRegisterAction</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>outputRegisterAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.OutputRegisterAction</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>J_SESSIONINF</managed-bean-name>
+		<managed-bean-class>com.ieci.tecdoc.common.isicres.SessionInformation</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>J_PERMSUSER</managed-bean-name>
+		<managed-bean-class>com.ieci.tecdoc.common.utils.ISicresGenPerms</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>J_PARAMBOOK</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.beans.ParamBookBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>J_BOOK</managed-bean-name>
+		<managed-bean-class>com.ieci.tecdoc.common.invesicres.ScrRegstate</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>booksAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.ListBooksAction</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		<managed-property>
+			<property-name>booksBo</property-name>
+			<value>#{booksBo}</value>
+		</managed-property>
+	</managed-bean>
+	<managed-bean>
+		<description> Web Parameter bean </description>
+		<managed-bean-name>webParam</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.beans.WebParameter</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>validationListAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.ValidationListAction</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>validationListDCOAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.ValidationListDCOAction</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>logoutAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.LogoutAction</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>changeOfficeAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.ChangeOfficeAction</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>exportAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.ExportAction</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>reportsInputRegisterAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.ReportsInputRegisterAction</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>reportsOutputRegisterAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.ReportsOutputRegisterAction</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>regInterchangeAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.RegInterchangeAction</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>searchOutboxRegInterchangeAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.SearchOutboxRegInterchangeAction</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>searchInboxRegInterchangeAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.SearchInboxRegInterchangeAction</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>reportsDistributionAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.ReportsDistributionAction</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>regInterchangeDownloadController</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.RegInterchangeDownloadController</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>documentDownloadController</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.DocumentDownloadController</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>searchUnitsAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.SearchUnitsAction</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>searchUnitsTramAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.SearchUnitsTramAction</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>reportsLabelAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.ReportsLabelAction</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+		<managed-bean>
+		<managed-bean-name>updateDCOAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.UpdateDCOAction</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>loadUsersAction</managed-bean-name>
+		<managed-bean-class>es.msssi.sgm.registropresencial.actions.LoadUsersAction</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<!-- Navigation rules -->
+	<navigation-rule>
+		<description>Inicio</description>
+		<from-view-id>/inicio.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goIntRegistralForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goCambioOficinaForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goRelacionesForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInformesForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goError</from-outcome>
+			<to-view-id>/error.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<description>goSearchInForm</description>
+		<from-view-id>/searchInputRegisterForm.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goNewInputRegisterForm</from-outcome>
+			<to-view-id>/inputRegister.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInputRegisterRelationsReportForm</from-outcome>
+			<to-view-id>/inputRegisterRelationsReportForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<description>goInputRegisterRelationsReportForm</description>
+		<from-view-id>/inputRegisterRelationsReportForm.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goNewInputRegisterForm</from-outcome>
+			<to-view-id>/inputRegister.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{inputRegisterAction.origen == 'B'}</if>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{inputRegisterAction.origen == 'D'}</if>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<description>goNewInputRegisterForm</description>
+		<from-view-id>/inputRegister.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{inputRegisterAction.origen == 'B'}</if>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{inputRegisterAction.origen == 'D'}</if>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{inputRegisterAction.origen == 'IR'}</if>
+			<to-view-id>/searchOutboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{inputRegisterAction.origen == 'I'}</if>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchDestinationRegInterchangeForm</from-outcome>
+			<to-view-id>/searchDestinationRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutInterchangeForm</from-outcome>
+			<to-view-id>/searchOutboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<description>goChangeOfficeForm</description>
+		<from-view-id>/changeOffice.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<description>goDistribucionForm</description>
+		<from-view-id>/searchDistributionForm.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistributionRelationsReportForm</from-outcome>
+			<to-view-id>/distributionRelationsReportForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<description>goDistributionRelationsReportForm</description>
+		<from-view-id>/distributionRelationsReportForm.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistributionRelationsReportForm</from-outcome>
+			<to-view-id>/distributionRelationsReportForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<description>goSearchOutForm</description>
+		<from-view-id>/searchOutputRegisterForm.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goNewOutputRegisterForm</from-outcome>
+			<to-view-id>/outputRegister.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goOutputRegisterRelationsReportForm</from-outcome>
+			<to-view-id>/outputRegisterRelationsReportForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<description>goOutputRegisterRelationsReportForm</description>
+		<from-view-id>/outputRegisterRelationsReportForm.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goNewInputRegisterForm</from-outcome>
+			<to-view-id>/inputRegister.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{outputRegisterAction.origen == 'B'}</if>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{outputRegisterAction.origen == 'D'}</if>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<description>goNewOutputRegisterForm</description>
+		<from-view-id>/outputRegister.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{outputRegisterAction.origen == 'B'}</if>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{outputRegisterAction.origen == 'D'}</if>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{outputRegisterAction.origen == 'IR'}</if>
+			<to-view-id>/searchOutboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<if>#{inputRegisterAction.origen == 'I'}</if>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goBack</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutInterchangeForm</from-outcome>
+			<to-view-id>/searchOutboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<description>goSearchDestinationRegInterchangeForm</description>
+		<from-view-id>/searchDestinationRegInterchange.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goNewInputRegisterForm</from-outcome>
+			<to-view-id>/inputRegister.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<description>goSearchInterchangeForm</description>
+		<from-view-id>/searchInboxRegInterchange.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutInterchangeForm</from-outcome>
+			<to-view-id>/searchOutboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>goSearchOutInterchangeForm</description>
+		<from-view-id>/searchOutboxRegInterchange.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInicioForm</from-outcome>
+			<to-view-id>/inicio.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<description>goUpdateDCOForm</description>
+		<from-view-id>/updateDCO.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goIntRegistralForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goCambioOficinaForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goRelacionesForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInformesForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goError</from-outcome>
+			<to-view-id>/error.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goLoadUsersForm</from-outcome>
+			<to-view-id>/loadUsers.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>	
+	<navigation-rule>
+		<description>goLoadUsersForm</description>
+		<from-view-id>/loadUsers.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>goSearchInForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goChangeOfficeForm</from-outcome>
+			<to-view-id>/changeOffice.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchOutForm</from-outcome>
+			<to-view-id>/searchOutputRegisterForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goDistribucionForm</from-outcome>
+			<to-view-id>/searchDistributionForm.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goIntRegistralForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goCambioOficinaForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goRelacionesForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goInformesForm</from-outcome>
+			<to-view-id>/searchInputRegisterForm.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goError</from-outcome>
+			<to-view-id>/error.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goSearchInterchangeForm</from-outcome>
+			<to-view-id>/searchInboxRegInterchange.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>goUpdateDCOForm</from-outcome>
+			<to-view-id>/updateDCO.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>TICKET_PAGE</from-outcome>
+			<to-view-id>/ticket.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>		
+</faces-config>

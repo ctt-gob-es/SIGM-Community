@@ -23,7 +23,7 @@ public class ControlSesionRequestProcesor extends RequestProcessor{
 
         
 		try {
-			if (!AutenticacionAdministracion.autenticarEntidad(request, ConstantesGestionUsuariosAdministracion.APLICACION_ESTRUCTURA_ORGANIZATIVA)) {
+			if (!autenticarEntidad(request, ConstantesGestionUsuariosAdministracion.APLICACION_ESTRUCTURA_ORGANIZATIVA)) {
 				String Url = AutenticacionAdministracion.obtenerUrlLogin(request, ConstantesGestionUsuariosAdministracion.APLICACION_ESTRUCTURA_ORGANIZATIVA);
 				request.setAttribute("urlRedireccion", Url);
 				response.sendRedirect(Url);
@@ -40,5 +40,19 @@ public class ControlSesionRequestProcesor extends RequestProcessor{
     	
     	return continueProcessing;
     }
-	
+    
+    private static boolean autenticarEntidad(HttpServletRequest request, String idAplicacion) {
+		
+    	String key_entidad = request.getParameter(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM_ENTIDAD);
+    	if(AutenticacionAdministracion.isNuloOVacio(key_entidad)) {
+    		key_entidad = (String) request.getSession().getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM_ENTIDAD);
+    	}
+    	
+    	if(AutenticacionAdministracion.isNuloOVacio(key_entidad)) {
+    		return false;
+    	} else {
+   			request.getSession().setAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_KEY_SESION_USUARIO_ADM_ENTIDAD, key_entidad);
+   			return true;
+    	} 
+	}
 }

@@ -218,7 +218,16 @@ public class DepartmentImpl implements Department
    	return _parentId;
    }
    
-   /**
+   
+   public Integer getIdorg() {
+    return _idorg;
+}
+
+public void setIdorg(Integer idorg) {
+    this._idorg = idorg;
+}
+
+/**
     * Devuelve lista de usuarios suceptibles de ser administradores
     * 
     * @return la lista
@@ -468,6 +477,7 @@ public class DepartmentImpl implements Department
       bdr.addSimpleElement("ManagerId", Integer.toString(_managerId));
       bdr.addSimpleElement("Type", Integer.toString(_type));
       bdr.addSimpleElement("Description", _description);
+      bdr.addSimpleElement("Idorg", Integer.toString(_idorg));
       bdr.addSimpleElement("CreatorId", Integer.toString(_creatorId));
       bdr.addSimpleElement("CreationDate", DateTimeUtil.getDateTime(
                      _creationDate, DatePattern.XML_TIMESTAMP_PATTERN));
@@ -572,6 +582,7 @@ public class DepartmentImpl implements Department
       _creationDate = statement.getDateTime(index++);
       _updaterId = statement.getLongInteger(index++);
       _updateDate = statement.getDateTime(index++);
+      _idorg = statement.getLongInteger(index++);
 
       return new Integer(index);
    }
@@ -602,7 +613,7 @@ public class DepartmentImpl implements Department
       statement.setLongInteger(index++, _creatorId);
 		_creationDate = DbUtil.getCurrentDateTime();
 		statement.setDateTime(index++, _creationDate);
-		
+		statement.setLongInteger(index++, _idorg);
       return new Integer(index);
    }
    
@@ -631,6 +642,7 @@ public class DepartmentImpl implements Department
 		_updateDate = DbUtil.getCurrentDateTime();
 		statement.setDateTime(index++, _updateDate);
 		statement.setLongInteger(index++, _type);
+		statement.setLongInteger(index++, _idorg);
       return new Integer(index);
    }
    
@@ -695,7 +707,7 @@ public class DepartmentImpl implements Department
 	    DbConnection dbConn=new DbConnection();      
 	    try{
 	      dbConn.open(DBSessionManager.getSession(entidad));
-	    	//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+	    	//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
 	    	
 	      if (_id == Defs.NULL_ID)
 				count = DbSelectFns.selectCount(dbConn, table.getBaseTableName(), table
@@ -833,7 +845,7 @@ public class DepartmentImpl implements Department
       try 
       {
     	 dbConn.open(DBSessionManager.getSession(entidad));
-    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
     	  
          dbConn.beginTransaction();
          inTrans = true;
@@ -878,7 +890,7 @@ public class DepartmentImpl implements Department
       DbConnection dbConn=new DbConnection();
       try{
       	  dbConn.open(DBSessionManager.getSession(entidad));
-    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
     	  
          tableInfo.setTableObject(table);
          tableInfo.setClassName(DepartmentsTable.class.getName());
@@ -1008,7 +1020,7 @@ public class DepartmentImpl implements Department
       DbConnection dbConn=new DbConnection();
       try{
       	 dbConn.open(DBSessionManager.getSession(entidad));
-    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
     	  
          tableInfo.setTableObject(table);
          tableInfo.setClassName(DepartmentsTable.class.getName());
@@ -1048,7 +1060,7 @@ public class DepartmentImpl implements Department
       DbConnection dbConn=new DbConnection();      
       try{
     	  dbConn.open(DBSessionManager.getSession(entidad));
-    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
     	  
 	      // Comprobamos si para el productId se tiene el permiso o no.
 	      permis = _permsImpl._perms.getProductPermission(productId);
@@ -1104,7 +1116,7 @@ public class DepartmentImpl implements Department
       DbConnection dbConn=new DbConnection();
       try{
       	dbConn.open(DBSessionManager.getSession(entidad));
-    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_000", "postgres", "postgres");
+    	  //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_000", "postgres", "postgres");
     	  
          tableInfo.setTableObject(usrTbl);
          tableInfo.setClassName(UsersTable.class.getName());
@@ -1151,6 +1163,7 @@ public class DepartmentImpl implements Department
       _permsImpl = new GenericPermsImpl();
       _users = new Users();
       _adminUsers = new BasicUsersImpl();
+      _idorg = null;
    }
  
    
@@ -1169,7 +1182,7 @@ public class DepartmentImpl implements Department
    private GenericPermsImpl _permsImpl;
    private Users _users;
    private BasicUsersImpl _adminUsers;
-   
+   private Integer _idorg;
 	private static final Logger _logger = Logger.getLogger(DepartmentImpl.class);
 
 }

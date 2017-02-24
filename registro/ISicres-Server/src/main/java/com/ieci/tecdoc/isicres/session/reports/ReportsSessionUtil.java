@@ -73,14 +73,14 @@ public class ReportsSessionUtil extends UtilsSession implements ServerKeys,
 			ReportException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		dropTable(sessionID, entidad, bookID);
 
 		ReportResult result = new ReportResult();
 		Transaction tran = null;
 		int bookType = 0;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
@@ -146,22 +146,22 @@ public class ReportsSessionUtil extends UtilsSession implements ServerKeys,
 			}
 			doFinal(result, tableName, queryType, maxReportRegister.intValue(),
 					entidad);
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 			return result;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to getOptionAQuery for the session ["
 					+ sessionID + "]", e);
 			throw new ReportException(
 					ReportException.ERROR_CANNOT_GENERATE_REPORT);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -174,13 +174,13 @@ public class ReportsSessionUtil extends UtilsSession implements ServerKeys,
 				ValidationException.ATTRIBUTE_SESSION);
 
 		dropTable(sessionID, entidad, bookID);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ReportResult result = new ReportResult();
 		Transaction tran = null;
 		int bookType = 0;
 		List privOrgs = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
@@ -239,25 +239,25 @@ public class ReportsSessionUtil extends UtilsSession implements ServerKeys,
 			generateRelationsNumOptionC(session, scrofic, bookType, tableName,
 					queryType, isTarget, result, maxReportRegister, entidad);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 			return result;
 		} catch (ReportException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw e;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to getOptionC for the session [" + sessionID
 					+ "]", e);
 			throw new ReportException(
 					ReportException.ERROR_CANNOT_GENERATE_REPORT);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -315,9 +315,9 @@ public class ReportsSessionUtil extends UtilsSession implements ServerKeys,
 				ValidationException.ATTRIBUTE_SESSION);
 
 		Transaction tran = null;
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			// Recuperamos la sesión
 
 			tran = session.beginTransaction();
@@ -339,13 +339,13 @@ public class ReportsSessionUtil extends UtilsSession implements ServerKeys,
 			DBEntityDAOFactory.getCurrentDBEntityDAO().dropTableOrView(
 					tableName, entidad);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to dropTable for the session [" + sessionID
 					+ "]", e);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -383,15 +383,15 @@ public class ReportsSessionUtil extends UtilsSession implements ServerKeys,
 		} else {
 			fieldList = FIELD_LIST_OUT;
 		}
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		boolean updateFieldList = true;
-		AxSf axsf = BBDDUtils.getTableSchemaFromDatabaseWithSQLName(bookID
+		AxSf axsf = bbddUtils.getTableSchemaFromDatabaseWithSQLName(bookID
 				.toString(), entidad);
 
 		// String fieldName = null;
 		for (Iterator it = bookIds.iterator(); it.hasNext() && updateFieldList;) {
 			Integer auxBookId = (Integer) it.next();
-			AxSf auxAxsf = BBDDUtils.getTableSchemaFromDatabaseWithSQLName(
+			AxSf auxAxsf = bbddUtils.getTableSchemaFromDatabaseWithSQLName(
 					auxBookId.toString(), entidad);
 			updateFieldList = axsf.getAttributesNames().size() == auxAxsf
 					.getAttributesNames().size();
@@ -596,7 +596,8 @@ public class ReportsSessionUtil extends UtilsSession implements ServerKeys,
 	private static String getCreateSentenceC(Integer bookID, int bookType,
 			String tableName, String where, Integer maxReportRegister,
 			String entidad) throws SQLException, Exception {
-		StringBuffer fieldList = getFieldList(BBDDUtils
+	    BBDDUtils bbddUtils = new BBDDUtils();
+		StringBuffer fieldList = getFieldList(bbddUtils
 				.getTableSchemaFromDatabase(bookID.toString(), entidad)
 				.getAttributesNames());
 		String aditionalFields = DBEntityDAOFactory.getCurrentDBEntityDAO()
@@ -649,7 +650,8 @@ public class ReportsSessionUtil extends UtilsSession implements ServerKeys,
 			throws SQLException, Exception {
 		String where = getWhereOptionA(filter, axsf, axsfQuery, user, fdrid,
 				entidad);
-		StringBuffer fieldList = getFieldList(BBDDUtils
+		BBDDUtils bbddUtils = new BBDDUtils();
+		StringBuffer fieldList = getFieldList(bbddUtils
 				.getTableSchemaFromDatabase(bookID.toString(), entidad)
 				.getAttributesNames());
 

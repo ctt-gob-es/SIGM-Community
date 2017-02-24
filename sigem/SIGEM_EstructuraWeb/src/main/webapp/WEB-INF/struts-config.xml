@@ -264,7 +264,7 @@
 		<set-property property="images_dir" value="images"/>
 		<!-- Son optativos 
 		<set-property property="protocol" value="http"/>
-		<set-property property="httpServer" value="10.228.69.65"/>
+		<set-property property="httpServer" value="127.0.0.1"/>
 		<set-property property="httpPort" value="8080"/>
 		 -->
 		<set-property property="system_config_name" value="IeciTd"/>

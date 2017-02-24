@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>	
+	<name>SIGEM_RegistroPresencialMSSSIJAXWS</name>
+	<groupId>es.msssi.tecdoc.sigem</groupId>
+	<version>3.0.0-msssi2.0.0</version>
+	<artifactId>SIGEM_RegistroPresencialMSSSIJAXWS</artifactId>
+	<packaging>pom</packaging>
+	
+
+	<!-- BUILD -->
+	<build>
+		<!-- PLUGINS -->
+		<plugins>
+			<!-- COMPILADO -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<compilerArguments>
+						<verbose />
+					</compilerArguments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<tagBase>https://subversion.msc.es/svn/sigm/tags</tagBase>
+					<checkModificationExcludes>
+						<checkModificationExclude>sigm.iml</checkModificationExclude>
+					</checkModificationExcludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<properties>
+		<isicres.version>8.0.1</isicres.version>
+	</properties>
+
+	<!-- MODULOS -->
+	<modules>
+		<module>sigm.webservices</module>
+		<module>sigm.dao</module>
+		<module>sigm.ear</module>
+	</modules>
+</project>

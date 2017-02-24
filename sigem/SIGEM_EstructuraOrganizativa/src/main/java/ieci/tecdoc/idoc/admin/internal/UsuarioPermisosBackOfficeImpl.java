@@ -123,7 +123,7 @@ public class UsuarioPermisosBackOfficeImpl implements UsuarioPermisosBackOffice 
 	      DbConnection dbConn = new DbConnection();
 	      try {
 	    	 dbConn.open(DBSessionManager.getSession(entidad));
-	    	 //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_001", "postgres", "postgres");
+	    	 //dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_001", "postgres", "postgres");
 	         tableInfo.setTableObject(table);
 	         tableInfo.setClassName(UsuariosPermisosTable.class.getName());
 	         tableInfo.setTablesMethod("getTableName");
@@ -165,7 +165,7 @@ public class UsuarioPermisosBackOfficeImpl implements UsuarioPermisosBackOffice 
 		DbConnection dbConn=new DbConnection();
 		try{
 			dbConn.open(DBSessionManager.getSession(entidad));
-			//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_001", "postgres", "postgres");
+			//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_001", "postgres", "postgres");
 			tableInfo.setTableObject(table);
 			tableInfo.setClassName(UsuariosPermisosTable.class.getName());
 			tableInfo.setTablesMethod("getTableName");
@@ -195,7 +195,7 @@ public class UsuarioPermisosBackOfficeImpl implements UsuarioPermisosBackOffice 
 		DbConnection dbConn=new DbConnection();  
 		try{
 			dbConn.open(DBSessionManager.getSession(entidad));
-			//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_001", "postgres", "postgres");
+			//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_001", "postgres", "postgres");
 
 			count = DbSelectFns.selectCount(dbConn, table.getTableName(), 
 					table.getByIdUsApQual(idUsuario, idAplicacion));
@@ -219,7 +219,7 @@ public class UsuarioPermisosBackOfficeImpl implements UsuarioPermisosBackOffice 
 	    DbConnection dbConn=new DbConnection();
 	    try{
 	    	dbConn.open(DBSessionManager.getSession(entidad));
-	    	//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://128.90.111.90/registro_001", "postgres", "postgres");
+	    	//dbConn.open("org.postgresql.Driver", "jdbc:postgresql://127.0.0.1/registro_001", "postgres", "postgres");
 	    	tableInfo.setTableObject(table);
 	    	tableInfo.setClassName(UsuariosPermisosTable.class.getName());
 	    	tableInfo.setTablesMethod("getTableName");

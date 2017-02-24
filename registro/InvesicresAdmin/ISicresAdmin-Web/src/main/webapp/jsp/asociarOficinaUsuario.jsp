@@ -4,7 +4,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
 <%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
-
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <c:set var="idOficPref" value="${requestScope['idOficPref']}"/>
 <c:set var="idUsuario" value="${requestScope['idUsuario']}"/>
 
@@ -16,9 +17,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="author" content="IECISA" />
 <title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message key="ieci.tecdoc.sgm.rpadmin.usuarios.titulo"/></title>
-<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-<link href="css/adminApp.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/common.js"></script>
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/adminApp.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
 </head>
 
 <body>
@@ -71,7 +72,7 @@
 						 sortable="false" style="width: 90%;">
 						 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 						 	<tr>
-						 		<td width="30" align="center"><img src="<html:rewrite page="/img/departamento.gif"/>" /></td>
+						 		<td width="30" align="center"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/departamento.gif" /></td>
 						 		<td><bean:write name="fila" property="nombre" /></td>
 						 	</tr>
 						 </table>
@@ -79,7 +80,7 @@
 					<display:column titleKey="ieci.tecdoc.sgm.rpadmin.usuarios.preferente" style="text-align:center;">
 						<c:choose>
 							<c:when test="${idOficPref == fila.id}">
-								&nbsp;<img src="<html:rewrite page="/img/guardar.gif"/>"/>
+								&nbsp;<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/guardar.gif"/>
 							</c:when>
 							<c:otherwise>
 								<input type="radio" value='<c:out value="${fila.id}"/>' onclick="llamadaActionAsociarOficPrefUsuario('<html:rewrite page="/asociarOficinaPreferenteAUsuario.do"/>','<bean:write name="fila" property="id" />', '<bean:write name="idUsuario"/>')"/>
@@ -118,7 +119,7 @@
 						 sortable="false" style="width: 90%;">
 						 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 						 	<tr>
-						 		<td width="30" align="center"><img src="<html:rewrite page="/img/departamento.gif"/>" /></td>
+						 		<td width="30" align="center"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/departamento.gif" /></td>
 						 		<td><bean:write name="fila" property="nombre" /></td>
 						 	</tr>
 						 </table>
@@ -136,7 +137,7 @@
 					<display:column titleKey="ieci.tecdoc.sgm.rpadmin.usuarios.preferente" style="text-align:center;">
 						<c:choose>
 							<c:when test="${idOficPref == fila.id}">
-								&nbsp;<img src="<html:rewrite page="/img/guardar.gif"/>" />
+								&nbsp;<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/guardar.gif" />
 							</c:when>
 							<c:otherwise>
 								<input type="radio" value='<c:out value="${fila.id}"/>' onclick="llamadaActionAsociarOficPrefUsuario('<html:rewrite page="/asociarOficinaPreferenteAUsuario.do"/>','<bean:write name="fila" property="id" />', '<bean:write name="idUsuario"/>')"/>

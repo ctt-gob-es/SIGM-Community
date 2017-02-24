@@ -29,6 +29,8 @@ import com.ieci.tecdoc.common.invesdoc.Idocvtblctlg;
 import com.ieci.tecdoc.common.invesicres.ScrAddrtel;
 import com.ieci.tecdoc.common.invesicres.ScrReport;
 import com.ieci.tecdoc.common.isicres.AxSf;
+import com.ieci.tecdoc.common.isicres.AxSfIn;
+import com.ieci.tecdoc.common.isicres.AxSfOut;
 import com.ieci.tecdoc.common.isicres.AxSfQuery;
 import com.ieci.tecdoc.common.isicres.AxSfQueryField;
 import com.ieci.tecdoc.common.isicres.Keys;
@@ -66,6 +68,11 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 	protected static final String MIN_TIME_QUOTE = " 00:00:00'";
 	protected static final String MAX_TIME_QUOTE = " 23:59:59'";
 
+	protected static final String UPPER = "UPPER";
+	protected static final String REPLACE = "TRANSLATE";
+
+	private static final String TILDES = "ÁÀÂÉÈÊÍÌÎÓÒÔÚÙÛ";
+	private static final String NOTILDES = "AAAEEEIIIOOOUUU";
 	/***************************************************************************
 	 * Constructors
 	 **************************************************************************/
@@ -172,7 +179,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String selectSentence = null;
 		Object[][] result = null;
 		try {
@@ -184,7 +191,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 						+ " ORDER BY FLD4, FLD7";
 
 			}
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(selectSentence);
 
@@ -208,9 +215,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando [" + selectSentence + "]", e);
 			throw new SQLException("Error ejecutando [" + selectSentence + "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 		return result;
 	}
@@ -227,7 +234,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int result = 0;
 		StringBuffer query = new StringBuffer();
 		try {
@@ -238,7 +245,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			query.append(" AND scr.idunit=" + idunit + " AND scr.relyear="
 					+ relyear);
 
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query.toString());
 
@@ -254,9 +261,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throw new SQLException("Error ejecutando [" + query.toString()
 					+ "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 		return result;
 	}
@@ -272,7 +279,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Connection connection = null;
 		ResultSet resultSet = null;
 		List privOrgs = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		StringBuffer query = new StringBuffer();
 		try {
 			query.append("SELECT IDORGS FROM SCR_PRIVORGS WHERE IDOFIC != "
@@ -281,7 +288,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					.append(" AND IDORGS NOT IN (SELECT IDORGS FROM SCR_PRIVORGS WHERE IDOFIC = "
 							+ idofic + ")");
 
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query.toString());
 
@@ -298,9 +305,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throw new SQLException("Error ejecutando [" + query.toString()
 					+ "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 		return privOrgs;
 	}
@@ -315,7 +322,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int result = 0;
 		StringBuffer query = new StringBuffer();
 		try {
@@ -323,7 +330,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			query.append("ID IN (SELECT IDOFIC FROM SCR_USROFIC WHERE IDUSER="
 					+ userId + ")");
 
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query.toString());
 
@@ -339,9 +346,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throw new SQLException("Error ejecutando [" + query.toString()
 					+ "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 		return result;
 	}
@@ -358,10 +365,10 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int result = 0;
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT COUNT(*) FROM A"
 					+ bookId.intValue() + "SF WHERE FLD6=1 AND FLD5=" + oficId);
@@ -382,9 +389,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ bookId.intValue() + "SF WHERE FLD6=1 AND FLD5=" + oficId
 					+ "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 
 		return result;
@@ -403,10 +410,10 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int result = 0;
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT COUNT(*) FROM "
 					+ tableName);
@@ -424,9 +431,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throw new SQLException("Error ejecutando [SELECT COUNT(*) FROM "
 					+ tableName + "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 
 		return result;
@@ -443,9 +450,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throws SQLException {
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate(sentence);
 		} catch (SQLException e) {
@@ -455,8 +462,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando [" + sentence + "]", e);
 			throw new SQLException("Error ejecutando [" + sentence + "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -471,9 +478,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throws SQLException {
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate(sentence);
 		} catch (SQLException e) {
@@ -483,8 +490,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando [" + sentence + "]", e);
 			throw new SQLException("Error ejecutando [" + sentence + "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -500,9 +507,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement pstatement = null;
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 
 			pstatement = connection.prepareStatement(insert);
 			assignAxSFPreparedStatement(axsfQuery, axsf, pstatement);
@@ -514,9 +521,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando [" + insert + "]", e);
 			throw new SQLException("Error ejecutando [" + insert + "]");
 		} finally {
-			BBDDUtils.close(pstatement);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(pstatement);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -532,9 +539,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement pstatement = null;
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate(create);
 
@@ -549,9 +556,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throw new SQLException("Error ejecutando [" + create + "] ["
 					+ insert + "]");
 		} finally {
-			BBDDUtils.close(pstatement);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(pstatement);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -567,9 +574,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement pstatement = null;
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate(create);
 
@@ -580,9 +587,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando [" + create + "] ", e);
 			throw new SQLException("Error ejecutando [" + create + "] ");
 		} finally {
-			BBDDUtils.close(pstatement);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(pstatement);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -597,12 +604,12 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			int unit, String entidad) throws SQLException {
 		PreparedStatement pstatement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			pstatement = connection.prepareStatement(insert);
-			pstatement.setTimestamp(1, BBDDUtils.getTimestamp(beginDate));
-			pstatement.setTimestamp(2, BBDDUtils.getTimestamp(endDate));
+			pstatement.setTimestamp(1, bbddUtils.getTimestamp(beginDate));
+			pstatement.setTimestamp(2, bbddUtils.getTimestamp(endDate));
 			if (unit != -1) {
 				pstatement.setInt(3, unit);
 			}
@@ -614,8 +621,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando [" + insert + "]", e);
 			throw new SQLException("Error ejecutando [" + insert + "]");
 		} finally {
-			BBDDUtils.close(pstatement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(pstatement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -631,9 +638,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		Connection connection = null;
 		String query = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 
 			Object valueToInspect = oldValue;
 			if (valueToInspect == null) {
@@ -654,9 +661,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					query = "INSERT INTO SCR_VALDATE(ID,VALUE,OLDVALUE) VALUES (?,?,?)";
 					statement = connection.prepareStatement(query);
 					statement.setInt(1, id.intValue());
-					statement.setTimestamp(2, BBDDUtils
+					statement.setTimestamp(2, bbddUtils
 							.getTimestamp((Date) newValue));
-					statement.setTimestamp(3, BBDDUtils
+					statement.setTimestamp(3, bbddUtils
 							.getTimestamp((Date) oldValue));
 				}
 				if (valueToInspect instanceof Timestamp) {
@@ -731,8 +738,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		} catch (Throwable e) {
 			log.warn("Resulta imposible iauditar [" + query + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -747,9 +754,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			String entidad) throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(INSERT_SCR_CNTOFICINA_OFIC);
 			statement.setInt(1, year);
 			statement.setInt(2, ofic);
@@ -765,8 +772,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ INSERT_SCR_CNTOFICINA_OFIC + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return 1;
@@ -784,9 +791,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			int nrel, String entidad) throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(INSERT_SCR_RELATIONS);
 			statement.setInt(1, typebook);
 			statement.setInt(2, typerel);
@@ -794,7 +801,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			statement.setInt(4, relmonth);
 			statement.setInt(5, relday);
 			statement.setInt(6, idofic);
-			statement.setDate(7, BBDDUtils.getDate(reldate));
+			statement.setDate(7, bbddUtils.getDate(reldate));
 			statement.setInt(8, idunit);
 			statement.setInt(9, nrel);
 
@@ -808,8 +815,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ INSERT_SCR_RELATIONS + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return 1;
@@ -826,7 +833,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			String entidad) throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String where = "FROM SCR_DISTREG WHERE ID_ARCH=? AND ID_FDR=? AND STATE=1 AND TYPE_ORIG=2 AND ID_ORIG=?";
 		StringBuffer query = null;
 		try {
@@ -835,37 +842,37 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			query.append("(SELECT ID ");
 			query.append(where);
 			query.append(")");
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(query.toString());
 			statement.setInt(1, idArch);
 			statement.setInt(2, idFdr);
 			statement.setInt(3, idOrg);
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			query = new StringBuffer();
 			query.append("DELETE FROM SCR_DISTREGSTATE WHERE ID_DIST IN ");
 			query.append("(SELECT ID ");
 			query.append(where);
 			query.append(")");
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(query.toString());
 			statement.setInt(1, idArch);
 			statement.setInt(2, idFdr);
 			statement.setInt(3, idOrg);
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			query = new StringBuffer();
 			query.append("DELETE ");
 			query.append(where);
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(query.toString());
 			statement.setInt(1, idArch);
 			statement.setInt(2, idFdr);
 			statement.setInt(3, idOrg);
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 		} catch (SQLException e) {
 			log.warn("Resulta imposible deleteDistributeForUpdate [" + query
 					+ "]", e);
@@ -873,8 +880,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Resulta imposible deleteDistributeForUpdate [" + query
 					+ "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -889,7 +896,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			String entidad, int state) throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String where = "FROM SCR_DISTREG WHERE ID_ARCH=? AND ID_FDR=? AND STATE=? AND TYPE_ORIG=2 AND ID_ORIG=?";
 		StringBuffer query = null;
 		try {
@@ -898,40 +905,40 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			query.append("(SELECT ID ");
 			query.append(where);
 			query.append(")");
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(query.toString());
 			statement.setInt(1, idArch);
 			statement.setInt(2, idFdr);
 			statement.setInt(3, state);
 			statement.setInt(4, idOrg);
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			query = new StringBuffer();
 			query.append("DELETE FROM SCR_DISTREGSTATE WHERE ID_DIST IN ");
 			query.append("(SELECT ID ");
 			query.append(where);
 			query.append(")");
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(query.toString());
 			statement.setInt(1, idArch);
 			statement.setInt(2, idFdr);
 			statement.setInt(3, state);
 			statement.setInt(4, idOrg);
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			query = new StringBuffer();
 			query.append("DELETE ");
 			query.append(where);
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(query.toString());
 			statement.setInt(1, idArch);
 			statement.setInt(2, idFdr);
 			statement.setInt(3, state);
 			statement.setInt(4, idOrg);
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 		} catch (SQLException e) {
 			log.warn("Resulta imposible deleteDistributeForUpdate [" + query
 					+ "]", e);
@@ -939,8 +946,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Resulta imposible deleteDistributeForUpdate [" + query
 					+ "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -955,9 +962,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(INSERT_SCR_CNTCENTRAL);
 			statement.setInt(1, year);
 			statement.setInt(2, bookType);
@@ -972,8 +979,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ INSERT_SCR_CNTCENTRAL + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return 1;
@@ -988,9 +995,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 	public void lockScrDistReg(int id, String entidad) throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(LOCK_SCR_DISTREG);
 			statement.setInt(1, id);
 
@@ -1002,8 +1009,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Resulta imposible bloquear SCR_DISTREG ["
 					+ LOCK_SCR_DISTREG + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -1016,9 +1023,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 	public void lockScrCentral(int year, String entidad) throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(LOCK_SCR_CNTCENTRAL);
 			statement.setInt(1, year);
 
@@ -1030,8 +1037,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Resulta imposible bloquear scr_cntcentral ["
 					+ LOCK_SCR_CNTCENTRAL + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -1044,9 +1051,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 	public void lockScrOficina(int year, String entidad) throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(LOCK_SCR_CNTOFICINA);
 			statement.setInt(1, year);
 
@@ -1060,8 +1067,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ LOCK_SCR_CNTCENTRAL + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -1075,9 +1082,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			String entidad) throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(SCR_LOCK_RELATIONS);
 			statement.setInt(1, typeBook);
 			statement.setInt(2, typeRel);
@@ -1095,8 +1102,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ SCR_LOCK_RELATIONS + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -1111,9 +1118,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(UPDATE_SCR_CNTCENTRAL);
 			statement.setInt(1, year);
 			statement.setInt(2, bookType);
@@ -1126,8 +1133,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Resulta imposible actualizar scr_cntcentral ["
 					+ UPDATE_SCR_CNTCENTRAL + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -1142,9 +1149,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			String entidad) throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(UPDATE_SCR_CNTOFICINA);
 			statement.setInt(1, year);
 			statement.setInt(2, bookType);
@@ -1158,8 +1165,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Resulta imposible actualizar scr_cntoficina ["
 					+ UPDATE_SCR_CNTOFICINA + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -1175,11 +1182,11 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int id = -1;
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection
 					.prepareStatement(SELECT_NUMREG_SCR_CNTCENTRAL);
 			statement.setInt(1, year);
@@ -1199,9 +1206,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ SELECT_NUMREG_SCR_CNTCENTRAL + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return id;
@@ -1218,9 +1225,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(DELETE_USER_CONFIG);
 			statement.setInt(1, userId);
 			statement.executeUpdate();
@@ -1234,9 +1241,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ DELETE_USER_CONFIG + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -1252,11 +1259,11 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int id = -1;
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection
 					.prepareStatement(SELECT_NUMREG_SCR_CNTOFICINA);
 			statement.setInt(1, year);
@@ -1276,9 +1283,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ SELECT_NUMREG_SCR_CNTOFICINA + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return id;
@@ -1296,21 +1303,21 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int id = -1;
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(UPDATE_LOCK_NEXT_ID_3);
 			statement.setInt(1, bookID.intValue());
 			int affected = statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			if (affected == 0) {
 				statement = connection.prepareStatement(INSERT_NEXT_ID_3);
 				statement.setInt(1, bookID.intValue());
 				affected = statement.executeUpdate();
-				BBDDUtils.close(statement);
+				bbddUtils.close(statement);
 			}
 
 			statement = connection.prepareStatement(SELECT_NEXT_ID_3);
@@ -1320,20 +1327,20 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			while (resultSet.next()) {
 				id = resultSet.getInt(1);
 			}
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			statement = connection.prepareStatement(UPDATE_NEXT_ID_3);
 			statement.setInt(1, bookID.intValue());
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 		} catch (SQLException e) {
 			log.warn("Resulta imposible obtener el nuevo id de registro.", e);
 		} catch (Throwable e) {
 			log.warn("Resulta imposible obtener el nuevo id de registro.", e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return id;
@@ -1351,14 +1358,14 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int id = -1;
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(UPDATE_NEXT_ID_IUSER);
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			statement = connection.prepareStatement(SELECT_NEXT_ID_IUSER);
 			resultSet = statement.executeQuery();
@@ -1371,7 +1378,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			} else {
 				id = id - 1;
 			}
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			statement = connection.prepareStatement(INSERT_NEXT_ID_IUSER);
 			statement.setInt(1, id);
@@ -1379,15 +1386,15 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			statement.setString(3, fullName);
 			// statement.executeQuery();
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 		} catch (SQLException e) {
 			log.warn("Resulta imposible obtener el nuevo id de usuario.", e);
 		} catch (Throwable e) {
 			log.warn("Resulta imposible obtener el nuevo id de usuario.", e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return id;
@@ -1404,21 +1411,21 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int id = -1;
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(UPDATE_LOCK_NEXT_ID_7);
 			statement.setInt(1, bookID.intValue());
 			int affected = statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			if (affected == 0) {
 				statement = connection.prepareStatement(INSERT_NEXT_ID_7);
 				statement.setInt(1, bookID.intValue());
 				affected = statement.executeUpdate();
-				BBDDUtils.close(statement);
+				bbddUtils.close(statement);
 			}
 
 			statement = connection.prepareStatement(SELECT_NEXT_ID_7);
@@ -1428,20 +1435,20 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			while (resultSet.next()) {
 				id = resultSet.getInt(1);
 			}
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			statement = connection.prepareStatement(UPDATE_NEXT_ID_7);
 			statement.setInt(1, bookID.intValue());
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 		} catch (SQLException e) {
 			log.warn("Resulta imposible obtener el nuevo id de registro.", e);
 		} catch (Throwable e) {
 			log.warn("Resulta imposible obtener el nuevo id de registro.", e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return id;
@@ -1459,21 +1466,21 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int id = -1;
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(UPDATE_LOCK_NEXT_ID_5);
 			statement.setInt(1, bookID.intValue());
 			int affected = statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			if (affected == 0) {
 				statement = connection.prepareStatement(INSERT_NEXT_ID_5);
 				statement.setInt(1, bookID.intValue());
 				affected = statement.executeUpdate();
-				BBDDUtils.close(statement);
+				bbddUtils.close(statement);
 			}
 
 			statement = connection.prepareStatement(SELECT_NEXT_ID_5);
@@ -1483,20 +1490,20 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			while (resultSet.next()) {
 				id = resultSet.getInt(1);
 			}
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			statement = connection.prepareStatement(UPDATE_NEXT_ID_5);
 			statement.setInt(1, bookID.intValue());
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 		} catch (SQLException e) {
 			log.warn("Resulta imposible obtener el nuevo id de registro.", e);
 		} catch (Throwable e) {
 			log.warn("Resulta imposible obtener el nuevo id de registro.", e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return id;
@@ -1514,25 +1521,25 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(SELECT_USER_LASTCONNECTION);
 			statement.setInt(1, idUser.intValue());
 			resultSet = statement.executeQuery();
 
 			if (resultSet.next()) {
 				date = resultSet.getTimestamp(1);
-				BBDDUtils.close(statement);
+				bbddUtils.close(statement);
 
 				statement = connection
 						.prepareStatement(DELETE_USER_LASTCONNECTION);
 				statement.setInt(1, idUser.intValue());
 				statement.executeUpdate();
-				BBDDUtils.close(statement);
+				bbddUtils.close(statement);
 
 			} else {
-				BBDDUtils.close(statement);
+				bbddUtils.close(statement);
 				date = getDBServerDate(entidad);
 			}
 
@@ -1540,7 +1547,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			statement.setInt(1, idUser.intValue());
 			statement.setTimestamp(2, getDBServerDate(entidad));
 			statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			log.info("LAST CONNECTION: " + date);
 
@@ -1555,9 +1562,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 							"Resulta imposible obtener la fecha de última conexión del usuario.",
 							e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return date;
@@ -1577,9 +1584,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		boolean lock = false;
 		int officeId = 0;
 		int state = 0;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(SELECT_DIST_DISTACCEPT);
 			statement.setInt(1, bookId.intValue());
 			statement.setInt(2, fdrid);
@@ -1607,9 +1614,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 							"Resulta imposible obtener la información del registro bloqueado aceptado tras una distribución.",
 							e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return lock;
@@ -1627,9 +1634,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		ResultSet resultSet = null;
 		Connection connection = null;
 		boolean exist = false;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(SELECT_DIST_DISTACCEPT);
 			statement.setInt(1, bookId.intValue());
 			statement.setInt(2, fdrid);
@@ -1652,9 +1659,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 							"Resulta imposible obtener la información del registro bloqueado aceptado tras una distribución.",
 							e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return exist;
@@ -1672,15 +1679,15 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			Date distDate, String entidad) {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			if (exist) {
 				statement = connection.prepareStatement(UPDATE_DIST_DISTACCEPT);
 				statement.setInt(1, officeId);
 				statement.setInt(2, state);
 				statement.setString(3, accUser.toUpperCase());
-				statement.setDate(4, BBDDUtils.getDate(accDate));
+				statement.setDate(4, bbddUtils.getDate(accDate));
 				statement.setInt(5, bookId.intValue());
 				statement.setInt(6, fdrId);
 				statement.executeUpdate();
@@ -1692,8 +1699,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 				statement.setInt(1, bookId.intValue());
 				statement.setInt(2, fdrId);
 				statement.setInt(3, officeId);
-				statement.setTimestamp(4, BBDDUtils.getTimestamp(distDate));
-				statement.setTimestamp(5, BBDDUtils.getTimestamp(accDate));
+				statement.setTimestamp(4, bbddUtils.getTimestamp(distDate));
+				statement.setTimestamp(5, bbddUtils.getTimestamp(accDate));
 				statement.setString(6, accUser.toUpperCase());
 				statement.setInt(7, state);
 				statement.executeUpdate();
@@ -1714,8 +1721,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 							"Resulta imposible actualizar o insertar en SCR_DISTACCEPT. ",
 							e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -1728,9 +1735,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 	public void updateRole(int userId, int prodId, int type, String entidad) {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(UPDATE_IUSERUSERTYPE);
 			statement.setInt(1, type);
 			statement.setInt(2, userId);
@@ -1749,8 +1756,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 							"Resulta imposible actualizar o insertar en IUSERUSERHDR. ",
 							e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -1764,9 +1771,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 	public void updateLdapFullName(int id, String ldapFullName, String entidad) {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(UPDATE_IUSERLDAPUSERHDR);
 			statement.setString(1, ldapFullName);
 			statement.setInt(2, id);
@@ -1778,8 +1785,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		} catch (Throwable e) {
 			log.warn("Resulta imposible actualizar en IUSERLDAPUSERHDR. ", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -1793,9 +1800,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 	public void deleteDistAccept(Integer bookId, int fdrid, String entidad) {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(DELETE_DIST_DISTACCEPT);
 			statement.setInt(1, bookId.intValue());
 			statement.setInt(2, fdrid);
@@ -1812,8 +1819,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					"Resulta imposible borrar la información de distribución ["
 							+ DELETE_DIST_DISTACCEPT + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 	}
@@ -1831,9 +1838,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		ResultSet resultSet = null;
 		Connection connection = null;
 		int lastFdrid = 0;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(SELECT_USER_LASTREGISTER);
 			statement.setInt(1, bookId.intValue());
 			statement.setInt(2, idUser.intValue());
@@ -1841,7 +1848,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 
 			if (resultSet.next()) {
 				lastFdrid = resultSet.getInt(FDRID_FIELD);
-				BBDDUtils.close(statement);
+				bbddUtils.close(statement);
 				if (fdrid != null) {
 					statement = connection
 							.prepareStatement(UPDATE_USER_LASTREGISTER);
@@ -1849,18 +1856,18 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					statement.setInt(2, bookId.intValue());
 					statement.setInt(3, idUser.intValue());
 					statement.executeUpdate();
-					BBDDUtils.close(statement);
+					bbddUtils.close(statement);
 				}
 
 			} else if (fdrid != null) {
-				BBDDUtils.close(statement);
+				bbddUtils.close(statement);
 				statement = connection
 						.prepareStatement(INSERT_USER_LASTREGISTER);
 				statement.setInt(1, bookId.intValue());
 				statement.setInt(2, fdrid.intValue());
 				statement.setInt(3, idUser.intValue());
 				statement.executeUpdate();
-				BBDDUtils.close(statement);
+				bbddUtils.close(statement);
 			}
 
 			log.info("LAST REGISTER: " + bookId.intValue() + " " + fdrid + " "
@@ -1877,9 +1884,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 							"Resulta imposible obtener la información del último registro creado por el usuario.",
 							e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return lastFdrid;
@@ -1897,9 +1904,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(getDateQuery());
 
@@ -1914,9 +1921,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		} catch (Throwable e) {
 			log.warn("Resulta imposible obtener la fecha del sistema.", e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return date;
@@ -1997,6 +2004,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 	 */
 	public void assignAxSFPreparedStatement(AxSfQuery axsfQuery, AxSf axsfP,
 			PreparedStatement ps) throws SQLException {
+	    BBDDUtils bbddUtils = new BBDDUtils();
 		if (axsfQuery != null && axsfQuery.getFields() != null
 				&& !axsfQuery.getFields().isEmpty()) {
 			AxSfQueryField field = null;
@@ -2028,27 +2036,34 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 										.equals(Date.class)
 										&& i == 1) {
 									GregorianCalendar gc = new GregorianCalendar();
-									gc.setTime((Date) it2.next());
-									gc.set(Calendar.SECOND, 0);
-
+									Date datetemp = (Date) it2.next();
+									gc.setTime(datetemp);
+									Calendar calendar = Calendar.getInstance();
+									calendar.setTime(datetemp);
+									/*int hours = calendar.get(Calendar.HOUR_OF_DAY);
+									int minutes = calendar.get(Calendar.MINUTE);
+									int seconds = calendar.get(Calendar.SECOND);
+									
+									
 									if (field.getOperator().equals(
 											Keys.QUERY_OR_TEXT_VALUE)) {
+									  
 										gc.set(Calendar.HOUR_OF_DAY, 0);
 										gc.set(Calendar.MINUTE, 0);
 										gc.set(Calendar.MILLISECOND, 0);
 										gc.set(Calendar.SECOND, 0);
+									 
 									} else {
 										gc.set(Calendar.HOUR_OF_DAY, 23);
 										gc.set(Calendar.MINUTE, 59);
 										gc.set(Calendar.SECOND, 59);
 										gc.set(Calendar.MILLISECOND, 999);
-									}
-									ps.setObject(index, BBDDUtils
+									   
+									}*/
+									ps.setObject(index, bbddUtils
 											.getTimestamp(gc.getTime()));
-								} else {
-									assignAttribute(field, axsfP, ps, index,
-											it2.next());
-								}
+								} else 
+										assignAttribute(field, axsfP, ps, index,it2.next());
 							}
 
 							index++;
@@ -2059,12 +2074,29 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 								.getBookId());
 						index++;
 					}
-				} else {
+				}else if (field.getOperator().equals(Keys.QUERY_LIKE_TEXT_VALUE)){
+					String likeFormat = Keys.QUERY_LIKE_TEXT_VALUE;
+					if (field.getValue() instanceof String)
+						likeFormat += ((String)field.getValue()).toUpperCase().replace(
+							"Á", "A").replace(
+								"É", "E").replace("Í", "I").replace(
+								"Ó", "O").replace("Ú", "U").replace(
+								"À", "A").replace("Â", "A").replace(
+								"È", "E").replace("Ê", "E").replace(
+								"Ì", "I").replace("Î", "I").replace(
+								"Ò", "O").replace("Ô", "O").replace(
+								"Ù", "U").replace("Û", "U");
+					else likeFormat += field.getValue();
+					likeFormat += Keys.QUERY_LIKE_TEXT_VALUE;
+					field.setValue(likeFormat);
+					assignAttribute(field, axsfP, ps, index);
+					index++;
+				} else{
 					assignAttribute(field, axsfP, ps, index);
 					// si el operador es = o != y el field es de tipo fecha
 					// incrementar dos veces i porque en assignAttribute
 					// setearemos 2 valores
-					if ((axsfP.getAttributeClass(field.getFldId())
+					if ((axsfP.getAttributeClass(field.getFldId()) != null && axsfP.getAttributeClass(field.getFldId())
 							.equals(Date.class))
 							&& ((field.getOperator().equals(IGUAL)) || (field
 									.getOperator().equals(DISTINTO)))) {
@@ -2500,17 +2532,50 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					if (field.getFldId().equals("fld9")) {
 						buffer.append(axsfQuery.getWhereField9());
 					} else {
-						buffer.append(field.getFldId());
+					    if (field.getFldId().equals("fld507")) {
+						buffer.append(axsfQuery.getWhereField507_01());
+						 buffer.append(axsfQuery.getBookId());
+						buffer.append(axsfQuery.getWhereField507_02());
+        					} else {
+        					    if (axsf instanceof AxSfIn  && field.getFldId().equals("fld18")) {
+        						buffer.append(axsfQuery.getWhereFieldExtend_01());
+        						buffer.append(axsfQuery.getBookId());
+        						buffer.append(axsfQuery.getWhereFieldExtend_02());
+        						buffer.append("18");
+        						buffer.append(axsfQuery.getWhereFieldExtend_03());
+        					    }else{
+        						if (axsf instanceof AxSfOut  && field.getFldId().equals("fld14")) {
+                						buffer.append(axsfQuery.getWhereFieldExtend_01());
+                						buffer.append(axsfQuery.getBookId());
+                						buffer.append(axsfQuery.getWhereFieldExtend_02());
+                						buffer.append("14");
+                						buffer.append(axsfQuery.getWhereFieldExtend_03());
+            					    	}else{
+                						buffer.append(REPLACE);
+                						buffer.append(PAR_IZQ);
+                						buffer.append(UPPER);
+                						buffer.append(PAR_IZQ);
+                						buffer.append(field.getFldId());
+                						buffer.append(PAR_DER);
+                						buffer.append(",'"+TILDES+"', '"+NOTILDES+"'");
+                						buffer.append(PAR_DER);
+            					    	}
+        					    }
+        					}
 					}
 					buffer.append(ESPACIO);
 					buffer.append(LIKE);
 					buffer.append(ESPACIO);
 					if (field.getFldId().equals("fld9")) {
 						axsfQuery.setSentenceField9((String) field.getValue());
-						buffer.append(axsfQuery.getSentenceField9());
+						buffer.append( REPLACE + 
+								PAR_IZQ +"UPPER('%"+(String) field.getValue()+"%'),'"+TILDES
+								+"', '"+NOTILDES+"'"+PAR_DER + " and id_arch=");
 					}
 					buffer.append(INTERROGACION);
-					if (field.getFldId().equals("fld9")) {
+					if (field.getFldId().equals("fld9") || field.getFldId().equals("fld507") 
+						|| (axsf instanceof AxSfIn  && field.getFldId().equals("fld18"))
+						|| (axsf instanceof AxSfOut  && field.getFldId().equals("fld14"))) {
 						buffer.append(")");
 					}
 					buffer.append(PAR_DER);
@@ -2590,28 +2655,49 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 	 */
 	private boolean generateQueryByField(AxSf axsf, AxSfQuery axsfQuery,
 			StringBuffer buffer, boolean fld32, AxSfQueryField field) {
-		if (axsf != null
+		if (axsf != null && axsf.getAttributeClass(field.getFldId()) != null 
 				&& axsf.getAttributeClass(field.getFldId()).equals(
 						Date.class)) {
 			buffer.append(getDateField(field.getFldId(), field
 					.getOperator(), 1, null));
 		} else {
 			if (!field.getFldId().equals("fld32")) {
-				if (field.getFldId().equals("fld9")) {
-					buffer.append(axsfQuery.getWhereField9());
-				} else {
-					buffer.append(field.getFldId());
+			    if (field.getFldId().equals("fld1001")){
+				if (((String) field.getValue()).equals("S")){
+				    buffer.append(axsfQuery.getWhereField1001_01_S());
+				    buffer.append(axsfQuery.getBookId());
+				    buffer.append(axsfQuery.getWhereField1001_02());
 				}
-				buffer.append(field.getOperator());
-				if (field.getFldId().equals("fld9")) {
-					axsfQuery.setSentenceField9((String) field
-							.getValue());
-					buffer.append(axsfQuery.getSentenceField9());
+				else {
+				    buffer.append(axsfQuery.getWhereField1001_01_N());
+				    buffer.append(axsfQuery.getBookId());
+				    buffer.append(axsfQuery.getWhereField1001_02());
 				}
-				buffer.append(INTERROGACION);
-				if (field.getFldId().equals("fld9")) {
-					buffer.append(")");
-				}
+			    }else {
+				 if (field.getFldId().equals("fld503") && 
+					 ((String) field.getValue()).equals("0")){
+					 buffer.append(field.getFldId());
+					 buffer.append(" IS NULL ");
+				 }
+				 else {
+        				if (field.getFldId().equals("fld9")) {
+        					buffer.append(axsfQuery.getWhereField9());
+        				} else {
+        					buffer.append(field.getFldId());
+        				}
+        				buffer.append(field.getOperator());
+        				if (field.getFldId().equals("fld9")) {
+        					axsfQuery.setSentenceField9((String) field
+        							.getValue());
+        					buffer.append(axsfQuery.getSentenceField9());
+        				}
+        				buffer.append(INTERROGACION);
+        				if (field.getFldId().equals("fld9")) {
+        					buffer.append(")");
+        				}
+				    
+				 }
+			    }
 				fld32 = false;
 			} else {
 				if (((String) field.getValue()).equals("xxx")) {
@@ -2708,7 +2794,16 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		} else if (field.getFldId().equals("fld32")) {
 			assignAttribute(field, axsfP, ps, index, new Integer(0));
 		} else {
-			assignAttribute(field, axsfP, ps, index, field.getValue());
+		    if (field.getFldId().equals("fld503") && 
+					 ((String) field.getValue()).equals("0")){
+			
+		    }else {
+        		    if (field.getFldId().equals("fld1001")) {
+        			assignAttribute(field, axsfP, ps, index, "1");
+        		    } else {
+        			assignAttribute(field, axsfP, ps, index, field.getValue());
+        		    }
+		    }
 		}
 	}
 
@@ -2724,7 +2819,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 	 */
 	protected void assignAttribute(AxSfQueryField field, AxSf axsfP,
 			PreparedStatement ps, int index, Object value) throws SQLException {
-		if ((axsfP.getAttributeClass(field.getFldId()).equals(Date.class))
+	    BBDDUtils bbddUtils = new BBDDUtils();
+		if ((axsfP.getAttributeClass(field.getFldId()) != null && axsfP.getAttributeClass(field.getFldId()).equals(Date.class))
 				&& ((field.getOperator().equals(IGUAL))
 						|| (field.getOperator().equals(DISTINTO)) || (field
 						.getOperator().equals(QUERY_OR)))) {
@@ -2743,35 +2839,61 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			dateFormatter = FORMATTER.format((Date) date) + MAX_TIME;
 			ps.setObject(index, dateFormatter);
 
-		} else if ((axsfP.getAttributeClass(field.getFldId())
+		} else if ((axsfP.getAttributeClass(field.getFldId()) != null && axsfP.getAttributeClass(field.getFldId())
 				.equals(Date.class))
 				&& ((field.getOperator().equals(ENTRE)))) {
 			GregorianCalendar gc = new GregorianCalendar();
 
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime((Date) value);
+			int hours = calendar.get(Calendar.HOUR_OF_DAY);
+			int minutes = calendar.get(Calendar.MINUTE);
+			int seconds = calendar.get(Calendar.SECOND);
+			
 			gc.setTime((Date) value);
-			gc.set(Calendar.SECOND, 0);
-			gc.set(Calendar.MILLISECOND, 0);
-			gc.set(Calendar.HOUR_OF_DAY, 0);
-			gc.set(Calendar.MINUTE, 0);
-			ps.setObject(index, BBDDUtils.getTimestamp(gc.getTime()));
+			if (hours == 0 && minutes == 0 && seconds ==0 ){
+        			gc.set(Calendar.SECOND, 0);
+        			gc.set(Calendar.MILLISECOND, 0);
+        			gc.set(Calendar.HOUR_OF_DAY, 0);
+        			gc.set(Calendar.MINUTE, 0);
+			}
+			ps.setObject(index, bbddUtils.getTimestamp(gc.getTime()));
 
-		} else if ((axsfP.getAttributeClass(field.getFldId())
+		} else if ((axsfP.getAttributeClass(field.getFldId()) != null && axsfP.getAttributeClass(field.getFldId())
 				.equals(Date.class))
 				&& ((field.getOperator().equals(MAYOR)) || (field.getOperator()
 						.equals(MENOR_IGUAL)))) {
-
-			String dateFormatter = FORMATTER.format((Date) field.getValue())
-					+ MAX_TIME;
+		    	Calendar calendar = Calendar.getInstance();
+			calendar.setTime((Date) field.getValue());
+			int hours = calendar.get(Calendar.HOUR_OF_DAY);
+			int minutes = calendar.get(Calendar.MINUTE);
+			int seconds = calendar.get(Calendar.SECOND);
+			
+			String dateFormatter = null;
+			if (hours == 0 && minutes == 0 && seconds == 0){
+			    dateFormatter =  FORMATTER.format((Date) field.getValue()) + MAX_TIME;
+			}else {
+			    dateFormatter = FORMATTERSTAMPAL.format((Date) field.getValue());
+			}
 			ps.setObject(index, dateFormatter);
 
-		} else if (axsfP.getAttributeClass(field.getFldId()).equals(Date.class)) {
-			String dateFormatter = FORMATTER.format((Date) field.getValue())
+		} else if (axsfP.getAttributeClass(field.getFldId()) != null && axsfP.getAttributeClass(field.getFldId()).equals(Date.class)) {
+		    	Calendar calendar = Calendar.getInstance();
+			calendar.setTime((Date) field.getValue());
+			int hours = calendar.get(Calendar.HOUR_OF_DAY);
+			int minutes = calendar.get(Calendar.MINUTE);
+			int seconds = calendar.get(Calendar.SECOND);
+			
+		    String dateFormatter = null;
+		    if (hours == 0 && minutes == 0 && seconds == 0){
+			dateFormatter = FORMATTER.format((Date) field.getValue())
 					+ MIN_TIME;
+		    }else {
+			dateFormatter = FORMATTERSTAMPAL.format((Date) field.getValue());
+		    }
 			ps.setObject(index, dateFormatter);
 
-		} else {
-			ps.setObject(index, value);
-		}
+		} else ps.setObject(index, value );
 	}
 
 	/*
@@ -2786,10 +2908,10 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int result = 0;
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sentence);
 
@@ -2803,9 +2925,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando [" + sentence + "]", e);
 			throw new SQLException("Error ejecutando [" + sentence + "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 
 		return result;
@@ -2823,10 +2945,10 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int result = 0;
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sentence);
 
@@ -2840,9 +2962,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando [" + sentence + "]", e);
 			throw new SQLException("Error ejecutando [" + sentence + "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 
 		return result;
@@ -2861,10 +2983,10 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Connection connection = null;
 		ResultSet resultSet = null;
 		List idArchs = new ArrayList();
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
 
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
@@ -2879,9 +3001,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throw new SQLException("Error ejecutando [" + query.toString()
 					+ "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 		return idArchs;
 	}
@@ -2898,9 +3020,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
-		try {
-			connection = BBDDUtils.getConnection(entidad);
+		BBDDUtils bbddUtils = new BBDDUtils();
+    		try {
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(INSERT_SCR_SHAREDFILES);
 			statement.setInt(1, fileId);
 			statement.setInt(2, ownerBookId);
@@ -2918,8 +3040,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ INSERT_SCR_SHAREDFILES + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return 1;
@@ -2938,9 +3060,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Connection connection = null;
 		ResultSet resultSet = null;
 		String result = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			if (selDel) {
 				statement = connection.prepareStatement(SELECT_HASH_PAGE);
 				statement.setInt(1, bookId.intValue());
@@ -2990,9 +3112,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 						+ DELETE_HASH_PAGE + "]", e);
 			}
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 		return result;
 	}
@@ -3008,7 +3130,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		byte[] buffer = null;
 		StringBuffer query = new StringBuffer();
 		int size = 0;
@@ -3016,7 +3138,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			InputStream fin = null;
 			query.append("SELECT DATA FROM SCR_REPORTS WHERE ID=" + reportId);
 
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query.toString());
 
@@ -3049,9 +3171,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throw new SQLException("Error ejecutando [" + query.toString()
 					+ "]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -3066,9 +3188,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			String entidad) {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			if (type == 0) {
 				statement = connection.prepareStatement(INSERT_USER_CONFIG);
 				statement.setInt(1, idUser.intValue());
@@ -3094,8 +3216,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 							"Resulta imposible actualizar la configuración del usuario.",
 							e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -3110,9 +3232,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		ResultSet resultSet = null;
 		Connection connection = null;
 		String userEmail = "";
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(SELECT_SCR_EMAIL_USRLOC);
 			statement.setInt(1, idUser.intValue());
 			resultSet = statement.executeQuery();
@@ -3132,9 +3254,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					"Resulta imposible obtener la dirección de correo del usuario."
 							+ idUser.intValue(), e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return userEmail;
@@ -3151,9 +3273,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		ResultSet resultSet = null;
 		Connection connection = null;
 		String oficEmail = "";
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(SELECT_SCR_EMAIL_OFIC);
 			statement.setInt(1, idOfic.intValue());
 			resultSet = statement.executeQuery();
@@ -3173,9 +3295,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					"Resulta imposible obtener la dirección de correo de la oficina."
 							+ idOfic.intValue(), e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return oficEmail;
@@ -3193,10 +3315,10 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		List result = new ArrayList();
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
 
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement("select * from scr_addrtel where id="
 					+ idAddress);
 			rs = ps.executeQuery();
@@ -3214,9 +3336,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Resulta imposible obtener la dirección de correo: "
 					+ idAddress, e);
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(rs);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(rs);
+			bbddUtils.close(con);
 
 		}
 
@@ -3255,10 +3377,11 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			String entidad) {
 		PreparedStatement statement = null;
 		Connection connection = null;
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int idOP = idOficPref == null ? 0 : idOficPref.intValue();
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection
 					.prepareStatement(UPDATE_USER_CONFIG_IDOFICPREF);
 			statement.setInt(1, idOP);
@@ -3278,8 +3401,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 							"Resulta imposible actualizar la oficina preferente del usuario.",
 							e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -3297,8 +3420,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Connection connection = null;
 		ScrRegisterInter scrRegisterInter = null;
 		List scrRegInts = null;
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			String query = SELECT_SCR_REGINT;
 			if (orderByOrd) {
 				query = query + ORDER_SCR_REGINT;
@@ -3328,9 +3452,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando SELECT_SCR_REGINT [" + SELECT_SCR_REGINT
 					+ "]", e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return scrRegInts;
@@ -3347,9 +3471,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(INSERT_SCR_REGINT);
 			statement.setInt(1, id);
 			statement.setInt(2, archId);
@@ -3373,8 +3497,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ INSERT_SCR_REGINT + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return 1;
@@ -3391,9 +3515,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(DELETE_SCR_REGINT);
 			statement.setInt(1, bookId);
 			statement.setInt(2, fdrId);
@@ -3408,9 +3532,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ DELETE_SCR_REGINT + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 	}
@@ -3428,7 +3552,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String selectSentence = null;
 		String description = null;
 		String tableName = null;
@@ -3450,7 +3574,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 						+ " WHERE  id=" + id;
 			}
 
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(selectSentence);
 
@@ -3464,9 +3588,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando [" + selectSentence + "]", e);
 			throw new SQLException("Error ejecutando [" + selectSentence + "]");
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 		return description;
 
@@ -3486,7 +3610,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Connection connection = null;
 		ResultSet resultSet = null;
 		List scrReportList = new ArrayList();
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String selectSentence = null;
 		String tableName = null;
 		if (!language.equals("ca")) {
@@ -3500,7 +3624,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ " WHERE  TYPE_REPORT=" + reportType + " AND TYPE_ARCH="
 					+ bookType;
 
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(selectSentence);
 
@@ -3522,9 +3646,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando [" + selectSentence + "]", e);
 			throw new SQLException("Error ejecutando [" + selectSentence + "]");
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 		return scrReportList;
 
@@ -3542,7 +3666,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Connection connection = null;
 		ResultSet resultSet = null;
 		Idocvtblctlg idocvtblctlg = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String selectSentence = null;
 		String tableName = null;
 		if (!language.equals("ca")) {
@@ -3554,7 +3678,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		try {
 			selectSentence = "SELECT * FROM " + tableName + " WHERE  ID=" + id;
 
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(selectSentence);
 
@@ -3576,9 +3700,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			log.warn("Error ejecutando [" + selectSentence + "]", e);
 			throw new SQLException("Error ejecutando [" + selectSentence + "]");
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 		return idocvtblctlg;
 
@@ -3596,9 +3720,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		ResultSet resultSet = null;
 		Connection connection = null;
 		String docUID = "";
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(SELECT_SCR_PAGEREPOSITORY);
 			statement.setInt(1, bookId.intValue());
 			statement.setInt(2, fdrId.intValue());
@@ -3622,9 +3746,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 							+ bookId.intValue() + "fdrId= " + fdrId.intValue()
 							+ "pageId= " + pageId.intValue(), e);
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return docUID;
@@ -3641,9 +3765,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 			String docUID, String entidad) throws SQLException {
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(INSERT_SCR_PAGEREPOSITORY);
 			statement.setInt(1, bookID);
 			statement.setInt(2, fdrID);
@@ -3660,8 +3784,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ INSERT_SCR_PAGEREPOSITORY + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return 1;
@@ -3673,9 +3797,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Connection connection = null;
 		ResultSet resultSet = null;
 		String documentRepositoryUID = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection
 					.prepareStatement(SELECT_REPOSITORY_DOCUMENT_ID);
 			statement.setInt(1, Integer.parseInt(isicresDocUID));
@@ -3694,9 +3818,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ SELECT_REPOSITORY_DOCUMENT_ID + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 		return documentRepositoryUID;
 
@@ -3708,9 +3832,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Connection connection = null;
 		ResultSet resultSet = null;
 		String isicresDocUID = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection
 					.prepareStatement(SELECT_NEXT_ID_SCR_DOCUMENTREPOSITORY);
 			resultSet = statement.executeQuery();
@@ -3728,13 +3852,13 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ SELECT_NEXT_ID_SCR_DOCUMENTREPOSITORY + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection
 					.prepareStatement(INSERT_SCR_DOCUMENTREPOSITORY);
 			statement.setInt(1, Integer.parseInt(isicresDocUID));
@@ -3749,8 +3873,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ INSERT_SCR_DOCUMENTREPOSITORY + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 		return isicresDocUID;
 	}
@@ -3767,11 +3891,11 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		Integer result = null;
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection
 					.prepareStatement(SELECT_REPOSITORY_BOOK_TYPE);
 			statement.setInt(1, bookType.intValue());
@@ -3781,7 +3905,7 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 				result = new Integer(resultSet.getInt(1));
 			}
 
-			BBDDUtils.close(resultSet);
+			bbddUtils.close(resultSet);
 		} catch (SQLException e) {
 			log.warn("Resulta imposible ejecutar ["
 					+ SELECT_NEXT_ID_SCR_DOCUMENTREPOSITORY + "]", e);
@@ -3791,9 +3915,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ SELECT_NEXT_ID_SCR_DOCUMENTREPOSITORY + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return result;
@@ -3811,11 +3935,11 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		PreparedStatement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String result = null;
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection
 					.prepareStatement(SELECT_REPOSITORY_CONFIGURATION_DATA);
 			statement.setInt(1, id.intValue());
@@ -3834,9 +3958,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ SELECT_NEXT_ID_SCR_DOCUMENTREPOSITORY + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return result;
@@ -3854,9 +3978,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 
 		PreparedStatement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(INSERT_SCR_DOCLOCATOR);
 			statement.setInt(1, bookId);
 			statement.setInt(2, folderId);
@@ -3873,8 +3997,8 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ INSERT_SCR_DOCLOCATOR + "]", e);
 			throw new SQLException(e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return 1;
@@ -3892,10 +4016,10 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 		Statement statement = null;
 		Connection connection = null;
 		ResultSet resultSet = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		Timestamp result = null;
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery("SELECT MAX(FLD2) FROM A"
 					+ bookId.intValue() + "SF WHERE FLD6=5 and FLD5=" + oficId);
@@ -3915,9 +4039,9 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					+ bookId.intValue() + "SF WHERE FLD6=5 and FLD5=" + oficId
 					+ " ]");
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 
 		return result;

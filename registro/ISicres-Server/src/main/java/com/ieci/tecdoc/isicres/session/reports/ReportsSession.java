@@ -49,11 +49,11 @@ public class ReportsSession extends ReportsSessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		List scrList = new ArrayList();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -108,23 +108,23 @@ public class ReportsSession extends ReportsSessionUtil implements ServerKeys,
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return scrList;
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load the reports for [" + bookID
 					+ "] reportType [" + reportType + "] for the session ["
 					+ sessionID + "]", e);
 			throw new ReportException(ReportException.ERROR_CANNOT_FIND_REPORTS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -144,10 +144,10 @@ public class ReportsSession extends ReportsSessionUtil implements ServerKeys,
 			SessionException, ReportException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -204,21 +204,21 @@ public class ReportsSession extends ReportsSessionUtil implements ServerKeys,
 										"CODE || '-' || MATTER" }, entidad);
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to getOptionAQuery for the session ["
 					+ sessionID + "]", e);
 			throw new ReportException(
 					ReportException.ERROR_CANNOT_GENERATE_REPORT);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -276,11 +276,11 @@ public class ReportsSession extends ReportsSessionUtil implements ServerKeys,
 			String entidad) throws ReportException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			// Recuperamos la sesión
 
 			tran = session.beginTransaction();
@@ -289,15 +289,15 @@ public class ReportsSession extends ReportsSessionUtil implements ServerKeys,
 			DBEntityDAOFactory.getCurrentDBEntityDAO().dropTableOrView(
 					reportResult.getTableName(), entidad);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to dropTable [" + reportResult.getTableName()
 					+ "] for the session [" + sessionID + "]", e);
 			throw new ReportException(
 					ReportException.ERROR_CANNOT_GENERATE_REPORT);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 

@@ -178,9 +178,10 @@ public class SecuritySessionUtil implements HibernateKeys, ServerKeys {
 	}
 
 	// /// TODO scr_lastconnection //////////
-	protected static Date getUserLastConnection(Integer userId, String entidad)
+	protected Date getUserLastConnection(Integer userId, String entidad)
 			throws HibernateException, Exception {
-		Date currentDate = BBDDUtils
+	    BBDDUtils bbddUtils = new BBDDUtils();
+		Date currentDate = bbddUtils
 				.getDateFromTimestamp(DBEntityDAOFactory
 						.getCurrentDBEntityDAO().getUserLastConnection(userId,
 								entidad));

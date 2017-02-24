@@ -69,7 +69,7 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 			String linkedColumnName[], String entidad) throws SQLException {
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		StringBuffer query = new StringBuffer();
 		query.append("UPDATE " + tableName + " AUX_TABLE SET ");
 		for (int i = 0; i < newColumnName.length; i++) {
@@ -86,7 +86,7 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 		}
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate(query.toString());
 		} catch (SQLException e) {
@@ -94,8 +94,8 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 		} catch (Throwable e) {
 			log.warn("Error ejecutando [" + query + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 			String newColumnName[], String entidad) throws SQLException {
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		StringBuffer query = new StringBuffer();
 		query.append("ALTER TABLE " + tableName + " ADD (");
 		for (int i = 0; i < newColumnName.length; i++) {
@@ -121,7 +121,7 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 		query.append(")");
 
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate(query.toString());
 		} catch (SQLException e) {
@@ -129,8 +129,8 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 		} catch (Throwable e) {
 			log.warn("Error ejecutando [" + query.toString() + "]", e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -143,9 +143,9 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 	public void dropTableOrView(String tableName, String entidad) {
 		Statement statement = null;
 		Connection connection = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			statement.executeUpdate("DROP VIEW " + tableName);
 
@@ -156,8 +156,8 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 			log.warn("Error ejecutando [DROP VIEW " + tableName + "]."
 					+ e.getMessage());
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 	}
 
@@ -534,9 +534,9 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 		ResultSet resultSet = null;
 		Connection connection = null;
 		int result = 0;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.createStatement();
 			resultSet = statement
 					.executeQuery("SELECT NEXTVAL FOR SCR_SEQCNT FROM SCR_CONFIGURATION");
@@ -558,9 +558,9 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 			throw new SQLException(
 					"Resulta imposible obtener el identificador de la secuencia [SCR_SEQCNT]");
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return result;
@@ -623,21 +623,21 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 		ResultSet resultSet = null;
 		Connection connection = null;
 		int result = 0;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection
 					.prepareStatement("UPDATE SCR_CONTADOR SET CONTADOR=CONTADOR+1 WHERE TABLAID=?");
 			statement.setString(1, tableName);
 			int affected = statement.executeUpdate();
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 
 			if (affected == 0) {
 				statement = connection
 						.prepareStatement("INSERT INTO SCR_CONTADOR(TABLAID,CONTADOR) VALUES (?,1)");
 				statement.setString(1, tableName);
 				affected = statement.executeUpdate();
-				BBDDUtils.close(statement);
+				bbddUtils.close(statement);
 			}
 
 			statement = connection
@@ -648,7 +648,7 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 			if (resultSet.next()) {
 				result = resultSet.getInt(1);
 			}
-			BBDDUtils.close(statement);
+			bbddUtils.close(statement);
 		} catch (SQLException e) {
 			log.warn("Resulta imposible obtener el identificador para ["
 					+ tableName + "]", e);
@@ -660,9 +660,9 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 					"Resulta imposible obtener el identificador para ["
 							+ tableName + "]");
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 
 		return result;
@@ -727,6 +727,7 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 	 */
 	protected void assignAttribute(AxSfQueryField field, AxSf axsfP,
 			PreparedStatement ps, int index, Object value) throws SQLException {
+	    BBDDUtils bbddUtils = new BBDDUtils();
 		if ((axsfP.getAttributeClass(field.getFldId()).equals(Date.class))
 				&& ((field.getOperator().equals(IGUAL))
 				 || (field.getOperator().equals(DISTINTO))
@@ -757,7 +758,7 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 			gc.set(Calendar.MILLISECOND, 0);
 			gc.set(Calendar.HOUR_OF_DAY, 0);
 			gc.set(Calendar.MINUTE, 0);
-			ps.setObject(index, BBDDUtils.getTimestamp(gc.getTime()));
+			ps.setObject(index, bbddUtils.getTimestamp(gc.getTime()));
 
 
 		} else if ((axsfP.getAttributeClass(field.getFldId())

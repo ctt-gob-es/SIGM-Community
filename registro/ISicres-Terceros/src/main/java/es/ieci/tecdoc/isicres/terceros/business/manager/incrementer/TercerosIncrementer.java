@@ -22,7 +22,7 @@ public class TercerosIncrementer extends AbstractDataFieldMaxValueIncrementer {
 	}
 
 	@Override
-	protected long getNextKey() {
+	protected synchronized long getNextKey() {
 		Connection conn = DataSourceUtils.getConnection(getDataSource());
 		PreparedStatement stmt = null;
 		long key;

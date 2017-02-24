@@ -129,8 +129,9 @@ public class Repository {
 	 **************************************************************************************************************************************/
 
 	private void init(String entidad) {
+	    	HibernateUtil hibernateUtil = new HibernateUtil();
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 
 			// Consultamos si existe distribucion externa
 /*			StringBuffer buffer = new StringBuffer();

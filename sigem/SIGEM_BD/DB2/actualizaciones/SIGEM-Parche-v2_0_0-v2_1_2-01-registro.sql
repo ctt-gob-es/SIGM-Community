@@ -1,4 +1,0 @@
-
-ALTER TABLE scr_usrloc ALTER COLUMN address DROP NOT NULL;
-
-ALTER TABLE scr_usrloc ALTER COLUMN city DROP NOT NULL;

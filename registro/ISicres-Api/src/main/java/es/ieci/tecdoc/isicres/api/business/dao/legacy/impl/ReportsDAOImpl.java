@@ -7,6 +7,7 @@ import java.sql.Statement;
 import org.apache.log4j.Logger;
 
 import com.ieci.tecdoc.common.utils.BBDDUtils;
+import com.ieci.tecdoc.utils.HibernateUtil;
 
 import es.ieci.tecdoc.isicres.api.business.dao.ReportsDAO;
 import es.ieci.tecdoc.isicres.api.business.vo.ReportVO;
@@ -21,12 +22,12 @@ public class ReportsDAOImpl implements ReportsDAO {
 		Connection connection = null;
 		ResultSet resultSet = null;
 		ReportVO report = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		StringBuffer query = new StringBuffer(
 				"SELECT id,report,description,type_report,type_arch,all_arch,all_ofics,all_perfs FROM SCR_REPORTS WHERE ID=")
 				.append(reportId);
 		try {
-			connection = BBDDUtils.getConnection(usuario
+			connection = bbddUtils.getConnection(usuario
 					.getConfiguracionUsuario().getIdEntidad());
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query.toString());
@@ -49,9 +50,9 @@ public class ReportsDAOImpl implements ReportsDAO {
 					.append(reportId).append("]");
 			logger.warn(sb.toString(), e);
 		} finally {
-			BBDDUtils.close(statement);
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(connection);
+			bbddUtils.close(statement);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(connection);
 		}
 
 		return report;

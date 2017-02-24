@@ -4,9 +4,10 @@
 	<parent>
 		<groupId>es.ieci.tecdoc.sigem</groupId>
 		<artifactId>sigem_main</artifactId>
-		<version>3.0.1-M2</version>
+		<version>3.0</version>
 	</parent>
 
+	<version>3.0.0-msssi2.0.0</version>
 	<artifactId>sigem_config</artifactId>
 	<packaging>pom</packaging>
 	<description>Ficheros de configuración para las distintas aplicaciones de SIGEM</description>
@@ -16,6 +17,8 @@
 		 de las distintas aplicaciones web.
 	 -->
 	 <properties>
+	 	<sigem.version>3.0</sigem.version>
+	 	<sigemMSSSI.version>3.0.0-msssi2.0.0</sigemMSSSI.version>
 	 </properties>
 	<dependencies>
 
@@ -37,7 +40,7 @@
 			<artifactId>
 				sigem_firmaDigital
 			</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -48,7 +51,7 @@
 			<artifactId>
 				sigem_criptoValidacion
 			</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -59,7 +62,7 @@
 			<artifactId>
 				sigem_registroPresencial-configurable-resources
 			</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigemMSSSI.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -68,7 +71,7 @@
 			<artifactId>
 				SIGEM_RegistroPresencialAdminWeb-configurable-resources
 			</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigemMSSSI.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -77,7 +80,7 @@
 			<artifactId>
 				sigem_registroPresencialWeb-configurable-resources
 			</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigemMSSSI.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -86,7 +89,7 @@
 			<artifactId>
 				sigem_registroPresencialWS-configurable-resources
 			</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigemMSSSI.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -95,7 +98,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_archivoResources_configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -104,7 +107,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_notificacion-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -112,8 +115,8 @@
 		<!-- Pago eletronico -->
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
-			<artifactId>sigem_pagoElectronico-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<artifactId>sigem_PagoElectronico-configurable-resources</artifactId>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -122,7 +125,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_registroTelematico-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -131,7 +134,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_CatalogoProcedimientosWeb-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -140,7 +143,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_PublicadorWeb-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -149,7 +152,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_MensajesCortosWS-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -158,7 +161,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_PublicadorWS-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -167,7 +170,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_SchedulerWeb-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -176,7 +179,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_TercerosWS-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -185,7 +188,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_Tramitacion-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -194,7 +197,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_TramitacionWeb-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -203,7 +206,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_TramitacionWS-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -212,7 +215,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_BuscadorDocsWeb-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -221,7 +224,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_ConsultaRegistroTelematico-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -230,7 +233,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_ConsultaRegistroTelematicoBackOffice-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -239,7 +242,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_ConsultaExpedienteBackOffice-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -248,7 +251,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_Consulta-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -257,7 +260,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_Certificacion-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -266,7 +269,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_AutenticacionAdministracion-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -275,7 +278,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_AutenticacionBackOffice-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -284,7 +287,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_Autenticacion-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -293,7 +296,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_gestionCSV-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -302,7 +305,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_Catastro-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -311,7 +314,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_GeoLocalizacion-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -320,7 +323,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_Consolidacion</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -331,7 +334,7 @@
 			<artifactId>
 				sigem_utilidadesAdministracion
 			</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -340,7 +343,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_log-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -349,7 +352,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_Config_Fwktd</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
@@ -359,24 +362,14 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_ServicioIntermediacionClienteLigeroWS-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>
-
-		<!-- SIGEM_PortafirmasNotificacionWS -->
-		<dependency>
-			<groupId>es.ieci.tecdoc.sigem</groupId>
-			<artifactId>SIGEM_PortafirmasNotificacionWS-resources-configurable</artifactId>
-			<version>${pom.version}</version>
-			<type>zip</type>
-			<classifier>configurableSigem</classifier>
-		</dependency>
-
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_SignoWS-configurable-resources</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<type>zip</type>
 			<classifier>configurableSigem</classifier>
 		</dependency>

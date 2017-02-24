@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<javaee:handler-chains xmlns:javaee="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<javaee:handler-chain>
+		<javaee:handler>
+			<javaee:handler-class>core.wssec.handler.WSSecSOAPHandler</javaee:handler-class>
+		</javaee:handler>
+	</javaee:handler-chain>
+</javaee:handler-chains>

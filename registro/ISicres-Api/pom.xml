@@ -9,8 +9,13 @@
 	<name>ISicres-Api</name>
 	<packaging>jar</packaging>
 	<description>Modulo de logica del Api de InvesSicres</description>
+	<version>3.0.0-msssi2.0.0</version>
 
 	<properties>
+		<fwktd-sirMSSSI.version>3.0.0-msssi2.0.0</fwktd-sirMSSSI.version>
+		<sigem.version>3.0</sigem.version>
+		<isicres.version>8.0.1</isicres.version>
+		<isicresMSSSI.version>3.0.0-msssi2.0.0</isicresMSSSI.version>
 		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory>
 	</properties>
 
@@ -34,7 +39,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 			<type>zip</type>
 		</dependency>
 
@@ -47,7 +52,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>ISicres-PersonManager</artifactId>
-			<version>${project.version}</version>
+			<version>${isicresMSSSI.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -57,26 +62,29 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>ISicres-Compulsa-Connector-Invesicres</artifactId>
-			<version>${project.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>ISicres-Document-Connector-Invesdoc</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
-
+		<dependency>
+		  <groupId>junit</groupId>
+		  <artifactId>junit</artifactId>
+		  <version>4.8.1</version>
+</dependency>
 
 
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
 			<artifactId>fwktd-sir-core</artifactId>
-			<version>${fwktd-sir.version}</version>
+			<version>${fwktd-sirMSSSI.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
 			<artifactId>fwktd-sir-wsclient</artifactId>
-			<version>${fwktd-sir.version}</version>
+			<version>${fwktd-sirMSSSI.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dir3</groupId>
@@ -175,7 +183,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -265,7 +273,7 @@
 					<target>1.5</target>
 					<encoding>iso-8859-1</encoding>
 					<fork>true</fork>
-          <!--					<executable>${JAVA_1_5_HOME}/bin/javac</executable>-->
+					<executable>${JAVA_1_5_HOME}/bin/javac</executable>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -286,13 +294,13 @@
 								<artifactItem>
 									<groupId>es.ieci.tecdoc.isicres</groupId>
 									<artifactId>ISicres-resources-config</artifactId>
-									<version>${pom.version}</version>
+									<version>${isicres.version}</version>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>es.ieci.tecdoc.isicres</groupId>
 									<artifactId>ISicres-resources-configurable</artifactId>
-									<version>${pom.version}</version>
+									<version>${isicres.version}</version>
 									<type>zip</type>
 									<!--<excludes>log4j.xml</excludes> -->
 								</artifactItem>
@@ -329,6 +337,7 @@
 		<profile>
 			<id>oracle</id>
 			<activation>
+				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>oracle</name>
 				</property>
@@ -344,7 +353,6 @@
 		<profile>
 			<id>postgres</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>postgres</name>
 				</property>
@@ -395,7 +403,6 @@
 				<property>
 					<name>tomcat</name>
 				</property>
-				<activeByDefault>true</activeByDefault>
 			</activation>
 			<build>
 				<filters>
@@ -438,6 +445,7 @@
 		<profile>
 			<id>weblogic</id>
 			<activation>
+				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>weblogic</name>
 				</property>
@@ -458,7 +466,6 @@
 				<property>
 					<name>unix</name>
 				</property>
-				<activeByDefault>true</activeByDefault>
 			</activation>
 			<build>
 				<filters>
@@ -471,6 +478,7 @@
 		<profile>
 			<id>win</id>
 			<activation>
+				<activeByDefault>true</activeByDefault>
 				<property>
 					<name>win</name>
 				</property>

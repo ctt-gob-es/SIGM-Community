@@ -3,6 +3,8 @@
 <%@ taglib uri="/WEB-INF/ieci.tld" prefix="ieci"%>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 
 <%@ page import="ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion" %>
 <%@ page import="ieci.tecdoc.sgm.core.services.gestion_administracion.ConstantesGestionUsuariosAdministracion" %>
@@ -17,12 +19,12 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 <html:html>
 <head>
 <ieci:baseInvesDoc/>
-<link rel="Stylesheet" rev="Stylesheet" href="include/css/tabs.css" />
-<link rel="Stylesheet" rev="Stylesheet" href="include/css/estilos.css" />
-<script src="include/js/docobj.js" type="text/javascript"></script>
-<script src="include/js/tabs.js" type="text/javascript"></script>
-<script src="include/js/edition.js" type="text/javascript"></script>
-<script src="include/js/validations.js" type="text/javascript"></script>
+<link rel="Stylesheet" rev="Stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/tabs.css" />
+<link rel="Stylesheet" rev="Stylesheet" href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/css/estilos.css" />
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/docobj.js" type="text/javascript"></script>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/tabs.js" type="text/javascript"></script>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/edition.js" type="text/javascript"></script>
+<script src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/js/validations.js" type="text/javascript"></script>
 
 <c:if test="${sessionScope.managerId eq sessionScope.user.id}">
 	<!-- Es manager Del Dtpo -->
@@ -33,9 +35,9 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 
 	function activaPestanhaGeneral()
 	{
-		document.getElementById("img1").src='include/images/subme3_on.gif';
-		document.getElementById("img2").src='include/images/subme3_on_of.gif';
-		document.getElementById("img3").src='include/images/subme3_of_0.gif';
+		document.getElementById("img1").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on.gif';
+		document.getElementById("img2").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on_of.gif';
+		document.getElementById("img3").src='<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_of_0.gif';
 		document.getElementById("tab1").className='submen1on';
 		document.getElementById("tab2").className='submen1off';
 	}
@@ -129,10 +131,10 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 						
 						<div class="submenu3">
 							<ul>
-	        					<li class="submen1on" id="tab1" onclick="choosebox(1,9); activaPestanhaGeneral();"><img id="img1" src="include/images/subme3_on.gif" />
+	        					<li class="submen1on" id="tab1" onclick="choosebox(1,9); activaPestanhaGeneral();"><img id="img1" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on.gif" />
 	        						<label id="tabmiddle1"><bean:message key="message.comun.pestana.general"/></label>
 	        					</li>
-	        					<img src="include/images/subme3_on_0.gif">	        					
+	        					<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/include/images/subme3_on_0.gif">	        					
 							</ul>
 						</div>
 							
@@ -156,7 +158,14 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 									<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.descripcion"/></label>
 									<label class="gr" style="width:190px;"><html:textarea property="descripcion" cols="65" rows="6" styleId="dept.description"/></label>
 							    </div>
-							    
+							    <div class="col" style="width: 490px;">
+									<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.organismo"/></label>
+									<label class="gr" style="width:190px;"><html:textarea property="idorg" cols="65" rows="6" styleId="dept.idorg"/></label>
+							    </div>
+							     <div class="col" style="width: 490px;">
+									<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.padre"/></label>
+									<label class="gr" style="width:190px;"><html:textarea property="idPadre" cols="65" rows="6" styleId="dept.idPadre"/></label>
+							    </div>
 							</div>
 							
 		       			</div>

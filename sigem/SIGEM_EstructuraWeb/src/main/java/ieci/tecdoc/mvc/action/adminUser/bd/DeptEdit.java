@@ -39,6 +39,7 @@ public class DeptEdit extends BaseAction{
     	String entidad=SessionHelper.getEntidad(request);
     	
         BasicForm deptForm = (BasicForm) form;
+        String objIdFather = request.getParameter("idPadre"); // Id del departamento padre
         String objId = request.getParameter("id");
         if (isCancelled(request))
             return mapping.findForward("cancel");
@@ -86,7 +87,8 @@ public class DeptEdit extends BaseAction{
         
         dep.setName(form.getNombre());
         dep.setDescription(form.getDescripcion());
-
+        dep.setIdorg(form.getIdorg());
+        dep.setParentId(form.getIdPadre());
         dep.store(entidad);
     }
     
@@ -99,6 +101,8 @@ public class DeptEdit extends BaseAction{
         deptForm.setId(id);
         // General
         deptForm.setNombre(dep.getName());
+        deptForm.setIdorg(dep.getIdorg());
+        deptForm.setIdPadre(dep.getParentId());
         String description = dep.getDescription();
         if (description != null)
             deptForm.setDescripcion(description);

@@ -180,11 +180,11 @@ public class DistributionUseCase {
 						.getSessionID(), ValidationException.ATTRIBUTE_SESSION);
 				Validator.validate_Integer(bookID,
 						ValidationException.ATTRIBUTE_BOOK);
-
+				HibernateUtil hibernateUtil = new HibernateUtil();
 				AxSf axsf = null;
 				Transaction tran = null;
 				try {
-					Session session = HibernateUtil.currentSession(useCaseConf
+					Session session = hibernateUtil.currentSession(useCaseConf
 							.getEntidadId());
 					tran = session.beginTransaction();
 
@@ -223,20 +223,21 @@ public class DistributionUseCase {
 						axsfs.put(key, axsf);
 					}
 
-					HibernateUtil.commitTransaction(tran);
+
+;
 
 				} catch (BookException bE) {
-					HibernateUtil.rollbackTransaction(tran);
+					hibernateUtil.rollbackTransaction(tran);
 					throw bE;
 				} catch (SessionException sE) {
-					HibernateUtil.rollbackTransaction(tran);
+					hibernateUtil.rollbackTransaction(tran);
 					throw sE;
 				} catch (Exception e) {
-					HibernateUtil.rollbackTransaction(tran);
+					hibernateUtil.rollbackTransaction(tran);
 					throw new BookException(
 							BookException.ERROR_CANNOT_FIND_REGISTERS);
 				} finally {
-					HibernateUtil.closeSession(useCaseConf.getEntidadId());
+					hibernateUtil.closeSession(useCaseConf.getEntidadId());
 				}
 			}
 

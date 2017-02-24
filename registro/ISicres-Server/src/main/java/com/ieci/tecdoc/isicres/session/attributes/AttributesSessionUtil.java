@@ -112,37 +112,36 @@ public class AttributesSessionUtil implements HibernateKeys {
 			Integer bookID, int fldid, String value, boolean isTVNull,
 			String language, String entidad) throws AttributesException,
 			BookException, SessionException, ValidationException {
-
+	    	HibernateUtil hibernateUtil = new HibernateUtil();
 		String result = null;
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			result = getExtendedValidationFieldValue(session, sessionID, bookID, fldid,
 					value, isTVNull, language, entidad);
-
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (AttributesException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (BookException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load the validation value field  bookID ["
 					+ bookID + "] fldid [" + fldid + "] for the session ["
 					+ sessionID + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 	
@@ -289,7 +288,7 @@ public class AttributesSessionUtil implements HibernateKeys {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String result = null;
 		try {
 			String query = null;
@@ -312,7 +311,7 @@ public class AttributesSessionUtil implements HibernateKeys {
 						tvs.getDocColName() };
 			}
 			query = MessageFormat.format(query, parameters);
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(query);
 			ps.setString(1, value);
 			rs = ps.executeQuery();
@@ -320,9 +319,9 @@ public class AttributesSessionUtil implements HibernateKeys {
 				result = rs.getString(tvs.getSustColName());
 			}
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 		return result;
 	}
@@ -333,7 +332,7 @@ public class AttributesSessionUtil implements HibernateKeys {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String result = null;
 		try {
 			String query = null;
@@ -356,7 +355,7 @@ public class AttributesSessionUtil implements HibernateKeys {
 						tv.getDocColName() };
 			}
 			query = MessageFormat.format(query, parameters);
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(query);
 			ps.setString(1, value);
 			rs = ps.executeQuery();
@@ -364,9 +363,9 @@ public class AttributesSessionUtil implements HibernateKeys {
 				result = rs.getString(tv.getDocColName());
 			}
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 		return result;
 	}
@@ -723,13 +722,13 @@ public class AttributesSessionUtil implements HibernateKeys {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		if (log.isDebugEnabled()) {
 			log.debug(query);
 		}
 
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
 
@@ -755,9 +754,9 @@ public class AttributesSessionUtil implements HibernateKeys {
 			}
 			result.setResults(aux);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
@@ -767,13 +766,13 @@ public class AttributesSessionUtil implements HibernateKeys {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		if (log.isDebugEnabled()) {
 			log.debug(query);
 		}
 
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
 
@@ -782,9 +781,9 @@ public class AttributesSessionUtil implements HibernateKeys {
 				result.setTotalSize(rs.getInt(1));
 			}
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 

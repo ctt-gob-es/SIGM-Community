@@ -106,13 +106,13 @@
 		<property name="raizNombreJNDI" value="${sigem.backoffice.jndiDatasource.jndiName}"/>
     </bean>
 
-	<!-- UTILIDADES SQL PARA CADA IMPLEMENTACIÓN ESPECÍFICA DE BASE DATOS -->
+	<!-- UTILIDADES SQL PARA CADA IMPLEMENTACIÓN ESPECÍFICA DE BASE DATOS 
 	<alias name="PostgresSQLUtils" alias="SQL_UTILS_IMPL"/>
 	<bean abstract="true" id="SQLUtils" class="ieci.tecdoc.sgm.core.db.utils.SQLUtils">
 	</bean>
 	<bean id="PostgresSQLUtils" class="ieci.tecdoc.sgm.core.db.utils.pgsql.PgsqlSQLUtils" parent="SQLUtils" lazy-init="true">
 	</bean>
-
+-->
 <!-- ******************************************************************************************************* -->
 
 <!-- ******************************************************************************************************* -->
@@ -183,9 +183,383 @@
 	<property name="header" ref="SIGEM.API"/>
 </bean>
 
+
+
+
+<!-- ******************************************************************************************************* -->
+<!-- ********** SERVICIO DE SESION DE USUARIO ************************************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${SESION_USUARIO_DEFAULT_IMPL}" alias="USER_SESSION_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_ServicioSesionUsuario" class="ieci.tecdoc.sgm.core.services.sesion.ServicioSesionUsuario">
+</bean>
+
+<!-- Implementación SIGEM a través de API Local -->
+<bean id="SIGEM_ServicioSesionUsuario.SIGEM.API" class="ieci.tecdoc.sgm.autenticacion.SigemServicioSesionUsuarioAdapter" parent="SIGEM_ServicioSesionUsuario" lazy-init="true">
+</bean>
+
+<!-- Implementación SIGEM a través de WebService -->
+<bean id="SIGEM_ServicioSesionUsuario.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.autenticacion.ws.client.ServicioSesionUsuarioRemoteClient" parent="SIGEM_ServicioSesionUsuario" lazy-init="true">
+	<property name="service" ref="SIGEM_ServicioSesionUsuario.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
+</bean>
+
+<bean id="SIGEM_ServicioSesionUsuario.LOCATOR" class="ieci.tecdoc.sgm.autenticacion.ws.client.SesionUsuarioWebServiceServiceLocator" lazy-init="true">
+	<property name="sesionUsuarioWebServiceEndpointAddress" value="${SESION_USUARIO_WS_ENDPOINT}"/>
+</bean>
+
+<bean id="SIGEM_ServicioSesionUsuario.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioSesionUsuario.LOCATOR" factory-method="getSesionUsuarioWebService" lazy-init="true">
+	<property name="header" ref="SIGEM.API"/>
+</bean>
+
 <!-- ******************************************************************************************************* -->
 
 
+<!-- ******************************************************************************************************* -->
+<!-- ********** SERVICIO DE NOTIFICACIÓN ELECTRÓNICA ******************************************************* -->
+<!-- ******************************************************************************************************* -->
+<alias name="${NOTIFICACIONES_DEFAULT_IMPL}" alias="NOTIFICATIONS_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_ServicioNotificaciones" class="ieci.tecdoc.sgm.core.services.notificaciones.ServicioNotificaciones">
+</bean>
+
+<!-- IMPLEMENTACION DEL SERVICIO DE NOTIFICACIONES SIGEM: SISNOT + Correos -->
+<!-- Implementación SIGEM a través de API Local -->
+<bean id="SIGEM_ServicioNotificaciones.SIGEM.API" class="ieci.tecdoc.sgm.nt.ServicioNotificacionesAdapter" parent="SIGEM_ServicioNotificaciones" lazy-init="true">
+</bean>
+
+<!-- Implementación SIGEM a través de WebService -->
+<bean id="SIGEM_ServicioNotificaciones.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.nt.ws.client.NotificacionesWebServiceRemoteClient" parent="SIGEM_ServicioNotificaciones" lazy-init="true">
+	<property name="service" ref="SIGEM_ServicioNotificaciones.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
+</bean>
+
+<bean id="SIGEM_ServicioNotificaciones.LOCATOR" class="ieci.tecdoc.sgm.nt.ws.client.NotificacionesWebServiceServiceLocator" lazy-init="true">
+	<property name="notificacionesWebServiceEndpointAddress" value="${NOTIFICACIONES_WS_ENDPOINT}"/>
+</bean>
+
+<bean id="SIGEM_ServicioNotificaciones.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioNotificaciones.LOCATOR" factory-method="getNotificacionesWebService" lazy-init="true">
+	<property name="header" ref="SIGEM.API"/>
+</bean>
+
+
+<!-- ******************************************************************************************************* -->
+<!-- ********** SERVICIO DE TERCEROS *********************************************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${TERCEROS_DEFAULT_IMPL}" alias="THIRDPARTY_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_ServicioTerceros" class="ieci.tecdoc.sgm.core.services.terceros.ServicioTerceros">
+</bean>
+
+<!-- Implementación SIGEM a través de API Local -->
+<bean id="SIGEM_ServicioTerceros.SIGEM.API" class="ieci.tecdoc.sgm.terceros.SigemTercerosServiceAdapter" parent="SIGEM_ServicioTerceros" lazy-init="true">
+    <property name="dsName" value="${TERCEROS_DATASOURCE_NAME}"/>
+</bean>
+
+<!-- Implementación SIGEM a través de WebService -->
+<bean id="SIGEM_ServicioTerceros.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.terceros.ws.client.ServicioTercerosRemoteClient" parent="SIGEM_ServicioTerceros" lazy-init="true">
+	<property name="service" ref="SIGEM_ServicioTerceros.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
+</bean>
+<bean id="SIGEM_ServicioTerceros.LOCATOR" class="ieci.tecdoc.sgm.terceros.ws.client.TercerosWebServiceServiceLocator" lazy-init="true">
+	<property name="tercerosWebServiceEndpointAddress" value="${TERCEROS_WS_ENDPOINT}"/>
+</bean>
+<bean id="SIGEM_ServicioTerceros.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioTerceros.LOCATOR" factory-method="getTercerosWebService" lazy-init="true">
+	<property name="header" ref="SIGEM.API"/>
+</bean>
+<!-- ******************************************************************************************************* -->
+
+<!-- ******************************************************************************************************* -->
+<!-- ********** SERVICIO DE REGISTRO PRESENCIAL ************************************************************ -->
+<!-- ******************************************************************************************************* -->
+<alias name="${REGISTRO_PRESENCIAL_DEFAULT_IMPL}" alias="REGISTRY_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_RegistroPresencial" class="ieci.tecdoc.sgm.core.services.registro.ServicioRegistro">
+</bean>
+
+<!-- IMPLEMENTACION DEL SERVICIO DE REGISTRO SIGEM = Isicres v6.5 -->
+<!-- Implementación SIGEM a través de API Local -->
+<bean id="SIGEM_RegistroPresencial.SIGEM.API" class="ieci.tecdoc.sgm.registropresencial.SigemRegistroServiceAdapter" parent="SIGEM_RegistroPresencial" lazy-init="true">
+	<property name="registerManager" ref="SIGEM_RegistroPresencial.SIGEM.API.REGISTRY_MANAGER"/>
+	<property name="distributionManager" ref="SIGEM_RegistroPresencial.SIGEM.API.DISTRIBUTION_MANAGER"/>
+</bean>
+<!-- Instancia del gestor de registro  -->
+<bean id="SIGEM_RegistroPresencial.SIGEM.API.REGISTRY_MANAGER" class="ieci.tecdoc.sgm.registropresencial.manager.RegisterManager" lazy-init="true">
+</bean>
+<!-- Instancia del gestor de distribucion  -->
+<bean id="SIGEM_RegistroPresencial.SIGEM.API.DISTRIBUTION_MANAGER" class="ieci.tecdoc.sgm.registropresencial.manager.DistributionManager" lazy-init="true">
+</bean>
+
+<!-- Implementación SIGEM a través de WebService -->
+<bean id="SIGEM_RegistroPresencial.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.registropresencial.ws.client.RegistroWebServiceRemoteClient" parent="SIGEM_RegistroPresencial" lazy-init="true">
+	<property name="service" ref="SIGEM_RegistroPresencial.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
+</bean>
+
+<bean id="SIGEM_RegistroPresencial.LOCATOR" class="ieci.tecdoc.sgm.registropresencial.ws.client.axis.ServicioRegistroWebServiceServiceLocator" lazy-init="true">
+	<property name="servicioRegistroWebServiceEndpointAddress" value="${REGISTRO_PRESENCIAL_WS_ENDPOINT}"/>
+</bean>
+
+<bean id="SIGEM_RegistroPresencial.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_RegistroPresencial.LOCATOR" factory-method="getServicioRegistroWebService" lazy-init="true">
+	<property name="header" ref="SIGEM.API"/>
+</bean>
+
+
+<!-- ******************************************************************************************************* -->
+
+
+<!-- ******************************************************************************************************* -->
+<!-- ********** SERVICIO DE ESTRUCTURA ORGANIZATIVA ******************************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${ESTRUCTURA_ORGANIZATIVA_DEFAULT_IMPL}" alias="ESTRUCTURA_ORGANIZATIVA_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_ServicioEstructuraOrganizativa" class="ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativa">
+</bean>
+
+<!-- IMPLEMENTACION DE LA ESTRUCURA ORGANIZATIVA DE SIGEM -->
+<!-- Implementación SIGEM a través de API Local -->
+<bean id="SIGEM_ServicioEstructuraOrganizativa.SIGEM.API" class="ieci.tecdoc.idoc.admin.api.ServicioEstructuraOrganizativaAdapter" parent="SIGEM_ServicioEstructuraOrganizativa" lazy-init="true">
+</bean>
+<!-- ******************************************************************************************************* -->
+
+<!-- ******************************************************************************************************* -->
+
+<!-- ******************************************************************************************************* -->
+<!-- ********** SERVICIO DE PERMISOS DE BACKOFFICE ******************************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${PERMISOS_BACKOFFICE_DEFAULT_IMPL}" alias="PERMISOS_BACKOFFICE_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_PermisosBackOffice" class="ieci.tecdoc.sgm.core.services.permisos_backoffice.ServicioPermisosBackOffice">
+</bean>
+
+<!-- IMPLEMENTACION DE LA ESTRUCURA ORGANIZATIVA DE SIGEM -->
+<!-- Implementación SIGEM a través de API Local -->
+<bean id="SIGEM_PermisosBackOffice.SIGEM.API" class="ieci.tecdoc.idoc.admin.api.ServicioPermisosBackOfficeAdapter" parent="SIGEM_PermisosBackOffice" lazy-init="true">
+</bean>
+<!-- ******************************************************************************************************* -->
+
+
+<!-- ******************************************************************************************************** -->
+<!-- ********** SERVICIO DE SESION DE ADMINISTRACION ******************************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${SESION_ADMINISTRACION_DEFAULT_IMPL}" alias="SESION_ADMINISTRACION_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_SesionAdministracion" class="ieci.tecdoc.sgm.core.services.sesionadmin.ServicioSesionAdministracion">
+</bean>
+
+<bean id="SIGEM_SesionAdministracion.SIGEM.API" class="ieci.tecdoc.sgm.sesionadmin.ServicioSesionAdministracionAdapter" parent="SIGEM_SesionAdministracion" lazy-init="true">
+</bean>
+
+<!-- ******************************************************************************************************* -->
+
+
+<!-- ******************************************************************************************************** -->
+<!-- ********** SERVICIO DE GESTION USUARIOS DE BACK OFFICE ******************************* -->
+<!-- ******************************************************************************************************* -->
+<alias name="${GESTION_USUARIOS_BACK_OFFICE_DEFAULT_IMPL}" alias="GESTION_USUARIOS_BACK_OFFICE_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_GestionUsuariosBackOffice" class="ieci.tecdoc.sgm.core.services.usuarios_backoffice.ServicioGestionUsuariosBackOffice">
+</bean>
+
+<bean id="SIGEM_GestionUsuariosBackOffice.SIGEM.API" class="ieci.tecdoc.sgm.usuarios_backoffice.ServicioGestionUsuariosBackOfficeAdapter" parent="SIGEM_GestionUsuariosBackOffice" lazy-init="true">
+</bean>
+
+<bean id="SIGEM_GestionUsuariosBackOffice.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.usuarios_backoffice.ws.client.GestionUsuariosBackOfficeWSRemoteClient" parent="SIGEM_GestionUsuariosBackOffice" lazy-init="true">
+	<property name="service" ref="SIGEM_GestionUsuariosBackOffice.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
+</bean>
+
+<bean id="SIGEM_GestionUsuariosBackOffice.LOCATOR" class="ieci.tecdoc.sgm.usuarios_backoffice.ws.client.GestionUsuariosBackOfficeWebServiceServiceLocator" lazy-init="true">
+	<property name="gestionUsuariosBackOfficeWebServiceEndpointAddress" value="${GESTION_USUARIOS_BACK_OFFICE_WS_ENDPOINT}"/>
+</bean>
+
+<bean id="SIGEM_GestionUsuariosBackOffice.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_GestionUsuariosBackOffice.LOCATOR" factory-method="getGestionUsuariosBackOfficeWebService" lazy-init="true">
+	<property name="header" ref="SIGEM.API"/>
+</bean>
+<!-- ******************************************************************************************************* -->
+
+
+<!-- ******************************************************************************************************** -->
+<!-- ********** SERVICIO DE ENTIDADES ************************************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${ENTIDADES_DEFAULT_IMPL}" alias="ENTITIES_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_Entidades" class="ieci.tecdoc.sgm.core.services.entidades.ServicioEntidades">
+</bean>
+
+<bean id="SIGEM_Entidades.SIGEM.API" class="ieci.tecdoc.sgm.entidades.ServicioEntidadesAdapter" parent="SIGEM_Entidades" lazy-init="true">
+</bean>
+
+<bean id="SIGEM_Entidades.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.entidades.ws.client.EntidadesWSRemoteClient" parent="SIGEM_Entidades" lazy-init="true">
+	<property name="service" ref="SIGEM_Entidades.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
+</bean>
+
+<bean id="SIGEM_Entidades.LOCATOR" class="ieci.tecdoc.sgm.entidades.ws.client.EntidadesWebServiceServiceLocator" lazy-init="true">
+	<property name="entidadesWebServiceEndpointAddress" value="${ENTIDADES_WS_ENDPOINT}"/>
+</bean>
+
+<bean id="SIGEM_Entidades.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_Entidades.LOCATOR" factory-method="getEntidadesWebService" lazy-init="true">
+	<property name="header" ref="SIGEM.API"/>
+</bean>
+<!-- ******************************************************************************************************* -->
+
+<!-- ******************************************************************************************************** -->
+<!-- ********** SERVICIO DE Administracion del registro presencial ****************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${ADMON_REGISTRO_PRESENCIAL_DEFAULT_IMPL}" alias="RPADMIN_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_RegistroPresencialAdmin" class="ieci.tecdoc.sgm.core.services.rpadmin.ServicioRPAdmin">
+</bean>
+
+<bean id="SIGEM_RegistroPresencialAdmin.SIGEM.API" class="ieci.tecdoc.sgm.rpadmin.ServicioRPAdminAdapter" parent="SIGEM_RegistroPresencialAdmin" lazy-init="true">
+</bean>
+
+<!-- ******************************************************************************************************* -->
+
+<!-- ******************************************************************************************************** -->
+<!-- ********** SERVICIO DE GESTION DE ADMINISTRACION ******************************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${GESTION_USUARIOS_ADM_DEFAULT_IMPL}" alias="GESTION_USUARIOS_ADM_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_GestionAdministracion" class="ieci.tecdoc.sgm.core.services.gestion_administracion.ServicioGestionUsuariosAdministracion">
+</bean>
+
+<bean id="SIGEM_GestionAdministracion.SIGEM.API" class="ieci.tecdoc.sgm.core.services.gestion_administracion.ServicioGestionUsuariosAdministracionAdapter" parent="SIGEM_GestionAdministracion" lazy-init="true">
+</bean>
+
+<!-- ******************************************************************************************************* -->
+
+
+<!-- ******************************************************************************************************** -->
+<!-- ********** SERVICIO DE AMINISTRACION DE APPS Y USAURIOS DE ADMINISTRACION ****************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${APP_ADM_DEFAULT_IMPL}" alias="APP_ADMIN_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_AdministracionAplicaciones" class="ieci.tecdoc.sgm.core.services.administracion.ServicioAdministracion">
+</bean>
+
+<bean id="SIGEM_AdministracionAplicaciones.SIGEM.API" class="ieci.tecdoc.sgm.admin.AdministracionManagerAdapter" parent="SIGEM_AdministracionAplicaciones" lazy-init="true">
+</bean>
+
+<!-- ******************************************************************************************************* -->
+<!-- ********** SERVICIO DE GEOLOCALIZACION **************************************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${GEOLOCALIZACION_DEFAULT_IMPL}" alias="GEOLOCALIZACION_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_ServicioGeoLocalizacion" class="ieci.tecdoc.sgm.core.services.geolocalizacion.ServicioGeoLocalizacion">
+</bean>
+
+<bean id="SIGEM_ServicioGeoLocalizacion.SIGEM.API" class="ieci.tecdoc.sgm.geolocalizacion.ServicioGeoLocalizacionAdapter" parent="SIGEM_ServicioGeoLocalizacion" lazy-init="true">
+</bean>
+
+<bean id="SIGEM_ServicioGeoLocalizacion.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.geolocalizacion.ws.client.GeoLocalizacionWSRemoteClient" parent="SIGEM_ServicioGeoLocalizacion" lazy-init="true">
+	<property name="service" ref="SIGEM_ServicioGeoLocalizacion.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
+</bean>
+
+<bean id="SIGEM_ServicioGeoLocalizacion.LOCATOR" class="ieci.tecdoc.sgm.geolocalizacion.ws.client.GeoLocalizacionWebServiceServiceLocator" lazy-init="true">
+	<property name="geoLocalizacionWebServiceEndpointAddress" value="${GEOLOCALIZACION_WS_ENDPOINT}"/>
+</bean>
+
+<bean id="SIGEM_ServicioGeoLocalizacion.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioGeoLocalizacion.LOCATOR" factory-method="getGeoLocalizacionWebService" lazy-init="true">
+	<property name="header" ref="SIGEM.API"/>
+</bean>
+<!-- ******************************************************************************************************* -->
+
+
+
+<!-- ******************************************************************************************************* -->
+<!-- ********** SERVICIO DE ANTIVIRUS*********************************************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${ANTIVIRUS_DEFAULT_IMPL}" alias="ANTIVIRUS_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_ServicioAntivirus" class="ieci.tecdoc.sgm.core.services.antivirus.ServicioAntivirus">
+</bean>
+
+<!-- bean id="SIGEM_ServicioAntivirus.SIGEM.API" class="ieci.tecdoc.sgm.antivirus.mcafee.AntivirusMcAFee" parent="SIGEM_ServicioAntivirus" lazy-init="true">
+	<property name="rutaAntivirus" value="c:/Archivos de Programa/McAfee/VirusScan Enterprise/scan32.exe"/>
+	<property name="parametros" value="/UINONE /ARCHIVE"/>
+	<property name="rutaTemporal" value="c:/Compartido/Antivirus Prueba/"/>
+</bean-->
+<bean id="SIGEM_ServicioAntivirus.SIGEM.API" class="ieci.tecdoc.sgm.antivirus.NoAntivirus" parent="SIGEM_ServicioAntivirus" lazy-init="true">
+	<property name="rutaAntivirus" value=""/>
+	<property name="parametros" value=""/>
+	<property name="rutaTemporal" value=""/>
+</bean>
+
+<bean id="SIGEM_ServicioAntivirus.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.antivirus.ws.client.AntivirusWSRemoteClient" parent="SIGEM_ServicioAntivirus" lazy-init="true">
+	<property name="service" ref="SIGEM_ServicioAntivirus.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
+</bean>
+
+<bean id="SIGEM_ServicioAntivirus.LOCATOR" class="ieci.tecdoc.sgm.antivirus.ws.client.AntivirusWebServiceServiceLocator" lazy-init="true">
+	<property name="antivirusWebServiceEndpointAddress" value="${ANTIVIRUS_WS_ENDPOINT}"/>
+</bean>
+
+<bean id="SIGEM_ServicioAntivirus.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioAntivirus.LOCATOR" factory-method="getAntivirusWebService" lazy-init="true">
+	<property name="header" ref="SIGEM.API"/>
+</bean>
+
+<!-- ******************************************************************************************************* -->
+
+<!-- ******************************************************************************************************* -->
+<!-- ********** SERVICIO DE TIEMPOS ********************************************************************* -->
+<!-- ******************************************************************************************************* -->
+<alias name="${TIEMPOS_DEFAULT_IMPL}" alias="TIEMPOS_SERVICE_DEFAULT_IMPL"/>
+<bean abstract="true" id="SIGEM_ServicioTiempos" class="ieci.tecdoc.sgm.core.services.tiempos.ServicioTiempos">
+</bean>
+
+<bean id="SIGEM_ServicioTiempos.SIGEM.API" class="ieci.tecdoc.sgm.tiempos.impl.ServicioTiemposImpl" parent="SIGEM_ServicioTiempos" lazy-init="true">
+</bean>
+
+<!-- ******************************************************************************************************* -->
+
+
+<!-- ******************************************************************************************************* -->
+<!-- ********** SERVICIO DE CATALOGO DE TRAMITES*** ******************************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${CATALOGO_TRAMITES_DEFAULT_IMPL}" alias="PROCEDURES_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_ServicioCatalogoTramites" class="ieci.tecdoc.sgm.core.services.catalogo.ServicioCatalogoTramites">
+</bean>
+
+<!-- IMPLEMENTACION DEL CATALOGO DE TRAMITES DE SIGEM -->
+<!-- Implementación SIGEM a través de API Local -->
+<bean id="SIGEM_ServicioCatalogoTramites.SIGEM.API" class="ieci.tecdoc.sgm.catalogo_tramites.ServicioCatalogoTramitesAdapter" parent="SIGEM_ServicioCatalogoTramites" lazy-init="true">
+</bean>
+
+<!-- Implementación SIGEM a través de WebService -->
+<bean id="SIGEM_ServicioCatalogoTramites.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.catalogo.ws.client.CatalogoTramitesWSRemoteClient" parent="SIGEM_ServicioCatalogoTramites" lazy-init="true">
+	<property name="service" ref="SIGEM_ServicioCatalogoTramites.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
+</bean>
+
+<bean id="SIGEM_ServicioCatalogoTramites.LOCATOR" class="ieci.tecdoc.sgm.catalogo.ws.client.CatalogoTramitesWebServiceServiceLocator" lazy-init="true">
+	<property name="catalogoTramitesWebServiceEndpointAddress" value="${CATALOGO_TRAMITES_WS_ENDPOINT}"/>
+</bean>
+
+<bean id="SIGEM_ServicioCatalogoTramites.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioCatalogoTramites.LOCATOR" factory-method="getCatalogoTramitesWebService" lazy-init="true">
+	<property name="header" ref="SIGEM.API"/>
+</bean>
+
+
+<!-- ******************************************************************************************************* -->
+<!-- ********** SERVICIO DE REGISTRO_TELEMATICO *** ******************************************************** -->
+<!-- ******************************************************************************************************* -->
+<alias name="${REGISTRO_TELEMATICO_DEFAULT_IMPL}" alias="EREGISTRY_SERVICE_DEFAULT_IMPL"/>
+
+<bean abstract="true" id="SIGEM_ServicioRegistroTelematico" class="ieci.tecdoc.sgm.core.services.telematico.ServicioRegistroTelematico">
+</bean>
+
+<!-- IMPLEMENTACION DEL REGISTRO TELEMATICO DE SIGEM -->
+<!-- Implementación SIGEM a través de API Local -->
+<bean id="SIGEM_ServicioRegistroTelematico.SIGEM.API" class="ieci.tecdoc.sgm.registro.ServicioRegistroTelematicoAdapter" parent="SIGEM_ServicioRegistroTelematico" lazy-init="true">
+</bean>
+
+<!-- Implementación SIGEM a través de WebService -->
+<bean id="SIGEM_ServicioRegistroTelematico.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.registro.ws.client.RegistroTelematicoWSRemoteClient" parent="SIGEM_ServicioRegistroTelematico" lazy-init="true">
+	<property name="service" ref="SIGEM_ServicioRegistroTelematico.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
+</bean>
+
+<bean id="SIGEM_ServicioRegistroTelematico.LOCATOR" class="ieci.tecdoc.sgm.registro.ws.client.axis.RegistroTelematicoWebServiceServiceLocator" lazy-init="true">
+	<property name="registroTelematicoWebServiceEndpointAddress" value="${REGISTRO_TELEMATICO_WS_ENDPOINT}"/>
+</bean>
+
+<bean id="SIGEM_ServicioRegistroTelematico.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioRegistroTelematico.LOCATOR" factory-method="getRegistroTelematicoWebService" lazy-init="true">
+	<property name="header" ref="SIGEM.API"/>
+</bean>
 
 <!-- ******************************************************************************************************* -->
 <!-- ********** SERVICIO DE FIRMA DIGITAL ****************************************************************** -->
@@ -312,43 +686,6 @@
 <bean id="SIGEM_ServicioValidacion.WEBSERVICE.IMPL" class="ieci.tecdoc.sgm.cripto.validacion.impl.afirma.ValidationManagerAFirmaImpl" lazy-init="true">
 </bean>
 
-
-<!-- ******************************************************************************************************* -->
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE PAGO TELEMATICO **************************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${PAGO_TELEMATICO_DEFAULT_IMPL}" alias="PAYMENT_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioPagoTelematico" class="ieci.tecdoc.sgm.core.services.pago.ServicioPagoTelematico">
-</bean>
-
-<!-- IMPLEMENTACION DEL SERVICIO DE PAGO SIGEM = RED.es -->
-<!-- Implementación SIGEM(Red.es) a través de API Local -->
-<bean id="SIGEM_ServicioPagoTelematico.SIGEM.API" class="ieci.tecdoc.sgm.pe.SigemPagoElectronicoServiceAdapter" parent="SIGEM_ServicioPagoTelematico" lazy-init="true">
-	<property name="manager" ref="SIGEM_ServicioPagoTelematico.SIGEM.API.MANAGER"/>
-</bean>
-<!-- Instancia del gestor de pagos utilizada por el adaptador del servicio  -->
-<bean id="SIGEM_ServicioPagoTelematico.SIGEM.API.MANAGER" class="ieci.tecdoc.sgm.pe.PagoElectronicoManager" lazy-init="true">
-</bean>
-
-<!-- Implementación SIGEM(Red.es) a través de WebService -->
-<bean id="SIGEM_ServicioPagoTelematico.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.pe.ws.client.ServicioPagoTelematicoRemoteClient" parent="SIGEM_ServicioPagoTelematico" lazy-init="true">
-	<property name="service" ref="SIGEM_ServicioPagoTelematico.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_ServicioPagoTelematico.LOCATOR" class="ieci.tecdoc.sgm.pe.ws.client.PagoTelematicoWebServiceServiceLocator" lazy-init="true">
-	<property name="pagoTelematicoWebServiceEndpointAddress" value="${PAGO_TELEMATICO_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_ServicioPagoTelematico.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioPagoTelematico.LOCATOR" factory-method="getPagoTelematicoWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-
-<!-- ******************************************************************************************************* -->
-
-
-
 <!-- ******************************************************************************************************* -->
 <!-- ********** SERVICIO DE CONSULTA DE EXPEDIENTES ******************************************************** -->
 <!-- ******************************************************************************************************* -->
@@ -374,65 +711,6 @@
 <bean id="SIGEM_ServicioConsultaExpedientes.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioConsultaExpedientes.LOCATOR" factory-method="getConsultaExpedientesWebService" lazy-init="true">
 	<property name="header" ref="SIGEM.API"/>
 </bean>
-<!-- ******************************************************************************************************* -->
-
-
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE SESION DE USUARIO ************************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${SESION_USUARIO_DEFAULT_IMPL}" alias="USER_SESSION_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioSesionUsuario" class="ieci.tecdoc.sgm.core.services.sesion.ServicioSesionUsuario">
-</bean>
-
-<!-- IMPLEMENTACION DEL SERVICIO DE CONSULTA DE EXPEDIENTES SIGEM -->
-<!-- Implementación SIGEM a través de API Local -->
-<bean id="SIGEM_ServicioSesionUsuario.SIGEM.API" class="ieci.tecdoc.sgm.autenticacion.SigemServicioSesionUsuarioAdapter" parent="SIGEM_ServicioSesionUsuario" lazy-init="true">
-</bean>
-
-<!-- Implementación SIGEM a través de WebService -->
-<bean id="SIGEM_ServicioSesionUsuario.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.autenticacion.ws.client.ServicioSesionUsuarioRemoteClient" parent="SIGEM_ServicioSesionUsuario" lazy-init="true">
-	<property name="service" ref="SIGEM_ServicioSesionUsuario.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_ServicioSesionUsuario.LOCATOR" class="ieci.tecdoc.sgm.autenticacion.ws.client.SesionUsuarioWebServiceServiceLocator" lazy-init="true">
-	<property name="sesionUsuarioWebServiceEndpointAddress" value="${SESION_USUARIO_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_ServicioSesionUsuario.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioSesionUsuario.LOCATOR" factory-method="getSesionUsuarioWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE NOTIFICACIÓN ELECTRÓNICA ******************************************************* -->
-<!-- ******************************************************************************************************* -->
-<alias name="${NOTIFICACIONES_DEFAULT_IMPL}" alias="NOTIFICATIONS_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioNotificaciones" class="ieci.tecdoc.sgm.core.services.notificaciones.ServicioNotificaciones">
-</bean>
-
-<!-- IMPLEMENTACION DEL SERVICIO DE NOTIFICACIONES SIGEM: SISNOT + Correos -->
-<!-- Implementación SIGEM a través de API Local -->
-<bean id="SIGEM_ServicioNotificaciones.SIGEM.API" class="ieci.tecdoc.sgm.nt.ServicioNotificacionesAdapter" parent="SIGEM_ServicioNotificaciones" lazy-init="true">
-</bean>
-
-<!-- Implementación SIGEM a través de WebService -->
-<bean id="SIGEM_ServicioNotificaciones.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.nt.ws.client.NotificacionesWebServiceRemoteClient" parent="SIGEM_ServicioNotificaciones" lazy-init="true">
-	<property name="service" ref="SIGEM_ServicioNotificaciones.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_ServicioNotificaciones.LOCATOR" class="ieci.tecdoc.sgm.nt.ws.client.NotificacionesWebServiceServiceLocator" lazy-init="true">
-	<property name="notificacionesWebServiceEndpointAddress" value="${NOTIFICACIONES_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_ServicioNotificaciones.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioNotificaciones.LOCATOR" factory-method="getNotificacionesWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
 
 <!-- ******************************************************************************************************* -->
 <!-- ********** SERVICIO DE REPOSITORIO DOCUMENTOS TRAMITACIÓN********************************************** -->
@@ -462,8 +740,6 @@
 <bean id="SIGEM_ServicioRepositorioDocumentosTramitacion.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioRepositorioDocumentosTramitacion.LOCATOR" factory-method="getRepositorioDocumentosWebService" lazy-init="true">
 	<property name="header" ref="SIGEM.API"/>
 </bean>
-<!-- ******************************************************************************************************* -->
-
 
 <!-- ******************************************************************************************************* -->
 <!-- ********** SERVICIO DE TRAMITACION ******************************************************************** -->
@@ -511,462 +787,6 @@
 <bean id="SIGEM_ServicioPublicador.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioPublicador.LOCATOR" factory-method="getPublicadorWebService" lazy-init="true">
 	<property name="header" ref="SIGEM.API"/>
 </bean>
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE TERCEROS *********************************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${TERCEROS_DEFAULT_IMPL}" alias="THIRDPARTY_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioTerceros" class="ieci.tecdoc.sgm.core.services.terceros.ServicioTerceros">
-</bean>
-
-<!-- Implementación SIGEM a través de API Local -->
-<bean id="SIGEM_ServicioTerceros.SIGEM.API" class="ieci.tecdoc.sgm.terceros.SigemTercerosServiceAdapter" parent="SIGEM_ServicioTerceros" lazy-init="true">
-    <property name="dsName" value="${TERCEROS_DATASOURCE_NAME}"/>
-</bean>
-
-<!-- Implementación SIGEM a través de WebService -->
-<bean id="SIGEM_ServicioTerceros.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.terceros.ws.client.ServicioTercerosRemoteClient" parent="SIGEM_ServicioTerceros" lazy-init="true">
-	<property name="service" ref="SIGEM_ServicioTerceros.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-<bean id="SIGEM_ServicioTerceros.LOCATOR" class="ieci.tecdoc.sgm.terceros.ws.client.TercerosWebServiceServiceLocator" lazy-init="true">
-	<property name="tercerosWebServiceEndpointAddress" value="${TERCEROS_WS_ENDPOINT}"/>
-</bean>
-<bean id="SIGEM_ServicioTerceros.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioTerceros.LOCATOR" factory-method="getTercerosWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE REGISTRO PRESENCIAL ************************************************************ -->
-<!-- ******************************************************************************************************* -->
-<alias name="${REGISTRO_PRESENCIAL_DEFAULT_IMPL}" alias="REGISTRY_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_RegistroPresencial" class="ieci.tecdoc.sgm.core.services.registro.ServicioRegistro">
-</bean>
-
-<!-- IMPLEMENTACION DEL SERVICIO DE REGISTRO SIGEM = Isicres v6.5 -->
-<!-- Implementación SIGEM a través de API Local -->
-<bean id="SIGEM_RegistroPresencial.SIGEM.API" class="ieci.tecdoc.sgm.registropresencial.SigemRegistroServiceAdapter" parent="SIGEM_RegistroPresencial" lazy-init="true">
-	<property name="registerManager" ref="SIGEM_RegistroPresencial.SIGEM.API.REGISTRY_MANAGER"/>
-	<property name="distributionManager" ref="SIGEM_RegistroPresencial.SIGEM.API.DISTRIBUTION_MANAGER"/>
-</bean>
-<!-- Instancia del gestor de registro  -->
-<bean id="SIGEM_RegistroPresencial.SIGEM.API.REGISTRY_MANAGER" class="ieci.tecdoc.sgm.registropresencial.manager.RegisterManager" lazy-init="true">
-</bean>
-<!-- Instancia del gestor de distribucion  -->
-<bean id="SIGEM_RegistroPresencial.SIGEM.API.DISTRIBUTION_MANAGER" class="ieci.tecdoc.sgm.registropresencial.manager.DistributionManager" lazy-init="true">
-</bean>
-
-<!-- Implementación SIGEM a través de WebService -->
-<bean id="SIGEM_RegistroPresencial.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.registropresencial.ws.client.RegistroWebServiceRemoteClient" parent="SIGEM_RegistroPresencial" lazy-init="true">
-	<property name="service" ref="SIGEM_RegistroPresencial.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_RegistroPresencial.LOCATOR" class="ieci.tecdoc.sgm.registropresencial.ws.client.axis.ServicioRegistroWebServiceServiceLocator" lazy-init="true">
-	<property name="servicioRegistroWebServiceEndpointAddress" value="${REGISTRO_PRESENCIAL_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_RegistroPresencial.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_RegistroPresencial.LOCATOR" factory-method="getServicioRegistroWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-
-
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE CATALOGO DE TRAMITES*** ******************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${CATALOGO_TRAMITES_DEFAULT_IMPL}" alias="PROCEDURES_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioCatalogoTramites" class="ieci.tecdoc.sgm.core.services.catalogo.ServicioCatalogoTramites">
-</bean>
-
-<!-- IMPLEMENTACION DEL CATALOGO DE TRAMITES DE SIGEM -->
-<!-- Implementación SIGEM a través de API Local -->
-<bean id="SIGEM_ServicioCatalogoTramites.SIGEM.API" class="ieci.tecdoc.sgm.catalogo_tramites.ServicioCatalogoTramitesAdapter" parent="SIGEM_ServicioCatalogoTramites" lazy-init="true">
-</bean>
-
-<!-- Implementación SIGEM a través de WebService -->
-<bean id="SIGEM_ServicioCatalogoTramites.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.catalogo.ws.client.CatalogoTramitesWSRemoteClient" parent="SIGEM_ServicioCatalogoTramites" lazy-init="true">
-	<property name="service" ref="SIGEM_ServicioCatalogoTramites.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_ServicioCatalogoTramites.LOCATOR" class="ieci.tecdoc.sgm.catalogo.ws.client.CatalogoTramitesWebServiceServiceLocator" lazy-init="true">
-	<property name="catalogoTramitesWebServiceEndpointAddress" value="${CATALOGO_TRAMITES_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_ServicioCatalogoTramites.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioCatalogoTramites.LOCATOR" factory-method="getCatalogoTramitesWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE ESTRUCTURA ORGANIZATIVA ******************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${ESTRUCTURA_ORGANIZATIVA_DEFAULT_IMPL}" alias="ESTRUCTURA_ORGANIZATIVA_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioEstructuraOrganizativa" class="ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativa">
-</bean>
-
-<!-- IMPLEMENTACION DE LA ESTRUCURA ORGANIZATIVA DE SIGEM -->
-<!-- Implementación SIGEM a través de API Local -->
-<bean id="SIGEM_ServicioEstructuraOrganizativa.SIGEM.API" class="ieci.tecdoc.idoc.admin.api.ServicioEstructuraOrganizativaAdapter" parent="SIGEM_ServicioEstructuraOrganizativa" lazy-init="true">
-</bean>
-<!-- ******************************************************************************************************* -->
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE ESTRUCTURA ORGANIZATIVA LDAP ******************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${ESTRUCTURA_ORGANIZATIVA_LDAP_DEFAULT_IMPL}" alias="ESTRUCTURA_ORGANIZATIVA_LDAP_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioEstructuraOrganizativaLdap" class="ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativaLdap">
-</bean>
-
-<!-- IMPLEMENTACION DE LA ESTRUCTURA ORGANIZATIVA DE LDAP DE SIGEM -->
-<!-- Implementación SIGEM a través de API Local -->
-<bean id="SIGEM_ServicioEstructuraOrganizativaLdap.SIGEM.API" class="ieci.tecdoc.idoc.admin.api.ServicioEstructuraOrganizativaLdapAdapter" parent="SIGEM_ServicioEstructuraOrganizativaLdap" lazy-init="true">
-</bean>
-<!-- ******************************************************************************************************* -->
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE PERMISOS DE BACKOFFICE ******************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${PERMISOS_BACKOFFICE_DEFAULT_IMPL}" alias="PERMISOS_BACKOFFICE_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_PermisosBackOffice" class="ieci.tecdoc.sgm.core.services.permisos_backoffice.ServicioPermisosBackOffice">
-</bean>
-
-<!-- IMPLEMENTACION DE LA ESTRUCURA ORGANIZATIVA DE SIGEM -->
-<!-- Implementación SIGEM a través de API Local -->
-<bean id="SIGEM_PermisosBackOffice.SIGEM.API" class="ieci.tecdoc.idoc.admin.api.ServicioPermisosBackOfficeAdapter" parent="SIGEM_PermisosBackOffice" lazy-init="true">
-</bean>
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE REGISTRO_TELEMATICO *** ******************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${REGISTRO_TELEMATICO_DEFAULT_IMPL}" alias="EREGISTRY_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioRegistroTelematico" class="ieci.tecdoc.sgm.core.services.telematico.ServicioRegistroTelematico">
-</bean>
-
-<!-- IMPLEMENTACION DEL REGISTRO TELEMATICO DE SIGEM -->
-<!-- Implementación SIGEM a través de API Local -->
-<bean id="SIGEM_ServicioRegistroTelematico.SIGEM.API" class="ieci.tecdoc.sgm.registro.ServicioRegistroTelematicoAdapter" parent="SIGEM_ServicioRegistroTelematico" lazy-init="true">
-</bean>
-
-<!-- Implementación SIGEM a través de WebService -->
-<bean id="SIGEM_ServicioRegistroTelematico.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.registro.ws.client.RegistroTelematicoWSRemoteClient" parent="SIGEM_ServicioRegistroTelematico" lazy-init="true">
-	<property name="service" ref="SIGEM_ServicioRegistroTelematico.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_ServicioRegistroTelematico.LOCATOR" class="ieci.tecdoc.sgm.registro.ws.client.axis.RegistroTelematicoWebServiceServiceLocator" lazy-init="true">
-	<property name="registroTelematicoWebServiceEndpointAddress" value="${REGISTRO_TELEMATICO_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_ServicioRegistroTelematico.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioRegistroTelematico.LOCATOR" factory-method="getRegistroTelematicoWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************** -->
-<!-- ********** SERVICIO DE CERTIFICACION ****************************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${CERTIFICACION_DEFAULT_IMPL}" alias="CERTIFICATION_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioCertificacion" class="ieci.tecdoc.sgm.core.services.certificacion.ServicioCertificacion">
-</bean>
-
-<bean id="SIGEM_ServicioCertificacion.SIGEM.API" class="ieci.tecdoc.sgm.certificacion.ServicioCertificacionAdapter" parent="SIGEM_ServicioCertificacion" lazy-init="true">
-</bean>
-
-<bean id="SIGEM_ServicioCertificacion.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.certificacion.ws.client.CertificacionWSRemoteClient" parent="SIGEM_ServicioCertificacion" lazy-init="true">
-	<property name="service" ref="SIGEM_ServicioCertificacion.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_ServicioCertificacion.LOCATOR" class="ieci.tecdoc.sgm.certificacion.ws.client.CertificacionWebServiceServiceLocator" lazy-init="true">
-	<property name="certificacionWebServiceEndpointAddress" value="${CERTIFICACION_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_ServicioCertificacion.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioCertificacion.LOCATOR" factory-method="getCertificacionWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-
-
-<!-- ******************************************************************************************************** -->
-<!-- ********** SERVICIO DE SESION DE ADMINISTRACION ******************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${SESION_ADMINISTRACION_DEFAULT_IMPL}" alias="SESION_ADMINISTRACION_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_SesionAdministracion" class="ieci.tecdoc.sgm.core.services.sesionadmin.ServicioSesionAdministracion">
-</bean>
-
-<bean id="SIGEM_SesionAdministracion.SIGEM.API" class="ieci.tecdoc.sgm.sesionadmin.ServicioSesionAdministracionAdapter" parent="SIGEM_SesionAdministracion" lazy-init="true">
-</bean>
-
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************** -->
-<!-- ********** SERVICIO DE GESTION USUARIOS DE BACK OFFICE ******************************* -->
-<!-- ******************************************************************************************************* -->
-<alias name="${GESTION_USUARIOS_BACK_OFFICE_DEFAULT_IMPL}" alias="GESTION_USUARIOS_BACK_OFFICE_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_GestionUsuariosBackOffice" class="ieci.tecdoc.sgm.core.services.usuarios_backoffice.ServicioGestionUsuariosBackOffice">
-</bean>
-
-<bean id="SIGEM_GestionUsuariosBackOffice.SIGEM.API" class="ieci.tecdoc.sgm.usuarios_backoffice.ServicioGestionUsuariosBackOfficeAdapter" parent="SIGEM_GestionUsuariosBackOffice" lazy-init="true">
-</bean>
-
-<bean id="SIGEM_GestionUsuariosBackOffice.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.usuarios_backoffice.ws.client.GestionUsuariosBackOfficeWSRemoteClient" parent="SIGEM_GestionUsuariosBackOffice" lazy-init="true">
-	<property name="service" ref="SIGEM_GestionUsuariosBackOffice.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_GestionUsuariosBackOffice.LOCATOR" class="ieci.tecdoc.sgm.usuarios_backoffice.ws.client.GestionUsuariosBackOfficeWebServiceServiceLocator" lazy-init="true">
-	<property name="gestionUsuariosBackOfficeWebServiceEndpointAddress" value="${GESTION_USUARIOS_BACK_OFFICE_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_GestionUsuariosBackOffice.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_GestionUsuariosBackOffice.LOCATOR" factory-method="getGestionUsuariosBackOfficeWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************** -->
-<!-- ********** SERVICIO DE ENTIDADES ************************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${ENTIDADES_DEFAULT_IMPL}" alias="ENTITIES_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_Entidades" class="ieci.tecdoc.sgm.core.services.entidades.ServicioEntidades">
-</bean>
-
-<bean id="SIGEM_Entidades.SIGEM.API" class="ieci.tecdoc.sgm.entidades.ServicioEntidadesAdapter" parent="SIGEM_Entidades" lazy-init="true">
-</bean>
-
-<bean id="SIGEM_Entidades.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.entidades.ws.client.EntidadesWSRemoteClient" parent="SIGEM_Entidades" lazy-init="true">
-	<property name="service" ref="SIGEM_Entidades.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_Entidades.LOCATOR" class="ieci.tecdoc.sgm.entidades.ws.client.EntidadesWebServiceServiceLocator" lazy-init="true">
-	<property name="entidadesWebServiceEndpointAddress" value="${ENTIDADES_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_Entidades.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_Entidades.LOCATOR" factory-method="getEntidadesWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-<!-- ******************************************************************************************************** -->
-<!-- ********** SERVICIO DE Administracion del registro presencial ****************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${ADMON_REGISTRO_PRESENCIAL_DEFAULT_IMPL}" alias="RPADMIN_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_RegistroPresencialAdmin" class="ieci.tecdoc.sgm.core.services.rpadmin.ServicioRPAdmin">
-</bean>
-
-<bean id="SIGEM_RegistroPresencialAdmin.SIGEM.API" class="ieci.tecdoc.sgm.rpadmin.ServicioRPAdminAdapter" parent="SIGEM_RegistroPresencialAdmin" lazy-init="true">
-</bean>
-
-<!-- ******************************************************************************************************* -->
-
-<!-- ******************************************************************************************************** -->
-<!-- ********** SERVICIO DE GESTION DE ADMINISTRACION ******************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${GESTION_USUARIOS_ADM_DEFAULT_IMPL}" alias="GESTION_USUARIOS_ADM_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_GestionAdministracion" class="ieci.tecdoc.sgm.core.services.gestion_administracion.ServicioGestionUsuariosAdministracion">
-</bean>
-
-<bean id="SIGEM_GestionAdministracion.SIGEM.API" class="ieci.tecdoc.sgm.core.services.gestion_administracion.ServicioGestionUsuariosAdministracionAdapter" parent="SIGEM_GestionAdministracion" lazy-init="true">
-</bean>
-
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************** -->
-<!-- ********** SERVICIO DE AMINISTRACION DE APPS Y USAURIOS DE ADMINISTRACION ****************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${APP_ADM_DEFAULT_IMPL}" alias="APP_ADMIN_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_AdministracionAplicaciones" class="ieci.tecdoc.sgm.core.services.administracion.ServicioAdministracion">
-</bean>
-
-<bean id="SIGEM_AdministracionAplicaciones.SIGEM.API" class="ieci.tecdoc.sgm.admin.AdministracionManagerAdapter" parent="SIGEM_AdministracionAplicaciones" lazy-init="true">
-</bean>
-
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE CATASTRO *********************************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${CATASTRO_DEFAULT_IMPL}" alias="CATASTRO_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioCatastro" class="ieci.tecdoc.sgm.core.services.catastro.ServicioCatastro">
-</bean>
-
-<bean id="SIGEM_ServicioCatastro.SIGEM.API" class="ieci.tecdoc.sgm.catastro.ServicioCatastroAdapter" parent="SIGEM_ServicioCatastro" lazy-init="true">
-</bean>
-
-<bean id="SIGEM_ServicioCatastro.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.catastro.ws.client.CatastroWSRemoteClient" parent="SIGEM_ServicioCatastro" lazy-init="true">
-	<property name="service" ref="SIGEM_ServicioCatastro.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_ServicioCatastro.LOCATOR" class="ieci.tecdoc.sgm.catastro.ws.client.CatastroWebServiceServiceLocator" lazy-init="true">
-	<property name="catastroWebServiceEndpointAddress" value="${CATASTRO_WS_ENDPOINT}"/>
-	<property name="usuario" value="${WSCLIENT_DEFAULT_USERNAME}"/>
-	<property name="password" value="${WSCLIENT_DEFAULT_PASSWORD}"/>
-	<property name="timeout" value="${WSCLIENT_DEFAULT_TIMEOUT}"/>
-</bean>
-
-<bean id="SIGEM_ServicioCatastro.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioCatastro.LOCATOR" factory-method="getCatastroWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE GEOLOCALIZACION **************************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${GEOLOCALIZACION_DEFAULT_IMPL}" alias="GEOLOCALIZACION_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioGeoLocalizacion" class="ieci.tecdoc.sgm.core.services.geolocalizacion.ServicioGeoLocalizacion">
-</bean>
-
-<bean id="SIGEM_ServicioGeoLocalizacion.SIGEM.API" class="ieci.tecdoc.sgm.geolocalizacion.ServicioGeoLocalizacionAdapter" parent="SIGEM_ServicioGeoLocalizacion" lazy-init="true">
-</bean>
-
-<bean id="SIGEM_ServicioGeoLocalizacion.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.geolocalizacion.ws.client.GeoLocalizacionWSRemoteClient" parent="SIGEM_ServicioGeoLocalizacion" lazy-init="true">
-	<property name="service" ref="SIGEM_ServicioGeoLocalizacion.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_ServicioGeoLocalizacion.LOCATOR" class="ieci.tecdoc.sgm.geolocalizacion.ws.client.GeoLocalizacionWebServiceServiceLocator" lazy-init="true">
-	<property name="geoLocalizacionWebServiceEndpointAddress" value="${GEOLOCALIZACION_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_ServicioGeoLocalizacion.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioGeoLocalizacion.LOCATOR" factory-method="getGeoLocalizacionWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE ANTIVIRUS*********************************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${ANTIVIRUS_DEFAULT_IMPL}" alias="ANTIVIRUS_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_ServicioAntivirus" class="ieci.tecdoc.sgm.core.services.antivirus.ServicioAntivirus">
-</bean>
-
-<!-- bean id="SIGEM_ServicioAntivirus.SIGEM.API" class="ieci.tecdoc.sgm.antivirus.mcafee.AntivirusMcAFee" parent="SIGEM_ServicioAntivirus" lazy-init="true">
-	<property name="rutaAntivirus" value="c:/Archivos de Programa/McAfee/VirusScan Enterprise/scan32.exe"/>
-	<property name="parametros" value="/UINONE /ARCHIVE"/>
-	<property name="rutaTemporal" value="c:/Compartido/Antivirus Prueba/"/>
-</bean-->
-<bean id="SIGEM_ServicioAntivirus.SIGEM.API" class="ieci.tecdoc.sgm.antivirus.NoAntivirus" parent="SIGEM_ServicioAntivirus" lazy-init="true">
-	<property name="rutaAntivirus" value=""/>
-	<property name="parametros" value=""/>
-	<property name="rutaTemporal" value=""/>
-</bean>
-
-<bean id="SIGEM_ServicioAntivirus.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.antivirus.ws.client.AntivirusWSRemoteClient" parent="SIGEM_ServicioAntivirus" lazy-init="true">
-	<property name="service" ref="SIGEM_ServicioAntivirus.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_ServicioAntivirus.LOCATOR" class="ieci.tecdoc.sgm.antivirus.ws.client.AntivirusWebServiceServiceLocator" lazy-init="true">
-	<property name="antivirusWebServiceEndpointAddress" value="${ANTIVIRUS_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_ServicioAntivirus.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioAntivirus.LOCATOR" factory-method="getAntivirusWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE MENSAJES CORTOS **************************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${MENSAJES_CORTOS_DEFAULT_IMPL}" alias="SHORT_MESSAGES_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_MensajesCortos" class="ieci.tecdoc.sgm.core.services.mensajes_cortos.ServicioMensajesCortos">
-</bean>
-
-<bean id="SIGEM_MensajesCortos.SIGEM.API" class="ieci.tecdoc.sgm.mensajes_cortos.SigemMensajesCortosServiceAdapter" parent="SIGEM_MensajesCortos" lazy-init="true">
-	<property name="smsManager" ref="SIGEM_MensajesCortos.SIGEM.SMS.MANAGER"/>
-	<property name="emailManager" ref="SIGEM_MensajesCortos.SIGEM.EMAIL.MANAGER"/>
-</bean>
-
-<bean id="SIGEM_MensajesCortos.SIGEM.SMS.MANAGER" class="ieci.tecdoc.sgm.mensajes_cortos.mgr.LleidanetSMSManager" lazy-init="true">
-	<property name="smsUrl" value="${MENSAJES_CORTOS_SMS_SMSURL}"/>
-	<property name="signUrl" value="${MENSAJES_CORTOS_SMS_SIGNURL}"/>
-	<property name="proxyHost" value="${MENSAJES_CORTOS_SMS_PROXYHOST}"/>
-	<property name="proxyPort" value="${MENSAJES_CORTOS_SMS_PROXYPORT}"/>
-	<property name="proxyUser" value="${MENSAJES_CORTOS_SMS_PROXYUSER}"/>
-	<property name="proxyPassword" value="${MENSAJES_CORTOS_SMS_PROXYPASSWORD}"/>
-	<property name="defaultPrefix" value="${MENSAJES_CORTOS_SMS_DEFAULT_PREFIX}"/>
-	<property name="numDigits" value="${MENSAJES_CORTOS_SMS_NUM_DIGITS}"/>
-</bean>
-
-<bean id="SIGEM_MensajesCortos.SIGEM.EMAIL.MANAGER" class="ieci.tecdoc.sgm.mensajes_cortos.mgr.SmtpEmailManager" lazy-init="true">
-	<property name="user" value="${MENSAJES_CORTOS_EMAIL_SMTP_USER}"/>
-	<property name="password" value="${MENSAJES_CORTOS_EMAIL_SMTP_PASSWORD}"/>
-	<property name="serverHost" value="${MENSAJES_CORTOS_EMAIL_SMTP_SERVER_HOST}"/>
-	<property name="serverPort" value="${MENSAJES_CORTOS_EMAIL_SMTP_SERVER_PORT}"/>
-</bean>
-
-<bean id="SIGEM_MensajesCortos.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.mensajesCortos.ws.client.ServicioMensajesCortosRemoteClient" parent="SIGEM_MensajesCortos" lazy-init="true">
-	<property name="service" ref="SIGEM_MensajesCortos.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_MensajesCortos.LOCATOR" class="ieci.tecdoc.sgm.mensajesCortos.ws.client.MensajesCortosWebServiceServiceLocator" lazy-init="true">
-	<property name="mensajesCortosWebServiceEndpointAddress" value="${MENSAJES_CORTOS_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_MensajesCortos.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_MensajesCortos.LOCATOR" factory-method="getMensajesCortosWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE CONSOLIDACION ****************************************************************** -->
-<!-- ******************************************************************************************************* -->
-<alias name="${CONSOLIDACION_DEFAULT_IMPL}" alias="CONSOLIDATION_SERVICE_DEFAULT_IMPL"/>
-
-<bean abstract="true" id="SIGEM_Consolidacion" class="ieci.tecdoc.sgm.core.services.consolidacion.ServicioConsolidacion">
-</bean>
-
-<bean id="SIGEM_Consolidacion.SIGEM.API" class="ieci.tecdoc.sgm.consolidacion.SigemConsolidacionServiceAdapter" parent="SIGEM_Consolidacion" lazy-init="true">
-	<property name="manager" ref="SIGEM_Consolidacion.SIGEM.API.MANAGER"/>
-</bean>
-
-<bean id="SIGEM_Consolidacion.SIGEM.API.MANAGER" class="ieci.tecdoc.sgm.consolidacion.mgr.ConsolidacionManagerImpl" lazy-init="true"/>
-
-<!--
-<bean id="SIGEM_Consolidacion.SIGEM.WEBSERVICE" class="ieci.tecdoc.sgm.consolidacion.ws.client.ConsolidacionWSRemoteClient" parent="SIGEM_Consolidacion" lazy-init="true">
-	<property name="service" ref="SIGEM_Consolidacion.SIGEM.WEBSERVICE.SERVICE_FACTORY"/>
-</bean>
-
-<bean id="SIGEM_Consolidacion.LOCATOR" class="ieci.tecdoc.sgm.consolidacion.ws.client.ConsolidacionWebServiceServiceLocator" lazy-init="true">
-	<property name="ConsolidacionWebServiceEndpointAddress" value="${CONSOLIDACION_WS_ENDPOINT}"/>
-</bean>
-
-<bean id="SIGEM_Consolidacion.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_Consolidacion.LOCATOR" factory-method="getConsolidacionWebService" lazy-init="true">
-	<property name="header" ref="SIGEM.API"/>
-</bean>
- -->
-<!-- ******************************************************************************************************* -->
 
 <!-- ******************************************************************************************************* -->
 <!-- ********** SERVICIO DE CALENDARIO ********************************************************************* -->
@@ -989,17 +809,6 @@
 
 <bean id="SIGEM_ServicioCalendario.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioCalendario.LOCATOR" factory-method="getCalendarioWebService" lazy-init="true">
 	<property name="header" ref="SIGEM.API"/>
-</bean>
-<!-- ******************************************************************************************************* -->
-
-<!-- ******************************************************************************************************* -->
-<!-- ********** SERVICIO DE TIEMPOS ********************************************************************* -->
-<!-- ******************************************************************************************************* -->
-<alias name="${TIEMPOS_DEFAULT_IMPL}" alias="TIEMPOS_SERVICE_DEFAULT_IMPL"/>
-<bean abstract="true" id="SIGEM_ServicioTiempos" class="ieci.tecdoc.sgm.core.services.tiempos.ServicioTiempos">
-</bean>
-
-<bean id="SIGEM_ServicioTiempos.SIGEM.API" class="ieci.tecdoc.sgm.tiempos.impl.ServicioTiemposImpl" parent="SIGEM_ServicioTiempos" lazy-init="true">
 </bean>
 
 <!-- ******************************************************************************************************* -->
@@ -1034,5 +843,6 @@
 <bean id="SIGEM_ServicioGestionCSV.SIGEM.WEBSERVICE.SERVICE_FACTORY" factory-bean="SIGEM_ServicioGestionCSV.LOCATOR" factory-method="getGestionCSVWebService" lazy-init="true">
 	<property name="header" ref="SIGEM.API"/>
 </bean>
+
 
 </beans>

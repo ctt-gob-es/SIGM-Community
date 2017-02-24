@@ -80,12 +80,12 @@ public abstract class AbstractAx implements ServerKeys {
 	public void load(String sentence, AxPK axPK, String entidad)
 			throws Exception {
 		loadEntityPrimaryKey(axPK);
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(getSentence(sentence));
 			ps.setInt(1, getId());
 			rs = ps.executeQuery();
@@ -100,9 +100,9 @@ public abstract class AbstractAx implements ServerKeys {
 			log.error("Error en método load PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
@@ -114,11 +114,11 @@ public abstract class AbstractAx implements ServerKeys {
 
 	public void store(String sentence, int idIndex, String entidad)
 			throws Exception {
-
+	    BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(getSentence(sentence));
 			assignStore(ps, entidad);
 			ps.setInt(idIndex, getId());
@@ -130,18 +130,18 @@ public abstract class AbstractAx implements ServerKeys {
 			log.error("Error en método store.PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
 	public void store(String sentence, int idIndex, String entidad,
 			String dataBaseType) throws Exception {
-
+	    BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(getSentence(sentence));
 			assignStore(ps, entidad, dataBaseType);
 			ps.setInt(idIndex, getId());
@@ -153,17 +153,18 @@ public abstract class AbstractAx implements ServerKeys {
 			log.error("Error en método store.PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
 	public AxPK createFromSentence(String sentence, String entidad)
 			throws Exception {
+	    	BBDDUtils bbddUtils = new BBDDUtils();
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(getSentence(sentence));
 			assignStore(ps, entidad);
 			ps.executeUpdate();
@@ -177,8 +178,8 @@ public abstract class AbstractAx implements ServerKeys {
 					+ getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 

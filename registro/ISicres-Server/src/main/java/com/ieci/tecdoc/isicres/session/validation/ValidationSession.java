@@ -51,11 +51,11 @@ public class ValidationSession extends ValidationSessionUtil implements
 			ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -77,20 +77,20 @@ public class ValidationSession extends ValidationSessionUtil implements
 			result = getValidationResults(session, criteriaResults, querySize
 					.toString(), where, enabled, firstRow, maxResults, "name");
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrTypeProc for session ["
 					+ sessionID + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONLISTFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -100,11 +100,11 @@ public class ValidationSession extends ValidationSessionUtil implements
 			ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -127,20 +127,20 @@ public class ValidationSession extends ValidationSessionUtil implements
 			result = getValidationResults(session, criteriaResults, querySize
 					.toString(), where, enabled, firstRow, maxResults, "name");
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrOfic for session [" + sessionID
 					+ "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONLISTFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -149,11 +149,11 @@ public class ValidationSession extends ValidationSessionUtil implements
 			throws AttributesException, SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -172,20 +172,20 @@ public class ValidationSession extends ValidationSessionUtil implements
 			result = getValidationResults(session, criteriaResults, querySize
 					.toString(), where, 0, firstRow, maxResults, "transport");
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrTt for session [" + sessionID
 					+ "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONLISTFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -195,11 +195,11 @@ public class ValidationSession extends ValidationSessionUtil implements
 			ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -223,20 +223,20 @@ public class ValidationSession extends ValidationSessionUtil implements
 			result = getValidationResults(session, criteriaResults, querySize
 					.toString(), where, 1, firstRow, maxResults, "name");
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrOrg for session [" + sessionID
 					+ "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONLISTFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -246,11 +246,11 @@ public class ValidationSession extends ValidationSessionUtil implements
 			SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -273,21 +273,21 @@ public class ValidationSession extends ValidationSessionUtil implements
 			result = getValidationResults(session, criteriaResults, querySize
 					.toString(), where, enabled, firstRow, maxResults, "name");
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible to load ScrOrgs for getScrOrgsForAdminUnits for session ["
 							+ sessionID + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONLISTFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -297,11 +297,11 @@ public class ValidationSession extends ValidationSessionUtil implements
 			SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -311,21 +311,21 @@ public class ValidationSession extends ValidationSessionUtil implements
 					where, firstRow, maxResults, true, false, 0, null, 0,
 					locale.getLanguage(), entidad);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible to load ScrOrgs for Distribution for session ["
 							+ sessionID + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONLISTFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -335,12 +335,12 @@ public class ValidationSession extends ValidationSessionUtil implements
 			throws AttributesException, SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -355,21 +355,21 @@ public class ValidationSession extends ValidationSessionUtil implements
 							.getId(), userusertype.getType(), locale
 							.getLanguage(), entidad);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible to load ScrOrgs for getScrOrgsForAdminUnitsWithType for session ["
 							+ sessionID + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONLISTFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -379,12 +379,12 @@ public class ValidationSession extends ValidationSessionUtil implements
 			throws AttributesException, SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -399,14 +399,14 @@ public class ValidationSession extends ValidationSessionUtil implements
 							.getId(), userusertype.getType(), locale
 							.getLanguage(), entidad);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log
 					.error(
 							"Impossible to load ScrOrgs for getScrOrgsForAdminUnitsWithFather for session ["
@@ -414,7 +414,7 @@ public class ValidationSession extends ValidationSessionUtil implements
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONLISTFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -424,11 +424,11 @@ public class ValidationSession extends ValidationSessionUtil implements
 			ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -475,20 +475,20 @@ public class ValidationSession extends ValidationSessionUtil implements
 			}
 			result.setResults(criteriaResults.list());
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrTypeadm for session [" + sessionID
 					+ "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONLISTFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -514,11 +514,11 @@ public class ValidationSession extends ValidationSessionUtil implements
 			AttributesException, SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -553,23 +553,23 @@ public class ValidationSession extends ValidationSessionUtil implements
 				listResult = listScrCaByOfic.subList(firstRow, lastRow);
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			result.setResults(listResult);
 			result.setTotalSize(listScrCaByOfic.size());
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to load ScrCa for session [" + sessionID
 					+ "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONLISTFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -638,12 +638,12 @@ public class ValidationSession extends ValidationSessionUtil implements
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_String_NotNull_LengthMayorZero(value,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ValidationResults result = new ValidationResults();
 		Transaction tran = null;
 		List privOrgs = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -698,21 +698,21 @@ public class ValidationSession extends ValidationSessionUtil implements
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return result;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error(
 					"Impossible to load ScrOrgs for validateAndReturnUA for session ["
 							+ sessionID + "]", e);
 			throw new AttributesException(
 					AttributesException.ERROR_CANNOT_FIND_VALIDATIONLISTFIELDS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 

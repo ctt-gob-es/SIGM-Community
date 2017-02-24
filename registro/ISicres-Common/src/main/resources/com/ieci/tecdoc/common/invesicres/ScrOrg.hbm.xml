@@ -141,7 +141,103 @@
             length="15"
         </meta>    
     </property>
+    <property
+        name="hierarchicalLevel"
+        type="java.lang.Integer"
+        column="HIERARCHICAL_LEVEL"
+        not-null="true"
+        length="6"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="HIERARCHICAL_LEVEL"
+            length="6"
+            not-null="true"
+        </meta>    
+    </property>
+    <property
+        name="adminLevel"
+        type="java.lang.String"
+        column="ADMIN_LEVEL"
+        not-null="true"
+        length="2"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="ADMIN_LEVEL"
+            length="2"
+            not-null="true"
+        </meta>    
+    </property>
 
+   <property
+        name="entityType"
+        type="java.lang.String"
+        column="ENTITY_TYPE"
+        not-null="true"
+        length="2"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="ENTITY_TYPE"
+            length="2"
+            not-null="true"
+        </meta>    
+    </property>
+    <property
+        name="uoType"
+        type="java.lang.String"
+        column="UO_TYPE"
+        not-null="true"
+        length="3"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="UO_TYPE"
+            length="3"
+            not-null="true"
+        </meta>    
+    </property>
+    <property
+        name="idRoot"
+        type="java.lang.Integer"
+        column="ID_ROOT"
+        length="10"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="ID_ROOT"
+            length="10"
+        </meta>    
+    </property>
+    <property
+        name="idCCAA"
+        type="java.lang.String"
+        column="ID_CCAA"
+        not-null="true"
+        length="2"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="ID_CCAA"
+            length="2"
+            not-null="true"
+        </meta>    
+    </property>
+    <property
+        name="idProv"
+        type="java.lang.Integer"
+        column="ID_PROV"
+        not-null="true"
+        length="10"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="ID_PROV"
+            length="10"
+            not-null="true"
+        </meta>    
+    </property>
     <!-- associations -->
     <!-- bi-directional many-to-one association to ScrTypeadm -->
     <many-to-one
@@ -372,6 +468,10 @@
             class="com.ieci.tecdoc.common.invesicres.ScrRelation"
         />
     </set>
+     <property name="nameOrgFather" 
+     formula=" (select scro.name from SCR_ORGS scro where scro.id = ID_FATHER) " />
+
+           
 
 </class>
 </hibernate-mapping>

@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.ieci.tecdoc.isicres.audit.helper.ISicresAuditHelper;
+
 public class GestionUsuariosBackOfficeManager {
 
 	/**
@@ -36,20 +38,25 @@ public class GestionUsuariosBackOfficeManager {
 		String idUser = null;
 		
 		try {
-			
 			idUser = EstructuraOrganizativaLdapManager.obtenerIdUsuario(username, password, entidad);
+			if(idUser == null){
+			    ISicresAuditHelper.auditarFalloLogin(username);
+			}
 			
 		} catch(IeciTdException e) {
 			logger.warn("Error en la autenticaci\u00F3n del usuario " + username, e);
 			if (UasBaseError.EC_INVALID_USER_NAME.equals(e.getErrorCode())) {
+			    ISicresAuditHelper.auditarFalloLogin(username);
 				throw new GestionUsuariosBackOfficeException(CodigosErrorGestionUsuariosBackOfficeException.EC_BAD_USER_OR_PASS, e);
 			} else if (UasBaseError.EC_INVALID_AUTH_SPEC.equals(e.getErrorCode())) {
+			    ISicresAuditHelper.auditarFalloLogin(username);
 				throw new GestionUsuariosBackOfficeException(CodigosErrorGestionUsuariosBackOfficeException.EC_BAD_USER_OR_PASS, e);
 			} else {
 				throw new GestionUsuariosBackOfficeException(CodigosErrorGestionUsuariosBackOfficeException.ERROR_INESPERADO, e);
 			}
 		} catch(Exception e) {
 			logger.warn("Error en la autenticaci\u00F3n del usuario " + username, e);
+			 ISicresAuditHelper.auditarFalloLogin(username);
 			throw new GestionUsuariosBackOfficeException(CodigosErrorGestionUsuariosBackOfficeException.ERROR_INESPERADO, e);
 		} 
 		

@@ -4,12 +4,11 @@ import ieci.tecdoc.sgm.administracion.utils.Comprobador;
 import ieci.tecdoc.sgm.administracion.utils.Defs;
 import ieci.tecdoc.sgm.administracion.utils.Utilidades;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
-import ieci.tecdoc.sgm.core.services.admsesion.administracion.ServicioAdministracionSesionesAdministrador;
 import ieci.tecdoc.sgm.core.services.entidades.ServicioEntidades;
 import ieci.tecdoc.sgm.core.services.gestion_administracion.ConstantesGestionUsuariosAdministracion;
 import ieci.tecdoc.sgm.core.services.idioma.ConstantesIdioma;
 import ieci.tecdoc.sgm.core.services.idioma.LectorIdiomas;
-import ieci.tecdoc.sgm.sesiones.administrador.ws.client.Sesion;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class InicioAction extends Action{
 			if(Utilidades.isNuloOVacio(idEntidad)) {
 				idEntidad = (String) session.getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD);
 				if(Utilidades.isNuloOVacio(idEntidad)) {
-					idEntidad = "";
+					idEntidad = "000";
 				}
 			}
 
@@ -58,7 +57,7 @@ public class InicioAction extends Action{
 			if(Utilidades.isNuloOVacio(idAplicacion)) {
 				idAplicacion = (String) session.getAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_APLICACION);
 				if(Utilidades.isNuloOVacio(idAplicacion)) {
-					idAplicacion = "";
+					idAplicacion = "5";
 				}
 			}
 
@@ -68,7 +67,7 @@ public class InicioAction extends Action{
 			List entidades = oServicio.obtenerEntidades();
 			request.setAttribute(Defs.PARAMETRO_ENTIDADES, entidades);
 
-			if(!Utilidades.isNuloOVacio(key)) {
+			/*if(!Utilidades.isNuloOVacio(key)) {
 				ServicioAdministracionSesionesAdministrador oCliente = LocalizadorServicios.getServicioAdministracionSesionesAdministrador();
 				ieci.tecdoc.sgm.core.services.admsesion.administracion.Sesion datosSesion = oCliente.obtenerSesion(key);
 				if (datosSesion != null) {
@@ -84,7 +83,7 @@ public class InicioAction extends Action{
 						return mapping.findForward(Comprobador.comprobarInformacionInterno(request, key, idEntidad, idAplicacion, null, null, false));
 					}
 				}
-			}
+			}*/
 			session.setAttribute(ConstantesGestionUsuariosAdministracion.PARAMETRO_ID_ENTIDAD, idEntidad);
 			return mapping.findForward(Comprobador.comprobarInformacion(request, key, idEntidad, idAplicacion, null, null, false));
 		} catch(Exception e) {

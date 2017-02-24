@@ -3,13 +3,14 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
-		<artifactId>fwktd-sir</artifactId>
+		<artifactId>fwktd-sir-parent</artifactId>
 		<version>1.0.1</version>
 	</parent>
 
 	<artifactId>fwktd-sir-core</artifactId>
 	<packaging>jar</packaging>
 	<name>fwktd-sir-core</name>
+	<version>3.0.0-msssi2.0.0</version>
 
 	<dependencies>
 

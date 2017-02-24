@@ -84,7 +84,6 @@ public class Register extends FolderSession implements ServerKeys, Keys,
 			Integer launchDistOutRegister, Locale locale, String entidad,
 			boolean consolidacion) throws BookException, SessionException,
 			ValidationException {
-
 		FolderDataSession data = createFolderWithDocuments(sessionID, bookID,
 				axsfNew, inter, documents, launchDistOutRegister, locale,
 				entidad, consolidacion, false);
@@ -224,11 +223,11 @@ public class Register extends FolderSession implements ServerKeys, Keys,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_NotNull(queryNavigationType,
 				ValidationException.ATTRIBUTE_NAVIGATIONTYPE);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		Integer bookID = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -269,22 +268,22 @@ public class Register extends FolderSession implements ServerKeys, Keys,
 				throw new BookException(
 						BookException.ERROR_CANNOT_FIND_REGISTERS);
 			}
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return queryResults.clone(result.values());
 		} catch (BookException bE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw bE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw sE;
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Impossible to execute the book query for [" + bookID
 					+ "] for the session [" + sessionID + "]", e);
 			throw new BookException(BookException.ERROR_CANNOT_FIND_REGISTERS);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 

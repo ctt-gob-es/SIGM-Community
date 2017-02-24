@@ -1,4 +1,4 @@
-/*package es.ieci.tecdoc.fwktd.dir3.api.dao.impl;
+package es.ieci.tecdoc.fwktd.dir3.api.dao.impl;
 
 import java.util.List;
 
@@ -16,8 +16,8 @@ import es.ieci.tecdoc.fwktd.dir3.core.type.OperadorCriterioEnum;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.Criterio;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.Criterios;
 
-@ContextConfiguration({ "/beans/cxf.xml", "/beans/fwktd-dir3-api-applicationContext.xml",
-		"/beans/fwktd-dir3-test-beans.xml" })
+@ContextConfiguration({"/jndi.xml", "/beans/cxf.xml", "/beans/fwktd-dir3-test-beans.xml",
+"/beans/fwktd-dir3-api-applicationContext.xml" })
 public class DatosBasicosUnidadOrganizaDaoImplTest extends AbstractJUnit4SpringContextTests {
 
 	protected static final String ID_UNIDAD_ORGANICA_EXISTENTE = "L01330447";
@@ -122,14 +122,14 @@ public class DatosBasicosUnidadOrganizaDaoImplTest extends AbstractJUnit4SpringC
 
 		// Test de consulta con criterios
 		unidades = getDatosBasicosUnidadOrganicaDao().findUnidadesOrganicas(new Criterios<CriterioUnidadOrganicaEnum>()
-	            .addCriterio(new Criterio<CriterioUnidadOrganicaEnum>(
+				/*    .addCriterio(new Criterio<CriterioUnidadOrganicaEnum>(
 	            		CriterioUnidadOrganicaEnum.UO_ESTADO,
 	                    OperadorCriterioEnum.IN,
 	                    new String[] { "V", "X" }))
 	            .addCriterio(new Criterio<CriterioUnidadOrganicaEnum>(
 	            		CriterioUnidadOrganicaEnum.UO_ID_OFICINA_RELACIONADA,
 	                    OperadorCriterioEnum.IN,
-	                    new String[] { "O00001186" })) //O00001202
+	                    new String[] { "O00001186" })) //O00001202*/
 	            .addOrderBy(CriterioUnidadOrganicaEnum.UO_ID)
 	            .addOrderBy(CriterioUnidadOrganicaEnum.UO_NOMBRE));
 		Assert.assertNotNull("Resultado nulo", unidades);
@@ -313,7 +313,8 @@ public class DatosBasicosUnidadOrganizaDaoImplTest extends AbstractJUnit4SpringC
 //		}
 
 	protected Criterios<CriterioUnidadOrganicaEnum> createCriterios() {
-        return new Criterios<CriterioUnidadOrganicaEnum>()
+      return null;
+		/* return new Criterios<CriterioUnidadOrganicaEnum>()
 
             .addCriterio(new Criterio<CriterioUnidadOrganicaEnum>(
                     CriterioUnidadOrganicaEnum.UO_ID,
@@ -394,7 +395,7 @@ public class DatosBasicosUnidadOrganizaDaoImplTest extends AbstractJUnit4SpringC
 //                    OperadorCriterioEnum.EQUAL_OR_LESS_THAN,
 //                    new Date()))
             .addOrderBy(CriterioUnidadOrganicaEnum.UO_ID)
-            .addOrderBy(CriterioUnidadOrganicaEnum.UO_NOMBRE);
+            .addOrderBy(CriterioUnidadOrganicaEnum.UO_NOMBRE);*/
 	}
 
-}*/
+}

@@ -1,1 +1,0 @@
-CREATE TABLE A_SCHEMA."SIMPLE_TABLE" ( field1 Varchar2(25) not null)

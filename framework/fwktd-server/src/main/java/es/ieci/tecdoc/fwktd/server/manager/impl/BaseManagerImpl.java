@@ -67,8 +67,9 @@ public class BaseManagerImpl<Entity, Id extends Serializable> extends
 	@SuppressWarnings("unchecked")
 	public void deleteAll(List<? extends Entity> entities) {
 		Assert.notNull(entities);
+		EntityUtils entityUtils = new EntityUtils();
 		for (Entity entity : entities) {
-			Object primaryKeyValue = EntityUtils.getPrimaryKeyValue(entity);
+			Object primaryKeyValue = entityUtils.getPrimaryKeyValue(entity);
 			delete((Id) primaryKeyValue);
 		}
 
@@ -78,14 +79,15 @@ public class BaseManagerImpl<Entity, Id extends Serializable> extends
 	 * {@inheritDoc}
 	 */
 	public Entity save(Entity anEntity) {
-		Object primaryKey = EntityUtils.getPrimaryKeyValue(anEntity);
+	    EntityUtils entityUtils = new EntityUtils();
+		Object primaryKey = entityUtils.getPrimaryKeyValue(anEntity);
 		if (null == primaryKey || StringUtils.EMPTY.equals(primaryKey)) {
-			Assert
+		    Assert
 					.notNull(incrementer,
 							"No se puede crear VO. VO sin Id y Manager no tiene incrementer inyectado");
-			Class<?> primaryKeyClass = EntityUtils
+			Class<?> primaryKeyClass = entityUtils
 					.getPrimaryKeyFieldType(anEntity);
-			EntityUtils.setPrimaryKey(anEntity, primaryKeyClass, incrementer
+			entityUtils.setPrimaryKey(anEntity, primaryKeyClass, incrementer
 					.nextStringValue());
 		}
 

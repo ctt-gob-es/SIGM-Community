@@ -21,7 +21,7 @@ Redirecciona a la página de entrada a la aplicación.
 <%@ page import="com.ieci.tecdoc.isicres.usecase.UseCaseConf" %>
 <%@ page import="com.ieci.tecdoc.isicres.usecase.security.SecurityUseCase" %>
 <%@ page import="com.ieci.tecdoc.isicres.desktopweb.utils.RequestUtils" %>
-<%@ page import="ieci.tecdoc.sgm.registropresencial.utils.AuthenticationHelper" %>
+<%@ page import="es.msssi.sgm.registropresencial.utils.AuthenticationHelper" %>
 <%@page import="com.ieci.tecdoc.common.utils.Configurator"%>
 
 <%@ include file="__headerLocale.jsp" %>

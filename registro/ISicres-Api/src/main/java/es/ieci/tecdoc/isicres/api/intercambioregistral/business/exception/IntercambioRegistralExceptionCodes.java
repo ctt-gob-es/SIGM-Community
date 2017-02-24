@@ -33,6 +33,10 @@ public class IntercambioRegistralExceptionCodes {
 	public static final Integer ERROR_CODE_VALIDACION_LENGTH_NUMERO_TRANSPORTE = 17;
 	public static final Integer ERROR_CODE_VALIDACION_TIPO_TRANSPORTE = 18;
 
+	public static final Integer ERROR_CODE_VALIDACION_SOPORTEDOC = 19;
+
+	public static final Integer ERROR_CODE_VALIDACION_MAX_SIZE_TOTAL = 20;
+
 
 
 }

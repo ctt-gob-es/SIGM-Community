@@ -77,7 +77,8 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 	}
 
 	protected void assignLoad(ResultSet rs, String entidad) throws SQLException {
-		AxSf axsfWithPrecisions = BBDDUtils.getTableSchemaFromDatabase(pkType,
+	    BBDDUtils bbddUtils = new BBDDUtils();
+	    AxSf axsfWithPrecisions = bbddUtils.getTableSchemaFromDatabase(pkType,
 				entidad);
 
 		String name = null;
@@ -96,7 +97,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 				}
 			}
 			if (type == Types.TIMESTAMP || type == Types.DATE) {
-				axsf.addAttributeValue(name, BBDDUtils.getDateFromTimestamp(rs
+				axsf.addAttributeValue(name, bbddUtils.getDateFromTimestamp(rs
 						.getTimestamp(name)));
 			} else {
 				axsf.addAttributeValue(name, rs.getObject(name));
@@ -106,7 +107,8 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 
 	protected void assignStore(PreparedStatement ps, String entidad)
 			throws SQLException {
-		AxSf axsfWithPrecisions = BBDDUtils.getTableSchemaFromDatabase(pkType,
+	    BBDDUtils bbddUtils = new BBDDUtils();
+		AxSf axsfWithPrecisions = bbddUtils.getTableSchemaFromDatabase(pkType,
 				entidad);
 
 		String name = null;
@@ -130,7 +132,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 					if (axsf.getAttributeValue(name) == null) {
 						ps.setNull(index++, Types.DATE);
 					} else {
-						ps.setTimestamp(index++, BBDDUtils
+						ps.setTimestamp(index++, bbddUtils
 								.getTimestamp((Date) axsf
 										.getAttributeValue(name)));
 					}
@@ -170,8 +172,8 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 
 	protected void assignStore(PreparedStatement ps, String entidad,
 			String dataBaseType) throws SQLException {
-
-		AxSf axsfWithPrecisions = BBDDUtils.getTableSchemaFromDatabase(pkType,
+	    BBDDUtils bbddUtils = new BBDDUtils();
+		AxSf axsfWithPrecisions = bbddUtils.getTableSchemaFromDatabase(pkType,
 				entidad);
 
 		String name = null;
@@ -195,7 +197,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 					if (axsf.getAttributeValue(name) == null) {
 						ps.setNull(index++, Types.DATE);
 					} else {
-						ps.setTimestamp(index++, BBDDUtils
+						ps.setTimestamp(index++, bbddUtils
 								.getTimestamp((Date) axsf
 										.getAttributeValue(name)));
 					}
@@ -313,7 +315,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 	public AxPK create(String type, AxSf axSfp, String entidad)
 			throws Exception {
 		setPkType(type);
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		if (log.isDebugEnabled()) {
 			log.debug("AxSfEntity create: " + getPrimaryKey() + " .." + axsf);
 		}
@@ -321,7 +323,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 		AxSf axsfWithPrecisions = null;
 		try {
 			loadFromDatabase(entidad);
-			axsfWithPrecisions = BBDDUtils.getTableSchemaFromDatabase(pkType,
+			axsfWithPrecisions = bbddUtils.getTableSchemaFromDatabase(pkType,
 					entidad);
 		} catch (Exception e) {
 			log.fatal("create. PK [" + getPrimaryKey() + "]", e);
@@ -354,7 +356,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(getSentence(sentence.toString()));
 
 			int index = 1;
@@ -377,12 +379,12 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 					if (t == Types.TIMESTAMP || t == Types.DATE) {
 						if (axsf.getAttributeValue(name) != null
 								&& axsf.getAttributeValue(name) instanceof Date) {
-							ps.setTimestamp(index++, BBDDUtils
+							ps.setTimestamp(index++, bbddUtils
 									.getTimestamp((Date) axsf
 											.getAttributeValue(name)));
 						} else if (axsf.getAttributeValue(name) != null
 								&& axsf.getAttributeValue(name) instanceof Timestamp) {
-							ps.setTimestamp(index++, BBDDUtils
+							ps.setTimestamp(index++, bbddUtils
 									.getTimestamp((Timestamp) axsf
 											.getAttributeValue(name)));
 						} else {
@@ -451,15 +453,15 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 			log.error("*************************************");
 			throw new Exception();
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
 	public AxPK create(String type, AxSf axSfp, String entidad,
 			String dataBaseType) throws Exception {
 		setPkType(type);
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		if (log.isDebugEnabled()) {
 			log.debug("AxSfEntity create: " + getPrimaryKey() + " .." + axsf);
 		}
@@ -467,7 +469,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 		AxSf axsfWithPrecisions = null;
 		try {
 			loadFromDatabase(entidad);
-			axsfWithPrecisions = BBDDUtils.getTableSchemaFromDatabase(pkType,
+			axsfWithPrecisions = bbddUtils.getTableSchemaFromDatabase(pkType,
 					entidad);
 		} catch (Exception e) {
 			log.fatal("create. PK [" + getPrimaryKey() + "]", e);
@@ -500,7 +502,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(getSentence(sentence.toString()));
 
 			int index = 1;
@@ -526,12 +528,12 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 							|| attributeType == Types.DATE) {
 						if (axsf.getAttributeValue(name) != null
 								&& axsf.getAttributeValue(name) instanceof Date) {
-							ps.setTimestamp(index++, BBDDUtils
+							ps.setTimestamp(index++, bbddUtils
 									.getTimestamp((Date) axsf
 											.getAttributeValue(name)));
 						} else if (axsf.getAttributeValue(name) != null
 								&& axsf.getAttributeValue(name) instanceof Timestamp) {
-							ps.setTimestamp(index++, BBDDUtils
+							ps.setTimestamp(index++, bbddUtils
 									.getTimestamp((Timestamp) axsf
 											.getAttributeValue(name)));
 						} else {
@@ -601,15 +603,15 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 			log.error("*************************************");
 			throw new Exception();
 		} finally {
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 	}
 
 	public AxPK findByPrimaryKey(AxPK pk, String entidad) throws Exception {
 		setPkType(pk.getType());
 		setId(pk.getId());
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		if (log.isDebugEnabled()) {
 			log.debug("AxSfEntity findByPrimaryKey: " + getPrimaryKey() + " .."
 					+ axsf);
@@ -619,7 +621,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(getSentence(AXSF_FINDBY_SENTENCE));
 			ps.setInt(1, getId());
 			rs = ps.executeQuery();
@@ -634,9 +636,9 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 			log.fatal("findByPrimaryKey. PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 
 		AxPK result = new AxPK(pk.getType(), pk.getId());
@@ -652,7 +654,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 		ResultSet rs = null;
 		List results = new ArrayList();
 		String sentence = null;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String type = bookID.toString();
 		String tableName = getTableName(type);
 		int lastFdrid = DBEntityDAOFactory.getCurrentDBEntityDAO()
@@ -660,7 +662,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 
 		try {
 			if (lastFdrid == 0) {
-				con = BBDDUtils.getConnection(entidad);
+				con = bbddUtils.getConnection(entidad);
 				sentence = DBEntityDAOFactory.getCurrentDBEntityDAO()
 						.findAxSFLastForUserSENTENCE(tableName, filter, true);
 				ps = con.prepareStatement(sentence);
@@ -689,9 +691,9 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 			throw new Exception(ex);
 		} finally {
 			if (lastFdrid == 0) {
-				BBDDUtils.close(rs);
-				BBDDUtils.close(ps);
-				BBDDUtils.close(con);
+				bbddUtils.close(rs);
+				bbddUtils.close(ps);
+				bbddUtils.close(con);
 			}
 		}
 
@@ -705,7 +707,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		Map results = new TreeMap();
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int size = 0;
 		int end = row + axsfQueryResults.getPageSize() - 1;
 		int begin = row;
@@ -720,7 +722,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 						filter, true);
 
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(sentence,
 					ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
@@ -748,9 +750,9 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 					+ axsfQuery, ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 
 		adjustAxSFQueryResults(axsfQueryResults, size, begin, end);
@@ -765,7 +767,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		Map results = new TreeMap();
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		int size = 0;
 		int begin = 0;
 		int end = 0;
@@ -774,8 +776,19 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 			begin = 1;
 			end = axsfQueryResults.getPageSize();
 		} else if (navigationType.equals(Keys.QUERY_LAST_PAGE)) {
-			begin = axsfQueryResults.getTotalQuerySize()
-					- axsfQueryResults.getPageSize() + 1;
+			/*begin = axsfQueryResults.getTotalQuerySize()
+					- axsfQueryResults.getPageSize() + 1;*/
+			/*
+			 * cmorenog-MSSSI: cambio para que el botón de última página en el buscador de registros
+			 * funcione de manera estandar
+			 * */
+			int base = axsfQueryResults.getTotalQuerySize() / axsfQueryResults.getPageSize();
+			int mod =  axsfQueryResults.getTotalQuerySize() % axsfQueryResults.getPageSize();
+			if (base == 0) begin = 1; 
+			else if (mod > 0)
+					begin = (base * axsfQueryResults.getPageSize()) +1;
+				else begin = ((base-1) * axsfQueryResults.getPageSize()) +1;
+			
 			end = axsfQueryResults.getTotalQuerySize();
 		} else if (navigationType.equals(Keys.QUERY_NEXT_PAGE)) {
 			begin = axsfQueryResults.getCurrentLastRow() + 1;
@@ -800,7 +813,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 						filter, true);
 
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(sentence,
 					ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
@@ -829,9 +842,9 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 					+ axsfQuery, ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 
 		adjustAxSFQueryResults(axsfQueryResults, size, begin, end);
@@ -845,7 +858,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		int result = 0;
-
+		BBDDUtils bbddUtils = new BBDDUtils();
 		String type = axsfQuery.getBookId().toString();
 		String tableName = getTableName(type);
 		String sentence = DBEntityDAOFactory.getCurrentDBEntityDAO()
@@ -853,7 +866,7 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 						false);
 
 		try {
-			con = BBDDUtils.getConnection(entidad);
+			con = bbddUtils.getConnection(entidad);
 			ps = con.prepareStatement(sentence);
 
 			DBEntityDAOFactory.getCurrentDBEntityDAO()
@@ -871,9 +884,9 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 					+ "] PK \n " + axsfQuery, ex);
 			throw new Exception(ex);
 		} finally {
-			BBDDUtils.close(rs);
-			BBDDUtils.close(ps);
-			BBDDUtils.close(con);
+			bbddUtils.close(rs);
+			bbddUtils.close(ps);
+			bbddUtils.close(con);
 		}
 
 		return result;
@@ -881,14 +894,15 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 
 	public void loadFromDatabase(String entidad) throws NamingException,
 			SQLException, ClassNotFoundException {
+	    BBDDUtils bbddUtils = new BBDDUtils();
 		if (!loaded) {
-			axsf = BBDDUtils.getTableSchemaFromDatabase(getPkType(), entidad);
+			axsf = bbddUtils.getTableSchemaFromDatabase(getPkType(), entidad);
 			loaded = true;
 		} else if (axsf.getAttributesSQLTypes() == null) {
-			axsf = BBDDUtils.getTableSchemaFromDatabase(getPkType(), entidad);
+			axsf = bbddUtils.getTableSchemaFromDatabase(getPkType(), entidad);
 			loaded = true;
 		} else if (axsf.getAttributesSQLTypes().isEmpty()) {
-			axsf = BBDDUtils.getTableSchemaFromDatabase(getPkType(), entidad);
+			axsf = bbddUtils.getTableSchemaFromDatabase(getPkType(), entidad);
 			loaded = true;
 		}
 	}
@@ -899,8 +913,9 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 		ResultSet resultSet = null;
 		Connection connection = null;
 		boolean exist = false;
+		BBDDUtils bbddUtils = new BBDDUtils();
 		try {
-			connection = BBDDUtils.getConnection(entidad);
+			connection = bbddUtils.getConnection(entidad);
 			statement = connection.prepareStatement(getCheckAxSFSentence(bookID
 					.toString()));
 			statement.setString(1, registerNumber);
@@ -918,9 +933,9 @@ public class AxSfEntity extends AbstractAx implements ServerKeys {
 		} catch (SQLException e) {
 		} catch (Throwable e) {
 		} finally {
-			BBDDUtils.close(resultSet);
-			BBDDUtils.close(statement);
-			BBDDUtils.close(connection);
+			bbddUtils.close(resultSet);
+			bbddUtils.close(statement);
+			bbddUtils.close(connection);
 		}
 		return exist;
 

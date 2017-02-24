@@ -64,7 +64,7 @@ public class GuardarEdicionOficinaAction extends RPAdminWebAction {
 
 				BeanUtils.copyProperties(oficina, oficinaForm);
 				oficina.setId(Integer.parseInt(id));
-
+				oficina.setIdOrgs(1);
 				//Se obtiene la entidad
 				Entidad entidad = new Entidad();
 				entidad.setIdentificador(MultiEntityContextHolder.getEntity());

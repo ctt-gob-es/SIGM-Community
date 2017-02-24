@@ -20,9 +20,8 @@ session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD, e
 	<div id="cabecera">
 		<utils-admin:eco-logo/>
 		<p class="logoSIGM">		
-			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="sigem" width="129px" height="56px"/>
+			<img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/logo.gif" alt="sigem" width="129px" height="56px"/>
 		</p>
-		<p class="salir"><a href="logout.do"><bean:message key="salir"/></a></p>
 	</div>
 
 	<div id="usuario">
@@ -51,7 +50,6 @@ session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD, e
 					</span>
 				</logic:present>
 
-				<a href="jsp/ayuda/AccesoSistemaTramitacion.htm" target="_blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
 			</p>
 		</div>
 	</div>

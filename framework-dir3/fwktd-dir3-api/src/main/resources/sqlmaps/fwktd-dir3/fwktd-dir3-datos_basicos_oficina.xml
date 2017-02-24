@@ -8,57 +8,50 @@
 
 	<resultMap id="datosBasicosOficina" class="es.ieci.tecdoc.fwktd.dir3.api.vo.DatosBasicosOficinaVO">
 
-		<result property="id" column="CODIGO_OFICINA" />
-		<result property="nombre" column="DENOMINACION_OFICINA" />
-		<result property="idExternoFuente" column="EXTERNO_FUENTE" />
+		<result property="id" column="C_ID_OFICINA" />
+		<result property="nombre" column="C_DNM_OFICINA" />
+		<result property="idExternoFuente" column="C_ID_EXTERNO_FUENTE" />
 
-		<result property="idUnidadResponsable" column="CODIGO_UNIDAD_RESPONSABLE" />
-		<result property="nombreUnidadResponsable" column="DENOMINACION_UNIDAD_RESPONSABLE" />
+		<result property="idUnidadResponsable" column="C_ID_UNIDAD_RESPONSABLE" />
+		<result property="nombreUnidadResponsable" column="C_DNM_UD_ORGANICA" />
 
-		<result property="provincia" column="PROVINCIA" />
-		<result property="localidad" column="LOCALIDAD" />
-		<result property="direccion" column="DIRECCION" />
 
 	</resultMap>
 
 	<sql id="table">DIR_OFICINA</sql>
 
 	<sql id="columns">
-		OFI.CODIGO_OFICINA,
-		OFI.DENOMINACION_OFICINA,
-		OFI.EXTERNO_FUENTE,
-		OFI.CODIGO_UNIDAD_RESPONSABLE,
-		OFI.PROVINCIA,
-		OFI.LOCALIDAD,
-		OFI.DIRECCION,
-		UO.NOMBRE_UNIDAD_ORGANICA AS DENOMINACION_UNIDAD_RESPONSABLE
+		OFI.C_ID_OFICINA,
+		OFI.C_DNM_OFICINA,
+		OFI.C_ID_EXTERNO_FUENTE,
+		OFI.C_ID_UNIDAD_RESPONSABLE,
+		UO.C_DNM_UD_ORGANICA AS C_DNM_UD_ORGANICA
 	</sql>
 
 	<sql id="from">
 		<include refid="table" /> OFI
-			LEFT OUTER JOIN DIR_UNIDAD_ORGANICA UO ON OFI.CODIGO_UNIDAD_RESPONSABLE=UO.CODIGO_UNIDAD_ORGANICA
+			LEFT OUTER JOIN DIR_DIRECCION DI ON OFI.N_ID_LOC_DIRECCION = DI.N_ID_DIRECCION
+			LEFT OUTER JOIN DIR_UNIDAD_ORGANICA UO ON OFI.C_ID_UNIDAD_RESPONSABLE=UO.C_ID_UD_ORGANICA
 	</sql>
 
 	<sql id="columns_insert">
-		CODIGO_OFICINA,
-		DENOMINACION_OFICINA,
-		EXTERNO_FUENTE,
-		CODIGO_UNIDAD_RESPONSABLE,
-		PROVINCIA,
-		LOCALIDAD,
-		DIRECCION
+		C_ID_OFICINA,
+		C_DNM_OFICINA,
+		C_ID_EXTERNO_FUENTE,
+		C_ID_UNIDAD_RESPONSABLE
 	</sql>
 
 	<sql id="insert">
 		#id#,
 		#nombre#,
 		#idExternoFuente#,
-		#idUnidadResponsable#,
-		#provincia#,
-		#localidad#,
-		#direccion#
+		#idUnidadResponsable#
 	</sql>
-
+	<sql id="update">
+		C_DNM_OFICINA=#nombre#,
+		C_ID_EXTERNO_FUENTE=#idExternoFuente#,
+		C_ID_UNIDAD_RESPONSABLE=#idUnidadResponsable#
+	</sql>
 
 
 	<sql id="findOficinas_fragment">
@@ -105,7 +98,7 @@
 			<include refid="columns" />
 		FROM
 			<include refid="from" />
-		ORDER BY OFI.DENOMINACION_OFICINA
+		ORDER BY OFI.C_DNM_OFICINA
 	</select>
 
 	<select id="getDatosBasicosOficinaVO" parameterClass="java.lang.String" resultMap="datosBasicosOficina">
@@ -114,7 +107,7 @@
 		FROM
 			<include refid="from" />
 		WHERE
-			OFI.CODIGO_OFICINA=#value#
+			OFI.C_ID_OFICINA=#value#
 	</select>
 
 	<insert id="addDatosBasicosOficinaVO" parameterClass="datosBasicosOficina">
@@ -127,7 +120,12 @@
 	<delete id="deleteDatosBasicosOficinaVO" parameterClass="java.lang.String">
 		DELETE FROM
 			<include refid="table" />
-		WHERE id=#value:INTEGER#
+		WHERE C_ID_OFICINA=#value:INTEGER#
 	</delete>
-
+	
+	<update id="updateDatosBasicosOficinaVO" parameterClass="datosBasicosOficina">
+		UPDATE <include refid="table" /> SET 
+		<include refid="update" /> 
+		WHERE C_ID_OFICINA=#id#
+	</update>
 </sqlMap>

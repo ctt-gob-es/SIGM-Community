@@ -4,6 +4,8 @@ import ieci.tecdoc.sgm.core.services.dto.Entidad;
 
 import java.security.cert.X509Certificate;
 
+import javax.servlet.http.HttpSession;
+
 public interface ServicioSesionUsuario {
 
 		/**
@@ -45,6 +47,22 @@ public interface ServicioSesionUsuario {
 	    * @throws SesionUsuarioException Si se produce algún error. 
 	    */
 	   public String login(String procedureId, X509Certificate certificate, Entidad entidad) throws SesionUsuarioException; 
+	   
+	   
+	   /**
+	    * Permite al usuario acceder al sistema si posee las credenciales adecuadas.
+	    * En este caso debe poseer un certificado Además su
+	    * certificado no debe estar revocado.
+	    *
+	    * @param session HttpSession.
+	    * @param actSessionId Identificador de sesión. Si no existe debe ser nulo.
+	    * @param authId Identificador de autenticación.
+	    * @param certificate Certificado presentado (credencial).
+	    * @return Un identificador de sesión.
+	    * @throws SesionUsuarioException Si se produce algún error. 
+	    */	   
+	   public String login(String idHttpSession, String actSessionId, String authId, X509Certificate certificate, Entidad entidad) throws SesionUsuarioException;
+	   
 
 	   /**
 	    * Desconecta a un usuario del sistema.

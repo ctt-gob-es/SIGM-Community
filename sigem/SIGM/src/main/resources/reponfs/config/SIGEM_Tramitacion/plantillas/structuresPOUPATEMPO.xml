@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<structures>
+    <structure>
+        <interessado>interessado</interessado>
+        <processoSGP>278</processoSGP>
+        <servPosto>Posto</servPosto>
+        <instrumentoCodigo>Número do </instrumentoCodigo>
+        <dataDoe>Publicacao DOE</dataDoe>
+        <instrumentoAssinatura>Data da Assinatura do Instrument</instrumentoAssinatura>
+        <instrumentoVigencia>Vigencia do Instrumento</instrumentoVigencia>
+        <vencimiento>26/04/2014</vencimiento>
+        <dataAssinaturaAditamento>Data do Documento</dataAssinaturaAditamento>
+        <dataDoeAditamento>Publicação DOE</dataDoeAditamento>
+        <dataAssinaturaEncerramento>Data do Documento</dataAssinaturaEncerramento>
+        <dataDoeEncerramento>Publicação DOE</dataDoeEncerramento>
+    </structure>
+</structures>

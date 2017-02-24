@@ -43,6 +43,9 @@ public class IsicresEventAuditTypeEnum extends ValuedEnum {
 	public static int ACCESO_INFORMES_VALUE = 9;
 	public static String ACCESO_INFORMES_REGISTRO_NAME = "EVENTO DE ACCESO A INFORMES";
 
+	public static int FALLO_ACCESO_APLICACION_VALUE = 10;
+	public static String FALLO_ACCESO_APLICACION_NAME = "EVENTO DE FALLO DE ACCESO A LA APLICACIÓN";
+	
 	public static IsicresEventAuditTypeEnum ACCESO_APLICACION = new IsicresEventAuditTypeEnum(ACCESO_APLICACION_NAME, ACCESO_APLICACION_VALUE);
 	public static IsicresEventAuditTypeEnum BUSQUEDA_REGISTRO = new IsicresEventAuditTypeEnum(BUSQUEDA_REGISTRO_NAME,BUSQUEDA_REGISTRO_VALUE);
 	public static IsicresEventAuditTypeEnum ACCESO_REGISTRO = new IsicresEventAuditTypeEnum(ACCESO_REGISTRO_NAME,ACCESO_REGISTRO_VALUE);
@@ -52,7 +55,7 @@ public class IsicresEventAuditTypeEnum extends ValuedEnum {
 	public static IsicresEventAuditTypeEnum MODIFICACION_CAMPO_REGISTRO = new IsicresEventAuditTypeEnum(MODIFICACION_CAMPO_REGISTRO_NAME,MODIFICACION_CAMPO_REGISTRO_VALUE);
 	public static IsicresEventAuditTypeEnum ACCESO_DOCUMENTO_REGISTRO = new IsicresEventAuditTypeEnum(ACCESO_DOCUMENTO_REGISTRO_NAME,ACCESO_DOCUMENTO_REGISTRO_VALUE);
 	public static IsicresEventAuditTypeEnum ACCESO_INFORMES = new IsicresEventAuditTypeEnum(ACCESO_INFORMES_REGISTRO_NAME, ACCESO_INFORMES_VALUE);
-
+	public static IsicresEventAuditTypeEnum FALLO_ACCESO_APLICACION = new IsicresEventAuditTypeEnum(FALLO_ACCESO_APLICACION_NAME, FALLO_ACCESO_APLICACION_VALUE);
 	protected IsicresEventAuditTypeEnum(String name, int value) {
 		super(name, value);
 	}

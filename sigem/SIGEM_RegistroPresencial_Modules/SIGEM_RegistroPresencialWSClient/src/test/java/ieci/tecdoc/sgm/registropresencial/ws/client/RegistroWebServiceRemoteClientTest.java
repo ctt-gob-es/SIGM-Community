@@ -161,13 +161,36 @@ public class RegistroWebServiceRemoteClientTest extends TestCase {
 		pInfo = new ieci.tecdoc.sgm.core.services.registro.PersonInfo();
 		pInfo.setPersonName("241324134W");
 		inter[0] = pInfo;
+		ieci.tecdoc.sgm.core.services.registro.DocumentInfo[] documents = new ieci.tecdoc.sgm.core.services.registro.DocumentInfo[1];
+		ieci.tecdoc.sgm.core.services.registro.DocumentInfo docs = null;
+
+		InputStream inputStream = null;
+		ByteArrayOutputStream outputStream = null;
+		byte[] buffer = null;
+		 try {
+			inputStream = new BufferedInputStream(new FileInputStream(
+					"C:\\prueba.pdf"));
+			outputStream = new ByteArrayOutputStream();
+			copy(inputStream, outputStream);
+			buffer = outputStream.toByteArray();
+			docs = new ieci.tecdoc.sgm.core.services.registro.DocumentInfo();
+			docs.setDocumentContent(buffer);
+			docs.setDocumentName("prueba");
+			docs.setExtension("pdf");
+			docs.setFileName("C:\\PRUEBA.pdf");
+			docs.setPageName("PagPrueba.pdf");
+			documents[0] = docs;
+
+			
 		ieci.tecdoc.sgm.core.services.registro.RegisterInfo oReg = null;
-		try {
+		
 			ieci.tecdoc.sgm.core.services.dto.Entidad entidad = new ieci.tecdoc.sgm.core.services.dto.Entidad();
 			entidad.setIdentificador("00001");
-			oReg = oClient.createFolder(oInfo, bookId, atts, inter, null,
+			oReg = oClient.createFolder(oInfo, bookId, atts, null, documents,
 					entidad);
 		} catch (RegistroException e) {
+			fail(e.getMessage());
+		}catch (Exception e) {
 			fail(e.getMessage());
 		}
 		Assert.assertTrue(true);
@@ -311,12 +334,12 @@ public class RegistroWebServiceRemoteClientTest extends TestCase {
 			fail(e.getMessage());
 		}
 		ieci.tecdoc.sgm.core.services.registro.UserInfo oInfo = new ieci.tecdoc.sgm.core.services.registro.UserInfo();
-		oInfo.setUserName("tramitador");
+		oInfo.setUserName("sigem");
 		oInfo.setPassword("sigem");
 		oInfo.setLocale(new Locale("es"));
 		Integer bookId = new Integer(1);
-		Integer folderId = new Integer(88);
-		Integer docID = new Integer(275);
+		Integer folderId = new Integer(74);
+		Integer docID = new Integer(262);
 		Integer pageID = new Integer(1);
 		DocumentQuery oDoc = null;
 		try {

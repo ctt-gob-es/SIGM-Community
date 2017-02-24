@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><contrataciones>
+    <contratacion>
+        <secretaria>-</secretaria>
+        <dataHora>-</dataHora>
+        <valorPrevisto>-</valorPrevisto>
+        <cantidadSolicitudes>2</cantidadSolicitudes>
+        <parecer>Reprovado</parecer>
+    </contratacion>
+    <contratacion>
+        <secretaria>secretaria 1</secretaria>
+        <dataHora>24/03/2014</dataHora>
+        <valorPrevisto>22222,00</valorPrevisto>
+        <cantidadSolicitudes>1</cantidadSolicitudes>
+        <parecer>-</parecer>
+    </contratacion>
+    <contratacion>
+        <secretaria>secretaria 1</secretaria>
+        <dataHora>25/03/2014</dataHora>
+        <valorPrevisto>12,00</valorPrevisto>
+        <cantidadSolicitudes>1</cantidadSolicitudes>
+        <parecer>-</parecer>
+    </contratacion>
+    <contratacion>
+        <secretaria>secretaria 1</secretaria>
+        <dataHora>25/03/2014</dataHora>
+        <valorPrevisto>2222222222,00</valorPrevisto>
+        <cantidadSolicitudes>1</cantidadSolicitudes>
+        <parecer>Aprovado</parecer>
+    </contratacion>
+    <contratacion>
+        <secretaria>secretaria 1</secretaria>
+        <dataHora>25/03/2014</dataHora>
+        <valorPrevisto>1000000000,00</valorPrevisto>
+        <cantidadSolicitudes>1</cantidadSolicitudes>
+        <parecer>Reprovado</parecer>
+    </contratacion>
+    <contratacion>
+        <secretaria>secretaria 1</secretaria>
+        <dataHora>26/03/2014</dataHora>
+        <valorPrevisto>1234567890,00</valorPrevisto>
+        <cantidadSolicitudes>1</cantidadSolicitudes>
+        <parecer>-</parecer>
+    </contratacion>
+    <contratacion>
+        <secretaria>secretaria 1</secretaria>
+        <dataHora>26/03/2014</dataHora>
+        <valorPrevisto>32312324,00</valorPrevisto>
+        <cantidadSolicitudes>2</cantidadSolicitudes>
+        <parecer>Aprovado</parecer>
+    </contratacion>
+    <contratacion>
+        <secretaria>secretaria 1</secretaria>
+        <dataHora>26/03/2014</dataHora>
+        <valorPrevisto>22222,00</valorPrevisto>
+        <cantidadSolicitudes>1</cantidadSolicitudes>
+        <parecer>Reprovado</parecer>
+    </contratacion>
+    <contratacion>
+        <secretaria>secretaria 2</secretaria>
+        <dataHora>25/03/2014</dataHora>
+        <valorPrevisto>12357,00</valorPrevisto>
+        <cantidadSolicitudes>2</cantidadSolicitudes>
+        <parecer>-</parecer>
+    </contratacion>
+    <contratacion>
+        <secretaria>secretaria 2</secretaria>
+        <dataHora>26/03/2014</dataHora>
+        <valorPrevisto>9876543210123,99</valorPrevisto>
+        <cantidadSolicitudes>2</cantidadSolicitudes>
+        <parecer>-</parecer>
+    </contratacion>
+    <contratacion>
+        <secretaria>secretaria 2</secretaria>
+        <dataHora>26/03/2014</dataHora>
+        <valorPrevisto>-</valorPrevisto>
+        <cantidadSolicitudes>1</cantidadSolicitudes>
+        <parecer>Reprovado</parecer>
+    </contratacion>
+    <contratacion>
+        <secretaria>secretaria 3</secretaria>
+        <dataHora>26/03/2014</dataHora>
+        <valorPrevisto>-</valorPrevisto>
+        <cantidadSolicitudes>1</cantidadSolicitudes>
+        <parecer>-</parecer>
+    </contratacion>
+<valorPrevistoTotal>9999999999999,99</valorPrevistoTotal><cantidadSolicitudesTotal>16</cantidadSolicitudesTotal></contrataciones>

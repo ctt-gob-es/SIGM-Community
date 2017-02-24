@@ -77,7 +77,7 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 	public static String login(String login, String password, String userDn,
 			Boolean useLdap, Boolean usingOSAuth, Locale locale, String entidad)
 			throws ValidationException, SecurityException {
-
+	    	HibernateUtil hibernateUtil = new HibernateUtil();
 		if (!useLdap.booleanValue() || !usingOSAuth.booleanValue()) {
 			Validator.validate_String_NotNull_LengthMayorZero(login,
 					ValidationException.ATTRIBUTE_USER);
@@ -92,47 +92,47 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 			user = validateUser(login, password, userDn, useLdap, usingOSAuth,
 					entidad);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			String sessionID = completarDatosLogin(locale, entidad, user,
 					session, null, true);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 			return sessionID;
 		} catch (ValidationException vE) {
 			try {
-				HibernateUtil.commitTransaction(tran);
+			    hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException hE) {
 				log.warn("Error al realizar el commit de la transacción", hE);
 			}
 			throw vE;
 		} catch (SecurityException sE) {
 			try {
-				HibernateUtil.commitTransaction(tran);
+			    hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException hE) {
 				log.warn("Error al realizar el commit de la transacción", hE);
 			}
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} catch (TecDocException iE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} catch (HibernateException hE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible validar el usuario [" + login + "] password ["
 					+ password + "]", hE);
 			throw new SecurityException(SecurityException.ERROR_SQL);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible validar el usuario [" + login + "] password ["
 					+ password + "]", e);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} finally {
 			if (tran != null) {
-				HibernateUtil.closeSession(entidad);
+				hibernateUtil.closeSession(entidad);
 			}
 		}
 	}
@@ -144,54 +144,52 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 				ValidationException.ATTRIBUTE_USER);
 		Validator.validate_String_NotNull(password,
 				ValidationException.ATTRIBUTE_PASSWORD);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		AuthenticationUser user = null;
 		try {
 			// Validamos el usuario
 			user = validateUser(login, password, "", Boolean.FALSE,
 					Boolean.FALSE, entidad);
-
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			String sessionID = completarDatosLogin(locale, entidad, user,
 					session, null, false);
-
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 			return sessionID;
 		} catch (ValidationException vE) {
 			try {
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException hE) {
 				log.warn("Error al realizar el commit de la transacción", hE);
 			}
 			throw vE;
 		} catch (SecurityException sE) {
 			try {
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException hE) {
 				log.warn("Error al realizar el commit de la transacción", hE);
 			}
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} catch (TecDocException iE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} catch (HibernateException hE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible validar el usuario [" + login + "] password ["
 					+ password + "]", hE);
 			throw new SecurityException(SecurityException.ERROR_SQL);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible validar el usuario [" + login + "] password ["
 					+ password + "]", e);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+		    hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -217,7 +215,7 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 				ValidationException.ATTRIBUTE_USER);
 		Validator.validate_String_NotNull(password,
 				ValidationException.ATTRIBUTE_PASSWORD);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		AuthenticationUser user = null;
 		try {
@@ -225,46 +223,46 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 			user = validateUser(login, password, "", Boolean.FALSE,
 					Boolean.FALSE, entidad);
 
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			String sessionID = completarDatosLogin(locale, entidad, user,
 					session, codigoOficina, false);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 			return sessionID;
 		} catch (ValidationException vE) {
 			try {
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException hE) {
 				log.warn("Error al realizar el commit de la transacción", hE);
 			}
 			throw vE;
 		} catch (SecurityException sE) {
 			try {
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException hE) {
 				log.warn("Error al realizar el commit de la transacción", hE);
 			}
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} catch (TecDocException iE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} catch (HibernateException hE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible validar el usuario [" + login + "] password ["
 					+ password + "]", hE);
 			throw new SecurityException(SecurityException.ERROR_SQL);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible validar el usuario [" + login + "] password ["
 					+ password + "]", e);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -287,53 +285,54 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 			String entidad, Locale locale) throws HibernateException,
 			Exception, SQLException, SecurityException, SessionException,
 			TecDocException {
+	    HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		String sessionID = null;
 		try{
 			//Se crea la sesion de hibernate
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			//Se completan los datos
 			sessionID = completarDatosLogin(locale, entidad, user, session,
 					null, true);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			//retornamos la session
 			return sessionID;
 
 		} catch (ValidationException vE) {
 			try {
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException hE) {
 				log.warn("Error al realizar el commit de la transacción", hE);
 			}
 			throw vE;
 		} catch (SecurityException sE) {
 			try {
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException hE) {
 				log.warn("Error al realizar el commit de la transacción", hE);
 			}
 			throw sE;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} catch (TecDocException iE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} catch (HibernateException hE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible validar el usuario [" + user.getName() + "]", hE);
 			throw new SecurityException(SecurityException.ERROR_SQL);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible validar el usuario [" + user.getName() + "]", e);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} finally {
 			//Cerramos la session de Hibernate
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -393,7 +392,8 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 		ISicresGenPerms genPerms = getGenPerms(session, user.getId(),
 				userType.getType());
 		//Obtenemos los datos de la ultima conexión
-		Date userLastConnection = getUserLastConnection(user.getId(),
+		SecuritySessionUtil secSessionUtil = new SecuritySessionUtil();
+		Date userLastConnection = secSessionUtil.getUserLastConnection(user.getId(),
 				entidad);
 
 		// Creamos la sesion
@@ -510,55 +510,56 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 				ValidationException.ATTRIBUTE_PASSWORD);
 		Validator.validate_String_NotNull(newPassword,
 				ValidationException.ATTRIBUTE_PASSWORD);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			AuthenticationFactory.getCurrentPolicy().changePassword(login,
 					newPassword, oldPassword, entidad);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (ValidationException vE) {
 			try {
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException hE) {
 				log.warn("Error al realizar el commit de la transacción", hE);
 			}
 			throw vE;
 		} catch (SecurityException sE) {
 			try {
-				HibernateUtil.commitTransaction(tran);
+				hibernateUtil.commitTransaction(tran);
 			} catch (HibernateException hE) {
 				log.warn("Error al realizar el commit de la transacción", hE);
 			}
 			throw sE;
 		} catch (TecDocException iE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible cambiar el password el usuario [" + login
 					+ "] password [" + oldPassword + "]", e);
 			throw new SecurityException(SecurityException.ERROR_USER_NOTFOUND);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
 	public static void logout(String sessionID, String entidad)
 			throws SecurityException {
+	    	HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry(
 					sessionID);
 			AuthenticationUser user = (AuthenticationUser) cacheBag
 					.get(HIBERNATE_Iuseruserhdr);
-
+			
 			for (Iterator it = cacheBag.keySet().iterator(); it.hasNext();) {
 				Object o = it.next();
 				if (o instanceof Integer) {
@@ -580,22 +581,22 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 
 			CacheFactory.getCacheInterface().removeCacheEntry(sessionID);
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			if (log.isDebugEnabled()) {
 				log.debug("El usuario [" + user.getName()
 						+ "] logout en el sistema.");
 			}
 		} catch (SessionException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 		} catch (Exception tE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible hacer logout de la sesion [" + sessionID
 					+ "].", tE);
 			throw new SecurityException(
 					SecurityException.ERROR_IMPOSSIBLE_LOGOUT);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 
@@ -697,12 +698,12 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		Transaction tran = null;
 		boolean result = false;
 
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			List listPerms = null;
@@ -728,15 +729,15 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 				}
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 		} catch (HibernateException e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new BookException(BookException.ERROR_CANNOT_OPEN_BOOK);
 		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new BookException(BookException.ERROR_CANNOT_OPEN_BOOK);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 
 		return result;
@@ -935,11 +936,11 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 			String entidad) throws ValidationException, SecurityException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
-
+		HibernateUtil hibernateUtil = new HibernateUtil();
 		ScrOfic ofic = null;
 		Transaction tran = null;
 		try {
-			Session session = HibernateUtil.currentSession(entidad);
+			Session session = hibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
 
 			// Recuperamos la sesión
@@ -958,25 +959,25 @@ public class SecuritySession extends SecuritySessionUtil implements ServerKeys,
 								EntityByLanguage.getTableName(5), entidad));
 			}
 
-			HibernateUtil.commitTransaction(tran);
+			hibernateUtil.commitTransaction(tran);
 
 			return ofic;
 		} catch (SessionException sE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new SecurityException(
 					SecurityException.ERROR_SCROFIC_NOT_FOUND);
 		} catch (TecDocException iE) {
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			throw new SecurityException(
 					SecurityException.ERROR_SCROFIC_NOT_FOUND);
 		} catch (Exception e) {
 			// Por aqui pasa la HibernateException tambien.
-			HibernateUtil.rollbackTransaction(tran);
+			hibernateUtil.rollbackTransaction(tran);
 			log.error("Imposible obtener la oficina del usuario", e);
 			throw new SecurityException(
 					SecurityException.ERROR_SCROFIC_NOT_FOUND);
 		} finally {
-			HibernateUtil.closeSession(entidad);
+			hibernateUtil.closeSession(entidad);
 		}
 	}
 

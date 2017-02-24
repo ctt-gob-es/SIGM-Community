@@ -52,18 +52,24 @@ public class IntercambioRegistralActualizadorEstadosManagerImpl implements
 												.getIdIntercambioInterno()
 												.toString());
 						
+						if (estado == null) {
+						    estado = getIntercambioRegistralSIRManager()
+								.getEstadoAsientoRegistralByCode(
+										intercambioRegistralSalidaVO.getIdIntercambioRegistral());
+						}
 						
 						EstadoAsientoRegistralEnum estadoEnum = null;
 						if (estado != null){
 							estadoEnum = estado.getEstado();
 						}
 						
-						
-						
 						//actuamos en caso de que el estado sea distinto de enviado a enviado y ack
 						if (estadoEnum != null
-								&& estadoEnum != EstadoAsientoRegistralEnum.ENVIADO
-								&& estadoEnum != EstadoAsientoRegistralEnum.ENVIADO_Y_ACK) {
+								&&  !EstadoAsientoRegistralEnum.ENVIADO.equals(estadoEnum)
+								&& !EstadoAsientoRegistralEnum.ENVIADO_Y_ACK.equals(estadoEnum)
+								&&  !EstadoAsientoRegistralEnum.REENVIADO.equals(estadoEnum)
+								&&  !EstadoAsientoRegistralEnum.REENVIADO_Y_ACK.equals(estadoEnum)
+								&& !EstadoAsientoRegistralEnum.RECIBIDO.equals(estadoEnum)) {
 
 							EstadoIntercambioRegistralSalidaVO nuevoEstadoSalida = null ; 
 							if (estado != null) {
@@ -114,6 +120,93 @@ public class IntercambioRegistralActualizadorEstadosManagerImpl implements
 						.debug("No hay intercambios registrales en estado ENVIADO para actualizar");
 			}
 		}
+		
+		
+	List<IntercambioRegistralSalidaVO> intercambiosReenviados = getIntercambioRegistralSalidaManager()
+			.getIntercambiosRegistralesSalida(
+					EstadoIntercambioRegistralSalidaEnumVO.REENVIADO
+							.getValue());
+	if (intercambiosReenviados != null) {
+		for (IntercambioRegistralSalidaVO intercambioRegistralSalidaVO : intercambiosReenviados) {
+			
+			// Consultamos el estado en el SIR
+			if (intercambioRegistralSalidaVO.getIdIntercambioInterno() != null) {
+				try {
+					//obtenemos el estado del modulo intermedio
+					EstadoAsientoRegistraVO estado = getIntercambioRegistralSIRManager()
+							.getEstadoAsientoRegistral(
+									intercambioRegistralSalidaVO
+											.getIdIntercambioInterno()
+											.toString());
+					
+					if (estado == null) {
+					    estado = getIntercambioRegistralSIRManager()
+							.getEstadoAsientoRegistralByCode(
+									intercambioRegistralSalidaVO.getIdIntercambioRegistral());
+					}
+					
+					EstadoAsientoRegistralEnum estadoEnum = null;
+					if (estado != null){
+						estadoEnum = estado.getEstado();
+					}
+					
+					//actuamos en caso de que el estado sea distinto de enviado a enviado y ack
+					if (estadoEnum != null
+							&&  !EstadoAsientoRegistralEnum.ENVIADO.equals(estadoEnum)
+							&& !EstadoAsientoRegistralEnum.ENVIADO_Y_ACK.equals(estadoEnum)
+							&&  !EstadoAsientoRegistralEnum.REENVIADO.equals(estadoEnum)
+							&&  !EstadoAsientoRegistralEnum.REENVIADO_Y_ACK.equals(estadoEnum)
+							&& !EstadoAsientoRegistralEnum.RECIBIDO.equals(estadoEnum)) {
+
+						EstadoIntercambioRegistralSalidaVO nuevoEstadoSalida = null ; 
+						if (estado != null) {
+							nuevoEstadoSalida = new EstadoIntercambioRegistralSalidaVO();
+							estadoEnum = estado.getEstado();
+							String contactoUsuario = estado.getContactoUsuario();
+							//de momento no se usa
+							Map<String, String> datosAdicionales = estado.getDatosAdicionales();
+							Date fechaEstado = estado.getFechaEstado();
+							String nombreUsuario = estado.getNombreUsuario();
+							String observaciones = estado.getObservaciones();
+							
+							nuevoEstadoSalida.setEstado(EstadoIntercambioRegistralSalidaEnumVO.getEnum(estadoEnum.getValue()));
+							nuevoEstadoSalida.setComentarios(observaciones);
+							nuevoEstadoSalida.setUserName(nombreUsuario +"-"+contactoUsuario);
+							nuevoEstadoSalida.setFechaEstado(fechaEstado);
+							nuevoEstadoSalida.setIdExReg(intercambioRegistralSalidaVO.getId());
+							
+						}
+						
+
+						getIntercambioRegistralSalidaManager()
+								.updateEstado(intercambioRegistralSalidaVO,
+										nuevoEstadoSalida);
+						if (logger.isDebugEnabled()) {
+							logger
+									.debug("Actualizado el estado del intercambio registral "
+											+ intercambioRegistralSalidaVO
+													.getIdIntercambioInterno()
+											+ " al estado "
+											+ estado.getEstado().getName());
+						}
+					}
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					logger
+							.error("Error al obtener el estado del intercambio registral con id:"
+									+ intercambioRegistralSalidaVO
+											.getIdIntercambioInterno());
+					logger
+							.error("Continuamos intentando actualizar el siguiente");
+				}
+			}
+		}
+	} else {
+		if (logger.isDebugEnabled()) {
+			logger
+					.debug("No hay intercambios registrales en estado REENVIO para actualizar");
+		}
+	}
 	}
 
 	public IntercambioRegistralSalidaManager getIntercambioRegistralSalidaManager() {

@@ -4,6 +4,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
 <%@ taglib uri="http://displaytag.sf.net" prefix="display"%>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
 <%@ page import="ieci.tecdoc.isicres.rpadmin.struts.util.AutenticacionAdministracion" %>
 <%@ page import="es.ieci.tecdoc.isicres.admin.core.services.ConstantesGestionUsuariosAdministracion" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -13,12 +15,12 @@
 <meta name="author" content="IECISA" />
 <title><bean:message key="ieci.tecdoc.sgm.pgadmin.title.aplication"/> - <bean:message
 	key="ieci.tecdoc.sgm.rpadmin.botones.informes" /></title>
-<link href="css/estilos.css" rel="stylesheet" type="text/css" />
-<link href="css/adminApp.css" rel="stylesheet" type="text/css" />
-<link href="css/calendar-win2k-1.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/common.js"></script>
-<script type="text/javascript" src="js/tabsInforme.js"></script>
-<script type="text/javascript" src="js/controlCambios.js"></script>
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/estilos.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/adminApp.css" rel="stylesheet" type="text/css" />
+<link href="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/css/calendar-win2k-1.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/common.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/tabsInforme.js"></script>
+<script type="text/javascript" src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/js/controlCambios.js"></script>
 </head>
 <body
 	onload="init(<bean:write name="informeForm" property="activeTab"/>)">
@@ -67,10 +69,10 @@
 				<tbody>
 					<tr>
 						<td class="tableft" height="17" width="7"><img
-							src="img/dot.gif" alt="" border="0" height="17" width="7" /></td>
+							src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7" /></td>
 						<td class="tabmiddle1" id="tabmiddle1" onclick="tabClick(1)"><bean:message
 							key="ieci.tecdoc.sgm.rpadmin.informes" /></td>
-						<td class="tabright"><img src="img/dot.gif" alt="" border="0"
+						<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0"
 							height="17" width="7" /></td>
 					</tr>
 				</tbody>
@@ -84,10 +86,10 @@
 				<tbody>
 					<tr>
 						<td class="tableft" height="17" width="7"><img
-							src="img/dot.gif" alt="" border="0" height="17" width="7" /></td>
+							src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7" /></td>
 						<td class="tabmiddle2" id="tabmiddle2" onclick="tabClick(2)"><bean:message
 							key="ieci.tecdoc.sgm.rpadmin.informes.oficinas.registro" /></td>
-						<td class="tabright"><img src="img/dot.gif" alt="" border="0"
+						<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0"
 							height="17" width="7" /></td>
 					</tr>
 				</tbody>
@@ -101,10 +103,10 @@
 				<tbody>
 					<tr>
 						<td class="tableft" height="17" width="7"><img
-							src="img/dot.gif" alt="" border="0" height="17" width="7" /></td>
+							src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7" /></td>
 						<td class="tabmiddle3" id="tabmiddle3" onclick="tabClick(3)"><bean:message
 							key="ieci.tecdoc.sgm.rpadmin.informes.prefiles.usuario" /></td>
-						<td class="tabright"><img src="img/dot.gif" alt="" border="0"
+						<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0"
 							height="17" width="7" /></td>
 					</tr>
 				</tbody>
@@ -118,10 +120,10 @@
 				<tbody>
 					<tr>
 						<td class="tableft" height="17" width="7"><img
-							src="img/dot.gif" alt="" border="0" height="17" width="7" /></td>
+							src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0" height="17" width="7" /></td>
 						<td class="tabmiddle4" id="tabmiddle4" onclick="tabClick(4)">
 						<bean:message key="ieci.tecdoc.sgm.rpadmin.informes.libros.registro" /></td>
-						<td class="tabright"><img src="img/dot.gif" alt="" border="0"
+						<td class="tabright"><img src="<%=((Context) new InitialContext().lookup("java:comp/env")).lookup("URLRoot")%>/img/dot.gif" alt="" border="0"
 							height="17" width="7" /></td>
 					</tr>
 				</tbody>

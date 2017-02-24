@@ -1,0 +1,546 @@
+<?xml version="1.0"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
+                         "http://castor.org/mapping.dtd">
+<mapping>
+	<!-- UNIDADES -->
+	<class name="es.msssi.dir3.api.vo.UnitsVO" auto-complete="true">
+		<map-to xml="unidades"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="units" type="es.msssi.dir3.api.vo.UnitVO" collection="vector">
+			<bind-xml name="unidades" />
+		</field>
+	</class>
+	
+	<!-- UNIDAD -->
+	<class name="es.msssi.dir3.api.vo.UnitVO" >
+		<map-to xml="unidad"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		
+		<field name="id" type="string">
+			<bind-xml name="codigo" node="element"/>
+		</field>
+		
+		<field name="name" type="string">
+			<bind-xml name="denominacion"  />
+		</field>
+		<field name="fatherUnitId" type="string">
+			<bind-xml name="codUnidadSuperior" node="element" />
+		</field>
+		<field name="fatherUnitName" type="string">
+			<bind-xml name="denomUnidadSuperior" node="element" />
+		</field>
+		<field name="status" type="string">
+			<bind-xml name="estado" node="element" />
+		</field>
+		<field name="acronyms" type="string">
+			<bind-xml name="siglas" node="element" />
+		</field>
+		<field name="principalUnitId" type="string">
+			<bind-xml name="codUnidadRaiz" node="element" />
+		</field>
+		<field name="principalUnitName" type="string">
+			<bind-xml name="denomUnidadRaiz" node="element" />
+		</field>
+		<field name="publicEntityLevel" type="integer">
+			<bind-xml name="nivelJerarquico" node="element" />
+		</field>
+		<field name="entityPublicLawIndicator" type="string">
+			<bind-xml name="esEDP" node="element" />
+		</field>
+		<field name="administrationLevelId" type="string">
+			<bind-xml name="nivelAdministracion" node="element" />
+		</field>
+		<field name="administrationLevelName" type="string">
+			<bind-xml name="descripcionNivelAdministracion" node="element" />
+		</field>
+		<field name="publicEntityTypeId" type="string">
+			<bind-xml name="codTipoEntPublica" node="element" />
+		</field>
+		<field name="publicEntityTypeName" type="string">
+			<bind-xml name="publicEntityTypeName" node="element" />
+		</field>
+		<field name="unitTypeId" type="string">
+			<bind-xml name="codTipoUnidad" node="element" />
+		</field>
+		<field name="unitTypeName" type="string">
+			<bind-xml name="unitTypeName" node="element" />
+		</field>
+		<field name="entityUnitOfPublicLawId" type="string">
+			<bind-xml name="codEDPPrincipal" node="element" />
+		</field>
+		<field name="entityUnitOfPublicLawName" type="string">
+			<bind-xml name="denomEDPPrincipal" node="element" />
+		</field>
+		<field name="authorityId" type="integer">
+			<bind-xml name="idPoder" node="element" />
+		</field>
+		<field name="authorityName" type="string">
+			<bind-xml name="authorityName" node="element" />
+		</field>
+		<field name="territorialScopeOfCompetenceId" type="string">
+			<bind-xml name="codAmbTerritorial" node="element" />
+		</field>
+		<field name="territorialScopeOfCompetenceName" type="string">
+			<bind-xml name="territorialScopeOfCompetenceName" node="element" />
+		</field>
+		<field name="geographicalEntityId" type="string">
+			<bind-xml name="codAmbEntGeografica" node="element" />
+		</field>
+		<field name="geographicalEntityName" type="string">
+			<bind-xml name="geographicalEntityName" node="element" />
+		</field>
+		<field name="countryId" type="string">
+			<bind-xml name="codAmbPais" node="element" />
+		</field>
+		<field name="countryName" type="string">
+			<bind-xml name="countryName" node="element" />
+		</field>
+		<field name="autonomousCommunityId" type="string">
+			<bind-xml name="codAmbComunidad" node="element" />
+		</field>
+		<field name="autonomousCommunityName" type="string">
+			<bind-xml name="autonomousCommunityName" node="element" />
+		</field>
+		<field name="provinceId" type="string">
+			<bind-xml name="codAmbProvincia" node="element" />
+		</field>	
+		<field name="provinceName" type="string">
+			<bind-xml name="provinceName" node="element" />
+		</field>
+		<field name="islandId" type="string">
+			<bind-xml name="codAmbIsla" node="element" />
+		</field>
+		<field name="islandName" type="string">
+			<bind-xml name="islandName" node="element" />
+		</field>
+		<field name="cityId" type="string">
+			<bind-xml name="codAmbMunicipio" node="element" />
+		</field>
+		<field name="cityName" type="string">
+			<bind-xml name="cityName" node="element" />
+		</field>
+		<field name="minorLocalEntityId" type="string">
+			<bind-xml name="codAmbElm" node="element" />
+		</field>
+		<field name="minorLocalEntityName" type="string">
+			<bind-xml name="minorLocalEntityName" node="element" />
+		</field>
+		<field name="foreignLocation" type="string">
+			<bind-xml name="codAmbLocExtranjera" node="element" />
+		</field>
+		<field name="competencesOfUnit" type="string">
+			<bind-xml name="competencias" node="element" />
+		</field>
+		<field name="legalProvisionOfCompetencesOfUnit" type="string">
+			<bind-xml name="disposicionLegal" node="element" />
+		</field>
+		<field name="bSameAddressFatherUnit" type="string">
+			<bind-xml name="mismaDireccionUnidadSuperior" node="element" />
+		</field>
+		<field name="address" type="es.msssi.dir3.api.vo.AddressVO">
+			<bind-xml name="direccion" node="element" />
+		</field>
+
+		<field name="addOfficialDate" type="string" handler="es.msssi.dir3.api.helper.DateHandler">
+			<bind-xml name="fechaAltaOficial" />
+		</field>
+		<field name="deleteOfficialDate" type="string" handler="es.msssi.dir3.api.helper.DateHandler">
+			<bind-xml name="fechaBajaOficial" />
+		</field>		
+		<field name="extinctionDate" type="string" handler="es.msssi.dir3.api.helper.DateHandler">
+			<bind-xml name="fechaExtincion"  />
+		</field>			
+		<field name="annulationDate" type="string" handler="es.msssi.dir3.api.helper.DateHandler">
+			<bind-xml name="fechaAnulacion"  />
+		</field>	
+		<field name="externalId" type="string">
+			<bind-xml name="codExterno" node="element" />
+		</field>	
+		<field name="systemCreationDate" type="string" handler="es.msssi.dir3.api.helper.DateHandler">
+			<bind-xml name="fechaAltaSistema"  />
+		</field>	
+		<field name="lastUpdateDate" type="string" handler="es.msssi.dir3.api.helper.DateHandler">
+			<bind-xml name="fechaUltimaActualizacion" />
+		</field>	
+		<field name="rootUnit" type="string">
+			<bind-xml name="raiz" node="element" />
+		</field>	
+		<field name="cif" type="string">
+			<bind-xml name="nifCif" node="element" />
+		</field>					
+		<field name="language" type="integer">
+			<bind-xml name="idioma" node="element" />
+		</field>	
+		<field name="generalObservations" type="string">
+			<bind-xml name="observGenerales" node="element" />
+		</field>	
+		
+		<field name="deleteObservations" type="string">
+			<bind-xml name="observBaja" node="element" />
+		</field>	
+		<field name="contactObservations" type="string">
+			<bind-xml name="descObservacionesContacto" node="element" />
+		</field>
+		<field name="unoUnitTypeId" type="integer">
+			<bind-xml name="tipoUnidad" node="element" />
+		</field>
+		<field name="unoCodUOResponsable" type="string">
+			<bind-xml name="codUOResponsable" node="element" />
+		</field>
+		<field name="unoDescUOResponsable" type="string">
+			<bind-xml name="denUOResponsable" node="element" />
+		</field>
+		<field name="unoobservations" type="string">
+			<bind-xml name="observaciones" node="element" />
+		</field>
+	</class>	
+	
+	<!-- DIRECCION -->
+	<class name="es.msssi.dir3.api.vo.AddressVO" auto-complete="true">
+		<map-to xml="direccion"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="streetTypeId" type="string">
+			<bind-xml name="tipoVia" node="element" />
+		</field>
+		<field name="streetTypeName" type="string">
+			<bind-xml name="streetTypeName" node="element" />
+		</field>
+		<field name="streetName" type="string">
+			<bind-xml name="nombreVia" node="element" />
+		</field>
+		<field name="addressNum" type="string">
+			<bind-xml name="numVia" node="element" />
+		</field>
+		<field name="addessInformation" type="string">
+			<bind-xml name="complemento" node="element" />
+		</field>
+		<field name="postalCode" type="string">
+			<bind-xml name="codPostal" node="element" />
+		</field>
+		<field name="countryId" type="string">
+			<bind-xml name="codPais" node="element" />
+		</field>
+		<field name="countryName" type="string">
+			<bind-xml name="countryName" node="element" />
+		</field>
+		<field name="autonomousCommunityId" type="string">
+			<bind-xml name="codComunidad" node="element" />
+		</field>
+		<field name="autonomousCommunityName" type="string">
+			<bind-xml name="autonomousCommunityName" node="element" />
+		</field>
+		<field name="geographicalEntityId" type="string">
+			<bind-xml name="codEntGeografica" node="element" />
+		</field>
+		<field name="geographicalEntityName" type="string">
+			<bind-xml name="geographicalEntityName" node="element" />
+		</field>
+		<field name="provinceId" type="string">
+			<bind-xml name="codProvincia" node="element" />
+		</field>
+		<field name="provinceName" type="string">
+			<bind-xml name="provinceName" node="element" />
+		</field>
+		<field name="cityId" type="string">
+			<bind-xml name="codLocalidad" node="element" />
+		</field>
+		<field name="cityName" type="string">
+			<bind-xml name="cityName" node="element" />
+		</field>
+		<field name="foreignLocation" type="string">
+			<bind-xml name="locExtranjera" node="element" />
+		</field>
+		<field name="foreignAddress" type="string">
+			<bind-xml name="dirExtranjera" node="element" />
+		</field>
+		<field name="observations" type="string">
+			<bind-xml name="observaciones" node="element" />
+		</field>
+	</class>	
+		<!-- CONTACTOS UO -->
+	<class name="es.msssi.dir3.api.vo.ContactsUOVO" auto-complete="true">
+		<map-to xml="contactosUO"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="contacts" type="es.msssi.dir3.api.vo.ContactUOVO" collection="vector">
+			<bind-xml name="contactos" />
+		</field>
+	</class>
+	<class name="es.msssi.dir3.api.vo.ContactsUNOVO" auto-complete="true">
+		<map-to xml="contactosUNO"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="contacts" type="es.msssi.dir3.api.vo.ContactUOVO" collection="vector">
+			<bind-xml name="contactos" />
+		</field>
+	</class>
+	
+	<!-- CONTACTO UO  -->
+	<class name="es.msssi.dir3.api.vo.ContactUOVO" >
+		<map-to xml="contacto"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="contactTypeId" type="string">
+			<bind-xml name="tipoContacto" node="element"/>
+		</field>
+		<field name="contactInfo" type="string">
+			<bind-xml name="valorContacto" node="element"/>
+		</field>
+		<field name="observations" type="string">
+			<bind-xml name="observaciones" node="element"/>
+		</field>
+		<field name="statusId" type="string">
+			<bind-xml name="idEstado" node="element"/>
+		</field>
+		<field name="unitId" type="string">
+			<bind-xml name="codigoUnidad" node="element"/>
+		</field>	
+		<field name="visibility" type="integer">
+			<bind-xml name="visibilidad" node="element"/>
+		</field>	
+	</class>	
+	
+	<!-- CONTACTOS OFI -->
+	<class name="es.msssi.dir3.api.vo.ContactsOFIVO" auto-complete="true">
+		<map-to xml="contactosOFI"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="contacts" type="es.msssi.dir3.api.vo.ContactOFIVO" collection="vector">
+			<bind-xml name="contactos" />
+		</field>
+	</class>
+	
+	<!-- CONTACTO OFI  -->
+	<class name="es.msssi.dir3.api.vo.ContactOFIVO" >
+		<map-to xml="contacto"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="contactTypeId" type="string">
+			<bind-xml name="tipoContacto" node="element"/>
+		</field>
+		<field name="contactInfo" type="string">
+			<bind-xml name="valorContacto" node="element"/>
+		</field>
+		<field name="observations" type="string">
+			<bind-xml name="observaciones" node="element"/>
+		</field>
+		<field name="statusId" type="string">
+			<bind-xml name="idEstado" node="element"/>
+		</field>
+		<field name="officeId" type="string">
+			<bind-xml name="codigoOficina" node="element"/>
+		</field>	
+		<field name="visibility" type="integer">
+			<bind-xml name="visibilidad" node="element"/>
+		</field>	
+	</class>	
+	
+	<!-- RELATIONSHIPS OFI UO ORG-->
+	<class name="es.msssi.dir3.api.vo.RelationshipsOFIUOVO" auto-complete="true">
+		<map-to xml="relacionesFisicas"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="relationships" type="es.msssi.dir3.api.vo.RelationshipOFIUOVO" collection="vector">
+			<bind-xml name="relaciones" />
+		</field>
+	</class>
+
+	<!-- RELATIONSHIPS OFI UO SIR-->
+	<class name="es.msssi.dir3.api.vo.RelationshipsOFIUOSIRVO" auto-complete="true">
+		<map-to xml="relacionesSIR"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="relationships" type="es.msssi.dir3.api.vo.RelationshipOFIUOVO" collection="vector">
+			<bind-xml name="relaciones" />
+		</field>
+	</class>
+	
+		
+	<!-- RELATIONSHIP OFI UO -->
+	<class name="es.msssi.dir3.api.vo.RelationshipOFIUOVO" >
+		<map-to xml="relacion"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="officeId" type="string">
+			<bind-xml name="codOficina" node="element"/>
+		</field>
+		<field name="officeName" type="string">
+			<bind-xml name="denOficina" node="element"/>
+		</field>
+		<field name="unitId" type="string">
+			<bind-xml name="codUnidad" node="element"/>
+		</field>
+		<field name="unitName" type="string">
+			<bind-xml name="denUnidad" node="element"/>
+		</field>
+		<field name="status" type="string">
+			<bind-xml name="estado" node="element"/>
+		</field>	
+	</class>	
+	
+	
+	<!-- SERVICES -->
+	<class name="es.msssi.dir3.api.vo.ServicesVO" auto-complete="true">
+		<map-to xml="servicios"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="services" type="es.msssi.dir3.api.vo.ServiceVO" collection="vector">
+			<bind-xml name="servicios" />
+		</field>
+	</class>
+	
+		
+	<!-- SERVICE -->
+	<class name="es.msssi.dir3.api.vo.ServiceVO" >
+		<map-to xml="servicio"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="id" type="string">
+			<bind-xml name="codigo" node="element"/>
+		</field>
+		<field name="description" type="string">
+			<bind-xml name="descripcion" node="element"/>
+		</field>
+		<field name="officeId" type="string">
+			<bind-xml name="codigoOficina" node="element"/>
+		</field>
+	</class>	
+	
+	<!-- HISTORIES -->
+	<class name="es.msssi.dir3.api.vo.HistoriesVO" auto-complete="true">
+		<map-to xml="historicos"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="histories" type="es.msssi.dir3.api.vo.HistoryVO" collection="vector">
+			<bind-xml name="relaciones" />
+		</field>
+	</class>
+	
+		
+	<!-- HISTORY -->
+	<class name="es.msssi.dir3.api.vo.HistoryVO" auto-complete="true">
+		<map-to xml="relacion"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="previousId" type="string">
+			<bind-xml name="codAnterior" node="element"/>
+		</field>
+		<field name="previousName" type="string">
+			<bind-xml name="denAnterior" node="element"/>
+		</field>
+		<field name="lastId" type="string">
+			<bind-xml name="codUltima" node="element"/>
+		</field>
+		<field name="lastName" type="string">
+			<bind-xml name="denUltima" node="element"/>
+		</field>
+	</class>	
+	
+	
+		<!-- OFICINAS -->
+	<class name="es.msssi.dir3.api.vo.OfficesVO" auto-complete="true">
+		<map-to xml="oficinas"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		<field name="offices" type="es.msssi.dir3.api.vo.OfficeVO" collection="vector">
+			<bind-xml name="oficinas" />
+		</field>
+	</class>
+	
+	<!-- OFICINA -->
+	<class name="es.msssi.dir3.api.vo.OfficeVO" >
+		<map-to xml="oficina"  ns-prefix="tns" ns-uri="http://impl.manager.directorio.map.es" />
+		
+		<field name="id" type="string">
+			<bind-xml name="codigo" node="element"/>
+		</field>
+		
+		<field name="name" type="string">
+			<bind-xml name="denominacion"  />
+		</field>
+		<field name="officeType" type="string">
+			<bind-xml name="tipoOficina"  />
+		</field>
+		<field name="officeTypeName" type="string">
+			<bind-xml name="officeTypeName"  />
+		</field>		
+		<field name="status" type="string">
+			<bind-xml name="estado" node="element" />
+		</field>
+		<field name="responsibleUnitId" type="string">
+			<bind-xml name="codUOResponsable" node="element" />
+		</field>		
+		<field name="responsibleUnitName" type="string">
+			<bind-xml name="denUOResponsable" node="element" />
+		</field>			
+		<field name="registerOfficeIndicator" type="string">
+			<bind-xml name="bRegistro" node="element" />
+		</field>
+		<field name="informationOfficeIndicator" type="string">
+			<bind-xml name="bInformacion" node="element" />
+		</field>
+		<field name="processingOfficeIndicator" type="string">
+			<bind-xml name="bTramitacion" node="element" />
+		</field>
+		<field name="sirOfficeIndicator" type="string">
+			<bind-xml name="bSir" node="element" />
+		</field>
+		<field name="electronicRegisterIndicator" type="string">
+			<bind-xml name="bRegElectronico" node="element" />
+		</field>
+		<field name="interchangeLocalStateIndicator" type="string">
+			<bind-xml name="bLocalEstatal" node="element" />
+		</field>
+		<field name="interchangeWithRestrictionLocalAutonomousIndicator" type="string">
+			<bind-xml name="bLocalAutonomicoRes" node="element" />
+		</field>
+		<field name="interchangeLocalGeneralAutonomousIndicator" type="string">
+			<bind-xml name="bSirLocalAutonomicoGen" node="element" />
+		</field>
+		<field name="interchangeWithRestrictionLocalLocalIndicator" type="string">
+			<bind-xml name="bLocalLocalRes" node="element" />
+		</field>
+		<field name="interchangeLocalGeneralLocalIndicator" type="string">
+			<bind-xml name="bLocalLocalGen" node="element" />
+		</field>
+		<field name="interchangeWithRestrictionCityHallCityHallIndicator" type="string">
+			<bind-xml name="bAyunAyunRest" node="element" />
+		</field>
+		<field name="interchangeWithoutRestrictionIndicator" type="string">
+			<bind-xml name="bSinRestriccion" node="element" />
+		</field>
+		<field name="genericIndicator" type="string">
+			<bind-xml name="bGenerico" node="element" />
+		</field>
+		<field name="genericIndicatorUse" type="string">
+			<bind-xml name="descindGenerico" node="element" />
+		</field>
+		<field name="administrationLevelId" type="string">
+			<bind-xml name="nivelAdministracion" node="element" />
+		</field>
+		<field name="administrationLevelName" type="string">
+			<bind-xml name="administrationLevelName" node="element" />
+		</field>
+		<field name="dependentOfficeId" type="string">
+			<bind-xml name="codOFIResponsable" node="element" />
+		</field>
+		<field name="dependentOfficeName" type="string">
+			<bind-xml name="denOFIResponsable" node="element" />
+		</field>		
+		<field name="businessHours" type="string">
+			<bind-xml name="horarioAtencion" node="element" />
+		</field>
+		<field name="inhabiliesDays" type="string">
+			<bind-xml name="diasInhabiles" node="element" />
+		</field>		
+		<field name="bSameAddress" type="string">
+			<bind-xml name="bMismaDireccion" node="element" />
+		</field>		
+		<field name="address" type="es.msssi.dir3.api.vo.AddressVO">
+			<bind-xml name="direccion" node="element" />
+		</field>
+		<field name="creationDate" type="string" handler="es.msssi.dir3.api.helper.DateHandler">
+			<bind-xml name="fechaAltaOficial" />
+		</field>
+		<field name="extinctionDate" type="string" handler="es.msssi.dir3.api.helper.DateHandler">
+			<bind-xml name="fechaExtincion" />
+		</field>		
+		<field name="annulationDate" type="string" handler="es.msssi.dir3.api.helper.DateHandler">
+			<bind-xml name="fechaAnulacion"  />
+		</field>			
+		<field name="externalId" type="string">
+			<bind-xml name="idExternoFuente" node="element" />
+		</field>	
+
+		<field name="generalObservations" type="string">
+			<bind-xml name="observaciones" node="element" />
+		</field>	
+		<field name="deleteObservations" type="string">
+			<bind-xml name="deleteObservations" node="element" />
+		</field>					
+		<field name="contactObservations" type="string">
+			<bind-xml name="contactObservations" node="element" />
+		</field>	
+	</class>	
+</mapping>

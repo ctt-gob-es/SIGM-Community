@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "dtd/log4j.dtd">
+<!-- Fichero de configuración del sistema de trazas log4j -->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <!-- Parte genérica de Sicres -->
+    <appender name="FICHERO" class="org.apache.log4j.RollingFileAppender">
+        <!-- Configurar ruta -->
+        <param name="File" value="${sigem.log.path}/SIGEM_RegistroPresencialMSSSIWeb/SIGEM_RegistroPresencialMSSSIWeb.log"/>
+        <param name="MaxFileSize" value="3072KB"/>
+        <param name="MaxBackupIndex" value="3"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+        </layout>
+    </appender>
+	<logger name="org.hibernate">
+	    <level value="OFF"/>
+	 </logger>
+	 <logger name="org.springframework">
+	    <level value="OFF"/>
+	 </logger>
+	 <logger name="org.apache.commons">
+	    <level value="OFF"/>
+	 </logger>
+	 <logger name="com.opensymphony.oscache">
+	    <level value="OFF"/>
+	 </logger>
+	 	 <logger name="com.ieci.tecdoc">
+	    <level value="ERROR"/>
+		 <appender-ref ref="FICHERO"/>
+	 </logger>
+    <logger name="ieci" additivity="false">
+		<level value="ERROR"/>
+		 <appender-ref ref="FICHERO"/>
+    </logger>
+    <logger name="es" additivity="false">
+            <level value="ERROR"/>
+		  <appender-ref ref="FICHERO"/>
+    </logger>
+
+    <logger name="net" additivity="false">
+           <level value="ERROR"/>
+		 <appender-ref ref="FICHERO"/>
+    </logger>
+</log4j:configuration>
+

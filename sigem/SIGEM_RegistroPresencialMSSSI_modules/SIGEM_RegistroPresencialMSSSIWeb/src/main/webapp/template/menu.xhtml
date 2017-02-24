@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xml:lang="es" lang="es">
+    <body>
+	    <ui:composition>
+			<!-- Inicio menu -->
+			<div class="apartado">
+			<span id="labellibrosregistrales"><h:outputText id="labellibrosregistrales" value="#{msgs.labellibrosregistrales}" /></span>
+			<a href="#" id="buttonhide"><img src="#{webParam.entryParameters['URLRoot']}/img/ico-ocultar.gif" alt="Ocultar menú"/></a>
+			</div>
+			<h:form>
+				<ul>
+					<li><h:outputText id="labellibrosentrada" value="#{msgs.labellibrosentrada}" />
+						<ul>
+							<c:forEach items="#{booksAction.listBook.inList}" var="itemIn">
+							<li>
+								<h:commandLink name="#{itemIn.idocarchhdrName}" value="#{itemIn.idocarchhdrName}" action="goSearchInForm" actionListener="#{booksAction.goSearchForm}">
+									<f:param name="id" value="#{itemIn.idocarchhdrId}" />
+									<f:param name="readonly" value="#{itemIn.scrregstateState}" />
+								</h:commandLink>
+							
+							</li>
+							</c:forEach>
+						</ul>
+					</li>
+					<li><h:outputText id="labellibrossalida" value="#{msgs.labellibrossalida}" />
+						<ul>
+						<c:forEach items="#{booksAction.listBook.outList}" var="itemOut">
+							<li>
+								<h:commandLink name="#{itemOut.idocarchhdrName}" value="#{itemOut.idocarchhdrName}" action="goSearchOutForm" actionListener="#{booksAction.goSearchForm}">
+									<f:param name="id" value="#{itemOut.idocarchhdrId}" />
+									<f:param name="readonly" value="#{itemOut.scrregstateState}" />
+								</h:commandLink>
+							</li>
+					</c:forEach>
+						</ul>	
+					</li>
+					</ul>
+					<div class="separador">&nbsp;</div>
+					
+				<ul>
+					<ui:fragment rendered="${J_PERMSUSER.canDistRegisters}" >
+						<li><h:commandLink value="#{msgs.labeldistribucion}" actionListener="#{booksAction.goDistribucionForm}" action="goDistribucionForm" /></li>
+					</ui:fragment>
+					<ui:fragment rendered="${J_ENABLEDINTREGISTRAL =='true' and J_PERMSUSER.canAccessRegInterchange}" >
+						<li><h:commandLink value="#{msgs.labelIntRegistral}"  actionListener="#{booksAction.goIntRegistralForm}" action="goSearchInterchangeForm" /></li>
+					</ui:fragment>
+					<ui:fragment rendered="${USERVO.permisos.permisosAplicacion.superUsuario}" >
+						<li><h:commandLink value="#{msgs.labelUpdateDCO}"  action="goUpdateDCOForm" rendered="#{USERVO.permisos.permisosAplicacion.superUsuario}" /></li>
+					</ui:fragment>
+					<ui:fragment rendered="${USERVO.permisos.permisosAplicacion.superUsuario}" >
+						<li><h:commandLink value="#{msgs.labelLoadUsers}"  action="goLoadUsersForm" rendered="#{USERVO.permisos.permisosAplicacion.superUsuario}" /></li>
+					</ui:fragment>
+				</ul>
+			</h:form>
+
+			
+			<!-- Fin menu -->		
+	    </ui:composition>
+    </body>
+</html>

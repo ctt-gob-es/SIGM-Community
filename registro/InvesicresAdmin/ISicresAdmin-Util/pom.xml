@@ -8,6 +8,11 @@
 	<artifactId>ISicresAdmin-Util</artifactId>
 	<packaging>jar</packaging>
 	<description>Modulo de Utilidades de la Administracion de Invesicres</description>
+	<version>3.0.0-msssi2.0.0</version>	
+	
+	<properties>
+		<isicres.version>8.0.1</isicres.version>	
+	</properties>
 
 
 
@@ -20,17 +25,17 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres.admin</groupId>
 			<artifactId>ISicresAdmin-EstructuraCore</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres.admin</groupId>
 			<artifactId>ISicresAdmin-ClasesBase</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres.admin</groupId>
 			<artifactId>ISicresAdmin-IntercambioRegistral</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

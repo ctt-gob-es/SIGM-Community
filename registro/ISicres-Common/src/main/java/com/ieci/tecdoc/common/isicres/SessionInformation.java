@@ -16,6 +16,11 @@ import java.io.Serializable;
  */
 public class SessionInformation implements Serializable{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6685305908057922595L;
+
     private String user;
 
     private String userName = "";
@@ -31,6 +36,12 @@ public class SessionInformation implements Serializable{
     private String sessionId = "";
     
     private String caseSensitive = "";
+    
+    private String departamentName = "";
+    
+    private String departamentNameFather = "";
+    
+    private String userContact = "";
     
 	public SessionInformation() {
 	}
@@ -135,4 +146,44 @@ public class SessionInformation implements Serializable{
 	public String getOfficeEnabled() {
 		return officeEnabled;
 	}
+	/**
+	 * @return the departamentNameFather
+	 */
+	public String getDepartamentFather() {
+	    return departamentNameFather;
+	}
+	/**
+	 * @param departamentNameFather the departamentNameFather to set
+	 */
+	public void setDepartamentFather(
+	    String departamentNameFather) {
+	    this.departamentNameFather = departamentNameFather;
+	}
+	/**
+	 * @return the departamentName
+	 */
+	public String getDepartamentName() {
+	    return departamentName;
+	}
+	/**
+	 * @param departamentName the departamentName to set
+	 */
+	public void setDepartamentName(
+	    String departamentName) {
+	    this.departamentName = departamentName;
+	}
+	/**
+	 * @return the userContact
+	 */
+	public String getUserContact() {
+	    return userContact;
+	}
+	/**
+	 * @param userContact the userContact to set
+	 */
+	public void setUserContact(String userContact) {
+	    this.userContact = userContact;
+	}
+	
+	
 }
