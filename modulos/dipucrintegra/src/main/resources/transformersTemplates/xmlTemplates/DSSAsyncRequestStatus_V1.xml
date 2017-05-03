@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<async:PendingRequest
+	xmlns:async="urn:oasis:names:tc:dss:1.0:profiles:asynchronousprocessing:1.0"
+	xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+	<dss:OptionalInputs>
+		<dss:ClaimedIdentity>
+			<dss:Name />
+		</dss:ClaimedIdentity>
+		<async:ResponseID afirmaNodeType="optional" />
+	</dss:OptionalInputs>
+</async:PendingRequest>

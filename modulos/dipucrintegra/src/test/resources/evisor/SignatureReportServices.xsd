@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by sesmv (EMBRACE) -->
+<xs:schema xmlns:srsm="urn:es:gob:signaturereport:services:messages" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:es:gob:signaturereport:services:messages" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<!-- Mensaje de petición para la validación de un informe de firma-->
+	<xs:element name="ValidationReportRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="srsm:ApplicationId"/>
+				<xs:element ref="srsm:Report"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- Mensaje de respuesta para la validación de un informe de firma-->
+	<xs:element name="ValidationReportResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="srsm:Result"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- Mensaje de petición para la generación de informe de firma-->
+	<xs:element name="GenerationRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="srsm:ApplicationId"/>
+				<xs:element ref="srsm:TemplateId"/>
+				<xs:element ref="srsm:Signature"/>
+				<xs:element ref="srsm:Document" minOccurs="0"/>
+				<xs:element ref="srsm:IncludeSignature" minOccurs="0"/>
+				<xs:element ref="srsm:Barcodes" minOccurs="0"/>
+				<xs:element ref="srsm:ExternalParameters" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- Identificador de aplicación-->
+	<xs:element name="ApplicationId" type="xs:string"/>
+	<!-- Identificador de la plantilla utilizada-->
+	<xs:element name="TemplateId" type="xs:string"/>
+	<!-- Firma a validar o resultado de validación -->
+	<xs:element name="Signature">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="srsm:EncodedSignature"/>
+				<xs:element ref="srsm:RepositoryLocation"/>
+				<xs:element ref="srsm:ValidationResponse"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- Firma electrónica codificada en base 64-->
+	<xs:element name="EncodedSignature" type="xs:base64Binary"/>
+	<!-- Localización de un elemento en un repositorio externo-->
+	<xs:element name="RepositoryLocation">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="RepositoryId" type="xs:string"/>
+				<xs:element name="ObjectId" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- Respuesta SOAP Firmada de @firma de validación de firma codificada en base 64-->
+	<xs:element name="ValidationResponse" type="xs:base64Binary"/>
+	<!-- Elemento que contiene  un documento firmado o su localización en un repositorio externo-->
+	<xs:element name="Document">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="srsm:EncodedDocument"/>
+				<xs:element ref="srsm:RepositoryLocation"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<!-- Documento codificado en base 64-->
+	<xs:element name="EncodedDocument" type="xs:base64Binary"/>
+	<!-- Elemento que indica si se debe firmar el informe generado-->
+	<xs:element name="IncludeSignature" type="xs:boolean"/>
+	<!-- Lista de códigos de barra que se quieren incluir en el informe generado-->
+	<xs:element name="Barcodes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="srsm:Barcode" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- Elemento que contiene información sobre un codigo de barra a generar-->
+	<xs:element name="Barcode">
+		<xs:complexType>
+			<xs:sequence>
+				<!-- Tipo de Barcode-->
+				<xs:element name="Type" type="xs:string"/>
+				<!-- Mensaje utilizado para generar el código de barras-->
+				<xs:element name="Message" type="xs:string"/>
+				<!-- Parametros adicionales de configuración -->
+				<xs:element name="Configuration" type="srsm:KeyValueType" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- Tipo que representa una lista de elementos clave,valor -->
+	<xs:complexType name="KeyValueType">
+		<xs:sequence>
+			<xs:element name="Parameter" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ParameterId" type="xs:string"/>
+						<xs:element name="ParameterValue" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Parámetros adicionales incluidos en la petición de generación de informe-->
+	<xs:element name="ExternalParameters" type="srsm:KeyValueType"/>
+	<!-- Respuesta del servicio de generación de informe de firma-->
+	<xs:element name="GenerationResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="srsm:Result"/>
+				<xs:element ref="srsm:Report" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- Elemento que recoge el resultado de la operación realizada por un servicio -->
+	<xs:element name="Result">
+		<xs:complexType>
+			<xs:sequence>
+				<!-- Código de resultado-->
+				<xs:element name="Code" type="xs:integer"/>
+				<!-- Mensaje descriptivo del resultado del proceso-->
+				<xs:element name="Message" type="xs:string"/>
+				<!-- Causa del error -->
+				<xs:element name="Cause" type="xs:string" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- Elemento que recoge un informe de firma codificado en Base 64-->
+	<xs:element name="Report" type="xs:base64Binary"/>
+</xs:schema>

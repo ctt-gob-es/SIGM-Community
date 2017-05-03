@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<srsm:ValidationReportResponse
+	xmlns:srsm="urn:es:gob:signaturereport:services:messages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<srsm:Result>
+		<srsm:Code>0</srsm:Code>
+		<srsm:Message>La firma del informe es válida.</srsm:Message>
+	</srsm:Result>
+</srsm:ValidationReportResponse>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<srsm:ValidationReportRequest xmlns:srsm="urn:es:gob:signaturereport:services:messages"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<srsm:ApplicationId />
+	<srsm:Report />
+</srsm:ValidationReportRequest>

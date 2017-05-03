@@ -1,0 +1,20 @@
+<DOC>
+	<ds:Signature xmlns:ds='http://www.w3.org/2000/09/xmldsig#'>
+		<ds:SignedInfo>
+			<ds:CanonicalizationMethod
+				Algorithm='http://www.w3.org/TR/2001/REC-xml-c14n-20010315' />
+			<ds:SignatureMethod Algorithm='http://www.w3.org/2000/09/xmldsig#rsa-sha1' />
+			<ds:Reference Id='Reference-cf5d9447-1f91-47bc-b60a-973b0132cbf2'
+				URI='#d13b582e-8b60-47cf-8eaa-eaf0e900550a'>
+				<ds:Transforms>
+					<ds:Transform Algorithm='http://www.w3.org/2000/09/xmldsig#base64' />
+				</ds:Transforms>
+				<ds:DigestMethod Algorithm='http://www.w3.org/2000/09/xmldsig#sha1' />
+				<ds:DigestValue>ySErJYEqdFwOFyp2icgkiDF/MiQ=</ds:DigestValue>
+			</ds:Reference>
+		</ds:SignedInfo>
+		<ds:SignatureValue
+			Id='Signature-a4f5a826-2895-4896-9f8b-76374fd2548e-SignatureValue'></ds:SignatureValue>
+		<ds:KeyInfo Id='Signature-a4f5a826-2895-4896-9f8b-76374fd2548e-KeyInfo' />
+	</ds:Signature>
+</DOC>

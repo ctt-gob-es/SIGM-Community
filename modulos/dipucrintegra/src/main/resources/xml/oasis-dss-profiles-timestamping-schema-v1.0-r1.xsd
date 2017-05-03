@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="urn:oasis:names:tc:dss:1.0:profiles:TimeStamp:schema#" xmlns="urn:oasis:names:tc:dss:1.0:profiles:TimeStamp:schema#" xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:saml="urn:oasis:names:tc:SAML:1.0:assertion" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+	<xs:import namespace="urn:oasis:names:tc:SAML:1.0:assertion" schemaLocation="oasis-sstc-saml-schema-protocol-1.1.xsd"/>
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+	<xs:import namespace="urn:oasis:names:tc:dss:1.0:core:schema" schemaLocation="oasis-dss-core-schema-v1.0-os.xsd"/>
+	<xs:element name="RenewTimestamp">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="PreviousTimestamp"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PreviousTimestamp">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="dss:Timestamp"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

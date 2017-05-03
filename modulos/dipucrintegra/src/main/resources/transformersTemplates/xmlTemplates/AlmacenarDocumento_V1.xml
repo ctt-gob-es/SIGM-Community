@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mensajeEntrada xmlns="https://afirmaws/ws/custodia" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:SchemaLocation="https://_XXX_/afirmaws/xsd/mcustodia/ws.xsd">
+	<peticion>AlmacenarDocumento</peticion>
+	<versionMsg>1.0</versionMsg>
+	<parametros>
+		<idAplicacion/>
+		<documento/>
+		<nombreDocumento/>
+		<tipoDocumento/>
+	</parametros>
+</mensajeEntrada>

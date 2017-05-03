@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mensajeEntrada targetNamespace="https://afirmaws/ws/firma"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://localhost/afirmaws/xsd/mfirma/ws.xsd">
+	<peticion>FirmaUsuario2FasesF2</peticion>
+	<versionMsg>1.0</versionMsg>
+	<parametros>
+		<idAplicacion />
+		<firmaElectronica />
+		<certificadoFirmante />
+		<idReferencia />
+		<formatoFirma />
+		<documento />
+		<nombreDocumento />
+		<tipoDocumento />
+		<algoritmoHash />
+		<custodiarDocumento />
+	</parametros>
+</mensajeEntrada>

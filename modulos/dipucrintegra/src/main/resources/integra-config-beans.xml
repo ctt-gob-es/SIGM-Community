@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd"
+[
+ 	
+]>
+
+<beans>
+	<bean name="integraConfigurationResourceLoader" id="integraConfigurationResourceLoader" 
+		class="ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigurationResourceLoaderImpl"/>
+
+	<bean id="integraConfigurationBean" class="org.springframework.beans.factory.config.MapFactoryBean">
+		<property name="sourceMap">
+			<map>
+				<entry key="CONFIG_SUBDIR" value="SIGEM_Tramitacion" />
+			</map>
+		</property>
+	</bean>
+
+</beans>

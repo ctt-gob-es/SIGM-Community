@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dss:SignResponse Profile="urn:afirma:dss:1.0:profile:XSS"
+	xmlns:ades="urn:oasis:names:tc:dss:1.0:profiles:AdES:schema#"
+	xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema" xmlns:arch="urn:oasis:names:tc:dss:1.0:profiles:archive"
+	xmlns:xss="urn:oasis:names:tc:dss:1.0:profiles:XSS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:oasis:names:tc:dss:1.0:profiles:AdES:schema# http://des-afirma.redsara.es/afirmaws/xsd/dss/oasis-dss-profiles-AdES-schema-v1.0-os.xsd urn:oasis:names:tc:dss:1.0:core:schema http://docs.oasis-open.org/dss/v1.0/oasis-dss-core-schema-v1.0-os.xsd urn:oasis:names:tc:dss:1.0:profiles:archive https://172.28.66.49:80/afirmaws/xsd/dss/oasis-dss-1.0-profiles-archive-schema.xsd urn:oasis:names:tc:dss:1.0:profiles:XSS https://172.28.66.49:80/afirmaws/xsd/dss/oasis-dss-1.0-profiles-XSS-schema-wd02.xsd"
+	xmlns:async="urn:oasis:names:tc:dss:1.0:profiles:asynchronousprocessing:1.0"
+	xmlns:afxp="urn:afirma:dss:1.0:profile:XSS:schema"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:cmism="http://docs.oasis-open.org/ns/cmis/messaging/200908/">
+	<dss:Result>
+		<dss:ResultMajor afirmaNodeType="text" />
+		<dss:ResultMessage afirmaNodeType="text" />
+		<dss:ResultMinor afirmaNodeType="text"/>
+	</dss:Result>
+	<dss:OptionalOutputs>
+		<ades:SignatureForm afirmaNodeType="text" />
+		<dss:SignatureType afirmaNodeType="text" />
+		<async:ResponseID afirmaNodeType="text" />
+		<afxp:ResponseTime afirmaNodeType="text" />
+		<dss:DocumentWithSignature>
+			<dss:Document afirmaNodeType="attribute" attributesToInclude="ID">
+				<dss:Base64XML afirmaNodeType="text" />
+			</dss:Document>
+		</dss:DocumentWithSignature>
+		<xss:ArchiveInfo>
+			<arch:ArchiveIdentifier afirmaNodeType="text" />
+		</xss:ArchiveInfo>
+		<!--  Nodo de actualización utilizado por firma servidor CounterSign -->
+		<dss:UpdatedSignature>
+			<dss:SignatureObject>
+				<dss:SignaturePtr afirmaNodeType="attribute" attributesToInclude="WhichDocument"  />
+				<ds:Signature afirmaNodeType="xml" />
+				<dss:Base64Signature afirmaNodeType="attributeText" attributesToInclude="Type"/>
+				<dss:Other>
+					<afxp:SignatureArchiveId afirmaNodeType="attribute" attributesToInclude="ID"/>
+					<cmism:getContentStream>
+						<cmism:repositoryId afirmaNodeType="text"/>
+						<cmism:objectId afirmaNodeType="text"/>
+					</cmism:getContentStream>
+				</dss:Other>
+			</dss:SignatureObject>
+		</dss:UpdatedSignature>
+	</dss:OptionalOutputs>
+	<dss:SignatureObject>
+		<dss:SignaturePtr afirmaNodeType="attribute" attributesToInclude="WhichDocument" />
+		<ds:Signature afirmaNodeType="xml" />
+		<dss:Base64Signature afirmaNodeType="attributeText"
+			attributesToInclude="Type" />
+		<dss:Other>
+			<afxp:SignatureArchiveId afirmaNodeType="attribute"	attributesToInclude="ID" />
+			<cmism:getContentStream>
+				<cmism:repositoryId afirmaNodeType="text" />
+				<cmism:objectId afirmaNodeType="text" />
+			</cmism:getContentStream>
+		</dss:Other>
+	</dss:SignatureObject>
+</dss:SignResponse>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mensajeEntrada xmlns="https://afirmaws/ws/validacion"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:SchemaLocation="https://_XXX_/afirmaws/mvalidacion/ws.xsd">
+	<peticion>ValidarCertificado</peticion>
+	<versionMsg>1.0</versionMsg>
+	<parametros>
+		<certificado></certificado>
+		<idAplicacion></idAplicacion>
+		<modoValidacion>0</modoValidacion>
+		<obtenerInfo>false</obtenerInfo>
+	</parametros>
+</mensajeEntrada>
+

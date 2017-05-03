@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dss:VerifyRequest Profile="urn:afirma:dss:1.0:profile:XSS"
+	RequestID="BCJGFFIDCBJAF0" xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema">
+	<dss:OptionalInputs xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema">
+		<dss:ClaimedIdentity xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema">
+			<dss:Name xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema">dipucr.sigem_quijote</dss:Name>
+		</dss:ClaimedIdentity>
+		<vr:ReturnVerificationReport
+			xmlns:vr="urn:oasis:names:tc:dss:1.0:profiles:verificationreport:schema#">
+			<vr:CheckOptions
+				xmlns:vr="urn:oasis:names:tc:dss:1.0:profiles:verificationreport:schema#">
+				<vr:CheckCertificateStatus>true</vr:CheckCertificateStatus>
+			</vr:CheckOptions>
+			<vr:ReportOptions
+				xmlns:vr="urn:oasis:names:tc:dss:1.0:profiles:verificationreport:schema#">
+				<vr:IncludeCertificateValues>false</vr:IncludeCertificateValues>
+				<vr:IncludeRevocationValues>false</vr:IncludeRevocationValues>
+				<vr:ReportDetailLevel>urn:oasis:names:tc:dss:1.0:reportdetail:noDetails</vr:ReportDetailLevel>
+			</vr:ReportOptions>
+		</vr:ReturnVerificationReport>
+	</dss:OptionalInputs>
+	<dss:SignatureObject xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema">
+		<dss:Other xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema">
+			<ds:X509Data xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+				<ds:X509Certificate><![CDATA[MIIDyjCCArKgAwIBAgIIeAhdYZcdc60wDQYJKoZIhvcNAQEFBQAwVzEUMBIGA1UEAwwLQWZpcm1hU3ViQ0ExIDAeBgNVBAsMF1RlbHZlbnQgR2xvYmFsIFNlcnZpY2VzMRAwDgYDVQQKDAdUZWx2ZW50MQswCQYDVQQGEwJFUzAeFw0xMDEwMjcxMDI4MzJaFw0xMjEwMjYxMDI4MzJaMFIxDzANBgNVBAMMBlNFUEFPVDEgMB4GA1UECwwXVGVsdmVudCBHbG9iYWwgU2VydmljZXMxEDAOBgNVBAoMB1RlbHZlbnQxCzAJBgNVBAYTAkVTMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhpMPjKmYlT+JKkyDu30Fmz6YQCHM3sZ02i6YFHh44bTXLQyixwP+TfOo+j4SboMOmizYEKL7e3Ty2bUuUerdVRue7OY+Ghw8Po97q5O6ZueZJDIAI3pSZv/Uc9qKdj6krQx98BemnKoFOyNZMUqGhiCh7ocTyaUzwi0FFBGtjijCAFzEEpHF4jXq/gFA7cAAUJHJCq5iDV4kQpgoq1ZLpC06wFR6iUbUMjmDlE6Y+9b/3yooVSlZle7oqwCB2hR+zuj5zwdlMClC1/FERuxDJ4J+1eantsyQEA3gJjLqc9u8X4kfSfLj+Zvut2nQoP/UTk1w9DD+lcpx+X4FervXowIDAQABo4GeMIGbMAwGA1UdEwEB/wQCMAAwOwYDVR0lBDQwMgYIKwYBBQUHAwEGCCsGAQUFBwMCBggrBgEFBQcDBAYIKwYBBQUHAwgGCCsGAQUFBwMJMB8GA1UdIwQYMBaAFJllOlt2vbfdiw4iwnmMO/ciD1H1MA4GA1UdDwEB/wQEAwIE8DAdBgNVHQ4EFgQUOtAYdmm2EuL5g8H61lqWZHL0JNowDQYJKoZIhvcNAQEFBQADggEBACYuJtr9pU/sCzui8IW1pv0wAztazDw3xfSn+wdnVwaDyvA66Fim0Hl2tLBo1WDrwEdQDHwVTC1hffHrTXBmT2l63bLDddBqs4kvgTbVeo2CQEtSfPyDlGiMhePLw+HFdQeADH0pjgDF8C+fbOjQ4ZJvSjAG5ckphsAT4HC093IHRA2EljguW6y1X8qsno0jnsAUKlRrMOC1kXVPpJSWMMmeUFEfLThvXUbsssbY3OFCyRPd/aelXno0S9KlfGCVx4Ngtaj8kyicfMHlWYplhcHVH6p3oEVqn/M96qyqLLrJ+ri8B3E1c4yC0x0cOK191M4/bKxysRXFTtTba0NOtUg=]]></ds:X509Certificate>
+			</ds:X509Data>
+		</dss:Other>
+	</dss:SignatureObject>
+</dss:VerifyRequest>

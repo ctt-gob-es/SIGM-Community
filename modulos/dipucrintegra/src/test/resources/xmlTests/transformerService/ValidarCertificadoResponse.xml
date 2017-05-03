@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<mensajeSalida xmlns="http://afirmaws/ws/validacion" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://afirmaws/ws/validacion https://172.28.66.49:80/afirmaws/xsd/mvalidacion/ws.xsd ">
+	<peticion>ValidarCertificado</peticion>
+	<versionMsg>1.0</versionMsg>
+	<respuesta>
+		<ResultadoProcesamiento>
+			<InfoCertificado>
+				<Campo>
+					<idCampo>idPolitica</idCampo>
+					<valorCampo>DEFAULT</valorCampo>
+				</Campo>
+				<Campo>
+					<idCampo>pais</idCampo>
+					<valorCampo>ES</valorCampo>
+				</Campo>
+				<Campo>
+					<idCampo>serialNumber</idCampo>
+					<valorCampo>8649265758093538221</valorCampo>
+				</Campo>
+				<Campo>
+					<idCampo>organizacion</idCampo>
+					<valorCampo>Telvent Global Services</valorCampo>
+				</Campo>
+				<Campo>
+					<idCampo>issuer</idCampo>
+					<valorCampo>AfirmaSubCA</valorCampo>
+				</Campo>
+				<Campo>
+					<idCampo>subject</idCampo>
+					<valorCampo>C=ES,O=Telvent,OU=Telvent Global Services,CN=SEPAOT</valorCampo>
+				</Campo>
+				<Campo>
+					<idCampo>validoDesde</idCampo>
+					<valorCampo>2010-10-27 mi&#xE9; 12:28:32 +0200</valorCampo>
+				</Campo>
+				<Campo>
+					<idCampo>versionPolitica</idCampo>
+					<valorCampo>13</valorCampo>
+				</Campo>
+				<Campo>
+					<idCampo>validoHasta</idCampo>
+					<valorCampo>2012-10-26 vie 12:28:32 +0200</valorCampo>
+				</Campo>
+			</InfoCertificado>
+			<ResultadoValidacion>
+				<resultado>0</resultado>
+				<descripcion>Validacion Satisfactoria</descripcion>
+				<ValidacionSimple>
+					<codigoResultado>0</codigoResultado>
+					<descResultado>Validacion Satisfactoria</descResultado>
+				</ValidacionSimple>
+				<ValidacionEstado>
+					<estado>0</estado>
+					<descEstado>Estado Certificado OK</descEstado>
+					<InfoMetodoVerificacion>
+						<estado>0</estado>
+						<descEstado>Estado Certificado OK</descEstado>
+						<fechaUltimaActualizacion>2011-03-22 mar 09:18:54 +0100</fechaUltimaActualizacion>
+						<Metodo>
+							<urlServidor>http://des-afirma.redsara.es/ejbca/publicweb/webdist/certdist?cmd=crl&amp;issuer=CN%3dAfirmaSubCA%2cOU%3dTelvent+Global+Services%2cO%3dTelvent%2cC%3dES</urlServidor>
+							<protocolo>CRL</protocolo>
+						</Metodo>
+						<tokenOCSP>
+							<![CDATA[]]>
+						</tokenOCSP>
+					</InfoMetodoVerificacion>
+				</ValidacionEstado>
+				<ValidacionCadena>
+					<codigoResultado>0</codigoResultado>
+					<descResultado>Cadena de certificacion OK</descResultado>
+				</ValidacionCadena>
+			</ResultadoValidacion>
+		</ResultadoProcesamiento>
+	</respuesta>
+</mensajeSalida>

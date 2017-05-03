@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dss:VerifyResponse Profile="urn:afirma:dss:1.0:profile:XSS"
+	xmlns:ades="urn:oasis:names:tc:dss:1.0:profiles:AdES:schema#"
+	xmlns:afxp="urn:afirma:dss:1.0:profile:XSS:schema"
+	xmlns:vr="urn:oasis:names:tc:dss:1.0:profiles:verificationreport:schema#"
+	xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sigpol="urn:oasis:names:tc:dss-x:1.0:profiles:SignaturePolicy:schema#"
+	xsi:schemaLocation="urn:oasis:names:tc:dss:1.0:profiles:AdES:schema# http://des-afirma.redsara.es/afirmaws/xsd/dss/oasis-dss-profiles-AdES-schema-v1.0-os.xsd urn:afirma:dss:1.0:profile:XSS:schema https://172.28.66.49:80/afirmaws/xsd/dss/afirma-dss-1.0-profiles-XSS-schema.xsd urn:oasis:names:tc:dss:1.0:profiles:verificationreport:schema# https://172.28.66.49:80/afirmaws/xsd/dss/oasis-dss-1.0-profile-verification-report-wd.xsd urn:oasis:names:tc:dss:1.0:core:schema http://docs.oasis-open.org/dss/v1.0/oasis-dss-core-schema-v1.0-os.xsd http://www.w3.org/2000/09/xmldsig# http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"
+	 afirmaNodeType="attribute" attributesToInclude="RequestID"
+	xmlns:async="urn:oasis:names:tc:dss:1.0:profiles:asynchronousprocessing:1.0"
+	xmlns:cmism="http://docs.oasis-open.org/ns/cmis/messaging/200908/">
+	<dss:Result>
+		<dss:ResultMajor afirmaNodeType="text"/>
+		<dss:ResultMessage afirmaNodeType="text"/>
+		<dss:ResultMinor afirmaNodeType="text"/>
+	</dss:Result>
+	<dss:OptionalOutputs>
+		<vr:VerificationReport afirmaNodeType="severalOcurrences" ocurrenceNames="vr:IndividualSignatureReport">
+			<vr:IndividualSignatureReport>
+				<vr:SignatureIdentifier>
+					<vr:DigestAlgAndValue>
+						<ds:DigestMethod afirmaNodeType="attribute" attributesToInclude="Algorithm"/>
+						<ds:DigestValue afirmaNodeType="text"/>
+					</vr:DigestAlgAndValue>
+				</vr:SignatureIdentifier>
+				<dss:Result>
+					<dss:ResultMajor afirmaNodeType="text"/>
+					<dss:ResultMessage afirmaNodeType="text" />
+				</dss:Result>
+				<vr:Details>
+					<afxp:ReadableCertificateInfo afirmaNodeType="mapFields">
+						<afxp:ReadableField>
+							<afxp:FieldIdentity afirmaNodeType="mapFieldKey"/>
+							<afxp:FieldValue  afirmaNodeType="mapFieldValue"/>
+						</afxp:ReadableField>
+					</afxp:ReadableCertificateInfo>
+					<afxp:DataInfoRef afirmaNodeType="attribute" attributesToInclude="WhichDataInfo"/>
+					<sigpol:VerifiedUnderSignaturePolicy>
+						<sigpol:SignaturePolicy>
+							<sigpol:SignaturePolicyIdentifier afirmaNodeType="text"/>
+							<sigpol:SignaturePolicyLocation afirmaNodeType="text"/>
+							<sigpol:DigestAndAlgorithm>
+								<ds:DigestMethod afirmaNodeType="attribute" attributesToInclude="Algorithm"/>
+								<ds:DigestValue afirmaNodeType="text"/>
+							</sigpol:DigestAndAlgorithm>
+						</sigpol:SignaturePolicy>
+					</sigpol:VerifiedUnderSignaturePolicy>
+					<afxp:SigPolicyDocument afirmaNodeType="attribute" attributesToInclude="Type,MimeType"/>
+					<dss:ProcessingDetails afirmaNodeType="severalOcurrences" ocurrenceNames="dss:ValidDetail,dss:IndeterminateDetail,dss:InvalidDetail">
+						<dss:ValidDetail afirmaNodeType="attribute" attributesToInclude="Type">
+							<!-- <dss:Code afirmaNodeType="text"/> -->
+							<dss:Message afirmaNodeType="text"/>
+						</dss:ValidDetail>
+						<dss:IndeterminateDetail afirmaNodeType="attribute" attributesToInclude="Type">
+							<dss:Code afirmaNodeType="text"/>
+							<dss:Message afirmaNodeType="text"/>
+						</dss:IndeterminateDetail>
+						<dss:InvalidDetail afirmaNodeType="attribute" attributesToInclude="Type">
+							<dss:Code afirmaNodeType="text"/>
+							<dss:Message afirmaNodeType="text"/>
+						</dss:InvalidDetail>
+					</dss:ProcessingDetails>
+					<vr:DetailedReport>
+						<vr:FormatOK afirmaNodeType="attribute" attributesToInclude="Type">
+							<dss:Code afirmaNodeType="text"/>
+							<dss:Message afirmaNodeType="text"/>
+						</vr:FormatOK>
+						<vr:SignatureOK>
+							<vr:SigMathOK afirmaNodeType="attribute" attributesToInclude="Type">
+								<dss:Code afirmaNodeType="text"/>
+								<dss:Message afirmaNodeType="text"/>
+							</vr:SigMathOK>
+						</vr:SignatureOK>
+						<vr:CertificatePathValidity>
+							<vr:PathValiditySummary afirmaNodeType="attribute" attributesToInclude="Type">
+								<dss:Code afirmaNodeType="text"/>
+								<dss:Message afirmaNodeType="text"/>
+							</vr:PathValiditySummary>
+							<vr:CertificateIdentifier>
+								<ds:X509IssuerName afirmaNodeType="text"/>
+								<ds:X509SerialNumber afirmaNodeType="text"/>
+							</vr:CertificateIdentifier>
+							<vr:PathValidityDetail afirmaNodeType="severalOcurrences" ocurrenceNames="vr:CertificateValidity">
+								<vr:CertificateValidity>
+									<vr:CertificateIdentifier>
+										<ds:X509IssuerName afirmaNodeType="text"/>
+										<ds:X509SerialNumber afirmaNodeType="text"/>
+									</vr:CertificateIdentifier>
+									<vr:Subject afirmaNodeType="text" />
+									<vr:ValidityPeriodOK afirmaNodeType="attribute" attributesToInclude="Type">
+										<dss:Code afirmaNodeType="text"/>
+										<dss:Message afirmaNodeType="text"/>
+									</vr:ValidityPeriodOK>
+									<vr:ExtensionsOK afirmaNodeType="attribute" attributesToInclude="Type">
+										<dss:Code afirmaNodeType="text"/>
+										<dss:Message afirmaNodeType="text"/>
+									</vr:ExtensionsOK>
+									<vr:CertificateValue afirmaNodeType="text"/>
+									<vr:SignatureOK>
+										<vr:SigMathOK afirmaNodeType="attribute" attributesToInclude="Type">
+											<dss:Code afirmaNodeType="text"/>
+											<dss:Message afirmaNodeType="text"/>
+										</vr:SigMathOK>
+									</vr:SignatureOK>
+									<vr:CertificateStatus>
+										<vr:CertStatusOK afirmaNodeType="attribute" attributesToInclude="Type">
+											<dss:Code afirmaNodeType="text"/>
+											<dss:Message afirmaNodeType="text"/>
+										</vr:CertStatusOK>
+										<vr:RevocationEvidence afirmaNodeType="attribute" attributesToInclude="ID">
+											<vr:CRLValidity>
+												<vr:CRLIdentifier afirmaNodeType="attribute" attributesToInclude="URI">
+													<xades:Issuer afirmaNodeType="text" />
+													<xades:IssueTime afirmaNodeType="text"/>
+													<xades:Number afirmaNodeType="text"/>
+												</vr:CRLIdentifier>
+												<CRLValue afirmaNodeType="text"/>
+												<vr:SignatureOK>
+													<vr:SigMathOK afirmaNodeType="attribute" attributesToInclude="Type">
+														<dss:Code afirmaNodeType="text"/>
+														<dss:Message afirmaNodeType="text"/>
+													</vr:SigMathOK>
+												</vr:SignatureOK>
+											</vr:CRLValidity>
+											<vr:OCSPValidity afirmaNodeType="attribute" attributesToInclude="ID">
+												<vr:OCSPValue afirmaNodeType="text"/>
+												<vr:SignatureOK>
+													<vr:SigMathOK afirmaNodeType="attribute" attributesToInclude="Type">
+														<dss:Code afirmaNodeType="text"/>
+														<dss:Message afirmaNodeType="text"/>
+													</vr:SigMathOK>
+												</vr:SignatureOK>
+												<vr:OCSPIdentifier afirmaNodeType="attribute" attributesToInclude="Type">
+													<xades:ResponderID>
+														<xades:ByName afirmaNodeType="text" />
+														<xades:ByKey afirmaNodeType="text" />
+													</xades:ResponderID>
+													<xades:ProducedAt afirmaNodeType="text"/>
+												</vr:OCSPIdentifier>
+											</vr:OCSPValidity>
+										</vr:RevocationEvidence>
+									</vr:CertificateStatus>
+								</vr:CertificateValidity>
+								<vr:TrustOrigin afirmaNodeType="attribute" attributesToInclude="Type">
+									<dss:Code afirmaNodeType="text"/>
+									<dss:Message afirmaNodeType="text"/>
+								</vr:TrustOrigin>
+							</vr:PathValidityDetail>
+						</vr:CertificatePathValidity>
+						<vr:Properties>
+							<vr:UnsignedProperties>
+								<vr:UnsignedSignatureProperties>
+									<vr:SignatureTimeStamp>
+										<vr:FormatOK afirmaNodeType="attribute" attributesToInclude="Type">
+											<dss:Code afirmaNodeType="text"/>
+											<dss:Message afirmaNodeType="text"/>
+										</vr:FormatOK>
+										<vr:TimeStampContent>
+											<vr:SerialNumber afirmaNodeType="text"/>
+											<vr:CreationTime afirmaNodeType="text"/>
+											<vr:Other>
+												<dss:Timestamp>
+													<dss:RFC3161TimeStampToken afirmaNodeType="text" />
+												</dss:Timestamp>
+											</vr:Other>
+										</vr:TimeStampContent>
+										<vr:MessageHashAlg afirmaNodeType="attribute" attributesToInclude="Type">
+											<dss:Code afirmaNodeType="text"/>
+											<dss:Message afirmaNodeType="text"/>
+										</vr:MessageHashAlg>
+										<vr:SignatureOK>
+											<vr:SigMathOK afirmaNodeType="attribute" attributesToInclude="Type">
+												<dss:Code afirmaNodeType="text"/>
+												<dss:Message afirmaNodeType="text"/>
+											</vr:SigMathOK>
+										</vr:SignatureOK>
+										<vr:CertificatePathValidity>
+											<vr:PathValiditySummary afirmaNodeType="attribute" attributesToInclude="Type">
+												<dss:Code afirmaNodeType="text"/>
+												<dss:Message afirmaNodeType="text"/>
+											</vr:PathValiditySummary>
+											<vr:CertificateIdentifier>
+												<ds:X509IssuerName afirmaNodeType="text"/>
+												<ds:X509SerialNumber afirmaNodeType="text"/>
+											</vr:CertificateIdentifier>
+											<vr:PathValidityDetail afirmaNodeType="severalOcurrences" ocurrenceNames="vr:CertificateValidity">
+												<vr:CertificateValidity>
+													<vr:CertificateIdentifier>
+														<ds:X509IssuerName afirmaNodeType="text"/>
+														<ds:X509SerialNumber afirmaNodeType="text"/>
+													</vr:CertificateIdentifier>
+													<vr:Subject afirmaNodeType="text" />
+													<vr:ValidityPeriodOK afirmaNodeType="attribute" attributesToInclude="Type">
+														<dss:Code afirmaNodeType="text"/>
+														<dss:Message afirmaNodeType="text"/>
+													</vr:ValidityPeriodOK>
+													<vr:ExtensionsOK afirmaNodeType="attribute" attributesToInclude="Type">
+														<dss:Code afirmaNodeType="text"/>
+														<dss:Message afirmaNodeType="text"/>
+													</vr:ExtensionsOK>
+													<vr:CertificateValue afirmaNodeType="text"/>
+													<vr:SignatureOK>
+														<vr:SigMathOK afirmaNodeType="attribute" attributesToInclude="Type">
+															<dss:Code afirmaNodeType="text"/>
+															<dss:Message afirmaNodeType="text"/>
+														</vr:SigMathOK>
+													</vr:SignatureOK>
+													<vr:CertificateStatus>
+														<vr:CertStatusOK afirmaNodeType="attribute" attributesToInclude="Type">
+															<dss:Code afirmaNodeType="text"/>
+															<dss:Message afirmaNodeType="text"/>
+														</vr:CertStatusOK>
+														<vr:RevocationEvidence afirmaNodeType="attribute" attributesToInclude="ID">
+															<vr:CRLValidity>
+																<vr:CRLIdentifier afirmaNodeType="attribute" attributesToInclude="URI">
+																	<xades:Issuer afirmaNodeType="text" />
+																	<xades:IssueTime afirmaNodeType="text"/>
+																	<xades:Number afirmaNodeType="text"/>
+																</vr:CRLIdentifier>
+																<CRLValue afirmaNodeType="text"/>
+																<vr:SignatureOK>
+																	<vr:SigMathOK afirmaNodeType="attribute" attributesToInclude="Type">
+																		<dss:Code afirmaNodeType="text"/>
+																		<dss:Message afirmaNodeType="text"/>
+																	</vr:SigMathOK>
+																</vr:SignatureOK>
+															</vr:CRLValidity>
+															<vr:OCSPValidity afirmaNodeType="attribute" attributesToInclude="ID">
+																<vr:OCSPValue afirmaNodeType="text"/>
+																<vr:SignatureOK>
+																	<vr:SigMathOK afirmaNodeType="attribute" attributesToInclude="Type">
+																		<dss:Code afirmaNodeType="text"/>
+																		<dss:Message afirmaNodeType="text"/>
+																	</vr:SigMathOK>
+																</vr:SignatureOK>
+																<vr:OCSPIdentifier afirmaNodeType="attribute" attributesToInclude="Type">
+																	<xades:ResponderID>
+																		<xades:ByName afirmaNodeType="text" />
+																		<xades:ByKey afirmaNodeType="text" />
+																	</xades:ResponderID>
+																	<xades:ProducedAt afirmaNodeType="text"/>
+																</vr:OCSPIdentifier>
+															</vr:OCSPValidity>
+														</vr:RevocationEvidence>
+													</vr:CertificateStatus>
+												</vr:CertificateValidity>
+												<vr:TrustOrigin afirmaNodeType="attribute" attributesToInclude="Type">
+													<dss:Code afirmaNodeType="text"/>
+													<dss:Message afirmaNodeType="text"/>
+												</vr:TrustOrigin>
+											</vr:PathValidityDetail>
+										</vr:CertificatePathValidity>
+									</vr:SignatureTimeStamp>
+								</vr:UnsignedSignatureProperties>
+							</vr:UnsignedProperties>
+						</vr:Properties>
+					</vr:DetailedReport>
+				</vr:Details>
+			</vr:IndividualSignatureReport>
+		</vr:VerificationReport>
+		<afxp:SignedDataInfo afirmaNodeType="severalOcurrences" ocurrenceNames="afxp:DataInfo">
+			<afxp:DataInfo afirmaNodeType="attribute" attributesToInclude="ID">
+				<afxp:ContentData>
+					<afxp:BinaryValue afirmaNodeType="text"/>
+					<afxp:MimeType afirmaNodeType="text" />
+				</afxp:ContentData>
+				<dss:DocumentHash>
+					<ds:DigestMethod afirmaNodeType="attribute" attributesToInclude="Algorithm"/>
+					<ds:DigestValue afirmaNodeType="text"/>
+				</dss:DocumentHash>
+				<afxp:SignedDataRefs afirmaNodeType="severalOcurrences" ocurrenceNames="afxp:SignedDataRef">
+					<afxp:SignedDataRef>
+						<afxp:XPath afirmaNodeType="text"/>
+						<afxp:ReferenceType afirmaNodeType="text"/>
+						<afxp:Mimetype afirmaNodeType="text"/>
+						<afxp:Encoding afirmaNodeType="text"/>
+						<afxp:HashAlgorithm afirmaNodeType="text"/>
+					</afxp:SignedDataRef>
+				</afxp:SignedDataRefs>
+			</afxp:DataInfo>
+		</afxp:SignedDataInfo>
+		<ades:SignatureForm afirmaNodeType="text" />
+		<dss:SignatureType afirmaNodeType="text"/>
+		<async:ResponseID afirmaNodeType="text"/>
+		<afxp:ResponseTime afirmaNodeType="text" />
+		<dss:UpdatedSignature>
+			<dss:SignatureObject>
+				<dss:SignaturePtr afirmaNodeType="attribute" attributesToInclude="WhichDocument"  />
+				<ds:Signature afirmaNodeType="xml" />
+				<dss:Base64Signature afirmaNodeType="attributeText" attributesToInclude="Type"/>
+				<dss:Other>
+					<afxp:SignatureArchiveId afirmaNodeType="attribute" attributesToInclude="ID"/>
+					<cmism:getContentStream>
+						<cmism:repositoryId afirmaNodeType="text"/>
+						<cmism:objectId afirmaNodeType="text"/>
+					</cmism:getContentStream>
+				</dss:Other>
+			</dss:SignatureObject>
+		</dss:UpdatedSignature>
+		<dss:DocumentWithSignature>
+			<dss:Document afirmaNodeType="attribute" attributesToInclude="ID">
+				<dss:Base64XML afirmaNodeType="text"/>
+			</dss:Document>
+		</dss:DocumentWithSignature>
+	</dss:OptionalOutputs>
+</dss:VerifyResponse>

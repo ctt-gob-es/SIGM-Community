@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inputMessage xmlns="https://afirmaws/ws/firma" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:SchemaLocation="https://_XXX_/afirmaws/xsd/mfirma/ws.xsd">
+	<request>ServerSignature</request>
+	<versionMsg>1.0</versionMsg>
+	<parameters>
+		<applicationId/>
+		<document/>
+		<documentName/>
+		<documentType/>
+		<signer/>
+		<reference/>
+		<hashAlgorithm/>
+		<eSignatureFormat/>
+	</parameters>
+</inputMessage>
