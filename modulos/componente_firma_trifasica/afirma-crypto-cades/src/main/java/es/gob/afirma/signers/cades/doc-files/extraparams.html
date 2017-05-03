@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<html>
+ <head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+  <title>
+   Valores aceptados como par&aacute;metros adicionales para las firmas CAdES
+  </title>
+ </head>
+ <body>
+ <p>Valores aceptados como par&aacute;metros adicionales para las firmas CAdES:</p>
+ <dl>
+    <dt><b><i>contentTypeOid</i></b> (propiedad compartida con XAdES, no aplica a contrafirmas)</dt>
+	<dd>
+	 OID que identifica el tipo de datos a firmar.
+	</dd>
+   <dt><b><i>contentDescription</i></b></dt>
+    <dd>
+     Descripci&oacute;n textual del tipo de contenido a firmar. Necesita que se establezca tambi&eacute;n la propiedad <code>contentTypeOid</code>.
+    </dd>
+    <dt><b><i>includeOnlySignningCertificate</i></b> (propiedad compartida con XAdES y PAdES)</dt>
+	<dd>
+	 Si se establece a <code>true</code> se incluye en la firma &uacute;nicamente el certificado del firmante (y no la cadena de certificaci&oacute;n completa).
+	 Si no se establece o se establece a <code>false</code> se incluir&aacute; toda la cadena de certificaci&oacute;n.
+	</dd>
+   <dt><b><i>mode</i></b></dt>
+    <dd>
+     Modo de firma a usar. El valor <code>explicit</code> indica que no se incluyen los datos firmados, sino una
+     referencia a estos, mientras que el valor <code>implicit</code> indica que s&iacute; se incluir&aacute;n dentro de
+     la propia firma los datos firmados.
+    </dd>
+   <dt><b><i>policyIdentifier</i></b> (propiedad compartida con XAdES y PAdES)</dt>
+    <dd>
+     Identificador de la pol&iacute;tica de firma. Debe ser un OID (o una URN de tipo OID) que identifique
+     &uacute;nivocamente la pol&iacute;tica en formato ASN.1 procesable.
+    </dd>
+   <dt><b><i>policyIdentifierHash</i></b> (propiedad compartida con XAdES y PAdES)</dt>
+    <dd>
+     Huella digital del documento de pol&iacute;tica de firma (normalmente del mismo fichero en formato ASN.1 procesable).
+     Si no se indica una huella digital y el par&aacute;metro <code>policyIdentifier</code> no es una URL accesible
+     universalmente se lanzar&aacute; una Excepci&oacute;n, mientras que si no se indica una huella digital pero el par&aacute;metro
+     <code>policyIdentifier</code> es una URL accesible universalmente, se descargar&aacute; el fichero apuntado por la URL para calcular la huella
+     digital <i>al vuelo</i>.
+    </dd>
+   <dt><b><i>policyIdentifierHashAlgorithm</i></b> (propiedad compartida con XAdES y PAdES)</dt>
+    <dd>
+     Algoritmo usado para el c&aacute;lculo de la huella digital indicada en el par&aacute;metro <code>policyIdentifierHash</code>.
+     Es obligatorio indicarlo cuando se proporciona una huella digital distinta de <code>0</code>.
+     </dd>
+    <dt><b><i>policyQualifier</i></b> (propiedad compartida con XAdES y PAdES)</dt>
+     <dd>
+      URL que apunta al documento descriptivo de la pol&iacute;tica de firma (normalmente un documento PDF con una descripci&oacute;n textual).
+     </dd>
+    <dt><b><i>precalculatedHashAlgorithm</i></b></dt>
+     <dd>
+      Algoritmo de huella digital (a usar para la firma) cuando esta se proporciona pre-calculada. Cuando se usan modos de firma
+      <i>expl&iacute;citos</i>, en los que los datos no se incluyen en la firma, es posible trabajar sin proporcionarlos, indicando
+      &uacute;nicamente su huella digital en el par&aacute;metro <code>data</code> y el algoritmo usado para su c&aacute;lculo.<br>
+      <b>
+       Siempre que se de valor a este par&aacute;metro se supondr&aacute; que los datos proporcionados en el par&aacute;metro
+       <code>data</code> son la huella digital de los datos a firmar, y no los datos a firmar en s&iacute;.
+      </b>
+     </dd>
+    <dt><b><i>signingCertificateV2</i></b> (propiedad compartida con PAdES)</dt>
+     <dd>
+      Debe establecerse a <code>true</code> si se desea usar la versi&oacute;n 2 del atributo
+      <i>Signing Certificate</i> de CAdES. Si no se establece un valor para este par&aacute;metro
+      se utilizar&aacute; la versi&oacute;n 1 con las firmas realizadas con algoritmos SHA1 y
+      la versi&oacute;n 2 con las firmas realizadas con cualquier otro algoritmo.
+     </dd>
+    <dt><b><i>signatureProductionCity</i></b> (propiedad compartida con XAdES y PAdES)</dt>
+     <dd>Ciudad en la que se realiza la firma.</dd>
+    <dt><b><i>signatureProductionPostalCode</i></b> (propiedad compartida con XAdES)</dt>
+     <dd>C&oacute;digo postal en el que se realiza la firma.</dd>
+    <dt><b><i>signatureProductionCountry</i></b></dt>
+     <dd>Pa&iacute;s en el que se realiza la firma.</dd>
+    <dt><b><i>commitmentTypeIndications</i></b> (propiedad compartida con XAdES)</dt>
+     <dd>
+      N&uacute;mero de <i>CommitmentTypeIndications</i> a a&ntilde;adir a la firma XAdES.<br>
+      En los par&aacute;metros siguientes, los <i>CommitmentTypeIndications</i> se numeran a partir de 0 (cero).
+     </dd>
+    <dt><b><i>commitmentTypeIndication</i>n<i>Identifier</i></b> (propiedad compartida con XAdES)</dt>  
+      <dd>
+      Tipo de <i>CommitmentTypeIndication</i> para el <i>CommitmentTypeIndication</i> n&uacute;mero <i>n</i> (contando desde cero). Atributo obligatorio:
+      <ul>
+       <li><i>1</i> = Prueba de origen</li>
+       <li><i>2</i> = Prueba de recepci&oacute;n</li>
+       <li><i>3</i> = Prueba de entrega</li>
+       <li><i>4</i> = Prueba de env&iacute;o</li>
+       <li><i>5</i> = Prueba de aprobaci&oacute;n</li>
+       <li><i>6</i> = Prueba de creaci&oacute;n</li>
+      </ul> 
+     </dd>
+    <dt><b><i>commitmentTypeIndication</i>n<i>CommitmentTypeQualifiers</i></b></dt>
+     <dd>
+      Lista de OID separados por el caracter '<i>|</i>' que se aportan como calificadores adicionales del 
+      <i>CommitmentTypeIndication</i> n&uacute;mero <i>n</i> (contando desde cero). Atributo opcional. 
+     </dd>     
+    <dt><b><i>tsaURL</i></b></dt>
+     <dd>URL de la autoridad de sello de tiempo (si no se indica no se a&ntilde;ade sello de tiempo).</dd>
+    <dt><b><i>tsaPolicy</i></b></dt>
+     <dd>Pol&iacute;tica de sellado de tiempo (obligatoria si se indica <code>tsaURL</code>).</dd>
+    <dt><b><i>tsaHashAlgorithm</i></b></dt>
+     <dd>Algoritmo de huella digital a usar para el sello de tiempo (si no se establece se usa SHA-1).</dd>
+    <dt><b><i>tsaRequireCert</i></b></dt>
+     <dd><code>true</code> si se requiere el certificado de la TSA, false en caso contrario (si no se establece se asume <code>true</code>).</dd>
+    <dt><b><i>tsaUsr</i></b></dt>
+     <dd>Nombre de usuario de la TSA.</dd>
+    <dt><b><i>tsaPwd</i></b></dt>
+     <dd>Contrase&ntilde;a del usuario de la TSA. Se ignora si no se ha establecido adem&aacute;s <code>tsaUsr</code>.</dd>
+    <dt><b><i>tsaSslPkcs12File</i></b></dt>
+     <dd>
+      Nombre del fichero PKCS#12 que contiene el certificado SSL cliente que pedir&aacute; la TSA al establecer la 
+      coneci&oacute;s HTTPS.
+     </dd>
+    <dt><b><i>tsaSslPkcs12FilePassword</i></b></dt>
+     <dd>
+      Contrase&ntilde;a del fichero PKCS#12 que contiene el certificado SSL cliente para las conexiones HTTPS.
+     </dd>
+  </dl>
+ </body>
+</html>
