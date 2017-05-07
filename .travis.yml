@@ -1,0 +1,15 @@
+language: java
+notifications:
+  email:
+  - francisco.solans@neodoo.es
+jdk:
+  - openjdk6
+before_install:
+  - cp .travis.maven.settings.xml $HOME/.m2/settings.xml
+script:
+  - mvn clean install -Dmaven.test.skip=true -Dinit
+  - mvn clean install -Dmaven.test.skip=true -Djars
+  - mvn clean install -Dmaven.test.skip=true
+  - mvn clean install -Dmaven.test.skip=true -Dwars
+  - mvn clean install -Dmaven.test.skip=true -Dears -P generate-distri
+

@@ -1,0 +1,26 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <localRepository/>
+  <interactiveMode/>
+  <usePluginRegistry/>
+  <offline/>
+  <pluginGroups/>
+  <servers/>
+  <mirrors/>
+  <proxies/>
+
+  <profiles>
+    <profile>
+      <id>development</id>
+        <properties>
+          <JAVA_1_4_HOME>${env.JAVA_HOME}</JAVA_1_4_HOME>
+          <JAVA_1_5_HOME>${env.JAVA_HOME}</JAVA_1_5_HOME>
+        </properties>
+    </profile>
+  </profiles>
+
+  <activeProfiles/>
+    <activeProfile>development</activeProfile>
+  </activeProfiles>
+    
+</settings>
