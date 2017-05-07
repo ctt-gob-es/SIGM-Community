@@ -19,7 +19,7 @@
     </profile>
   </profiles>
 
-  <activeProfiles/>
+  <activeProfiles>
     <activeProfile>development</activeProfile>
   </activeProfiles>
     
