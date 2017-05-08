@@ -5,6 +5,7 @@
 		<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dm</groupId>
 		<artifactId>fwktd-dm</artifactId>
 		<version>0.7</version>
+                <relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>fwktd-dm-bd</artifactId>
