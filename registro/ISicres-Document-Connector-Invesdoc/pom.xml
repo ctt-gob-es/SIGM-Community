@@ -10,6 +10,13 @@
 	<name>ISicres-Document-Connector-Invesdoc</name>
 	<packaging>jar</packaging>
 	<description>Modulo de gestion documental para Invesdoc</description>
+
+  <repositories>
+    <repository>
+      <id>uji</id>
+      <url>http://devel.uji.es/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
 	
 	
 	<dependencies>

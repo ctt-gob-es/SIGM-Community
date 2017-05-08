@@ -15,6 +15,13 @@
 		<maven>2.0.9</maven>
 	</prerequisites>
 
+  <repositories>
+    <repository>
+      <id>uji</id>
+      <url>http://devel.uji.es/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
+
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<jdk.version>1.5</jdk.version>
