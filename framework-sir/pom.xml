@@ -16,6 +16,13 @@
 
 	<name>fwktd-sir</name>
 
+ <repositories>
+    <repository>
+      <id>uji</id>
+      <url>http://devel.uji.es/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
+
   <properties>
 
           <!-- Framework dependencies -->
