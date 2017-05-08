@@ -7,9 +7,6 @@ jdk:
 before_install:
   - cp .travis.maven.settings.xml $HOME/.m2/settings.xml
 
-before_script:
-  - mvn install:install-file -Dfile=./framework-time/lib/ojdbc14.jar -DgroupId=com.oracle -DartifactId=ojdbc14 -Dversion=10.2.0.2.0 -Dpackaging=jar -DgeneratePom=true
-
 script:
   - mvn clean install -Dmaven.test.skip=true -Dinit
   - mvn clean install -Dmaven.test.skip=true -Djars
