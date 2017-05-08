@@ -17,13 +17,14 @@
 	
 	
 	<dependencies>
+		<!--
 		<dependency>
 			<groupId>java</groupId>
 			<artifactId>java-plugin</artifactId>
 			<version>jre-1.4.2_14</version>		
 			<scope>provided</scope>	
 		</dependency>
-		
+		-->		
 		<dependency>
 			<groupId>commons-lang</groupId>
  			 <artifactId>commons-lang</artifactId>
