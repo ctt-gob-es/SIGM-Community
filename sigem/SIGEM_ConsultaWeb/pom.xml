@@ -5,6 +5,7 @@
 		<groupId>es.ieci.tecdoc.sigem</groupId>
 		<artifactId>sigem_main</artifactId>
 		<version>3.0.1-M2</version>
+                <relativePath>../sigem_main/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>sigem_consultaWeb</artifactId>
