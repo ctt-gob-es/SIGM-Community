@@ -69,17 +69,21 @@
 		    <version>${jtds.version}</version>
 			<scope>test</scope>
 		</dependency>
-	    <dependency>
+	    	<dependency>
 		    <groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 			<version>${spring.version}</version>
 			<scope>test</scope>
-	    </dependency>
+	    	</dependency>
 		<dependency>
 		  <groupId>com.ibm.db2.jcc</groupId>
 		  <artifactId>db2jcc</artifactId>
 		  <version>${db2jcc.version}</version>
+		   	<!--
 			<scope>test</scope>
+			-->
+			<scope>system</scope>
+    			<systemPath>${basedir}/lib/db2jcc4-10.1.jar</systemPath>
 		</dependency>
 	    <dependency>
 		    <groupId>org.springframework</groupId>
