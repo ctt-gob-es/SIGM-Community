@@ -15,6 +15,14 @@
 	<properties>
 		<invesdoc.version>9.2.3.1</invesdoc.version>
 	</properties>
+
+  <repositories>
+    <repository>
+      <id>uji</id>
+      <url>http://devel.uji.es/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
+
 	<dependencies>
 		<!-- Dependencias de Inves Sicres -->
 		<dependency>
