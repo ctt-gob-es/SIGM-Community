@@ -5,6 +5,7 @@
 		<groupId>es.ieci.tecdoc.fwktd</groupId>
 		<artifactId>fwktd</artifactId>
 		<version>0.7</version>
+                <relativePath>../framework/pom.xml</relativePath>
 	</parent>
 
 	<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-time</groupId>
