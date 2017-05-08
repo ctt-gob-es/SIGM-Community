@@ -10,6 +10,13 @@
 	<name>ISicres-Common</name>
 	<packaging>jar</packaging>
 	<description>Modulo de Acceso a Datos de Inves Sicres</description>
+  <repositories>
+    <repository>
+      <id>uji</id>
+      <url>http://devel.uji.es/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
