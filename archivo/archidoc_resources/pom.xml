@@ -4,6 +4,7 @@
 		<groupId>es.ieci.tecdoc.archidoc</groupId>
 		<artifactId>archidoc_main</artifactId>
 		<version>5.0.9-M1</version>
+		<relativePath>../archidoc_main/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>archidoc_resources</artifactId>

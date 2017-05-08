@@ -5,6 +5,7 @@
 		<groupId>es.ieci.tecdoc.sigem</groupId>
 		<artifactId>sigem_main_wsclient</artifactId>
 		<version>3.0.1-M2</version>
+		<relativePath>../../sigem_main/sigem_main_wsclient/pom.xml</relativePath>
 	</parent>
 	
 	<artifactId>SIGEM_ServicioIntermediacionClienteLigeroWSClient</artifactId>
