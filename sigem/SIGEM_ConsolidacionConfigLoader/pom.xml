@@ -6,6 +6,7 @@
 		<artifactId>sigem_main</artifactId>
 		<groupId>es.ieci.tecdoc.sigem</groupId>
 		<version>3.0.1-M2</version>
+                <relativePath>../sigem_main/pom.xml</relativePath>
 	</parent>
 	
 	<artifactId>sigem_consolidacionConfigLoader</artifactId>
