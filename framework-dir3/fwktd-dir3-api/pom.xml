@@ -69,7 +69,11 @@
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc14</artifactId>
 			<version>${oracle.version}</version>
-			<scope>test</scope>
+                        <!--
+                        <scope>test</scope>
+                        -->
+                        <scope>system</scope>
+                        <systemPath>${basedir}/lib/ojdbc14.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>postgresql</groupId>
