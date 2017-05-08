@@ -14,17 +14,21 @@
 		<jdk.target.version>1.5</jdk.target.version>
 		<skipDeploy>false</skipDeploy>
 	</properties>	
-	
+
+ <repositories>
+    <repository>
+      <id>uji</id>
+      <url>http://devel.uji.es/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
 	
 	<dependencies>
-		<!--
 		<dependency>
 			<groupId>java</groupId>
 			<artifactId>java-plugin</artifactId>
 			<version>jre-1.4.2_14</version>		
 			<scope>provided</scope>	
 		</dependency>
-		-->		
 		<dependency>
 			<groupId>commons-lang</groupId>
  			 <artifactId>commons-lang</artifactId>

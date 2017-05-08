@@ -12,6 +12,13 @@
 	<version>0.7</version>
 	<name>fwktd-sendFilesApplet</name>
 
+ <repositories>
+    <repository>
+      <id>uji</id>
+      <url>http://devel.uji.es/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
+
 	<dependencies>
 
 		<dependency>

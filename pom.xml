@@ -10,17 +10,6 @@
     <maven>2.0.9</maven>
   </prerequisites>
 
- <repositories>
-    <repository>
-      <id>googlecode</id>
-      <url>http://lhg.googlecode.com/svn/!svn/bc/807/repository/</url>
-    </repository>
-    <repository>
-      <id>uji</id>
-      <url>http://devel.uji.es/nexus/content/groups/public/</url>
-    </repository>
-  </repositories>
-
   <modules>
     <module>framework</module>
     <module>framework-audit</module>
