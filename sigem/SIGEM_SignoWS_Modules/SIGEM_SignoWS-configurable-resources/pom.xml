@@ -3,6 +3,7 @@
 		<groupId>es.ieci.tecdoc.sigem</groupId>
 		<artifactId>sigem_main</artifactId>
 		<version>3.0.1-M2</version>
+                <relativePath>../../sigem_main/pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>SIGEM_SignoWS-configurable-resources</artifactId>
