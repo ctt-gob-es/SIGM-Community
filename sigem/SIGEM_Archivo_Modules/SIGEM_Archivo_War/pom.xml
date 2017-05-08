@@ -4,6 +4,7 @@
 		<groupId>es.ieci.tecdoc.sigem</groupId>
 		<artifactId>sigem_archivoModules</artifactId>
 		<version>3.0.1-M2</version>
+                <relativePath>../sigem_archivoModules/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>sigem_archivoWar</artifactId>
