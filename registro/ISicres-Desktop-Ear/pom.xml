@@ -4,6 +4,7 @@
 		<groupId>es.ieci.tecdoc.isicres</groupId>
 		<artifactId>InvesSicres</artifactId>
 		<version>8.0.1</version>
+                <relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>ISicres-Desktop-Ear</artifactId>

@@ -5,6 +5,7 @@
 		<artifactId>InvesSicres</artifactId>
 		<groupId>es.ieci.tecdoc.isicres</groupId>
 		<version>8.0.1</version>
+                <relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>ISicres-sql</artifactId>
