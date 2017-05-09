@@ -65,7 +65,7 @@
 				</property>
 			</activation>
 			<modules>
-				<module>archidoc_ear</module>
+				<!--module>archidoc_ear</module-->
 				<!-- module>archidocWS</module-->
 			</modules>
 		</profile>
