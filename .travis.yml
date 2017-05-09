@@ -8,9 +8,9 @@ before_install:
   - cp .travis.maven.settings.xml $HOME/.m2/settings.xml
 
 script:
-  - mvn clean install -Dmaven.test.skip=true -Dinit
-  - mvn clean install -Dmaven.test.skip=true -Djars
-  - mvn clean install -Dmaven.test.skip=true
-  - mvn clean install -Dmaven.test.skip=true -Dwars
-  - mvn clean install -Dmaven.test.skip=true -Dears -P generate-distri
+  - travis_wait ./mvn clean install -q -Dmaven.test.skip=true -Dinit
+  - travis_wait ./mvn clean install -q -Dmaven.test.skip=true -Djars
+  - travis_wait ./mvn clean install -q -Dmaven.test.skip=true
+  - travis_wait ./mvn clean install -q -Dmaven.test.skip=true -Dwars
+  - travis_wait ./mvn clean install -q -Dmaven.test.skip=true -Dears -P generate-distri
 
