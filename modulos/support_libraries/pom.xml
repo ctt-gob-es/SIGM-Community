@@ -1,0 +1,19 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.gob.afirma</groupId>
+	<artifactId>support-libraries</artifactId>
+	<version>1.0.0</version>
+	<name>support-libraries</name>
+	<packaging>pom</packaging>
+	
+	<modules>
+		<module>afirma-lib-jmimemagic/trunk</module>
+		<module>afirma-lib-juniversalchardet/trunk</module>
+		<module>afirma-lib-oro/trunk</module>
+		<module>afirma-lib-itext/trunk</module>
+		<module>afirma-lib-itext-android/trunk</module>
+	</modules>
+
+</project>

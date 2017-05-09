@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE magic PUBLIC "-//jmimemagic//DTD magic config 1.0//EN" "magic_1_0.dtd">
+<magic><info><version></version><author></author><description>file</description></info><match-list><match><mimetype></mimetype><extension></extension><description></description><test type="" offset="" length="" bitmask="" comparator=""></test><match-list><match><mimetype></mimetype><extension></extension><description supplemental=""></description><test offset="" length="" type="" bitmask="" comparator=""></test></match><match><mimetype></mimetype><extension></extension><description supplemental=""></description><test offset="" length="" type="" bitmask="" comparator=""></test></match></match-list></match></match-list></magic>
