@@ -20,6 +20,13 @@
 		<sqljdbc.version>1.2</sqljdbc.version>
 	</properties>
 
+  <repositories>
+    <repository>
+      <id>uji</id>
+      <url>http://devel.uji.es/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
+
 	<dependencies>
 
 		<!-- IECI dependencies -->

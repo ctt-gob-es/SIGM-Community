@@ -16,6 +16,13 @@
 	<name>ispac-alfresco</name>
 	<packaging>jar</packaging>
 
+  <repositories>
+    <repository>
+      <id>uji</id>
+      <url>http://devel.uji.es/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
+
 	<dependencies>
 
 		<!-- IECI dependencies -->

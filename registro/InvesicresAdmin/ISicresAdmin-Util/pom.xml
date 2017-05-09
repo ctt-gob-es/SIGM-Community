@@ -9,7 +9,12 @@
 	<packaging>jar</packaging>
 	<description>Modulo de Utilidades de la Administracion de Invesicres</description>
 
-
+  <repositories>
+    <repository>
+      <id>uji</id>
+      <url>http://devel.uji.es/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
 
 	<dependencies>
 		 <dependency>
