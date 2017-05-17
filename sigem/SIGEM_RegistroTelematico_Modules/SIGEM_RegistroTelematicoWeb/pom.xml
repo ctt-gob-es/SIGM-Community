@@ -636,6 +636,18 @@
 			<version>1.0</version>
 		</dependency>
 		
+		<dependency>
+			<artifactId>DipucrIntegra</artifactId>
+			<groupId>es.gob.afirma</groupId>	
+			<version>1.2.2_002</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+		</dependency>		
+		
 	</dependencies>
 
 	<build>

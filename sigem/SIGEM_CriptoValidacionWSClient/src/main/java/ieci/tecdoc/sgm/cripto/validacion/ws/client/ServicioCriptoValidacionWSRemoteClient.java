@@ -126,4 +126,10 @@ public class ServicioCriptoValidacionWSRemoteClient implements
 			return true;
 		}
 	}
+
+	public ResultadoValidacion validateSignature(String psB64Signature)
+			throws CriptoValidacionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

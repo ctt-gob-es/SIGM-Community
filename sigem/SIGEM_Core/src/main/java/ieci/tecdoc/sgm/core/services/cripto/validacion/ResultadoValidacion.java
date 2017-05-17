@@ -1,9 +1,13 @@
 package ieci.tecdoc.sgm.core.services.cripto.validacion;
 
+import java.util.Map;
+
 public class ResultadoValidacion {
 
 	public static final String VALIDACION_OK 	= "0";
 	public static final String VALIDACION_ERROR	= "-1";
+	
+	private Map<String, Object> propertiesResult;
 	
 	private String resultadoValidacion;
 	
@@ -34,6 +38,13 @@ public class ResultadoValidacion {
 	public void setResultadoValidacion(String resultadoValidacion) {
 		this.resultadoValidacion = resultadoValidacion;
 	}
-	
+
+	public Map<String, Object> getPropertiesResult() {
+		return propertiesResult;
+	}
+
+	public void setPropertiesResult(Map<String, Object> propertiesResult) {
+		this.propertiesResult = propertiesResult;
+	}	
 	
 }

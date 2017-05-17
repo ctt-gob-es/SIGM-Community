@@ -1,11 +1,13 @@
 package ieci.tecdoc.sgm.autenticacion.util.hook;
 
+import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
 import ieci.tecdoc.sgm.autenticacion.MessagesUtil;
 import ieci.tecdoc.sgm.autenticacion.util.hook.cert.CertificadoFirmaX509Info;
 import ieci.tecdoc.sgm.autenticacion.vo.ReceiptVO;
 import ieci.tecdoc.sgm.base.base64.Base64Util;
 import ieci.tecdoc.sgm.base.miscelanea.Goodies;
 import ieci.tecdoc.sgm.core.config.impl.spring.MultiEntityContextHolder;
+import ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigFilePathResolver;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.cripto.firma.CertificadoX509Info;
 import ieci.tecdoc.sgm.core.services.cripto.firma.ServicioFirmaDigital;
@@ -301,6 +303,17 @@ public class JustificantePDF implements FirmaExt {
 		String rutaPlantilla = additionalInfo.substring(0, i)
 				+ System.getProperty("file.separator");
 		params.put("SUBREPORT_DIR", rutaPlantilla);
+		
+		//[Dipucr-Manu Ticket #464] INICIO - ALSIGM3 Extraer textos legales de los formularios de registro
+		String rutaImg = ".\\";
+		try{
+			rutaImg = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + MultiEntityContextHolder.getEntity(), "/SIGEM_RegistroTelematicoWeb");
+		}catch(Exception e){
+			logger.error("Error al recuperar la ruta de las imágenes");
+		}
+		params.put("IMAGES_REPOSITORY_PATH", rutaImg);
+		//[Dipucr-Manu Ticket #464] FIN - ALSIGM3 Extraer textos legales de los formularios de registro
+		
 		JasperPrint objJasperPrint = JasperFillManager.fillReport(receipt, params, conn);
 		byte[] pdf = JasperExportManager.exportReportToPdf(objJasperPrint);
 		ByteArrayOutputStream output = new ByteArrayOutputStream(pdf.length);
@@ -336,7 +349,7 @@ public class JustificantePDF implements FirmaExt {
 
 			if (certificadoX509Info != null) {
 				ServicioCriptoValidacion servicioCriptoValidacion = LocalizadorServicios
-						.getServicioCriptoValidacion();
+						.getServicioCriptoValidacion("SIGEM_ServicioValidacion.SIGEM.API");
 
 				BASE64Encoder encoder = new BASE64Encoder();
 

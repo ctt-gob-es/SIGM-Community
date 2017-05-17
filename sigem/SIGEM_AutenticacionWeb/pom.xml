@@ -231,8 +231,19 @@
 			<artifactId>servlet-api</artifactId>
 			<version>2.3</version>
 			<scope>provided</scope>
-		</dependency>
-
+		</dependency>	
+				
+		<dependency>
+			<artifactId>DipucrIntegra</artifactId>
+			<groupId>es.gob.afirma</groupId>	
+			<version>1.2.2_002</version>
+		</dependency>	
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+		</dependency>	
 
 	</dependencies>
 

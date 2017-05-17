@@ -41,6 +41,8 @@ public class Defs {
 
 	public static final String CERTIFICADOS = "CERTIFICADOS";
 	public static final String CERTIFICADO_SELECCIONADO = "CERTIFICADO_SELECCIONADO";
+	public static final String CERTIFICADO_SELECCIONADO_SERIALNUMBER = "CERTIFICADO_SELECCIONADO_SERIALNUMBER";
+	public static final String CERTIFICADO_SELECCIONADO_SUBJECT = "CERTIFICADO_SELECCIONADO_SUBJECT";
 
 	public static final String TRAMITES = "TRAMITES";
 	public static final String TRAMITE_SELECCIONADO = "TRAMITE_SELECCIONADO";
@@ -123,6 +125,7 @@ public class Defs {
 	public static final String MENSAJE_ERROR_REGISTRAR_SOLICITUD = "mensaje_error.registrar_solicitud";
 	public static final String MENSAJE_ERROR_CERTIFICADO_FIRMA = "mensaje_error.certificado_firma";
 	public static final String MENSAJE_ERROR_SELECCIONAR_CERTIFICADO = "mensaje_error.seleccionar_certificado";
+	public static final String MENSAJE_ERROR_SELECCIONAR_CERTIFICADO_FIRMA = "mensaje_error.seleccionar_certificado_firma";
 	public static final String MENSAJE_ERROR_SOLICITUDES_REGISTRO = "mensaje_error.solicitudes_registro";
 	public static final String MENSAJE_ERROR_INICIO_EXPEDIENTE = "mensaje_error.inicio_expediente";
 	public static final String MENSAJE_ERROR_NO_EXISTE = "mensaje_error.no_tramite";

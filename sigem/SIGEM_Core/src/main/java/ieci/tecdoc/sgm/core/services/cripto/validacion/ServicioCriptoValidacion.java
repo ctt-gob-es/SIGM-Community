@@ -27,4 +27,12 @@ public interface ServicioCriptoValidacion {
      */
     public ResultadoValidacion validateCertificate(String psB64Certificate) throws CriptoValidacionException;
     
+    /**
+     * Método que valida la firma xml de un formulario
+     * @param psB64Signature Contenido de la firma
+     * @return Datos del resultado de la validación
+     * @throws CriptoValidacionException
+     */
+    public ResultadoValidacion validateSignature(String psB64Signature) throws CriptoValidacionException;
+    
 }

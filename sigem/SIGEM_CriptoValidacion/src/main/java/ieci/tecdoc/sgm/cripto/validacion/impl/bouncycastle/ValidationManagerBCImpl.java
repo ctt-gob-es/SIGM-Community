@@ -23,8 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import es.gob.afirma.utils.UtilsBase64;
 
 
 public class ValidationManagerBCImpl implements ServicioCriptoValidacion{
@@ -71,10 +70,9 @@ public class ValidationManagerBCImpl implements ServicioCriptoValidacion{
     	String b64 = null;
     	ValidacionBCConfiguration config = loadConfig();
     	try{
-    		BASE64Decoder oDecoder = new BASE64Decoder();
-    		byte[]res = crearResumenReal(config.getAlgorithm(), oDecoder.decodeBuffer(psBase64Document));
-    	    BASE64Encoder encoder=new BASE64Encoder();
-    	    b64 = encoder.encodeBuffer(res);
+    		byte[]res = crearResumenReal(config.getAlgorithm(), UtilsBase64.decode(psBase64Document));
+    	    //BASE64Encoder encoder=new BASE64Encoder();
+    	    b64 = UtilsBase64.encodeBytes(res);
     	} catch (Throwable e) {
     	    log.error("Error al crear hash de documento [createHash] [Throwable]", e.fillInStackTrace());  
     	    throw new CriptoValidacionException(CriptoValidacionException.EXC_HASH_GEN, e.getMessage(), e);
@@ -87,9 +85,8 @@ public class ValidationManagerBCImpl implements ServicioCriptoValidacion{
     public boolean validateHash(String psBase64Document, String psB64Hash) throws CriptoValidacionException {
     	try {
     		ValidacionBCConfiguration config = loadConfig();
-    		BASE64Decoder oDecoder = new BASE64Decoder();
-    		String cParamHash = new String(oDecoder.decodeBuffer(psB64Hash));
-    	    String resumenDoc = new String(crearResumenReal(config.getAlgorithm(), oDecoder.decodeBuffer(psBase64Document)));
+    		String cParamHash = new String(UtilsBase64.decode(psB64Hash));
+    	    String resumenDoc = new String(crearResumenReal(config.getAlgorithm(), UtilsBase64.decode(psBase64Document)));
     	    if(resumenDoc.equals(cParamHash))
     	    	return true;
     	    else
@@ -106,8 +103,7 @@ public class ValidationManagerBCImpl implements ServicioCriptoValidacion{
     	ResultadoValidacion oResultado = new ResultadoValidacion();
     	try {
     	    
-    	    BASE64Decoder decoder=new BASE64Decoder();
-    	    byte[]b=decoder.decodeBuffer(psB64Certificate);
+    	    byte[]b=UtilsBase64.decode(psB64Certificate);
     	    
     	    java.io.InputStream is=new java.io.ByteArrayInputStream(b);
     	    java.io.BufferedInputStream bis=new java.io.BufferedInputStream(is);
@@ -202,4 +198,12 @@ public class ValidationManagerBCImpl implements ServicioCriptoValidacion{
 		}
 		
 	}
+
+
+	public ResultadoValidacion validateSignature(String psB64Signature)
+			throws CriptoValidacionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

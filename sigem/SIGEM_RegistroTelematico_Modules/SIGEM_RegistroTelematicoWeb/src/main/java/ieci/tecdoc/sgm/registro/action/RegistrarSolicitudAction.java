@@ -21,11 +21,14 @@ import ieci.tecdoc.sgm.registro.utils.Misc;
 import java.io.File;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import java.security.cert.X509Certificate;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -34,6 +37,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import es.gob.afirma.transformers.TransformersFacade;
 
 public class RegistrarSolicitudAction extends RegistroWebAction {
 
@@ -73,25 +78,7 @@ public class RegistrarSolicitudAction extends RegistroWebAction {
 			   		bFirma = false;
 			   	}
 
-			   	if (bFirma) {
-			   		String codEntidad = Misc.obtenerEntidad(request).getIdentificador();
-			   		MultiEntityContextHolder.setEntity(codEntidad);
-				   	// Validar el certificado con el que se ha firmado
-				   	ServicioCriptoValidacion oServicioCriptoValidacion = LocalizadorServicios.getServicioCriptoValidacion();
-				   	
-				   	//TODO [DipuCR-Agustin #115] como no obtengo el certificado de autofirma en principio solo utilizo el filtro para firmar y no valido
-//				   	String certificadoFirma = (String)request.getParameter(Defs.CERTIFICADO);
-//				   	ResultadoValidacion resultadoValidacion = oServicioCriptoValidacion.validateCertificate(certificadoFirma);
-//				   	if (resultadoValidacion.getResultadoValidacion().equals(ResultadoValidacion.VALIDACION_ERROR)) {
-//
-//				    	session.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_CERTIFICADO_FIRMA);
-//				    	session.setAttribute(Defs.MENSAJE_ERROR_DETALLE, resultadoValidacion.getMensajeValidacion());
-//
-//				    	return mapping.findForward("failure");
-//				   	}
-			   	}
-
-			   	//Se crea el XML firmado por el usuario
+	     	   	//Se crea el XML firmado por el usuario
 			   	String firma = (String)request.getParameter(Defs.FIRMA);
 			   	String xml_request = (String)session.getAttribute(Defs.REQUEST);
 			   	byte[] registryReq = Base64Util.decode(xml_request);
@@ -142,18 +129,54 @@ public class RegistrarSolicitudAction extends RegistroWebAction {
 		        			+ xml_request.substring(indexEndSignature, xml_request.length());
 		        
 		        //INICIO [eCenpri-Felipe #457]
+		        //INICIO [eCenpri-Agustin S3#351] Comprobacion del formulario firmado y si lo ha firmado el mismo que se autentico
 		        //Incrustar el idTransaccion
 		        if(bFirma){
-				   	String certificadoFirma = (String)request.getParameter(Defs.CERTIFICADO);
 				   	
-			        ServicioFirmaDigital firmaDigital = LocalizadorServicios.getServicioFirmaDigital();
-
-			        String hashSolicitud = (String)session.getAttribute(Defs.HASH_SOLICITUD);
+					// Validar el certificado con el que se ha firmado
+					ServicioCriptoValidacion oServicioCriptoValidacion = LocalizadorServicios.getServicioCriptoValidacion();
+					   	
+					//[DipuCR-Agustin #115] como no obtengo el certificado de autofirma en principio solo utilizo el filtro para firmar y no valido
+					//[DipuCR-Agustin #341] validar certificado con el que se realizo la firma del formulario
+					String certificateSerialNumber = (String)request.getParameter(Defs.CERTIFICADO_SELECCIONADO_SERIALNUMBER);
+					String certificateSubject = (String)request.getParameter(Defs.CERTIFICADO_SELECCIONADO_SUBJECT);
+					
+					
+					//Comento la parte de validacion de la firma del formulario para subir a produccion
+//					ResultadoValidacion resultadoValidacion = oServicioCriptoValidacion.validateSignature(firma);
+//					
+//					//Si el certificado no es valido
+//					if (resultadoValidacion.getResultadoValidacion().equals(ResultadoValidacion.VALIDACION_ERROR)) {
+//
+//					    	session.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_CERTIFICADO_FIRMA);
+//					    	session.setAttribute(Defs.MENSAJE_ERROR_DETALLE, resultadoValidacion.getMensajeValidacion());
+//
+//					    	return mapping.findForward("failure");
+//					}
+//					
+//					//Si es valido vamos a comprobar que tiene el mismo numero de serie que con el que se autentico o pertenece al mismo sujeto
+//					Map<String, Object>[ ] signReports = (Map[ ]) resultadoValidacion.getPropertiesResult().get(TransformersFacade.getInstance().getParserParameterValue("IndividualSignatureReport"));
+//					Map<String, Object> individualSignReport = signReports[0];
+//					// comprobamos valores de la información del certificado (tipo mapa)
+//					Map<String, String> certificateInfo = (Map<String, String>) individualSignReport.get(TransformersFacade.getInstance().getParserParameterValue("ReadableCertificateInfo"));
+//					
+//					if(!certificateSerialNumber.equals(certificateInfo.get("serialNumber"))){
+//						if(!certificateSubject.equals(certificateInfo.get("subject"))){
+//							
+//							session.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_SELECCIONAR_CERTIFICADO_FIRMA);
+//					    	session.setAttribute(Defs.MENSAJE_ERROR_DETALLE, resultadoValidacion.getMensajeValidacion());
+//
+//					    	return mapping.findForward("failure");
+//							
+//						}
+//						
+//					}
+				   	
 			        
-			        //[Agus Ticket #1072] Provisionalmente sustituyo el idTransaon por el tiempoenmiliseg+idTramite	        
+			        //[Agus Ticket #1072] Sustituyo el idTransaon por el tiempoenmiliseg+idTramite	        
 
-//			        String idTransaction = firmaDigital.registrarFirma
-//			        	(Base64Util.decode(firma), Base64Util.decode(certificadoFirma), Base64Util.decode(hashSolicitud));
+					//			        String idTransaction = firmaDigital.registrarFirma
+					//		        	(Base64Util.decode(firma), Base64Util.decode(certificadoFirma), Base64Util.decode(hashSolicitud));
 
 				    Date date = new Date(); 
 			        String idTransaction = String.valueOf(date.getTime());
