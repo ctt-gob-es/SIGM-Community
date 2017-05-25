@@ -69,7 +69,7 @@
 			validar_NO[4] = new Array('DPCR_SRSD5','<xsl:value-of select="$lang.documento5"/>');
 	
 			//Array con los datos especificos del formulario -> -> ('id_campo','tag_xml')
-			var especificos = new Array(9);
+			var especificos = new Array(11);
 			especificos[0] = new Array('telefono','Telefono');
 			especificos[1] = new Array('domicilioNotificacion','Domicilio_Notificacion');
 			especificos[2] = new Array('localidad','Localidad');
@@ -79,6 +79,8 @@
 			especificos[6] = new Array('solicita','Solicita');
 			especificos[7] = new Array('solicitarEnvio','Solicitar_Envio');
 			especificos[8] = new Array('direccionElectronicaUnica','Direccion_Electronica_Unica');
+			especificos[9] = new Array('documentoIdentidad','documentoIdentidad');
+			especificos[10] = new Array('nombreSolicitante','nombreSolicitante');
 						
 			
 			var validarNumero = new Array(1);

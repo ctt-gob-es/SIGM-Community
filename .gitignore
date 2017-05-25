@@ -1,2 +1,8 @@
 target
-/.project
+.project
+.classpath
+.settings
+/sigem/SIGEM_DIST
+/tramitador/invesFlow/6.4.1/ear
+/tramitador/invesFlow/6.4.1/jar
+/tramitador/invesFlow/6.4.1/war

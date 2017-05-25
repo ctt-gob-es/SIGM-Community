@@ -164,27 +164,28 @@ public class SellarDocumentos{
 			
 			idTipDoc = DocumentosUtil.getTipoDoc(cct, "Documentos Sellados", DocumentosUtil.BUSQUEDA_EXACTA, false);
 
-			IItemCollection tipoDocSellarCollection = cct.getAPI().getEntitiesAPI().queryEntities("SPAC_P_PLANTDOC", "WHERE NOMBRE='Documentos Sellados' AND ID_TPDOC=" + idTipDoc + ";");
+			IItemCollection tipoDocSellarCollection = cct.getAPI().getEntitiesAPI().queryEntities("SPAC_P_PLANTDOC", "WHERE NOMBRE='Documentos Sellados' AND ID_TPDOC=" + idTipDoc);
 			Iterator<?> tipoDocSellarIterator = tipoDocSellarCollection.iterator();
 			
 			if (tipoDocSellarIterator.hasNext()) {
 				idPlantillaSellar = ((IItem) tipoDocSellarIterator.next()).getInt("ID_TPDOC");
 			}
 			
-			IItemCollection tipoDocCompareceCollection = cct.getAPI().getEntitiesAPI().queryEntities("SPAC_P_PLANTDOC", "WHERE NOMBRE='" + Constants.COMPARECE.PARTICIPANTES_COMPARECE + "' AND ID_TPDOC=" + idTipDoc + ";");
+			IItemCollection tipoDocCompareceCollection = cct.getAPI().getEntitiesAPI().queryEntities("SPAC_P_PLANTDOC", "WHERE NOMBRE='" + Constants.COMPARECE.PARTICIPANTES_COMPARECE + "' AND ID_TPDOC=" + idTipDoc);
 			Iterator<?> tipoDocCompareceIterator = tipoDocCompareceCollection.iterator();
 			
 			if (tipoDocCompareceIterator.hasNext()) {
 				idPlantillaComparece = ((IItem) tipoDocCompareceIterator.next()).getInt("ID");
 			}
 		
-			String consultaDocumentosRegistrados = "WHERE ID_TRAMITE=" + taskId + " AND (NREG IS NOT NULL AND NREG != '')";
+			//String consultaDocumentosRegistrados = "WHERE ID_TRAMITE=" + taskId + " AND (NREG IS NOT NULL AND NREG != '')";
+			String consultaDocumentosRegistrados = "WHERE ID_TRAMITE=" + taskId + " AND NREG IS NOT NULL";
 			
 			if (StringUtils.isNotEmpty(this.idDocSeleccionado)) {
 				logger.debug("Se va a sellar o enviar a COMPARECE el documento: " + this.idDocSeleccionado);
 				consultaDocumentosRegistrados += " AND ID = " + this.idDocSeleccionado;
 			}
-			consultaDocumentosRegistrados += " AND UPPER(EXTENSION_RDE) = 'PDF' ORDER BY DESCRIPCION;";
+			consultaDocumentosRegistrados += " AND UPPER(EXTENSION_RDE) = 'PDF' ORDER BY DESCRIPCION";
 			logger.debug("Se van a enviar a COMPARECE o sellar los documentos: " + consultaDocumentosRegistrados);
 
 			IItemCollection documentosRegistradosCollection = DocumentosUtil.queryDocumentos(cct, consultaDocumentosRegistrados);
@@ -255,78 +256,93 @@ public class SellarDocumentos{
 				
 				//Se vuelve a comprobar si se han dado de alta en COMPARECE los que antes no estaban, si es así se envía por comparece ahora.
 				compruebaEnvioComparece(cct, numexp, document);
-			
-				IItemCollection enviadosCompareceCollection = entitiesAPI.getEntities(Constants.TABLASBBDD.DPCR_ACUSES_COMPARECE, numexp, " IDENT_DOC = '" + idDoc + "'");
-				Iterator<?> enviadosCompareceIterator = enviadosCompareceCollection.iterator();				
-				if(enviadosCompareceIterator.hasNext()){
-					contadorComparece++;
-					if(fileComparece == null){
-						//fileComparece = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/documentoComparece.pdf");
-						fileComparece = new File(FileTemporaryManager.getInstance().getFileTemporaryPath()  + File.separator + FileTemporaryManager.getInstance().newFileName(".pdf"));						
-						documentComparece = new Document();
-
-						pdfCopy = PdfCopy.getInstance(documentComparece, new FileOutputStream(fileComparece));
-						documentComparece.open();
-
-						String entidad = EntidadesAdmUtil.obtenerEntidad(cct);
-						String imageLogoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_LOGO_PATH_DIPUCR);
-						String imageFondoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_FONDO_PATH_DIPUCR);
-						String imagePiePath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_PIE_PATH_DIPUCR);
-
-						File logoURL = new File(imageLogoPath);
-						if (logoURL != null) {
-							Image logo = Image.getInstance(imageLogoPath);
-							logo.scalePercent(50);
-							documentComparece.add(logo);
+				if(CompareceConfiguration.getInstanceNoSingleton(EntidadesAdmUtil.obtenerEntidad(cct)).getProperty(CompareceConfiguration.TIENE_COMPARECE).equals("S")){
+					IItemCollection enviadosCompareceCollection = entitiesAPI.getEntities(Constants.TABLASBBDD.DPCR_ACUSES_COMPARECE, numexp, " IDENT_DOC = '" + idDoc + "'");
+					Iterator<?> enviadosCompareceIterator = enviadosCompareceCollection.iterator();	
+				
+					if(enviadosCompareceIterator.hasNext()){
+						contadorComparece++;
+						if(fileComparece == null){
+							//fileComparece = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/documentoComparece.pdf");
+							fileComparece = new File(FileTemporaryManager.getInstance().getFileTemporaryPath()  + File.separator + FileTemporaryManager.getInstance().newFileName(".pdf"));						
+							documentComparece = new Document();
+	
+							pdfCopy = PdfCopy.getInstance(documentComparece, new FileOutputStream(fileComparece));
+							documentComparece.open();
+	
+							String entidad = EntidadesAdmUtil.obtenerEntidad(cct);
+							String imageLogoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_LOGO_PATH_DIPUCR);
+							String imageFondoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_FONDO_PATH_DIPUCR);
+							String imagePiePath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_PIE_PATH_DIPUCR);
+	
+							File logoURL = new File(imageLogoPath);
+							if (logoURL != null) {
+								Image logo = Image.getInstance(imageLogoPath);
+								logo.scalePercent(50);
+								documentComparece.add(logo);
+							}
+							File fondoURL = new File(imageFondoPath);
+							if(fondoURL != null){
+								Image fondo = Image.getInstance(imageFondoPath);
+								fondo.setAbsolutePosition(250, 50);
+								fondo.scalePercent(70);
+								documentComparece.add(fondo);
+								
+							}
+	
+							File pieURL = new File(imagePiePath);
+							if(pieURL != null){
+								Image pie = Image.getInstance(imagePiePath);
+								pie.setAbsolutePosition(documentComparece.getPageSize().getWidth() - 550, 15);
+								pie.scalePercent(80);
+								documentComparece.add(pie);
+								
+							}
+	
+							documentComparece.add(new Phrase("\n\n"));
+							Paragraph titulo = new Paragraph(new Phrase("DOCUMENTOS ENVIADOS A COMPARECE", fuenteTitulo));
+							titulo.setAlignment(Element.ALIGN_CENTER);
+							documentComparece.add(titulo);
+							documentComparece.add(new Phrase("\n"));
 						}
-						File fondoURL = new File(imageFondoPath);
-						if(fondoURL != null){
-							Image fondo = Image.getInstance(imageFondoPath);
-							fondo.setAbsolutePosition(250, 50);
-							fondo.scalePercent(70);
-							documentComparece.add(fondo);
-							
-						}
-
-						File pieURL = new File(imagePiePath);
-						if(pieURL != null){
-							Image pie = Image.getInstance(imagePiePath);
-							pie.setAbsolutePosition(documentComparece.getPageSize().getWidth() - 550, 15);
-							pie.scalePercent(80);
-							documentComparece.add(pie);
-							
-						}
-
-						documentComparece.add(new Phrase("\n\n"));
-						Paragraph titulo = new Paragraph(new Phrase("DOCUMENTOS ENVIADOS A COMPARECE", fuenteTitulo));
-						titulo.setAlignment(Element.ALIGN_CENTER);
-						documentComparece.add(titulo);
-						documentComparece.add(new Phrase("\n"));
-					}
-					logger.debug("Documento enviado a COMPARECE: " + descripcion);
-					
-					logger.debug("Insertar Ayuntamiento en documento comparece. " + destino);
-
-					documentComparece.add(new Phrase(contadorComparece + ".- Destino del registro: " + destino + " : "));
-					documentComparece.add(new Phrase("\n"));					
-					documentComparece.add(new Phrase("\t\tDocumento: " + descripcion + " : ", fuenteDocumento));
-					documentComparece.add(new Phrase("\n"));
-					documentComparece.add(new Phrase("\t\t\t Interesado o Representante - ID Notificación - Fecha de notificación"));
-					documentComparece.add(new Phrase("\n"));
-					int contadorRepresentantes = 0;
-					while(enviadosCompareceIterator.hasNext()){	
-						contadorRepresentantes++;
-						//se ha enviado por comparece
-						IItem enviadosCompareceItem = (IItem) enviadosCompareceIterator.next();
-						String dniNotificado = enviadosCompareceItem.getString("DNI_NOTIFICADO");
-						String idNotificacion = enviadosCompareceItem.getString("ID_NOTIFICACION");
+						logger.debug("Documento enviado a COMPARECE: " + descripcion);
 						
-						documentComparece.add(new Phrase("\t\t\t" + contadorRepresentantes + ".- " + dniNotificado + " - " + idNotificacion + " - " + sFechaRegistro + "."));
+						logger.debug("Insertar Ayuntamiento en documento comparece. " + destino);
+	
+						documentComparece.add(new Phrase(contadorComparece + ".- Destino del registro: " + destino + " : "));
+						documentComparece.add(new Phrase("\n"));					
+						documentComparece.add(new Phrase("\t\tDocumento: " + descripcion + " : ", fuenteDocumento));
+						documentComparece.add(new Phrase("\n"));
+						documentComparece.add(new Phrase("\t\t\t Interesado o Representante - ID Notificación - Fecha de notificación"));
+						documentComparece.add(new Phrase("\n"));
+						int contadorRepresentantes = 0;
+						while(enviadosCompareceIterator.hasNext()){	
+							contadorRepresentantes++;
+							//se ha enviado por comparece
+							IItem enviadosCompareceItem = (IItem) enviadosCompareceIterator.next();
+							String dniNotificado = enviadosCompareceItem.getString("DNI_NOTIFICADO");
+							String idNotificacion = enviadosCompareceItem.getString("ID_NOTIFICACION");
+							
+							documentComparece.add(new Phrase("\t\t\t" + contadorRepresentantes + ".- " + dniNotificado + " - " + idNotificacion + " - " + sFechaRegistro + "."));
+							documentComparece.add(new Phrase("\n"));
+						}
 						documentComparece.add(new Phrase("\n"));
 					}
-					documentComparece.add(new Phrase("\n"));
+					else{					 
+						addGrayBand(documentoRegistrado, pathFileTemp, infoPagRDE, tipoRegistro, numRegistro, sFechaRegistro, departamento);
+						rutaFileName = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + pathFileTemp;
+						logger.debug("Documento sellado: '" + descripcion + "', ruta: " + rutaFileName);
+						
+						//[Manu Ticket #110] - INICIO - ALSIGM3 Cambiar registro de salida para que actualice el campo ESTADONOTIFICACION
+						document.set("ESTADONOTIFICACION", "OK");
+						document.store(cct);
+			      		//[Manu Ticket #110] - FIN - ALSIGM3 Cambiar registro de salida para que actualice el campo ESTADONOTIFICACION
+	
+						fileSello = new File(rutaFileName);
+						listaDocumentosSellar.add(fileSello);
+					}
 				}
-				else{					 
+				else{
 					addGrayBand(documentoRegistrado, pathFileTemp, infoPagRDE, tipoRegistro, numRegistro, sFechaRegistro, departamento);
 					rutaFileName = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + pathFileTemp;
 					logger.debug("Documento sellado: '" + descripcion + "', ruta: " + rutaFileName);

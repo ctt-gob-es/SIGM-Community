@@ -568,7 +568,7 @@
 	<entitydef	id='64'
 				name='SPAC_P_TRAM_DATOSESPECIFICOS'
 				keyfield='ID'
-				sequence='SPAC_SQ_ID_PTRAM_DATOSESPECIFICOS'
+				sequence='SPAC_SQ_ID_PTRAM_DATOSESPEC'
 				description='Datos Específicos de un Trámite'
 				schemaexpr=''
 				keynumexp=''

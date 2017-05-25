@@ -53,7 +53,7 @@
 				<module>archivo/archidoc_main</module>
 				<module>framework</module>
 				<module>invesdoc</module>
-				<module>invesdoc/invesdoc_main</module>
+				<module>invesdoc/invesdoc_main</module>				
 				<module>sigem/SIGEM_Archivo_Modules</module>
 				<module>sigem/SIGEM_Archivo_Modules/SIGEM_Archivo_Main</module>
 			</modules>

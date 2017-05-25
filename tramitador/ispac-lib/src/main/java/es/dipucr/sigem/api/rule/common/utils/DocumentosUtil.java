@@ -1399,7 +1399,8 @@ public class DocumentosUtil {
 	public static String getNombrePlantillaByCod(IClientContext cct, String strCodPlantillaDoc) throws ISPACException{
 		String nombrePlantilla = "";
 		try {
-			IItemCollection plantillasDelTPDocCollection = cct.getAPI().getEntitiesAPI().queryEntities("SPAC_P_PLANTDOC", "WHERE COD_PLANT='" + strCodPlantillaDoc + "';");
+			String query = "WHERE COD_PLANT='" + strCodPlantillaDoc + "'";
+			IItemCollection plantillasDelTPDocCollection = cct.getAPI().getEntitiesAPI().queryEntities("SPAC_P_PLANTDOC", query);
 			Iterator<?> plantillasDelTPDocIterator = plantillasDelTPDocCollection.iterator();
 			
 			if (plantillasDelTPDocIterator.hasNext()) {
@@ -1422,7 +1423,7 @@ public class DocumentosUtil {
 		String tipoDocumento = "";
 		try {
 			int id_tpDoc = 0;
-			IItemCollection plantillasDelTPDocCollection = cct.getAPI().getEntitiesAPI().queryEntities("SPAC_P_PLANTDOC", "WHERE COD_PLANT='" + strCodPlantillaDoc + "';");
+			IItemCollection plantillasDelTPDocCollection = cct.getAPI().getEntitiesAPI().queryEntities("SPAC_P_PLANTDOC", "WHERE COD_PLANT='" + strCodPlantillaDoc + "'");
 			Iterator<?> plantillasDelTPDocIterator = plantillasDelTPDocCollection.iterator();
 			
 			if (plantillasDelTPDocIterator.hasNext()) {
@@ -1450,7 +1451,7 @@ public class DocumentosUtil {
 		String tipoDocumento = "";
 		try {
 			int id_tpDoc = 0;
-			String strQueryNombre = "SELECT ID_TPDOC FROM SPAC_P_PLANTDOC WHERE NOMBRE='" + plantilla + "';";
+			String strQueryNombre = "SELECT ID_TPDOC FROM SPAC_P_PLANTDOC WHERE NOMBRE='" + plantilla + "'";
 			ResultSet plantillasDelTPDocIterator = cct.getConnection().executeQuery(strQueryNombre).getResultSet();
 
 			while (plantillasDelTPDocIterator.next()) {
@@ -1474,7 +1475,7 @@ public class DocumentosUtil {
 		IItem tipDoc = null;
 		try {
 			int id_tpDoc = 0;
-			String strQueryNombre = "SELECT ID_TPDOC FROM SPAC_P_PLANTDOC WHERE NOMBRE='" + plantilla + "';";
+			String strQueryNombre = "SELECT ID_TPDOC FROM SPAC_P_PLANTDOC WHERE NOMBRE='" + plantilla + "'";
 			ResultSet plantillasDelTPDocIterator = cct.getConnection().executeQuery(strQueryNombre).getResultSet();
 
 			while (plantillasDelTPDocIterator.next()) {

@@ -307,11 +307,9 @@ public class BatchSignAction extends BaseDispatchAction {
 			hashCodes.add(docRef);
 			
 			// URL del documento			
-			//TODO tengo un problema con los ficheros temporales
 			//En la anterior version del servidor de firma 3 fases obtenia desde el servidor los ficheros a firmar mediante webservice
 			//Esta version obliga a que se recuperen por url, como son ficheros temporales no estan en el repositorio de sigem
 			//He tocado la clase SingleSign del servidor, si le paso la palabra webservice en el datasource como url llama a mi webservice
-			//La otra opcion que tengo en mente es implementar un servlet en sigem que devuelva los ficheros temporales
 			String url_ = DocumentUtil.generateURL(request, "download", session.getTicket(), String.valueOf(signDocument.getItemDoc().getKeyInt()), null);
 			String url = DATASOURCE_WEBSERVICE;
 			

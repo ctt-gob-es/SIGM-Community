@@ -420,7 +420,7 @@ public final class SingleSign {
 	}
 
 	byte[] getData() throws IOException {
-		checkDataSource(this.dataSource);
+		//checkDataSource(this.dataSource);
 		byte[] ret = null;
 		
 		if(this.dataSource.startsWith("http"))

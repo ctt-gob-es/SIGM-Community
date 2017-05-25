@@ -20,7 +20,7 @@ import ieci.tdw.ispac.ispaclib.db.DbCnt;
 public class PTramDatosEspecificosDAO extends ObjectDAO
 {
 	static final String TABLENAME 	= "SPAC_P_TRAM_DATOSESPECIFICOS";
-	static final String IDSEQUENCE 	= "SPAC_SQ_ID_PTRAM_DATOSESPECIFICOS";
+	static final String IDSEQUENCE 	= "SPAC_SQ_ID_PTRAM_DATOSESPEC";
 	static final String IDKEY = "ID";
 
 	/**

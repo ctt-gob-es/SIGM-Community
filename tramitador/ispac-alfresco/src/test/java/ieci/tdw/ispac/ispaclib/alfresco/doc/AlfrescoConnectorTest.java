@@ -414,4 +414,20 @@ public class AlfrescoConnectorTest extends TestCase {
 		);
 	}
 	
+	public static void main(String args[]){
+		
+		AlfrescoConnectorTest act = new AlfrescoConnectorTest();
+		try {
+			
+			act.setUp();
+			act.testGetRepositoryInfo();
+		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
 }

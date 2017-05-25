@@ -1,9 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="afirma-server-triphase-signer">
+    <wb-module deploy-name="afirma-server-triphase-signer-3.3.2-SNAPSHOT">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="afirma-core-3.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-core/afirma-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-lib-jmimemagic-0.0.3-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-lib-jmimemagic/afirma-lib-jmimemagic">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-lib-oro-0.0.3-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-lib-oro/afirma-lib-oro">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-server-triphase-signer-core-3.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-server-triphase-signer-core/afirma-server-triphase-signer-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-crypto-cades-multi-3.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-crypto-cades-multi/afirma-crypto-cades-multi">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-crypto-cades-3.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-crypto-cades/afirma-crypto-cades">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-crypto-core-pkcs7-3.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-crypto-core-pkcs7/afirma-crypto-core-pkcs7">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-crypto-xades-3.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-crypto-xades/afirma-crypto-xades">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-crypto-core-xml-3.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-crypto-core-xml/afirma-crypto-core-xml">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-crypto-pdf-3.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-crypto-pdf/afirma-crypto-pdf">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-ui-core-jse-3.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-ui-core-jse/afirma-ui-core-jse">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-crypto-core-pkcs7-tsp-3.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-crypto-core-pkcs7-tsp/afirma-crypto-core-pkcs7-tsp">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="afirma-lib-itext-3.3.2-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/afirma-lib-itext/afirma-lib-itext">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="afirma-server-triphase-signer"/>
         <property name="java-output-path" value="/afirma-server-triphase-signer/target/classes"/>
     </wb-module>

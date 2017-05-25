@@ -103,6 +103,7 @@ public class DipucrAutoGeneraDocIniTramiteRule implements IRule {
 									String nombre = "";
 									if ((String)part.getString("NOMBRE")!=null) nombre = (String)part.getString("NOMBRE");
 									documento.set("DESCRIPCION", nombreDoc+" - "+nombre);
+									documento.set("DESTINO", nombre);
 									documento.store(cct);
 								}
 							}							

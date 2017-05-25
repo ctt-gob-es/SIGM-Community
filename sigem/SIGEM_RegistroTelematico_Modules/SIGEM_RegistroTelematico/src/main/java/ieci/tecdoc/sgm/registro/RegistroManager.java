@@ -1,5 +1,29 @@
 package ieci.tecdoc.sgm.registro;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import es.ieci.tecdoc.fwktd.util.file.FileUtils;
 import ieci.tecdoc.sgm.autenticacion.FirmaManager;
 import ieci.tecdoc.sgm.autenticacion.SesionManager;
 import ieci.tecdoc.sgm.autenticacion.util.Solicitante;
@@ -27,6 +51,12 @@ import ieci.tecdoc.sgm.core.services.catalogo.Documentos;
 import ieci.tecdoc.sgm.core.services.catalogo.ServicioCatalogoTramites;
 import ieci.tecdoc.sgm.core.services.catalogo.Tramite;
 import ieci.tecdoc.sgm.core.services.dto.Entidad;
+import ieci.tecdoc.sgm.core.services.registro.Document;
+import ieci.tecdoc.sgm.core.services.registro.DocumentQuery;
+import ieci.tecdoc.sgm.core.services.registro.Page;
+import ieci.tecdoc.sgm.core.services.registro.RegisterWithPagesInfoPersonInfo;
+import ieci.tecdoc.sgm.core.services.registro.ServicioRegistro;
+import ieci.tecdoc.sgm.core.services.registro.UserInfo;
 import ieci.tecdoc.sgm.core.services.repositorio.ContenedorDocumento;
 import ieci.tecdoc.sgm.core.services.repositorio.ContenedorDocumentos;
 import ieci.tecdoc.sgm.core.services.repositorio.DocumentoInfo;
@@ -63,31 +93,6 @@ import ieci.tecdoc.sgm.registro.util.database.RegistroDatos;
 import ieci.tecdoc.sgm.registro.util.database.RegistroDocumentoCSVDatos;
 import ieci.tecdoc.sgm.registro.util.database.RegistroDocumentoDatos;
 import ieci.tecdoc.sgm.registro.util.database.RegistroSecuenciaDatos;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import es.ieci.tecdoc.fwktd.util.file.FileUtils;
 
 /**
  * Clase que proporciona la interfaz de funcionalidad de registro.
@@ -2025,25 +2030,29 @@ public class RegistroManager {
    throws RegistroExcepcion {
 	   byte[] receipt = null;
 	      try {
-	    	  ServicioRepositorioDocumentosTramitacion oServicio = LocalizadorServicios.getServicioRepositorioDocumentosTramitacion();
-	    	  RegistroDocumentoDatos rdd = new RegistroDocumentoDatos();
-	    	  rdd.load(registryNumber, code, entidad);
-	    	  logger.warn("rdd.getGuid() "+rdd.getGuid());
-	    	  DocumentoInfo di = oServicio.retrieveDocument(null, rdd.getGuid(), getEntidad(entidad));
-	    	  logger.warn(di.getContent().length+"");
-	    	  if(di.getContent().length>0){
-	    		  receipt = di.getContent();
-	    	  }
-	    	  /**
-	    	   * [Ticket#1048 Teresa ] (SIGEM Error cuando se va a obtener el Justificante de Registro en una solicitud Telemática)
-	    	   * **/
-	    	  else{
-	    		  logger.warn("contenido vacio");
-	    		  ServicioRepositorioDocumentosTramitacion repositorio = LocalizadorServicios.getServicioRepositorioDocumentosTramitacion();
-	    		  DocumentoInfo docInfo = repositorio.retrieveDocument("", rdd.getGuid(), getEntidad(entidad));
-	    		  receipt = docInfo.getContent();
-	    	  }
+	    	  ServicioRegistro servicioRegistroPresencial = LocalizadorServicios.getServicioRegistro();
 	    	  
+	    	  UserInfo userInfo = new UserInfo();
+	    	  userInfo.setUserName("REGISTRO_TELEMATICO");
+	    	  userInfo.setPassword("*");
+	    	  
+	    	  RegisterWithPagesInfoPersonInfo infoRegPresencial = servicioRegistroPresencial.getInputRegister(userInfo, registryNumber, getEntidad(entidad));
+	    	  
+	    	  Integer bookId = null;
+	    	  Integer folderId = null;
+	    	  Integer docID = null;
+	    	  Integer pageID = null;
+	    	  for(Document doc : infoRegPresencial.getDocInfo()){
+	    		  if (null != doc.getDocumentName() && doc.getDocumentName().equals(code)){
+	    			  bookId = Integer.parseInt(doc.getBookId());
+	    			  folderId = Integer.parseInt(doc.getFolderId());
+	    			  docID = Integer.parseInt(doc.getDocID());
+	    			  pageID = Integer.parseInt(((Page)doc.getPages().get(0)).getPageID());
+	    		  }
+	    	  }
+	    	  DocumentQuery documentoInfo = servicioRegistroPresencial.getDocumentFolder(userInfo , bookId, folderId, docID, pageID,  getEntidad(entidad));
+	  		  receipt = documentoInfo.getContent();
+	  		
 	      } catch (Exception e) {
 	    	  logger.error("Error al obtener documento [getDocument][Excepcion]", e.fillInStackTrace());
 	    	  throw new RegistroExcepcion(RegistroCodigosError.EC_BAD_REGISTRY_NUMBER);

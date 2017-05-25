@@ -4,80 +4,80 @@
 	<!--
 		Repositorio de documentos electronicos 
 	 -->
-	<Repository id="3" alias="ge_docs" default="true">
+	<Repository id="3" alias="repositorio_tramitacion" default="true">
 	    <Properties>
-	    	<Property name="ALFRESCO_IP_ADDRESS">localhost</Property>
-	    	<Property name="ALFRESCO_PORT">8080</Property>
-	    	<Property name="ALFRESCO_USER">admin</Property>
-	    	<Property name="ALFRESCO_PASSWORD">admin</Property>
+	    	<Property name="ALFRESCO_IP_ADDRESS">xxx.xxx.xxx.xxx</Property>
+	    	<Property name="ALFRESCO_PORT">puerto</Property>
+	    	<Property name="ALFRESCO_USER">usuario</Property>
+	    	<Property name="ALFRESCO_PASSWORD">contraseña</Property>
 
 	    	<Property name="ALFRESCO_STORE_NAMESPACE">Store</Property>
 	    	<Property name="ALFRESCO_FILE_KEY">document_name</Property>
-	    	<Property name="ALFRESCO_ASPECTS">{ge.model}aspectDocumento</Property>
-	    	<Property name="ALFRESCO_REPOSITORY_WEBSCRIPT_URL">http://localhost:8080/alfresco/service/ieci/repository/ge</Property>
+	    	<Property name="ALFRESCO_ASPECTS">{repositorio_tramitacion.model}aspectDocumento</Property>
+	    	<Property name="ALFRESCO_REPOSITORY_WEBSCRIPT_URL">http://xxx.xxx.xxx.xxx:puerto/alfresco/service/ieci/repository/repositorio_tramitacion</Property>
 
 	    	<Property name="DOCUMENT_NAME_TOKEN">documentName</Property>
 		</Properties>
 	    <MetaDataMappings>
 	      	<Mapping>
 	        	<Source type="token">documentId</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">document_id</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">document_id</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">documentName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">document_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">document_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">documentType</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">document_type</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">document_type</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">documentSize</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">document_size</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">document_size</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">procedureId</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">procedure_id</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">procedure_id</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">procedureName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">procedure_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">procedure_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">expedientId</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">expedient_id</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">expedient_id</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">expedientName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">expedient_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">expedient_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">userGUID</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">user_guid</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">user_guid</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">userName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">user_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">user_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">stageId</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">stage_id</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">stage_id</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">stageName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">stage_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">stage_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">taskId</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">task_id</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">task_id</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">taskName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">task_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">task_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">mimetype</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">mimetype</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">mimetype</Destination>
 	      	</Mapping>
 		</MetaDataMappings>
 		<Tokens>
@@ -142,94 +142,98 @@
 				<Value type="xpath">/doc_properties/property[contains(name,'mimetype')]/value</Value>
 			</Token>
 		</Tokens>
-		<FolderPath>/app:company_home/cm:ge</FolderPath>
+		<FolderPath>/app:company_home/cm:repositorio_tramitacion</FolderPath>
 	</Repository>
 	
 	<!--
 		Repositorio de documentos electronicos firmados 
 	 -->
-	<Repository id="4" alias="ge_docs_firmados">
+	<Repository id="4" alias="repositorio_docs_firmados">
 	    <Properties>
-	    	<Property name="ALFRESCO_IP_ADDRESS">localhost</Property>
-	    	<Property name="ALFRESCO_PORT">8080</Property>
-	    	<Property name="ALFRESCO_USER">admin</Property>
-	    	<Property name="ALFRESCO_PASSWORD">admin</Property>
+	    	<Property name="ALFRESCO_IP_ADDRESS">xxx.xxx.xxx.xxx</Property>
+	    	<Property name="ALFRESCO_PORT">puerto</Property>
+	    	<Property name="ALFRESCO_USER">usuario</Property>
+	    	<Property name="ALFRESCO_PASSWORD">contraseña</Property>
 
 	    	<Property name="ALFRESCO_STORE_NAMESPACE">Store</Property>
 	    	<Property name="ALFRESCO_FILE_KEY">document_name</Property>
-	    	<Property name="ALFRESCO_ASPECTS">{ge.model}aspectDocumento,{ge.model}aspectFirmaDocumento</Property>
-	    	<Property name="ALFRESCO_REPOSITORY_WEBSCRIPT_URL">http://localhost:8080/alfresco/service/ieci/repository/ge_firmados</Property>
+	    	<Property name="ALFRESCO_ASPECTS">{repositorio_tramitacion.model}aspectDocumento,{repositorio_tramitacion.model}aspectFirmaDocumento</Property>
+	    	<Property name="ALFRESCO_REPOSITORY_WEBSCRIPT_URL">http://xxx.xxx.xxx.xxx:puerto/alfresco/service/ieci/repository/repositorio_tramitacion_custodia</Property>
 
 	    	<Property name="DOCUMENT_NAME_TOKEN">documentName</Property>
 		</Properties>
 	    <MetaDataMappings>
 	      	<Mapping>
 	        	<Source type="token">documentId</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">document_id</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">document_id</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">documentName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">document_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">document_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">documentType</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">document_type</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">document_type</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">documentSize</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">document_size</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">document_size</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">procedureId</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">procedure_id</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">procedure_id</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">procedureName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">procedure_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">procedure_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">expedientId</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">expedient_id</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">expedient_id</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">expedientName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">expedient_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">expedient_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">userGUID</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">user_guid</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">user_guid</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">userName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">user_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">user_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">stageId</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">stage_id</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">stage_id</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">stageName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">stage_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">stage_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">taskId</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">task_id</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">task_id</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">taskName</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">task_name</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">task_name</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">mimetype</Source>
-	        	<Destination type="string" aspect="aspectDocumento" model="ge.model">mimetype</Destination>
+	        	<Destination type="string" aspect="aspectDocumento" model="repositorio_tramitacion.model">mimetype</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">sign</Source>
-	        	<Destination type="string" aspect="aspectFirmaDocumento" model="ge.model">sign</Destination>
+	        	<Destination type="string" aspect="aspectFirmaDocumento" model="repositorio_tramitacion.model">sign</Destination>
 	      	</Mapping>
 	      	<Mapping>
 	        	<Source type="token">creationDate</Source>
-	        	<Destination type="string" aspect="aspectFirmaDocumento" model="ge.model">creation_date</Destination>
+	        	<Destination type="string" aspect="aspectFirmaDocumento" model="repositorio_tramitacion.model">creation_date</Destination>
+	      	</Mapping>
+		<Mapping>
+	        	<Source type="token">Firma</Source>
+	        	<Destination type="string" aspect="aspectFirmaDocumento" model="repositorio_tramitacion.model">Firma</Destination>
 	      	</Mapping>
 		</MetaDataMappings>
 		<Tokens>
@@ -301,8 +305,104 @@
 				<Name>creationDate</Name>
 				<Value type="xpath">/doc_properties/property[contains(name,'Fecha Creación')]/value</Value>
 			</Token>
+			<Token>
+				<Name>Firma</Name>
+				<Value type="xpath">/doc_properties/property[contains(name,'Firma')]/value</Value>
+			</Token>
 		</Tokens>
-		<FolderPath>/app:company_home/cm:ge_custodia</FolderPath>
+		<FolderPath>/app:company_home/cm:repositorio_tramitacion_custodia</FolderPath>
 	</Repository>
-		
+	
+	
+	
+	<Repository id="5" alias="repositorio_docs_registro" default="true">
+	    <Properties>
+	    	<Property name="ALFRESCO_IP_ADDRESS">xxx.xxx.xxx.xxx</Property>
+	    	<Property name="ALFRESCO_PORT">puerto</Property>
+	    	<Property name="ALFRESCO_USER">usuario</Property>
+	    	<Property name="ALFRESCO_PASSWORD">contraseña</Property>
+
+	    	<Property name="ALFRESCO_STORE_NAMESPACE">Store</Property>
+	    	<Property name="ALFRESCO_FILE_KEY">document_name</Property>
+	    	<Property name="ALFRESCO_ASPECTS">{repositorio_docs_registro.model}aspectRegistro</Property>
+	    	<Property name="ALFRESCO_REPOSITORY_WEBSCRIPT_URL">http://xxx.xxx.xxx.xxx:puerto/alfresco/service/ieci/repository/repositorio_docs_registro</Property>
+
+	    	<Property name="DOCUMENT_NAME_TOKEN">documentName</Property>
+		</Properties>
+	    <MetaDataMappings>
+	      	<Mapping>
+	        	<Source type="token">fileName</Source>
+	        	<Destination type="string" aspect="aspectRegistro" model="repositorio_docs_registro.model">fileName</Destination>
+	      	</Mapping>
+	      	<Mapping>
+	        	<Source type="token">bookID</Source>
+	        	<Destination type="string" aspect="aspectRegistro" model="repositorio_docs_registro.model">bookID</Destination>
+	      	</Mapping>
+	      	<Mapping>
+	        	<Source type="token">bookType</Source>
+	        	<Destination type="string" aspect="aspectRegistro" model="repositorio_docs_registro.model">bookType</Destination>
+	      	</Mapping>
+	      	<Mapping>
+	        	<Source type="token">bookName</Source>
+	        	<Destination type="string" aspect="aspectRegistro" model="repositorio_docs_registro.model">bookName</Destination>
+	      	</Mapping>
+	      	<Mapping>
+	        	<Source type="token">registerNumber</Source>
+	        	<Destination type="string" aspect="aspectRegistro" model="repositorio_docs_registro.model">registerNumber</Destination>
+	      	</Mapping>
+	      	<Mapping>
+	        	<Source type="token">registerUser</Source>
+	        	<Destination type="string" aspect="aspectRegistro" model="repositorio_docs_registro.model">registerUser</Destination>
+	      	</Mapping>
+	      	<Mapping>
+	        	<Source type="token">registerWorkDate</Source>
+	        	<Destination type="string" aspect="aspectRegistro" model="repositorio_docs_registro.model">registerWorkDate</Destination>
+	      	</Mapping>
+	      	<Mapping>
+	        	<Source type="token">registerOficName</Source>
+	        	<Destination type="string" aspect="aspectRegistro" model="repositorio_docs_registro.model">registerOficName</Destination>
+	      	</Mapping>
+	      	
+		</MetaDataMappings>
+		<Tokens>
+			<Token>
+				<Name>fileName</Name>
+				<Value type="xpath">/doc_properties/property[contains(name,'fileName')]/value</Value>
+			</Token>
+			<Token>
+				<Name>bookID</Name>
+				<Value type="xpath">/doc_properties/property[contains(name,'bookID')]/value</Value>
+			</Token>
+			<Token>
+				<Name>bookType</Name>
+				<Value type="xpath">/doc_properties/property[contains(name,'bookType')]/value</Value>
+			</Token>
+			<Token>
+				<Name>bookName</Name>
+				<Value type="xpath">/doc_properties/property[contains(name,'bookName')]/value</Value>
+			</Token>
+			<Token>
+				<Name>registerNumber</Name>
+				<Value type="xpath">/doc_properties/property[contains(name,'registerNumber')]/value</Value>
+			</Token>
+			<Token>
+				<Name>registerUser</Name>
+				<Value type="xpath">/doc_properties/property[contains(name,'registerUser')]/value</Value>
+			</Token>
+			<Token>
+				<Name>registerWorkDate</Name>
+				<Value type="xpath">/doc_properties/property[contains(name,'registerWorkDate')]/value</Value>
+			</Token>
+			<Token>
+				<Name>registerOficName</Name>
+				<Value type="xpath">/doc_properties/property[contains(name,'registerOficName')]/value</Value>
+			</Token>
+			
+		</Tokens>
+		<FolderPath>/app:company_home/cm:repositorio_docs_registro</FolderPath>
+	</Repository>
+	
+	
+
+	
 </Repositories>
