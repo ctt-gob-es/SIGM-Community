@@ -1,0 +1,9 @@
+
+Estos son los scripts que actualizan la base de datos de sigem de la versión 3.1 a la versión QUIJOTE.
+
+Hay que ejecutar los scripts que hay en las siguientes carpetas:
+
+eTramitación: Ejecutar los dos scripts.
+fwktd_audit: Puede no hacer falta. Comprobar si los datos que inserta ya están en la base de datos.
+registro: los dos scripts.
+tramitador: Hay que ejecutar los 9 scripts desde 01 hasta 09.
