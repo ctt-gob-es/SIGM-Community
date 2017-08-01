@@ -56,7 +56,7 @@ public class DSSServicesManager extends TestCase {
     /**
      * Attribute that represents application name for tests.
      */
-    private static final String APPLICATION_NAME = "dipucr.sigem_quijote";
+    private static final String APPLICATION_NAME = "id_aplicacion.en@firma";
     
     private static final Logger LOGGER = Logger.getLogger(WebServiceInvoker.class);
 
@@ -93,7 +93,7 @@ public class DSSServicesManager extends TestCase {
     /**
      * Attribute that represents certificate path.
      */
-    private static final String CERTIFICATE_NAME = "NOMBRE_JIMENEZ_MORENO_AGUSTIN_NIF_47062508T_s_FNMT_ID_old.cer";
+    private static final String CERTIFICATE_NAME = "NOMBRE_JIMENEZ_MORENO_AGUSTIN_FNMT_ID_old.cer";
 
     public void doDSSAfirmaSign() throws Exception {
 
