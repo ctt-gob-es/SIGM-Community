@@ -17,7 +17,7 @@ public class BDNSAPI {
 	private static final Logger LOGGER = Logger.getLogger(BDNSAPI.class);
 	
 	/** Constantes **/
-	public final static String DIR3_DIPUCR = "L02000013";
+	public final static String DIR3_DIPUCR = "U03500001";
 	public final static String CONTADOR_PETICION_BDNS_NAME = "num_request_bdns";
 
 	/**

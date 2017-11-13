@@ -152,7 +152,7 @@ public class SignDocumentAction extends BaseDispatchAction {
 		
 		//Construimos el xml en caso que finalmente lo incorporemos, finalmente el xml de metadata ira vinculado pero no en la firma del documento
 		//Este parametro ya no se usa lo dejo aqui por si hiciera falta en un futuro
-		String xml = "<xml>FIRMA ELECTRONICA EN DIPUTACION DE CIUDAD REAL</xml>";
+		String xml = "<xml>FIRMA ELECTRONICA EN UNIVERSIDAD PUBLICA DE NAVARRA</xml>";
 			
 		//Añadimos los datos del documento
 		StringBuffer sbDatosDoc = new StringBuffer();

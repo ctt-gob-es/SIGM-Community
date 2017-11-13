@@ -20,8 +20,8 @@ function enviar(){
 <div id="contenedora">
 	<div id="cabecera">
    		<div id="logo">
-   			<img src="img/minetur.jpg" alt="GOBIERNO DE ESPAÑA. MINISTERIO DE INDUSTRIA, ENERGÍA Y TURISMO " />
-   			<img src="img/logo.gif" alt="sigem" />
+   			
+			<img src="img/logo.gif" alt="sigem" />
    		</div>
  		</div>
  		<div class="usuario">

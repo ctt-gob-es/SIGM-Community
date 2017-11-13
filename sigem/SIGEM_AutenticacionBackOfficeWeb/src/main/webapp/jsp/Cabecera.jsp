@@ -18,10 +18,10 @@ session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD, e
 %>
 
 	<div id="cabecera">
-		<utils-admin:eco-logo/>
-		<p class="logoSIGM">		
-			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="sigem" width="129px" height="56px"/>
-		</p>
+		<h1>
+		
+		<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="sigem" />
+	</h1>
 		<p class="salir"><a href="logout.do"><bean:message key="salir"/></a></p>
 	</div>
 

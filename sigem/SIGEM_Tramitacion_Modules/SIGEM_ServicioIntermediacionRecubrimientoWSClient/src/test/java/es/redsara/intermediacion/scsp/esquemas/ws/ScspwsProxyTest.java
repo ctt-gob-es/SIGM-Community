@@ -58,8 +58,8 @@ public class ScspwsProxyTest extends TestCase {
 			
 			
 			//Solicitante
-	        String identificadorSolicitante = "P1300000E";
-	        String nombreSolicitante = "Diputación Provincial de Ciudad Real";
+	        String identificadorSolicitante = "Q3150012G";
+	        String nombreSolicitante = "Universidad Pública de Navarra";
 	        String unidadTramitadora = "SECCIONINICIADORA";
 	        Procedimiento procedimiento = new Procedimiento("codProcedimiento", "nombreProcedimiento");
 	        String finalidad = "finalidad de la solicitudd";

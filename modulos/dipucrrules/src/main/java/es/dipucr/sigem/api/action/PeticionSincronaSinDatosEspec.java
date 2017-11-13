@@ -103,9 +103,9 @@ public class PeticionSincronaSinDatosEspec {
 		OMElement solicitante = fac.createOMElement("Solicitante", omNs);  
 		
 		OMElement identificadorSolicitante = fac.createOMElement("IdentificadorSolicitante", omNs);  
-		identificadorSolicitante.setText("P1300000E");
+		identificadorSolicitante.setText("Q3150012G");
 		OMElement nombreSolicitante = fac.createOMElement("NombreSolicitante", omNs);  
-		nombreSolicitante.setText("Diputación Provincial de Ciudad Real");
+		nombreSolicitante.setText("Universidad Pública de Navarra");
 		
 		//Finalidad
 		String entidad = EntidadesAdmUtil.obtenerEntidad(cct);

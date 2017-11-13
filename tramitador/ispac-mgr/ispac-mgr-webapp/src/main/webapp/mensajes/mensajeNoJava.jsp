@@ -44,7 +44,7 @@
 									<font color='RED'>URGENTE</font>
 									<br>
 									<p>
-										Debido a tareas de mantenimiento en el CPD de la Diputación de Ciudad Real
+										Debido a tareas de mantenimiento en el CPD de la Universidad Pública de Navarra
 										<br>
 										el día 3 de Diciembre de 2015 a partir de las 15:15 H. se podrá 
 										<br>

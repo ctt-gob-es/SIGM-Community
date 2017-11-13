@@ -17,7 +17,7 @@ if (rutaImagenes == null) rutaImagenes = "";
 
 	<div id="cabecera">
 		<h1>
-			<img src="img/minetur.jpg" alt="GOBIERNO DE ESPAÑA. MINISTERIO DE INDUSTRIA, ENERGÍA Y TURISMO " />
+
 			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="sigem" />
 		</h1>
 		<h3>&nbsp;</h3>

@@ -43,18 +43,18 @@
 
 <div id="divDatos" style="height: 100%;width:100%;">
 	<div class="divGenericos" style="margin-top: 0px;">
-		<input maxlength="50" id="nombreSolicitante" name="nombreSolicitante" value="Diputación Provincial de Ciudad Real" type="hidden" />
+		<input maxlength="50" id="nombreSolicitante" name="nombreSolicitante" value="Universidad Pública de Navarra" type="hidden" />
 		<h4 class="tableDatos">Datos genéricos del solicitante</h4>
 		
 		<table class="tablaListado">	
 			<tr>
 				<td class="formsTitle">NIF solicitante:</td>
-				<td >P1300000E</td>
+				<td >Q3150012G</td>
 				
 			</tr>
 			<tr>
 				<td class="formsTitle">Nombre solicitante:</td>
-				<td><input maxlength="60" type="text" id="nombreSolicitanteOriginal" readonly="true" value="Diputación Provincial de Ciudad Real"/></td>
+				<td><input maxlength="60" type="text" id="nombreSolicitanteOriginal" readonly="true" value="Universidad Pública de Navarra"/></td>
 			</tr>
 			<tr>
 				<td class="formsTitle">Nombre Funcionario:</td>

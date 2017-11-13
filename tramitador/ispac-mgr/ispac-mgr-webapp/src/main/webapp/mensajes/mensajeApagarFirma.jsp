@@ -49,7 +49,7 @@
 									<br/>
 									Disculpe las molestias.
 									<br/>
-									CENPRI. Diputación de Ciudad Real.
+									Servicio Informático. Universidad Pública de Navarra.
 								</div>
 							</td>
 						</tr>

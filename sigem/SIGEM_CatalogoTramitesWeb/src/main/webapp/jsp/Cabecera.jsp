@@ -14,8 +14,9 @@
 <!-- [Manu #814] FIN - SIGEM Administración - Poner nombre entidad en la que estamos en el Catálogo de Procedimientos. -->
 
 	<div id="cabecera">
-		<img src="img/minetur.jpg" alt="GOBIERNO DE ESPAÃ‘A. MINISTERIO DE INDUSTRIA, ENERGÃA Y TURISMO " />
-		<p class="logoSIGM"><img alt="sigem" src="img/logo.gif"></p>
+
+		<img src="img/logo.gif" alt="sigem" />
+
 		<h3>&nbsp;</h3>
 		<p class="salir"><a href='<html:rewrite page="/desconectar.do"/>'><bean:message key="salir"/></a></p>
 	</div>

@@ -22,7 +22,7 @@ session.setAttribute(ConstantesGestionTelematicoCiudadano.PARAMETRO_ID_ENTIDAD, 
 
 	<div id="cabecera">
 		<h1>
-			<img src="img/minetur.jpg" alt="GOBIERNO DE ESPAÑA. MINISTERIO DE INDUSTRIA, ENERGÍA Y TURISMO " />
+
 			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="SIgem 2" />
 		</h1>
 		<h3>&nbsp;</h3>

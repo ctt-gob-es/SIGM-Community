@@ -23,10 +23,10 @@ session.setAttribute(ConstantesGestionTelematicoCiudadano.PARAMETRO_ID_ENTIDAD, 
 %>
 
 	<div id="cabecera">
-		<utils-admin:eco-logo/>
-		<p class="logoSIGM">
+		<h1>
+		
 			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="SIgem 2" />
-		</p>
+	</h1>
 		<h3>&nbsp;</h3>
 		<p class="salir"><a href="jsp/RedireccionPortal.jsp"><bean:message key="salir"/></a></p>
 	</div>

@@ -44,7 +44,7 @@
 									<font color='RED'>URGENTE</font>
 									<br>
 									<p>
-										Debido a mejoras y ampliaciones en el CPD de la Diputación de Ciudad Real
+										Debido a mejoras y ampliaciones en el CPD de la Universidad Pública de Navarra
 										<br>
 										SIGEM (Registro y Tramitador) va a ser parado hoy día martes, 13 de enero a las 15:00 h.
 									</p>

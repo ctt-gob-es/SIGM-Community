@@ -73,7 +73,7 @@ function firmaBasicaXades(datosFormulario) {
 	}
 	catch (e) {
 
-		alert("ERROR AL REALIZAR LA FIRMA \n1. Borre el hist\u00f3rico del navegador.\n2. Cierre el navegador.\n3. Si le sigue apareciendo este mensaje ponga una incidencia en la siguiente direcci\u00f3n:\nhttps://sede.dipucr.es/soporte\nExplique con detalle el problema. Gracias y perdone las molestias.");
+		alert("ERROR AL REALIZAR LA FIRMA \n1. Borre el hist\u00f3rico del navegador.\n2. Cierre el navegador.\n3. Si le sigue apareciendo este mensaje ponga una incidencia en la siguiente direcci\u00f3n:\nadministracion.electronica@unavarra.es\nExplique con detalle el problema. Gracias y perdone las molestias.");
 		
 		return null;
 	}

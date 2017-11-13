@@ -86,8 +86,8 @@ public class Configuracion {
 
 	public static Seat getSeatAdmin() {
 		Seat seat = new Seat();
-		seat.setCode("L02000013");
-		seat.setDescription("Diputación de Ciudad Real");
+		seat.setCode("Q3150012G");
+		seat.setDescription("Universidad Pública de Navarra");
 		return seat;
 	}
 

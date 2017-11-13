@@ -115,7 +115,7 @@ if (bFirma) {
 															
 															
 														} catch(e) {				
-															alert('ERROR AL REALIZAR LA FIRMA, es posible que usted haya cancelado el proceso, en ese caso para poder hacer el registro debe cerrar el navegador y volver a realizar la solicitud. Si le aparece este mensaje siempre sin raz\u00f3n ponga una incidencia en la siguiente direcci\u00f3n https://sede.dipucr.es/soporte');
+															alert('ERROR AL REALIZAR LA FIRMA, es posible que usted haya cancelado el proceso, en ese caso para poder hacer el registro debe cerrar el navegador y volver a realizar la solicitud. Si le aparece este mensaje siempre sin raz\u00f3n ponga una incidencia en la siguiente direcci\u00f3n administracion.electronica@unavarra.es');
 															//Descomenta esta linea para ver la excepcion															
 															//alert("ERROR EN LA FIRMA EXCEPCION: "+e);
 															document.getElementById('aceptar_registro').disabled = false;
@@ -248,7 +248,7 @@ if (bFirma) {
 					<div class="cuerpobt" id="divButtons" style="display: block;">
       					<div class="cuerporightbt">
         					<div class="cuerpomidbt">
-        					
+        					<!--
         						<br/>
 											  <p style="color:red;text-align:justify;margin-left:15px;margin-right:15px"> 
 												ATENCIÓN: A PARTIR DEL 18 de ENERO de 2016 se introducen modificaciones técnicas que simplifican y facilitan el proceso de presentación y recepción de documentos electrónicos.
@@ -271,7 +271,7 @@ if (bFirma) {
 											  <br/>
 											  <br/>										    
 								<br/>
-        					
+        					-->
 								<input type="button" value="<bean:message key="resultado.ver_solicitud"/>" class="ok" id="aceptar_registro" onclick="window.open('<%=request.getSession().getAttribute(Defs.XML_REQUEST_FILE)%>','ventana1','width=600px,height=800px,scrollbars=yes');"/>
 								<%									
 								if (!bVirus || (bVirus && bRegistrar)) {

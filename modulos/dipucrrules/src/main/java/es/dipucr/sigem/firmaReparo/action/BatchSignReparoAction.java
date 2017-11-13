@@ -222,7 +222,7 @@ public class BatchSignReparoAction extends BatchSignAction{
 			}
 			
 			//TODO: Construimos el xml en caso que finalmente lo incorporemos
-			xml = "<xml>FIRMA ELECTRONICA EN DIPUTACION DE CIUDAD REAL</xml>";
+			xml = "<xml>FIRMA ELECTRONICA EN DIPUTACION DE UNIVERSIDAD PUBLICA DE NAVARRA</xml>";
 			
 			//Añadimos los parametros necesarios en la firma tres fases
 			sbListaDocs.append(codEntidad);			

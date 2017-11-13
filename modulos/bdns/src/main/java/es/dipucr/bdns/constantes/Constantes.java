@@ -4,14 +4,14 @@ public class Constantes {
 	public static final String NIFIGAE = "S2826015F";
 	public static String nombreIGAE = "IGAE";
 	
-	public static final String DIR3Cenpri = "LA0006599";
-	public static String nombreCenpri = "CENTRO PROVINCIAL DE INFORMÁTICA";
+	public static final String DIR3Cenpri = "U03500057";
+	public static String nombreCenpri = "SERVICIO INFORMÁTICO";
 	
-	public static final String DIR3Dipu = "L02000013";
+	public static final String DIR3Dipu = "U03500001";
 	public static final String TIPOMOVIMIENTO_ALTA = "ALTA";
 	public static final Object TIPOMOVIMIENTO_MODIFICACION = "MODIFICACION";
 	public static final Object TIPOMOVIMIENTO_BAJA = "BAJA";
-	public static String nombreDipu = "DIPUTACIÓN PROVINCIAL DE CIUDAD REAL";
+	public static String nombreDipu = "UNIVERSIDAD PÚBLICA DE NAVARRA";
 
 
 	/**
