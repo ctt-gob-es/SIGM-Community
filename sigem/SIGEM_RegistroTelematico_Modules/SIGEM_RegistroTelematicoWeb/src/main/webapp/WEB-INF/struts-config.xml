@@ -161,10 +161,11 @@
 
 	</action-mappings>
 	
-	<!-- [Manu Ticket #734] SIGEM Tramitador  Anexar documento: Ampliar máximo tamaño de archivo -->
+	<!-- [Josemi Ticket #546649] SIGEM Tramitador  Anexar documento: Reducir máximo tamaño de archivo -->
 	<!-- <controller maxFileSize="50M" inputForward="true" />-->
-	<controller maxFileSize="200M" inputForward="true" />
-	<!-- [Manu Ticket #734] SIGEM Tramitador  Anexar documento: Ampliar máximo tamaño de archivo -->
+	<!-- [Ruben #546649] Establecer limite de subida de adjuntos a 16MB -->
+	<controller maxFileSize="16M" inputForward="true" />
+	<!-- [Josemi Ticket #546649] SIGEM Tramitador  Anexar documento: Reducir máximo tamaño de archivo -->
 	
 	<message-resources parameter="resources.application" />
 	<plug-in className="ieci.tecdoc.sgm.registro.plugin.ConfigPlugin">

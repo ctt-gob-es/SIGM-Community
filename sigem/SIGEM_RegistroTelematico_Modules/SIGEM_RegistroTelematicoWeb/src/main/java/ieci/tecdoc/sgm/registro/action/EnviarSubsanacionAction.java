@@ -59,7 +59,8 @@ public class EnviarSubsanacionAction extends EnviarSolicitudAction {
 		    	MessageResources resources = getResources(request);
 
 	    		request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_ENVIO_SOLICITUD);
-		    	request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, resources.getMessage(Defs.MENSAJE_ERROR_DOCUMENT_MAX_LENGTH));
+	    		//[Ruben #546649] Uso el getMessage sobreescrito con locale para coger el actual y se recupere el mensaje del idioma correspondiente
+		    	request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, resources.getMessage(LocaleFilterHelper.getCurrentLocale(request),Defs.MENSAJE_ERROR_DOCUMENT_MAX_LENGTH));
 
 		   		return mapping.findForward("failure");
 	    	}
@@ -135,7 +136,8 @@ public class EnviarSubsanacionAction extends EnviarSolicitudAction {
 
 		    			MessageResources resources = getResources(request);
 			   			request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_ENVIO_SOLICITUD);
-			   			request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, resources.getMessage(Defs.MENSAJE_ERROR_SUBSANACION_SIN_OFICINA_REGISTRO));
+			   			//[Ruben #546649] Uso el getMessage sobreescrito con locale para coger el actual y se recupere el mensaje del idioma correspondiente
+			   			request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, resources.getMessage(LocaleFilterHelper.getCurrentLocale(request),Defs.MENSAJE_ERROR_SUBSANACION_SIN_OFICINA_REGISTRO));
 			   			return mapping.findForward("failure");
 		    		}
 

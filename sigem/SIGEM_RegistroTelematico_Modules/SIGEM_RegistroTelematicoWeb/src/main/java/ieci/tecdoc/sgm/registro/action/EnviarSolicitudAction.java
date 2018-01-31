@@ -58,7 +58,8 @@ public class EnviarSolicitudAction extends RegistroWebAction {
 		    	MessageResources resources = getResources(request);
 
 	    		request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_ENVIO_SOLICITUD);
-		    	request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, resources.getMessage(Defs.MENSAJE_ERROR_DOCUMENT_MAX_LENGTH));
+		    	//[Ruben #546649] Uso el getMessage sobreescrito con locale para coger el actual y se recupere el mensaje del idioma correspondiente
+		    	request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, resources.getMessage(LocaleFilterHelper.getCurrentLocale(request), Defs.MENSAJE_ERROR_DOCUMENT_MAX_LENGTH));
 
 		   		return mapping.findForward("failure");
 	    	}
@@ -304,7 +305,8 @@ public class EnviarSolicitudAction extends RegistroWebAction {
 			String fileNameCopia = (String) hashDocumentos.get(hash);
 
 			MessageResources resources = getResources(request);
-			throw new RegistroTelematicoException(resources.getMessage(Defs.MENSAJE_ERROR_ENVIO_SOLICITUD_DOCUMENTOS_DUPLICADOS, new String[] {formFile.getFileName(), fileNameCopia}));
+			//[Ruben #546649] Uso el getMessage sobreescrito con locale para coger el actual y se recupere el mensaje del idioma correspondiente
+			throw new RegistroTelematicoException(resources.getMessage(LocaleFilterHelper.getCurrentLocale(request),Defs.MENSAJE_ERROR_ENVIO_SOLICITUD_DOCUMENTOS_DUPLICADOS, new String[] {formFile.getFileName(), fileNameCopia}));
 		}
 		else {
 			hashDocumentos.put(hash, formFile.getFileName());
