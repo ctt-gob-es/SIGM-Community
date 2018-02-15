@@ -131,9 +131,12 @@ if (bFirma) {
 									}
 <%}else{%>
 									function FirmarReg()
-									{										  
-											alert("SE HA CANCELADO EL PROCESO DE FIRMA");
-											return false;
+									{		
+                                        // OCT-17 JMB Error en solicitudes del registro telemático sin firma.	
+                                        // El valor false debería ser correcto, pero no sabemos por qué, tenemos que poner true.										
+										//	alert("SE HA CANCELADO EL PROCESO DE FIRMA");
+										//	return false;
+										return true;
 									}
 <%
 	}

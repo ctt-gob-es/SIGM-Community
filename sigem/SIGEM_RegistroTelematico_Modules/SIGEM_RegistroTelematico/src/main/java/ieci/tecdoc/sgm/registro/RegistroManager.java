@@ -2030,28 +2030,45 @@ public class RegistroManager {
    throws RegistroExcepcion {
 	   byte[] receipt = null;
 	      try {
-	    	  ServicioRegistro servicioRegistroPresencial = LocalizadorServicios.getServicioRegistro();
 	    	  
-	    	  UserInfo userInfo = new UserInfo();
-	    	  userInfo.setUserName("REGISTRO_TELEMATICO");
-	    	  userInfo.setPassword("*");
+			  // [Josemi #545416] Recuperar justificante desde Reg. Tel y/o Reg. Presencial
+        	  // Codigo de acceso al justificante en el Registro Telematico
+	    	  ServicioRepositorioDocumentosTramitacion oServicio = LocalizadorServicios.getServicioRepositorioDocumentosTramitacion();
+	    	  RegistroDocumentoDatos rdd = new RegistroDocumentoDatos();
+	    	  rdd.load(registryNumber, code, entidad);
+	    	  logger.warn("rdd.getGuid() "+rdd.getGuid());
+	    	  DocumentoInfo di = oServicio.retrieveDocument(null, rdd.getGuid(), getEntidad(entidad));
+	    	//  logger.warn(di.getContent().length+"");
 	    	  
-	    	  RegisterWithPagesInfoPersonInfo infoRegPresencial = servicioRegistroPresencial.getInputRegister(userInfo, registryNumber, getEntidad(entidad));
+	    	  if(di.getContent() != null && di.getContent().length>0){
+	    		  receipt = di.getContent();
+	    		  
+	    	  } else {
 	    	  
-	    	  Integer bookId = null;
-	    	  Integer folderId = null;
-	    	  Integer docID = null;
-	    	  Integer pageID = null;
-	    	  for(Document doc : infoRegPresencial.getDocInfo()){
-	    		  if (null != doc.getDocumentName() && doc.getDocumentName().equals(code)){
-	    			  bookId = Integer.parseInt(doc.getBookId());
-	    			  folderId = Integer.parseInt(doc.getFolderId());
-	    			  docID = Integer.parseInt(doc.getDocID());
-	    			  pageID = Integer.parseInt(((Page)doc.getPages().get(0)).getPageID());
+  	    	    // Codigo de acceso al justificante en el Registro Presencial
+	    	    ServicioRegistro servicioRegistroPresencial = LocalizadorServicios.getServicioRegistro();
+	    	  
+	    	    UserInfo userInfo = new UserInfo();
+	    	    userInfo.setUserName("REGISTRO_TELEMATICO");
+	    	    userInfo.setPassword("*");
+	    	  
+	    	    RegisterWithPagesInfoPersonInfo infoRegPresencial = servicioRegistroPresencial.getInputRegister(userInfo, registryNumber, getEntidad(entidad));
+	    	  
+	    	    Integer bookId = null;
+	    	    Integer folderId = null;
+	    	    Integer docID = null;
+	    	    Integer pageID = null;
+	    	    for(Document doc : infoRegPresencial.getDocInfo()){
+	    	  	  if (null != doc.getDocumentName() && doc.getDocumentName().equals(code)){
+	    			bookId = Integer.parseInt(doc.getBookId());
+	    			folderId = Integer.parseInt(doc.getFolderId());
+	    			docID = Integer.parseInt(doc.getDocID());
+	    			pageID = Integer.parseInt(((Page)doc.getPages().get(0)).getPageID());
 	    		  }
+	    	    }
+	    	    DocumentQuery documentoInfo = servicioRegistroPresencial.getDocumentFolder(userInfo , bookId, folderId, docID, pageID,  getEntidad(entidad));
+	  		    receipt = documentoInfo.getContent();
 	    	  }
-	    	  DocumentQuery documentoInfo = servicioRegistroPresencial.getDocumentFolder(userInfo , bookId, folderId, docID, pageID,  getEntidad(entidad));
-	  		  receipt = documentoInfo.getContent();
 	  		
 	      } catch (Exception e) {
 	    	  logger.error("Error al obtener documento [getDocument][Excepcion]", e.fillInStackTrace());
@@ -2303,7 +2320,7 @@ public class RegistroManager {
 				oServicio.anexarDocsExpediente(idEntidad, numExpediente, numRegistro, new Date(), docsExpediente);
 //				if(oServicio.anexarDocsExpediente(idEntidad, numExpediente, numRegistro, new Date(), docsExpediente)){
 //					//Publicamos el hito de subsanación, justificación o modificación.
-//					try{
+//					try{]
 //						ServicioConsultaExpedientes consulta = LocalizadorServicios.getServicioConsultaExpedientes();
 //	
 //						HitosExpediente hitos = consulta.obtenerHistoricoExpediente(numExpediente, entidad);

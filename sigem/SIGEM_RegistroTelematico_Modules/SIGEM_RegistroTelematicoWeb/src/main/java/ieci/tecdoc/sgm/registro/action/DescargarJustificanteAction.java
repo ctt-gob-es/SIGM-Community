@@ -1,5 +1,11 @@
 package ieci.tecdoc.sgm.registro.action;
 
+// [Josemi #545416] Recuperar justificante desde Reg. Tel y/o Reg. Presencial
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.telematico.ServicioRegistroTelematico;
+import ieci.tecdoc.sgm.registro.utils.Defs;
+import ieci.tecdoc.sgm.registro.utils.Misc;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,35 +31,23 @@ public class DescargarJustificanteAction extends RegistroWebAction {
 	public ActionForward executeAction(ActionMapping mapping, ActionForm form,
         HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		
 		ServletOutputStream out = response.getOutputStream();
 
 		try {
+			// [Josemi #545416] Recuperar justificante desde Reg. Tel y/o Reg. Presencial
+			// Codigo de acceso al justificante en el Registro Telematico
+			HttpSession session = request.getSession();
+
+			String sessionId = (String)session.getAttribute(Defs.SESION_ID);
 			String numRegistro = (String)request.getParameter("numeroRegistro");
 
-	         // Obtener el documento a mostrar
-			ServicioRegistro servicioRegistroPresencial = LocalizadorServicios.getServicioRegistro();
-	
-			UserInfo userInfo = new UserInfo();
-			userInfo.setUserName("REGISTRO_TELEMATICO");
-			userInfo.setPassword("*");
+			ServicioRegistroTelematico oServicio = LocalizadorServicios.getServicioRegistroTelematico();
+
+           	// Obtener el justificante a mostrar
+			byte[] justificante = oServicio.obtenerJustificanteRegistro(sessionId, numRegistro, Misc.obtenerEntidad(request));
+
 			
-			RegisterWithPagesInfoPersonInfo infoRegPresencial = servicioRegistroPresencial.getInputRegister(userInfo, numRegistro, Misc.obtenerEntidad(request));
-					
-			Integer bookId = null;
-			Integer folderId = null;
-			Integer docID = null;
-			Integer pageID = null;
-			for(Document doc : infoRegPresencial.getDocInfo()){
-				if (null != doc.getDocumentName() && doc.getDocumentName().equals(Definiciones.REGISTRY_RECEIPT_CODE)){
-					bookId = Integer.parseInt(doc.getBookId());
-					folderId = Integer.parseInt(doc.getFolderId());
-					docID = Integer.parseInt(doc.getDocID());
-					pageID = Integer.parseInt(((Page)doc.getPages().get(0)).getPageID());
-				}				
-			}		
-			
-			DocumentQuery documentoInfo = servicioRegistroPresencial.getDocumentFolder(userInfo , bookId, folderId, docID, pageID,  Misc.obtenerEntidad(request));
-			byte[] justificante = documentoInfo.getContent();
          
 			response.setHeader("Pragma", "public");
 	    	response.setHeader("Cache-Control", "max-age=0");

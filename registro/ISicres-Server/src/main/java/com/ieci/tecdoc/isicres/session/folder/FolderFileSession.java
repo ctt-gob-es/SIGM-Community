@@ -661,7 +661,13 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 					try {
 						fileID = Integer.parseInt(docUID);
 					} catch (NumberFormatException e) {
-						fileID = Integer.MAX_VALUE - 2;
+				         /*
+				         * [Ruben #545232] Como el fileID tenía el mismo valor al no poder guardar
+						 * el identificador de Alfresco en fileId, guardamos el DOcId que es un id
+						 * que identifica cada fichero y nos sirve para utilidades dependientes.
+				         */
+						//fileID = Integer.MAX_VALUE - 2;
+						fileID = document.getDocID();
 					}
 
 					tran = session.beginTransaction();

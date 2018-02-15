@@ -879,9 +879,7 @@ div.historialDist{
 	border-bottom:1px solid #000000;
 }
 
-/*[teresa-felipe-ecenpri Ticket #71]
-Color para diferenciar registro de entrada del de salida
-en el registroTelematicoWeb. */
+/*[Mikel #547098] Restablecemos el color de fondo del registro de entrada a blanco. */
 .registroEntrada{
-    background-color: #FFF8BC
+    background-color: #FFFFFF
 }

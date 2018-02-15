@@ -230,7 +230,12 @@ public class AxPagehEntity implements ServerKeys {
          ps.setString(index++, getName());
          ps.setInt(index++, getSortOrder());
          ps.setInt(index++, getDocId());
-         ps.setInt(index++, getFileId());
+         /*
+         * [Ruben #545232] Como el fileID tenía el mismo valor al no poder guardar
+		 * el identificador de Alfresco en fileId, guardamos el DOcId que es un id
+		 * que identifica cada fichero y nos sirve para utilidades dependientes.
+         */
+         ps.setInt(index++, getDocId());
          ps.setInt(index++, getVolId());
          ps.setString(index++, getLoc());
          ps.setInt(index++, getAnnId());

@@ -25,6 +25,7 @@
         <job-group>SIGEM_JOBS</job-group>
         <repeat-count>-1</repeat-count>
         <!-- Ticket #986# SIGEM Actualizar el destino de los registros de entrada automáticamente. Consolide antes de que cree el expediente-->
+		<!-- [Josemi #545416] Restablecer tiempo una vez solucionada el problema de recuperar justificante. -->
         <repeat-interval>300000</repeat-interval>
       </simple>
     </trigger>

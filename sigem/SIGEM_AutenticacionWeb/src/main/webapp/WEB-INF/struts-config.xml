@@ -69,8 +69,8 @@
 				type="ieci.tecdoc.sgm.autenticacion.action.DesconectarAction"
 				scope="request"
 				validate="false">
-<!-- 				<forward name="success" path="/jsp/RedireccionPortal.jsp"/> -->
-				<forward name="success" path="/jsp/salir/Desconexion.jsp"/>
+ 				<forward name="success" path="/jsp/RedireccionPortal.jsp"/> 
+<!--            <forward name="success" path="/jsp/salir/Desconexion.jsp"/> -->
 				<forward name="failure" path="/jsp/MensajeError.jsp"/>
 		</action>
 		

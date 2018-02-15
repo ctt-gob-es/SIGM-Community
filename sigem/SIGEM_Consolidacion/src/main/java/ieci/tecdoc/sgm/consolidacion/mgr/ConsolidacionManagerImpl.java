@@ -13,6 +13,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.ieci.tecdoc.common.entity.dao.DBEntityDAOFactory;
 import com.ieci.tecdoc.common.repository.helper.ISRepositoryDocumentHelper;
 import com.ieci.tecdoc.common.repository.vo.ISRepositoryRetrieveDocumentVO;
 
@@ -240,19 +241,25 @@ public class ConsolidacionManagerImpl implements ConsolidacionManager {
 		        	logger.warn("Identificador del fichero en registo. "+page.getFileID());
 		        	logger.warn("Nombre del documento. "+docReg.getDocumentName());
 		        	logger.warn("Número registro. "+regInfo.getNumber());
-//		        	RegistroDocumento docRegTelema = servicioRegistroTelemático.obtenerDocumentoRegistro("", registro.getRegistryNumber(), docReg.getDocumentName(), entidad);
+		        	RegistroDocumento docRegTelema = servicioRegistroTelemático.obtenerDocumentoRegistro("", registro.getRegistryNumber(), docReg.getDocumentName(), entidad);
 		        	
 		        	Integer bookID = Integer.parseInt(docReg.getBookId());
 		        	Integer regId = Integer.parseInt(docReg.getFolderId());
 		        	Integer pageId = Integer.parseInt(page.getPageID());
+					//[Ruben #545416] Obtengo el id de Alfresco para poder incluirlo al borrar los docs de Telematico 
+		        	String docUID = DBEntityDAOFactory.getCurrentDBEntityDAO().getDocUID(bookID, regId,pageId, entidad.getIdentificador());
 		        	
-		        	ISRepositoryRetrieveDocumentVO findVO = ISRepositoryDocumentHelper.getRepositoryRetrieveDocumentVO(bookID, regId, pageId, entidad.getNombre(), true);
-		        	logger.warn("- Registro Telemático:");
+					// [Josemi #545742] Correccion por error en las trazas del scheduler. No se pasaba bien la entidad.
+					ISRepositoryRetrieveDocumentVO findVO = ISRepositoryDocumentHelper.getRepositoryRetrieveDocumentVO(bookID, regId, pageId, entidad.getIdentificador(), true);
+					logger.warn("- Registro Telemático:");
+
 //	        		logger.warn("guid: "+findVO.getGuid());
-//	        		logger.warn("Nombre: "+docRegTelema.getCode());	        	
+	        		logger.warn("Nombre: "+docRegTelema.getCode());	        	
 		        	//[**2]Almacenar ese identificador en la tabla sgmrdedocumentos. 
+					
 		        	//Hay que crear un servicio web que elimine el contenido y añada el identificador.
-//	        		servicioDocumentos.insertarIdFileBorrarContenido(docRegTelema.getGuid(), page.getFileID(), entidad);
+					//[Ruben #545416] grabo el id de Alfresco al borrar de Telematico para funcionalidades que lo usan como recuperar por CSV
+	        		servicioDocumentos.insertarIdFileBorrarContenido(docRegTelema.getGuid(), docUID, entidad);
 	        		logger.warn("MODIFICADO ");
 	        	}
 			}
@@ -383,8 +390,14 @@ public class ConsolidacionManagerImpl implements ConsolidacionManager {
 		if (registro != null) {
 
 			// Componer el nombre del interviniente
-			String personName = StringUtils.trim(StringUtils.defaultString(registro.getSenderId(),
-					"") + " " + StringUtils.defaultString(registro.getName(), ""));
+			// ENE-16 JMB Se cambia el formato del campo para que se ajuste al creado por 
+			//            IECISA para poder tener busqueda por DNI
+//			String personName = StringUtils.trim(StringUtils.defaultString(registro.getSenderId(),
+//					"") + " " + StringUtils.defaultString(registro.getName(), ""));
+			String personName = StringUtils.trim(
+					                    StringUtils.defaultString(registro.getName(), "") + " - " +  					
+					                    StringUtils.defaultString(registro.getSenderId(), "") 
+							);
 
 			cargarConfiguracion(idEntidad);
 			if (personName.length() > config.getMaxLength()) {

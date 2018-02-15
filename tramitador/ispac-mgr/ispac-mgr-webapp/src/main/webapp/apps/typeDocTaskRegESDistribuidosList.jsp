@@ -36,19 +36,18 @@
 	<ispac:javascriptLanguage/>
 
 	<script>
-
+		//[Ruben #551694] cambio logica para evitar que se vuelva a lanzar el proceso al volver a pulsar y se anexen documentos por repetido
+		var enviado = false;
 		//Muestra el mensaje de operacion en progreso al seleccionar un trámite
 		function showMsgInProgress(link){
-			//Bloqueamos los enlaces y mostramos el mensaje
+			if (!enviado) {
+			enviado = true;
 			document.getElementById('inProgress').style.display='block';
-			document.getElementById('btnClose').disabled=true;
-			document.getElementById('btnReturn').disabled=true;
-			elements = document.getElementsByTagName("A");
-			for (i = 0; i < elements.length; i++){
-				elements[i].disabled=true;
-			}
 			//redirigimos
 			top.window.location.href = link;
+			}else {
+			return false;
+			}	
 		}
 	</script>
 

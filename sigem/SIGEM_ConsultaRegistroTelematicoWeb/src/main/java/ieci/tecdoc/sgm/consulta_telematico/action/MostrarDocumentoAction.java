@@ -3,6 +3,18 @@ package ieci.tecdoc.sgm.consulta_telematico.action;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 
+import ieci.tecdoc.sgm.consulta_telematico.utils.Defs;
+import ieci.tecdoc.sgm.consulta_telematico.utils.Utils;
+import ieci.tecdoc.sgm.core.services.ConstantesServicios;
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.repositorio.DocumentoInfo;
+import ieci.tecdoc.sgm.core.services.repositorio.ServicioRepositorioDocumentosTramitacion;
+import ieci.tecdoc.sgm.core.services.telematico.Registro;
+import ieci.tecdoc.sgm.core.services.telematico.RegistroDocumento;
+import ieci.tecdoc.sgm.core.services.telematico.RegistroTelematicoException;
+import ieci.tecdoc.sgm.core.services.telematico.ServicioRegistroTelematico;
+import ieci.tecdoc.sgm.registro.exception.RegistroCodigosError;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -78,37 +90,23 @@ public class MostrarDocumentoAction extends ConsultaRegistroTelematicoWebAction 
 			}
 
 			// Obtener el documento a mostrar
-			ServicioRegistro servicioRegistro = LocalizadorServicios.getServicioRegistro();
+			// [Josemi #545416] Recuperar correctamente el justificante de registro telematico. 
+			//RegistroDocumento registroDocumento = oServicioRegistroTelematico.obtenerDocumentoRegistro(idSesion, numRegistro, code, Utils.obtenerEntidad(idEntidad));
+			//ServicioRepositorioDocumentosTramitacion oServicioRepositorioDocumentosTramitacion = LocalizadorServicios.getServicioRepositorioDocumentosTramitacion();
+			//DocumentoInfo documentoInfo = oServicioRepositorioDocumentosTramitacion.retrieveDocument(idSesion, registroDocumento.getGuid(), Utils.obtenerEntidad(idEntidad));
+			//byte[] documento = documentoInfo.getContent();
+			// [Ruben #545416] Reutilizo la parte de recuperar justificante para que vaya a telematico o presentical según si está consolidado o no.
+			byte[] documento = oServicioRegistroTelematico.obtenerDocumento(numRegistro, code, Utils.obtenerEntidad(idEntidad));
 
-			UserInfo userInfo = new UserInfo();
-			userInfo.setUserName("REGISTRO_TELEMATICO");
-			userInfo.setPassword("*");
-			
-			RegisterWithPagesInfoPersonInfo infoRegPresencial = servicioRegistro.getInputRegister(userInfo, registro.getRegistryNumber(), Utils.obtenerEntidad(idEntidad));
-					
-			Integer bookId = null;
-			Integer folderId = null;
-			Integer docID = null;
-			Integer pageID = null;
-			for(Document doc : infoRegPresencial.getDocInfo()){
-				if (null != doc.getDocumentName() && doc.getDocumentName().equals(code)){
-					bookId = Integer.parseInt(doc.getBookId());
-					folderId = Integer.parseInt(doc.getFolderId());
-					docID = Integer.parseInt(doc.getDocID());
-					pageID = Integer.parseInt(((Page)doc.getPages().get(0)).getPageID());
-				}				
-			}		
-			
-			DocumentQuery documentoInfo = servicioRegistro.getDocumentFolder(userInfo , bookId, folderId, docID, pageID,  Utils.obtenerEntidad(idEntidad));
-			byte[] documento = documentoInfo.getContent();
-			
 			response.setHeader("Pragma", "public");
 	    	response.setHeader("Cache-Control", "max-age=0");
+            //response.setContentType(documentoInfo.getMimeType());
             response.setHeader("Content-Transfer-Encoding", "binary");
-           	response.setHeader("Content-Disposition", "attachment; filename=\"" + code + "_" + registro.getRegistryNumber() + "." + extension + "\"");
-            
-            IOUtils.copy(new BufferedInputStream(new ByteArrayInputStream(documento)),out);
-            
+           	response.setHeader("Content-Disposition", "attachment; filename=\"" + code + "_" + numRegistro + "." + extension + "\"");
+
+            response.setContentLength(documento.length);
+            out.write(documento, 0, documento.length);
+			
         }
 		catch (Exception e) {
         	response.setContentType("text/html");

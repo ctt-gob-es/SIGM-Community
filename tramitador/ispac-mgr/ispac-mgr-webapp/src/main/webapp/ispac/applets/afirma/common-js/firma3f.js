@@ -95,7 +95,7 @@ function doSign(xml_lote, serialNumber) {
 
 	} catch (e) {
 		try {
-			alert("Error al firmar, si no puede firmar ponga una incidencia indicando con detalle el problema tiene, describa los mensajes de error. Acceda a la siguiente url para rellenar el formulario de la incidencia: https://sede.dipucr.es/soporte");					
+			alert("Error al firmar. Si no puede firmar envíe un correo electrónico a administracion.electronica@unavarra.es indicando con detalle el problema que tiene y describiendo los mensajes de error.");					
 		  return false;
 		} catch (ex) {
 			alert("Error: " + e);
@@ -136,7 +136,7 @@ function saveSignatureCallback(signatureB64) {
  */
 function showLogCallback(errorType, errorMessage) {
 
-	alert("Error al firmar, si no puede firmar ponga una incidencia indicando con detalle el problema tiene, describa los mensajes de error. Acceda a la siguiente url para rellenar el formulario de la incidencia: https://sede.dipucr.es/soporte");
+	alert("Error al firmar. Si no puede firmar envíe un correo electrónico a administracion.electronica@unavarra.es indicando con detalle el problema que tiene y describiendo los mensajes de error.");
 	//alert("ERROR AL REALIZAR LA FIRMA:" + errorMessage);	
 
 }

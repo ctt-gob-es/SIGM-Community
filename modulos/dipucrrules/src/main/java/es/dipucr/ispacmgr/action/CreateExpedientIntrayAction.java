@@ -262,7 +262,7 @@ public class CreateExpedientIntrayAction extends BaseAction {
 			//Busqueda si tiene permisos para iniciar un expediente
 			+ " AND ID IN" 
 			+ " (SELECT ID_PCD FROM SPAC_SS_PERMISOS WHERE  PERMISO="
-			+ ISecurityAPI.ISPAC_RIGHTS_CREATEEXP + DBUtil.addAndInResponsibleCondition("UID_USR", resp) + "));";
+			+ ISecurityAPI.ISPAC_RIGHTS_CREATEEXP + DBUtil.addAndInResponsibleCondition("UID_USR", resp) + "))";
 			
 			return entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_CT_PROCEDIMIENTOS, sqlquery);
 		}
@@ -552,7 +552,8 @@ public class CreateExpedientIntrayAction extends BaseAction {
 	            	}
 	            	
 	            	// ASUNTO (se corresponde con el resumen de registro)
-	    	    	if (inReg.getRegisterData().getSummary() != null) {
+	    	    	if (inReg.getRegisterData().getSummary() != null &&
+	    	    	    !inReg.getRegisterData().getSummary().equals("")) {
 	    	    		expedient.set("ASUNTO", StringUtils.nullToEmpty(inReg.getRegisterData().getSummary()));
 	    	    	} else if (inReg.getRegisterData().getSubject() != null) {
 	    	    		expedient.set("ASUNTO", StringUtils.nullToEmpty(inReg.getRegisterData().getSubject().getName()));

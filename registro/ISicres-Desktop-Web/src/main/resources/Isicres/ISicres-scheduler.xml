@@ -24,7 +24,7 @@
         <job-name>UpdateStatesSIRJob</job-name>
         <job-group>ISICRES_JOBS</job-group>
         <repeat-count>-1</repeat-count>
-        <repeat-interval>30000</repeat-interval>
+        <repeat-interval>3000000</repeat-interval>
       </simple>
     </trigger>
   </job>
