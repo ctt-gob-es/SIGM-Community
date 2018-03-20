@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mensajeEntrada targetNamespace="https://afirmaws/ws/firma"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://localhost/afirmaws/xsd/mfirma/ws.xsd">
+	<peticion>FirmaServidorCoSign</peticion>
+	<versionMsg>1.0</versionMsg>
+	<parametros>
+		<idAplicacion />
+		<idTransaccion />
+		<firmante />
+		<idReferencia />
+		<algoritmoHash />
+	</parametros>
+</mensajeEntrada>

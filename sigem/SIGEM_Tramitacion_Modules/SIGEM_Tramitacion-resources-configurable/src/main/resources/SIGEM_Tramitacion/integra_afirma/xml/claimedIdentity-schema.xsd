@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="steria:claimedIdentity:schema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:documentation>This Schema is defined by Steria, to specify the method to identify the client who makes the request</xs:documentation>
+	</xs:annotation>
+	
+	<xs:element name="ClaimedIdentity">
+		<xs:complexType>
+			<xs:sequence>
+					<xs:element name="idAplicacion" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+</xs:schema>

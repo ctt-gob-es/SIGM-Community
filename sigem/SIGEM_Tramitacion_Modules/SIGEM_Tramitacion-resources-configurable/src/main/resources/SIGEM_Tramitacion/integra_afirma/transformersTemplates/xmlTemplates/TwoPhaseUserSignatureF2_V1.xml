@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inputMessage targetNamespace="https://afirmaws/ws/signature"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://localhost/afirmaws/xsd/mfirma/wseng.xsd">
+	<request>TwoPhaseUserSignatureF2</request>
+	<versionMsg>1.0</versionMsg>
+	<parameters>
+		<applicationId />
+		<eSignature />
+		<signerCertificate />
+		<reference />
+		<eSignatureFormat />
+		<document />
+		<documentName />
+		<documentType />
+		<hashAlgorithm />
+		<storeDocument />
+	</parameters>
+</inputMessage>

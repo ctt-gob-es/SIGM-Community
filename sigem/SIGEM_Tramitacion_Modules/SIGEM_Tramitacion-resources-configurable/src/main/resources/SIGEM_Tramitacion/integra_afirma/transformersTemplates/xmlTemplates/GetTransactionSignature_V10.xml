@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mensajeEntrada xmlns="https://afirmaws/ws/custodia" xmlns:xsi="http://www.w3.org/2001/XMLSchemainstance"
+xsi:SchemaLocation="https://_XXX_/afirmaws/xsd/mcustodia/ws.xsd">
+<peticion>ObtenerFirmaTransaccion</peticion>
+<versionMsg>1.0</versionMsg>
+<parametros>
+<idAplicacion/>
+<idTransaccion/>
+</parametros>
+</mensajeEntrada>

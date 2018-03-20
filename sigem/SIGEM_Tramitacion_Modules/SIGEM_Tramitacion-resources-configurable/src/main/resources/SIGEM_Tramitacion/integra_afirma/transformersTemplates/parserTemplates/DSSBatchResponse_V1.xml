@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<afxp:BatchResponse Profile="urn:afirma:dss:1.0:profile:XSS"
+	Type="urn:afirma:dss:1.0:profile:XSS:BatchProtocol:VerifySignatureType"
+	xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema" xmlns:afxp="urn:afirma:dss:1.0:profile:XSS:schema"
+	xmlns:async="urn:oasis:names:tc:dss:1.0:profiles:asynchronousprocessing:1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:oasis:names:tc:dss:1.0:core:schema http://docs.oasis-open.org/dss/v1.0/oasis-dss-core-schema-v1.0-os.xsd urn:afirma:dss:1.0:profile:XSS:schema http://des-afirma.redsara.es/afirmaws/xsd/dss/afirma-dss-1.0-profiles-XSS-schema.xsd urn:oasis:names:tc:dss:1.0:profiles:asynchronousprocessing:1.0 http://docs.oasis-open.org/dss/v1.0/oasis-dss-1.0-profiles-asynchronous-processing-schema-cd-r2.xsd">
+	<dss:Result>
+		<dss:ResultMajor afirmaNodeType="text" />
+		<dss:ResultMessage afirmaNodeType="text" />
+		<dss:ResultMinor afirmaNodeType="text" />
+	</dss:Result>
+	<dss:OptionalOutputs>
+		<async:ResponseID afirmaNodeType="text" />
+		<afxp:ResponseTime afirmaNodeType="text" />
+	</dss:OptionalOutputs>
+</afxp:BatchResponse>

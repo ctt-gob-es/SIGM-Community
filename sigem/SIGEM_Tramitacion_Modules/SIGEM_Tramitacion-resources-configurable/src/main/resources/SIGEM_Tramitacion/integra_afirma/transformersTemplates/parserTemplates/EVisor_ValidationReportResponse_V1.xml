@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<srsm:ValidationReportResponse xmlns:srsm="urn:es:gob:signaturereport:services:messages"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<srsm:Result>
+		<srsm:Code afirmaNodeType="text" />
+		<srsm:Message afirmaNodeType="text" />
+		<srsm:Cause afirmaNodeType="optional" />
+	</srsm:Result>
+</srsm:ValidationReportResponse>

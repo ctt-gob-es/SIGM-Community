@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inputMessage targetNamespace="https://afirmaws/ws/signature"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://localhost/afirmaws/xsd/mfirma/wseng.xsd">
+	<request>ThreePhaseUserSignatureF1</request>
+	<versionMsg>1.0</versionMsg>
+	<parameters>
+		<applicationId/>
+		<documentId/>
+		<hashAlgorithm/>
+	</parameters>
+</inputMessage>

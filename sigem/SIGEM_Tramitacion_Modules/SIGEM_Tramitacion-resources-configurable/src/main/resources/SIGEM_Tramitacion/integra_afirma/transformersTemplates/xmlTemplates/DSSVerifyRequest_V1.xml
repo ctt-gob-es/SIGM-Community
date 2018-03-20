@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dss:VerifyRequest Profile="urn:afirma:dss:1.0:profile:XSS"
+	xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:afxp="urn:afirma:dss:1.0:profile:XSS:schema" xmlns:ades="urn:oasis:names:tc:dss:1.0:profiles:AdES:schema#"
+	xmlns:cmism="http://docs.oasis-open.org/ns/cmis/messaging/200908/"
+	xmlns:vr="urn:oasis:names:tc:dss:1.0:profiles:verificationreport:schema#">
+	<dss:InputDocuments afirmaNodeType="optional">
+		<dss:Document afirmaNodeType="choice">
+			<dss:Base64XML afirmaNodeType="optional"/>
+		</dss:Document>
+		<dss:DocumentHash afirmaNodeType="choice">
+			<ds:DigestMethod />
+			<ds:DigestValue />
+		</dss:DocumentHash>
+		<dss:Other afirmaNodeType="choice">
+			<cmism:getContentStream>
+				<cmism:repositoryId />
+				<cmism:objectId />
+			</cmism:getContentStream>
+		</dss:Other>
+	</dss:InputDocuments>
+	
+	<dss:OptionalInputs>
+		<dss:ClaimedIdentity>
+			<dss:Name />
+		</dss:ClaimedIdentity>
+		<afxp:ReturnReadableCertificateInfo afirmaNodeType="optional" />
+		<vr:ReturnVerificationReport afirmaNodeType="optional">
+			<vr:CheckOptions afirmaNodeType="optional">
+				<vr:CheckCertificateStatus afirmaNodeType="optional"/>
+				<vr:VerifyManifest afirmaNodeType="optional"/>
+			</vr:CheckOptions>
+			<vr:ReportOptions afirmaNodeType="optional">
+				<vr:IncludeCertificateValues afirmaNodeType="optional"/>
+				<vr:IncludeRevocationValues afirmaNodeType="optional"/>
+				<vr:ReportDetailLevel afirmaNodeType="optional"/>
+			</vr:ReportOptions>
+		</vr:ReturnVerificationReport>
+		<afxp:AdditionalReportOption afirmaNodeType="optional">
+			<afxp:IncludeProperties>
+				<afxp:IncludeProperty />
+			</afxp:IncludeProperties>
+		</afxp:AdditionalReportOption>
+		<dss:ReturnProcessingDetails afirmaNodeType="optional"/>
+		<afxp:ReturnSigPolicyDocument afirmaNodeType="optional"/>
+		<afxp:ReturnSignedDataInfo afirmaNodeType="optional"/>
+		<afxp:ReturnUpdatedSignature afirmaNodeType="optional"/>
+		<afxp:TargetSigner afirmaNodeType="optional"/>
+	</dss:OptionalInputs>
+	
+	<dss:SignatureObject>
+		<dss:SignaturePtr afirmaNodeType="choice" />
+		<ds:Signature afirmaNodeType="choice" />
+		<dss:Base64Signature afirmaNodeType="choice" />
+		<dss:Other afirmaNodeType="choice">
+			<afxp:SignatureArchiveId afirmaNodeType="optional"/>
+			<cmism:getContentStream afirmaNodeType="optional">
+				<cmism:repositoryId afirmaNodeType="choice"/>
+				<cmism:objectId afirmaNodeType="choice"/>
+			</cmism:getContentStream>
+			<ds:X509Data afirmaNodeType="optional">
+				<ds:X509Certificate afirmaNodeType="optional"/>
+				<cmism:getContentStream afirmaNodeType="optional"/>
+			</ds:X509Data>
+		</dss:Other>
+	</dss:SignatureObject>
+	
+</dss:VerifyRequest>

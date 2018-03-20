@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<srsm:GenerationRequest xmlns:srsm="urn:es:gob:signaturereport:services:messages"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<srsm:ApplicationId />
+	<srsm:TemplateId />
+	<srsm:Signature>
+		<srsm:EncodedSignature afirmaNodeType="choice" />
+		<srsm:RepositoryLocation afirmaNodeType="choice">
+			<srsm:RepositoryId />
+			<srsm:ObjectId />
+		</srsm:RepositoryLocation>
+		<srsm:ValidationResponse afirmaNodeType="choice" />
+	</srsm:Signature>
+	<srsm:Document afirmaNodeType="optional">
+		<srsm:EncodedDocument afirmaNodeType="choice" />
+		<srsm:RepositoryLocation afirmaNodeType="choice">
+			<srsm:RepositoryId />
+			<srsm:ObjectId />
+		</srsm:RepositoryLocation>
+	</srsm:Document>
+	<srsm:IncludeSignature afirmaNodeType="optional" />
+	<srsm:Barcodes afirmaNodeType="optional">
+		<srsm:Barcode afirmaNodeType="severalOcurrences">
+			<srsm:Type />
+			<srsm:Message />
+			<srsm:Configuration afirmaNodeType="optional">
+				<srsm:Parameter afirmaNodeType="severalOcurrences">
+					<srsm:ParameterId />
+					<srsm:ParameterValue />
+				</srsm:Parameter>
+			</srsm:Configuration>
+		</srsm:Barcode>
+	</srsm:Barcodes>
+	<srsm:ExternalParameters afirmaNodeType="optional">
+		<srsm:Parameter afirmaNodeType="severalOcurrences">
+			<srsm:ParameterId />
+			<srsm:ParameterValue />
+		</srsm:Parameter>
+	</srsm:ExternalParameters>
+</srsm:GenerationRequest>

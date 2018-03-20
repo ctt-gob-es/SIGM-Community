@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dss:SignRequest Profile="urn:oasis:names:tc:dss:1.0:profiles:timestamping"
+	xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+	<dss:OptionalInputs>
+		<dss:SignatureType afirmaNodeType="optional" />
+		<dss:ClaimedIdentity>
+			<dss:idAplicacion />
+		</dss:ClaimedIdentity>
+		<dss:ServicePolicy afirmaNodeType="optional" />
+	</dss:OptionalInputs>
+	<dss:InputDocuments>
+		<dss:Document afirmaNodeType="choice">
+			<dss:Base64Data afirmaNodeType="choice"/>
+			<dss:Base64XML afirmaNodeType="choice"/>
+			<dss:InlineXML afirmaNodeType="choice"/>
+			<dss:EscapedXML afirmaNodeType="choice"/>
+		</dss:Document>
+		<dss:DocumentHash afirmaNodeType="choice">
+			<ds:Transforms afirmaNodeType="optional">
+				<ds:Transform afirmaNodeType="severalOcurrences" />
+			</ds:Transforms>
+			<ds:DigestMethod/>
+			<ds:DigestValue />
+		</dss:DocumentHash>
+		<dss:TransformedData afirmaNodeType="choice">
+			<ds:Transforms>
+				<ds:Transform afirmaNodeType="severalOcurrences" />
+			</ds:Transforms>
+			<dss:Base64Data />
+		</dss:TransformedData>
+	</dss:InputDocuments>
+</dss:SignRequest>
