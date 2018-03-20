@@ -39,6 +39,7 @@
 				<module>portafirmasexterno</module>
 				<module>subvenciones</module>
 				<module>bdns</module>
+				<module>dipucrintegra</module>
 			</modules>
 		</profile>
 
