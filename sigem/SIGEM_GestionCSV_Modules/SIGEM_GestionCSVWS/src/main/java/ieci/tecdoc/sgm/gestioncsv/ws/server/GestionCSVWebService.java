@@ -504,7 +504,8 @@ public class GestionCSVWebService {
 			logger.debug("getInfoDocumentoCSVRetorno(InfoDocumentoCSV) - start");
 		}
 
-		InfoDocumentoCSVRetorno docRetorno = new InfoDocumentoCSVRetorno();
+		// [Josemi #547806] Cambiamos el tipo para que no haya un problemas de casting en otras partes del código
+        DocumentoCSVRetorno docRetorno = new DocumentoCSVRetorno();
 		if (doc != null) {
 			docRetorno.setCsv(doc.getCsv());
 			docRetorno.setFechaCSV(doc.getFechaCSV());
@@ -532,7 +533,7 @@ public class GestionCSVWebService {
 		DocumentoCSVRetorno docRetorno = new DocumentoCSVRetorno();
 
 		if (doc != null) {
-			// TODO:Comprobar que esta herencia esté bien
+			// [Josemi #547806] La herencia era incorrecta. Se soluciona en el código del método
 			docRetorno = (DocumentoCSVRetorno) getInfoDocumentoCSVRetorno((InfoDocumentoCSV) doc);
 			docRetorno.setContenido(doc.getContenido());
 		}

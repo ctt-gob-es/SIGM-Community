@@ -104,12 +104,6 @@
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_core</artifactId>
 			<version>${pom.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>xpp3</groupId>
-					<artifactId>xpp3_min</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>

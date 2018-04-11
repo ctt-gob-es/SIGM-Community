@@ -561,7 +561,23 @@ public abstract class GenericRepositoryManager implements IRepositoryManager {
 		byte[] file = null;
 		try {
 			if(docUID!=null){
-				documentVO = getRetrieveDocumentParams(docUID, entidad);
+				// [Ruben #545232] Reutilizo código para recuperar de Alfresco en isicres con BookType=1 a fuego para poder reutilizar esta parte
+				//documentVO = getRetrieveDocumentParams(docUID, entidad);
+				
+				ISRepositoryConfigurationVO confVO = new ISRepositoryConfigurationVO(
+						1, entidad);
+
+				ISicresBasicDatosEspecificosVO datosEspecificosVO = getDatosEspecificosForRetrieveDocument(
+						docUID, entidad);
+				IsicresBasicConnectorConfigurationVO connectorConfigurationVO = getConfiguration(confVO);
+
+				ISicresBasicDocumentVO iSicresDocumentVO = new ISicresBasicDocumentVO();
+				iSicresDocumentVO.setId(docUID);
+				iSicresDocumentVO.setDatosEspecificos(datosEspecificosVO);
+				iSicresDocumentVO.setConfiguration(connectorConfigurationVO);
+
+				documentVO = getEspecificRepositoryDataForRetrieve(iSicresDocumentVO);
+
 				log.warn(documentVO.getId());
 				log.warn(documentVO.getName());
 				documentVO = connector.retrieve(documentVO);

@@ -37,6 +37,11 @@
 					<groupId>axis</groupId>
 					<artifactId>axis-schema</artifactId>
 				</exclusion>
+             <!-- [Josemi #547806] Eliminamos la librería por conflicto entre clases con otro paquete -->
+				<exclusion>
+					<groupId>axis</groupId>
+					<artifactId>axis-wsdl4j</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 

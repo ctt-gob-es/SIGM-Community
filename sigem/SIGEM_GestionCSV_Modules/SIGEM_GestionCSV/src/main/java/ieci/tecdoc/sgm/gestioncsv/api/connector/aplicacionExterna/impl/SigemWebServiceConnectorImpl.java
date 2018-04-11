@@ -130,8 +130,16 @@ public class SigemWebServiceConnectorImpl extends AbstractAplicacionExternaConne
 	public AplicacionExternaCSVConnectorWS getAplicacionExternaCSVConnectorWS(
 			Map<String, String> params) {
 
-		AplicacionExternaCSVConnectorWSService aplicacionExternaConnectorWSService = new AplicacionExternaCSVConnectorWSService(
+		AplicacionExternaCSVConnectorWSService aplicacionExternaConnectorWSService = null;
+		
+		// [Josemi #547806] Traceamos la aplicación para detectar causas de error en un futuro
+		try {
+			aplicacionExternaConnectorWSService = new AplicacionExternaCSVConnectorWSService(
 				getWSDLLocation(params));
+		} catch (Throwable ex) {
+			logger.error("Error en el método getAplicacionExternaCSVConnectorWS. Causa: " + ex.getMessage(), ex);
+		}
+		
 		AplicacionExternaCSVConnectorWS aplicacionExternaConnectorWS = aplicacionExternaConnectorWSService
 				.getAplicacionExternaCSVConnectorWS();
 
