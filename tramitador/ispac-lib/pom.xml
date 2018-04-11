@@ -455,6 +455,11 @@
 		  <artifactId>wss4j</artifactId>
 		  <version>1.5.1</version>
 		</dependency>
-	
+
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>sigem_clasesBase</artifactId>
+			<version>3.0.1-M2</version>
+		</dependency>
 	</dependencies>
 </project>

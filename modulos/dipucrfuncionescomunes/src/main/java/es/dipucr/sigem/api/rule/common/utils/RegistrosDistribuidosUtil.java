@@ -28,7 +28,14 @@ import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
-
+import ieci.tecdoc.sgm.base.miscelanea.Goodies;
+import ieci.tecdoc.sgm.base.xml.core.XmlDocument;
+import ieci.tecdoc.sgm.base.xml.core.XmlElement;
+import ieci.tecdoc.sgm.base.xml.core.XmlElements;
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.dto.Entidad;
+import ieci.tecdoc.sgm.core.services.telematico.ServicioRegistroTelematico;
+import ieci.tecdoc.sgm.registro.util.Definiciones;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -74,6 +81,23 @@ public class RegistrosDistribuidosUtil {
 					// Gestor de ficheros temporales
 					FileTemporaryManager fileTempMgr = FileTemporaryManager.getInstance();
 					
+					//INI [Ruben #565416] Corregir establecimiento nombre ficheros originales de Solicitud.xml
+					Entidad entidad = new Entidad();
+					entidad.setIdentificador(EntidadesAdmUtil.obtenerEntidad(cct));
+					
+                    //cargar el Solicitud.xml
+					ServicioRegistroTelematico oServicioRT = LocalizadorServicios.getServicioRegistroTelematico();
+					byte[] solicitud = oServicioRT.obtenerDocumento(intray.getRegisterNumber(), Definiciones.REGISTRY_REQUEST_NOTSIGNED_CODE, entidad);
+
+					XmlDocument xmlDocReg = new XmlDocument();
+					xmlDocReg.createFromStringText(Goodies.fromUTF8ToStr(solicitud));
+				   	
+				   	XmlElement solicitudRegistro = xmlDocReg.getRootElement();
+					
+					XmlElement docsElement = solicitudRegistro.getDescendantElement(Definiciones.XPATH_DOCUMENTS);
+					XmlElements xmlElements = docsElement.getChildElements();
+					//FIN [Ruben #565416] Corregir establecimiento nombre ficheros originales de Solicitud.xml
+					
 					for (int i = 0; i < annexes.length; i++) {
 
 						// Información del anexo
@@ -101,8 +125,34 @@ public class RegistrosDistribuidosUtil {
 							
 							// Componer información del documento
 							Document doc = new Document();
-							doc.setCode(ISPACConfiguration.getInstance().get(ISPACConfiguration.SICRES_INTRAY_DEFAULT_DOCUMENT_TYPE));
-							doc.setName(annex.getName());
+							//INI [Ruben #565416] Corregir establecimiento tipo documental al iniciar expediente de registro
+							
+							String codigo = annex.getName().substring(0,annex.getName().indexOf('.'));
+							String name = annex.getName();
+							
+							if (codigo.equals("Justificante de Registro")) {
+								codigo = "Justificante";
+							}
+							else if (codigo.equals("Solicitud")||codigo.equals("Solicitud Firmada")) {
+								codigo = "Solicitud Registro";
+							}
+							else {
+								for(int j = 1; j <= xmlElements.getCount(); j++) {
+								XmlElement docElement = xmlElements.getItem(j);//solo entre los anexos busco el que corresponde para ponerle su nombre de fichero
+								if (codigo.equals(docElement.getChildElement(Definiciones.CODE).getValue())) {
+									codigo = ISPACConfiguration.getInstance().get(ISPACConfiguration.SICRES_INTRAY_DEFAULT_DOCUMENT_TYPE);
+									name = docElement.getChildElement(Definiciones.NAME).getValue();
+									}
+								}
+								if (!codigo.equals(ISPACConfiguration.getInstance().get(ISPACConfiguration.SICRES_INTRAY_DEFAULT_DOCUMENT_TYPE))){
+									codigo = ISPACConfiguration.getInstance().get(ISPACConfiguration.SICRES_INTRAY_DEFAULT_DOCUMENT_TYPE);
+								}
+							}
+							
+							doc.setCode(codigo);
+							doc.setName(name);
+							//doc.setName(annex.getName());
+							//FIN [Ruben #565416]
 							doc.setExtension(annex.getExt());
 							doc.setLength(new Long(file.length()).intValue());
 							FileInputStream in = new FileInputStream(file);

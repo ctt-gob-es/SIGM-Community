@@ -45,6 +45,7 @@ public class Definiciones
    public static final String CODE = "Codigo";
    public static final String EXTENSION = "Extension";
    public static final String HASH = "Hash";
+   public static final String NAME = "Nombre";
    public static final String SIGNATURE_HOOK = "Firma";
    public static final String VALIDATION_HOOK = "Contenido";
    public static final String ANTIVIRUS = "Antivirus";

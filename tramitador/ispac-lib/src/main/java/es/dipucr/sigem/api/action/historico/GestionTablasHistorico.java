@@ -60,7 +60,9 @@ public class GestionTablasHistorico {
 					((IItem)tramite).delete(getCct());
 				}
 				catch(ISPACException e){
-					logger.error("Error al pasar los trámites del expediente: " + numexp + " al histórico. " + e.getMessage(), e);					
+					logger.error("Error al pasar los trámites del expediente: " + numexp + " al histórico. " + e.getMessage(), e);	
+					//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+					throw new Exception(e);
 				}
 			}
 
@@ -73,6 +75,8 @@ public class GestionTablasHistorico {
 				}
 				catch(ISPACException e){
 					logger.error("Error al pasar los documentos del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+					//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+					throw new Exception(e);
 				}
 			}
 
@@ -85,6 +89,8 @@ public class GestionTablasHistorico {
 				}
 				catch(ISPACException e){
 					logger.error("Error al pasar los intervinientes del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+					//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+					throw new Exception(e);
 				}
 			}
 			
@@ -97,6 +103,8 @@ public class GestionTablasHistorico {
 				}
 				catch(Exception e){
 					logger.error("Error al pasar los hitos del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+					//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+					throw new Exception(e);
 				}
 			}
 
@@ -108,6 +116,8 @@ public class GestionTablasHistorico {
 			}
 			catch(ISPACException e){
 				logger.error("Error al pasar el expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+				//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+				throw new Exception(e);
 			}
 		} catch (Exception e) {
 			logger.error("ERROR al pasar al histórico el expediente: " + numexp + ". " + e.getMessage(), e);
