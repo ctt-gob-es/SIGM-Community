@@ -6,6 +6,7 @@
 
 	<form:form action="action/documento/search" commandName="documento" cssClass="block">
 
+		<!-- [Ruben #576645] añado los textos en euskera inlcuyendo / texto_euskera para dejar la pagina de la consulta en bilingüe-->
 		<div class="onecol">
 				<p class="enlaces">
 					<a href='<spring:url value="action/documento/form"/>' title='<spring:message code="label.form.button.home"/>' class="inicio">
@@ -18,7 +19,7 @@
 
 		<div class="twocolrightb cabecera">
 			<div class="column first">
-				<h4><spring:message code="label.form.csv.title" /></h4>
+				<h4><spring:message code="label.form.csv.title" /></h4>	
 			</div>
 			<div class="column last textright">
 				<p class="botones">
@@ -54,33 +55,36 @@
 				<input type="hidden" name="idEntidad" value="${idEntidad}"/>
 			</c:if>
 
-			<p>
+			<p style='color: #006699; font: bold;'>
 				<label for="csv">
 					<spring:message code="label.form.csv.csv" />
 				</label>
 				<input type="text" id="csv" name="csv" class="small" value="${csv}" />
+				Egiaztapen Kode Segurua
 			</p>
 
 			<!-- [eCenpri-Manu Ticket #280] - INICIO ALSIGM3 Incluir texto aclaratorio Consulta de documentos con CSV -->
+			<!-- [Ruben #576645] Ocultamos el texto aclaratorio tras quitar de la generación del csv los caracteres que dan problemas
 			<div>
 				<p style='text-align:justify;display:block;padding:0;margin: 0px 0px 0px 0px;color:#105CB6;font-family:helvetica;'>
-					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;NOTA: El código debe introducirse sin espacios.</br>
-					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;l = ele minúsucla</br>
-					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;I = i latina mayúscula</br>
-					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;0 = cero</br>
-					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;O = o mayúscula</br>
+					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;NOTA: El código debe introducirse sin espacios. / OHARRA: kodea espaziorik gabe sartu behar da.</br>
+					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;l = ele minúsucla / l = ele minuskula</br>
+					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;I = i latina mayúscula / I = i latino maiuskula </br>
+					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;0 = cero / 0 = zero</br>
+					<label for="captcha_answer">&nbsp;</label>&nbsp;&nbsp;O = o mayúscula / O = o maiuskula</br>
 				</p>
-			</div>			
+			</div>-->			
 
 			<c:if test="${configProperties['fwktd-csv-webapp.useCaptcha']}">
-			<p>	
+			<p style='color: #006699; font: bold;'>	
 				<label for="captcha_answer">&nbsp;</label>		
 				<img id="captcha" src='<spring:url value="action/captcha" />' />
 				<br/>
 				<label for="captcha">
-					Introduzca el texto de la imagen:
+					Introduzca el texto de la imagen
 				</label>
 				<input type="text" id="captcha_answer" name="captcha_answer" class="small" />
+				Irudiko testua idatzi
 			</p>
 			</c:if>
 			<!-- [eCenpri-Manu Ticket #280] - FIN ALSIGM3 Incluir texto aclaratorio Consulta de documentos con CSV -->
@@ -167,7 +171,10 @@
 	<div class="infoDoc">
 		<!-- [Manu #65] + ALSIGM3 Añadir texto jurídico en formulario de búsqueda de documentos -->
 			<p style='text-align:justify;display:block;padding:0;margin: 0px 0px 0px 0px;color:#105CB6;'>
-De conformidad con lo dispuesto en el art. 18.1.b) de la ley 11/2007, de 22 de junio, de acceso electrónico de los ciudadanos a los Servicios Públicos, mediante la inserción del Código Seguro de Verificación (CVE) que aparece en la banda gris del documento electrónico, se permite al interesado la comprobación de la integridad del documento en esta sede electrónica.
+De conformidad con lo dispuesto en el art. 42.b) de la ley 40/2015, de 1 de octubre, de Régimen Jurídico del Sector Público, mediante la inserción del Código Seguro de Verificación (CSV) que aparece en el documento electrónico, se permite al interesado la comprobación de la integridad del documento en esta sede electrónica.
+			</p>
+			<p style='text-align:justify;display:block;padding:0;margin: 0px 0px 0px 0px;color:#105CB6;'>
+Sektore Publikoaren Araubide Juridikoaren 2015eko urriaren 1eko 40/2015 Legearen 42.b) artikuluan xedatutakoarekin bat etorriz, dokumentu elektronikoan agertzen den Egiaztapen Kode Segurua (EKS) sartuta interesdunari aukera ematen zaio dokumentuaren osotasuna egiaztatzeko egoitza elektroniko horretan.
 			</p>
 		<!-- [Manu #65] + ALSIGM3 Añadir texto jurídico en formulario de búsqueda de documentos -->
 	</div>
