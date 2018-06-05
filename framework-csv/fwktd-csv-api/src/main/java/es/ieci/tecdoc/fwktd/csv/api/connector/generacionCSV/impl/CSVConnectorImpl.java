@@ -121,6 +121,15 @@ public class CSVConnectorImpl extends BaseConnector implements CSVConnector {
 		hashBase64 = hashBase64.replace("l", "L");
 		hashBase64 = hashBase64.replace("I", "i");
 		hashBase64 = hashBase64.replace("O", "o");
+		/* [Josemi #573210] El código CSV debe ser solo alfanúmerico
+		 * En B64 se generan también los caracteres "+" y "/" por los que se sustituyen
+		 * -"+" se sustituirá por "4" :: + -> 4
+		 * - "/" se sustituirá por "L" :: / -> L
+		 * - Los "0" (ceros) se sutituirán por "9" :: 0 -> 9
+		 */
+		hashBase64 = hashBase64.replace("+", "4");
+		hashBase64 = hashBase64.replace("/", "L");
+		hashBase64 = hashBase64.replace("0", "9");
 		logger.info("CSV final: {}", hashBase64);
 
 		return hashBase64;
