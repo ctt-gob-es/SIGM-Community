@@ -1,14 +1,14 @@
-#SIGM4.0-QUIJOTE
+# SIGM4.0-QUIJOTE
 
 SIGM4.0-QUIJOTE es una rama creada a partir de la última versión de SIGM (Sistema Integrado de Gestión Modular) donde se incluyen el código desarrollado por la Diputación Provincial de Ciudad Real (en adelante Dipucr).
 
-####Configuración del entorno de desarrollo (Instalación y compilación)
+#### Configuración del entorno de desarrollo (Instalación y compilación)
 
 El documento **README.txt** contiene las instrucciones de configuración del entorno Maven de desarrollo así como las instrucciones para realizar la **primera compilación e instalación** del código fuente recién descargado.
 Dicho fichero se encuentran en el directorio raiz del proyecto.
 
-##Mejoras incluidas en la rama
-###Mejoras Técnicas
+## Mejoras incluidas en la rama
+### Mejoras Técnicas
 * Rendimiento en general:
   * Lista de trabajo.
   * Datos de trámites.
@@ -40,7 +40,7 @@ Dicho fichero se encuentran en el directorio raiz del proyecto.
 * Indicar en el log la entidad a la que se corresponde la traza.
 * Adaptación para trabajar con ODSs.
 
-###Mejoras Funcionales
+### Mejoras Funcionales
 * **Tramitador**:
   * Lista de trabajo.
   * Cambios apariencia Avisos electrónicos.
@@ -84,7 +84,7 @@ Dicho fichero se encuentran en el directorio raiz del proyecto.
   * Mantenimiento de Manuales de Usuario.
 * Consulta de documentos por CVE, mostrar los datos del registro de salida.
 
-##Licencia
+## Licencia
 
 La siguiente «Licencia Pública de la Unión Europea» («European Union Public Licence EUPL») se ha elaborado en el marco de IDABC, programa de la Comunidad Europea cuyo objetivo es promover la prestación interoperable de servicios de administración electrónica europea a las administraciones públicas, las empresas y los ciudadanos. IDABC prolonga y profundiza el anterior programa IDA («Intercambio de Datos entre Administraciones»). 
 
