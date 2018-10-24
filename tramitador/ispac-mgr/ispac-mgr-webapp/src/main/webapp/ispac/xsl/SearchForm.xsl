@@ -88,7 +88,8 @@ xmlns:java="http://www.oracle.com/XSL/Transform/java/ieci.tdw.ispac.ispacmgr.sea
 
                                                 	<table width="98%" border="0">
                                                 		<!--xsl:apply-templates /-->
-														<!--xsl:apply-templates select="queryform/entity/field[@type[.='query']]" /-->														<xsl:for-each select="queryform/entity/field[@type[.='query']]">
+														<!--xsl:apply-templates select="queryform/entity/field[@type[.='query']]" /-->		
+														<xsl:for-each select="queryform/entity/field[@type[.='query']]">
 														<xsl:sort select="@order" order="ascending"/>
 														<xsl:apply-templates select="." />
 														</xsl:for-each>

@@ -295,6 +295,11 @@ public class SearchMgr
 
 		try
 		{
+			// Parametrizamos los formularios de búsqueda por usuario. Permite restringir los procedimientos [Josemi #595908]
+			String userName = (String) values.get("USERNAME_PARAM");
+			values.remove("USERNAME_PARAM");
+			xml = xml.replace("USERNAME_PARAM", userName);
+			
 			TransformerFactory tFactory = TransformerFactory.newInstance();
 			Source xmlSource = new StreamSource(new StringReader(xml));
 			Source xslSource = new StreamSource(new java.net.URL("file", "", xslpath).openStream());

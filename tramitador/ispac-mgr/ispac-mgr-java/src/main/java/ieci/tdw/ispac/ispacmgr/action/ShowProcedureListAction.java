@@ -22,6 +22,7 @@ import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
 import ieci.tdw.ispac.ispacweb.api.ManagerState;
 import ieci.tdw.ispac.ispacweb.manager.ISPACRewrite;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -140,6 +141,11 @@ public class ShowProcedureListAction extends BaseAction {
 			if (formSelect != null) {
 				
 				try {
+					// Parametrizamos los formularios de búsqueda con el nombre de usuario. Permite restringir los procedimientos [Josemi #595908]
+					if (values == null) {
+					   values = new HashMap();
+					}
+					values.put("USERNAME_PARAM", session.getUserName());
 					frm = searchAPI.buildHTMLSearchForm(Integer.parseInt(formSelect), xslurl, ResourceBundle.getBundle(BUNDLE_NAME, cct.getLocale()), cct.getLocale(), params,values,operators);
 				}
 				catch (ISPACException e) {
