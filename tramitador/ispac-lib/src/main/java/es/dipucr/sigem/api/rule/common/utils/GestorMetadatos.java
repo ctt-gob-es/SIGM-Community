@@ -55,10 +55,12 @@ public class GestorMetadatos {
  			//INICIO [dipucr #186]
  			String infoFirmas = null;
  			if (!StringUtils.isEmpty(infopagRdeBefore)){
- 				infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infopagRdeBefore, "Firma");
+ 				// [Ruben CMIS] adapto la referencia al metadato de firma para que funcione con CMIS Firma --> sign
+ 				infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infopagRdeBefore, "sign");
  			}
  			else{
- 				infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, "Firma");
+ 			// [Ruben CMIS] adapto la referencia al metadato de firma para que funcione con CMIS Firma --> sign
+ 				infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, "sign");
  			}
  			//FIN [dipucr #186]
 		    
@@ -83,7 +85,8 @@ public class GestorMetadatos {
  			try{ 				
  			
  			xmlInfoFirmas.set(xPath, firmante);
- 			genDocAPI.setDocumentProperty(connectorSession, infoPageRDE, "Firma", xmlInfoFirmas.toString() );
+ 			// [Ruben CMIS] adapto la referencia al metadato de firma para que funcione con CMIS Firma --> sign
+ 			genDocAPI.setDocumentProperty(connectorSession, infoPageRDE, "sign", xmlInfoFirmas.toString() );
  			
  			}
  			catch(Exception e){

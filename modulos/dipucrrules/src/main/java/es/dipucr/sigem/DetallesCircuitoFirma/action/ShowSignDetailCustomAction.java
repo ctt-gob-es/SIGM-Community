@@ -135,7 +135,7 @@ public class ShowSignDetailCustomAction extends BaseAction {
 
 				// Obtenemos el xml con las firmas adjuntadas antes de añadir la nueva
 				signProperty = genDocAPI.getDocumentProperty(connectorSession,
-						infoPageRDE, "Firma");
+						infoPageRDE, "sign");
 
 				XmlFacade xmlFacade = new XmlFacade(signProperty);
 

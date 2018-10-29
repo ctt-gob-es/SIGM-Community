@@ -767,11 +767,11 @@ public class DipucrSignConnector extends AFirmaSignSimpleVerifyConnector{
 
 			connectorSession = genDocAPI.createConnectorSession();
 			//Obtenemos el xml con las firmas adjuntadas antes de añadir la nueva
-		    signProperty = genDocAPI.getDocumentProperty(connectorSession, infoPagRDE, "Firma");
+		    signProperty = genDocAPI.getDocumentProperty(connectorSession, infoPagRDE, "sign");
 
 		    XmlFacade xmlFacade = new XmlFacade(signProperty);
 		    xmlFacade.set("/firmas/firma["+signerNumber+"]/@idTransaccion", idTransaccion);
-		    genDocAPI.setDocumentProperty(connectorSession, infoPagRDE, "Firma", xmlFacade.toString() );
+		    genDocAPI.setDocumentProperty(connectorSession, infoPagRDE, "sign", xmlFacade.toString() );
 		    logger.debug(xmlFacade.toString());
 
 		}

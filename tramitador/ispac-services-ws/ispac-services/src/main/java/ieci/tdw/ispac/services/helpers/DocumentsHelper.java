@@ -181,7 +181,7 @@ public class DocumentsHelper {
 		};
 		
 		DocumentoVO docOriginal = (DocumentoVO) sCommand.exec();
-    	String signProperty = genDocAPI.getDocumentProperty(connectorSession, doc.getGuid(), "Firma");
+    	String signProperty = genDocAPI.getDocumentProperty(connectorSession, doc.getGuid(), "sign");
 		    
 	    XmlFacade xmlFacade = new XmlFacade(signProperty);
 	    	

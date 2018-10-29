@@ -189,7 +189,7 @@
 	    <Repository>
 	    	<!-- Posibles implementaciones: es.ieci.tecdoc.isicres.document.manager.invesdoc.InvesDocRepositoryManager -->
 	    	<!--							es.ieci.tecdoc.isicres.document.manager.alfresco.AlfrescoRepositoryManager -->
-	    	<RepositoryManager>es.ieci.tecdoc.isicres.document.manager.invesdoc.InvesDocRepositoryManager</RepositoryManager>
+	    	<RepositoryManager>es.ieci.tecdoc.isicres.document.manager.alfrescoCMIS.AlfrescoCMISRepositoryManager</RepositoryManager>
 	    </Repository>
 	    <!-- Configura la implementación de la funcionalidad de validación de personas. -->
 	    <!-- Posibles implementaciones: com.ieci.tecdoc.person.validation.core.PersonValidationImpl-->

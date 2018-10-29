@@ -10,13 +10,7 @@
 	<packaging>jar</packaging>
 	<description>Modulo de gestion documental para Alfresco</description>
 	
-	<repositories>
-		<repository>
-			<id>repo_arch</id>
-			<name>repo_arch</name>
-			<url>file:${project.basedir}/lib</url>
-		</repository>
-	</repositories>	
+	
 	<dependencies>
 		<!-- Dependencias de InvesSicres -->
 		<dependency>
@@ -138,12 +132,12 @@
 		</dependency> 	 
 		
 		
-		<!-- Librería UPCT --> <!--
+		<!-- Librería UPCT -->
 	     <dependency>
 	       <groupId>upct.ctsi</groupId>
 	       <artifactId>utilsCtsi</artifactId>
 	       <version>1.4</version>
-	         </dependency>-->
+	         </dependency>
 	
 	         <dependency>
 	                 <groupId>junit</groupId>

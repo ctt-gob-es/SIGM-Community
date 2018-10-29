@@ -100,7 +100,7 @@ public class PortafirmasMinhapSignConnector extends Sigm30SignConnector {
 				}
 			}
 
-			genDocAPI.setDocumentProperty(connectorSession, infoPagRDE, "Firma", xmlFacade.toString() );
+			genDocAPI.setDocumentProperty(connectorSession, infoPagRDE, "sign", xmlFacade.toString() );
 			logger.debug(xmlFacade.toString());
 		}
 		finally {

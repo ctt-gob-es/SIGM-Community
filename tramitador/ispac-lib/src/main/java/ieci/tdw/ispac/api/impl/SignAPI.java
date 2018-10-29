@@ -728,7 +728,7 @@ public class SignAPI implements ISignAPI {
 			}
 
 			//Obtenemos el xml con las firmas adjuntadas antes de aniadir la nueva
-		    signProperty = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, "Firma");
+		    signProperty = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, "sign");
 
 	    	XmlFacade xmlFacade = new XmlFacade(signProperty);
 

@@ -494,7 +494,7 @@ public class Sigem23SignConnector extends SigemSignConnector {
 
 	    		connectorSession = genDocAPI.createConnectorSession();
 
-	    		String infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infoPagRDE, "Firma");
+	    		String infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infoPagRDE, "sign");
 	    		XmlFacade xmlInfoFirmas = new XmlFacade(infoFirmas);
 
 	    		List firmas = xmlInfoFirmas.getList("/" + SignDocument.TAG_FIRMAS + "/" + SignDocument.TAG_FIRMA);

@@ -19,7 +19,9 @@ public class ISicresAlfrescoConnectorConfigurationVO extends IsicresAbstractConn
 	private String ip;
 	private String puerto;	
 	
-	
+	// [Ruben CMIS] Parámetros para CMIS
+	private String version;	
+	private String protocolo;	
 	
 	/**
 	 * @return the usuario
@@ -77,6 +79,24 @@ public class ISicresAlfrescoConnectorConfigurationVO extends IsicresAbstractConn
 		this.puerto = puerto;
 	}
 
+	// [Ruben CMIS] Metodos integracion CMIS 
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getProtocolo() {
+		return protocolo;
+	}
+
+	public void setProtocolo(String protocolo) {
+		this.protocolo = protocolo;
+	}
+	// FIN Metodos integracion CMIS 
+	
 	public void fromXml(String xml) {
 		XStream xstream = configureXstream();
 		ISicresAlfrescoConnectorConfigurationVO objectFromXml = (ISicresAlfrescoConnectorConfigurationVO)xstream.fromXML(xml);
@@ -84,6 +104,10 @@ public class ISicresAlfrescoConnectorConfigurationVO extends IsicresAbstractConn
 		this.pass 		= objectFromXml.getPass();
 		this.puerto 	= objectFromXml.getPuerto();
 		this.usuario 	= objectFromXml.getUsuario();
+		
+		// [Ruben CMIS] Adaptación a CMIS
+		this.version	= objectFromXml.getVersion();
+		this.protocolo	= objectFromXml.getProtocolo();
 	}
 
 	public String toXml() {
@@ -102,4 +126,5 @@ public class ISicresAlfrescoConnectorConfigurationVO extends IsicresAbstractConn
 		result.alias("Connector", ISicresBasicDatosEspecificosValueVO.class);
 		return result;	
 	}
+
 }

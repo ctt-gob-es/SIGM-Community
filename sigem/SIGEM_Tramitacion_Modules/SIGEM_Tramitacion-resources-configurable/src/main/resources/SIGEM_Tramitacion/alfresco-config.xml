@@ -6,7 +6,7 @@
 	 -->
 	<Repository id="3" alias="repositorio_tramitacion" default="true">
 	    <Properties>
-	    	<Property name="ALFRESCO_IP_ADDRESS">xxx.xxx.xxx.xxx</Property>
+	    	<Property name="ALFRESCO_IP_ADDRESS">servidor.alfresco.es</Property>
 	    	<Property name="ALFRESCO_PORT">puerto</Property>
 	    	<Property name="ALFRESCO_USER">usuario</Property>
 	    	<Property name="ALFRESCO_PASSWORD">contraseña</Property>
@@ -14,9 +14,14 @@
 	    	<Property name="ALFRESCO_STORE_NAMESPACE">Store</Property>
 	    	<Property name="ALFRESCO_FILE_KEY">document_name</Property>
 	    	<Property name="ALFRESCO_ASPECTS">{repositorio_tramitacion.model}aspectDocumento</Property>
-	    	<Property name="ALFRESCO_REPOSITORY_WEBSCRIPT_URL">http://xxx.xxx.xxx.xxx:puerto/alfresco/service/ieci/repository/repositorio_tramitacion</Property>
+	    	<Property name="ALFRESCO_REPOSITORY_WEBSCRIPT_URL">http://servidor.alfresco.es:puerto/alfresco/service/ieci/repository/repositorio_tramitacion</Property>
 
 	    	<Property name="DOCUMENT_NAME_TOKEN">documentName</Property>
+						
+			<!-- UPNA- Adaptación a CMIS -->
+	    	<Property name="ALFRESCO_VERSION">5.2</Property>
+	    	<Property name="ALFRESCO_PROTOCOL">https</Property>
+			
 		</Properties>
 	    <MetaDataMappings>
 	      	<Mapping>
@@ -142,7 +147,9 @@
 				<Value type="xpath">/doc_properties/property[contains(name,'mimetype')]/value</Value>
 			</Token>
 		</Tokens>
-		<FolderPath>/app:company_home/cm:repositorio_tramitacion</FolderPath>
+		<!--<FolderPath>/app:company_home/cm:repositorio_tramitacion</FolderPath>-->
+		<!-- Adaptación a CMIS -->
+		<FolderPath>/repositorio_tramitacion</FolderPath>
 	</Repository>
 	
 	<!--
@@ -150,7 +157,7 @@
 	 -->
 	<Repository id="4" alias="repositorio_docs_firmados">
 	    <Properties>
-	    	<Property name="ALFRESCO_IP_ADDRESS">xxx.xxx.xxx.xxx</Property>
+	    	<Property name="ALFRESCO_IP_ADDRESS">servidor.alfresco.es</Property>
 	    	<Property name="ALFRESCO_PORT">puerto</Property>
 	    	<Property name="ALFRESCO_USER">usuario</Property>
 	    	<Property name="ALFRESCO_PASSWORD">contraseña</Property>
@@ -158,9 +165,14 @@
 	    	<Property name="ALFRESCO_STORE_NAMESPACE">Store</Property>
 	    	<Property name="ALFRESCO_FILE_KEY">document_name</Property>
 	    	<Property name="ALFRESCO_ASPECTS">{repositorio_tramitacion.model}aspectDocumento,{repositorio_tramitacion.model}aspectFirmaDocumento</Property>
-	    	<Property name="ALFRESCO_REPOSITORY_WEBSCRIPT_URL">http://xxx.xxx.xxx.xxx:puerto/alfresco/service/ieci/repository/repositorio_tramitacion_custodia</Property>
+	    	<Property name="ALFRESCO_REPOSITORY_WEBSCRIPT_URL">http://servidor.alfresco.es:puerto/alfresco/service/ieci/repository/repositorio_tramitacion_custodia</Property>
 
 	    	<Property name="DOCUMENT_NAME_TOKEN">documentName</Property>
+			
+			<!-- UPNA- Adaptación a CMIS -->
+	    	<Property name="ALFRESCO_VERSION">5.2</Property>
+	    	<Property name="ALFRESCO_PROTOCOL">https</Property>
+			
 		</Properties>
 	    <MetaDataMappings>
 	      	<Mapping>
@@ -231,10 +243,10 @@
 	        	<Source type="token">creationDate</Source>
 	        	<Destination type="string" aspect="aspectFirmaDocumento" model="repositorio_tramitacion.model">creation_date</Destination>
 	      	</Mapping>
-		<Mapping>
+		<!--<Mapping>
 	        	<Source type="token">Firma</Source>
 	        	<Destination type="string" aspect="aspectFirmaDocumento" model="repositorio_tramitacion.model">Firma</Destination>
-	      	</Mapping>
+	      	</Mapping>-->
 		</MetaDataMappings>
 		<Tokens>
 			<Token>
@@ -305,19 +317,21 @@
 				<Name>creationDate</Name>
 				<Value type="xpath">/doc_properties/property[contains(name,'Fecha Creación')]/value</Value>
 			</Token>
-			<Token>
+			<!--<Token>
 				<Name>Firma</Name>
 				<Value type="xpath">/doc_properties/property[contains(name,'Firma')]/value</Value>
-			</Token>
+			</Token>-->
 		</Tokens>
-		<FolderPath>/app:company_home/cm:repositorio_tramitacion_custodia</FolderPath>
+		<!--<FolderPath>/app:company_home/cm:repositorio_tramitacion_custodia</FolderPath>-->
+		<!-- UPNA - Adaptación a CMIS -->
+		<FolderPath>/repositorio_tramitacion_custodia</FolderPath>
 	</Repository>
 	
 	
 	
 	<Repository id="5" alias="repositorio_docs_registro" default="true">
 	    <Properties>
-	    	<Property name="ALFRESCO_IP_ADDRESS">xxx.xxx.xxx.xxx</Property>
+	    	<Property name="ALFRESCO_IP_ADDRESS">servidor.alfresco.es</Property>
 	    	<Property name="ALFRESCO_PORT">puerto</Property>
 	    	<Property name="ALFRESCO_USER">usuario</Property>
 	    	<Property name="ALFRESCO_PASSWORD">contraseña</Property>
@@ -325,9 +339,14 @@
 	    	<Property name="ALFRESCO_STORE_NAMESPACE">Store</Property>
 	    	<Property name="ALFRESCO_FILE_KEY">document_name</Property>
 	    	<Property name="ALFRESCO_ASPECTS">{repositorio_docs_registro.model}aspectRegistro</Property>
-	    	<Property name="ALFRESCO_REPOSITORY_WEBSCRIPT_URL">http://xxx.xxx.xxx.xxx:puerto/alfresco/service/ieci/repository/repositorio_docs_registro</Property>
+	    	<Property name="ALFRESCO_REPOSITORY_WEBSCRIPT_URL">http://servidor.alfresco.es:puerto/alfresco/service/ieci/repository/repositorio_docs_registro</Property>
 
 	    	<Property name="DOCUMENT_NAME_TOKEN">documentName</Property>
+			
+			<!-- UPNA- Adaptación a CMIS -->
+	    	<Property name="ALFRESCO_VERSION">5.2</Property>
+	    	<Property name="ALFRESCO_PROTOCOL">https</Property>
+			
 		</Properties>
 	    <MetaDataMappings>
 	      	<Mapping>
@@ -399,7 +418,9 @@
 			</Token>
 			
 		</Tokens>
-		<FolderPath>/app:company_home/cm:repositorio_docs_registro</FolderPath>
+		<!--<FolderPath>/app:company_home/cm:repositorio_docs_registro</FolderPath>-->
+		<!-- UPNA - Adaptación a CMIS -->
+		<FolderPath>/repositorio_docs_registro</FolderPath>
 	</Repository>
 	
 	

@@ -27,6 +27,8 @@ public class DMConnectorFactory {
 	private static final int INVESDOC = 5;
 	private static final int SHAREPOINT = 6;
 	private static final int ALFRESCO = 7;
+	// [Ruben CMIS] Añado el repositorio Alfresco CMIS
+	private static final int ALFRESCO_CMIS = 8;
 
 	private static int mConnector = NONE;
 	static {
@@ -47,7 +49,11 @@ public class DMConnectorFactory {
 				mConnector = SHAREPOINT;
 			} else if (manager.equalsIgnoreCase("alfresco")) {
 				mConnector = ALFRESCO;
-			} else {
+			} // [Ruben CMIS] Añado el repositorio Alfresco CMIS
+			  else if (manager.equalsIgnoreCase("alfrescoCMIS")) {
+				mConnector = ALFRESCO_CMIS;
+			}
+			else {
 				throw new ISPACException("No se ha indicado ningún gestor de almacenamiento");
 			}
 
@@ -95,7 +101,11 @@ public class DMConnectorFactory {
 				return (IDocConnector) ClassLoaderUtil.executeStaticMethod(
 						"ieci.tdw.ispac.ispaclib.alfresco.doc.AlfrescoConnector",
 						"getInstance", new Object[] { ctx });
-
+			// UPCT - Conector de AlfrescoCMIS
+			case ALFRESCO_CMIS:
+				return (IDocConnector) ClassLoaderUtil.executeStaticMethod(
+						"ieci.tdw.ispac.ispaclib.alfresco.doc.AlfrescoCMISConnector",
+						"getInstance", new Object[] { ctx });
 			case SHAREPOINT:
 				return (IDocConnector) ClassLoaderUtil.executeStaticMethod(
 						"ieci.tdw.ispac.ispaclib.sharepoint.gendoc.moss.MossConnector",
@@ -131,7 +141,11 @@ public class DMConnectorFactory {
 				return (IDocConnector) ClassLoaderUtil.executeStaticMethod(
 						"ieci.tdw.ispac.ispaclib.alfresco.doc.AlfrescoConnector",
 						"getInstance", new Object[] { ctx, obj });
-
+			// UPCT - Conector de AlfrescoCMIS
+			case ALFRESCO_CMIS:
+				return (IDocConnector) ClassLoaderUtil.executeStaticMethod(
+						"ieci.tdw.ispac.ispaclib.alfresco.doc.AlfrescoCMISConnector",
+						"getInstance", new Object[] { ctx, obj});
 			case SHAREPOINT:
 				return (IDocConnector) ClassLoaderUtil.executeStaticMethod(
 						"ieci.tdw.ispac.ispaclib.sharepoint.gendoc.moss.MossConnector",

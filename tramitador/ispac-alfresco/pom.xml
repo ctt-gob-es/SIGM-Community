@@ -22,7 +22,6 @@
 			<url>file:${project.basedir}/lib</url>
 		</repository>
 	</repositories>
-
 	<dependencies>
 
 		<!-- IECI dependencies -->
@@ -47,31 +46,26 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
-		<dependency>
+		
+		<!-- UPCT - Dependencia con AlfrescoCMIS -->
+		<!-- <dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
-			<artifactId>ISicres-Document-Connector</artifactId>
-			<version>${invesicres.version}</version>
-		</dependency>
-
+			<artifactId>ISicres-Document-Connector-AlfrescoCMIS</artifactId>
+			<version>0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>es.ieci.tecdoc.isicres</groupId>
+					<artifactId>ISicres-Common</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency> -->
+		<!--
 		<dependency>
 			<groupId>org.alfresco</groupId>
 			<artifactId>alfresco-web-service-client</artifactId>
-			<version>4.0.d</version>
+			<version>3.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>${commons.httpclient.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-<!--
 		<dependency>
 			<groupId>org.alfresco</groupId>
 			<artifactId>alfresco-repository</artifactId>
