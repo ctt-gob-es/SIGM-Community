@@ -14,6 +14,10 @@ var g_FdrReadOnly    = true;
 var g_CloseFolder    = 1;
 var g_ShowTable      = true;
 
+// Impedir crear nuevos registros desde la Oficina de Registro Telemático [Josemi #610012]
+var g_codOffice      = 0;
+var g_codOffice_RT   = 999;
+
 var g_WndVld = null;
 var g_FormVld = null;
 

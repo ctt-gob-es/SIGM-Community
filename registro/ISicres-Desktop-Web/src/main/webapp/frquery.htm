@@ -170,7 +170,8 @@
 							<TD>
 								<DIV ALIGN="center">&nbsp;</DIV>
 							</TD>
-							<TD ID="NewFolderBtn" WIDTH="120" CLASS="SubOptionsDisabled" onmouseover="top.Over(this)" onmouseout="top.Out(this)" onclick="if (this.className != 'SubOptionsDisabled'){top.NewFolder(this)}" onkeydown="if ((top.GetKeyCode(event)==13) && (this.className != 'SubOptionsDisabled')){top.NewFolder(this)}" TABINDEX="1">
+							<!-- [Josemi #610012] Impedir crear nuevos registros desde la Oficina de Registro Telemático -->
+ 							<TD ID="NewFolderBtn" WIDTH="120" CLASS="SubOptionsDisabled" onmouseover="top.Over(this)" onmouseout="top.Out(this)" onclick="if ((this.className != 'SubOptionsDisabled')  && (top.g_codOffice != top.g_codOffice_RT)){top.NewFolder(this)} else if (top.g_codOffice == top.g_codOffice_RT) { alert(top.IDS_OFFICE_RT_NOT_NEWREG_ENABLED) }" onkeydown="if ((top.GetKeyCode(event)==13) && (this.className != 'SubOptionsDisabled') && (top.g_codOffice != top.g_codOffice_RT)){top.NewFolder(this)} else if (top.g_codOffice == top.g_codOffice_RT) { alert(top.IDS_OFFICE_RT_NOT_NEWREG_ENABLED) }" TABINDEX="1">
 								<DIV ALIGN="center">
 									<SCRIPT LANGUAGE="javascript">document.write( top.GetIdsLan( "IDS_OPCNUEVA" ) )</SCRIPT>
 								</DIV>

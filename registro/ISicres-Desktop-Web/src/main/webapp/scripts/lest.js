@@ -358,5 +358,8 @@ function SetIdentification(User, Username, OfficeCode, Officename)
 		getElementById("imgPoint").style.visibility = "visible";
 		getElementById("textUser").innerHTML = userText;
 		getElementById("textOffice").innerHTML = OfficeCode + " - " + Officename;
+
+		// Impedir crear nuevos registros desde la Oficina de Registro Telemático [Josemi #610012]
+		top.g_codOffice = OfficeCode;
 	}
 }

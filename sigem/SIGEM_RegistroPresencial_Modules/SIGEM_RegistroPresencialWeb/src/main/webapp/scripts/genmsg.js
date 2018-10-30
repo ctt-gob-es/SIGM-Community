@@ -87,6 +87,7 @@ var IDS_BTNREFRESCAR    = "Refrescar";
 var IDS_BTNCOMPULSAR    = "Compulsar";
 var IDS_BTNDIST			= "Distribuir";
 var IDS_BTNSENDIR		= "Intercambio Registral";
+var IDS_BTNSENDIR_LABEL	= "Inter. Registral";
 
 var IDS_ETQSIGNIVEL     = "Siguiente nivel";
 var IDS_ETQNIVELANT     = "Nivel previo";
@@ -209,6 +210,7 @@ var IDS_OPC_ENTRADA     = "Entrada";
 var IDS_OPC_SALIDA      = "Salida";
 var IDS_TIT_HIST_DISTR  = "Historial de Distribución";
 var IDS_TIT_HIST_INTERCAMBIO_REG = "Historial de Intercambio Registral";
+var IDS_TIT_DETALLE_INTERCAMBIO_REG = "Información Intercambio Registral";
 var IDS_DTR_ELEMENTOS   = "Elementos";
 var IDS_FRM_CONF_FLDS   = "Conf. registro";
 var IDS_REGISTRO        = "Registro";
@@ -446,6 +448,8 @@ var IDS_SEARCH_CAMPO_NOT_NULL = "El valor de Campo no puede ser nulo";
 
 var IDS_TIME_OUT_DIST_ACEPT= "El registro excede el plazo marcado para la aceptación de la distribución";
 
+// Impedir crear nuevos registros desde la Oficina de Registro Telemático [Josemi #610012]
+var IDS_OFFICE_RT_NOT_NEWREG_ENABLED = "No se pueden crear registros nuevos desde la oficina de Registro Telemático.";
 var IDS_OFFICE_NOT_ENABLED = "La oficina actual esta dada de baja, no se podrá dar de alta nuevos registros.";
 
 //Intercambio registral
@@ -470,6 +474,11 @@ var IDS_WAIT_PLEASE="Espere por favor...";
 
 var IDS_LABEL_COMBO_INTER_REG_NO = "No";
 var IDS_LABEL_COMBO_INTER_REG_SI = "Si";
+
+var IDS_UNID_ADMIN_PADRE = "Unidad Administrativa Padre";
+
+var IDS_QRYREITENTARCOMPULSA = "No se ha podido completar el proceso de compulsa del documento. ¿Desea volver a intentarlo?";
+
 // FIN DE CASTELLANO
 
 
@@ -559,6 +568,7 @@ var EU_IDS_BTNREFRESCAR    = "Freskatu";
 var EU_IDS_BTNCOMPULSAR    = "Konpultsatu";
 var EU_IDS_BTNDIST	   = "Banatzeatu";
 var EU_IDS_BTNSENDIR		= "Registrala trukatzen dut";
+var EU_IDS_BTNSENDIR_LABEL	= "Inter. Registrala";
 
 var EU_IDS_ETQSIGNIVEL     = "Hurrengo maila";
 var EU_IDS_ETQNIVELANT     = "Aurreko maila";
@@ -682,6 +692,7 @@ var EU_IDS_OPC_ENTRADA     = "Sarrera";
 var EU_IDS_OPC_SALIDA      = "Irteera";
 var EU_IDS_TIT_HIST_DISTR  = "Banaketaren historia";
 var EU_IDS_TIT_HIST_INTERCAMBIO_REG = "Registral trukearen historia";
+var EU_IDS_TIT_DETALLE_INTERCAMBIO_REG = "Registral trukearen";
 var EU_IDS_DTR_ELEMENTOS   = "Gaiak";
 var EU_IDS_FRM_CONF_FLDS   = "Konf. erreg.";
 var EU_IDS_REGISTRO        = "Erregistroa";
@@ -924,7 +935,9 @@ var EU_IDS_INTERCAMBIOREGISTRAL = "Registrala trukatzen dut";
 
 var EU_IDS_TIME_OUT_DIST_ACEPT= "Erregistroak epe markatua gainditzen du distribuzioaren onarpenarentzat.";
 
+var EU_IDS_OFFICE_RT_NOT_NEWREG_ENABLED = "No se pueden crear registros nuevos desde la oficina de Registro Telemático.";
 var EU_IDS_OFFICE_NOT_ENABLED = "Gaur bulegoan hartu da behera, eta ezin duzu ireki berri erregistroak.";
+
 //Intercambio registral
 var EU_IDS_IR_NO_HAY_SELECCIONADOS = "Erregistro aukeratuak ez daude";
 var EU_IDS_IR_NO_HA_SELECCIONADO_DESTINO = "Norako bat ez du aukeratu";
@@ -946,6 +959,11 @@ var EU_IDS_WAIT_PLEASE="Mesedez zain egon dezan...";
 
 var EU_IDS_LABEL_COMBO_INTER_REG_NO = "Ez";
 var EU_IDS_LABEL_COMBO_INTER_REG_SI = "Bai";
+
+var EU_IDS_UNID_ADMIN_PADRE = "Aita Administrazio Atala";
+
+var EU_IDS_QRYREITENTARCOMPULSA = "Dokumentuaren konpultsatzearen prozesua ez du osatu ahal izan. ¿ saiatu desiratzen du ?";
+
 // FIN EUSKERA
 
 
@@ -1031,6 +1049,7 @@ var CT_IDS_BTNREFRESCAR    = "Refresca";
 var CT_IDS_BTNCOMPULSAR    = "Compulsa";
 var CT_IDS_BTNDIST	   = "Distribueix";
 var CT_IDS_BTNSENDIR		= "Intercanvi registral";
+var CT_IDS_BTNSENDIR_LABEL	= "Inter. Registral";
 
 var CT_IDS_ETQSIGNIVEL     = "Nivell posterior";
 var CT_IDS_ETQNIVELANT     = "Nivell anterior";
@@ -1139,6 +1158,7 @@ var CT_IDS_OPC_ENTRADA     = "Entrada";
 var CT_IDS_OPC_SALIDA      = "Sortida";
 var CT_IDS_TIT_HIST_DISTR  = "Historial de distribució";
 var CT_IDS_TIT_HIST_INTERCAMBIO_REG = "Historial d'intercanvi registral";
+var CT_IDS_TIT_DETALLE_INTERCAMBIO_REG = "Informació d'intercanvi registral";
 var CT_IDS_DTR_ELEMENTOS   = "Elements";
 var CT_IDS_FRM_CONF_FLDS   = "Conf. Registre";
 var CT_IDS_REGISTRO        = "Registre";
@@ -1379,6 +1399,7 @@ var CT_IDS_INTERCAMBIOREGISTRAL = "Intercanvi Registral";
 
 var CT_IDS_TIME_OUT_DIST_ACEPT= "El registre excedeix el termini marcat per a l'acceptació de la distribució.";
 
+var CT_IDS_OFFICE_RT_NOT_NEWREG_ENABLED = "No se pueden crear registros nuevos desde la oficina de Registro Telemático.";
 var CT_IDS_OFFICE_NOT_ENABLED = "L'oficina actual aquesta donada de baixa, no es podrà donar d'alta nous registres.";
 
 //Intercambio registral
@@ -1402,6 +1423,11 @@ var CT_IDS_WAIT_PLEASE="Esperi per favor...";
 
 var CT_IDS_LABEL_COMBO_INTER_REG_NO = "No";
 var CT_IDS_LABEL_COMBO_INTER_REG_SI = "Si";
+
+var CT_IDS_UNID_ADMIN_PADRE = "Unitat administrativa pare";
+
+var CT_IDS_QRYREITENTARCOMPULSA = "No s'ha pogut completar el procés de compulsa del document. Desitja tornar a intentar-ho?"
+
 // FIN DE CATALAN
 
 
@@ -1485,6 +1511,7 @@ var GL_IDS_BTNREFRESCAR    = "Refrescar";
 var GL_IDS_BTNCOMPULSAR    = "Compulsar";
 var GL_IDS_BTNDIST	   = "Distribuír";
 var GL_IDS_BTNSENDIR		= "Intercambio rexistral";
+var GL_IDS_BTNSENDIR_LABEL	= "Inter. Rexistral";
 
 var GL_IDS_ETQSIGNIVEL     = "Seguinte nivel";
 var GL_IDS_ETQNIVELANT     = "Nivel previo";
@@ -1609,6 +1636,7 @@ var GL_IDS_OPC_ENTRADA     = "Entrada";
 var GL_IDS_OPC_SALIDA      = "Saída";
 var GL_IDS_TIT_HIST_DISTR  = "Historial de Distribución";
 var GL_IDS_TIT_HIST_INTERCAMBIO_REG = "Historial de intercambio rexistral";
+var GL_IDS_TIT_DETALLE_INTERCAMBIO_REG = "Información do intercambio rexistral";
 var GL_IDS_DTR_ELEMENTOS   = "Elementos";
 var GL_IDS_FRM_CONF_FLDS   = "Conf. rexistro";
 var GL_IDS_REGISTRO        = "Rexistro";
@@ -1848,6 +1876,7 @@ var GL_IDS_INTERCAMBIOREGISTRAL = "Intercambio Rexistral";
 
 var GL_IDS_TIME_OUT_DIST_ACEPT= "O rexistro excede o prazo marcado para a aceptación da distribución.";
 
+var GL_IDS_OFFICE_RT_NOT_NEWREG_ENABLED = "No se pueden crear registros nuevos desde la oficina de Registro Telemático.";
 var GL_IDS_OFFICE_NOT_ENABLED = "A oficina actual esta dada de baixa, non se poderá dar de alta novos rexistros.";
 
 //Intercambio registral
@@ -1872,6 +1901,10 @@ var GL_IDS_WAIT_PLEASE="Espere por favor...";
 
 var GL_IDS_LABEL_COMBO_INTER_REG_NO = "Non";
 var GL_IDS_LABEL_COMBO_INTER_REG_SI = "Si";
+
+var GL_IDS_UNID_ADMIN_PADRE = "Unidade administrativa pai";
+
+var GL_IDS_QRYREITENTARCOMPULSA = "Non se puido completar o proceso de compulsa do documento. Desexa volver tentalo?";
 // FIN DE GALLEGO
 
 // FIN DE SU IDIOMA

@@ -366,7 +366,8 @@ function GetBarText()
 		HTMLText += "<div align=\"center\" style=\"vertical-align:middle\"><IMG src=\"images/edit.png\" align=\"middle\"/>"+ top.GetIdsLan( "IDS_OPC_EDITAR" ) + "</IMG></div>";
 		HTMLText += "</td>";
 
-		HTMLText += "<td  id=\"opCopy\" class=\"SubOptions2\" onclick=\"Copy(this)\" onmouseover=\"OverTbltext(this)\" onmouseout=\"OutTbltext(this)\" onkeydown=\"javascript:if (top.GetKeyCode(event)==13){Copy(this);}\" tabIndex=\"1\">";
+		// [Josemi #610012] Impedir crear nuevos registros desde la Oficina de Registro Telemático
+		HTMLText += "<td  id=\"opCopy\" class=\"SubOptions2\" onclick=\"if (top.g_codOffice != top.g_codOffice_RT) {Copy(this) } else {alert(top.IDS_OFFICE_RT_NOT_NEWREG_ENABLED)}\" onmouseover=\"OverTbltext(this)\" onmouseout=\"OutTbltext(this)\" onkeydown=\"javascript:if (top.GetKeyCode(event)==13){Copy(this);}\" tabIndex=\"1\">";
 		HTMLText += "<div align=\"center\" style=\"vertical-align:middle\"><IMG src=\"images/copy.png\" align=\"middle\"/> " + top.GetIdsLan( "IDS_OPC_COPIAR" ) + "</IMG></div>";
 		HTMLText += "</td>";
 

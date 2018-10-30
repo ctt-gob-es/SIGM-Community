@@ -53,7 +53,23 @@
 						<td>
 							<div name="nbsp" align="center"></div>
 						</td>
-						<td id="NewFolderBtn" width="120" class="Options" onmouseover="top.Over(this);" onmouseout="top.Out(this);" onclick="top.NewFolder(this);" tabIndex="1" onkeydown="DoOnKeyDown(this, event);">
+
+
+							<!-- [Josemi #610012] Impedir crear nuevos registros desde la Oficina de Registro Telemático -->
+							<SCRIPT language="javascript">
+							
+								function chequeaOficinaRegTel(obj) {
+								
+									if (top.g_codOffice != top.g_codOffice_RT) {
+										top.NewFolder(obj);
+									} else {
+										alert(top.IDS_OFFICE_RT_NOT_NEWREG_ENABLED) 
+									}
+								}
+								
+							</SCRIPT>
+
+						<td id="NewFolderBtn" width="120" class="Options" onmouseover="top.Over(this);" onmouseout="top.Out(this);" onclick="chequeaOficinaRegTel(this);" tabIndex="1" onkeydown="DoOnKeyDown(this, event);">
 							<div align="center"><SCRIPT language="javascript">document.write( top.GetIdsLan( "IDS_OPCNUEVA" ) )</SCRIPT></div>
 						</td>
 						<td id="FormBtn" width="80" class="Options" onmouseover="top.Over(this);" onmouseout="top.Out(this);" onclick="OnClickFormBtn();" onkeydown="DoOnKeyDown(this, event);" tabIndex="1">
