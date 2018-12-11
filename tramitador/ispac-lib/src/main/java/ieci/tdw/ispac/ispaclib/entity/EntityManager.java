@@ -164,7 +164,8 @@ public class EntityManager
 
 	    // Estado y fecha de firma
         entity.set("ESTADOFIRMA", SignStatesConstants.SIN_FIRMA);
-        entity.set("FFIRMA", new Date());
+        // [Josemi #625110] Dejar sin valor el campo de fecha de firma (ffirma) al crear un nuevo documento
+        // entity.set("FFIRMA", new Date());
 
 		return entity;
 	}
