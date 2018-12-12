@@ -26,6 +26,12 @@ public class FileTemporary {
 
   public FileTemporary( String sFileTemporaryPath) 
   throws ISPACException {
+	//[Ruben #625290] Para mantener el funcionamiento del resto de llamadas
+    this(sFileTemporaryPath, true);
+  }
+  
+  public FileTemporary( String sFileTemporaryPath, boolean clean) 
+  throws ISPACException {
     
     try 
 	{
@@ -35,7 +41,10 @@ public class FileTemporary {
       
       mFileDirContext = new FileDirContext();
       mFileDirContext.setDocBase( sFileTemporaryPath);
-      clean();
+	//[Ruben #625290] Usamos un booleano clean que es false para no borrar el fichero temporal tras el reinicio y que no falle la primera firma
+      if (clean) {
+        clean();
+      }
     } 
     catch(IllegalArgumentException e) 
 	{ throw new ISPACException( e);}

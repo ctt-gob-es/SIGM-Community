@@ -351,7 +351,8 @@ public class DocumentsHelper {
 			
 			connectorSession = genDocAPI.createConnectorSession();
 			//genDocAPI.getDocument(connectorSession, path, out);
-			FileTemporaryManager.getInstance().get(out, path);
+			//[Ruben #625290] Instanciamos al gestor de ficheros temporales con clean a false para que no borre los ficheros temporales esta vez y así evitar que falle la primera firma tras un reinicio
+			FileTemporaryManager.getInstance(false).get(out, path);
 				
 			out.close();
     	} catch (Exception e) {
