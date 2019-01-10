@@ -60,15 +60,15 @@ public class DefinicionLibroSicres3Utils {
 	 */
 	public static void addSicres3Fields (ArchiveFlds fields) throws ISicresAdminEstructuraException {
 		//campos para sicres3 expone y solicita
-		boolean sicres3Enabled= isSicres3Enabled();
-		if (sicres3Enabled){
+//		boolean sicres3Enabled= isSicres3Enabled();
+//		if (sicres3Enabled){
 			fields.add(SICRES3_EXPONE_FIELD_ID, "Expone", 2, 65535, true, false, false, "");
 			fields.add(SICRES3_SOLICITA_FIELD_ID, "Solicita", 2, 65535, true, false, false, "");
 			fields.add(SICRES3_INVOLUCRADO_IR_FIELD_ID, "Involucrado en Interc. Registral" , 4, 0, true, false, false, "");
 			fields.add(SICRES3_ACOMPANIA_DOCFISREQ_FIELD_ID, "Acompaña doc. física requerida", 4, 0, true, false, false, "");
 			fields.add(SICRES3_ACOMPANIA_DOCFISCOMP_FIELD_ID, "Acompaña doc. física complementaria", 4, 0, true, false, false, "");
 			fields.add(SICRES3_NO_ACOMPANIA_DOCFISNOS_FIELD_ID, "No acompaña doc. física ni otros soportes",4, 0, true, false, false, "");
-		}
+//		}
 	}
 
 	/**

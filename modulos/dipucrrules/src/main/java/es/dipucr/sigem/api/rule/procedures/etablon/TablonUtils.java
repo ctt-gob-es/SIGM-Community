@@ -6,7 +6,7 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
-import es.dipucr.sigem.api.rule.common.avisos.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 
 public class TablonUtils {

@@ -65,8 +65,10 @@ public class DipucrFaceRelacionarExpFacturaRule implements IRule {
 			List<IItem> listFacturas = entitiesAPI.queryEntities("FACTURAE", query).toList();
 			
 			if (listFacturas.size() == 0){
-				throw new IllegalArgumentException(
-					"Imposible localizar el expediente de factura relacionado");
+//				throw new IllegalArgumentException(
+//					"Imposible localizar el expediente de factura relacionado");
+				logger.warn("Imposible localizar el expediente de factura relacionado a la anulación. Registro FACe: " + nreg);
+				return new Boolean(false);
 			}
 			IItem itemFactura = listFacturas.get(0);
 			String numexpPadre = itemFactura.getString("NUMEXP");

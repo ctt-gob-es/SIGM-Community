@@ -75,7 +75,8 @@ public class InteresadosCRUDController extends MultiActionController {
 		interesado.setId(String.valueOf(interesados.size()));
 		interesado.setOrden(interesados.size());
 		
-		terceroValidadoVO.setNombre(terceroValidadoVO.getNumeroDocumento() + " - " + terceroValidadoVO.getNombre());
+		//[Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros
+	//Se elimina la mejora #170 de SIGEM2 mejora, porque se ha hecho mejor.
 
 		interesado.setTercero(terceroValidadoVO);
 

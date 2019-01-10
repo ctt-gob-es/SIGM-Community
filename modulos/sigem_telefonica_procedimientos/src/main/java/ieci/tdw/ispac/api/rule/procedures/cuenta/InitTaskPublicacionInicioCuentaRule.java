@@ -5,10 +5,9 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitTaskPublicacionInicioCuentaRule extends InitTaskPublicacionCuentaRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "CUEN_CUENTA";
-		STR_template = "Anuncio Cuenta";		
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "CUEN_CUENTA";
+        strTemplate = "Anuncio Cuenta";        
         return true;
     }
 }

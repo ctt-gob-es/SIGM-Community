@@ -356,10 +356,17 @@ public abstract class DefaultSignConnector implements ISignConnector {
 		// Se cambia el estado del documento a FIRMADO si asi esta indicado,
 		// se establece la fecha de firma y se asigna tambien esta fecha al
 		// campo que indica la fecha de aprobacion
-		if (changeState)
+		if (changeState){
+			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> se marca como firmado 02, se firma desde el expediente sin circuito de firma");
+			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> se marca como firmado ID: "+itemDoc.getString("ID"));
+			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> se marca como firmado NUMEXP: "+itemDoc.getString("NUMEXP"));
+			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> se marca como firmado NOMBRE: "+itemDoc.getString("NOMBRE"));
 			itemDoc.set("ESTADOFIRMA", SignStatesConstants.FIRMADO);
+			
+		}
 		itemDoc.set("FFIRMA", new Date());
 		itemDoc.set("FAPROBACION", new Date());
+		logger.warn("AJM ESTADOFIRMA updateDataDoc---------> actauliza fecha de firma y fecha de aprobacion ");
 		// Bloqueamos el documento para la edicion
 		
 		//[Manu Ticket #584] INICIO - SIGEM regla decretos evitar borrado tramite y documento.
@@ -369,6 +376,7 @@ public abstract class DefaultSignConnector implements ISignConnector {
 		//[Manu Ticket #584] FIN - SIGEM regla decretos evitar borrado tramite y documento.
 				
 		itemDoc.store(clientContext);
+		logger.warn("AJM ESTADOFIRMA updateDataDoc---------> ha realizado la transaccion");
 	}
 
 	/**

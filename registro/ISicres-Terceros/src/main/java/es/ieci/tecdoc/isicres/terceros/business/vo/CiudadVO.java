@@ -40,5 +40,18 @@ public class CiudadVO extends Entity {
 	protected ProvinciaVO provincia;
 
 	private static final long serialVersionUID = -4942548196429217902L;
+	
+	public String toString() {
+		return nombre;
+	}
+	
+	public boolean equals(Object o) {
+		if (null == o || !(o instanceof CiudadVO)){
+			return false;
+		}
+		
+		CiudadVO comparador = (CiudadVO) o;
+		return comparador.getNombre().equals(nombre) && comparador.getProvincia().equals(provincia);
+	}
 
 }

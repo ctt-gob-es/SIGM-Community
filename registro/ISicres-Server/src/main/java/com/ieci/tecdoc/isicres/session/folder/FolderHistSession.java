@@ -24,6 +24,7 @@ import com.ieci.tecdoc.common.exception.SessionException;
 import com.ieci.tecdoc.common.exception.ValidationException;
 import com.ieci.tecdoc.common.invesdoc.Idocarchdet;
 import com.ieci.tecdoc.common.invesicres.ScrCa;
+import com.ieci.tecdoc.common.invesicres.ScrModifDoc;
 import com.ieci.tecdoc.common.invesicres.ScrModifreg;
 import com.ieci.tecdoc.common.invesicres.ScrValdate;
 import com.ieci.tecdoc.common.invesicres.ScrValnum;
@@ -32,6 +33,7 @@ import com.ieci.tecdoc.common.isicres.AxSf;
 import com.ieci.tecdoc.common.isicres.AxSfIn;
 import com.ieci.tecdoc.common.isicres.AxSfOut;
 import com.ieci.tecdoc.common.isicres.Keys;
+import com.ieci.tecdoc.common.isicres.UpdHisDocFdrResults;
 import com.ieci.tecdoc.common.isicres.UpdHisFdrResults;
 import com.ieci.tecdoc.common.isicres.ValidationResults;
 import com.ieci.tecdoc.common.keys.HibernateKeys;
@@ -109,6 +111,11 @@ public class FolderHistSession extends FolderSessionUtil implements ServerKeys,
 
 					Object fldtype = axsf.getAttributeClass("fld"
 							+ String.valueOf(scr.getIdFld()));
+					if (fldtype == null){
+					    if (axsf.getExtendedFields().get(scr.getIdFld()) != null){
+						fldtype = String.class;
+					    }
+					}
 					updHisFdrResults = getUpdHisFdrResultsByFldType(session,
 							updHisFdrResults, fldtype, bookID, scr.getId());
 
@@ -419,4 +426,59 @@ public class FolderHistSession extends FolderSessionUtil implements ServerKeys,
 		return updHisFdrResultsValue;
 	}
 
+	public static List<UpdHisDocFdrResults> getUpdHisDocResults(String sessionID, Locale locale, Integer bookID, int folderId, AxSf axsf, String num_reg, String entidad) throws BookException, SessionException, ValidationException {
+		
+		Validator.validate_String_NotNull_LengthMayorZero(sessionID, ValidationException.ATTRIBUTE_SESSION);
+		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
+
+		Transaction tran = null;
+		List<UpdHisDocFdrResults> result = new ArrayList<UpdHisDocFdrResults>();
+
+		try {
+			Session session = HibernateUtil.currentSession(entidad);
+
+			// Recuperamos la sesión
+			CacheBag cacheBag = CacheFactory.getCacheInterface().getCacheEntry( sessionID);
+
+			// Es necesario tener el libro abierto para consultar su contenido.
+			if (!cacheBag.containsKey(bookID)) {
+				throw new BookException(BookException.ERROR_BOOK_NOT_OPEN);
+			}
+
+			List<?> list = ISicresQueries.getUpdHistDoc(session, bookID, num_reg);
+
+			if (list != null && !list.isEmpty()) {
+				for (Iterator<?> it = list.iterator(); it.hasNext();) {
+					ScrModifDoc scr = (ScrModifDoc) it.next();
+					UpdHisDocFdrResults updHisDocResults = new UpdHisDocFdrResults();
+					updHisDocResults.setScrModifDoc(scr);
+
+					updHisDocResults.setTipoDoc(""+scr.getTipoDoc());
+					updHisDocResults.setNombreDoc(scr.getNombreDoc());
+					updHisDocResults.setNombreDocNuevo(scr.getNombreDocNuevo());
+					updHisDocResults.setAccion(""+scr.getAccion());
+					
+					result.add(updHisDocResults);
+				}
+			}
+
+			return result;
+			
+		} catch (BookException bE) {
+			HibernateUtil.rollbackTransaction(tran);
+			throw bE;
+			
+		} catch (SessionException sE) {
+			HibernateUtil.rollbackTransaction(tran);
+			throw sE;
+			
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction(tran);
+			log.error("Impossible to close the book [" + bookID + "] and fdrid [" + folderId + "] for the session [" + sessionID + "]", e);
+			throw new BookException( BookException.ERROR_CANNOT_FIND_MODIFICATION_HISTORY);
+			
+		} finally {
+			HibernateUtil.closeSession(entidad);
+		}
+	}
 }

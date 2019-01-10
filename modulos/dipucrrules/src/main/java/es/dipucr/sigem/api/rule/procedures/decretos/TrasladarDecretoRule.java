@@ -15,6 +15,7 @@ import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigFilePathResolver;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -22,8 +23,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
-
-import com.ibm.icu.text.SimpleDateFormat;
 
 import es.dipucr.sigem.api.rule.common.correo.CorreoConfiguration;
 import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
@@ -36,7 +35,7 @@ import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
 		
 public class TrasladarDecretoRule implements IRule {
 
-	private static final Logger logger = Logger.getLogger(TrasladarDecretoRule.class);
+	private static final Logger LOGGER = Logger.getLogger(TrasladarDecretoRule.class);
 	
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		return true;
@@ -52,16 +51,14 @@ public class TrasladarDecretoRule implements IRule {
 		 * sobre el envío correcto o incorrecto del email.
 		 * */
 		String nombreNotif = "";
-		Date fechaEnvío = null;
+		Date fechaEnvio = null;
 		String nombreDoc = "";
 		String descripcionDoc = "";
 		boolean enviadoEmail = false;
 		String emailNotif = "";
 		String descripError = "";
-		try{
-			
-			try{
-				
+		try{			
+			try{				
 				//Comprobar si el campo motivo rechazo tiene asignado un valor
 				
 				//----------------------------------------------------------------------------------------------
@@ -76,21 +73,17 @@ public class TrasladarDecretoRule implements IRule {
 		        String strQuery = "WHERE NUMEXP='" + numExp + "'";
 		        IItemCollection collExps = entitiesAPI.queryEntities("SGD_RECHAZO_DECRETO", strQuery);
 		        Iterator<?> itExps = collExps.iterator();
-		        if (itExps.hasNext()) 
-		        {
+		        if (itExps.hasNext()) {
 		        	exp = (IItem)itExps.next();
 		        	motivoRechazo = exp.getString("RECHAZO_DECRETO");
 		        	
-		        	if (motivoRechazo!=null && !motivoRechazo.equals("")){
+		        	if (motivoRechazo!=null && !"".equals(motivoRechazo)){
 		        		return null;
 		        	}
 		        }
-			}catch (Exception e){
-				try {
-					throw new ISPACInfo("Se ha producido un error al ejecutar la regla de trasladar decreto.");
-				} catch (ISPACInfo e1) {
-		        	logger.error("Se ha producido un error al ejecutar la regla de trasladar decreto en el expediente: " + rulectx.getNumExp() + ". " + e1.getMessage(), e1);
-				}
+			}catch (ISPACInfo e){
+	        	LOGGER.error("Se ha producido un error al ejecutar la regla de trasladar decreto en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+				throw new ISPACInfo("Se ha producido un error al ejecutar la regla de trasladar decreto.");
 			}
 			
 			//APIs
@@ -103,7 +96,7 @@ public class TrasladarDecretoRule implements IRule {
 			
 			String rutaImg = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + EntidadesAdmUtil.obtenerEntidad(rulectx.getClientContext()), "/SIGEM_TramitacionWeb");
 
-			Object[] imagen = {rutaImg, new Boolean(true), "logoCabecera.gif", "escudo"};
+			Object[] imagen = {rutaImg, Boolean.TRUE, "logoCabecera.gif", "escudo"};
 			List<Object[]> imagenes = new ArrayList<Object[]>();
 			imagenes.add(imagen);
 						
@@ -126,12 +119,9 @@ public class TrasladarDecretoRule implements IRule {
 					throw new ISPACRuleException("No se pueden enviar los traslados: Hay más de un documento anexado al trámite.");
 				}else if (documentos.toList().size() == 1) {
 					IItem doc = (IItem)documentos.iterator().next();
-					if(!doc.get("ESTADOFIRMA").equals("04")){
+					if(!"04".equals(doc.get("ESTADOFIRMA"))){
 
 						String numDecreto = this.getNumeroDecreto(rulectx, numExp);
-						
-//							String cContenido = "<br/>Adjunto se envía el Decreto Nº"+numDecreto;
-//							String cAsunto= "[SIGEM] Traslado de Decreto Nº"+numDecreto;
 						
 						/**
 						 * [Ticket #357#[Teresa] INICIO SIGEM Traslados cambiar el asuntos de los email que se mandan]
@@ -154,7 +144,6 @@ public class TrasladarDecretoRule implements IRule {
 						 * **/			
 						
 						// Fichero a adjuntar
-						//IItem doc = (IItem)documentos.iterator().next();
 						String infoPagRde = doc.getString("INFOPAG_RDE");
 
 						String nombreFichero=exp.getString("NOMBREPROCEDIMIENTO") + "-" + numDecreto;
@@ -178,32 +167,29 @@ public class TrasladarDecretoRule implements IRule {
 					
 									if (participante!=null){
 							        	if (StringUtils.isNotEmpty(cCorreoDestino)){
-											String dir[]= MailUtil.enviarCorreo(rulectx, cCorreoOrigen, cCorreoDestino, cAsunto, cContenido, file, imagenes);
+											String dir[]= MailUtil.enviarCorreo(rulectx.getClientContext(), cCorreoOrigen, cCorreoDestino, cAsunto, cContenido, file, imagenes);
 
 											String error = "";
-											if (dir != null) 
-											{
+											if (dir != null) {
 												for (int nI = 0; nI < dir.length; nI++)
 												{
 													error = error + '\r' + dir[nI];
 												}
 												descripError = error;
 												enviadoEmail = false;
-												DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvío, nombreDoc, descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
+												DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvio, nombreDoc, descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
 												throw new ISPACRuleException(error);
-											}
-											else{
+											} else {
 												enviadoEmail = true;
-												fechaEnvío = new Date();
+												fechaEnvio = new Date();
 												// Eliminar el fichero temporal una vez enviado por correo
-												DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvío, nombreDoc, descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
+												DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvio, nombreDoc, descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
 											}
-										} else {
-											
+										} else {											
 											descripError = "No es posible enviar el correo electrónico de Traslados de decretos."
 													+ "Por favor, póngase en contacto con el administrador del sistema";
 											enviadoEmail = false;
-											DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvío, nombreDoc, descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
+											DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvio, nombreDoc, descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
 											throw new ISPACInfo(descripError);
 								        }
 								    }
@@ -213,11 +199,10 @@ public class TrasladarDecretoRule implements IRule {
 								IItem participanteAActualizar = entitiesAPI.getParticipant(participante.getInt("ID"));
 								participanteAActualizar.set("DECRETO_TRASLADADO", "Y");
 								participanteAActualizar.store(cct);
-							}
-							else{
+							} else {
 								descripError = "El email esta vacío";
 								enviadoEmail = false;
-								DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvío, nombreDoc, descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
+								DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvio, nombreDoc, descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
 							}
 						}
 						file.delete();
@@ -226,9 +211,7 @@ public class TrasladarDecretoRule implements IRule {
 			}
 			return null;
 		} catch(Exception e) {
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException(e);
+        	throw new ISPACRuleException("No se han podido insertar en BBDD los datos sobre el envío del mail", e);
         }
 	}
 	
@@ -272,6 +255,6 @@ public class TrasladarDecretoRule implements IRule {
 	}
 		
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-
+		// Empty method
 	}
 }

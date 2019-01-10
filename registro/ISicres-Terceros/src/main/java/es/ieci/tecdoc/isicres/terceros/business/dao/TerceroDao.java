@@ -40,7 +40,7 @@ public interface TerceroDao extends BaseDao<TerceroValidadoVO, String> {
 	 * @param typeDoc
 	 * @return
 	 */
-	public List<TerceroValidadoFisicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber, int typeDoc);
+	public List<TerceroValidadoJuridicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber, int typeDoc);
 
 	/**
 	 * Devuelve un listado de terceros físicos a partir del tipo de documento y el número de documento
@@ -50,6 +50,22 @@ public interface TerceroDao extends BaseDao<TerceroValidadoVO, String> {
 	 * @return
 	 */
 	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber, int typeDoc);
+	
+	/**
+	 * Devuelve un listado de terceros físicos a partir del tipo de documento y el número de documento
+	 * 
+	 * @param phisicalNumber
+	 * @return
+	 */
+	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber);
+	
+	/**
+	 * Devuelve un listado de terceros jurídicos a partir del tipo de documento y el número de documento
+	 * 
+	 * @param phisicalNumber
+	 * @return
+	 */
+	public List<TerceroValidadoJuridicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber);
 	
 	/**
 	 *

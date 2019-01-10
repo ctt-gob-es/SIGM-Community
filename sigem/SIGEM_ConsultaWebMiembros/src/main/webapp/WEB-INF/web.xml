@@ -34,12 +34,31 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+
+	<servlet>
+	    <servlet-name>ResourceDispatcherServlet</servlet-name>
+	    <servlet-class>ieci.tecdoc.sgm.core.web.ResourceDispatcherServlet</servlet-class>
+	    <init-param>
+	      <param-name>subdir</param-name>
+	      <param-value>/SIGEM_ConsultaWebMiembros</param-value>
+	    </init-param>
+
+	    <init-param>
+	      <param-name>defaultSkin</param-name>
+	      <param-value>skin</param-value>
+	    </init-param>
+  	</servlet>
 	
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
 	
+	<servlet-mapping>
+		<servlet-name>ResourceDispatcherServlet</servlet-name>
+		<url-pattern>/resourceServlet/*</url-pattern>
+	</servlet-mapping>
+
 	<session-config>
 		<session-timeout>30</session-timeout>
 	</session-config>

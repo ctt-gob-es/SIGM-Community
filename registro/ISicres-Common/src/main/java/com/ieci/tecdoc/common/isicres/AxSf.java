@@ -155,6 +155,7 @@ public class AxSf extends AbstractAx implements Serializable {
 	protected static final String ISICRES_FILE_NAME = "resources/ISicres-Server";
 
 	protected static final String AXSF_PREFIX = "a{0}sf.{1}";
+	public static final int FLD507_FIELD_ID = 507;
 
 
 	protected boolean isModified = false;

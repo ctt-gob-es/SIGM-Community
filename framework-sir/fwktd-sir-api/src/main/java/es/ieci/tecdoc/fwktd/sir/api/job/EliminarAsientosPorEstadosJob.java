@@ -10,6 +10,8 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.util.Assert;
 
@@ -23,114 +25,116 @@ import es.ieci.tecdoc.fwktd.sir.core.vo.CriteriosVO;
 
 /**
  * Job para eliminar asientos registrales por su estado.
- *
+ * 
  * @author Iecisa
  * @version $Revision$
- *
+ * 
  */
 public class EliminarAsientosPorEstadosJob extends QuartzJobBean {
 
-	private static Logger logger = LoggerFactory
-			.getLogger(EliminarAsientosPorEstadosJob.class);
+    private static Logger logger = LoggerFactory.getLogger(EliminarAsientosPorEstadosJob.class);
 
-	/**
-	 * Servicio de intercambio registral.
-	 */
-	private ServicioIntercambioRegistral servicioIntercambioRegistral = null;
+    /**
+     * Servicio de intercambio registral.
+     */
+    private ServicioIntercambioRegistral servicioIntercambioRegistral = null;
 
-	/**
-	 * Códigos de los estados de asientos registrales.
-	 */
-	private int[] codigosEstado = null;
+    /**
+     * Códigos de los estados de asientos registrales.
+     */
+    private int[] codigosEstado = null;
 
-	/**
-	 * Constructor.
-	 */
-	public EliminarAsientosPorEstadosJob() {
-		super();
+    /**
+     * Constructor.
+     */
+    public EliminarAsientosPorEstadosJob() {
+	super();
+	if (servicioIntercambioRegistral == null) {
+	    ApplicationContext context =
+		    new ClassPathXmlApplicationContext(
+			    new String[] { "classpath:/beans/fwktd-sir-api-applicationContext.xml" });
+	    servicioIntercambioRegistral =
+		    (ServicioIntercambioRegistral) context
+			    .getBean("fwktd_sir_servicioIntercambioRegistralImpl");
 	}
+    }
 
-	public ServicioIntercambioRegistral getServicioIntercambioRegistral() {
-		return servicioIntercambioRegistral;
-	}
+    public ServicioIntercambioRegistral getServicioIntercambioRegistral() {
+	return servicioIntercambioRegistral;
+    }
 
-	public void setServicioIntercambioRegistral(
-			ServicioIntercambioRegistral servicioIntercambioRegistral) {
-		this.servicioIntercambioRegistral = servicioIntercambioRegistral;
-	}
+    public int[] getCodigosEstado() {
+	return codigosEstado;
+    }
 
-	public int[] getCodigosEstado() {
-		return codigosEstado;
-	}
+    public void setCodigosEstado(int[] codigosEstado) {
+	this.codigosEstado = codigosEstado;
+    }
 
-	public void setCodigosEstado(int[] codigosEstado) {
-		this.codigosEstado = codigosEstado;
-	}
+    @Override
+    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 
-	@Override
-	protected void executeInternal(JobExecutionContext context)
-			throws JobExecutionException {
+	logger.info("Inicio del job para eliminar asientos registrales por estados");
 
-		logger.info("Inicio del job para eliminar asientos registrales por estados");
+	try {
 
-		try {
+	    // Obtener los estados de los asientos a eliminar
+	    EstadoAsientoRegistralEnum[] estados = getEstados();
+	    logger.info("Se eliminarán los asientos registrales con estados: {}",
+		    StringUtils.join(estados, ", "));
 
-			// Obtener los estados de los asientos a eliminar
-			EstadoAsientoRegistralEnum[] estados = getEstados();
-			logger.info("Se eliminarán los asientos registrales con estados: {}",
-					StringUtils.join(estados, ", "));
+	    // Obtener los asientos registrales por estado
+	    List<AsientoRegistralVO> asientos =
+		    getServicioIntercambioRegistral()
+			    .findAsientosRegistrales(
+				    new CriteriosVO().addCriterioVO(new CriterioVO(
+					    CriterioEnum.ASIENTO_ESTADO, OperadorCriterioEnum.IN,
+					    estados)));
 
-			// Obtener los asientos registrales por estado
-			List<AsientoRegistralVO> asientos = getServicioIntercambioRegistral()
-					.findAsientosRegistrales(new CriteriosVO()
-						.addCriterioVO(new CriterioVO(
-			        			CriterioEnum.ASIENTO_ESTADO,
-								OperadorCriterioEnum.IN,
-								estados)));
+	    if (CollectionUtils.isNotEmpty(asientos)) {
 
-			if (CollectionUtils.isNotEmpty(asientos)) {
+		logger.info("Eliminando {} asiento/s registral/es", asientos.size());
 
-				logger.info("Eliminando {} asiento/s registral/es", asientos.size());
+		for (AsientoRegistralVO asiento : asientos) {
 
-				for (AsientoRegistralVO asiento : asientos) {
+		    logger.info("Eliminando el asiento con identificador [{}]", asiento.getId());
 
-					logger.info("Eliminando el asiento con identificador [{}]", asiento.getId());
+		    // Eliminar el asiento registral
+		    getServicioIntercambioRegistral().deleteAsientoRegistral(asiento.getId());
 
-					// Eliminar el asiento registral
-					getServicioIntercambioRegistral().deleteAsientoRegistral(asiento.getId());
-
-					logger.info("Asiento con identificador [{}] eliminado", asiento.getId());
-				}
-			}
-
-			context.setResult("Ok");
-
-		} catch (Throwable e) {
-			logger.error("Error al eliminar asientos registrales por estados",
-					e);
-			context.setResult("Error al eliminar asientos registrales por estados: "
-					+ e.toString());
-			throw new JobExecutionException(
-					"Error al eliminar asientos registrales por estados", e);
-		} finally {
-			logger.info("Fin del job para la recepción de ficheros de intercambio mediante el sistema de ficheros");
+		    logger.info("Asiento con identificador [{}] eliminado", asiento.getId());
 		}
+	    }
+
+	    context.setResult("Ok");
+
+	}
+	catch (Throwable e) {
+	    logger.error("Error al eliminar asientos registrales por estados", e);
+	    context.setResult("Error al eliminar asientos registrales por estados: " + e.toString());
+	    throw new JobExecutionException("Error al eliminar asientos registrales por estados", e);
+	}
+	finally {
+	    logger.info("Fin del job para la recepción de ficheros de intercambio mediante el sistema de ficheros");
+	}
+    }
+
+    protected EstadoAsientoRegistralEnum[] getEstados() {
+
+	List<EstadoAsientoRegistralEnum> estados = new ArrayList<EstadoAsientoRegistralEnum>();
+
+	Assert.isTrue(ArrayUtils.isNotEmpty(getCodigosEstado()),
+		"'codigosEstados' must not be empty");
+
+	for (int codigoEstado : getCodigosEstado()) {
+	    EstadoAsientoRegistralEnum estado =
+		    EstadoAsientoRegistralEnum.getEstadoAsientoRegistral(codigoEstado);
+	    if (estado != null) {
+		estados.add(estado);
+	    }
 	}
 
-	protected EstadoAsientoRegistralEnum[] getEstados() {
-
-		List<EstadoAsientoRegistralEnum> estados = new ArrayList<EstadoAsientoRegistralEnum>();
-
-		Assert.isTrue(ArrayUtils.isNotEmpty(getCodigosEstado()), "'codigosEstados' must not be empty");
-
-		for (int codigoEstado : getCodigosEstado()) {
-			EstadoAsientoRegistralEnum estado = EstadoAsientoRegistralEnum.getEstadoAsientoRegistral(codigoEstado);
-			if (estado != null) {
-				estados.add(estado);
-			}
-		}
-
-		return estados.toArray(new EstadoAsientoRegistralEnum[estados.size()]);
-	}
+	return estados.toArray(new EstadoAsientoRegistralEnum[estados.size()]);
+    }
 
 }

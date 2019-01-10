@@ -17,13 +17,31 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import com.sun.star.awt.Point;
+import com.sun.star.awt.Size;
+import com.sun.star.beans.PropertyVetoException;
+import com.sun.star.beans.UnknownPropertyException;
+import com.sun.star.beans.XPropertySet;
+import com.sun.star.container.ElementExistException;
+import com.sun.star.container.NoSuchElementException;
 import com.sun.star.container.XIndexAccess;
+import com.sun.star.container.XNameContainer;
+import com.sun.star.drawing.XShape;
 import com.sun.star.lang.DisposedException;
+import com.sun.star.lang.IllegalArgumentException;
+import com.sun.star.lang.WrappedTargetException;
 import com.sun.star.lang.XComponent;
+import com.sun.star.lang.XMultiServiceFactory;
 import com.sun.star.sheet.XCellRangeData;
 import com.sun.star.sheet.XSpreadsheet;
 import com.sun.star.sheet.XSpreadsheetDocument;
 import com.sun.star.table.XCellRange;
+import com.sun.star.text.HoriOrientation;
+import com.sun.star.text.TextContentAnchorType;
+import com.sun.star.text.VertOrientation;
+import com.sun.star.text.XText;
+import com.sun.star.text.XTextContent;
+import com.sun.star.text.XTextCursor;
 import com.sun.star.text.XTextDocument;
 import com.sun.star.text.XTextRange;
 import com.sun.star.uno.UnoRuntime;
@@ -244,15 +262,15 @@ public class DocumentParser
 
 			// mxDesktop.terminate();
 		}catch (DisposedException e){
-			logger.warn("El servidor OpenOffice no está disponible", e);
+			logger.warn("El servidor OpenOffice no está disponible - "+e.getMessage(), e);
         	ooHelper.dispose();
         	throw e;
         }catch (ISPACException e){
-        	logger.error("Error al mezclar el documento", e);
+        	logger.error("Error al mezclar el documento - "+e.getMessage(), e);
 			throw e;
 		}catch (Exception e){
-			logger.error("Error al mezclar el documento", e);
-			throw new ISPACException(e);
+			logger.error("Error al mezclar el documento - "+e.getMessage(), e);
+			throw new ISPACException("Error al mezclar el documento - "+e.getMessage(), e);
 		}finally{
 		    if (xComponent != null) xComponent.dispose();
 		}
@@ -308,7 +326,7 @@ public class DocumentParser
         	try {
         		xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(x));
         	} catch (Exception e) {
-				logger.warn("Error al obtener el interfaz", e);
+				logger.warn("Error al obtener el interfaz - "+e.getMessage(), e);
 			}
 
 			//TODO Cargar el limite del rango de alguna constante que debe existe, aunque no la encontre,
@@ -327,8 +345,8 @@ public class DocumentParser
 
 			}catch(Exception e)
 			{
-				logger.error("Error al establecer la propiedad [SearchRegularExpression]: " + object, e);
-				throw new ISPACException(e);
+				logger.error("Error al establecer la propiedad [SearchRegularExpression]: " + object +" - "+e.getMessage(), e);
+				throw new ISPACException("Error al generar el documento - "+e.getMessage(), e);
 			}
 
 				//variables de acceso a datos
@@ -339,7 +357,7 @@ public class DocumentParser
 
 				// Busca todos los tags declarados en el documento
 				xIndexAccess = xReplaceable.findAll(xReplaceDescriptor);
-			    ArrayList tagslist = new ArrayList();
+			    ArrayList<String> tagslist = new ArrayList<String>();
 				//Comprobamos que hay Tags declarados en la hoja activa antes de recorrerla
 				if (xIndexAccess!=null){
 
@@ -372,7 +390,7 @@ public class DocumentParser
 
 						}
 
-						List translatedtags = tagtranslator.translateTags(tagslist);
+						List<?> translatedtags = tagtranslator.translateTags(tagslist);
 
 						object = new Boolean(false);
 					try
@@ -385,8 +403,8 @@ public class DocumentParser
 					}
 
 						// Los dos conjuntos estan ordenados.
-					Iterator it = tagslist.iterator();
-					Iterator ittranslated = translatedtags.iterator();
+					Iterator<String> it = tagslist.iterator();
+					Iterator<?> ittranslated = translatedtags.iterator();
 
 					while (ittranslated.hasNext()&&it.hasNext())
 						{
@@ -395,7 +413,7 @@ public class DocumentParser
 						if (stagvalue==null)
 							stagvalue="";
 
-						xReplaceDescriptor.setSearchString((String) it.next());
+						xReplaceDescriptor.setSearchString(it.next());
 						xReplaceDescriptor.setReplaceString(stagvalue);
 						xReplaceable.replaceAll(xReplaceDescriptor);
 						}
@@ -409,8 +427,8 @@ public class DocumentParser
 	 * @param cellText Contenido de una celda que contiene algún tag
 	 * @return listado de tags contenidos en la celda <code>cellText</code>
 	 */
-	private List getAllTgas(String cellText) {
-		List list = new ArrayList();
+	private List<String> getAllTgas(String cellText) {
+		List<String> list = new ArrayList<String>();
 
 		Pattern pattern = Pattern.compile(ISPACTAG);
 		Matcher matcher = pattern.matcher(cellText);
@@ -421,6 +439,61 @@ public class DocumentParser
 		return list;
 	}
 
+	// [Dipucr-Manu Ticket #478] -INICIO - ALSIGM3 Nueva opción Repositorio Común
+	private void insertaImagen(XComponent xComponent, XTextRange xTextRange, int count, TemplateGraphicInfo graphicInfo){
+		 try {
+			 XTextDocument xTextDocument = (XTextDocument)UnoRuntime.queryInterface(XTextDocument.class, xComponent);
+			 XMultiServiceFactory docServices = (XMultiServiceFactory) UnoRuntime.queryInterface(XMultiServiceFactory.class, xTextDocument);
+			 
+			 Object graphicShape = null;
+			 graphicShape = docServices.createInstance("com.sun.star.drawing.GraphicObjectShape");
+			 
+			 // Customizing graphic shape position and size
+			 XShape shapeSettings = (XShape)UnoRuntime.queryInterface(XShape.class, graphicShape);			 
+			 shapeSettings.setSize(new Size(graphicInfo.getWidth(), graphicInfo.getHeight()));
+			 shapeSettings.setPosition(new Point(20, 20));
+			 
+			 // Creating bitmap container service
+			 XNameContainer bitmapContainer = (XNameContainer) UnoRuntime.queryInterface(XNameContainer.class, docServices.createInstance("com.sun.star.drawing.BitmapTable"));
+			 bitmapContainer.insertByName("img" + count, graphicInfo.getGraphicUrl());
+			 
+			 XPropertySet xPropSet = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, graphicShape);
+			 xPropSet.setPropertyValue("AnchorType", TextContentAnchorType.AT_PARAGRAPH);
+			 
+			 // Probamos para que centre la imagen en una celda
+			 // xPropSet.setPropertyValue("VertOrient", VertOrientation.CENTER);
+			 if (graphicInfo.isCentered()) {
+				 xPropSet.setPropertyValue("HoriOrient", HoriOrientation.CENTER);				 
+			 }
+			 
+			 xPropSet.setPropertyValue("GraphicURL", bitmapContainer.getByName("img" + count));
+			 
+			 XTextContent xTextContent = (XTextContent)UnoRuntime.queryInterface(XTextContent.class, graphicShape);
+			 
+			 XText xText = xTextRange.getText();
+			 
+			 XTextCursor xTextCursor = xTextRange.getText().createTextCursor();			 
+			 xTextCursor.gotoRange(xTextRange,false);
+			 
+			 xText.insertTextContent( xTextCursor, xTextContent, true);
+		} catch (IllegalArgumentException e) {
+			logger.error("Error al reemplazar la imagen. " + e.getMessage(), e);			
+		} catch (ElementExistException e) {
+			logger.error("Error al reemplazar la imagen. " + e.getMessage(), e);
+		} catch (WrappedTargetException e) {
+			logger.error("Error al reemplazar la imagen. " + e.getMessage(), e);
+		} catch (PropertyVetoException e) {
+			logger.error("Error al reemplazar la imagen. " + e.getMessage(), e);
+		} catch (UnknownPropertyException e) {
+			logger.error("Error al reemplazar la imagen. " + e.getMessage(), e);
+		} catch (NoSuchElementException e) {
+			logger.error("Error al reemplazar la imagen. " + e.getMessage(), e);
+		} catch (com.sun.star.uno.Exception e) {
+			logger.error("Error al reemplazar la imagen. " + e.getMessage(), e);
+		}
+	}
+	
+	// [Dipucr-Manu Ticket #478] - FIN - ALSIGM3 Nueva opción Repositorio Común
 	private void generateDocument(XComponent xComponent,ITagTranslator tagtranslator)throws ISPACException{
 		try{
 
@@ -453,8 +526,8 @@ public class DocumentParser
 				// Busca todos los tags declarados en el documento
 				xIndexAccess = xReplaceable.findAll(xReplaceDescriptor);
 
-				ArrayList tagslist = new ArrayList();
-				ArrayList xTextRangeList = new ArrayList();
+				ArrayList<String> tagslist = new ArrayList<String>();
+				ArrayList<XTextRange> xTextRangeList = new ArrayList<XTextRange>();
 				for (int i = 0; i < xIndexAccess.getCount(); i++){
 					object = xIndexAccess.getByIndex(i);
 					XTextRange xTextRange = (XTextRange) UnoRuntime.queryInterface(XTextRange.class, object);
@@ -466,19 +539,21 @@ public class DocumentParser
 					break;
 				}
 
-				List translatedtags = tagtranslator.translateTags(tagslist);
+				List<?> translatedtags = tagtranslator.translateTags(tagslist);
 				object = new Boolean(false);
 				xReplaceDescriptor.setPropertyValue("SearchRegularExpression", object);
 
 				// Los dos conjuntos estan ordenados.
-				Iterator it = tagslist.iterator();
-				Iterator ittranslated = translatedtags.iterator();
-				Iterator itXTextRange = xTextRangeList.iterator();
+				Iterator<String> it = tagslist.iterator();
+				Iterator<?> ittranslated = translatedtags.iterator();
+				Iterator<XTextRange> itXTextRange = xTextRangeList.iterator();
+				
+				int count = 0;
 
-				while (ittranslated.hasNext()&&it.hasNext() && itXTextRange.hasNext()){
+				while (ittranslated.hasNext()&&it.hasNext() && itXTextRange.hasNext()){					
 					Object stagvalue = ittranslated.next();
-					XTextRange xTextRangeReplace = (XTextRange)itXTextRange.next();
-					String tag = (String)it.next();
+					XTextRange xTextRangeReplace = itXTextRange.next();
+					String tag = it.next();
 					if (stagvalue==null){
 						xReplaceDescriptor.setSearchString(tag);
 						xReplaceDescriptor.setReplaceString("");
@@ -502,12 +577,10 @@ public class DocumentParser
 			        		ooHelper.deletePageBreak(xComponent, xTextRangeReplace.getStart());
 			        	}
 					}else if (stagvalue instanceof TemplateGraphicInfo){
+						count++;
 						TemplateGraphicInfo graphicInfo = ((TemplateGraphicInfo)stagvalue);
-						//Inserccion de una imagen => la inserta pero la situa centrada
-						ooHelper.insertGraphic(xComponent, xTextRangeReplace, graphicInfo.getUrl());
-
-						//Inserccion de una imagen => no funciona si se inserta mas de una imagen
-						//insertImage(xFactory,xComponent, xTextRangeReplace,graphicInfo.getUrl(),graphicInfo.isAsLink() );
+						
+						insertaImagen(xComponent, xTextRangeReplace, count, graphicInfo);
 					}else if (stagvalue instanceof TemplateTableInfo){
 						TemplateTableInfo tableInfo = ((TemplateTableInfo)stagvalue);
 						ooHelper.insertTable(tableInfo, xComponent, xTextRangeReplace);
@@ -518,14 +591,12 @@ public class DocumentParser
 					}
 				}
 			}
-
-
         } catch (ISPACException e) {
-        	logger.error("Error al generar el documento", e);
+        	logger.error("Error al generar el documento - "+e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error al generar el documento", e);
-			throw new ISPACException(e);
+			logger.error("Error al generar el documento - "+e.getMessage(), e);
+			throw new ISPACException("Error al generar el documento - "+e.getMessage(), e);
 		}
 	}
 }

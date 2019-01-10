@@ -88,6 +88,18 @@
         </meta>    
     </property>
     <property
+        name="forDistRT"
+        type="java.lang.Integer"
+        column="FOR_DISTRT"
+        length="10"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="FOR_DISTRT"
+            length="10"
+        </meta>    
+    </property>
+    <property
         name="allOfics"
         type="java.lang.Integer"
         column="ALL_OFICS"

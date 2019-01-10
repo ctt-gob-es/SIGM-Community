@@ -28,10 +28,10 @@ import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 public class DipucrGenerarDocBOPRule extends DipucrAutoGeneraDocIniTramiteRule {
 	
 	/** Logger de la clase. */
-	private static final Logger logger = Logger.getLogger(DipucrGenerarDocBOPRule.class);
+	private static final Logger LOGGER = Logger.getLogger(DipucrGenerarDocBOPRule.class);
 	
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		logger.warn("INICIO - " + DipucrGenerarDocBOPRule.class);
+		LOGGER.warn("INICIO - " + DipucrGenerarDocBOPRule.class);
 
 		IClientContext cct = rulectx.getClientContext();
 		
@@ -42,7 +42,7 @@ public class DipucrGenerarDocBOPRule extends DipucrAutoGeneraDocIniTramiteRule {
 		}
 		refTablas = "%TABLA1%";
 
-		logger.warn("FIN - " + DipucrGenerarDocBOPRule.class);
+		LOGGER.warn("FIN - " + DipucrGenerarDocBOPRule.class);
 		return true;
 	}
 	public void insertaTabla(IRuleContext rulectx, XComponent xComponent, String refTabla, IEntitiesAPI entitiesAPI, String numexp){
@@ -56,9 +56,9 @@ public class DipucrGenerarDocBOPRule extends DipucrAutoGeneraDocIniTramiteRule {
 		try {
 			DipucrTablasUtil.insertaTabla1(xComponent, contenido, numColumnas-1, false);
 		} catch (ISPACException e) {
-			logger.error("Error al generar al calcular la tabla. " + e.getMessage(), e);
+			LOGGER.error("Error al generar al calcular la tabla. " + e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error("Error al generar al calcular la tabla. " + e.getMessage(), e);
+			LOGGER.error("Error al generar al calcular la tabla. " + e.getMessage(), e);
 		}
 		
 	}
@@ -97,12 +97,12 @@ public List generaListFincas(IRuleContext rulectx){
 			IItem item = null;
 			List expFincas = new ArrayList();
 			
-			logger.warn("Expediente de Expropiacion: " + rulectx.getNumExp());
+			LOGGER.warn("Expediente de Expropiacion: " + rulectx.getNumExp());
 			
 			while (it.hasNext()) {
 			   item = (IItem)it.next();
 			   expFincas.add(item.getString("NUMEXP_HIJO"));
-			   logger.warn("Expediente de Finca: " + item.getString("NUMEXP_HIJO"));			
+			   LOGGER.warn("Expediente de Finca: " + item.getString("NUMEXP_HIJO"));			
 			}
 			
 			//Si la lista de fincas está vacía no dibujar la tabla
@@ -118,7 +118,7 @@ public List generaListFincas(IRuleContext rulectx){
 			}
 				
 			
-			logger.warn("Fincas a buscar: " + strQuery);
+			LOGGER.warn("Fincas a buscar: " + strQuery);
 			
 			/**
 			 * #[Teresa - Ticket 200] INICIO SIGEM expropiaciones Modificar los listados para que aparezcan los metros a ocupar por propietario 
@@ -170,17 +170,14 @@ public List generaListFincas(IRuleContext rulectx){
 				}			
 				
 				contenido.add(fila);				
-				logger.warn("Detalle de Expediente de Finca: " + item.getString("NUMEXP") + " Num Finca: " + item.getString("NUM_FINCA"));
+				LOGGER.warn("Detalle de Expediente de Finca: " + item.getString("NUMEXP") + " Num Finca: " + item.getString("NUM_FINCA"));
 			}
 		}catch (ISPACRuleException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 		} catch (ISPACException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 		}
 		
 		return contenido;

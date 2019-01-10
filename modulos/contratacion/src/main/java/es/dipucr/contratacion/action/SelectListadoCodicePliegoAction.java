@@ -60,6 +60,9 @@ public class SelectListadoCodicePliegoAction  extends SelectSubstituteAction
 				}else	if (idTipoContrato.equalsIgnoreCase("50")){  
 					columna = "COD_SUB_PATRIM";
 				}
+				else	if (idTipoContrato.equalsIgnoreCase("40")){  
+					columna = "COD_COL_PUBPIV";
+				}
 			}
 	    }
 	    

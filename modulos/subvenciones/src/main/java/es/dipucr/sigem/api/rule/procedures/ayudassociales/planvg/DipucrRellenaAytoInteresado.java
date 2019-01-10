@@ -27,7 +27,7 @@ public class DipucrRellenaAytoInteresado implements IRule{
     protected String idTraslado = "";
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
     public Object execute(IRuleContext rulectx) throws ISPACRuleException {
@@ -38,7 +38,7 @@ public class DipucrRellenaAytoInteresado implements IRule{
             IItemCollection participantes = ParticipantesUtil.getParticipantes(cct, numexp);
             if(participantes.toList().size() > 0){
                 IItem participante = (IItem)(participantes.iterator()).next();
-                idTraslado = participante.getString("ID_EXT");                
+                idTraslado = participante.getString(ParticipantesUtil.ID_EXT);                
                 
                 participante.delete(cct);
             
@@ -47,23 +47,7 @@ public class DipucrRellenaAytoInteresado implements IRule{
                     IThirdPartyAdapter tercero = servicioTerceros.lookupById(idTraslado);
                                         
                     if(ParticipantesUtil.insertarParticipanteById(rulectx, numexp, idTraslado, ParticipantesUtil._TIPO_INTERESADO, ParticipantesUtil._TIPO_PERSONA_JURIDICA, email, "Aytos.Adm.Publ.")){
-                
-                        IItem expediente = ExpedientesUtil.getExpediente(cct, numexp);
-                        
-                        expediente.set("NIFCIFTITULAR", tercero.getIdentificacion());
-                        expediente.set("IDENTIDADTITULAR", tercero.getNombreCompleto());
-
-                        if (null != tercero.getDefaultDireccionPostal()){
-                            expediente.set("CPOSTAL", tercero.getDefaultDireccionPostal().getCodigoPostal());
-                            expediente.set("DOMICILIO",tercero.getDefaultDireccionPostal().getDireccionPostal());
-                            expediente.set("CIUDAD", tercero.getDefaultDireccionPostal().getMunicipio());
-                            expediente.set("REGIONPAIS",tercero.getDefaultDireccionPostal().getProvincia());
-                            expediente.set("TFNOFIJO",tercero.getDefaultDireccionPostal().getTelefono());
-                        }
-                        
-                        expediente.set("ROLTITULAR", "INT");
-                        
-                        expediente.store(cct);    
+                        ExpedientesUtil.setTerceroAsInteresadoPrincipal(cct, numexp, tercero);   
                     }
                 }
             }                

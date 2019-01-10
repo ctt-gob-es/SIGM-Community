@@ -2,7 +2,7 @@ package ieci.tdw.ispac.ispaclib.gendoc.parser;
 
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACInfo;
-import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
+import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
 import ieci.tdw.ispac.ispaclib.util.Semaphore;
 
 import java.util.HashMap;
@@ -16,6 +16,8 @@ import com.sun.star.comp.helper.Bootstrap;
 import com.sun.star.lang.XMultiComponentFactory;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
+
+import es.dipucr.sigem.api.rule.common.libreoffice.LibreOfficeConfiguration;
 
 /**
  * Gestor que mantiene un conjunto de componentes de combinaci&oacute;n de documentos (DocumentParser) previamente
@@ -46,10 +48,13 @@ public class DocumentParserPool
 	private DocumentParserPool()
 	throws ISPACException
 	{
-		ISPACConfiguration config = ISPACConfiguration.getInstance();
+		//[dipucr-Felipe #681]
+		String idEntidad = OrganizationUser.getOrganizationUserInfo().getOrganizationId();
+		LibreOfficeConfiguration config = LibreOfficeConfiguration.getInstance(idEntidad);
+//		ISPACConfiguration config = ISPACConfiguration.getInstance();
 
 		mParserPool = new HashMap();
-		String connection = config.get( ISPACConfiguration.OPEN_OFFICE_CONNECT);
+		String connection = config.get(LibreOfficeConfiguration.OPEN_OFFICE_CONNECT);//[dipucr-Felipe #681]
 		DocumentParserPooled parserpooled = new DocumentParserPooled( connection);
 		DocumentParser documentparser = parserpooled.getDocument();
 		
@@ -59,13 +64,13 @@ public class DocumentParserPool
 		}
 		//[Manu Ticket #86] FIN - ALSIGM3 Usar varias instancias de OpenOffice
 		
-		String parameter = config.get( ISPACConfiguration.OPEN_OFFICE_ADDITIONAL_INSTANCES);
+		String parameter = config.get(LibreOfficeConfiguration.OPEN_OFFICE_ADDITIONAL_INSTANCES);//[dipucr-Felipe #681]
 		if (parameter != null)
 		{
 			int count = Integer.parseInt( parameter);
 			for (int i = 0; i < count; i++)
 			{
-				connection = config.get( ISPACConfiguration.OPEN_OFFICE_CONNECT + "_" + i);
+				connection = config.get(LibreOfficeConfiguration.OPEN_OFFICE_CONNECT + "_" + (i + 1));//[dipucr-Felipe #681]
 				parserpooled = new DocumentParserPooled( connection);
 				documentparser = parserpooled.getDocument();
 				
@@ -77,7 +82,7 @@ public class DocumentParserPool
 			}
 		}
 
-		String timeout=config.get(ISPACConfiguration.OPEN_OFFICE_TIMEOUT);
+		String timeout=config.get(LibreOfficeConfiguration.OPEN_OFFICE_TIMEOUT);//[dipucr-Felipe #681]
 		mTimeout=30000;
 		if (timeout!=null && timeout.length()>0)
 		{

@@ -135,6 +135,20 @@ public class ServicioDocumentosWSClientImpl implements ServicioDocumentos {
 
 		return DocumentoAdapterHelper.getDocumentoCSV(getServicioDocumentos().getDocumentoByCSV(csv));
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.core.service.ServicioDocumentos#getInfoDocumentoByCSV(java.lang.String)
+	 */
+	public InfoDocumentoCSV getInfoDocumentoByNombre(String nombreDoc) {
+
+		logger.info("Llamada a getInfoDocumentoByNombre: nombre=[{}]", nombreDoc);
+
+		Assert.hasText(nombreDoc, "'nombre' must not be empty");
+
+		return DocumentoAdapterHelper.getInfoDocumentoCSV(getServicioDocumentos().getInfoDocumentoByNombre(nombreDoc));
+	}
 
 	/**
 	 * {@inheritDoc}

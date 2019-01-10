@@ -429,8 +429,7 @@ public class InveSicresConnector implements ISicresConnector {
 	    try {
 			return insertRegister(register);
 		} catch (ISPACException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("ERROR. " + e.getMessage(), e);
 			return null;
 		}
 	}

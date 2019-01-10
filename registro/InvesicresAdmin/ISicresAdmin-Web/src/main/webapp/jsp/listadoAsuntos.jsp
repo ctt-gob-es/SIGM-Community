@@ -70,6 +70,11 @@
 							<center><img src="<html:rewrite page="/img/guardar.gif"/>"/></center>
 						</logic:equal>
 					</display:column>
+					<display:column style="width: 5%;" titleKey="ieci.tecdoc.sgm.rpadmin.asuntos.distribuirRT" sortable="false">
+						<logic:equal name="fila" property="forDistRT" value="1">
+							<center><img src="<html:rewrite page="/img/guardar.gif"/>"/></center>
+						</logic:equal>
+					</display:column>
 					<display:column style="width: 5%;">
 						<table><tr>
 							<td class="col_editar" onclick="llamadaActionNameId('<html:rewrite page="/editarAsunto.do"/>','idAsunto','<bean:write name="fila" property="id" />')" title="<bean:message key="ieci.tecdoc.sgm.rpadmin.botones.propiedadesEditar"/>">&nbsp;&nbsp;&nbsp;</td>

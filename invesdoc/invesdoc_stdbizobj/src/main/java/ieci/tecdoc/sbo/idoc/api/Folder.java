@@ -403,23 +403,20 @@ public final class Folder
     * @throws Exception arroja una {@link IeciTdException} en caso de que el
     * usuario no tenga permisos para eliminar la carpeta
     */
-   public FolderObject newFolder(AcsAccessObject acs, ArchiveObject arch)
-							 throws Exception
-   {
+   public FolderObject newFolder(AcsAccessObject acs, ArchiveObject arch) throws Exception {
       
       FolderToken  token = null;
       FolderObject fdr  = null;  
       
-      try
-      {
-         
+      try {
          DbConnection.open(getDbConfig());
          
-         if (acs == null)
-            token = FolderMdoFdr.newFolder(null, arch.getArchiveToken());
-         else
-            token = FolderMdoFdr.newFolder(acs.getAccessToken(),
-                                           arch.getArchiveToken());
+         if (acs == null) {
+        	 token = FolderMdoFdr.newFolder(null, arch.getArchiveToken());
+         
+         } else {
+        	 token = FolderMdoFdr.newFolder(acs.getAccessToken(), arch.getArchiveToken());
+         }
 
          DbConnection.close();
 
@@ -427,8 +424,7 @@ public final class Folder
          
          return fdr;
                                           
-      }
-      catch (Exception e)
+      }      catch (Exception e)
       {
          DbConnection.ensureClose(e);  
          return null;
@@ -448,26 +444,16 @@ public final class Folder
     * usuario no tenga permisos para crear la carpeta
     * @see Folder#newFolder(AcsAccessObject, ArchiveObject)
     */
-   public void createFolder(int userId, ArchiveObject arch, FolderObject fdr)
-				   throws Exception
-   {
+   public void createFolder(int userId, ArchiveObject arch, FolderObject fdr) throws Exception {
             
-      try
-      {
-         
+      try {
          DbConnection.open(getDbConfig());		        
-
-         FolderMdoFdr.createFolder(userId, arch.getArchiveToken(), 
-                                   fdr.getFolderToken());
-
+         FolderMdoFdr.createFolder(userId, arch.getArchiveToken(), fdr.getFolderToken());
          DbConnection.close();
                                           
-      }
-      catch (Exception e)
-      {
+      } catch (Exception e) {
          DbConnection.ensureClose(e);  
       }
-            
    }
    
    /**
@@ -483,35 +469,22 @@ public final class Folder
     * especificada. 
     * @throws Exception si se produce un error al leer el fichero
     */
-   public byte[] retrieveFolderDocumentFile(AcsAccessObject acs, 
-                                            ArchiveObject arch,
-                                            FolderObject fdr,
-                                            int docId)
-				     throws Exception
-   {
+   public byte[] retrieveFolderDocumentFile(AcsAccessObject acs,  ArchiveObject arch, FolderObject fdr, int docId) throws Exception {
       byte[] fileData = null;
-            
-      try
-      {
-         
+
+      try {
          DbConnection.open(getDbConfig());	
          
-         if (acs == null)
-            fileData = FolderMdoFdr.retrieveFolderDocumentFile(null,
-                                                               arch.getArchiveToken(),
-                                                               fdr.getFolderToken(),
-                                                               docId);
-         else
-            fileData = FolderMdoFdr.retrieveFolderDocumentFile(acs.getAccessToken(),
-                                                               arch.getArchiveToken(),
-                                                               fdr.getFolderToken(),
-                                                               docId);
+         if (acs == null) {
+            fileData = FolderMdoFdr.retrieveFolderDocumentFile(null, arch.getArchiveToken(), fdr.getFolderToken(), docId);
+         
+         } else {
+            fileData = FolderMdoFdr.retrieveFolderDocumentFile(acs.getAccessToken(), arch.getArchiveToken(), fdr.getFolderToken(), docId);
+         }
 
          DbConnection.close();
                                           
-      }
-      catch (Exception e)
-      {
+      } catch (Exception e) {
          DbConnection.ensureClose(e);
          return null;  
       }
@@ -531,46 +504,33 @@ public final class Folder
     * @return el tamaño de un documento de la carpeta especificada. 
     * @throws Exception si se produce un error al leer el fichero
     */
-   public int getFileSize (AcsAccessObject acs, 
-	   ArchiveObject arch,
-	   FolderObject fdr,
-	   int docId)
-	throws Exception
-	{
+   public int getFileSize (AcsAccessObject acs, ArchiveObject arch, FolderObject fdr, int docId) throws Exception {
 		int size = -1;
 		
-		try
-		{
+		try {
 		
 			DbConnection.open(getDbConfig());	
 			
-			if (acs == null)
-				size = FolderMdoFdr.getFileSize (null,
-				                      arch.getArchiveToken(),
-				                      fdr.getFolderToken(),
-				                      docId);
-			else
-				size = FolderMdoFdr.getFileSize (acs.getAccessToken(),
-				                      arch.getArchiveToken(),
-				                      fdr.getFolderToken(),
-				                      docId);
+			if (acs == null) {
+				size = FolderMdoFdr.getFileSize (null, arch.getArchiveToken(), fdr.getFolderToken(), docId);
+				
+			} else {
+				size = FolderMdoFdr.getFileSize (acs.getAccessToken(), arch.getArchiveToken(), fdr.getFolderToken(), docId);
+			}
 			
 			DbConnection.close();
 		 
-		}
-		catch (Throwable e)
-		{
-			if (e instanceof Exception)
+		} catch (Throwable e) {
+			if (e instanceof Exception) {
 				DbConnection.ensureClose ((Exception) e);
-			else
+			
+			} else {
 				DbConnection.ensureClose (new Exception (e));
+			}
 		}
 		
 		return size;
-	
 	}
-   
-   
    
    /**
     * Obtiene los bytes del fichero de anotaciones asociado al documento de la carpeta
@@ -585,41 +545,27 @@ public final class Folder
     * mento de la carpeta especificada. 
     * @throws Exception si se produce un error al leer el fichero
     */
-   public String retrieveFolderDocumentAnnData(AcsAccessObject acs, 
-                                               ArchiveObject arch,
-                                               FolderObject fdr,
-                                               int docId)
-                 throws Exception
-   {
+   public String retrieveFolderDocumentAnnData(AcsAccessObject acs, ArchiveObject arch, FolderObject fdr, int docId) throws Exception {
       String data = null;
             
-      try
-      {
-         
+      try {
          DbConnection.open(getDbConfig());   
          
-         if (acs == null)
-            data = FolderMdoFdr.retrieveFolderDocumentAnnData(null,
-                                                              arch.getArchiveToken(),
-                                                              fdr.getFolderToken(),
-                                                              docId);
-         else
-            data = FolderMdoFdr.retrieveFolderDocumentAnnData(acs.getAccessToken(),
-                                                              arch.getArchiveToken(),
-                                                              fdr.getFolderToken(),
-                                                              docId);
+         if (acs == null) {
+            data = FolderMdoFdr.retrieveFolderDocumentAnnData(null, arch.getArchiveToken(), fdr.getFolderToken(), docId);
+            
+         } else {
+        	 data = FolderMdoFdr.retrieveFolderDocumentAnnData(acs.getAccessToken(), arch.getArchiveToken(), fdr.getFolderToken(), docId);
+         }
 
          DbConnection.close();
                                           
-      }
-      catch (Exception e)
-      {
+      } catch (Exception e) {
          DbConnection.ensureClose(e);
          return null;  
       }
       
       return data;
-            
    }
    
    /**
@@ -634,31 +580,23 @@ public final class Folder
     * la carpeta. <tt>false</tt> en caso contrario 
     * @throws Exception 
     */
-   public boolean canEditFolder(AcsAccessObject acs, ArchiveObject arch,
-                                int fdrId)
-                  throws Exception
-   {
+   public boolean canEditFolder(AcsAccessObject acs, ArchiveObject arch, int fdrId) throws Exception {
       boolean can = false;
       
-      try
-      {
+      try {
          
          DbConnection.open(getDbConfig());		        
 
-         can = FolderMdoFdr.canEditFolder(acs.getAccessToken(), 
-                                          arch.getArchiveToken(), fdrId);
+         can = FolderMdoFdr.canEditFolder(acs.getAccessToken(), arch.getArchiveToken(), fdrId);
 
          DbConnection.close();
          
          return can;
                                           
-      }
-      catch (Exception e)
-      {
+      } catch (Exception e) {
          DbConnection.ensureClose(e);  
          return can;
       }
-            
    }
    
    /**
@@ -680,31 +618,24 @@ public final class Folder
     * @see Folder#terminateEditFolder(int, ArchiveObject, int)
     * @see Folder#storeFolder(int, ArchiveObject, FolderObject)
     */
-   public void editFolder(AcsAccessObject acs, int userId,
-                          ArchiveObject arch, int fdrId)
-				   throws Exception
-   {
-            
-      try
-      {
+   public void editFolder(AcsAccessObject acs, int userId, ArchiveObject arch, int fdrId) throws Exception {
+          
+      try {
          
          DbConnection.open(getDbConfig());		        
 
-         if (acs == null)
-            FolderMdoFdr.editFolder(null, userId, 
-                                    arch.getId(), fdrId);
-         else
-            FolderMdoFdr.editFolder(acs.getAccessToken(), userId, 
-                                    arch.getId(), fdrId);
+         if (acs == null){
+        	 FolderMdoFdr.editFolder(null, userId, arch.getId(), fdrId);
+        	 
+         } else {
+        	 FolderMdoFdr.editFolder(acs.getAccessToken(), userId, arch.getId(), fdrId);
+         }
 
          DbConnection.close();
-                                          
-      }
-      catch (Exception e)
-      {
+
+      } catch (Exception e) {
          DbConnection.ensureClose(e);  
       }
-            
    }
    
    /**
@@ -719,57 +650,43 @@ public final class Folder
     * @see Folder#editFolder(AcsAccessObject, int, ArchiveObject, int)
     * @see Folder#storeFolder(int, ArchiveObject, FolderObject)
     */
-   public void terminateEditFolder(int userId, ArchiveObject arch, int fdrId)
-				  throws Exception
-   {
+   public void terminateEditFolder(int userId, ArchiveObject arch, int fdrId) throws Exception{
             
-      try
-      {
-         
+      try {
          DbConnection.open(getDbConfig());		        
-
          FolderMdoFdr.terminateEditFolder(userId, arch.getId(), fdrId);
-
          DbConnection.close();
                                           
-      }
-      catch (Exception e)
-      {
+      } catch (Exception e) {
          DbConnection.ensureClose(e);  
       }
             
    }
    
-   public boolean isFolderLocked (int archId, int fdrId) throws Exception
-   {
+   public boolean isFolderLocked (int archId, int fdrId) throws Exception {
       boolean rc = false;
       
-      try
-      {
+      try {
          DbConnection.open(getDbConfig());
          rc = FolderMdoFdr.isFolderLocked(archId, fdrId);
          DbConnection.close();
-      }
-      catch (Exception e)
-      {
+         
+      } catch (Exception e) {
          DbConnection.ensureClose(e); 
       }
       
       return rc;
    }
    
-   public boolean isFolderLockedByUser (int userId, int archId, int fdrId) throws Exception
-   {
+   public boolean isFolderLockedByUser (int userId, int archId, int fdrId) throws Exception {
       boolean rc = false;
       
-      try
-      {
+      try {
          DbConnection.open(getDbConfig());
          rc = FolderMdoFdr.isFolderLockedByUser(userId, archId, fdrId);
          DbConnection.close();
-      }
-      catch (Exception e)
-      {
+         
+      } catch (Exception e) {
          DbConnection.ensureClose(e); 
       }
       
@@ -787,23 +704,17 @@ public final class Folder
     * @see Folder#editFolder(AcsAccessObject, int, ArchiveObject, int)
     * @see Folder#terminateEditFolder(int, ArchiveObject, int)
     */
-   public void storeFolder(int userId, ArchiveObject arch, FolderObject fdr)
-				   throws Exception
-   {
+   public void storeFolder(int userId, ArchiveObject arch, FolderObject fdr) throws Exception {
             
-      try
-      {
+      try {
          
          DbConnection.open(getDbConfig());		        
 
-         FolderMdoFdr.storeFolder(userId, arch.getArchiveToken(),
-                                  fdr.getFolderToken());
+         FolderMdoFdr.storeFolder(userId, arch.getArchiveToken(), fdr.getFolderToken());
 
          DbConnection.close();
-                                          
-      }
-      catch (Exception e)
-      {
+
+      } catch (Exception e) {
          DbConnection.ensureClose(e);  
       }
             
@@ -825,47 +736,29 @@ public final class Folder
     * @return una referencia al fichero creado. 
     * @throws Exception si se produce un error al leer el fichero
     */
-   public File retrieveFolderDocumentFile(AcsAccessObject acs, 
-                                            ArchiveObject arch,
-                                            FolderObject fdr,
-                                            File parentFolder,
-                                            int docId)
-                     throws Exception
-   {
+   public File retrieveFolderDocumentFile(AcsAccessObject acs, ArchiveObject arch, FolderObject fdr, File parentFolder, int docId) throws Exception {
       File file = null;
             
-      try
-      {
-         
+      try {
          DbConnection.open(getDbConfig());  
          
-         if (acs == null)
-             file = FolderMdoFdr.retrieveFolderDocumentFile(null,
-                                                               arch.getArchiveToken(),
-                                                               fdr.getFolderToken(),
-                                                               docId,
-                                                               parentFolder);
-         else
-             file = FolderMdoFdr.retrieveFolderDocumentFile(acs.getAccessToken(),
-                                                               arch.getArchiveToken(),
-                                                               fdr.getFolderToken(),
-                                                               docId,
-                                                               parentFolder);
-
+         if (acs == null){
+             file = FolderMdoFdr.retrieveFolderDocumentFile(null, arch.getArchiveToken(), fdr.getFolderToken(), docId, parentFolder);
+         
+         } else {
+        	 file = FolderMdoFdr.retrieveFolderDocumentFile(acs.getAccessToken(), arch.getArchiveToken(), fdr.getFolderToken(), docId, parentFolder);
+         }
+         
          DbConnection.close();
                                           
-      }
-      catch (Exception e)
-      {
+      } catch (Exception e) {
          DbConnection.ensureClose(e);
          return null;  
+      
+      } finally {
+    	  DbConnection.close();
       }
       
       return file;
-            
    }
-
-   
-   
-   
 } // class

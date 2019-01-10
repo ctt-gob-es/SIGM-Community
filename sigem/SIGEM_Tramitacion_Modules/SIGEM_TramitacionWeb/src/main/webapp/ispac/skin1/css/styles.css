@@ -712,6 +712,10 @@ a.formaction, a.formaction:hover {
 	text-decoration: underline;
 }
 
+a.danger, a.danger:hover {
+	color: #942323;
+}
+
 /* barra de separación en los formularios */
 .formbar, .formbar1 {
 	background-color: #5C65A0;

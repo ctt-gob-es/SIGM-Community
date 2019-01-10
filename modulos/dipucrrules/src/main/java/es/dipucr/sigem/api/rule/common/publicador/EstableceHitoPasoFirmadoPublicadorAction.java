@@ -106,7 +106,7 @@ public class EstableceHitoPasoFirmadoPublicadorAction implements IRule {
         } catch (ISPACException e) {
         	logger.error("Error al establecer el hito de fin de paso en circuito de firma del expediente: " + numexp + ". " + e.getMessage(), e);
         	throw new ISPACRuleException("Error al establecer el hito de fin de paso en circuito de firma del expediente: " + numexp + ". " + e.getMessage());
-        } catch (Throwable e) {
+        } catch (Exception e) {
         	logger.error("Error al establecer el hito de fin de paso en circuito de firma del expediente: " + numexp + ". " + e.getMessage(), e);
         	throw new ISPACRuleException("Error al establecer el hito de fin de paso en circuito de firma del expediente: " + numexp + ". " + e.getMessage());
         }

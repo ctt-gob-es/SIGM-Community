@@ -38,7 +38,7 @@ public class ListadoPropuestasRule implements IRule{
 	        int orden = 1;
 	        while (it.hasNext()) {
                 item = ((IItem)it.next());
-                listado += String.valueOf(orden) + ".- " + item.getString("EXTRACTO") + "\n";
+                listado += String.valueOf(orden) + ".- " + item.getString("EXTRACTO") + "\n\n";
                 orden++;
 	        }
 	        //Mostraremos como último punto el apartado de ruegos y preguntas

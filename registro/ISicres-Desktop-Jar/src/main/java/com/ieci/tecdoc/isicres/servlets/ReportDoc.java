@@ -112,9 +112,13 @@ public class ReportDoc extends HttpServlet implements Keys {
 
 	private static final String ORDERBYFLD1 = " ORDER BY FLD1";
 
-	private static final String ORDERBYDES = " ORDER BY FLD4,FLD8,FLD1";
+	//[Dipucr-Manu Ticket#378] - INICIO - ALSIGM3 Relación diaria por destino no agrupa por destino
+//	private static final String ORDERBYDES = " ORDER BY FLD4,FLD8,FLD1";
+	private static final String ORDERBYDES = " ORDER BY substr(FLD4::varchar(20),0, 11),FLD8,FLD1";
 
-	private static final String ORDERBYORG = " ORDER BY FLD4,FLD7,FLD1";
+//	private static final String ORDERBYORG = " ORDER BY FLD4,FLD7,FLD1";
+	private static final String ORDERBYORG = " ORDER BY substr(FLD4::varchar(20),0, 11),FLD7,FLD1";
+	//[Dipucr-Manu Ticket#378] - FIN - ALSIGM3 Relación diaria por destino no agrupa por destino
 	
 	//[Manu Ticket #693] SIGEM Modificaciones en listados del registro de Tomelloso
     private static final String ORDERBYDESTINATARIO = " ORDER BY FLD8_TEXT, FLD1";
@@ -514,7 +518,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 	 * @param report
 	 * @throws IOException
 	 */
-	private void getReportFileSendResponse(HttpServletResponse response,
+	protected void getReportFileSendResponse(HttpServletResponse response,
 			OutputStream output, byte[] report) throws IOException {
 		//generamos la cabecera para el documento
 		response.reset();
@@ -564,7 +568,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 		return list;
 	}
 
-	private void deleteTemplateReport(String pathTemplateReport)
+	protected void deleteTemplateReport(String pathTemplateReport)
 			throws Exception {
 		File zipTemplate = new File(pathTemplateReport);
 		if (zipTemplate.exists()) {
@@ -607,7 +611,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 	 * @throws JRException
 	 * @throws ReportException
 	 */
-	private byte[] generateReportFromTemplate(ReportResult reportResult,
+	protected byte[] generateReportFromTemplate(ReportResult reportResult,
 			HttpSession session, Integer reportId, String fileName,
 			int typeUnit, String entidad) throws IOException,
 			FileNotFoundException, NamingException, SQLException,
@@ -808,7 +812,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 	 * @param typeUnit - Tipo de unidad
 	 * @param xmlDocument - XML del informe
 	 */
-	private void setParametersByNodo(String nodoList,ReportResult reportResult, int typeUnit,
+	protected void setParametersByNodo(String nodoList,ReportResult reportResult, int typeUnit,
 			Document xmlDocument) {
 		//Obtenemos la información de los nodos
 		List nodeListTypeBook = xmlDocument.getRootElement()
@@ -825,7 +829,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 	 * @param reportResult - Datos del informe
 	 * @param xmlDocument - XML del informe
 	 */
-	private void setOficinaCabeceraInforme(ReportResult reportResult,
+	protected void setOficinaCabeceraInforme(ReportResult reportResult,
 			Document xmlDocument) {
 		List nodeList = xmlDocument.getRootElement().selectNodes(
 				NODO_PAGEHEADER_OFICINA);
@@ -877,7 +881,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 	 * @param reportResult - Datos de la consulta
 	 * @param xmlDocument - XML del Informe
 	 */
-	private void setQueryReport(ReportResult reportResult, Document xmlDocument) {
+	protected void setQueryReport(ReportResult reportResult, Document xmlDocument) {
 		ReportsHelper sicresReportsUtils = new ReportsHelper(xmlDocument);
 		if(_logger.isDebugEnabled()){
 			_logger.debug("VALORES INICIALES INFORME");
@@ -909,14 +913,14 @@ public class ReportDoc extends HttpServlet implements Keys {
 		}
 	}
 
-	private String getFinalReportName(File sourceReport) {
+	protected String getFinalReportName(File sourceReport) {
 		String fileName = sourceReport.getName().substring(0,
 				sourceReport.getName().lastIndexOf(PUNTO));
 
 		return fileName + ".pdf";
 	}
 
-	private File getFinalReport(File sourceReport) {
+	protected File getFinalReport(File sourceReport) {
 		String fileName = sourceReport.getName().substring(0,
 				sourceReport.getName().lastIndexOf(PUNTO));
 
@@ -925,7 +929,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 		return temp;
 	}
 
-	private File getCompiledReport(File sourceReport) {
+	protected File getCompiledReport(File sourceReport) {
 		String fileName = sourceReport.getName().substring(0,
 				sourceReport.getName().lastIndexOf(PUNTO));
 
@@ -935,7 +939,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 		return temp;
 	}
 
-	private File getCompiledSubReport(File sourceReport) {
+	protected File getCompiledSubReport(File sourceReport) {
 		String fileName = sourceReport.getName().substring(0,
 				sourceReport.getName().lastIndexOf(PUNTO));
 
@@ -945,7 +949,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 		return temp;
 	}
 
-	private String findFileTemplate(String pathTemplateReport) {
+	protected String findFileTemplate(String pathTemplateReport) {
 		String result = null;
 		String aux = null;
 		File buscFile = new File(pathTemplateReport);
@@ -970,7 +974,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 		return result;
 	}
 
-	private Object[] getSourceReportFromTemplate(HttpSession session,
+	protected Object[] getSourceReportFromTemplate(HttpSession session,
 			Integer reportId, String fileName) throws IOException,
 			FileNotFoundException {
 		//obtenemos la plantilla del informe
@@ -1091,7 +1095,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 		return result;
 	}
 
-	private String getPathTemplateReportFile(HttpSession session,
+	protected String getPathTemplateReportFile(HttpSession session,
 			UseCaseConf useCaseConf, Integer reportId) throws IOException,
 			FileNotFoundException {
 		String result = null;
@@ -1109,7 +1113,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 		return result;
 	}
 
-	private static String getJasperDTD(HttpSession session) {
+	protected static String getJasperDTD(HttpSession session) {
 		String dtdPath = Configurator.getInstance().getProperty(
 				ConfigurationKeys.KEY_DESKTOP_REPORTS_DTD_PATH);
 		String dtdJasper = Configurator.getInstance().getProperty(
@@ -1132,7 +1136,7 @@ public class ReportDoc extends HttpServlet implements Keys {
 		return jasperDTDAux;
 	}
 
-	private static File getJasperFile(HttpSession session, String jasperLib) {
+	protected static File getJasperFile(HttpSession session, String jasperLib) {
 		String jasperRerportLibPath = Configurator.getInstance().getProperty(
 				ConfigurationKeys.KEY_DESKTOP_REPORTS_LIB_PATH);
 		boolean isRelative = new Boolean(

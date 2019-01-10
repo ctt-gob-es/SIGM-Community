@@ -74,6 +74,15 @@ public class DocumentosDelegateImpl implements DocumentosDelegate {
 	/**
 	 * {@inheritDoc}
 	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.ws.delegate.DocumentosDelegate#getInfoDocumentoByNombre(String)
+	 */
+	public InfoDocumentoCSV getInfoDocumentoByNombre(String nombreDoc) {
+		return DocumentoAdapterHelper.getInfoDocumentoCSV(getServicioDocumentos().getInfoDocumentoByNombre(nombreDoc));
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
 	 * @see es.ieci.tecdoc.fwktd.csv.ws.delegate.DocumentosDelegate#getDocumento(String)
 	 */
 	public DocumentoCSV getDocumento(String id) {

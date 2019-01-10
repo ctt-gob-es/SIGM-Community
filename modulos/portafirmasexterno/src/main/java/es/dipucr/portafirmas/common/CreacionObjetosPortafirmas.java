@@ -198,7 +198,7 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Request getRequest(IRuleContext rulectx) throws ISPACRuleException {
+	public static Request getRequest(IRuleContext rulectx, String tipoFirma) throws ISPACRuleException {
 		Request request = new Request();
 		try{
 			//----------------------------------------------------------------------------------------------
@@ -242,13 +242,17 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 			
 			IItem expediente = ExpedientesUtil.getExpediente(cct, rulectx.getNumExp());
 			
-			request.setSubject(expediente.getString("ASUNTO"));
+			String asunto = expediente.getString("ASUNTO");
+			if(asunto.length()>100){
+				asunto = asunto.substring(0, 100);
+			}
+			request.setSubject(asunto);
 			
 			/**
 			 * Identificador de la aplicación que envía la solicitud.
 			 * **/
 			//request.setApplication("DIPUCR_WS");//firma xades
-			request.setApplication(Configuracion.getAplicacionPADES());
+			request.setApplication(Configuracion.getAplicacionPADES(cct));
 			
 			request.setFstart(Calendar.getInstance());
 			
@@ -258,7 +262,7 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 			
 			request.setReference(rulectx.getNumExp());
 			
-			request.setText(expediente.getString("NOMBREPROCEDIMIENTO")+" - "+expediente.getString("ASUNTO"));
+			request.setText(expediente.getString("NOMBREPROCEDIMIENTO")+" - "+asunto);
 			
 			
 			/**
@@ -303,19 +307,25 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 			
 			
 			/**
-			 * Cascada: En la firma en cascada, las diversas lineas de firma, se deben firmar o dar el visto bueno
+			 *-  Cascada: En la firma en cascada, las diversas lineas de firma, se deben firmar o dar el visto bueno
 			 * en el orden en que están en la petición. Si hubiera varias personas en una misma linea, lo podrá
 			 * firmar/validar cualquiera de ellas.
-			 * Paralelo: En la firma en paralelo, las diversas lineas de firma, se pueden firmar o dar el visto
+			 * - Paralelo: En la firma en paralelo, las diversas lineas de firma, se pueden firmar o dar el visto
 			 * bueno en cualquier orden idependietemente de como estén en la petición. Si hubiera varias
 			 * personas en una misma linea, lo podrá firmar/validar cualquiera de ellas. Si una persona estuviese
 			 * en más de una linea, deberá firmar/validar en primer lugar la primera de ellas, aunque eso no
 			 * impide que otros usuarios puedan firmar otras lineas.
-			 * Primer firmante: Este tipo de firma es igual que la firma en paralelo salvo que un usuario que
+			 * - Primer firmante: Este tipo de firma es igual que la firma en paralelo salvo que un usuario que
 			 * esté en 2 lineas de firma, sólo podrá firmar una de ellas
 			 * **/
-	
-			request.setSignType(SignType.value1);			
+			
+			if(tipoFirma.equals("CASCADA")){
+				request.setSignType(SignType.value1);
+			}
+			if(tipoFirma.equals("PARALELA")){
+				request.setSignType(SignType.value2);
+			}
+						
 			
 			/**
 			 * importanceLevel: Nivel de importancia de la petición
@@ -382,7 +392,7 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 			request.setSignLineList(signlinelist);
 			
 			
-			_0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.User usuario = Configuracion.getRemitentePeticionPADES();
+			_0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.User usuario = Configuracion.getRemitentePeticionPADES(cct);
 			RemitterList remitterList = new RemitterList();
 			_0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.User[] user = new _0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.User[1];
 			user[0] = usuario;
@@ -405,11 +415,17 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 
 	public static Document getDocumento(ClientContext cct, IItem docFirma) throws ISPACRuleException {
 		Document doc = new Document();
+		
+		//[Dipucr-Agustin] #766 Mientras que no cambiemos la forma de trabajar siempre poner pdf, estaba cogiendo en algunos casos extension odt o doc
+		String extension_permitida="pdf"; 
+		
 		try{
+			
 			//Nombre del documento (nombre del fichero)
-			doc.setName(docFirma.getString("NOMBRE")+"."+docFirma.getString("EXTENSION"));
+			doc.setName(docFirma.getString("NOMBRE")+"."+extension_permitida);
 			//Tipo mime del documento
-			doc.setMime(MimetypeMapping.getMimeType(docFirma.getString("EXTENSION")));
+			doc.setMime(MimetypeMapping.getMimeType(extension_permitida));
+			
 			//Tipo de documento. Los tipos de documentos se definen en la aplicación, e indican que tipo de contenido tiene el documento: Informe, petición, convenio,
 			DocumentType documentType = new DocumentType();
 			documentType.setIdentifier(docFirma.getInt("ID")+"");
@@ -437,9 +453,8 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 			fileInputStream.close();
 			byteArrayOutputStream.close();
 			// FileDataSource fDataSource = new FileDataSource(file);
-			DataHandler contenido = new DataHandler(new ByteArrayDataSource(data,MimetypeMapping.getMimeType(docFirma.getString("EXTENSION"))));
-						
-	
+			DataHandler contenido = new DataHandler(new ByteArrayDataSource(data,MimetypeMapping.getMimeType(extension_permitida)));			
+				
 			doc.setContent(contenido);
 			
 			doc.setSign(true);

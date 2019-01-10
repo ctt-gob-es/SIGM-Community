@@ -1,5 +1,7 @@
 package ieci.tecdoc.sgm.cripto.validacion.impl.afirma.xml;
 
+import org.apache.log4j.Logger;
+
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -16,6 +18,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
  * no tocar esta clase si no se sabe que se esta haciendo
  */
 public abstract class ElementoConTexto extends Nodo implements Converter {
+	
+	private static final Logger LOGGER = Logger.getLogger(ElementoConTexto.class);
     
     // elementos que han sido registrados, necesario para evitar llamadas recursivas en el constructor
     static java.util.Set registrados=new java.util.HashSet();
@@ -35,7 +39,7 @@ public abstract class ElementoConTexto extends Nodo implements Converter {
 		    Gestion.getXStream().registerConverter((Converter)c.newInstance(new String[]{""}));
 		}
 	    } catch (Exception e) {
-		e.printStackTrace();
+	    	LOGGER.error("ERROR. " + e.getMessage(), e);
 	    }
 	}
     }
@@ -57,7 +61,7 @@ public abstract class ElementoConTexto extends Nodo implements Converter {
 	    java.lang.reflect.Constructor c=this.getClass().getConstructor(new Class[]{String.class});
 	    return c.newInstance(new Object[]{reader.getValue()});
 	} catch (Exception e) {
-	    e.printStackTrace();
+		LOGGER.error("ERROR. " + e.getMessage(), e);
 	    return null;
 	}
     }

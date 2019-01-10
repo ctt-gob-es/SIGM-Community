@@ -2,6 +2,7 @@ package es.dipucr.contratacion.objeto;
 
 import java.util.Calendar;
 
+
 public class BOP {
 	private String nombreBOP="Boletín Oficial de la Provincia de Ciudad Real";
 	private Calendar fechaPublicacion;

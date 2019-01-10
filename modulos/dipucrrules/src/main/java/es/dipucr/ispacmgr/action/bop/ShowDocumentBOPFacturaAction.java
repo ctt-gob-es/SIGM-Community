@@ -31,7 +31,7 @@ import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 public class ShowDocumentBOPFacturaAction extends BaseAction {
 	
 	//[dipucr-Felipe #1088]
-	private static final Logger logger = Logger.getLogger(ShowDocumentBOPFacturaAction.class);
+	private static final Logger LOGGER = Logger.getLogger(ShowDocumentBOPFacturaAction.class);
 
     public ActionForward executeAction(ActionMapping mapping, 
     								   ActionForm form,
@@ -47,15 +47,14 @@ public class ShowDocumentBOPFacturaAction extends BaseAction {
         IInvesflowAPI invesflowAPI = session.getAPI();
         
         //[dipucr-Felipe #1023]
-//      IItemCollection collection = entityAPI.queryEntities(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS, "WHERE DESCRIPCION LIKE '%" + numFactura + "%'");
         String query = "WHERE DESCRIPCION LIKE '%" + numFactura + "%'";
         IItemCollection collection = DocumentosUtil.queryDocumentos(session.getClientContext(), query);
         
         @SuppressWarnings({ "rawtypes" })
 		List listDocumentos = collection.toList();
         
-        if (listDocumentos.size() == 0){
-        	logger.error("No existe ningún documento de factura. Query: " + query); //[dipucr-Felipe #1088]
+        if (listDocumentos.isEmpty()){
+        	LOGGER.error("No existe ningún documento de factura. Query: " + query); //[dipucr-Felipe #1088]
         	return null;
         }
         
@@ -94,23 +93,20 @@ public class ShowDocumentBOPFacturaAction extends BaseAction {
 	            response.setContentLength(genDocAPI.getDocumentSize(connectorSession, docref));
 	            try {
 	            	genDocAPI.getDocument(connectorSession, docref, out);
-	            }
-	            catch(ISPACException e){
+	            } catch(ISPACException e){
 	            	//Se saca el mensaje de error en la propia ventana, que habra sido lanzada con un popup
+	            	LOGGER.info("Se saca el mensaje en Popup",e);
 	            	response.setContentType("text/html");
 	            	out.write(e.getCause().getMessage().getBytes());
-	            }
-	            finally{
+	            } finally{
 	            	out.close();
 	            }
-			}
-			finally {
+			} finally {
 				if (connectorSession != null) {
 					genDocAPI.closeConnectorSession(connectorSession);
 				}
 			}
-        }
-        else {
+        } else {
         	throw new ISPACInfo("No existe el documento");
         }
 
@@ -178,14 +174,15 @@ public class ShowDocumentBOPFacturaAction extends BaseAction {
     	ITask task = null;
     	try {
     		task = invesflowAPI.getTask(entity.getInt("ID_TRAMITE"));
-		} catch(ISPACNullObject e) {}
+		} catch(ISPACNullObject e) {
+			LOGGER.info("El usuario no tiene permisos para ver el documento", e);
+		}
 		
     	if (task != null) {
         	String sUID = task.getString("ID_RESP");
 		  	if (!((invesflowAPI.getWorkListAPI().isInResponsibleList(sUID, ISecurityAPI.SUPERV_ANY)) ||
 		  		  (invesflowAPI.getSignAPI().isResponsible(entity.getKeyInt(), uid)) ||
-		  		  (invesflowAPI.getSignAPI().isResponsibleSubstitute(entity.getKeyInt(), uid)))) //[eCenpri-Felipe #425]
-		  	{
+		  		  (invesflowAPI.getSignAPI().isResponsibleSubstitute(entity.getKeyInt(), uid)))) { //[eCenpri-Felipe #425]		  	
 		  		throw new ISPACInfo("exception.documents.noResponsability",false);
 		  	}
 		}
@@ -205,7 +202,9 @@ public class ShowDocumentBOPFacturaAction extends BaseAction {
 	    	IStage stage = null;
 	    	try {
 	    		stage = invesflowAPI.getStage(entity.getInt("ID_FASE"));
-			} catch(ISPACNullObject e) {}
+			} catch(ISPACNullObject e) {
+				LOGGER.info("El usuario no tiene permisos para ver el documento", e);
+			}
 			
 	    	if (stage != null) {
 	        	String sUID = stage.getString("ID_RESP");

@@ -157,9 +157,7 @@ public class CierreActaRule implements IRule {
         	return new Boolean(true);
     		
         } catch(Exception e) {
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException("No se ha podido cerrar el borrador de acta",e);
+        	throw new ISPACRuleException("No se ha podido cerrar el borrador de acta del expediente: "+e.getMessage(),e);
         }
     }
 
@@ -197,7 +195,7 @@ public class CierreActaRule implements IRule {
 			**/
 			if (StringUtils.isNotEmpty(strTo)){
 				logger.warn("Enviar correo...");
-				String dir[]= MailUtil.enviarCorreo(rulectx, strFrom, strTo, strAsunto, strContenido, attachment, imagenes);
+				String dir[]= MailUtil.enviarCorreo(rulectx.getClientContext(), strFrom, strTo, strAsunto, strContenido, attachment, imagenes);
 				
 				// Enviar email
 				logger.warn("Enviado");
@@ -222,7 +220,7 @@ public class CierreActaRule implements IRule {
 					"Por favor, póngase en contacto con el administrador del sistema";
 				enviadoEmail = false;
 				DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvío, nombreDoc, descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
-				throw new ISPACInfo(descripError);
+				throw new ISPACRuleException(descripError);
 			}
 		}
 		catch(ISPACException e){
@@ -244,9 +242,7 @@ public class CierreActaRule implements IRule {
 			descripError = "Error al enviar el correo electrónico con el borrador de acta a '" + strTo + "'. ";
 			enviadoEmail = false;
 			DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvío, nombreDoc, descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException(descripError ,e);
+        	throw new ISPACRuleException(descripError +" expediente. "+rulectx.getNumExp(),e);
         }
 	}
 	
@@ -254,8 +250,9 @@ public class CierreActaRule implements IRule {
 			*INICIO
 			* [Teresa]Ticket #173#Secretaria Cambiar el asunto y el 
 			*contenido de los email que se envían
+	 * @throws ISPACRuleException 
 			**/
-	private String getOrgano (IRuleContext rulectx){
+	private String getOrgano (IRuleContext rulectx) throws ISPACRuleException{
 		String organo = "";
 		try {
 			organo = SecretariaUtil.getOrgano(rulectx);
@@ -274,7 +271,7 @@ public class CierreActaRule implements IRule {
 				organo = "Comisión Informativa";
 			}
 		} catch (ISPACRuleException e) {
-			logger.error(e.getMessage(), e);
+			logger.error("expediente. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
 		}
 		return organo;
 	}
@@ -316,7 +313,7 @@ public class CierreActaRule implements IRule {
 		if (iSesion != null){
 			Date dFecha = iSesion.getDate("FECHA");
 			if (dFecha==null){
-				throw new ISPACInfo("Error: No se ha introducido la fecha de la sesión.");				
+				throw new ISPACRuleException("Error: No se ha introducido la fecha de la sesión.");				
 			}
 	        SimpleDateFormat dateformat = new SimpleDateFormat("d 'de' MMMM 'de' yyyy", new Locale("es"));
 	        String strFecha = dateformat.format(dFecha);
@@ -330,7 +327,7 @@ public class CierreActaRule implements IRule {
 	        
 		}
 		else{
-			throw new ISPACInfo("Se ha producido un error al obtener los datos de la sesión.");
+			throw new ISPACRuleException("Se ha producido un error al obtener los datos de la sesión, en el número de expediente. "+rulectx.getNumExp());
 		}
 		return strContenido;
 	}
@@ -364,7 +361,7 @@ public class CierreActaRule implements IRule {
 			
 				return file;
 			} catch (FileNotFoundException e) {
-				throw new ISPACInfo("Error al intentar obtener el documento, no existe.", e);
+				throw new ISPACRuleException("Error al intentar obtener el documento, no existe del número expediente. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
 			}
 		}finally {
 			if (connectorSession != null) {

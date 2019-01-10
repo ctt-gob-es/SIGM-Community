@@ -78,4 +78,13 @@ public interface AsientoRegistralDao extends
 	public AsientoRegistralVO getAsientoRegistral(
 			String codigoEntidadRegistral, String identificadorIntercambio);
 
+	/**
+	 * Obtiene el estado de un asiento registral.
+	 *
+	 * @param code
+	 *            code del asiento registral.
+	 * @return Estado de un asiento registral.
+	 */
+	public EstadoAsientoRegistraVO getEstadoByCode(String code);
+
 }

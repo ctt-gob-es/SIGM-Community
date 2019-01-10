@@ -22,11 +22,11 @@ public class CriterioUnidadOrganicaEnum extends CriterioEnum {
 	public static final String TABLE_UNIDAD_ORGANICA_PRINCIPAL = "UO_PRI";
 	public static final String TABLE_UNIDAD_ORGANICA_EDP = "UO_EDP";
 
-	public static final CriterioUnidadOrganicaEnum UO_ID = new CriterioUnidadOrganicaEnum(TABLE_DIR_UNIDAD_ORGANICA, "Identificador de la unidad orgánica", "CODIGO_UNIDAD_ORGANICA");
-	public static final CriterioUnidadOrganicaEnum UO_NOMBRE = new CriterioUnidadOrganicaEnum(TABLE_DIR_UNIDAD_ORGANICA, "Nombre de la unidad orgánica", "NOMBRE_UNIDAD_ORGANICA");
-	public static final CriterioUnidadOrganicaEnum UO_ID_EXTERNO_FUENTE = new CriterioUnidadOrganicaEnum(TABLE_DIR_UNIDAD_ORGANICA, "Código externo de la Entidad Pública", "CODIGO_EXTERNO_FUENTE");
+	public static final CriterioUnidadOrganicaEnum UO_ID = new CriterioUnidadOrganicaEnum(TABLE_DIR_UNIDAD_ORGANICA, "Identificador de la unidad orgánica", "C_ID_UD_ORGANICA");
+	public static final CriterioUnidadOrganicaEnum UO_NOMBRE = new CriterioUnidadOrganicaEnum(TABLE_DIR_UNIDAD_ORGANICA, "Nombre de la unidad orgánica", "C_DNM_UD_ORGANICA");
+	public static final CriterioUnidadOrganicaEnum UO_ID_EXTERNO_FUENTE = new CriterioUnidadOrganicaEnum(TABLE_DIR_UNIDAD_ORGANICA, "Código externo de la Entidad Pública", "C_ID_EXTERNO_FUENTE");
 
-	public static final CriterioUnidadOrganicaEnum UO_ID_UNIDAD_ORGANICA_SUPERIOR = new CriterioUnidadOrganicaEnum(TABLE_DIR_UNIDAD_ORGANICA, "Identificador de la unidad orgánica superior", "CODIGO_UNIDAD_SUP_JERARQUICA");
+	public static final CriterioUnidadOrganicaEnum UO_ID_UNIDAD_ORGANICA_SUPERIOR = new CriterioUnidadOrganicaEnum(TABLE_DIR_UNIDAD_ORGANICA, "Identificador de la unidad orgánica superior", "C_ID_DEP_UD_SUPERIOR");
 	public static final CriterioUnidadOrganicaEnum UO_NOMBRE_UNIDAD_ORGANICA_SUPERIOR = new CriterioUnidadOrganicaEnum(TABLE_UNIDAD_ORGANICA_SUPERIOR, "Nombre de la unidad orgánica superior", "DENOM_UNIDAD_SUP_JERARQUICA");
 
 	/**

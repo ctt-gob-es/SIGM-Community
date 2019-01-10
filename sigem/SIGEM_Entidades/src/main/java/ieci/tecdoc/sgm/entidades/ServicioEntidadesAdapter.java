@@ -115,7 +115,12 @@ public class ServicioEntidadesAdapter implements ServicioEntidades {
 		poEntidad.setIdentificador(oEntidad.getIdentificador());
 		poEntidad.setNombreCorto(oEntidad.getNombreCorto());
 		poEntidad.setNombreLargo(oEntidad.getNombreLargo());
-		poEntidad.setCodigoINE(oEntidad.getCodigoINE());
+		poEntidad.setCodigo_ine(oEntidad.getCodigo_ine());
+		poEntidad.setPassword_entidad(oEntidad.getPassword_entidad());
+		poEntidad.setCif(oEntidad.getCif());
+		poEntidad.setDir3(oEntidad.getDir3());
+		poEntidad.setSia(oEntidad.getSia());
+		poEntidad.setDeh(oEntidad.getDeh());
 		
 		return poEntidad;
 	}
@@ -129,7 +134,12 @@ public class ServicioEntidadesAdapter implements ServicioEntidades {
 		poEntidad.setIdentificador(oEntidad.getIdentificador());
 		poEntidad.setNombreCorto(oEntidad.getNombreCorto());
 		poEntidad.setNombreLargo(oEntidad.getNombreLargo());
-		poEntidad.setCodigoINE(oEntidad.getCodigoINE());
+		poEntidad.setCodigo_ine(oEntidad.getCodigo_ine());
+		poEntidad.setPassword_entidad(oEntidad.getPassword_entidad());
+		poEntidad.setCif(oEntidad.getCif());
+		poEntidad.setSia(oEntidad.getSia());
+		poEntidad.setDir3(oEntidad.getDir3());
+		poEntidad.setDeh(oEntidad.getDeh());
 		
 		return poEntidad;
 	}

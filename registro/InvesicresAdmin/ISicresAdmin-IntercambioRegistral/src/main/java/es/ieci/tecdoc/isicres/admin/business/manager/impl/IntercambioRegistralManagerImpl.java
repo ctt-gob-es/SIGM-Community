@@ -210,6 +210,13 @@ public class IntercambioRegistralManagerImpl implements IntercambioRegistralMana
 		this.servicioConsultaDirectorioComun = servicioConsultaDirectorioComun;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public int countOficinasDirectorioComun(Criterios<CriterioOficinaEnum> criteriosBusqueda) {
+		int numeroOficinas = getServicioConsultaDirectorioComun().countOficinas(criteriosBusqueda);
+		return numeroOficinas;
+	}
 
 
 }

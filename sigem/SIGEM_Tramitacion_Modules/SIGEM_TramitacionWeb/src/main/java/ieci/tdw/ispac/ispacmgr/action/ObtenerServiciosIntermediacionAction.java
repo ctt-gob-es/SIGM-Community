@@ -76,12 +76,12 @@ public class ObtenerServiciosIntermediacionAction extends BaseAction {
 		        	certificate = (X509Certificate) obj;
 				}
 		   	}catch(Exception e){
-		    	logger.error(e.getMessage());
+		    	LOGGER.error(e.getMessage());
 		   		throw new ISPACInfo(getResources(request).getMessage("exception.certificado.usuario"), true);
 		   	}
 			
 			if (certificate == null){
-				logger.error("Error al obtener el certificado de usuario");
+				LOGGER.error("Error al obtener el certificado de usuario");
 		   		throw new ISPACInfo(getResources(request).getMessage("exception.certificado.usuario"), true);
 			}
 			
@@ -224,10 +224,10 @@ public class ObtenerServiciosIntermediacionAction extends BaseAction {
 		
 			return servicios;
 		}catch(ServiceException e){
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			throw new ISPACException("Error al consultar los servicios disponibles al Cliente Ligero del Servicio de Intermediacion. "+e.getMessage());
 		} catch (RemoteException e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			throw new ISPACException("Error al consultar los servicios disponibles al Cliente Ligero del Servicio de Intermediacion. "+e.getMessage());
 		}
 	}

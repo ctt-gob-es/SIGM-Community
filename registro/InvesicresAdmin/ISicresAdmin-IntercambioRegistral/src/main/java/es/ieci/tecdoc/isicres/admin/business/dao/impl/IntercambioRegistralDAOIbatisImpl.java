@@ -128,9 +128,9 @@ public class IntercambioRegistralDAOIbatisImpl implements IntercambioRegistralDA
 		}
 	}
 
-	public List findEntidadesRegistrales(EntidadRegistralVO entidadEjemplo) {
+	public List fIdentidadesRegistrales(EntidadRegistralVO entidadEjemplo) {
 		try {
-			List result = getSqlMapClientTemplate().queryForList("EntidadRegistralVO.findEntidadesRegistrales",entidadEjemplo);
+			List result = getSqlMapClientTemplate().queryForList("EntidadRegistralVO.fIdentidadesRegistrales",entidadEjemplo);
 			return result;
 		} catch (DataAccessException exception) {
 			logger.error(exception.getMessage(), exception);

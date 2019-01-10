@@ -210,7 +210,7 @@ public class SelectAtributeAction extends BaseAction{
 	    {
 	      logger.error(e.getMessage(), e);
 	    }
-	    catch(Throwable t)
+	    catch(Exception t)
 	    {
 	      logger.error(t.getMessage(), t);
 	    }

@@ -204,7 +204,7 @@ public class AvisoEmailModDocMiemOrgColegRule implements IRule{
 																	* **/
 													        		// Eliminar el fichero temporal una vez enviado por correo 
 															        try{
-															        	MailUtil.enviarCorreo(rulectx, emailNotif, strAsunto, strContenido);
+															        	MailUtil.enviarCorreo(rulectx.getClientContext(), emailNotif, strAsunto, strContenido);
 															        	
 													        		} catch(Exception e) {
 													                	throw new ISPACRuleException("Error al enviar el correo electrónico a la dirección: "+emailNotif, e);

@@ -1,5 +1,6 @@
 <HTML>
-	<HEAD>
+	<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<title>&nbsp;</title>
 		<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
 		<script language="javascript">
@@ -12,12 +13,16 @@
 		<script TYPE="text/javascript" LANGUAGE="javascript" SRC="scripts/colors.js"></script>
 		<SCRIPT TYPE="text/javascript" LANGUAGE="javascript" SRC="./scripts/genmsg.js"></SCRIPT>
 		<SCRIPT TYPE="text/javascript" LANGUAGE="javascript" SRC="./scripts/global.js"></SCRIPT>
+		
 		<SCRIPT LANGUAGE="javascript">
+			debugger;
 			top.g_URL = top.GetDlgParam(1);
 			top.g_SessionPId = top.GetDlgParam(2);
 			top.Idioma = top.GetDlgParam(5);
 			document.title = top.GetDlgParam(6);
 			var typeForm = top.GetDlgParam(4);
+			var callbackFunctionName = top.GetDlgParam(7);
+			var FldId = top.GetDlgParam(3); 			
 		</SCRIPT>
 		<SCRIPT LANGUAGE="javascript">
 			var rowSelected = -1;
@@ -33,8 +38,19 @@
 				tagName = "FullName";
 			}
 
-			function onWindowLoad(XMLDoc)
-			{
+			function obtenerXMLDeParametro(paramXML) {
+				if (typeof paramXML == 'string') {
+					var xmlClaro = atob(paramXML);
+					return new DOMParser().parseFromString(xmlClaro, "text/xml");	
+				}
+				else {
+					return paramXML;
+				}
+			}			
+			
+			
+			function onWindowLoad(paramXML) {					
+				XMLDoc = obtenerXMLDeParametro(paramXML);
 				var init = parseInt(XMLDoc.documentElement.getElementsByTagName("Init")[0].firstChild.data, 10);
 				var paso = parseInt(XMLDoc.documentElement.getElementsByTagName("Paso")[0].firstChild.data, 10);
 				var end = parseInt(XMLDoc.documentElement.getElementsByTagName("End")[0].firstChild.data, 10);
@@ -135,18 +151,19 @@
 					arrTypeTelIds[i] = tipo;
 				}
 
-				with (document.body.all("tbUnits"))	{
+				with (document.getElementById("tbUnits"))	{
+					//Establecer cabecera de la tabla
 					with (tHead.rows[0]){
 						top.SetInnerText(cells[1], top.GetIdsLan("IDS_LABEL_CODE"));
 						top.SetInnerText(cells[2], top.GetIdsLan("IDS_LABEL_DESC"));
 						top.SetInnerText(cells[3], "");
 						top.SetInnerText(cells[4], "");
 					}
-
+					//Limpiar todas las filas existentes
 					for (var i = rows.length - 1; i > 0; i--){
 						deleteRow(i);
 					}
-
+					//Añadir las filas recibidas como parámetros
 					for (var i = 0; i < arrCodes.length; i++){
 						var newRow = insertRow();
 						var datas = new Array;
@@ -155,8 +172,8 @@
 
 						newRow.id = "rowDatas";
 						newRow.className="Style5";
-						newRow.onclick = OnDataRowClick;
-						newRow.ondblclick = OnOK;
+						newRow.addEventListener("click", function(e) { OnDataRowClick(e); });												
+						newRow.addEventListener("dblclick", function(e) { OnOK(); });						
 
 						newCell[0] = newRow.insertCell();
 						newCell[0].width="5%";
@@ -216,43 +233,44 @@
 						newCell[5].setAttribute("idDirtel", arrDirtelIds[i]);
 						newCell[5].setAttribute("idType", arrTypeTelIds[i]);
 					}
-
-					rows("rowDatas", 0).style.backgroundColor = g_color4;
+					//Marcar la primera fila de datos de la tabla (la 0 es el head)
+					rows[1].style.backgroundColor = g_color4;
 				}
 
-				with (document.body.all("tbButtons")){
-					with (rows("rowButtons")){
-						cells[1].firstChild.value = top.GetIdsLan("IDS_BTNACEPTAR");
-						cells[2].firstChild.value = top.GetIdsLan("IDS_BTNCANCEL");
-					}
+				
+					
+				with (document.getElementById("tbButtons")){
+					document.getElementById("Button1").value = top.GetIdsLan("IDS_BTNACEPTAR")
+					document.getElementById("Button2").value = top.GetIdsLan("IDS_BTNCANCEL");
+					
 
-					with (rows("tbNav").cells[0]){
-						all("imgFirst").style.display = (init == 1)?"none":"inline";
-						all("trans1").style.display = (init == 1)?"none":"inline";
-						all("imgPrev").style.display = (init == 1)?"none":"inline";
+					with (document.getElementById("tbNav").cells[0]){
+						document.getElementById("imgFirst").style.display = (init == 1)?"none":"inline"; 
+						document.getElementById("trans1").style.display = (init == 1)?"none":"inline";
+						document.getElementById("imgPrev").style.display = (init == 1)?"none":"inline";
 
-						all("imgNext").style.display = (total - end >= 1)?"inline":"none";
-						all("trans2").style.display = (total - end >= 1)?"inline":"none";
-						all("imgLast").style.display = (total - end >= 1)?"inline":"none";
+						document.getElementById("imgNext").style.display = (total - end >= 1)?"inline":"none"; 
+						document.getElementById("trans2").style.display = (total - end >= 1)?"inline":"none";
+						document.getElementById("imgLast").style.display = (total - end >= 1)?"inline":"none";
 
-						all("imgFirst").title = top.GetIdsLan("IDS_ETQPRINCIPIO");
-						all("imgPrev").title = top.GetIdsLan("IDS_ETQANTERIOR");
-						all("imgNext").title = top.GetIdsLan("IDS_ETQSIGUIENTE");
-						all("imgLast").title = top.GetIdsLan("IDS_ETQFINAL");
+						document.getElementById("imgFirst").title = top.GetIdsLan("IDS_ETQPRINCIPIO");
+						document.getElementById("imgPrev").title = top.GetIdsLan("IDS_ETQANTERIOR");
+						document.getElementById("imgNext").title = top.GetIdsLan("IDS_ETQSIGUIENTE");
+						document.getElementById("imgLast").title = top.GetIdsLan("IDS_ETQFINAL");
 
-						top.SetInnerText(all("lbRango"), init.toString() + " - " + end.toString());
-						top.SetInnerText(all("lbPrepDe"), " " + top.GetIdsLan("IDS_PREPDE") + " ");
-						top.SetInnerText(all("lbTotal"), total.toString());
+						top.SetInnerText(document.getElementById("lbRango"), init.toString() + " - " + end.toString());
+						top.SetInnerText(document.getElementById("lbPrepDe"), " " + top.GetIdsLan("IDS_PREPDE") + " ");
+						top.SetInnerText(document.getElementById("lbTotal"), total.toString());
 
-						top.SetInnerText(all("Init"), init.toString());
-						top.SetInnerText(all("Paso"), paso.toString());
-						top.SetInnerText(all("Total"), total.toString());
-						top.SetInnerText(all("Code"), XMLDoc.documentElement.getElementsByTagName("Name")[0].firstChild.data);
+						top.SetInnerText(document.getElementById("Init"), init.toString());
+						top.SetInnerText(document.getElementById("Paso"), paso.toString());
+						top.SetInnerText(document.getElementById("Total"), total.toString());
+						top.SetInnerText(document.getElementById("Code"), XMLDoc.documentElement.getElementsByTagName("Name")[0].firstChild.data);
 					}
 				}
 
-				rowSelected = document.body.all("tbUnits").rows("rowDatas", 0).rowIndex;
-				top.SetTableFocus(document.body.all("tbUnits").rows("rowDatas", 0));
+				rowSelected = document.getElementById("tbUnits").rows[1].rowIndex;
+				top.SetTableFocus(document.getElementById("tbUnits").rows[1]);
 
 				document.body.style.cursor = "cursor";
 
@@ -262,19 +280,29 @@
 			function OnOK()
 			{
 				if ((typeForm == "ValidateInt") || (typeForm == "SearchInt")){
-					top.returnValue = top.GetInnerText(document.body.all("tbUnits").rows[rowSelected].cells[1]) + "#" +
-					  				  top.GetInnerText(document.body.all("tbUnits").rows[rowSelected].cells[2]) + "#" +
-									  document.body.all("tbUnits").rows[rowSelected].cells[0].getAttribute("id") + "#" +
-									  top.GetInnerText(document.body.all("tbUnits").rows[rowSelected].cells[3]) + "#" +
-									  document.body.all("tbUnits").rows[rowSelected].cells[5].getAttribute("idDom") + "#" +
-									  top.GetInnerText(document.body.all("tbUnits").rows[rowSelected].cells[4]) + "#" +
-									  document.body.all("tbUnits").rows[rowSelected].cells[5].getAttribute("idDirtel") + "#" +
-									  document.body.all("tbUnits").rows[rowSelected].cells[5].getAttribute("idType") + "#";
+					top.returnValue = top.GetInnerText(document.getElementById("tbUnits").rows[rowSelected].cells[1]) + "#" +
+					  				  top.GetInnerText(document.getElementById("tbUnits").rows[rowSelected].cells[2]) + "#" +
+									  document.getElementById("tbUnits").rows[rowSelected].cells[0].getAttribute("id") + "#" +
+									  top.GetInnerText(document.getElementById("tbUnits").rows[rowSelected].cells[3]) + "#" +
+									  document.getElementById("tbUnits").rows[rowSelected].cells[5].getAttribute("idDom") + "#" +
+									  top.GetInnerText(document.getElementById("tbUnits").rows[rowSelected].cells[4]) + "#" +
+									  document.getElementById("tbUnits").rows[rowSelected].cells[5].getAttribute("idDirtel") + "#" +
+									  document.getElementById("tbUnits").rows[rowSelected].cells[5].getAttribute("idType") + "#";
 				} else {
-					top.returnValue = top.GetInnerText(document.body.all("tbUnits").rows[rowSelected].cells[1]) + "#" +
-									  top.GetInnerText(document.body.all("tbUnits").rows[rowSelected].cells[2]) + "#" +
-						document.body.all("tbUnits").rows[rowSelected].cells[0].getAttribute("id") + "#";
+					top.returnValue = top.GetInnerText(document.getElementById("tbUnits").rows[rowSelected].cells[1]) + "#" +
+									  top.GetInnerText(document.getElementById("tbUnits").rows[rowSelected].cells[2]) + "#" +
+						document.getElementById("tbUnits").rows[rowSelected].cells[0].getAttribute("id") + "#";												
 				}
+				
+				if (callbackFunctionName != '' && window.opener) {
+					if(callbackFunctionName.includes('SetCodeAndFieldDescription')){
+					var tokensRet = top.getTokens(top.returnValue, "#", "#", 2);
+					top.returnValue = FldId + "','" + tokensRet[0] + "','" + tokensRet[1];
+					}
+					
+					eval("window.opener." + callbackFunctionName + "('"+top.returnValue+"')");
+				}
+				
 				top.close();
 			}
 
@@ -284,7 +312,7 @@
 				top.close();
 			}
 
-			function OnDataRowClick()
+			function OnDataRowClick(event)
 			{
 				var srcElement = top.GetSrcElement(event);
 
@@ -297,7 +325,7 @@
 
 			function ChangeToRow(row)
 			{
-				document.body.all("tbUnits").rows[rowSelected].style.backgroundColor = "#fafcff";
+				document.getElementById("tbUnits").rows[rowSelected].style.backgroundColor = "#fafcff";
 				row.style.backgroundColor= g_color4;
 				rowSelected = row.rowIndex;
 				top.SetTableFocus(row);
@@ -305,7 +333,7 @@
 
 			function DoDownload(InitValue)
 			{
-				var Code = top.GetInnerText(document.body.all("tbButtons").rows["tbNav"].cells[0].all("Code"));
+				var Code = top.GetInnerText(document.getElementById("Code"));
 
 				document.body.style.cursor = "wait";
 
@@ -355,49 +383,34 @@
 				}
 			}
 
-			function FirstValue()
-			{
+			function FirstValue() {
 				DoDownload("0");
 			}
 
-			function PrevValue()
-			{
-				var Init, Paso, Prev;
-
-				with (document.body.all("tbButtons").rows["tbNav"].cells[0]) {
-					Init = parseInt(top.GetInnerText(all("Init")), 10);
-					Paso = parseInt(top.GetInnerText(all("Paso")), 10);
-				}
-				Prev = Init - Paso - 1;
+			function PrevValue() {
+				var Init = parseInt(top.GetInnerText(document.getElementById("Init")), 10);
+				var Paso = parseInt(top.GetInnerText(document.getElementById("Paso")), 10);
+				
+				var Prev = Init - Paso - 1;
 
 				DoDownload(Prev.toString());
 			}
 
-			function NextValue()
-			{
-				var Init, Paso, Next;
+			function NextValue(){
+				var Init = parseInt(top.GetInnerText(document.getElementById("Init")), 10);
+				var Paso = parseInt(top.GetInnerText(document.getElementById("Paso")), 10);
 
-				with (document.body.all("tbButtons").rows["tbNav"].cells[0]) {
-					Init = parseInt(top.GetInnerText(all("Init")), 10);
-					Paso = parseInt(top.GetInnerText(all("Paso")), 10);
-				}
-
-				Next = Init + Paso - 1;
+				var Next = Init + Paso - 1;
 
 				DoDownload(Next.toString());
 			}
 
-			function LastValue()
-			{
-				var Init, Paso, Total, Last;
-
-				with (document.body.all("tbButtons").rows["tbNav"].cells[0]){
-					Init = parseInt(top.GetInnerText(all("Init")), 10);
-					Paso = parseInt(top.GetInnerText(all("Paso")), 10);
-					Total = parseInt(top.GetInnerText(all("Total")), 10);
-				}
-
-				Last = Init - 1;
+			function LastValue() {
+				var Init = parseInt(top.GetInnerText(document.getElementById("Init")), 10);
+				var Paso = parseInt(top.GetInnerText(document.getElementById("Paso")), 10);
+				var Total = parseInt(top.GetInnerText(document.getElementById("Total")), 10);
+								
+				var Last = Init - 1;
 
 				while (Last + Paso < Total){
 					Last += Paso;
@@ -405,6 +418,11 @@
 
 				DoDownload(Last.toString());
 			}
+			
+			
+			
+			
+			
 
 			function OnPressKey(aEvent)
 			{
@@ -412,14 +430,14 @@
 
 				switch(key) {
 					case 40: {
-						if (rowSelected < document.body.all("tbUnits").rows["rowDatas"].length) {
-							ChangeToRow(document.body.all("tbUnits").rows("rowDatas", rowSelected))
+						if (rowSelected < (document.getElementById("tbUnits").rows.length - 1)) { //Se le resta uno para decontar la cabecera
+							ChangeToRow(document.getElementById("tbUnits").rows[rowSelected + 1])
 						}
 						break;
 					}
 					case 38: {
 						if (rowSelected - 1 > 0) {
-							ChangeToRow(document.body.all("tbUnits").rows("rowDatas", rowSelected-2))
+							ChangeToRow(document.getElementById("tbUnits").rows[rowSelected - 1])
 						}
 						break;
 					}
@@ -437,7 +455,7 @@
 	</HEAD>
 	<BODY onload="onWindowLoad(top.GetDlgParam(0));" TABINDEX="-1" onkeydown="OnPressKey(event);" onunload="top.EnableEvents(window.opener);">
 		<DIV style="width:'100%';height='450px';top='0px';left='0px';overflow:'auto'" tabindex="-1">
-			<TABLE id="tbUnits" width="98%" align="left" cellpadding="0" cellspacing="0" border="0" tabindex="-1">
+			<TABLE id="tbUnits" width="100%" align="left" cellpadding="0" cellspacing="0" border="0" tabindex="-1">
 				<THEAD tabindex="-1">
 					<TR>
 						<TH class="report" width="5%" />

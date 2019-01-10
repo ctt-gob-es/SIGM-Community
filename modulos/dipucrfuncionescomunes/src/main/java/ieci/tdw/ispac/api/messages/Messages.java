@@ -5,15 +5,17 @@ import ieci.tdw.ispac.ispaclib.messages.MessagesFormatter;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 public class Messages {
+	
+	public static final Logger LOGGER = Logger.getLogger(Messages.class);
 
 	/** Nombre del fichero de recursos. */
-	private static final String BUNDLE_NAME = 
-		"ieci.tdw.ispac.api.resources.ApplicationResources";
+	private static final String BUNDLE_NAME = "ieci.tdw.ispac.api.resources.ApplicationResources";
 
 	/** Recursos. */
-	private static final ResourceBundle RESOURCE_BUNDLE = 
-		ResourceBundle.getBundle(BUNDLE_NAME);
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
 
 	/**
@@ -25,6 +27,7 @@ public class Messages {
 		try {
 			return RESOURCE_BUNDLE.getString(key);
 		} catch (MissingResourceException e) {
+			LOGGER.error("Error al recuperar el texto del recurso específico.", e);
 			return key;
 		}
 	}
@@ -42,7 +45,8 @@ public class Messages {
 				text = MessagesFormatter.format(text, params);
 			}
 			return text;
-		} catch (MissingResourceException e) {
+		} catch (MissingResourceException e){
+			LOGGER.error("Error al recuperar el texto del recurso específico.", e);
 			return key;
 		}
 	}

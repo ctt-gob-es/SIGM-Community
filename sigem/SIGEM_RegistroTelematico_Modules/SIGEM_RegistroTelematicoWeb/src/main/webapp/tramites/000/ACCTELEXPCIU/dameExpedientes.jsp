@@ -37,7 +37,7 @@ Recuperando datos de solicitudes anteriores.
 	String anio = cadenaSplit[1];	
 	String entidad = cadenaSplit[2];	
 
-	String ficheroSolAyto = XmlCargaDatos.getDatosConsulta("SolicitudesAyto", "select numexp, replace(replace(replace(numexp ||' - '|| asunto , '</br>', ' '), '<b>', ' '), '</b>', ' ') from spac_expedientes a where upper(a.nifciftitular) like upper(#%" + nifCif + "%#) and numexp like #DPCR"+anio+"/%#",entidad);
+	String ficheroSolAyto = XmlCargaDatos.getDatosConsulta("SolicitudesAyto", "select numexp, replace(replace(replace(numexp ||' - '|| asunto , '</br>', ' '), '<b>', ' '), '</b>', ' ') from spac_expedientes a where trim(upper(a.nifciftitular)) = trim(upper(#"+ nifCif +"#)) and a.nifciftitular is not null and a.nifciftitular != ## and numexp like #%"+anio+"/%#",entidad);
 	
 	Document dom;
 	DocumentBuilderFactory dbf;
@@ -74,7 +74,7 @@ Recuperando datos de solicitudes anteriores.
 					%>						
 						op = opener.document.createElement('option');  
 						op.value = '<%=numexp%>'; 
-						op.text = '<%=asunto.replaceAll("[\n\r]","")%>'; 						
+						op.text = '<%=asunto.replaceAll("[\n\r]","").replaceAll("\'","\\\\'")%>'; 						
 						expedientes.add(op); 
 					<%
 				}

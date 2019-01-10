@@ -10,10 +10,10 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.messages.Messages;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
+import ieci.tdw.ispac.ispaclib.common.constants.SignStatesConstants;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.gendoc.converter.DocumentConverter;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
-import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,24 +24,28 @@ import java.io.InputStream;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
+import org.apache.tools.ant.types.FlexInteger;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
-import com.lowagie.text.pdf.PdfFileSpecification;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.FileUtils;
 import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
 import es.dipucr.sigem.api.rule.common.utils.PdfUtil;
 
 public class GenerateDocUnicoConAnexosRule implements IRule{
 	
-	private static final Logger logger = Logger.getLogger(GenerateDocUnicoConAnexosRule.class);
+	private static final String ERROR_GENERAR_DOCUMENTOS = "Error al generar los documentos. ";
+	private static final String CARTA_DIGITAL = "Carta digital";
+	
+	private static final Logger LOGGER = Logger.getLogger(GenerateDocUnicoConAnexosRule.class);
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-		
+		// Empty method
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -57,14 +61,6 @@ public class GenerateDocUnicoConAnexosRule implements IRule{
 			File file = null;
 			
 			String nombreDocumento = "";
-			
-			String nombre = "";
-	    	String dirnot = "";
-	    	String c_postal = "";
-	    	String localidad = "";
-	    	String caut = "";
-	    	String recurso = "";
-	    	String observaciones = "";
 	    	int documentTypeId = 0;
 			
 			Document document = null;
@@ -79,7 +75,7 @@ public class GenerateDocUnicoConAnexosRule implements IRule{
 			
 			String numExp = rulectx.getNumExp();
 			
-        	documentTypeId = DocumentosUtil.getTipoDoc(cct, "Carta digital", DocumentosUtil.BUSQUEDA_EXACTA, false);
+        	documentTypeId = DocumentosUtil.getTipoDoc(cct, CARTA_DIGITAL, DocumentosUtil.BUSQUEDA_EXACTA, false);
 			
 			if(iDocAnexar.hasNext()){
 				// 1. Obtener participantes del expediente actual, con relación != "Trasladado"
@@ -98,68 +94,14 @@ public class GenerateDocUnicoConAnexosRule implements IRule{
 						IItem participante = (IItem) participantes.toList().get(j);
 						
 						if (participante!=null){
-							IItemCollection documentos = entitiesAPI.getDocuments(rulectx.getNumExp(), "(EXTENSION='odt' or EXTENSION='doc') AND NOMBRE!='Anexo'", "");
+							IItemCollection documentos = entitiesAPI.getDocuments(rulectx.getNumExp(), "(UPPER(EXTENSION)='ODT' or UPPER(EXTENSION)='DOC')  AND ESTADOFIRMA = '"+SignStatesConstants.SIN_FIRMA+"' AND NOMBRE!='Anexo'", "");
 							Iterator iDoc = documentos.iterator();
 							
 							while(iDoc.hasNext()){
 								
 								// Añadir a la session los datos para poder utilizar <ispactag sessionvar='var'> en la plantilla
-					        	if ((String)participante.get("NOMBRE")!=null){
-					        		nombre = (String)participante.get("NOMBRE");
-					        	}else{
-					        		nombre = "";
-					        	}
-					        	if ((String)participante.get("DIRNOT")!=null){
-					        		dirnot = (String)participante.get("DIRNOT");
-					        	}else{
-					        		dirnot = "";
-					        	}
-					        	if ((String)participante.get("C_POSTAL")!=null){
-					        		c_postal = (String)participante.get("C_POSTAL");
-					        	}else{
-					        		c_postal = "";
-					        	}
-					        	if ((String)participante.get("LOCALIDAD")!=null){
-					        		localidad = (String)participante.get("LOCALIDAD");
-					        	}else{
-					        		localidad = "";
-					        	}
-					        	if ((String)participante.get("CAUT")!=null){
-					        		caut = (String)participante.get("CAUT");
-					        	}else{
-					        		caut = "";
-					        	}
-					        	if ((String)participante.get("RECURSO")!=null){
-					        		recurso = (String)participante.get("RECURSO");
-					        	}else{
-					        		recurso = "";
-					        	}
-					        	if ((String)participante.get("OBSERVACIONES")!=null){
-					        		observaciones = (String)participante.get("OBSERVACIONES");
-					        	}else{
-					        		observaciones = "";
-					        	}
-					        	
-					        	//recurso
-					        	// Obtener el sustituto del recurso en la tabla SPAC_VLDTBL_RECURSOS
-					        	String sqlQueryPart = "WHERE VALOR = '"+recurso+"'";
-					        	IItemCollection colRecurso = entitiesAPI.queryEntities("DPCR_RECURSOS", sqlQueryPart);
-					        	if (colRecurso.iterator().hasNext()){
-					        		IItem iRecurso = (IItem)colRecurso.iterator().next();
-					        		recurso = iRecurso.getString("SUSTITUTO");
-					        	}
-					        	/**
-					        	 * INICIO
-					        	 * ##Ticket #172 SIGEM decretos y secretaria, modificar el recurso
-					        	 * **/
-					        	if (recurso.equals("")){
-					        		recurso += es.dipucr.sigem.api.rule.procedures.Constants.SECRETARIAPROC.sinRECUSO;
-					        	}
-					        	else{
-					        		recurso += es.dipucr.sigem.api.rule.procedures.Constants.SECRETARIAPROC.conRECUSO;
-					        	}
-					        	
-					        	
+								DocumentosUtil.setParticipanteAsSsVariable(cct, participante);
+								
 					        	int templateId = 0;
 								IItemCollection tpDocsTemplatesCollection = (IItemCollection)procedureAPI.getTpDocsTemplates(documentTypeId);
 					        	if(tpDocsTemplatesCollection==null || tpDocsTemplatesCollection.toList().isEmpty()){
@@ -169,34 +111,27 @@ public class GenerateDocUnicoConAnexosRule implements IRule{
 						        	templateId = tpDocsTemplate.getInt("ID");
 					        	}
 					        	
-					        	cct.setSsVariable("NOMBRE", nombre);
-					        	cct.setSsVariable("DIRNOT", dirnot);
-					        	cct.setSsVariable("C_POSTAL", c_postal);
-					        	cct.setSsVariable("LOCALIDAD", localidad);
-					        	cct.setSsVariable("CAUT", caut);
-					        	cct.setSsVariable("RECURSO", recurso);
-					        	cct.setSsVariable("OBSERVACIONES", observaciones);
-								
-								IItem doc = (IItem)iDoc.next();
-								String infoPag = doc.getString("INFOPAG");
-								String extension = doc.getString("EXTENSION");
+					        	IItem doc = (IItem)iDoc.next();
+								String infoPag = doc.getString(DocumentosUtil.INFOPAG);
+								String extension = doc.getString(DocumentosUtil.EXTENSION);
 								
 					        	//Plantilla de Notificaciones
 					        	File resultado1 = DocumentosUtil.getFile(cct, infoPag, null, null);
 					        	
 					    		IItem entityDoc1 = DocumentosUtil.generaYAnexaDocumento(rulectx, rulectx.getTaskId(), documentTypeId, templateId, "Prueba Carta Digital Plantilla", resultado1, "pdf");
-					    		entityDoc1.set("DESTINO", nombre);
+					    		entityDoc1.set(DocumentosUtil.DESTINO, participante.getString(ParticipantesUtil.NOMBRE));
 					    		entityDoc1.store(cct);
 					        	
 					        	
-					        	String docInfoPag = entityDoc1.getString("INFOPAG");
+					        	String docInfoPag = entityDoc1.getString(DocumentosUtil.INFOPAG);
 								// Convertir el documento original a PDF
-					    		String docFilePath= DocumentConverter.convert2PDF(cct.getAPI(), docInfoPag,extension);
+					    		String docFilePath= DocumentConverter.convert2PDF(cct.getAPI(), docInfoPag, extension);
 					    		
 					    		// Obtener la información del fichero convertido
 					    		file = new File(docFilePath);
-					    		if (!file.exists())
+					    		if (!file.exists()){
 					    			throw new ISPACException("No se ha podido convertir el documento a PDF");
+					    		}
 				
 								String rutaFileName = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/"+FileTemporaryManager.getInstance().newFileName()+".pdf";
 								File resultado = new File(rutaFileName);
@@ -228,23 +163,27 @@ public class GenerateDocUnicoConAnexosRule implements IRule{
 									
 									String  infoPagAnexar = "";
 									String ext = "";
-									if(docAnexar.getString("INFOPAG_RDE")!=null){
-										infoPagAnexar = docAnexar.getString("INFOPAG_RDE");
-										 ext = docAnexar.getString("EXTENSION_RDE");
-									}
-									else{
-										infoPagAnexar = docAnexar.getString("INFOPAG");
-										 ext = docAnexar.getString("EXTENSION");
+									if(docAnexar.getString(DocumentosUtil.INFOPAG_RDE)!=null){
+										infoPagAnexar = docAnexar.getString(DocumentosUtil.INFOPAG_RDE);
+										 ext = docAnexar.getString(DocumentosUtil.EXTENSION_RDE);
+									} else {
+										infoPagAnexar = docAnexar.getString(DocumentosUtil.INFOPAG);
+										 ext = docAnexar.getString(DocumentosUtil.EXTENSION);
 									}
 
-									String descripcion = docAnexar.getString("DESCRIPCION");
+									String descripcion = docAnexar.getString(DocumentosUtil.DESCRIPCION);
 									
 									File fileAnexo = DocumentosUtil.getFile(cct, infoPagAnexar, null, null);
-													
-									nombreDocumento = descripcion + "." + ext;
+									
+									//INICIO [dipucr-Felipe #782]
+									nombreDocumento = descripcion;
+									if (!nombreDocumento.endsWith("." + ext)){
+										nombreDocumento = descripcion + "." + ext;
+									}
+									//FIN [dipucr-Felipe #782]
 									
 									//[dipucr-Felipe 3#91]
-									PdfUtil.anexarDocumento(writer, fileAnexo.getAbsolutePath(), nombreDocumento, normalizar(descripcion));
+									PdfUtil.anexarDocumento(writer, fileAnexo.getAbsolutePath(), nombreDocumento, FileUtils.normalizarNombre(descripcion));
 					
 									fileAnexo.delete();
 									fileAnexo = null;																	
@@ -255,22 +194,18 @@ public class GenerateDocUnicoConAnexosRule implements IRule{
 								reader.close();
 								
 								//Guarda el resultado en gestor documental
-								int tpdoc = DocumentosUtil.getTipoDoc(cct, "Carta digital", DocumentosUtil.BUSQUEDA_EXACTA, false);
+								int tpdoc = DocumentosUtil.getTipoDoc(cct, CARTA_DIGITAL, DocumentosUtil.BUSQUEDA_EXACTA, false);
 					    		
-					    		IItem entityDoc = DocumentosUtil.generaYAnexaDocumento(rulectx, tpdoc, "Carta digital", resultado, "pdf"); 
+					    		IItem entityDoc = DocumentosUtil.generaYAnexaDocumento(rulectx, tpdoc, CARTA_DIGITAL, resultado, "pdf"); 
 
-					    		String templateDescripcion = entityDoc.getString("DESCRIPCION");
-								templateDescripcion = templateDescripcion + " - " + cct.getSsVariable("NOMBRE");
-								entityDoc.set("DESCRIPCION", templateDescripcion);
-								entityDoc.set("DESTINO", nombre);					    		
-					    		// Si todo ha sido correcto borrar las variables de la session
-								cct.deleteSsVariable("NOMBRE");
-								cct.deleteSsVariable("DIRNOT");
-								cct.deleteSsVariable("C_POSTAL");
-								cct.deleteSsVariable("LOCALIDAD");
-								cct.deleteSsVariable("CAUT");
-								cct.deleteSsVariable("RECURSO");
-								cct.deleteSsVariable("OBSERVACIONES");
+					    		String templateDescripcion = entityDoc.getString(DocumentosUtil.DESCRIPCION);
+								templateDescripcion = templateDescripcion + " - " + cct.getSsVariable(DocumentosUtil.NOMBRE);
+								entityDoc.set(DocumentosUtil.DESCRIPCION, templateDescripcion);
+								entityDoc.set(DocumentosUtil.DESTINO, participante.getString(ParticipantesUtil.NOMBRE));
+								entityDoc.set("DESTINO_ID", participante.getString(ParticipantesUtil.ID_EXT));
+					    		
+								// Si todo ha sido correcto borrar las variables de la session
+								DocumentosUtil.borraParticipanteSsVariable(cct);
 					    		
 					    		entityDoc.store(cct);
 					    		file.delete();
@@ -282,20 +217,24 @@ public class GenerateDocUnicoConAnexosRule implements IRule{
 					    		//Borra los documentos intermedios del gestor documental
 						        IItemCollection collectionBorrar = entitiesAPI.getDocuments(rulectx.getNumExp(), "DESCRIPCION = 'Prueba Carta Digital Plantilla'", "");
 						        Iterator itBorrar = collectionBorrar.iterator();
-						        while (itBorrar.hasNext())
-						        {
+						        while (itBorrar.hasNext()) {
 						        	IItem docBorrar = (IItem)itBorrar.next();
 						        	entitiesAPI.deleteDocument(docBorrar);
 						        }
 						        
-						        if(resultado1 != null && resultado1.exists()) resultado1.delete();
+						        if(resultado1 != null && resultado1.exists()) {
+						        	resultado1.delete();
+						        }
 						        resultado1 = null;
-						        if(fisFileAnexo != null) fisFileAnexo.close();
+						        
+						        if(fisFileAnexo != null) {
+						        	fisFileAnexo.close();
+						        }
 						        fisFileAnexo = null;
+						        
 						        writer.close();
 						        writer = null;
 						        DocumentosUtil.deleteFile(docFilePath);
-								System.gc();
 							}
 						}//fin if parti
 					}//fin for
@@ -304,21 +243,19 @@ public class GenerateDocUnicoConAnexosRule implements IRule{
 			
 			
 		} catch (ISPACException e) {
-			logger.error("Error al generar los documentos. " + e.getMessage(), e);
+			LOGGER.error(ERROR_GENERAR_DOCUMENTOS+rulectx.getNumExp()+ " - " + e.getMessage(), e);
+			throw new ISPACRuleException(ERROR_GENERAR_DOCUMENTOS+rulectx.getNumExp()+ " - " + e.getMessage(), e);
 		} catch (FileNotFoundException e) {
-			logger.error("Error al generar los documentos. " + e.getMessage(), e);
+			LOGGER.error(ERROR_GENERAR_DOCUMENTOS+rulectx.getNumExp()+ " - " + e.getMessage(), e);
+			throw new ISPACRuleException(ERROR_GENERAR_DOCUMENTOS+rulectx.getNumExp()+ " - " + e.getMessage(), e);
 		} catch (IOException e) {
-			logger.error("Error al generar los documentos. " + e.getMessage(), e);
+			LOGGER.error(ERROR_GENERAR_DOCUMENTOS+rulectx.getNumExp()+ " - " + e.getMessage(), e);
+			throw new ISPACRuleException(ERROR_GENERAR_DOCUMENTOS+rulectx.getNumExp()+ " - " + e.getMessage(), e);
 		} catch (DocumentException e) {
-			logger.error("Error al generar los documentos. " + e.getMessage(), e);
+			LOGGER.error(ERROR_GENERAR_DOCUMENTOS+rulectx.getNumExp()+ " - " + e.getMessage(), e);
+			throw new ISPACRuleException(ERROR_GENERAR_DOCUMENTOS+rulectx.getNumExp()+ " - " + e.getMessage(), e);
 		}
-		return new Boolean (true);
-	}
-	
-	private static String normalizar(String name) {
-		name = StringUtils.replace(name, "/", "_");
-		name = StringUtils.replace(name, "\\", "_");
-		return name;
+		return true;
 	}
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {

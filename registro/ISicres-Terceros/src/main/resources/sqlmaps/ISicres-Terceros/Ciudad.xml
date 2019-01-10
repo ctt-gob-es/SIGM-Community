@@ -52,5 +52,13 @@
 		</isNotNull>
 		ORDER BY cities.name ASC
 	</select>
+	
+	<select id="getCiudadesByNombreProvincia" parameterClass="java.lang.String"
+		resultMap="ciudad">
+		SELECT cities.id, cities.name, cities.code, cities.id_prov
+		FROM SCR_CITIES cities, SCR_PROV prov
+		WHERE cities.id_prov=prov.id AND prov.name=#value#
+		ORDER BY cities.name ASC
+	</select>
 
 </sqlMap>

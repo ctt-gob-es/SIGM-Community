@@ -9,7 +9,10 @@
 	
 	<artifactId>sigem_estructuraOrganizativaWeb</artifactId>
 	<packaging>war</packaging>
-	
+	<properties>
+		<sigem.version>3.0.1-M2</sigem.version>
+		<sigemMSSSI.version>3.0.0-msssi2.0.0</sigemMSSSI.version>		
+	</properties>
 	
 	<dependencies>
 	
@@ -41,7 +44,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_clasesBase</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-net</groupId>
@@ -53,37 +56,37 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_entidades</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_estructuraOrganizativa</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_estructuraOrganizativaCore</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_administracionSesionesAdmWsClient</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_aplicacionesAdministracion</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_utilidadesAdministracion</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>es.ieci.tecdoc.sigem</groupId>
@@ -172,20 +175,28 @@
 			<artifactId>struts-el</artifactId>
 			<version>1.1</version>
 		</dependency>
-
+		<dependency>
+			<groupId>es.msssi.tecdoc.sigem</groupId>
+			<artifactId>sigem_init</artifactId>
+			<version>${sigemMSSSI.version}</version>	
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 
 	<build>
 		<finalName>SIGEM_EstructuraWeb</finalName>
-		<filters>
-			<filter>${filter.generic.system}</filter>
-		</filters>
+
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
-		</resources>		
+		</resources>	
 	</build>
 
 	<profiles>
@@ -213,6 +224,32 @@
 				<filter.generic.system>${project.basedir}/../SIGEM_Config/src/main/filters/system/windows.properties</filter.generic.system>
 			</properties>
 		</profile>	
+		<profile>
+			<id>msssi_local</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>msssi_local</name>
+				</property>
+			</activation>
+			<properties>
+				<filter.generic.system>${project.basedir}/../SIGEM_Config/src/main/filters/system/msssi.properties</filter.generic.system>
+				<source.exclude></source.exclude>
+				<targetPathStatic>resources</targetPathStatic>
+				<weblogic.dataSource.jndi.name.sigemadmin>jdbc/sigemAdmin</weblogic.dataSource.jndi.name.sigemadmin>
+				<!--<weblogic.dataSource.jndi.name.sigemaudit_000>jdbc/fwktd-auditDS_000</weblogic.dataSource.jndi.name.sigemaudit_000>
+				<weblogic.dataSource.jndi.name.registroDS_000>jdbc/registroDS_000</weblogic.dataSource.jndi.name.registroDS_000>
+				<weblogic.dataSource.jndi.name.eTramitacionDS_000>jdbc/eTramitacionDS_000</weblogic.dataSource.jndi.name.eTramitacionDS_000>
+				<weblogic.dataSource.jndi.name.tramitadorDS_000>jdbc/tramitadorDS_000</weblogic.dataSource.jndi.name.tramitadorDS_000-->
+				<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+				<!--<weblogic.dataSource.jndi.name.fwktdsirDS_000>jdbc/fwktd-sirDS_000</weblogic.dataSource.jndi.name.fwktdsirDS_000-->
+				<URLRoot>http://localhost:7005/SIGEM_EstructuraWeb/resources</URLRoot>
+				<PATH_REPO>D:/Repositorio/SIGEM/</PATH_REPO>
+				<sigem.url.webservices>http://localhost:7005</sigem.url.webservices>
+				<URLRootRelative>/SIGEM_EstructuraWeb/resources</URLRootRelative> 
+				
+			</properties>
+		</profile>
 	</profiles>
 
 </project>

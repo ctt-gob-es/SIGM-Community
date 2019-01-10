@@ -224,6 +224,29 @@ public class ServicioDocumentosImpl implements ServicioDocumentos {
 
 		return infoDocumentoCSV;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.core.service.ServicioDocumentos#getInfoDocumentoByNombre(java.lang.String)
+	 */
+	public InfoDocumentoCSV getInfoDocumentoByNombre(String nombreDoc) {
+
+		logger.info("Llamada a getInfoDocumentoByNombre: nombreDoc=[{}]", nombreDoc);
+
+		Assert.hasText(nombreDoc, "'nombreDoc' must not be empty");
+
+		// Obtener la información del documento
+		DocumentoVO documento = getDocumentoManager().getDocumentoByNombre(nombreDoc);
+
+		// Rellenar el objeto a devolver
+		InfoDocumentoCSV infoDocumentoCSV = DocumentoHelper.getInfoDocumentoCSV(documento);
+		if (infoDocumentoCSV == null) {
+			logger.info("El documento con nombre [{}] no existe", nombreDoc);
+		}
+
+		return infoDocumentoCSV;
+	}
 
 	/**
 	 * {@inheritDoc}

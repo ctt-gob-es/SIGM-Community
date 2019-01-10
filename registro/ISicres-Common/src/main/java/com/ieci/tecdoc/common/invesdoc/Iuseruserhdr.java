@@ -2,6 +2,7 @@ package com.ieci.tecdoc.common.invesdoc;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -57,8 +58,10 @@ public class Iuseruserhdr implements Serializable {
 
     /** nullable persistent field */
     private String pwdvpcheck;
+    
+    private Iuserdata iuserdata;
 
-    /** full constructor */
+    /** full constructor anterior*/
     public Iuseruserhdr(Integer id, String name, String password, int deptid, int flags, int stat, int numbadcnts, String remarks, int crtrid, Date crtndate, Integer updrid, Date upddate, Integer pwdlastupdts, String pwdmbc, String pwdvpcheck) {
         this.id = id;
         this.name = name;
@@ -75,6 +78,26 @@ public class Iuseruserhdr implements Serializable {
         this.pwdlastupdts = pwdlastupdts;
         this.pwdmbc = pwdmbc;
         this.pwdvpcheck = pwdvpcheck;
+    }
+    
+    /** full constructor */
+    public Iuseruserhdr(Integer id, String name, String password, int deptid, int flags, int stat, int numbadcnts, String remarks, int crtrid, Date crtndate, Integer updrid, Date upddate, Integer pwdlastupdts, String pwdmbc, String pwdvpcheck, Iuserdata iuserdata) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.deptid = deptid;
+        this.flags = flags;
+        this.stat = stat;
+        this.numbadcnts = numbadcnts;
+        this.remarks = remarks;
+        this.crtrid = crtrid;
+        this.crtndate = crtndate;
+        this.updrid = updrid;
+        this.upddate = upddate;
+        this.pwdlastupdts = pwdlastupdts;
+        this.pwdmbc = pwdmbc;
+        this.pwdvpcheck = pwdvpcheck;
+        this.iuserdata = iuserdata;
     }
 
     /** default constructor */
@@ -313,6 +336,14 @@ public class Iuseruserhdr implements Serializable {
         this.pwdvpcheck = pwdvpcheck;
     }
 
+	public Iuserdata getIuserdata() {
+		return iuserdata;
+	}
+
+	public void setIuserdata(Iuserdata iuserdata) {
+		this.iuserdata = iuserdata;
+	}
+
     public String toString() {
         return new ToStringBuilder(this)
             .append("id", getId())
@@ -376,5 +407,4 @@ public int hashCode() {
             .append(getId())
             .toHashCode();
     }
-
 }

@@ -14,7 +14,7 @@ public class Defs {
 	public static final String PARAMETRO_NOMBRE_ENTIDAD = "nombreEntidad";
 	public static final String PARAMETRO_NOMBRE_CORTO = "nombreCorto";
 	public static final String PARAMETRO_NOMBRE_LARGO = "nombreLargo";
-	public static final String PARAMETRO_CODIGO_INE = "codigoINE";
+	public static final String PARAMETRO_CODIGO_INE = "codigo_ine";
 	public static final String PARAMETRO_PROVINCIAS = "provincias";
 	public static final String PARAMETRO_MUNICIPIOS = "municipios";
 	public static final String PARAMETRO_PROVINCIA = "provincia";
@@ -22,6 +22,12 @@ public class Defs {
 	public static final String PARAMETRO_BUSQUEDA_ENTIDAD = "busquedaEntidad";
 	public static final String PARAMETRO_BUSQUEDA = "busqueda";
 	public static final String PARAMETRO_APLICACIONES = "aplicaciones";
+	
+	public static final String PARAMETRO_CIF = "cif";
+	public static final String PARAMETRO_DIR3 = "dir3";
+	public static final String PARAMETRO_SIA = "sia";
+	public static final String PARAMETRO_DEH = "deh";
+	public static final String PARAMETRO_PASSWORD_ENTIDAD = "password_entidad";
 
 	// Gestion de acciones de multientidad
 	public static final String LISTADO_ACCIONES_MULTIENTIDAD = "listadoAccionesMultientidad";

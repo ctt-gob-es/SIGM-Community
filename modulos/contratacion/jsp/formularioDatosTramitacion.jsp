@@ -28,7 +28,13 @@
 		document.defaultForm.target = "ParentWindow";
 		document.defaultForm.action = "storeEntity.do";
 		document.defaultForm.submit();
-		ispac_needToConfirm = true;
+		var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+		if (is_chrome){
+		 ispac_needToConfirm = false;
+		}
+		else{
+		 ispac_needToConfirm = true;
+		}
 	} */
 
 //--></script>
@@ -205,20 +211,6 @@
 				</nobr>
 			</div>
 			
-			<div id="LABEL_CONTRATACION_DATOS_TRAMIT:DESCRIPCION_FECHA_PRESENTACION"
-				style="position: absolute; top: 185px; left: 10px; width: 110px;"
-				class="formsTitleB">
-				<bean:write name="defaultForm"
-					property="entityApp.label(CONTRATACION_DATOS_TRAMIT:DESCRIPCION_FECHA_PRESENTACION)" />
-				:
-			</div>
-			<div id="data_CONTRATACION_DATOS_TRAMIT:DESCRIPCION_FECHA_PRESENTACION"
-				style="position: absolute; top: 185px; left: 110px; width: 100%;">
-				<ispac:htmlText property="property(CONTRATACION_DATOS_TRAMIT:DESCRIPCION_FECHA_PRESENTACION)"
-					readonly="false" propertyReadonly="readonly" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="80" maxlength="256">
-				</ispac:htmlText>
-			</div>
 			<!--
 			
 			<div id="label_CONTRATACION_DATOS_TRAMIT:F_TERM_PAZO_PRESEN_PROP"
@@ -391,21 +383,84 @@
 				<ispac:htmlText
 					property="property(CONTRATACION_DATOS_TRAMIT:DOMICILIO_NOTIF_ADJ)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="80" maxlength="500">
+					styleClassReadonly="inputReadOnly" size="55" maxlength="500">
+				</ispac:htmlText>
+			</div>
+			
+			<div id="label_CONTRATACION_DATOS_TRAMIT:NUM_CALLE_ADJ"
+				style="position: absolute; top: 415px; left: 550px; width: 170px;"
+				class="formsTitleB"><bean:write name="defaultForm"
+				property="entityApp.label(CONTRATACION_DATOS_TRAMIT:NUM_CALLE_ADJ)" />:</div>
+			<div id="data_CONTRATACION_DATOS_TRAMIT:NUM_CALLE_ADJ"
+				style="position: absolute; top: 415px; left: 600px; width: 100%;">
+				<ispac:htmlText
+					property="property(CONTRATACION_DATOS_TRAMIT:NUM_CALLE_ADJ)"
+					readonly="false" propertyReadonly="readonly" styleClass="input"
+					styleClassReadonly="inputReadOnly" size="10" maxlength="500">
 				</ispac:htmlText>
 			</div>
 			
 			<div id="label_CONTRATACION_DATOS_TRAMIT:CP"
-				style="position: absolute; top: 415px; left: 700px; width: 170px;"
+				style="position: absolute; top: 415px; left: 680px; width: 170px;"
 				class="formsTitleB"><bean:write name="defaultForm"
 				property="entityApp.label(CONTRATACION_DATOS_TRAMIT:CP)" />:</div>
 			<div id="data_CONTRATACION_DATOS_TRAMIT:CP"
-				style="position: absolute; top: 415px; left: 750px; width: 100%;">
+				style="position: absolute; top: 411px; left: 710px; width: 100%;">
 				<ispac:htmlText
 					property="property(CONTRATACION_DATOS_TRAMIT:CP)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
 					styleClassReadonly="inputReadOnly" size="10" maxlength="500">
 				</ispac:htmlText>
+			</div>
+			
+			<div id="label_CONTRATACION_DATOS_TRAMIT:NUTS_ADJ"
+				style="position: absolute; top: 415px; left: 790px; width: 210px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_TRAMIT:NUTS_ADJ)" />:
+			</div>
+			<div id="data_CONTRATACION_DATOS_TRAMIT:NUTS_ADJ"
+				style="position: absolute; top: 411px; left: 840px; width: 100%;">
+				<nobr>
+					<ispac:htmlTextImageFrame
+						property="property(CONTRATACION_DATOS_TRAMIT:NUTS_ADJ)" readonly="true"
+						readonlyTag="false" propertyReadonly="readonly" styleClass="input"
+						styleClassReadonly="inputReadOnly" size="15"
+						id="SEARCH_CONTRATACION_DATOS_TRAMIT_NUTS_ADJ" target="workframe"
+						action="selectListadoCodicePliego.do?atributo=NUTS"
+						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
+						imageDelete="img/borrar.gif"
+						titleKeyImageDelete="title.delete.data.selection"
+						styleClassDeleteLink="tdlink"
+						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
+						showFrame="true" width="640" height="480">
+						<ispac:parameter name="SEARCH_CONTRATACION_DATOS_TRAMIT_NUTS_ADJ" id="property(CONTRATACION_DATOS_TRAMIT:NUTS_ADJ)" property="SUSTITUTO" />
+					</ispac:htmlTextImageFrame>
+				</nobr>
+			</div>
+			
+			<div id="label_CONTRATACION_DATOS_TRAMIT:PAIS_ADJ"
+				style="position: absolute; top: 415px; left: 1000px; width: 210px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_TRAMIT:PAIS_ADJ)" />:
+			</div>
+			<div id="data_CONTRATACION_DATOS_TRAMIT:PAIS_ADJ"
+				style="position: absolute; top: 411px; left: 1040px; width: 100%;">
+				<nobr>
+					<ispac:htmlTextImageFrame
+						property="property(CONTRATACION_DATOS_TRAMIT:PAIS_ADJ)" readonly="true"
+						readonlyTag="false" propertyReadonly="readonly" styleClass="input"
+						styleClassReadonly="inputReadOnly" size="15"
+						id="SEARCH_CONTRATACION_DATOS_TRAMIT_PAIS_ADJ" target="workframe"
+						action="selectListadoCodicePliego.do?atributo=COD_PAIS"
+						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
+						imageDelete="img/borrar.gif"
+						titleKeyImageDelete="title.delete.data.selection"
+						styleClassDeleteLink="tdlink"
+						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
+						showFrame="true" width="640" height="480">
+						<ispac:parameter name="SEARCH_CONTRATACION_DATOS_TRAMIT_PAIS_ADJ" id="property(CONTRATACION_DATOS_TRAMIT:PAIS_ADJ)" property="SUSTITUTO" />
+					</ispac:htmlTextImageFrame>
+				</nobr>
 			</div>
 
 			<div id="label_CONTRATACION_DATOS_TRAMIT:MOTIVACION"

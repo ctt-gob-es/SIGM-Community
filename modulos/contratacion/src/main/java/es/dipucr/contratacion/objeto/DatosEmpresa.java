@@ -1,12 +1,13 @@
 package es.dipucr.contratacion.objeto;
 
-import es.dipucr.contratacion.client.beans.Campo;
-import es.dipucr.contratacion.client.beans.CondicionesLicitadores;
-import es.dipucr.contratacion.client.beans.RequisitfiDeclaraciones;
+import es.dipucr.contratacion.services.PlataformaContratacionStub.Campo;
+import es.dipucr.contratacion.services.PlataformaContratacionStub.CondicionesLicitadores;
+import es.dipucr.contratacion.services.PlataformaContratacionStub.RequisitfiDeclaraciones;
 
 public class DatosEmpresa {
 	
 	private Campo [] clasificacion;
+	private Campo clasificacionEvidence = null;
 	private RequisitfiDeclaraciones [] tipoDeclaracion;
 	private CondicionesLicitadores condLicit;
 	
@@ -28,6 +29,12 @@ public class DatosEmpresa {
 	}
 	public void setTipoDeclaracion(RequisitfiDeclaraciones [] tipoDeclaracion) {
 		this.tipoDeclaracion = tipoDeclaracion;
+	}
+	public Campo getClasificacionEvidence() {
+		return clasificacionEvidence;
+	}
+	public void setClasificacionEvidence(Campo clasificacionEvidence) {
+		this.clasificacionEvidence = clasificacionEvidence;
 	}
 
 }

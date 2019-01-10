@@ -50,6 +50,12 @@ public class GenerateNotifRule implements IRule {
 			if(!iDocAnexar.hasNext()){
 				GenerateNotificacion.GenerarNotificaciones(rulectx, "TRAS", "Plantilla Carta digital", "Carta digital");
 			}
+			sqlQuery = "NUMEXP='"+rulectx.getNumExp()+"' AND NOMBRE='Plantilla Carta digital'";
+			documentosAnexar = entitiesAPI.getDocuments(rulectx.getNumExp(), sqlQuery, "");
+			iDocAnexar = documentosAnexar.iterator();			
+			if(!iDocAnexar.hasNext()){
+				rulectx.setInfoMessage("Faltaría por introducir el documento Plantilla Carta digital del trámite anterior");
+			}
 			
 		} catch (ISPACException e) {
         	logger.error("Error en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);

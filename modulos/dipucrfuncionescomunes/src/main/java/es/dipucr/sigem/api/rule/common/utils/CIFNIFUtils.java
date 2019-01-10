@@ -1,5 +1,7 @@
 package es.dipucr.sigem.api.rule.common.utils;
 
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+
 public class CIFNIFUtils {
 
 	public static final String PATTERN_NIE = "([X-Z]{1})(\\d{7})([A-Z]?)";
@@ -57,13 +59,11 @@ public class CIFNIFUtils {
 		int docType = TipoDocumento.DOC_ERROR;
 		boolean greenCard = false;
 
-		if (!documento.equals("")) {
-
+		if (StringUtils.isNotEmpty(documento)) {
 			if (documento.length() == 10) {
-
+				
 				String first = documento.substring(0, 1);
-				if (first.equalsIgnoreCase("X") || first.equalsIgnoreCase("Y")
-						|| first.equalsIgnoreCase("Z")) {
+				if ("X".equalsIgnoreCase(first) || "Y".equalsIgnoreCase(first) || "Z".equalsIgnoreCase(first)) {
 					// NIE
 					documento = documento.substring(1);
 					greenCard = true;
@@ -71,13 +71,11 @@ public class CIFNIFUtils {
 			}
 
 			if (documento.length() == 9) {
-
 				char[] cif = documento.toUpperCase().toCharArray();
 
 				if (Character.isLetter(cif[0])) {
 
 					// Ejemplo: CIF A58818501
-
 					// CIF-NIE
 					int oddAddition = 0;
 					int globalAddition = 0;
@@ -86,9 +84,7 @@ public class CIFNIFUtils {
 
 					// Sumar las cifras pares
 					// 8 + 1 + 5 = 14
-					int evenAddition = Integer.parseInt(String.valueOf(cif[2]))
-							+ Integer.parseInt(String.valueOf(cif[4]))
-							+ Integer.parseInt(String.valueOf(cif[6]));
+					int evenAddition = Integer.parseInt(String.valueOf(cif[2])) + Integer.parseInt(String.valueOf(cif[4])) + Integer.parseInt(String.valueOf(cif[6]));
 
 					// Sumar cada cifra impar multiplicada por dos
 					// 5 * 2 = 10 -> 1 + 0 = 1
@@ -98,10 +94,7 @@ public class CIFNIFUtils {
 					// Y sumar las cifras del resultado
 					// 1 + 7 + 7 + 0 = 15
 					for (int i = 1; i <= 4; i++) {
-						int value = ((2 * Integer.parseInt(String
-								.valueOf(cif[2 * i - 1]))) % 10)
-								+ ((2 * Integer.parseInt(String
-										.valueOf(cif[2 * i - 1]))) / 10);
+						int value = ((2 * Integer.parseInt(String.valueOf(cif[2 * i - 1]))) % 10) + ((2 * Integer.parseInt(String.valueOf(cif[2 * i - 1]))) / 10);
 						oddAddition += value;
 					}
 
@@ -120,14 +113,15 @@ public class CIFNIFUtils {
 
 					// NIE
 					if (cif[0] == 'X' || cif[0] == 'Y' || cif[0] == 'Z') {
-						if (cif[8] == (char) (64 + (10 - (globalAddition % 10))))
+						if (cif[8] == (char) (64 + (10 - (globalAddition % 10)))){
 							docType = TipoDocumento.DOC_NIE;
+						}
 					}
 					// CIF
-					else if ((cif[0] == 'K') || (cif[0] == 'P')
-							|| (cif[0] == 'Q') || (cif[0] == 'S')) {
-						if (cif[8] == (char) (64 + (10 - (globalAddition % 10))))
+					else if ((cif[0] == 'K') || (cif[0] == 'P') || (cif[0] == 'Q') || (cif[0] == 'S')) {
+						if (cif[8] == (char) (64 + (10 - (globalAddition % 10)))){
 							docType = TipoDocumento.DOC_CIF;
+						}
 					} else {
 						// Corrección:
 						// para el CIF B14507610 el valor final de (10 - (Suma
@@ -135,29 +129,27 @@ public class CIFNIFUtils {
 						// con lo que el resultado de salida de la función sería
 						// 0 (error), pero este CIF es correcto.
 						int digControl = 10 - (globalAddition % 10);
-						if (digControl == 10)
+						if (digControl == 10) {
 							digControl = 0;
+						}
 
 						// CIF con número
-						if ((cif[0] == 'A') || (cif[0] == 'B')
-								|| (cif[0] == 'E') || (cif[0] == 'H')) {
+						if ((cif[0] == 'A') || (cif[0] == 'B') || (cif[0] == 'E') || (cif[0] == 'H')) {
 							if (Character.isDigit(cif[8])) {
-								if (Integer.parseInt(String.valueOf(cif[8])) == digControl)
+								if (Integer.parseInt(String.valueOf(cif[8])) == digControl){
 									docType = TipoDocumento.DOC_CIF;
+								}
 							}
 						}
 						// Para otros CIFs podrá ser tanto número como letra
 						else {
 							if (Character.isDigit(cif[8])) {
-								if (Integer.parseInt(String.valueOf(cif[8])) == digControl)
+								if (Integer.parseInt(String.valueOf(cif[8])) == digControl) {
 									docType = TipoDocumento.DOC_CIF;
+								}
 							} else {
-								char[] letterControl = new String("JABCDEFGHI")
-										.toCharArray();
-								if (String
-										.valueOf(cif[8])
-										.equalsIgnoreCase(
-												String.valueOf(letterControl[digControl]))) {
+								char[] letterControl = new String("JABCDEFGHI").toCharArray();
+								if (String.valueOf(cif[8]).equalsIgnoreCase( String.valueOf(letterControl[digControl]))) {
 									docType = TipoDocumento.DOC_CIF;
 								}
 							}
@@ -167,16 +159,16 @@ public class CIFNIFUtils {
 
 					// DNI-NIE
 					char[] letters = "TRWAGMYFPDXBNJZSQVHLCKE".toCharArray();
-					String sNumber = documento.substring(0,
-							documento.length() - 1); // Antes ponía de 1 a
+					String sNumber = documento.substring(0, documento.length() - 1); // Antes ponía de 1 a
 														// length - 1
 					long lNumber = Long.parseLong(sNumber);
 					char letra = cif[cif.length - 1];
 					if (letters[Integer.parseInt(Long.toString(lNumber % 23))] == letra) {
-						if (greenCard)
+						if (greenCard){
 							docType = TipoDocumento.DOC_NIE;
-						else
+						} else{
 							docType = TipoDocumento.DOC_NIF;
+						}
 					}
 				}
 			}
@@ -191,7 +183,6 @@ public class CIFNIFUtils {
 	 * @return
 	 */
 	public static boolean esCIFNIFCorrecto(String documento){
-		
 		return (TipoDocumento.DOC_ERROR != validarTipoDocumento(documento));
 	}
 }

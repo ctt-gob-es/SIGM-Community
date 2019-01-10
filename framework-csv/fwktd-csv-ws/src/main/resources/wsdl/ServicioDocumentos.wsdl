@@ -70,6 +70,18 @@
 					<xs:element minOccurs="0" name="return" type="tns:infoDocumentoCSV" />
 				</xs:sequence>
 			</xs:complexType>
+			<xs:element name="getInfoDocumentoByNombre" type="tns:getInfoDocumentoByNombre" />
+			<xs:complexType name="getInfoDocumentoByNombre">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="nombreDoc" type="xs:string" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="getInfoDocumentoByNombreResponse" type="tns:getInfoDocumentoByNombreResponse" />
+			<xs:complexType name="getInfoDocumentoByNombreResponse">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="return" type="tns:infoDocumentoCSV" />
+				</xs:sequence>
+			</xs:complexType>
 			<xs:element name="getDocumentoByCSV" type="tns:getDocumentoByCSV" />
 			<xs:complexType name="getDocumentoByCSV">
 				<xs:sequence>
@@ -193,6 +205,10 @@
 		<wsdl:part name="parameters" element="tns:getInfoDocumentoByCSV">
 		</wsdl:part>
 	</wsdl:message>
+	<wsdl:message name="getInfoDocumentoByNombre">
+		<wsdl:part name="parameters" element="tns:getInfoDocumentoByNombre">
+		</wsdl:part>
+	</wsdl:message>
 	<wsdl:message name="revocarDocumento">
 		<wsdl:part name="parameters" element="tns:revocarDocumento">
 		</wsdl:part>
@@ -211,6 +227,10 @@
 	</wsdl:message>
 	<wsdl:message name="getInfoDocumentoByCSVResponse">
 		<wsdl:part name="parameters" element="tns:getInfoDocumentoByCSVResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getInfoDocumentoByNombreResponse">
+		<wsdl:part name="parameters" element="tns:getInfoDocumentoByNombreResponse">
 		</wsdl:part>
 	</wsdl:message>
 	<wsdl:message name="getDocumento">
@@ -277,6 +297,13 @@
 			</wsdl:input>
 			<wsdl:output name="getInfoDocumentoByCSVResponse"
 				message="tns:getInfoDocumentoByCSVResponse">
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getInfoDocumentoByNombre">
+			<wsdl:input name="getInfoDocumentoByNombre" message="tns:getInfoDocumentoByNombre">
+			</wsdl:input>
+			<wsdl:output name="getInfoDocumentoByNombreResponse"
+				message="tns:getInfoDocumentoByNombreResponse">
 			</wsdl:output>
 		</wsdl:operation>
 		<wsdl:operation name="getDocumentoByCSV">
@@ -354,6 +381,15 @@
 				<soap:body use="literal" />
 			</wsdl:input>
 			<wsdl:output name="getInfoDocumentoByCSVResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getInfoDocumentoByNombre">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="getInfoDocumentoByNombre">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getInfoDocumentoByNombreResponse">
 				<soap:body use="literal" />
 			</wsdl:output>
 		</wsdl:operation>

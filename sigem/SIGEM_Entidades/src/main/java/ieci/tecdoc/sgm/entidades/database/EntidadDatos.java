@@ -36,7 +36,12 @@ public class EntidadDatos extends Entidad implements Serializable {
 	   setIdentificador(entidad.getIdentificador());
 	   setNombreCorto(entidad.getNombreCorto());
 	   setNombreLargo(entidad.getNombreLargo());
-	   setCodigoINE(entidad.getCodigoINE());
+	   setCodigo_ine(entidad.getCodigo_ine());
+	   setPassword_entidad(entidad.getPassword_entidad());
+	   setCif(entidad.getCif());
+	   setDir3(entidad.getDir3());
+	   setSia(entidad.getSia());
+	   setDeh(entidad.getDeh());
    }
    /**
     * Recupera todos los valores de los parámetros de la sentencia
@@ -56,8 +61,12 @@ public class EntidadDatos extends Entidad implements Serializable {
       setIdentificador(statement.getShortText(index ++));
       setNombreCorto(statement.getShortText(index ++));
       setNombreLargo(statement.getShortText(index ++));
-      setCodigoINE(statement.getShortText(index++));
-      
+      setCodigo_ine(statement.getShortText(index++));
+      setPassword_entidad(statement.getShortText(index++));
+      setCif(statement.getShortText(index++));
+      setDir3(statement.getShortText(index++));
+	  setSia(statement.getShortText(index++));
+	  setDeh(statement.getShortText(index++));
       return new Integer(index);
    }
 
@@ -88,7 +97,12 @@ public class EntidadDatos extends Entidad implements Serializable {
      statement.setShortText(index++, getIdentificador());
      statement.setShortText(index ++, getNombreCorto());
      statement.setShortText(index++, getNombreLargo());
-     statement.setShortText(index++, getCodigoINE());
+     statement.setShortText(index++, getCodigo_ine());
+     statement.setShortText(index++, getPassword_entidad());
+     statement.setShortText(index++, getCif());
+     statement.setShortText(index++, getDir3());
+     statement.setShortText(index++, getSia());
+     statement.setShortText(index ++, getDeh());     
      
      return new Integer(index);
    }
@@ -100,7 +114,12 @@ public class EntidadDatos extends Entidad implements Serializable {
 	    int index = idx.intValue();
 	    statement.setShortText(index++, getNombreCorto());
 	    statement.setShortText(index++, getNombreLargo());
-	    statement.setShortText(index++, getCodigoINE());
+	    statement.setShortText(index++, getCodigo_ine());
+	    statement.setShortText(index++, getPassword_entidad());
+	    statement.setShortText(index++, getCif());
+	    statement.setShortText(index++, getDir3());
+	    statement.setShortText(index++, getSia());
+	    statement.setShortText(index ++, getDeh());	   
 	    
 	     return new Integer(index);
 	  }

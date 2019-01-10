@@ -399,28 +399,19 @@ public class SubProcessState extends TaskState {
 		return result;
 	}
 	
-	// Devuelve el usuario que tiene bloqueada la actividad
-    public String getLockedActivityUser(IClientContext ctx,int nIdActivity)
-    throws ISPACException
-    {
-        DbCnt cnt = ctx.getConnection();
-		try
-		{
-		    String sqlquery=" WHERE ID = (SELECT ID FROM SPAC_S_BLOQUEOS WHERE TP_OBJ=" + LockManager.LOCKTYPE_STAGE + " AND ID_OBJ=" + nIdActivity + ")";
-		    SessionDAO sessionDAO = new SessionDAO(cnt);
-			sessionDAO.load(cnt,sqlquery);
-
-			return sessionDAO.getString("USUARIO");
-		}
-		catch (ISPACException ie)
-		{
-			return "";
-		}
-		finally
-		{
-		    ctx.releaseConnection(cnt);
-		}
+	/**
+	 * Devuelve el usuario que tiene bloqueada la actividad
+	 * [dipucr-Felipe #427] Modifico la función que utilizar una heredada creada en BaseState
+	 * @param ctx
+	 * @param nIdActivity
+	 * @return
+	 * @throws ISPACException
+	 */
+    public String getLockedActivityUser(IClientContext ctx) throws ISPACException {
+    	
+        return getLockedEntityUser(ctx, mStateContext.getActivityId(), LockManager.LOCKTYPE_STAGE);
     }
+    
     
 	public void checkNewEntity(IState iState, IClientContext cctx) throws ISPACException {
 		

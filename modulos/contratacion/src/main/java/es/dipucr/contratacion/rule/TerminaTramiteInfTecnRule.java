@@ -1,10 +1,19 @@
 package es.dipucr.contratacion.rule;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Iterator;
+
+import org.apache.log4j.Logger;
+
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.procedures.Constants;
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.ITXTransaction;
-import ieci.tdw.ispac.api.errors.ISPACInfo;
+import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
@@ -12,15 +21,6 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.Iterator;
-
-import org.apache.log4j.Logger;
-
-import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
-import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class TerminaTramiteInfTecnRule implements IRule{
 	
@@ -88,12 +88,20 @@ public class TerminaTramiteInfTecnRule implements IRule{
 			 }
 			
 			//Creo el tramite Informe Jurídico del Procedimiento genérico
-			int idTramiteInfTecnico = transaction.createTask(idFase, idTramite);
+			 int idTramiteInfTecnico = 0; 
+			 try{
+				 idTramiteInfTecnico = transaction.createTask(idFase, idTramite);
+			 }catch(ISPACRuleException e) 
+	        {     
+				logger.error("Contacte con el responsable de Contratación para que lo ponga en la fase adecuada para poder anexar el Informe Técnico. Numexp. "+rulectx.getNumExp()+" Error. "+e.getMessage(),e);
+	        	throw new ISPACRuleException("Contacte con el responsable de Contratación para que lo ponga en la fase adecuada para poder anexar el Informe Técnico. Numexp"+rulectx.getNumExp()+" Error. "+e.getMessage(),e);	        	
+	        }
+			
 			logger.warn("idTramitePropuesta "+idTramiteInfTecnico);
 			
 			logger.warn("Creado el tramite");
 			
-			IItemCollection documentsCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), "ID_TRAMITE="+rulectx.getTaskId()+" AND NOMBRE = 'Propuesta Informe Técnico'", "FDOC DESC");
+			IItemCollection documentsCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), "ID_TRAMITE="+rulectx.getTaskId()+" AND (NOMBRE = 'Propuesta Informe Técnico' OR NOMBRE = 'Informe Técnico')", "FDOC DESC");
 			Iterator<IItem> exp_documentsCollection = documentsCollection.iterator();
 			IItem contenidoInforTecn = null;
 			while (exp_documentsCollection.hasNext()){
@@ -135,22 +143,20 @@ public class TerminaTramiteInfTecnRule implements IRule{
 				DbCnt cnt = cct.getConnection();
 				String query = "DELETE FROM SPAC_DT_DOCUMENTOS WHERE NUMEXP='"+numexpPadreContratacion+"' AND (NOMBRE='Propuesta Informe Técnico' OR DESCRIPCION='Informe Técnico') AND INFOPAG_RDE IS null";
 			 	cnt.execute(query);	
+			 	cct.releaseConnection(cnt);
 			}
-
-			
-			
-			
-			
 		 			
     	 }
-    	catch(Exception e) 
-        {
-        	if (e instanceof ISPACRuleException)
-        	{
-			    throw new ISPACRuleException(e);
-        	}
-        	throw new ISPACRuleException("No se ha podido inicializar la propuesta. Numexp. "+rulectx.getNumExp()+" Error. "+e.getMessage(),e);
-        }
+    	catch(ISPACRuleException e){   
+    		logger.error("Error. Numexp. "+rulectx.getNumExp()+" Error. "+e.getMessage(),e);
+        	throw new ISPACRuleException("Error. Numexp. "+rulectx.getNumExp()+" Error. "+e.getMessage(),e);        	
+        } catch (ISPACException e) {
+        	logger.error("Error. Numexp. "+rulectx.getNumExp()+" Error. "+e.getMessage(),e);
+        	throw new ISPACRuleException("Error. Numexp. "+rulectx.getNumExp()+" Error. "+e.getMessage(),e);
+		} catch (FileNotFoundException e) {
+			logger.error("Error. Numexp. "+rulectx.getNumExp()+" Error. "+e.getMessage(),e);
+        	throw new ISPACRuleException("Error. Numexp. "+rulectx.getNumExp()+" Error. "+e.getMessage(),e);
+		}
 		
 		return new Boolean(true);
 	}

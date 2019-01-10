@@ -8,6 +8,7 @@ import ieci.tdw.ispac.api.ITXTransaction;
 import ieci.tdw.ispac.api.entities.SpacEntities;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACInfo;
+import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
@@ -182,6 +183,9 @@ public class CreateSearchExpedientAssociateAction extends BaseDispatchAction {
 						eventmgr.newContext();
 						eventmgr.getRuleContextBuilder().addContext(process);
 						eventmgr.processRule(ruleId);
+					}
+					else{
+						throw new ISPACRuleException("LA REGLA "+strRuleName+" ESTA SIN CREAR. CONTACTE CON EL ADMINISTRADOR");
 					}
 				}
 			}

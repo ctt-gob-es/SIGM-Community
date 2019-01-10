@@ -112,14 +112,21 @@ public class InsertChartAplazFraccRule implements IRule {
     		gendocAPI.setDocument(connectorSession, docId, strInfoPag, in, (int)(fileOut.length()), mime);
     		
     		//Borra archivos temporales
-    		file.delete();
-    		fileOut.delete();
-    		ooHelper.dispose();
-	    }
-        catch (Exception e) 
-        {
+    		if (null != file) {
+    			file.delete();
+    		}
+    		if(null != fileOut){
+    			fileOut.delete();
+    		}
+    		
+	    } catch (Exception e) {
 	        throw new ISPACRuleException("Error en InsertChartAplazFraccRule.", e);
-	    }
+	    } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
+        
         return new Boolean(true);
 	}
 

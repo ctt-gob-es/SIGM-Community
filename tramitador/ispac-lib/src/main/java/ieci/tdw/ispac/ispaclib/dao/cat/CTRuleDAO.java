@@ -92,5 +92,15 @@ public class CTRuleDAO extends ObjectDAO
 
 		return (CTRuleDAO)collection.value();
 	}
+	
+	public static CollectionDAO findRulesByClass(DbCnt cnt, String classname)
+			throws ISPACException
+		{
+			String sql = "WHERE CLASE = '" + DBUtil.replaceQuotes(classname) + "'";
+
+			CollectionDAO collection = new CollectionDAO(CTRuleDAO.class);
+			collection.query(cnt,sql);
+			return collection;
+		}
 
 }

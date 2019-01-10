@@ -632,6 +632,27 @@ public class SQLServerOracleDBEntityDAO extends AbstractDBEntityDAO {
 		}
 
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.ieci.tecdoc.common.entity.dao.DBEntityDAO#getNextIdForScrModifDoc(java.lang.Integer,
+	 *      java.lang.String)
+	 */
+	public int getNextIdForScrModifDoc(Integer userId, String entidad) throws SQLException {
+		// return getContador("SCR_MODIFREG");
+		return getContador(userId.intValue(), entidad);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.ieci.tecdoc.common.entity.dao.DBEntityDAO#getNextIdForScrDocumentMetadatos(java.lang.Integer,
+	 *      java.lang.String)
+	 */
+	public int getNextIdForScrDocumentMetadatos(Integer userId, String entidad) throws SQLException {
+		return getContador(userId.intValue(), entidad);
+	}
 
 	/***************************************************************************
 	 * Private methods

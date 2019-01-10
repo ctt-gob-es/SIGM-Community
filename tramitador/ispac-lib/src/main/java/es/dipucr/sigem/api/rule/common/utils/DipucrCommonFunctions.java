@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
 
 import com.sun.star.container.XNameAccess;
@@ -78,25 +79,6 @@ public class DipucrCommonFunctions
 		 return output;
 	}
 	
-	
-	/**
-	 * [eCenpri-Felipe Ticket R#25] Este método hará los mismo que el antiguo Concatena
-	 * Se pasa directamente la extensión doc
-	 * @param xComponent
-	 * @param file
-	 * @param ooHelper
-	 * @throws ISPACException
-	 * @author Felipe
-	 * @since 30.08.2010
-	 */
-	public static void Concatena(XComponent xComponent , String file, OpenOfficeHelper ooHelper)throws ISPACException
-	{
-		//[eCenpri-Felipe Ticket #95] 08.10.2010 
-		//Llamamos directamente al ConcatenaODT
-		//Concatena(xComponent, file, ooHelper, _FORMAT_DOC);
-		ConcatenaODT(xComponent, file);
-	}
-	
 	/**
 	 * [eCenpri-Felipe Ticket R#25]
 	 * Llamada desde fuera al método privado Concatena
@@ -113,7 +95,7 @@ public class DipucrCommonFunctions
 			ConcatenaDOC(xComponent, file);
 		}
 		else if (fileFormat.equals(_FORMAT_ODT)){
-			ConcatenaODT(xComponent, file);
+			concatena(xComponent, file);
 		}
 		
 	}
@@ -128,7 +110,7 @@ public class DipucrCommonFunctions
 	 * @param fileFormat
 	 * @throws ISPACException
 	 */
-	public static void ConcatenaODT(XComponent xComponent , String fileName) throws ISPACException{
+	public static void concatena(XComponent xComponent , String fileName) throws ISPACException{
 		try{
 			
 		    XTextDocument xTextDocument = (XTextDocument)UnoRuntime.queryInterface(XTextDocument.class, xComponent);
@@ -144,7 +126,7 @@ public class DipucrCommonFunctions
 		    XDocumentInsertable xDocInsert = (XDocumentInsertable)UnoRuntime.queryInterface(XDocumentInsertable.class, xTextCursor);
 			xDocInsert.insertDocumentFromURL(fileName, null);
 			
-		}catch(Exception e){
+		} catch(Exception e){
 			
 			throw new ISPACException(e);
 		}
@@ -333,15 +315,13 @@ public class DipucrCommonFunctions
 			        	if (strInfoPag != null)
 			        	{
 			        		File file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-			        		DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+			        		DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
 			        		file.delete();
 			        	}
 		        	}
 	        	}
 	        }
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			throw new ISPACException(e); 	
 		}
 	}	
@@ -378,7 +358,6 @@ public class DipucrCommonFunctions
     		logger.info("PIE GENERADO ");
         	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, strNombreDocPie);
     		File file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-    		//DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
 			DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
     		file.delete();
     		
@@ -395,12 +374,15 @@ public class DipucrCommonFunctions
 	        	IItem doc = (IItem)it.next();
 	        	entitiesAPI.deleteDocument(doc);
 	        }
-	        ooHelper.dispose();
         } 
-		catch(Exception e)
-		{
+		catch(Exception e) {
         	throw new ISPACException(e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
+    	
     	return docResultado;
 	}
 	
@@ -448,41 +430,24 @@ public class DipucrCommonFunctions
 	 * el resto en minusculas
 	 * @throws ISPACException **/
 	public static String transformarMayusMinus(String nombreParti) throws ISPACException {
-
-		Vector<String> resultado = new Vector<String>();
+		
+		String resultado = "";
+		
 		try {
-			int iEspacioNombreParti = nombreParti.indexOf(" ");
-			while (iEspacioNombreParti != -1) {
-				String nombre = nombreParti.substring(0, iEspacioNombreParti);
-				nombre = nombre.toLowerCase();
-				String cNombre = nombre.substring(0, 1);
-				cNombre = cNombre.toUpperCase();
-				nombre = cNombre + nombre.substring(1, nombre.length());
-				resultado.add(nombre);
-				nombreParti = nombreParti.substring(iEspacioNombreParti + 1, nombreParti.length());
-				iEspacioNombreParti = nombreParti.indexOf(" ");
-			}
+			nombreParti = nombreParti.trim();
 			nombreParti = nombreParti.toLowerCase();
-			String cNombre = nombreParti.substring(0, 1);
-			cNombre = cNombre.toUpperCase();
-			nombreParti = cNombre + nombreParti.substring(1, nombreParti.length());
-			resultado.add(nombreParti);
-
+			// Quitamos espacios contiguos en el caso de que hubiera más de uno
+			nombreParti = nombreParti.replaceAll("\\s+", " ");
+			
+			// Capitalizamos
+			resultado = WordUtils.capitalize(nombreParti);
+			
 		} catch (Exception e) {
 			logger.error("Error al subtituir en mayusculas al nombre. " + nombreParti + " - " + e.getMessage(), e);
-			throw new ISPACException(e);
+			throw new ISPACException("Error al subtituir en mayusculas al nombre. " + nombreParti + " - " + e.getMessage(), e);
 		}
 
-		return mostrar(resultado);
-	}
-
-	@SuppressWarnings("rawtypes")
-	private static String mostrar(Vector resultado) {
-		String nombre = "";
-		for(int i= 0; i<resultado.size();i++){
-			nombre+=resultado.get(i)+" ";
-		}
-		return nombre;
+		return resultado;
 	}
 	
 	/**

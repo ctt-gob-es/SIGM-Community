@@ -1,5 +1,8 @@
 package ieci.tdw.ispac.ispaclib.sicres.vo;
 
+import ieci.tdw.ispac.ispaclib.thirdparty.IElectronicAddressAdapter;
+import ieci.tdw.ispac.ispaclib.thirdparty.IPostalAddressAdapter;
+
 import java.util.Calendar;
 
 /**
@@ -30,6 +33,12 @@ public class Organization {
     /* Fecha de baja.
      */
     private Calendar disabledDate;
+    
+    private String cif;
+    
+    private IPostalAddressAdapter direccionPostal;
+    
+    private IElectronicAddressAdapter direccionElectronica;
 
     public Organization() {
     }
@@ -127,4 +136,27 @@ public class Organization {
 		this.name = name;
 	}
 
+	public String getCif() {
+		return cif;
+	}
+
+	public void setCif(String cif) {
+		this.cif = cif;
+	}
+
+	public IPostalAddressAdapter getDireccionPostal() {
+		return direccionPostal;
+	}
+
+	public void setDireccionPostal(IPostalAddressAdapter direccionPostal) {
+		this.direccionPostal = direccionPostal;
+	}
+
+	public IElectronicAddressAdapter getDireccionElectronica() {
+		return direccionElectronica;
+	}
+
+	public void setDireccionElectronica( IElectronicAddressAdapter direccionElectronica) {
+		this.direccionElectronica = direccionElectronica;
+	}
 }

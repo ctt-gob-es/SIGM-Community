@@ -60,6 +60,8 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 
+import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
+import es.dipucr.sigem.api.rule.common.utils.FirmaLotesUtil;
 import es.dipucr.sigem.api.rule.common.utils.GestorDecretos;
 import es.dipucr.sigem.api.rule.common.utils.UsuariosUtil;
 
@@ -87,6 +89,7 @@ public class Sigem3fasesSignConnector extends AFirmaSign3FasesVerifyConnector {
 	 * @return Detalles de la validación.
 	 * 
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public  Map verify(String signatureValue, String signedContentB64) {
 		
 		boolean firmaVerificada=false;
@@ -619,12 +622,11 @@ public class Sigem3fasesSignConnector extends AFirmaSign3FasesVerifyConnector {
 	    	over.endText();
 	    	
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("ERROR. " + e.getMessage(), e);
 		} catch (ISPACException e) {
-			e.printStackTrace();
+			logger.error("ERROR. " + e.getMessage(), e);
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("ERROR. " + e.getMessage(), e);
 		}
 	}	
 	
@@ -688,16 +690,16 @@ public class Sigem3fasesSignConnector extends AFirmaSign3FasesVerifyConnector {
 		sbInfoFirmante.append(UsuariosUtil.getDni(cct));
 		return sbInfoFirmante.toString();
 	}
-
-	protected void getImagen(String dateFirma, PdfContentByte pdfContentByte, float margen, boolean vh, float x, int numberOfPages,
+	
+	@Deprecated
+	protected void getImagenOLD(String dateFirma, PdfContentByte pdfContentByte, float margen, boolean vh, float x, int numberOfPages,
 			int pageActual, String nombreFirmante, String codCotejo, String sNumDecreto, boolean isDocDecreto) throws ISPACException {
 		
 		try {
-		
+			
 			String font = ISPACConfiguration.getInstance().getProperty(FONT_BAND);
 			String encoding = ISPACConfiguration.getInstance().getProperty(ENCODING_BAND);
 			float fontSize = Float.parseFloat(ISPACConfiguration.getInstance().getProperty(FONTSIZE_BAND));
-			//float positionY = Float.parseFloat(ISPACConfiguration.getInstance().getProperty(MARGIN_BAND));
 			
 			BaseFont bf = BaseFont.createFont(font, encoding, false);
 			pdfContentByte.beginText();
@@ -780,6 +782,88 @@ public class Sigem3fasesSignConnector extends AFirmaSign3FasesVerifyConnector {
 			
 			//INICIO [eCenpri-Felipe Ticket#195]
 			br.close();
+			
+		} catch (Exception e) {
+			logger.error("Error al componer la imagen de la banda lateral", e);
+			throw new ISPACException(e);
+		}
+	}
+
+	/**
+	 * [dipucr-Felipe #791]
+	 * @param dateFirma
+	 * @param pdfContentByte
+	 * @param margen
+	 * @param vh
+	 * @param x
+	 * @param numberOfPages
+	 * @param pageActual
+	 * @param nombreFirmante
+	 * @param codCotejo
+	 * @param sNumDecreto
+	 * @param isDocDecreto
+	 * @throws ISPACException
+	 */
+	protected void getImagen(String dateFirma, PdfContentByte pdfContentByte, float margen, boolean vh, float x, int numberOfPages,
+			int pageActual, String nombreFirmante, String codCotejo, String sNumDecreto, boolean isDocDecreto) throws ISPACException {
+		
+		try {
+		
+			String font = ISPACConfiguration.getInstance().getProperty(FONT_BAND);
+			String encoding = ISPACConfiguration.getInstance().getProperty(ENCODING_BAND);
+			float fontSize = Float.parseFloat(ISPACConfiguration.getInstance().getProperty(FONTSIZE_BAND));
+			
+			BaseFont bf = BaseFont.createFont(font, encoding, false);
+			pdfContentByte.beginText();
+			pdfContentByte.setFontAndSize(bf, fontSize);
+			
+			FirmaConfiguration fc = FirmaConfiguration.getInstance(clientContext);
+			
+			int paginaFirma = FirmaLotesUtil.getSignPage(clientContext, signDocument.getDocumentType());
+			String sDescPagina = "";
+			String sPagina = "";
+			
+			if (numberOfPages == 1){
+				sDescPagina = "actual ";
+			}
+			else{
+				if (paginaFirma == FirmaLotesUtil.END_PAGE){
+					sDescPagina = "última ";
+				}
+				else if (paginaFirma == 1){
+					sDescPagina = "primera ";
+				}
+				else{
+					sPagina = " " + String.valueOf(paginaFirma);
+				}
+			}
+			
+			String texto = fc.get("firmar.grayband.text");
+			texto = MessagesFormatter.format(texto, new String[] {
+				sDescPagina,
+				sPagina,
+				String.valueOf(numberOfPages), 
+				String.valueOf(pageActual), 
+				String.valueOf(numberOfPages),
+				codCotejo });
+
+			fontSize += 3F;
+			String[] arrTexto = texto.split("\n");
+			for (String linea : arrTexto){
+				if (vh){
+					pdfContentByte.setTextMatrix(0.0F, 1.0F, -1F, 0.0F, x, margen);
+					pdfContentByte.showText(linea);
+					x += fontSize;
+				}
+				else{
+	                pdfContentByte.setTextMatrix(margen, x);
+					pdfContentByte.showText(linea);
+	                x -= fontSize;
+				}
+			}
+			
+			pdfContentByte.endText();
+			
 			
 		} catch (Exception e) {
 			logger.error("Error al componer la imagen de la banda lateral", e);

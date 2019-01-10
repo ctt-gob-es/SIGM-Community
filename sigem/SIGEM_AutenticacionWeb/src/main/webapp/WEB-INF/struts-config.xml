@@ -102,5 +102,6 @@
 	<!--[eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.-->
 		<set-property property="redirArbolDocumental" value="SIGEM_ArbolDocumentalWeb/" />
 	<!-- FIN -->
+	
 	</plug-in>
 </struts-config>

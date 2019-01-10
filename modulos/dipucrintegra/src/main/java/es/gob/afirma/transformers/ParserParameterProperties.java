@@ -133,7 +133,8 @@ public final class ParserParameterProperties {
 	String path = afirmaConfigFilePathResolver.getConfigFilePath(afirmaConfigFilePathResolver.ISPAC_BASE_CONFIG_SUBDIR_KEY_AFIRMA + File.separator + TransformersConstants.PARSED_PARAMETERS_FILE);
 	
 	if (path == null) {
-	    throw new URISyntaxException("Error", Language.getFormatResIntegra(ILogConstantKeys.PPP_LOG005, new Object[ ] { TransformersConstants.PARSED_PARAMETERS_FILE }));
+	    //throw new URISyntaxException("Error", Language.getFormatResIntegra(ILogConstantKeys.PPP_LOG005, new Object[ ] { TransformersConstants.PARSED_PARAMETERS_FILE }));
+		path = "/config/SIGEM/conf/SIGEM_Tramitacion/integra_afirma/parserParameters.properties";
 	}
 	
 	res = new File(path);

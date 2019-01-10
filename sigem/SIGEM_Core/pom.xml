@@ -11,7 +11,18 @@
 	<artifactId>sigem_core</artifactId>
 	<packaging>jar</packaging>
 	
-	
+	<properties>
+		<fwktdMSSSI.version>3.0.0-msssi2.0.0</fwktdMSSSI.version>
+		<fwktd.version>0.7</fwktd.version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
 
 
 	<dependencies>
@@ -19,11 +30,11 @@
 		<!-- Esta dependencia es obligatoria para la clase LdapName() ya que en la jdk1.4 no esta incluida
 			 para la jdk1.5 no es necesaria esta dependencia
 		 -->
-		<!--<dependency>
+		<dependency>
 			<groupId>com.sun.jndi</groupId>
 			<artifactId>ldap</artifactId>
 			<version>1.2.4</version>
-		</dependency>-->
+		</dependency>
 		
 		<!--  -->	
 	
@@ -134,6 +145,7 @@
 			<artifactId>fwktd-csv-core</artifactId>
 			<version>${fwktd.csv.version}</version>
 		</dependency>		
+		
 		
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -249,7 +261,17 @@
 				<filter.generic.server>${project.basedir}/../SIGEM_Config/src/main/filters/server/websphere.properties</filter.generic.server>
 			</properties>
 		</profile>	
-		
+		<profile>
+			<id>weblogic</id>
+			<activation>
+				<property>
+					<name>weblogic</name>
+				</property>
+			</activation>
+			<properties>
+				<filter.generic.server>${project.basedir}/../SIGEM_Config/src/main/filters/server/weblogic_msssi.properties</filter.generic.server>
+			</properties>
+		</profile>		
 		<!--Perfiles de construccion en funcion de la base de datos -->
 		<profile>
 			<id>oracle</id>

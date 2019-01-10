@@ -12,8 +12,9 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
-import ieci.tdw.ispac.ispaclib.dao.security.SustitucionDAO;
+import ieci.tdw.ispac.ispaclib.security.SecurityMgr;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.common.utils.UsuariosUtil;
@@ -75,11 +76,12 @@ public class AvisoComprobarDecretoRespTramiteRule implements IRule {
 			AvisosUtil.generarAviso(entitiesAPI, processId, numexp, message, respId, ctx);
 			
 			// Obtener los responsables sustituidos
-        	IItemCollection substitutes = SustitucionDAO.getSubstitutes(ctx.getConnection(), respId).disconnect();
+			SecurityMgr secMgr = new SecurityMgr(ctx.getConnection());
+			IItemCollection substitutes = secMgr.getSubstitutesAssets(respId);
         	while (substitutes.next()) {
 
         		IItem substitute = (IItem) substitutes.value();
-        		String respIdSubs = substitute.getString("UID_SUSTITUTO");
+        		String respIdSubs = substitute.getString("SUSTITUCION:UID_SUSTITUTO");
     			AvisosUtil.generarAviso(entitiesAPI, processId, numexp, message, respIdSubs, ctx);
         	}
 			

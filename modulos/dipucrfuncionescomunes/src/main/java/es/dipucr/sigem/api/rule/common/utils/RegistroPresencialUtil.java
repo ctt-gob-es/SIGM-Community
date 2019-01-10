@@ -34,6 +34,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.AccesoBBDDRegistro;
+import es.dipucr.sigem.api.rule.common.AccesoBBDDeTramitacion;
 
 
 /*
@@ -61,7 +62,7 @@ fld20	=> Fecha del documento
 
 public class RegistroPresencialUtil {
 	
-	private static final Logger logger = Logger.getLogger(RegistroPresencialUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(RegistroPresencialUtil.class);
 				
 	public static boolean modificaDestinoRegistroEntrada(IClientContext cct, String nreg, String codDepartamento) throws ISPACException{
 		boolean resultado = false;
@@ -70,12 +71,35 @@ public class RegistroPresencialUtil {
 			resultado = modificaRegistroEntrada(cct, nreg, "8", codDepartamento, "", "");
 			
 		} catch (ISPACException e) {
-			logger.error("Error al modificar el destino: " + codDepartamento + " del registro: " + nreg + ". " + e.getMessage(), e);
+			LOGGER.error("Error al modificar el destino: " + codDepartamento + " del registro: " + nreg + ". " + e.getMessage(), e);
+			throw new ISPACException("Error al modificar el destino: " + codDepartamento + " del registro: " + nreg + ". " + e.getMessage(), e);
+		} catch (Exception e) {
+			LOGGER.error("Error al modificar el destino: " + codDepartamento + " del registro: " + nreg + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al modificar el destino: " + codDepartamento + " del registro: " + nreg + ". " + e.getMessage(), e);
 		}
-		catch (Exception e) {
-			logger.error("Error al modificar el destino: " + codDepartamento + " del registro: " + nreg + ". " + e.getMessage(), e);
-			throw new ISPACException("Error al modificar el destino: " + codDepartamento + " del registro: " + nreg + ". " + e.getMessage(), e);
+		return resultado;
+	}
+	
+	public static boolean modificaInteresadoRegistroEntrada(IClientContext cct, String nreg, String nif, String nombre) throws ISPACException{
+		boolean resultado = false;
+		String nombreCompleto = nif + " " + nombre;
+		
+		try {
+			String entidad = EntidadesAdmUtil.obtenerEntidad(cct);
+			AccesoBBDDRegistro registro = new AccesoBBDDRegistro(entidad);
+			registro.modificaInteresadoRegistroEntrada(nreg, nombreCompleto);
+			
+			AccesoBBDDeTramitacion eTramitacion = new AccesoBBDDeTramitacion(entidad);
+			eTramitacion.modificaInteresadoRegistroEntrada(nreg, nif, nombre);
+			
+		} catch (ISPACException e) {
+			String error = "Error al modificar el interesado: " + nombreCompleto + " del registro: " + nreg + ". " + e.getMessage();
+			LOGGER.error(error, e);
+			throw new ISPACException(error, e);
+		} catch (Exception e) {
+			String error = "Error al modificar el destino: " + nombreCompleto + " del registro: " + nreg + ". " + e.getMessage();
+			LOGGER.error(error, e);
+			throw new ISPACException(error, e);
 		}
 		return resultado;
 	}
@@ -85,19 +109,17 @@ public class RegistroPresencialUtil {
 		try {
 			if(StringUtils.isEmpty(resumen)){
 				resumen = "";
-			}
-			else{
+			} else{
 				if(resumen.length() > 250){
 					resumen = resumen.substring(0, 249);
 				}
 				resultado = modificaRegistroEntrada(cct, nreg, "17", resumen, "", "");
 			}			
 		} catch (ISPACException e) {
-			logger.error("Error al modificar el resumen: " + resumen + " del registro: " + nreg + ". " + e.getMessage(), e);
+			LOGGER.error("Error al modificar el resumen: " + resumen + " del registro: " + nreg + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al modificar el resumen: " + resumen + " del registro: " + nreg + ". " + e.getMessage(), e);
-		}
-		catch (Exception e) {
-			logger.error("Error al modificar el resumen: " + resumen + " del registro: " + nreg + ". " + e.getMessage(), e);
+		} catch (Exception e) {
+			LOGGER.error("Error al modificar el resumen: " + resumen + " del registro: " + nreg + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al modificar el resumen: " + resumen + " del registro: " + nreg + ". " + e.getMessage(), e);
 		}
 		return resultado;
@@ -108,19 +130,17 @@ public class RegistroPresencialUtil {
 		try {
 			if(StringUtils.isEmpty(comentario)){
 				comentario = "";
-			}
-			else{
+			} else{
 				if(comentario.length() > 250){
 					comentario = comentario.substring(0, 249);
 				}
 				resultado = modificaRegistroEntrada(cct, nreg, "18", comentario, "", "");
 			}			
 		} catch (ISPACException e) {
-			logger.error("Error al modificar el comentario: " + comentario + " del registro: " + nreg + ". " + e.getMessage(), e);
+			LOGGER.error("Error al modificar el comentario: " + comentario + " del registro: " + nreg + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al modificar el comentario: " + comentario + " del registro: " + nreg + ". " + e.getMessage(), e);
-		}
-		catch (Exception e) {
-			logger.error("Error al modificar el comentario: " + comentario + " del registro: " + nreg + ". " + e.getMessage(), e);
+		} catch (Exception e) {
+			LOGGER.error("Error al modificar el comentario: " + comentario + " del registro: " + nreg + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al modificar el comentario: " + comentario + " del registro: " + nreg + ". " + e.getMessage(), e);
 		}
 		return resultado;
@@ -174,19 +194,20 @@ public class RegistroPresencialUtil {
 			try{
 				registroWithPagesInfo = servicioRegistro.getInputFolderForNumber(user, IRegisterAPI.BOOK_TYPE_INPUT, nreg, entidad);
 			}
-			catch(Exception e){}
+			catch(Exception e){
+				LOGGER.error("Error al recuperar el registro de entrada: " + nreg + ". ", e);
+			}
 			
-			if(registroWithPagesInfo != null){
+			if(registroWithPagesInfo != null) {
 				
 				for(int i=0; i< registroWithPagesInfo.getRqInfo().length; i++){
-					if(((RegisterQueryInfo)registroWithPagesInfo.getRqInfo()[i]).getFolderName().toUpperCase().equals("FDRID")){
+					if("FDRID".equalsIgnoreCase(((RegisterQueryInfo)registroWithPagesInfo.getRqInfo()[i]).getFolderName())){
 						fdrid = new Integer(Integer.parseInt(((RegisterQueryInfo)registroWithPagesInfo.getRqInfo()[i]).getValue()));
 					}
 				}
 				if(fdrid == null || fdrid.intValue() == 0){
-					logger.warn("No se ha podido actualizar el destino del registro: " + nreg + ". ");
-				}
-				else{				
+					LOGGER.warn("No se ha podido actualizar el destino del registro: " + nreg + ". ");
+				} else{				
 					Registro registro = servicioRegistroTelematico.obtenerRegistro("", nreg, entidad);
 					// Obtener los ficheros del registro telemático
 			        RegistroDocumentos documentos = servicioRegistroTelematico.obtenerDocumentosRegistro(registro.getRegistryNumber(), entidad);
@@ -215,20 +236,20 @@ public class RegistroPresencialUtil {
 				}
 			}
 		} catch (SigemException e) {
-			logger.error("Error al instanciar el servicio al modificar el registro: " + nreg + ". " + e.getMessage(), e);
+			LOGGER.error("Error al instanciar el servicio al modificar el registro: " + nreg + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al instanciar el servicio al modificar el registro: " + nreg + ". " + e.getMessage(), e);
 		} catch (EntidadException e) {
-			logger.error("Error al recuperar la entidad para modificar el registro: " + nreg + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar la entidad para modificar el registro: " + nreg + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar la entidad para modificar el registro: " + nreg + ". " + e.getMessage(), e);
 		} catch (RegistroExcepcion e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("Error al recuperar la entidad para modificar el registro: " + nreg + ". " + e.getMessage(), e);
+			throw new ISPACException("Error al recuperar la entidad para modificar el registro: " + nreg + ". " + e.getMessage(), e);
 		} catch (GuidIncorrectoExcepcion e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("Error al recuperar la entidad para modificar el registro: " + nreg + ". " + e.getMessage(), e);
+			throw new ISPACException("Error al recuperar la entidad para modificar el registro: " + nreg + ". " + e.getMessage(), e);
 		} catch (RepositorioDocumentosExcepcion e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("Error al recuperar la entidad para modificar el registro: " + nreg + ". " + e.getMessage(), e);
+			throw new ISPACException("Error al recuperar la entidad para modificar el registro: " + nreg + ". " + e.getMessage(), e);
 		}
 		return resultado;
 	}
@@ -251,8 +272,7 @@ public class RegistroPresencialUtil {
     		RegistroDocumento documento = documentos.get(i);
     		
     		// Información del contenedor del documento
-    		ContenedorDocumento contenedor = servicioRde.retrieveDocumentInfo("", 
-    				documento.getGuid(), entidad);
+    		ContenedorDocumento contenedor = servicioRde.retrieveDocumentInfo("", documento.getGuid(), entidad);
     		
     		// Información del documento en el registro presencial
     		docs[i] = new DocumentInfo();
@@ -319,10 +339,10 @@ public class RegistroPresencialUtil {
 			acc = new AccesoBBDDRegistro(entidad.getIdentificador());
 			codDep = acc.getCodeDepByIdDep(idDepartamento);
 		} catch (ISPACException e) {
-			logger.error("Error al obtener el código del departamento con id: " + idDepartamento + ". " + e.getMessage(), e);
+			LOGGER.error("Error al obtener el código del departamento con id: " + idDepartamento + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al obtener el código del departamento con id: " + idDepartamento + ". " + e.getMessage(), e);
 		} catch (EntidadException e) {
-			logger.error("Error al recuperar la entidad para obtener el departamento con id: " + idDepartamento + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar la entidad para obtener el departamento con id: " + idDepartamento + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar la entidad para obtener el departamento con id: " + idDepartamento + ". " + e.getMessage(), e);
 		}
 		return codDep;

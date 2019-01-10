@@ -31,14 +31,11 @@ public class EnvioAnuncioRecaudacionTablonEdictalBOERule implements IRule {
 	}
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+		
 		try {
-			
-			OpenOfficeHelper ooHelper = OpenOfficeHelper.getInstance();
-
 			String tablonEdictal_address = ServiciosWebTEUFunciones.getDireccionSW();
 			ServicioNotificacionesProxy notificacion = new ServicioNotificacionesProxy(tablonEdictal_address);
 
-			
 			RecaudacionFichero recaudacion = new RecaudacionFichero();
 
 			FuncionesComunes.obtenerRutaFicheroRecaudacion(rulectx, recaudacion);
@@ -51,8 +48,7 @@ public class EnvioAnuncioRecaudacionTablonEdictalBOERule implements IRule {
 				
 				FuncionesComunes.anadirInformacionRespuesta(rulectx, respuesta);
 
-				FuncionesComunes.crearDocInformacionEnvioTEU(ooHelper, rulectx, respuesta);
-
+				FuncionesComunes.crearDocInformacionEnvioTEU(rulectx, respuesta);
 			}
 
 		} catch (RemoteException e) {

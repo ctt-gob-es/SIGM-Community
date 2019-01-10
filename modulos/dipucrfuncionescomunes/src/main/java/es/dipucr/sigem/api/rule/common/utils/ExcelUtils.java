@@ -1,6 +1,5 @@
 package es.dipucr.sigem.api.rule.common.utils;
 
-import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 
 import java.io.File;
@@ -28,8 +27,30 @@ public class ExcelUtils {
 	/**
 	 * [Ticket #476 TCG] SIGEM Utilidades de Excel
 	 * **/
-	private static OpenOfficeHelper ooHelper = null;
-	protected static final Logger logger = Logger.getLogger(ExcelUtils.class);
+	protected static final Logger LOGGER = Logger.getLogger(ExcelUtils.class);
+	
+	public static XSpreadsheets getHojas(File documentoExcel){
+		XSpreadsheets xSheets = null;
+		OpenOfficeHelper ooHelper = null;
+	
+		try{
+			ooHelper = OpenOfficeHelper.getInstance();
+			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
+			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class, xComp);
+			xSheets = xls.getSheets();
+			
+		} catch (Exception e) {
+			LOGGER.error("Error al recuperar el libro: " + documentoExcel.getName() + ". " + e.getMessage(), e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
+		
+		return xSheets;
+	}
+	
+	
 	
 	/**
 	* Función que devuelve el numero de hojas
@@ -39,23 +60,13 @@ public class ExcelUtils {
 	public static int getNumSheet(File documentoExcel){
 		int numHojas = 1;
 		try{
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
 			String[] names = xSheets.getElementNames();
 			
 			numHojas = names.length;
-			ooHelper.dispose();
-		}
-		catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 		return numHojas;
 	}
@@ -71,19 +82,12 @@ public class ExcelUtils {
 	public static int getNumColumn(File documentoExcel, int hoja){
 		int numColumn = 0;
 		try{
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			// Obtenemos la hoja actual
-			XSpreadsheet xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(hoja));
+			XSpreadsheet xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(hoja));
 			
 			XSheetCellCursor cursor1 = xSheet.createCursor(); 
 		    XUsedAreaCursor xUsedAreaCursor = (XUsedAreaCursor) UnoRuntime.queryInterface(XUsedAreaCursor.class, cursor1); 
@@ -93,12 +97,8 @@ public class ExcelUtils {
 		    int endColumn = xCellRangeAddressable.getRangeAddress().EndColumn;
 		    
 		    numColumn = endColumn;
-		    ooHelper.dispose();
-		}
-		catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 		return numColumn;
 	}
@@ -112,21 +112,14 @@ public class ExcelUtils {
 	*/
 	public static int getNumRow(File documentoExcel, int hoja){
 		int numFilas = 0;
+		
 		try{
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
-			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			// Obtenemos la hoja actual
-			XSpreadsheet xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(hoja));
+			XSpreadsheet xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(hoja));
 			
 			XSheetCellCursor cursor1 = xSheet.createCursor(); 
 		    XUsedAreaCursor xUsedAreaCursor = (XUsedAreaCursor) UnoRuntime.queryInterface(XUsedAreaCursor.class, cursor1);
@@ -136,41 +129,32 @@ public class ExcelUtils {
 		    int endRow = xCellRangeAddressable.getRangeAddress().EndRow;
 			
 		    numFilas = endRow;
-		    ooHelper.dispose();
-		}
-		catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
+		
 		return numFilas;
 	}
 	
-	//int(num_hoja) findSheet(id_doc, valor_busqueda);
-	public static int  findSheet(File documentoExcel, String valor_busqueda){
+	//int(numHoja) findSheet(idDoc, valorBusqueda);
+	public static int findSheet(File documentoExcel, String valorBusqueda){
 		int numHoja = 0;
 		boolean encontrado = false;
+		
 		try{
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
-			for (int i = 0; i < xIndexAccess_.getCount() && !encontrado; i++) {
+			for (int i = 0; i < xIndexAccess.getCount() && !encontrado; i++) {
 				try {
 					// Obtenemos la hoja actual
-					xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(i));
+					xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(i));
 				} catch (IndexOutOfBoundsException e1) {
-					logger.error(e1.getMessage(), e1);
+					LOGGER.error(e1.getMessage(), e1);
 				} catch (WrappedTargetException e1) {
-					logger.error(e1.getMessage(), e1);
+					LOGGER.error(e1.getMessage(), e1);
 				}
 			
 				XSheetCellCursor cursor = xSheet.createCursor(); 
@@ -201,14 +185,14 @@ public class ExcelUtils {
 							// Celda con valor constante o formula: obtenemos su
 							// valor
 							String valorCelda = cell.getValue()+"";
-							if(valorCelda.equals(valor_busqueda)){
+							if(valorCelda.equals(valorBusqueda)){
 								encontrado = true;
 								numHoja = i;
 							}
 						} else if (cell.getType() == CellContentType.TEXT) {
 							// Celda con texto: obtenemos su contenido
 							XText cellText = (XText) UnoRuntime.queryInterface(XText.class, cell);
-							if(cellText.getString().equals(valor_busqueda)){
+							if(cellText.getString().equals(valorBusqueda)){
 								encontrado = true;
 								numHoja = i;
 							}
@@ -216,43 +200,33 @@ public class ExcelUtils {
 					}
 				}
 			}
-			
-			ooHelper.dispose();			
-		}catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
-		return numHoja;
 		
+		return numHoja;
 	}
 	
-	public static int findRow(File documentoExcel, int num_hoja, String valor_busqueda){
+	public static int findRow(File documentoExcel, int numHoja, String valorBusqueda){
 		int numFila = 0;
 		boolean encontrado = false;
+		
 		try{
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
 			//Numero de la hoja la tenemos
 			try {
 				// Obtenemos la hoja actual
-				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(num_hoja));
+				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(numHoja));
 			} catch (IndexOutOfBoundsException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			} catch (WrappedTargetException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			}
 		
 			XSheetCellCursor cursor = xSheet.createCursor(); 
@@ -283,58 +257,48 @@ public class ExcelUtils {
 						// Celda con valor constante o formula: obtenemos su
 						// valor
 						String valorCelda = cell.getValue()+"";
-						if(valorCelda.equals(valor_busqueda)){
+						if(valorCelda.equals(valorBusqueda)){
 							encontrado = true;
 							numFila = y;
 						}
 					} else if (cell.getType() == CellContentType.TEXT) {
 						// Celda con texto: obtenemos su contenido
 						XText cellText = (XText) UnoRuntime.queryInterface(XText.class, cell);
-						if(cellText.getString().equals(valor_busqueda)){
+						if(cellText.getString().equals(valorBusqueda)){
 							encontrado = true;
 							numFila = y;
 						}
 					}
 				}
 			}
-			
-			ooHelper.dispose();			
-		}catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
-		return numFila;
 		
+		return numFila;
 	}
 	
 	
-	public static int findColumn(File documentoExcel, int num_hoja, String valor_busqueda){
+	public static int findColumn(File documentoExcel, int numHoja, String valorBusqueda){
 		int numColumn = 0;
 		boolean encontrado = false;
+		
 		try{
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
 			//Numero de la hoja la tenemos
 			try {
 				// Obtenemos la hoja actual
-				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(num_hoja));
+				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(numHoja));
 			} catch (IndexOutOfBoundsException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			} catch (WrappedTargetException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			}
 		
 			XSheetCellCursor cursor = xSheet.createCursor(); 
@@ -366,57 +330,47 @@ public class ExcelUtils {
 						// Celda con valor constante o formula: obtenemos su
 						// valor
 						String valorCelda = cell.getValue()+"";
-						if(valorCelda.equals(valor_busqueda)){
+						if(valorCelda.equals(valorBusqueda)){
 							encontrado = true;
 							numColumn = x;
 						}
 					} else if (cell.getType() == CellContentType.TEXT) {
 						// Celda con texto: obtenemos su contenido
 						XText cellText = (XText) UnoRuntime.queryInterface(XText.class, cell);
-						if(cellText.getString().equals(valor_busqueda)){
+						if(cellText.getString().equals(valorBusqueda)){
 							encontrado = true;
 							numColumn = x;
 						}
 					}
 				}
 			}
-			
-			ooHelper.dispose();			
-		}catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
-		return numColumn;
 		
+		return numColumn;
 	}
 	
-	public static int findRowbyColumn(File documentoExcel, int num_hoja, int num_columna, String valor_busqueda){
+	public static int findRowbyColumn(File documentoExcel, int numHoja, int numColumna, String valorBusqueda){
 		int numFila = 0;
 		boolean encontrado = false;
+		
 		try{
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
 			//Numero de la hoja la tenemos
 			try {
 				// Obtenemos la hoja actual
-				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(num_hoja));
+				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(numHoja));
 			} catch (IndexOutOfBoundsException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			} catch (WrappedTargetException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			}
 		
 			XSheetCellCursor cursor = xSheet.createCursor(); 
@@ -436,7 +390,7 @@ public class ExcelUtils {
 		 // Recorremos las celdas existentes por sus coordenadas
 			for (int y = startRow; y <= endRow && !encontrado; y++) {
 				// Obtemos la celda actual
-				XCell cell = cursorGeneral.getCellByPosition(num_columna, y);
+				XCell cell = cursorGeneral.getCellByPosition(numColumna, y);
 
 				// Miramos el contenido de la celda
 				if (cell.getType() == CellContentType.EMPTY) {
@@ -445,55 +399,46 @@ public class ExcelUtils {
 					// Celda con valor constante o formula: obtenemos su
 					// valor
 					String valorCelda = cell.getValue()+"";
-					if(valorCelda.equals(valor_busqueda)){
+					if(valorCelda.equals(valorBusqueda)){
 						encontrado = true;
 						numFila = y;
 					}
 				} else if (cell.getType() == CellContentType.TEXT) {
 					// Celda con texto: obtenemos su contenido
 					XText cellText = (XText) UnoRuntime.queryInterface(XText.class, cell);
-					if(cellText.getString().equals(valor_busqueda)){
+					if(cellText.getString().equals(valorBusqueda)){
 						encontrado = true;
 						numFila = y;
 					}
 				}
 			}
-			
-			ooHelper.dispose();			
-		}catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
+		
 		return numFila;
 	}
 	
-	public static int findRowbyColumnVector(File documentoExcel, int num_hoja, int []num_columna, String []valor_busqueda){
+	public static int findRowbyColumnVector(File documentoExcel, int numHoja, int []numColumna, String []valorBusqueda){
 		int numFila = 0;
 		boolean encontrado = false;
+		
 		try{
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
 			//Numero de la hoja la tenemos
 			try {
 				// Obtenemos la hoja actual
-				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(num_hoja));
+				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(numHoja));
 			} catch (IndexOutOfBoundsException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			} catch (WrappedTargetException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			}
 		
 			XSheetCellCursor cursor = xSheet.createCursor(); 
@@ -511,12 +456,12 @@ public class ExcelUtils {
 		    XSheetCellCursor cursorGeneral = xSheet.createCursor();
 		 // Recorremos las celdas existentes por sus coordenadas
 		    
-		    boolean [] vEncontrado = new boolean [num_columna.length]; 
+		    boolean [] vEncontrado = new boolean [numColumna.length]; 
 			for (int y = startRow; y <= endRow && !encontrado; y++) {
 				// Obtemos la celda actual
 				
-				for(int colum=0; colum<num_columna.length; colum++){
-					XCell cell = cursorGeneral.getCellByPosition(num_columna[colum], y);
+				for(int colum=0; colum<numColumna.length; colum++){
+					XCell cell = cursorGeneral.getCellByPosition(numColumna[colum], y);
 	
 					// Miramos el contenido de la celda
 					if (cell.getType() == CellContentType.EMPTY) {
@@ -525,7 +470,7 @@ public class ExcelUtils {
 						// Celda con valor constante o formula: obtenemos su
 						// valor
 						String valorCelda = cell.getValue()+"";
-						if(valorCelda.equals(valor_busqueda[colum])){
+						if(valorCelda.equals(valorBusqueda[colum])){
 							vEncontrado[colum] = true;
 							//encontrado = true;
 							numFila = y;
@@ -534,7 +479,7 @@ public class ExcelUtils {
 						// Celda con texto: obtenemos su contenido
 						XText cellText = (XText) UnoRuntime.queryInterface(XText.class, cell);
 						String valor = cellText.getString();
-						if(valor.equals(valor_busqueda[colum])){
+						if(valor.equals(valorBusqueda[colum])){
 							vEncontrado[colum] = true;
 							//encontrado = true;
 							numFila = y;
@@ -557,43 +502,33 @@ public class ExcelUtils {
 					numFila = y;
 				}
 			}
-			
-			ooHelper.dispose();			
-		}catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
+		
 		return numFila;
 	}
 	
-	public static String findValueBySheetRowColumn(File documentoExcel, int num_hoja, int num_columna, int num_fila){
+	public static String findValueBySheetRowColumn(File documentoExcel, int numHoja, int numColumna, int numFila){
 		
 		String value = "";
 
 		try{
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
 			//Numero de la hoja la tenemos
 			try {
 				// Obtenemos la hoja actual
-				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(num_hoja));
+				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(numHoja));
 			} catch (IndexOutOfBoundsException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			} catch (WrappedTargetException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			}
 		    
 		    XSheetCellCursor cursorGeneral = xSheet.createCursor();
@@ -601,7 +536,7 @@ public class ExcelUtils {
 
 			// Obtemos la celda actual
 				
-			XCell cell = cursorGeneral.getCellByPosition(num_columna, num_fila);
+			XCell cell = cursorGeneral.getCellByPosition(numColumna, numFila);
 
 			// Miramos el contenido de la celda
 			if (cell.getType() == CellContentType.EMPTY) {
@@ -616,45 +551,33 @@ public class ExcelUtils {
 				XText cellText = (XText) UnoRuntime.queryInterface(XText.class, cell);
 				value=cellText.getString();
 			}
-				
-			
-			ooHelper.dispose();			
-		}catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
+		
 		return value;
 	}
 	
-	public static int findColumnByRow(File documentoExcel, int num_hoja, int num_fila, String valor_busqueda){
-		
+	public static int findColumnByRow(File documentoExcel, int numHoja, int numFila, String valorBusqueda){
 		int numColumn = 0;
 		boolean encontrado = false;
+		
 		try{
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
-			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
 			//Numero de la hoja la tenemos
 			try {
 				// Obtenemos la hoja actual
-				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(num_hoja));
+				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(numHoja));
 			} catch (IndexOutOfBoundsException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			} catch (WrappedTargetException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			}
 		
 			XSheetCellCursor cursor = xSheet.createCursor(); 
@@ -675,7 +598,7 @@ public class ExcelUtils {
 			for (int x = startColumn; x <= endColumn && !encontrado; x++) {
 			
 				// Obtemos la celda actual
-				XCell cell = cursorGeneral.getCellByPosition(x, num_fila);
+				XCell cell = cursorGeneral.getCellByPosition(x, numFila);
 
 				// Miramos el contenido de la celda
 				if (cell.getType() == CellContentType.EMPTY) {
@@ -684,55 +607,45 @@ public class ExcelUtils {
 					// Celda con valor constante o formula: obtenemos su
 					// valor
 					String valorCelda = cell.getValue()+"";
-					if(valorCelda.equals(valor_busqueda)){
+					if(valorCelda.equals(valorBusqueda)){
 						encontrado = true;
 						numColumn = x;
 					}
 				} else if (cell.getType() == CellContentType.TEXT) {
 					// Celda con texto: obtenemos su contenido
 					XText cellText = (XText) UnoRuntime.queryInterface(XText.class, cell);
-					if(cellText.getString().equals(valor_busqueda)){
+					if(cellText.getString().equals(valorBusqueda)){
 						encontrado = true;
 						numColumn = x;
 					}
 				}
 			}
-			
-			ooHelper.dispose();			
-		}catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
+		
 		return numColumn;
 	}
 	
-	public static List<String> getRow(File documentoExcel, int num_hoja, int num_fila){
+	public static List<String> getRow(File documentoExcel, int numHoja, int numFila){
 		List<String> lRow = new ArrayList<String>();
+		
 		try{
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
-			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
 			//Numero de la hoja la tenemos
 			try {
 				// Obtenemos la hoja actual
-				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(num_hoja));
+				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(numHoja));
 			} catch (IndexOutOfBoundsException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			} catch (WrappedTargetException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			}
 		
 			XSheetCellCursor cursor = xSheet.createCursor(); 
@@ -752,7 +665,7 @@ public class ExcelUtils {
 		 // Recorremos las celdas existentes por sus coordenadas
 			for (int x = startColumn; x <= endColumn; x++) {
 				// Obtemos la celda actual
-				XCell cell = cursorGeneral.getCellByPosition(x, num_fila);
+				XCell cell = cursorGeneral.getCellByPosition(x, numFila);
 
 				// Miramos el contenido de la celda
 				if (cell.getType() == CellContentType.EMPTY) {
@@ -768,43 +681,33 @@ public class ExcelUtils {
 					lRow.add(cellText.getString());
 				}
 			}
-			
-			ooHelper.dispose();			
-		}catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
+		
 		return lRow;
 	}
 	
 	
-	public static List<String> getColumn(File documentoExcel, int num_hoja, int num_column){
+	public static List<String> getColumn(File documentoExcel, int numHoja, int numColumn){
 		List<String> lColumn = new ArrayList<String>();
+		
 		try{
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
-			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
 			//Numero de la hoja la tenemos
 			try {
 				// Obtenemos la hoja actual
-				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(num_hoja));
+				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(numHoja));
 			} catch (IndexOutOfBoundsException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			} catch (WrappedTargetException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			}
 		
 			XSheetCellCursor cursor = xSheet.createCursor(); 
@@ -824,7 +727,7 @@ public class ExcelUtils {
 		 // Recorremos las celdas existentes por sus coordenadas
 		    for (int y = startRow; y <= endRow; y++) {
 				// Obtemos la celda actual
-				XCell cell = cursorGeneral.getCellByPosition(num_column, y);
+				XCell cell = cursorGeneral.getCellByPosition(numColumn, y);
 
 				// Miramos el contenido de la celda
 				if (cell.getType() == CellContentType.EMPTY) {
@@ -840,38 +743,28 @@ public class ExcelUtils {
 					lColumn.add(cellText.getString());
 				}
 			}
-		    if(xComp != null) xComp.dispose();
-		    if(ooHelper!= null) ooHelper.dispose();			
-		}catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
+		
 		return lColumn;
 	}
 	
 	public static List<List<List<String>>> getAll(File documentoExcel){
 		List<List<List<String>>> lAllExcel = new ArrayList<List<List<String>>>();
+		
 		try{
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
-			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
-			for (int i = 0; i < xIndexAccess_.getCount(); i++) {
+			for (int i = 0; i < xIndexAccess.getCount(); i++) {
 				List<List<String>> hoja = new ArrayList<List<String>>();
 				// Obtenemos la hoja actual
-				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(i));
+				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(i));
 					
 			
 				XSheetCellCursor cursor = xSheet.createCursor(); 
@@ -915,34 +808,26 @@ public class ExcelUtils {
 				}
 			    lAllExcel.add(hoja);
 			}
-			ooHelper.dispose();			
-		}catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
+		
 		return lAllExcel;
 	}
 	
 	public static List<List<String>> getAllBySheet(File documentoExcel, int hoja){
 		List<List<String>> lAllExcel = new ArrayList<List<String>>();
+		
 		try{
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
 			// Obtenemos la hoja actual
-			xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(hoja));
+			xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(hoja));
 		
 			XSheetCellCursor cursor = xSheet.createCursor(); 
 		    XUsedAreaCursor xUsedAreaCursor = (XUsedAreaCursor) UnoRuntime.queryInterface(XUsedAreaCursor.class, cursor);
@@ -976,7 +861,7 @@ public class ExcelUtils {
 						String [] vCelda = valorCelda.split("\\.");
 						if(vCelda!=null && vCelda.length==2){
 							String decimales = vCelda[1];
-							if(decimales.equals("0")){
+							if("0".equals(decimales)){
 								valorCelda =  vCelda[0];
 							}
 						}
@@ -990,41 +875,32 @@ public class ExcelUtils {
 				}
 				lAllExcel.add(fila);
 			}
-		    ooHelper.dispose();			
-		}catch (ISPACException e) {		
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
+		
 		return lAllExcel;
 	}
 	
-	public static boolean isEmptyRow (File documentoExcel, int num_hoja, int num_fila){
+	public static boolean isEmptyRow (File documentoExcel, int numHoja, int numFila){
 		boolean isEmptyRow = false;
+		
 		try{
+			XSpreadsheets xSheets = getHojas(documentoExcel);
 			
-			ooHelper = OpenOfficeHelper.getInstance();
-			XComponent xComp = ooHelper.loadDocument("file://"+ documentoExcel.getPath());
-			
-			// Hacemos casting del documento cargado a hoja de calculo
-			XSpreadsheetDocument xls = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,xComp);
-
-			// Obtenemos las hojas del documento y las recorremos por nombre
-			XSpreadsheets xSheets = xls.getSheets();
-			
-			XIndexAccess xIndexAccess_ = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
+			XIndexAccess xIndexAccess = (XIndexAccess) UnoRuntime.queryInterface(XIndexAccess.class, xSheets);
 			
 			XSpreadsheet xSheet = null;
 			//Numero de la hoja la tenemos
 			try {
 				// Obtenemos la hoja actual
-				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess_.getByIndex(num_hoja));
+				xSheet = (XSpreadsheet) UnoRuntime.queryInterface(XSpreadsheet.class, xIndexAccess.getByIndex(numHoja));
 			} catch (IndexOutOfBoundsException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			} catch (WrappedTargetException e1) {
-				logger.error(e1.getMessage(), e1);
+				LOGGER.error(e1.getMessage(), e1);
 			}
 		
 			XSheetCellCursor cursor = xSheet.createCursor(); 
@@ -1042,20 +918,17 @@ public class ExcelUtils {
 		 // Recorremos las celdas existentes por sus coordenadas
 			for (int x = startColumn; x <= endColumn && !isEmptyRow; x++) {
 				// Obtemos la celda actual
-				XCell cell = cursor.getCellByPosition(x, num_fila);
+				XCell cell = cursor.getCellByPosition(x, numFila);
 
 				// Miramos el contenido de la celda
 				if (cell.getType() == CellContentType.EMPTY) {
 					isEmptyRow = true;
 				}
 			}
-			ooHelper.dispose();			
-		}catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 		
 		return isEmptyRow;

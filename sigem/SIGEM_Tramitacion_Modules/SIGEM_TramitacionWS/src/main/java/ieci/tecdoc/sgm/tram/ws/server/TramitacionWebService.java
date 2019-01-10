@@ -12,12 +12,12 @@ import ieci.tecdoc.sgm.core.ws.axis.UtilAxis;
 import ieci.tecdoc.sgm.tram.ws.server.dto.Binario;
 import ieci.tecdoc.sgm.tram.ws.server.dto.Booleano;
 import ieci.tecdoc.sgm.tram.ws.server.dto.Cadena;
-import ieci.tecdoc.sgm.tram.ws.server.dto.Entero;
 import ieci.tecdoc.sgm.tram.ws.server.dto.DatosComunesExpediente;
 import ieci.tecdoc.sgm.tram.ws.server.dto.DocElectronico;
 import ieci.tecdoc.sgm.tram.ws.server.dto.DocFisico;
 import ieci.tecdoc.sgm.tram.ws.server.dto.DocumentoExpediente;
 import ieci.tecdoc.sgm.tram.ws.server.dto.Emplazamiento;
+import ieci.tecdoc.sgm.tram.ws.server.dto.Entero;
 import ieci.tecdoc.sgm.tram.ws.server.dto.Expediente;
 import ieci.tecdoc.sgm.tram.ws.server.dto.Firma;
 import ieci.tecdoc.sgm.tram.ws.server.dto.InfoBExpediente;
@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
 public class TramitacionWebService {
 
 	/** Logger de la clase. */
-	private static final Logger logger = 
+	private static final Logger LOGGER = 
 		Logger.getLogger(TramitacionWebService.class);
 	
 	/** Nombre del servicio. */
@@ -96,15 +96,15 @@ public class TramitacionWebService {
 			lista.setProcedimientos(getInfoBProcedimientos(procs));
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al obtener los procedimientos por tipo.", e);
+			LOGGER.error("Error al obtener los procedimientos por tipo.", e);
 			return (ListaInfoBProcedimientos) 
 				ServiciosUtils.completeReturnError(lista,e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al obtener los procedimientos por tipo.", e);
+			LOGGER.error("Error al obtener los procedimientos por tipo.", e);
 			return (ListaInfoBProcedimientos) 
 				ServiciosUtils.completeReturnError(lista,e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al obtener los procedimientos por tipo.", e);
+			LOGGER.error("Error al obtener los procedimientos por tipo.", e);
 			return (ListaInfoBProcedimientos) 
 				ServiciosUtils.completeReturnError(lista);
 		}
@@ -131,15 +131,15 @@ public class TramitacionWebService {
 			lista.setProcedimientos(getInfoBProcedimientos(procs));
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al obtener los procedimientos.", e);
+			LOGGER.error("Error al obtener los procedimientos.", e);
 			return (ListaInfoBProcedimientos) 
 				ServiciosUtils.completeReturnError(lista, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al obtener los procedimientos.", e);
+			LOGGER.error("Error al obtener los procedimientos.", e);
 			return (ListaInfoBProcedimientos) 
 				ServiciosUtils.completeReturnError(lista, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al obtener los procedimientos.", e);
+			LOGGER.error("Error al obtener los procedimientos.", e);
 			return (ListaInfoBProcedimientos) 
 				ServiciosUtils.completeReturnError(lista);
 		}
@@ -165,15 +165,15 @@ public class TramitacionWebService {
 			copyProcedimiento(procedimiento, proc);
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al obtener el procedimiento.", e);
+			LOGGER.error("Error al obtener el procedimiento.", e);
 			return (Procedimiento) 
 				ServiciosUtils.completeReturnError(procedimiento, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al obtener el procedimiento.", e);
+			LOGGER.error("Error al obtener el procedimiento.", e);
 			return (Procedimiento) 
 				ServiciosUtils.completeReturnError(procedimiento, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al obtener el procedimiento.", e);
+			LOGGER.error("Error al obtener el procedimiento.", e);
 			return (Procedimiento) 
 				ServiciosUtils.completeReturnError(procedimiento);
 		}
@@ -194,15 +194,15 @@ public class TramitacionWebService {
 			binario.setContenido(service.getFichero(idEntidad, guid));
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al obtener el fichero.", e);
+			LOGGER.error("Error al obtener el fichero.", e);
 			return (Binario) 
 				ServiciosUtils.completeReturnError(binario, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al obtener el fichero.", e);
+			LOGGER.error("Error al obtener el fichero.", e);
 			return (Binario) 
 				ServiciosUtils.completeReturnError(binario, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al obtener el fichero.", e);
+			LOGGER.error("Error al obtener el fichero.", e);
 			return (Binario) ServiciosUtils.completeReturnError(binario);
 		}
 		
@@ -223,15 +223,15 @@ public class TramitacionWebService {
 			binario.setContenido(service.getFicheroTemp(idEntidad, guid));
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al obtener el fichero.", e);
+			LOGGER.error("Error al obtener el fichero.", e);
 			return (Binario) 
 				ServiciosUtils.completeReturnError(binario, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al obtener el fichero.", e);
+			LOGGER.error("Error al obtener el fichero.", e);
 			return (Binario) 
 				ServiciosUtils.completeReturnError(binario, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al obtener el fichero.", e);
+			LOGGER.error("Error al obtener el fichero.", e);
 			return (Binario) ServiciosUtils.completeReturnError(binario);
 		}
 		
@@ -255,12 +255,51 @@ public class TramitacionWebService {
 			result = service.setFicheroTemp(idEntidad, guid, data);
 			
 		} catch (Exception e) {
-			logger.error("Error al guardar el fichero el fichero.", e);
+			LOGGER.error("Error al guardar el fichero el fichero.", e);
 		} 
 		
 		return result;	
     }
     
+    /**
+     * [dipucr-Felipe #860 WE#153]
+     * @param idEntidad
+     * @param numexp
+     * @return
+     * @throws TramitacionException
+     */
+    public Booleano anularLicenciaRRHH(String idEntidad, String numexp) {
+    	
+    	Booleano ret = new Booleano();
+		try {
+			ServicioTramitacion service = getServicioTramitacion();	
+			ret.setValor(service.anularLicenciaRRHH(idEntidad, numexp));
+			
+		} catch (Exception e) {
+			LOGGER.error("Error al anular la licencia.", e);
+			return (Booleano) ServiciosUtils.completeReturnError(ret, e.getMessage());
+		}
+		return (Booleano) ServiciosUtils.completeReturnOK(ret);
+    }
+    
+    /**
+     * [dipucr-Felipe #563]
+     * @param idEntidad
+     * @param entidad
+     * @param query
+     * @return
+     */
+    public String[] queryEntities(String idEntidad, String entidad, String query) {
+    	
+		try {
+			ServicioTramitacion service = getServicioTramitacion();	
+			return service.queryEntities(idEntidad, entidad, query);
+			
+		} catch (Exception e) {
+			LOGGER.error("Error al realizar la query de entidades.", e);
+		}
+		return new String[0];
+    }
 
 	/**
 	 * Obtiene la información de origen e integridad del documento.
@@ -280,15 +319,15 @@ public class TramitacionWebService {
 			copyInfoFichero(infoFichero, info);
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al obtener la información del fichero.", e);
+			LOGGER.error("Error al obtener la información del fichero.", e);
 			return (InfoFichero) 
 				ServiciosUtils.completeReturnError(infoFichero, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al obtener la información del fichero.", e);
+			LOGGER.error("Error al obtener la información del fichero.", e);
 			return (InfoFichero) 
 				ServiciosUtils.completeReturnError(infoFichero, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al obtener la información del fichero.", e);
+			LOGGER.error("Error al obtener la información del fichero.", e);
 			return (InfoFichero) ServiciosUtils.completeReturnError(infoFichero);
 		}
 		
@@ -312,15 +351,15 @@ public class TramitacionWebService {
 			copyInfoOcupacion(infoOcupacion, info);
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al obtener la información de ocupación.", e);
+			LOGGER.error("Error al obtener la información de ocupación.", e);
 			return (InfoOcupacion) 
 				ServiciosUtils.completeReturnError(infoOcupacion, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al obtener la información de ocupación.", e);
+			LOGGER.error("Error al obtener la información de ocupación.", e);
 			return (InfoOcupacion) 
 				ServiciosUtils.completeReturnError(infoOcupacion, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al obtener la información de ocupación.", e);
+			LOGGER.error("Error al obtener la información de ocupación.", e);
 			return (InfoOcupacion) ServiciosUtils.completeReturnError(infoOcupacion);
 		}
 		
@@ -340,15 +379,15 @@ public class TramitacionWebService {
 			service.eliminaFicheros(idEntidad, guids);
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al eliminar ficheros.", e);
+			LOGGER.error("Error al eliminar ficheros.", e);
 			return (RetornoServicio) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al eliminar ficheros.", e);
+			LOGGER.error("Error al eliminar ficheros.", e);
 			return (RetornoServicio) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al eliminar ficheros.", e);
+			LOGGER.error("Error al eliminar ficheros.", e);
 			return (RetornoServicio) ServiciosUtils.completeReturnError(ret);
 		}
 		
@@ -383,15 +422,15 @@ public class TramitacionWebService {
 			lista.setIdentificadores(ids);
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al obtener los identificadores de expedientes.", e);
+			LOGGER.error("Error al obtener los identificadores de expedientes.", e);
 			return (ListaIdentificadores) 
 				ServiciosUtils.completeReturnError(lista,e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al obtener los identificadores de expedientes.", e);
+			LOGGER.error("Error al obtener los identificadores de expedientes.", e);
 			return (ListaIdentificadores) 
 				ServiciosUtils.completeReturnError(lista,e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al obtener los identificadores de expedientes.", e);
+			LOGGER.error("Error al obtener los identificadores de expedientes.", e);
 			return (ListaIdentificadores) 
 				ServiciosUtils.completeReturnError(lista);
 		}
@@ -418,15 +457,15 @@ public class TramitacionWebService {
 			lista.setExpedientes(getInfoBExpedientes(exps));
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al obtener los expedientes.", e);
+			LOGGER.error("Error al obtener los expedientes.", e);
 			return (ListaInfoBExpedientes) 
 				ServiciosUtils.completeReturnError(lista,e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al obtener los expedientes.", e);
+			LOGGER.error("Error al obtener los expedientes.", e);
 			return (ListaInfoBExpedientes) 
 				ServiciosUtils.completeReturnError(lista,e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al obtener los expedientes.", e);
+			LOGGER.error("Error al obtener los expedientes.", e);
 			return (ListaInfoBExpedientes) 
 				ServiciosUtils.completeReturnError(lista);
 		}
@@ -448,13 +487,13 @@ public class TramitacionWebService {
 			service.archivarExpedientes(idEntidad, idExps);
 
 		} catch (TramitacionException e) {
-			logger.error("Error inesperado al archivar los expedientes", e);
+			LOGGER.error("Error inesperado al archivar los expedientes", e);
 			return (RetornoServicio) ServiciosUtils.completeReturnError(ret);
 		} catch (SigemException e) {
-			logger.error("Error inesperado al archivar los expedientes", e);
+			LOGGER.error("Error inesperado al archivar los expedientes", e);
 			return (RetornoServicio) ServiciosUtils.completeReturnError(ret);
 		} catch (Throwable e){
-			logger.error("Error inesperado al archivar los expedientes", e);
+			LOGGER.error("Error inesperado al archivar los expedientes", e);
 			return (RetornoServicio) ServiciosUtils.completeReturnError(ret);
 		}
 		
@@ -479,15 +518,15 @@ public class TramitacionWebService {
 			copyExpediente(expediente, exp);
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al obtener el expediente.", e);
+			LOGGER.error("Error al obtener el expediente.", e);
 			return (Expediente) 
 				ServiciosUtils.completeReturnError(expediente, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al obtener el expediente.", e);
+			LOGGER.error("Error al obtener el expediente.", e);
 			return (Expediente) 
 				ServiciosUtils.completeReturnError(expediente, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al obtener el expediente.", e);
+			LOGGER.error("Error al obtener el expediente.", e);
 			return (Expediente) 
 				ServiciosUtils.completeReturnError(expediente);
 		}
@@ -517,15 +556,15 @@ public class TramitacionWebService {
 					getCoreDocumentosExpediente(documents)));
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al iniciar el expediente.", e);
+			LOGGER.error("Error al iniciar el expediente.", e);
 			return (Booleano) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al iniciar el expediente.", e);
+			LOGGER.error("Error al iniciar el expediente.", e);
 			return (Booleano) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al iniciar el expediente.", e);
+			LOGGER.error("Error al iniciar el expediente.", e);
 			return (Booleano) ServiciosUtils.completeReturnError(ret);
 		}
 		
@@ -556,15 +595,15 @@ public class TramitacionWebService {
 					initSystem));
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al iniciar el expediente.", e);
+			LOGGER.error("Error al iniciar el expediente.", e);
 			return (Cadena) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al iniciar el expediente.", e);
+			LOGGER.error("Error al iniciar el expediente.", e);
 			return (Cadena) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al iniciar el expediente.", e);
+			LOGGER.error("Error al iniciar el expediente.", e);
 			return (Cadena) ServiciosUtils.completeReturnError(ret);
 		}
 		
@@ -586,15 +625,15 @@ public class TramitacionWebService {
 			ServicioTramitacion service = getServicioTramitacion();	
 			ret.setValor(service.cambiarEstadoAdministrativo(idEntidad, numExp, estadoAdm));
 		} catch (TramitacionException e) {
-			logger.error("Error al cambiar estado administrativo.", e);
+			LOGGER.error("Error al cambiar estado administrativo.", e);
 			return (Booleano) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al cambiar estado administrativo.", e);
+			LOGGER.error("Error al cambiar estado administrativo.", e);
 			return (Booleano) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al cambiar estado administrativo.", e);
+			LOGGER.error("Error al cambiar estado administrativo.", e);
 			return (Booleano) ServiciosUtils.completeReturnError(ret);
 		}
 		
@@ -617,15 +656,15 @@ public class TramitacionWebService {
 			ServicioTramitacion service = getServicioTramitacion();	
 			ret.setValor(service.moverExpedienteAFase(idEntidad, numExp, idFaseCatalogo));
 		} catch (TramitacionException e) {
-			logger.error("Error al mover expediente de fase.", e);
+			LOGGER.error("Error al mover expediente de fase.", e);
 			return (Booleano) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al mover expediente de fase.", e);
+			LOGGER.error("Error al mover expediente de fase.", e);
 			return (Booleano) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al mover expediente de fase.", e);
+			LOGGER.error("Error al mover expediente de fase.", e);
 			return (Booleano) ServiciosUtils.completeReturnError(ret);
 		}
 		
@@ -633,7 +672,7 @@ public class TramitacionWebService {
     }
     
     /**
-     * Añade documentos al trámite de un expediente.
+     * Añade documentos a un expediente.
      * @param idEntidad Identificador de la entidad.
      * @param numExp Número de expediente.
      * @param regNum Número de registro de entrada.
@@ -652,15 +691,49 @@ public class TramitacionWebService {
 					getCoreDocumentosExpediente(documents)));
 			
 		} catch (TramitacionException e) {
-			logger.error("Error al iniciar el expediente.", e);
+			LOGGER.error("Error al iniciar el expediente.", e);
 			return (Booleano) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (SigemException e) {
-			logger.error("Error al iniciar el expediente.", e);
+			LOGGER.error("Error al iniciar el expediente.", e);
 			return (Booleano) 
 				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
 		} catch (Throwable e){
-			logger.error("Error al iniciar el expediente.", e);
+			LOGGER.error("Error al iniciar el expediente.", e);
+			return (Booleano) ServiciosUtils.completeReturnError(ret);
+		}
+		
+		return (Booleano) ServiciosUtils.completeReturnOK(ret);	
+    }
+    
+    /**
+     * Añade documentos al trámite de un expediente.
+     * @param idEntidad Identificador de la entidad.
+     * @param numExp Número de expediente.
+     * @param idTramite Identificador del trámite al que anexar los documentos.
+     * @param regNum Número de registro de entrada.
+     * @param regDate Fecha de registro de entrada.
+     * @param documents Lista de documentos asociados al expediente.
+     * @return Cierto si los documentos se han creado correctamente.
+     */
+    public Booleano anexarDocsTramite(String idEntidad, String numExp, int idTramite, String regNum, Date regDate, DocumentoExpediente[] documents) {
+
+		Booleano ret = new Booleano();
+		
+		try {
+			ServicioTramitacion service = getServicioTramitacion();	
+			ret.setValor(service.anexarDocsTramite(idEntidad, numExp, idTramite, regNum, regDate, getCoreDocumentosExpediente(documents)));
+			
+		} catch (TramitacionException e) {
+			LOGGER.error("Error al anexar los documentos al trámite: " + idTramite + " del expediente: " + numExp + ".", e);
+			return (Booleano) ServiciosUtils.completeReturnError(ret, e.getErrorCode());
+			
+		} catch (SigemException e) {
+			LOGGER.error("Error al anexar los documentos al trámite: " + idTramite + " del expediente: " + numExp + ".", e);
+			return (Booleano) ServiciosUtils.completeReturnError(ret, e.getErrorCode());
+			
+		} catch (Throwable e){
+			LOGGER.error("Error al anexar los documentos al trámite: " + idTramite + " del expediente: " + numExp + ".", e);
 			return (Booleano) ServiciosUtils.completeReturnError(ret);
 		}
 		
@@ -685,7 +758,7 @@ public class TramitacionWebService {
 			ServicioTramitacion service = getServicioTramitacion();	
 			ret.setValor(service.busquedaAvanzada(idEntidad, nombreGrupo, nombreFrmBusqueda, xmlBusqueda, dominio));
 		} catch (Throwable e){
-			logger.error("Error al iniciar el expediente.", e);
+			LOGGER.error("Error al iniciar el expediente.", e);
 			return (Cadena) ServiciosUtils.completeReturnError(ret);
 		}
 		return (Cadena) ServiciosUtils.completeReturnOK(ret);	
@@ -706,7 +779,7 @@ public class TramitacionWebService {
 			ServicioTramitacion service = getServicioTramitacion();
 			ret.setValor(service.establecerDatosRegistroEntidad(idEntidad, nombreEntidad, numExp, xmlDatosEspecificos));
 		} catch (Throwable e){
-			logger.error("Error al insertar registro en la entidad '" + nombreEntidad + "'", e);
+			LOGGER.error("Error al insertar registro en la entidad '" + nombreEntidad + "'", e);
 			return (Entero) ServiciosUtils.completeReturnError(ret);
 		}
 		return (Entero) ServiciosUtils.completeReturnOK(ret);
@@ -727,7 +800,7 @@ public class TramitacionWebService {
 			ServicioTramitacion service = getServicioTramitacion();	
 			ret.setValor(service.obtenerRegistroEntidad(idEntidad, nombreEntidad, numExp, idRegistro));
 		} catch (Throwable e){
-			logger.error("Error al obtener registro de la entidad '" + nombreEntidad + "'", e);
+			LOGGER.error("Error al obtener registro de la entidad '" + nombreEntidad + "'", e);
 			return (Cadena) ServiciosUtils.completeReturnError(ret);
 		}
 		return (Cadena) ServiciosUtils.completeReturnOK(ret);
@@ -749,7 +822,7 @@ public class TramitacionWebService {
 			ServicioTramitacion service = getServicioTramitacion();	
 			ret.setValor(service.obtenerRegistrosEntidad(idEntidad, nombreEntidad, numExp));
 		} catch (Throwable e){
-			logger.error("Error al obtener los registros de la entidad '" + nombreEntidad + "'", e);
+			LOGGER.error("Error al obtener los registros de la entidad '" + nombreEntidad + "'", e);
 			return (Cadena) ServiciosUtils.completeReturnError(ret);
 		}
 		return (Cadena) ServiciosUtils.completeReturnOK(ret);		
@@ -770,7 +843,7 @@ public class TramitacionWebService {
 			ServicioTramitacion service = getServicioTramitacion();
 			ret.setValor(service.recibirDocumentoFirmado(idEntidad, numExp, idDocumento));
 		} catch (Throwable e){
-			logger.error("Error al recibir el documento firmado '" + idDocumento + "'", e);
+			LOGGER.error("Error al recibir el documento firmado '" + idDocumento + "'", e);
 			return (Cadena) ServiciosUtils.completeReturnError(ret);
 		}
 		return (Cadena) ServiciosUtils.completeReturnOK(ret);

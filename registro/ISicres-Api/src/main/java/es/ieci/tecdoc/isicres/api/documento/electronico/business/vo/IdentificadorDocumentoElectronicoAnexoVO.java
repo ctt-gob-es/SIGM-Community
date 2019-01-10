@@ -30,6 +30,11 @@ public class IdentificadorDocumentoElectronicoAnexoVO extends BaseIsicresApiVO{
 	 */
 	protected Long idPagina;
 	
+	/**
+	 * identificador de la fichero
+	 */
+	protected Long idFile;
+	
 	
 	public Long getIdRegistro() {
 		return idRegistro;
@@ -55,5 +60,10 @@ public class IdentificadorDocumentoElectronicoAnexoVO extends BaseIsicresApiVO{
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	public Long getIdFile() {
+		return idFile;
+	}
+	public void setIdFile(Long idFile) {
+		this.idFile = idFile;
+	}
 }

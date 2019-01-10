@@ -66,7 +66,7 @@ public class ShowDocumentAction extends BaseAction {
 				if(!genDocAPI.existsDocument(connectorSession, docref)){
 				//	//Se saca el mensaje de error en la propia ventana, que habra sido lanzada con un popup
 					response.setContentType("text/html");
-					logger.error("No se ha encontrado el documento físico con identificador: '"+docref+"' en el repositorio de documentos");
+					LOGGER.error("No se ha encontrado el documento físico con identificador: '"+docref+"' en el repositorio de documentos");
 					String message = new ISPACInfo("exception.documents.notExists").getExtendedMessage(session.getClientContext().getLocale());
 					out.write(message.getBytes());
 					out.close();
@@ -110,7 +110,7 @@ public class ShowDocumentAction extends BaseAction {
         else {
         	//Se saca el mensaje de error en la propia ventana, que habra sido lanzada con un popup
         	response.setContentType("text/html");
-        	logger.error("Idtenficaidor documento nulo");
+        	LOGGER.error("Idtenficaidor documento nulo");
         	String message = new ISPACInfo("exception.documents.notExists").getExtendedMessage(session.getClientContext().getLocale());
         	out.write(message.getBytes());
         	out.close();

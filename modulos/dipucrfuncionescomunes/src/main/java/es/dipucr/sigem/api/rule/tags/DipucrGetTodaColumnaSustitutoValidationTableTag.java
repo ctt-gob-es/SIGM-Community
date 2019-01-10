@@ -27,7 +27,7 @@ public class DipucrGetTodaColumnaSustitutoValidationTableTag implements IRule {
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
 		String strSustituto = "";
-		StringBuffer listado = new StringBuffer();
+		StringBuilder listado = new StringBuilder();
         try {
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();

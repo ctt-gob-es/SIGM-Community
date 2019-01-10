@@ -283,9 +283,12 @@ public class ImprimirAllDocumentAction extends BaseDispatchAction {
 				//throw new ISPACInfo(e,false);
 				return mapping.findForward("failure");
 			} finally {				
-				for (int i=0; i<inputStreamNotificaciones.size(); i++)
+				for (int i=0; i<inputStreamNotificaciones.size(); i++){
 					((FileInputStream)inputStreamNotificaciones.get(i)).close();
-				ooHelper.dispose();
+				}
+				if(null != ooHelper){
+		        	ooHelper.dispose();
+				}
 				System.gc();			
 			}
 	}
@@ -372,7 +375,7 @@ public class ImprimirAllDocumentAction extends BaseDispatchAction {
 			entityTemplate.store(cct);
 			entityTemplate.store(cct);
 		}
-		catch (Throwable e)
+		catch (Exception e)
 		{
 			// Si se produce algún error se hace rollback de la transacción
 			cct.endTX(false);

@@ -27,6 +27,9 @@
 	<parameter name="SUBREPORT_DIR" isForPrompting="true" class="java.lang.String">
 		<defaultValueExpression ><![CDATA[".\\"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["\\."]]></defaultValueExpression>
+	</parameter>
 	<queryString language="xPath"><![CDATA[<?xml version="1.0" encoding="UTF-8" ?> 
 <Solicitud_Registro>
 <Version>1.1</Version> 
@@ -152,19 +155,25 @@
 	<field name="asunto" class="java.lang.String">
 		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/asunto]]></fieldDescription>
 	</field>
+	<field name="texto_legal_comun" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/texto_legal_comun]]></fieldDescription>
+	</field>
+	<field name="texto_datos_personales_comun" class="java.lang.String">
+		<fieldDescription><![CDATA[Datos_Firmados/Datos_Especificos/texto_datos_personales_comun]]></fieldDescription>
+	</field>
 
 		<background>
 			<band height="658"  isSplitAllowed="true" >
 				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="108"
+						x="0"
 						y="0"
-						width="402"
-						height="657"
+						width="535"
+						height="658"
 						key="image-2"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "logodipuFondo.png"]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH} + "logodipuFondo.jpg"]]></imageExpression>
 				</image>
 			</band>
 		</background>
@@ -184,7 +193,7 @@
 						key="image-1"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "logoDipucrBlanco.bmp"]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH} + "logoCabecera.png"]]></imageExpression>
 				</image>
 				<staticText>
 					<reportElement
@@ -312,13 +321,13 @@
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="63"  isSplitAllowed="true" >
+			<band height="69"  isSplitAllowed="true" >
 				<rectangle radius="1" >
 					<reportElement
 						mode="Opaque"
 						x="0"
 						y="0"
-						width="534"
+						width="535"
 						height="39"
 						forecolor="#CCCCCC"
 						backcolor="#EEEEEE"
@@ -329,7 +338,7 @@
 					<reportElement
 						x="0"
 						y="17"
-						width="534"
+						width="535"
 						height="45"
 						forecolor="#CCCCCC"
 						backcolor="#FFFFFF"
@@ -434,14 +443,14 @@
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="278"  isSplitAllowed="true" >
+			<band height="300"  isSplitAllowed="true" >
 				<rectangle radius="1" >
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="0"
-						width="534"
-						height="24"
+						y="10"
+						width="535"
+						height="17"
 						forecolor="#CCCCCC"
 						backcolor="#EEEEEE"
 						key="rectangle-5"/>
@@ -449,8 +458,8 @@
 				</rectangle>
 				<staticText>
 					<reportElement
-						x="0"
-						y="0"
+						x="6"
+						y="14"
 						width="153"
 						height="13"
 						key="staticText-7"/>
@@ -460,61 +469,10 @@
 					</textElement>
 				<text><![CDATA[DATOS DE LA SOLICITUD]]></text>
 				</staticText>
-				<rectangle radius="1" >
-					<reportElement
-						mode="Opaque"
-						x="0"
-						y="185"
-						width="534"
-						height="39"
-						forecolor="#CCCCCC"
-						backcolor="#EEEEEE"
-						key="rectangle-13"
-						positionType="Float"/>
-					<graphicElement stretchType="NoStretch"/>
-				</rectangle>
-				<rectangle>
-					<reportElement
-						x="0"
-						y="202"
-						width="533"
-						height="76"
-						forecolor="#CCCCCC"
-						backcolor="#FFFFFF"
-						key="rectangle-14"
-						positionType="Float"/>
-					<graphicElement stretchType="NoStretch"/>
-				</rectangle>
-				<staticText>
-					<reportElement
-						x="0"
-						y="185"
-						width="177"
-						height="13"
-						key="staticText-20"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Verdana" size="10" isBold="true"/>
-					</textElement>
-				<text><![CDATA[DOCUMENTOS APORTADOS]]></text>
-				</staticText>
-				<subreport  isUsingCache="true">
-					<reportElement
-						mode="Transparent"
-						x="0"
-						y="202"
-						width="534"
-						height="20"
-						key="subreport-1"
-						positionType="Float"/>
-					<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JRXmlDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("/Solicitud_Registro/Datos_Firmados/Documentos/Documento")]]></dataSourceExpression>
-					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "documentos.jasper"]]></subreportExpression>
-				</subreport>
 				<staticText>
 					<reportElement
 						x="6"
-						y="29"
+						y="33"
 						width="162"
 						height="15"
 						key="staticText-26"/>
@@ -527,7 +485,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="177"
-						y="29"
+						y="33"
 						width="100"
 						height="15"
 						key="textField"/>
@@ -540,7 +498,7 @@
 				<staticText>
 					<reportElement
 						x="6"
-						y="50"
+						y="54"
 						width="162"
 						height="15"
 						key="staticText-27"/>
@@ -553,7 +511,7 @@
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="6"
-						y="65"
+						y="69"
 						width="528"
 						height="18"
 						key="textField"/>
@@ -566,7 +524,7 @@
 				<staticText>
 					<reportElement
 						x="6"
-						y="89"
+						y="93"
 						width="162"
 						height="15"
 						key="staticText-28"
@@ -580,7 +538,7 @@
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="6"
-						y="104"
+						y="108"
 						width="528"
 						height="18"
 						key="textField-16"
@@ -594,7 +552,7 @@
 				<staticText>
 					<reportElement
 						x="6"
-						y="129"
+						y="133"
 						width="162"
 						height="15"
 						key="staticText-29"
@@ -608,7 +566,7 @@
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="6"
-						y="144"
+						y="148"
 						width="528"
 						height="18"
 						key="textField-17"
@@ -619,25 +577,129 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{solicita}]]></textFieldExpression>
 				</textField>
+				<rectangle radius="1" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="225"
+						width="535"
+						height="19"
+						forecolor="#CCCCCC"
+						backcolor="#EEEEEE"
+						key="rectangle-12"
+						positionType="Float"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<staticText>
+					<reportElement
+						x="6"
+						y="229"
+						width="517"
+						height="13"
+						key="staticText-30"
+						positionType="Float"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Verdana" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[DOCUMENTOS APORTADOS]]></text>
+				</staticText>
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Transparent"
+						x="0"
+						y="243"
+						width="535"
+						height="20"
+						key="subreport-1"
+						positionType="Float"/>
+					<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JRXmlDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("/Solicitud_Registro/Datos_Firmados/Documentos/Documento")]]></dataSourceExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "documentos.jasper"]]></subreportExpression>
+				</subreport>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="274"
+						width="535"
+						height="18"
+						key="textField-18"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean (null != $F{texto_datos_personales_comun} && !$F{texto_datos_personales_comun}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Justified" isStyledText="true">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["<font style=\"color:#CCCCCC;\">" + $F{texto_datos_personales_comun} + "</font>"]]></textFieldExpression>
+				</textField>
+				<rectangle radius="1" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="172"
+						width="535"
+						height="39"
+						forecolor="#CCCCCC"
+						backcolor="#EEEEEE"
+						key="rectangle-13"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean (null != $F{texto_legal_comun} && !$F{texto_legal_comun}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<staticText>
+					<reportElement
+						x="6"
+						y="176"
+						width="517"
+						height="13"
+						key="staticText-31"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean (null != $F{texto_legal_comun} && !$F{texto_legal_comun}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Verdana" size="10" isBold="true"/>
+					</textElement>
+				<text><![CDATA[AUTORIZACIÓN DE CONSULTA DE DATOS DE CARÁCTER PERSONAL]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="189"
+						width="535"
+						height="27"
+						backcolor="#FFFFFF"
+						key="textField-19"
+						positionType="Float">
+							<printWhenExpression><![CDATA[new Boolean (null != $F{texto_legal_comun} && !$F{texto_legal_comun}.equals(""))]]></printWhenExpression>
+						</reportElement>
+					<box topBorder="Thin" topBorderColor="#CCCCCC" topPadding="5" leftBorder="Thin" leftBorderColor="#CCCCCC" leftPadding="5" rightBorder="Thin" rightBorderColor="#CCCCCC" rightPadding="5" bottomBorder="Thin" bottomBorderColor="#CCCCCC" bottomPadding="5"/>
+					<textElement textAlignment="Justified">
+						<font fontName="Verdana" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{texto_legal_comun}]]></textFieldExpression>
+				</textField>
 			</band>
 		</detail>
 		<columnFooter>
-			<band height="138"  isSplitAllowed="true" >
-				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+			<band height="37"  isSplitAllowed="true" >
+				<image  hAlign="Right" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="0"
-						y="102"
+						y="4"
 						width="535"
-						height="34"
+						height="27"
 						key="image-3"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "logoPieSinPag.jpg"]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH} + "logoPie.jpg"]]></imageExpression>
 				</image>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="481"
-						y="106"
+						x="505"
+						y="6"
 						width="18"
 						height="22"
 						forecolor="#FFFFFF"
@@ -648,45 +710,14 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement
-						x="435"
-						y="106"
-						width="46"
-						height="21"
-						forecolor="#FFFFFF"
-						key="staticText-24"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Verdana" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
-					</textElement>
-				<text><![CDATA[Página ]]></text>
-				</staticText>
 			</band>
 		</columnFooter>
 		<pageFooter>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</pageFooter>
-		<lastPageFooter>
-			<band height="1"  isSplitAllowed="true" >
-				<staticText>
-					<reportElement
-						x="0"
-						y="-138"
-						width="535"
-						height="84"
-						key="staticText-25"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Justified">
-						<font size="8"/>
-					</textElement>
-				<text><![CDATA[Los datos personales, identificativos y de contacto, aportados mediante esta comunicación se entienden facilitados voluntariamente, y serán incorporados a un fichero cuya finalidad es la de mantener con Vd. relaciones dentro del ámbito de las competencias de esta Administración Pública así como informarle de nuestros servicios presentes y futuros ya sea por correo ordinario o por medios telemáticos y enviarle invitaciones para eventos y felicitaciones en fechas señaladas. Entenderemos que presta su consentimiento tácito para este tratamiento de datos si en el plazo de un mes no expresa su voluntad en contra. Podrá ejercer sus derechos de acceso, rectificación, cancelación y oposición ante el Responsable del Fichero, la Diputación Provincial de Ciudad Real en C/ Toledo, 17, 13071 Ciudad Real - España, siempre acreditando conforme a Derecho su identidad en la comunicación. En cumplimiento de la L.O. 34/2002 le informamos de que puede revocar en cualquier momento el consentimiento que nos otorga dirigiéndose a la dirección citada ut supra o bien al correo electrónico lopd@dipucr.es o bien por telefono al numero gratuito 900 714 080. ]]></text>
-				</staticText>
-			</band>
-		</lastPageFooter>
 		<summary>
-			<band height="10"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</summary>
 </jasperReport>

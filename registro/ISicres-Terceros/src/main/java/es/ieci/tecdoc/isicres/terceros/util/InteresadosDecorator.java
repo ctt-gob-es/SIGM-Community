@@ -72,6 +72,7 @@ public class InteresadosDecorator {
 	/**
 	 *
 	 * @param interesadosEncoded
+	 * [Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros
 	 * @return
 	 */
 	public List<InteresadoVO> string2interesados(String interesadosEncoded) {
@@ -116,15 +117,21 @@ public class InteresadosDecorator {
 					interesado.setTercero(tercero);
 					break;
 				case 2:
+					//Token con el NIF del interesado
+					if(tercero instanceof TerceroValidadoVO){
+						((TerceroValidadoVO)tercero).setNumeroDocumento(tokens[i]);
+					}
+					break;
+				case 3:
 					if (!StringUtils.isBlank(tokens[i])) {
 						direccionTercero = new BaseDireccionVO();
 						direccionTercero.setId(tokens[i]);
 					}
 					break;
-				case 3:
+				case 4:
 					//Token con el literal de la Direccion del interesado
 					break;
-				case 4:
+				case 5:
 					if (null != direccionTercero) {
 						// seteamos la direccion del interesado con los datos recuperados de BBDD
 						interesado.setDireccionNotificacion(getDireccion(tokens[i],
@@ -132,7 +139,7 @@ public class InteresadosDecorator {
 					}
 
 					break;
-				case 5:
+				case 6:
 					if (!StringUtils.isBlank(tokens[i])) {
 						BaseTerceroVO terceroRepresentante = new BaseTerceroVO();
 						terceroRepresentante.setId(tokens[i]);
@@ -141,7 +148,7 @@ public class InteresadosDecorator {
 						interesado.setRepresentante(representante);
 					}
 					break;
-				case 6:
+				case 7:
 					if (null != representante) {
 						interesado.getRepresentante().getRepresentante()
 								.setNombre(tokens[i]);
@@ -150,16 +157,16 @@ public class InteresadosDecorator {
 								.setRepresentante(new RepresentanteInteresadoVO());
 					}
 					break;
-				case 7:
+				case 8:
 					if (!StringUtils.isBlank(tokens[i])) {
 						direccionRepresentante = new BaseDireccionVO();
 						direccionRepresentante.setId(tokens[i]);
 					}
 					break;
-				case 8:
+				case 9:
 					//Token con el literal de la Direccion del representante
 					break;
-				case 9:
+				case 10:
 					if (null != direccionRepresentante) {
 						//obtenemos la informacion del representante de BBDD
 						TerceroValidadoVO representanteVO = getTerceroManager()

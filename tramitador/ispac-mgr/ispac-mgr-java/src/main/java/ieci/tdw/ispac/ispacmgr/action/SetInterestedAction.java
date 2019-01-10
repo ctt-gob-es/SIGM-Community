@@ -54,7 +54,7 @@ public class SetInterestedAction extends BaseAction {
         	IPostalAddressAdapter dirPostal = thirdParty.getDefaultDireccionPostal();
         	if (dirPostal != null) {
             	item.set("IDDIRECCIONPOSTAL", dirPostal.getId());
-        		item.set("DOMICILIO", dirPostal.getDireccionPostal());
+        		item.set("DOMICILIO", limpiarSaltosLinea(dirPostal.getDireccionPostal()));//[dipucr-Felipe #704]
         		item.set("CPOSTAL", dirPostal.getCodigoPostal());
         		item.set("CIUDAD", dirPostal.getMunicipio());
         		item.set("TFNOFIJO", dirPostal.getTelefono());
@@ -71,7 +71,7 @@ public class SetInterestedAction extends BaseAction {
         		if (dirElectronica.getTipo() == IElectronicAddressAdapter.MOBILE_PHONE_TYPE) {
         			item.set("TFNOMOVIL", dirElectronica.getDireccion());
         		} else {
-        			item.set("DIRECCIONTELEMATICA", dirElectronica.getDireccion());
+        			item.set("DIRECCIONTELEMATICA", limpiarSaltosLinea(dirElectronica.getDireccion()));//[dipucr-Felipe #704]
         		}
         	}
         	
@@ -133,7 +133,7 @@ public class SetInterestedAction extends BaseAction {
         properties.add( new Property(ordinal++, "DIRECCIONTELEMATICA", Types.VARCHAR));
         properties.add( new Property(ordinal++, "TIPODIRECCIONINTERESADO", Types.VARCHAR));
         properties.add( new Property(ordinal++, "SUSTITUTOTIPODIRECCIONINTERESADO", Types.VARCHAR));
-        properties.add(new Property(ordinal++, "NIFCIFTITULAR", Types.VARCHAR));
+        properties.add( new Property(ordinal++, "NIFCIFTITULAR", Types.VARCHAR));
 
         return properties;
     }
@@ -157,5 +157,17 @@ public class SetInterestedAction extends BaseAction {
     		}
     	}
     	return thirdParty;
+    }
+    
+    /**
+     * [dipucr-Felipe #704]
+     * @return
+     */
+    private String limpiarSaltosLinea(String cadena){
+    	String resultado = "";
+    	if(StringUtils.isNotEmpty(cadena)){
+    		resultado = cadena.replace("\r", "").replace("\n", "");
+    	}
+    	return resultado;
     }
 }

@@ -75,14 +75,15 @@ public class GenerarDiaHoraRule implements IRule {
 			String fechas = null;
 			int numeroDias = 0;
 			int intervalo = 0;
-			int margenEntreFinca = 1;
+			int margenEntreFinca = 2;
 			
 			IItem itemExp = null;
 			if (itExp.hasNext()) {
 				itemExp = (IItem) itExp.next();
 				fechas = itemExp.getString("ACTAS_PREVIAS_DIAS_SELECCIONAD");
 				numeroDias = itemExp.getInt("ACTAS_PREVIAS_DIAS_NECESARIOS");
-				intervalo = itemExp.getInt("INTERVALO_MUNICIPIOS");	
+				intervalo = itemExp.getInt("INTERVALO_MUNICIPIOS");
+				if(itemExp.getInt("INTERVALO_FINCAS") > 0) margenEntreFinca = itemExp.getInt("INTERVALO_FINCAS");
 				
 				// Si el intervalo es menor que 0 -> No se ha inicializado el campo por lo que se asignan 30 minutos.
 				if (intervalo < 0){

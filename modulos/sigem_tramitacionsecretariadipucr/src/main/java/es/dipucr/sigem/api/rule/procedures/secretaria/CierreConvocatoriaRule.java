@@ -228,7 +228,7 @@ public class CierreConvocatoriaRule implements IRule {
 			}
 	        
 	        if (StringUtils.isNotEmpty(strTo)){
-				String dir[]= MailUtil.enviarCorreo(rulectx, cCorreoOrigen, strTo, subject, content, attachment, imagenes);
+				String dir[]= MailUtil.enviarCorreo(rulectx.getClientContext(), cCorreoOrigen, strTo, subject, content, attachment, imagenes);
 
 	       		String error = "";
 				if (dir != null) 
@@ -343,6 +343,11 @@ public class CierreConvocatoriaRule implements IRule {
 			}
 			if(organo.equals("JGOB")){
 				organo = "Junta de Gobierno";
+				// # 824 Si el expediente es de la entidad OA Casa de Acogida
+				// el órgano se llama "Consejo Rector" en lugar de "Junta de Gobierno"
+				if (rulectx.getNumExp().startsWith("OACASA")) {
+					organo = "Consejo Rector";
+				}
 			}
 			if(organo.equals("PLEN")){
 				organo = "Pleno";

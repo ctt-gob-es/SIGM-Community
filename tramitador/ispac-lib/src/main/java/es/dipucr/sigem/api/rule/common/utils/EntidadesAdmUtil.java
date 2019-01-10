@@ -19,14 +19,21 @@ public class EntidadesAdmUtil{
 	public static String obtenerEntidad(IClientContext cct){
 		String entidad = "";
 		
+		DbCnt cnt = null;
+		 
 		try{
-			DbCnt cnt = cct.getConnection();
+			cnt = cct.getConnection();
 			String pool = cnt.getPoolName();
 			String[] vEntidad = pool.split("_");
 			entidad = vEntidad[1];
-			}
-		catch (ISPACException e){
+			
+		} catch (ISPACException e){
 			logger.error(e.getMessage(), e);
+			
+		} finally {
+			if(null != cnt){
+				cct.releaseConnection(cnt);
+			}
 		}
 		return entidad;
 	}
@@ -44,6 +51,20 @@ public class EntidadesAdmUtil{
 			logger.debug("Error al obtener el nombre de la entidad. " +e.getMessage(), e);
 		}
 		return nombreEntidad;
+	}
+	
+	public static Entidad obtenerEntidadObject(IClientContext cct){
+		Entidad entidad = null;
+		try{
+			ServicioEntidades servicioEntidades = LocalizadorServicios.getServicioEntidades();
+			entidad = servicioEntidades.obtenerEntidad(obtenerEntidad(cct));
+			
+		} catch (EntidadesException e) {
+			logger.debug("Error al obtener la entidad. " +e.getMessage(), e);
+		} catch (SigemException e) {
+			logger.debug("Error al obtener la entidad. " +e.getMessage(), e);
+		}
+		return entidad;
 	}
 
 	public static boolean tieneEntidadTablaHistoricos(){

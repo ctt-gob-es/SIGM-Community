@@ -97,7 +97,6 @@ public class EnviarPublicacionTablonGenericaRule implements IRule
 			numexp = rulectx.getNumExp();
 			IItem itemDocumento = DocumentosUtil.getPrimerDocumentByNombre(numexp, rulectx, nombreDocumento);
 			int idDoc = itemDocumento.getKeyInt();
-			boolean bWScorrecto = false;
 			
 			//Sacamos la fecha de firma
 			Date dFechaFirma = itemDocumento.getDate("FFIRMA");
@@ -126,14 +125,11 @@ public class EnviarPublicacionTablonGenericaRule implements IRule
 			//Hacemos la petición al servicio web
 			TablonWSProxy wsTablon = new TablonWSProxy();
 			String codEntidad = EntidadesAdmUtil.obtenerEntidad((ClientContext)cct);
-			bWScorrecto = wsTablon.insertarPublicacion(codEntidad, titulo, descripcion, calendarFechaFirma, codServicio, 
+			
+			//[dipucr-Felipe 3#382]
+			wsTablon.insertarPublicacion(codEntidad, titulo, descripcion, calendarFechaFirma, codServicio, 
 					codCategoria, calendarIniVigencia, calendarFinVigencia, cve, hash, idTransaccion, numexp, 
 					null, null, dhPublicacion);
-			
-			if (!bWScorrecto){
-				logger.error("Error en el servicio web de la aplicación eTablón. Expediente: " + numexp + ". ");
-				throw new ISPACRuleException("Error en el servicio web de la aplicación eTablón. Expediente: " + numexp + ". ");
-			}
 		}
 		catch (Exception e) {
 			logger.error("Error al insertar la publicación en el tablón. Expediente: " + numexp + ". " + e.getMessage(), e);

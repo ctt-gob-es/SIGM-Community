@@ -125,6 +125,12 @@ public class TipoConectorImpl implements TipoConector, Serializable
      * Autenticación con certificado digital vía web.
      */
     public final static int CERTIFICATE_WEB_AUTH = 7;
+    
+    /**
+     * Autenticación con clave.
+     * [DipuCR-Agustin] #548 integrar Cl@ve autentificacion
+     */
+    public final static int CLAVE_AUTENTICACION = 8;
    
     
   protected int id;

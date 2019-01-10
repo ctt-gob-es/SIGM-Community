@@ -25,8 +25,7 @@ import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
  */
 public class DipucrGenerateAcuseVertical implements IRule {
 	
-	protected String STR_NombreDocAcuse  = "Acuse de Recibo Vertical";
-
+	protected String strNombreDocAcuse  = "Acuse de Recibo Vertical";
 	
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		return true;
@@ -46,11 +45,6 @@ public class DipucrGenerateAcuseVertical implements IRule {
 			
 			
 			String numExp = rulectx.getNumExp();
-			String nombre = "";
-	    	String dirnot = "";
-	    	String c_postal = "";
-	    	String localidad = "";
-	    	String caut = "";
 	    	Object connectorSession = null;
 	    	
 			// 1. Obtener participantes del expediente actual, con relación != "Trasladado"
@@ -69,19 +63,9 @@ public class DipucrGenerateAcuseVertical implements IRule {
 						if (participante!=null){
 				        
 							// Añadir a la session los datos para poder utilizar <ispatag sessionvar='var'> en la plantilla
-				        	if ((String)participante.get("NOMBRE")!=null) nombre = (String)participante.get("NOMBRE");
-				        	if ((String)participante.get("DIRNOT")!=null) dirnot = (String)participante.get("DIRNOT");
-				        	if ((String)participante.get("C_POSTAL")!=null) c_postal = (String)participante.get("C_POSTAL");
-				        	if ((String)participante.get("LOCALIDAD")!=null) localidad = (String)participante.get("LOCALIDAD");
-				        	if ((String)participante.get("CAUT")!=null) caut = (String)participante.get("CAUT");
-				        	cct.setSsVariable("NOMBRE", nombre);
-				        	cct.setSsVariable("DIRNOT", dirnot);
-				        	cct.setSsVariable("C_POSTAL", c_postal);
-				        	cct.setSsVariable("LOCALIDAD", localidad);
-				        	cct.setSsVariable("CAUT", caut);				        	
+							DocumentosUtil.setParticipanteAsSsVariable(cct, participante);	        	
 				        	
-				        	DocumentosUtil.generarDocumento(rulectx, STR_NombreDocAcuse, nombre);
-
+				        	DocumentosUtil.generarDocumento(rulectx, strNombreDocAcuse, participante.getString(ParticipantesUtil.NOMBRE));
 							
 				        	// 5. Actualizar el campo 'Acuse_Generado' con valor 'Y'
 							IItem participanteAActualizar = entitiesAPI.getParticipant(participante.getInt("ID"));
@@ -89,14 +73,10 @@ public class DipucrGenerateAcuseVertical implements IRule {
 							participanteAActualizar.store(cct);
 					        									
 							// Si todo ha sido correcto borrar las variables de la session
-							cct.deleteSsVariable("NOMBRE");
-							cct.deleteSsVariable("DIRNOT");
-							cct.deleteSsVariable("C_POSTAL");
-							cct.deleteSsVariable("LOCALIDAD");
-							cct.deleteSsVariable("CAUT");
+							DocumentosUtil.borraParticipanteSsVariable(cct);
 					        
 					    }
-					}catch (Throwable e) {
+					} catch (Exception e) {
 						
 						// Si se produce algún error se hace rollback de la transacción
 						cct.endTX(false);
@@ -109,15 +89,12 @@ public class DipucrGenerateAcuseVertical implements IRule {
 							
 							if (eCause.getCause() instanceof NoConnectException) {
 								extraInfo = "exception.extrainfo.documents.openoffice.off"; 
-							}
-							else {
+							} else {
 								extraInfo = eCause.getCause().getMessage();
 							}
-						}
-						else if (eCause instanceof DisposedException) {
+						} else if (eCause instanceof DisposedException) {
 							extraInfo = "exception.extrainfo.documents.openoffice.stop";
-						}
-						else {
+						} else {
 							extraInfo = e.getMessage();
 						}			
 						throw new ISPACInfo(message, extraInfo);
@@ -133,15 +110,13 @@ public class DipucrGenerateAcuseVertical implements IRule {
 			// Si todo ha sido correcto se hace commit de la transacción
 			cct.endTX(true);
 		} catch(Exception e) {
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException(e);
+    		throw new ISPACRuleException("Error al generar los acuses de recibo del Decreto", e);   
         }
 		return null;
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-
+		// Empty method
 	}
 
 }

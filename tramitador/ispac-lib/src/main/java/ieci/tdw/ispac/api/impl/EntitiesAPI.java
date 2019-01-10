@@ -37,6 +37,7 @@ import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTApplicationDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTEntityDAO;
 import ieci.tdw.ispac.ispaclib.dao.cat.CTRuleDAO;
+import ieci.tdw.ispac.ispaclib.dao.cat.CTTpDocDAO;
 import ieci.tdw.ispac.ispaclib.dao.entity.EntityDAO;
 import ieci.tdw.ispac.ispaclib.dao.entity.EntityFactoryDAO;
 import ieci.tdw.ispac.ispaclib.dao.entity.EntityResourceDAO;
@@ -55,6 +56,7 @@ import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispaclib.utils.TypeConverter;
+import ieci.tdw.ispac.ispactx.TXConstants;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,6 +66,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.GestorDatosFirma;
 
 public class EntitiesAPI implements IEntitiesAPI
 {
@@ -3290,6 +3295,9 @@ public class EntitiesAPI implements IEntitiesAPI
 			    IItem stepSignCircuit = itemcol.value();
 			    stepSignCircuit.delete(mcontext);
 			}
+			
+			// [dipucr-Felipe #817] Eliminar los datos de firma del documento
+			GestorDatosFirma.deleteDatosFirma(mcontext, document);
 
 	        // Eliminar el registro que almacena los datos del documento
 			document.delete(mcontext);
@@ -3322,6 +3330,20 @@ public class EntitiesAPI implements IEntitiesAPI
 
 	    	String numExpediente = document.getString("NUMEXP");
 	    	String idDoc = String.valueOf(document.getKeyInt());
+	    	
+	    	String docTypeName = "";
+	    	int docType = document.getInt(DocumentosUtil.ID_TPDOC);
+
+	    	if (document.getInt(DocumentosUtil.ID_TPDOC) != 0) {
+				CTTpDocDAO tpdoc = new CTTpDocDAO(mcontext.getConnection(), docType);
+				docTypeName = "'" + tpdoc.getString("NOMBRE") + "'";
+			}
+			
+	    	if (null != mcontext.getStateContext()){//[dipucr-Felipe #854]
+				ITXTransaction txapi = mcontext.getAPI().getTransactionAPI();			
+				txapi.newMilestone(mcontext.getStateContext().getProcessId(), mcontext.getStateContext().getStagePcdId(), mcontext.getStateContext().getTaskPcdId(), TXConstants.MILESTONE_DOCUMENTO_DELETED,
+						new StringBuffer("<?xml version='1.0' encoding='ISO-8859-1'?>").append("<infoaux>").append(docTypeName).append("</infoaux>").toString(), "Documento " + docTypeName + " borrado");
+	    	}
 	    		    	
 	    	auditEliminacionDocumento(idDoc, numExpediente);
 			// Si todo ha sido correcto se hace commit de la transacción

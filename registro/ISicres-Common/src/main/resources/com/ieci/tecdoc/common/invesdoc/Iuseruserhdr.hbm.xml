@@ -34,6 +34,8 @@
         </meta>
         <generator class="assigned" />
     </id>
+    
+    <one-to-one name="iuserdata" class="com.ieci.tecdoc.common.invesdoc.Iuserdata" foreign-key="id"/>
 
     <property
         name="name"

@@ -42,7 +42,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import es.dipucr.sigem.api.rule.common.DipucrProperties;
+import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
+import es.dipucr.sigem.api.rule.common.utils.FirmaLotesError;
+import es.dipucr.sigem.api.rule.common.utils.FirmaLotesUtil;
 import es.dipucr.sigem.api.rule.common.utils.GestorDecretos;
 import es.dipucr.sigem.api.rule.common.utils.UsuariosUtil;
 import es.dipucr.sigem.firmaReparo.api.impl.SignReparoAPI;
@@ -59,7 +61,7 @@ public class BatchSignReparoAction extends BatchSignAction{
 		IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(
 				session.getClientContext());
 		// Se cambia el estado de tramitación
-		Map params = request.getParameterMap();
+		Map<?, ?> params = request.getParameterMap();
 		// Al estar en un 'DispacthAction', cambiamos de estado si no nos
 		// encontramos ya en el estado de BATCHSIGNDOCUMENT
 		IState state = managerAPI.currentState(getStateticket(request));
@@ -89,19 +91,17 @@ public class BatchSignReparoAction extends BatchSignAction{
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response, SessionAPI session) throws Exception {
 		
-		//INICIO [eCenpri-Felipe #818]
-		String sDeshabilitarFirma = DipucrProperties.getPropertyNoSingleton("firmar.deshabilitar");
-		boolean bDeshabilitarFirma = false;
-		if (StringUtils.isNotEmpty(sDeshabilitarFirma)){
-			bDeshabilitarFirma = Boolean.valueOf(sDeshabilitarFirma).booleanValue();
-		}
-		if (bDeshabilitarFirma){
+		//Código de entidad
+		ClientContext cct = session.getClientContext();
+		String codEntidad = OrganizationUser.getOrganizationUserInfo().getOrganizationId();
+		FirmaConfiguration fc = FirmaConfiguration.getInstance(cct);
 
-			String titulo = DipucrProperties.getPropertyNoSingleton("firmar.titulo");
-			String texto = DipucrProperties.getPropertyNoSingleton("firmar.texto");
-			request.setAttribute("firmar.titulo", titulo);
-			request.setAttribute("firmar.texto", texto);
-			return mapping.findForward("nofirmar");
+		//INICIO [eCenpri-Felipe #818]
+		FirmaLotesError error = FirmaLotesUtil.getErrorDeshabilitar(codEntidad);
+		if (null != error){
+			request.setAttribute(ERROR_TITULO, error.getTitulo());
+			request.setAttribute(ERROR_TEXTO, error.getTexto());
+			return mapping.findForward(ERROR_MAPPING);
 		}
 		//FIN [eCenpri-Felipe #818]
 		
@@ -109,28 +109,19 @@ public class BatchSignReparoAction extends BatchSignAction{
 		IState state = enterState(request, session, response);
 		IEntitiesAPI entitiesAPI = session.getAPI().getEntitiesAPI();
 		ISignAPI signAPI = session.getAPI().getSignAPI();
-		HashMap infoFirmas = new HashMap();
+		HashMap<String, String> infoFirmas = new HashMap<String, String>();
 		
-		//AJM Obtenemos el nombre del firmante		
-		ClientContext cct = session.getClientContext();
-		String nombreFirmante = UsuariosUtil.getNombreFirma(cct);
-		String docIdentidad = UsuariosUtil.getDni(cct);
-		String numeroSerie = UsuariosUtil.getNumeroSerie(cct);
-		InfoFirmante infoFirmante = new InfoFirmante();
-//		infoFirmante.setIdDocumentoDeIdentidadEnCertificado(numeroSerie);
-		infoFirmante.setIdDocumentoDeIdentidadEnCertificado(docIdentidad);
-		infoFirmante.setNombreFirmante(nombreFirmante);	
+		//Informacion del firmante
+		InfoFirmante infoFirmante = FirmaLotesUtil.getInfoFirmante(cct, codEntidad);
 		
-		if (StringUtils.isEmpty(nombreFirmante) || StringUtils.isEmpty(numeroSerie))
-		{	
-			//TODO: Coger los textos de un resources
-			request.setAttribute("firmar.titulo", "Error al realizar la firma");
-			request.setAttribute("firmar.texto", "NO SE HA PODIDO REALIZAR LA FIRMA.<br/><br/>" +
-					"El usuario con el que está accediendo no tiene configurada la firma en SIGEM.<br/>" +
-					"Por favor, consulte con el departamento de Informática para actualizar sus datos de firma." +
-					"<br/><br/>Gracias y un saludo.");
-			return mapping.findForward("nofirmar");
+		//INICIO [dipucr-Felipe 3#231]
+		error = FirmaLotesUtil.getErrorFirmanteNoConfigurado(codEntidad, infoFirmante);
+	    if (null != error) {
+			request.setAttribute(ERROR_TITULO, error.getTitulo());
+			request.setAttribute(ERROR_TEXTO, error.getTexto());
+			return mapping.findForward(ERROR_MAPPING);
 		}
+	    //FIN [dipucr-Felipe 3#231]
 		
 		BatchSignForm batchSignForm = ((BatchSignForm) form);
 		// en 'ids' se recogen los identificados de los pasos de circuitos de
@@ -143,7 +134,6 @@ public class BatchSignReparoAction extends BatchSignAction{
 		SignDocument signDocument;
 		
 		StringBuffer sbListaDocs = new StringBuffer();		
-		String codEntidad = getCodEntidad();
 		String docRef = null; //infopag o infopag_rde
 		String xml = null;
 		
@@ -193,13 +183,9 @@ public class BatchSignReparoAction extends BatchSignAction{
 				GestorDecretos.bloquearFirmaDecretos(cct);
 			}
 			else{
-				//TODO: Coger los textos de un resources
-				request.setAttribute("firmar.titulo", "Error al realizar la firma de Decretos");
-				request.setAttribute("firmar.texto", "NO SE HA PODIDO REALIZAR LA FIRMA.<br/><br/>" +
-						"La firma de decretos está bloqueada actualmente por otro usuario.<br/>" +
-						"Por favor, espere unos minutos y vuelva a recargar la página.<br/><br/>Gracias y un saludo.");
-				return mapping.findForward("nofirmar");
-//						throw new ISPACException("En estos momentos no se pueden firmar decretos. Espere unos minutos.");
+				request.setAttribute(ERROR_TITULO, fc.getProperty(FirmaLotesUtil.ERROR.DECRETOS.TITULO));
+				request.setAttribute(ERROR_TEXTO, fc.getProperty(FirmaLotesUtil.ERROR.DECRETOS.TEXTO));
+				return mapping.findForward(ERROR_MAPPING);
 			}
 		}
 		
@@ -238,7 +224,7 @@ public class BatchSignReparoAction extends BatchSignAction{
 		}
 		
 		//Seteamos los parametros en la firma tres fases
-		batchSignForm.setSerialNumber(numeroSerie);
+		batchSignForm.setSerialNumber(infoFirmante.getNumeroSerie());
 		batchSignForm.setListaDocs(sbListaDocs.toString());
 		batchSignForm.setCodEntidad(codEntidad);//TODO: Esto ya no se usa
 		batchSignForm.setInfoFirma(infoFirmas);	
@@ -260,7 +246,7 @@ public class BatchSignReparoAction extends BatchSignAction{
 //		ISignAPI signAPI = session.getAPI().getSignAPI();
 		SignReparoAPI signAPI = new SignReparoAPI(session.getClientContext());
 		BatchSignForm batchSignForm = ((BatchSignForm) form);
-		HashMap infoFirmas = batchSignForm.getInfoFirma();	
+		HashMap<?, ?> infoFirmas = batchSignForm.getInfoFirma();	
 		String listaDocs = batchSignForm.getListaDocs();
 		String[] infoDocs = listaDocs.split(DOC_SEPARATOR);
 		
@@ -354,19 +340,19 @@ public class BatchSignReparoAction extends BatchSignAction{
 		String entityId = (String) request.getSession().getAttribute("idEntidad");		
 
 		// Firmar con reparo los documentos asociados a los pasos de firma
-		List signDocuments = signAPI.firmarReparo(stepIds, signs, batchSignForm.getSignCertificate(), entityId, batchSignForm.getMotivoRechazo());
+		List<?> signDocuments = signAPI.firmarReparo(stepIds, signs, batchSignForm.getSignCertificate(), entityId, batchSignForm.getMotivoRechazo());
 //		String autor_cert = signAPI.getFirmanteFromCertificado(batchSignForm.getSignCertificate());//TODO: viene vacío
 		
 		// Estados de firma para incluir el sustituto en la lista enviada a la
 		// vista
 		IItemCollection itemcol = entitiesAPI.queryEntities(
 				SpacEntities.SPAC_TBL_008, "");
-		Map mapSignStates = CollectionBean.getBeanMap(itemcol, "VALOR");
+		Map<?, ?> mapSignStates = CollectionBean.getBeanMap(itemcol, "VALOR");
 
 		// Establecer el estado de firma para cada documento
-		List ltSignsDocuments = new ArrayList();
+		List<ItemBean> ltSignsDocuments = new ArrayList<ItemBean>();
 
-		Iterator it = signDocuments.iterator();
+		Iterator<?> it = signDocuments.iterator();
 		while (it.hasNext()) {
 			
 			SignDocument signDocument_aux = (SignDocument) it.next();

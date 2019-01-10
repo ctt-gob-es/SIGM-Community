@@ -84,6 +84,7 @@ import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
+import es.dipucr.sigem.api.rule.common.utils.PdfUtil;
 import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 import es.dipucr.tablonEdictalUnico.firma.ClientHandler;
@@ -124,14 +125,12 @@ public class FuncionesComunes {
 	public static final Logger logger = Logger.getLogger(ServicioNotificacionesSOAPStub.class);
 	
 
-	public static void crearDocInformacionEnvioTEU(OpenOfficeHelper ooHelper, IRuleContext rulectx, Respuesta respuesta)
+	public static void crearDocInformacionEnvioTEU(IRuleContext rulectx, Respuesta respuesta)
 			throws ISPACRuleException {
 		try {
 			// ------------------------------------------------------------------
 			ClientContext cct = (ClientContext) rulectx.getClientContext();
 			// ------------------------------------------------------------------
-			if (ooHelper != null)
-				ooHelper.dispose();
 
 			// Creación del documento 'Información de Notificación y Traslado'
 			String filePathDoc = FileTemporaryManager.getInstance().getFileTemporaryPath()+ "/"+ FileTemporaryManager.getInstance().newFileName(".pdf");
@@ -146,7 +145,7 @@ public class FuncionesComunes {
 			writer.setViewerPreferences(PdfCopy.PageModeUseOutlines);
 
 			document.open();
-			DocumentosUtil.nuevaPagina(document, true, true, true, PageSize.A4);
+			PdfUtil.nuevaPagina(document, true, true, true, PageSize.A4);
 
 			Paragraph parrafo = new Paragraph();
 			Font fuente = new Font(Font.TIMES_ROMAN);
@@ -726,8 +725,10 @@ public class FuncionesComunes {
 
 
 	private static void obtenerTablaRecaudacionFicheroZona(Texto texto,	String ruta) throws ISPACException {
+		OpenOfficeHelper ooHelper = null;
+		
 		try{
-			OpenOfficeHelper ooHelper = OpenOfficeHelper.getInstance();
+			ooHelper = OpenOfficeHelper.getInstance();
     		XComponent xComponent = ooHelper.loadDocument("file://" + ruta);
 		    XTextDocument xTextDocument = (XTextDocument)UnoRuntime.queryInterface(XTextDocument.class, xComponent);
 		    XText xText = xTextDocument.getText();
@@ -761,8 +762,11 @@ public class FuncionesComunes {
 		}catch(Exception e){
 			logger.warn("Error al leer el fichero. "+ruta+" ."+e.getMessage(), e);
 			throw new ISPACException(e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
-		
 	}
 
 
@@ -878,7 +882,7 @@ public class FuncionesComunes {
 			            	if(dato.getNodeName().equals("Nombre") || dato.getNodeName().equals("NOMBRE")){
 		            			nombre = true;
 		            		}
-		            		if(dato.getNodeName().equals("DNI")){
+		            		if(dato.getNodeName().equals("DNI") || dato.getNodeName().equals("CIF")){
 		            			dni = true;
 		            			notificado.setTipId("NIF");
 		            		}

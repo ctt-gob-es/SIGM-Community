@@ -31,4 +31,7 @@ public interface InteresadoManager extends BaseManager<InteresadoVO, String> {
 	 */
 	public abstract void deleteAll(String idLibro, String idRegistro);
 
+	
+	public RepresentanteInteresadoManager getRepresentanteInteresadoManager();
+
 }

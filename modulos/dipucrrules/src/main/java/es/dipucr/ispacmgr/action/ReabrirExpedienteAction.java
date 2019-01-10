@@ -33,7 +33,7 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class ReabrirExpedienteAction extends BaseAction {
 	
-	protected static final Logger logger = Logger.getLogger(ReabrirExpedienteAction.class);
+	protected static final Logger LOGGER = Logger.getLogger(ReabrirExpedienteAction.class);
 
 	public ActionForward executeAction(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response,
@@ -52,39 +52,39 @@ public class ReabrirExpedienteAction extends BaseAction {
 		//processId
 		int processId = Integer.parseInt(request.getParameter("processId"));		
 		
-		int id_process = 0;
+		int idProcess = 0;
 		IProcess procesos = invesflowAPI.getProcess(numexp);
 		
 		if(procesos != null){
-			id_process = procesos.getKeyInt();
+			idProcess = procesos.getKeyInt();
 			procesos.set("ESTADO",  "1");
 			procesos.store(cct);
 		}		
 		
 		IItemCollection hitos = HitosUtils.getHitos(cct, numexp);
-		int id_fase = 0;
+		int idFase = 0;
 		if(hitos != null){
 			for (Object oHito : hitos.toList()){
 				IItem hito = (IItem)oHito;
-				int id_fase_aux = hito.getInt("ID_FASE");
-				if(id_fase_aux > id_fase) id_fase = id_fase_aux;
+				int idFaseAux = hito.getInt("ID_FASE");
+				if(idFaseAux > idFase) {
+					idFase = idFaseAux;
+				}
 			}
-		}
+		}				
 				
-		//txTransaction.openPreviousStage(id_process, id_fase);	
-		
-		ITXAction action = new TXReabrirExpediente(id_process, id_fase);
+		ITXAction action = new TXReabrirExpediente(idProcess, idFase);
 		run(action, cct, txTransaction);
 
 	    String resp = workListAPI.getRespString();
 		IItemCollection activeStagesSet = workListAPI.findActiveStages(processId, resp);
-	    if (activeStagesSet.next())	    
+	    if (activeStagesSet.next())	{    
 	      stageId = activeStagesSet.value().getInt("ID_STAGE");
-	      
+	    }
+	    
 		TXTransactionDataContainer dataContainer = new TXTransactionDataContainer((ClientContext) cct);
 		
-		TXHitoDAO hito=dataContainer.newMilestone(id_process, 0, 0, TXConstants.MILESTONE_EXPED_RELOCATED);
-//		hito.set("INFO", composeInfo(numexp));
+		TXHitoDAO hito=dataContainer.newMilestone(idProcess, 0, 0, TXConstants.MILESTONE_EXPED_RELOCATED);
 		hito.store(cct);	
 		
 		if(procesos != null){
@@ -123,87 +123,80 @@ public class ReabrirExpedienteAction extends BaseAction {
 	protected void run(ITXAction action, IClientContext cct, ITXTransaction itxTransaction) throws ISPACException{
 		TXTransactionDataContainer dataContainer = null;
 
-		try
-		{			
+		try	{			
 			dataContainer = new TXTransactionDataContainer((ClientContext) cct);	
 			action.lock((ClientContext)cct,dataContainer);
 			action.run((ClientContext)cct,dataContainer, itxTransaction);
 			dataContainer.persist();
-		}
-		catch(ISPACException e)
-		{
+		} catch(ISPACException e) {
 			dataContainer.setError();
 			throw e;
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			dataContainer.setError();
 			throw new ISPACException(e);
-		}
-		finally
-		{
+		} finally {
 			dataContainer.release();
-			}
+		}
 	}
 	
-	public IItem copiaExpediente(IClientContext cct, IItem expediente_viejo, String numexp, boolean reabriendo) throws ISPACException{
+	public IItem copiaExpediente(IClientContext cct, IItem expedienteViejo, String numexp, boolean reabriendo) throws ISPACException{
 
 		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
 
-		IItem expediente_nuevo = entitiesAPI.createEntity(Constants.TABLASBBDD.SPAC_EXPEDIENTES, numexp);
+		IItem expedienteNuevo = entitiesAPI.createEntity(Constants.TABLASBBDD.SPAC_EXPEDIENTES, numexp);
 	
-		expediente_nuevo.set("ID_PCD", expediente_viejo.getInt("ID_PCD"));
-		expediente_nuevo.set("NUMEXP", expediente_viejo.getString("NUMEXP"));
-		expediente_nuevo.set("REFERENCIA_INTERNA", expediente_viejo.getString("REFERENCIA_INTERNA"));
-		expediente_nuevo.set("NREG", expediente_viejo.getString("NREG"));
-		expediente_nuevo.set("FREG", expediente_viejo.getDate("FREG"));
-		expediente_nuevo.set("ESTADOINFO", expediente_viejo.getString("ESTADOINFO"));
-		expediente_nuevo.set("FESTADO", expediente_viejo.getDate("FESTADO"));
-		expediente_nuevo.set("NIFCIFTITULAR", expediente_viejo.getString("NIFCIFTITULAR"));
-		expediente_nuevo.set("IDTITULAR", expediente_viejo.getString("IDTITULAR"));
-		expediente_nuevo.set("DOMICILIO", expediente_viejo.getString("DOMICILIO"));
-		expediente_nuevo.set("CIUDAD", expediente_viejo.getString("CIUDAD"));
-		expediente_nuevo.set("REGIONPAIS", expediente_viejo.getString("REGIONPAIS"));
-		expediente_nuevo.set("CPOSTAL", expediente_viejo.getString("CPOSTAL"));
-		expediente_nuevo.set("IDENTIDADTITULAR", expediente_viejo.getString("IDENTIDADTITULAR"));
-		expediente_nuevo.set("TIPOPERSONA", expediente_viejo.getString("TIPOPERSONA"));
-		expediente_nuevo.set("ROLTITULAR", expediente_viejo.getString("ROLTITULAR"));
-		expediente_nuevo.set("ASUNTO", expediente_viejo.getString("ASUNTO"));
-		expediente_nuevo.set("FINICIOPLAZO", expediente_viejo.getDate("FINICIOPLAZO"));
-		expediente_nuevo.set("POBLACION", expediente_viejo.getString("POBLACION"));
-		expediente_nuevo.set("MUNICIPIO", expediente_viejo.getString("MUNICIPIO"));
-		expediente_nuevo.set("LOCALIZACION", expediente_viejo.getString("LOCALIZACION"));
-		expediente_nuevo.set("EXPRELACIONADOS", expediente_viejo.getString("EXPRELACIONADOS"));
-		expediente_nuevo.set("CODPROCEDIMIENTO", expediente_viejo.getString("CODPROCEDIMIENTO"));
-		expediente_nuevo.set("NOMBREPROCEDIMIENTO", expediente_viejo.getString("NOMBREPROCEDIMIENTO"));
-		expediente_nuevo.set("PLAZO", expediente_viejo.getInt("PLAZO"));
-		expediente_nuevo.set("UPLAZO", expediente_viejo.getString("UPLAZO"));
-		expediente_nuevo.set("FORMATERMINACION", expediente_viejo.getString("FORMATERMINACION"));
-		expediente_nuevo.set("UTRAMITADORA", expediente_viejo.getString("UTRAMITADORA"));
-		expediente_nuevo.set("FUNCIONACTIVIDAD", expediente_viejo.getString("FUNCIONACTIVIDAD"));
-		expediente_nuevo.set("MATERIAS", expediente_viejo.getString("MATERIAS"));
-		expediente_nuevo.set("SERVPRESACTUACIONES", expediente_viejo.getString("SERVPRESACTUACIONES"));
-		expediente_nuevo.set("TIPODEDOCUMENTAL", expediente_viejo.getString("TIPODEDOCUMENTAL"));
-		expediente_nuevo.set("PALABRASCLAVE", expediente_viejo.getString("PALABRASCLAVE"));
-		expediente_nuevo.set("ESTADOADM", expediente_viejo.getString("ESTADOADM"));
-		expediente_nuevo.set("HAYRECURSO", expediente_viejo.getString("HAYRECURSO"));
-		expediente_nuevo.set("EFECTOSDELSILENCIO", expediente_viejo.getString("EFECTOSDELSILENCIO"));
-		expediente_nuevo.set("FAPERTURA", expediente_viejo.getDate("FAPERTURA"));
-		expediente_nuevo.set("OBSERVACIONES", expediente_viejo.getString("OBSERVACIONES"));
-		expediente_nuevo.set("IDUNIDADTRAMITADORA", expediente_viejo.getString("IDUNIDADTRAMITADORA"));
-		expediente_nuevo.set("IDPROCESO", expediente_viejo.getInt("IDPROCESO"));
-		expediente_nuevo.set("TIPODIRECCIONINTERESADO", expediente_viejo.getString("TIPODIRECCIONINTERESADO"));
-		expediente_nuevo.set("NVERSION", expediente_viejo.getString("NVERSION"));
-		expediente_nuevo.set("IDSECCIONINICIADORA", expediente_viejo.getString("IDSECCIONINICIADORA"));
-		expediente_nuevo.set("SECCIONINICIADORA", expediente_viejo.getString("SECCIONINICIADORA"));
-		expediente_nuevo.set("TFNOFIJO", expediente_viejo.getString("TFNOFIJO"));
-		expediente_nuevo.set("TFNOMOVIL", expediente_viejo.getString("TFNOMOVIL"));
-		expediente_nuevo.set("DIRECCIONTELEMATICA", expediente_viejo.getString("DIRECCIONTELEMATICA"));
-		expediente_nuevo.set("NUMEXP", expediente_viejo.getString("NUMEXP"));
-		expediente_nuevo.set("VERSION", expediente_viejo.getString("VERSION"));
-		expediente_nuevo.set("FECHA_APROBACION", expediente_viejo.getDate("FECHA_APROBACION"));
-		expediente_nuevo.set("TIPOEXP", expediente_viejo.getString("TIPOEXP")); //[dipucr-Felipe #908]
+		expedienteNuevo.set("ID_PCD", expedienteViejo.getInt("ID_PCD"));
+		expedienteNuevo.set("NUMEXP", expedienteViejo.getString("NUMEXP"));
+		expedienteNuevo.set("REFERENCIA_INTERNA", expedienteViejo.getString("REFERENCIA_INTERNA"));
+		expedienteNuevo.set("NREG", expedienteViejo.getString("NREG"));
+		expedienteNuevo.set("FREG", expedienteViejo.getDate("FREG"));
+		expedienteNuevo.set("ESTADOINFO", expedienteViejo.getString("ESTADOINFO"));
+		expedienteNuevo.set("FESTADO", expedienteViejo.getDate("FESTADO"));
+		expedienteNuevo.set("NIFCIFTITULAR", expedienteViejo.getString("NIFCIFTITULAR"));
+		expedienteNuevo.set("IDTITULAR", expedienteViejo.getString("IDTITULAR"));
+		expedienteNuevo.set("DOMICILIO", expedienteViejo.getString("DOMICILIO"));
+		expedienteNuevo.set("CIUDAD", expedienteViejo.getString("CIUDAD"));
+		expedienteNuevo.set("REGIONPAIS", expedienteViejo.getString("REGIONPAIS"));
+		expedienteNuevo.set("CPOSTAL", expedienteViejo.getString("CPOSTAL"));
+		expedienteNuevo.set("IDENTIDADTITULAR", expedienteViejo.getString("IDENTIDADTITULAR"));
+		expedienteNuevo.set("TIPOPERSONA", expedienteViejo.getString("TIPOPERSONA"));
+		expedienteNuevo.set("ROLTITULAR", expedienteViejo.getString("ROLTITULAR"));
+		expedienteNuevo.set("ASUNTO", expedienteViejo.getString("ASUNTO"));
+		expedienteNuevo.set("FINICIOPLAZO", expedienteViejo.getDate("FINICIOPLAZO"));
+		expedienteNuevo.set("POBLACION", expedienteViejo.getString("POBLACION"));
+		expedienteNuevo.set("MUNICIPIO", expedienteViejo.getString("MUNICIPIO"));
+		expedienteNuevo.set("LOCALIZACION", expedienteViejo.getString("LOCALIZACION"));
+		expedienteNuevo.set("EXPRELACIONADOS", expedienteViejo.getString("EXPRELACIONADOS"));
+		expedienteNuevo.set("CODPROCEDIMIENTO", expedienteViejo.getString("CODPROCEDIMIENTO"));
+		expedienteNuevo.set("NOMBREPROCEDIMIENTO", expedienteViejo.getString("NOMBREPROCEDIMIENTO"));
+		expedienteNuevo.set("PLAZO", expedienteViejo.getInt("PLAZO"));
+		expedienteNuevo.set("UPLAZO", expedienteViejo.getString("UPLAZO"));
+		expedienteNuevo.set("FORMATERMINACION", expedienteViejo.getString("FORMATERMINACION"));
+		expedienteNuevo.set("UTRAMITADORA", expedienteViejo.getString("UTRAMITADORA"));
+		expedienteNuevo.set("FUNCIONACTIVIDAD", expedienteViejo.getString("FUNCIONACTIVIDAD"));
+		expedienteNuevo.set("MATERIAS", expedienteViejo.getString("MATERIAS"));
+		expedienteNuevo.set("SERVPRESACTUACIONES", expedienteViejo.getString("SERVPRESACTUACIONES"));
+		expedienteNuevo.set("TIPODEDOCUMENTAL", expedienteViejo.getString("TIPODEDOCUMENTAL"));
+		expedienteNuevo.set("PALABRASCLAVE", expedienteViejo.getString("PALABRASCLAVE"));
+		expedienteNuevo.set("ESTADOADM", expedienteViejo.getString("ESTADOADM"));
+		expedienteNuevo.set("HAYRECURSO", expedienteViejo.getString("HAYRECURSO"));
+		expedienteNuevo.set("EFECTOSDELSILENCIO", expedienteViejo.getString("EFECTOSDELSILENCIO"));
+		expedienteNuevo.set("FAPERTURA", expedienteViejo.getDate("FAPERTURA"));
+		expedienteNuevo.set("OBSERVACIONES", expedienteViejo.getString("OBSERVACIONES"));
+		expedienteNuevo.set("IDUNIDADTRAMITADORA", expedienteViejo.getString("IDUNIDADTRAMITADORA"));
+		expedienteNuevo.set("IDPROCESO", expedienteViejo.getInt("IDPROCESO"));
+		expedienteNuevo.set("TIPODIRECCIONINTERESADO", expedienteViejo.getString("TIPODIRECCIONINTERESADO"));
+		expedienteNuevo.set("NVERSION", expedienteViejo.getString("NVERSION"));
+		expedienteNuevo.set("IDSECCIONINICIADORA", expedienteViejo.getString("IDSECCIONINICIADORA"));
+		expedienteNuevo.set("SECCIONINICIADORA", expedienteViejo.getString("SECCIONINICIADORA"));
+		expedienteNuevo.set("TFNOFIJO", expedienteViejo.getString("TFNOFIJO"));
+		expedienteNuevo.set("TFNOMOVIL", expedienteViejo.getString("TFNOMOVIL"));
+		expedienteNuevo.set("DIRECCIONTELEMATICA", expedienteViejo.getString("DIRECCIONTELEMATICA"));
+		expedienteNuevo.set("NUMEXP", expedienteViejo.getString("NUMEXP"));
+		expedienteNuevo.set("VERSION", expedienteViejo.getString("VERSION"));
+		expedienteNuevo.set("FECHA_APROBACION", expedienteViejo.getDate("FECHA_APROBACION"));
+		expedienteNuevo.set("TIPOEXP", expedienteViejo.getString("TIPOEXP")); //[dipucr-Felipe #908]
 		
-		return expediente_nuevo;
+		return expedienteNuevo;
 	}
 }

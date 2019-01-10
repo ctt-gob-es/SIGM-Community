@@ -47,11 +47,11 @@ public class DeleteBatchTasksAction extends BaseAction  {
 						transactionAPI.deleteBatchTask(batchTaskId);
 					}
 				} catch (ISPACInfo e) {
-					logger.warn("Error al eliminar la tramitación agrupada: " 
+					LOGGER.warn("Error al eliminar la tramitación agrupada: " 
 							+ multibox[i], e);
 					throw e;
 				} catch (Exception e) {
-					logger.error("Error al eliminar la tramitación agrupada: " 
+					LOGGER.error("Error al eliminar la tramitación agrupada: " 
 							+ multibox[i], e);
 					throw new ISPACInfo(e);
 				}

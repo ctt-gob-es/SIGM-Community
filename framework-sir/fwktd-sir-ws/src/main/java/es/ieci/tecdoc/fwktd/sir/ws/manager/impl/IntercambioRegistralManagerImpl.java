@@ -1056,4 +1056,9 @@ public class IntercambioRegistralManagerImpl implements
 		return infoReenvioVO;
 	}
 
+	public List<TrazabilidadDTO> getHistoricoAsientoRegistralCode(String entity, String code) {
+	    return getListaTrazabilidadDTO(getServicioIntercambioRegistral()
+			.getHistoricoAsientoRegistralCode(entity, code));
+	}
+
 }

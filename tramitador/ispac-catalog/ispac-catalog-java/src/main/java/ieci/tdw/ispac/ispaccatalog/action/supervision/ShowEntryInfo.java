@@ -329,6 +329,11 @@ public class ShowEntryInfo extends DirectoryAction {
 					form.setEditPermissions(true);
 					break;
 
+				//[Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+				case ISecurityAPI.FUNC_INV_REPOSITORIO_COMUN_EDIT:
+					form.setEditRepositorioComun(true);
+					break;
+
 			}
 		}
 		

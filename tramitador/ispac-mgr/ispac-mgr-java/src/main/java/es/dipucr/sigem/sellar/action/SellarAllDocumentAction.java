@@ -12,6 +12,7 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.ispaclib.configuration.ConfigurationHelper;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
 import ieci.tdw.ispac.ispaclib.sign.SignDocument;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
@@ -71,6 +72,7 @@ import com.lowagie.text.pdf.SimpleBookmark;
 
 import es.dipucr.notificador.model.EnvioWS;
 import es.dipucr.notificador.model.TerceroWS;
+import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
 import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
@@ -95,6 +97,7 @@ public class SellarAllDocumentAction extends BaseDispatchAction {
 	 * Ruta por defecto de la imagen de fondo del PDF.
 	 */
 	private static final String DEFAULT_PDF_BG_IMAGE_PATH = "firma/fondo.gif";
+	public final static String PATH_IMAGEN_BAND = "PATH_IMAGE_BAND";//[dipucr-Felipe #507]
 
 	/**
 	 * Ruta por defecto del fichero con el texto de la banda lateral del PDF.
@@ -851,6 +854,13 @@ public class SellarAllDocumentAction extends BaseDispatchAction {
 					if (partic.getString("NDOC") != null) {
 						ndoc = partic.getString("NDOC");
 						logger.warn("ndoc " + ndoc);
+
+						//[Dipucr-Manu Ticket#458] - INICIO - ALSIGM3 Error al sellar documentos registrados y comprobar si están en Comparece.
+						if(StringUtils.isNotEmpty(ndoc)){
+							ndoc = ndoc.trim();
+						}
+						//[Dipucr-Manu Ticket#458] - FIN - ALSIGM3 Error al sellar documentos registrados y comprobar si están en Comparece.						
+
 						break;
 					}
 				}
@@ -1056,17 +1066,21 @@ public class SellarAllDocumentAction extends BaseDispatchAction {
 	protected Image createBgImage() throws ISPACException {
 
 		// Ruta relativa de la imagen de fondo
-		String imagePath = ISPACConfiguration.getInstance().getProperty(
-				DEFAULT_PDF_BG_IMAGE_PATH);
+		String imagePath = ISPACConfiguration.getInstance().getProperty(PATH_IMAGEN_BAND);
 		if (StringUtils.isBlank(imagePath)) {
 			imagePath = DEFAULT_PDF_BG_IMAGE_PATH;
 		}
+		
 		try {
 
 			// Ruta absoluta de la imagen de fondo
-			String imageFullPath = ConfigurationHelper
-					.getConfigFilePath(imagePath);
-			// logger.warn("imageFullPath "+imageFullPath);
+			//INICIO [dipucr-Felipe #507]
+//			String imageFullPath = ConfigurationHelper.getConfigFilePath(imagePath);
+			String idEntidad = OrganizationUser.getOrganizationUserInfo().getOrganizationId();
+			FirmaConfiguration fc = FirmaConfiguration.getInstanceNoSingleton(idEntidad);
+			String imageFullPath = fc.getBaseFilePath() + File.separator + imagePath;
+			//FIN [dipucr-Felipe #507]
+			
 			if (logger.isInfoEnabled()) {
 				logger.info("Imagen de fondo del PDF: " + imageFullPath);
 			}

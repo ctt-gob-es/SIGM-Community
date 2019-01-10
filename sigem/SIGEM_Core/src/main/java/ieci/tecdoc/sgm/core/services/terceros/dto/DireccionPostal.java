@@ -9,6 +9,8 @@ import java.io.Serializable;
 public class DireccionPostal implements Serializable {
 
 	
+	private static final long serialVersionUID = 1L;
+	
 	String id;
 	String direccionPostal;
 	String tipoVia;
@@ -23,6 +25,13 @@ public class DireccionPostal implements Serializable {
 	String comunidadAutonoma;
 	String pais;
 	String telefono;
+	
+	/** INICIO [dipucr-Felipe 3#333] **/
+	String codMunicipio;
+	String codMunicipioDir3;
+	String codProvincia;
+	String codProvinciaDir3;
+	/** FIN [dipucr-Felipe 3#333] **/
 	
 	
 	/**
@@ -144,4 +153,37 @@ public class DireccionPostal implements Serializable {
 		this.telefono = telefono;
 	}
 
+	public String getCodMunicipio() {
+		return codMunicipio;
+	}
+
+	public void setCodMunicipio(String codMunicipio) {
+		this.codMunicipio = codMunicipio;
+	}
+
+	public String getCodMunicipioDir3() {
+		return codMunicipioDir3;
+	}
+
+	public void setCodMunicipioDir3(String codMunicipioDir3) {
+		this.codMunicipioDir3 = codMunicipioDir3;
+	}
+
+	public String getCodProvincia() {
+		return codProvincia;
+	}
+
+	public void setCodProvincia(String codProvincia) {
+		this.codProvincia = codProvincia;
+	}
+
+	public String getCodProvinciaDir3() {
+		return codProvinciaDir3;
+	}
+
+	public void setCodProvinciaDir3(String codProvinciaDir3) {
+		this.codProvinciaDir3 = codProvinciaDir3;
+	}
+	
+	
 }

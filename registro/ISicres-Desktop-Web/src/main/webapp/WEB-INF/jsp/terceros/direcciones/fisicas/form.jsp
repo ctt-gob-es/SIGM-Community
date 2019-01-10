@@ -28,7 +28,7 @@
 						<label for="${status.expression}">
 							<spring:message code="label.form.direccion.fisica.direccion" />
 						</label>
-						<textarea name="${status.expression}" class="medium ${sessionScope.texttransform}" tabindex="30" rows="3" cols="30">${status.value}</textarea>
+						<input type="text" name="${status.expression}" value="${status.value}" class="medium ${sessionScope.texttransform}" tabindex="30" />
 					</spring:bind>
 				</p>
 				<p>

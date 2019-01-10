@@ -1514,5 +1514,27 @@ public interface DBEntityDAO {
 	/***************************************************************************
 	 * Test brench
 	 **************************************************************************/
+	
+	/**
+	 * Método que nos devuelve el siguiente identificador de una secuencia
+	 * 
+	 * @param userId
+	 *            identificador del usuario
+	 * @param entidad
+	 * @return siguiente identificador
+	 * @throws SQLException
+	 */
+	public int getNextIdForScrModifDoc(Integer userId, String entidad) throws SQLException;
+	
+	/**
+	 * Método que nos devuelve el siguiente identificador de una secuencia
+	 * 
+	 * @param userId
+	 *            identificador del usuario
+	 * @param entidad
+	 * @return siguiente identificador
+	 * @throws SQLException
+	 */
+	public int getNextIdForScrDocumentMetadatos(Integer userId, String entidad) throws SQLException;
 
 }

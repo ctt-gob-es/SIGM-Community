@@ -36,9 +36,9 @@ public class DipucrIniciaExpSolTrabImprenta implements IRule{
 			IInvesflowAPI invesflowAPI = cct.getAPI();
 			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 			
-			IItemCollection datosSolicitudCollection = entitiesAPI.getEntities("DPCR_DAT_PET_TRAB_IMPRENTA", numexp);
+			IItemCollection datosSolicitudCollection = entitiesAPI.getEntities(ConstantesImprenta.TABLA_DATOS_PETICION_TRABAJO, numexp);
 			if(datosSolicitudCollection.toList().size() == 0){
-				IItem datosSolicitud = entitiesAPI.createEntity("DPCR_DAT_PET_TRAB_IMPRENTA", numexp);
+				IItem datosSolicitud = entitiesAPI.createEntity(ConstantesImprenta.TABLA_DATOS_PETICION_TRABAJO, numexp);
 				IItem expediente = ExpedientesUtil.getExpediente(cct, numexp);
 				
 				String sNombreDepartamento = "";
@@ -52,7 +52,7 @@ public class DipucrIniciaExpSolTrabImprenta implements IRule{
 				}
 				
 				if(StringUtils.isNotEmpty(sNombreDepartamento)){
-					datosSolicitud.set("PETICIONARIO", sNombreDepartamento);
+					datosSolicitud.set(ConstantesImprenta.COLUMNA_PETICIONARIO, sNombreDepartamento);
 				}
 				
 				datosSolicitud.store(cct);			

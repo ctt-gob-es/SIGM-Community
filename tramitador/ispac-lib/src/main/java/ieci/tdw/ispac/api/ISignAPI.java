@@ -80,6 +80,8 @@ public interface ISignAPI {
 	 * @throws ISPACException
 	 */
 	String  initCircuitPortafirmas(int id, int documentId, ProcessSignProperties properties) throws ISPACException;
+	
+	int addFirmanteCtosFirma(int circuitId, int documentId, int idPaso, String idFirmante, String nombreFirmante, Date fechaFirma) throws ISPACException;
 
 	/**
 	 * Devuelve los pasos de un circuito de firma instanciado,

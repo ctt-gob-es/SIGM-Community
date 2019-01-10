@@ -28,6 +28,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+
 public class DownloadDocumentsAction extends BaseAction {
 	
 	public ActionForward executeAction(ActionMapping mapping, ActionForm form,
@@ -95,7 +97,11 @@ public class DownloadDocumentsAction extends BaseAction {
 				if (docId > 0) {
 					
 					// Obtener la información del documento
-					doc = entitiesAPI.getDocument(docId);
+					//INICIO [dipucr-Felipe #490]
+//					doc = entitiesAPI.getDocument(docId);
+					doc = DocumentosUtil.getDocumento(entitiesAPI, docId);
+					//FIN [dipucr-Felipe #490]
+					
 					if (doc != null) {
 						documents.add(doc);
 					}

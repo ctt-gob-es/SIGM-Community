@@ -44,8 +44,7 @@ public class DipucrTablasUtil {
 	        XTextRange xSearchTextRange = null;
 	        
 	        xSearchInterface = (XInterface)xSearchable.findFirst(xSearchDescriptor);
-	        if (xSearchInterface != null) 
-	        {
+	        if (xSearchInterface != null) {
 	        	//Cadena encontrada, la borro antes de insertar la tabla
 		        xSearchTextRange = (XTextRange) UnoRuntime.queryInterface(XTextRange.class, xSearchInterface);
 		        xSearchTextRange.setString("");
@@ -92,8 +91,7 @@ public class DipucrTablasUtil {
 		logger.info("Fin insertaTabla1");
 	}
 	
-	public static void pintaTabla(XComponent xComponent, List<?> valores, int numeroColumnas, boolean pieTabla) throws ISPACException, Exception
-	{               
+	public static void pintaTabla(XComponent xComponent, List<?> valores, int numeroColumnas, boolean pieTabla) throws ISPACException, Exception {               
 		if (valores.size() > 0){
 			
 			//Coloco el cursor al final del documento			
@@ -142,10 +140,9 @@ public class DipucrTablasUtil {
         }
 	}
 	
-	public static void setHeaderCellText(XTextTable xTextTable, String CellName, String strText, String fuente) throws Exception 
-    {
-    	XCell xCell = xTextTable.getCellByName(CellName);
-		XText xCellText = (XText) UnoRuntime.queryInterface(XText.class, xTextTable.getCellByName(CellName));
+	public static void setHeaderCellText(XTextTable xTextTable, String cellName, String strText, String fuente) throws Exception {
+    	XCell xCell = xTextTable.getCellByName(cellName);
+		XText xCellText = (XText) UnoRuntime.queryInterface(XText.class, xTextTable.getCellByName(cellName));
 
 		//Propiedades		
 		XTextCursor xTC = xCellText.createTextCursor();
@@ -166,10 +163,9 @@ public class DipucrTablasUtil {
 		xCellText.setString(strText);
 	}
 	
-	public static void setHeaderCellText(XTextTable xTextTable, String CellName, String strText, Float tamanioFuente, ParagraphAdjust alineacion, String fuente) throws Exception 
-    {
-    	XCell xCell = xTextTable.getCellByName(CellName);
-		XText xCellText = (XText) UnoRuntime.queryInterface(XText.class, xTextTable.getCellByName(CellName));
+	public static void setHeaderCellText(XTextTable xTextTable, String cellName, String strText, Float tamanioFuente, ParagraphAdjust alineacion, String fuente) throws Exception {
+    	XCell xCell = xTextTable.getCellByName(cellName);
+		XText xCellText = (XText) UnoRuntime.queryInterface(XText.class, xTextTable.getCellByName(cellName));
 
 		//Propiedades		
 		XTextCursor xTC = xCellText.createTextCursor();
@@ -190,9 +186,8 @@ public class DipucrTablasUtil {
 		xCellText.setString(strText);
 	}	
     
-	public static void setCellTextLastRow(XTextTable xTextTable, String CellName, String strText, String fuente) throws Exception 
-    {
-    	XCell xCell = xTextTable.getCellByName(CellName);
+	public static void setCellTextLastRow(XTextTable xTextTable, String cellName, String strText, String fuente) throws Exception {
+    	XCell xCell = xTextTable.getCellByName(cellName);
 		XText xCellText = (XText) UnoRuntime.queryInterface(XText.class, xCell);
 
 		//Propiedades
@@ -213,9 +208,8 @@ public class DipucrTablasUtil {
 		xCellText.setString(strText);
 	}
 
-	public static void setCellTextLastRow(XTextTable xTextTable, String CellName, String strText, Float tamanioFuente, ParagraphAdjust alineacion, String fuente) throws Exception 
-    {
-    	XCell xCell = xTextTable.getCellByName(CellName);
+	public static void setCellTextLastRow(XTextTable xTextTable, String cellName, String strText, Float tamanioFuente, ParagraphAdjust alineacion, String fuente) throws Exception {
+    	XCell xCell = xTextTable.getCellByName(cellName);
 		XText xCellText = (XText) UnoRuntime.queryInterface(XText.class, xCell);
 
 		//Propiedades
@@ -236,9 +230,8 @@ public class DipucrTablasUtil {
 		xCellText.setString(strText);
 	}
 
-	public static void setCellText(XTextTable xTextTable, String CellName, String strText, String fuente) throws Exception 
-    {
-    	XCell xCell = xTextTable.getCellByName(CellName);    	
+	public static void setCellText(XTextTable xTextTable, String cellName, String strText, String fuente) throws Exception {
+    	XCell xCell = xTextTable.getCellByName(cellName);    	
 		XText xCellText = (XText) UnoRuntime.queryInterface(XText.class, xCell);
 
 		//Propiedades
@@ -258,9 +251,8 @@ public class DipucrTablasUtil {
 		xCellText.setString(strText);
 	}
 	
-	public static void setCellText(XTextTable xTextTable, String CellName, String strText, Float tamanioFuente, ParagraphAdjust alineacion, String fuente) throws Exception 
-    {
-    	XCell xCell = xTextTable.getCellByName(CellName);    	
+	public static void setCellText(XTextTable xTextTable, String cellName, String strText, Float tamanioFuente, ParagraphAdjust alineacion, String fuente) throws Exception {
+    	XCell xCell = xTextTable.getCellByName(cellName);    	
 		XText xCellText = (XText) UnoRuntime.queryInterface(XText.class, xCell);
 
 		//Propiedades

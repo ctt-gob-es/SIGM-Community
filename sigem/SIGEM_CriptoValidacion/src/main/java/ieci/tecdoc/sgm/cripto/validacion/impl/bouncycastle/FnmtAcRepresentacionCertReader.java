@@ -5,6 +5,7 @@ import ieci.tecdoc.sgm.core.services.cripto.validacion.InfoCertificado;
 
 
 
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.cert.CertificateParsingException;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.DEREncodable;
 import org.bouncycastle.asn1.DERSequence;
@@ -25,6 +27,8 @@ import org.bouncycastle.asn1.DERUTF8String;
  * author [DipuCR-Agustin]  #310
  */
 public class FnmtAcRepresentacionCertReader implements IReaderCert {
+	
+	private static final Logger LOGGER = Logger.getLogger(FnmtAcRepresentacionCertReader.class);
 	
 	final static String CADENA = "CN=AC Representación";
     final static String CN = "CN=";
@@ -47,8 +51,7 @@ public class FnmtAcRepresentacionCertReader implements IReaderCert {
 	    try {
 			Map aux = cp.parse(cert);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 		}
 	    
 	    nombre_sinapellidos= cp.dameNombre();

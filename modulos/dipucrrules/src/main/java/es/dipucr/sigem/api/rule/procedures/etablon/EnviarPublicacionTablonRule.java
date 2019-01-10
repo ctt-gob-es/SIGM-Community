@@ -110,7 +110,6 @@ public class EnviarPublicacionTablonRule implements IRule
 			
 			String strMotivo = null;
 			boolean bFirmado = false;
-			boolean bWScorrecto = false;
 			
 			if (estado.equals(SignStatesConstants.FIRMADO)){
 				bFirmado = true;
@@ -179,18 +178,17 @@ public class EnviarPublicacionTablonRule implements IRule
 				//Hacemos la petición al servicio web
 				TablonWSProxy wsTablon = new TablonWSProxy();
 				String codEntidad = EntidadesAdmUtil.obtenerEntidad((ClientContext)cct);
-				bWScorrecto = wsTablon.insertarPublicacion(codEntidad, titulo, descripcion, calendarFechaFirma, codServicio, 
+				
+				//[dipucr-Felipe 3#382] El servicio web devuelve ahora el id del anuncio publicado
+				int idPublicacionTablon = wsTablon.insertarPublicacion(codEntidad, titulo, descripcion, calendarFechaFirma, codServicio, 
 						codCategoria, calendarIniVigencia, calendarFinVigencia, cve, hash, idTransaccion, numexp, 
 						servicioOtros, categoriaOtros, dhPublicacion);
+				itemPublicacion.set("ID_PUBLICACION", idPublicacionTablon);
+				itemPublicacion.store(cct);
 				
-				if (bWScorrecto){
-					TablonUtils.generarAvisoUsuario(rulectx, "eTablón: Su documento ha sido publicado.", 
-							null, itemDocumento, itemPublicacion);
-					TramitesUtil.crearTramite(_COD_TRAM_CERTIFICADO, rulectx);
-				}
-				else{
-					throw new Exception("Error en el servicio web de la aplicación eTablón.");
-				}
+				TablonUtils.generarAvisoUsuario(rulectx, "eTablón: Su documento ha sido publicado.", 
+						null, itemDocumento, itemPublicacion);
+				TramitesUtil.crearTramite(_COD_TRAM_CERTIFICADO, rulectx);
 			}
 		}
 		catch (Exception e) {

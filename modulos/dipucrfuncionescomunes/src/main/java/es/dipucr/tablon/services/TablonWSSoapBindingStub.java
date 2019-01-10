@@ -16,35 +16,13 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
     static org.apache.axis.description.OperationDesc [] _operations;
 
     static {
-        _operations = new org.apache.axis.description.OperationDesc[5];
+        _operations = new org.apache.axis.description.OperationDesc[7];
         _initOperationDesc1();
     }
 
     private static void _initOperationDesc1(){
         org.apache.axis.description.OperationDesc oper;
         org.apache.axis.description.ParameterDesc param;
-        oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("getServicios");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "codEntidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "ItemLista"));
-        oper.setReturnClass(es.dipucr.tablon.services.ItemLista[].class);
-        oper.setReturnQName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "getServiciosReturn"));
-        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
-        oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[0] = oper;
-
-        oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("getCategorias");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "codEntidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "ItemLista"));
-        oper.setReturnClass(es.dipucr.tablon.services.ItemLista[].class);
-        oper.setReturnQName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "getCategoriasReturn"));
-        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
-        oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[1] = oper;
-
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("insertarPublicacion");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "codEntidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
@@ -77,12 +55,23 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "dhPublicacion"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://xml.apache.org/xml-soap", "DataHandler"), javax.activation.DataHandler.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
-        oper.setReturnClass(boolean.class);
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
+        oper.setReturnClass(int.class);
         oper.setReturnQName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "insertarPublicacionReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[2] = oper;
+        _operations[0] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("eliminarPublicacion");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "idPublicacion"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), int.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
+        oper.setReturnClass(boolean.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "eliminarPublicacionReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[1] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getServicioByCodigo");
@@ -95,7 +84,7 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
         oper.setReturnQName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "getServicioByCodigoReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[3] = oper;
+        _operations[2] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getCategoriaByCodigo");
@@ -108,7 +97,42 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
         oper.setReturnQName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "getCategoriaByCodigoReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[3] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("eliminarPublicaciones");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "codEntidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "numexp"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
+        oper.setReturnClass(boolean.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "eliminarPublicacionesReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
         _operations[4] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("getServicios");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "codEntidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "ItemLista"));
+        oper.setReturnClass(es.dipucr.tablon.services.ItemLista[].class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "getServiciosReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[5] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("getCategorias");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "codEntidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "ItemLista"));
+        oper.setReturnClass(es.dipucr.tablon.services.ItemLista[].class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "getCategoriasReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[6] = oper;
 
     }
 
@@ -214,7 +238,7 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
         }
     }
 
-    public es.dipucr.tablon.services.ItemLista[] getServicios(java.lang.String codEntidad) throws java.rmi.RemoteException {
+    public int insertarPublicacion(java.lang.String codEntidad, java.lang.String titulo, java.lang.String descripcion, java.util.Calendar fechaFirma, java.lang.String codServicio, java.lang.String codCategoria, java.util.Calendar fechaIniVigencia, java.util.Calendar fechaFinVigencia, java.lang.String cve, java.lang.String hash, java.lang.String idTransaccion, java.lang.String numexp, java.lang.String servicioOtros, java.lang.String categoriaOtros, javax.activation.DataHandler dhPublicacion) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -226,11 +250,11 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "getServicios"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "insertarPublicacion"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {codEntidad});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {codEntidad, titulo, descripcion, fechaFirma, codServicio, codCategoria, fechaIniVigencia, fechaFinVigencia, cve, hash, idTransaccion, numexp, servicioOtros, categoriaOtros, dhPublicacion});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -238,9 +262,9 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
         else {
             extractAttachments(_call);
             try {
-                return (es.dipucr.tablon.services.ItemLista[]) _resp;
+                return ((java.lang.Integer) _resp).intValue();
             } catch (java.lang.Exception _exception) {
-                return (es.dipucr.tablon.services.ItemLista[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.dipucr.tablon.services.ItemLista[].class);
+                return ((java.lang.Integer) org.apache.axis.utils.JavaUtils.convert(_resp, int.class)).intValue();
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {
@@ -248,7 +272,7 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
 }
     }
 
-    public es.dipucr.tablon.services.ItemLista[] getCategorias(java.lang.String codEntidad) throws java.rmi.RemoteException {
+    public boolean eliminarPublicacion(int idPublicacion) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -260,45 +284,11 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "getCategorias"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "eliminarPublicacion"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {codEntidad});
-
-        if (_resp instanceof java.rmi.RemoteException) {
-            throw (java.rmi.RemoteException)_resp;
-        }
-        else {
-            extractAttachments(_call);
-            try {
-                return (es.dipucr.tablon.services.ItemLista[]) _resp;
-            } catch (java.lang.Exception _exception) {
-                return (es.dipucr.tablon.services.ItemLista[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.dipucr.tablon.services.ItemLista[].class);
-            }
-        }
-  } catch (org.apache.axis.AxisFault axisFaultException) {
-  throw axisFaultException;
-}
-    }
-
-    public boolean insertarPublicacion(java.lang.String codEntidad, java.lang.String titulo, java.lang.String descripcion, java.util.Calendar fechaFirma, java.lang.String codServicio, java.lang.String codCategoria, java.util.Calendar fechaIniVigencia, java.util.Calendar fechaFinVigencia, java.lang.String cve, java.lang.String hash, java.lang.String idTransaccion, java.lang.String numexp, java.lang.String servicioOtros, java.lang.String categoriaOtros, javax.activation.DataHandler dhPublicacion) throws java.rmi.RemoteException {
-        if (super.cachedEndpoint == null) {
-            throw new org.apache.axis.NoEndPointException();
-        }
-        org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[2]);
-        _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("");
-        _call.setEncodingStyle(null);
-        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
-        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
-        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "insertarPublicacion"));
-
-        setRequestHeaders(_call);
-        setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {codEntidad, titulo, descripcion, fechaFirma, codServicio, codCategoria, fechaIniVigencia, fechaFinVigencia, cve, hash, idTransaccion, numexp, servicioOtros, categoriaOtros, dhPublicacion});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {new java.lang.Integer(idPublicacion)});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -321,7 +311,7 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[3]);
+        _call.setOperation(_operations[2]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -355,7 +345,7 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[4]);
+        _call.setOperation(_operations[3]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -377,6 +367,108 @@ public class TablonWSSoapBindingStub extends org.apache.axis.client.Stub impleme
                 return (es.dipucr.tablon.services.ItemLista) _resp;
             } catch (java.lang.Exception _exception) {
                 return (es.dipucr.tablon.services.ItemLista) org.apache.axis.utils.JavaUtils.convert(_resp, es.dipucr.tablon.services.ItemLista.class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public boolean eliminarPublicaciones(java.lang.String codEntidad, java.lang.String numexp) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[4]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "eliminarPublicaciones"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {codEntidad, numexp});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return ((java.lang.Boolean) _resp).booleanValue();
+            } catch (java.lang.Exception _exception) {
+                return ((java.lang.Boolean) org.apache.axis.utils.JavaUtils.convert(_resp, boolean.class)).booleanValue();
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public es.dipucr.tablon.services.ItemLista[] getServicios(java.lang.String codEntidad) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[5]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "getServicios"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {codEntidad});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (es.dipucr.tablon.services.ItemLista[]) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (es.dipucr.tablon.services.ItemLista[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.dipucr.tablon.services.ItemLista[].class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public es.dipucr.tablon.services.ItemLista[] getCategorias(java.lang.String codEntidad) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[6]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://services.tablon.dipucr.es", "getCategorias"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {codEntidad});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (es.dipucr.tablon.services.ItemLista[]) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (es.dipucr.tablon.services.ItemLista[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.dipucr.tablon.services.ItemLista[].class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {

@@ -5,6 +5,8 @@ import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.IRespManagerAPI;
 import ieci.tdw.ispac.api.ITXTransaction;
 import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.EventManager;
 import ieci.tdw.ispac.api.rule.EventsDefines;
 import ieci.tdw.ispac.ispaclib.bpm.BpmUIDs;
@@ -29,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import es.dipucr.sigem.api.action.historico.GestionTablasHistorico;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 
 public class TXOpenNextStages implements ITXAction {
 	
@@ -38,13 +41,13 @@ public class TXOpenNextStages implements ITXAction {
 	/**
 	 * Parámetros para el contexto de las reglas.
 	 */
-	private final Map mparams;
+	private final Map<?, ?> mparams;
 
 	public TXOpenNextStages(int nIdProcess, int nIdPcdStageActivator) {
 		this(nIdProcess, nIdPcdStageActivator, null);
 	}
 
-	public TXOpenNextStages(int nIdProcess, int nIdPcdStageActivator, Map params) {
+	public TXOpenNextStages(int nIdProcess, int nIdPcdStageActivator, Map<?, ?> params) {
 		super();
 		mnIdProcess=nIdProcess;
 		mnIdPcdStageActivator = nIdPcdStageActivator;
@@ -83,8 +86,8 @@ public class TXOpenNextStages implements ITXAction {
 		eventmgr.getRuleContextBuilder().addContext(process);
 
 		//Se invoca al BPM para obtener las siguientes fases a activar
-		List nextNodes = bpmAPI.getNextStages(process.getString("ID_PROCESO_BPM"), pNodo.getString("ID_NODO_BPM"));
-		Iterator it = nextNodes.iterator();
+		List<?> nextNodes = bpmAPI.getNextStages(process.getString("ID_PROCESO_BPM"), pNodo.getString("ID_NODO_BPM"));
+		Iterator<?> it = nextNodes.iterator();
 		
 		TXDAOGen genDAO= new TXDAOGen(cs,eventmgr);
 		TXNodeActivationManager nodeActMgr=new TXNodeActivationManager(genDAO,procedure,dtc);
@@ -94,18 +97,18 @@ public class TXOpenNextStages implements ITXAction {
 			PNodoDAO node = procedure.getNode(cs.getConnection(), nodeUID);
 			if (node.isStage()){
 				PFaseDAO pStage = procedure.getStageDAO(cs.getConnection(), nodeUID);
-				instanceStage(bpmAPI, pStage, process, eventmgr, nodeActMgr, nodeUID, respManagerAPI);
+				instanceStage(cs, bpmAPI, pStage, process, eventmgr, nodeActMgr, nodeUID, respManagerAPI);
 			}else{//Se trata de un nodo de sincronizacion
 				bpmAPI.processSyncNode(nodeUID);
-				List nextSpacStages = nodeActMgr.processSyncNode(mnIdPcdStageActivator, node.getKeyInt(), process);
+				List<?> nextSpacStages = nodeActMgr.processSyncNode(mnIdPcdStageActivator, node.getKeyInt(), process);
 				//Nos quedamos con las fases que nos retorna SPAC no las del BPM, ya que en el BPM propio para SPAC deberia tener acceso al dtc para aplicar los cambios 
 				if (nextSpacStages !=null ){	
-					for (Iterator iter = nextSpacStages.iterator(); iter.hasNext();) {
+					for (Iterator<?> iter = nextSpacStages.iterator(); iter.hasNext();) {
 						int stageId = ((Integer) iter.next()).intValue();
 						PFaseDAO pStage = procedure.getStageDAO(stageId);
 						PNodoDAO node1 = procedure.getNode(cs.getConnection(), pStage.getKeyInt());
 						if (!nodeActMgr.testStageOpen(process.getKeyInt(), pStage.getKeyInt()))
-							instanceStage(bpmAPI, pStage, process, eventmgr, nodeActMgr, node1.getString("ID_NODO_BPM"), respManagerAPI);
+							instanceStage(cs, bpmAPI, pStage, process, eventmgr, nodeActMgr, node1.getString("ID_NODO_BPM"), respManagerAPI);
 					}
 				}
 			}
@@ -155,7 +158,7 @@ public class TXOpenNextStages implements ITXAction {
 		
 	}
 	
-	private void instanceStage(IBPMAPI bpmAPI, PFaseDAO pStage, TXProcesoDAO process, EventManager eventmgr, TXNodeActivationManager nodeActMgr, String nodeUID, IRespManagerAPI respManagerAPI) throws ISPACException{
+	private void instanceStage(ClientContext cs, IBPMAPI bpmAPI, PFaseDAO pStage, TXProcesoDAO process, EventManager eventmgr, TXNodeActivationManager nodeActMgr, String nodeUID, IRespManagerAPI respManagerAPI) throws ISPACException{
 		
 		//eventmgr.getRuleContextBuilder().addContext(RuleProperties.RCTX_STAGEPCD, ""+pStage.getKeyInt());
 		String processStageRespId = ResponsibleHelper.calculateStageResp(eventmgr, pStage, process.getString("ID_RESP"));
@@ -176,6 +179,42 @@ public class TXOpenNextStages implements ITXAction {
 			stageInstanced.set("ID_FASE_BPM", processStageUID);
 			stageInstanced.set("RESP", nombreRespId);
 			//stageInstanced.set("ID_RESP", processStageRespId);
+			
+			//[Manu Ticket #620] INICIO SIGEM Muestra Trámites al retorceder fase
+			// Comprobamos si la fase posterior tenía trámites, si es así recuperamos el id de la fase, 
+			//para que no los muestre como de fases anteriores
+			int id_fase_posterior = 0;
+			
+			IItemCollection tramitesCollection = TramitesUtil.getTramites(cs, process.getString("NUMEXP"));
+			Iterator<?> tramitesIterator = tramitesCollection.iterator();
+			int id_fase_stage = stageInstanced.getIdFase();
+			
+			boolean encontrado = false;
+			
+			while (tramitesIterator.hasNext() && !encontrado){
+				IItem tramite = (IItem) tramitesIterator.next();
+				int id_fase_pcd = tramite.getInt("ID_FASE_PCD");			
+				if(id_fase_pcd == id_fase_stage){
+					id_fase_posterior = tramite.getInt("ID_FASE_EXP");
+					encontrado = true;
+				}
+			}
+
+			if(id_fase_posterior != 0 && encontrado){
+				cs.endTX(true);
+				cs.beginTX();
+				try{
+					cs.getConnection().execute("update spac_fases set id = " + id_fase_posterior + ", id_fase_bpm = '" + id_fase_posterior + "' where id = " + stageInstanced.getKeyInt());
+					cs.endTX(true);
+				}
+				catch(ISPACException e){
+					//Se captura la excepción, en caso de que de algún error no hace nada y se comporta como siempre.
+					cs.endTX(false);
+				}
+			}
+			//[Manu Ticket #620] FIN - SIGEM Muestra Trámites al retorceder fase
+			
+			
 		}
 	}
 	

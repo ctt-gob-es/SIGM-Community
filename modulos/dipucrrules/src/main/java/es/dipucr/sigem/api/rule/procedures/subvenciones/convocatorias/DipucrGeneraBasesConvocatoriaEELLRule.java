@@ -1,13 +1,13 @@
 package es.dipucr.sigem.api.rule.procedures.subvenciones.convocatorias;
 
+import java.util.Calendar;
+
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
 import org.apache.log4j.Logger;
-
-import com.ibm.icu.util.Calendar;
 
 import es.dipucr.sigem.api.rule.common.documento.DipucrAutoGeneraDocIniTramiteRule;
 

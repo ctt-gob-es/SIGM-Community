@@ -43,7 +43,7 @@ public class GenerarFoliadoRule extends DipucrGenerarExpedienteFoliadoConIndiceR
 		StringBuffer numexps = new StringBuffer("");
 		try{
 			
-			Vector<String> resultado = ExpedientesRelacionadosUtil.recuperarTodosExpRelacionados(rulectx, rulectx.getNumExp(), new Vector<String>());
+			Vector<String> resultado = ExpedientesRelacionadosUtil.getTodosExpRelacionados(rulectx, rulectx.getNumExp());
 			numexps.append("'"+resultado.get(0)+"'");
 			for(int i=1; i<resultado.size(); i++){
 				numexps.append(",'"+resultado.get(i)+"'");

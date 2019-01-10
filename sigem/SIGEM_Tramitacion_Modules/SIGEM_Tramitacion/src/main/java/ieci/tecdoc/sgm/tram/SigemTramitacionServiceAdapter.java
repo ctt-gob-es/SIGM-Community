@@ -1,8 +1,12 @@
 package ieci.tecdoc.sgm.tram;
 
 import ieci.tdw.ispac.api.IEntitiesAPI;
+import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.ISignAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
+import ieci.tdw.ispac.ispaclib.common.constants.SignStatesConstants;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
 import ieci.tdw.ispac.ispaclib.session.OrganizationUserInfo;
@@ -32,9 +36,13 @@ import ieci.tecdoc.sgm.tram.vo.SGMInfoOcupacionVO;
 import ieci.tecdoc.sgm.tram.vo.SGMProcedimientoVO;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 
 /**
  * Implementación del servicio de Tramitación de SIGEM.
@@ -579,6 +587,115 @@ public class SigemTramitacionServiceAdapter implements ServicioTramitacion {
 					TramitacionException.EXC_GENERIC_EXCEPCION, e);
 		}
 
-	}	
+	}
+	
+	/**
+     * [dipucr-Felipe #563]
+     * @param idEntidad
+     * @param entidad
+     * @param query
+     * @return
+     * @throws TramitacionException
+     */
+	@SuppressWarnings("unchecked")
+	public String[] queryEntities(String idEntidad, String entidad, String query) throws TramitacionException{
+		
+		try {
+			setOrganizationUserInfo(idEntidad);
+			ClientContext ctx = TramitacionManager.getInstance().getContext();
+			ctx.setLocale(new Locale("es", "ES"));
+			IEntitiesAPI entitiesAPI = ctx.getAPI().getEntitiesAPI();
+			IItemCollection colItems = entitiesAPI.queryEntities(entidad, query);
+			List<IItem> listEntities = colItems.toList();
+			String[] arrXmlItems = new String[listEntities.size()];
+			int i = 0;
+			for (IItem item : listEntities){
+//				arrXmlItems[i] = Base64Util.encodeString(item.getXmlValues());
+				arrXmlItems[i] = item.getXmlValues();
+				i++;
+			}
+			return arrXmlItems;
+					
+		} catch (Throwable e) {
+			logger.error("Error al realizar la query de entidades. [idEntidad=" + idEntidad + "; "
+					+ "entidad=" + entidad + "; query=" + query + "]", e);
+			throw new TramitacionException(
+					TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+	}
+	
+	/**
+     * [dipucr-Felipe #860 WE#153]
+     * @param idEntidad
+     * @param numexp
+     * @return
+     * @throws TramitacionException
+     */
+	public boolean anularLicenciaRRHH(String idEntidad, String numexp) throws TramitacionException{
+		
+		try {
+			final String NOMBRE_DOCUMENTO = "RRHH - Solicitud de Licencias";
+			
+			setOrganizationUserInfo(idEntidad);
+			ClientContext ctx = TramitacionManager.getInstance().getContext();
+			ctx.setLocale(new Locale("es", "ES"));
+			IInvesflowAPI invesflowAPI = ctx.getAPI();
+			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
+			ISignAPI signAPI = invesflowAPI.getSignAPI();
+			
+			IItem itemExpediente = entitiesAPI.getExpedient(numexp);
+			String asunto = itemExpediente.getString("ASUNTO");
+			asunto = "[Anulado a solicitud del usuario] " + asunto;
+			itemExpediente.set("ASUNTO", asunto);
+			itemExpediente.store(ctx);
+			
+			IItemCollection colDocumentos = DocumentosUtil.getDocumentsByNombre(ctx, numexp, NOMBRE_DOCUMENTO, "");
+			if (colDocumentos.toList().size() > 0){
+				IItem itemDocumento = colDocumentos.value();
+				int documentId = itemDocumento.getKeyInt();
+				
+				//Borramos los pasos de firma pendientes del documento
+				signAPI.deleteStepsByDocument(documentId);
+				
+				//Desmarcamos el documento como pendiente de firma
+				itemDocumento.set("ESTADOFIRMA", SignStatesConstants.SIN_FIRMA);
+				itemDocumento.store(ctx);
+				
+				//Cerramos trámites y expediente
+				ExpedientesUtil.cerrarExpediente(ctx, numexp);
+			}
+			else{
+				throw new Exception("Error al anular la licencia RRHH del expediente " + numexp +
+						". No es posible localizar el documento de justificante que se envió a la firma.");
+			}
+			
+			return true;
+					
+		} catch (Throwable e) {
+			logger.error("Error al anular la licencia de RRHH del expediente " + numexp);
+			throw new TramitacionException(TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+	}
 
+	/**
+     * Añade documentos al trámite de un expediente.
+     * @param numExp Número de expediente.
+     * @param idTramite Identificador del trámite al que anexar los documentos.
+     * @param numReg Número de registro de entrada.
+     * @param fechaReg Fecha de registro de entrada.
+     * @param documentos Lista de documentos asociados al expediente.
+     * @return Cierto si los documentos se han creado correctamente.
+     * @throws TramitacionException Si se produce algún error.
+     */
+    public boolean anexarDocsTramite(String idEntidad, String numExp, int idTramite, String numReg, Date fechaReg, DocumentoExpediente[] documentos) throws TramitacionException {
+    	
+		try {
+			setOrganizationUserInfo(idEntidad);
+			return TramitacionManager.getInstance().anexarDocsTramite(numExp, idTramite, numReg, fechaReg, toInternalForm(documentos));
+			
+		} catch (Throwable e){
+			logger.error("Error inesperado al anexar documentos al expediente [numExp=" + numExp + ", numReg=" + numReg + ", fechaReg=" + fechaReg + ", documentos=" + documentos + "]", e);
+			throw new TramitacionException( TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+    }
 }

@@ -296,6 +296,11 @@ var IDS_LABEL_SEL_ALL_BOOKS         = "Todos los libros del mismo tipo que el li
 var IDS_MSG_EXCEDEED_SELECTION      = "Ha excedido el número de registros seleccionables";
 var IDS_ERR_GET_USERDN_LDAP			= "Error al obtener el DN del usuario conectado";
 var IDS_LABEL_INT					= "Interesado";
+
+//[Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros.
+var IDS_LABEL_NIF					= "N.I.F.";
+//[Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros.
+
 var IDS_LABEL_REPRE					= "Representante";
 var IDS_LABEL_DOM					= "Domicilio";
 var IDS_LABEL_CONFIG				= "Configuración";
@@ -767,6 +772,11 @@ var EU_IDS_MSG_EXCEDEED_SELECTION       = "Hauta daitezkeen erregistroen kopurua
 var EU_IDS_MUST_INSTALL_PLUGIN_LDAP     = "Direktorio-zerbitzuarekin integratzeko ActiveX zuzen instalatu behar duzu (LDAP)";
 var EU_IDS_ERR_GET_USERDN_LDAP			= "Konektatu den erabiltzailearen Domeinu Zk. eskuratzean errorea.";
 var EU_IDS_LABEL_INT					= "Interesduna";
+
+//[Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros.
+var EU_IDS_LABEL_NIF					= "N.I.F.";
+//[Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros.
+
 var EU_IDS_LABEL_REPRE					= "ordezkari";
 var EU_IDS_LABEL_DOM					= "Helbidea";
 var EU_IDS_LABEL_CONFIG					= "Konfigurazioa";
@@ -1226,6 +1236,11 @@ var CT_IDS_MSG_EXCEDEED_SELECTION       = "Heu excedit el número màxim de regi
 var CT_IDS_MUST_INSTALL_PLUGIN_LDAP     = "Instal·leu correctament l'ActiveX d'integració amb el servei de directori (LDAP)";
 var CT_IDS_ERR_GET_USERDN_LDAP			= "Error en obtenir el DN de l'usuari connectar";
 var CT_IDS_LABEL_INT					= "Interessat";
+
+//[Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros.
+var CT_IDS_LABEL_NIF					= "N.I.F.";
+//[Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros.
+
 var CT_IDS_LABEL_REPRE					= "Representant";
 var CT_IDS_LABEL_DOM					= "Domicili";
 var CT_IDS_LABEL_CONFIG					= "Configuració";
@@ -1696,6 +1711,11 @@ var GL_IDS_LABEL_SEL_ALL_BOOKS         = "Todos os libros do mesmo tipo que o li
 var GL_IDS_MSG_EXCEDEED_SELECTION      = "Excedeu o número de rexistros seleccionables";
 var GL_IDS_ERR_GET_USERDN_LDAP			= "Erro ao obter o DN do usuario conectado";
 var GL_IDS_LABEL_INT					= "Interesado";
+
+//[Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros.
+var GL_IDS_LABEL_NIF					= "N.I.F.";
+//[Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros.
+
 var GL_IDS_LABEL_REPRE					= "Representante";
 var GL_IDS_LABEL_DOM					= "Domicilio";
 var GL_IDS_LABEL_CONFIG				= "Configuración";

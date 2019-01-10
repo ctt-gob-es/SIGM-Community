@@ -16,7 +16,6 @@ import es.ieci.tecdoc.fwktd.sir.api.manager.InteresadoManager;
 import es.ieci.tecdoc.fwktd.sir.api.manager.RecepcionManager;
 import es.ieci.tecdoc.fwktd.sir.api.manager.TrazabilidadManager;
 import es.ieci.tecdoc.fwktd.sir.core.service.ServicioIntercambioRegistral;
-import es.ieci.tecdoc.fwktd.sir.core.types.EstadoAsientoRegistralEnum;
 import es.ieci.tecdoc.fwktd.sir.core.util.ToStringLoggerHelper;
 import es.ieci.tecdoc.fwktd.sir.core.vo.AnexoFormVO;
 import es.ieci.tecdoc.fwktd.sir.core.vo.AnexoVO;
@@ -628,4 +627,43 @@ public class ServicioIntercambioRegistralImpl implements ServicioIntercambioRegi
 		// Comprobar el time-out de los ficheros de intercambio enviados
 		getAsientoRegistralManager().comprobarTimeOutEnvios();
 	}
+
+
+	public List<TrazabilidadVO> getHistoricoAsientoRegistralCode(String entity, String code) {
+	    logger.info("Llamada a getHistoricoAsientoRegistral: code=[{}]", code);
+
+	        Assert.hasText(code, "'code' must not be empty");
+
+	        List<TrazabilidadVO> trazas = null;
+
+	        logger.debug("Asiento registral: codigoEntidadRegistral=[{}], codigoIntercambio=[{}]", 
+	        		new Object[] { entity, code});
+
+	        if (StringUtils.isNotBlank(code)) {
+
+	            // Obtener las trazas de intercambio
+				trazas = getTrazabilidadManager().getTrazabilidad(
+					entity, code, true, false);
+	        }
+
+	        return trazas;
+	}
+	
+
+	    /**
+	     * {@inheritDoc}
+	     * @see es.ieci.tecdoc.fwktd.sir.core.service.ServicioIntercambioRegistral#getEstadoAsientoRegistral(java.lang.String)
+	     */
+	    public EstadoAsientoRegistraVO getEstadoAsientoRegistralByCode(String code) {
+
+	    	EstadoAsientoRegistraVO result = null;
+	        logger.info("Llamada a getEstadoAsientoRegistral: code=[{}]", code);
+
+	        Assert.hasText(code, "'id' must not be empty");
+	        
+	        // Obtener el estado del asiento registral
+	        result = getAsientoRegistralManager().getEstadoByCode(code);
+	        
+	        return result;
+	    }
 }

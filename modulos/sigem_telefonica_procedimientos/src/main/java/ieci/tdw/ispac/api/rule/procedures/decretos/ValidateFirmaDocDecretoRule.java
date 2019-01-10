@@ -15,62 +15,55 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
  */
 public class ValidateFirmaDocDecretoRule implements IRule{
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		return true;
-	}
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        return true;
+    }
 
-	public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
-		try{
-			IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
-	        
-        	// Comprobar que se haya anexado un documento
-			IItemCollection docsCollection = entitiesAPI.getTaskDocuments(rulectx.getNumExp(), rulectx.getTaskId());
-			
-			if (docsCollection==null || docsCollection.toList().size()==0)
-			{
-				rulectx.setInfoMessage("No se puede cerrar el trámite ya que no se ha generado el documento de Decreto");
-				return false;
-			}
-			
-			// Comprobar que se haya firmado el documento de Decreto
-			int taskId = rulectx.getTaskId();
-			String sqlQuery = "ID_TRAMITE = "+taskId+" AND NOMBRE = 'Decreto' AND ESTADOFIRMA = '02'";
-			IItemCollection itemCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), sqlQuery, "");
-			
-			if (!itemCollection.next())
-			{
-				rulectx.setInfoMessage("No se puede cerrar el trámite ya que no se ha generado el documento de Decreto o está sin firmar");
-				return false;
-			}
-			else
-			{
-				
-				// Comprobar que se haya adjuntado y no se haya firmado el documento de Plantilla de Notificaciones
-				sqlQuery = "ID_TRAMITE = "+taskId+" AND NOMBRE = 'Plantilla de Notificaciones' AND ESTADOFIRMA = '00'";
-				itemCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), sqlQuery, "");
-				
-				if (!itemCollection.next())
-				{
-					rulectx.setInfoMessage("No se puede cerrar el trámite ya que no se ha generado el documento de Plantilla de Notificaciones o está firmado");
-					return false;
-				}
-				else
-				{
-					return true;
-				}
-			}
-		}
-		catch (Exception e) 
-		{
-	        throw new ISPACRuleException("Error al comprobar el estado de la firma de los documentos", e);
-	    } 
-	}
+    public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
+        try{
+            IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
+            
+            // Comprobar que se haya anexado un documento
+            IItemCollection docsCollection = entitiesAPI.getTaskDocuments(rulectx.getNumExp(), rulectx.getTaskId());
+            
+            if (docsCollection==null || docsCollection.toList().size()==0) {
+                rulectx.setInfoMessage("No se puede cerrar el trámite ya que no se ha generado el documento de Decreto");
+                return false;
+            }
+            
+            // Comprobar que se haya firmado el documento de Decreto
+            int taskId = rulectx.getTaskId();
+            String sqlQuery = "ID_TRAMITE = "+taskId+" AND NOMBRE = 'Decreto' AND ESTADOFIRMA = '02'";
+            IItemCollection itemCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), sqlQuery, "");
+            
+            if (!itemCollection.next()) {
+                rulectx.setInfoMessage("No se puede cerrar el trámite ya que no se ha generado el documento de Decreto o está sin firmar");
+                return false;
+                
+            } else {
+                // Comprobar que se haya adjuntado y no se haya firmado el documento de Plantilla de Notificaciones
+                sqlQuery = "ID_TRAMITE = "+taskId+" AND NOMBRE = 'Plantilla de Notificaciones' AND ESTADOFIRMA = '00'";
+                itemCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), sqlQuery, "");
+                
+                if (!itemCollection.next()) {
+                    rulectx.setInfoMessage("No se puede cerrar el trámite ya que no se ha generado el documento de Plantilla de Notificaciones o está firmado");
+                    return false;
+                    
+                } else {
+                    return true;
+                }
+            }
+            
+        } catch (Exception e) {
+            throw new ISPACRuleException("Error al comprobar el estado de la firma de los documentos", e);
+        } 
+    }
 
-	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
-		return null;
-	}
+    public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+        return null;
+    }
 
-	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-
-	}
+    public void cancel(IRuleContext rulectx) throws ISPACRuleException {
+        // No se da nunca este caso
+    }
 }

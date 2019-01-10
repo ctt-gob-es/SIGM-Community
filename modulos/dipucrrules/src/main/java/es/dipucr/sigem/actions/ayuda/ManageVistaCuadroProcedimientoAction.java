@@ -52,6 +52,8 @@ public class ManageVistaCuadroProcedimientoAction extends TreeViewManager implem
 	public ActionForward home(ActionMapping mappings, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response, SessionAPI sessionApi) throws ISPACException {
 		
+		Boolean bool = false;
+		
 		// Comprobar si hay que recargar la información del procedimiento
 		String reload = request.getParameter("reload");
 		if ("true".equals(reload)) {
@@ -68,10 +70,15 @@ public class ManageVistaCuadroProcedimientoAction extends TreeViewManager implem
 				for (Iterator<?> iter = nodes.iterator(); iter.hasNext();) {
 					TreeNode nodeToSelect = (TreeNode) iter.next();
 					tree.setSelectedNode(nodeToSelect);
+					ElementoCuadro elem = (ElementoCuadro) nodeToSelect.getModelItem();
+					if (elem.isEntityPlantillaTipoDoc() || elem.isEntityPlantillaStageTipoDoc()) {
+						bool = new Boolean(sessionApi.getAPI().getTemplateAPI().isProcedureTemplate(Integer.parseInt(elem.getRegId())));
+					}
 					break;
 				}
 			}
-		}		
+		}
+
 		return mappings.findForward("success");
 	}
 

@@ -37,6 +37,9 @@ public class TipoDocumentoAnexoEnumVO extends ValuedEnum {
 	 public static final TipoDocumentoAnexoEnumVO  DOCUMENTO_ADJUNTO_FORMULARIO  = new TipoDocumentoAnexoEnumVO(DOCUMENTO_ADJUNTO_FORMULARIO_NAME,DOCUMENTO_ADJUNTO_FORMULARIO_VALUE);
 	 public static final TipoDocumentoAnexoEnumVO  FICHERO_TECNICO = new TipoDocumentoAnexoEnumVO(FICHERO_TECNICO_NAME,FICHERO_TECNICO_VALUE);
 	 
-	 
+	 public static TipoDocumentoAnexoEnumVO getEnum(int valor) {
+		return (TipoDocumentoAnexoEnumVO) getEnum(TipoDocumentoAnexoEnumVO.class,
+				valor);
+	}
 
 }

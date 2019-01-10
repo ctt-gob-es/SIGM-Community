@@ -20,7 +20,10 @@
 
 	<div id="cabecera">
 		<utils-admin:eco-logo/>
-		<p class="logoSIGM">		
-			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="sigem" width="129px" height="56px"/>
+		<p class="logoSIGM">					
+		<!-- [eCenpri-Manu Ticket#267] + ALSIGM3 Logotipo de la entidad sale feas en registro presencial y tramitador -->
+			<!-- <img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="sigem" width="129px" height="56px"/> -->
+			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="SIGM" style="width: auto; max-width: 200px; height: 59px; max-height: 200px;" />
+		<!-- [eCenpri-Manu Ticket#267] + ALSIGM3 Logotipo de la entidad sale feas en registro presencial y tramitador -->
 		</p>
 	</div>

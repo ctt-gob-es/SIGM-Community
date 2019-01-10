@@ -10,7 +10,6 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
@@ -44,7 +43,7 @@ public class GeneratePropuestaConvocatoriaIntervencionRule implements IRule {
     	String numexp = "";
     	try{
 			//----------------------------------------------------------------------------------------------
-	        ClientContext cct = (ClientContext) rulectx.getClientContext();
+	        IClientContext cct = rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 	        //----------------------------------------------------------------------------------------------
@@ -70,7 +69,7 @@ public class GeneratePropuestaConvocatoriaIntervencionRule implements IRule {
 				cct.setSsVariable("CONTENIDO", strContenido);
 		        
 		        //Generación del comienzo del documento
-				String strNombreTpDoc = DocumentosUtil.getNombreTipoDocByCod(rulectx, "Subv-PropApr");
+				String strNombreTpDoc = DocumentosUtil.getNombreTipoDocByCod(cct, "Subv-PropApr");
 				String strNombrePlant = getPlantilla(rulectx, strNombreTpDoc);
 		        DocumentosUtil.generarDocumento(rulectx, strNombreTpDoc, strNombrePlant, "intermedio");
 	        	String strInfoPag = DocumentosUtil.getInfoPagByNombre(rulectx.getNumExp(), rulectx, strNombreTpDoc);
@@ -81,7 +80,7 @@ public class GeneratePropuestaConvocatoriaIntervencionRule implements IRule {
 	    		//Generación de las bases
 	    		File file = null;
 	    		String descr = "";
-				strNombreTpDoc = DocumentosUtil.getNombreTipoDocByCod(rulectx, "Subv-AnunBases");
+				strNombreTpDoc = DocumentosUtil.getNombreTipoDocByCod(cct, "Subv-AnunBases");
 				strNombrePlant = strNombreTpDoc;
 				strQuery = "WHERE NUMEXP='" + rulectx.getNumExp() + "' ORDER BY NUMERO ASC";
 		        IItemCollection bases = entitiesAPI.queryEntities("SUBV_BASES", strQuery);
@@ -107,7 +106,7 @@ public class GeneratePropuestaConvocatoriaIntervencionRule implements IRule {
 		        	descr = strNombreTpDoc + " - " + strNumeroNorma;
 	            	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, descr);
 	        		file = DocumentosUtil.getFile(rulectx.getClientContext(), strInfoPag, null, null);
-	        		EdicionDocumentosUtil.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+	        		EdicionDocumentosUtil.Concatena(xComponent, "file://" + file.getPath());
 	        		file.delete();
 		        }
 	    		/**
@@ -127,14 +126,14 @@ public class GeneratePropuestaConvocatoriaIntervencionRule implements IRule {
 	    		file1.delete();
 	    		
 	    		//Guarda el resultado en gestor documental
-				strNombreTpDoc = DocumentosUtil.getNombreTipoDocByCod(rulectx, "Subv-PropApr");
+				strNombreTpDoc = DocumentosUtil.getNombreTipoDocByCod(cct, "Subv-PropApr");
 				int tpdoc = DocumentosUtil.getTipoDoc(cct, strNombreTpDoc, DocumentosUtil.BUSQUEDA_EXACTA, false);
 
 	    		DocumentosUtil.generaYAnexaDocumento(rulectx, tpdoc, strNombreTpDoc, file, Constants._EXTENSION_ODT);
 	    		if(file != null && file.exists()) file.delete();
 	    		
 	    		//Borra los documentos intermedios del gestor documental
-		        IItemCollection collection = entitiesAPI.getDocuments(rulectx.getNumExp(), "DESCRIPCION LIKE '" + DocumentosUtil.getNombreTipoDocByCod(rulectx, "Subv-AnunBases") + "%' OR DESCRIPCION LIKE '%intermedio'", "");
+		        IItemCollection collection = entitiesAPI.getDocuments(rulectx.getNumExp(), "DESCRIPCION LIKE '" + DocumentosUtil.getNombreTipoDocByCod(cct, "Subv-AnunBases") + "%' OR DESCRIPCION LIKE '%intermedio'", "");
 		        it = collection.iterator();
 		        while (it.hasNext())
 		        {
@@ -144,7 +143,6 @@ public class GeneratePropuestaConvocatoriaIntervencionRule implements IRule {
 	    		
 		        cct.deleteSsVariable("TITULO");
 		        cct.deleteSsVariable("CONTENIDO");	
-		        if(ooHelper!= null) ooHelper.dispose();
 	        }//MQE fin de generar el documento
 			
         	return new Boolean(true);
@@ -161,6 +159,10 @@ public class GeneratePropuestaConvocatoriaIntervencionRule implements IRule {
 		} catch (Exception e) {
 			logger.error("No se ha podido crear la propuesta de convocatoria del expediente: " + numexp + ". " + e.getMessage(), e);
         	throw new ISPACRuleException("No se ha podido crear la propuesta de convocatoria del expediente: " + numexp + ". " + e.getMessage(), e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
     }
 
@@ -194,7 +196,7 @@ public class GeneratePropuestaConvocatoriaIntervencionRule implements IRule {
         	{
 		    	IItem taskTpDoc = (IItem)itTpDocs.next();
 	    		int documentTypeId = taskTpDoc.getInt("TASKTPDOC:ID_TPDOC");
-	        	int tpDocId = DocumentosUtil.getIdTpDocByNombreTpDoc(rulectx, nombreTpDoc);
+	        	int tpDocId = DocumentosUtil.getIdTipoDocByNombre(cct, nombreTpDoc);
 	    		if (tpDocId != documentTypeId)
 	    		{
 	    			//Este no es el Tipo de documento solicitado

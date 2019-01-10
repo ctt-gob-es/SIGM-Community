@@ -111,10 +111,11 @@ public class PrepararAnuncioBopRule implements IRule
         } catch(Exception e) {
         	logger.error("No se ha podido crear el anuncio del BOP. " +e.getMessage(), e);
         	throw new ISPACRuleException("No se ha podido crear el anuncio del BOP. " +e.getMessage(), e);
-        }
-        finally{
-        	ooHelper.dispose();
-        }
+        } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
     }
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException{

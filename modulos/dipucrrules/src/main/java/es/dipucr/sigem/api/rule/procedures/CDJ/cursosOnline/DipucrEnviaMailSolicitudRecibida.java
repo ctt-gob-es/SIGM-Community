@@ -123,19 +123,19 @@ public class DipucrEnviaMailSolicitudRecibida implements IRule {
 						List<Object[]> imagenes = new ArrayList<Object[]>();
 						imagenes.add(imagen);
 						try{
-							MailUtil.enviarCorreo(rulectx, correo, subject, content, imagenes);
+							MailUtil.enviarCorreo(rulectx.getClientContext(), correo, subject, content, imagenes);
 							logger.info("[DipucrEnviaMailSolicitudRecibida:execute()] Email enviado a: "	+ correo);
 						}
 						catch(Exception e){
-							logger.error(this.getClass().getName()+": Error al enviar e-mail a: "+correo);
+							logger.error(this.getClass().getName()+": Error al enviar e-mail a: "+correo, e);
 							content = "ERROR - <br>"+content;
 							subject = "ERROR - "+subject;
 							try{
 								CorreoConfiguration correoConfig = CorreoConfiguration.getInstance(rulectx.getClientContext());
 								correo = correoConfig.get("correo_cdj_error");
-								MailUtil.enviarCorreo(rulectx, correo, subject, content, imagenes);
+								MailUtil.enviarCorreo(rulectx.getClientContext(), correo, subject, content, imagenes);
 							}catch(Exception e1){
-								logger.error(this.getClass().getName()+": Error al enviar e-mail a: "+correo);
+								logger.error(this.getClass().getName()+": Error al enviar e-mail a: "+correo, e1);
 							}
 						}		     		    	   
 					}

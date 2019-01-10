@@ -116,6 +116,22 @@
 												needToConfirm="true">
 										</ispac:linkframe>
 									</td>
+									<!-- INICIO [dipucr-Felipe #630] -->
+									<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" width="10px"/></td>
+									<td>
+										<ispac:linkframe 	id="GenerarDocumentosZipAnexar"
+												target="workframe"
+												action="selectDocumentType.do?action=attachFilesFromZip.do"
+												titleKey="forms.tasks.generate.document.attachZip"
+												showFrame="true"
+												inputField=""
+												styleClass="tdlink"
+												width="500"
+												height="300"
+												needToConfirm="true">
+										</ispac:linkframe>
+									</td>
+									<!-- FIN [dipucr-Felipe #630] -->
 									<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" width="10px"/></td>
 									<td>
 										<ispac:linkframe 	id="GenerarDocumentoEscanear"
@@ -148,8 +164,24 @@
 										</ispac:linkframe>
 									</td>
 									 -->
+									<!-- [Dipucr-Manu Ticket #478] - INICIO - ALSIGM3 Nueva opción Repositorio Común -->
 									<td>
-												<ispac:linkframe
+										<ispac:linkframe id="GenerarDocumentoRepositorioComun"
+												 target="workframe"
+												 action="selectDocumentType.do?action=uploadRepoComunFiles.do"
+												 titleKey="forms.tasks.generate.document.from.repositoryComun"
+												 showFrame="true"
+												 inputField=""
+												 styleClass="tdlink"
+												 width="640"
+												 height="480"
+												 needToConfirm="true">
+										</ispac:linkframe>
+									</td>
+									<!-- [Dipucr-Manu Ticket #478] - FIN - ALSIGM3 Nueva opción Repositorio Común -->
+									<td><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" width="10px"/></td>
+									<td>
+										<ispac:linkframe
 												id="GenerarDocumentoPlantilla"
 												target="workframe"
 												action="selectTemplateDocumentType.do?selectParticipantes=1"
@@ -590,7 +622,8 @@
 										
 									</display:column>
 
-								</logic:equal>
+								</logic:equal>										
+								
 								
 								<logic:equal name="format" property="fieldType" value="NOTIFICACION">
 
@@ -610,12 +643,61 @@
 											</c:set>
 										</logic:notEmpty>
 										<c:choose>
-											<c:when test="${_data == 'PE'}">Pendiente</c:when>
-											<c:when test="${_data == 'PR'}"><b>En proceso</b></c:when>
-											<c:when test="${_data == 'OK'}"><font color="green"><b>Finalizada</b></font></c:when>
-											<c:when test="${_data == 'CA'}"><font color="red"><b>Caducada</b></c:when>
-											<c:when test="${_data == 'RE'}"><font color="red"><b>Rechazada</b></c:when>
-											<c:when test="${_data == 'ER'}"><font color="red"><b>Error</b></font></c:when>
+											<c:when test="${_data == 'PE'}"><font color="blue"><b>[Comparece] Pendiente de comparecencia</b></font></c:when>
+											<c:when test="${_data == 'PR'}"><b>Envío postal</b></c:when>
+											<c:when test="${_data == 'OK'}"><font color="green"><b>[Comparece] Notificada</b></font></c:when>
+											<c:when test="${_data == 'CA'}"><font color="red"><b>[Comparece] Caducada</b></c:when>
+											<c:when test="${_data == 'RE'}"><font color="red"><b>[Comparece] Rechazada</b></c:when>
+											<c:when test="${_data == 'ER'}"><font color="red"><b>[Notifica] NIF Erróneo</b></font></c:when>
+											<c:when test="${_data == 'CO'}"><font color="blue"><b>[Comparece] Pendiente de comparecencia</b></font></c:when>
+											<c:when test="${_data == 'NT'}"><font color="blue"><b>[Notifica] Pendiente de comparecencia</b></font></c:when>
+											<c:when test="${_data == 'NTAUSENT'}"><font color="red"><b>[Notifica] Ausente</b></font></c:when>
+											<c:when test="${_data == 'NTDESCON'}"><font color="red"><b>[Notifica] Desconocido</b></font></c:when>
+											<c:when test="${_data == 'NTDIERRO'}"><font color="red"><b>[Notifica] Dirección incorrecta</b></font></c:when>
+											<c:when test="${_data == 'NTENVIMP'}"><font color="red"><b>[Notifica] Enviado al centro de impresión</b></font></c:when>
+											<c:when test="${_data == 'NTENVDEH'}"><font color="blue"><b>[Notifica] Enviado a la DEH</b></font></c:when>
+											<c:when test="${_data == 'NTILEIDA'}"><font color="green"><b>[Notifica] Leida</b></font></c:when>
+											<c:when test="${_data == 'NTIERROR'}"><font color="red"><b>[Notifica] Error en el envío a Notifica</b></font></c:when>
+											<c:when test="${_data == 'NTEXTRAV'}"><font color="red"><b>[Notifica] Extraviada</b></font></c:when>
+											<c:when test="${_data == 'NTFALLEC'}"><font color="red"><b>[Notifica] Fallecido</b></font></c:when>
+											<c:when test="${_data == 'NTIFCAOK'}"><font color="green"><b>[Notifica] Notificada</b></font></c:when>
+											<c:when test="${_data == 'NTPENENV'}"><font color="red"><b>[Notifica] Caducada, envío postal</b></font></c:when>
+											<c:when test="${_data == 'NTPENCOM'}"><font color="blue"><b>[Notifica] Pendiente de comparecencia</b></font></c:when>
+											<c:when test="${_data == 'NTREHUSA'}"><font color="green"><b>[Notifica] Rehusada</b></font></c:when>
+											<c:when test="${_data == 'NTPENPRO'}"><font color="blue"><b>[Notifica] Envío programado</b></font></c:when>
+											<c:when test="${_data == 'NTSININF'}"><font color="red"><b>[Notifica] Sin información</b></font></c:when>
+											<c:when test="${_data == 'NTPOSTAL'}"><font color="red"><b>[Notifica] Envío postal</b></font></c:when>
+											<c:when test="${_data == 'NTCADUCA'}"><font color="red"><b>[Notifica] Caducada</b></font></c:when>
+											<c:otherwise>
+											    -
+											</c:otherwise>
+										</c:choose>	
+
+									</display:column>
+
+								</logic:equal>
+								
+												
+								<logic:equal name="format" property="fieldType" value="DESTINOTIPO">
+
+									<display:column titleKey='<%=format.getTitleKey()%>'
+													media='<%=format.getMedia()%>'
+													headerClass='<%=format.getHeaderClass()%>'
+													sortable='<%=format.getSortable()%>'
+													sortProperty='<%=format.getPropertyName()%>'
+													decorator='<%=format.getDecorator()%>'
+													class='<%=format.getColumnClass()%>'
+													comparator='<%=format.getComparator()%>'>
+										
+										<c:set var="tipoDestino" value="unknown"/>
+										<logic:notEmpty name="document" property="property(DESTINO_TIPO)">
+											<c:set var="tipoDestino">
+												<bean:write name="document" property="property(DESTINO_TIPO)" />
+											</c:set>
+										</logic:notEmpty>
+										<c:choose>
+											<c:when test="${tipoDestino == 'F'}"><font color="blue"><b>Física</b></></c:when>
+											<c:when test="${tipoDestino == 'J'}"><font color="green"><b>Jurídica</b></c:when>
 											<c:otherwise>
 											    -
 											</c:otherwise>
@@ -702,12 +784,12 @@
 												</logic:notEmpty>
 												<bean:define id="estadofirma" name="estadofirma" type="java.lang.String"/>										
 												
-												<c:if test="${ tipoRegistro != 'ENTRADA' && (extension == 'doc' || extension == 'ppt' || extension == 'docx' || extension == 'xslx' || extension == 'pptx' || extension == 'odt' || extension == 'ods') && estadofirma == '00'}">
+												<c:if test="${ tipoRegistro != 'ENTRADA' && (extension == 'doc' || extension == 'ppt' || extension == 'docx' || extension == 'xslx' || extension == 'pptx' || extension == 'odt' || extension == 'ods' || extension == 'DOC' || extension == 'PPT' || extension == 'DOCX' || extension == 'XSLX' || extension == 'PPTX' || extension == 'ODT' || extension == 'ODS') && estadofirma == '00'}">
 													<a class="tooltip" href='<c:out value="${link}"/>' class='<%=format.getStyleClass()%>' title='<%=format.getTooltipTitle()%>' target='workframe_document'> 
 														<img src='<ispac:rewrite href="img/editDoc.gif"/>'/>
 													</a>
 												</c:if>
-												<c:if test="${tipoRegistro == 'ENTRADA' || not (extension == 'doc' || extension == 'ppt' || extension == 'docx' || extension == 'xslx' || extension == 'pptx' || extension == 'odt' || extension == 'ods') || estadofirma != '00'}">
+												<c:if test="${tipoRegistro == 'ENTRADA' || not (extension == 'doc' || extension == 'ppt' || extension == 'docx' || extension == 'xslx' || extension == 'pptx' || extension == 'odt' || extension == 'ods' || extension == 'DOC' || extension == 'PPT' || extension == 'DOCX' || extension == 'XSLX' || extension == 'PPTX' || extension == 'ODT' || extension == 'ODS') || estadofirma != '00'}">
 													<bean:define id="_link" value='showDocument.do'></bean:define>
 													<c:url value="${_link}" var="link">
 														<c:param name="document" value="${document.keyProperty}"/>

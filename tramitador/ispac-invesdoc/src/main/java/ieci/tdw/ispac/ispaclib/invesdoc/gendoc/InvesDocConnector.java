@@ -300,24 +300,24 @@ public class InvesDocConnector implements IDocConnector
 			document.replaceFile(sPath,sExt);
 			
 			mFolderAPI.storeFolder(mUserId, archive, folder);
-		} 
-		catch (Exception e)
-		{
+			
+		} catch (Exception e) {
 			logger.error("Error al modificar el documento [" + sGUID + "]", e);
 			throw new ISPACException(e);
-		}
-		finally
-		{
-			try
-			{
+			
+		} finally {
+			try {
 				// Desbloquea la carpeta
-				if (folder != null)
-				{
+				if (folder != null) {
 					mFolderAPI.terminateEditFolder(mUserId, archive, folder.getId());
 				}
-			}
-			catch (Exception e)
-			{
+				
+				// Elimina el fichero intermedio
+				if (sFileName != null) {
+					mFileTemporaryManager.delete(sFileName);
+				}
+				
+			} catch (Exception e) {
 				logger.error("Error al desbloquear la carpeta", e);
 			}
 		}

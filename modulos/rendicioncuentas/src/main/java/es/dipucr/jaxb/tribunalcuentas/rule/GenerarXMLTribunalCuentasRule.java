@@ -30,7 +30,7 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class GenerarXMLTribunalCuentasRule implements IRule {
 	
-	public static final Logger logger = Logger.getLogger(GenerarXMLTribunalCuentasRule.class);
+	public static final Logger LOGGER = Logger.getLogger(GenerarXMLTribunalCuentasRule.class);
 
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
@@ -53,12 +53,12 @@ public class GenerarXMLTribunalCuentasRule implements IRule {
 			}
 			//sQuery.append(") and numexp like 'DPCR"+ejercicio+"/%' ORDER BY CODPROCEDIMIENTO, NUMEXP");
 			sQuery.append(") ORDER BY CODPROCEDIMIENTO, NUMEXP");
-			logger.warn("sQuery "+sQuery.toString());
+			LOGGER.warn("sQuery "+sQuery.toString());
 			//Obtenemos los expedientes que cumplan los datos anteriores.
 			IItemCollection itColExp = ExpedientesUtil.queryExpedientes(rulectx.getClientContext(), sQuery.toString());
 			
 			Vector <String> expedCont = FuncionesComunes.expedientesByCodProcemiento(itColExp);
-			logger.warn("expedCont "+expedCont);
+			LOGGER.warn("expedCont "+expedCont);
 			sQuery = new StringBuffer("");
 			sQuery.append("NUMEXP IN ('"+expedCont.get(0)+"'");
 			for (int i = 1; i < expedCont.size(); i++) {
@@ -67,7 +67,7 @@ public class GenerarXMLTribunalCuentasRule implements IRule {
 			
 			//Consulta a la tabla CONTRATACION_DATOS_TRAMIT
 			sQuery.append(") AND F_CONTRATO IS NOT NULL AND F_CONTRATO BETWEEN '"+ejercicio+"-01-01' and '"+ejercicio+"-12-31'");
-			logger.warn("sQuery "+sQuery);
+			LOGGER.warn("sQuery "+sQuery);
 			Iterator<IItem> itExp = ConsultasGenericasUtil.queryEntities(rulectx, "CONTRATACION_DATOS_TRAMIT", sQuery.toString());
 			
 			
@@ -85,13 +85,15 @@ public class GenerarXMLTribunalCuentasRule implements IRule {
 				DatosTramitacion datosTramitacion = DipucrFuncionesComunes.getDatosTramitacion(rulectx, numexpExp);
 				DiariosFechaOficiales diariosFechaOficiales = DipucrFuncionesComunes.getFechaDiariosOficiales(rulectx, numexpExp);
 				Contrato contrato = FuncionesComunes.getContrato(datosContrato, datosTramitacion, diariosFechaOficiales);
-				if(contrato!=null)	relacionContratos.getContrato().add(contrato);
+				if(null != contrato){
+					relacionContratos.getContrato().add(contrato);
+				}
 			}
 			
 			File fileXML = FuncionesComunes.obtenerXML(relacionContratos);
 			//Guarda el resultado en gestor documental Notificaciones
 			int tpdocXML = DocumentosUtil.getIdTipoDocByCodigo(rulectx.getClientContext(), "xml-tribunalCuen");
-			String nombreTipoDocXML = DocumentosUtil.getNombreTipoDocByCod(rulectx, "xml-tribunalCuen");
+			String nombreTipoDocXML = DocumentosUtil.getNombreTipoDocByCod(rulectx.getClientContext(), "xml-tribunalCuen");
 			IItem docXML = DocumentosUtil.generaYAnexaDocumento(rulectx, rulectx.getTaskId(), tpdocXML, nombreTipoDocXML, fileXML, "xml");
 			
 			if(fileXML.exists()){
@@ -108,11 +110,11 @@ public class GenerarXMLTribunalCuentasRule implements IRule {
 			
 			fileXML.delete();
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. "+e.getMessage(),e);
 		}
 		
-		return new Boolean(true);
+		return Boolean.TRUE;
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {

@@ -20,7 +20,7 @@
 
 <ispac:calendar-config imgDir='<%= imgcalendar %>' scriptFile='<%= jscalendar %>'/>
 
-<script language='JavaScript' type='text/javascript'><!--
+<script language='JavaScript' type='text/javascript'>
 
 	function save() {
 
@@ -118,6 +118,21 @@
 		}
 	}
 
+	<%-- [dipucr-Felipe #854] --%>
+	function deleteDocuments() {
+
+		var data = checkboxElement(document.forms["documentsForm"].multibox);
+
+		if (data != "") {
+
+			document.forms["documentsForm"].action = "deleteDocuments.do";
+			document.forms["documentsForm"].submit();
+		}
+		else {
+			jAlert('<bean:message key="forms.listdoc.deleteDocuments.empty"/>', '<bean:message key="common.alert"/>' , '<bean:message key="common.message.ok"/>' , '<bean:message key="common.message.cancel"/>');
+		}
+	}
+
 
 	<%--
 	function printDocuments() {
@@ -140,7 +155,7 @@
 	}
 	--%>
 
-//--></script>
+</script>
 
 <!-- BOTON DE CERRAR CUANDO SE ABRE EL FORMULARIO EN EL WORKFRAME -->
 <c:if test="${(!empty param.form) && (param.form == 'single')}">
@@ -504,14 +519,14 @@
 																<table width="100%" border="0" cellspacing="0" cellpadding="0">
 																	<tr>
 																		<td colspan="3" align="center">
-																			<table width="95%" cellpadding="0" cellspacing="0">
+																			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 																				<tr>
-																					<td width="95%" class="formsTitleB" colspan="2">
+																					<td width="95%" class="formsTitleB" colspan="3">
 																						<bean:message key="forms.listdoc.listaDocumentos" />
 																					</td>
 																				</tr>
 																				<tr>
-																					<td width="95%" height="2px" class="formsTitleB" colspan="2">
+																					<td width="95%" height="2px" class="formsTitleB" colspan="3">
 																						<hr class="formbar" /></hr>
 																					</td>
 																				</tr>
@@ -536,9 +551,15 @@
 																							<bean:message key="forms.listdoc.convertDocuments2PDF"/>
 																						</html:button>&nbsp;&nbsp;
 																					</td>
+																					<!-- [dipucr-Felipe #854] -->
+																					<td height="2px" class="formsTitleB">
+																						<html:button property="deleteDocuments" styleClass="form_button_white" onclick="javascript:deleteDocuments();">
+																							<bean:message key="forms.listdoc.deleteDocuments"/>
+																						</html:button>&nbsp;&nbsp;
+																					</td>
 																				</tr>
 																				<tr>
-																					<td  colspan="2">
+																					<td  colspan="3">
 																						<html:form action="downloadDocuments.do">
 
 																						<display:table	name="sessionScope.defaultForm.items"
@@ -621,11 +642,18 @@
 																										</c:url>
 
 																										<c:set var="extension" value="unknown"/>
-																										<logic:notEmpty name="object" property="property(EXTENSION)">
+																										<logic:notEmpty name="object" property="property(EXTENSION_RDE)">
 																											<c:set var="extension">
-																												<bean:write name="object" property="property(EXTENSION)" />
+																												<bean:write name="object" property="property(EXTENSION_RDE)" />
 																											</c:set>
 																										</logic:notEmpty>
+																										<logic:empty name="object" property="property(EXTENSION_RDE)">
+																											<logic:notEmpty name="object" property="property(EXTENSION)">
+																												<c:set var="extension">
+																													<bean:write name="object" property="property(EXTENSION)" />
+																												</c:set>
+																											</logic:notEmpty>
+																										</logic:empty>
 																										<bean:define id="extension" name="extension" type="java.lang.String"/>
 
 																										<nobr><a href='<c:out value="${link}"/>' class="tdlink">
@@ -766,6 +794,7 @@
 										</table>
 									</td>
 									<td width="8"><img height="1" width="8px" src='<ispac:rewrite href="img/pixel.gif"/>'/></td>
+								</tr>
 								<tr>
 									<td height="5px" colspan="3"><img src='<ispac:rewrite href="img/pixel.gif"/>' height="5px"/></td>
 								</tr>

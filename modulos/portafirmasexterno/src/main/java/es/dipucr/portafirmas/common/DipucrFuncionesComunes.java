@@ -42,9 +42,9 @@ public class DipucrFuncionesComunes {
 	            } else
 	            	logger.warn("Result is null");
 	        } catch (XMLStreamException e) {
-	            e.printStackTrace();
+	        	logger.error("ERROR. " + e.getMessage(), e);
 	        } catch (FactoryConfigurationError e) {
-	            e.printStackTrace();
+	        	logger.error("ERROR. " + e.getMessage(), e);
 	        }
 	    }
 }

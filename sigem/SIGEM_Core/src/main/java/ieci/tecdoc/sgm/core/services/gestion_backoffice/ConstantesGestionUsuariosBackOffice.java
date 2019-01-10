@@ -8,6 +8,7 @@ public class ConstantesGestionUsuariosBackOffice {
 	public static final String PARAMETRO_USUARIO = "username";
 	public static final String PARAMETRO_PASSWORD = "password";
 	public static final String PARAMETRO_KEY_SESION_USUARIO = "keySesionUsuario";
+	public static final String PARAMETRO_DATOS_SESION = "datosSesion";
 
 	public static final String PARAMETRO_SSO_USER_DN = "userDn";
 
@@ -22,6 +23,8 @@ public class ConstantesGestionUsuariosBackOffice {
 	
 	//[eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.
 	public static final String APLICACION_ARBOL_DOCUMENTAL_MANAGER = "AD";
+	
+	public static final String APLICACION_REGISTRO_PRESENCIAL_MSSSI = "RPMSSSI";
 	
 //	public static final String PARAMETRO_AUTENTICACION = "autenticacion";
 //	public static final String AUTENTICACION = "true";

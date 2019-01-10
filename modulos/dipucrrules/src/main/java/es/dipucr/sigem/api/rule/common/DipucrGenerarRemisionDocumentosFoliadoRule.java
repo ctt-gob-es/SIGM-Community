@@ -133,7 +133,7 @@ public class DipucrGenerarRemisionDocumentosFoliadoRule implements IRule {
 							entityDocument.set("DESTINO_ID", id_ext);
 							entityDocument.store(cct);
 				        }
-					}catch (Throwable e) {
+					}catch (Exception e) {
 						
 						// Si se produce algún error se hace rollback de la transacción
 						cct.endTX(false);

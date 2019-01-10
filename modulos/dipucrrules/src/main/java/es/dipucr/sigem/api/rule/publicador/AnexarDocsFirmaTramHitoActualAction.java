@@ -36,7 +36,7 @@ public class AnexarDocsFirmaTramHitoActualAction extends SigemBaseAction {
 
 	ClientContext context = null;
 	/** Logger de la clase. */
-    private static final Logger logger = Logger.getLogger(AnexarDocsFirmaTramHitoActualAction.class);
+    private static final Logger LOGGER = Logger.getLogger(AnexarDocsFirmaTramHitoActualAction.class);
 
 	/** Logger de la clase. */
     private static final Logger CONSULTA_TELEMATICA = Logger.getLogger("CONSULTA_TELEMATICA");
@@ -62,8 +62,8 @@ public class AnexarDocsFirmaTramHitoActualAction extends SigemBaseAction {
     @SuppressWarnings("unchecked")
 	public boolean execute(RuleContext rctx, AttributeContext attContext) throws ActionException {
     	
-        if (logger.isInfoEnabled()) {
-            logger.info("Acción [" + this.getClass().getName() + "] en ejecución");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Acción [" + this.getClass().getName() + "] en ejecución");
         }
 
         String numexp = (String) rctx.getProperties().get("idobjeto");
@@ -83,7 +83,9 @@ public class AnexarDocsFirmaTramHitoActualAction extends SigemBaseAction {
     		try{
     			existeExp = consultaExp.obtenerDetalle(expediente.getCnum(), getEntidad());
     		}
-    		catch(Exception e){}
+    		catch(Exception e){
+    			LOGGER.info("No hace nada, solo captura la excepcion. " + e.getMessage(), e);
+    		}
     		if( existeExp != null)	{
 				ServicioConsultaExpedientes consulta = LocalizadorServicios.getServicioConsultaExpedientes();
 	
@@ -115,21 +117,25 @@ public class AnexarDocsFirmaTramHitoActualAction extends SigemBaseAction {
         	setInfo(e.getLocalizedMessage());
         	logError(e);
         	
+        	LOGGER.warn("No se han podido eliminar los ficheros en RDE", e);
+        	
         	try {
 	    		service.deleteFicherosHito(ficheros);
-        	} catch (Throwable t) {
-        		logger.warn("No se han podido eliminar los ficheros en RDE", e);
+        	} catch (Exception t) {
+        		LOGGER.warn("No se han podido eliminar los ficheros en RDE", t);
         	}
         	
             throw e;
-        } catch (Throwable e) {
+        } catch (Exception e) {
         	setInfo("Error al anexar ficheros al hito actual: " + e.toString());
         	logError(e);
         	
+        	LOGGER.warn("No se han podido eliminar los ficheros en RDE", e);
+        	
         	try {
 	    		service.deleteFicherosHito(ficheros);
-        	} catch (Throwable t) {
-        		logger.warn("No se han podido eliminar los ficheros en RDE", e);
+        	} catch (Exception t) {
+        		LOGGER.warn("No se han podido eliminar los ficheros en RDE", t);
         	}
         	
             throw new ActionException(e);

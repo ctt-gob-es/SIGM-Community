@@ -15,6 +15,7 @@ import ieci.tdw.ispac.ispaclib.bean.CollectionBean;
 import ieci.tdw.ispac.ispaclib.bean.ItemBean;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
@@ -109,9 +110,13 @@ public class DipucrAnexaDocumentacionADocumentoRule implements IRule {
         				IItem expediente = ExpedientesUtil.getExpediente(cct, numexp);
             	        if (expediente != null){
 	        				String consulta="SELECT ID FROM SPAC_P_PLANTILLAS WHERE ID_P_PLANTDOC ='"+templateId+"' AND ID_PCD='"+expediente.getString("ID_PCD")+"'";
-	        		        ResultSet pertenece = cct.getConnection().executeQuery(consulta).getResultSet();
-	        		        if(pertenece!= null && pertenece.next())
+	        				
+	        				DbCnt cnt = cct.getConnection();
+	        		        ResultSet pertenece = cnt.executeQuery(consulta).getResultSet();
+	        		        if(pertenece!= null && pertenece.next()){
 	        		        	encontrado = true;     
+	        		        }
+	        		        cct.releaseConnection(cnt);
             	        }
         			}
         			else{
@@ -174,7 +179,7 @@ public class DipucrAnexaDocumentacionADocumentoRule implements IRule {
     			String extensionDocumento = iitemDoc.getString("EXTENSION");
     			File file = DocumentosUtil.getFile(cct, infoPagBases, null, null);
     			if(extensionDocumento.equals("doc") || extensionDocumento.equals("odt")){
-    	        	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+    	        	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
     	        	
     			}
     			if(extensionDocumento.equals("xls") || extensionDocumento.equals("ods")){
@@ -194,7 +199,9 @@ public class DipucrAnexaDocumentacionADocumentoRule implements IRule {
 
     		cct.deleteSsVariable("NOMBRE_TRAMITE");
     		
-    		ooHelper.dispose();
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+   	        }
     		
     		logger.info("FIN - " + this.getClass().getName());
     		

@@ -21,11 +21,14 @@ package net.java.xades.security.xml.XAdES;
 
 import net.java.xades.util.Base64;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 public class IndividualDataObjectsTimeStampDetails extends XAdESStructure
 {
-    public IndividualDataObjectsTimeStampDetails(
+    private static final Logger LOGGER = Logger.getLogger(IndividualDataObjectsTimeStampDetails.class);
+
+	public IndividualDataObjectsTimeStampDetails(
             SignedDataObjectProperties signedDataObjectProperties,
             IndividualDataObjectsTimeStamp individualDataObjectsTimeStampDetails,
             String xadesPrefix, String xadesNamespace, String xmlSignaturePrefix, String tsaURL)
@@ -45,7 +48,7 @@ public class IndividualDataObjectsTimeStampDetails extends XAdESStructure
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+        	LOGGER.error("ERROR. " + e.getMessage(), e);
         }
     }
 }

@@ -24,7 +24,6 @@ import com.sun.star.lang.XComponent;
 
 import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
-import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
 
 public class GeneratePlenoRule implements IRule {
@@ -73,8 +72,7 @@ public class GeneratePlenoRule implements IRule {
 				ooHelper = OpenOfficeHelper.getInstance();
 				xComponent = ooHelper.loadDocument("file://"+ file.getPath());
 				file.delete();
-			}
-			else{
+			} else{
 
 				// Obtiene la cabecera
 				DocumentosUtil.generarDocumento(rulectx, STR_nombreCabecera,null);
@@ -140,7 +138,6 @@ public class GeneratePlenoRule implements IRule {
 				DocumentosUtil.generarDocumento(rulectx,STR_propuestaBorrador, null);
 				strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, STR_propuestaBorrador);
 				file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-				//DipucrCommonFunctions.Concatena(xComponent,"file://" + file.getPath(), ooHelper);
 				DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 				file.delete();
 	
@@ -152,7 +149,7 @@ public class GeneratePlenoRule implements IRule {
 				// GENERACION DE LAS PROPUESTAS
 				collection = DocumentosUtil.getDocumentsByNombre(rulectx.getNumExp(), rulectx, "Propuesta");
 	
-				Vector<IItem> vPropuesta = SecretariaUtil.orderPropuestas(collection);
+				Vector<IItem> vPropuesta = SecretariaUtil.orderPropuestas(rulectx);
 				if (vPropuesta != null && vPropuesta.size()>1) {
 	
 					for (int i = 1; i < vPropuesta.size(); i++) {
@@ -162,7 +159,6 @@ public class GeneratePlenoRule implements IRule {
 							String descripcion = item.getString("DESCRIPCION");
 							strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, descripcion);
 							file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-							//DipucrCommonFunctions.Concatena(xComponent, "file://"+file.getPath(), ooHelper);
 							DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 							file.delete();
 						}
@@ -244,7 +240,6 @@ public class GeneratePlenoRule implements IRule {
 		
 									file = DocumentosUtil
 											.getFile(cct, strInfoPag, null, null);
-									//DipucrCommonFunctions.Concatena(xComponent,"file://" + file.getPath(), ooHelper);
 									DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 									file.delete();
 								}
@@ -266,7 +261,6 @@ public class GeneratePlenoRule implements IRule {
 						strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, STR_nombreRuegos);
 		
 						file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-						//DipucrCommonFunctions.Concatena(xComponent,"file://" + file.getPath(), ooHelper);
 						DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 						file.delete();
 					}
@@ -280,7 +274,6 @@ public class GeneratePlenoRule implements IRule {
 						STR_nombrePie);
 	
 				file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-				//DipucrCommonFunctions.Concatena(xComponent,"file://" + file.getPath(), ooHelper);
 				DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 				file.delete();
 			}
@@ -312,9 +305,10 @@ public class GeneratePlenoRule implements IRule {
 		} catch (Exception e) {
 			logger.error("Numexp."+rulectx.getNumExp()+" - "+e.getMessage(), e);
 			throw new ISPACRuleException("Numexp."+rulectx.getNumExp()+" - "+e.getMessage(), e);
-		}
-		finally{
-			if(ooHelper!= null) ooHelper.dispose();
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 
 		return new Boolean(true);

@@ -20,6 +20,8 @@ import ieci.tdw.ispac.ispactx.TXTransactionDataContainer;
 
 import java.util.Map;
 
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+
 /**
  * Acción para delegar una fase.
  */
@@ -161,9 +163,11 @@ public class TXDelegateStage implements ITXAction {
 			Notices notices = new Notices(cs);
 			int tipoAviso = Notices.TIPO_AVISO_FASE_DELEGADA;
 			int idTramite = 0;
+			String tipo = "Fase";
 			String message = "notice.delegateStage";
 			if (stage.isActivity()){
 				tipoAviso = Notices.TIPO_AVISO_ACTIVIDAD_DELEGADA;
+				tipo = "Actividad";
 				message = "notice.delegateActivity";
 				//Se obtiene el id del tramite para informarlo en el aviso
 				IEntitiesAPI entitiesAPI = cs.getAPI().getEntitiesAPI();
@@ -173,7 +177,9 @@ public class TXDelegateStage implements ITXAction {
 				}
 				idTramite = col.value().getKeyInt();
 			}
-			notices.generateDelegateObjectNotice(stage.getInt("ID_EXP"), stage.getKeyInt(), idTramite, cs.getStateContext().getNumexp(), message, mIdResp,tipoAviso);
+			String avisoElectronico = "<a href=\"/SIGEM_TramitacionWeb/selectAnActivity.do?numexp=" + cs.getStateContext().getNumexp() +"\" class=\"displayLink\"> Nueva "+tipo+" desde " + mNameResp +"</a>";
+			//notices.generateDelegateObjectNotice(stage.getInt("ID_EXP"), stage.getKeyInt(), idTramite, cs.getStateContext().getNumexp(), message, mIdResp,tipoAviso);
+			notices.generateDelegateObjectNotice(stage.getInt("ID_EXP"), stage.getKeyInt(), idTramite, cs.getStateContext().getNumexp(), avisoElectronico, mIdResp,tipoAviso);
 	}
 
 	/**

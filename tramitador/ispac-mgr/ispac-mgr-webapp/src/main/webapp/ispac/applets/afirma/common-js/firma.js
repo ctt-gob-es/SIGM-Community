@@ -1,11 +1,11 @@
-/*
- * Este fichero forma parte del Cliente @firma, el cliente de @firma queda en desuso al utilizar el Miniapplet (aunque se mantiene el código que lo integra)  
- * El Cliente @firma es un applet de libre distribución cuyo código fuente puede ser consultado
- * y descargado desde www.ctt.map.es.
- * Copyright 2009,2010 Ministerio de la Presidencia, Gobierno de España (opcional: correo de contacto)
- * Este fichero se distribuye bajo las licencias EUPL versión 1.1  y GPL versión 3  según las
- * condiciones que figuran en el fichero 'licence' que se acompaña.  Si se   distribuyera este 
- * fichero individualmente, deben incluirse aquí las condiciones expresadas allí.
+/* Copyright (C) 2012 [Gobierno de Espana]
+ * This file is part of "Cliente @Firma".
+ * "Cliente @Firma" is free software; you can redistribute it and/or modify it under the terms of:
+ *   - the GNU General Public License as published by the Free Software Foundation; 
+ *     either version 2 of the License, or (at your option) any later version.
+ *   - or The European Software License; either version 1.1 or (at your option) any later version.
+ * Date: 11/01/11
+ * You may contact the copyright holder at: soporte.afirma5@seap.minhap.es
  */
 
 /*
@@ -44,9 +44,6 @@
 function configuraFirma()
 {
 	var command	= "";
-
-	if( certFilter != undefined )
-	command	+= "clienteFirma.setCertFilter('"+certFilter+"');";
 
 	if( signatureAlgorithm != undefined )
 	{
@@ -121,15 +118,7 @@ function getEstructuraNodos()
  */
 function getCertificatesAlias()
 {
-
-	/* Ya que en Firefox 2 no funciona la funcion split() de cadenas en JavaScript, hacemos un
-	 * proceso distinto de la cadena para obtener el mismo resultado que esta funcion.
-	 */
-	if(isFireFox2()) {
-		return dividir(clienteFirma.getCertificatesAlias(), clienteFirma.STRING_SEPARATOR);
-	} else {
-		return clienteFirma.getCertificatesAlias().split(clienteFirma.STRING_SEPARATOR);
-	}
+	return clienteFirma.getCertificatesAlias().split(clienteFirma.STRING_SEPARATOR);
 }
 
 /*
@@ -137,56 +126,5 @@ function getCertificatesAlias()
  */
 function getCertificates()
 {
-	return dividir(clienteFirma.getCertificates(), clienteFirma.STRING_SEPARATOR);
-}
-
-/*
- * Comprueba que el navegador Web sea Firefox 2.
- */
-function isFireFox2()
-{
-	if(window.navigator.appName == 'Netscape') {
-		var userAgent = window.navigator.userAgent;
-		
-		//posición de la cadena que coge la parte  de la versión de Firefox
-		posfinal = userAgent.lastIndexOf('/') + 2; 
-		//posicion de la cadena que devuelve si realmente es Firefox
-		posinicial=  userAgent.lastIndexOf('/') - 7;
-		navigator = userAgent.substring(posinicial, posfinal);
-	
-		if(navigator== 'Firefox/2') {
-			return true;
-		}
-	}
-	return false;
-}
-
-/*
- * Divide una cadena en un array de cadenas en donde el criterio de separacion era un delimitador.
- */
-function dividir(text, delimitator)
-{
-	var nDel = 0;
-	var tempPos = 0;
-	var tempPos2 = 0;
-
-	/* Contamos el numero de cadenas que debemos extraer de la principal. */
-	while((tempPos = text.indexOf(delimitator, tempPos)) != -1) {
-		nDel++;
-		tempPos += delimitator.length;
-	}
-	
-	/* Creamos el array en donde almacenaremos las cadenas. */
-	var substrings = new Array(nDel+1);
-
-	/* Recorremos la cadena principal extrayendo las subcadenas. */
-	tempPos = 0;
-	for(var i=0; i < nDel; i++) {
-		tempPos2 = text.indexOf(delimitator, tempPos);
-		substrings[i] = text.substring(tempPos, tempPos2);
-		tempPos = tempPos2 + delimitator.length;
-	}
-	substrings[nDel] = text.substring(tempPos);
-
-	return substrings;
+	return clienteFirma.getCertificates().split(clienteFirma.STRING_SEPARATOR);
 }

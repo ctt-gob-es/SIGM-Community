@@ -43,7 +43,7 @@
 	select * from scr_entityreg where ID=#value#
 	</select>
 
-	<select id="findEntidadesRegistrales" parameterClass="entidadRegistralVO" resultMap="entidadRegistral">
+	<select id="fIdentidadesRegistrales" parameterClass="entidadRegistralVO" resultMap="entidadRegistral">
 	select * from scr_entityreg
 	<dynamic prepend="WHERE">
 	 	<isNotEqual compareValue="0" prepend="AND" property="id">

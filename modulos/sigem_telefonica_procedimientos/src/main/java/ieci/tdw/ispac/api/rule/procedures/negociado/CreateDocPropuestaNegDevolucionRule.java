@@ -12,12 +12,12 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
  */
 public class CreateDocPropuestaNegDevolucionRule extends CreateDocPropuestaNegRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		STR_entidad = "SGN_NEGOCIADO";
-		STR_queryDocumentos = 
-			"COD_TPDOC = 'Inf servicio' OR " +
-			"COD_TPDOC = 'Inf Intervencion'" ;	
-		return true;
-	}
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "SGN_NEGOCIADO";
+        strQueryDocumentos = 
+            "COD_TPDOC = 'Inf servicio' OR " +
+            "COD_TPDOC = 'Inf Intervencion'" ;    
+        return true;
+    }
 
 }

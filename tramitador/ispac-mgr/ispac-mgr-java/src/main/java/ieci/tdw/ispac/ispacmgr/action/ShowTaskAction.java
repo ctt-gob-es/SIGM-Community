@@ -41,6 +41,7 @@ import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.ispacweb.api.IWorklist;
 import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
 import ieci.tdw.ispac.ispacweb.api.ManagerState;
+import ieci.tdw.ispac.ispacweb.api.impl.states.TaskState;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -216,6 +217,19 @@ public class ShowTaskAction extends BaseAction
 
         //Cargamos los datos del esquema
 		IScheme scheme = SchemeMgr.loadScheme(mapping, request, session,state);
+
+		//INICIO [dipucr-Felipe #427]
+		if (!state.getReadonly()) {
+			// Eliminamos si existe el atributo que indica el usuario que tiene bloqueado el expediente
+			request.getSession(false).removeAttribute("userLock");
+		} else {
+			// Insertamos el atributo que indica el usuario que tiene bloqueado el expediente
+			if (StateContext.READONLYREASON_LOCK == state.getReadonlyReason()){
+				String username = ((TaskState) state).getLockedTaskUser(cct);
+				request.setAttribute(ActionsConstants.LOCKUSERNAME, " por " + username);
+			}
+		}
+		//FIN [dipucr-Felipe #427]
 
         //[ildfns] Cargamos el expediente
         //SpacMgr.loadExpedient(session, state, request);
@@ -538,7 +552,7 @@ public class ShowTaskAction extends BaseAction
 			} else {
 				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
 			}
-			logger.info("Auditando la creación del trámite");
+			LOGGER.info("Auditando la creación del trámite");
 			auditoriaManager.audit(evento);
     	}
 	}

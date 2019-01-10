@@ -156,7 +156,7 @@ public final class UtilsXML {
     		return el;
     	}
     	catch(Exception e){
-    		e.printStackTrace();
+    		LOGGER.error("ERROR. " + e.getMessage(), e);
     		return null;
     	}
     }

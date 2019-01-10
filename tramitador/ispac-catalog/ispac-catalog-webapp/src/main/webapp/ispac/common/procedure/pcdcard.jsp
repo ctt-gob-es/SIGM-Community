@@ -280,7 +280,7 @@
 													</td>
 													<td height="20">
 														<logic:present name="PCD_DRAFT">
-															&nbsp;&nbsp;<html:text property="property(COD_PCD)" styleClass="inputSelectS" readonly="false" maxlength="100"/>&nbsp; <bean:message key="catalog.data.obligatory"/>
+															&nbsp;&nbsp;<html:text property="property(COD_PCD)" styleClass="inputSelectS" readonly="false" maxlength="16"/>&nbsp; <bean:message key="catalog.data.obligatory"/>
 														</logic:present>
 														<logic:notPresent name="PCD_DRAFT">
 															&nbsp;&nbsp;<html:text property="property(COD_PCD)" styleClass="inputSelectS inputReadOnly" readonly="true"/>

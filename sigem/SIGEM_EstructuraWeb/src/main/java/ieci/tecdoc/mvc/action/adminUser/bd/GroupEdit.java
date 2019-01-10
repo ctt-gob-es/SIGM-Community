@@ -82,6 +82,7 @@ public class GroupEdit extends BaseAction{
         group.setName(form.getNombre());
         group.setDescription(form.getDescripcion());
         group.setManagerId(Integer.parseInt(form.getManagerId()));
+        group.setEmail(form.getEmail());//[dipucr-Felipe #541]
         
         group.store(entidad);        
     }
@@ -95,6 +96,7 @@ public class GroupEdit extends BaseAction{
         // General
         form.setNombre(group.getName());
         form.setDescripcion(group.getDescription());
+        form.setEmail(group.getEmail());//[dipucr-Felipe #541]
 
         int managerId = group.getManagerId();
         form.setManagerId(String.valueOf(managerId));

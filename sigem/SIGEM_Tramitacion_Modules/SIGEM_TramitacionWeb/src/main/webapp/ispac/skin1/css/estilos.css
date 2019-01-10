@@ -1637,7 +1637,11 @@ li.subOff h3 {
 
 .cuerpo_sub ul {
 	margin:0px;
-	padding:5px 0px 0px 30px;
+	padding: 0px 0px 0px 30px;
+}
+
+.cuerpo_sub ul > :first-child {
+	padding-top:5px;
 }
 
 .td_desplegado{
@@ -1752,7 +1756,13 @@ a.bajar{
 	 top: 70px;
 	 z-index: 99999
 }
-
+.moveHuge{
+	 height:500px;
+	 width:900px;
+	 left: 150px;
+	 top: 70px;
+	 z-index: 99999
+}
 
 #backgroundColorWhite{
 	background-color: #FFFFFF;

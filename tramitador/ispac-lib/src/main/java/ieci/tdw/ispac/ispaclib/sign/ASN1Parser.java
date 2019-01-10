@@ -2,14 +2,18 @@ package ieci.tdw.ispac.ispaclib.sign;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.DERApplicationSpecific;
 import org.bouncycastle.asn1.DERBitString;
 import org.bouncycastle.asn1.DERBoolean;
@@ -49,6 +53,36 @@ public class ASN1Parser {
 		Map propiedadesOid = new HashMap();
 		DERObject derOBJ  = signature.getDERObject();
 		readPropiedadesOid(null,derOBJ , propiedadesOid);
+		return propiedadesOid;
+	}
+	
+	/***
+	 * Parsea un certificado X509 para extraer todos sus oids
+	 * 
+	 * @param certificadoX509
+	 * @return
+	 * @throws IOException 
+	 */
+	public Map readPropertiesOid(X509Certificate certificadoX509) throws IOException {
+		Map propiedadesOid = new HashMap();
+		// obtengo los Oids
+		Set oids = certificadoX509.getNonCriticalExtensionOIDs();
+		
+		if (oids != null) {
+			// iteramos sobre los Oids // TODO ( este es el mecanismo para FNMT)
+			  Iterator itr= oids.iterator();
+				while (itr.hasNext()) {
+					String oid= (String) itr.next();
+				ASN1InputStream aIn = new ASN1InputStream(
+							new ByteArrayInputStream(certificadoX509.getExtensionValue(oid)));
+				ASN1OctetString extValue = (ASN1OctetString) aIn.readObject();
+				aIn = new ASN1InputStream(new ByteArrayInputStream(extValue.getOctets()));
+					
+				readPropiedadesOid(oid, extValue, propiedadesOid);
+			}
+		}
+
+		// retornamos el conjunto de oids recuperados.
 		return propiedadesOid;
 	}
 	
@@ -136,7 +170,7 @@ public class ASN1Parser {
 				// Problema extraño detectado con los certificados corruptos.
 				// OID: 2.5.29.14 :java.lang.IllegalStateException: DER length
 				// more than 4 bytes
-				e.printStackTrace();
+				logger.error("ERROR. " + e.getMessage(), e);
 			}
 
 		} else if (extension instanceof DERInteger) {

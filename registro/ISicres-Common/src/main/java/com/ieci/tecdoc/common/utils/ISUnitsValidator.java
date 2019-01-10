@@ -8,6 +8,8 @@ package com.ieci.tecdoc.common.utils;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
@@ -42,7 +44,7 @@ public class ISUnitsValidator implements HibernateKeys {
         	result = getOrg(session, query.toString(), arrObj, arrType);
         } catch(ValidationException e){}
         
-		if (result == null){
+		if (result == null  && StringUtils.isNotEmpty(code)){
 			query = new StringBuffer(); 
 			query.append("FROM " + HIBERNATE_ScrOrg + " scr WHERE scr.acron = ?");
 	        
@@ -56,7 +58,7 @@ public class ISUnitsValidator implements HibernateKeys {
     }
 		
 	
-	public static ScrOrg getUnit(Session session, String code, boolean onlyEnabled, List privOrgs) 
+	public static ScrOrg getUnit(Session session, String code, boolean onlyEnabled, List<?> privOrgs) 
 		throws HibernateException, ValidationException {
     
 		StringBuffer query = new StringBuffer();
@@ -73,7 +75,7 @@ public class ISUnitsValidator implements HibernateKeys {
         	result = getOrg(session, query.toString(), arrObj, arrType);
         } catch(ValidationException e){}
 		
-		if (result == null){
+		if (result == null && StringUtils.isNotEmpty(code)){
 			query = new StringBuffer();
 			query.append("FROM " + HIBERNATE_ScrOrg + " scr WHERE scr.acron = ? AND scr.scrTypeadm.id != 0");
 			if (onlyEnabled){
@@ -135,7 +137,7 @@ public class ISUnitsValidator implements HibernateKeys {
 		throws HibernateException, ValidationException {
         
 		ScrOrg scr = null;
-        List list = session.find(query, arrayObj, arrayType);
+        List<?> list = session.find(query, arrayObj, arrayType);
 
         if (list != null && !list.isEmpty()) {
             scr = (ScrOrg) list.get(0);

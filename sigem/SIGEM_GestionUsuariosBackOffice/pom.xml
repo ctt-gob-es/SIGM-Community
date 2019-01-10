@@ -10,11 +10,17 @@
 	<artifactId>sigem_gestionUsuariosBackOffice</artifactId>
 	<packaging>jar</packaging>
 	
-	
-	
+	<properties>
+		<sigem.version>3.0.1-M2</sigem.version>
+		<isicres.version>8.0.1</isicres.version>
+	</properties>
 	<dependencies>
 		
-				
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Server</artifactId>
+			<version>${isicres.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_core</artifactId>
@@ -24,19 +30,19 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_clasesBase</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_estructuraOrganizativa</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_estructuraOrganizativaCore</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
 		
 		<dependency>
@@ -71,11 +77,10 @@
 			<optional>false</optional>
 		</dependency>
 
-
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_criptoValidacion</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
 	</dependencies>
 </project>

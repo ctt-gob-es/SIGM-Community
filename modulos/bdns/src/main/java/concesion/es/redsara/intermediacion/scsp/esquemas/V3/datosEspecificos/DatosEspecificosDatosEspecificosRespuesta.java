@@ -7,7 +7,9 @@
 
 package concesion.es.redsara.intermediacion.scsp.esquemas.V3.datosEspecificos;
 
-public class DatosEspecificosDatosEspecificosRespuesta  implements java.io.Serializable {
+import es.dipucr.bdns.common.DatosEspecificosDatosEspecificosRespuestaAbstracta;
+
+public class DatosEspecificosDatosEspecificosRespuesta extends DatosEspecificosDatosEspecificosRespuestaAbstracta implements java.io.Serializable {
     private concesion.es.redsara.intermediacion.scsp.esquemas.V3.datosEspecificos.DatosEspecificosDatosEspecificosRespuestaDatosIdentificacion datosIdentificacion;
 
     private java.lang.String codigoEstadoSo;

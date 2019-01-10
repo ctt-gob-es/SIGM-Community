@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+import org.apache.log4j.Logger;
+
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Paragraph;
@@ -18,6 +20,8 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
 public class PruebaPDF {
+	
+	private static final Logger LOGGER = Logger.getLogger(PruebaPDF.class);
 	
 	public static boolean _NIVEL_SEGURIDAD_POR_DEFECTO = PdfWriter.STRENGTH128BITS;
 	
@@ -46,11 +50,9 @@ public class PruebaPDF {
 			//encriptarPdf(new File("EncryptedPDFAllowAssemblyFillInScreenReadersModifyContents.pdf"), _PERMISOS_TOTALES, null);
 			
 		}catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 		} 
 			    
 	    
@@ -76,8 +78,7 @@ public class PruebaPDF {
 
 		}
 		catch (Exception e) {
-			throw new ISPACException("Error al encriptar el archivo pdf " +
-					file.getName(), e);
+			throw new ISPACException("Error al encriptar el archivo pdf " + file.getName(), e);
 		}
 	}
 	 

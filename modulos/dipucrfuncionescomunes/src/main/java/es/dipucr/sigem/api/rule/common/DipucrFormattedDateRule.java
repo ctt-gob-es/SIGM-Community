@@ -116,7 +116,7 @@ public class DipucrFormattedDateRule implements IRule{
         	// para poner la fecha en mayusculas
         	if(rulectx.get("mayusculas") != null){
         		String mayus = rulectx.get("mayusculas");
-        		if(mayus.equals("SI")){
+        		if("SI".equals(mayus)){
         			fecha = fecha.toUpperCase();
         		}
         	}

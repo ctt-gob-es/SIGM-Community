@@ -139,7 +139,7 @@ public class DipucrIniciaSolicitudAnuncioInternoBOP implements IRule{
 			entityTemplate.store(cct);
 			entityTemplate.store(cct);
 		}
-		catch (Throwable e){
+		catch (Exception e){
 			// Si se produce algún error se hace rollback de la transacción
 			cct.endTX(false);
 			
@@ -191,7 +191,7 @@ public class DipucrIniciaSolicitudAnuncioInternoBOP implements IRule{
         
         //Cuerpo de decreto
     	file = DocumentosUtil.getFile(cct, infopag, null, null);
-    	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+    	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
 		file.delete();
 		    		
 		//Guarda el resultado en repositorio temporal
@@ -222,11 +222,13 @@ public class DipucrIniciaSolicitudAnuncioInternoBOP implements IRule{
         }
         infopag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, Constants.BOP._DOC_ANUNCIO);
 		file = DocumentosUtil.getFile(cct, infopag, null, null);
-        DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+        DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
     	file.delete();
     	DocumentosUtil.deleteFile(fileName);
     	
-    	ooHelper.dispose();
+		if(null != ooHelper){
+        	ooHelper.dispose();
+		}
 	}
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {

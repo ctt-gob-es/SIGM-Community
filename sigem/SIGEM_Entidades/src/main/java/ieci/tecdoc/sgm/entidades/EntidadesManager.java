@@ -210,8 +210,12 @@ public class EntidadesManager {
 		oEntidad.setIdentificador(poEntidad.getIdentificador());
 		oEntidad.setNombreCorto(poEntidad.getNombreCorto());
 		oEntidad.setNombreLargo(poEntidad.getNombreLargo());
-		oEntidad.setCodigoINE(poEntidad.getCodigoINE());
-		
+		oEntidad.setCodigo_ine(poEntidad.getCodigo_ine());
+		oEntidad.setPassword_entidad(poEntidad.getPassword_entidad());
+		oEntidad.setDir3(poEntidad.getDir3());
+		oEntidad.setSia(poEntidad.getSia());
+		oEntidad.setDeh(poEntidad.getDeh());
+		oEntidad.setCif(poEntidad.getCif());
 		return oEntidad;
 	}
 	

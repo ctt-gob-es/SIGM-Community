@@ -9,6 +9,10 @@
 	<packaging>jar</packaging>
 
 	<properties>
+		<sigem.version>3.0.1-M2</sigem.version>
+		<sigemMSSSI.version>3.0.0-msssi2.0.0</sigemMSSSI.version>
+		<isicres.version>8.0.1</isicres.version>		
+		<isicresMSSSI.version>3.0.0-msssi2.0.0</isicresMSSSI.version>
 		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory>
 	</properties>
 
@@ -131,7 +135,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_clasesBase</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-net</groupId>
@@ -142,7 +146,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_entidades</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			
 		</dependency>		
 
@@ -195,6 +199,12 @@
 			<groupId>org.opensymphony.quartz</groupId>
 			<artifactId>quartz</artifactId>
 			<version>${quartz.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>Metadatos</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 
@@ -309,6 +319,22 @@
 				<filters>
 					<filter>
 						${project.basedir}/../SIGEM_RegistroPresencialWeb/src/main/filters/system/Windows.properties
+					</filter>
+				</filters>
+			</build>
+		</profile>
+		<profile>
+			<id>msssi</id>
+			<activation>
+				<property>
+					<name>msssi</name>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<filters>
+					<filter>
+						${project.basedir}/../SIGEM_RegistroPresencialWeb/src/main/filters/system/msssi.properties
 					</filter>
 				</filters>
 			</build>

@@ -48,8 +48,8 @@ public class SearchElectronicAddressesThirdPartyAction extends BaseAction {
 		
 		if (ArrayUtils.isEmpty(direcciones)) {
 			//...mostramos un mensaje informando del suceso
-		    if (logger.isInfoEnabled()) {
-			    logger.info("No se han encontrado direcciones para el tercero con identificador '" + externId + "'");
+		    if (LOGGER.isInfoEnabled()) {
+			    LOGGER.info("No se han encontrado direcciones para el tercero con identificador '" + externId + "'");
 		    }
 			throw new ISPACInfo("exception.info.electronic.noAddresses",false);
 		}

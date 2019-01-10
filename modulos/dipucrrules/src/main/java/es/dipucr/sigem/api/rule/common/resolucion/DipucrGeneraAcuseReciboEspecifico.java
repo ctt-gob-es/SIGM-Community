@@ -51,11 +51,6 @@ public class DipucrGeneraAcuseReciboEspecifico implements IRule {
 			IItem processTask =  entitiesAPI.getTask(rulectx.getTaskId());
 			int idTramCtl = processTask.getInt("ID_TRAM_CTL");
 			String numExp = rulectx.getNumExp();
-			String nombre = "";
-	    	String dirnot = "";
-	    	String c_postal = "";
-	    	String localidad = "";
-	    	String caut = "";
 	    	int documentId = 0;
 	    	Object connectorSession = null;
 	    	
@@ -70,7 +65,7 @@ public class DipucrGeneraAcuseReciboEspecifico implements IRule {
 			Iterator it = taskTpDocCollection.iterator();
 			while (it.hasNext()) {
 				IItem taskTpDoc = (IItem) it.next();
-				if ((((String) taskTpDoc.get("CT_TPDOC:NOMBRE")).trim().toUpperCase()).equals((tipoDocumento).trim().toUpperCase())) {
+				if ((((String) taskTpDoc.get("CT_TPDOC:NOMBRE")).trim()).equalsIgnoreCase((tipoDocumento.trim()))) {
 					documentTypeId = taskTpDoc.getInt("TASKTPDOC:ID_TPDOC");
 				}
 			}
@@ -78,13 +73,12 @@ public class DipucrGeneraAcuseReciboEspecifico implements IRule {
 				IItemCollection tpDocsTemplatesCollection = (IItemCollection) procedureAPI.getTpDocsTemplates(documentTypeId);
 				if (tpDocsTemplatesCollection == null || tpDocsTemplatesCollection.toList().isEmpty()) {
 					throw new ISPACInfo(Messages.getString("error.decretos.acuses.tpDocsTemplates"));
-				} 
-				else {
+				} else {
 					Iterator docs = tpDocsTemplatesCollection.iterator();
 					boolean encontrado = false;
 					while (docs.hasNext() && !encontrado) {
 						IItem tpDocsTemplate = (IItem) docs.next();
-						if (((String) tpDocsTemplate.get("NOMBRE")).trim().toUpperCase().equals(plantilla.trim().toUpperCase())) {
+						if (((String) tpDocsTemplate.get("NOMBRE")).trim().equalsIgnoreCase(plantilla.trim())) {
 							templateId = tpDocsTemplate.getInt("ID");
 							encontrado = true;
 						}
@@ -101,17 +95,8 @@ public class DipucrGeneraAcuseReciboEspecifico implements IRule {
 									IItem participante = (IItem) participantesIterator.next();
 							        cct.beginTX();
 								
-									if (participante!=null){								        
-							        	if ((String)participante.get("NOMBRE")!=null) nombre = (String)participante.get("NOMBRE");
-							        	if ((String)participante.get("DIRNOT")!=null) dirnot = (String)participante.get("DIRNOT");
-							        	if ((String)participante.get("C_POSTAL")!=null) c_postal = (String)participante.get("C_POSTAL");
-							        	if ((String)participante.get("LOCALIDAD")!=null) localidad = (String)participante.get("LOCALIDAD");
-							        	if ((String)participante.get("CAUT")!=null) caut = (String)participante.get("CAUT");
-							        	cct.setSsVariable("NOMBRE", nombre);
-							        	cct.setSsVariable("DIRNOT", dirnot);
-							        	cct.setSsVariable("C_POSTAL", c_postal);
-							        	cct.setSsVariable("LOCALIDAD", localidad);
-							        	cct.setSsVariable("CAUT", caut);
+									if (participante!=null){
+										DocumentosUtil.setParticipanteAsSsVariable(cct, participante);
 		
 							        	entityDocument = gendocAPI.createTaskDocument(taskId, documentTypeId);
 										documentId = entityDocument.getKeyInt();
@@ -130,14 +115,9 @@ public class DipucrGeneraAcuseReciboEspecifico implements IRule {
 										participanteAActualizar.set("ACUSE_GENERADO", "Y");
 										participanteAActualizar.store(cct);
 								        
-										cct.deleteSsVariable("NOMBRE");
-										cct.deleteSsVariable("DIRNOT");
-										cct.deleteSsVariable("C_POSTAL");
-										cct.deleteSsVariable("LOCALIDAD");
-										cct.deleteSsVariable("CAUT");
-								        
+										DocumentosUtil.borraParticipanteSsVariable(cct);							        
 								    }
-								}catch (Throwable e) {
+								}catch (Exception e) {
 									cct.endTX(false);
 									
 									String message = "exception.documents.generate";
@@ -174,15 +154,13 @@ public class DipucrGeneraAcuseReciboEspecifico implements IRule {
 			}
 			cct.endTX(true);
 		} catch(Exception e) {
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException(e);
+        	throw new ISPACRuleException("No se ha podido generar el acuse de recibo específico", e);
         }
 		return true;
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-
+		// Empty method
 	}
 
 }

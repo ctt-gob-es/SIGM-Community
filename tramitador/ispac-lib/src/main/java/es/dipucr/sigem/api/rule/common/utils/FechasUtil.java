@@ -9,8 +9,10 @@ import org.apache.commons.lang.time.DateUtils;
 public class FechasUtil {
 
 	public static String SIMPLE_DATE_PATTERN = "dd/MM/yyyy";
+	public static String SIMPLE_DATE_PATTERN_HOUR = "dd/MM/yyyy HH:mm:ss";
 	public static String QUERY_DATE_PATTERN = "yyyy-MM-dd";
 	public static String QUERY_DATE_PATTERN_WITHTIME = "yyyy-MM-dd HH:mm:ss";
+	public static String DOC_DATE_PATTERN = "d 'de' MMMM 'de' yyyy";
 	public static long MS_POR_DIA = DateUtils.MILLIS_PER_DAY;
 	public static int MES_ENERO = 1;
 	
@@ -281,5 +283,16 @@ public class FechasUtil {
 	 */
 	public static Date convertToDate(String sDate) throws Exception{
 		return defaultSdf.parse(sDate);
+	}
+	
+	/**
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static Calendar convertToCalendar(Date date){ 
+	  Calendar cal = Calendar.getInstance();
+	  cal.setTime(date);
+	  return cal;
 	}
 }

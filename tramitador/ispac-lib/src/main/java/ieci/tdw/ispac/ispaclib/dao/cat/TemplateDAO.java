@@ -2,6 +2,7 @@ package ieci.tdw.ispac.ispaclib.dao.cat;
 
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.item.IItemCollection;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.ObjectDAO;
 import ieci.tdw.ispac.ispaclib.dao.idsequences.IdSequenceMgr;
@@ -96,19 +97,28 @@ public class TemplateDAO extends ObjectDAO
 	  * @return la plantilla
 	  * @throws ISPACException
 	  */
-	 public static TemplateDAO getTemplate(DbCnt cnt, String name, int idTpDoc)
-	 throws ISPACException
-	 {
-	 	TemplateDAO template = null;
-	 	
-	 	CollectionDAO collection = new CollectionDAO (TemplateDAO.class);
-	 	collection.query (cnt, "WHERE NOMBRE = '" + DBUtil.replaceQuotes(name) + "' AND ID_TPDOC = " + idTpDoc);
-	 	if (collection.next())
-	 	{
-	 		template = (TemplateDAO) collection.value();
-	 	}
-	 	
-	 	return template;
+	 public static TemplateDAO getTemplate(IClientContext cct, String name, int idTpDoc) throws ISPACException{
+		 DbCnt cnt = cct.getConnection();
+		 TemplateDAO template = null;
+		 
+		 try{
+			 template = getTemplate(cnt, name, idTpDoc);
+		 } finally{
+			 cct.releaseConnection(cnt);
+		 }
+		 
+		 return template;
+	 }
+	 
+     public static TemplateDAO getTemplate(DbCnt cnt, String name, int idTpDoc) throws ISPACException{
+		 TemplateDAO template = null;
+		 CollectionDAO collection = new CollectionDAO (TemplateDAO.class);
+		 collection.query (cnt, "WHERE NOMBRE = '" + DBUtil.replaceQuotes(name) + "' AND ID_TPDOC = " + idTpDoc);
+		 if (collection.next()){
+			 template = (TemplateDAO) collection.value();
+		 }
+		 		 
+		 return template;
 	 }
   
 	 

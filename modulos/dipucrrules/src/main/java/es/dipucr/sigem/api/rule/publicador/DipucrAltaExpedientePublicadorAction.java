@@ -80,7 +80,7 @@ public class DipucrAltaExpedientePublicadorAction extends SigemBaseAction {
         	setInfo("Error en el alta de expediente: " + e.toString());
         	logError(expediente, interesado, e);
         	throw e;
-        } catch (Throwable e) {
+        } catch (Exception e) {
         	setInfo("Error en el alta de expediente: " + e.toString());
         	logError(expediente, interesado, e);
             throw new ActionException(e);
@@ -171,7 +171,7 @@ public class DipucrAltaExpedientePublicadorAction extends SigemBaseAction {
 			consulta.nuevoExpediente(ctexp, ctinteresado, getEntidad());
     }
     
-    private static Expediente getCTExpediente(ExpedienteVO exp) {
+    protected static Expediente getCTExpediente(ExpedienteVO exp) {
     	Expediente ctexp = null;
     	
     	if (exp != null) {
@@ -193,7 +193,7 @@ public class DipucrAltaExpedientePublicadorAction extends SigemBaseAction {
     	return ctexp;
     }
     
-    private static Interesado getCTInteresado(InteresadoVO interesado) {
+    protected static Interesado getCTInteresado(InteresadoVO interesado) {
     	Interesado ctinteresado = null;
     	
 		if (interesado != null) {

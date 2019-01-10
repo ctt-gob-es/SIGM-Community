@@ -157,7 +157,15 @@ public class GenerarActasOcupacionAllRule implements IRule {
 						
 						
 						int indiceSeparador = municipio.indexOf("-");
-						String municipioOcupación = municipio.substring(0, indiceSeparador);
+						//[Dipucr-Manu Ticket #474] - INICIO - ALSIGM3 Al generar las actas de ocupación da error
+						String municipioOcupación = "";
+						if(indiceSeparador >= 0){
+							municipioOcupación = municipio.substring(0, indiceSeparador);
+						}
+						else{
+							municipioOcupación = municipio;
+						}
+						//[Dipucr-Manu Ticket #474] - FIN - ALSIGM3 Al generar las actas de ocupación da error
 						
 						cct.setSsVariable("MUNICIPIO_OCUPACION", municipioOcupación);
 						
@@ -328,7 +336,7 @@ public class GenerarActasOcupacionAllRule implements IRule {
 							
 						}			
 
-					} catch (Throwable e) {
+					} catch (Exception e) {
 
 						String message = "exception.documents.generate";
 						String extraInfo = null;

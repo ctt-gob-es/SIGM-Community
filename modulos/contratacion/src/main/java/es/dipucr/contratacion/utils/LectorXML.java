@@ -31,13 +31,15 @@ public class LectorXML extends DefaultHandler {
 	public LectorXML(ArrayList<ValorXML> nodos) throws ISPACRuleException{
 
 		try {
+			//Ticket570
+			System.setProperty("https.protocols", "TLSv1.1,TLSv1.2");
 			xr = XMLReaderFactory.createXMLReader();
 			xr.setContentHandler(this);
 			xr.setErrorHandler(this);
 			this.nodos = nodos;
 		} catch (SAXException e) {
 			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
+			throw new ISPACRuleException("Error. "+e.getMessage(),e);
 		}
 
 	}
@@ -50,13 +52,13 @@ public class LectorXML extends DefaultHandler {
 			xr.parse(new InputSource(in));
 		} catch (SAXException e) {
 			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException(e);
+			throw new ISPACRuleException(e.getMessage(), e);
 		} catch (MalformedURLException e) {
 			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException(e);
+			throw new ISPACRuleException(e.getMessage(), e);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException(e);
+			throw new ISPACRuleException(e.getMessage(), e);
 		} 
 
 	}

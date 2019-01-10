@@ -21,12 +21,12 @@
 		</plugins>
 	</build>
 	<distributionManagement>
-		<!--<repository>
+		<!-- <repository>
 			<id>inhouse_releases</id>
 			<name>Repositorio tecdoc de releases</name>
 			<url>http://10.228.20.249:8081/nexus/content/repositories/thirdparty/</url>
 		</repository>
-		 <snapshotRepository>
+		<snapshotRepository>
 			<id>inhouse_snapshots</id>
 			<name>Repositorio tecdoc de snapshots</name>
 			<url>http://10.228.20.249:8081/nexus/content/repositories/snapshots/</url>
@@ -39,7 +39,7 @@
 				<property>
 					<name>jars</name>
 				</property>
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			</activation>			
 			<modules>
 				<module>invesdoc_main</module>
@@ -47,6 +47,16 @@
 				<module>invesdoc_stdbizobj</module>				
 				<module>invesdoc_admin</module>
 			</modules>
+		</profile>
+
+		<profile>
+			<id>init</id>
+			<activation>
+				<property>
+					<name>init</name>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>			
 		</profile>
 	</profiles>
 </project>

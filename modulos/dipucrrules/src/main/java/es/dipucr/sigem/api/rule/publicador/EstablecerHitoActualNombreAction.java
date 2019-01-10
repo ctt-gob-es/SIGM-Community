@@ -45,7 +45,7 @@ public class EstablecerHitoActualNombreAction extends SigemBaseAction {
 	//========================================================================
 	
 	/** Logger de la clase. */
-    private static final Logger logger = 
+    private static final Logger LOGGER = 
     	Logger.getLogger(EstablecerHitoActualNombreAction.class);
 
 	/** Logger de la clase. */
@@ -73,8 +73,8 @@ public class EstablecerHitoActualNombreAction extends SigemBaseAction {
     public boolean execute(RuleContext rctx, AttributeContext attContext) 
     		throws ActionException {
     	
-        if (logger.isInfoEnabled()) {
-            logger.info("Acción [" + this.getClass().getName() + "] en ejecución");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Acción [" + this.getClass().getName() + "] en ejecución");
         }
 
         HitoExpediente hito = new HitoExpediente();
@@ -90,8 +90,10 @@ public class EstablecerHitoActualNombreAction extends SigemBaseAction {
 
     		try{
     			existeExp = consultaExp.obtenerDetalle(expediente.getCnum(), getEntidad());
-    		}
-    		catch(Exception e){}
+    		} catch(Exception e) {
+    			LOGGER.info("No existe el expediente" + expediente, e);
+			}
+    		
     		if( existeExp != null){
 		        	
 	        	hito = establecerHitoActual(rctx, attContext);
@@ -103,7 +105,7 @@ public class EstablecerHitoActualNombreAction extends SigemBaseAction {
     		}
 		    // Log del hito
 		    logOk(hito);
-        } catch (Throwable e) {
+        } catch (Exception e) {
         	setInfo("Error al establecer hito actual: " + e.toString());
         	logError(hito, e);
             throw new ActionException(e);
@@ -169,7 +171,7 @@ public class EstablecerHitoActualNombreAction extends SigemBaseAction {
 	        } else if (idFase > 0) {
 		        ficheros = service.getFicherosFase(hito.getGuid(), rctx.getIdObjeto(), idFase);
 	        } else {
-	        	logger.warn("No se ha encontrado ningún identificador de fase o trámite");
+	        	LOGGER.warn("No se ha encontrado ningún identificador de fase o trámite");
 	        }
 
 	        // Anexar los ficheros al hito actual en CT
@@ -178,13 +180,13 @@ public class EstablecerHitoActualNombreAction extends SigemBaseAction {
 	        }
 
         } catch (Exception e) {
-        	logger.error("Error al anexar ficheros al hito: " + hito.getGuid(), e);
+        	LOGGER.error("Error al anexar ficheros al hito: " + hito.getGuid(), e);
         	
         	try {
 	        	// Eliminar los ficheros anexados
 	    		service.deleteFicherosHito(ficheros);
-        	} catch (Throwable t) {
-        		logger.warn("No se han podido eliminar los ficheros en RDE", e);
+        	} catch (Exception t) {
+        		LOGGER.warn("No se han podido eliminar los ficheros en RDE", t);
         	}
         	
             throw e;
@@ -200,7 +202,7 @@ public class EstablecerHitoActualNombreAction extends SigemBaseAction {
     	if (hito!= null && CONSULTA_TELEMATICA.isInfoEnabled()) {
     		
 	        // Información del hito
-	        StringBuffer hitoInfo = new StringBuffer().append("- HITO ESTADO: ").append(toString(hito));
+	        StringBuilder hitoInfo = new StringBuilder().append("- HITO ESTADO: ").append(toString(hito));
 	        
 	        // Log del resultado de la acción
 	        CONSULTA_TELEMATICA.info("Alta de hito actual:\n"  + hitoInfo.toString());
@@ -214,7 +216,7 @@ public class EstablecerHitoActualNombreAction extends SigemBaseAction {
     private static void logError(HitoExpediente hito, Throwable e) {
     	
         // Información del hito
-        StringBuffer hitoInfo = new StringBuffer().append("- HITO ESTADO: ").append(toString(hito));
+        StringBuilder hitoInfo = new StringBuilder().append("- HITO ESTADO: ").append(toString(hito));
         
         // Log del error
         CONSULTA_TELEMATICA.error("Error en la acción " + EstablecerHitoActualNombreAction.class.getName() + ":\n" + hitoInfo.toString(), e);
@@ -227,7 +229,7 @@ public class EstablecerHitoActualNombreAction extends SigemBaseAction {
      */
     private static String toString(HitoExpediente hito) {
     	if (hito != null) {
-	    	return new StringBuffer()
+	    	return new StringBuilder()
 	    		.append("guid=[").append(hito.getGuid()).append("]")
 	    		.append(", numeroExpediente=[").append(hito.getNumeroExpediente())
 	    		.append("]")
@@ -269,8 +271,7 @@ public class EstablecerHitoActualNombreAction extends SigemBaseAction {
 	    	String nombreFase = "";
 	    	if(idFase>0){
 	    		nombreFase = FasesUtil.getNombreFase(cct, idFase);
-	    	}
-	    	else{
+	    	} else {
 	    		nombreFase = FasesUtil.getNombreFaseActiva(cct, numexp);				
 	    	}
 	    	parameters.put("NOMBREFASE", nombreFase);
@@ -278,8 +279,9 @@ public class EstablecerHitoActualNombreAction extends SigemBaseAction {
 	    	String nombreTramite = "";
 	    	if(idTramite > 0){
 	    		IItem tramite = TramitesUtil.getPTramiteById(cct, idTramite);
-	    		if(tramite != null) nombreTramite = tramite.getString("NOMBRE");
-	    		
+	    		if(tramite != null) {
+	    			nombreTramite = tramite.getString("NOMBRE");
+	    		}	    		
 	    	}
 	    	parameters.put("NOMBRETRAMITE", nombreTramite);
     	}

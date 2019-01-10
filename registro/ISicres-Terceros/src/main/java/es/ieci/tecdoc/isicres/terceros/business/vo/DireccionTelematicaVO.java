@@ -30,6 +30,9 @@ public class DireccionTelematicaVO extends BaseDireccionVO {
 	}
 
 	public TipoDireccionTelematicaVO getTipoDireccionTelematica() {
+		if (null == tipoDireccionTelematica){
+			tipoDireccionTelematica = new TipoDireccionTelematicaVO();
+		}
 		return tipoDireccionTelematica;
 	}
 

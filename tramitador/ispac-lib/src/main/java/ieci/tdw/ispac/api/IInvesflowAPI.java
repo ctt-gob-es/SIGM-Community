@@ -394,4 +394,13 @@ public interface IInvesflowAPI extends Serializable
 	 */
 	public IManualUsuarioAPI getManualUsuarioAPI() throws ISPACException;
 	
+	/**
+	 * [Dipucr-Manu Ticket #] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	 * 
+	 * Obtiene el interface {@link ITemplateAPI}
+	 * @return el interface IManualUsuarioAPI
+	 * @throws ISPACException
+	 */
+	public IMensajeAPI getMensajeAPI() throws ISPACException;
+	
 }

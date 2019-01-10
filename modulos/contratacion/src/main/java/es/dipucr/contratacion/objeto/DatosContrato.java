@@ -1,25 +1,27 @@
 package es.dipucr.contratacion.objeto;
 
-import es.dipucr.contratacion.client.beans.Campo;
+import es.dipucr.contratacion.services.PlataformaContratacionStub.Campo;
 
 public class DatosContrato {
-	private String objetoContrato;
-	private Campo procedimientoContratacion;
-	private Campo tipoContrato;
-	private Campo subTipoContrato;
-	private Campo tipoTramitacion;
-	private Campo tramitacionGasto;
-	private Campo [] cpv;
-	private String valorEstimadoContrato;
-	private String numContrato;
+	private String objetoContrato = null;
+	private Campo procedimientoContratacion = null;
+	private Campo tipoContrato = null;
+	private Campo subTipoContrato = null;
+	private Campo tipoTramitacion = null;
+	private Campo tramitacionGasto = null;
+	private Campo [] cpv = null;
+	private String valorEstimadoContrato = null;
+	private String numContrato = null;
 	private boolean criteriosMultiples;
 	private boolean regulacionArmonizada = false;
-	private String provinciaContrato;
-	private String caracteristicasBienes;
+	private Campo provinciaContrato = null;
+	private String caracteristicasBienes = null;
 	//procNegArticulo.Artículo y apartado de la LCAP por el que se aplica procedimiento negociado
-	private String procNegCausa;
-	private String organoContratacion;
-
+	private String procNegCausa = null;
+	private String organoContratacion = null;
+	private String presupuestoConImpuesto = null;
+	private String presupuestoSinImpuesto = null;
+	
 	public String getObjetoContrato() {
 		return objetoContrato;
 	}
@@ -108,11 +110,11 @@ public class DatosContrato {
 		this.regulacionArmonizada = regulacionArmonizada;
 	}
 
-	public String getProvinciaContrato() {
+	public Campo getProvinciaContrato() {
 		return provinciaContrato;
 	}
 
-	public void setProvinciaContrato(String provinciaContrato) {
+	public void setProvinciaContrato(Campo provinciaContrato) {
 		this.provinciaContrato = provinciaContrato;
 	}
 
@@ -138,6 +140,22 @@ public class DatosContrato {
 
 	public void setProcNegCausa(String procNegCausa) {
 		this.procNegCausa = procNegCausa;
+	}
+
+	public String getPresupuestoConImpuesto() {
+		return presupuestoConImpuesto;
+	}
+
+	public void setPresupuestoConImpuesto(String presupuestoConImpuesto) {
+		this.presupuestoConImpuesto = presupuestoConImpuesto;
+	}
+
+	public String getPresupuestoSinImpuesto() {
+		return presupuestoSinImpuesto;
+	}
+
+	public void setPresupuestoSinImpuesto(String presupuestoSinImpuesto) {
+		this.presupuestoSinImpuesto = presupuestoSinImpuesto;
 	}
 
 }

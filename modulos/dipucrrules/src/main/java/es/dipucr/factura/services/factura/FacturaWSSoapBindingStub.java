@@ -16,13 +16,40 @@ public class FacturaWSSoapBindingStub extends org.apache.axis.client.Stub implem
     static org.apache.axis.description.OperationDesc [] _operations;
 
     static {
-        _operations = new org.apache.axis.description.OperationDesc[4];
+        _operations = new org.apache.axis.description.OperationDesc[7];
         _initOperationDesc1();
     }
 
     private static void _initOperationDesc1(){
         org.apache.axis.description.OperationDesc oper;
         org.apache.axis.description.ParameterDesc param;
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("crearRetencionCredito");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "idEntidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "ejercicio"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "nifTercero"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "fechaContable"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"), java.util.Calendar.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "texto"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "economica"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "organica"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "funcional"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "importe"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "double"), double.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://bean.domain.factura.dipucr.es", "OperacionGastosFuturosBean"));
+        oper.setReturnClass(es.dipucr.factura.domain.bean.OperacionGastosFuturosBean.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "crearRetencionCreditoReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[0] = oper;
+
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("cambiarEstadoFactura");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "idEntidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
@@ -38,7 +65,7 @@ public class FacturaWSSoapBindingStub extends org.apache.axis.client.Stub implem
         oper.setReturnType(org.apache.axis.encoding.XMLType.AXIS_VOID);
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[0] = oper;
+        _operations[1] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("cambiarEstadoAnulacionFactura");
@@ -53,7 +80,7 @@ public class FacturaWSSoapBindingStub extends org.apache.axis.client.Stub implem
         oper.setReturnType(org.apache.axis.encoding.XMLType.AXIS_VOID);
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[1] = oper;
+        _operations[2] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("enviarFacturaFirmada");
@@ -66,7 +93,7 @@ public class FacturaWSSoapBindingStub extends org.apache.axis.client.Stub implem
         oper.setReturnType(org.apache.axis.encoding.XMLType.AXIS_VOID);
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[2] = oper;
+        _operations[3] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("recuperarContratosMenores");
@@ -89,7 +116,45 @@ public class FacturaWSSoapBindingStub extends org.apache.axis.client.Stub implem
         oper.setReturnQName(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "recuperarContratosMenoresReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[3] = oper;
+        _operations[4] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("recuperarIngresos");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "idEntidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "ejercicio"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "cifTercero"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "refContable"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "tipoMovimiento"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://bean.domain.factura.dipucr.es", "IngresosBean"));
+        oper.setReturnClass(es.dipucr.factura.domain.bean.IngresosBean[].class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "recuperarIngresosReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[5] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("recuperarOperacionesGastoDefinitivas");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "idEntidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "ejercicio"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "cifTercero"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "refContable"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "tipoMovimiento"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://bean.domain.factura.dipucr.es", "OperacionGastosBean"));
+        oper.setReturnClass(es.dipucr.factura.domain.bean.OperacionGastosBean[].class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "recuperarOperacionesGastoDefinitivasReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[6] = oper;
 
     }
 
@@ -125,6 +190,27 @@ public class FacturaWSSoapBindingStub extends org.apache.axis.client.Stub implem
             qName = new javax.xml.namespace.QName("http://bean.domain.factura.dipucr.es", "ContratoMenorBean");
             cachedSerQNames.add(qName);
             cls = es.dipucr.factura.domain.bean.ContratoMenorBean.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://bean.domain.factura.dipucr.es", "IngresosBean");
+            cachedSerQNames.add(qName);
+            cls = es.dipucr.factura.domain.bean.IngresosBean.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://bean.domain.factura.dipucr.es", "OperacionGastosBean");
+            cachedSerQNames.add(qName);
+            cls = es.dipucr.factura.domain.bean.OperacionGastosBean.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://bean.domain.factura.dipucr.es", "OperacionGastosFuturosBean");
+            cachedSerQNames.add(qName);
+            cls = es.dipucr.factura.domain.bean.OperacionGastosFuturosBean.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -195,12 +281,46 @@ public class FacturaWSSoapBindingStub extends org.apache.axis.client.Stub implem
         }
     }
 
-    public void cambiarEstadoFactura(java.lang.String idEntidad, java.lang.String nreg, java.lang.String codEstado, int subtipo, java.lang.String motivo) throws java.rmi.RemoteException {
+    public es.dipucr.factura.domain.bean.OperacionGastosFuturosBean crearRetencionCredito(java.lang.String idEntidad, java.lang.String ejercicio, java.lang.String nifTercero, java.util.Calendar fechaContable, java.lang.String texto, java.lang.String economica, java.lang.String organica, java.lang.String funcional, double importe) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[0]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "crearRetencionCredito"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {idEntidad, ejercicio, nifTercero, fechaContable, texto, economica, organica, funcional, new java.lang.Double(importe)});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (es.dipucr.factura.domain.bean.OperacionGastosFuturosBean) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (es.dipucr.factura.domain.bean.OperacionGastosFuturosBean) org.apache.axis.utils.JavaUtils.convert(_resp, es.dipucr.factura.domain.bean.OperacionGastosFuturosBean.class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public void cambiarEstadoFactura(java.lang.String idEntidad, java.lang.String nreg, java.lang.String codEstado, int subtipo, java.lang.String motivo) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[1]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -227,7 +347,7 @@ public class FacturaWSSoapBindingStub extends org.apache.axis.client.Stub implem
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[1]);
+        _call.setOperation(_operations[2]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -254,7 +374,7 @@ public class FacturaWSSoapBindingStub extends org.apache.axis.client.Stub implem
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[2]);
+        _call.setOperation(_operations[3]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -281,7 +401,7 @@ public class FacturaWSSoapBindingStub extends org.apache.axis.client.Stub implem
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[3]);
+        _call.setOperation(_operations[4]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -303,6 +423,74 @@ public class FacturaWSSoapBindingStub extends org.apache.axis.client.Stub implem
                 return (es.dipucr.factura.domain.bean.ContratoMenorBean[]) _resp;
             } catch (java.lang.Exception _exception) {
                 return (es.dipucr.factura.domain.bean.ContratoMenorBean[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.dipucr.factura.domain.bean.ContratoMenorBean[].class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public es.dipucr.factura.domain.bean.IngresosBean[] recuperarIngresos(java.lang.String idEntidad, java.lang.String ejercicio, java.lang.String cifTercero, java.lang.String refContable, java.lang.String tipoMovimiento) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[5]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "recuperarIngresos"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {idEntidad, ejercicio, cifTercero, refContable, tipoMovimiento});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (es.dipucr.factura.domain.bean.IngresosBean[]) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (es.dipucr.factura.domain.bean.IngresosBean[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.dipucr.factura.domain.bean.IngresosBean[].class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public es.dipucr.factura.domain.bean.OperacionGastosBean[] recuperarOperacionesGastoDefinitivas(java.lang.String idEntidad, java.lang.String ejercicio, java.lang.String cifTercero, java.lang.String refContable, java.lang.String tipoMovimiento) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[6]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://factura.services.factura.dipucr.es", "recuperarOperacionesGastoDefinitivas"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {idEntidad, ejercicio, cifTercero, refContable, tipoMovimiento});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (es.dipucr.factura.domain.bean.OperacionGastosBean[]) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (es.dipucr.factura.domain.bean.OperacionGastosBean[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.dipucr.factura.domain.bean.OperacionGastosBean[].class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {

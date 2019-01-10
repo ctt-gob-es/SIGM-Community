@@ -31,6 +31,8 @@ import es.dipucr.sigem.api.rule.common.utils.MailUtil;
 public class DipucrEnviaDocEmailConAcuse implements IRule{
 	private static final Logger LOGGER = Logger.getLogger(DipucrEnviaDocEmailConAcuse.class);
 
+	private static final String FORMATO_FECHA_DD_MM_YYYY = "dd/MM/yyyy";
+
 	public String VAR_EMAILS; //Variable de sistema de la que tomamos los emails 
 	public String contenido; //Texto con el contenido del correo
 	public String asunto; //Asunto del correo
@@ -53,19 +55,18 @@ public class DipucrEnviaDocEmailConAcuse implements IRule{
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 	        //----------------------------------------------------------------------------------------------
-	        LOGGER.info("INICIO - "+this.getClass().getName());
+	        LOGGER.info("INICIO - " + this.getClass().getName());
 	        
 	        String numexp = rulectx.getNumExp();
 	        //[Ticket190] INICIO ALSIGM3 error en el ciruito de firma de la interventora al lanzar la regla EnvioAvisoEmailFinFirmaRule 
 	        int tramiteId = 0;
-	        if(numexp==null){
+	        if(numexp == null){
 	        	//Si el numexp es null quiere decir que la regla se lanza desde el circuito de firmas
 	        	int idDoc = rulectx.getInt("ID_DOCUMENTO");
 				IItem itemDocumento = DocumentosUtil.getDocumento(entitiesAPI, idDoc);
 	        	tramiteId = itemDocumento.getInt("ID_TRAMITE");
 	        	numexp = itemDocumento.getString("NUMEXP");
-	        }
-	        else{
+	        } else {
 	        	tramiteId = rulectx.getTaskId();
 	        }	
 	        
@@ -82,37 +83,46 @@ public class DipucrEnviaDocEmailConAcuse implements IRule{
 	        String nombreDocumento = ""; //Nombre del documento con extensión y todo
 	        File fileDocumento = null;
 	        
-	        if(asunto == null) asunto = "";
-	        if(contenido == null) contenido = "";
-	        if(nombreNotif == null) nombreNotif = "";
+	        if(asunto == null){
+	        	asunto = "";
+	        }
+	        if(contenido == null){
+	        	contenido = "";
+	        }
+	        if(nombreNotif == null){
+	        	nombreNotif = "";
+	        }
 	        	        
 			//Recuperamos el adjunto
 	        if(conDocumento){
-	        	IItemCollection documentosCollection = entitiesAPI.getDocuments(numexp, "ID_TRAMITE = '" + tramiteId + "'", "");
+	        	IItemCollection documentosCollection = entitiesAPI.getDocuments(numexp, DocumentosUtil.ID_TRAMITE + " = '" + tramiteId + "'", "");
 				Iterator<?> documentosIterator = documentosCollection.iterator();
+				
 				if(documentosIterator.hasNext()){
 					IItem documento = (IItem) documentosIterator.next();
-					String infoPag = documento.getString("INFOPAG_RDE");
-					String extension = documento.getString("EXTENSION_RDE");
+					String infoPag = documento.getString(DocumentosUtil.INFOPAG_RDE);
+					String extension = documento.getString(DocumentosUtil.EXTENSION_RDE);
 					
-					if(infoPag == null || infoPag.equals("")){
-						infoPag = documento.getString("INFOPAG");
-						extension = documento.getString("EXTENSION");						
+					if(StringUtils.isEmpty(infoPag)){
+						infoPag = documento.getString(DocumentosUtil.INFOPAG);
+						extension = documento.getString(DocumentosUtil.EXTENSION);						
 					}
-					nombreDocumento = documento.getString("DESCRIPCION");// + "." + extension;
-					tipoDocumento = documento.getString("NOMBRE");
-					if(nombreDocumento == null || nombreDocumento.equals("")) nombreDocumento = documento.getString("NOMBRE");// + "." + extension;
+					nombreDocumento = documento.getString(DocumentosUtil.DESCRIPCION);// + "." + extension;
+					tipoDocumento = documento.getString(DocumentosUtil.NOMBRE);
+					
+					if(StringUtils.isEmpty(nombreDocumento)){
+						nombreDocumento = documento.getString(DocumentosUtil.NOMBRE);// + "." + extension;
+					}
 					
 					fileDocumento = DocumentosUtil.getFile(cct, infoPag, nombreDocumento, extension);
 					
-					Date faprobacionDate = documento.getDate("FAPROBACION");
+					Date faprobacionDate = documento.getDate(DocumentosUtil.FAPROBACION);
 					if(faprobacionDate != null){
-						String faprobacion = (new SimpleDateFormat("dd/MM/yyyy")).format(faprobacionDate);
+						String faprobacion = (new SimpleDateFormat(FORMATO_FECHA_DD_MM_YYYY)).format(faprobacionDate);
 						if(faprobacion == null) faprobacion = "";
 						contenido += "Fecha de aprobación: <b>" + faprobacion + "</b>. \n";
 					}
-				}
-				else{
+				} else {
 					throw new ISPACRuleException("No se ha podido recuperar ningún documento del tipo: "+ tipoDocumento);
 				}
 	        }
@@ -134,29 +144,27 @@ public class DipucrEnviaDocEmailConAcuse implements IRule{
 		        		+ " </p>"
 		        		+ "<br/> <br/>";
 		        		
-				asunto +=  expediente.getString("NOMBREPROCEDIMIENTO");
-			}
-			catch(Exception e){
+				asunto +=  expediente.getString(ExpedientesUtil.NOMBREPROCEDIMIENTO);
+			} catch(Exception e){
 				throw new ISPACRuleException("Error al recuperar el expediente: " + numexp, e);
 			}				
     			
 	        String emails = ConfigurationMgr.getVarGlobal(cct, VAR_EMAILS);
-	        if(emails.equals("")){
+	        if(StringUtils.isEmpty(emails)){
 	        	emails = VAR_EMAILS;
 	        }
+	        
 	        if(StringUtils.isNotEmpty(emails)){
 	        	emails = emails.replaceAll("#", MailUtil.DEFAULT_MAIL_SEPARATOR);
 	        	try{
 	        		MailUtil.enviarCorreoVarios(rulectx, emails, asunto, contenido, false, fileDocumento, imagenes);
-	        	}
-	        	catch(Exception e){
+	        	} catch(Exception e){
 		        	String descripError =  "No se ha podido recuperar los correos electrónicos de la Variable de Sistema: " + VAR_EMAILS;
 					DipucrCommonFunctions.insertarAcuseEmail(nombreNotif, new Date(), nombreDocumento, nombreDocumento, false, "", descripError, rulectx);
 					LOGGER.error(descripError, e);
 					throw new ISPACRuleException(descripError);
 		        }
-	        }
-	        else{	        	
+	        } else {	        	
 	        	String descripError =  "No existe ningún participante para trasladar el documento.";
 				DipucrCommonFunctions.insertarAcuseEmail(nombreNotif, new Date(), nombreDocumento, nombreDocumento, false, "", descripError, rulectx);
 				LOGGER.error(descripError);
@@ -169,13 +177,14 @@ public class DipucrEnviaDocEmailConAcuse implements IRule{
         	}
 	        //[Dipucr-Manu Ticket #327] FIN - ALSIGM3 Cuando se envía documento por correo se deja el documento abandonado en la carpeta de temporales.
 
-        	LOGGER.info("FIN - "+this.getClass().getName());
+        	LOGGER.info("FIN - " + this.getClass().getName());
         	return true;
     		
         } catch(Exception e) {
         	LOGGER.error("Error al enviar email a: " + nombreNotif + ", en el expediente: " + rulectx.getNumExp() + ". "+ e.getMessage(), e);
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
+        	if (e instanceof ISPACRuleException){
+        		throw new ISPACRuleException(e);
+        	}
         	throw new ISPACRuleException("No se ha podido obtener la lista de solicitudes",e);
         }
     }

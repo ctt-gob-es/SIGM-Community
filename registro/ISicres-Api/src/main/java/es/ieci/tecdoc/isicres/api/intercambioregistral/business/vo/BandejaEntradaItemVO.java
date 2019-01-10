@@ -4,6 +4,10 @@ import java.util.Date;
 
 public class BandejaEntradaItemVO extends BaseIntercambioRegistralVO{
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1547161298119915600L;
 	protected Long id;
 	protected Long idLibro;
 	protected Long idRegistro;
@@ -37,8 +41,9 @@ public class BandejaEntradaItemVO extends BaseIntercambioRegistralVO{
 	
 	protected String comentarios;
 	
-	
-	
+	protected Boolean tieneAdjuntos;
+	private String codigoAsunto;
+	protected String resumen;
 
 	public Long getId() {
 		return id;
@@ -179,6 +184,24 @@ public class BandejaEntradaItemVO extends BaseIntercambioRegistralVO{
 	public void setComentarios(String comentarios) {
 		this.comentarios = comentarios;
 	}
-
-
+	public Boolean getTieneAdjuntos() {
+	    return tieneAdjuntos;
+	}
+	public void setTieneAdjuntos(
+	    Boolean tieneAdjuntos) {
+	    this.tieneAdjuntos = tieneAdjuntos;
+	}
+	public void setCodigoAsunto(
+	    String codigoAsunto) {
+	   this.codigoAsunto = codigoAsunto;
+	}
+	public String getCodigoAsunto() {
+		return codigoAsunto;
+	}
+	public String getResumen() {
+	    return resumen;
+	}
+	public void setResumen(String resumen) {
+	    this.resumen = resumen;
+	}
 }

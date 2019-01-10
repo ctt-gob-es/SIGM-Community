@@ -12,6 +12,7 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXTramiteDAO;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 
 /**

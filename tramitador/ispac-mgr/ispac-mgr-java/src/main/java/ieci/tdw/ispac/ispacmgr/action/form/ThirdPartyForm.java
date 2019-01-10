@@ -2,6 +2,11 @@ package ieci.tdw.ispac.ispacmgr.action.form;
 
 public class ThirdPartyForm extends EntityForm {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private String id;
 	private String postalAddressId;
 	private String electronicAddressId;
@@ -9,6 +14,7 @@ public class ThirdPartyForm extends EntityForm {
 	private String nombre;
 	private String apellido1;
 	private String apellido2;
+	private String dir3;
 	
 	public String getNif() {
 		return nif;
@@ -52,5 +58,10 @@ public class ThirdPartyForm extends EntityForm {
 	public void setPostalAddressId(String postalAddressId) {
 		this.postalAddressId = postalAddressId;
 	}
-	
+	public String getDir3() {
+		return dir3;
+	}
+	public void setDir3(String dir3) {
+		this.dir3 = dir3;
+	}
 }

@@ -47,6 +47,12 @@
 			<artifactId>invesdoc-stdbizobj</artifactId>
 			<version>${invesdoc.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>Metadatos</artifactId>
+			<version>1.0</version>
+		</dependency>
 
 
 		<!-- 3rd Party -->

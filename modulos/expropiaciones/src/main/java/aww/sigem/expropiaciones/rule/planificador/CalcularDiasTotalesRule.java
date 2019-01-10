@@ -54,20 +54,26 @@ public class CalcularDiasTotalesRule implements IRule {
 			String expQuery = "WHERE NUMEXP = '" + rulectx.getNumExp() + "'";
 			IItemCollection collExp = entitiesAPI.queryEntities("EXPR_EEF", expQuery);
 			Iterator itExp = collExp.iterator();
-			int intervalo = 0;
-			int margenEntreFinca = 1;
+			int intervalo = 0;			
+			int margenEntreFinca = 0;
 			
 			IItem itemExp = null;
 			if (itExp.hasNext()) {
 				itemExp = (IItem) itExp.next();			
 				intervalo = itemExp.getInt("INTERVALO_MUNICIPIOS");	
+				margenEntreFinca = itemExp.getInt("INTERVALO_FINCA");
 				
 				// Si el intervalo es menor que 0 -> No se ha inicializado el campo por lo que se asignan 30 minutos.
 				if (intervalo < 0){
 					intervalo = 30;
 					itemExp.set("INTERVALO_MUNICIPIOS", 30);
 					itemExp.store(cct);
-				}				
+				}
+				if(margenEntreFinca < 0){
+					margenEntreFinca = 2;
+					itemExp.set("INTERVALO_FINCA", 2);
+					itemExp.store(cct);
+				}
 				
 			} else throw new ISPACRuleException("Se ha producido un error. EXPEDIENTE EXPROPIACION FORZOSA No encontrado");
 			

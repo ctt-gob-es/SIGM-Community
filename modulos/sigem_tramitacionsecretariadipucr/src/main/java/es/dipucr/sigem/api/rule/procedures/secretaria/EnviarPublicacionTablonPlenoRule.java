@@ -3,14 +3,17 @@ package es.dipucr.sigem.api.rule.procedures.secretaria;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.EnviarPublicacionTablonGenericaRule;
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.FechasUtil;
 import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
 
@@ -21,16 +24,21 @@ public class EnviarPublicacionTablonPlenoRule extends EnviarPublicacionTablonGen
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 
 		try {
-			nombreDocumento = "Convocatoria del Pleno";
-			titulo = "Convocatoria del Pleno";
-			IItem sesion = SecretariaUtil.getSesion(rulectx,
-					rulectx.getNumExp());
+			IItemCollection convocariaFirma = DocumentosUtil.getDocumentos(rulectx.getClientContext(), rulectx.getNumExp(), "FAPROBACION IS NOT NULL", "FAPROBACION DESC");
+			Iterator<IItem> itconvoca = convocariaFirma.iterator();
+			if (itconvoca.hasNext()) {
+				IItem conv = itconvoca.next();
+				nombreDocumento = conv.getString("NOMBRE");
+			}
+			titulo = nombreDocumento;
+			
+			//nombreDocumento = "Convocatoria del Pleno";
+			//titulo = "Convocatoria del Pleno";
+			IItem sesion = SecretariaUtil.getSesion(rulectx, rulectx.getNumExp());
 			Date fechaCelebracion = sesion.getDate("FECHA");
-			String fechaCe = FechasUtil.getFormattedDate(fechaCelebracion,
-					"dd 'de' MMMM 'de' yyyy");
+			String fechaCe = FechasUtil.getFormattedDate(fechaCelebracion, "dd 'de' MMMM 'de' yyyy");
 			String horaConv = sesion.getString("HORA");
-			descripcion = "Convocatoria de Pleno con fecha " + fechaCe
-					+ " y hora " + horaConv;
+			descripcion = nombreDocumento+" con fecha " + fechaCe+ " y hora " + horaConv;
 
 			codCategoria = "PLENO";
 			codServicio = "SEG";

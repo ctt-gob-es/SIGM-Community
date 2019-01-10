@@ -7,11 +7,16 @@ import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
+import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.avisos.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.ResponsablesUtil;
 
 public class AvisoNuevoPeticionContratacion implements IRule 
@@ -26,13 +31,58 @@ public class AvisoNuevoPeticionContratacion implements IRule
 		return true;
 	}
 	
-	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
-
-		
+	public Object execute(IRuleContext rulectx) throws ISPACRuleException {		
 		try{
 			
-			//Generamos el aviso
-			generarAvisoAnuncio(rulectx, ResponsablesUtil.get_ID_RESP_Fase(rulectx));
+			//Comprobamos si el mismo funcionario hace contratos menores y el resto
+			String unificado = ConfigurationMgr.getVarGlobal(rulectx.getClientContext(), "TRAMITACION_CONTRATOS_UNIFICADO");
+			if(StringUtils.isNotEmpty(unificado)){
+				if(unificado.equals("SI")){
+					generarAvisoAnuncio(rulectx, ResponsablesUtil.get_ID_RESP_Fase(rulectx));
+				}
+				if(unificado.equals("NO")){
+					boolean mandarPersonalProcContra = false;
+					//Mandar un aviso electrónico al grupo de PROC_CONTRATACION
+					//Obras mayores de 40.000
+					//Servicios y Suministros 15.000
+					//EMAILS_NUEVOPROC_CONTR
+					
+					String query = "NUMEXP = '"+rulectx.getNumExp()+"'";
+					Iterator<IItem> itPeticion = ConsultasGenericasUtil.queryEntities(rulectx, "CONTRATACION_PETICION", query);
+					while(itPeticion.hasNext()){
+						IItem peticion = itPeticion.next();
+						String presupuesto = "0.0";
+						double valPresupuesto = 0.0;
+						if(StringUtils.isNotEmpty(peticion.getString("PRESUPUESTO"))){
+							presupuesto = peticion.getString("PRESUPUESTO");
+							valPresupuesto = Double.parseDouble(presupuesto);
+						}
+						String tipoContrato = "";
+						if(StringUtils.isNotEmpty(peticion.getString("TIPO_CONTRATO"))){
+							tipoContrato = peticion.getString("TIPO_CONTRATO");
+							if((tipoContrato.equals("1 - Suministros") || tipoContrato.equals("2 - Servicios")) && valPresupuesto>15000){						
+								mandarPersonalProcContra = true;
+							}
+							else{
+								if(tipoContrato.equals("3 - Obras") && valPresupuesto>40000){
+									mandarPersonalProcContra = true;
+								}
+							}					
+						}				
+					}
+					if(mandarPersonalProcContra){
+						String restoContratoId = ConfigurationMgr.getVarGlobal(rulectx.getClientContext(), "CONTRATO_RESTO_ID");
+						generarAvisoAnuncio(rulectx, restoContratoId);
+					}
+					else{
+						String contratoMenorId = ConfigurationMgr.getVarGlobal(rulectx.getClientContext(), "CONTRATO_MENOR_ID");
+						generarAvisoAnuncio(rulectx, contratoMenorId);
+					}
+					//Contratos Menores
+					//EMAIL -> EMAILS_DEPCONTRA_PETSUM
+					//Generamos el aviso
+				}
+			}			
 		}
 		catch (Exception e) {
 			
@@ -48,7 +98,7 @@ public class AvisoNuevoPeticionContratacion implements IRule
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
 	}
 	
-	public static String _ADVERTISE_MESSAGE = "Nueva Petición de Contratación";
+	public static String _ADVERTISE_MESSAGE = "Nueva petición del tramitación del contrato";
 	
 	private void generarAvisoAnuncio(IRuleContext rulectx, String sResponsable)
 			throws ISPACException

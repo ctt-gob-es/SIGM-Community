@@ -44,6 +44,14 @@ public class GestionURLsBackOffice {
 			aux = propiedades.getString(ConstantesGestionUsuariosBackOffice.APLICACION_ARBOL_DOCUMENTAL_MANAGER);
 			config.put(KEY_URL + ConstantesGestionUsuariosBackOffice.APLICACION_ARBOL_DOCUMENTAL_MANAGER, aux);
 			//[eCenpri-Manu Ticket #295] - FIN  -ALSIGM3 Nuevo proyecto Árbol Documental.
+			
+			
+			//[eCenpri-Manu Ticket #] - INICIO - ALSIGM3 .
+			aux = propiedades.getString(ConstantesGestionUsuariosBackOffice.APLICACION_REGISTRO_PRESENCIAL_MSSSI);
+			config.put(KEY_URL + ConstantesGestionUsuariosBackOffice.APLICACION_REGISTRO_PRESENCIAL_MSSSI, aux);
+			//[eCenpri-Manu Ticket #] - FIN  -ALSIGM3 .
+			
+			
 			aux = propiedades.getString(KEY_LOGIN);
 			config.put(KEY_LOGIN, aux);
 			aux = propiedades.getString(KEY_LOGOUT);

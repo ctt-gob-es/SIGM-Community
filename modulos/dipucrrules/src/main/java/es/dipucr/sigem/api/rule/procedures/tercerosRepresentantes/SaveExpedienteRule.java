@@ -9,6 +9,9 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
@@ -36,13 +39,21 @@ public class SaveExpedienteRule  implements IRule {
 			
 			String consulta = "WHERE NIFCIFTITULAR='"+nifciftitular+"' AND (CODPROCEDIMIENTO='CR-TERC-01' OR CODPROCEDIMIENTO='PCD-222' OR CODPROCEDIMIENTO='PCD-223')";
 	        IItemCollection collection = entitiesAPI.queryEntities(SpacEntities.SPAC_EXPEDIENTES, consulta);
-	        if (collection.toList().size()<1)
-	        {
-	        	return true;
+	        Iterator<IItem> itCollection = collection.iterator();
+	        if(itCollection.hasNext()){
+	        	IItem itExpediente = itCollection.next();
+	        	String expediente = "";
+	        	if(StringUtils.isNotEmpty(itExpediente.getString("NUMEXP")))expediente = itExpediente.getString("NUMEXP");
+	        	if(expediente.equals(rulectx.getNumExp())){
+	        		return true;
+	        	}
+	        	else{
+	        		rulectx.setInfoMessage("Este representado ya existe");
+		        	return false;
+	        	}
 	        }
 	        else{
-	        	rulectx.setInfoMessage("Este representado ya existe");
-	        	return false;
+	        	return true;
 	        }
 	        
 		}catch(Exception e) {

@@ -632,7 +632,7 @@ public boolean execute(String sql) throws ISPACException {
 		 * if (m_cnt != null) { try { if (m_cnt.getAutoCommit()) {
 		 * System.out.println("WARNING!!! Liberando una transacción perdida.
 		 * Nombre " + m_cnt.toString() + " \n"); m_cnt.rollback(); } }
-		 * catch(SQLException e) { e.printStackTrace();
+		 * catch(SQLException e) { logger.error("ERROR. " + e.getMessage(), e);
 		 * System.out.println("ERROR!!! Error al cancelar una transacción.
 		 * Nombre " + m_cnt.toString() + " \n");
 		 *  } closeConnection(); }

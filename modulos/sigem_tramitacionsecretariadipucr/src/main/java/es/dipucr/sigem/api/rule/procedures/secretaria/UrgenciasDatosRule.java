@@ -17,7 +17,7 @@ import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
 
 public class UrgenciasDatosRule implements IRule {
 
-	private static final Logger logger = Logger.getLogger(PropuestaDatosRule.class);
+	private static final Logger logger = Logger.getLogger(UrgenciasDatosRule.class);
 	
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException{
         return true;

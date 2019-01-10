@@ -1,10 +1,10 @@
 package ieci.tecdoc.sgm.core.services.terceros;
 
-import java.util.List;
-
 import ieci.tecdoc.sgm.core.services.terceros.dto.DireccionElectronica;
 import ieci.tecdoc.sgm.core.services.terceros.dto.DireccionPostal;
 import ieci.tecdoc.sgm.core.services.terceros.dto.Tercero;
+
+import java.util.List;
 
 
 /**
@@ -169,6 +169,30 @@ public interface ServicioTerceros {
     		String tipo, String provincia, String municipio, String cpostal, String direccion,
     		String tfnoFijo, String tfnoMovil, String email) throws TercerosException;
     
+    /**
+	 * [dipucr-Felipe #583]
+	 * @param idPerson
+	 * @param email
+	 * @return
+	 * @throws ISPACException 
+	 */
+	public boolean insertDefaultEmail(String entityId, int idPerson, String email) throws TercerosException;
+    
+	/**
+	 * [eCenpri-Felipe #592] Actualiza los datos del terceros en la base de datos
+	 * @param idPerson
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @return
+	 * @throws ISPACException
+	 */
+	public boolean updateThirdParty(String entityId, int idPerson, String nombre, String ape1, String ape2, 
+			String provincia, String municipio, String cpostal, String direccion) throws TercerosException;
     
 	/**
 	 * Establece el origen de datos.

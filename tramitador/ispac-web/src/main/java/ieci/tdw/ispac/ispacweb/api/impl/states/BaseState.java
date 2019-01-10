@@ -3,6 +3,8 @@ package ieci.tdw.ispac.ispacweb.api.impl.states;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.context.StateContext;
+import ieci.tdw.ispac.ispaclib.dao.session.SessionDAO;
+import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.lock.LockManager;
@@ -212,6 +214,34 @@ public class BaseState implements IState {
 			}
 		}
 	}
+	
+	/**
+	 * [dipucr-Felipe #427]
+	 * Devuelve el nombre del usuario que tiene bloqueado el objeto
+	 * @param ctx
+	 * @param nIdEntity
+	 * @param lockType
+	 * @return
+	 * @throws ISPACException
+	 */
+    public String getLockedEntityUser(IClientContext ctx, int nIdEntity, int lockType) throws ISPACException{
+    	
+        DbCnt cnt = ctx.getConnection();
+		try{
+		    String sqlquery=" WHERE ID = (SELECT ID FROM SPAC_S_BLOQUEOS WHERE TP_OBJ=" + lockType + " AND ID_OBJ=" + nIdEntity + ")";
+		    SessionDAO sessionDAO = new SessionDAO(cnt);
+			sessionDAO.load(cnt,sqlquery);
+
+			return sessionDAO.getString("USUARIO");
+		}
+		catch (ISPACException ie){
+			return "";
+		}
+		finally{
+		    ctx.releaseConnection(cnt);
+		}
+    }
+    
 	
 	public void checkNewEntity(IState iState, IClientContext cctx) throws ISPACException {
 	}

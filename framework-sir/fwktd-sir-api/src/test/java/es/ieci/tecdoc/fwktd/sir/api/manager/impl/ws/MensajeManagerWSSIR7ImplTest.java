@@ -18,7 +18,7 @@ import es.ieci.tecdoc.fwktd.sir.api.types.TipoMensajeEnum;
 import es.ieci.tecdoc.fwktd.sir.api.vo.MensajeVO;
 import es.ieci.tecdoc.fwktd.sir.core.types.ErroresEnum;
 
-@ContextConfiguration({ 
+@ContextConfiguration({ "/jndi.xml", "/cxf.xml",
 	"/beans/fwktd-sir-test-beans-initial-custom.xml",
 	"/beans/fwktd-sir-api-applicationContext.xml",
 		"/beans/fwktd-sir-test-beans-custom.xml" })

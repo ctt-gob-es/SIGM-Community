@@ -27,6 +27,7 @@
 				<module>framework-time</module>
 				<module>framework-csv</module>
 				<module>framework-dir3</module>
+				<module>framework-dir3-MSSSI</module>
 				<module>framework-dm</module>
 				<module>framework-filesystem-applet</module>
 				<module>framework-scan-applet</module>
@@ -56,8 +57,84 @@
 				<module>invesdoc/invesdoc_main</module>
 				<module>sigem/SIGEM_Archivo_Modules</module>
 				<module>sigem/SIGEM_Archivo_Modules/SIGEM_Archivo_Main</module>
+				<module>framework-dir3/fwktd-dir3-parent</module>
+				<module>framework-sir/fwktd-sir-parent</module>
+				<module>registro/ISicres-resources-config</module>
 			</modules>
 		</profile>
+
+		<profile>
+			<id>sonar-archivo</id>
+			<activation>
+				<property>
+					<name>sonar-archivo</name>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>				
+				<module>archivo</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>sonar-registro</id>
+			<activation>
+				<property>
+					<name>sonar-registro</name>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>invesdoc</module>
+				<module>framework</module>
+				<module>framework-audit</module>
+				<module>framework-time</module>
+				<module>framework-csv</module>
+				<module>framework-dir3</module>
+				<module>framework-dir3-MSSSI</module>
+				<module>framework-dm</module>
+				<module>framework-filesystem-applet</module>
+				<module>framework-scan-applet</module>
+				<module>framework-sendFiles-applet</module>
+				<module>framework-sir</module>
+				<module>registro</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>sonar-tramitador</id>
+			<activation>
+				<property>
+					<name>sonar-tramitador</name>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>				
+				<module>tramitador</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>sonar-modulosDipucr</id>
+			<activation>
+				<property>
+					<name>sonar-modulosDipucr</name>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>				
+				<module>modulos</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>sonar-sigem</id>
+			<activation>
+				<property>
+					<name>sonar-sigem</name>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>				
+				<module>sigem</module>
+			</modules>
+		</profile>		
 	</profiles>
 
 </project>

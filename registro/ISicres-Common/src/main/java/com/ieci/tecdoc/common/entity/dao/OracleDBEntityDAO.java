@@ -738,7 +738,26 @@ public class OracleDBEntityDAO extends AbstractDBEntityDAO {
 	 */
 	public void deleteIdsGenerationTable(Integer userId, String entidad) {
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ieci.tecdoc.common.entity.dao.DBEntityDAO#getNextIdForScrModifDoc(java.lang.Integer,
+	 *      java.lang.String)
+	 */
+	public int getNextIdForScrModifDoc(Integer userId, String entidad) throws SQLException {
+		return getContador4SCRREGORIGDOC(userId, entidad);
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ieci.tecdoc.common.entity.dao.DBEntityDAO#getNextIdForScrDocumentMetadatos(java.lang.Integer,
+	 *      java.lang.String)
+	 */
+	public int getNextIdForScrDocumentMetadatos(Integer userId, String entidad) throws SQLException {
+		return getContador4SCRREGORIGDOC(userId, entidad);
+	}
 	/***************************************************************************
 	 * Private methods
 	 **************************************************************************/

@@ -12,10 +12,9 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitTaskPublicacionInicioSancionadorRule extends InitTaskPublicacionSancionadorRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "URB_SANCIONADOR";
-		STR_template = "Anuncio Sancionador";		
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "URB_SANCIONADOR";
+        strTemplate = "Anuncio Sancionador";        
         return true;
     }
 }

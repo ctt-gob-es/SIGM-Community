@@ -54,7 +54,7 @@ import org.apache.log4j.Logger;
 
 public class WebdavClient extends HttpClient {
 	
-	private static final Logger logger = Logger.getLogger(WebdavClient.class); 
+	private static final Logger LOGGER = Logger.getLogger(WebdavClient.class); 
 	
     private String url;
     private Credentials mCredentials;
@@ -71,7 +71,7 @@ public class WebdavClient extends HttpClient {
      */
     public WebdavClient(HttpConnectionManager connectionMgr) {
         super(connectionMgr);
-        logger.debug(TAG + "Creating WebdavClient");
+        LOGGER.debug(TAG + "Creating WebdavClient");
         getParams().setParameter(HttpMethodParams.USER_AGENT, USER_AGENT);
         getParams().setParameter(HttpMethodParams.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
     }
@@ -82,8 +82,9 @@ public class WebdavClient extends HttpClient {
     }
 
     private Credentials getCredentials(String username, String password) {
-        if (mCredentials == null)
-            mCredentials = new UsernamePasswordCredentials(username, password);
+        if (mCredentials == null){
+        	mCredentials = new UsernamePasswordCredentials(username, password);
+        }
         return mCredentials;
     }
     
@@ -122,17 +123,18 @@ public class WebdavClient extends HttpClient {
 				result = new RemoteOperationResult(false, status, query.getResponseHeaders());
             }
 		} catch (IOException e) {
-			logger.error("Error al recuperar los documentos de la ruta: " + ruta + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar los documentos de la ruta: " + ruta + ". " + e.getMessage(), e);
 	    } catch (Exception e) {
-			logger.error("Error al recuperar los documentos de la ruta: " + ruta + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar los documentos de la ruta: " + ruta + ". " + e.getMessage(), e);
 	        result = new RemoteOperationResult(e);       
 	    } finally {
-	        if (query != null)
-	            query.releaseConnection();  // let the connection available for other methods
+	        if (query != null){
+	        	query.releaseConnection();  // let the connection available for other methods
+	        }
 	        if (result.isSuccess()) {
-	        	logger.info("Synchronized "  + url + ": " + result.getLogMessage());
+	        	LOGGER.info("Synchronized "  + url + ": " + result.getLogMessage());
 	        } else {
-            	logger.error("Synchronized " + url  + ": " + result.getLogMessage(), result.getException());
+            	LOGGER.error("Synchronized " + url  + ": " + result.getLogMessage(), result.getException());
 	        }
 	    }
     	
@@ -204,8 +206,9 @@ public class WebdavClient extends HttpClient {
                 byte[] bytes = new byte[4096];
                 int readResult;
                 while ((readResult = bis.read(bytes)) != -1) {
-                    if (mDataTransferListener != null)
-                        mDataTransferListener.transferProgress(readResult);
+                    if (mDataTransferListener != null){
+                    	mDataTransferListener.transferProgress(readResult);
+                    }
                     fos.write(bytes, 0, readResult);
                 }
                 ret = true;
@@ -214,7 +217,7 @@ public class WebdavClient extends HttpClient {
             } else {
                 exhaustResponse(get.getResponseBodyAsStream());
             }
-            logger.error(TAG + "Download of " + remoteFilePath + " to " + targetFile + " finished with HTTP status " + status + (!ret?"(FAIL)":""));
+            LOGGER.error(TAG + "Download of " + remoteFilePath + " to " + targetFile + " finished with HTTP status " + status + (!ret?"(FAIL)":""));
             
         } catch (Exception e) {
             logException(e, "dowloading " + remoteFilePath);
@@ -241,7 +244,7 @@ public class WebdavClient extends HttpClient {
             ret = (status == HttpStatus.SC_OK || status == HttpStatus.SC_ACCEPTED || status == HttpStatus.SC_NO_CONTENT);
             exhaustResponse(delete.getResponseBodyAsStream());
             
-            logger.error(TAG + "DELETE of " + remoteFilePath + " finished with HTTP status " + status +  (!ret?"(FAIL)":""));
+            LOGGER.error(TAG + "DELETE of " + remoteFilePath + " finished with HTTP status " + status +  (!ret?"(FAIL)":""));
             
         } catch (Exception e) {
             logException(e, "deleting " + remoteFilePath);
@@ -280,7 +283,7 @@ public class WebdavClient extends HttpClient {
             
             result = (status == HttpStatus.SC_OK || status == HttpStatus.SC_CREATED || status == HttpStatus.SC_NO_CONTENT);
             
-            logger.debug(TAG+ "PUT to " + remoteTarget + " finished with HTTP status " + status + (!result?"(FAIL)":""));
+            LOGGER.debug(TAG+ "PUT to " + remoteTarget + " finished with HTTP status " + status + (!result?"(FAIL)":""));
 
             exhaustResponse(put.getResponseBodyAsStream());
             
@@ -304,7 +307,7 @@ public class WebdavClient extends HttpClient {
         try {
             status = executeMethod(head);
             boolean result = status == HttpStatus.SC_OK;
-            logger.debug(TAG + "HEAD for " + url + " finished with HTTP status " + status + (!result?"(FAIL)":""));
+            LOGGER.debug(TAG + "HEAD for " + url + " finished with HTTP status " + status + (!result?"(FAIL)":""));
             exhaustResponse(head.getResponseBodyAsStream());
             
         } catch (Exception e) {
@@ -327,7 +330,7 @@ public class WebdavClient extends HttpClient {
         int status = -1;
         PostMethod post = new PostMethod(url + WebdavUtils.encodePath(path));
         try {
-            logger.debug(TAG + " Sharing directory " + path);
+            LOGGER.debug(TAG + " Sharing directory " + path);
             
 //			String postParameters = "path=" + path + "&shareType=3&publicUpload=true&permissions=31";
             NameValuePair[] parametros = {
@@ -339,13 +342,13 @@ public class WebdavClient extends HttpClient {
             post.setRequestBody(parametros);
             
             status = executeMethod(post);
-            logger.debug(TAG + "Status returned: " + status);
+            LOGGER.debug(TAG + "Status returned: " + status);
                         
             if (status == 200) {
 				BufferedReader in = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream()));
 
 				String inputLine;
-				StringBuffer response = new StringBuffer();
+				StringBuilder response = new StringBuilder();
 
 				while ((inputLine = in.readLine()) != null) {
 					response.append(inputLine);
@@ -374,12 +377,12 @@ public class WebdavClient extends HttpClient {
         int status = -1;
         MkColMethod mkcol = new MkColMethod(url + WebdavUtils.encodePath(path));
         try {
-            logger.debug(TAG + " Creating directory " + path);
+            LOGGER.debug(TAG + " Creating directory " + path);
             status = executeMethod(mkcol);
-            logger.debug(TAG + " Status returned: " + status);
+            LOGGER.debug(TAG + " Status returned: " + status);
             result = mkcol.succeeded();
             
-            logger.debug(TAG + " MKCOL to " + path + " finished with HTTP status " + status + (!result?"(FAIL)":""));
+            LOGGER.debug(TAG + " MKCOL to " + path + " finished with HTTP status " + status + (!result?"(FAIL)":""));
             exhaustResponse(mkcol.getResponseBodyAsStream());
             
         } catch (Exception e) {
@@ -401,7 +404,7 @@ public class WebdavClient extends HttpClient {
         HeadMethod head = new HeadMethod(url + WebdavUtils.encodePath(path));
         try {
             int status = executeMethod(head);
-            logger.debug(TAG + " HEAD to " + path + " finished with HTTP status " + status + ((status != HttpStatus.SC_OK)?"(FAIL)":""));
+            LOGGER.debug(TAG + " HEAD to " + path + " finished with HTTP status " + status + ((status != HttpStatus.SC_OK)?"(FAIL)":""));
             exhaustResponse(head.getResponseBodyAsStream());
             return (status == HttpStatus.SC_OK);
             
@@ -454,11 +457,12 @@ public class WebdavClient extends HttpClient {
     private static void exhaustResponse(InputStream responseBodyAsStream) {
         if (responseBodyAsStream != null) {
             try {
-                while (responseBodyAsStream.read(sExhaustBuffer) >= 0);
+                while (responseBodyAsStream.read(sExhaustBuffer) >= 0){
+                }
                 responseBodyAsStream.close();
             
             } catch (IOException io) {
-                logger.error(TAG + "Unexpected exception while exhausting not interesting HTTP response; will be IGNORED", io);
+                LOGGER.error(TAG + "Unexpected exception while exhausting not interesting HTTP response; will be IGNORED", io);
             }
         }
     }
@@ -472,13 +476,13 @@ public class WebdavClient extends HttpClient {
      */
     private static void logException(Exception e, String doing) {
         if (e instanceof HttpException) {
-            logger.error(TAG + "HTTP violation while " + doing, e);
+            LOGGER.error(TAG + "HTTP violation while " + doing, e);
 
         } else if (e instanceof IOException) {
-            logger.error(TAG + "Unrecovered transport exception while " + doing, e);
+            LOGGER.error(TAG + "Unrecovered transport exception while " + doing, e);
 
         } else {
-            logger.error(TAG +  "Unexpected exception while " + doing, e);
+            LOGGER.error(TAG +  "Unexpected exception while " + doing, e);
         }
     }
 

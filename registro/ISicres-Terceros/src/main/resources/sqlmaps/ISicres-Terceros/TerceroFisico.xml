@@ -44,11 +44,19 @@
 		<include refid="TerceroValidadoVO.dynamicCriteriaSearch" />
 	</select>
 
-	<select id="findByDocumentNumber" parameterClass="java.util.HashMap"
+	<select id="findByDocumentNumberTipoDoc" parameterClass="java.util.HashMap"
 		resultMap="TerceroValidadoVO.terceroFisico">
 		SELECT id, type_doc, nif as documento, first_name, second_name, surname, 'FISICO' AS tipoTercero
 		FROM scr_pfis
 		WHERE type_doc=#type_doc# AND nif=#nif#
+		ORDER BY id ASC
+	</select>
+	
+	<select id="findByDocumentNumber" parameterClass="java.util.HashMap"
+		resultMap="TerceroValidadoVO.terceroFisico">
+		SELECT id, type_doc, nif as documento, first_name, second_name, surname, 'FISICO' AS tipoTercero
+		FROM scr_pfis
+		WHERE nif=#nif#
 		ORDER BY id ASC
 	</select>
 

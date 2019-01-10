@@ -104,6 +104,7 @@
 				<module>ISicresAdmin-Util</module>
 				<module>ISicresAdmin-EstructuraCore</module>
 				<module>ISicresAdmin-Core</module>
+				<module>ISicresAdmin-Web</module>
 				<module>ISicresAdmin-resources-config</module>
 				<module>ISicresAdmin-resources-configurable</module>
 				<module>ISicresAdmin-ConfigLocation</module>

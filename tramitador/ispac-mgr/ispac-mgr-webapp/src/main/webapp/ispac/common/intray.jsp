@@ -291,6 +291,18 @@
 																				styleClass="inputReadOnly" readonly="true" rows="4" cols="80" />
 																		</td>
 																	<tr>
+																	<tr>
+																		<td colspan="2"><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" height="8px" /></td>
+																	</tr>
+																	<tr valign="top">
+																		<td class="formsTitle width20percent">
+																			<nobr><bean:message key="intray.form.comentarios"/>:</nobr>
+																		</td>
+																		<td height="20">
+																			<html:textarea name="Intray" property="comentarios"
+																				styleClass="inputReadOnly" readonly="true" rows="4" cols="80" />
+																		</td>
+																	<tr>																	
 																</table>
 															</td>
 														</tr>

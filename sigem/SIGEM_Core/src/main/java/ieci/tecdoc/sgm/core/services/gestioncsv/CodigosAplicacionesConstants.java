@@ -17,5 +17,8 @@ public class CodigosAplicacionesConstants {
 
 	// Tramitación de Expedientes
 	public static final String TRAMITACION_EXPEDIENTES_CODE = "SGM_TRAM_EXP";
+	
+	// Registro Presencial
+	public static final String REGISTRO_PRESENCIAL_CODE = "SGM_REG_PRES";
 
 }

@@ -7,7 +7,7 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 
@@ -47,16 +47,15 @@ public class GeneraNotificacionPlenoJuntaPropuestaRule implements IRule {
     	String numexp = "";
     	try{
     		//----------------------------------------------------------------------------------------------
-			ClientContext cct = (ClientContext) rulectx.getClientContext();
+			IClientContext cct = rulectx.getClientContext();
             IInvesflowAPI invesFlowAPI = cct.getAPI();
             IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
             //----------------------------------------------------------------------------------------------
             numexp = rulectx.getNumExp();
-            ooHelper = OpenOfficeHelper.getInstance();
             
-            String strNombreDoc = DocumentosUtil.getNombreTipoDocByCod(rulectx, "Secr-NotifAc");
-            String strNombreDocCab = DocumentosUtil.getNombreTipoDocByCod(rulectx, "Secr-NotifAcCab");
-            String strNombreDocPie = DocumentosUtil.getNombreTipoDocByCod(rulectx, "Secr-NotifAcPie");
+            String strNombreDoc = DocumentosUtil.getNombreTipoDocByCod(cct, "Secr-NotifAc");
+            String strNombreDocCab = DocumentosUtil.getNombreTipoDocByCod(cct, "Secr-NotifAcCab");
+            String strNombreDocPie = DocumentosUtil.getNombreTipoDocByCod(cct, "Secr-NotifAcPie");
             
             boolean urgencia = false;
             Vector <IItem> vPropuesta = null;
@@ -76,9 +75,8 @@ public class GeneraNotificacionPlenoJuntaPropuestaRule implements IRule {
 	  	  		  	vPropuesta = SecretariaUtil.orderUrgencias(collection);
 	  	  		  	i = 0;
   	  		  	}
-    		}
-    		else{
-    			vPropuesta = SecretariaUtil.orderPropuestas(collection);
+    		} else{
+    			vPropuesta = SecretariaUtil.orderPropuestas(rulectx);
     		}
     		    		
     		SimpleDateFormat dateformat = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es"));
@@ -113,8 +111,9 @@ public class GeneraNotificacionPlenoJuntaPropuestaRule implements IRule {
 				    	/**
 				    	 * FIN[Teresa] Ticket #106 añadir el id_ext
 				    	 * **/
-			        	while (itParticipante.hasNext())
-			        	{
+			        	while (itParticipante.hasNext()) {
+			        		ooHelper = OpenOfficeHelper.getInstance();
+			        		
 			        		cct.setSsVariable("FECHA", fecha);
 			        		IItem participante = (IItem)itParticipante.next();
 			        		
@@ -178,7 +177,7 @@ public class GeneraNotificacionPlenoJuntaPropuestaRule implements IRule {
 			        		//Cuerpo
 			 	        	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(numexp, rulectx, descripcion);
 			 	        	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-			 	        	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+			 	        	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
 			 	    		file.delete();
 			        		
 			        		//Pie
@@ -187,7 +186,7 @@ public class GeneraNotificacionPlenoJuntaPropuestaRule implements IRule {
 			    	    	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(numexp, rulectx, strNombreDocPie);
 			    	    	//logger.warn(strInfoPag);
 			    	    	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-			    	    	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+			    	    	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
 			    			file.delete();
 			    			//logger.warn("FIN PIE NOTIFICACION");
 			    	
@@ -240,10 +239,9 @@ public class GeneraNotificacionPlenoJuntaPropuestaRule implements IRule {
 			    	        }
 			        		strInfoPag = DocumentosUtil.getInfoPagByDescripcion(numexp, rulectx, descripcion);
 			 	        	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-			 	        	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+			 	        	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
 			 	    		file.delete();
 			 	    		file = null;
-			 	    		xComponent.dispose();
 
 				        	//Generación del acuse de recibo
 				        	
@@ -255,6 +253,13 @@ public class GeneraNotificacionPlenoJuntaPropuestaRule implements IRule {
 							cct.deleteSsVariable("CAUT");
 							cct.deleteSsVariable("RECURSO");
 							cct.deleteSsVariable("FECHA");
+							
+							if(null != ooHelper){
+					        	ooHelper.dispose();
+							}
+			 	    		if (xComponent != null){
+			 	    			xComponent.dispose();
+			 	    		}
 			        	}
 	 	        	}
 	 	        	
@@ -279,10 +284,11 @@ public class GeneraNotificacionPlenoJuntaPropuestaRule implements IRule {
         } catch(Exception e) {
         	logger.error("No se ha podido generar las notificaciones del expediente: " + numexp + ". " + e.getMessage(), e);
         	throw new ISPACRuleException("No se ha podido generar las notificaciones del expediente: " + numexp + ". " + e.getMessage(), e);
-        }
-    	finally{
-    		if(ooHelper!= null) ooHelper.dispose();
-    	}
+        } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
     }
 
 	private String sacarNumExp(String descripcion) throws ISPACRuleException {

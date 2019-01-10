@@ -111,12 +111,13 @@ public class DipucrInitDecretoRelacionadoRule implements IRule {
 	private void generarDocumentoConInforme(IRuleContext rulectx, DatosPlantilla cabecera, 
 			String nombreDocInforme, DatosPlantilla pie, String numexpInforme, int idTramiteActual, String nombreDocFinal) throws ISPACRuleException {
 
+		OpenOfficeHelper ooHelper = null;
 		try{
 			//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
-	        OpenOfficeHelper ooHelper = OpenOfficeHelper.getInstance();
+	        ooHelper = OpenOfficeHelper.getInstance();
 	        //----------------------------------------------------------------------------------------------
 			
 	        IItemCollection col = null;
@@ -136,7 +137,7 @@ public class DipucrInitDecretoRelacionadoRule implements IRule {
 	        
 	        //Concatenamos el cuerpo
         	file = DocumentosUtil.getFile(cct, infopag, null, null);
-        	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+        	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
     		file.delete();
     		
     		//Pie
@@ -144,7 +145,7 @@ public class DipucrInitDecretoRelacionadoRule implements IRule {
 	    			pie.getTipoDoc(), null, numexpInforme, idTramiteActual);
 	    	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, pie.getNombrePlantilla());
 	    	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-	    	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+	    	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
 			file.delete();
 			
 			//Guarda el resultado en repositorio temporal
@@ -169,13 +170,15 @@ public class DipucrInitDecretoRelacionadoRule implements IRule {
 	        	IItem doc = (IItem)it.next();
 	        	entitiesAPI.deleteDocument(doc);
 	        }
-	        ooHelper.dispose();
 		}
 		catch (Exception e) {
 			logger.error("Error al generar el documento " + nombreDocFinal, e);
 			throw new ISPACRuleException("Error al generar el documento " + nombreDocFinal, e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
-		
 	}
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException{

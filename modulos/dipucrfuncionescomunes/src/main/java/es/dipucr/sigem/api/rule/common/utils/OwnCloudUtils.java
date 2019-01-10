@@ -21,7 +21,7 @@ import es.dipucr.ownCloud.WebdavUtils;
 
 public class OwnCloudUtils {
 
-	private static final Logger logger = Logger.getLogger(OwnCloudUtils.class);
+	private static final Logger LOGGER = Logger.getLogger(OwnCloudUtils.class);
 
 	public static final String COD_ERROR = "ERROR";
 	public static final String COD_OK = "OK";
@@ -48,10 +48,12 @@ public class OwnCloudUtils {
 			
 			String urlCompartir = ownCloudConfig.getProperty(OwnCloudConfiguration.DIR_COMPARTIR);
 			resultado = cliente.compartir(urlCompartir, WebdavUtils.encodePath(objCompartir));
-			if(StringUtils.isEmpty(resultado)) resultado = OwnCloudUtils.COD_ERROR;
+			if(StringUtils.isEmpty(resultado)){
+				resultado = OwnCloudUtils.COD_ERROR;
+			}
 			
 		} catch (ISPACException e) {
-			logger.error("Error al compartir el archivo/carpeta: " + objCompartir + ". " + e.getMessage(), e);
+			LOGGER.error("Error al compartir el archivo/carpeta: " + objCompartir + ". " + e.getMessage(), e);
 		}
 		return resultado;
 	}
@@ -65,12 +67,14 @@ public class OwnCloudUtils {
 			WebdavClient cliente = OwnCloudUtils.crearOwnCloudCliente(dirCloud, username, password);
 			
 			String urlWebdav = ownCloudConfig.getProperty(OwnCloudConfiguration.DIR_WEBDAV_OWNCLOUD);
-			if (!OwnCloudUtils.existe(cliente, path))
+			if (!OwnCloudUtils.existe(cliente, path)){
 				resultado = cliente.createDirectory(urlWebdav + WebdavUtils.encodePath(path));
-			else resultado = true;
+			} else {
+				resultado = true;
+			}
 
 		} catch (ISPACException e) {
-			logger.error("Error al crear el archivo/carpeta: " + path + ", con el usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
+			LOGGER.error("Error al crear el archivo/carpeta: " + path + ", con el usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
 		}
 		return resultado;
 	}	
@@ -86,13 +90,10 @@ public class OwnCloudUtils {
 			String urlCompartir = ownCloudConfig.getProperty(OwnCloudConfiguration.DIR_WEBDAV_OWNCLOUD);
 
 			if (OwnCloudUtils.existe(cliente, nombreCarpeta)){
-
 				resultado = cliente.deleteFile(urlCompartir+"/"+nombreCarpeta);				
 			}
-				
-
 		} catch (ISPACException e) {
-			logger.error("Error al eliminar el archivo/carpeta: " + nombreCarpeta + ", con el usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
+			LOGGER.error("Error al eliminar el archivo/carpeta: " + nombreCarpeta + ", con el usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
 		}
 		return resultado;
 	}
@@ -105,12 +106,9 @@ public class OwnCloudUtils {
 			String dirCloud = ownCloudConfig.getProperty(OwnCloudConfiguration.URL_SIN_OWNCLOUD);
 			WebdavClient cliente = OwnCloudUtils.crearOwnCloudCliente(dirCloud, username, password);
 			
-
 			resultado = cliente.downloadFile(docDescargar, fileLocal);
-				
-
 		} catch (ISPACException e) {
-			logger.error("Error al descargar el documento: " + docDescargar + ", con el usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
+			LOGGER.error("Error al descargar el documento: " + docDescargar + ", con el usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
 		}
 		return resultado;
 	}
@@ -125,7 +123,7 @@ public class OwnCloudUtils {
 			
 			resultado = OwnCloudUtils.existe(cliente, path);
 		} catch (ISPACException e) {
-			logger.error("Error al comprobar si existe el archivo/carpeta: " + path + ", con el usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
+			LOGGER.error("Error al comprobar si existe el archivo/carpeta: " + path + ", con el usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
 		}
 		return resultado;
 	}
@@ -145,7 +143,7 @@ public class OwnCloudUtils {
 				resultado = cliente.getContenidoCarpeta(urlCompartir+"/"+nombreCarpeta);
 			}
 		} catch (ISPACException e) {
-			logger.error("Error al obtener el contenido de la carpeta: " + nombreCarpeta + ", con el usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
+			LOGGER.error("Error al obtener el contenido de la carpeta: " + nombreCarpeta + ", con el usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
 		}
 		return resultado;
 	}
@@ -160,7 +158,7 @@ public class OwnCloudUtils {
 	    	try {
 				nombreDoc = URLDecoder.decode(tmp[tmp.length - 1], "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				logger.error("Error al decodificar el nombre del archivo/carpeta: " + tmp[tmp.length - 1] + ". " + e.getMessage(), e);
+				LOGGER.error("Error al decodificar el nombre del archivo/carpeta: " + tmp[tmp.length - 1] + ". " + e.getMessage(), e);
 				nombreDoc = tmp[tmp.length - 1];
 			}
 	    }
@@ -178,7 +176,7 @@ public class OwnCloudUtils {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("Error al recuperar todos los documentos insertados en la carpeta: " + nombreCarpeta + ", con el usuario usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar todos los documentos insertados en la carpeta: " + nombreCarpeta + ", con el usuario usuario: " + username + ", password: " + password + ". " + e.getMessage(), e);
 		}
 		return resultado;
 	}
@@ -192,7 +190,7 @@ public class OwnCloudUtils {
 			resultado = cliente.existsFile(urlWebdav + WebdavUtils.encodePath(path));
 			
 		} catch (ISPACException e) {
-			logger.error("Error al comprobar si existe el archivo/carpeta: " + path + ". " + e.getMessage(), e);
+			LOGGER.error("Error al comprobar si existe el archivo/carpeta: " + path + ". " + e.getMessage(), e);
 		}
 		return resultado;
 	}
@@ -233,7 +231,7 @@ public class OwnCloudUtils {
 		try {
 			pr = Protocol.getProtocol("https");
 		} catch (IllegalStateException e) {
-			// nothing to do here; really
+			LOGGER.debug("nothing to do here; really", e);
 		}
 		boolean isAllowed = (pr != null && pr.getSocketFactory() instanceof EasySSLSocketFactory);
 		if (allow && !isAllowed) {

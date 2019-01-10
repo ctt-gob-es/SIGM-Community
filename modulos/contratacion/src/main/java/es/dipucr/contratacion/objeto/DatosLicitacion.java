@@ -1,10 +1,6 @@
 package es.dipucr.contratacion.objeto;
 
-import es.dipucr.contratacion.client.beans.AplicacionPresupuestaria;
-import es.dipucr.contratacion.client.beans.Campo;
-import es.dipucr.contratacion.client.beans.CriteriosAdjudicacion;
-import es.dipucr.contratacion.client.beans.FundacionPrograma;
-import es.dipucr.contratacion.client.beans.VariantesOfertas;
+import es.dipucr.contratacion.services.PlataformaContratacionStub.*;
 
 public class DatosLicitacion {
 	private Campo tipoPresentacionOferta;
@@ -13,7 +9,9 @@ public class DatosLicitacion {
 	private VariantesOfertas variantes;
 	private FundacionPrograma fundacionPrograma;
 	private String revisionPrecios;
-
+	private Campo contratoSujetoRegArmon = null;
+	private OrganoAsistencia organoAsistencia = null;
+	
 	public Campo getTipoPresentacionOferta() {
 		return tipoPresentacionOferta;
 	}
@@ -61,4 +59,21 @@ public class DatosLicitacion {
 	public void setRevisionPrecios(String revisionPrecios) {
 		this.revisionPrecios = revisionPrecios;
 	}
+
+	public Campo getContratoSujetoRegArmon() {
+		return contratoSujetoRegArmon;
+	}
+
+	public void setContratoSujetoRegArmon(Campo contratoSujetoRegArmon) {
+		this.contratoSujetoRegArmon = contratoSujetoRegArmon;
+	}
+
+	public OrganoAsistencia getOrganoAsistencia() {
+		return organoAsistencia;
+	}
+
+	public void setOrganoAsistencia(OrganoAsistencia organoAsistencia) {
+		this.organoAsistencia = organoAsistencia;
+	}
+
 }

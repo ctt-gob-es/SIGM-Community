@@ -106,6 +106,15 @@
 		WHERE
 			csv=#value#
 	</select>
+	
+	<select id="getDocumentoVOByNombre" parameterClass="java.lang.String" resultMap="documento">
+		SELECT
+			<include refid="columns" />
+		FROM
+			<include refid="table" />
+		WHERE
+			nombre=#value#
+	</select>
 
 	<insert id="addDocumentoVO" parameterClass="documento">
 		INSERT INTO

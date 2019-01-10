@@ -1,7 +1,5 @@
 package es.dipucr.bdns.api.impl;
 
-import org.apache.log4j.Logger;
-
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.item.IItem;
@@ -9,6 +7,9 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
+
+import org.apache.log4j.Logger;
+
 import es.dipucr.bdns.dao.AnuncioBopBdnsDAO;
 
 public class BDNSAPI {
@@ -46,7 +47,7 @@ public class BDNSAPI {
 			LOGGER.error(error, e);
 			throw new ISPACException(error, e);
 		} finally {
-//			cct.releaseConnection(cnt);
+			cct.releaseConnection(cnt);
 		}
 	}
 
@@ -67,7 +68,7 @@ public class BDNSAPI {
 			LOGGER.error(error, e);
 			throw new ISPACException(error, e);
 		} finally {
-//			cct.releaseConnection(cnt);
+			cct.releaseConnection(cnt);
 		}
 	}
 
@@ -89,7 +90,7 @@ public class BDNSAPI {
 			LOGGER.error(error, e);
 			throw new ISPACException(error, e);
 		} finally {
-//			cct.releaseConnection(cnt);
+			cct.releaseConnection(cnt);
 		}
 	}
 	
@@ -102,21 +103,32 @@ public class BDNSAPI {
      */
 	public static String getIdPeticion(ClientContext cct, IEntitiesAPI entitiesAPI) throws ISPACException {
 
-		String strQuery = "WHERE VALOR = '" + CONTADOR_PETICION_BDNS_NAME + "'";
-        IItemCollection itemCollection = entitiesAPI.queryEntities("BOP_VLDTBL_CONTADORES", strQuery);
-        String sIdPeticion = null;
+		String sIdPeticion = null;
+		try{
+			cct.beginTX();
+			String strQuery = "WHERE VALOR = '" + CONTADOR_PETICION_BDNS_NAME + "'";
+	        IItemCollection itemCollection = entitiesAPI.queryEntities("BOP_VLDTBL_CONTADORES", strQuery);
+	        
+	        if (itemCollection.next()){
+	        	IItem item = (IItem) itemCollection.iterator().next();
+	        	int numPeticion = Integer.valueOf(item.getString("SUSTITUTO"));
+	        	sIdPeticion = DIR3_DIPUCR + "-" + numPeticion;
+	        	item.set("SUSTITUTO", String.valueOf(numPeticion + 1));
+	        	item.store(cct);
+	        }
+	        else{
+	        	throw new ISPACException("No existe ningún registro " + CONTADOR_PETICION_BDNS_NAME 
+	        			+ " en la tabla BOP_VLDTBL_CONTADORES");
+	        }
+		}
+		catch(Exception ex){
+			throw new ISPACException(ex.getMessage(), ex);
+		}
+		finally{
+			cct.endTX(true);
+		}
         
-        if (itemCollection.next()){
-        	IItem item = (IItem) itemCollection.iterator().next();
-        	int numPeticion = Integer.valueOf(item.getString("SUSTITUTO"));
-        	sIdPeticion = DIR3_DIPUCR + "-" + numPeticion;
-        	item.set("SUSTITUTO", String.valueOf(numPeticion + 1));
-        	item.store(cct);
-        }
-        else{
-        	throw new ISPACException("No existe ningún registro " + CONTADOR_PETICION_BDNS_NAME 
-        			+ " en la tabla BOP_VLDTBL_CONTADORES");
-        }
         return sIdPeticion;
 	}
+	
 }

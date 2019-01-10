@@ -1,11 +1,11 @@
-/*
- * Este fichero forma parte del Cliente @firma. 
- * El Cliente @firma es un applet de libre distribución cuyo código fuente puede ser consultado
- * y descargado desde www.ctt.map.es.
- * Copyright 2009,2010 Ministerio de la Presidencia, Gobierno de España (opcional: correo de contacto)
- * Este fichero se distribuye bajo las licencias EUPL versión 1.1  y GPL versión 3  según las
- * condiciones que figuran en el fichero 'licence' que se acompaña.  Si se   distribuyera este 
- * fichero individualmente, deben incluirse aquí las condiciones expresadas allí.
+/* Copyright (C) 2014 [Gobierno de Espana]
+ * This file is part of "Cliente @Firma".
+ * "Cliente @Firma" is free software; you can redistribute it and/or modify it under the terms of:
+ *   - the GNU General Public License as published by the Free Software Foundation; 
+ *     either version 2 of the License, or (at your option) any later version.
+ *   - or The European Software License; either version 1.1 or (at your option) any later version.
+ * Date: 11/01/11
+ * You may contact the copyright holder at: soporte.afirma5@seap.minhap.es
  */
 
 /**
@@ -29,7 +29,7 @@ function configuraCifrador()
 	    }
 	}
 
-	whenTry("clienteFirmaCargado == true", command);
+	eval(command);
 }
 
 /**
@@ -106,9 +106,9 @@ function recuperaEnvelopedDataMozilla(data){
 }
 	
 function recuperaEnvelopedData(data){
-    if(_ie)
-        return recuperaEnvelopedDataIE(data);
-    else
+//    if(_ie)
+//        return recuperaEnvelopedDataIE(data);
+//    else
         return recuperaEnvelopedDataMozilla(data);
 }
 

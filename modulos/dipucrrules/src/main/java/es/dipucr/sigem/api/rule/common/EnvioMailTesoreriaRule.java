@@ -151,7 +151,14 @@ public class EnvioMailTesoreriaRule implements IRule {
 			 * **/			
 			
 			String strContenido = getContenido(rulectx);
-			String strAsunto = "[SIGEM] Certificado de Asistencia Nº"+getSesion(rulectx).getString("NUMCONV");
+			IItem sesion = getSesion(rulectx);
+			String strAsunto = "[SIGEM] Certificado de Asistencia Nº";
+			if(sesion!=null){
+				if(sesion.getString("NUMCONV")!=null){
+					strAsunto += sesion.getString("NUMCONV");
+				}
+				
+			}			
 			
 			String strDtStart = getDtStart(rulectx);
 			String strDtEnd = strDtStart;
@@ -311,69 +318,80 @@ public class EnvioMailTesoreriaRule implements IRule {
 		if (iSesion != null)
 		{
 			//Fecha
-			Date dFecha = iSesion.getDate("FECHA");
-	        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMdd", new Locale("es"));
-	        strDtStart = dateformat.format(dFecha);
+			if(iSesion.getDate("FECHA")!=null){
+				Date dFecha = iSesion.getDate("FECHA");
+		        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMdd", new Locale("es"));
+		        strDtStart = dateformat.format(dFecha);
+		        if(iSesion.getString("HORA")!=null){
+					 //Hora
+			        boolean ok;
+			        String strPartHora = "T";
+			        String strHora = iSesion.getString("HORA");
+					StringTokenizer tokens = new StringTokenizer(strHora, ".:',");
+					DecimalFormat df = new DecimalFormat("00");
 
-	        //Hora
-	        boolean ok;
-	        String strPartHora = "T";
-	        String strHora = iSesion.getString("HORA");
-			StringTokenizer tokens = new StringTokenizer(strHora, ".:',");
-			DecimalFormat df = new DecimalFormat("00");
-
-			//Dígitos de hora
-			ok = false;
-			if (tokens.hasMoreTokens())
-			{
-				String strPart = tokens.nextToken();
-				int nPart = Integer.parseInt(strPart);
-				if (nPart >= 0 && nPart <= 23) 
+					//Dígitos de hora
+					ok = false;
+					if (tokens.hasMoreTokens())
+					{
+						String strPart = tokens.nextToken();
+						int nPart = Integer.parseInt(strPart);
+						if (nPart >= 0 && nPart <= 23) 
+						{
+							strPartHora += df.format(nPart);
+							ok = true;
+						}
+					}
+					if (!ok)
+					{
+						strPartHora += "10"; //Por defecto las 10 horas
+					}
+					
+					//Dígitos de minutos
+					ok = false;
+					if (tokens.hasMoreTokens())
+					{
+						String strPart = tokens.nextToken();
+						int nPart = Integer.parseInt(strPart);
+						if (nPart >= 0 && nPart <= 60)
+						{
+							strPartHora += df.format(nPart);
+							ok = true;
+						}
+					}
+					if (!ok)
+					{
+						strPartHora += "00"; //Por defecto 00 minutos
+					}
+					
+					//Dígitos de segundos
+					ok = false;
+					if (tokens.hasMoreTokens())
+					{
+						String strPart = tokens.nextToken();
+						int nPart = Integer.parseInt(strPart);
+						if (nPart >= 0 && nPart <= 60)
+						{
+							strPartHora += df.format(nPart);
+							ok = true;
+						}
+					}
+					if (!ok)
+					{
+						strPartHora += "00"; //Por defecto 00 segundos
+					}
+					
+					strDtStart += strPartHora;
+				}
+		        else
 				{
-					strPartHora += df.format(nPart);
-					ok = true;
+					throw new ISPACInfo("No se ha especificado la hora de la sesión.");
 				}
 			}
-			if (!ok)
+			else
 			{
-				strPartHora += "10"; //Por defecto las 10 horas
-			}
-			
-			//Dígitos de minutos
-			ok = false;
-			if (tokens.hasMoreTokens())
-			{
-				String strPart = tokens.nextToken();
-				int nPart = Integer.parseInt(strPart);
-				if (nPart >= 0 && nPart <= 60)
-				{
-					strPartHora += df.format(nPart);
-					ok = true;
-				}
-			}
-			if (!ok)
-			{
-				strPartHora += "00"; //Por defecto 00 minutos
-			}
-			
-			//Dígitos de segundos
-			ok = false;
-			if (tokens.hasMoreTokens())
-			{
-				String strPart = tokens.nextToken();
-				int nPart = Integer.parseInt(strPart);
-				if (nPart >= 0 && nPart <= 60)
-				{
-					strPartHora += df.format(nPart);
-					ok = true;
-				}
-			}
-			if (!ok)
-			{
-				strPartHora += "00"; //Por defecto 00 segundos
-			}
-			
-			strDtStart += strPartHora;
+				throw new ISPACInfo("No se ha especificado la fecha de la sesión.");
+			}				       
 		}
 		else
 		{

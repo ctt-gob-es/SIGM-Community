@@ -81,7 +81,8 @@
 			String loadNotAssociated = request.getParameter("loadNotAssociated");
 			
 			String displayTagURI = searchAction + "?entity=" + entity 
-								 + "&parameters=" + parameters
+								 + "&parameters=" + parameters 
+								 + "&multivalueId=" + multivalueId //[dipucr-Felipe #398]
 								 + "&setAction=" + setAction
 								 + "&searchAction=" + searchAction
 								 + "&captionKey=" + captionKey

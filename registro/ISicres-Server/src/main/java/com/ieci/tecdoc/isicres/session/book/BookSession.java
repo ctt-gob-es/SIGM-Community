@@ -379,7 +379,17 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 					getQueryFilter(session, bookInformation, bookID, user
 							.getId(), scrofic);
 				}
-
+				if (!aPerms.isBookAdmin()){
+				   String filterBookIds = (String)bookInformation.get(QUERY_FILTER);
+					if ((filterBookIds == null) || (filterBookIds != null && filterBookIds.trim().length() == 0) ) {
+					    filterBookIds = " ";
+					}
+					else {
+					    filterBookIds += " AND ";
+					}
+					 filterBookIds += " (FLD1002 IS NULL OR FLD1002 != 2) ";
+					 bookInformation.put(QUERY_FILTER, filterBookIds);
+				}
 				// Introducimos en la informacion del libro el detalle del libro
 				getIdocarchdet(session, bookID, bookInformation);
 
@@ -1334,6 +1344,4 @@ public class BookSession extends BookSessionUtil implements ServerKeys, Keys,
 
 		return date;
 	}
-
-
 }

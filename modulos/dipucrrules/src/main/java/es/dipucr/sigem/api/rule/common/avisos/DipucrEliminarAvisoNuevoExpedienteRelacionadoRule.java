@@ -3,6 +3,7 @@ package es.dipucr.sigem.api.rule.common.avisos;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 
 public class DipucrEliminarAvisoNuevoExpedienteRelacionadoRule  implements IRule{
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {

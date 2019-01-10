@@ -529,7 +529,7 @@ public class CloneExpedientAction extends BaseDispatchAction {
 	        }
 	        catch (ISPACException e) {
 
-				logger.error(e);
+				LOGGER.error(e);
 				//throw e;
 
 				// Error al clonar

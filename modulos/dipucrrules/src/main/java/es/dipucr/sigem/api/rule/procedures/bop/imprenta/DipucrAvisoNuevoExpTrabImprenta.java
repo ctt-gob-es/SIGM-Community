@@ -11,7 +11,7 @@ import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.avisos.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.ResponsablesUtil;
 

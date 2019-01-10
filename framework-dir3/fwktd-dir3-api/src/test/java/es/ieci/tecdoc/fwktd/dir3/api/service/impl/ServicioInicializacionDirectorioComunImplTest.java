@@ -14,8 +14,8 @@ import es.ieci.tecdoc.fwktd.dir3.core.service.ServicioInicializacionDirectorioCo
  * @version $Revision$
  *
  */
-@ContextConfiguration({"/beans/cxf.xml", "/beans/fwktd-dir3-test-beans.xml",
-		"/beans/fwktd-dir3-api-applicationContext.xml" })
+@ContextConfiguration({"/beans/fwktd-dir3-test-beans.xml",
+"/beans/fwktd-dir3-api-applicationContext.xml" })
 public class ServicioInicializacionDirectorioComunImplTest extends
 		AbstractJUnit4SpringContextTests {
 

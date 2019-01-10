@@ -8,10 +8,11 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.avisos.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 
 public class AvisoElectronico implements IRule 
 {
@@ -52,21 +53,22 @@ public class AvisoElectronico implements IRule
 	{
 		
 		IClientContext ctx = rulectx.getClientContext();
-		int stageId = rulectx.getStageId();
 		IInvesflowAPI invesflowAPI = ctx.getAPI();
 		IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 		
-		String numexp = rulectx.getNumExp();		
-		int processId = invesflowAPI.getProcess(numexp).getInt("ID");
-//		ITask task = invesflowAPI.getTask(idTask);
-//		String nombreTramite = task.getString("NOMBRE");
-		IItem itemExpediente = entitiesAPI.getExpedient(numexp);
-		String asunto = itemExpediente.getString("ASUNTO");
-		//Enlace que dirige directamente al trámite
-		String message = "<a href=\"/SIGEM_TramitacionWeb/showTask.do?stageId=" + stageId +
-			"\" class=\"displayLink\">" + mensaje + "</a><br/>Asunto: " + asunto;
-		
-		AvisosUtil.generarAviso(entitiesAPI, processId, numexp, message, sResponsable, ctx);
+		if (!StringUtils.isEmpty(sResponsable)){
+			String numexp = rulectx.getNumExp();		
+			int processId = invesflowAPI.getProcess(numexp).getInt("ID");
+	//		ITask task = invesflowAPI.getTask(idTask);
+	//		String nombreTramite = task.getString("NOMBRE");
+			IItem itemExpediente = entitiesAPI.getExpedient(numexp);
+			String asunto = itemExpediente.getString("ASUNTO");
+			//Enlace que dirige directamente al trámite
+			String message = "<a href=\"/SIGEM_TramitacionWeb/showTask.do?taskId=" + rulectx.getTaskId() +
+				"\" class=\"displayLink\">" + mensaje + "</a><br/>Asunto: " + asunto;
+			
+			AvisosUtil.generarAviso(entitiesAPI, processId, numexp, message, sResponsable, ctx);
+		}
 	}
 }
 

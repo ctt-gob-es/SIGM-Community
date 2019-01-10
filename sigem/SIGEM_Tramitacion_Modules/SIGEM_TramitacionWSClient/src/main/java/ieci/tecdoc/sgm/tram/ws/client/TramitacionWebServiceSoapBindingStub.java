@@ -1958,6 +1958,44 @@ public class TramitacionWebServiceSoapBindingStub extends Stub implements
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public Booleano anexarDocsTramite(String idEntidad, String numExp, int idTramite, String numReg, 
+			Date fechaReg, DocumentoExpediente[] documentos) 
+		throws java.rmi.RemoteException {
+	if (super.cachedEndpoint == null) {
+		throw new NoEndPointException();
+	}
+	Call _call = createCall();
+	_call.setOperation(_operations[11]);
+	_call.setUseSOAPAction(true);
+	_call.setSOAPActionURI("");
+	_call.setEncodingStyle(null);
+	_call.setProperty(Call.SEND_TYPE_ATTR, Boolean.FALSE);
+	_call.setProperty(AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+	_call.setSOAPVersion(SOAPConstants.SOAP11_CONSTANTS);
+	_call.setOperationName(new QName(
+			"http://server.ws.tram.sgm.tecdoc.ieci", "anexarDocsTramite"));
+
+	setRequestHeaders(_call);
+	setAttachments(_call);
+	try {
+		Object _resp = _call.invoke(new Object[] { idEntidad, numExp, idTramite, numReg, fechaReg,
+				documentos });
+
+		if (_resp instanceof java.rmi.RemoteException) {
+			throw (java.rmi.RemoteException) _resp;
+		} else {
+			extractAttachments(_call);
+			try {
+				return (Booleano) _resp;
+			} catch (Exception _exception) {
+				return (Booleano) JavaUtils.convert(_resp, Booleano.class);
+			}
+		}
+	} catch (AxisFault axisFaultException) {
+		throw axisFaultException;
+	}
+}
     
 	
 }

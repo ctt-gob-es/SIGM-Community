@@ -6,7 +6,7 @@ import es.dipucr.sigem.api.rule.common.DipucrGenerateAcuseVertical;
 
 public class AcusesReciboPersonalRule extends DipucrGenerateAcuseVertical{
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		STR_NombreDocAcuse  = "Acuses de recibo Personal";
+		strNombreDocAcuse  = "Acuses de recibo Personal";
 		return true;
 	}
 }

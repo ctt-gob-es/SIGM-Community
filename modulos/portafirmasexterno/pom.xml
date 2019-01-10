@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>es.ieci.tecdoc.iflow</groupId>
@@ -16,78 +15,13 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<!-- Versiones que se encuentran en ispac-main de AL-SIGM 3.0, quitar en 
-			la migración -->
+		<!-- Versiones que se encuentran en ispac-main de AL-SIGM 3.0, quitar en la migración -->
 		<project.build.sourceEncoding>LATIN9</project.build.sourceEncoding>
 
 		<ispac.version>6.4.1</ispac.version>
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.apache.ws.commons.axiom</groupId>
-			<artifactId>axiom-api</artifactId>
-			<version>1.2.15</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ws.commons.axiom</groupId>
-			<artifactId>axiom-dom</artifactId>
-			<version>1.2.15</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ws.commons.axiom</groupId>
-			<artifactId>axiom-impl</artifactId>
-			<version>1.2.15</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-adb</artifactId>
-			<version>1.6.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.neethi</groupId>
-			<artifactId>neethi</artifactId>
-			<version>3.0.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-kernel</artifactId>
-			<version>1.6.3</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.ws.commons.axiom</groupId>
-					<artifactId>axiom-dom</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.ws.commons.axiom</groupId>
-					<artifactId>axiom-impl</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.neethi</groupId>
-					<artifactId>neethi</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.ws.commons.schema</groupId>
-					<artifactId>XmlSchema</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>		
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-transport-local</artifactId>
-			<version>1.6.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2-transport-http</artifactId>
-			<version>1.6.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-			<version>4.4.1</version>
-		</dependency>
-
 		<dependency>
 			<groupId>es.dipucr</groupId>
 			<artifactId>DipucrFuncionesComunes</artifactId>
@@ -96,8 +30,7 @@
 	</dependencies>
 
 
-	<!-- Se pone el build para qeu funcione sigem 2.0, en la migración mirar 
-		si se puede quitar -->
+	<!-- Se pone el build para qeu funcione sigem 2.0, en la migración mirar si se puede quitar -->
 	<build>
 		<pluginManagement>
 			<plugins>

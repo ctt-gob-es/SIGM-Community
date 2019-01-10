@@ -63,15 +63,14 @@ public class CrearProcedAnuncioBOPRule implements IRule {
 	 * **/
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
-		try
-    	{
-		
+		OpenOfficeHelper ooHelper = null;
+		try {
 			/*****************************************************************/
 			ClientContext cct = (ClientContext) rulectx.getClientContext();
 			IInvesflowAPI invesflowAPI = cct.getAPI();
 			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 			ITXTransaction tx = invesflowAPI.getTransactionAPI();
-			OpenOfficeHelper ooHelper = OpenOfficeHelper.getInstance();
+			ooHelper = OpenOfficeHelper.getInstance();
 			/*****************************************************************/
 			//Identificador del trámite actual
 			int nIdTask = rulectx.getStageId();
@@ -171,7 +170,7 @@ public class CrearProcedAnuncioBOPRule implements IRule {
 	        String infopag = iPropuesta.getString("INFOPAG");
 	        
         	file = DocumentosUtil.getFile(cct, infopag, null, null);
-        	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+        	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
     		file.delete();
 			
     		//Guarda el resultado en repositorio temporal
@@ -194,20 +193,20 @@ public class CrearProcedAnuncioBOPRule implements IRule {
 	        	IItem doc = (IItem)it.next();
 	        	entitiesAPI.deleteDocument(doc);
 	        }
-	        ooHelper.dispose();
 	        		
 			return new Boolean(true);
-    	}
-    	catch(Exception e) 
-        {
+    	} catch(Exception e) {
     		logger.error("No se ha podido realizar la publicacion del anuncio en el BOP. " + e.getMessage(), e);
         	if (e instanceof ISPACRuleException)
         	{
 			    throw new ISPACRuleException(e);
         	}
-        	throw new ISPACRuleException("No se ha podido realizar la publicacion del anuncio en el BOP. " + e.getMessage(), e);
-        	
-        }		
+        	throw new ISPACRuleException("No se ha podido realizar la publicacion del anuncio en el BOP. " + e.getMessage(), e);        	
+        } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
 	}
 	
 	public IItemCollection getProcedure(ClientContext context, String strProcHijo) throws ISPACException

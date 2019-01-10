@@ -29,7 +29,7 @@ import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
 public class DipucrTrasladarAcuerdosRule implements IRule {
 	
 	
-	private static final Logger logger = Logger.getLogger(DipucrTrasladarAcuerdosRule.class);
+	private static final Logger LOGGER = Logger.getLogger(DipucrTrasladarAcuerdosRule.class);
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		return true;
@@ -40,17 +40,15 @@ public class DipucrTrasladarAcuerdosRule implements IRule {
 	}
 
 	@SuppressWarnings({ "deprecation", "rawtypes", "unchecked" })
-	public Object execute(IRuleContext rulectx) throws ISPACRuleException 
-	{
-		try
-		{
+	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+		try {
 			/**
 			 * Variables que se utilizarán para insertar en la bbdd los datos 
 			 * sobre el envío correcto o incorrecto del email.
 			 * */
 			String emailNotif = "";
 			String rutaImg = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + EntidadesAdmUtil.obtenerEntidad(rulectx.getClientContext()), "/SIGEM_TramitacionWeb");
-			Object[] imagen = {rutaImg, new Boolean(true), "logoCabecera.gif", "escudo"};
+			Object[] imagen = {rutaImg, true, "logoCabecera.gif", "escudo"};
 			List<Object[]> imagenes = new ArrayList<Object[]>();
 			imagenes.add(imagen);
 
@@ -74,38 +72,44 @@ public class DipucrTrasladarAcuerdosRule implements IRule {
 
 	        //Para cada propuesta se envía un email a sus participantes trasladados
 	        int orden = 0;
-	        while (it.hasNext())
-	        {
+	        while (it.hasNext()) {
 	        	orden++;
 	        	iProp = (IItem)it.next();
-	        	String numexp_origen = iProp.getString("NUMEXP_ORIGEN");
+	        	String numexpOrigen = iProp.getString("NUMEXP_ORIGEN");
 	        	
 				//Obtener Participantes de la propuesta actual, con relación "Trasladado"
-				IItemCollection participantes = entitiesAPI.getParticipants(numexp_origen, "ROL= 'TRAS'", "ID");
-				//logger.warn("1.- sqlQueryPart "+sqlQueryPart);
+				IItemCollection participantes = entitiesAPI.getParticipants(numexpOrigen, "ROL= 'TRAS'", "ID");
+				
+				LOGGER.warn("numexp_origen "+numexpOrigen);
+				
 				
 				//Obtener el número de la propuesta de urgencia
 				if(urgencia){
-					IItemCollection itcolPropuesta = DocumentosUtil.getDocumentos(cct, rulectx.getNumExp(), "(DESCRIPCION LIKE '%"+numexp_origen+"%')", "");
+					IItemCollection itcolPropuesta = DocumentosUtil.getDocumentos(cct, rulectx.getNumExp(), "(DESCRIPCION LIKE '%"+numexpOrigen+"%')", "");
 					Iterator<IItem> itPropuesta = itcolPropuesta.iterator();
 					while (itPropuesta.hasNext()) {
-			        	IItem itemPropuesta = ((IItem)itPropuesta.next());
+			        	IItem itemPropuesta = (IItem)itPropuesta.next();
 			        	String desc = itemPropuesta.getString("DESCRIPCION");
-						desc = desc.replaceFirst("Propuesta Urgencia - ", "");
+			        	desc = desc.replaceFirst("Propuesta - ", "");						
 	
-			        	logger.warn("desc "+desc);
+			        	LOGGER.warn("desc "+desc);
 			        	char sNumPropuesta = desc.charAt(0);
-			        	logger.warn("sNumPropuesta "+sNumPropuesta);
+			        	LOGGER.warn("sNumPropuesta "+sNumPropuesta);
+			        	if(!isNumeric(sNumPropuesta+"")){
+			        		desc = itemPropuesta.getString("DESCRIPCION");
+			        		desc = desc.replaceFirst("Propuesta Urgencia - ", "");
+			        		sNumPropuesta = desc.charAt(0);
+			        		LOGGER.warn("sNumPropuesta "+sNumPropuesta);
+			        	}
 			        	char sNumPropuestaDecima = desc.charAt(1);
-			        	logger.warn("sNumPropuestaDecima "+sNumPropuestaDecima);
+			        	LOGGER.warn("sNumPropuestaDecima "+sNumPropuestaDecima);
 			        	if(sNumPropuestaDecima != ' '){
 			        		String numD = desc.substring(0, 2);
 			        		orden = Integer.parseInt(numD);
-			        	}
-			        	else{
+			        	} else {
 			        		orden = Integer.parseInt(sNumPropuesta+"");
 			        	}
-			        	logger.warn("orden "+orden);
+			        	LOGGER.warn("orden "+orden);
 					}
 				}
 				
@@ -120,24 +124,22 @@ public class DipucrTrasladarAcuerdosRule implements IRule {
 					sqlQueryDoc = "ID_TRAMITE = "+taskId+" AND ESTADOFIRMA IN ('02','03') AND DESCRIPCION = '"+orden+".- Urgencia Certificado de acuerdos'";
 				}
 				
-				//logger.warn("---------------------------- sqlQueryDoc "+sqlQueryDoc);
+				LOGGER.warn("---------------------------- sqlQueryDoc "+sqlQueryDoc);
 				
 				IItemCollection documentos = entitiesAPI.getDocuments(rulectx.getNumExp(), sqlQueryDoc, "");
 				
-				if (documentos.toList().size() == 1) 
-				{
+				if (documentos.toList().size() == 1) {
 					//Enviar email con el decreto adjunto
 					IItem sesion = SecretariaUtil.getSesion(rulectx, rulectx.getNumExp());
 					Date fechaConv = sesion.getDate("FECHA");
 					String horaConv = sesion.getString("HORA");
 					String numexpConv = rulectx.getNumExp();
 					String asuntoProp = iProp.getString("EXTRACTO");
-					String ordenProp = iProp.getString("ORDEN");
 					
 					String organo = SecretariaUtil.getNombreOrganoSesion(rulectx, rulectx.getNumExp());
 					String cContenido = "<br/>Número de expediente de la convocatoria: " +numexpConv+
 							", de fecha y hora: " +DateUtil.format(fechaConv, "dd/MM/yyyy")+ " "+ horaConv+
-							", número de expediente de la Propuesta: " +numexp_origen+" -> "+ordenProp+": "+asuntoProp+"\n"+
+							", número de expediente de la Propuesta: " +numexpOrigen+" -> "+orden+": "+asuntoProp+"\n"+
 							"Adjunto se envía el Certificado ";
 					String cAsunto= "[SIGEM] Traslado de "+organo+", convocatoria Nº"+sesion.getString("NUMCONV");
 					
@@ -156,26 +158,21 @@ public class DipucrTrasladarAcuerdosRule implements IRule {
 					
 					// Para cada participante seleccionado --> enviar email y actualizar el campo ACUERDO_TRASLADADO en la BBDD
 					if(participantes != null && participantes.toList()!= null && participantes.toList().size() != 0){
-						for (int i=0; i<participantes.toList().size(); i++)
-						{
+						
+						cContenido = MailUtil.formateContenidoEmail(rulectx, cAsunto, cContenido);
+						
+						for (int i=0; i<participantes.toList().size(); i++) {
 							IItem participante = (IItem) participantes.toList().get(i);
 							emailNotif = participante.getString("DIRECCIONTELEMATICA");
 							
-							//logger.warn("-"+nombreNotif);
+							LOGGER.warn("-"+emailNotif);
 							
-							if (emailNotif != null)
-							{
+							if (emailNotif != null) {
 								StringTokenizer tokens = new StringTokenizer(emailNotif, ";");
-								while (tokens.hasMoreTokens()) 
-								{
+								while (tokens.hasMoreTokens()) {
 									String cCorreoDestino = tokens.nextToken();	
-									if (participante!=null)
-									{
-							        	if (!cCorreoDestino.equals("")) 
-							        	{
-							        		cContenido = MailUtil.formateContenidoEmail(rulectx, cAsunto, cContenido);
-							        		MailUtil.enviarCorreoVarios(rulectx, cCorreoDestino, cAsunto, cContenido, false, file, imagenes);
-							        	}
+									if (participante!=null && !"".equals(cCorreoDestino)) {							        		
+						        		MailUtil.enviarCorreoVarios(rulectx, cCorreoDestino, cAsunto, cContenido, false, file, imagenes);
 								    }
 								}
 							}
@@ -188,23 +185,28 @@ public class DipucrTrasladarAcuerdosRule implements IRule {
 	        		it = listUrgencias.iterator();
 	        		urgencia = true;
 	        		orden = 0;
-	        	}
-				
+	        	}				
 	        }
 			return null;
-		}
-		catch(Exception e) 
-		{
-			logger.error(e.getMessage(), e);
-        	if (e instanceof ISPACRuleException)
-        	{
-			    throw new ISPACRuleException(e);
-        	}
+		} catch(Exception e) {
+			LOGGER.error(e.getMessage(), e);
         	throw new ISPACRuleException(e);
         }
 	}
 	
-	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
+	private static boolean isNumeric(String cadena) {
+		try {
+			Integer.parseInt(cadena);
+			return true;
+		} catch (NumberFormatException nfe) {
+			LOGGER.info("Valor no numérico", nfe);
+			return false;
+		}
+	}
 
+
+	
+	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
+		// Empty method
 	}
 }

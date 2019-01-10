@@ -28,12 +28,12 @@ public class CargaDIR3DepartamentoRecaudacionRule implements IRule{
 		
 		try {
 			IItem itTeu = ConsultasGenericasUtil.createEntities(rulectx, "TABLON_EDICTAL_BOE_DATOS");
-			itTeu.set("IDENT_DEPART_DIR3", "LA0006601");
+			itTeu.set("IDENT_DEPART_DIR3", "L02000013");
 			itTeu.set("NAME_DEPART_DIR3", "GESTIÓN TRIBUTARIA, INSPECCION Y RECAUDACIÓN");
 			itTeu.store(rulectx.getClientContext());
 		} catch (ISPACException e) {
-			logger.error("Error al crear la entidad 'TABLON_EDICTAL_BOE_DATOS' *IDENT_DEPART_DIR3-> LA0006601. "+e.getMessage(), e);
-			throw new ISPACRuleException("Error al crear la entidad 'TABLON_EDICTAL_BOE_DATOS' *IDENT_DEPART_DIR3-> LA0006601. "+e.getMessage(),e);
+			logger.error("Error al crear la entidad 'TABLON_EDICTAL_BOE_DATOS' *IDENT_DEPART_DIR3-> L02000013. "+e.getMessage(), e);
+			throw new ISPACRuleException("Error al crear la entidad 'TABLON_EDICTAL_BOE_DATOS' *IDENT_DEPART_DIR3-> L02000013. "+e.getMessage(),e);
 		}
 		return new Boolean(true);
 	}

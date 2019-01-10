@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.avisos.DipucrAvisoFirmanteRule;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.MailUtil;
@@ -69,16 +70,21 @@ public class AvisoSolicitudLicenciasRule implements IRule
 			
 			//Obtenemos el objeto con los datos de la solicitud
 			collection = entitiesAPI.getEntities("RRHH_LICENCIAS", numexp);
-			IItem itemLicencias = (IItem)collection.iterator().next();
-			
-    		//Obtenemos el circuito y el paso concreto
-    		int idCircuitoFirma  = rulectx.getInt("ID_CIRCUITO");
-			int idPaso = rulectx.getInt("ID_PASO");
-    		IItem signStep = signAPI.getCircuitStep(idCircuitoFirma, idPaso);
-
-    		Map<String, String> variables = LicenciasUtils.getVariablesLicencias(itemLicencias, itemExpediente);
-    		MailUtil.enviarCorreoCircuitoConVariables
-    			(rulectx, signStep, EMAIL_SUBJECT_VAR_NAME, EMAIL_CONTENT_VAR_NAME, variables);
+			if (collection.toList().size() > 0){
+				IItem itemLicencias = (IItem)collection.iterator().next();
+				
+	    		//Obtenemos el circuito y el paso concreto
+	    		int idCircuitoFirma  = rulectx.getInt("ID_CIRCUITO");
+				int idPaso = rulectx.getInt("ID_PASO");
+	    		IItem signStep = signAPI.getCircuitStep(idCircuitoFirma, idPaso);
+	
+	    		Map<String, String> variables = LicenciasUtils.getVariablesLicencias(itemLicencias, itemExpediente);
+	    		MailUtil.enviarCorreoCircuitoConVariables
+	    			(rulectx, signStep, EMAIL_SUBJECT_VAR_NAME, EMAIL_CONTENT_VAR_NAME, variables);
+			}
+			else{//[dipucr-Felipe 3#693]
+				return new DipucrAvisoFirmanteRule().execute(rulectx);
+			}
 		}
 		catch (Exception e) {
 			logger.error("Error al notificar al jefe de departamento de la solicitud de licencias. " + e.getMessage(), e);

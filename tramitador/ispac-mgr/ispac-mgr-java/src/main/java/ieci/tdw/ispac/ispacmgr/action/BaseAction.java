@@ -1,19 +1,16 @@
 package ieci.tdw.ispac.ispacmgr.action;
 
-import ieci.tdw.ispac.api.IEntitiesAPI;
-import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.IMensajeAPI;
+import ieci.tdw.ispac.api.ISPACEntities;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.impl.SessionAPIFactory;
-import ieci.tdw.ispac.api.item.IItem;
-import ieci.tdw.ispac.api.item.IItemCollection;
-import ieci.tdw.ispac.audit.business.manager.impl.IspacAuditoriaManagerImpl;
 import ieci.tdw.ispac.audit.business.vo.AuditContext;
 import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
 import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
-import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.dao.cat.CTMensaje;
 import ieci.tdw.ispac.ispaclib.search.objects.impl.SearchInfo;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacmgr.action.form.SearchForm;
@@ -49,10 +46,12 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
 
+import com.ibm.icu.text.SimpleDateFormat;
+
 public abstract class BaseAction extends Action
 {
  	/** Logger de la clase. */
-	protected static final Logger logger = Logger.getLogger(BaseAction.class);
+	protected static final Logger LOGGER = Logger.getLogger(BaseAction.class);
 
 //	// String del estado de la aplicación
 //	protected static final String ATTR_STATETICKET = "ATTR_STATETICKET";
@@ -73,8 +72,7 @@ public abstract class BaseAction extends Action
 	 * @param response The HTTP Response we are processing.
 	 */
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		// Establecer el ContentType
 		response.setContentType(CONTENT_TYPE);
@@ -83,10 +81,9 @@ public abstract class BaseAction extends Action
 		
 		try {
 			sesion = SessionAPIFactory.getSessionAPI(request, response);
-			
 		} catch (ISPACException e) {
 			
-			logger.warn("Error al obtener la sesión", e);
+			LOGGER.warn("Error al obtener la sesión", e);
 			
 			ActionMessages messages = new ActionMessages();
 			messages.add("session",new ActionMessage("error.session"));
@@ -96,17 +93,32 @@ public abstract class BaseAction extends Action
 		}
 		
 		//[Manu Ticket #129] INICIO - SIGEM Avisos Avisos_usuarios Sistema de avisos.
-		String idMensaje = getMensaje(sesion);
-		if( StringUtils.isNotEmpty(idMensaje)){	
-				ActionForward forwardMensaje = new ActionForward("/mensajes/" + idMensaje);
-				if(forwardMensaje != null)
-					return forwardMensaje;
-		}
+		IMensajeAPI mensajeAPI = sesion.getClientContext().getAPI().getMensajeAPI();
+		int idMensaje = mensajeAPI.getPrimerMensaje(sesion);
 		
+		if(ISPACEntities.ENTITY_NULLREGKEYID != idMensaje){
+			CTMensaje mensaje = mensajeAPI.getMensaje(idMensaje);
+			String urlMensaje = mensajeAPI.getPantallaByTipo(mensaje.getTipo());
+			String textoMensaje = mensaje.getTexto();
+			String fechaMensaje = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(mensaje.getFechaMensaje());
+			
+			mensaje.delete(sesion.getClientContext());
+			
+			if( StringUtils.isNotEmpty(urlMensaje)){
+				request.setAttribute("TEXTO", textoMensaje);
+				request.setAttribute("FECHA_MENSAJE", fechaMensaje);
+				
+				ActionForward forwardMensaje = new ActionForward(urlMensaje);
+				if(forwardMensaje != null){
+					return forwardMensaje;
+				}
+			}
+		}
 		//[Manu Ticket #129] FIN - SIGEM Avisos Avisos_usuarios Sistema de avisos.
 				
 		String username = sesion.getRespName();
 		request.setAttribute("User", username);
+		
 		try {
 			ActionMessages errors = (ActionMessages) request.getSession().getAttribute(Globals.ERROR_KEY);
 			if ((errors != null) && (!errors.isEmpty())) {
@@ -128,6 +140,7 @@ public abstract class BaseAction extends Action
 			request.setAttribute(Globals.MESSAGE_KEY,e);
 			request.getSession().setAttribute("infoAlert", e);
 			request.setAttribute("refresh", refresh);
+			
 			if(e.isRefresh()){
 				IManagerAPI managerAPI=ManagerAPIFactory.getInstance().getManagerAPI(sesion.getClientContext());
 				IState currentstate = managerAPI.currentState(getStateticket(request));
@@ -145,35 +158,6 @@ public abstract class BaseAction extends Action
 			sesion.release();
 		}
 	}
-
-	//[Manu Ticket #129] INICIO - SIGEM Avisos Avisos_usuarios Sistema de avisos.
-	public String getMensaje(SessionAPI sesion){
-		String idMensaje = "";
-		try{
-			IClientContext cct = sesion.getClientContext();
-			IInvesflowAPI invesflowAPI = cct.getAPI();
-			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
-			
-			String idSesion = sesion.getTicket();
-			
-			//[Manu Ticket #133] INICIO - SIGEM Avisos modulo avisos modulo para avisos electronicos.
-			String usuario = sesion.getUserName();
-			IItemCollection sesionesCollection = entitiesAPI.queryEntities("SPAC_S_SESION_MENSAJE", "WHERE ID_SESION = '" + idSesion + "' OR USUARIO = '" +usuario+ "'");
-			//[Manu Ticket #133] FIN - SIGEM Avisos modulo avisos modulo para avisos electronicos.
-
-			Iterator sesionesIterator = sesionesCollection.iterator();
-			if(sesionesIterator.hasNext()){
-				IItem sesiones = (IItem) sesionesIterator.next();
-				idMensaje = sesiones.getString("ID_MENSAJE");
-				sesiones.delete(cct);
-			}
-		}
-		catch(Exception e){
-			logger.error("ERROR al recuperar el mensaje de la sesion: " + sesion.getTicket(), e);
-		}
-		return idMensaje;
-	}
-	//[Manu Ticket #129] FIN - SIGEM Avisos Avisos_usuarios Sistema de avisos.
 		
 //	public void setOrganizationInfo(HttpServletRequest request){
 //		OrganizationUserInfo info =(OrganizationUserInfo)request.getSession()
@@ -187,8 +171,7 @@ public abstract class BaseAction extends Action
 			HttpServletRequest request, HttpServletResponse response, SessionAPI session)
 			throws Exception;
 
-	protected void storeStateticket(IState iState,HttpServletResponse response)
-	throws ISPACException {
+	protected void storeStateticket(IState iState,HttpServletResponse response) throws ISPACException {
 		String newStateticket = iState.getTicket();
     	Cookie cookieInfo = new Cookie("contextInfo", newStateticket);
 		response.addCookie(cookieInfo);
@@ -216,8 +199,7 @@ public abstract class BaseAction extends Action
 		return (String)request.getAttribute(SessionAPIFactory.ATTR_STATETICKET);
 	}
 	
-	public void setStateticket(HttpServletRequest request, IState iState)
-	throws ISPACException {
+	public void setStateticket(HttpServletRequest request, IState iState) throws ISPACException {
 		request.setAttribute(SessionAPIFactory.ATTR_STATETICKET, iState.getTicket());
 	}
 	
@@ -226,7 +208,7 @@ public abstract class BaseAction extends Action
 //		request.setAttribute(ATTR_STATETICKET, stateticket);
 //	}
 	
-	public ActionForward composeActionForward(ActionForm form, String nameAction, HashSet ignoredParams){
+	public ActionForward composeActionForward(ActionForm form, String nameAction, HashSet<?> ignoredParams){
 		ActionForward ret = new ActionForward();
 		
 		String url = RequestUtil.getPath(nameAction, getMap(form), ignoredParams);
@@ -236,31 +218,28 @@ public abstract class BaseAction extends Action
 		
 	}
 	
-	private Map getMap(ActionForm frm)
-	{
-		Map map = new HashMap();
+	private Map<String, Object> getMap(ActionForm frm) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		
 		Field [] fields = frm.getClass().getDeclaredFields();
-		for (int i = 0; i < fields.length; i++)
+		for (int i = 0; i < fields.length; i++){
 			map.put(fields[i].getName(), getAttributeValue(frm, fields[i].getName()));
+		}
 
 		return map;
 	}
-	private Object getAttributeValue(ActionForm frm,String attribute)
-	{
+	
+	private Object getAttributeValue(ActionForm frm,String attribute) {
 		Object value = null;
 		
-		try
-		{
-			if ( (attribute != null) && (attribute.length() > 0) )
-			{
+		try {
+			if ((attribute != null) && (attribute.length() > 0) ) {
 				Method method = findMethod(frm, "get".concat(attribute));
-				if (method != null)
+				if (method != null){
 					value = method.invoke(frm, null);
+				}
 			}
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			value = null;
 		}
 		
@@ -272,34 +251,35 @@ public abstract class BaseAction extends Action
 	 * @param name Nombre del método.
 	 * @return Método.
 	 */
-	private Method findMethod(ActionForm frm,String name)
-	{
+	private Method findMethod(ActionForm frm,String name) {
 		Method[] methods = frm.getClass().getMethods();
-		for (int i = 0; i < methods.length; i++) 
-			if (methods[i].getName().equalsIgnoreCase(name))
+		
+		for (int i = 0; i < methods.length; i++){
+			if (methods[i].getName().equalsIgnoreCase(name)){
 				return methods[i];
+			}
+		}
+		
 		return null;
 	}
 	
  	public String getDisplayTagOrderParams(HttpServletRequest request) throws Exception {
  		
  		String displayTagOrderParams = "";
-        Enumeration paramNames = request.getParameterNames();
+        Enumeration<?> paramNames = request.getParameterNames();
         
         while (paramNames.hasMoreElements()) {
         	
         	String name = (String) paramNames.nextElement();
             
-        	if ((name != null) && 
-        		(name.startsWith("d-"))) {
+        	if ((name != null) && (name.startsWith("d-"))) {
         		
         		String value = request.getParameter(name);
         		String param = name + "=" + value;
         		
         		if (StringUtils.isEmpty(displayTagOrderParams)) {
         			displayTagOrderParams = param;
-        		}
-        		else {
+        		} else {
         			displayTagOrderParams = displayTagOrderParams +  "&" + param;
         		}
         	}
@@ -308,13 +288,12 @@ public abstract class BaseAction extends Action
         return displayTagOrderParams;
  	}
 
-	protected void setQuery(SearchInfo searchinfo, SearchForm searchForm)
-			throws ISPACException {
+	protected void setQuery(SearchInfo searchinfo, SearchForm searchForm) throws ISPACException {
 		
-		Map values = searchForm.getValuesMap();
-		Map operators = searchForm.getOperatorsMap();
-		Set valueKeys = values.keySet();
-		Iterator iter = valueKeys.iterator();
+		Map<?, ?> values = searchForm.getValuesMap();
+		Map<?, ?> operators = searchForm.getOperatorsMap();
+		Set<?> valueKeys = values.keySet();
+		Iterator<?> iter = valueKeys.iterator();
 
 		while (iter.hasNext()) {
 			String key = (String) iter.next();
@@ -329,6 +308,7 @@ public abstract class BaseAction extends Action
 	public String getMessage(HttpServletRequest request, Locale locale, String key) {
 		
 		MessageResources resources = getResources(request);
+		
 		if ((resources != null) && resources.isPresent(locale, key)) {
 			return (resources.getMessage(locale, key));
 		}
@@ -339,6 +319,7 @@ public abstract class BaseAction extends Action
 	public String getMessage(HttpServletRequest request, Locale locale, String key, Object params[]) {
 		
 		MessageResources resources = getResources(request);
+		
 		if ((resources != null) && resources.isPresent(locale, key)) {
 			return (resources.getMessage(locale, key, params));
 		}
@@ -350,6 +331,7 @@ public abstract class BaseAction extends Action
 	 * @param request
 	 */
 	private void setAuditContext(HttpServletRequest request, SessionAPI session) {
+		
 		//[Manu #93] * ALSIGM3 Modificaciones Auditoría
     	if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE)){
 	    		

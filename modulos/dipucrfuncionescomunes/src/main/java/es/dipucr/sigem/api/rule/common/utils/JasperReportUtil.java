@@ -71,11 +71,11 @@ public class JasperReportUtil {
 			File fPantiJasp = new File(ruta);
 			if(fPantiJasp.exists()){
 				//La pantilla existe
-				if(extensionPlantillaJasper.equals("jasper")){
+				if("jasper".equals(extensionPlantillaJasper)){
 					
 					jasperReport = (JasperReport) JRLoader.loadObject(ruta);
 				}
-				if(vNombrePlantilla[1].equals("jrxml")){
+				if("jrxml".equals(vNombrePlantilla[1])){
 					JasperDesign jd=JRXmlLoader.load(ruta);								
 					jasperReport = JasperCompileManager.compileReport(jd);   
 				}
@@ -130,8 +130,7 @@ public class JasperReportUtil {
 				 * DOCUMENTO CON TODOS LOS CONTRATOS
 				 * **/
 
-				String fileDoc= FileTemporaryManager.getInstance().getFileTemporaryPath() + File.separator
-						+ FileTemporaryManager.getInstance().newFileName(".pdf");
+				String fileDoc= FileTemporaryManager.getInstance().getFileTemporaryPath() + File.separator	+ FileTemporaryManager.getInstance().newFileName(".pdf");
 				fPdf = new File(fileDoc);
 
 				JasperReport report = JasperReportUtil.obtenerObjetoJasper(nombreCarpetaJasper, nombreJasper);
@@ -142,6 +141,8 @@ public class JasperReportUtil {
 				 * [Ticket #59# INICIO]Cambio para que utilice la carpeta skin 
 				 * **/
 				map.put("IMAGES_REPOSITORY_PATH", SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + EntidadesAdmUtil.obtenerEntidad(rulectx.getClientContext()), "/SIGEM_TramitacionWeb"));
+				String ruta= Thread.currentThread().getContextClassLoader().getResource("../../report").getPath() + nombreCarpetaJasper + File.separator;
+				map.put("SUBREPORT_DIR", ruta);
 				/**
 				 * [Ticket #59# FIN]
 				 * **/

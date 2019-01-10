@@ -86,6 +86,11 @@ public class DefinicionLibroSalida implements DefinicionLibroRegistro {
 			fields.add(14, "Comentario", 2, 65535, true, false, false, "");
 			fields.add(15, "Fecha del documento", 7, 0, true, false, false, "");
 
+			fields.add(1002, "Campo que no sé qué hace", 4, 0, true, false, false, "");
+			fields.add(1003, "Obligatorio el registro original", 4, 0, true, false, false, "");
+			fields.add(1004, "Último acuse generado", 1, 255, true, false, false, "");
+
+
 			//se añaden campos reservados adicionales que estaran en el rango 500-1000
 			DefinicionLibroSicres3Utils.addAditionalReservedAndSicres3Fields(fields);
 

@@ -72,7 +72,7 @@ public class SigemComprobarTimeOutEnviosJob extends QuartzJobBean {
 				Entidad entidad = (Entidad) iterator.next();
 				
 				try{
-					entidad.getCodigoINE();
+					entidad.getCodigo_ine();
 					logger.debug("entdidad:"+entidad.getIdentificador());
 					MultiEntityContextHolder.setEntity(entidad.getIdentificador());
 					getServicioIntercambioRegistral().comprobarTimeOutEnvios();

@@ -1,8 +1,8 @@
 package ieci.tecdoc.sbo.fss.core;
 
 import ieci.tecdoc.core.collections.IeciTdLongIntegerArrayList; //import ieci.tecdoc.core.database.DbConnection;
-import ieci.tecdoc.core.db.DbConnection;
 import ieci.tecdoc.core.datetime.DateTimeUtil;
+import ieci.tecdoc.core.db.DbConnection;
 import ieci.tecdoc.core.exception.IeciTdException;
 import ieci.tecdoc.core.file.FileManager;
 import ieci.tecdoc.core.ftp.FtpBasicFns;
@@ -10,21 +10,19 @@ import ieci.tecdoc.core.ftp.FtpConnectionInfo;
 import ieci.tecdoc.core.ftp.FtpTransferFns;
 import ieci.tecdoc.core.textutil.Util;
 import ieci.tecdoc.core.types.IeciTdType;
-
 import ieci.tecdoc.sbo.config.CfgFssMdoFile;
-
 import ieci.tecdoc.sbo.fss.core.CfgMdoFile.RepositoryConfig;
 import ieci.tecdoc.sbo.util.nextid.NextId;
-
-import org.apache.log4j.Logger;
-
-import com.ieci.tecdoc.common.conf.BookTypeConf;
-import com.ieci.tecdoc.common.utils.SignTiff;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import com.ieci.tecdoc.common.conf.BookTypeConf;
+import com.ieci.tecdoc.common.utils.SignTiff;
 
 public class FssMdoFileRegistro {
 	// ~ Static fields/initializers
@@ -262,8 +260,11 @@ public class FssMdoFileRegistro {
 			createDirectory(repInfo, dirFullPath);
 
 		} catch (Exception e) {
-
-			log.error(e.getMessage(), e);
+			if(e instanceof IeciTdException){
+				if(!FssError.EC_DIR_NOT_CREATED.equals(((IeciTdException)e).getErrorCode())){
+					log.error(e.getMessage(), e);
+				}
+			}
 
 		}
 
@@ -311,9 +312,11 @@ public class FssMdoFileRegistro {
 				break;
 
 			} catch (Exception e) {
-
-				log.error(e.getMessage(), e);
-
+				if(e instanceof IeciTdException){
+					if(!FssError.EC_VOL_IS_FULL.equals(((IeciTdException)e).getErrorCode())){
+						log.error(e.getMessage(), e);
+					}
+				}
 			}
 
 		}

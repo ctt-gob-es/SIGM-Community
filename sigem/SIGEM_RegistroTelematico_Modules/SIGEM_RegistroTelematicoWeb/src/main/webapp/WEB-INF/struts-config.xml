@@ -162,8 +162,8 @@
 	</action-mappings>
 	
 	<!-- [Manu Ticket #734] SIGEM Tramitador  Anexar documento: Ampliar máximo tamaño de archivo -->
-	<!-- <controller maxFileSize="50M" inputForward="true" />-->
-	<controller maxFileSize="200M" inputForward="true" />
+	<controller maxFileSize="50M" inputForward="true" />
+<!-- <controller maxFileSize="200M" inputForward="true" /> -->
 	<!-- [Manu Ticket #734] SIGEM Tramitador  Anexar documento: Ampliar máximo tamaño de archivo -->
 	
 	<message-resources parameter="resources.application" />

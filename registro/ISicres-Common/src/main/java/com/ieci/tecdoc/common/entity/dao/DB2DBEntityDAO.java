@@ -777,6 +777,27 @@ public class DB2DBEntityDAO extends AbstractDBEntityDAO {
 			ps.setObject(index, value);
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.ieci.tecdoc.common.entity.dao.DBEntityDAO#getNextIdForScrModifDoc(java.lang.Integer,
+	 *      java.lang.String)
+	 */
+	public int getNextIdForScrModifDoc(Integer userId, String entidad) throws SQLException {
+		return getContador4SCRREGORIGDOC(userId, entidad);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.ieci.tecdoc.common.entity.dao.DBEntityDAO#getNextIdForScrDocumentMetadatos(java.lang.Integer,
+	 *      java.lang.String)
+	 */
+	public int getNextIdForScrDocumentMetadatos(Integer userId, String entidad) throws SQLException {
+		return getContador4SCRREGORIGDOC(userId, entidad);
+	}
+	
 	/***************************************************************************
 	 * Private methods
 	 **************************************************************************/

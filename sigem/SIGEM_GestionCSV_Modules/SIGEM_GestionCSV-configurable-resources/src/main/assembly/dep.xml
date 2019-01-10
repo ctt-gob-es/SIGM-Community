@@ -16,8 +16,10 @@
 				<include>gestionCSVWebConfig.properties</include>
 			</includes>
 		</fileSet>
+		<!--[Dipucr-Manu Ticket #357] - ALSIGM3 Hacer que todos los módulos de sigem usen las imágenes del tramitador-->
 		<fileSet>
-			<directory>../SIGEM_GestionCSVWeb/src/main/resources/SIGEM_GestionCSVWeb</directory>
+			<directory>../../SIGEM_Tramitacion_Modules/SIGEM_TramitacionWeb/src/main/resources/SIGEM_TramitacionWeb</directory>
+			<!--<directory>../SIGEM_GestionCSVWeb/src/main/resources/SIGEM_GestionCSVWeb</directory>-->
 			<outputDirectory>/SIGEM_GestionCSVWeb</outputDirectory>
 			<includes>
 				<include>skin*/</include>

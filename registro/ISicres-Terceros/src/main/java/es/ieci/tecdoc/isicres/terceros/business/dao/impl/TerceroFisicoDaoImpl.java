@@ -37,14 +37,23 @@ public class TerceroFisicoDaoImpl extends
 	 * {@inheritDoc}
 	 * @see es.ieci.tecdoc.isicres.terceros.business.dao.TerceroFisicoDao#findTerceroFisicoByDocumentNumber(java.lang.String, int)
 	 */
-	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber,
-			int typeDoc) {
+	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber, int typeDoc) {
 		HashMap map = new HashMap();
 		map.put("type_doc", typeDoc);
 		map.put("nif",phisicalNumber);
-		return getSqlMapClientTemplate().queryForList("TerceroValidadoFisicoVO.findByDocumentNumber",map);
+		return getSqlMapClientTemplate().queryForList("TerceroValidadoFisicoVO.findByDocumentNumberTipoDoc", map);
 	}
 	
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.isicres.terceros.business.dao.TerceroFisicoDao#findTerceroFisicoByDocumentNumber(java.lang.String, int)
+	 */
+	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber) {
+		HashMap map = new HashMap();		
+		map.put("nif",phisicalNumber);
+		return getSqlMapClientTemplate().queryForList("TerceroValidadoFisicoVO.findByDocumentNumber", map);
+	}
 	
 
 }

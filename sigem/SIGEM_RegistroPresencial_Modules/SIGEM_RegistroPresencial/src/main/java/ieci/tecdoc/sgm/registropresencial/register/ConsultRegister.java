@@ -63,35 +63,32 @@ public class ConsultRegister implements Keys {
 	 * Public methods
 	 **************************************************************************/
 
-	public static Map consultFolderInfo(AxSf axsf, Integer bookID, int page,
-			Locale locale, Map extendedValues, String origen, String destino,
-			Map fldDefs) {
+	public static Map<String, String> consultFolderInfo(AxSf axsf, Integer bookID, int page, Locale locale, Map<?, ?> extendedValues, String origen, String destino, Map<?, ?> fldDefs) {
 		String data = axsf.getFormat().getData();
 		FormFormat formFormat = new FormFormat(data);
 
-		longFormatter = new SimpleDateFormat(RBUtil.getInstance(locale)
-				.getProperty(I18N_DATE_LONGFORMAT));
-		shortFormatter = new SimpleDateFormat(RBUtil.getInstance(locale)
-				.getProperty(I18N_DATE_SHORTFORMAT));
+		longFormatter = new SimpleDateFormat(RBUtil.getInstance(locale).getProperty(I18N_DATE_LONGFORMAT));
+		shortFormatter = new SimpleDateFormat(RBUtil.getInstance(locale).getProperty(I18N_DATE_SHORTFORMAT));
 
-		TreeMap pages = formFormat.getDlgDef().getPagedefs();
+		TreeMap<?, ?> pages = formFormat.getDlgDef().getPagedefs();
 		FPageDef pageDef = (FPageDef) pages.get(new Integer(page));
-		TreeMap ctrls = pageDef.getCtrldefs();
+		TreeMap<?, ?> ctrls = pageDef.getCtrldefs();
 		FCtrlDef ctrlDef = null;
-		Map folderValues = new HashMap();
+		Map<String, String> folderValues = new HashMap<String, String>();
 		String value = null;
 		FFldDef flddef = null;
 
-		for (Iterator it = ctrls.values().iterator(); it.hasNext();) {
+		for (Iterator<?> it = ctrls.values().iterator(); it.hasNext();) {
 			ctrlDef = (FCtrlDef) it.next();
+			
 			if (ctrlDef.getName().startsWith(IDOC_EDIT)) {
-				value = getFolderInfoFromForm(ctrlDef, axsf, locale,
-						extendedValues, origen, destino);
-				for (Iterator it1 = fldDefs.keySet().iterator(); it1.hasNext();) {
+				value = getFolderInfoFromForm(ctrlDef, axsf, locale, extendedValues, origen, destino);
+				
+				for (Iterator<?> it1 = fldDefs.keySet().iterator(); it1.hasNext();) {
 					Integer key = (Integer) it1.next();
 					flddef = (FFldDef) fldDefs.get(key);
-					if (flddef.getColname().equals(
-							XML_FLD_UPPERF_TEXT + ctrlDef.getFldId())) {
+				
+					if (flddef.getColname().equals( XML_FLD_UPPERF_TEXT + ctrlDef.getFldId())) {
 						break;
 					}
 				}
@@ -102,14 +99,13 @@ public class ConsultRegister implements Keys {
 		return folderValues;
 	}
 
-	public static List consultBookInfo(List books) {
-		List result = new ArrayList();
+	public static List<InfoBook> consultBookInfo(List<?> books) {
+		List<InfoBook> result = new ArrayList<InfoBook>();
 
 		if (books != null && !books.isEmpty()) {
-			for (Iterator iterator = books.iterator(); iterator.hasNext();) {
+			for (Iterator<?> iterator = books.iterator(); iterator.hasNext();) {
 				// ScrRegstate scrRegstate = (ScrRegstate) iterator.next();
-				ScrRegStateByLanguage book = (ScrRegStateByLanguage) iterator
-						.next();
+				ScrRegStateByLanguage book = (ScrRegStateByLanguage) iterator.next();
 
 				InfoBook bookInfo = new InfoBook();
 				// bookInfo.setId(scrRegstate.getId());
@@ -126,18 +122,17 @@ public class ConsultRegister implements Keys {
 				bookInfo.setRemarks(book.getIdocarchhdrRemarks());
 
 				result.add(bookInfo);
-
 			}
 		}
 
 		return result;
 	}
 
-	public static List consultOfficeInfo(List offices) {
-		List result = new ArrayList();
+	public static List<InfoOffice> consultOfficeInfo( List<?> offices) {
+		List<InfoOffice> result = new ArrayList<InfoOffice>();
 
 		if (offices != null && !offices.isEmpty()) {
-			for (Iterator iterator = offices.iterator(); iterator.hasNext();) {
+			for (Iterator<?> iterator = offices.iterator(); iterator.hasNext();) {
 				ScrOfic scrOfic = (ScrOfic) iterator.next();
 
 				InfoOffice officeInfo = new InfoOffice();
@@ -148,7 +143,6 @@ public class ConsultRegister implements Keys {
 				officeInfo.setName(scrOfic.getName());
 
 				result.add(officeInfo);
-
 			}
 		}
 
@@ -158,10 +152,8 @@ public class ConsultRegister implements Keys {
 	public static InfoRegister consultRegisterInfo(Integer bookID, AxSf axsf,
 			int folderId, ScrOfic scrOfic, String userName, Locale locale) {
 		
-		longFormatter = new SimpleDateFormat(RBUtil.getInstance(locale)
-				.getProperty(I18N_DATE_LONGFORMAT));
-		shortFormatter = new SimpleDateFormat(RBUtil.getInstance(locale)
-				.getProperty(I18N_DATE_SHORTFORMAT));
+		longFormatter = new SimpleDateFormat(RBUtil.getInstance(locale).getProperty(I18N_DATE_LONGFORMAT));
+		shortFormatter = new SimpleDateFormat(RBUtil.getInstance(locale).getProperty(I18N_DATE_SHORTFORMAT));
 		
 		InfoRegister wsRegisterInfo = new InfoRegister();
 		wsRegisterInfo.setFolderId(String.valueOf(folderId));
@@ -172,8 +164,7 @@ public class ConsultRegister implements Keys {
 		wsRegisterInfo.setOfficeName(scrOfic.getName());
 		wsRegisterInfo.setState(axsf.getAttributeValueAsString("fld6"));
 		wsRegisterInfo.setUserName(userName);
-		wsRegisterInfo
-				.setWorkDate(getRegisterDate(axsf, "fld4", shortFormatter));
+		wsRegisterInfo.setWorkDate(getRegisterDate(axsf, "fld4", shortFormatter));
 
 		return wsRegisterInfo;
 
@@ -194,14 +185,10 @@ public class ConsultRegister implements Keys {
 	 * @throws SessionException
 	 * @throws TecDocException
 	 */
-	public static InfoRegister consultRegisterInfo(Integer bookID, ScrOfic scrofic,
-			AuthenticationUser user, AxSf axsf, Locale locale)
-			throws BookException, SessionException, TecDocException {
+	public static InfoRegister consultRegisterInfo(Integer bookID, ScrOfic scrofic, AuthenticationUser user, AxSf axsf, Locale locale) throws BookException, SessionException, TecDocException {
 		
-		longFormatter = new SimpleDateFormat(RBUtil.getInstance(locale)
-				.getProperty(I18N_DATE_LONGFORMAT));
-		shortFormatter = new SimpleDateFormat(RBUtil.getInstance(locale)
-				.getProperty(I18N_DATE_SHORTFORMAT));
+		longFormatter = new SimpleDateFormat(RBUtil.getInstance(locale).getProperty(I18N_DATE_LONGFORMAT));
+		shortFormatter = new SimpleDateFormat(RBUtil.getInstance(locale).getProperty(I18N_DATE_SHORTFORMAT));
 		
 		InfoRegister registerInfo = new InfoRegister();
 		registerInfo.setBookId(bookID.toString());
@@ -228,38 +215,45 @@ public class ConsultRegister implements Keys {
 
 	private static String getRegOff(ScrOfic ofic) {
 		String text = "";
+		
 		if (ofic != null) {
 			text = ofic.getCode() + " - " + ofic.getName();
 		}
+		
 		return text;
 	}
 
 	private static String getAdminUnit(ScrOrg org, String name) {
 		String text = "";
+		
 		if (org != null) {
 			text = org.getCode() + " - " + name;
 		}
+		
 		return text;
 	}
 
 	private static String getRegAdmin(ScrOrg org) {
 		String text = "";
+		
 		if (org != null) {
 			text = org.getCode() + " - " + org.getName();
 		}
+		
 		return text;
 	}
 
 	private static String getSubjType(ScrCa ca) {
 		String text = "";
+		
 		if (ca != null) {
 			text = ca.getCode() + " - " + ca.getMatter();
 		}
+		
 		return text;
 	}
 
-	private static String getFolderInfoFromForm(FCtrlDef ctrlDef, AxSf axsf,
-			Locale locale, Map extendedValues, String origen, String destino) {
+	private static String getFolderInfoFromForm(FCtrlDef ctrlDef, AxSf axsf, Locale locale, Map<?, ?> extendedValues, String origen, String destino) {
 
 		String fldName = XML_FLD_TEXT + ctrlDef.getFldId();
 		String text = "";
@@ -269,131 +263,133 @@ public class ConsultRegister implements Keys {
 
 		} else if (fldName.equals(AxSf.FLD7_FIELD)) {
 			text = getAdminUnit(axsf.getFld7(), origen);
+			
 		} else if (fldName.equals(AxSf.FLD8_FIELD)) {
 			text = getAdminUnit(axsf.getFld8(), destino);
+			
 		} else if (fldName.equals(AxSf.FLD13_FIELD) && axsf instanceof AxSfIn) {
 			text = getRegAdmin(((AxSfIn) axsf).getFld13());
+			
 		} else if (fldName.equals(AxSf.FLD16_FIELD) && axsf instanceof AxSfIn) {
 			text = getSubjType(((AxSfIn) axsf).getFld16());
+			
 		} else if (fldName.equals(AxSf.FLD12_FIELD) && axsf instanceof AxSfOut) {
 			text = getSubjType(((AxSfOut) axsf).getFld12());
+			
 		} else if (fldName.equals(AxSf.FLD12_FIELD) && axsf instanceof AxSfIn) {
 			if (axsf.getAttributeValue(fldName) != null) {
-				text = shortFormatter.format((Date) axsf
-						.getAttributeValue(fldName));
+				text = shortFormatter.format((Date) axsf.getAttributeValue(fldName));
 			}
+			
 		} else if (fldName.equals(AxSf.FLD4_FIELD) && axsf instanceof AxSfIn) {
 			if (axsf.getAttributeValue(fldName) != null) {
-				text = shortFormatter.format((Date) axsf
-						.getAttributeValue(fldName));
+				text = shortFormatter.format((Date) axsf.getAttributeValue(fldName));
 			}
+			
 		} else if (fldName.equals(AxSf.FLD2_FIELD) && axsf instanceof AxSfIn) {
 			if (axsf.getAttributeValue(fldName) != null) {
-				text = longFormatter.format((Date) axsf
-						.getAttributeValue(fldName));
+				text = longFormatter.format((Date) axsf.getAttributeValue(fldName));
 			}
+			
 		} else if (fldName.equals(AxSf.FLD2_FIELD) && axsf instanceof AxSfOut) {
 			if (axsf.getAttributeValue(fldName) != null) {
-				text = longFormatter.format((Date) axsf
-						.getAttributeValue(fldName));
+				text = longFormatter.format((Date) axsf.getAttributeValue(fldName));
 			}
+			
 		} else if (fldName.equals(AxSf.FLD4_FIELD) && axsf instanceof AxSfOut) {
 			if (axsf.getAttributeValue(fldName) != null) {
-				text = shortFormatter.format((Date) axsf
-						.getAttributeValue(fldName));
+				text = shortFormatter.format((Date) axsf.getAttributeValue(fldName));
 			}
+			
 		} else if (fldName.equals(AxSf.FLD6_FIELD) && axsf instanceof AxSfIn) {
 			if (axsf.getAttributeValue(fldName) != null) {
 				int value = 0;
 				try {
-					value = ((BigDecimal) axsf.getAttributeValue(fldName))
-							.intValue();
+					value = ((BigDecimal) axsf.getAttributeValue(fldName)).intValue();
+					
 				} catch (ClassCastException e) {
-					value = ((Integer) axsf.getAttributeValue(fldName))
-							.intValue();
+					value = ((Integer) axsf.getAttributeValue(fldName)).intValue();
 				}
-				text = RBUtil.getInstance(locale).getProperty(
-						"book." + fldName + "." + value, text);
+				
+				text = RBUtil.getInstance(locale).getProperty("book." + fldName + "." + value, text);
 			}
+			
 		} else if (fldName.equals(AxSf.FLD6_FIELD) && axsf instanceof AxSfOut) {
 			if (axsf.getAttributeValue(fldName) != null) {
 				int value = 0;
 				try {
-					value = ((BigDecimal) axsf.getAttributeValue(fldName))
-							.intValue();
+					value = ((BigDecimal) axsf.getAttributeValue(fldName)).intValue();
+					
 				} catch (ClassCastException e) {
-					value = ((Integer) axsf.getAttributeValue(fldName))
-							.intValue();
+					value = ((Integer) axsf.getAttributeValue(fldName)).intValue();
 				}
-				text = RBUtil.getInstance(locale).getProperty(
-						"book." + fldName + "." + value, text);
+				
+				text = RBUtil.getInstance(locale).getProperty( "book." + fldName + "." + value, text);
 			}
+			
 		} else if (fldName.equals(AxSf.FLD11_FIELD) && axsf instanceof AxSfIn) {
 			if (axsf.getAttributeValue(fldName) != null) {
 				int value = 0;
 				try {
-					value = ((BigDecimal) axsf.getAttributeValue(fldName))
-							.intValue();
+					value = ((BigDecimal) axsf.getAttributeValue(fldName)).intValue();
+					
 				} catch (ClassCastException e) {
-					value = ((Integer) axsf.getAttributeValue(fldName))
-							.intValue();
+					value = ((Integer) axsf.getAttributeValue(fldName)).intValue();
 				}
-				text = RBUtil.getInstance(locale).getProperty(
-						"book." + fldName + "." + value, text);
+				
+				text = RBUtil.getInstance(locale).getProperty( "book." + fldName + "." + value, text);
 			}
+			
 		} else if (fldName.equals(AxSf.FLD14_FIELD) && axsf instanceof AxSfOut) {
 			if (axsf.getAxxf() != null && axsf.getAxxf().getText() != null) {
 				text = axsf.getAxxf().getText();
 			}
+			
 		} else if (fldName.equals(AxSf.FLD18_FIELD) && axsf instanceof AxSfIn) {
 			if (axsf.getAxxf() != null && axsf.getAxxf().getText() != null) {
 				text = axsf.getAxxf().getText();
 			}
-		} else if (axsf.getExtendedFields().containsKey(
-				new Integer(ctrlDef.getFldId()))) {
-			AxXf extendedField = (AxXf) axsf.getExtendedFields().get(
-					new Integer(ctrlDef.getFldId()));
+			
+		} else if (axsf.getExtendedFields().containsKey( new Integer(ctrlDef.getFldId()))) {
+			AxXf extendedField = (AxXf) axsf.getExtendedFields().get( new Integer(ctrlDef.getFldId()));
 			if (extendedField != null && extendedField.getText() != null) {
 				text = extendedField.getText();
 			}
-		} else if (axsf instanceof AxSfIn
-				&& ctrlDef.getFldId() > com.ieci.tecdoc.common.isicres.Keys.EREG_FDR_MATTER
-				&& (ctrlDef.getRole() == 10 || ctrlDef.getRole() == 4)) {
+			
+		} else if (axsf instanceof AxSfIn && ctrlDef.getFldId() > com.ieci.tecdoc.common.isicres.Keys.EREG_FDR_MATTER && (ctrlDef.getRole() == 10 || ctrlDef.getRole() == 4)) {
 			if (extendedValues.containsKey(new Integer(ctrlDef.getFldId()))) {
-				Map aux = (Map) extendedValues.get(new Integer(ctrlDef
-						.getFldId()));
+				Map<?, ?> aux = (Map<?, ?>) extendedValues.get(new Integer(ctrlDef.getFldId()));
+				
 				if (aux != null && !aux.isEmpty()) {
-					if (aux
-							.containsKey(axsf
-									.getAttributeValueAsString(fldName))) {
-						text = (String) aux.get(axsf
-								.getAttributeValueAsString(fldName));
+					if (aux.containsKey(axsf.getAttributeValueAsString(fldName))) {
+						text = (String) aux.get(axsf.getAttributeValueAsString(fldName));
+						
 					} else {
 						text = "";
 					}
+					
 				} else {
 					text = "";
 				}
 			}
-		} else if (axsf instanceof AxSfOut
-				&& ctrlDef.getFldId() > com.ieci.tecdoc.common.isicres.Keys.SREG_FDR_MATTER
-				&& (ctrlDef.getRole() == 10 || ctrlDef.getRole() == 4)) {
+			
+		} else if (axsf instanceof AxSfOut && ctrlDef.getFldId() > com.ieci.tecdoc.common.isicres.Keys.SREG_FDR_MATTER && (ctrlDef.getRole() == 10 || ctrlDef.getRole() == 4)) {
 			if (extendedValues.containsKey(new Integer(ctrlDef.getFldId()))) {
-				Map aux = (Map) extendedValues.get(new Integer(ctrlDef
-						.getFldId()));
+				Map<?, ?> aux = (Map<?, ?>) extendedValues.get(new Integer(ctrlDef.getFldId()));
+				
 				if (aux != null && !aux.isEmpty()) {
-					if (aux
-							.containsKey(axsf
-									.getAttributeValueAsString(fldName))) {
-						text = (String) aux.get(axsf
-								.getAttributeValueAsString(fldName));
+					if (aux.containsKey(axsf.getAttributeValueAsString(fldName))) {
+						text = (String) aux.get(axsf.getAttributeValueAsString(fldName));
+						
 					} else {
 						text = "";
 					}
+					
 				} else {
 					text = "";
 				}
 			}
+			
 		} else {
 			if (axsf.getAttributeValue(fldName) != null) {
 				text = axsf.getAttributeValue(fldName).toString();
@@ -401,35 +397,30 @@ public class ConsultRegister implements Keys {
 
 			if (_logger.isDebugEnabled()) {
 				_logger.debug("ctrlDef => " + ctrlDef);
-				_logger.debug("axsf.getAttributeClass(fldName) => "
-						+ axsf.getAttributeClass(fldName));
-				_logger.debug("axsf.getAttributeValue(fldName) => "
-						+ axsf.getAttributeValue(fldName));
+				_logger.debug("axsf.getAttributeClass(fldName) => " + axsf.getAttributeClass(fldName));
+				_logger.debug("axsf.getAttributeValue(fldName) => " + axsf.getAttributeValue(fldName));
+				
 				if (axsf.getAttributeValue(fldName) != null) {
-					_logger.debug("axsf.getAttributeValue(fldName) => "
-							+ axsf.getAttributeValue(fldName).getClass()
-									.getName());
+					_logger.debug("axsf.getAttributeValue(fldName) => " + axsf.getAttributeValue(fldName).getClass().getName());
 				}
 			}
 
-			if (axsf.getAttributeValue(fldName) != null
-					&& axsf.getAttributeClass(fldName) != null) {
+			if (axsf.getAttributeValue(fldName) != null && axsf.getAttributeClass(fldName) != null) {
 				if (axsf.getAttributeClass(fldName).equals(Date.class)) {
-					text = shortFormatter.format((Date) axsf
-							.getAttributeValue(fldName));
+					text = shortFormatter.format((Date) axsf.getAttributeValue(fldName));
 				}
+				
 			} else if (axsf.getAttributeClass(fldName) == null) {
 				if (axsf.getAttributeValue(fldName) instanceof Date) {
-					text = shortFormatter.format((Date) axsf
-							.getAttributeValue(fldName));
+					text = shortFormatter.format((Date) axsf.getAttributeValue(fldName));
 				}
+				
 				if (axsf.getAttributeValue(fldName) instanceof java.sql.Date) {
-					text = shortFormatter.format(new Date(((java.sql.Date) axsf
-							.getAttributeValue(fldName)).getTime()));
+					text = shortFormatter.format(new Date(((java.sql.Date) axsf.getAttributeValue(fldName)).getTime()));
 				}
+				
 				if (axsf.getAttributeValue(fldName) instanceof Timestamp) {
-					text = shortFormatter.format(new Date(((Timestamp) axsf
-							.getAttributeValue(fldName)).getTime()));
+					text = shortFormatter.format(new Date(((Timestamp) axsf.getAttributeValue(fldName)).getTime()));
 				}
 			}
 		}
@@ -438,27 +429,26 @@ public class ConsultRegister implements Keys {
 	
 	private static String getRegisterDate(AxSf axsf, String fld, SimpleDateFormat formatter) {
 		String text = "";
+		
 		if (fld != null){
-		if (axsf.getAttributeValue(fld) != null
-				&& axsf.getAttributeClass(fld) != null) {
-			if (axsf.getAttributeClass(fld).equals(Date.class)) {
-				text = formatter.format((Date) axsf
-						.getAttributeValue(fld));
-			}
-		} else if (axsf.getAttributeClass(fld) == null) {
-			if (axsf.getAttributeValue(fld) instanceof Date) {
-				text = formatter.format((Date) axsf
-						.getAttributeValue(fld));
-			}
-			if (axsf.getAttributeValue(fld) instanceof java.sql.Date) {
-				text = formatter.format(new Date(((java.sql.Date) axsf
-						.getAttributeValue(fld)).getTime()));
-			}
-			if (axsf.getAttributeValue(fld) instanceof Timestamp) {
-				text = formatter.format(new Date(((Timestamp) axsf
-						.getAttributeValue(fld)).getTime()));
-			}
-		} 
+			if (axsf.getAttributeValue(fld) != null && axsf.getAttributeClass(fld) != null) {
+				if (axsf.getAttributeClass(fld).equals(Date.class)) {
+					text = formatter.format((Date) axsf.getAttributeValue(fld));
+				}
+				
+			} else if (axsf.getAttributeClass(fld) == null) {
+				if (axsf.getAttributeValue(fld) instanceof Date) {
+					text = formatter.format((Date) axsf.getAttributeValue(fld));
+				}
+				
+				if (axsf.getAttributeValue(fld) instanceof java.sql.Date) {
+					text = formatter.format(new Date(((java.sql.Date) axsf.getAttributeValue(fld)).getTime()));
+				}
+				
+				if (axsf.getAttributeValue(fld) instanceof Timestamp) {
+					text = formatter.format(new Date(((Timestamp) axsf.getAttributeValue(fld)).getTime()));
+				}
+			} 
 		}
 
 		return text;

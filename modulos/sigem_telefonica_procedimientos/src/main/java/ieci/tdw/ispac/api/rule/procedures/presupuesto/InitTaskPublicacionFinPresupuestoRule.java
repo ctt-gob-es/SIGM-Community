@@ -5,10 +5,9 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitTaskPublicacionFinPresupuestoRule extends InitTaskPublicacionPresupuestoRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "PRES_PRESUPUESTO";
-		STR_template = "Anuncio definitivo Presupuesto";		
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "PRES_PRESUPUESTO";
+        strTemplate = "Anuncio definitivo Presupuesto";        
         return true;
     }
 }

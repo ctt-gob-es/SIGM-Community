@@ -16,6 +16,7 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class FechaAprobacionRule implements IRule{
@@ -180,7 +181,9 @@ public class FechaAprobacionRule implements IRule{
 	        				"OR NOMBRE='"+Constants.SECRETARIATRAMITES.CERTIFICADACUERDNOTIFICACI+"') AND ESTADO=3";
 	        logger.warn("consultaSQL "+consultaSQL);
 	        
-	        itemCollection = entitiesAPI.queryEntities(SpacEntities.SPAC_DT_TRAMITES, consultaSQL);
+//	        itemCollection = entitiesAPI.queryEntities(SpacEntities.SPAC_DT_TRAMITES, consultaSQL);
+	        itemCollection = TramitesUtil.queryTramites(cct, consultaSQL); //[dipucr-Felipe #842]
+	        
 	        it = itemCollection.iterator();
 	        if(it.hasNext()){
 	        	 while(it.hasNext()){

@@ -17,6 +17,9 @@ public class CTRuleApp extends SimpleEntityApp {
 
 	//private static final String[][] ruleTypes = {{"Acción","1"},{"Cálculo de responsabilidad", "2"}};
 	
+	//[dipucr-Felipe #665]
+	private static final String ALLOW_DUPLICATED_CLASS_KEY = "DATOSREGLA";
+	
     public CTRuleApp(ClientContext context)
     {
         super(context);
@@ -57,9 +60,11 @@ public class CTRuleApp extends SimpleEntityApp {
 			String clase = getString("CLASE");
 			itemcol = catalogAPI.queryCTEntities(ICatalogAPI.ENTITY_CT_RULE, " WHERE CLASE = '" + DBUtil.replaceQuotes(clase) + "' AND ID != " + getString("ID"));
 			if (itemcol.next()) {
-
-				addError(new ValidationError("property(CLASE)",	"error.rule.classDuplicated", new String[] {clase}));
-				return false;
+				
+				if (!clase.toUpperCase().contains(ALLOW_DUPLICATED_CLASS_KEY)){//[dipucr-Felipe #665]
+					addError(new ValidationError("property(CLASE)",	"error.rule.classDuplicated", new String[] {clase}));
+					return false;
+				}
 			}
 			
 			return true;

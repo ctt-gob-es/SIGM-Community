@@ -6,6 +6,8 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 import java.util.ArrayList;
 
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
+
 /**
  * Ticket #32 - Aviso fin circuito de firma
  * @author Felipe-ecenpri

@@ -13,8 +13,8 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrSERSOComprDineroLibrosComedor implements IRule {
     private static final Logger LOGGER = Logger.getLogger(DipucrSERSOComprDineroLibrosComedor.class);
@@ -51,7 +51,7 @@ public class DipucrSERSOComprDineroLibrosComedor implements IRule {
             Iterator<?> solicitudIterator = solicitudCollection.iterator();
             if (solicitudIterator.hasNext()) {
                 IItem solicitud = (IItem) solicitudIterator.next();
-                tipoAyuda = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
+                tipoAyuda = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
 
                 if (ConstantesPlanEmergencia.LIBROS.equals(tipoAyuda) || ConstantesPlanEmergencia.COMEDOR.equals(tipoAyuda)) {
                     if (ConstantesPlanEmergencia.LIBROS.equals(tipoAyuda)) {
@@ -60,19 +60,19 @@ public class DipucrSERSOComprDineroLibrosComedor implements IRule {
                         columna = ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.IMPORTETOTALCOMEDOR;
                     }
 
-                    convocatoria = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CONVOCATORIA);
-                    ciudad = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD);
+                    convocatoria = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CONVOCATORIA);
+                    ciudad = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD);
 
                     // Recuperamos las cantidades del ayuntamiento en cuestión
-                    IItemCollection cantidadesCol = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.NOMBRE_TABLA, " WHERE LOCALIDAD = '" + ciudad
+                    IItemCollection cantidadesCol = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.NOMBRE_TABLA, ConstantesString.WHERE + " LOCALIDAD = '" + ciudad
                             + "' AND NUMEXPCONVOCATORIA = '" + convocatoria + "'ORDER BY ID LIMIT 1");
                     Iterator<?> cantidadesIt = cantidadesCol.iterator();
                     while (cantidadesIt.hasNext()) {
                         IItem cantidades = (IItem) cantidadesIt.next();
-                        maximoMunicipio = cantidades.getDouble(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TRIMESTRAL);
+                        maximoMunicipio = SubvencionesUtils.getDouble(cantidades, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TRIMESTRAL);
                     }
 
-                    StringBuilder consulta = new StringBuilder(" WHERE ");
+                    StringBuilder consulta = new StringBuilder(ConstantesString.WHERE);
                     consulta.append(" CONVOCATORIA = '" + convocatoria + "'");
                     consulta.append(" AND  CIUDAD = '" + ciudad + "'");
                     consulta.append(" AND (NUMEXP IN (SELECT NUMEXP FROM SPAC_EXPEDIENTES WHERE ESTADOADM IN ('RS','AP', 'AP25','NE', 'NE25','NA','NT', 'NT25'))");
@@ -85,20 +85,11 @@ public class DipucrSERSOComprDineroLibrosComedor implements IRule {
 
                         IItem solicitudes = (IItem) solicitudesIterator.next();
 
-                        IItemCollection concesionLibrosComedorCollection = entitiesAPI
-                                .getEntities(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE_TABLA, solicitudes.getString("NUMEXP"));
+                        IItemCollection concesionLibrosComedorCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE_TABLA, solicitudes.getString("NUMEXP"));
                         Iterator<?> concesionLibrosComedorIterator = concesionLibrosComedorCollection.iterator();
                         if (concesionLibrosComedorIterator.hasNext()) {
                             IItem concesionLibrosComedor = (IItem) concesionLibrosComedorIterator.next();
-
-                            try {
-                                importeSol += Double.parseDouble(concesionLibrosComedor.getString(columna));
-                            } catch (Exception e) {
-                                LOGGER.error(ConstantesString.LOGGER_ERROR + " al dar formato al importe " + concesionLibrosComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.TOTALLIBROS) + " de la ayuda de "
-                                        + tipoAyuda + " del el expediente: " + solicitudes.getString("NUMEXP") + ". " + e.getMessage(), e);
-                                throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + " al dar formato al importe " + concesionLibrosComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.TOTALLIBROS)
-                                        + " de la ayuda de " + tipoAyuda + " del el expediente: " + solicitudes.getString("NUMEXP") + ". " + e.getMessage(), e);
-                            }
+                            importeSol += SubvencionesUtils.getDouble(concesionLibrosComedor, columna);
                         }
                     }
 
@@ -106,28 +97,11 @@ public class DipucrSERSOComprDineroLibrosComedor implements IRule {
                     Iterator<?> concesionLibrosComedorSolIterator = concesionLibrosComedorSolCollection.iterator();
                     if (concesionLibrosComedorSolIterator.hasNext()) {
                         IItem concesionLibrosSolComedor = (IItem) concesionLibrosComedorSolIterator.next();
-
-                        try {
-                            importeSol += Double.parseDouble(concesionLibrosSolComedor.getString(columna));
-                        } catch (Exception e) {
-                            LOGGER.error(ConstantesString.LOGGER_ERROR + " al dar formato al importe " + concesionLibrosSolComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.TOTALLIBROS) + " de la ayuda de "
-                                    + tipoAyuda + " del el expediente: " + numexp + ". " + e.getMessage(), e);
-                            throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + " al dar formato al importe " + concesionLibrosSolComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.TOTALLIBROS)
-                                    + " de la ayuda de " + tipoAyuda + " del el expediente: " + numexp + ". " + e.getMessage(), e);
-                        }
+                        importeSol += SubvencionesUtils.getDouble(concesionLibrosSolComedor, columna);
                     }
 
-                    if (importeSol > maximoMunicipio) {
-                        IItem expediente = ExpedientesUtil.getExpediente(cct, numexp);
-                        if (expediente != null) {
-                            String asunto = expediente.getString("ASUNTO");
-                            if (asunto.indexOf(" - AVISO. Se ha sobrepasado el límite para el municipio.") < 0) {
-                                asunto += " - AVISO. Se ha sobrepasado el límite para el municipio.";
-                            }
-                            expediente.set("ASUNTO", asunto);
-
-                            expediente.store(cct);
-                        }
+                    if (importeSol > maximoMunicipio) {                        
+                        SubvencionesUtils.concatenaTextoAAsunto(cct, numexp, ConstantesPlanEmergencia.DpcrSERSOAvisos.TEXTOASUNTO_LIMITE_MUNICIPIO);                        
                     }
                 }
             }
@@ -141,7 +115,7 @@ public class DipucrSERSOComprDineroLibrosComedor implements IRule {
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
 }

@@ -7,14 +7,18 @@
 
 package ieci.tecdoc.sgm.entidades.ws.client;
 
+
 public class Entidad  extends ieci.tecdoc.sgm.entidades.ws.client.RetornoServicio  implements java.io.Serializable {
-    private java.lang.String codigoINE;
-
+	
+    private java.lang.String codigo_ine;
     private java.lang.String identificador;
-
     private java.lang.String nombreCorto;
-
     private java.lang.String nombreLargo;
+	private String cif;
+	private String password_entidad;
+	private String dir3;
+	private String sia;
+	private String deh;
 
     public Entidad() {
     }
@@ -22,41 +26,72 @@ public class Entidad  extends ieci.tecdoc.sgm.entidades.ws.client.RetornoServici
     public Entidad(
            java.lang.String errorCode,
            java.lang.String returnCode,
-           java.lang.String codigoINE,
+           java.lang.String codigo_ine,
            java.lang.String identificador,
            java.lang.String nombreCorto,
            java.lang.String nombreLargo) {
         super(
             errorCode,
             returnCode);
-        this.codigoINE = codigoINE;
+        this.codigo_ine = codigo_ine;
         this.identificador = identificador;
         this.nombreCorto = nombreCorto;
         this.nombreLargo = nombreLargo;
     }
+    
+       
+    
 
 
-    /**
-     * Gets the codigoINE value for this Entidad.
-     * 
-     * @return codigoINE
-     */
-    public java.lang.String getCodigoINE() {
-        return codigoINE;
-    }
+    public java.lang.String getCodigo_ine() {
+		return codigo_ine;
+	}
 
+	public void setCodigo_ine(java.lang.String codigo_ine) {
+		this.codigo_ine = codigo_ine;
+	}
 
-    /**
-     * Sets the codigoINE value for this Entidad.
-     * 
-     * @param codigoINE
-     */
-    public void setCodigoINE(java.lang.String codigoINE) {
-        this.codigoINE = codigoINE;
-    }
+	public String getCif() {
+		return cif;
+	}
 
+	public void setCif(String cif) {
+		this.cif = cif;
+	}
 
-    /**
+	public String getPassword_entidad() {
+		return password_entidad;
+	}
+
+	public void setPassword_entidad(String password_entidad) {
+		this.password_entidad = password_entidad;
+	}
+
+	public String getDir3() {
+		return dir3;
+	}
+
+	public void setDir3(String dir3) {
+		this.dir3 = dir3;
+	}
+
+	public String getSia() {
+		return sia;
+	}
+
+	public void setSia(String sia) {
+		this.sia = sia;
+	}
+
+	public String getDeh() {
+		return deh;
+	}
+
+	public void setDeh(String deh) {
+		this.deh = deh;
+	}
+
+	/**
      * Gets the identificador value for this Entidad.
      * 
      * @return identificador
@@ -127,9 +162,9 @@ public class Entidad  extends ieci.tecdoc.sgm.entidades.ws.client.RetornoServici
         __equalsCalc = obj;
         boolean _equals;
         _equals = super.equals(obj) && 
-            ((this.codigoINE==null && other.getCodigoINE()==null) || 
-             (this.codigoINE!=null &&
-              this.codigoINE.equals(other.getCodigoINE()))) &&
+            ((this.codigo_ine==null && other.getCodigo_ine()==null) || 
+             (this.codigo_ine!=null &&
+              this.codigo_ine.equals(other.getCodigo_ine()))) &&
             ((this.identificador==null && other.getIdentificador()==null) || 
              (this.identificador!=null &&
               this.identificador.equals(other.getIdentificador()))) &&
@@ -150,8 +185,8 @@ public class Entidad  extends ieci.tecdoc.sgm.entidades.ws.client.RetornoServici
         }
         __hashCodeCalc = true;
         int _hashCode = super.hashCode();
-        if (getCodigoINE() != null) {
-            _hashCode += getCodigoINE().hashCode();
+        if (getCodigo_ine() != null) {
+            _hashCode += getCodigo_ine().hashCode();
         }
         if (getIdentificador() != null) {
             _hashCode += getIdentificador().hashCode();

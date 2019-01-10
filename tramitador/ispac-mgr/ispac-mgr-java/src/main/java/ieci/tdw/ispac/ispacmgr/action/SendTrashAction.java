@@ -67,8 +67,8 @@ public class SendTrashAction extends BaseAction {
 			//FIN [dipucr-Felipe #226]
 		}
 	
-		if (logger.isInfoEnabled()) {
-			logger.info("Expediente [" 
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Expediente [" 
 					+ cct.getStateContext().getNumexp() + "] enviado a la papelera");
 		}
 

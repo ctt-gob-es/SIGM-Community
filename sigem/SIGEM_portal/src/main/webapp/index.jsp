@@ -174,6 +174,7 @@
 						<div class="cuerpo_sec">
 							<ul>
 								<li><a href="../SIGEM_RegistroPresencialWeb"><fmt:message key="apps.bo.registroPresencial.name"/></a></li>
+								<li><a href="../SIGEM_RegistroPresencialMSSSIWeb"><fmt:message key="apps.bo.registroPresencialMSSSI.name"/></a></li>
 							</ul>
 						</div>
 					</div> <!-- fin seccion -->
@@ -335,7 +336,8 @@
 							<ul>
 								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=CONVSUB_01">Convocatoria de Subvenciones a EELL</a></li>
 								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=CONVSUB_ASO">Convocatoria de Subvenciones para Asociaciones</a></li>
-								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=CONVSUB_CIU">Convocatoria de Subvenciones para Personas Físicas</a></li>									
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=CONVSUB_CIU">Convocatoria de Subvenciones para Personas Físicas</a></li>					
+								<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=ALTA_CONV_CULT">Alta Convenios Culturales</a></li>
 							</ul>
 						</div>
 						
@@ -358,6 +360,9 @@
 									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SUBSANACION_JUSTIFICACION">Solicitud de Subsanación, Modificación o Justificación para Ayuntamientos</a></li>
 									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SUBSANACION_JUST_REPRESENT">Solicitud de Subsanación o Modificación para Ciudadanos</a></li>
 									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=SUBSANACION_JUST_REPRESENT">Solicitud de Subsanación o Modificación para Asociaciones</a></li>
+
+									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=CONS_REPRE">Consulta de Entidades Representadas</a></li>
+
 									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=ACCTELEXPAYTOS">Acceso Telemático a Expedientes - AYUNTAMIENTOS</a></li>
 									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=ACCTELEXPCIU">Acceso Telemático a Expedientes - CIUDADANOS</a></li>									
 									<li><a href="../SIGEM_RegistroTelematicoWeb/realizarSolicitudRegistro.do?tramiteId=ACCTELEXPEMP">Acceso Telemático a Expedientes - OTROS</a></li>
@@ -476,6 +481,8 @@
                                 <li><a href="../SIGEM_MensajesCortosWS/services/MensajesCortosWebService?wsdl"><fmt:message key="apps.services.mensajesCortos.name"/></a></li>
 
                                 <li><a href="../SIGEM_NotificacionWS/services/NotificacionesWebService?wsdl"><fmt:message key="apps.services.notificacion.name"/></a></li>
+                                
+                                <li><a href="../SIGEM_PagoElectronicoWS/services/PagoTelematicoWebService?wsdl"><fmt:message key="apps.services.pagoElectronico.name"/></a></li>
 							</ul>
 						</div>
 					</div> <!-- fin seccion -->
@@ -483,8 +490,6 @@
 					<div class="seccion_top">
 						<div class="cuerpo_sec">
 							<ul>
-								<li><a href="../SIGEM_PagoElectronicoWS/services/PagoTelematicoWebService?wsdl"><fmt:message key="apps.services.pagoElectronico.name"/></a></li>
-
                                 <li><a href="../SIGEM_PublicadorWS/services/PublicadorWebService?wsdl"><fmt:message key="apps.services.publicador.name"/></a></li>
 
 								<li><a href="../SIGEM_RdeWS/services/RepositorioDocumentosWebService?wsdl"><fmt:message key="apps.services.rde.name"/></a></li>
@@ -503,6 +508,9 @@
 
 								<li><a href="../SIGEM_GestionCSVWS/services/GestionCSVWebService?wsdl"><fmt:message key="apps.services.gestionCSV.name"/></a></li>
 
+								<!-- [Dipucr-Manu Ticket # 485] + ALSIGM3 Recuperar Documentos por CSV del registro presencial. -->
+								<li><a href="../SIGEM_RegistroPresencialWS/services/AplicacionExternaCSVConnectorWS?wsdl"><fmt:message key="apps.services.registroPresencial.csv.name"/></a></li>
+
 								<li><a href="../SIGEM_RegistroTelematicoWS/services/AplicacionExternaCSVConnectorWS?wsdl"><fmt:message key="apps.services.registroTelematico.csv.name"/></a></li>
 
 								<li><a href="../SIGEM_TramitacionWS/services/AplicacionExternaCSVConnectorWS?wsdl"><fmt:message key="apps.services.tramitacion.csv.name"/></a></li>
@@ -510,6 +518,9 @@
 								<li><a href="../SIGEM_ArchivoWeb/services/WSTransferencias?wsdl"><fmt:message key="apps.services.archivo.transferencias.documentos.electronicos.name"/></a></li>
 
 								<li><a href="../SIGEM_SignoWS/services/LiquidacionPlusvalias.wsdl"><fmt:message key="apps.services.notariado.signo.name"/></a></li>
+								
+								<!-- [Dipucr-Manu Ticket] + ALSIGM3 Servicio Web de Contratación. -->
+								<li><a href="../SIGEM_TramitacionWS/services/LicitacionElectronicaWS?wsdl"><fmt:message key="apps.services.tramitacion.licitacion.name"/></a></li>
 							</ul>
 						</div>
 					</div> <!-- fin seccion -->

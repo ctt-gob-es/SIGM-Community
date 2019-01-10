@@ -5,7 +5,7 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class GenerateCertificadoAsistenciaCOMIBieSociRule extends GenerateCertificadoAsistenciaRule{
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		STR_NombreDocCertificado  = "Certificado de Asistencia COMI Bienestar Social";
+		nombreDocCertificado  = "Certificado de Asistencia COMI Bienestar Social";
 		return true;
 	}
 }

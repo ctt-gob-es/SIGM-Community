@@ -86,7 +86,7 @@ public class Util {
 	    pw.close();
 	    baos.close();
 	} catch(Exception ee) {
-	    ee.printStackTrace();
+		logger.error("ERROR. " + ee.getMessage(), ee);
 	}
 	return s;
     }
@@ -148,7 +148,7 @@ public class Util {
 		impl=DEFECTO;
 
 	} catch (javax.xml.soap.SOAPException e) {
-	    e.printStackTrace();
+		logger.error("ERROR. " + e.getMessage(), e);
 	    impl=DEFECTO;
 	}
 

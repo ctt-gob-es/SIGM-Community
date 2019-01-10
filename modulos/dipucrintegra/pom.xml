@@ -48,12 +48,26 @@
 		</developer>
 	</developers>
 
-		<properties>
+	<issueManagement>
+		<system>Trac Open Sourced Project</system>
+		<url>http://10.12.200.179/trac/SIGEM_incidencias/</url>
+	</issueManagement>
+
+	<properties>
 		<ispac.version>6.4.1</ispac.version>
 
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
 
 	</properties>
+	
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
+
   <profiles>
 		<profile>
 			<id>mygrid-repository</id>
@@ -168,7 +182,7 @@
 		<repository>
 			<id>DipucrRepDeploy</id>
 			<name>Repositorio de la Diputación de Ciudad Real</name>
-			<url>http://ipservernexus/nexus/content/repositories/DipucrRepo/</url>
+			<url>http://10.12.200.113:8081/nexus/content/repositories/DipucrRepo/</url>
 		</repository>
 	</distributionManagement>
 	

@@ -12,6 +12,8 @@ import com.ieci.tecdoc.common.AuthenticationUser;
 import com.ieci.tecdoc.common.invesdoc.Idocfdrstat;
 import com.ieci.tecdoc.common.invesicres.ScrAddress;
 import com.ieci.tecdoc.common.invesicres.ScrDistreg;
+import com.ieci.tecdoc.common.invesicres.ScrDocumentMetadatos;
+import com.ieci.tecdoc.common.invesicres.ScrModifDoc;
 import com.ieci.tecdoc.common.invesicres.ScrModifreg;
 import com.ieci.tecdoc.common.invesicres.ScrPageInfo;
 import com.ieci.tecdoc.common.invesicres.ScrRegasoc;
@@ -119,5 +121,34 @@ public class ISicresSaveQueries {
 		}
 		scr.setOrd(order);
 		session.save(scr);
+	}
+	
+	public static void saveScrModifDoc(Session session, Integer id, String userName, Date modifDate, String numReg, int bookId, int tipoDoc, String nombreDoc, String nombreDocNuevo, int accion) throws HibernateException {
+		ScrModifDoc scrModifdoc = new ScrModifDoc();
+		scrModifdoc.setId(id);
+		scrModifdoc.setUsr(userName);
+		scrModifdoc.setModifDate(modifDate);
+		scrModifdoc.setNumReg(numReg);
+		scrModifdoc.setIdArch(bookId);
+		scrModifdoc.setTipoDoc(tipoDoc);
+		scrModifdoc.setNombreDoc(nombreDoc);
+		scrModifdoc.setNombreDocNuevo(nombreDocNuevo);
+		scrModifdoc.setAccion(accion);
+		
+		session.save(scrModifdoc);
+	}
+	
+	public static void saveScrDocumentMetadato(Session session, Integer id, int idBook, int idFld, int idPage, int idFile, String nombreMetadato, String valorMetadato) throws HibernateException {
+		ScrDocumentMetadatos scrDocumentMetadato = new ScrDocumentMetadatos();
+		
+		scrDocumentMetadato.setId(id);
+		scrDocumentMetadato.setIdBook(idBook);
+		scrDocumentMetadato.setIdFld(idFld);
+		scrDocumentMetadato.setIdPage(idPage);
+		scrDocumentMetadato.setIdFile(idFile);
+		scrDocumentMetadato.setNombreMetadato(nombreMetadato);
+		scrDocumentMetadato.setValorMetadato(valorMetadato);
+		
+		session.save(scrDocumentMetadato);
 	}
 }

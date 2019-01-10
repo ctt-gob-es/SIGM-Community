@@ -93,6 +93,7 @@ public class DipucrTreeStagesComponent extends AbstractProcedureTreeComponent {
     			+ "				<option value='----'> - TODOS - </option>"
     			+ "			</options>"
     			+ "		</select>"
+    			+ "		Búsqueda rápida de expedientes: <input id='searcher' type='text' name='searcher'>" //[dipucr-Felipe-Alberto #510]
     			+ "		</h1>"
     			+ "		<script>"
     			+ "			var anioSelect = '" + anio + "';"
@@ -106,6 +107,7 @@ public class DipucrTreeStagesComponent extends AbstractProcedureTreeComponent {
     			+ "				}"
     			+ "			}"
     			+ "		</script>"    			
+    			+ "<script type='text/javascript' src='./ispac/scripts/searcher.js'></script>"//[dipucr-Felipe-Alberto #510]
     			+ drawPcdTree(ctx, context, request, getProcedureTree(ctx), stagesMap);
 			//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 		setContent(html);
@@ -167,7 +169,7 @@ public class DipucrTreeStagesComponent extends AbstractProcedureTreeComponent {
     			Iterator<?> stages = stagesMap.iterator(new Long(item.getString("SPAC_P_PROCEDIMIENTO:ID")));
     			
     			if(stages.hasNext()){
-    				stagesHTML += "<ul>";
+    				stagesHTML += "<ul class=\"fases\">";//[dipucr-Felipe-Alberto #510]
     				
 					while(stages.hasNext()){
 		    			

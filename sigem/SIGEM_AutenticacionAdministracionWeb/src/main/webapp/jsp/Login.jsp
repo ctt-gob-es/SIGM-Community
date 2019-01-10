@@ -191,9 +191,8 @@
 					              </p>
 
 					                <%
-					                if (!ConstantesGestionUsuariosAdministracion.APLICACION_ADMINISTRACION.equals(idApp)) {
-					                //DESCOMENTAR LINEA ANTERIOR Y COMENTAR SIGUIENTE PARA QUE FUNCIONE CON USUARIOS DE BACKOFFICE
-					                //if (ConstantesGestionUsuariosAdministracion.APLICACION_ADMINISTRACION.equals("2002020321284391.123")) {
+									//[Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+					                if (ConstantesGestionUsuariosAdministracion.APLICACION_CATALOGO_PROCEDIMIENTOS.equals(idApp)) {
 					                %>
 
 						              <p class="fila">

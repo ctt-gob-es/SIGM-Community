@@ -29,6 +29,7 @@ import ieci.tdw.ispac.ispacweb.util.DocumentUtil;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -49,6 +50,9 @@ import es.dipucr.sigem.api.firma.xml.peticion.ObjectFactoryFirmaLotesPeticion;
 import es.dipucr.sigem.api.firma.xml.peticion.Signbatch;
 import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.FirmaLotesError;
+import es.dipucr.sigem.api.rule.common.utils.FirmaLotesUtil;
+import es.dipucr.sigem.api.rule.common.utils.GestorDatosFirma;
 import es.dipucr.sigem.api.rule.common.utils.GestorMetadatos;
 import es.dipucr.sigem.api.rule.common.utils.UsuariosUtil;
 
@@ -63,11 +67,12 @@ public class SignAllDocumentAction extends BaseDispatchAction
   private static final String ITEM_SEPARATOR = ":";
   protected static final String SIGN_DOCUMENT_IDS_PARAM = "SIGN_DOCUMENT_IDS";
   protected static final String SIGN_DOCUMENT_HASHCODES_PARAM = "SIGN_DOCUMENT_HASHCODES";
-  private static final String DATASOURCE_WEBSERVICE = "webservice";
-  private static final String EXTRAPARAM_DOC_CODIGO_ENTIDAD = "codent=";
-  private static final String EXTRAPARAM_DOC_GLOBALLY_UNIQUE_IDENTIFIER = "guid=";
-  private static final String EXTRAPARAM_DOC_TEMP_WEBSERVICE_ENDPOINT_DATASOURCE = "datasource=";
-  public static final Logger logger = Logger.getLogger(SignAllDocumentAction.class);
+
+  public static final Logger LOGGER = Logger.getLogger(SignAllDocumentAction.class);
+  
+  protected static final String ERROR_TITULO = "firmar.titulo";
+  protected static final String ERROR_TEXTO = "firmar.texto";
+  protected static final String ERROR_MAPPING = "nofirmar";
   
   /**
      * [eCenpri-Agustin S3 #94] Integracion de firma 3 fases y firma lotes  
@@ -85,28 +90,21 @@ public class SignAllDocumentAction extends BaseDispatchAction
   public ActionForward initSign(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response, SessionAPI session)
     throws Exception
   {
-    OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
-    String entityId = info.getOrganizationId();
-    FirmaConfiguration fc = FirmaConfiguration.getInstanceNoSingleton(entityId);
-    String sDeshabilitarFirma = fc.getProperty("firmar.deshabilitar");
-    
-    boolean bDeshabilitarFirma = false;
-    if (StringUtils.isNotEmpty(sDeshabilitarFirma)) {
-      bDeshabilitarFirma = Boolean.valueOf(sDeshabilitarFirma).booleanValue();
-    }
-    
-    //Codigo para deshabilitar temporalmente la firma
-    if (bDeshabilitarFirma)
-    {
-      String titulo = fc.getProperty("firmar.titulo");
-      String texto = fc.getProperty("firmar.texto");
-      request.setAttribute("firmar.titulo", titulo);
-      request.setAttribute("firmar.texto", texto);
-      return mapping.findForward("nofirmar");
-    }
+	//Código de entidad
+	ClientContext cct = session.getClientContext();
+	String codEntidad = OrganizationUser.getOrganizationUserInfo().getOrganizationId();
+	
+	//INICIO [eCenpri-Felipe #818]
+	FirmaLotesError error = FirmaLotesUtil.getErrorDeshabilitar(codEntidad);
+	if (null != error){
+		request.setAttribute(ERROR_TITULO, error.getTitulo());
+		request.setAttribute(ERROR_TEXTO, error.getTexto());
+		return mapping.findForward(ERROR_MAPPING);
+	}
+	//FIN [eCenpri-Felipe #818]
+	
     ISignAPI signAPI = session.getAPI().getSignAPI();
     IState state = enterState(request, session, response);
-    ClientContext cct = session.getClientContext();
     IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(cct);
     IState currentState = managerAPI.currentState(getStateticket(request));
     
@@ -133,28 +131,17 @@ public class SignAllDocumentAction extends BaseDispatchAction
     IItemCollection collAllDoc = DocumentosUtil.queryDocumentos(cct, strQuery);
     Iterator itcollAllDoc = collAllDoc.iterator();
     
-    String codEntidad = OrganizationUser.getOrganizationUserInfo().getOrganizationId();
-    
-    //Obtencion de datos del firmante
-    String nombreFirmante = UsuariosUtil.getNombreFirma(cct);
-    String docIdentidad = UsuariosUtil.getDni(cct);
-    String numeroSerie = UsuariosUtil.getNumeroSerie(cct);
-    InfoFirmante infoFirmante = new InfoFirmante();
-    infoFirmante.setIdDocumentoDeIdentidadEnCertificado(numeroSerie);
-    infoFirmante.setIdDocumentoDeIdentidadEnCertificado(docIdentidad);
-    infoFirmante.setNombreFirmante(nombreFirmante);
-    //INICIO [dipucr-Felipe 3#231]
-    if (StringUtils.isEmpty(nombreFirmante) || StringUtils.isEmpty(numeroSerie)) {
-		
-		//TODO: Coger los textos de un resources
-		request.setAttribute("firmar.titulo", "Error al realizar la firma");
-		request.setAttribute("firmar.texto", "NO SE HA PODIDO REALIZAR LA FIRMA.<br/><br/>" +
-		"El usuario con el que está accediendo no tiene configurada la firma en SIGEM.<br/>" +
-		"Por favor, consulte con el departamento de Informática para actualizar sus datos de firma." +
-		"<br/><br/>Gracias y un saludo.");
-		return mapping.findForward("nofirmar");
-	}
-    //FIN [dipucr-Felipe 3#231]
+    //Informacion del firmante
+  	InfoFirmante infoFirmante = FirmaLotesUtil.getInfoFirmante(cct, codEntidad);
+  		
+  	//INICIO [dipucr-Felipe 3#231]
+  	error = FirmaLotesUtil.getErrorFirmanteNoConfigurado(codEntidad, infoFirmante);
+  	if (null != error) {
+  		request.setAttribute(ERROR_TITULO, error.getTitulo());
+  		request.setAttribute(ERROR_TEXTO, error.getTexto());
+  		return mapping.findForward(ERROR_MAPPING);
+  	}
+  	//FIN [dipucr-Felipe 3#231]
     
     //Lectura del properties de firma
     List<String> hashCodes = new ArrayList();
@@ -162,21 +149,9 @@ public class SignAllDocumentAction extends BaseDispatchAction
     String nodos = "";
     int count = 0;
     
-    String firmar_lotes_algorithm = fc.getProperty("firmar.lotes.algorithm");
-    String firmar_lotes_format = fc.getProperty("firmar.lotes.format");
-    String firmar_lotes_stoponerror = fc.getProperty("firmar.lotes.stoponerror");
-    String firmar_lotes_suboperation = fc.getProperty("firmar.lotes.suboperation");
-    String firmar_lotes_concurrenttimeout = fc.getProperty("firmar.lotes.concurrenttimeout");
-    String firmar_lotes_signsaver = fc.getProperty("firmar.lotes.signsaver");
-    
-    //Construir peticion al servidor de firma
     ObjectFactoryFirmaLotesPeticion peticion = new ObjectFactoryFirmaLotesPeticion();
-    BigInteger concurrenttimeout = new BigInteger(firmar_lotes_concurrenttimeout);
+	Signbatch signbatch = FirmaLotesUtil.getSignBatch(cct, peticion);
     
-    Signbatch signbatch = peticion.createSignbatch();
-    signbatch.setAlgorithm(firmar_lotes_algorithm);
-    signbatch.setStoponerror(firmar_lotes_stoponerror);
-    signbatch.setConcurrenttimeout(concurrenttimeout);
     if (itcollAllDoc.hasNext())
     {
       HashMap infoFirmas = new HashMap();
@@ -196,55 +171,21 @@ public class SignAllDocumentAction extends BaseDispatchAction
         String idDoc = String.valueOf(signDocument.getItemDoc().getKeyInt());
         
         docRef = signAPI.presign(signDocument, true);
-        logger.info("Prefirma realizada, el iddocumento temporal es: " + docRef);
+        LOGGER.info("Prefirma realizada, el iddocumento temporal es: " + docRef);
         
         hashCodes.add(docRef);
-        
-        String url_ = DocumentUtil.generateURL(request, "download", session.getTicket(), idDoc, null);
-        String url = "webservice";
-        
-        byte[] extraparamsBase64 = null;
-        byte[] configSignSaberBase64 = null;
-        
-        String firmar_lotes_extraparams = fc.getProperty("firmar.lotes.extraparams");
-        String firmar_lotes_signsaver_config_path = fc.getProperty("firmar.lotes.signsaver.config");
-        firmar_lotes_extraparams = firmar_lotes_extraparams.concat("\n");
-        
-        String firmar_lotes_extraparams_sigem = "";
-        firmar_lotes_extraparams_sigem = firmar_lotes_extraparams_sigem.concat("datasource=");
-        firmar_lotes_extraparams_sigem = firmar_lotes_extraparams_sigem.concat(firmar_lotes_signsaver_config_path.substring(firmar_lotes_signsaver_config_path.indexOf("=") + 1));
-        
-        firmar_lotes_extraparams_sigem = firmar_lotes_extraparams_sigem.concat("\n");
-        firmar_lotes_extraparams_sigem = firmar_lotes_extraparams_sigem.concat("codent=");
-        firmar_lotes_extraparams_sigem = firmar_lotes_extraparams_sigem.concat(entityId);
-        
-        firmar_lotes_extraparams_sigem = firmar_lotes_extraparams_sigem.concat("\n");
-        firmar_lotes_extraparams_sigem = firmar_lotes_extraparams_sigem.concat("guid=");
-        firmar_lotes_extraparams_sigem = firmar_lotes_extraparams_sigem.concat((String)hashCodes.get(count));
-        
-        firmar_lotes_extraparams = firmar_lotes_extraparams.concat(firmar_lotes_extraparams_sigem);
-        
-        extraparamsBase64 = firmar_lotes_extraparams.getBytes();
-        configSignSaberBase64 = firmar_lotes_signsaver_config_path.getBytes();
-        
-        Signbatch.Singlesign.Signsaver signsaver = peticion.createSignbatchSinglesignSignsaver();
-        signsaver.setClazz(firmar_lotes_signsaver);
-        signsaver.setConfig(configSignSaberBase64);
-        
-        Signbatch.Singlesign singlesign = peticion.createSignbatchSinglesign();
-        singlesign.setId(Integer.toString(count));
-        singlesign.setDatasource(url);
-        singlesign.setFormat(firmar_lotes_format);
-        singlesign.setSuboperation(firmar_lotes_suboperation);
-        singlesign.setExtraparams(extraparamsBase64);
-        singlesign.setSignsaver(signsaver);
+
+        String extraparams = FirmaLotesUtil.getFirmaExtraParams(codEntidad, cct, infoFirmante, 
+        		signDocument.getDocumentType(), docRef, 1, 1, new Date());
+		Signbatch.Singlesign singlesign = FirmaLotesUtil.getSingleSign(cct, peticion, codEntidad, count, extraparams);
+		signbatch.getSinglesign().add(singlesign);
         
         signbatch.getSinglesign().add(singlesign);
         
         count++;
       }
-      try
-      {
+      
+      try {
         JAXBContext jaxbContext = JAXBContext.newInstance(new Class[] { ObjectFactoryFirmaLotesPeticion.class });
         
         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
@@ -254,10 +195,9 @@ public class SignAllDocumentAction extends BaseDispatchAction
         jaxbMarshaller.setProperty("com.sun.xml.bind.xmlDeclaration", Boolean.FALSE);
         jaxbMarshaller.marshal(signbatch, sw);
         result = result.concat(sw.toString());
-      }
-      catch (JAXBException e)
-      {
-        e.printStackTrace();
+      
+      } catch (JAXBException e) {
+    	  LOGGER.error("Error al generar la lista de documetos a firmar: " + e.getMessage(), e);
       }
       
       //Guardar en la sesion y en el form el xml generado para el envio al servidor de firma y 
@@ -266,7 +206,7 @@ public class SignAllDocumentAction extends BaseDispatchAction
       
       BatchSignForm batchSignForm = (BatchSignForm)form;
       
-      batchSignForm.setSerialNumber(numeroSerie);
+      batchSignForm.setSerialNumber(infoFirmante.getNumeroSerie());
       batchSignForm.setListaDocs(result);
       batchSignForm.setCodEntidad(codEntidad);
       batchSignForm.setInfoFirma(infoFirmas);
@@ -351,10 +291,13 @@ public class SignAllDocumentAction extends BaseDispatchAction
         //[DipuCR-Agustin] #150 Agregar metadatos
 		GestorMetadatos.storeMetada(session, signDocument, autorCert, null);
 		
+		//[dipucr-Felipe #817]
+		GestorDatosFirma.storeDatosFirma(cct, signDocument, null);
+		
       }
       catch (ISPACException e)
       {
-        logger.error("Error al firmar el documento:" + document.getKeyInt() + " - " + document.getString("NOMBRE") + " [" + document.getString("DESCRIPCION") + "]", e);
+        LOGGER.error("Error al firmar el documento:" + document.getKeyInt() + " - " + document.getString("NOMBRE") + " [" + document.getString("DESCRIPCION") + "]", e);
         
         Map<String, Object> map = new HashMap();
         map.put("documento", new ItemBean(document));
@@ -486,7 +429,7 @@ public class SignAllDocumentAction extends BaseDispatchAction
 		    
 	} catch (ISPACException e) {
 		
-			logger.error(
+			LOGGER.error(
 					"Error al iniciar el circuito de firmas para el documento:"
 							+ IDoc.getKeyInt() + " - "
 							+ IDoc.getString("NOMBRE") + " ["

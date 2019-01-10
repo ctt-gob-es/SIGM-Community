@@ -160,7 +160,7 @@ public class DipucrGeneraAnunciosConvocatoriaSubv implements IRule {
 			    		if(doc != null){
 			    			String infoPag = doc.getString("INFOPAG");
 				        	File fileBases = DocumentosUtil.getFile(cct, infoPag, null, null);
-				        	DipucrCommonFunctions.Concatena(xComponent, "file://" + fileBases.getPath(), ooHelper);
+				        	DipucrCommonFunctions.concatena(xComponent, "file://" + fileBases.getPath());
 				        	fileBases.delete();
 						}
 			    		
@@ -181,8 +181,12 @@ public class DipucrGeneraAnunciosConvocatoriaSubv implements IRule {
 			    		entityTemplateT.delete(cct);
 						entityDocumentT.delete(cct);
 						
-						DocumentosUtil.deleteFile(sFileTemplate);					
-						if(ooHelper!= null) ooHelper.dispose();
+						DocumentosUtil.deleteFile(sFileTemplate);
+						
+						if(null != ooHelper){
+				        	ooHelper.dispose();
+						}
+						
 						cct.endTX(true);
 					}
 					else{

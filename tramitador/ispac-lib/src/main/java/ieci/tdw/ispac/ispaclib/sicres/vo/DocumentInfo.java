@@ -24,6 +24,19 @@ public class DocumentInfo {
 	/* Contenido del fichero asociado al documento.
 	 */
     private byte[] data;
+        
+    /* Tipo documental
+     */
+    private String tipoDocumental;
+
+    /* Tipo de firma del documento
+     */
+    private String tipoFirma;
+    
+    /* CSV del documento
+     */
+    private String csv;
+    
 
     public DocumentInfo() {
     }
@@ -43,7 +56,15 @@ public class DocumentInfo {
 			Date date) {
 		this(id, name, data);
 		this.date = date;
-    }    
+    }
+    
+    public DocumentInfo(String id, String name, byte[] data, Date date, String tipoDocumental, String tipoFirma, String csv) {
+		this(id, name, data);
+		this.date = date;
+		this.tipoDocumental = tipoDocumental;
+		this.tipoFirma = tipoFirma;
+		this.csv = csv;
+    } 
     
 	/**
 	 * @return Returns the id.
@@ -92,4 +113,27 @@ public class DocumentInfo {
 		this.date = date;
 	}
 
+	public String getTipoDocumental() {
+		return tipoDocumental;
+	}
+
+	public void setTipoDocumental(String tipoDocumental) {
+		this.tipoDocumental = tipoDocumental;
+	}
+
+	public String getTipoFirma() {
+		return tipoFirma;
+	}
+
+	public void setTipoFirma(String tipoFirma) {
+		this.tipoFirma = tipoFirma;
+	}
+
+	public String getCsv() {
+		return csv;
+	}
+
+	public void setCsv(String csv) {
+		this.csv = csv;
+	}
 }

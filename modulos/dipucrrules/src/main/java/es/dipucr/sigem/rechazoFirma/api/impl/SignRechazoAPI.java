@@ -93,7 +93,8 @@ public class SignRechazoAPI extends SignAPI {
 				String observaciones = tramiteDAO.getString("OBSERVACIONES");
 				if(observaciones != null && !observaciones.equals("")) observaciones += "\n";
 				else observaciones="";
-				observaciones += "Rechazado: "+ motivoRechazo;
+				String nombreUsuarioRechazo = mcontext.getUser().getName();
+				observaciones += "Rechazado por " + nombreUsuarioRechazo + ": "+ motivoRechazo;
 				//observaciones += motivoRechazo;
 				if(observaciones.length()>254) observaciones = observaciones.substring(0,253);
 				tramiteDAO.set("OBSERVACIONES", observaciones);

@@ -8,9 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.displaytag.model.Cell;
 
 public class DateComparatorWithOutYear implements Comparator {
+	
+	private static final Logger LOGGER = Logger.getLogger(DateComparatorWithOutYear.class);
 	
     DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     
@@ -32,7 +35,7 @@ public class DateComparatorWithOutYear implements Comparator {
     		try {
     			return DateUtil.compare(init, end);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("ERROR. " + e.getMessage(), e);
 			}
         }else if((object1 instanceof Cell) && (object2 instanceof Cell)){
     		try {
@@ -40,7 +43,7 @@ public class DateComparatorWithOutYear implements Comparator {
 	        	Date end = (Date)formatter.parse(((Cell)object2).getStaticValue().toString()+"/2000");
     			return DateUtil.compare(init, end);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("ERROR. " + e.getMessage(), e);
 			}
         }else if((object1 instanceof String) && (object2 instanceof String)){
     		try {
@@ -48,7 +51,7 @@ public class DateComparatorWithOutYear implements Comparator {
 	        	Date end = (Date)formatter.parse((String)object2+"/2000");
     			return DateUtil.compare(init, end);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("ERROR. " + e.getMessage(), e);
 			}
         	
         }else if((object1 instanceof Comparable) && (object2 instanceof Comparable))

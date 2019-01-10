@@ -1,6 +1,5 @@
 package es.dipucr.sigem.api.rule.procedures.intervencion.creditosExtraordinarios;
 
-import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACInfo;
@@ -14,7 +13,6 @@ import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.util.Calendar;
 import com.sun.star.connection.NoConnectException;
 import com.sun.star.lang.DisposedException;
 
@@ -30,7 +28,7 @@ import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
  */
 public class DipucrGeneraOficiosRemision implements IRule {
 	
-	private static final Logger logger = Logger.getLogger(DipucrGeneraOficiosRemision.class);
+	private static final Logger LOGGER = Logger.getLogger(DipucrGeneraOficiosRemision.class);
 	
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		return true;
@@ -42,25 +40,16 @@ public class DipucrGeneraOficiosRemision implements IRule {
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
 		try{
-			logger.info("INICIO - " + this.getClass().getName());
+			LOGGER.info("INICIO - " + this.getClass().getName());
 		
 			// APIs
 			IClientContext cct = rulectx.getClientContext();
-			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
 			IGenDocAPI gendocAPI = cct.getAPI().getGenDocAPI();
 			
-			IItem processTask =  entitiesAPI.getTask(rulectx.getTaskId());
-			
 			String numExp = rulectx.getNumExp();
-			String nombre = "";
-	    	String dirnot = "";
-	    	String c_postal = "";
-	    	String localidad = "";
-	    	String caut = "";
-	    	String recurso = "";
+
 	    	String id_ext = "";
-	    	//String recursoTexto = "";
-	    	String observaciones = "";
+
 	    	Object connectorSession = null;
 			
 			String plantillaDefecto = DocumentosUtil.getPlantillaDefecto(cct, rulectx.getTaskProcedureId());
@@ -75,72 +64,7 @@ public class DipucrGeneraOficiosRemision implements IRule {
 				
 					if (participante!=null){
 			        
-			        	if ((String)participante.get("NOMBRE")!=null){
-			        		nombre = (String)participante.get("NOMBRE");
-			        	}else{
-			        		nombre = "";
-			        	}
-			        	if ((String)participante.get("DIRNOT")!=null){
-			        		dirnot = (String)participante.get("DIRNOT");
-			        	}else{
-			        		dirnot = "";
-			        	}
-			        	if ((String)participante.get("C_POSTAL")!=null){
-			        		c_postal = (String)participante.get("C_POSTAL");
-			        	}else{
-			        		c_postal = "";
-			        	}
-			        	if ((String)participante.get("LOCALIDAD")!=null){
-			        		localidad = (String)participante.get("LOCALIDAD");
-			        	}else{
-			        		localidad = "";
-			        	}
-			        	if ((String)participante.get("CAUT")!=null){
-			        		caut = (String)participante.get("CAUT");
-			        	}else{
-			        		caut = "";
-			        	}
-			        	if ((String)participante.get("RECURSO")!=null){
-			        		recurso = (String)participante.get("RECURSO");
-			        	}else{
-			        		recurso = "";
-			        	}
-			        	
-			        	if ((String)participante.get("ID_EXT")!=null){
-			        		id_ext = (String)participante.get("ID_EXT");
-			        	}else{
-			        		id_ext = "";
-			        	}
-			        	
-			        	if ((String)participante.get("OBSERVACIONES")!=null){
-			        		observaciones = (String)participante.get("OBSERVACIONES");
-			        	}else{
-			        		observaciones = "";
-			        	}
-
-			        	// Obtener el sustituto del recurso en la tabla SPAC_VLDTBL_RECURSOS
-			        	String sqlQueryPart = "WHERE VALOR = '"+recurso+"'";
-			        	IItemCollection colRecurso = entitiesAPI.queryEntities("DPCR_RECURSOS", sqlQueryPart);
-			        	if (colRecurso.iterator().hasNext()){
-			        		IItem iRecurso = (IItem)colRecurso.iterator().next();
-			        		recurso = iRecurso.getString("SUSTITUTO");
-			        	}
-			        	if (recurso.equals("")){
-			        		recurso += es.dipucr.sigem.api.rule.procedures.Constants.SECRETARIAPROC.sinRECUSO;
-			        	}
-			        	else{
-			        		recurso += es.dipucr.sigem.api.rule.procedures.Constants.SECRETARIAPROC.conRECUSO;
-			        	}
-			        	
-			        	cct.setSsVariable("NOMBRE", nombre);
-			        	cct.setSsVariable("DIRNOT", dirnot);
-			        	cct.setSsVariable("C_POSTAL", c_postal);
-			        	cct.setSsVariable("LOCALIDAD", localidad);
-			        	cct.setSsVariable("CAUT", caut);
-			        	cct.setSsVariable("RECURSO", recurso);
-			        	cct.setSsVariable("OBSERVACIONES", observaciones);
-			        	cct.setSsVariable("ANIO", ""+Calendar.getInstance().get(Calendar.YEAR));
-			        	cct.setSsVariable("NOMBRE_TRAMITE", processTask.getString("NOMBRE"));							        	
+						DocumentosUtil.setParticipanteAsSsVariable(cct, participante);	        	
 
 						// Generar el documento a partir la plantilla
 						IItem entityTemplate = DocumentosUtil.generarDocumento(rulectx, plantillaDefecto,null);
@@ -149,25 +73,16 @@ public class DipucrGeneraOficiosRemision implements IRule {
 						String sMimetype = gendocAPI.getMimeType(connectorSession, docref);
 						entityTemplate.set("EXTENSION", MimetypeMapping.getExtension(sMimetype));
 						String templateDescripcion = entityTemplate.getString("DESCRIPCION");
-						entityTemplate.set("DESCRIPCION", templateDescripcion+" - "+nombre);
+						entityTemplate.set("DESCRIPCION", templateDescripcion+" - "+participante.getString(ParticipantesUtil.NOMBRE));
 						entityTemplate.set("DESTINO", cct.getSsVariable("NOMBRE"));
 						entityTemplate.set("DESTINO_ID", id_ext);
 
 						entityTemplate.store(cct);
 				        
 						// Si todo ha sido correcto borrar las variables de la session
-						cct.deleteSsVariable("NOMBRE");
-						cct.deleteSsVariable("DIRNOT");
-						cct.deleteSsVariable("C_POSTAL");
-						cct.deleteSsVariable("LOCALIDAD");
-						cct.deleteSsVariable("CAUT");
-						cct.deleteSsVariable("RECURSO");
-						//cct.deleteSsVariable("RECURSO_TEXTO");
-						cct.deleteSsVariable("OBSERVACIONES");
-						cct.deleteSsVariable("ANIO");
-			        	cct.deleteSsVariable("NOMBRE_TRAMITE");
+						DocumentosUtil.borraParticipanteSsVariable(cct);
 				    }
-				}catch (Throwable e) {
+				}catch (Exception e) {
 					
 					// Si se produce algún error se hace rollback de la transacción
 					cct.endTX(false);
@@ -180,21 +95,18 @@ public class DipucrGeneraOficiosRemision implements IRule {
 						
 						if (eCause.getCause() instanceof NoConnectException) {
 							extraInfo = "exception.extrainfo.documents.openoffice.off"; 
-						}
-						else {
+						} else {
 							extraInfo = eCause.getCause().getMessage();
 						}
-					}
-					else if (eCause instanceof DisposedException) {
+					} else if (eCause instanceof DisposedException) {
 						extraInfo = "exception.extrainfo.documents.openoffice.stop";
-					}
-					else {
+					} else {
 						extraInfo = e.getMessage();
 					}
-	            	logger.error("Error en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+	            	LOGGER.error("Error en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
 					throw new ISPACInfo(message, extraInfo);
 					
-				}finally {
+				} finally {
 					
 					if (connectorSession != null) {
 						gendocAPI.closeConnectorSession(connectorSession);
@@ -202,16 +114,14 @@ public class DipucrGeneraOficiosRemision implements IRule {
 				}
 			}// for
 			cct.endTX(true);
-			logger.info("FIN - " + this.getClass().getName());
-		} catch(Exception e) {
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException(e);
+			LOGGER.info("FIN - " + this.getClass().getName());
+		} catch(Exception e) {        	
+        	throw new ISPACRuleException("No se han generado los oficios de remisión", e);
         }
 		return null;
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-
+		// Empty method
 	}	
 }

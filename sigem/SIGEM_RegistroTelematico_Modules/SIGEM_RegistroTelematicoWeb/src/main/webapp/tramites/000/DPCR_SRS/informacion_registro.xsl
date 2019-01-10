@@ -10,37 +10,37 @@
 	
 	<xsl:template match="/">
 		<div class="col" xml:space="preserve">
-			<label class="gr" style="position: relative; width:170px;">
+			<label class="gr" style="position: relative; width:100%; font-weight:bold;">
 				<xsl:value-of select="$lang.docIdentidad"/>:	
 			</label>
-			<label class="gr" style="position: relative; width:460px;">
+			<label class="gr" style="position: relative; width:100%; padding-left:5px; text-align: justify;">
 				<xsl:value-of select="Solicitud_Registro/Datos_Firmados/Datos_Genericos/Remitente/Documento_Identificacion/Numero"/>
 			</label>
 			<br/>
 		</div>
 		<div class="col">
-			<label class="gr" style="position: relative; width:170px;">
+			<label class="gr" style="position: relative; width:100%; font-weight:bold;">
 				<xsl:value-of select="$lang.nombre"/>:	
 			</label>
-			<label class="gr" style="position: relative; width:460px;">
+			<label class="gr" style="position: relative; width:100%; padding-left:5px; text-align: justify;">
 				<xsl:value-of select="Solicitud_Registro/Datos_Firmados/Datos_Genericos/Remitente/Nombre"/>
 			</label>
 			<br/>
 		</div>
 		<div class="col">
-			<label class="gr" style="position: relative; width:170px;">
+			<label class="gr" style="position: relative; width:100%; font-weight:bold;">
 				<xsl:value-of select="$lang.email"/>:	
 			</label>
-			<label class="gr" style="position: relative; width:460px;">
+			<label class="gr" style="position: relative; width:100%; padding-left:5px; text-align: justify;">
 				<xsl:value-of select="Solicitud_Registro/Datos_Firmados/Datos_Genericos/Remitente/Correo_Electronico"/>
 			</label>
 			<br/>
 		</div>
 		<div class="col">
-			<label class="gr" style="position: relative; width:170px;">
+			<label class="gr" style="position: relative; width:100%; font-weight:bold;">
 				<xsl:value-of select="$lang.numRegistro"/>:	
 			</label>
-			<label class="gr" style="position: relative; width:460px;">
+			<label class="gr" style="position: relative; width:100%; padding-left:5px; text-align: justify;">
 				<xsl:value-of select="Solicitud_Registro/Datos_Registro/Numero_Registro"/>
 			</label>
 			<input type="hidden" id="numeroRegistro" name="numeroRegistro">
@@ -49,11 +49,11 @@
 			<br/>
 		</div>
 		<div class="col">
-			<label class="gr" style="position: relative; width:170px;">
+			<label class="gr" style="position: relative; width:100%; font-weight:bold;">
 				<xsl:value-of select="$lang.fechaRegistro"/>:	
 			</label>
 			<label class="gr">
-				<xsl:attribute name="style">position: relative;</xsl:attribute>
+				<xsl:attribute name="style">position: relative; width:100%; padding-left:5px; text-align: justify;</xsl:attribute>
 				<xsl:value-of select="Solicitud_Registro/Datos_Registro/Hora_Registro"/>, 
 				<xsl:call-template name="transformaFecha">
 				   <xsl:with-param name="node" select="Solicitud_Registro/Datos_Registro/Fecha_Registro"/>
@@ -62,10 +62,10 @@
 			<br/>
 		</div>
 		<div class="col">
-			<label class="gr" style="position: relative; width:170px;">
+			<label class="gr" style="position: relative; width:100%; font-weight:bold;">
 				<xsl:value-of select="$lang.asunto"/>:	
 			</label>
-			<label class="gr" style="position: relative; width:460px;">
+			<label class="gr" style="position: relative; width:100%; padding-left:5px; text-align: justify;">
 				<xsl:value-of select="Solicitud_Registro/Datos_Firmados/Datos_Genericos/Asunto/Descripcion"/>
 			</label>
 			<br/>

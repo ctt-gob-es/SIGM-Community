@@ -192,7 +192,7 @@ public class CrearExpedienteTablonRule implements IRule{
 			entityTemplate.set("DESCRIPCION", templateDescripcion);
 			entityTemplate.store(cct);
 		}
-		catch (Throwable e){
+		catch (Exception e){
 			// Si se produce algún error se hace rollback de la transacción
 			cct.endTX(false);
 			

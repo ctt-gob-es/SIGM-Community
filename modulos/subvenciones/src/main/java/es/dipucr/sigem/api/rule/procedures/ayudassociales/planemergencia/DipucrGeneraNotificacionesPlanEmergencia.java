@@ -1,43 +1,46 @@
 package es.dipucr.sigem.api.rule.procedures.ayudassociales.planemergencia;
 
 import ieci.tdw.ispac.api.IEntitiesAPI;
-import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
-import ieci.tdw.ispac.api.IProcedureAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
-import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
-import ieci.tdw.ispac.api.messages.Messages;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
-import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.text.DecimalFormat;
-import com.ibm.icu.util.Calendar;
-
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
-import es.dipucr.sigem.api.rule.procedures.Constants;
+import es.dipucr.sigem.api.rule.procedures.ConstantesSubvenciones;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrGeneraNotificacionesPlanEmergencia implements IRule {
 
     public static final Logger LOGGER = Logger.getLogger(DipucrGeneraNotificacionesPlanEmergencia.class);
+    
+    protected String[] estadosAdm = {ExpedientesUtil.EstadoADM.AP, ExpedientesUtil.EstadoADM.AP25};
 
     protected String tipoDocumento = "Notificación";
     protected String plantilla = "Notificación Plan Emeregencia Social";
+    protected int templateId = 0;
+    protected int documentTypeId = 0;
+    
+    protected int numeroTramites = 0;
+
     String textoAlternativo = "";
     String textoAlternativo2 = "";
     String textoAlternativo3 = "";
@@ -49,11 +52,24 @@ public class DipucrGeneraNotificacionesPlanEmergencia implements IRule {
     String textoAlternativoPuntoTerceroContenido2 = "";
 
     public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-        return true;
+         LOGGER.info(ConstantesString.INICIO + this.getClass().getName());
+         try {
+             IClientContext cct = rulectx.getClientContext();
+             
+             documentTypeId = DocumentosUtil.getTipoDoc(cct, tipoDocumento, DocumentosUtil.BUSQUEDA_EXACTA, false);
+             
+             templateId = DocumentosUtil.getTemplateId(cct, plantilla, documentTypeId);
+             
+         } catch (ISPACException e) {
+             LOGGER.error(ConstantesString.LOGGER_ERROR + " al recuperar la plantilla específica del expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+             throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + " al recuperar la plantilla específica del expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+         }
+         LOGGER.info(ConstantesString.FIN + this.getClass().getName());
+         return true;
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
     public Object execute(IRuleContext rulectx) throws ISPACRuleException {
@@ -63,32 +79,16 @@ public class DipucrGeneraNotificacionesPlanEmergencia implements IRule {
             ClientContext cct = (ClientContext) rulectx.getClientContext();
             IInvesflowAPI invesFlowAPI = cct.getAPI();
             IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
-            IGenDocAPI genDocAPI = invesFlowAPI.getGenDocAPI();
-            IProcedureAPI procedureAPI = cct.getAPI().getProcedureAPI();
             // ----------------------------------------------------------------------------------------------
 
             String numexp = rulectx.getNumExp();
 
-            ArrayList<String> expedientesResolucion = new ArrayList<String>();
+            List<String> expedientesResolucion = ExpedientesRelacionadosUtil.getExpedientesRelacionadosHijosByVariosEstadosAdm(rulectx, Arrays.asList(estadosAdm));
 
-            String strQuery = "WHERE NUMEXP_PADRE='" + numexp + "'";
-            IItemCollection expRelCol = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, strQuery);
-            Iterator<?> expRelIt = expRelCol.iterator();
-            if (expRelIt.hasNext()) {
-                while (expRelIt.hasNext()) {
-                    IItem expRel = (IItem) expRelIt.next();
-                    String numexpHijo = expRel.getString("NUMEXP_HIJO");
-
-                    // IItem expHijo = entitiesAPI.getExpedient(numexpHijo);
-                    IItem expHijo = ExpedientesUtil.getExpediente(cct, numexpHijo);
-                    if ((expHijo != null) && ("AP".equals(expHijo.get("ESTADOADM")) || "AP25".equals(expHijo.get("ESTADOADM")))) {
-                        expedientesResolucion.add(numexpHijo);
-                    }
-                }
-            }
-            if (!expedientesResolucion.isEmpty()) {
-                for (int i = 0; i < expedientesResolucion.size(); i++){
-                    generaNotificacion(expedientesResolucion.get(i), rulectx, cct, entitiesAPI, genDocAPI, procedureAPI);
+            if (!expedientesResolucion.isEmpty()){
+                numeroTramites = TramitesUtil.cuentaTramites(cct, numexp, rulectx.getTaskProcedureId());
+                for (String numexpHijo : expedientesResolucion){
+                    generaNotificacion(numexpHijo, rulectx, cct, entitiesAPI);
                 }
             }
         } catch (ISPACException e) {
@@ -101,185 +101,53 @@ public class DipucrGeneraNotificacionesPlanEmergencia implements IRule {
         return true;
     }
 
-    private void generaNotificacion(String numexp, IRuleContext rulectx, ClientContext cct, IEntitiesAPI entitiesAPI, IGenDocAPI genDocAPI, IProcedureAPI procedureAPI) {
+    private void generaNotificacion(String numexp, IRuleContext rulectx, ClientContext cct, IEntitiesAPI entitiesAPI) {
         try {
-            IItem entityDocument = null;
-            int documentId = 0;
-            int documentTypeId = 0;
-            int templateId = 0;
             int taskId = rulectx.getTaskId();
-            Object connectorSession = null;
-            String sFileTemplate = null;
+            
+            IItemCollection participantesCollection = ParticipantesUtil.getParticipantes(cct, numexp, "", "");
+            Iterator<?> participantesIterator = participantesCollection.iterator();
+            if (participantesIterator.hasNext()) {
+                IItem participante = (IItem) participantesIterator.next();
+                
+                DocumentosUtil.setParticipanteAsSsVariable(cct, participante);
+                
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO, "" + Calendar.getInstance().get(Calendar.YEAR));
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.NOMBRE_TRAMITE, TramitesUtil.getNombreTramite(cct, rulectx.getTaskId()));
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.NUMEXPSOLICITUD, numexp);
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.DATOSSOLICITUD, getDatosAlimentacion(rulectx, numexp, cct, entitiesAPI));
 
-            String nombre = "";
-            String recurso = "";
-            String idExt = "";
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO, textoAlternativo);
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO2, textoAlternativo2);
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO3, textoAlternativo3);
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO4, textoAlternativo4);
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO5, textoAlternativo5);
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO6, textoAlternativo6);
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVOPUNTOTERCERO, textoAlternativoPuntoTercero);
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVOPUNTOTERCEROCONTENIDO, textoAlternativoPuntoTerceroContenido);
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVOPUNTOTERCEROCONTENIDO2, textoAlternativoPuntoTerceroContenido2);
 
-            connectorSession = genDocAPI.createConnectorSession();
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.NRESOLUCIONPARCIAL, "" + numeroTramites);
+                
+                IItem documento = DocumentosUtil.generarDocumentoDesdePlantilla(rulectx, taskId, documentTypeId, templateId, numexp, "");
+                documento.store(cct);
+                
+                DocumentosUtil.borraParticipanteSsVariable(cct);
 
-            IItem processTask = entitiesAPI.getTask(rulectx.getTaskId());
-            int idTramCtl = processTask.getInt("ID_TRAM_CTL");
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO);
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.NOMBRE_TRAMITE);
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.NUMEXPSOLICITUD);
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.DATOSSOLICITUD);
 
-            IItemCollection taskTpDocCollection = (IItemCollection) procedureAPI.getTaskTpDoc(idTramCtl);
-            Iterator<?> it = taskTpDocCollection.iterator();
-            while (it.hasNext()) {
-                IItem taskTpDoc = (IItem) it.next();
-                if ((taskTpDoc.getString("CT_TPDOC:NOMBRE").trim()).equalsIgnoreCase((tipoDocumento).trim())) {
-                    documentTypeId = taskTpDoc.getInt("TASKTPDOC:ID_TPDOC");
-                }
-            }
-            cct.beginTX();
-            // Comprobamos que haya encontrado el Tipo de documento
-            if (documentTypeId != 0) {
-                // Comprobar que el tipo de documento tiene asociado una
-                // plantilla
-                IItemCollection tpDocsTemplatesCollection = (IItemCollection) procedureAPI.getTpDocsTemplates(documentTypeId);
-                if (tpDocsTemplatesCollection == null || tpDocsTemplatesCollection.toList().isEmpty()) {
-                    throw new ISPACInfo(Messages.getString(ConstantesString.LOGGER_ERROR + ".decretos.acuses.tpDocsTemplates"));
-                } else {
-                    Iterator<?> docs = tpDocsTemplatesCollection.iterator();
-                    boolean encontrado = false;
-                    while (docs.hasNext() && !encontrado) {
-                        IItem tpDocsTemplate = (IItem) docs.next();
-                        if (((String) tpDocsTemplate.get("NOMBRE")).trim().equalsIgnoreCase(plantilla.trim())) {
-                            templateId = tpDocsTemplate.getInt("ID");
-                            encontrado = true;
-                        }
-                    }
-
-                    // Recuperamos el participante del expediente que estamos
-                    // resolviendo
-                    // IItemCollection participantesCollection =
-                    // entitiesAPI.getParticipants(numexp, "", "");
-                    IItemCollection participantesCollection = ParticipantesUtil.getParticipantes(cct, numexp, "", "");
-                    Iterator<?> participantesIterator = participantesCollection.iterator();
-                    if (participantesIterator.hasNext()) {
-                        IItem participante = (IItem) participantesIterator.next();
-                        if (participante != null) {
-                            // Añadir a la session los datos para poder utilizar
-                            // <ispactag sessionvar='var'> en la plantilla
-                            if ((String) participante.get("NOMBRE") != null) {
-                                nombre = (String) participante.get("NOMBRE");
-                            } else {
-                                nombre = "";
-                            }
-
-                            if ((String) participante.get("RECURSO") != null) {
-                                recurso = (String) participante.get("RECURSO");
-                            } else {
-                                recurso = "";
-                            }
-                            /**
-                             * INICIO[Teresa] Ticket#106#: añadir el campo
-                             * id_ext
-                             * **/
-                            if ((String) participante.get("ID_EXT") != null) {
-                                idExt = (String) participante.get("ID_EXT");
-                            } else {
-                                idExt = "";
-                            }
-                            /**
-                             * FIN[Teresa] Ticket#106#: añadir el campo id_ext
-                             * **/
-                            // if
-                            // ((String)participante.get("RECURSO_TEXTO")!=null)
-                            // recursoTexto =
-                            // (String)participante.get("RECURSO_TEXTO");
-
-                            // Obtener el sustituto del recurso en la tabla
-                            // SPAC_VLDTBL_RECURSOS
-                            String sqlQueryPart = "WHERE VALOR = 'Pers.Fis.-Empr.'";
-                            IItemCollection colRecurso = entitiesAPI.queryEntities("DPCR_RECURSOS", sqlQueryPart);
-                            if (colRecurso.iterator().hasNext()) {
-                                IItem iRecurso = (IItem) colRecurso.iterator().next();
-                                recurso = iRecurso.getString("SUSTITUTO");
-                            }
-                            /**
-                             * INICIO ##Ticket #172 SIGEM decretos y secretaria,
-                             * modificar el recurso
-                             * **/
-                            if ("".equals(recurso)) {
-                                recurso += es.dipucr.sigem.api.rule.procedures.Constants.SECRETARIAPROC.sinRECUSO;
-                            } else {
-                                recurso += es.dipucr.sigem.api.rule.procedures.Constants.SECRETARIAPROC.conRECUSO;
-                            }
-
-                            cct.setSsVariable("ANIO", "" + Calendar.getInstance().get(Calendar.YEAR));
-                            cct.setSsVariable("NOMBRE_TRAMITE", processTask.getString("NOMBRE"));
-                            cct.setSsVariable("NOMBRETRABAJADOR", nombre);
-                            cct.setSsVariable("NOMBREBENEFICIARIO", idExt);
-                            cct.setSsVariable("NUMEXPSOLICITUD", numexp);
-                            cct.setSsVariable("DATOSSOLICITUD", getDatosAlimentacion(rulectx, numexp, cct, entitiesAPI));
-                            cct.setSsVariable("RECURSO", recurso);
-                            cct.setSsVariable("TEXTO_ALTERNATIVO", textoAlternativo);
-                            cct.setSsVariable("TEXTO_ALTERNATIVO2", textoAlternativo2);
-                            cct.setSsVariable("TEXTO_ALTERNATIVO3", textoAlternativo3);
-                            cct.setSsVariable("TEXTO_ALTERNATIVO4", textoAlternativo4);
-                            cct.setSsVariable("TEXTO_ALTERNATIVO5", textoAlternativo5);
-                            cct.setSsVariable("TEXTO_ALTERNATIVO6", textoAlternativo6);
-                            cct.setSsVariable("TEXTO_ALTERNATIVOPUNTOTERCERO", textoAlternativoPuntoTercero);
-                            cct.setSsVariable("TEXTO_ALTERNATIVOPUNTOTERCEROCONTENIDO",    textoAlternativoPuntoTerceroContenido);
-                            cct.setSsVariable("TEXTO_ALTERNATIVOPUNTOTERCEROCONTENIDO2", textoAlternativoPuntoTerceroContenido2);
-
-                            String tramite = "Notificación 2ª";
-
-                            IItemCollection tramitesCollection = cct.getAPI().getEntitiesAPI().queryEntities(Constants.TABLASBBDD.SPAC_DT_TRAMITES,"WHERE NUMEXP='" + rulectx.getNumExp() + "' AND NOMBRE='" + tramite + "'");
-                            List<?> tramitesList = tramitesCollection.toList();
-                            cct.setSsVariable("NRESOLUCIONPARCIAL", "" + (tramitesList.size()));
-
-                            connectorSession = genDocAPI.createConnectorSession();
-
-                            IItem entityDocumentT = genDocAPI.createTaskDocument(taskId, documentTypeId);
-                            int documentIdT = entityDocumentT.getKeyInt();
-
-                            IItem entityTemplateT = genDocAPI.attachTaskTemplate(connectorSession, taskId, documentIdT, templateId);
-
-                            String infoPagT = entityTemplateT.getString("INFOPAG");
-                            entityTemplateT.store(cct);
-
-                            entityDocument = genDocAPI.createTaskDocument(taskId, documentTypeId);
-                            documentId = entityDocument.getKeyInt();
-
-                            sFileTemplate = DocumentosUtil.getFile(cct, infoPagT, null, null).getName();
-
-                            // Generar el documento a partir la plantilla
-                            IItem entityTemplate = genDocAPI.attachTaskTemplate(connectorSession, taskId, documentId, templateId, sFileTemplate);
-
-                            // Referencia al fichero del documento en el gestor
-                            // documental
-                            String docref = entityTemplate.getString("INFOPAG");
-                            String sMimetype = genDocAPI.getMimeType(connectorSession, docref);
-                            entityTemplate.set("EXTENSION", MimetypeMapping.getExtension(sMimetype));
-                            String templateDescripcion = entityTemplate.getString("DESCRIPCION");
-                            templateDescripcion = templateDescripcion + " - " + numexp;
-                            entityTemplate.set("DESCRIPCION", templateDescripcion);
-                            entityTemplate.set("DESTINO", nombre);
-                            entityTemplate.set("DESTINO_ID", idExt);
-
-                            entityTemplate.store(cct);
-
-                            cct.deleteSsVariable("ANIO");
-                            cct.deleteSsVariable("");
-                            cct.deleteSsVariable("NOMBRE_TRAMITE");
-                            cct.deleteSsVariable("NOMBRETRABAJADOR");
-                            cct.deleteSsVariable("NOMBREBENEFICIARIO");
-                            cct.deleteSsVariable("NUMEXPSOLICITUD");
-                            cct.deleteSsVariable("DATOSSOLICITUD");
-                            cct.deleteSsVariable("RECURSO");
-                            cct.deleteSsVariable("TEXTO_ALTERNATIVO");
-                            cct.deleteSsVariable("TEXTO_ALTERNATIVO2");
-                            cct.deleteSsVariable("TEXTO_ALTERNATIVO3");
-                            cct.deleteSsVariable("TEXTO_ALTERNATIVO4");
-                            cct.deleteSsVariable("TEXTO_ALTERNATIVO5");
-                            cct.deleteSsVariable("TEXTO_ALTERNATIVO6");
-
-                            entityTemplateT.delete(cct);
-                            entityDocumentT.delete(cct);
-
-                            DocumentosUtil.deleteFile(sFileTemplate);
-                        }
-                    }
-                }
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO);
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO2);
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO3);
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO4);
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO5);
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVO6);
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVOPUNTOTERCERO);
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVOPUNTOTERCEROCONTENIDO);
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.TEXTO_ALTERNATIVOPUNTOTERCEROCONTENIDO2);
             }
             cct.endTX(true);
         } catch (ISPACRuleException e) {
@@ -354,151 +222,90 @@ public class DipucrGeneraNotificacionesPlanEmergencia implements IRule {
 
             double importe = 0;
 
-            String strQuery = "WHERE NUMEXP = '" + numexp + "'";
+            String strQuery = ConstantesString.WHERE + " NUMEXP = '" + numexp + "'";
 
             // Recuperamos las solicitud
             IItemCollection expSolicitudesCiudadCol = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, strQuery);
-            Iterator<?> expSolicitudesCiudadIt = expSolicitudesCiudadCol.iterator();
-            String strQuery2 = "";
-            strQuery2 = "WHERE VALOR IN (";
-            while (expSolicitudesCiudadIt.hasNext()){
-                strQuery2 += "'" + ((IItem) expSolicitudesCiudadIt.next()).getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD) + "',";
-            }
-            strQuery2 = strQuery2.substring(0, strQuery2.length() - 1);
-            strQuery2 += ") ORDER BY SUSTITUTO";
-
-            IItemCollection ciudadOrdenCol = entitiesAPI.queryEntities("REC_VLDTBL_MUNICIPIOS", strQuery2);
+            String strQuery2 = ConstantesString.WHERE + ConstantesSubvenciones.MunicipiosValidationTable.VALOR + " IN " + SubvencionesUtils.getWhereInFormat(expSolicitudesCiudadCol, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD) + ConstantesString.ORDER_BY + ConstantesSubvenciones.MunicipiosValidationTable.SUSTITUTO;
+            
+            IItemCollection ciudadOrdenCol = entitiesAPI.queryEntities(ConstantesSubvenciones.MunicipiosValidationTable.NOMBRE_TABLA, strQuery2);
             Iterator<?> ciudadOrdenIt = ciudadOrdenCol.iterator();
+            
             while (ciudadOrdenIt.hasNext()) {
-
-                IItemCollection expSolicitudesCol = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, strQuery + " AND CIUDAD = '"
-                        + ((IItem) ciudadOrdenIt.next()).getString("VALOR") + "' ORDER BY TIPOAYUDA, NOMBRESOLICITANTE");
+                IItemCollection expSolicitudesCol = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, strQuery + " AND CIUDAD = '" + ((IItem) ciudadOrdenIt.next()).getString("VALOR") + "' ORDER BY TIPOAYUDA, NOMBRESOLICITANTE");
                 Iterator<?> expSolicitudesIt = expSolicitudesCol.iterator();
                 while (expSolicitudesIt.hasNext()) {
                     IItem expSolicitud = (IItem) expSolicitudesIt.next();
-                    trimestre = expSolicitud.getString(ConstantesPlanEmergencia.TRIMESTRE);
+                    trimestre = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.TRIMESTRE);
 
                     // Recuperamos el municipio si es distinto
-                    if (!ciudad.equals(expSolicitud.get(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD))) {
-                        ciudad = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD);
-                        numMiembrosFamilia = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NFAMILIAR);
+                    if (!ciudad.equals(SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD))) {
+                        ciudad = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD);
+                        numMiembrosFamilia = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NFAMILIAR);
 
                         tipoAyuda = "";
                         trabajadorSocial = "";
-                        IItemCollection ciudadCol = entitiesAPI.queryEntities("REC_VLDTBL_MUNICIPIOS",
-                                "WHERE VALOR='" + expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD) + "'");
-                        Iterator<?> ciudadIt = ciudadCol.iterator();
-                        if (ciudadIt.hasNext()) {
-                            countCiudad++;
-                            descripcionCiudad = ((IItem) ciudadIt.next()).getString("SUSTITUTO");
+                        
+                        descripcionCiudad = SubvencionesUtils.getMunicipioByValor(cct, SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD));                        
+                        if (StringUtils.isNotEmpty(descripcionCiudad)) {
+                            countCiudad++;                            
                         }
+                        
                         listado.append("\n");
                         listado.append("\t" + countCiudad + ". " + descripcionCiudad + "\n");
                     }
-                    if (!tipoAyuda.equals(expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA))) {
+                    if (!tipoAyuda.equals(SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA))) {
                         trabajadorSocial = "";
-                        tipoAyuda = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
-                        descripcionTipoAyuda = expSolicitud.getString("DESCRIPCION_TIPOAYUDA");
+                        tipoAyuda = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
+                        descripcionTipoAyuda = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.DESCRIPCION_TIPOAYUDA);
 
                         listado.append("\tTipo de Ayuda: " + descripcionTipoAyuda + "\n");
                     }
 
-                    if (!trabajadorSocial.equals(expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRESOLICITANTE))) {
-                        trabajadorSocial = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRESOLICITANTE);
+                    if (!trabajadorSocial.equals(SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRESOLICITANTE))) {
+                        trabajadorSocial = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRESOLICITANTE);
 
                         listado.append("\tTrabajador/a Social: " + trabajadorSocial + "\n");
                     }
                     listado.append("\n");
 
-                    beneficiario = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE);
-                    nifBeneficiario = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
+                    beneficiario = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE);
+                    nifBeneficiario = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
                     listado.append("\t- Beneficiario/a: " + beneficiario + "\t\tNIF: " + nifBeneficiario + "\n");
 
-                    IItemCollection numChequesCol = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSONVales.NOMBRE_TABLA, expSolicitud.getString("NUMEXP"));
+                    IItemCollection numChequesCol = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSONVales.NOMBRE_TABLA, SubvencionesUtils.getString(expSolicitud,  ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMEXP));
                     Iterator<?> numChequesIt = numChequesCol.iterator();
+                    
                     if (numChequesIt.hasNext()) {
                         IItem numCheq = (IItem) numChequesIt.next();
-                        numCheques1 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE1);
-                        try {
-                            semestreImpresos1 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE1IMPRESOS);
-                        } catch (Exception e) {
-                            semestreImpresos1 = 0;
-                            LOGGER.debug("El campo ConstantesPlanEmergencia.SEMESTRE1IMPRESOS es nulo, vacío o no númerico. " + e.getMessage(), e);
-                        }
+                        
+                        numCheques1 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE1);
+                        semestreImpresos1 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE1IMPRESOS);
                         importeCheques1 = (numCheques1 - semestreImpresos1) * 30;
 
-                        numCheques2 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE2);
-                        try {
-                            semestreImpresos2 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE2IMPRESOS);
-                        } catch (Exception e) {
-                            LOGGER.debug("El campo SEMESTRE2IMPRESOS es nulo, vacío o no númerico. " + e.getMessage(), e);
-                            semestreImpresos2 = 0;
-                        }
+                        numCheques2 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE2);
+                        semestreImpresos2 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE2IMPRESOS);
                         importeCheques2 = (numCheques2 - semestreImpresos2) * 30;
 
-                        numCheques3 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE3);
-                        try {
-                            semestreImpresos3 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE3IMPRESOS);
-                        } catch (Exception e) {
-                            LOGGER.debug("El campo SEMESTRE3IMPRESOS es nulo, vacío o no númerico. " + e.getMessage(), e);
-                            semestreImpresos3 = 0;
-                        }
+                        numCheques3 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE3);
+                        semestreImpresos3 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE3IMPRESOS);
                         importeCheques3 = (numCheques3 - semestreImpresos3) * 30;
 
-                        numCheques4 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE4);
-                        try {
-                            semestreImpresos4 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE4IMPRESOS);
-                        } catch (Exception e) {
-                            LOGGER.debug("El campo SEMESTRE4IMPRESOS es nulo, vacío o no númerico. " + e.getMessage(), e);
-                            semestreImpresos4 = 0;
-                        }
+                        numCheques4 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE4);
+                        semestreImpresos4 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE4IMPRESOS);
                         importeCheques4 = (numCheques4 - semestreImpresos4) * 30;
                     }
 
-                    IItemCollection concesionItemCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NOMBRE_TABLA, expSolicitud.getString("NUMEXP"));
+                    IItemCollection concesionItemCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NOMBRE_TABLA, SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMEXP));
                     Iterator<?> concesionIterator = concesionItemCollection.iterator();
 
                     if (concesionIterator.hasNext()) {
                         IItem concesion = (IItem) concesionIterator.next();
-                        String cantidad = concesion.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE1);
-                        if (StringUtils.isNotEmpty(cantidad)) {
-                            try {
-                                importeExcepcional1 = Double.parseDouble(cantidad.trim());
-                            } catch (Exception e) {
-                                LOGGER.debug("El campo TOTALSEMESTRE1 es nulo, vacío o no númerico. " + e.getMessage(), e);
-                                importeExcepcional1 = Double.parseDouble(cantidad.trim().replace(",", "."));
-                            }
-                        }
 
-                        cantidad = concesion.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE2);
-                        if (StringUtils.isNotEmpty(cantidad)) {
-                            try {
-                                importeExcepcional2 = Double.parseDouble(cantidad.trim());
-                            } catch (Exception e) {
-                                LOGGER.debug("El campo TOTALSEMESTRE2 es nulo, vacío o no númerico. " + e.getMessage(), e);
-                                importeExcepcional2 = Double.parseDouble(cantidad.trim().replace(",", "."));
-                            }
-                        }
-
-                        cantidad = concesion.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE3);
-                        if (StringUtils.isNotEmpty(cantidad)) {
-                            try {
-                                importeExcepcional3 = Double.parseDouble(cantidad.trim());
-                            } catch (Exception e) {
-                                LOGGER.debug("El campo TOTALSEMESTRE3 es nulo, vacío o no númerico. " + e.getMessage(), e);
-                                importeExcepcional3 = Double.parseDouble(cantidad.trim().replace(",", "."));
-                            }
-                        }
-
-                        cantidad = concesion.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE4);
-                        if (StringUtils.isNotEmpty(cantidad)) {
-                            try {
-                                importeExcepcional4 = Double.parseDouble(cantidad.trim());
-                            } catch (Exception e) {
-                                LOGGER.debug("El campo TOTALSEMESTRE4 es nulo, vacío o no númerico. " + e.getMessage(), e);
-                                importeExcepcional4 = Double.parseDouble(cantidad.trim().replace(",", "."));
-                            }
-                        }
+                        importeExcepcional1 = SubvencionesUtils.getDouble(concesion, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE1);
+                        importeExcepcional2 = SubvencionesUtils.getDouble(concesion, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE2);
+                        importeExcepcional3 = SubvencionesUtils.getDouble(concesion, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE3);
+                        importeExcepcional4 = SubvencionesUtils.getDouble(concesion, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE4);
                     }
 
                     if (ConstantesPlanEmergencia.PRIMER_TRIMESTRE.equals(trimestre)) {
@@ -521,21 +328,22 @@ public class DipucrGeneraNotificacionesPlanEmergencia implements IRule {
 
                     if (ConstantesPlanEmergencia.ALIMENTACION.equals(tipoAyuda)) {
                         listado.append("\tNúmero de miembros de la unidad familiar: " + numMiembrosFamilia + "\n");
-                        if ("SI".equals(expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.MENORES3ANIOS))) {
+                        if ("SI".equals(SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.MENORES3ANIOS))) {
                             listado.append("\tMenor: SÍ\n");
                         }
                         listado.append("\tNº cheques: " + numCheques + "\n");
                         listado.append("\tImporte Cheques: " + importeCheques + " €\n");
 
                     } else if (ConstantesPlanEmergencia.EXCEPCIONAL.equals(tipoAyuda)) {
-                        IItemCollection concesionExcCol = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOPeConcesionExce.NOMBRE_TABLA, expSolicitud.getString("NUMEXP"));
+                        IItemCollection concesionExcCol = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOPeConcesionExce.NOMBRE_TABLA, SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMEXP));
                         Iterator<?> concesionExcIt = concesionExcCol.iterator();
                         if (concesionExcIt.hasNext()) {
                             IItem concesionExc = (IItem) concesionExcIt.next();
-                            nfactura = concesionExc.getString(ConstantesPlanEmergencia.DpcrSERSOPeConcesionExce.NFACTURA);
-                            fechaFactura = concesionExc.getString(ConstantesPlanEmergencia.DpcrSERSOPeConcesionExce.FECHAFACTURA);
-                            concepto = concesionExc.getString(ConstantesPlanEmergencia.DpcrSERSOPeConcesionExce.CONCEPTO);
-                            proveedor = concesionExc.getString(ConstantesPlanEmergencia.DpcrSERSOPeConcesionExce.PROVEEDOR);
+                            
+                            nfactura = SubvencionesUtils.getString(concesionExc, ConstantesPlanEmergencia.DpcrSERSOPeConcesionExce.NFACTURA);
+                            fechaFactura = SubvencionesUtils.getString(concesionExc, ConstantesPlanEmergencia.DpcrSERSOPeConcesionExce.FECHAFACTURA);
+                            concepto = SubvencionesUtils.getString(concesionExc, ConstantesPlanEmergencia.DpcrSERSOPeConcesionExce.CONCEPTO);
+                            proveedor = SubvencionesUtils.getString(concesionExc, ConstantesPlanEmergencia.DpcrSERSOPeConcesionExce.PROVEEDOR);
                         }
 
                         listado.append("\tFactura Nº: " + nfactura + "\t\tFecha: " + fechaFactura + "\n");
@@ -573,37 +381,24 @@ public class DipucrGeneraNotificacionesPlanEmergencia implements IRule {
 
                         textoAlternativo5 = "\tSe informa al/a beneficiario/a que una vez terminado el curso escolar, y siempre que sea posible, pongan a disposición del Centro Social o Escolar correspondiente, los libros adquiridos con esta subvención.";
 
-                        IItemCollection concesionLibrosCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE_TABLA, expSolicitud.getString("NUMEXP"));
+                        IItemCollection concesionLibrosCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE_TABLA, SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMEXP));
                         Iterator<?> concesionLibrosIterator = concesionLibrosCollection.iterator();
 
                         if (concesionLibrosIterator.hasNext()) {
                             IItem concesionLibros = (IItem) concesionLibrosIterator.next();
-                            try {
-                                totallibros = Double.parseDouble(concesionLibros.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.TOTALLIBROS));
-                                haPagado = concesionLibros.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.PAGADO);
+                            
+                            totallibros = SubvencionesUtils.getDouble(concesionLibros, ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.TOTALLIBROS);
+                            haPagado = concesionLibros.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.PAGADO);
 
-                                for (int i = 1; i < 9; i++) {
-                                    dMaterial = 0;
-                                    dLibros = 0;
-                                    String material = concesionLibros.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.CURSO + i);
-                                    if (StringUtils.isNotEmpty(material)){
-                                        dMaterial = Double.parseDouble(material);
-                                    }
+                            for (int i = 1; i < 9; i++) {
+                                dMaterial = SubvencionesUtils.getDouble(concesionLibros, ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.CURSO + i);
+                                dLibros = SubvencionesUtils.getDouble(concesionLibros, ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.COSTELIBROS + i);
 
-                                    String libros = concesionLibros.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.COSTELIBROS + i);
-                                    if (StringUtils.isNotEmpty(libros)){
-                                        dLibros = Double.parseDouble(libros);
-                                    }
+                                importeMaterial += dMaterial;
 
-                                    importeMaterial += dMaterial;
-
-                                    if (dMaterial > 0 || dLibros > 0){
-                                        iNumMenores++;
-                                    }
+                                if (dMaterial > 0 || dLibros > 0){
+                                    iNumMenores++;
                                 }
-                            } catch (Exception e) {
-                                LOGGER.error(ConstantesString.LOGGER_ERROR + " al recuperar el importe de la ayuda de libros del el expediente: " + expSolicitud.getString("NUMEXP") + ". " + e.getMessage(), e);
-                                throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + " al recuperar el importe de la ayuda de libros del el expediente: " + expSolicitud.getString("NUMEXP") + ". " + e.getMessage(), e);
                             }
                         }
 
@@ -611,8 +406,8 @@ public class DipucrGeneraNotificacionesPlanEmergencia implements IRule {
 
                         listado.append("\tNúmero de menores becados: " + iNumMenores + "\n");
                         listado.append("\tImporte de material escolar: "
-                                + new DecimalFormat("#,##0.00").format(Math.rint(importeMaterial * 100) / 100) + " €, importe de libros: "
-                                + new DecimalFormat("#,##0.00").format(Math.rint(importeLibros * 100) / 100) + " €\n");
+                                + SubvencionesUtils.formateaDouble(ConstantesString.FORMATO_IMPORTE, Math.rint(importeMaterial * 100) / 100) + " €, importe de libros: "
+                                + SubvencionesUtils.formateaDouble(ConstantesString.FORMATO_IMPORTE, Math.rint(importeLibros * 100) / 100) + " €\n");
 
                         if (StringUtils.isNotEmpty(haPagado) && "F".equalsIgnoreCase(haPagado.trim())) {
                             listado.append("\tLa familia HA PAGADO los libros.\n");
@@ -622,31 +417,22 @@ public class DipucrGeneraNotificacionesPlanEmergencia implements IRule {
                             listado.append("\tError al comprobar si la familia ha pagado o no los libros.\n");
                         }
 
-                        listado.append("\tAyuda por importe de: " + new DecimalFormat("#,##0.00").format(Math.rint(totallibros * 100) / 100) + " €\n");
+                        listado.append("\tAyuda por importe de: " + SubvencionesUtils.formateaDouble(ConstantesString.FORMATO_IMPORTE, Math.rint(totallibros * 100) / 100) + " €\n");
                     } else if (ConstantesPlanEmergencia.COMEDOR.equals(tipoAyuda)) {
-                        // IItem expediente =
-                        // entitiesAPI.getExpedient(expSolicitud.getString("NUMEXP"));
-                        // IItem expediente = ExpedientesUtil.getExpediente(cct,
-                        // expSolicitud.getString("NUMEXP"));
-                        // String estadoadm = expediente.getString("ESTADOADM");
 
-                        IItemCollection concesionComedorCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE_TABLA, expSolicitud.getString("NUMEXP"));
+                        IItemCollection concesionComedorCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE_TABLA, SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMEXP));
                         Iterator<?> concesionComedorIterator = concesionComedorCollection.iterator();
 
                         if (concesionComedorIterator.hasNext()) {
                             IItem concesionComedor = (IItem) concesionComedorIterator.next();
-                            try {
-                                empresa1 = concesionComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.EMPRESACOMEDOR1);
-                                nombreMenor1 = concesionComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE1);
-                                empresa2 = concesionComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.EMPRESACOMEDOR2);
-                                nombreMenor2 = concesionComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE2);
-                                mesInicio = concesionComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.MESINICIO);
 
-                                importe = Double.parseDouble(concesionComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.IMPORTETOTALCOMEDOR));
-                            } catch (Exception e) {
-                                LOGGER.error( ConstantesString.LOGGER_ERROR + " al recuperar el importe de la ayuda de libros del el expediente: " + expSolicitud.getString("NUMEXP") + ". " + e.getMessage(), e);
-                                throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + " al recuperar el importe de la ayuda de libros del el expediente: " + expSolicitud.getString("NUMEXP") + ". " + e.getMessage(), e);
-                            }
+                            empresa1 = concesionComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.EMPRESACOMEDOR1);
+                            nombreMenor1 = concesionComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE1);
+                            empresa2 = concesionComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.EMPRESACOMEDOR2);
+                            nombreMenor2 = concesionComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE2);
+                            mesInicio = concesionComedor.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.MESINICIO);
+                            
+                            importe = SubvencionesUtils.getDouble(concesionComedor, ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.IMPORTETOTALCOMEDOR);
                         }
 
                         textoAlternativo = "\n";
@@ -680,7 +466,7 @@ public class DipucrGeneraNotificacionesPlanEmergencia implements IRule {
                         if (StringUtils.isNotEmpty(nombreMenor2)) {
                             listado.append("\tNombre del menor: " + nombreMenor2 + "\n");
                         }
-                        listado.append("\tAyuda por importe de: " + new DecimalFormat("#,##0.00").format(Math.rint(importe * 100) / 100) + " €\n");
+                        listado.append("\tAyuda por importe de: " + SubvencionesUtils.formateaDouble(ConstantesString.FORMATO_IMPORTE, Math.rint(importe * 100) / 100) + " €\n");
                         listado.append("\tMes de inicio: " + mesInicio + "\n");
                     }
                 }
@@ -692,5 +478,5 @@ public class DipucrGeneraNotificacionesPlanEmergencia implements IRule {
         }catch (Exception e) {            
             throw new ISPACRuleException("No se ha podido obtener la lista de solicitudes", e);
         }
-    }
+    }    
 }

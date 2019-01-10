@@ -11,6 +11,10 @@
 	<artifactId>sigem_estructuraOrganizativaCore</artifactId>
 	<packaging>jar</packaging>
 
+	<properties>
+		<sigem.version>3.0.1-M2</sigem.version>
+	</properties> 
+
 	<repositories>
 		<repository>
 			<id>repo_arch</id>
@@ -39,14 +43,14 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_core</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 
 		</dependency>
 
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_clasesBase</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
 
 		<dependency>

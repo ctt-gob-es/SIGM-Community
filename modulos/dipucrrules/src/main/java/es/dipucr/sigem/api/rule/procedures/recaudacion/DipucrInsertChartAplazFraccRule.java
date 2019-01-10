@@ -117,15 +117,21 @@ public class DipucrInsertChartAplazFraccRule implements IRule {
     		logger.info("Documento Actualizado");
     		
     		//Borra archivos temporales
-    		file.delete();
-    		fileOut.delete();
+    		if(null != file){
+    			file.delete();
+    		}
+    		if(null != fileOut){
+    			fileOut.delete();
+    		}
     		
-    		ooHelper.dispose();
-	    }
-        catch (Exception e) 
-        {
+	    } catch (Exception e) {
 	        throw new ISPACRuleException("Error en DipucrInsertChartAplazFraccRule.", e);
-	    }
+	    } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
+        
         return new Boolean(true);
 	}
 

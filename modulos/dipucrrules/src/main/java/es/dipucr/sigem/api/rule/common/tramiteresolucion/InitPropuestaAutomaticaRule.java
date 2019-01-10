@@ -142,18 +142,33 @@ public class InitPropuestaAutomaticaRule implements IRule {
 			Iterator<IItem> docuPro = documentsCollection.iterator();
 			while(docuPro.hasNext()){
 				IItem contenidoPropuesta = docuPro.next();
-				// Crear el documento del mismo tipo que el Contenido de la propuesta pero asociado al nuevo expediente de Propuesta
-				IItem nuevoDocumento = (IItem)genDocAPI.createTaskDocument(codContenidoPropuesta, contenidoPropuesta.getInt("ID_TPDOC"));
-				//logger.warn("Creado el documento");
-				
-				String infopag = contenidoPropuesta.getString("INFOPAG");
+				String infopag = "";
+				if(contenidoPropuesta.getString("INFOPAG_RDE")!=null){
+					infopag = contenidoPropuesta.getString("INFOPAG_RDE");
+				}
+				else{
+					infopag = contenidoPropuesta.getString("INFOPAG");
+				}
 				String descripcion = contenidoPropuesta.getString("DESCRIPCION");
-				String extension = contenidoPropuesta.getString("EXTENSION");			
+				File fileFoliado = DocumentosUtil.getFile(cct, infopag, null, null);
+				
+				IItem nuevoDocumento = DocumentosUtil.generaYAnexaDocumento(rulectx, codContenidoPropuesta, contenidoPropuesta.getInt("ID_TPDOC"), descripcion, fileFoliado, contenidoPropuesta.getString("EXTENSION"));	
+				nuevoDocumento.set("NOMBRE", Constants.TIPODOC.DOCUMENTACION_PROPUESTA);
+				nuevoDocumento.store(cct);
+				if(fileFoliado != null && fileFoliado.exists()) fileFoliado.delete();
+				
+				logger.warn("Creado el documento");
+				
+				// Crear el documento del mismo tipo que el Contenido de la propuesta pero asociado al nuevo expediente de Propuesta
+				//IItem nuevoDocumento = (IItem)genDocAPI.createTaskDocument(codContenidoPropuesta, contenidoPropuesta.getInt("ID_TPDOC"));
+				//logger.warn("Creado el documento");				
+				
+				/*String extension = contenidoPropuesta.getString("EXTENSION");			
 				nuevoDocumento.set("INFOPAG", infopag);
 				nuevoDocumento.set("NOMBRE", Constants.TIPODOC.DOCUMENTACION_PROPUESTA);
 				nuevoDocumento.set("DESCRIPCION", descripcion);
 				nuevoDocumento.set("EXTENSION", extension);
-				nuevoDocumento.store(cct);
+				nuevoDocumento.store(cct);*/
 			}
 			
 			

@@ -32,6 +32,9 @@ import ieci.tecdoc.sgm.core.services.repositorio.ServicioRepositorioDocumentosTr
 import ieci.tecdoc.sgm.core.services.telematico.RegistroDocumento;
 import ieci.tecdoc.sgm.core.services.telematico.RegistroDocumentos;
 import ieci.tecdoc.sgm.core.services.telematico.ServicioRegistroTelematico;
+import ieci.tecdoc.sgm.core.services.terceros.ServicioTerceros;
+import ieci.tecdoc.sgm.core.services.terceros.dto.DireccionElectronica;
+import ieci.tecdoc.sgm.core.services.terceros.dto.Tercero;
 import ieci.tecdoc.sgm.core.services.tramitacion.ServicioTramitacion;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.DatosComunesExpediente;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.DocumentoExpediente;
@@ -437,7 +440,14 @@ public class IniciarExpedienteAction extends RegistroWebAction {
 						for(int j=0; j<documents.size(); j++)
 							documentsExpediente[j] = (DocumentoExpediente)documents.get(j);
 
-						oServicioTramitacion.iniciarExpediente(entidad.getIdentificador(), commonData, specificDataXML,	documentsExpediente);
+						//INICIO [dipucr-Felipe #583]
+						//Cuando se inicia un expediente a partir de un registro telemático, si el interesado 
+						//existe en la BBDD de terceros y no tiene email, se le inserta el email introducido por defecto
+						boolean bResult = oServicioTramitacion.iniciarExpediente(entidad.getIdentificador(), commonData, specificDataXML,	documentsExpediente);
+						if (bResult){
+							insertarDefaultMailTercero(entidad.getIdentificador(), interestedPerson);
+						}
+						//FIN [dipucr-Felipe #583]
 					}
 				}
 			}
@@ -514,6 +524,36 @@ public class IniciarExpedienteAction extends RegistroWebAction {
 
 		return mapping.findForward("success");
 	}
+	
+	/**
+    * [dipucr-Felipe #583]
+    * @param idEntidad
+    * @param interesado
+    * @throws SigemException
+    */
+   private static void insertarDefaultMailTercero(String idEntidad, InteresadoExpediente interesado) throws SigemException {
+	
+	   String email = interesado.getTelematicAddress();
+	   
+	   if (!StringUtils.isEmpty(email)){
+	   
+		   ServicioTerceros oServicio = LocalizadorServicios.getServicioTerceros();
+		   
+		   @SuppressWarnings("unchecked")
+		   List<Tercero> listTerceros = oServicio.lookup(idEntidad, interesado.getNifcif());
+		   
+		   for (Tercero tercero : listTerceros){
+			   
+			   DireccionElectronica dirEmail = tercero.getDireccionElectronicaPredeterminada();
+			   
+			   if (null == dirEmail){
+				   int idPerson = Integer.valueOf(tercero.getIdExt());
+				   oServicio.insertDefaultEmail(idEntidad, idPerson, email);
+			   }
+		   }
+	   }
+	
+   }
 
 
 	private void sendErrorEmail(ServletContext servletContext,String message, Exception e) {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>es.ieci.tecdoc.iflow</groupId>
@@ -27,11 +26,12 @@
 			<version>3.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>axis</groupId>
-			<artifactId>axis</artifactId>
-			<version>1.3</version>
-		</dependency>
+		<!-- <dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-adb</artifactId>
+			<version>1.6.3</version>
+			<scope>provided</scope>
+		</dependency> -->
 
 		<dependency>
 			<groupId>org.jsoup</groupId>
@@ -39,10 +39,15 @@
 			<version>1.7.3</version>
 		</dependency>
 
+		<!-- <dependency>
+			<groupId>org.apache.james</groupId>
+			<artifactId>apache-mime4j</artifactId>
+			<version>0.6</version>
+		</dependency> -->
+
 	</dependencies>
 
-	<!-- Se pone el build para qeu funcione sigem 2.0, en la migración mirar 
-		si se puede quitar -->
+	<!-- Se pone el build para qeu funcione sigem 2.0, en la migración mirar si se puede quitar -->
 	<build>
 		<pluginManagement>
 			<plugins>

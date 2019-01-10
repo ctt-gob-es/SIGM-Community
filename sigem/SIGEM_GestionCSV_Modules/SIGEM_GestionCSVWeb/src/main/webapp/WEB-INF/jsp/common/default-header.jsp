@@ -17,7 +17,10 @@ session.setAttribute("idEntidad", entidadId);
 	<div id="cabecera">
 		<h1>
 			<img src="img/minetur.jpg" alt="GOBIERNO DE ESPAÑA. MINISTERIO DE INDUSTRIA, ENERGÍA Y TURISMO " />
-			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="SIGM" />
+		<!-- [eCenpri-Manu Ticket#267] + ALSIGM3 Logotipo de la entidad sale feas en registro presencial y tramitador -->
+		<!--	<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="SIGM" /> -->
+			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="SIGM" style="width: auto; max-width: 200px; height: 59px; max-height: 200px;" />
+		<!-- [eCenpri-Manu Ticket#267] + ALSIGM3 Logotipo de la entidad sale feas en registro presencial y tramitador -->
 		</h1>
 		<h3>&nbsp;</h3>
 		<p class="salir">

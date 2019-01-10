@@ -45,5 +45,10 @@ public class BaseTerceroVO extends Entity {
 	public String getDescripcion() {
 		return getNombre();
 	}
+	
+	//[Dipucr-Manu Ticket#383] - ALSIGM3 no muestra el DNI en los interesados de los registros
+	public String getNumeroDocumento() {
+		return getId();
+	}
 
 }

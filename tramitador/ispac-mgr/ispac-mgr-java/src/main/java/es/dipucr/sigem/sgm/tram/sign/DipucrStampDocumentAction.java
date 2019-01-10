@@ -120,11 +120,11 @@ public class DipucrStampDocumentAction extends BaseAction {
 		  		}
 				
 			} catch (ISPACInfo e) {
-				logger.error("Error al sellar el documento", e);
+				LOGGER.error("Error al sellar el documento", e);
 				e.setRefresh(false);
 				throw e;
 			} catch (Exception e) {
-				logger.error("Error al sellar el documento", e);
+				LOGGER.error("Error al sellar el documento", e);
 				throw new ISPACInfo(e,false);
 			} finally {
 				if (stampedDoc != null) {

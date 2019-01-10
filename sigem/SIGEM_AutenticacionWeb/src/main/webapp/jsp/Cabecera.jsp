@@ -24,8 +24,11 @@ session.setAttribute(ConstantesGestionTelematicoCiudadano.PARAMETRO_ID_ENTIDAD, 
 
 	<div id="cabecera">
 		<utils-admin:eco-logo/>
-		<p class="logoSIGM">
-			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="SIgem 2" />
+		<p class="logoSIGM">			
+		<!-- [eCenpri-Manu Ticket#267] + ALSIGM3 Logotipo de la entidad sale feas en registro presencial y tramitador -->
+			<!-- <img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="SIgem 2" /> -->
+			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="SIGM" style="width: auto; max-width: 200px; height: 59px; max-height: 200px;" />
+		<!-- [eCenpri-Manu Ticket#267] + ALSIGM3 Logotipo de la entidad sale feas en registro presencial y tramitador -->
 		</p>
 		<h3>&nbsp;</h3>
 		<p class="salir"><a href="jsp/RedireccionPortal.jsp"><bean:message key="salir"/></a></p>

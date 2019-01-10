@@ -1,17 +1,13 @@
 package es.ieci.tecdoc.fwktd.sir.wsclient.service.impl;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import es.ieci.tecdoc.fwktd.sir.core.service.ServicioIntercambioRegistral;
-import es.ieci.tecdoc.fwktd.sir.core.types.EstadoAsientoRegistralEnum;
 import es.ieci.tecdoc.fwktd.sir.core.vo.AnexoFormVO;
 import es.ieci.tecdoc.fwktd.sir.core.vo.AnexoVO;
 import es.ieci.tecdoc.fwktd.sir.core.vo.AsientoRegistralFormVO;
@@ -25,9 +21,7 @@ import es.ieci.tecdoc.fwktd.sir.core.vo.InteresadoFormVO;
 import es.ieci.tecdoc.fwktd.sir.core.vo.InteresadoVO;
 import es.ieci.tecdoc.fwktd.sir.core.vo.TrazabilidadVO;
 import es.ieci.tecdoc.fwktd.sir.ws.service.EstadoAsientoRegistralDTO;
-import es.ieci.tecdoc.fwktd.sir.ws.service.HashMapString;
 import es.ieci.tecdoc.fwktd.sir.ws.service.IntercambioRegistralWS;
-import es.ieci.tecdoc.fwktd.sir.ws.service.HashMapString.Item;
 import es.ieci.tecdoc.fwktd.sir.wsclient.mapper.Mapper;
 import es.ieci.tecdoc.fwktd.util.date.DateUtils;
 
@@ -593,6 +587,22 @@ public class ServicioIntercambioRegistralWSClientImpl implements
 
 		// Comprobar el time-out de los ficheros de intercambio enviados
 		getIntercambioRegistralWS().comprobarTimeOutEnvios();
+	}
+
+
+	public List<TrazabilidadVO> getHistoricoAsientoRegistralCode(String entity, String code) {
+	    logger.info("Llamada a getHistoricoAsientoRegistral: code=[{}]", code);
+
+		Assert.hasText(code, "'code' must not be empty");
+
+		// Obtener las trazas de intercambio
+		return getMapper().getTrazabilidadVOList(getIntercambioRegistralWS()
+				.getHistoricoAsientoRegistralCode(entity, code));
+	}
+
+	@Override
+	public EstadoAsientoRegistraVO getEstadoAsientoRegistralByCode(String code) {
+		return null;
 	}
 
 }

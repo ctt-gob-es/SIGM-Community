@@ -20,12 +20,12 @@ public class CriterioOficinaEnum extends CriterioEnum {
 	public static final String TABLE_DIR_UNIDAD_ORGANICA = "UO";
 
 
-	public static final CriterioOficinaEnum OFICINA_ID = new CriterioOficinaEnum(TABLE_DIR_OFICINA, "Identificador de la oficina", "CODIGO_OFICINA");
-	public static final CriterioOficinaEnum OFICINA_NOMBRE = new CriterioOficinaEnum(TABLE_DIR_OFICINA, "Nombre de la oficina", "DENOMINACION_OFICINA");
+	public static final CriterioOficinaEnum OFICINA_ID = new CriterioOficinaEnum(TABLE_DIR_OFICINA, "Identificador de la oficina", "C_ID_OFICINA");
+	public static final CriterioOficinaEnum OFICINA_NOMBRE = new CriterioOficinaEnum(TABLE_DIR_OFICINA, "Nombre de la oficina", "C_DNM_OFICINA");
 
-	public static final CriterioOficinaEnum OFICINA_ID_UNIDAD_RESPONSABLE = new CriterioOficinaEnum(TABLE_DIR_OFICINA, "Unidad responsable de la oficina", "CODIGO_UNIDAD_ORGANICA");
+	public static final CriterioOficinaEnum OFICINA_ID_UNIDAD_RESPONSABLE = new CriterioOficinaEnum(TABLE_DIR_OFICINA, "Unidad responsable de la oficina", "C_ID_UNIDAD_RESPONSABLE");
 
-	public static final CriterioOficinaEnum OFICINA_ID_EXTERNO_FUENTE = new CriterioOficinaEnum(TABLE_DIR_OFICINA, "Código externo de la Entidad Pública", "EXTERNO_FUENTE");
+	public static final CriterioOficinaEnum OFICINA_ID_EXTERNO_FUENTE = new CriterioOficinaEnum(TABLE_DIR_OFICINA, "Código externo de la Entidad Pública", "C_ID_EXTERNO_FUENTE");
 
 	/**
 	 * Constructor.

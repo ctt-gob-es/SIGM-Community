@@ -76,6 +76,12 @@
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_catalogoTramites</artifactId>
 			<version>${pom.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.mail</groupId>
+					<artifactId>mail</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -445,13 +451,15 @@
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>SIGEM_MensajesCortos</artifactId>
 			<version>${pom.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.mail</groupId>
-					<artifactId>mail</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
+		
+		<!-- INICIO [dipucr-Felipe #583] Inserción mail interesados -->		
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>SIGEM_Terceros</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
+		<!-- FIN [dipucr-Felipe #583] -->
 		
 		<dependency>
 			<groupId>es.dipucr</groupId>

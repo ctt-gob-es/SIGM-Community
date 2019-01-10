@@ -12,11 +12,14 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
-import es.dipucr.sigem.api.rule.procedures.Constants;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrAnotaValesImpresos implements IRule {
 
@@ -28,92 +31,77 @@ public class DipucrAnotaValesImpresos implements IRule {
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        // No puede darse este caso        
     }
 
     public Object execute(IRuleContext rulectx) throws ISPACRuleException {
         LOGGER.info(ConstantesString.INICIO + DipucrAnotaValesImpresos.class);
-        String numexpSol = "";
-        IClientContext cct;
+        
+        String numexpParaLogear = "";
+        double cantConcedida = 0;
+        
         try{
             //----------------------------------------------------------------------------------------------
-            cct = (ClientContext) rulectx.getClientContext();
+            IClientContext cct = (ClientContext) rulectx.getClientContext();
             IInvesflowAPI invesFlowAPI = cct.getAPI();
             IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
             //----------------------------------------------------------------------------------------------
-            IItemCollection relacionadosCollection = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_EXPEDIENTES, "WHERE NUMEXP IN (SELECT NUMEXP_HIJO FROM SPAC_EXP_RELACIONADOS WHERE NUMEXP_PADRE = '" +rulectx.getNumExp()+"') AND ESTADOADM='NE'");
-            Iterator<?> relacionadosIterator = relacionadosCollection.iterator();
-            while (relacionadosIterator.hasNext()){
-                IItem expSol = (IItem) relacionadosIterator.next();
-                numexpSol = expSol.getString("NUMEXP");
+            List<String> expedientesRelacionadosList = ExpedientesRelacionadosUtil.getExpedientesRelacionadosHijosByEstadoAdm(rulectx, ExpedientesUtil.EstadoADM.NE);
+            
+            for(String numexpSol : expedientesRelacionadosList){
+                numexpParaLogear = numexpSol;
+                cantConcedida = 0;
                 
-                if(expSol != null){
-                    IItemCollection solicitudCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, numexpSol);
-                    Iterator<?> solicitudIterator = solicitudCollection.iterator();
+                IItemCollection solicitudCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, ConstantesString.WHERE + ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMEXP + " = '" + numexpSol + "' AND " + ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA + " = '" + ConstantesPlanEmergencia.ALIMENTACION + "'");
+                Iterator<?> solicitudIterator = solicitudCollection.iterator();
+                
+                IItemCollection concedidoCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NOMBRE_TABLA, numexpSol);
+                Iterator<?> concedidoIterator = concedidoCollection.iterator();
+                
+                IItemCollection cantidadesCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSONVales.NOMBRE_TABLA, numexpSol);
+                Iterator<?> cantidadesIterator = cantidadesCollection.iterator();
+                
+                if (solicitudIterator.hasNext() && concedidoIterator.hasNext() && cantidadesIterator.hasNext()){
                     
-                    String tipoAyuda = "";
-                    String trimestre = "";
+                    IItem solicitud = (IItem) solicitudIterator.next();                               
+                    IItem concedido = (IItem) concedidoIterator.next();                                
+                    IItem cantidades = (IItem) cantidadesIterator.next();
                     
-                    double cantConcedida = 0;
+                    String trimestre  = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.TRIMESTRE);
+                    
+                    if(ConstantesPlanEmergencia.PRIMER_TRIMESTRE.equals(trimestre)){
+                        cantConcedida = SubvencionesUtils.getDouble(concedido, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO);
+                        cantidades.set(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE1IMPRESOS, cantConcedida/30);
                         
-                    if (solicitudIterator.hasNext()) {
-                        IItem solicitud = (IItem) solicitudIterator.next();
-                        trimestre  = solicitud.getString(ConstantesPlanEmergencia.TRIMESTRE);
-                        tipoAyuda = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
-                       
-                        if(ConstantesPlanEmergencia.ALIMENTACION.equals(tipoAyuda)){
-                            IItemCollection concedidoCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NOMBRE_TABLA, numexpSol);
-                            Iterator<?> concedidoIterator = concedidoCollection.iterator();
-                            
-                            if(concedidoIterator.hasNext()){
-                                IItem concedido = (IItem) concedidoIterator.next();
-                                
-                                IItemCollection cantidadesCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSONVales.NOMBRE_TABLA, numexpSol);
-                                Iterator<?> cantidadesIterator = cantidadesCollection.iterator();            
-                                if (cantidadesIterator.hasNext()){
-                                    IItem cantidades = (IItem) cantidadesIterator.next();
-                                    cantConcedida = 0;
-                                    if(ConstantesPlanEmergencia.PRIMER_TRIMESTRE.equals(trimestre)){
-                                        cantConcedida = Double.parseDouble(concedido.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO));
-                                    } else if(ConstantesPlanEmergencia.SEGUNDO_TRIMESTRE.equals(trimestre)){
-                                        cantConcedida = Double.parseDouble(concedido.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO2));
-                                    } else if(ConstantesPlanEmergencia.TERCER_TRIMESTRE.equals(trimestre)){
-                                        cantConcedida = Double.parseDouble(concedido.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO3));
-                                    } else{
-                                        cantConcedida = Double.parseDouble(concedido.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO4));
-                                    }
-                                                                            
-                                    if(ConstantesPlanEmergencia.PRIMER_TRIMESTRE.equals(trimestre)){
-                                        cantidades.set(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE1IMPRESOS,cantConcedida/30);
-                                    } else if(ConstantesPlanEmergencia.SEGUNDO_TRIMESTRE.equals(trimestre)){
-                                        cantidades.set(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE2IMPRESOS,cantConcedida/30);
-                                    } else if(ConstantesPlanEmergencia.TERCER_TRIMESTRE.equals(trimestre)){
-                                        cantidades.set(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE3IMPRESOS,cantConcedida/30);
-                                    } else{
-                                        cantidades.set(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE4IMPRESOS,cantConcedida/30);
-                                    }
-                                    
-                                    cantidades.store(cct);
-                               }
-                            }
-                        }
+                    } else if(ConstantesPlanEmergencia.SEGUNDO_TRIMESTRE.equals(trimestre)){
+                        cantConcedida = SubvencionesUtils.getDouble(concedido, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO2);
+                        cantidades.set(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE2IMPRESOS, cantConcedida/30);
+                        
+                    } else if(ConstantesPlanEmergencia.TERCER_TRIMESTRE.equals(trimestre)){
+                        cantConcedida = SubvencionesUtils.getDouble(concedido, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO3);
+                        cantidades.set(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE3IMPRESOS, cantConcedida/30);
+                        
+                    } else{
+                        cantConcedida = SubvencionesUtils.getDouble(concedido, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO4);
+                        cantidades.set(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE4IMPRESOS, cantConcedida/30);
                     }
+                                                            
+                    cantidades.store(cct);
                 }
             }            
         } catch (ISPACException e) {
-            LOGGER.error(ConstantesString.LOGGER_ERROR + " al anotar los vales del expediente: " + numexpSol + ". " + e.getMessage(), e);
-            throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + " al anotar los vales del expediente: " + numexpSol + ". " + e.getMessage(), e);
+            LOGGER.error(ConstantesString.LOGGER_ERROR + " al anotar los vales del expediente: " + numexpParaLogear + ". " + e.getMessage(), e);
+            throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + " al anotar los vales del expediente: " + numexpParaLogear + ". " + e.getMessage(), e);
         } catch(Exception e){
-            LOGGER.error(ConstantesString.LOGGER_ERROR + " al anotar los vales del expediente: " + numexpSol + ". " + e.getMessage(), e);
-            throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + " al anotar los vales del expediente: " + numexpSol + ". " + e.getMessage(), e);
+            LOGGER.error(ConstantesString.LOGGER_ERROR + " al anotar los vales del expediente: " + numexpParaLogear + ". " + e.getMessage(), e);
+            throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + " al anotar los vales del expediente: " + numexpParaLogear + ". " + e.getMessage(), e);
         }
                 
         LOGGER.info(ConstantesString.FIN + this.getClass().getName());
         return true;
     }
 
-    public boolean validate(IRuleContext paramIRuleContext)
-            throws ISPACRuleException {
+    public boolean validate(IRuleContext paramIRuleContext) throws ISPACRuleException {        
         return true;
     }
 

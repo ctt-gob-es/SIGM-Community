@@ -2273,7 +2273,7 @@ public class CatalogAPI implements ICatalogAPI
 		bCommit=true;
 		} catch (ISPACException e) {
 			bCommit=false;
-			e.printStackTrace();
+			logger.error("ERROR. " + e.getMessage(), e);
 		}finally{
 			cnt.closeTX(bCommit);
 		}
@@ -4314,4 +4314,28 @@ public class CatalogAPI implements ICatalogAPI
 	}
 	
 	//[eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	
+	/**
+	 * Obtiene los mensajes a los usuario.
+	 *
+	 * @param pattern
+	 *            Patrón del texto del mensaje.
+	 * @return Lista de informes del catálogo.
+	 * @throws ISPACException
+	 *             si ocurre algún error.
+	 */
+	public IItemCollection getSMensajes(String pattern) throws ISPACException {
+
+		StringBuffer sql = new StringBuffer();
+
+        if (StringUtils.isNotBlank(pattern)) {
+        	sql.append("WHERE MENSAJE LIKE '%")
+        		.append(DBUtil.replaceQuotes(pattern.trim()))
+        		.append("%'");
+        }
+
+        sql.append(" ORDER BY USUARIO");
+
+		return queryCTEntities(ICatalogAPI.ENTITY_S_SESION_MENSAJE, sql.toString());
+	}
 }

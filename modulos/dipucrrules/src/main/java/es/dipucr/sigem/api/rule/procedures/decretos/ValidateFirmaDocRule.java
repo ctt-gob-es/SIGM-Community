@@ -24,7 +24,7 @@ import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
  */
 public class ValidateFirmaDocRule implements IRule{
 
-	private static final Logger logger = Logger.getLogger(ValidateFirmaDocRule.class);
+	private static final Logger LOGGER = Logger.getLogger(ValidateFirmaDocRule.class);
 	
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		
@@ -48,26 +48,22 @@ public class ValidateFirmaDocRule implements IRule{
 		        String strQuery = "WHERE NUMEXP='" + numExp + "'";
 		        IItemCollection collExps = entitiesAPI.queryEntities("SGD_RECHAZO_DECRETO", strQuery);
 		        Iterator<?> itExps = collExps.iterator();
-		        if (itExps.hasNext()) 
-		        {
+		        if (itExps.hasNext()) {
 		        	exp = (IItem)itExps.next();
 		        	motivoRechazo = exp.getString("RECHAZO_DECRETO");
 		        	
-		        	if (motivoRechazo!=null && !motivoRechazo.equals("")){
+		        	if (motivoRechazo!=null && !"".equals(motivoRechazo)){
 		        		return true;
 		        	}
 		        }
 			}catch (Exception e){
-				try {
-					throw new ISPACInfo("Se ha producido un error al ejecutar la regla de trasladar decreto.");
-				} catch (ISPACInfo e1) {
-		        	logger.error("Error en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-				}
+	        	LOGGER.error("Error en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+				throw new ISPACInfo("Se ha producido un error al ejecutar la regla de trasladar decreto.");
 			}
 			IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
 			IItem item = ExpedientesUtil.getExpediente(rulectx.getClientContext(), rulectx.getNumExp());
 	        
-	        if(item.getString("ESTADOADM") != null && item.getString("ESTADOADM").equals("RC")){
+	        if(item.getString("ESTADOADM") != null && "RC".equals(item.getString("ESTADOADM"))){
 	        	return true;
 	        }else{
 	        	// Comprobar que se haya anexado un documento
@@ -83,15 +79,14 @@ public class ValidateFirmaDocRule implements IRule{
 				IItemCollection itemCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), sqlQuery, "");
 				
 				if (!itemCollection.next()){
-					rulectx.setInfoMessage("No se puede cerrar el trámite del expediente "+rulectx.getNumExp()+" ya que tiene documentos sin firmar");
-					//throw new ISPACRuleException("No se puede cerrar el trámite del expediente "+rulectx.getNumExp()+" ya que tiene documentos sin firmar");
+					rulectx.setInfoMessage("No se puede cerrar el trámite del expediente "+rulectx.getNumExp()+" ya que tiene documentos sin firmar");					
 					return false;
 				}else{
 					return true;
 				}
 	        }
 		} catch (Exception e) {
-        	logger.error("Error al comprobar el estado de la firma de los documentos en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+        	LOGGER.error("Error al comprobar el estado de la firma de los documentos en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
 	        throw new ISPACRuleException("Error al comprobar el estado de la firma de los documentos en el expediente: "+ rulectx.getNumExp() + ". " + e.getMessage(), e);
 	    } 
 	}
@@ -101,6 +96,6 @@ public class ValidateFirmaDocRule implements IRule{
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-
+		// Empty method
 	}
 }

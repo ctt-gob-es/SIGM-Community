@@ -29,7 +29,11 @@ public class DistributionResults implements Serializable {
     private Map idocarchhdr = new HashMap();
     
     private List books = new ArrayList();
+    
+//[Dipucr-Manu Ticket #505] + ALSIGM3 Velocidad listado de distribuciones
+    private List distInfo = new ArrayList();
 
+    
      /***************************************************************************
      * Constructors
      **************************************************************************/
@@ -135,5 +139,17 @@ public class DistributionResults implements Serializable {
 	public void setDistType(Map distType) {
 		this.distType = distType;
 	}
+
+	// [Dipucr-Manu Ticket #505] -INICIO - ALSIGM3 Velocidad listado de distribuciones
+
+	public List getDistInfo() {
+		return distInfo;
+	}
+
+
+	public void setDistInfo(List distInfo) {
+		this.distInfo = distInfo;
+	}
+	// [Dipucr-Manu Ticket #505] - FIN - ALSIGM3 Velocidad listado de distribuciones
 }
 

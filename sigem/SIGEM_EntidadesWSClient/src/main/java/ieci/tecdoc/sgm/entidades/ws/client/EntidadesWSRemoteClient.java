@@ -130,7 +130,11 @@ public class EntidadesWSRemoteClient implements ServicioEntidades{
 		poEntidad.setIdentificador(oEntidad.getIdentificador());
 		poEntidad.setNombreCorto(oEntidad.getNombreCorto());
 		poEntidad.setNombreLargo(oEntidad.getNombreLargo());
-		poEntidad.setCodigoINE(oEntidad.getCodigoINE());
+		poEntidad.setCodigo_ine(oEntidad.getCodigo_ine());
+		poEntidad.setDir3(oEntidad.getDir3());
+		poEntidad.setSia(oEntidad.getSia());
+		poEntidad.setDeh(oEntidad.getDeh());
+		poEntidad.setCif(oEntidad.getCif());
 		
 		return poEntidad;
 	}
@@ -144,7 +148,11 @@ public class EntidadesWSRemoteClient implements ServicioEntidades{
 		poEntidad.setIdentificador(oEntidad.getIdentificador());
 		poEntidad.setNombreCorto(oEntidad.getNombreCorto());
 		poEntidad.setNombreLargo(oEntidad.getNombreLargo());
-		poEntidad.setCodigoINE(oEntidad.getCodigoINE());
+		poEntidad.setCodigo_ine(oEntidad.getCodigo_ine());
+		poEntidad.setDir3(oEntidad.getDir3());
+		poEntidad.setSia(oEntidad.getSia());
+		poEntidad.setDeh(oEntidad.getDeh());
+		poEntidad.setCif(oEntidad.getCif());
 		
 		return poEntidad;
 	}

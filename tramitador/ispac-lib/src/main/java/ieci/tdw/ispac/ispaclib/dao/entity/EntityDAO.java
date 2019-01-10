@@ -53,6 +53,9 @@ public class EntityDAO extends ObjectDAO
 	private final String mfieldnumexp;
 	private final String msequence;
 	
+	/** [dipucr-Felipe #347] **/
+	public static final String MULTIVALUE_VIEWCOLUMN_TAG = "VIEWCOLUMN";
+	
 	public EntityDAO(DbCnt cnt,
 			 		 String tablename, 
 			 		 String fieldpk,  
@@ -115,13 +118,6 @@ public class EntityDAO extends ObjectDAO
 		}
 	}
 	
-	
-	
-	
-	
-	
-
-
 
 
 	protected void storeDataMultivalue(DbCnt cnt, String sqlWhere) throws ISPACException {
@@ -134,7 +130,7 @@ public class EntityDAO extends ObjectDAO
 		{
 			member = getMemberDAO(it);
 			//if (member.getColumn().isMultivalue() && member.isDirty())
-			if (member.getColumn().isMultivalue())
+			if (member.getColumn().isMultivalue() && !member.getRawName().startsWith(MULTIVALUE_VIEWCOLUMN_TAG))//[dipucr-Felipe #347]
 			{
 				try{
 					//Se eliminan los campos multivalor asociados a este registro

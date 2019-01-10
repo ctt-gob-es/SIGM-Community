@@ -58,7 +58,9 @@ public class DepartmentsTable
       "," +  UasDaoDeptTbl.CD_TYPE.getName() +
       "," +  UasDaoDeptTbl.CD_REMARKS.getName() +
       "," +  UasDaoDeptTbl.CD_CRTRID.getName() +
-      "," +  UasDaoDeptTbl.CD_CRTNDATE.getName();
+      "," +  UasDaoDeptTbl.CD_CRTNDATE.getName() +
+      "," +  UasDaoDeptTbl.CD_EMAIL.getName() + // [Tere Ticket#362] Crear un campo con email departamento
+      "," +  UasDaoDeptTbl.CD_IDORG.getName();
              
       return val;
    }
@@ -83,7 +85,9 @@ public class DepartmentsTable
           UasDaoDeptTbl.CD_REMARKS.getName() +  "," + 
           UasDaoDeptTbl.CD_UPDRID.getName() + "," +
           UasDaoDeptTbl.CD_UPDATE.getName() + "," +
-          UasDaoDeptTbl.CD_TYPE.getName();
+          UasDaoDeptTbl.CD_TYPE.getName() + "," +
+          UasDaoDeptTbl.CD_EMAIL.getName() + "," +  // [Tere Ticket#362] Crear un campo con email departamento
+          UasDaoDeptTbl.CD_IDORG.getName();
     
     /*
    	val = getBaseTableName() + "." +  UasDaoDeptTbl.CD_NAME.getName() +
@@ -112,7 +116,8 @@ public class DepartmentsTable
 
       val = UasDaoDeptTbl.CD_MGRID.getName() +
       "," + UasDaoDeptTbl.CD_UPDRID.getName() +
-      "," + UasDaoDeptTbl.CD_UPDATE.getName();
+      "," + UasDaoDeptTbl.CD_UPDATE.getName() +
+      "," + UasDaoDeptTbl.CD_EMAIL.getName(); // [Tere Ticket#362] Crear un campo con email departamento
       /*
       val = getBaseTableName() + "." + UasDaoDeptTbl.CD_MGRID.getName() +
             "," + getBaseTableName() + "." + UasDaoDeptTbl.CD_UPDRID.getName() +
@@ -141,7 +146,9 @@ public class DepartmentsTable
 		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_CRTRID.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_CRTNDATE.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_UPDRID.getName() +
-		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_UPDATE.getName();
+		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_UPDATE.getName() +
+		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_EMAIL.getName() + // [Tere Ticket#362] Crear un campo con email departamento
+		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_IDORG.getName();
              
       return val;
    }

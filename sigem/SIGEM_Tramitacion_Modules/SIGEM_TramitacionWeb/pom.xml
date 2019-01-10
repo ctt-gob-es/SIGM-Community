@@ -168,10 +168,10 @@
 				    <groupId>wss4j</groupId>
     				<artifactId>wss4j</artifactId>
 				</exclusion>
-				<exclusion>
+				<!-- <exclusion>
 					<groupId>org.apache.ws.commons.schema</groupId>
 					<artifactId>XmlSchema</artifactId>
-				</exclusion>
+				</exclusion> -->	
 				<!-- Agustin excluir invesdoc-admin #94 -->			
 				<exclusion>
 					<groupId>es.ieci.tecdoc.invesdoc</groupId>
@@ -320,6 +320,34 @@
 			<version>${servlet-api.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
+			<artifactId>fwktd-sir-api</artifactId>
+			<version>${fwktd.sir.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>fwktd-dm-alfresco</artifactId>
+					<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>axis-wsdl4j</artifactId>
+					<groupId>axis</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>invesdoc-business</artifactId>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>invesdoc-core</artifactId>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>quartz-jboss</artifactId>
+					<groupId>org.quartz-scheduler</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
 <!-- 		<dependency> -->
 <!-- 			<groupId>verificacionDatosClient</groupId> -->
@@ -372,6 +400,12 @@
 		<dependency>
 			<groupId>es.dipucr.portafirmas</groupId>
 			<artifactId>PortaFirmasExterno</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.dipucr.svd</groupId>
+			<artifactId>Clienteligero</artifactId>
 			<version>3.0</version>
 		</dependency>
 		

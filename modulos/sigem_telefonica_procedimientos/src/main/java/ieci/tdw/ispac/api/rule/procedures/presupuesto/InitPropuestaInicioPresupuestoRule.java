@@ -5,10 +5,9 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitPropuestaInicioPresupuestoRule extends InitPropuestaPresupuestoRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "PRES_PRESUPUESTO";
-		STR_extracto = "Propuesta de aprobación inicial del Presupuesto General";
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "PRES_PRESUPUESTO";
+        strExtracto = "Propuesta de aprobación inicial del Presupuesto General";
         return true;
     }
 }

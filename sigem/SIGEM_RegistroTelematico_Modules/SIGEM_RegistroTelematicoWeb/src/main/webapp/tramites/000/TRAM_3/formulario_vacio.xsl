@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:java="http://xml.apache.org/xalan/java"
     exclude-result-prefixes="java">
-<xsl:output encoding="ISO-8859-1" method="html"/>
+<xsl:include href="../templates_comunes.xsl" /><xsl:output encoding="ISO-8859-1" method="html"/>
 	<xsl:variable name="lang.titulo" select="'Formulario de Subvención'"/>
 	<xsl:variable name="lang.datosSolicitante" select="'Datos del Solicitante'"/>
 	<xsl:variable name="lang.docIdentidad" select="'Documento de identidad'"/>

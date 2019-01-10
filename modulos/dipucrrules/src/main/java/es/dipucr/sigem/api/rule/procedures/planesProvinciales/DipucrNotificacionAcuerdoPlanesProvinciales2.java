@@ -281,7 +281,7 @@ public class DipucrNotificacionAcuerdoPlanesProvinciales2 implements IRule{
 							        	}//fin for cada obra
 						        	}//Si hay obras
 								}
-							}catch (Throwable e) {
+							}catch (Exception e) {
 								
 								// Si se produce algún error se hace rollback de la transacción
 								cct.endTX(false);

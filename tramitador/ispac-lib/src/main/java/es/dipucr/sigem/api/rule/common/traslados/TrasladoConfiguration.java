@@ -27,6 +27,9 @@ public class TrasladoConfiguration extends DipucrPropertiesConfiguration {
 
 	public static final String BOP_TRASLADO_EMAIL = "bop_traslado_email";
 	public static final String BOP_TRASLADO_ID = "bop_traslado_id";
+	
+	public static final String CEX_TRASLADO_EMAIL = "cex_traslado_email";
+	public static final String CEX_TRASLADO_ID = "cex_traslado_id";
 
 	public static final String CONTRATACION_COMPRAS_TRASLADO_EMAIL = "contratacion_compras_traslado_email";
 	public static final String CONTRATACION_COMPRAS_TRASLADO_ID = "contratacion_compras_traslado_id";

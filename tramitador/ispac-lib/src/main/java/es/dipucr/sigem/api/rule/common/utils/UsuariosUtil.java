@@ -1,10 +1,13 @@
 package es.dipucr.sigem.api.rule.common.utils;
 
+import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+
 import java.util.StringTokenizer;
 
-import ieci.tdw.ispac.api.errors.ISPACException;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
-import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import org.apache.log4j.Logger;
+
 import es.dipucr.sigem.api.rule.common.AccesoBBDDRegistro;
 
 /**
@@ -14,6 +17,8 @@ import es.dipucr.sigem.api.rule.common.AccesoBBDDRegistro;
  * @since 01.02.13
  */
 public class UsuariosUtil {
+	
+    protected static final Logger LOGGER = Logger.getLogger(UsuariosUtil.class);
 	
 	public static String UID_SEPARATOR = "-";
 
@@ -33,7 +38,7 @@ public class UsuariosUtil {
 	 * @return
 	 * @throws ISPACException
 	 */
-	public static String getCampoUsuario(ClientContext cct, String nombreCampo) throws ISPACException{
+	public static String getCampoUsuario(IClientContext cct, String nombreCampo) throws ISPACException{
 		
 		String codEntidad = EntidadesAdmUtil.obtenerEntidad(cct);
 		AccesoBBDDRegistro accesoRegistro = new AccesoBBDDRegistro(codEntidad);
@@ -48,7 +53,7 @@ public class UsuariosUtil {
 	 * @return
 	 * @throws ISPACException
 	 */
-	public static String getCampoUsuario(ClientContext cct, String nombreUsuario, String nombreCampo) throws ISPACException{
+	public static String getCampoUsuario(IClientContext cct, String nombreUsuario, String nombreCampo) throws ISPACException{
 		
 		String codEntidad = EntidadesAdmUtil.obtenerEntidad(cct);
 		AccesoBBDDRegistro accesoRegistro = new AccesoBBDDRegistro(codEntidad);
@@ -62,7 +67,7 @@ public class UsuariosUtil {
 	 * @return
 	 * @throws ISPACException
 	 */
-	public static String getCampoUsuarioData(ClientContext cct, String nombreCampo) throws ISPACException{
+	public static String getCampoUsuarioData(IClientContext cct, String nombreCampo) throws ISPACException{
 		
 		String codEntidad = EntidadesAdmUtil.obtenerEntidad(cct);
 		AccesoBBDDRegistro accesoRegistro = new AccesoBBDDRegistro(codEntidad);
@@ -77,7 +82,7 @@ public class UsuariosUtil {
 	 * @return
 	 * @throws ISPACException
 	 */
-	public static String getCampoUsuarioData(ClientContext cct, String nombreUsuario, String nombreCampo) throws ISPACException{
+	public static String getCampoUsuarioData(IClientContext cct, String nombreUsuario, String nombreCampo) throws ISPACException{
 		
 		String codEntidad = EntidadesAdmUtil.obtenerEntidad(cct);
 		AccesoBBDDRegistro accesoRegistro = new AccesoBBDDRegistro(codEntidad);
@@ -92,7 +97,7 @@ public class UsuariosUtil {
 	 * @return
 	 * @throws ISPACException
 	 */
-	public static int getIdUsuario(ClientContext cct) throws ISPACException{
+	public static int getIdUsuario(IClientContext cct) throws ISPACException{
 		
 		int id = Integer.MIN_VALUE;
 		String sUID = cct.getUser().getUID();
@@ -115,7 +120,7 @@ public class UsuariosUtil {
 	 * @return
 	 * @throws ISPACException
 	 */
-	public static String getDni(ClientContext cct) throws ISPACException{
+	public static String getDni(IClientContext cct) throws ISPACException{		
 		
 		return getCampoUsuarioData(cct, "DNI");
 	}
@@ -126,7 +131,7 @@ public class UsuariosUtil {
 	 * @return
 	 * @throws ISPACException
 	 */
-	public static String getNombreFirma(ClientContext cct) throws ISPACException{
+	public static String getNombreFirma(IClientContext cct) throws ISPACException{
 		
 		String nombre = getCampoUsuarioData(cct, "NOMBRE");
 		String apellidos = getCampoUsuarioData(cct, "APELLIDOS");
@@ -139,10 +144,24 @@ public class UsuariosUtil {
 	 * @return
 	 * @throws ISPACException
 	 */
-	public static String getNombreFirma(ClientContext cct, String nombreUsuario) throws ISPACException{
+	public static String getNombreFirma(IClientContext cct, String nombreUsuario) throws ISPACException{
 		
 		String nombre = getCampoUsuarioData(cct, nombreUsuario, "NOMBRE");
 		String apellidos = getCampoUsuarioData(cct, nombreUsuario, "APELLIDOS");
+		return getNombreCompleto(nombre, apellidos);
+	}
+	
+	/**
+	 * Devuelve el Nombre de firma del usuario actual
+	 * @param ctx
+	 * @return
+	 * @throws ISPACException
+	 */
+	public static String getNombreFirma(String idEntidad, int idUsuario) throws ISPACException{
+		
+		AccesoBBDDRegistro accesoRegistro = new AccesoBBDDRegistro(idEntidad);
+		String nombre = accesoRegistro.getCampoUsuarioData(idUsuario, "NOMBRE");
+		String apellidos = accesoRegistro.getCampoUsuarioData(idUsuario, "APELLIDOS");
 		return getNombreCompleto(nombre, apellidos);
 	}
 	
@@ -170,8 +189,21 @@ public class UsuariosUtil {
 	 * @return
 	 * @throws ISPACException
 	 */
-	public static String getNumeroSerie(ClientContext cct) throws ISPACException{
+	public static String getNumeroSerie(IClientContext cct) throws ISPACException{
 		
 		return getCampoUsuarioData(cct, "ID_CERTIFICADO");
+	}
+	
+	public static String getCorreoElectronico(IClientContext cct, String nombreUsuario) {
+		String correo = "";
+		
+		try{
+			correo = getCampoUsuarioData( cct, nombreUsuario, "EMAIL");
+			
+		} catch (Exception e){
+			LOGGER.error("ERROR al recueprar el correo electrónico del usuario " + nombreUsuario + ". " + e.getMessage(), e);
+		}
+	
+		return correo;
 	}
 }

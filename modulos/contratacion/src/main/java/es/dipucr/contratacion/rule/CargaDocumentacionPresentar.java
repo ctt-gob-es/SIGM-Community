@@ -71,7 +71,8 @@ public class CargaDocumentacionPresentar implements IRule{
 			//Sobre A
 			itemDocPres.set("NUMEXP", numexp);
 			itemDocPres.set("NOMBRESOBRE", sobre1); 
-			itemDocPres.set("TIPO_DOC", sobre1TipoDoc); 
+			itemDocPres.set("TIPO_DOC", sobre1TipoDoc);
+			//itemDocPres.set("TIPO_EVENTO", tipoEvento);
 			itemDocPres.set("CALLE", calle); 
 			itemDocPres.set("LOCALIDAD", localidad); 
 			itemDocPres.set("PROVINCIA", provincia); 

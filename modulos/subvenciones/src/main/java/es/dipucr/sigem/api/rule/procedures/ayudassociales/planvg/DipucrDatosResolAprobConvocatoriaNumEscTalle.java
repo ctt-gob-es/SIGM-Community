@@ -10,17 +10,19 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
+import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.util.Calendar;
-
 import es.dipucr.sigem.api.rule.common.documento.DipucrAutoGeneraDocIniTramiteRule;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
-import es.dipucr.sigem.api.rule.procedures.Constants;
+import es.dipucr.sigem.api.rule.procedures.ConstantesSubvenciones;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrDatosResolAprobConvocatoriaNumEscTalle extends DipucrAutoGeneraDocIniTramiteRule {
 
@@ -47,48 +49,34 @@ public class DipucrDatosResolAprobConvocatoriaNumEscTalle extends DipucrAutoGene
     
     public void setSsVariables(IClientContext cct, IRuleContext rulectx) {
         try {
-             IInvesflowAPI invesFlowAPI = cct.getAPI();
-             IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+            IInvesflowAPI invesFlowAPI = cct.getAPI();
+            IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
                 
-            cct.setSsVariable("ANIO", "" + Calendar.getInstance().get(Calendar.YEAR));
+            cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO, "" + Calendar.getInstance().get(Calendar.YEAR));
             
-            String numexp = rulectx.getNumExp();
             int totalTalleres = 0;
-            int totalActividades = 0;            
+            int totalActividades = 0;
+            int totalBullying = 0;
             
-             //Recuperamos los expedientes relacionados
-            String strQuery = "WHERE NUMEXP_PADRE='" + numexp + "'";
-            IItemCollection expRelCol = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, strQuery);
-            Iterator<?> expRelIt = expRelCol.iterator();                  
-            if(expRelIt.hasNext()){
-                while (expRelIt.hasNext()){
-                    IItem expRel = (IItem)expRelIt.next();
-                    //Solo trabajamos con aquellos expedientes en estado RESOLUCION - RS
-                    String numexpHijo = expRel.getString("NUMEXP_HIJO");
-                    
-                    IItem expHijo = ExpedientesUtil.getExpediente(cct, numexpHijo); 
-                    if(expHijo != null && "RS".equals(expHijo.get("ESTADOADM"))){
-                        IItemCollection resolucionCollection = entitiesAPI.getEntities("DPCR_RESOL_SOL_CONV_SUB", numexpHijo);
-                        Iterator<?> resolucionIterator = resolucionCollection.iterator();
-                        if(resolucionIterator.hasNext()){
-                            IItem resolucion = (IItem)resolucionIterator.next();
-                            try{
-                                totalTalleres += Integer.parseInt(resolucion.getString("TALLERES_EDU"));
-                            } catch(Exception e){
-                                LOGGER.debug("El campo TALLERES_EDU es nulo, vacío o no numérico. " + e.getMessage(), e);
-                            }
-                            try{
-                                totalActividades += Integer.parseInt(resolucion.getString("ACTIVIDADES_INTERCULT"));
-                            } catch(Exception e){
-                                LOGGER.debug("El campo ACTIVIDADES_INNTERCULT es nulo, vacío o no numérico. " + e.getMessage(), e);
-                            }
-                        }                            
-                    }                    
+            List<String> expedientesRelacionadosList = ExpedientesRelacionadosUtil.getExpedientesRelacionadosHijosByEstadoAdm(rulectx, ExpedientesUtil.EstadoADM.RS);
+            
+            for(String numexpHijo : expedientesRelacionadosList){
+                IItemCollection resolucionCollection = entitiesAPI.getEntities(ConstantesSubvenciones.DatosResolucion.NOMBRE_TABLA, numexpHijo);
+                Iterator<?> resolucionIterator = resolucionCollection.iterator();
+                
+                if(resolucionIterator.hasNext()){
+                    IItem resolucion = (IItem)resolucionIterator.next();
+
+                    totalTalleres += SubvencionesUtils.getInt(resolucion, ConstantesSubvenciones.DatosResolucion.TALLERES_EDU);
+                    totalActividades += SubvencionesUtils.getInt(resolucion, ConstantesSubvenciones.DatosResolucion.ACTIVIDADES_INTERCULT);
+                    totalBullying += SubvencionesUtils.getInt(resolucion, ConstantesSubvenciones.DatosResolucion.TALLERES_BULLYING);
                 }
             }  
             
             cct.setSsVariable("TOTALTALLERES", totalTalleres > 0 ? "Número total de talleres de educación en igualdad: " + totalTalleres : "");
-            cct.setSsVariable("TOTALACTIVIDADES", totalActividades>0?"Número total de talleres de educación en interculturalidad: " + totalActividades : "");
+            cct.setSsVariable("TOTALACTIVIDADES", totalActividades > 0 ? "Número total de talleres de educación en interculturalidad: " + totalActividades : "");
+            cct.setSsVariable("TOTALBULLYING", totalBullying > 0 ? "Número total de talleres contra el bullying y el ciberbullying: " + totalBullying : "");
+
             
         } catch (ISPACException e) {
             LOGGER.error(e.getMessage(), e);
@@ -97,7 +85,7 @@ public class DipucrDatosResolAprobConvocatoriaNumEscTalle extends DipucrAutoGene
 
     public void deleteSsVariables(IClientContext cct) {
         try {
-            cct.deleteSsVariable("ANIO");
+            cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO);
         } catch (ISPACException e) {
             LOGGER.error(e.getMessage(), e);
         }

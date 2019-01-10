@@ -43,7 +43,8 @@
 		<!-- applet de escaneo-->
 		<APPLET MAYSCRIPT="true" id="appletScanCompulsa" width="0" height="0" CODE="es.ieci.tecdoc.fwktd.applets.scan.applet.IdocAppletLauncher" 
 			ALT="Applet Compulsa"
-			ARCHIVE="applets/fwktd-scan-applet-0.7.jar;jsessionid=<%=session.getId()%>">
+			ARCHIVE="applets/fwktd-scan-applet-0.7.jar">
+			<!-- ARCHIVE="applets/fwktd-scan-applet-0.7.jar;jsessionid=<%=session.getId()%>"> -->
 			<param name="returnJSFunction" value="compulsar"/>
 			<param name="codebase" value="<%=SigemHttpUtils.getHttpCodeBase(request)%>"/>
 			<param name="java_arguments"  value="-Xmx512m"/>

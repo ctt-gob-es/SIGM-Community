@@ -73,13 +73,13 @@ public class GenerateActaComiMiguelturraRule extends GenerateActaBasePropuestaRu
 				//"Servicios a la Ciudadanía"
 				if(area.equals("0040")){
 					if(sesion.equals("ORD")){
-						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - BSocial - Ordinaria";
+						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - Cultura - Ordinaria";
 					}
 					if(sesion.equals("EXTR")){
-						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - BSocial - Extra";
+						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - Cultura - Extra";
 					}
 					if(sesion.equals("EXUR")){
-						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - BSocial -  ExtraUrg";
+						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - Cultura - ExtraUrg";
 					}
 					if(sesion.equals("CONS")){
 						
@@ -88,13 +88,13 @@ public class GenerateActaComiMiguelturraRule extends GenerateActaBasePropuestaRu
 				//"Acción Social"
 				if(area.equals("0060")){
 					if(sesion.equals("ORD")){
-						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - Cultura - Ordinaria";
+						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - BSocial - Ordinaria";
 					}
 					if(sesion.equals("EXTR")){
-						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - Cultura - Extra";
+						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - BSocial - Extra";
 					}
 					if(sesion.equals("EXUR")){
-						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - Cultura - ExtraUrg";
+						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - BSocial - ExtraUrg";
 					}
 					if(sesion.equals("CONS")){
 						

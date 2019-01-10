@@ -14,10 +14,10 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
  */
 public class InitPropuestaNegComisionRule extends InitPropuestaNegRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		STR_entidad = "SGN_NEGOCIADO";
-		STR_extracto = "Comisión informativa previa a la aprobación de convocatoria de contratación";
-		return true;
-	}
-	
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "SGN_NEGOCIADO";
+        strExtracto = "Comisión informativa previa a la aprobación de convocatoria de contratación";
+        return true;
+    }
+    
 }

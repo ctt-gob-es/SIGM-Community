@@ -32,5 +32,13 @@ public interface TerceroFisicoDao extends
 	 * @return
 	 */
 	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber, int typeDoc);
+	
+	/**
+	 * Devuelve un listado de terceros físicos a partir del tipo de documento y el número de documento
+	 * 
+	 * @param phisicalNumber
+	 * @return
+	 */
+	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber);
 
 }

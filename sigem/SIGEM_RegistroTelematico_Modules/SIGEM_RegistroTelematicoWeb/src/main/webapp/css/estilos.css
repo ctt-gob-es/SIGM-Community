@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
 /*Generales*/
 body {
 	padding:0px;
-	margin: 5px 5px 10px 5px;
-	font:normal 70%/normal Verdana, "Arial", Tahoma, Helvetica, sans-serif;
+	margin: 0px;
+	font:normal 78%/normal 'Open Sans', Tahoma, Helvetica, Verdana, "Arial", sans-serif;
 	background: #FFFFFF;
 }
 #contenedora {
@@ -30,15 +32,24 @@ body {
     visibility: hidden;
 }
 
-a:hover{ text-decoration:underline;
+a:hover{ 
+	text-decoration:underline;
 }
-a{ text-decoration:none; color:#000000
+
+a{ 
+	text-decoration:none; color:#000000
 }
-.activo{ text-decoration:none;color:#cc3300
+
+.activo{
+	text-decoration:none;color:#cc3300
 }
-.titular{font-weight:bold;color: #006699;
+
+.titular{
+	font-weight:bold;color: #006699;
 }
-.titular a{ text-decoration:none; color: #006699;
+
+.titular a{
+	text-decoration:none; color: #006699;
 }
 
 /*cabecera*/
@@ -46,33 +57,66 @@ a{ text-decoration:none; color:#000000
 
 #cabecera {
 	height: 61px;
-	background: #99D6F5 url("../img/fondo_cab.jpg") top left no-repeat;
+	overflow: hidden;
+	background: #dbf1ff /*url("../img/fondo_cab.jpg") top left no-repeat*/; /* Por defecto, navegadores que no soportan gradientes*/
+	background: linear-gradient(#c4daf5, #ffffff);
+	background: -webkit-linear-gradient(#c4daf5, #ffffff); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#c4daf5, #ffffff); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#c4daf5, #ffffff); /* For Firefox 3.6 to 15 */
+	border-bottom: 1px solid #677f8e;
 }
 
-#cabecera h1 {
-	margin: 10px 0px 0px 8px;
-	height: 54px;
-/*	background: url("../img/logo.gif") 0px 10px no-repeat;
-	text-indent: -3000px;*/
+#cabecera .logo {
+	float:left;
+	margin-left:20px;
 }
 
-#cabecera h3 {
-	margin: 0px;
-	position: absolute;
-	top: 6px;
-	left: 279px;
-/*	cambiar para cabecera sin margen */
-	width: 415px;
-	height: 60px;
-/*	background: url("../img/portal_organismo.gif") 0px 0px no-repeat;*/
-	text-indent: -3000px;
+#cabecera .logo img {
+	width: auto;
+    height: 61px;
 }
+
+#cabecera .nombre_entidad {
+	float:left;
+	margin-left: 20px;
+}
+
+#cabecera .nombre_entidad h1 {
+    padding-top: 38px;
+    margin: 0;
+    font-size: 1.3em;
+    color: #294b65;
+	font-family: Tahoma, Helvetica, Verdana, "Arial", sans-serif;
+}
+
+/* #cabecera h1 { */
+	/* margin: 0px 0px 0px 8px; */
+	/* height: 54px; */
+	/* background: url("../img/logo.gif") 0px 10px no-repeat; */
+	/* text-indent: -3000px; */
+/* } */
+
+/* #cabecera h3 { */
+	/* margin: 0px; */
+	/* position: absolute; */
+	/* top: 6px; */
+	/* left: 279px; */
+/* /*	cambiar para cabecera sin margen */ */
+	/* width: 415px; */
+	/* height: 60px; */
+/* /*	background: url("../img/portal_organismo.gif") 0px 0px no-repeat;*/ */
+	/* text-indent: -3000px; */
+/* } */
 
 #cabecera .salir {
+	float:right;
+}
+
+#cabecera .salir p {
 	position: absolute;
 	background: url("../img/exit.gif") top left no-repeat;
 	text-align: right;
-	top: 28px;
+	top: 18px;
 	right: 26px;
 }
 
@@ -92,7 +136,9 @@ a{ text-decoration:none; color:#000000
 /* area de usuario con texto a izquierda y bot�n de ayuda a derecha */
 
 #usuario {
-	background: url("../img/bg_right_usuario.jpg") bottom right no-repeat;
+	background: #f7f7f7; 
+	/*url("../img/bg_right_usuario.jpg") bottom right no-repeat;*/
+	border-bottom: 1px solid #999;
 	height: 27px;
 	vertical-align:middle;
 	margin: 0px;
@@ -100,10 +146,10 @@ a{ text-decoration:none; color:#000000
 }
 
 #barra_usuario {
-	margin: 0px;
+	/*margin: 0px;
 	background: url("../img/bg_left_usuario.jpg") left bottom no-repeat;
 	padding: 0px;
-	height: 27px;
+	height: 27px;*/
 	line-height: 27px;
 }
 
@@ -189,24 +235,30 @@ p.desplegar{
 }
 
 .cuerpo{
-	background: #dee1e8 url(../img/bg_left_cuerpo.jpg) no-repeat left top;
-	width:707px;
+	/*background: #dee1e8 url(../img/bg_left_cuerpo.jpg) no-repeat left top;*/
+	/* width:707px; */
 	text-align:left;
 }
-.cuerpomid{ background: url(../img/bg_mid_cuerpo.jpg) repeat-x left top; margin: 0px 6px 0px 5px; padding: 6px 0px 0px;
+.cuerpomid{ 
+	/* background: url(../img/bg_mid_cuerpo.jpg) repeat-x left top;  */
+	/* margin: 0px 6px 0px 5px;  */
+	/* padding: 6px 0px 0px; */
 }
-.cuerporight{ background: url(../img/bg_right_cuerpo.jpg) no-repeat right top;
+.cuerporight{ 
+	/* background: url(../img/bg_right_cuerpo.jpg) no-repeat right top; */
 }
 
 .contenedor_centrado h1{
 	font-weight:bold;
-	color: #006699;
+	color: #444;
 	font-size:100%;
-	background: url(../img/bolo_activo.gif) no-repeat left top;
-	margin: 6px 0px 6px 10px;
+	/* background: url(../img/bolo_activo.gif) no-repeat left top; */
+	/* margin: 6px 0px 6px 10px; */
+	margin: 6px 0px;
 	padding: 0px 0px 0px 10px;
 	line-height:90%;
 }
+
 h2{
 	font-weight:bold;
 	color: #006699;
@@ -217,12 +269,26 @@ h2{
 }
 
 .cuerpobt{
-	background: #dee1e8 url(../img/bg_leftdown_cuerpo.jpg) no-repeat left bottom;
-	width:707px;
+	/* /* background: #dee1e8 url(../img/bg_leftdown_cuerpo.jpg) no-repeat left bottom; */ */
+	/* width:707px; */
 }
-.cuerpomidbt{ background: url(../img/bg_middown_cuerpo.jpg) repeat-x left bottom; margin: 0px 6px 0px 5px; padding: 6px 0px 20px;
+
+.cuerpomidbt{
+	/* background: url(../img/bg_middown_cuerpo.jpg) repeat-x left bottom;  */
+	/* margin: 0px 6px 0px 5px;  */
+	/* padding: 6px 0px 20px; */
+	margin-top:10px;
 }
-.cuerporightbt{ background: url(../img/bg_rightdown_cuerpo.jpg) no-repeat right bottom;
+
+.cuerporightbt{ 
+	/* background: url(../img/bg_rightdown_cuerpo.jpg) no-repeat right bottom; */
+}
+
+.cuerpomid > h1 {
+	font-size:1.3em;
+	text-align: center;
+	padding:0;
+	line-height: 120%;
 }
 
 .contenido_cuerpo {
@@ -238,29 +304,49 @@ h2{
 
 
 .submenu {
-	width:100%;
+	/* width:100%; */
 	height:21px;
 	border-top: 1px solid #D4D0C8;
 	border-right: 1px solid #D4D0C8;
 	border-left: 1px solid #D4D0C8;
-	background-color: #BEE8F9;
+	background-color: #e2e2e2;
 	padding:0px;
 }
 
 .cuadro {
 	border: 1px solid #c7d9d3;
-	background: #FFFFFF;
+	background: #fbfeff;
 	padding: 15px;
 	margin: 0px;
 }
 
-.cuadro input{height:16px;font-size:100%; padding:0;border:1px solid #7f9db9;width:160px;margin-right:10px
+.cuadro input{
+	/* height:16px; */
+	font-size:100%; 
+	padding:2px;
+	border-radius:3px;
+	border:1px solid #7f9db9;
+	width:160px;
+	margin-right:10px
+}
+
+.cuadro textarea {
+	padding:2px;
+	border-radius: 3px;
+}
+
+.cuadro a {
+	font-weight: bold;
+    	color: #0579c0;
+    	padding-top: 5px;
 }
 
 .col {
-	background: url(../img/fondo_puntos.gif) repeat-x left bottom;
+	/* background: url(../img/fondo_puntos.gif) repeat-x left bottom; */
 	padding-bottom:3px;
 	padding-top:3px;
+	height: auto !important; 
+	border-bottom: 1px solid #eee;
 }
 
 
@@ -278,13 +364,15 @@ h2{
 
 
 .col label {
-	color: #006699;
+	color: #484848;
 	float:left;
 	padding-top:2px;
 }
 
 label.gr {
 	width:110px;
+	/* text-align: right; */
+    padding-right: 10px;
 }
 
 .cuadro_alta{ background: #FFFFFF; border-right: 1px solid #c6c9d5; border-bottom: 1px solid #c6c9d5; border-left: 1px solid #c6c9d5; padding:1px; margin:0px
@@ -295,7 +383,7 @@ label.gr {
 }
 .cuadro select.gr{height:16px;font-size:100%; padding:0;border:1px solid #7f9db9;width:160px;margin-right:10px
 }
-.cuadro textarea.gr{padding:0;border:1px solid #7f9db9;margin-right:10px
+.cuadro textarea.gr{border:1px solid #7f9db9;margin-right:10px
 }
 titulo{ font-weight:bold; color: #006699; font-size:100%; margin: 6px 0px 0px 10px; padding: 0px 0px 0px 10px; line-height:90%;
 }
@@ -308,12 +396,30 @@ titulo{ font-weight:bold; color: #006699; font-size:100%; margin: 6px 0px 0px 10
 .cuadro2 gr2{height:16px; font-size:100%; padding:0;border:1px solid #7f9db9;width:160px;margin-right:10px
 }
 
+/* input.ok { */
+	/* background: #fefefe url(../img/fondo_boton.jpg) no-repeat; */
+	/* color:#fff; font:bold 11px "Arial"; */
+	/* height: 20px; */
+	/* border: 0px; */
+	/* width:87px; */
+/* } */
+
 input.ok {
-	background: #fefefe url(../img/fondo_boton.jpg) no-repeat;
-	color:#fff; font:bold 11px "Arial";
-	height: 20px;
-	border: 0px;
-	width:87px;
+	color: #fff;
+    background-color: #0275d8;
+    border-color: #0275d8;    
+    border: 1px solid transparent;
+    padding: .5rem 1rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+    -webkit-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+	cursor:pointer;
+}
+
+input.ok:hover {
+	background-color:#0a5390;
 }
 
 label.error {

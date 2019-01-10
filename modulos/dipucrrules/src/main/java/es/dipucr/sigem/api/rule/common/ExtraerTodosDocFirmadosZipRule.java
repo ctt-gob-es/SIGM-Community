@@ -27,15 +27,15 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class ExtraerTodosDocFirmadosZipRule implements IRule {
 	
-	private static final Logger logger = Logger.getLogger(ExtraerDocFirmadosZipRule.class);
+	private static final Logger LOGGER = Logger.getLogger(ExtraerDocFirmadosZipRule.class);
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException{
+		// Nada que hacer al cancelar
     }
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
-		try
-    	{
+		try {
 			//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
@@ -50,8 +50,9 @@ public class ExtraerTodosDocFirmadosZipRule implements IRule {
 	
 	        //Obtenemos los documentos a partir de su nombre
 			List filesConcatenate = new ArrayList();
-			String STR_queryDocumentos = "ESTADOFIRMA = '02'";
-			IItemCollection documentsCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), STR_queryDocumentos, "FDOC DESC");
+			//[dipucr-Felipe] Incluyo documentos firmados externamente que se anexan mediante "anexar fichero" 
+			String queryDocumentos = "(ESTADOFIRMA = '02' OR FAPROBACION IS NOT NULL)";
+			IItemCollection documentsCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), queryDocumentos, "FDOC DESC");
 			
 			Iterator it  = documentsCollection.iterator();
 	        IItem itemDoc = null;
@@ -73,7 +74,8 @@ public class ExtraerTodosDocFirmadosZipRule implements IRule {
 			
 			// Crear el zip con los documentos
 			//    http://www.manual-java.com/codigos-java/compresion-decompresion-archivos-zip-java.html
-			File zipFile = DocumentosUtil.createDocumentsZipFile(genDocAPI, filesConcatenate);
+//			File zipFile = DocumentosUtil.createDocumentsZipFileInfoPagRDE(genDocAPI, filesConcatenate);//[dipucr-Felipe #868]
+			File zipFile = DocumentosUtil.createDocumentsZipFileAll(genDocAPI, filesConcatenate);
 			
 	        //Generamos el documento zip
 			String sExtension = "zip";
@@ -94,12 +96,10 @@ public class ExtraerTodosDocFirmadosZipRule implements IRule {
 				
 				// Si todo ha sido correcto se hace commit de la transacción
 				bCommit = true;
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				// Si se produce algún error
-				throw new ISPACInfo("Error al generar el documento.");
-			}
-			finally {
+				throw new ISPACInfo("Error al generar el documento.", e);
+			} finally {
 				cct.endTX(bCommit);
 			}
 		        
@@ -130,11 +130,18 @@ public class ExtraerTodosDocFirmadosZipRule implements IRule {
 			        
 			        strQuery="SELECT DESCRIPCION FROM SPAC_CTOS_FIRMA_CABECERA WHERE ID_CIRCUITO = "+idCircuito+"";
 			        ResultSet circuitoFirmaDetalle = cct.getConnection().executeQuery(strQuery).getResultSet();
-			        if(circuitoFirmaDetalle==null)
-		          	{
+			        if(circuitoFirmaDetalle==null) {
 		          		throw new ISPACInfo("No hay ningun procediento asociado");
 		          	}
-		          	if(circuitoFirmaDetalle.next()) if (circuitoFirmaDetalle.getString("DESCRIPCION")!=null) cargo = circuitoFirmaDetalle.getString("DESCRIPCION"); else cargo="";
+		          	if(circuitoFirmaDetalle.next()) if (circuitoFirmaDetalle.getString("DESCRIPCION")!=null) {
+		          		cargo = circuitoFirmaDetalle.getString("DESCRIPCION");
+		          	} else {
+		          		cargo="";
+		          	}
+		          	if(cargo.length()>20) {
+		          		cargo = cargo.substring(0,19);
+		          	}
+		          	circuitoFirmaDetalle.close();
 		        }
 	        }
 	        
@@ -148,8 +155,7 @@ public class ExtraerTodosDocFirmadosZipRule implements IRule {
 			        entidad.set("NUM_VICEP", cargo);
 			        entidad.set("TITULO", titulo);
 			        entidad.store(cct);
-		        }
-		        else{
+		        } else {
 		        	IItem item = entitiesAPI.createEntity(Constants.TABLASBBDD.SUBV_CONVOCATORIA,numexp);
 					item.set("NUMEXP", rulectx.getNumExp()); 
 					item.set("ESTADO", "Inicio");
@@ -158,17 +164,11 @@ public class ExtraerTodosDocFirmadosZipRule implements IRule {
 			        item.store(rulectx.getClientContext());
 		        }
 	         }			
-    	}
-    	catch(Exception e) 
-        {
-    		logger.error(e.getMessage(), e);
-        	if (e instanceof ISPACRuleException)
-        	{
-			    throw new ISPACRuleException(e);
-        	}
+    	} catch(Exception e) {
+    		LOGGER.error(e.getMessage(), e);
         	throw new ISPACRuleException("No se ha podido generar la propuesta.",e);
         }
-    	return new Boolean(true);
+    	return true;
 	}
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException{

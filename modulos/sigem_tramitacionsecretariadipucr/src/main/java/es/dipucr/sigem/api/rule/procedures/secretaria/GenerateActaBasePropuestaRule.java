@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 
 import com.sun.star.lang.XComponent;
 
+import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
@@ -69,8 +70,7 @@ public class GenerateActaBasePropuestaRule implements IRule {
 				ooHelper = OpenOfficeHelper.getInstance();
 				xComponent = ooHelper.loadDocument("file://"+ file.getPath());
 				file.delete();
-			}
-			else{
+			} else{
 	
 				// Obtiene la cabecera
 				DocumentosUtil.generarDocumento(rulectx, STR_nombreCabecera,null);				
@@ -100,8 +100,7 @@ public class GenerateActaBasePropuestaRule implements IRule {
 				String numexp_origen = iProp2.getString("NUMEXP_ORIGEN");
 	
 				String strQuery = "WHERE NUMEXP = '" + numexp_origen + "'";
-				IItemCollection collection = entitiesAPI.queryEntities(
-						"SECR_PROPUESTA", strQuery);
+				IItemCollection collection = entitiesAPI.queryEntities("SECR_PROPUESTA", strQuery);
 	
 				Iterator it = collection.iterator();
 				IItem item = null;
@@ -111,19 +110,16 @@ public class GenerateActaBasePropuestaRule implements IRule {
 					item = ((IItem) it.next());
 					String fecha_emision = item.getString("FECHA_EMISION");
 					if (fecha_emision != null) {
-						SimpleDateFormat dateformat = new SimpleDateFormat(
-								"dd 'de' MMMM 'de' yyyy", new Locale("es"));
-						SimpleDateFormat inputDateformat = new SimpleDateFormat(
-								"dd'/'MM'/'yyyy", new Locale("es"));
-						fecha_emision = dateformat.format(inputDateformat
-								.parse(fecha_emision));
+						SimpleDateFormat dateformat = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es"));
+						SimpleDateFormat inputDateformat = new SimpleDateFormat("dd'/'MM'/'yyyy", new Locale("es"));
+						fecha_emision = dateformat.format(inputDateformat.parse(fecha_emision));
 	
 					} else {
 						fecha_emision = "";
 					}
 					cct.setSsVariable("FECHA_EMISION", fecha_emision);
 				}
-	
+				logger.warn("Propuesta. "+ numexp_origen);
 				String votacion = "";
 				if (iProp2.get("RESULTADO_VOTACION") != null)
 					votacion = iProp2.getString("RESULTADO_VOTACION");
@@ -135,35 +131,37 @@ public class GenerateActaBasePropuestaRule implements IRule {
 				cct.setSsVariable("RESULTADO_VOTACION", votacion);
 	
 				// creacion del documento
+				//Generación de la propuesta 1
+				Iterator<IItem> propAprob = ConsultasGenericasUtil.queryEntities(rulectx, "SECR_PROPUESTA", "ORIGEN='0001' AND NUMEXP='"+rulectx.getNumExp()+"'");
+				int nOrden = 1;
+				if(propAprob.hasNext()){
+					DocumentosUtil.generarDocumento(rulectx, STR_propuestaBorrador, null);
+					strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, STR_propuestaBorrador);
+					file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
+					DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
+					file.delete();
+		
+					cct.deleteSsVariable("ORDEN");
+					cct.deleteSsVariable("EXTRACTO");
+					cct.deleteSsVariable("FECHA_EMISION");
+					cct.deleteSsVariable("RESULTADO_VOTACION");
+		
+					// GENERACION DE LAS PROPUESTAS
+					collection = DocumentosUtil.getDocumentsByNombre(rulectx.getNumExp(), rulectx, "Propuesta");
+				}
+				else{
+        			nOrden = 0;
+        		}
 	
-				DocumentosUtil.generarDocumento(rulectx,
-						STR_propuestaBorrador, null);
-				strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx,
-						STR_propuestaBorrador);
-				file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-				//DipucrCommonFunctions.Concatena(xComponent,"file://" + file.getPath(), ooHelper);
-				DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
-				file.delete();
-	
-				cct.deleteSsVariable("ORDEN");
-				cct.deleteSsVariable("EXTRACTO");
-				cct.deleteSsVariable("FECHA_EMISION");
-				cct.deleteSsVariable("RESULTADO_VOTACION");
-	
-				// GENERACION DE LAS PROPUESTAS
-				collection = DocumentosUtil.getDocumentsByNombre(rulectx.getNumExp(), rulectx, "Propuesta");
-	
-				Vector<IItem> vPropuesta = SecretariaUtil.orderPropuestas(collection);
+				Vector<IItem> vPropuesta = SecretariaUtil.orderPropuestas(rulectx);
 				if (vPropuesta != null && vPropuesta.size()>1) {
-					for (int i = 1; i < vPropuesta.size(); i++) {
+					for (int i = nOrden; i < vPropuesta.size(); i++) {
 	
 						if (vPropuesta.get(i) != null) {
 							item = ((IItem) vPropuesta.get(i));
 							String descripcion = item.getString("DESCRIPCION");
-							strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), 
-									rulectx, descripcion);
+							strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, descripcion);
 							file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-							//DipucrCommonFunctions.Concatena(xComponent, "file://"+file.getPath(), ooHelper);
 							DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 							file.delete();
 						}
@@ -235,7 +233,6 @@ public class GenerateActaBasePropuestaRule implements IRule {
 		
 									file = DocumentosUtil
 											.getFile(cct, strInfoPag, null, null);
-									//DipucrCommonFunctions.Concatena(xComponent,"file://" + file.getPath(), ooHelper);
 									DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 									file.delete();
 								}
@@ -259,7 +256,6 @@ public class GenerateActaBasePropuestaRule implements IRule {
 								STR_nombreRuegos);
 		
 						file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-						//DipucrCommonFunctions.Concatena(xComponent,"file://" + file.getPath(), ooHelper);
 						DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 						file.delete();
 					}
@@ -272,7 +268,6 @@ public class GenerateActaBasePropuestaRule implements IRule {
 						STR_nombrePie);
 	
 				file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-				//DipucrCommonFunctions.Concatena(xComponent,"file://" + file.getPath(), ooHelper);
 				DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 				file.delete();
 			}
@@ -302,14 +297,12 @@ public class GenerateActaBasePropuestaRule implements IRule {
 				entitiesAPI.deleteDocument(doc);
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			if (e instanceof ISPACRuleException) {
-				throw new ISPACRuleException(e);
-			}
-			throw new ISPACRuleException(e);
-		}
-		finally{
-			if(ooHelper!= null) ooHelper.dispose();
+			logger.error("Error al general el acta. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Error al general el acta. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 
 		return new Boolean(true);

@@ -10,79 +10,67 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitTaskResolucionFinCuentaRule extends InitTaskResolucionCuentaRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "CUEN_CUENTA";
-		STR_queryDocumentos = 
-			"NOMBRE = 'Providencia' OR " + 
-			"NOMBRE = 'Propuesta de aprobación definitiva'"; 
-		
-		try
-		{
-	        IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
-	        int pcdId = rulectx.getProcedureId();
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "CUEN_CUENTA";
+        strQueryDocumentos = 
+            "NOMBRE = 'Providencia' OR " + 
+            "NOMBRE = 'Propuesta de aprobación definitiva'"; 
+        
+        try {
+            IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
+            int pcdId = rulectx.getProcedureId();
 
-	        String strQuery = "WHERE ID_PCD="+pcdId+" AND NOMBRE='Cuenta general'";
-			IItemCollection col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
-	        Iterator it = col.iterator();
-	        if (it.hasNext())
-	        {
-		        IItem tramite = (IItem)it.next();
-		        int tramCuentaId = tramite.getInt("ID");
-			
-				STR_queryDocumentos +=
-					" OR " +
-					"ID_TRAMITE_PCD="+tramCuentaId;
-	        }
+            String strQuery = "WHERE ID_PCD="+pcdId+" AND NOMBRE='Cuenta general'";
+            IItemCollection col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
+            Iterator<?> it = col.iterator();
+            
+            if (it.hasNext()) {
+                IItem tramite = (IItem)it.next();
+                int tramCuentaId = tramite.getInt("ID");
+            
+                strQueryDocumentos += " OR " + "ID_TRAMITE_PCD = " + tramCuentaId;
+            }
 
-	        strQuery = "WHERE ID_PCD="+pcdId+" AND NOMBRE='Informe de intervención'";
-			col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
-	        it = col.iterator();
-	        if (it.hasNext())
-	        {
-		        IItem tramite = (IItem)it.next();
-		        int tramIntervencionId = tramite.getInt("ID");
-			
-				STR_queryDocumentos +=
-					" OR " +
-					"ID_TRAMITE_PCD="+tramIntervencionId;
-	        }
+            strQuery = "WHERE ID_PCD = " + pcdId + " AND NOMBRE = 'Informe de intervención'";
+            col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
+            it = col.iterator();
+            
+            if (it.hasNext()) {
+                IItem tramite = (IItem)it.next();
+                int tramIntervencionId = tramite.getInt("ID");
+            
+                strQueryDocumentos += " OR " + "ID_TRAMITE_PCD="+tramIntervencionId;
+            }
 
-	        strQuery = "WHERE ID_PCD="+pcdId+" AND NOMBRE='Alegaciones'";
-			col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
-	        it = col.iterator();
-	        if (it.hasNext())
-	        {
-		        IItem tramite = (IItem)it.next();
-		        int tramAlegacionesId = tramite.getInt("ID");
-			
-				STR_queryDocumentos +=
-					" OR " +
-					"ID_TRAMITE_PCD="+tramAlegacionesId;
-	        }
+            strQuery = "WHERE ID_PCD = " + pcdId + " AND NOMBRE = 'Alegaciones'";
+            col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
+            it = col.iterator();
+            
+            if (it.hasNext()) {
+                IItem tramite = (IItem)it.next();
+                int tramAlegacionesId = tramite.getInt("ID");
+            
+                strQueryDocumentos += " OR " + "ID_TRAMITE_PCD = " + tramAlegacionesId;
+            }
 
-	        strQuery = "WHERE ID_PCD="+pcdId+" AND NOMBRE='Certificación de alegaciones'";
-			col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
-	        it = col.iterator();
-	        if (it.hasNext())
-	        {
-		        IItem tramite = (IItem)it.next();
-		        int tramCertificacionId = tramite.getInt("ID");
-			
-				STR_queryDocumentos +=
-					" OR " +
-					"ID_TRAMITE_PCD="+tramCertificacionId;
-	        }
+            strQuery = "WHERE ID_PCD = " + pcdId + " AND NOMBRE = 'Certificación de alegaciones'";
+            col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
+            it = col.iterator();
+            
+            if (it.hasNext()) {
+                IItem tramite = (IItem)it.next();
+                int tramCertificacionId = tramite.getInt("ID");
+            
+                strQueryDocumentos += " OR " + "ID_TRAMITE_PCD = " + tramCertificacionId;
+            }
+            
+        } catch(ISPACRuleException e) {
+            throw new ISPACRuleException(e);
+
+        } catch(Exception e) {
+            throw new ISPACRuleException("No se ha podido iniciar el trámite de resolución.",e);
         }
-    	catch(Exception e) 
-        {
-        	if (e instanceof ISPACRuleException)
-        	{
-			    throw new ISPACRuleException(e);
-        	}
-        	throw new ISPACRuleException("No se ha podido iniciar el trámite de resolución.",e);
-        }
-		
+        
         return true;
     }
 }

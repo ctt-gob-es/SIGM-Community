@@ -17,9 +17,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.apache.log4j.Logger;
+
 /**
  */
 public class TelefonicaSignConnector{
+	
+	private static final Logger LOGGER = Logger.getLogger(TelefonicaSignConnector.class);
 
 	
 	/**
@@ -220,7 +224,7 @@ public class TelefonicaSignConnector{
 		try {
 			nombreDoc = signDocument.getItemDoc().getString("NOMBRE");
 		} catch (ISPACException e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 			return false;
 		}
 		

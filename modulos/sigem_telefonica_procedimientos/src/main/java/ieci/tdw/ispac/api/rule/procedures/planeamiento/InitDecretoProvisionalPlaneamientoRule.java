@@ -12,10 +12,9 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitDecretoProvisionalPlaneamientoRule extends InitDecretoPlaneamientoRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "PLAN_POM";
-		STR_extracto = "Resolución de aprobación provisional del procedimiento de Aprobación y Modificación del Plan de Ordenación Municipal";
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "PLAN_POM";
+        strExtracto = "Resolución de aprobación provisional del procedimiento de Aprobación y Modificación del Plan de Ordenación Municipal";
         return true;
     }
 }

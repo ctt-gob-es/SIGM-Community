@@ -3,6 +3,7 @@ package ieci.tdw.ispac.ispacmgr.action;
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.ITXTransaction;
 import ieci.tdw.ispac.api.IWorklistAPI;
 import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.impl.SessionAPI;
@@ -10,7 +11,9 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IStage;
 import ieci.tdw.ispac.api.item.ITask;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.dao.cat.CTTpDocDAO;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import ieci.tdw.ispac.ispactx.TXConstants;
 import ieci.tdw.ispac.ispacweb.api.IManagerAPI;
 import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
@@ -25,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 
 public class GetDocumentAction extends BaseAction {
 	
@@ -107,7 +112,7 @@ public class GetDocumentAction extends BaseAction {
 				try {
 					connectorSession = genDocAPI.createConnectorSession();
 					if (!genDocAPI.existsDocument(connectorSession, docref)){
-						logger.error("No se ha encontrado el documento físico con identificador: '"+docref+"' en el repositorio de documentos");
+						LOGGER.error("No se ha encontrado el documento físico con identificador: '"+docref+"' en el repositorio de documentos");
 						throw new ISPACInfo("exception.documents.notExists", false);
 					}
 					// Procesar el tipo del fichero anexado al documento
@@ -122,7 +127,20 @@ public class GetDocumentAction extends BaseAction {
 											  docref,
 											  sMimetype,
 											  readonly,
-											  true, false);
+											  true, true);
+					
+			    	String docTypeName = "";
+			    	int docType = entity.getInt(DocumentosUtil.ID_TPDOC);
+
+			    	if (entity.getInt(DocumentosUtil.ID_TPDOC) != 0) {
+						CTTpDocDAO tpdoc = new CTTpDocDAO(cct.getConnection(), docType);
+						docTypeName = "'" + tpdoc.getString("NOMBRE") + "'";
+					}
+			    	
+					ITXTransaction txapi = cct.getAPI().getTransactionAPI();
+
+					txapi.newMilestone(cct.getStateContext().getProcessId(), cct.getStateContext().getStagePcdId(), cct.getStateContext().getTaskPcdId(), TXConstants.MILESTONE_DOCUMENTO_EDITED,
+					new StringBuffer("<?xml version='1.0' encoding='ISO-8859-1'?>").append("<infoaux>").append(docTypeName).append("</infoaux>").toString(), "Documento " + docTypeName + " editado");
 				}
 				finally {
 					

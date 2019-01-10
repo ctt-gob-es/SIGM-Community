@@ -84,6 +84,11 @@ public class GroupProperties extends BaseAction {
         if ( group.getDescription() != null )
             description  = group.getDescription();
         
+        //[dipucr-Felipe #541]
+        String email = "";
+        if ( group.getEmail() != null)
+        	email = group.getEmail();
+        
         Date creationDate = group.getCreationDate();
         String fechaCreacion = formatter.format(creationDate );
         
@@ -109,6 +114,7 @@ public class GroupProperties extends BaseAction {
         groupForm.setId(id);
         groupForm.setManagerName(managerName);
         groupForm.setDescripcion(description);
+        groupForm.setEmail(email);//[dipucr-Felipe #541]
         
         groupForm.setCreationDate(fechaCreacion);
         groupForm.setCreatorName(creatorName);

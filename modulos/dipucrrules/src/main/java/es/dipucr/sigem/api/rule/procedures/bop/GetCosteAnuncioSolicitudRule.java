@@ -163,7 +163,9 @@ public class GetCosteAnuncioSolicitudRule implements IRule {
 	        	
 	        	item.store(cct);
 	        	
-	        	ooHelper.dispose();
+    			if(null != ooHelper){
+    	        	ooHelper.dispose();
+    	        }
 	        }
 	        
 	        return numAnuncioSolicitud;
@@ -231,6 +233,10 @@ public class GetCosteAnuncioSolicitudRule implements IRule {
 		ooHelper = OpenOfficeHelper.getInstance();
 		XComponent xComponent = ooHelper.loadDocument("file://" + file1.getPath());
 		numCaracteres = EdicionDocumentosUtil.getNumeroCaracteres(xComponent).intValue();
+
+		if(null != ooHelper){
+	       	ooHelper.dispose();
+		}
 		
 		//Borramos el documento
 		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();

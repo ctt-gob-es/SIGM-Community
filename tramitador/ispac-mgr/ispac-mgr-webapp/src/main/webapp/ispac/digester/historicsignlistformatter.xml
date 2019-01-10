@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<beanformatter defaultSort="1">
+<beanformatter defaultSort="7">
 
 	<propertyfmt type="BeanPropertySimpleFmt" 
 				 property='SPAC_DT_DOCUMENTOS:NUMEXP' 
@@ -66,6 +66,6 @@
 				 format='dd/MM/yyyy'
 				 columnClass="width15percent"
 				 sortable='true'
-				 comparator='ieci.tdw.ispac.ispacweb.comparators.DateComparator'/>
+				 comparator='ieci.tdw.ispac.ispacweb.comparators.InverseDateComparator'/>
 
 </beanformatter>

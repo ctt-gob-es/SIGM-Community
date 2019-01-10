@@ -21,14 +21,16 @@ public class CompruebaCreadoIdPropuestaRule implements IRule {
 	}
 
 	public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
-		boolean iniciadoPropuesta = false;
 		
 		Iterator<IItem> propuestas = ConsultasGenericasUtil.queryEntities(rulectx, "DPCR_ID_PROPUESTA", "NUMEXP='"+rulectx.getNumExp()+"'");
 		if (propuestas.hasNext()) {
-			iniciadoPropuesta = true;
 			logger.info("Tiene propuesta el número de expediente: "+rulectx.getNumExp());
+			return true;
 		}
-		return iniciadoPropuesta;
+		else{
+			rulectx.setInfoMessage("Debe firmar la propuesta o borrador de resolución y terminar el trámite dónde se encuentra");
+			return false;
+		}
 	}
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {

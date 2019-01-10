@@ -97,7 +97,7 @@ public class LoginCheckFilter implements javax.servlet.Filter, Keys {
 			}
 
             //si esta logado o la petición es de un pdf o es de subida de fichero a traves de FileUploadScan
-            if (sessionID != null || request.getRequestURI().indexOf("/FileUploadScan") != -1
+            if (sessionID != null || request.getRequestURI().indexOf("/FileUploadScan") != -1 || request.getRequestURI().indexOf("/FileUploadCompulsa") != -1
                     	|| request.getRequestURI().indexOf(".pdf") != -1|| request.getRequestURI().indexOf("/remoting") != -1) {
 
                 //Logged in - Let's pass thru the user

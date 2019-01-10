@@ -525,8 +525,14 @@ public class FlushFdr extends HttpServlet implements Keys {
 
 				if (flushFdrField.getFldid() == 9) {
 					inter = parseInter(flushFdrField.getValue());
-					flushFdrField.setValue(((FlushFdrInter) inter.get(0))
-							.getInterName());
+
+				//[Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros
+					flushFdrField.setValue(((FlushFdrInter) inter.get(0)).getInterName());
+					
+					if(null != inter && inter.size()!=0 && StringUtils.isNotEmpty(((FlushFdrInter) inter.get(0)).getInterNif()) && !((FlushFdrInter) inter.get(0)).getInterNif().equals("0")){
+						((FlushFdrInter) inter.get(0)).setInterName(((FlushFdrInter) inter.get(0)).getInterNif() + " - " + ((FlushFdrInter) inter.get(0)).getInterName());
+					}
+				//[Dipucr-Manu Ticket#383] - FIN - ALSIGM3 no muestra el DNI en los interesados de los registros
 				}
 			}
 
@@ -972,6 +978,7 @@ public class FlushFdr extends HttpServlet implements Keys {
 		return result;
 	}
 
+	//[Dipucr-Manu Ticket#383] - INICIO - ALSIGM3 no muestra el DNI en los interesados de los registros
 	private void parseDataInter(String interesado, List result) {
 		FlushFdrInter dataInter = null;
 		FlushFdrInter representante = null;
@@ -988,6 +995,9 @@ public class FlushFdr extends HttpServlet implements Keys {
 				dataInter.setInterName(tokens[i]);
 				break;
 			case 2:
+				dataInter.setInterNif(tokens[i]);
+				break;
+			case 3:
 				if (!StringUtils.isEmpty(tokens[i])) {
 					try {
 						Integer dataDomId = new Integer(tokens[i]);
@@ -996,10 +1006,10 @@ public class FlushFdr extends HttpServlet implements Keys {
 					}
 				}
 				break;
-			case 3:
+			case 4:
 				dataInter.setDirection(tokens[i]);
 				break;
-			case 5:
+			case 6:
 				if (!StringUtils.isBlank(tokens[i])) {
 					representante = new FlushFdrInter();
 					try {
@@ -1008,12 +1018,12 @@ public class FlushFdr extends HttpServlet implements Keys {
 					}
 				}
 				break;
-			case 6:
+			case 7:
 				if (null != representante) {
 					representante.setInterName(tokens[i]);
 				}
 				break;
-			case 7:
+			case 8:
 				if (null != representante) {
 					if (!StringUtils.isBlank(tokens[i])) {
 						try {
@@ -1024,7 +1034,7 @@ public class FlushFdr extends HttpServlet implements Keys {
 				}
 
 				break;
-			case 8:
+			case 9:
 				if (null != representante) {
 					representante.setDirection(tokens[i]);
 					dataInter.setRepresentante(representante);

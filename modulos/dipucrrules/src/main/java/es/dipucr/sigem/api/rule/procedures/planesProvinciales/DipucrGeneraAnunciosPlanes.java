@@ -198,13 +198,23 @@ public class DipucrGeneraAnunciosPlanes implements IRule {
 		    		gendocAPI.setDocument(connectorSession, documentId, docref, in, (int)(fileOut.length()), mime);
 		    		
 		    		//Borra archivos temporales
-		    		file.delete();
-		    		fileOut.delete();
+		    		if(null != file) {
+		    			file.delete();
+		    		}
+		    		if( null != fileOut){
+		    			fileOut.delete();
+		    		}
 		    		
-		    		entityTemplateT.delete(cct);
-					entityDocumentT.delete(cct);	
-					ooHelper.dispose();
-	        	}
+		    		if(null != entityTemplateT) {
+		    			entityTemplateT.delete(cct);
+		    		}
+					if( null != entityDocumentT) {
+						entityDocumentT.delete(cct);	
+					}
+					if(null != ooHelper){
+			        	ooHelper.dispose();
+					}
+				}
     		}	
 			cct.endTX(true);
 		} catch(Exception e) {
@@ -320,12 +330,23 @@ public class DipucrGeneraAnunciosPlanes implements IRule {
 		    		gendocAPI.setDocument(connectorSession, documentId, docref, in, (int)(fileOut.length()), mime);
 		    		
 		    		//Borra archivos temporales
-		    		file.delete();
-		    		fileOut.delete();
+		    		if(null != file) {
+		    			file.delete();
+		    		}
+		    		if(null != fileOut) {
+		    			fileOut.delete();
+		    		}
 		    		
-		    		entityTemplateT.delete(cct);
-					entityDocumentT.delete(cct);	
-					ooHelper.dispose();
+		    		if(null != entityTemplateT) {
+		    			entityTemplateT.delete(cct);
+		    		}
+					if(null != entityDocumentT) {
+						entityDocumentT.delete(cct);	
+					}
+
+					if(null != ooHelper){
+			        	ooHelper.dispose();
+					}
 	        	}
     		}	
 			cct.endTX(true);

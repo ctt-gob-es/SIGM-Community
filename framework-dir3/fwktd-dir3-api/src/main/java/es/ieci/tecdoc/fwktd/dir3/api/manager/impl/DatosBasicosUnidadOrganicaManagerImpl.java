@@ -5,6 +5,7 @@ import java.util.ListIterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.ObjectRetrievalFailureException;
 
 import es.ieci.tecdoc.fwktd.dir3.api.dao.DatosBasicosUnidadOrganicaDao;
@@ -176,7 +177,21 @@ public class DatosBasicosUnidadOrganicaManagerImpl extends
 		//parseamos el organismoVO a un tipo DatosBasicosUnidadOrganicaVO
 		setDatosBasicosOrganismo(datosBasicosUnidadOrganica,organismo);
 		//almacenamos los datos basicos de la unidad
-		((DatosBasicosUnidadOrganicaDao) getDao()).save(datosBasicosUnidadOrganica);
+		try{
+			((DatosBasicosUnidadOrganicaDao) getDao()).save(datosBasicosUnidadOrganica);
+		}
+		catch(DataIntegrityViolationException e){
+			logger.error("ERROR al guardar el organismo: " + datosBasicosUnidadOrganica.getNombre() + ". ");
+			logger.error("ERROR al guardar el organismo: " + datosBasicosUnidadOrganica + ". " + e.getMessage(), e);
+			datosBasicosUnidadOrganica.setNombre(datosBasicosUnidadOrganica.getNombre().replaceAll("´", "'"));
+			try{
+				((DatosBasicosUnidadOrganicaDao) getDao()).save(datosBasicosUnidadOrganica);
+			}
+			catch(DataIntegrityViolationException e1){
+				logger.error("ERROR al guardar el organismo, no ha funcionado el reemplazo: " + datosBasicosUnidadOrganica.getNombre() + ". ");
+				logger.error("ERROR al guardar el organismo, no ha funcionado el reemplazo: " + datosBasicosUnidadOrganica + ". " + e1.getMessage(), e1);
+			}
+		}
 	}
 
 	/**

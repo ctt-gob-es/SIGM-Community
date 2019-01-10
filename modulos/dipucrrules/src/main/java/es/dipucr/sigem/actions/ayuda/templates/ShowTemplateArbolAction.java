@@ -39,55 +39,51 @@ public class ShowTemplateArbolAction extends BaseAction {
 		String cod_plantilla = "";
 		
 		if (!StringUtils.isEmpty(template)) {
-			if(!FunctionHelper.userHasFunctions(request, session.getClientContext(), new int[] {ISecurityAPI.FUNC_INV_TEMPLATES_EDIT})){
-					
-				IInvesflowAPI invesFlowAPI = session.getAPI();
-		    	ITemplateAPI templateAPI = invesFlowAPI.getTemplateAPI();
-		    	CTTemplate ctTemplate = templateAPI.getTemplate(Integer.parseInt(template));
-		    	
-		    	if (StringUtils.equalsIgnoreCase(ctTemplate.getMimetype(),"application/vnd.oasis.opendocument.text") && !ConfigurationMgr.getVarGlobalBoolean(session.getClientContext(), ConfigurationMgr.USE_ODT_TEMPLATES, false)){
-		    		throw new ISPACInfo(getResources(request).getMessage("exception.template.odt.disabled"));
-		    	}
-		    	
-				try {
-			    	response.setHeader("Pragma", "public");
-			    	response.setHeader("Cache-Control", "max-age=0");
-		            response.setHeader("Content-Transfer-Encoding", "binary");
-		            				
-		        	String mimetype = ctTemplate.getMimetype();
-		        	plantilla = ctTemplate.getName();
-		        	cod_plantilla = ctTemplate.getString("TEMPLATE:COD_PLANT");
-		        	
-		            response.setContentType(mimetype);
-		            
-		            String extension = MimetypeMapping.getExtension(mimetype);
-	             	if ("application/pdf".equalsIgnoreCase(mimetype) || StringUtils.isBlank(extension)) { 
-	             		String name = template; 
-	             		if (StringUtils.isNotBlank(extension)){ 
-	             			name += "." + extension; 
-	             		} 
-	             		response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\""); 
-	             	} else {
-		            	response.setHeader("Content-Disposition", "inline; filename=\"" + template + "." + extension + "\"");
-		            }
-		            
-		            response.setContentLength(ctTemplate.getSize());
-		            try {
-		            	ctTemplate.getTemplate(session.getClientContext().getConnection(), out);
-		            }
-		            catch(ISPACException e){
-		            	//Se saca el mensaje de error en la propia ventana, que habra sido lanzada con un popup
-		            	response.setContentType("text/html");
-		            	out.write(e.getCause().getMessage().getBytes());
-		            }
-		            finally{
-		            	out.close();
-		            }
-				}
-				finally {
-					logger.info("USUARIO:'" + usuario + "' - PLANTILLA [CÓDIGO] '" + plantilla + "' [" + cod_plantilla + "] - MODO CONSULTA.");
-				}
-
+			IInvesflowAPI invesFlowAPI = session.getAPI();
+	    	ITemplateAPI templateAPI = invesFlowAPI.getTemplateAPI();
+	    	CTTemplate ctTemplate = templateAPI.getTemplate(Integer.parseInt(template));
+	    	
+	    	if (StringUtils.equalsIgnoreCase(ctTemplate.getMimetype(),"application/vnd.oasis.opendocument.text") && !ConfigurationMgr.getVarGlobalBoolean(session.getClientContext(), ConfigurationMgr.USE_ODT_TEMPLATES, false)){
+	    		throw new ISPACInfo(getResources(request).getMessage("exception.template.odt.disabled"));
+	    	}
+	    	
+			try {
+		    	response.setHeader("Pragma", "public");
+		    	response.setHeader("Cache-Control", "max-age=0");
+	            response.setHeader("Content-Transfer-Encoding", "binary");
+	            				
+	        	String mimetype = ctTemplate.getMimetype();
+	        	plantilla = ctTemplate.getName();
+	        	cod_plantilla = ctTemplate.getString("TEMPLATE:COD_PLANT");
+	        	
+	            response.setContentType(mimetype);
+	            
+	            String extension = MimetypeMapping.getExtension(mimetype);
+             	if ("application/pdf".equalsIgnoreCase(mimetype) || StringUtils.isBlank(extension)) { 
+             		String name = template; 
+             		if (StringUtils.isNotBlank(extension)){ 
+             			name += "." + extension; 
+             		} 
+             		response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\""); 
+             	} else {
+	            	response.setHeader("Content-Disposition", "inline; filename=\"" + template + "." + extension + "\"");
+	            }
+	            
+	            response.setContentLength(ctTemplate.getSize());
+	            try {
+	            	ctTemplate.getTemplate(session.getClientContext().getConnection(), out);
+	            }
+	            catch(ISPACException e){
+	            	//Se saca el mensaje de error en la propia ventana, que habra sido lanzada con un popup
+	            	response.setContentType("text/html");
+	            	out.write(e.getCause().getMessage().getBytes());
+	            }
+	            finally{
+	            	out.close();
+	            }
+			}
+			finally {
+				logger.info("USUARIO:'" + usuario + "' - PLANTILLA [CÓDIGO] '" + plantilla + "' [" + cod_plantilla + "] - MODO CONSULTA.");
 			}
 		}
         else {

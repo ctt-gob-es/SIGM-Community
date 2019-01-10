@@ -6,7 +6,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 @ContextConfiguration({"/jndi.xml", "/beans/cxf.xml", "/beans/fwktd-dir3-test-beans.xml",
-		"/beans/fwktd-dir3-api-applicationContext.xml" })
+		"classpath*:/beans/fwktd-dir3-api-applicationContext.xml" })
 public class ServicioActualizacionDirectorioComunImplTest extends
 		AbstractJUnit4SpringContextTests {
 

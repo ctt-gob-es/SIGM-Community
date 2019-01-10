@@ -710,16 +710,17 @@ public class GenerateLiquidacionRecibos {
 			//Borra los documentos intermedios del gestor documental
 	        collection = DocumentosUtil.getDocumentsByDescripcion(rulectx.getNumExp(), rulectx, "borrar");
 	        it = collection.iterator();
-	        while (it.hasNext())
-	        {
+	        while (it.hasNext()) {
 	        	IItem doc = (IItem)it.next();
 	        	entitiesAPI.deleteDocument(doc);
 	        }
-	        ooHelper.dispose();
-		}
-		catch(Exception e){
+		} catch(Exception e) {
 			logger.error("Error al crear el documento " + nombreCompleto + "." + e.getMessage());
 			throw new Exception("Error al crear el documento " + nombreCompleto + "." + e.getMessage());
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 	}
 	

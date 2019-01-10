@@ -9,21 +9,20 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
-import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrSERSOCompMaxAnualFamiliaPE implements IRule {
 
     public static final Logger LOGGER = Logger.getLogger(DipucrSERSOCompMaxAnualFamiliaPE.class);
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
     public Object execute(IRuleContext rulectx) throws ISPACRuleException {
@@ -46,38 +45,27 @@ public class DipucrSERSOCompMaxAnualFamiliaPE implements IRule {
             
             if (solicitudIterator.hasNext()) {
                 IItem solicitud = (IItem) solicitudIterator.next();
-                String tipoAyuda = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
+                String tipoAyuda = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
                 
                 if(ConstantesPlanEmergencia.ALIMENTACION.equals(tipoAyuda)){
                     IItemCollection resolucionCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NOMBRE_TABLA, numexp);
                     Iterator<?> resolucionIterator = resolucionCollection.iterator();
+                    
                     if (resolucionIterator.hasNext()) {
                         IItem resolucion = (IItem) resolucionIterator.next();
-                        maxTrimestral += Double.parseDouble(resolucion.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE));
-                        maxTrimestral += Double.parseDouble(resolucion.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE2));
-                        maxTrimestral += Double.parseDouble(resolucion.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE3));
-                        maxTrimestral += Double.parseDouble(resolucion.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE4));
+                        
+                        maxTrimestral += SubvencionesUtils.getDouble(resolucion, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE);
+                        maxTrimestral += SubvencionesUtils.getDouble(resolucion, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE2);
+                        maxTrimestral += SubvencionesUtils.getDouble(resolucion, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE3);
+                        maxTrimestral += SubvencionesUtils.getDouble(resolucion, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE4);
         
-                        totalConcedido += Double.parseDouble(StringUtils.isNotEmpty(resolucion.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO)) ? resolucion
-                                .getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO) : "0");
-                        totalConcedido += Double.parseDouble(StringUtils.isNotEmpty(resolucion.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO2)) ? resolucion
-                                .getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO2) : "0");
-                        totalConcedido += Double.parseDouble(StringUtils.isNotEmpty(resolucion.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO3)) ? resolucion
-                                .getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO3) : "0");
-                        totalConcedido += Double.parseDouble(StringUtils.isNotEmpty(resolucion.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO4)) ? resolucion
-                                .getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO4) : "0");
+                        totalConcedido += SubvencionesUtils.getDouble(resolucion, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO);
+                        totalConcedido += SubvencionesUtils.getDouble(resolucion, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO2);
+                        totalConcedido += SubvencionesUtils.getDouble(resolucion, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO3);
+                        totalConcedido += SubvencionesUtils.getDouble(resolucion, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO4);
         
                         if (maxTrimestral < totalConcedido) {
-                            IItem expediente = ExpedientesUtil.getExpediente(cct, numexp);
-                            if(expediente != null){
-                                String asunto = expediente.getString("ASUNTO");
-                                if (asunto.toUpperCase().indexOf("MÁXIMO FAMILIAR ANUAL") < 0) {
-                                    asunto += " - AVISO EL BENEFICIARIO HA SUPERADO EL MÁXIMO FAMILIAR ANUAL.";
-                                    expediente.set("ASUNTO", asunto);
-        
-                                    expediente.store(cct);
-                                }
-                            }
+                            SubvencionesUtils.concatenaTextoAAsunto(cct, numexp, ConstantesPlanEmergencia.DpcrSERSOAvisos.INDEXOF_MAXIMO_FAMILIAR_ANUAL, ConstantesPlanEmergencia.DpcrSERSOAvisos.TEXTOASUNTO_MAXIMO_FAMILIAR_ANUAL);
                         }
                     }
                 }

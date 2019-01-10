@@ -528,6 +528,10 @@
                                                             	<xsl:choose>
 								                                		<xsl:when test='./RoleTypeCode="04"'>
 								                                				<xsl:value-of select="./Name"/>
+								                                				
+								                                				<xsl:if test='./Name=""'>
+								                                					<xsl:value-of select="./CentreDescription"/>
+								                                				</xsl:if>
 								                                		</xsl:when>
 								                                </xsl:choose>
                                                             </xsl:for-each>

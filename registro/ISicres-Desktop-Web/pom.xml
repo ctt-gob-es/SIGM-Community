@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>InvesSicres</artifactId>
 		<groupId>es.ieci.tecdoc.isicres</groupId>
@@ -11,6 +12,7 @@
 	<description>Modulo de Presentación InvesSicres</description>
 
 	<properties>
+		<isicres.version>8.0.1</isicres.version>
 		<documents.manager.scope>compile</documents.manager.scope>
 		<alfresco.manager.scope>provided</alfresco.manager.scope>
 	</properties>
@@ -39,7 +41,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-Desktop-Api</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd</groupId>
@@ -55,7 +57,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-PersonManager</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>xerces</groupId>
@@ -70,12 +72,12 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-EventsManager</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-Compulsa-Connector-Invesicres</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
@@ -86,7 +88,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-Document-Connector-Alfresco</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 			<scope>${alfresco.manager.scope}</scope>
 		</dependency>
 
@@ -178,8 +180,7 @@
 				<version>1.0-beta-1</version>
 				<configuration>
 					<mode>both</mode>
-					<contextFile>${project.basedir}/src/test/resources/tomcat/context.xml
-					</contextFile>
+					<contextFile>${project.basedir}/src/test/resources/tomcat/context.xml</contextFile>
 				</configuration>
 			</plugin>
 
@@ -224,6 +225,42 @@
 					</execution>
 				</executions>
 			</plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/src/main/webapp/applets</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>../../framework-scan-applet/target</directory>
+                  <includes>
+                    <include>fwktd-scan-applet-0.7.jar</include>
+                  </includes>
+                </resource>
+                <resource>
+                  <directory>../../framework-filesystem-applet/target</directory>
+                  <includes>
+                    <include>fwktd-fileSystem-applet-0.6.jar</include>
+                  </includes>
+                </resource>
+                <resource>
+                  <directory>../../framework-sendFiles-applet/target</directory>
+                  <includes>
+                    <include>fwktd-sendFiles-applet-0.7.jar</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 		</plugins>
 	</build>
 	<profiles>

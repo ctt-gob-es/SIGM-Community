@@ -1,5 +1,6 @@
 package ieci.tecdoc.sgm.core.services.registro;
 
+
 /**
  * Informacion de un document
  * 
@@ -29,6 +30,22 @@ public class DocumentInfo {
 	 * Extensión del fichero
 	 */
 	protected String extension = null;
+	
+    /* Tipo documental
+     */
+    private String tipoDocumental;
+
+    /* Tipo de firma del documento
+     */
+    private String tipoFirma;
+    
+    /* CSV del documento
+     */
+    private String csv;
+    
+    /* CSV del documento
+     */
+    private Object metadatosDocumento = null;
 
 	/**
 	 * @return
@@ -99,5 +116,37 @@ public class DocumentInfo {
 	public void setPageName(String pageName) {
 		this.pageName = pageName;
 	}
+	
+	public String getTipoDocumental() {
+		return tipoDocumental;
+	}
 
+	public void setTipoDocumental(String tipoDocumental) {
+		this.tipoDocumental = tipoDocumental;
+	}
+
+	public String getTipoFirma() {
+		return tipoFirma;
+	}
+
+	public void setTipoFirma(String tipoFirma) {
+		this.tipoFirma = tipoFirma;
+	}
+
+	public String getCsv() {
+		return csv;
+	}
+
+	public void setCsv(String csv) {
+		this.csv = csv;
+	}
+
+	public Object getMetadatosDocumento() {
+		return metadatosDocumento;
+	}
+
+	public void setMetadatosDocumento(Object metadatosDocumento) {
+		this.metadatosDocumento = metadatosDocumento;
+	}
+	
 }

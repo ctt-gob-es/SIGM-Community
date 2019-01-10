@@ -1,6 +1,8 @@
 package es.dipucr.sigem.api.rule.common.utils;
 
+import ieci.tdw.ispac.api.IMensajeAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.api.impl.MensajeAPI;
 import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
@@ -18,7 +20,7 @@ import ieci.tdw.ispac.lock.LockManager;
  */
 public class BloqueosFirmaUtil {
 
-	public static String MENSAJE_BLOQUEO_FIRMA = "mensajeBloqueoFirma.jsp";
+	public static String SPAC_VAR_TEXTO_BLOQUEO = "BLOQUEO_FIRMA_TEXTO";
 	public static String SPAC_VAR_CLOSE_SESSION = "BLOQUEO_FIRMA_CERRAR_SESION";
 	
 	/**
@@ -48,12 +50,11 @@ public class BloqueosFirmaUtil {
 		//Sólo borramos la sesión del usuario si existe y está activada la opción
 		String sCerrarSesion = ConfigurationMgr.getVarGlobal(cct, SPAC_VAR_CLOSE_SESSION);
 		
-		if (!StringUtils.isEmpty(sCerrarSesion) && sCerrarSesion.equals("SI")){
+		if (!StringUtils.isEmpty(sCerrarSesion) && "SI".equals(sCerrarSesion)){
 			
 			//Obtenemos los bloqueos que pudiera tener el trámite
 			DbCnt cnt = cct.getConnection();
-			String sQuery = "WHERE TP_OBJ = " + LockManager.LOCKTYPE_TASK
-					 + " AND ID_OBJ = " + idTramite;
+			String sQuery = "WHERE TP_OBJ = " + LockManager.LOCKTYPE_TASK + " AND ID_OBJ = " + idTramite;
 			CollectionDAO collectionLocks = new CollectionDAO(LockDAO.class);
 			collectionLocks.query(cnt, sQuery);
 			
@@ -73,8 +74,12 @@ public class BloqueosFirmaUtil {
 				sessMgr.deleteSession(idSession);
 				
 				//Mandamos un aviso al usuario, explicándole porque se le expulsó de SIGEM
-				MensajesSesionUtil.crearMensajeUsuario(cct, MENSAJE_BLOQUEO_FIRMA, sUsuario);
+				//[dipucr-Felipe #607 #712]
+				IMensajeAPI mensajesAPI = cct.getAPI().getMensajeAPI();
+				String texto = ConfigurationMgr.getVarGlobal(cct, SPAC_VAR_TEXTO_BLOQUEO);
+				mensajesAPI.newMensaje(null, texto, sUsuario, MensajeAPI.TIPO_MENSAJE.AVISO);
 			}
+			cct.releaseConnection(cnt);
 		}
 	}
 	

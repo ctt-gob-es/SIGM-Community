@@ -2,6 +2,7 @@ package es.dipucr.contratacion.rule;
 
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.entities.SpacEntities;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
@@ -14,6 +15,9 @@ import java.util.Calendar;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
+
+import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
+import es.dipucr.sigem.api.rule.common.utils.EntidadesUtil;
 
 public class SaveDatosContratoRule  implements IRule {
 	
@@ -62,26 +66,26 @@ public class SaveDatosContratoRule  implements IRule {
 			        	}
 
 			        }
+			        //año
+	             	Calendar calendar = Calendar.getInstance();
+	             	int year =calendar.get(Calendar.YEAR);
 			
-			    	String consulta = "WHERE TIPO_CONTRATO = '"+cod_tipo_contrato+"'";
+			    	String consulta = "WHERE TIPO_CONTRATO = '"+cod_tipo_contrato+"' AND YEAR = "+year;
 			        logger.warn(consulta);
 			        IItemCollection collection = entitiesAPI.queryEntities("CONTRATACION_CONT_TIPCONTRAT", consulta);
 			        Iterator<IItem> it = collection.iterator();
+			      //tipo contrato
+	             	String tipoContrato = "";
+	             	int longitud = cod_tipo_contrato.length();
+	             	if(longitud == 1){
+	             		tipoContrato = "0"+cod_tipo_contrato;
+	             	}
+	             	else{
+	             		tipoContrato = cod_tipo_contrato;
+	             	}
 			        if(it.hasNext()){
 			        	 while (it.hasNext()){
-			             	IItem procExpediente = (IItem)it.next();
-			             	//año
-			             	Calendar calendar = Calendar.getInstance();
-			             	int year =calendar.get(Calendar.YEAR);
-			             	//tipo contrato
-			             	String tipoContrato = "";
-			             	int longitud = cod_tipo_contrato.length();
-			             	if(longitud == 1){
-			             		tipoContrato = "0"+cod_tipo_contrato;
-			             	}
-			             	else{
-			             		tipoContrato = cod_tipo_contrato;
-			             	}
+			             	IItem procExpediente = (IItem)it.next();	
 			             	//Numero de contrato
 			             	int iNumContrato = procExpediente.getInt("CONTADOR_NUM_CONTRATO");
 			             	String snumcontrato = (iNumContrato+1)+"";
@@ -95,6 +99,14 @@ public class SaveDatosContratoRule  implements IRule {
 			             	procExpediente.store(cct);
 			             	datosFormulario.set("NCONTRATO", year +" - "+ tipoContrato+ " - " +snumcontrato);
 			             }
+			        }
+			        else{
+			        	IItem tipoContra = entitiesAPI.createEntity("CONTRATACION_CONT_TIPCONTRAT", "-");
+			        	tipoContra.set("TIPO_CONTRATO", cod_tipo_contrato);
+			        	tipoContra.set("CONTADOR_NUM_CONTRATO", 1);
+			        	tipoContra.set("YEAR", year);
+			        	tipoContra.store(cct);
+			        	datosFormulario.set("NCONTRATO", year +" - "+ tipoContrato+ " - " +1);
 			        }
 				}
 			}	

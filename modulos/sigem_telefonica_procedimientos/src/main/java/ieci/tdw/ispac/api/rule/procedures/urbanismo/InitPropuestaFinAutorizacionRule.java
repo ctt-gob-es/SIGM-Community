@@ -5,10 +5,9 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitPropuestaFinAutorizacionRule extends InitPropuestaSegregacionRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "URB_AUTORIZACION";
-		STR_extracto = "Resolución de licencia de autorización";
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "URB_AUTORIZACION";
+        strExtracto = "Resolución de licencia de autorización";
         return true;
     }
 }

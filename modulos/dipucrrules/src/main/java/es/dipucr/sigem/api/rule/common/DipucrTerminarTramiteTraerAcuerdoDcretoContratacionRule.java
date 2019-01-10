@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class DipucrTerminarTramiteTraerAcuerdoDcretoContratacionRule implements IRule {
@@ -146,7 +147,8 @@ public class DipucrTerminarTramiteTraerAcuerdoDcretoContratacionRule implements 
 	        				"OR NOMBRE='"+Constants.SECRETARIATRAMITES.CERTIFICADACUERDNOTIFICACI+"') AND ESTADO=3";
 	        logger.warn("consultaSQL "+consultaSQL);
 	        
-	        itemCollection = entitiesAPI.queryEntities(SpacEntities.SPAC_DT_TRAMITES, consultaSQL);
+//	        itemCollection = entitiesAPI.queryEntities(SpacEntities.SPAC_DT_TRAMITES, consultaSQL);
+	        itemCollection = TramitesUtil.queryTramites(cct, consultaSQL); //[dipucr-Felipe #842]
 	        
 	        it = itemCollection.iterator();
 	        if(it.hasNext()){
@@ -264,7 +266,7 @@ public class DipucrTerminarTramiteTraerAcuerdoDcretoContratacionRule implements 
 	        					esDecreto = true;
 	        				}
 	        				String infopag_rde = itemDoc.getString("INFOPAG_RDE");
-	        				File filePropuesta = DocumentosUtil.getFile(cct, infopag_rde, null, null);
+	        				File filePropuesta = DocumentosUtil.getFile(cct, infopag_rde, null, itemDoc.getString("EXTENSION_RDE"));
 	        				
 	        				if(descripcion.equals("")){
 	        					descripcion = itemDoc.getString("DESCRIPCION");

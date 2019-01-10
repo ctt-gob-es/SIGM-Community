@@ -362,6 +362,9 @@
 		<action path="/attachFile" type="ieci.tdw.ispac.ispacmgr.action.AttachFileAction">
 			<forward name="success" path="/ispac/common/attachFile.jsp" />
 		</action>
+		<action path="/attachFilesFromZip" type="ieci.tdw.ispac.ispacmgr.action.AttachFilesFromZipAction">
+			<forward name="success" path="/ispac/common/attachFilesFromZip.jsp" />
+		</action>
 		<action path="/scanFiles" type="ieci.tdw.ispac.ispacmgr.action.ScanFilesAction">
 			<forward name="success" path="/ispac/common/scanFiles.jsp" />
 		</action>
@@ -370,6 +373,10 @@
 			<forward name="success" path="/ispac/common/uploadRepoFiles.jsp" />
 		</action>
 		<action path="/uploadFile" type="ieci.tdw.ispac.ispacmgr.action.UploadFileAction"
+			name="uploadForm" scope="request" validate="false">
+			<forward name="success" path="/ispac/common/uploadFile.jsp" />
+		</action>
+		<action path="/uploadFilesFromZip" type="ieci.tdw.ispac.ispacmgr.action.UploadFilesFromZipAction"
 			name="uploadForm" scope="request" validate="false">
 			<forward name="success" path="/ispac/common/uploadFile.jsp" />
 		</action>
@@ -545,6 +552,14 @@
 			<forward name="setSubstitute" path="/apps/setSubstitute.jsp"/>
 		</action>
 		<!-- FIN [eCenpri-Felipe #1151] -->
+		
+		<!-- INICIO [dipucr-Felipe 3#395] Pcd.Generico - Categorias por departamento -->
+		<action path="/selectPcdGenericos"
+			type="es.dipucr.sigem.pcdgenerico.action.SelectPcdGenericosAction">
+			<forward name="success" path="/apps/selectSubstitute.jsp" />
+			<forward name="setSubstitute" path="/apps/setSubstitute.jsp" />
+		</action>
+		<!-- FIN [dipucr-Felipe 3#395] -->
 
 		<action path="/showPcdGUI"
 			type="ieci.tdw.ispac.ispacmgr.action.ShowProcedureGUIAction" scope="request"
@@ -725,6 +740,12 @@
 
 		<action path="/downloadDocuments"
 			type="ieci.tdw.ispac.ispacmgr.action.DownloadDocumentsAction" name="documentsForm"
+			scope="request" validate="false">
+		</action>
+		
+		<!-- [dipucr-Felipe #854] -->
+		<action path="/deleteDocuments"
+			type="ieci.tdw.ispac.ispacmgr.action.DeleteDocumentsAction" name="documentsForm"
 			scope="request" validate="false">
 		</action>
 
@@ -942,6 +963,7 @@
 			<forward name="success" path="/apps/sign/summary.jsp" />
 			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
 			<forward name="nofirmar" path="/apps/sign/noFirmar.jsp" /> <!-- [eCenpri-Felipe #818] -->
+			<forward name="failureResumen" path="/apps/sign/failureResumen.jsp" />
 		</action>
 
 		<!-- Clonar Expediente -->
@@ -1180,28 +1202,15 @@
 		<action path="/ExecuteRule" type="ieci.tdw.ispac.ispacmgr.action.ExecuteRuleAction">
 			<forward name="success" path="/showProcedureList.do" />
 		</action>
-		<!-- [teresa Ticket #85] ALSIGM3 Servicio de mensajes para organos Colegiados 
+		<!-- [teresa Ticket #85] ALSIGM3 Servicio de mensajes para organos Colegiados - Pleno -->
+		
+		<!-- [agustin Ticket #726] ALSIGM3 Servicio de mensajes para organos Colegiados 
 			- Pleno -->
-
-		<!-- [Teresa Ticket##96] Adaptación del Servicio de Verificación de Datos -->
-		<!-- Certificados -->
-		<action path="/obtenerProcedimientos"
-			type="es.dipucr.sigem.api.action.ObtenerProcedimientosAction" scope="request"
-			validate="false">
-			<forward name="success" path="/jsp/muestraProcedimientos.jsp" />
+		<action path="/CopySmsText" type="ieci.tdw.ispac.ispacmgr.action.CopySmsTextAction">
+			<forward name="success" path="/showProcedureList.do" />
 		</action>
-
-		<action path="/cargaDatosServicios"
-			type="es.dipucr.sigem.api.action.PeticionSincronaAction" scope="request"
-			validate="false">
-			<forward name="success" path="/jsp/peticionSincronaDatosEspecificos.jsp" />
-		</action>
-
-		<action path="/cargaDatosEspecificos"
-			type="es.scsp.client.test.PeticionSincronaConDatosEspecSync" scope="request"
-			validate="false">
-		</action>
-		<!-- [Teresa Ticket##96] Adaptación del Servicio de Verificación de Datos -->
+		<!-- [agustin Ticket #726] FIN ALSIGM3 Servicio de mensajes para organos Colegiados 
+			- Pleno -->
 
 		<!-- [Manu Ticket #97] INICIO - ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java. -->
 		<action path="/configurarEditores" type="es.dipucr.ispacmgr.action.ConfigurarEditoresAction">
@@ -1217,8 +1226,7 @@
 		<!-- [Teresa Ticket #96] ALSIGM3 Adaptación del Servicio de Verificación de Datos de SIGEM2.0 -> ALSIGM3.0-->
 		<!-- Certificados -->
 		<action path="/obtenerProcedimientos"
-			type="es.dipucr.sigem.api.action.ObtenerProcedimientosAction" scope="request"
-			validate="false">
+			type="es.dipucr.sigem.api.action.ObtenerProcedimientosAction"  scope="request" validate="false" parameter="method">
 			<forward name="success" path="/jsp/muestraProcedimientos.jsp" />
 		</action>
 
@@ -1229,8 +1237,7 @@
 		</action>
 
 		<action path="/cargaDatosEspecificos"
-			type="es.scsp.client.test.PeticionSincronaConDatosEspecSync" scope="request"
-			validate="false">
+			type="es.dipucr.sigem.api.action.PeticionSincronaConDatosEspecSync">
 		</action>
 		<!-- [Teresa Ticket #96] FIN -->
 		
@@ -1335,11 +1342,47 @@
 		<!-- [eCenpri-Manu #281] - INICIO - Edición de plantillas desde el tramitador por usuarios -->
 		<action path="/editTemplateArbol"
 			type="es.dipucr.sigem.actions.ayuda.templates.EditTemplateArbolAction"/>
+		
+		<action path="/seleccionarEditorArbol" type="es.dipucr.ispacmgr.action.SeleccionarEditorAction"
+			name="/seleccionarEditorArbol">
+			<forward name="success" path="seleccionarEditorArbol" redirect="false" />
+		</action>
 			
 		<action path="/showTemplateArbol"
 			type="es.dipucr.sigem.actions.ayuda.templates.ShowTemplateArbolAction"/>
 		<!-- [eCenpri-Manu #281] - FIN - Edición de plantillas desde el tramitador por usuarios -->
-				
+		
+		<!-- [Dipucr-Manu Ticket #478] - INICIO - ALSIGM3 Nueva opción Repositorio Común -->
+		<action path="/uploadRepoComunFiles"
+			type="ieci.tdw.ispac.ispacmgr.action.UploadRepoComunFilesAction">
+			<forward name="success" path="/ispac/common/uploadRepoComunFiles.jsp" />
+		</action>
+		
+		<action path="/showDocumentRepoComun"
+			type="ieci.tdw.ispac.ispacmgr.action.ShowDocumentRepoComunAction" />
+			
+		<action path="/subirDocumentosRepoComun"
+			type="ieci.tdw.ispac.ispacmgr.action.SubirDocumentosRepoComunAction" scope="request"
+			validate="false">
+			<forward name="success" path="/ispac/common/subirDocumentosRepoComunSummary.jsp" />
+		</action>
+		<!-- [Dipucr-Manu Ticket #478] - INICIO - ALSIGM3 Nueva opción Repositorio Común -->
+		
+		<!-- [Dipucr-Teresa Ticket #512] - INICIO - ALSIGM3 Nueva provisión puestos de trabajo -->
+		<action path="/SelectListadoServicesPersonalPuestoTrabajo" 
+				type="es.dipucr.sigem.api.rule.procedures.personal.SelectListadoServicesPersonalPuestoTrabajoAction" 
+				scope="request"
+				validate="false"> 
+				<forward name="success" path="/jsp/selectValueSubstitute.jsp"/>
+				<forward name="setSubstitute" path="/apps/setSubstituteOnChange.jsp"/>
+		</action>
+		
+		<action path="/setSubstitutePersonal"
+				type="es.dipucr.sigem.api.rule.procedures.personal.SetListadoPuestoTrabajoAction">
+				<forward name="success" path="/jsp/puestoTrabajo/setSubstitutePuestoTrabajo.jsp"/>
+		</action>
+		<!-- [Dipucr-Teresa Ticket #512] - FIN - ALSIGM3 Nueva provisión puestos de trabajo -->
+
 	</action-mappings>
 
 	<!-- Controlador -->
@@ -1352,7 +1395,7 @@
 		maxFileSize="10M" /> -->
 	<controller nocache="false"
 		processorClass="org.apache.struts.tiles.TilesRequestProcessor"
-		maxFileSize="200M" />
+		maxFileSize="500M" />
 	<!-- [Manu Ticket #734] SIGEM Tramitador Anexar documento: Ampliar máximo 
 		tamaño de archivo -->
 

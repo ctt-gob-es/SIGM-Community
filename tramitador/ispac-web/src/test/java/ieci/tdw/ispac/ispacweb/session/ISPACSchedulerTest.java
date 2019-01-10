@@ -1,4 +1,4 @@
-package java.ieci.tdw.ispac.ispacweb.session;
+package ieci.tdw.ispac.ispacweb.session;
 
 
 

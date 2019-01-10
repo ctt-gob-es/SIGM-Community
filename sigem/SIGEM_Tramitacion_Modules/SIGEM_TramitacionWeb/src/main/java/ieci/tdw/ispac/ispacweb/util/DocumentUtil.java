@@ -30,6 +30,8 @@ public class DocumentUtil {
 	/** Librería del applet que lanza aplicaciones. */
 	private static final String APP_LAUNCHER_APPLET_ARCHIVE =
 		"applets/applauncherapplet.jar";
+	
+	static boolean useOdtTemplantes = true;
 
 	/**
 	 * Ver un documento.
@@ -61,35 +63,16 @@ public class DocumentUtil {
 			   						   boolean reloadTopWindow) throws Exception {
 
 		String url = generateURL(request, servletName, session.getTicket(), id, mimeType);
+		
+		useOdtTemplantes = ConfigurationMgr.getVarGlobalBoolean(session.getClientContext(), ConfigurationMgr.USE_ODT_TEMPLATES, false);		
 
-		boolean useOdtTemplantes = ConfigurationMgr.getVarGlobalBoolean(session.getClientContext(), ConfigurationMgr.USE_ODT_TEMPLATES, false);
-
-	    if ( "application/msword".equalsIgnoreCase(mimeType)
-	    		|| "application/vnd.openxmlformats-officedocument.wordprocessingml.document".equalsIgnoreCase(mimeType)
-	    		|| "application/excel".equalsIgnoreCase(mimeType)
-	    		|| "application/x-excel".equalsIgnoreCase(mimeType)
-				|| "application/x-msexcel".equalsIgnoreCase(mimeType)
-				|| "application/vndms-excel".equalsIgnoreCase(mimeType)
-				|| "application/vnd.ms-excel".equalsIgnoreCase(mimeType)
-				|| "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equalsIgnoreCase(mimeType)
-	    		|| "application/mspowerpoint".equalsIgnoreCase(mimeType)
-				|| "application/powerpoint".equalsIgnoreCase(mimeType)
-				|| "application/vndms-powerpoint".equalsIgnoreCase(mimeType)
-				|| "application/vnd.ms-powerpoint".equalsIgnoreCase(mimeType)
-				|| "application/x-mspowerpoint".equalsIgnoreCase(mimeType)
-				|| ("application/vnd.oasis.opendocument.text".equalsIgnoreCase(mimeType) && useOdtTemplantes)
-				|| "application/vnd.openxmlformats-officedocument.presentationml.presentation".equalsIgnoreCase(mimeType)
-				|| "application/vnd.openxmlformats-officedocument.presentationml.slideshow".equalsIgnoreCase(mimeType)
-//			[Manu Ticket #475] Modificaciones para que reconozca los ODS
-				|| "application/vnd.oasis.opendocument.spreadsheet".equalsIgnoreCase(mimeType)
-//			[Manu Ticket #475] Modificaciones para que reconozca los ODS
-	    		) {
+	    if (esMimeTypeEditable(mimeType)) {
 
 	    	//String htmlPage = generateHtmlPage(servletCtx, request.getContextPath(), url, mimeType, readonly, reloadTopWindow, useOdtTemplantes);
 	    	//String htmlPage = generateHtmlPage(servletCtx, request, url, mimeType, readonly, reloadTopWindow, useOdtTemplantes);
         	
 			// [Manu Ticket #97] ALSIGM3 Adapatar AL-SIGM para poder editar documentos sin necesidad de java.
-	    	String htmlPage = generateHtmlPageNoJava(servletCtx, request.getContextPath(), url, mimeType, id, readonly, reloadTopWindow, useOdtTemplantes);
+	    	String htmlPage = generateHtmlPageNoJava(url, mimeType, id, readonly, reloadTopWindow);
 
 
 	    	ServletOutputStream out = response.getOutputStream();
@@ -302,14 +285,14 @@ public class DocumentUtil {
 	 * @throws Exception
 	 */
 	public static String generateHtmlPageNoJava(
-			ServletContext servletCtx, String context, String url, String mimeType, String document,
-			String readOnly, boolean reloadTopWindow, boolean useOdtTemplates) throws Exception {
+			String url, String mimeType, String document,
+			String readOnly, boolean reloadTopWindow) throws Exception {
 			
         return new StringBuffer()
         	.append("<html>\n")
         	.append("	<head>\n")
         	.append("		<script language='javascript'>\n")        	
-        	.append(getFunctionOfficeNoJavaProtocolo(servletCtx, context, url, reloadTopWindow, mimeType, document, readOnly))
+        	.append(getFunctionOfficeNoJavaProtocolo(url, reloadTopWindow, mimeType, document, readOnly))
 			.append("		</script>\n")
         	.append("	</head>\n")
         	.append("	<body onload=\"lazarOffice()\">\n")
@@ -334,25 +317,26 @@ public class DocumentUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	private static String getFunctionOfficeNoJavaProtocolo(ServletContext servletCtx,
-			String context, String url, boolean reloadTopWindow, String mimeType, String document, String readonly)
+	private static String getFunctionOfficeNoJavaProtocolo(String url, boolean reloadTopWindow, String mimeType, String document, String readonly)
 			throws Exception {
 		String ext = MimetypeMapping.getExtension(mimeType);
 		
-		return new StringBuffer()
+		StringBuffer resultado =  new StringBuffer()
 			.append("			function lazarOffice() {\n")
 			.append("				var protocolo = localStorage.getItem('" + ext + "');\n")
 			.append("				if(String(protocolo) == 'null'){\n")			
 			.append("					parent.showFrame(\"workframe\", \"seleccionarEditor.do?extension=" + ext + "&document=" + document + "&readonly=" + readonly + "\", \"\", \"\", \"\", false);")
 			.append("				}\n")
-			.append("				else{\n")
+			.append("				else{\n");
 			//[Manu Ticket #100] - ALSIGM3 Al generar un documento se queda la pantalla en blanco
-			.append(generateJSCodeReloadTopWindowWithTimeout(5000))
-			.append("					window.location.href = localStorage.getItem('" + ext + "') + \"" + url + "\";\n")		
+			if(reloadTopWindow){
+				resultado.append(generateJSCodeReloadTopWindowWithTimeout(5000));
+			}
+			resultado.append("					window.location.href = localStorage.getItem('" + ext + "') + \"" + url + "\";\n")		
 			.append("				}\n")
 			.append("				return true;\n")
-			.append("			}\n")
-			.toString();
+			.append("			}\n");
+			return resultado.toString();
 	}
 
 	/**
@@ -814,11 +798,11 @@ public class DocumentUtil {
 	 * @param timeout retardo al recargar la página principal.
 	 * @return Código JavaScript que permite recargar la página principal.
 	 */
-	protected static String generateJSCodeReloadTopWindowWithTimeout(int timeout) {
+	public static String generateJSCodeReloadTopWindowWithTimeout(int timeout) {
 		return "top.ispac_needToConfirm = false; " + generateJSCodeLocationHref() + " setTimeout(top.window.location.href = newhref, " + timeout + ");";
 	}
 
-	private static String generateJSCodeLocationHref() {
+	public static String generateJSCodeLocationHref() {
 
 		StringBuffer javascript = new StringBuffer();
 
@@ -988,5 +972,28 @@ public class DocumentUtil {
     		}
         }
 	}
-
+	
+	public static boolean esMimeTypeEditable(String mimeType){
+		
+		return ("application/msword".equalsIgnoreCase(mimeType)
+	    		|| "application/vnd.openxmlformats-officedocument.wordprocessingml.document".equalsIgnoreCase(mimeType)
+	    		|| "application/excel".equalsIgnoreCase(mimeType)
+	    		|| "application/x-excel".equalsIgnoreCase(mimeType)
+				|| "application/x-msexcel".equalsIgnoreCase(mimeType)
+				|| "application/vndms-excel".equalsIgnoreCase(mimeType)
+				|| "application/vnd.ms-excel".equalsIgnoreCase(mimeType)
+				|| "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equalsIgnoreCase(mimeType)
+	    		|| "application/mspowerpoint".equalsIgnoreCase(mimeType)
+				|| "application/powerpoint".equalsIgnoreCase(mimeType)
+				|| "application/vndms-powerpoint".equalsIgnoreCase(mimeType)
+				|| "application/vnd.ms-powerpoint".equalsIgnoreCase(mimeType)
+				|| "application/x-mspowerpoint".equalsIgnoreCase(mimeType)
+				|| ("application/vnd.oasis.opendocument.text".equalsIgnoreCase(mimeType) && useOdtTemplantes)
+				|| "application/vnd.openxmlformats-officedocument.presentationml.presentation".equalsIgnoreCase(mimeType)
+				|| "application/vnd.openxmlformats-officedocument.presentationml.slideshow".equalsIgnoreCase(mimeType)
+//			[Manu Ticket #475] Modificaciones para que reconozca los ODS
+				|| "application/vnd.oasis.opendocument.spreadsheet".equalsIgnoreCase(mimeType)
+//			[Manu Ticket #475] Modificaciones para que reconozca los ODS)
+				);
+	}
 }

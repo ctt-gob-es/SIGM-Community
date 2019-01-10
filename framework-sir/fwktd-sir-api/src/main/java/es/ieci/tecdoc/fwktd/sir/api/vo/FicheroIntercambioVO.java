@@ -283,7 +283,7 @@ public class FicheroIntercambioVO extends BaseValueObject {
 		if ((getFicheroIntercambio() != null)
 				&& (getFicheroIntercambio().getDe_Internos_Control() != null)){
 
-	        Documentacion_FisicaType documentacion_Fisica = getFicheroIntercambio().getDe_Internos_Control().getDocumentacion_Fisica();
+	        Documentacion_FisicaType documentacion_Fisica = Documentacion_FisicaType.fromValue(getFicheroIntercambio().getDe_Internos_Control().getDocumentacion_Fisica());
 	        if ((documentacion_Fisica != null) && StringUtils.isNotBlank(documentacion_Fisica.value())) {
 	        	return DocumentacionFisicaEnum.getDocumentacionFisica(documentacion_Fisica.value());
 	        }
@@ -360,7 +360,7 @@ public class FicheroIntercambioVO extends BaseValueObject {
 		if ((getFicheroIntercambio() != null)
 				&& (getFicheroIntercambio().getDe_Internos_Control() != null)){
 
-	        Tipo_RegistroType tipoRegistro = getFicheroIntercambio().getDe_Internos_Control().getTipo_Registro();
+	        Tipo_RegistroType tipoRegistro = Tipo_RegistroType.fromValue(getFicheroIntercambio().getDe_Internos_Control().getTipo_Registro());
 	        if ((tipoRegistro != null) && StringUtils.isNotBlank(tipoRegistro.value())) {
 	        	return TipoRegistroEnum.getTipoRegistro(tipoRegistro.value());
 	        }
@@ -382,7 +382,7 @@ public class FicheroIntercambioVO extends BaseValueObject {
 		if ((getFicheroIntercambio() != null)
 				&& (getFicheroIntercambio().getDe_Internos_Control() != null)){
 
-	        Indicador_PruebaType indicadorPrueba = getFicheroIntercambio().getDe_Internos_Control().getIndicador_Prueba();
+	        Indicador_PruebaType indicadorPrueba = Indicador_PruebaType.fromValue(getFicheroIntercambio().getDe_Internos_Control().getIndicador_Prueba());
 	        if ((indicadorPrueba != null) && StringUtils.isNotBlank(indicadorPrueba.value())) {
 	        	return IndicadorPruebaEnum.getIndicadorPrueba(indicadorPrueba.value());
 	        }
@@ -484,23 +484,33 @@ public class FicheroIntercambioVO extends BaseValueObject {
 		    	}
 
 		    	// Tipo de registro
-		        Tipo_RegistroType tipo_Registro = de_Internos_Control.getTipo_Registro();
-		        if ((tipo_Registro != null) && StringUtils.isNotBlank(tipo_Registro.value())) {
-		        	asiento.setTipoRegistro(TipoRegistroEnum.getTipoRegistro(tipo_Registro.value()));
-		        }
-
+		    	try{
+        		        Tipo_RegistroType tipo_Registro = Tipo_RegistroType.fromValue(de_Internos_Control.getTipo_Registro());
+        		        if ((tipo_Registro != null) && StringUtils.isNotBlank(tipo_Registro.value())) {
+        		        	asiento.setTipoRegistro(TipoRegistroEnum.getTipoRegistro(tipo_Registro.value()));
+        		        }
+		    	}catch (IllegalArgumentException e){
+		    	asiento.setTipoRegistro(null);
+		    	}
 		        // Documentación física
-		        Documentacion_FisicaType documentacion_Fisica = de_Internos_Control.getDocumentacion_Fisica();
-		        if ((documentacion_Fisica != null) && StringUtils.isNotBlank(documentacion_Fisica.value())) {
-		        	asiento.setDocumentacionFisica(DocumentacionFisicaEnum.getDocumentacionFisica(documentacion_Fisica.value()));
-		        }
-
-                // Indicador de prueba
-                Indicador_PruebaType indicadorPrueba = de_Internos_Control.getIndicador_Prueba();
-                if ((indicadorPrueba != null) && StringUtils.isNotBlank(indicadorPrueba.value())){
-                	asiento.setIndicadorPrueba(IndicadorPruebaEnum.getIndicadorPrueba(indicadorPrueba.value()));
-                }
-
+		    	try {
+        		        Documentacion_FisicaType documentacion_Fisica = Documentacion_FisicaType.fromValue(de_Internos_Control.getDocumentacion_Fisica());
+        		        if ((documentacion_Fisica != null) && StringUtils.isNotBlank(documentacion_Fisica.value())) {
+        		        	asiento.setDocumentacionFisica(DocumentacionFisicaEnum.getDocumentacionFisica(documentacion_Fisica.value()));
+        		        }
+		    	}catch (IllegalArgumentException e){
+			    	asiento.setDocumentacionFisica(null);
+		    	}
+		    	
+                        // Indicador de prueba
+		    	try{
+                            Indicador_PruebaType indicadorPrueba = Indicador_PruebaType.fromValue(de_Internos_Control.getIndicador_Prueba());
+                            if ((indicadorPrueba != null) && StringUtils.isNotBlank(indicadorPrueba.value())){
+                            	asiento.setIndicadorPrueba(IndicadorPruebaEnum.getIndicadorPrueba(indicadorPrueba.value()));
+                            }
+		    	}catch (IllegalArgumentException e){
+			    	asiento.setIndicadorPrueba(null);
+			}
 		    }
 
 		    De_Formulario_Generico de_Formulario_Generico = getFicheroIntercambio().getDe_Formulario_Generico();

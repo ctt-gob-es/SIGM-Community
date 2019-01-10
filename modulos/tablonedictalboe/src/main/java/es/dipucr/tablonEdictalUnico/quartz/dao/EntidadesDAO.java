@@ -10,14 +10,11 @@ import org.apache.log4j.Logger;
 import es.dipucr.tablonEdictalUnico.quartz.bean.Entidad;
 
 
-public class EntidadesDAO extends GenericoDAO
-{
+public class EntidadesDAO extends GenericoDAO {
 	private static final Logger logger = Logger.getLogger(" es.dipucr.sigem.consolidacion.dao.EntidadesDAO");
 	
 	public EntidadesDAO(){
-		
 		super();
-		
 	}
 	
 	public ArrayList<Entidad> dameEntidadesAyuntamientos() throws Exception{
@@ -28,7 +25,6 @@ public class EntidadesDAO extends GenericoDAO
 		GenericoDAO dao = new GenericoDAO();		
 		
 		try {
-			
 		    Connection con;
 			con = dao.getConexionPostgresDipucr("sigemAdmin");
 		
@@ -46,7 +42,6 @@ public class EntidadesDAO extends GenericoDAO
 				aux.setNombre(r.getString("NOMBRECORTO"));
 				
 				entidades.add(aux);
-								
 			}
 			
 			/*con = dao.getConexionPostgresAyuntamiento("sigemAdmin");
@@ -75,8 +70,7 @@ public class EntidadesDAO extends GenericoDAO
 			con=null;
 			
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 			throw e1;
 		}		
 		
@@ -115,7 +109,7 @@ public class EntidadesDAO extends GenericoDAO
 			con=null;
 			
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error("ERROR. " + e1.getMessage(), e1);
 			throw e1;
 		}
 		return bResult;

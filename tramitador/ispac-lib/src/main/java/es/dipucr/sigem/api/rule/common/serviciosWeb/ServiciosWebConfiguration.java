@@ -23,12 +23,14 @@ public class ServiciosWebConfiguration extends DipucrPropertiesConfiguration {
 	
 	public static final String DEFAULT_CONFIG_FILENAME = "serviciosWeb.properties";
 	
+	public static final String URL_NOTIFICA_SW = "servicioWeb.notifica.url";
 	public static final String URL_COMPARECE_SW = "servicioWeb.comparece.url";
 	public static final String URL_WEB_EMPLEADO_SW = "servicioWeb.WebEmpleado.url";
 	public static final String URL_ETABLON_SW = "servicioWeb.eTablon.url";
 	public static final String URL_SEDE_BOP_SW = "servicioWeb.SedeBOP.url";
 	public static final String URL_FACTURA_SW = "servicioWeb.Factura.url";
 	public static final String URL_PLATAFORMACONTRATACION_SW = "servicioWeb.plataformaContratacion.url";
+	public static final String URL_PEMPLEADO_AYTOS_SW = "servicioWeb.PEmpleadoAytos.url";
 	
 	public static final String URL_SVD_RECUBRIMIENTO_SW = "servicioWeb.SVD.Recubrimiento.url";
 	public static final String URL_SVD_SCSP_SW = "servicioWeb.SVD.SW_SCSP.url";
@@ -46,8 +48,23 @@ public class ServiciosWebConfiguration extends DipucrPropertiesConfiguration {
 	public static final String BDNS_APP_BOP = "servicioWeb.BDNS.id.bop";
 	public static final String BDNS_APP_CONVOCATORIAS = "servicioWeb.BDNS.id.convocatoria";
 	public static final String BDNS_APP_CONCESPAGOPROY = "servicioWeb.BDNS.id.concpagoproy";
+	public static final String BDNS_APP_DATOSPERSONALES = "servicioWeb.BDNS.id.datospersonales";
+	public static final String BDNS_APP_DEVOLUCIONREINTEGRO = "servicioWeb.BDNS.id.devolucionreintegro";
 	
 	
+	//Servicio web de consulta de ORVE (WSExportacion)
+	public static final String ORVE_URL = "servicioWeb.ORVE.url";
+	public static final String ORVE_USUARIO = "servicioWeb.ORVE.usuario";
+	public static final String ORVE_PASSWORD = "servicioWeb.ORVE.password";
+	public static final String ORVE_MAIL_ERROR = "servicioWeb.ORVE.emailError";
+	public static final String ORVE_USUARIO_REGISTRO = "ORVE.registro.usuario";
+	public static final String ORVE_PASSWORD_REGISTRO = "ORVE.registro.password";
+	public static final String ORVE_BOOKID_REGISTRO = "ORVE.registro.bookid";
+	public static final String ORVE_COD_TIPO_TRANSPORTE = "ORVE.registro.codTipoTransporte";
+	public static final String ORVE_COD_OFICINA = "ORVE.registro.codOficinaORVE";
+	public static final String ORVE_COD_TIPO_ASUNTO = "ORVE.registro.codTipoAsunto";
+
+
 	
 	/**
 	 * Constructor.

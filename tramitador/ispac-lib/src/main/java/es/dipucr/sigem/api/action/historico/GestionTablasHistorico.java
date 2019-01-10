@@ -12,6 +12,8 @@ import ieci.tdw.ispac.ispaclib.dao.TableDAO;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXProcesoDAO;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.db.DbResultSet;
+import ieci.tdw.ispac.ispaclib.search.vo.SearchResultVO;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispactx.TXTransactionDataContainer;
 
 import java.lang.reflect.Constructor;
@@ -205,64 +207,38 @@ public class GestionTablasHistorico {
 		this.proceso = proceso;
 	}
 
-	// MQE Buscamos también en la tabla de histórico con los mismos criterios
 	public ListCollection buscaEnHistorico(DbCnt cnt, String[] tableNames, String fromClause, Property[] columns, String conditions, List<ObjectDAO> lista) {
+		return buscaEnHistorico(cnt, tableNames, fromClause, columns, conditions, lista, null, 0, null);
+	}
+	
+	// MQE Buscamos también en la tabla de histórico con los mismos criterios
+	public ListCollection buscaEnHistorico(DbCnt cnt, String[] tableNames, String fromClause, Property[] columns, 
+			String conditions, List<ObjectDAO> lista, String order, int maximo, SearchResultVO searchResultVO) {
 
 		String[] tableNamesH;
 		String fromClauseH;
 		Property[] columnsH;
 		String conditionsH;
-
-		CollectionDAO resultsH;
+		String orderH;
 
 		if (tableNames != null) {
 			tableNamesH = new String[tableNames.length];
 			for (int i = 0; i < tableNames.length; i++) {
-				String aux = tableNames[i].toUpperCase().replaceAll(Constants.TABLASBBDD.SPAC_EXPEDIENTES, Constants.TABLASBBDD.SPAC_EXPEDIENTES_H);
-				aux = aux.replaceAll(Constants.TABLASBBDD.SPAC_DT_TRAMITES, Constants.TABLASBBDD.SPAC_DT_TRAMITES_H);
-				aux = aux.replaceAll(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS, Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS_H);
-				aux = aux.replaceAll(Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES, Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES_H);
-				aux = aux.replaceAll(Constants.TABLASBBDD.SPAC_HITOS, Constants.TABLASBBDD.SPAC_HITOS_H);
-
-				tableNamesH[i] = aux;
+				tableNamesH[i] = reemplazarTablasH(tableNames[i]);
 			}
 		} else
 			tableNamesH = tableNames;
 
-		if (fromClause != null) {
-			fromClauseH = fromClause.toUpperCase().replaceAll(Constants.TABLASBBDD.SPAC_EXPEDIENTES, Constants.TABLASBBDD.SPAC_EXPEDIENTES_H);
-			fromClauseH = fromClauseH.replaceAll(Constants.TABLASBBDD.SPAC_DT_TRAMITES,Constants.TABLASBBDD.SPAC_DT_TRAMITES_H);
-			fromClauseH = fromClauseH.replaceAll(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS, Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS_H);
-			fromClauseH = fromClauseH.replaceAll(Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES, Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES_H);
-			fromClauseH = fromClauseH.replaceAll(Constants.TABLASBBDD.SPAC_HITOS, Constants.TABLASBBDD.SPAC_HITOS_H);
-		} else			
-			fromClauseH = fromClause;
+		fromClauseH = reemplazarTablasH(fromClause);
 
 		if (columns != null) {
 			columnsH = new Property[columns.length];
 
 			for (int i = 0; i < columns.length; i++) {
 				Property aux = columns[i];
-				String auxName = aux.getName().toUpperCase()
-						.replaceAll(Constants.TABLASBBDD.SPAC_EXPEDIENTES, Constants.TABLASBBDD.SPAC_EXPEDIENTES_H);
-				auxName = auxName.replaceAll(Constants.TABLASBBDD.SPAC_DT_TRAMITES,Constants.TABLASBBDD.SPAC_DT_TRAMITES_H);
-				auxName = auxName.replaceAll(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS, Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS_H);
-				auxName = auxName.replaceAll(Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES, Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES_H);
-				auxName = auxName.replaceAll(Constants.TABLASBBDD.SPAC_HITOS, Constants.TABLASBBDD.SPAC_HITOS_H);
-
-				String auxRawName = aux.getRawName().toUpperCase()
-						.replaceAll(Constants.TABLASBBDD.SPAC_EXPEDIENTES, Constants.TABLASBBDD.SPAC_EXPEDIENTES_H);
-				auxRawName = auxRawName.replaceAll(Constants.TABLASBBDD.SPAC_DT_TRAMITES,Constants.TABLASBBDD.SPAC_DT_TRAMITES_H);
-				auxRawName = auxRawName.replaceAll(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS,	Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS_H);
-				auxRawName = auxRawName.replaceAll(Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES, Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES_H);
-				auxRawName = auxRawName.replaceAll(Constants.TABLASBBDD.SPAC_HITOS, Constants.TABLASBBDD.SPAC_HITOS_H);
-
-				String auxTitle = aux.getTitle().toUpperCase()
-						.replaceAll(Constants.TABLASBBDD.SPAC_EXPEDIENTES, Constants.TABLASBBDD.SPAC_EXPEDIENTES_H);
-				auxTitle = auxTitle.replaceAll(Constants.TABLASBBDD.SPAC_DT_TRAMITES,Constants.TABLASBBDD.SPAC_DT_TRAMITES_H);
-				auxTitle = auxTitle.replaceAll(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS,	Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS_H);
-				auxTitle = auxTitle.replaceAll(Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES, Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES_H);
-				auxTitle = auxTitle.replaceAll(Constants.TABLASBBDD.SPAC_HITOS, Constants.TABLASBBDD.SPAC_HITOS_H);
+				String auxName = reemplazarTablasH(aux.getName());
+				String auxRawName = reemplazarTablasH(aux.getRawName());
+				String auxTitle = reemplazarTablasH(aux.getTitle());
 
 				Property aux2 = new Property(aux.getOrdinal(), auxName,
 						auxRawName, aux.getType(), aux.getSize(),
@@ -273,20 +249,26 @@ public class GestionTablasHistorico {
 		} else
 			columnsH = columns;
 
-		if (conditions != null) {
-			conditionsH = conditions.toUpperCase().replaceAll(Constants.TABLASBBDD.SPAC_EXPEDIENTES, Constants.TABLASBBDD.SPAC_EXPEDIENTES_H);
-			conditionsH = conditionsH.replaceAll(Constants.TABLASBBDD.SPAC_DT_TRAMITES,Constants.TABLASBBDD.SPAC_DT_TRAMITES_H);
-			conditionsH = conditionsH.replaceAll(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS, Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS_H);
-			conditionsH = conditionsH.replaceAll(Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES, Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES_H);
-			conditionsH = conditionsH.replaceAll(Constants.TABLASBBDD.SPAC_HITOS, Constants.TABLASBBDD.SPAC_HITOS_H);
-		} else
-			conditionsH = conditions;
 
-		try {
-			resultsH = TableDAO.newCollectionDAO(TableDAO.class, tableNamesH,
-					fromClauseH, columnsH);
+		conditionsH = reemplazarTablasH(conditions);
 		
-			DbResultSet rs = resultsH.querySinToList(cnt, conditionsH);
+		//[dipucr-Felipe #847]
+		orderH = reemplazarTablasH(order);
+
+		DbResultSet rs = null;
+		try {
+			CollectionDAO resultsH = TableDAO.newCollectionDAO(TableDAO.class, tableNamesH,	fromClauseH, columnsH);
+			
+			//INICIO [dipucr-Felipe #847]
+			rs = resultsH.querySinToList(cnt, conditionsH, orderH, maximo);
+			
+			if (null != searchResultVO){
+				int numRegistros = searchResultVO.getNumTotalRegistros();
+				int numRegistrosHist = resultsH.count(cnt, conditionsH);
+				searchResultVO.setNumTotalRegistros(numRegistros + numRegistrosHist);
+			}
+			//FIN [dipucr-Felipe #847]
+
 			while (rs.getResultSet().next()) {
 				Object[] marguments = new Object[4];
 				marguments[0] = cnt;
@@ -327,9 +309,34 @@ public class GestionTablasHistorico {
 			logger.error("Error al buscar en el histórico. " + e.getMessage(), e);
 		} catch (ISPACException e) {
 			logger.error("Error al buscar en el histórico. " + e.getMessage(), e);
+		} finally {			
+			if (null != rs){
+				try {
+					rs.close();
+				} catch (ISPACException e) {
+				}
+			}
 		}
 		ListCollection listaResult = new ListCollection(lista);
 
 		return listaResult;
+	}
+
+	/**
+	 * [dipucr-Felipe #847]
+	 * @param cadena
+	 * @return
+	 */
+	public String reemplazarTablasH(String cadena) {
+		String result = cadena;
+		if (!StringUtils.isEmpty(result)){
+			result = result.toUpperCase();
+			result = result.replaceAll(Constants.TABLASBBDD.SPAC_EXPEDIENTES, Constants.TABLASBBDD.SPAC_EXPEDIENTES_H);
+			result = result.replaceAll(Constants.TABLASBBDD.SPAC_DT_TRAMITES, Constants.TABLASBBDD.SPAC_DT_TRAMITES_H);
+			result = result.replaceAll(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS, Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS_H);
+			result = result.replaceAll(Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES, Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES_H);
+			result = result.replaceAll(Constants.TABLASBBDD.SPAC_HITOS, Constants.TABLASBBDD.SPAC_HITOS_H);
+		}
+		return result;
 	}
 }

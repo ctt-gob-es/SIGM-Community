@@ -1,6 +1,5 @@
 package es.dipucr.contratacion.rule;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import ieci.tdw.ispac.api.IEntitiesAPI;

@@ -40,6 +40,17 @@ public interface ServicioGestionCSV {
 	 * @return Información del documento con el CSV
 	 */
 	public InfoDocumentoCSV getInfoDocumentoByCSV(Entidad entidad, String csv) throws CSVException;
+	
+	/**
+	 * Obtiene la información de un documento a partir de su Nombre.
+	 * 
+	 * @param entidad
+	 *            Entidad sobre la que estamos trabajando
+	 * @param nombreDoc
+	 *            Nombre de dicho documento
+	 * @return Información del documento con ese nombre
+	 */
+	public InfoDocumentoCSV getInfoDocumentoByNombre(Entidad entidad, String nombreDoc) throws CSVException;
 
 	/**
 	 * Obtiene la información de un documento, incluido su contenido, a partir

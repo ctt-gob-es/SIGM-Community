@@ -92,4 +92,8 @@ public interface TramitacionWebService extends Remote {
 	
 	//[DipuCR-Agustin #781]
 	public Binario getFicheroTemp(String idEntidad, String guid);
+	
+	public Booleano anexarDocsTramite(String idEntidad, String numExp, int idTramite, String numReg, 
+			Date fechaReg, DocumentoExpediente[] documentos) 
+		throws RemoteException;
 }

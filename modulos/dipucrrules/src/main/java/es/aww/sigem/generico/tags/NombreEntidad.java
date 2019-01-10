@@ -5,6 +5,7 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
 import ieci.tdw.ispac.ispaclib.session.OrganizationUserInfo;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tecdoc.sgm.core.exception.SigemException;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.entidades.EntidadesException;
@@ -23,7 +24,9 @@ public class NombreEntidad implements IRule{
 	}
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {		
-		String descEntidad = "";		
+		String descEntidad = "";
+		String mayusculas = rulectx.get("mayusculas");
+
 		OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
 		if (info != null) {
 			
@@ -36,6 +39,11 @@ public class NombreEntidad implements IRule{
 				logger.error("Error al recuperar la descripción de la entidad. " + e.getMessage(), e);
 			}
 			
+			if (StringUtils.isNotEmpty(mayusculas)) {
+				if (mayusculas.equalsIgnoreCase("true")) {
+					return descEntidad.toUpperCase();
+				}
+			}
 			return descEntidad;
 		}
 		return null;

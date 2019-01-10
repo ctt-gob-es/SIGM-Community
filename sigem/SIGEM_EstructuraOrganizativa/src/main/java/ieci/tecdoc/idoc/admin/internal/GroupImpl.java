@@ -225,6 +225,27 @@ public class GroupImpl implements Group {
 	public void setDescription(String description) {
 		_description = description;
 	}
+	
+	// INICIO [dipucr-Felipe #541]
+	/**
+	 * Obtiene la email del grupo.
+	 * 
+	 * @return El email.
+	 */
+	public String getEmail() {
+		return _email;
+	}
+
+	/**
+	 * Establece el email del grupo.
+	 * 
+	 * @param description
+	 *            El email del grupo.
+	 */
+	public void setEmail(String email) {
+		_email = email;
+	}
+	// FIN [dipucr-Felipe #541]
 
 	/**
 	 * Obtiene el identificador del usuario que ha creado el grupo.
@@ -357,6 +378,7 @@ public class GroupImpl implements Group {
 		bdr.addSimpleElement("ManagerId", Integer.toString(_managerId));
 		bdr.addSimpleElement("Type", Integer.toString(_type));
 		bdr.addSimpleElement("Description", _description);
+		bdr.addSimpleElement("Email", _email);//[dipucr-Felipe #541]
 		bdr.addSimpleElement("CreatorId", Integer.toString(_creatorId));
 		bdr.addSimpleElement("CreationDate", DateTimeUtil.getDateTime(
 				_creationDate, DatePattern.XML_TIMESTAMP_PATTERN));
@@ -421,6 +443,7 @@ public class GroupImpl implements Group {
 		statement.setLongInteger(index++, _managerId);
 		statement.setLongInteger(index++, _type);
 		statement.setShortText(index++, _description);
+		statement.setShortText(index++, _email);//[dipucr-Felipe #541]
 		statement.setLongInteger(index++, _creatorId);
 		_creationDate = DbUtil.getCurrentDateTime();
 		statement.setDateTime(index++, _creationDate);
@@ -446,6 +469,7 @@ public class GroupImpl implements Group {
 		statement.setShortText(index++, _name);
 		statement.setLongInteger(index++, _managerId);
 		statement.setShortText(index++, _description);
+		statement.setShortText(index++, _email);//[dipucr-Felipe #541]
 		_updaterId = _userConnected;
 		statement.setLongInteger(index++, _updaterId);
 		_updateDate = DbUtil.getCurrentDateTime();
@@ -474,6 +498,7 @@ public class GroupImpl implements Group {
 		_name = statement.getShortText(index++);
 		_managerId = statement.getLongInteger(index++);
 		_description = statement.getShortText(index++);
+		_email = statement.getShortText(index++);//[dipucr-Felipe #541]
 		_creatorId = statement.getLongInteger(index++);
 		_creationDate = statement.getDateTime(index++);
 		_updaterId = statement.getLongInteger(index++);
@@ -972,6 +997,7 @@ public class GroupImpl implements Group {
 		_managerId = userConnected;
 		_type = Defs.GROUP_STANDARD;
 		_description = null;
+		_email = null;//[dipucr-Felipe #541]
 		_creatorId = _userConnected;
 		_creationDate = DbDataType.NULL_DATE_TIME;
 		_updaterId = DbDataType.NULL_LONG_INTEGER;
@@ -987,6 +1013,7 @@ public class GroupImpl implements Group {
 	private int _managerId;
 	private int _type;
 	private String _description;
+	private String _email;//[dipucr-Felipe #541]
 	private int _creatorId;
 	private Date _creationDate;
 	private int _updaterId;

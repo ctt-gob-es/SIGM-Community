@@ -345,7 +345,6 @@ public class Base64
         }   // end try
         catch( java.io.IOException e )
         {
-            //e.printStackTrace();
             logger.error (e, e);
             return null;
         }   // end catch
@@ -475,7 +474,6 @@ public class Base64
             }   // end try
             catch( java.io.IOException e )
             {
-                //e.printStackTrace();
                 logger.error (e, e);
                 return null;
             }   // end catch
@@ -802,13 +800,11 @@ public class Base64
         catch( java.io.IOException e )
         {
 			logger.error (e, e);
-            //e.printStackTrace();
             obj = null;
         }   // end catch
         catch( java.lang.ClassNotFoundException e )
         {
 			logger.error (e, e);
-            //e.printStackTrace();
             obj = null;
         }   // end catch
         finally

@@ -14,6 +14,7 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrSERSOComprTrabSoc implements IRule{
     private static final Logger LOGGER = Logger.getLogger(DipucrSERSOComprTrabSoc.class);
@@ -47,17 +48,16 @@ public class DipucrSERSOComprTrabSoc implements IRule{
             Iterator<?> solicitudIterator = solicitudCollection.iterator();                
             if (solicitudIterator.hasNext()){
                 solicitud = (IItem)solicitudIterator.next();
-                nifTrabSol = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.DOCUMENTOIDENTIDAD);
-                if(nifTrabSol == null){
-                    nifTrabSol = "";
-                }
+                nifTrabSol = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.DOCUMENTOIDENTIDAD);
                 
                 //Recuperamos la lista de trabajadores sociales
-                IItemCollection trabajadoresCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOTrabSocial.NOMBRE_TABLA, "WHERE 1=1");
-                Iterator<?> trabajadoresIterator = trabajadoresCollection.iterator();                
+                IItemCollection trabajadoresCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOTrabSocial.NOMBRE_TABLA, ConstantesString.WHERE + " 1 = 1");
+                Iterator<?> trabajadoresIterator = trabajadoresCollection.iterator();  
+                
                 while(!encontrado && trabajadoresIterator.hasNext()){
                     IItem trabajador = (IItem) trabajadoresIterator.next();
-                    String nifTrabajador = trabajador.getString(ConstantesPlanEmergencia.DpcrSERSOTrabSocial.DNI);
+                    String nifTrabajador = SubvencionesUtils.getString(trabajador, ConstantesPlanEmergencia.DpcrSERSOTrabSocial.DNI);
+                    
                     if(nifTrabajador != null && nifTrabajador.trim().equalsIgnoreCase(nifTrabSol.trim())){
                         encontrado = true;
                     }
@@ -80,7 +80,7 @@ public class DipucrSERSOComprTrabSoc implements IRule{
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
 }

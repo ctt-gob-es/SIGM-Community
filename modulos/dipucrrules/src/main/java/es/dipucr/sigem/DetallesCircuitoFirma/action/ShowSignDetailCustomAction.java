@@ -210,7 +210,7 @@ public class ShowSignDetailCustomAction extends BaseAction {
 
 						//INICIO [dipucr-Felipe 3#230]
 						String sFechaFirma = null;
-						if (listPasosFirma.size() > 0){
+						if (listPasosFirma.size() > 0 && listPasosFirma.size()>i){
 							Date dFechaFirma = listPasosFirma.get(i).getDate("FECHA");
 							sFechaFirma = FechasUtil.getFormattedDate(dFechaFirma);
 						}

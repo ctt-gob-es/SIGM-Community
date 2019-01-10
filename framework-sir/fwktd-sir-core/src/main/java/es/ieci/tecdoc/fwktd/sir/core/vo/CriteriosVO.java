@@ -33,7 +33,11 @@ public class CriteriosVO extends BaseValueObject {
 	 */
 	private PageInfo pageInfo = null;
 
-
+	/**
+	 * Criterios por los que se van a ordenar los resultados
+	 */
+	private String orderByString = null;
+	
 	/**
 	 * Constructor.
 	 */
@@ -96,4 +100,13 @@ public class CriteriosVO extends BaseValueObject {
 		this.pageInfo = pageInfo;
 		return this;
 	}
+
+	public String getOrderByString() {
+	    return orderByString;
+	}
+
+	public void setOrderByString(String orderByString) {
+	    this.orderByString = orderByString;
+	}
+	
 }

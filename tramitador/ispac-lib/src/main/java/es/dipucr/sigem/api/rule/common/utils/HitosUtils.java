@@ -133,7 +133,10 @@ public class HitosUtils {
 				logger.warn("No insertamos el hito en historicos. " + e1.getMessage(), e1);
 				return false;
 			}
+		} finally {
+			cct.releaseConnection(cnt);
 		}
+		
 		return true;
 	}
 }

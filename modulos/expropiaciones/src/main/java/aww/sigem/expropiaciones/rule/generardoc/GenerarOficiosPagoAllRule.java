@@ -173,7 +173,7 @@ public class GenerarOficiosPagoAllRule implements IRule {
 						
 						cct.deleteSsVariable("NUMEXP");
 
-					} catch (Throwable e) {
+					} catch (Exception e) {
 
 						String message = "exception.documents.generate";
 						String extraInfo = null;

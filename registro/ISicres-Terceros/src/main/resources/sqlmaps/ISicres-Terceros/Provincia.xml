@@ -8,6 +8,7 @@
 		<result property="id" column="id" />
 		<result property="codigo" column="code" />
 		<result property="nombre" column="name" />
+		<result property="ciudades" select="CiudadVO.getCiudadesByNombreProvincia" column="name" />
 	</resultMap>
 
 	<select id="getProvinciaVOs" resultMap="provincia">

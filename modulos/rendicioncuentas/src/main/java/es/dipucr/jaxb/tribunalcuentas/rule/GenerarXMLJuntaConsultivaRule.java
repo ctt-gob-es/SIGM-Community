@@ -45,7 +45,7 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class GenerarXMLJuntaConsultivaRule implements IRule {
 	
-	public static final Logger logger = Logger.getLogger(GenerarXMLJuntaConsultivaRule.class);
+	public static final Logger LOGGER = Logger.getLogger(GenerarXMLJuntaConsultivaRule.class);
 
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
@@ -117,11 +117,10 @@ public class GenerarXMLJuntaConsultivaRule implements IRule {
 			//Si la entidad es la 005 es diputacion por lo tanto los decretos son el presidente y es el resto es el alcalde
 			OrganoContratante organoContratanteDecretos = new OrganoContratante();
 			String codEntidad = EntidadesAdmUtil.obtenerEntidad(rulectx.getClientContext());
-			if(codEntidad.equals("005")){
+			if("005".equals(codEntidad)){
 				organoContratanteDecretos.setCodigoOrganoContratante(Constantes.ORGANO_CONTRATACION_JUNTACONSULTIVA.PRESIDENTE);
 				organoContratanteDecretos.setNombreOrganoContratante("Presidente");
-			}
-			else{
+			} else{
 				organoContratanteDecretos.setCodigoOrganoContratante(Constantes.ORGANO_CONTRATACION_JUNTACONSULTIVA.ALCALDE);
 				organoContratanteDecretos.setNombreOrganoContratante("Alcalde");
 			}
@@ -141,36 +140,49 @@ public class GenerarXMLJuntaConsultivaRule implements IRule {
 				DatosLicitacion datosLicitacion = DipucrFuncionesComunes.getDatosLicitacion(rulectx);
 				DiariosFechaOficiales diariosFechaOficiales = DipucrFuncionesComunes.getFechaDiariosOficiales(rulectx, numexpExp);
 				DatosEmpresa datosEmpresa = DipucrFuncionesComunes.getDatosEmpresa(rulectx, numexpExp);
-				if(datosContrato==null) datosContrato = new DatosContrato();
-				if(datosTramitacion==null) datosTramitacion = new DatosTramitacion();
-				if(diariosFechaOficiales==null) diariosFechaOficiales = new DiariosFechaOficiales();
-				if(datosEmpresa==null) datosEmpresa = new DatosEmpresa();
+				if(null == datosContrato){
+					datosContrato = new DatosContrato();
+				}
+				if(null == datosTramitacion){
+					datosTramitacion = new DatosTramitacion();
+				}
+				if(null == diariosFechaOficiales){
+					diariosFechaOficiales = new DiariosFechaOficiales();
+				}
+				if(null == datosEmpresa){
+					datosEmpresa = new DatosEmpresa();
+				}
 				Contrato contrato = FuncionesComunes.getContratoJuntaConsultiva(datosContrato, datosTramitacion, diariosFechaOficiales, datosLicitacion, datosEmpresa);
 				//compruebo que organo de contratación lo aprobo
 				if(datosContrato.getOrganoContratacion().equals(Constantes.ORGANO_CONTRATACION.JUNTAGOBIERNO)){						
-					if(contrato!=null)	organoContratanteJuntaGobierno.getContrato().add(contrato);
-				}
-				else if(datosContrato.getOrganoContratacion().equals(Constantes.ORGANO_CONTRATACION.DECRETO)){
-					if(contrato!=null)	organoContratanteDecretos.getContrato().add(contrato);
-				}
-				else if(datosContrato.getOrganoContratacion().equals(Constantes.ORGANO_CONTRATACION.PLENO)){
-					if(contrato!=null)	organoContratanteJuntaPleno.getContrato().add(contrato);
-				}
-				else{
-					if(contrato!=null)	organoContratanteJuntaResto.getContrato().add(contrato);
+					if(null != contrato){
+						organoContratanteJuntaGobierno.getContrato().add(contrato);
+					}
+				} else if(datosContrato.getOrganoContratacion().equals(Constantes.ORGANO_CONTRATACION.DECRETO)){
+					if(null != contrato){
+						organoContratanteDecretos.getContrato().add(contrato);
+					}
+				} else if(datosContrato.getOrganoContratacion().equals(Constantes.ORGANO_CONTRATACION.PLENO)){
+					if(null != contrato){
+						organoContratanteJuntaPleno.getContrato().add(contrato);
+					}
+				} else{
+					if(null != contrato){
+						organoContratanteJuntaResto.getContrato().add(contrato);
+					}
 				}
 				
 			}
-			if(organoContratanteJuntaGobierno.getContrato()!=null && organoContratanteJuntaGobierno.getContrato().size()>0){
+			if(null != organoContratanteJuntaGobierno.getContrato() && organoContratanteJuntaGobierno.getContrato().size()>0){
 				departamento.getOrganoContratante().add(organoContratanteJuntaGobierno);
 			}
-			if(organoContratanteDecretos.getContrato()!=null && organoContratanteDecretos.getContrato().size()>0){
+			if(null != organoContratanteDecretos.getContrato() && organoContratanteDecretos.getContrato().size()>0){
 				departamento.getOrganoContratante().add(organoContratanteDecretos);
 			}
-			if(organoContratanteJuntaPleno.getContrato()!=null && organoContratanteJuntaPleno.getContrato().size()>0){
+			if(null != organoContratanteJuntaPleno.getContrato() && organoContratanteJuntaPleno.getContrato().size()>0){
 				departamento.getOrganoContratante().add(organoContratanteJuntaPleno);
 			}
-			if(organoContratanteJuntaResto.getContrato()!=null && organoContratanteJuntaResto.getContrato().size()>0){
+			if(null != organoContratanteJuntaResto.getContrato() && organoContratanteJuntaResto.getContrato().size()>0){
 				departamento.getOrganoContratante().add(organoContratanteJuntaResto);
 			}
 
@@ -184,10 +196,10 @@ public class GenerarXMLJuntaConsultivaRule implements IRule {
 			
 			File fileXML = FuncionesComunes.obtenerXML(relacionContratos);
 			
-			if(fileXML!=null){
+			if(null != fileXML){
 				//Guarda el resultado en gestor documental Notificaciones
 				int tpdocXML = DocumentosUtil.getIdTipoDocByCodigo(rulectx.getClientContext(), "xml-rendiCuen");
-				String nombreTipoDocXML = DocumentosUtil.getNombreTipoDocByCod(rulectx, "xml-rendiCuen");
+				String nombreTipoDocXML = DocumentosUtil.getNombreTipoDocByCod(rulectx.getClientContext(), "xml-rendiCuen");
 				IItem docXML = DocumentosUtil.generaYAnexaDocumento(rulectx, rulectx.getTaskId(), tpdocXML, nombreTipoDocXML, fileXML, "xml");
 				if(fileXML.exists()){
 					fileXML.delete();
@@ -206,14 +218,14 @@ public class GenerarXMLJuntaConsultivaRule implements IRule {
 			
 			
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. "+e.getMessage(),e);
 		} catch (DatatypeConfigurationException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. "+e.getMessage(),e);
 		}
 		
-		return new Boolean(true);
+		return Boolean.TRUE;
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {

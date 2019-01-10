@@ -254,6 +254,12 @@ public class SaveFunctionsAction extends BaseAction {
 			selectedFunctions.put(new Integer(ISecurityAPI.FUNC_PERM_EDIT),
 					null);
 		}
+		
+		//[Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+		if (form.isEditRepositorioComun()) {
+			selectedFunctions.put(new Integer(
+					ISecurityAPI.FUNC_INV_REPOSITORIO_COMUN_EDIT), null);
+		}
 
 		// Actualizar las funciones
 		if (selectedFunctions.isEmpty()) {

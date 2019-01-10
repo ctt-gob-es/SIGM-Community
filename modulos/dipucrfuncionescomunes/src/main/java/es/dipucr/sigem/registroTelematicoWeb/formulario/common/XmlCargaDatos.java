@@ -18,7 +18,7 @@ public class XmlCargaDatos{
 	public static String COD_ERROR = "[ERROR]";
 	
 	/** Logger **/
-	protected static final Logger logger = Logger.getLogger(XmlCargaDatos.class);
+	protected static final Logger LOGGER = Logger.getLogger(XmlCargaDatos.class);
 	
 	/**
 	 * Devuelve los datos de una tabla de validación con sustituto
@@ -36,7 +36,7 @@ public class XmlCargaDatos{
 			fileName = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/"+nombreTabla+".xml";		
 			fichero = new FileWriter(fileName);
 			  
-		    StringBuffer sbDatos = new StringBuffer();
+		    StringBuilder sbDatos = new StringBuilder();
 		    sbDatos.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><listado>");
 	        
 	        Vector listDatos = new Vector();
@@ -53,17 +53,16 @@ public class XmlCargaDatos{
 			BufferedWriter bw = new BufferedWriter(fichero);
 			bw.write(sbDatos.toString());
 			bw.close();
-			logger.info("fileName "+fileName);			
+			LOGGER.info("fileName " + fileName);			
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} finally {
 			try {
-	           // Nuevamente aprovechamos el finally para 
-	           // asegurarnos que se cierra el fichero.
-				if (null != fichero)
+				if (null != fichero){
 					fichero.close();
+				}
 			} catch (Exception e2) {
-				logger.error(e2.getMessage(), e2);
+				LOGGER.error(e2.getMessage(), e2);
 			}
 		}
 		return fileName;
@@ -86,7 +85,7 @@ public class XmlCargaDatos{
 			fileName = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/"+nombreTabla+".xml";		
 			fichero = new FileWriter(fileName);
 			  
-		    StringBuffer sbDatos = new StringBuffer();
+		    StringBuilder sbDatos = new StringBuilder();
 		    sbDatos.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><listado>");
 	        
 	        Vector listDatos = new Vector();
@@ -106,17 +105,16 @@ public class XmlCargaDatos{
 			BufferedWriter bw = new BufferedWriter(fichero);
 			bw.write(sbDatos.toString());
 			bw.close();
-			logger.info("fileName "+fileName);			
+			LOGGER.info("fileName "+fileName);			
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} finally {
 			try {
-	           // Nuevamente aprovechamos el finally para 
-	           // asegurarnos que se cierra el fichero.
-				if (null != fichero)
+				if (null != fichero){
 					fichero.close();
+				}
 			} catch (Exception e2) {
-				logger.error(e2.getMessage(), e2);
+				LOGGER.error(e2.getMessage(), e2);
 			}
 		}
 		return fileName;
@@ -141,7 +139,7 @@ public class XmlCargaDatos{
 			
 			consulta = consulta.replace("#", "'");
 			  
-		    StringBuffer sbDatos = new StringBuffer();
+		    StringBuilder sbDatos = new StringBuilder();
 		    sbDatos.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><listado>");
 	        
 	        Vector listDatos = new Vector();
@@ -158,17 +156,16 @@ public class XmlCargaDatos{
 			BufferedWriter bw = new BufferedWriter(fichero);
 			bw.write(sbDatos.toString());
 			bw.close();
-			logger.info("fileName "+fileName);			
+			LOGGER.info("fileName "+fileName);			
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} finally {
 			try {
-	           // Nuevamente aprovechamos el finally para 
-	           // asegurarnos que se cierra el fichero.
-				if (null != fichero)
+				if (null != fichero){
 					fichero.close();
+				}
 			} catch (Exception e2) {
-				logger.error(e2.getMessage(), e2);
+				LOGGER.error(e2.getMessage(), e2);
 			}
 		}
 		return fileName;
@@ -193,7 +190,7 @@ public class XmlCargaDatos{
 			
 			consulta = consulta.replace("#", "'");
 			  
-		    StringBuffer sbDatos = new StringBuffer();
+		    StringBuilder sbDatos = new StringBuilder();
 		    sbDatos.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><listado>");
 	        
 	        Vector listDatos = new Vector();
@@ -220,17 +217,16 @@ public class XmlCargaDatos{
 			BufferedWriter bw = new BufferedWriter(fichero);
 			bw.write(sbDatos.toString());
 			bw.close();
-			logger.info("fileName "+fileName);			
+			LOGGER.info("fileName "+fileName);			
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} finally {
 			try {
-	           // Nuevamente aprovechamos el finally para 
-	           // asegurarnos que se cierra el fichero.
-				if (null != fichero)
+				if (null != fichero){
 					fichero.close();
+				}
 			} catch (Exception e2) {
-				logger.error(e2.getMessage(), e2);
+				LOGGER.error(e2.getMessage(), e2);
 			}
 		}
 		return fileName;

@@ -109,7 +109,7 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       <wsdl:port binding="impl:SC12OF_IncrementalDatosBasicosSoapBinding" name="SC12OF_IncrementalDatosBasicos">
 
-         <wsdlsoap:address location="http://pre-wsdir3.inter060.es/directorio/services/SC12OF_IncrementalDatosBasicos"/>
+         <wsdlsoap:address location="http://dir3ws.redsara.es/directorio/services/SC12OF_IncrementalDatosBasicos"/>
 
       </wsdl:port>
 

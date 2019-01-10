@@ -142,7 +142,7 @@ public class TrasladarLibroExtractosRule implements IRule {
 										// NOTA: Usamos esta clase pues ServicioMensajesCortos estaba manteniendo saltos de línea
 										// y enlaces pero no envía correos fuera de la Diputación
 
-										MailUtil.enviarCorreo(rulectx, cCorreoDestino, cAsunto, cContenido, file, imagenes);
+										MailUtil.enviarCorreo(rulectx.getClientContext(), cCorreoDestino, cAsunto, cContenido, file, imagenes);
 										
 										// Acuse de recibo
 										DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvío, nombreDoc, descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);

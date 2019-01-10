@@ -174,7 +174,10 @@ public class DipucrFincasActaPreviaExpropiadoTagTablaRule implements IRule {
 						 * INICIO[Teresa] Ticket #106 añadir el destino_id al documento
 						 * **/
 						if(expropiado[2]!=null && !expropiado[2].trim().toUpperCase().equals("null")){
-							itemDocume.set("DESTINO_ID", expropiado[2]);
+							//itemDocume.set("DESTINO_ID", expropiado[2]);
+							if (expropiado[2]!=null){
+								itemDocume.set("DESTINO_ID", expropiado[2]);
+							}
 						}
 						
 						/**
@@ -356,7 +359,6 @@ public class DipucrFincasActaPreviaExpropiadoTagTablaRule implements IRule {
 			fileOut.delete();
 			if(in!=null) in.close();
 			if(out != null) out.close();
-			ooHelper.dispose();
 			
     	} catch (ISPACException e) {
     		logger.error("Se produjo una excepción", e);
@@ -370,6 +372,10 @@ public class DipucrFincasActaPreviaExpropiadoTagTablaRule implements IRule {
 		} catch (java.lang.Exception e) {
 			logger.error("Se produjo una excepción", e);
 			throw new ISPACRuleException(e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 	}	
 

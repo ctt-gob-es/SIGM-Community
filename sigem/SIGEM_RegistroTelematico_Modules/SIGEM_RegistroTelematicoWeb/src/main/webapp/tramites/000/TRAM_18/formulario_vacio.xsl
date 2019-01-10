@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output encoding="ISO-8859-1" method="html"/>
+<xsl:include href="../templates_comunes.xsl" /><xsl:output encoding="ISO-8859-1" method="html"/>
 
 <!-- TEXTO  -->
 		<xsl:variable name="lang.titulo" select="'Formulario de Solicitud de Certificado Urbanistico y autoliquidación de la tasa por licencia urbanística'"/>

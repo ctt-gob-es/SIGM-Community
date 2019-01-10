@@ -132,6 +132,7 @@ public class LoginAction extends Action{
 					user.setPassword(password);
 					user = oServicio.authenticateUser(user, entidad);
 					if (user != null) {
+						session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_USUARIO, usuario);
 						return createSession(mapping, request, oServicio, user, idEntidad, idAplicacion);
 					} else {
 						request.setAttribute("invalid_user", "true");
@@ -187,6 +188,8 @@ public class LoginAction extends Action{
 		}
 
 		session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO, key);
+		session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD, idEntidad);
+		
 		oClient.modificarDatosSesion(key, datosSesion);
 		if (!Utilidades.isNuloOVacio(idAplicacion)){
 			// Si no es la aplicación de Archivo

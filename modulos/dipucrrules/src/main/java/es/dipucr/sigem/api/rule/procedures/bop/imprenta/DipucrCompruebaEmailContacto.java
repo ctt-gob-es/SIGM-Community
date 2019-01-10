@@ -32,9 +32,9 @@ public class DipucrCompruebaEmailContacto implements IRule {
 			
 			numexp = rulectx.getNumExp();
 			
-        	IItemCollection solicitudCollection = entitiesAPI.getEntities("DPCR_DAT_PET_TRAB_IMPRENTA", numexp);
+        	IItemCollection solicitudCollection = entitiesAPI.getEntities(ConstantesImprenta.TABLA_DATOS_PETICION_TRABAJO, numexp);
 	        if(solicitudCollection.toList().size() > 0){
-		        String email = ((IItem) solicitudCollection.iterator().next()).getString("EMAILCONTACTO");
+		        String email = ((IItem) solicitudCollection.iterator().next()).getString(ConstantesImprenta.COLUMNA_EMAILCONTACTO);
 		        if(StringUtils.isEmpty(email)){
 		        	rulectx.setInfoMessage("ERROR. Debe rellenar la 'Dirección Electrónica' de la 'Persona de contacto' en la pestaña 'Datos Petición de Trabajos a la Imprenta Provincial'.");
 		        	resultado = false;

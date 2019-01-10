@@ -5,10 +5,9 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitDecretoResolucionRule extends InitDecretoSubvRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "SUBV_CONVOCATORIA";
-		STR_extracto = "Resolución de convocatoria de subvenciones";
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "SUBV_CONVOCATORIA";
+        strExtracto = "Resolución de convocatoria de subvenciones";
         return true;
     }
 }

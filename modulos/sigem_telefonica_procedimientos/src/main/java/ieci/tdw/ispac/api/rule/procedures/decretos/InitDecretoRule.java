@@ -17,38 +17,38 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
  */
 public class InitDecretoRule implements IRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		return true;
-	}
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        return true;
+    }
 
-	public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
-		return true;
-	}
+    public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
+        return true;
+    }
 
-	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
-		try {
-			IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
-			IItemCollection itemCollection = entitiesAPI.getEntities("SGD_DECRETO", rulectx.getNumExp());
-			
-			if (itemCollection!=null && itemCollection.toList().size()>1) {
-				throw new ISPACRuleException("Se ha producido un error. Se han encontrado varios registros para la entidad Decreto");
-			}else if (itemCollection!=null && itemCollection.toList().size()==0) {
-				IItem item = entitiesAPI.createEntity("SGD_DECRETO","");
-				item.set("NUMEXP", rulectx.getNumExp());
-				//Obtener la unidad organizativa del responsable
-		        IItem departamento = getDepartamento(rulectx);
-		        if (departamento != null) {
-		        	item.set("DPTO_SERVICIO", departamento.getString("NAME"));
-			    }
-		        item.store(rulectx.getClientContext());
-			}
-			return null;
-		} catch (ISPACException e) {
-			throw new ISPACRuleException(e);
-		}
-	}
+    public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+        try {
+            IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
+            IItemCollection itemCollection = entitiesAPI.getEntities("SGD_DECRETO", rulectx.getNumExp());
+            
+            if (itemCollection!=null && itemCollection.toList().size()>1) {
+                throw new ISPACRuleException("Se ha producido un error. Se han encontrado varios registros para la entidad Decreto");
+            }else if (itemCollection!=null && itemCollection.toList().size()==0) {
+                IItem item = entitiesAPI.createEntity("SGD_DECRETO","");
+                item.set("NUMEXP", rulectx.getNumExp());
+                //Obtener la unidad organizativa del responsable
+                IItem departamento = getDepartamento(rulectx);
+                if (departamento != null) {
+                    item.set("DPTO_SERVICIO", departamento.getString("NAME"));
+                }
+                item.store(rulectx.getClientContext());
+            }
+            return null;
+        } catch (ISPACException e) {
+            throw new ISPACRuleException(e);
+        }
+    }
 
-	/**
+    /**
      * Obtiene el departamento del responsable del expediente.
      * @param rulectx Contexto de la regla.
      * @return Departamento del responsable.
@@ -59,17 +59,17 @@ public class InitDecretoRule implements IRule {
         
         IResponsible resp = rulectx.getClientContext().getResponsible();
         if (resp.isUser()) {
-        	departamento = resp.getRespOrgUnit();
+            departamento = resp.getRespOrgUnit();
         } else if (resp.isOrgUnit()) {
-        	departamento = resp;
+            departamento = resp;
         } else { // resp.isGroup()
-        	// No hay departamento
+            // No hay departamento
         }
-        	
+            
         return departamento;
     }
-	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-
-	}
+    public void cancel(IRuleContext rulectx) throws ISPACRuleException {
+        // No se da nunca este caso
+    }
 
 }

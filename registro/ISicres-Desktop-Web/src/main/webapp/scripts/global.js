@@ -432,20 +432,25 @@ function ValidateOtherOffices(XMLDoc)
 		args[4] = Action;
 		args[5] = top.Idioma;
 		args[6] = top.GetIdsLan( "IDS_OPCCHANGEOFFICE");
+		args[7] = "seleccionadaOficina"; //callbackFunction
 
 		document.body.style.cursor = "wait";
 
 		sRet = top.ShowModalDialog(top.g_URL + "/dlglist.htm", args, 550, 750, "");
 
-		if ((sRet != null) && (sRet != ""))	{
-			var arrTokens = top.getTokens(sRet, "#", "#", 2);
-			var URL = top.g_URL + "/changeoffice.jsp?SessionPId=" + top.g_SessionPId.toString()
-				+ "&OfficeCode=" + arrTokens[0];
+		seleccionadaOficina(sRet);
+	}
+}
 
-			top.g_TreeFunc = false;
+function seleccionadaOficina(sRet) {
+	if ((sRet != null) && (sRet != ""))	{
+		var arrTokens = top.getTokens(sRet, "#", "#", 2);
+		var URL = top.g_URL + "/changeoffice.jsp?SessionPId=" + top.g_SessionPId.toString()
+			+ "&OfficeCode=" + arrTokens[0];
 
-			window.open(URL, "LEST","location=no",true);
-		}
+		top.g_TreeFunc = false;
+
+		window.open(URL, "LEST","location=no",true);
 	}
 }
 
@@ -1817,7 +1822,7 @@ function ShowModalDialog(URL, arguments, height, width, sFeatures)
 	var ret = "";
 	var style = "";
 	if (top.showModalDialog){
-		style = "dialogHeight:" + height.toString() + "px;dialogWidth:" + width.toString() + "px;center:Yes;help:No;resizable:No;status:No;unadorned:Yes;scroll:no;";
+		style = "dialogHeight:" + height.toString() + "px;dialogWidth:" + width.toString() + "px;center:Yes;help:No;resizable:Yes;status:No;unadorned:Yes;scroll:no;";
 
 		if (sFeatures != ""){
 			style += ";" + sFeatures;
@@ -1829,14 +1834,14 @@ function ShowModalDialog(URL, arguments, height, width, sFeatures)
 		style = "height=" + height.toString() + "px,width=" + width.toString() + "px,resizable=no,scrollbars=no,modal=yes,dialog=yes,status=no,menubar=no,location=no,dependent=yes";
 		style += ",screenY=" + ((screen.availHeight-height)/2);
 		style += ",screenX="+((screen.availWidth-width)/2);
-
+		
 		for (var i = 0; i < arguments.length; i++){
-			if (arguments[i].documentElement != null){
-				eval("top.param" + i + "= " + arguments[i]);
+			if (arguments[i] != undefined && arguments[i].documentElement != undefined && arguments[i].documentElement != null ){
+				eval("top.param" + i + "= '" + btoa(new XMLSerializer().serializeToString(arguments[i])) + "'");
 			}
 			else {
 				eval("top.param" + i + "= '" + arguments[i] + "'");
-			}
+			}			
 		}
 
 		DisableEvents(window.top);

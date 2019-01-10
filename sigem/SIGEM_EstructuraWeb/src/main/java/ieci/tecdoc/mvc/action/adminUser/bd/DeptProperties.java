@@ -74,6 +74,11 @@ public class DeptProperties extends BaseAction{
         if ( dep.getDescription() != null )
             description  = dep.getDescription();
         
+        // [Tere Ticket#362] Crear un campo con email departamento
+        String email = "";
+        if (dep.getEmail() != null)
+        	email = dep.getEmail();
+        
         Date creationDate = dep.getCreationDate();
         String fechaCreacion = formatter.format(creationDate );
         
@@ -100,6 +105,7 @@ public class DeptProperties extends BaseAction{
         deptForm.setId(id);
         deptForm.setManagerName(managerName);
         deptForm.setDescripcion(description);
+        deptForm.setEmail(email);//[Tere Ticket#362] Crear un campo con email departamento
         
         deptForm.setCreationDate(fechaCreacion);
         deptForm.setCreatorName(creatorName);

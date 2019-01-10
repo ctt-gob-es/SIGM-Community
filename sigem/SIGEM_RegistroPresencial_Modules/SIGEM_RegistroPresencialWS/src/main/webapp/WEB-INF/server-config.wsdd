@@ -508,6 +508,27 @@
 			qname="ns1:ArrayOfRegisterInfo" />
 
 	</service>
+	
+	<!-- Services from AplicacionExternaCSVConnectorWSService WSDL service -->
+	<service name="AplicacionExternaCSVConnectorWS" provider="java:RPC" style="wrapped" use="literal">
+		<parameter name="wsdlTargetNamespace" value="http://server.connector.csv.ws.sgm.tecdoc.ieci"/>
+		<parameter name="wsdlServiceElement" value="AplicacionExternaCSVConnectorWSService"/>
+		<parameter name="schemaQualified" value="http://server.connector.csv.ws.sgm.tecdoc.ieci"/>
+		<parameter name="wsdlServicePort" value="AplicacionExternaCSVConnectorWS"/>
+		<parameter name="className" value="ieci.tecdoc.sgm.ws.csv.connector.server.AplicacionExternaCSVConnectorWS"/>
+		<parameter name="wsdlPortType" value="AplicacionExternaCSVConnectorWS"/>
+		<parameter name="typeMappingVersion" value="1.2"/>
+		<operation xmlns:operNS="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:retNS="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="getContenidoDocumento" qname="operNS:getContenidoDocumento" returnQName="retNS:getContenidoDocumentoReturn" returnType="rtns:base64Binary" soapAction="">
+		  	<parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:csv" type="tns:string"/>
+		  	<parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:entidad" type="tns:string"/>
+		</operation>
+		<operation xmlns:operNS="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:retNS="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="existeDocumento" qname="operNS:existeDocumento" returnQName="retNS:existeDocumentoReturn" returnType="rtns:boolean" soapAction="">
+			<parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:csv" type="tns:string"/>
+			<parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:entidad" type="tns:string"/>
+		</operation>
+		<parameter name="allowedMethods" value="getContenidoDocumento existeDocumento"/>
+	</service>
+  
 	<transport name="http">
 		<requestFlow>
 			<handler type="URLMapper" />

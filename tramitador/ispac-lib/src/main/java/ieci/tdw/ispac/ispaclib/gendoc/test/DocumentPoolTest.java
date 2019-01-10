@@ -1,11 +1,14 @@
 package ieci.tdw.ispac.ispaclib.gendoc.test;
 
 import ieci.tdw.ispac.api.errors.ISPACException;
-import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
+import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
 import ieci.tdw.ispac.ispaclib.util.Semaphore;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import es.dipucr.sigem.api.rule.common.libreoffice.LibreOfficeConfiguration;
 
 public class DocumentPoolTest
 {
@@ -19,27 +22,30 @@ public class DocumentPoolTest
 	private DocumentPoolTest()
 	throws ISPACException
 	{
-		ISPACConfiguration config = ISPACConfiguration.getInstance();
+		//[dipucr-Felipe #681]
+		String idEntidad = OrganizationUser.getOrganizationUserInfo().getOrganizationId();
+		LibreOfficeConfiguration config = LibreOfficeConfiguration.getInstance(idEntidad);
+//		ISPACConfiguration config = ISPACConfiguration.getInstance();
 
 		mSources = new HashMap();
-		String connection = config.get( ISPACConfiguration.OPEN_OFFICE_CONNECT);
+		String connection = config.get(LibreOfficeConfiguration.OPEN_OFFICE_CONNECT);//[dipucr-Felipe #681]
 		DocumentSource source = new DocumentSource( connection);
 		DocumentParserTest document = source.getDocument();
 		mSources.put( document, source);
 
-		String parameter = config.get( ISPACConfiguration.OPEN_OFFICE_ADDITIONAL_INSTANCES);
+		String parameter = config.get(LibreOfficeConfiguration.OPEN_OFFICE_ADDITIONAL_INSTANCES);//[dipucr-Felipe #681]
 		if (parameter != null)
 		{
 			int count = Integer.parseInt( parameter);
 			for (int i = 0; i < count; i++)
 			{
-				connection = config.get( ISPACConfiguration.OPEN_OFFICE_CONNECT + "_" + i);
+				connection = config.get(LibreOfficeConfiguration.OPEN_OFFICE_CONNECT + "_" + (i + 1));//[dipucr-Felipe #681]
 				source = new DocumentSource( connection);
 				document = source.getDocument();
 				mSources.put( document, source);
 			}
 		}
-		String timeout=config.get(ISPACConfiguration.OPEN_OFFICE_TIMEOUT);
+		String timeout=config.get(LibreOfficeConfiguration.OPEN_OFFICE_TIMEOUT);//[dipucr-Felipe #681]
 		mTimeout=30000;
 		if (timeout!=null && timeout.length()>0)
 		{

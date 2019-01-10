@@ -1,4 +1,4 @@
-/*package es.ieci.tecdoc.fwktd.dir3.api.dao.impl;
+package es.ieci.tecdoc.fwktd.dir3.api.dao.impl;
 
 import java.util.List;
 
@@ -15,9 +15,8 @@ import es.ieci.tecdoc.fwktd.dir3.core.type.CriterioOficinaEnum;
 import es.ieci.tecdoc.fwktd.dir3.core.type.OperadorCriterioEnum;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.Criterio;
 import es.ieci.tecdoc.fwktd.dir3.core.vo.Criterios;
-
-@ContextConfiguration({"/beans/cxf.xml", "/beans/fwktd-dir3-api-applicationContext.xml",
-		"/beans/fwktd-dir3-test-beans.xml" })
+@ContextConfiguration({"/jndi.xml", "/beans/cxf.xml", "/beans/fwktd-dir3-test-beans.xml",
+"/beans/fwktd-dir3-api-applicationContext.xml" })
 public class DatosBasicosOficinaDaoImplTest extends AbstractJUnit4SpringContextTests {
 
 	protected static final String ID_OFICINA_EXISTENTE = "O00001177";
@@ -119,7 +118,7 @@ public class DatosBasicosOficinaDaoImplTest extends AbstractJUnit4SpringContextT
 //		Assert.assertTrue("No se han obtenido resultados", oficinas.size() > 0);
 
 		// Test de consulta con criterios
-		List<DatosBasicosOficinaVO> oficinas = getDatosBasicosOficinaDao().findOficinas(createCriterios());
+/*		List<DatosBasicosOficinaVO> oficinas = getDatosBasicosOficinaDao().findOficinas(createCriterios());
 		Assert.assertNotNull("Resultado nulo", oficinas);
 		Assert.assertTrue("No se han obtenido resultados", oficinas.size() > 0);
 
@@ -141,7 +140,7 @@ public class DatosBasicosOficinaDaoImplTest extends AbstractJUnit4SpringContextT
                 .addOrderBy(CriterioOficinaEnum.OFICINA_NOMBRE));
 
 		Assert.assertNotNull("Resultado nulo", oficinas);
-		Assert.assertTrue("No se han obtenido resultados", oficinas.size() > 0);
+		Assert.assertTrue("No se han obtenido resultados", oficinas.size() > 0);*/
 	}
 
 	protected void assertDatosBasicosOficina(DatosBasicosOficinaVO oficina) {
@@ -177,6 +176,7 @@ public class DatosBasicosOficinaDaoImplTest extends AbstractJUnit4SpringContextT
 	}
 
 	protected Criterios<CriterioOficinaEnum> createCriterios() {
+        return null;/*
         return new Criterios<CriterioOficinaEnum>()
 
             .addCriterio(new Criterio<CriterioOficinaEnum>(
@@ -280,7 +280,6 @@ public class DatosBasicosOficinaDaoImplTest extends AbstractJUnit4SpringContextT
 //                    OperadorCriterioEnum.EQUAL_OR_LESS_THAN,
 //                    new Date()))
             .addOrderBy(CriterioOficinaEnum.OFICINA_ID)
-            .addOrderBy(CriterioOficinaEnum.OFICINA_NOMBRE);
+            .addOrderBy(CriterioOficinaEnum.OFICINA_NOMBRE);*/
 	}
 }
-*/

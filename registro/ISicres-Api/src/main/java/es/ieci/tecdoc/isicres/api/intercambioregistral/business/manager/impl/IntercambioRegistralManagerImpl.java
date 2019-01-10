@@ -6,7 +6,10 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import es.ieci.tecdoc.fwktd.sir.core.vo.AsientoRegistralVO;
+import es.ieci.tecdoc.fwktd.sir.core.vo.CriteriosVO;
 import es.ieci.tecdoc.fwktd.sir.core.vo.TrazabilidadVO;
+import es.ieci.tecdoc.isicres.api.business.vo.IdentificadorRegistroVO;
+import es.ieci.tecdoc.isicres.api.business.vo.UsuarioVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.ConfiguracionIntercambioRegistralManager;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.IntercambioRegistralEntradaManager;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.IntercambioRegistralManager;
@@ -20,6 +23,7 @@ import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.IntercambioRe
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.IntercambioRegistralSalidaVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadAdministrativaIntercambioRegistralVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionDCO;
+import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralSIRVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralVO;
 
 public class IntercambioRegistralManagerImpl implements IntercambioRegistralManager {
@@ -122,6 +126,20 @@ public class IntercambioRegistralManagerImpl implements IntercambioRegistralMana
 		return result;
 	}
 
+	public List<BandejaEntradaItemVO> getBandejaEntradaIntercambioRegistral(Integer estado,
+		Integer idOficina, CriteriosVO criterios) {
+	    List<BandejaEntradaItemVO> result = getIntercambioRegistralEntradaManager()
+			.getBandejaEntradaIntercambioRegistral(estado, idOficina,criterios);
+	return result;
+	}
+	
+	public int getCountBandejaEntradaIntercambioRegistral(Integer estado,
+		Integer idOficina, CriteriosVO criterios) {
+		int result = getIntercambioRegistralEntradaManager()
+			.getCountBandejaEntradaIntercambioRegistral(estado, idOficina,criterios);
+	return result;
+	}
+	
 	public void rechazarIntercambioRegistralEntradaById(String idIntercambioRegistralEntrada,
 			String tipoRechazo, String observaciones) {
 		getIntercambioRegistralEntradaManager().rechazarIntercambioRegistralEntradaById(
@@ -157,6 +175,15 @@ public class IntercambioRegistralManagerImpl implements IntercambioRegistralMana
 						user, idOficina, codOficina, llegoDocFisica);
 	}
 
+	public void aceptarIntercambioRegistralEntradaById(String idIntercambioRegistralEntrada,
+		String idLibro, UsuarioVO user, Integer idOficina, String codOficina,
+		boolean llegoDocFisica) {
+	getIntercambioRegistralEntradaManager()
+			.aceptarIntercambioRegistralEntradaById(idIntercambioRegistralEntrada, idLibro,
+					user, idOficina, codOficina, llegoDocFisica);
+}
+
+	
 	public UnidadAdministrativaIntercambioRegistralVO getUnidadAdministrativaByCodigosComunes(
 			String codeEntidadRegistral, String codeUnidadTramitacion) {
 		return getConfiguracionIntercambioRegistralManager()
@@ -222,36 +249,57 @@ public class IntercambioRegistralManagerImpl implements IntercambioRegistralMana
 
 		List<IntercambioRegistralEntradaVO> intercambios = getIntercambioRegistralEntradaManager()
 				.getHistorialIntercambioRegistralEntrada(idLibro, idRegistro, idOficina);
-
-		for (IntercambioRegistralEntradaVO intercambio : intercambios) {
-
-			if (intercambio.getIdIntercambioInterno() != null) {
-				// El identificador que se necesita es el id del intercambio interno
-				List<TrazabilidadVO> trazas = this.getTrazasIntercambioRegistral(String
-						.valueOf(intercambio.getIdIntercambioInterno()));
-				intercambio.setTrazas(trazas);
-			}
-
+		EntidadRegistralVO entidad = getEntidadRegistralVOByIdScrOfic(idOficina);
+		if (entidad != null ){
+        		for (IntercambioRegistralEntradaVO intercambio : intercambios) {
+        
+        			if (intercambio.getIdIntercambioInterno() != null) {
+        				// El identificador que se necesita es el id del intercambio interno
+        				List<TrazabilidadVO> trazas = this.getTrazasIntercambioRegistralCod(
+        					entidad.getCode(), intercambio.getIdIntercambioRegistral());
+        				intercambio.setTrazas(trazas);
+        			}
+        
+        		}
 		}
-
 		return intercambios;
 	}
 
+	public List<IntercambioRegistralEntradaVO> getHistorialIntercambioRegistralEntradaResumen(
+		String idLibro, String idRegistro, String idOficina) {
+
+        	List<IntercambioRegistralEntradaVO> intercambios = getIntercambioRegistralEntradaManager()
+        			.getHistorialIntercambioRegistralEntrada(idLibro, idRegistro, idOficina);
+        
+        	return intercambios;
+	}
+	
+	public List<IntercambioRegistralSalidaVO> getHistorialIntercambioRegistralSalidaResumen(
+		String idLibro, String idRegistro, String idOficina) {
+
+    	List<IntercambioRegistralSalidaVO> intercambios = getIntercambioRegistralSalidaManager()
+    			.getHistorialIntercambioRegistralSalida(idLibro, idRegistro, idOficina);
+    
+    	return intercambios;
+	}
+
+	
 	public List<IntercambioRegistralSalidaVO> getHistorialIntercambioRegistralSalida(
 			String idLibro, String idRegistro, String idOficina) {
 
 		List<IntercambioRegistralSalidaVO> intercambios = getIntercambioRegistralSalidaManager()
 				.getHistorialIntercambioRegistralSalida(idLibro, idRegistro, idOficina);
-
-		for (IntercambioRegistralSalidaVO intercambio : intercambios) {
+		EntidadRegistralVO entidad = getEntidadRegistralVOByIdScrOfic(idOficina);
+		if (entidad != null ){
+		    for (IntercambioRegistralSalidaVO intercambio : intercambios) {
 
 			if (intercambio.getIdIntercambioInterno() != null) {
 				// El identificador que se necesita es el id del intercambio interno
-				List<TrazabilidadVO> trazas = this.getTrazasIntercambioRegistral(String
-						.valueOf(intercambio.getIdIntercambioInterno()));
+				List<TrazabilidadVO> trazas = this.getTrazasIntercambioRegistralCod(
+					entidad.getCode(), intercambio.getIdIntercambioRegistral());
 				intercambio.setTrazas(trazas);
 			}
-
+		    }
 		}
 		return intercambios;
 	}
@@ -301,6 +349,15 @@ public class IntercambioRegistralManagerImpl implements IntercambioRegistralMana
 		return result;
 	}
 
+	public String enviarIntercambioRegistralSalida(String idLibro, String idRegistro,
+		String idOfic, String username, String userContact, String tipoOrigen,
+		UnidadTramitacionIntercambioRegistralVO unidadDestino) {
+	String result = getIntercambioRegistralSalidaManager().enviarIntercambioRegistralSalida(
+			idLibro, idRegistro, idOfic, username, userContact, tipoOrigen, unidadDestino);
+
+	return result;
+}
+	
 	public List<EntidadRegistralDCO> buscarEntidadesRegistralesDCO(String code, String nombre) {
 		return getConfiguracionIntercambioRegistralManager().buscarEntidadesRegistralesDCO(code,
 				nombre);
@@ -341,4 +398,46 @@ public class IntercambioRegistralManagerImpl implements IntercambioRegistralMana
 		return getIntercambioRegistralSIRManager().getHistoricoAsientoRegistral(id);
 	}
 
+	public List<UnidadTramitacionIntercambioRegistralSIRVO> buscarUnidadesTramitacion(
+	    String code, String name) {
+	    return getConfiguracionIntercambioRegistralManager()
+		.listUnidadesTramitacionIntercambioRegistralSIRVO(code, name);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.IntercambioRegistralManager#getTrazasIntercambioRegistral(java.lang.String)
+	 */
+	public List<TrazabilidadVO> getTrazasIntercambioRegistralCod(String entity, String code) {
+
+		return getIntercambioRegistralSIRManager().getHistoricoAsientoRegistralCode(entity, code);
+	}
+
+	public void rechazarIntercambioRegistralEntradaById(String idIntercambioRegistralEntrada, String tipoRechazo,
+		String observaciones, UsuarioVO user, Integer idOficina, String codOficina) {
+	    getIntercambioRegistralEntradaManager().rechazarIntercambioRegistralEntradaById(
+			idIntercambioRegistralEntrada, tipoRechazo, observaciones, user, idOficina, codOficina);
+	    
+	}
+
+	public void reenviarIntercambioRegistralEntradaById (String idIntercambioRegistralEntrada, 
+	UnidadTramitacionIntercambioRegistralVO nuevoDestino,
+	String observaciones, UsuarioVO user, Integer idOficina, String codOficina) {
+	    getIntercambioRegistralEntradaManager().reenviarIntercambioRegistralEntradaById(
+		    idIntercambioRegistralEntrada, nuevoDestino, observaciones, user, idOficina, codOficina);
+	}
+
+	public void reenviarIntercambioRegistralSalidaById (String idIntercambioRegistralEntrada, 
+	UnidadTramitacionIntercambioRegistralVO nuevoDestino,
+	String observaciones, UsuarioVO user, Integer idOficina, String codOficina) {
+	    getIntercambioRegistralSalidaManager().reenviarIntercambioRegistralSalidaById(
+		    idIntercambioRegistralEntrada, user.getFullName(),user.getUserContact(), observaciones, nuevoDestino,idOficina,codOficina);
+
+	}
+
+	public void rectificarIntercambioRegistralSalidaById(String valueOf, IdentificadorRegistroVO  identificadorRegistroVO) {
+	    getIntercambioRegistralSalidaManager().rectificarIntercambioRegistralSalidaById(valueOf, identificadorRegistroVO);
+
+	}
 }

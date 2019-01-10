@@ -24,6 +24,7 @@ package es.gob.afirma.tsaServiceInvoker;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Properties;
@@ -65,18 +66,25 @@ public final class TSAServiceInvokerProperties {
 	// de TS@
 	URL url = TSAServiceInvokerProperties.class.getClassLoader().getResource(TSAServiceInvokerConstants.TSA_INVOKER_PROPERTIES);
 	if (url == null) {
-	    LOGGER.error(Language.getFormatResIntegra(ILogConstantKeys.TSIP_LOG001, new Object[]{TSAServiceInvokerConstants.TSA_INVOKER_PROPERTIES}));
-	} else {
-	    InputStream in = null;
-	    try {
+	    //LOGGER.error(Language.getFormatResIntegra(ILogConstantKeys.TSIP_LOG001, new Object[]{TSAServiceInvokerConstants.TSA_INVOKER_PROPERTIES}));
+		try {
+			url= new URL("/config/SIGEM/conf/SIGEM_Tramitacion/integra_afirma/tsaServiceInvoker.properties");
+		} catch (MalformedURLException e) {
+			LOGGER.error(Language.getFormatResIntegra(ILogConstantKeys.TSIP_LOG001, new Object[]{TSAServiceInvokerConstants.TSA_INVOKER_PROPERTIES}));
+		}		
+	}
+	
+	InputStream in = null;
+	try {
 		tsaServiceInvokerProperties = new Properties();
 		in = new FileInputStream(new File(new URI(url.toString())));
 		tsaServiceInvokerProperties.load(in);
-	    } catch (Exception e) {
+	} catch (Exception e) {
 		LOGGER.error(Language.getFormatResIntegra(ILogConstantKeys.TSIP_LOG002, new Object[]{TSAServiceInvokerConstants.TSA_INVOKER_PROPERTIES}));
-	    }
 	}
+	
 	return tsaServiceInvokerProperties;
+	
     }
 
 }

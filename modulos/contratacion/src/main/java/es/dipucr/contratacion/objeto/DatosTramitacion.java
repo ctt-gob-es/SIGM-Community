@@ -2,11 +2,7 @@ package es.dipucr.contratacion.objeto;
 
 import java.util.Calendar;
 
-import es.dipucr.contratacion.client.beans.DuracionContratoBean;
-import es.dipucr.contratacion.client.beans.FormalizacionBean;
-import es.dipucr.contratacion.client.beans.LicitadorBean;
-import es.dipucr.contratacion.client.beans.OfertasRecibidas;
-import es.dipucr.contratacion.client.beans.Periodo;
+import es.dipucr.contratacion.services.PlataformaContratacionStub.*;
 
 public class DatosTramitacion {
 	private Calendar fechaAperturaProposiones = null;
@@ -35,8 +31,7 @@ public class DatosTramitacion {
 	private int tmpProrroga = 0;
 	
 	private String estadoExpediente = null;
-
-
+	
 
 	public LicitadorBean[] getLicitador() {
 		return licitador;

@@ -215,7 +215,7 @@ public class UploadScannedFilesAction extends BaseAction {
 		try {
 			fileName = URLDecoder.decode(file.getFieldName(), "ISO-8859-15");
 		} catch (UnsupportedEncodingException e) {
-			logger.warn("Error al decodificar el nombre del fichero", e);
+			LOGGER.warn("Error al decodificar el nombre del fichero", e);
 			fileName = file.getFieldName();
 		}
 
@@ -377,7 +377,7 @@ public class UploadScannedFilesAction extends BaseAction {
 			}
 			catch (Exception e) {
 
-				logger.error("Error al subir el fichero", e);
+				LOGGER.error("Error al subir el fichero", e);
 
 				StringWriter stringWriter = new StringWriter();
 				PrintWriter printWriter = new PrintWriter(stringWriter);

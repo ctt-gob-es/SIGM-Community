@@ -81,7 +81,7 @@ public interface IntercambioRegistralDAO {
 	 * @param entidadEjemplo - Entidad Registral con los valores a buscar
 	 * @return Listado de {@link EntidadRegistralVO}
 	 */
-	public List findEntidadesRegistrales(EntidadRegistralVO entidadEjemplo);
+	public List fIdentidadesRegistrales(EntidadRegistralVO entidadEjemplo);
 
 	/**
 	 * Metodo que busca las Unidades Registrales a partir de los datos que se pasan como parametro

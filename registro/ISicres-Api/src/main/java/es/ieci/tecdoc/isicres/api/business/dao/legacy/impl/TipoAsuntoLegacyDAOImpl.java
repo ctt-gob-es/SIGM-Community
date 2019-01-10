@@ -483,6 +483,12 @@ public class TipoAsuntoLegacyDAOImpl extends IsicresBaseHibernateDAOImpl
 		} else {
 			result.setDisponibleLibroSalida(false);
 		}
+		
+		if (scrCa.getForDistRT().intValue() == 1) {
+			result.setDistribuirRegistroTelematico(true);
+		} else {
+			result.setDistribuirRegistroTelematico(false);
+		}
 
 		return result;
 	}

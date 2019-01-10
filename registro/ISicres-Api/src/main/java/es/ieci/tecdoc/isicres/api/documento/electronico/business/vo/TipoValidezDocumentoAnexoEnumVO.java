@@ -26,17 +26,21 @@ public class TipoValidezDocumentoAnexoEnumVO extends ValuedEnum {
 	 
 	 public static final String  COPIA_NAME= "01";
 	 public static final String  COPIA_COMPULSADA_NAME  = "02";
-	 public static final String COPIA_ORIGINAL_NAME  = "03";
+	 public static final String  COPIA_ORIGINAL_NAME  = "03";
 	 public static final String  ORIGINAL_NAME  = "04";
 	 
-	 public static final TipoValidezDocumentoAnexoEnumVO COPIA= new TipoValidezDocumentoAnexoEnumVO(COPIA_NAME, COPIA_VALUE);
-	 public static final TipoValidezDocumentoAnexoEnumVO COPIA_COMPULSADA= new TipoValidezDocumentoAnexoEnumVO(COPIA_COMPULSADA_NAME, COPIA_COMPULSADA_VALUE);
+	 public static final TipoValidezDocumentoAnexoEnumVO COPIA = new TipoValidezDocumentoAnexoEnumVO(COPIA_NAME, COPIA_VALUE);
+	 public static final TipoValidezDocumentoAnexoEnumVO COPIA_COMPULSADA = new TipoValidezDocumentoAnexoEnumVO(COPIA_COMPULSADA_NAME, COPIA_COMPULSADA_VALUE);
 	 public static final TipoValidezDocumentoAnexoEnumVO COPIA_ORIGINAL = new TipoValidezDocumentoAnexoEnumVO(COPIA_ORIGINAL_NAME, COPIA_ORIGINAL_VALUE);
-	 public static final TipoValidezDocumentoAnexoEnumVO ORIGINAL= new TipoValidezDocumentoAnexoEnumVO(ORIGINAL_NAME, ORIGINAL_VALUE);
+	 public static final TipoValidezDocumentoAnexoEnumVO ORIGINAL = new TipoValidezDocumentoAnexoEnumVO(ORIGINAL_NAME, ORIGINAL_VALUE);
 	 
 	
 	protected TipoValidezDocumentoAnexoEnumVO(String name, int value) {
 		super(name, value);
 	}
-
+	
+	 public static TipoValidezDocumentoAnexoEnumVO getEnum(int valor) {
+		return (TipoValidezDocumentoAnexoEnumVO) getEnum(TipoValidezDocumentoAnexoEnumVO.class,
+				valor);
+	}
 }

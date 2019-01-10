@@ -18,7 +18,6 @@ import ieci.tecdoc.sgm.core.services.registro.RegisterInfo;
 import ieci.tecdoc.sgm.core.services.registro.RegisterQueryInfo;
 import ieci.tecdoc.sgm.core.services.registro.RegisterWithPagesInfo;
 import ieci.tecdoc.sgm.core.services.registro.UserInfo;
-
 import ieci.tecdoc.sgm.registropresencial.autenticacion.User;
 import ieci.tecdoc.sgm.registropresencial.info.InfoBook;
 import ieci.tecdoc.sgm.registropresencial.info.InfoDistribution;
@@ -40,6 +39,8 @@ import com.ieci.tecdoc.idoc.flushfdr.FlushFdrField;
 import com.ieci.tecdoc.idoc.flushfdr.FlushFdrFile;
 import com.ieci.tecdoc.idoc.flushfdr.FlushFdrInter;
 import com.ieci.tecdoc.idoc.flushfdr.FlushFdrPage;
+
+import es.dipucr.metadatos.beans.MetadatosDocumentoBean;
 
 /**
  * @author 66575267
@@ -102,25 +103,30 @@ public class SigemRegistroServiceAdapterUtil {
 		return documentQuery;
 	}
 
-	public static Map getDocumentsInfo(DocumentInfo[] documentsServicio) {
+	public static Map<String, FlushFdrDocument> getDocumentsInfo(DocumentInfo[] documentsServicio) {
 		if (documentsServicio == null) {
 			return null;
 		}
 		String docName = "";
-		List docItems = new ArrayList();
-		Map documents = new HashMap();
+		List<FlushFdrDocument> docItems = new ArrayList<FlushFdrDocument>();
+		Map<String, FlushFdrDocument> documents = new HashMap<String, FlushFdrDocument>();
 
 		for (int i = 0; i < documentsServicio.length; i++) {
 			DocumentInfo documentInfo = documentsServicio[i];
 			if (!docName.equals(documentInfo.getDocumentName())) {
 				FlushFdrDocument document = new FlushFdrDocument();
 				document.setDocumentName(documentInfo.getDocumentName());
+				
+				document.setTipoDocumental(documentInfo.getTipoDocumental());
+				document.setTipoFirma(documentInfo.getTipoFirma());
+				document.setCsv(documentInfo.getCsv());
+				
 				docItems.add(document);
 			}
 			docName = documentInfo.getDocumentName();
 		}
 
-		for (Iterator it = docItems.iterator(); it.hasNext();) {
+		for (Iterator<FlushFdrDocument> it = docItems.iterator(); it.hasNext();) {
 			FlushFdrDocument flushFdrDocument = (FlushFdrDocument) it.next();
 			String clavedocument = flushFdrDocument.getDocumentName();
 			for (int i = 0; i < documentsServicio.length; i++) {
@@ -135,6 +141,10 @@ public class SigemRegistroServiceAdapterUtil {
 					FlushFdrPage page = new FlushFdrPage();
 					page.setPageName(documentInfo.getPageName());
 					page.setFile(file);
+					
+					if(null != documentInfo.getMetadatosDocumento()){
+						page.setMetadatosDocumento((MetadatosDocumentoBean) documentInfo.getMetadatosDocumento());
+					}
 
 					flushFdrDocument.addPage(page);
 				}
@@ -429,6 +439,8 @@ public class SigemRegistroServiceAdapterUtil {
 		dInfo.setStateDescription(apiDistInfo.getStateDescription());
 
 		dInfo.setUser(apiDistInfo.getUser());
+		
+		dInfo.setComentarios(apiDistInfo.getComentarios());
 
 		return dInfo;
 	}

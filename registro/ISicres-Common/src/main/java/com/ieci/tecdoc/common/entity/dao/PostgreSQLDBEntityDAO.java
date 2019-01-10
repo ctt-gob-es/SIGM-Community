@@ -165,7 +165,13 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 			result.append("(SELECT code || '-' || name FROM SCR_ORGS B WHERE B.ID=A.FLD8) AS FLD8_TEXT,");
 			result.append("(SELECT CODE FROM SCR_ORGS B WHERE B.ID=A.FLD13) AS FLD13_TEXT,");
 			result.append("(SELECT code|| '-'|| matter FROM SCR_CA B WHERE B.ID=A.FLD16) AS FLD16_TEXT,");
+			/**
+			 * INICIO [Ticket 134#Teresa]ALSIM3 Añadir el campo comentario dentro de los informes del registro presencial
+			 * **/
 			result.append("(SELECT text FROM A"+bookType+"XF a1xf WHERE a1xf.fdrid=A.fdrid) AS COMENTARIOS");
+			/**
+			 * FIN [Ticket 134#Teresa]ALSIM3 Añadir el campo comentario dentro de los informes del registro presencial
+			 * **/
 		} else {
 			result.append(",(SELECT NAME FROM SCR_OFIC B WHERE B.ID=A.FLD5) AS FLD5_TEXT,");
 			result.append("(SELECT code || '-' || name FROM SCR_ORGS B WHERE B.ID=A.FLD7) AS FLD7_TEXT,");
@@ -656,7 +662,26 @@ public class PostgreSQLDBEntityDAO extends AbstractDBEntityDAO {
 	 */
 	public void deleteIdsGenerationTable(Integer userId, String entidad) {
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ieci.tecdoc.common.entity.dao.DBEntityDAO#getNextIdForScrModifDoc(java.lang.Integer,
+	 *      java.lang.String)
+	 */
+	public int getNextIdForScrModifDoc(Integer userId, String entidad) throws SQLException {
+		return getContador4SCRREGORIGDOC(userId, entidad);
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ieci.tecdoc.common.entity.dao.DBEntityDAO#getNextIdForScrDocumentMetadatos(java.lang.Integer,
+	 *      java.lang.String)
+	 */
+	public int getNextIdForScrDocumentMetadatos(Integer userId, String entidad) throws SQLException {
+		return getContador4SCRREGORIGDOC(userId, entidad);
+	}
 	/***************************************************************************
 	 * Private methods
 	 **************************************************************************/

@@ -8,12 +8,17 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
+import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
+import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
 
 public class CargaListaMensajesRule implements IRule {
@@ -48,8 +53,21 @@ public class CargaListaMensajesRule implements IRule {
 	        }
 	        DateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy"); 
 	        String fecha = dateFormatter.format(sesion.getDate("FECHA"));
-	        String strPlantillaTexto = "Se ha convocado la sesión que celebrará "+articulo+" "+organo+" de la Diputación " +
-	        		"de Ciudad Real el día "+fecha+" a las "+sesion.getString("HORA");
+	        String strPlantillaTexto = ConfigurationMgr.getVarGlobal(cct, "SECRETARIA_TEXTO_ENVIO_MAIL");
+	        
+	        Map<String, String> variables = new HashMap<String, String>();
+
+	        variables.put("ARTICULO", articulo);
+	        variables.put("ORGANO", organo);
+	        variables.put("ENTIDAD", EntidadesAdmUtil.obtenerNombreLargoEntidadById(cct));
+	        variables.put("FECHA", fecha);
+	        variables.put("HORA", sesion.getString("HORA"));
+	        
+	        if (StringUtils.isNotBlank(strPlantillaTexto)) {
+	        	strPlantillaTexto = StringUtils.replaceVariables(strPlantillaTexto, variables);
+			}
+	        
+	        //String strPlantillaTexto = "Se ha convocado la sesión que celebrará "+articulo+" "+organo+" de la Diputación de Ciudad Real el día "+fecha+" a las "+sesion.getString("HORA");
 	        IItemCollection partsCol = entitiesAPI.getParticipants(rulectx.getNumExp(), "", "");
 	        Iterator<IItem> itParts = partsCol.iterator();
 	        while(itParts.hasNext())

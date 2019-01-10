@@ -15,6 +15,8 @@ public class FlushFdrInter implements Serializable {
 	private static final long serialVersionUID = -4964582962866166182L;
 	private int interId = 0;
 	private String interName = null;
+//[Dipucr-Manu Ticket#383] - ALSIGM3 no muestra el DNI en los interesados de los registros
+	private String interNif = null;
 	private int domId = 0;
 	private String Direction = null;
 
@@ -48,6 +50,22 @@ public class FlushFdrInter implements Serializable {
 	 */
 	public void setInterName(String interName) {
 		this.interName = interName;
+	}
+	
+	/**
+	 * @return Returns the InterNif.
+	 * [Dipucr-Manu Ticket#383] - ALSIGM3 no muestra el DNI en los interesados de los registros
+	 */
+	public String getInterNif() {
+		return interNif;
+	}
+
+	/**
+	 * @param documentNif
+	 *            The InterNif to set.
+	 */
+	public void setInterNif(String interNif) {
+		this.interNif = interNif;
 	}
 
 	/**
@@ -108,6 +126,8 @@ public class FlushFdrInter implements Serializable {
 		buffer.append("FlushFdrInter[");
 		buffer.append("interId = ").append(interId);
 		buffer.append(", interName = ").append(interName);
+//[Dipucr-Manu Ticket#383] - ALSIGM3 no muestra el DNI en los interesados de los registros
+		buffer.append(", interNif = ").append(interNif);
 		buffer.append(", domId = ").append(domId);
 		buffer.append(", Direction = ").append(Direction);
 		if (null != getRepresentante()) {

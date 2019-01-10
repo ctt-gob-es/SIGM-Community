@@ -12,34 +12,27 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import aww.sigem.expropiaciones.rule.xmlcatastro.ComprobarXMLCatastroRule;
-
-public class DOMParser
-{
-	public static final Logger logger = Logger.getLogger(DOMParser.class);
+public class DOMParser {
+	
+	public static final Logger LOGGER = Logger.getLogger(DOMParser.class);
 	private Document doc = null;
 	
-	public DOMParser()
-	{
-		try
-		{
+	public DOMParser() {
+		try {
 			doc = parserXML(new File("SCLTI140071691101 Buena.XML"));
 			
 			visit(doc, 0);
-		}
-		catch(Exception error)
-		{
-			error.printStackTrace();
+			
+		} catch(Exception error) {
+			LOGGER.error("ERROR. " + error.getMessage(), error);
 		}
 	}
 	
-	public void visit(Node node, int level)
-	{
+	public void visit(Node node, int level) {
 		NodeList nl = node.getChildNodes();
 		
-		for(int i=0, cnt=nl.getLength(); i<cnt; i++)
-		{
-			logger.warn("["+nl.item(i)+"]");
+		for(int i=0, cnt=nl.getLength(); i<cnt; i++) {
+			LOGGER.warn("["+nl.item(i)+"]");
 			
 			visit(nl.item(i), level+1);
 		}

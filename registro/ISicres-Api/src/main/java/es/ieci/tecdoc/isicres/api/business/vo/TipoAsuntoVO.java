@@ -17,6 +17,7 @@ public class TipoAsuntoVO extends BaseIsicresApiVO {
 	protected boolean habilitado;
 	protected boolean disponibleLibroEntrada;
 	protected boolean disponibleLibroSalida;
+	protected boolean distribuirRegistroTelematico;
 
 	public String getCodigo() {
 		return codigo;
@@ -64,6 +65,14 @@ public class TipoAsuntoVO extends BaseIsicresApiVO {
 
 	public void setDisponibleLibroSalida(boolean disponibleLibroSalida) {
 		this.disponibleLibroSalida = disponibleLibroSalida;
+	}
+	
+	public boolean isDistribuirRegistroTelematico() {
+		return distribuirRegistroTelematico;
+	}
+
+	public void setDistribuirRegistroTelematico(boolean distribuirRegistroTelematico) {
+		this.distribuirRegistroTelematico = distribuirRegistroTelematico;
 	}
 
 }

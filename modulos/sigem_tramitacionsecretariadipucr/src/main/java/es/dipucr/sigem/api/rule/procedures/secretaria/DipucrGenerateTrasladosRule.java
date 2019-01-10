@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 
 import com.sun.star.lang.XComponent;
 
+import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
@@ -76,13 +77,17 @@ public class DipucrGenerateTrasladosRule implements IRule {
   	  		  	}
     		}
     		else{
-    			vPropuesta = SecretariaUtil.orderPropuestas(collection);
+    			vPropuesta = SecretariaUtil.orderPropuestas(rulectx);
     		}
     		    		
     		SimpleDateFormat dateformat = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es"));
     		String fecha = dateformat.format(new Date());
     		
-    		
+    		Iterator<IItem> propAprob = ConsultasGenericasUtil.queryEntities(rulectx, "SECR_PROPUESTA", "ORIGEN='0001' AND NUMEXP='"+rulectx.getNumExp()+"'");
+    		if(!propAprob.hasNext()){
+    			i = 0;
+    		}
+
     		if(vPropuesta != null){
 	 	        while( i < vPropuesta.size()) {
 	 	        	if(vPropuesta.get(i)!=null){
@@ -170,10 +175,11 @@ public class DipucrGenerateTrasladosRule implements IRule {
         } catch(Exception e) {
         	logger.error("No se han podido generar las certificaciones del expediente: " + numexp + ". " + e.getMessage(), e);        	
         	throw new ISPACRuleException("No se han podido generar las certificaciones del expediente: " + numexp + ". " + e.getMessage(), e);
-        }
-    	finally{
-    		if(ooHelper != null) ooHelper.dispose();
-    	}
+        } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
     }
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException{

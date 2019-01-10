@@ -1,11 +1,18 @@
 package ieci.tdw.ispac.ispacmgr.action;
 
+import java.util.Iterator;
+
+import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.ITXTransaction;
 import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.impl.SessionAPI;
+import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.item.ITask;
+import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.context.StateContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacweb.api.IManagerAPI;
@@ -20,6 +27,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import es.dipucr.sigem.api.rule.procedures.Constants;
+
 public class CloseTaskAction extends BaseAction {
 	
 	public ActionForward executeAction(ActionMapping mapping, 
@@ -32,10 +41,13 @@ public class CloseTaskAction extends BaseAction {
 		
     	IInvesflowAPI invesflowAPI = session.getAPI();
     	ITXTransaction tx = invesflowAPI.getTransactionAPI();
+    	IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 		
 		// Estado del contexto de tramitación
 		IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(cct);
 		IState currentstate = managerAPI.currentState(getStateticket(request));
+		
+		
 
     	String idsTask = request.getParameter("idsTask");
 		String[] taskids = idsTask.split("-");
@@ -57,6 +69,20 @@ public class CloseTaskAction extends BaseAction {
 			if(!invesflowAPI.getWorkListAPI().isInResponsibleList(task.getString("ID_RESP"), task)) {
 				message.append(getMessage(request, cct.getLocale(), "errors.close.task.resp", new Object[]{task.getString("NUMEXP")})+"<br/>");
 				continue;
+			}
+			
+			// [DipuCR-Agustin #559] Comprobar que el tramite no tiene notificaciones electrónicas pendientes en Notifica
+			if(!(ConfigurationMgr.getVarGlobal(cct, Constants.NOTIFICA.API_KEY_NOTIFICA).equals("")))
+			{
+	        	String strQuery = "WHERE TRAMITE="+ntaskid+" AND CORREO_CADUCIDAD_ENVIADA IS NULL";
+	        	IItemCollection collection  = entitiesAPI.queryEntities("DPCR_ACUSES_NOTIFICA", strQuery);
+	        	Iterator<IItem> it = collection.iterator();
+		        it = collection.iterator();
+		        if (it.hasNext()){
+		        	message.append(getMessage(request, cct.getLocale(), "errors.close.task.notifica", new Object[]{task.getString("NOMBRE")})+"<br/>");
+					continue;
+		        }
+				
 			}
 
 			// En el caso de cerrar un solo trámite se intentará

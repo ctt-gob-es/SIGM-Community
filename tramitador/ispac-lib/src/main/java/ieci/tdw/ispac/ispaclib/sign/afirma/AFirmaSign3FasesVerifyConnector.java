@@ -8,18 +8,14 @@ import ieci.tdw.ispac.ispaclib.messages.MessagesFormatter;
 import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
 import ieci.tdw.ispac.ispaclib.session.OrganizationUserInfo;
 import ieci.tdw.ispac.ispaclib.sign.DefaultSignConnector;
-import ieci.tdw.ispac.ispaclib.sign.SignDocument;
 import ieci.tdw.ispac.ispaclib.sign.exception.InvalidSignatureValidationException;
 import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
-import ieci.tdw.ispac.ispaclib.utils.ArrayUtils;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
-import java.io.StringWriter;
-import java.math.BigInteger;
 import java.security.cert.CertStore;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
@@ -29,20 +25,15 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.util.encoders.Base64;
 
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.*;
+import com.lowagie.text.Image;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfContentByte;
 
-import es.dipucr.sigem.api.firma.xml.peticion.ObjectFactoryFirmaLotesPeticion;
-import es.dipucr.sigem.api.firma.xml.peticion.Signbatch;
 import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
 
 /**
@@ -446,7 +437,13 @@ public class AFirmaSign3FasesVerifyConnector extends DefaultSignConnector {
 		try {
 			
 			// Ruta absoluta de la imagen de fondo
-			String imageFullPath = ConfigurationHelper.getConfigFilePath(imagePath);
+			//INICIO [dipucr-Felipe #507]
+//			String imageFullPath = ConfigurationHelper.getConfigFilePath(imagePath);
+			String idEntidad = OrganizationUser.getOrganizationUserInfo().getOrganizationId();
+			FirmaConfiguration fc = FirmaConfiguration.getInstanceNoSingleton(idEntidad);
+			String imageFullPath = fc.getBaseFilePath() + File.separator + imagePath;
+			//FIN [dipucr-Felipe #507]
+			
 			if (logger.isInfoEnabled()) {
 				logger.info("Imagen de fondo del PDF: " + imageFullPath);
 			}

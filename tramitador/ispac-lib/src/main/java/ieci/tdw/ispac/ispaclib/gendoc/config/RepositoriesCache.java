@@ -24,7 +24,7 @@ public class RepositoriesCache {
 	/**
 	 * Logger de la clase.
 	 */
-	private static final Logger logger = Logger.getLogger(RepositoriesCache.class);
+	private static final Logger LOGGER = Logger.getLogger(RepositoriesCache.class);
 
 	/**
 	 * Clave por defecto de los repositorios cacheados
@@ -34,14 +34,16 @@ public class RepositoriesCache {
 	/**
 	 * Información de los repositorios documentales configurados.
 	 */
-	private static final Map repositoriesMap = new HashMap();
-
+	private static final Map REPOSITORIES_MAP = new HashMap();
 	
+	private RepositoriesCache(){		
+	}
+
 	public static synchronized Repositories getRepositories(IClientContext ctx, String configFileName) throws ISPACException {
 		
 		String repositoriesKey = getRepositoriesKey();
 		
-		Repositories repositories = (Repositories)repositoriesMap.get(repositoriesKey);
+		Repositories repositories = (Repositories)REPOSITORIES_MAP.get(repositoriesKey);
 		if (repositories == null) {
 			try {
 				
@@ -52,8 +54,7 @@ public class RepositoriesCache {
 					String configVarName = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER_CFG_VARNAME);
 					if (StringUtils.isNotBlank(configVarName)) {
 				    	String repositoriesXML = ConfigurationMgr.getVarGlobal(ctx, configVarName);
-				    	if (StringUtils.isNotBlank(repositoriesXML)) {
-				    		
+				    	if (StringUtils.isNotBlank(repositoriesXML)) {				    		
 				    		documentalConfig = new DocumentalConfiguration(new ByteArrayInputStream(repositoriesXML.getBytes("UTF-8")));
 				    	}
 					}
@@ -65,10 +66,10 @@ public class RepositoriesCache {
 				}
 				
 				repositories = documentalConfig.getRepositories();
-				repositoriesMap.put(repositoriesKey, repositories);
+				REPOSITORIES_MAP.put(repositoriesKey, repositories);
 				
-			} catch (Throwable e) {
-				logger.error("Error al cargar la información de los repositorios documentales", e);
+			} catch (Exception e) {
+				LOGGER.error("Error al cargar la información de los repositorios documentales", e);
 				throw new ISPACException("Error al cargar la información de los repositorios documentales", e);
 			}
 		}

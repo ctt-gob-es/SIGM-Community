@@ -5,7 +5,7 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd</groupId>
-		<artifactId>fwktd</artifactId>
+		<artifactId>fwktd-parent</artifactId>
 		<version>0.7</version>
 	</parent>
 
@@ -16,7 +16,7 @@
 	<packaging>pom</packaging>
 
 	<name>fwktd-dir3</name>
-  <description>Modulo de consulta sobre el Directorio Comun (DIR3)</description>
+	<description>Modulo de consulta sobre el Directorio Comun (DIR3)</description>
 
   <properties> 
     <!-- Framework dependencies -->
@@ -50,10 +50,12 @@
   </properties>
 
 	<modules>
+		<module>fwktd-dir3-parent</module>
 		<module>fwktd-dir3-core</module>
 		<module>fwktd-dir3-api</module>
 		<module>fwktd-dir3-sql</module>
 		<module>fwktd-dir3-dco-wsclient</module>
+		<module>fwktd-dir3-dco-wsclientjaxws</module>
 	</modules>
 
 	<profiles>

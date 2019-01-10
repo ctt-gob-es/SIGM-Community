@@ -10,6 +10,7 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.dao.cat.TemplateDAO;
+import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
@@ -153,7 +154,7 @@ public class GeneraCartaLiquidacionRule implements IRule{
 									}
 						        	
 						        	int documentTypeId = DocumentosUtil.getTipoDoc(cct, tipoDocumento, DocumentosUtil.BUSQUEDA_EXACTA, false);
-						        	IItem template = TemplateDAO.getTemplate(cct.getConnection(), plantilla, documentTypeId);
+						        	IItem template = TemplateDAO.getTemplate(cct, plantilla, documentTypeId);
 						        	
 						        	if(template != null){
 										int templateId = template.getInt("ID");

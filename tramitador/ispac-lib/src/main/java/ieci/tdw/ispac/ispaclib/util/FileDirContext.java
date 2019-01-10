@@ -151,6 +151,24 @@ public class FileDirContext extends BaseDirContext {
   public void unbind( String name) throws NamingException {
 	  unbind(getFile(name));
   }
+  
+  /**
+   * Unbinds the named object. Removes the terminal atomic name in name 
+   * from the target context--that named by all but the terminal atomic 
+   * part of name.
+   * <p>
+   * This method is idempotent. It succeeds even if the terminal atomic 
+   * name is not bound in the target context, but throws 
+   * NameNotFoundException if any of the intermediate contexts do not exist. 
+   * 
+   * @param name the name to bind; may not be empty
+   * @exception NameNotFoundException if an intermediate context does not 
+   * exist
+   * @exception NamingException if a naming exception is encountered
+   */
+  public void unbindHora( String name) throws NamingException {
+	  unbindHora(getFile(name));
+  }
 
   /**
    * Unbinds the named object. Removes the terminal atomic name in name 
@@ -177,9 +195,56 @@ public class FileDirContext extends BaseDirContext {
     	for (int i = 0; i < files.length; i++) {
     		unbind(files[i]);
     	}
-    	file.delete();
+    	if(0 == file.listFiles().length){
+    		file.delete();
+    	}
+    	
     } else {
-    	file.delete();
+    	long tiempo = (System.currentTimeMillis() - file.lastModified());
+    	
+    	//Media hora
+    	if(1800000 < tiempo){
+    		file.delete();
+    	}
+    }
+  }
+  
+  /**
+   * Unbinds the named object. Removes the terminal atomic name in name 
+   * from the target context--that named by all but the terminal atomic 
+   * part of name.
+   * <p>
+   * This method is idempotent. It succeeds even if the terminal atomic 
+   * name is not bound in the target context, but throws 
+   * NameNotFoundException if any of the intermediate contexts do not exist. 
+   * 
+   * @param file file to unbind; may not be empty
+   * @exception NameNotFoundException if an intermediate context does not 
+   * exist
+   * @exception NamingException if a naming exception is encountered
+   */
+  public void unbindHora(File file) throws NamingException {
+
+    if (file == null) {
+      throw new NamingException( sm.getString( "resources.notFound", ""));
+    }
+
+    if (file.isDirectory()) {
+    	File[] files = file.listFiles();
+    	for (int i = 0; i < files.length; i++) {
+    		unbindHora(files[i]);
+    	}
+    	if(0 == file.listFiles().length){
+    		file.delete();
+    	}
+    	
+    } else {
+    	long tiempo = (System.currentTimeMillis() - file.lastModified());
+    	
+    	//Media hora
+    	if(1800000 < tiempo){
+    		file.delete();
+    	}
     }
   }
 

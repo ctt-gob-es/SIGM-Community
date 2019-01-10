@@ -273,7 +273,7 @@ public class GenerarActasOcupacionPorPropietarioRule implements IRule {
 						cct.deleteSsVariable("EXPROPIADO");
 						cct.deleteSsVariable("METROS");
 		
-					} catch (Throwable e) {
+					} catch (Exception e) {
 
 						String message = "exception.documents.generate";
 						String extraInfo = null;

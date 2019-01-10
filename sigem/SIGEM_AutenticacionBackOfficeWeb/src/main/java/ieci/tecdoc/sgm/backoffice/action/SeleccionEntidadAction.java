@@ -74,6 +74,8 @@ public class SeleccionEntidadAction extends Action{
 						if (Utilidades.isNuloOVacio(idEntidad))
 							idEntidad = sesionBO.getIdEntidad();
 						session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD, idEntidad);
+						session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO, key);
+						request.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD, idEntidad);
 						session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD_ALMACENADA,  sesionBO.getIdEntidad());
 						if (!Utilidades.isNuloOVacio(idAplicacion)) {
 							if (idEntidad.equals(sesionBO.getIdEntidad())) {
@@ -82,6 +84,8 @@ public class SeleccionEntidadAction extends Action{
 									String url = oServicio.obtenerDireccionAplicacion(idAplicacion);
 									url = AutenticacionBackOffice.comprobarURL(request, url);
 									request.setAttribute(Defs.PARAMETRO_URL, url);
+									request.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_USUARIO, sesionBO.getUsuario());											
+									request.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_DATOS_SESION, sesionBO.getDatosEspecificos());									
 									return mapping.findForward("redirigir");
 								} else {
 									String especifico = sesionBO.getDatosEspecificos();
@@ -91,6 +95,9 @@ public class SeleccionEntidadAction extends Action{
 											String url = oServicio.obtenerDireccionAplicacion(idAplicacion);
 											url = AutenticacionBackOffice.comprobarURL(request, url);
 											request.setAttribute(Defs.PARAMETRO_URL, url);
+											request.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_USUARIO, sesionBO.getUsuario());
+											request.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_DATOS_SESION, sesionBO.getDatosEspecificos());
+											request.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO, key);
 											return mapping.findForward("redirigir");
 										} else {
 											//PONER UN PARAMETRO PARA QUE LO DIGA
@@ -113,7 +120,7 @@ public class SeleccionEntidadAction extends Action{
 			
 			session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD, idEntidad);
 			session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD_ALMACENADA, "");
-			session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_APLICACION, idAplicacion);
+			session.setAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_APLICACION, idAplicacion);			
 			
 			if (Utilidades.isNuloOVacio(idEntidad)) {
 				List oLista = AdministracionHelper.obtenerListaEntidades();

@@ -48,7 +48,7 @@
 		<result property="idIntercambioInterno" column="id_exchange" />
 		<result property="estado" column="state" />
 		<result property="fechaIntercambioRegistral" column="exchange_date" />
-		
+		<result property="fechaEstado" column="state_date" />
 		<result property="username" column="username" />
 		
 		<result property="codigoUnidadTramitacion" column="code_tramunit" />

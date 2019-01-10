@@ -93,9 +93,10 @@ public class CargarDatosExcell {
 			logger.error(e.getMessage(), e);
 		} catch (java.lang.Exception e) {
 			logger.error(e.getMessage(), e);
-		}
-		finally{
-			ooHelper.dispose();
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 	}
 

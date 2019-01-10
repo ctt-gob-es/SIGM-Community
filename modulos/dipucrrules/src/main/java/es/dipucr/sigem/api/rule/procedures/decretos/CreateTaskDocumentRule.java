@@ -29,7 +29,7 @@ import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
  */
 public class CreateTaskDocumentRule implements IRule {
 	
-	private static final Logger logger = Logger.getLogger(CreateTaskDocumentRule.class);
+	private static final Logger LOGGER = Logger.getLogger(CreateTaskDocumentRule.class);
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		return true;
@@ -65,8 +65,6 @@ public class CreateTaskDocumentRule implements IRule {
 			// Obtener el Decreto adjuntado en la fase de Inicio, para copiar: infopag, descripción, idplantilla, extensión
 			// Debe haber uno, ya que en la fase de Inicio se comprueba que se haya anexado sólo un doc (ValidateNumDocsTramiteRule)
 			
-			// Obtener el documento que tiene hasta el momento el expediente
-			//IItemCollection documentsCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), "", "FDOC DESC");
 			// Obtener el documento Decreto del expediente
 			
 			numexp = rulectx.getNumExp();
@@ -116,21 +114,17 @@ public class CreateTaskDocumentRule implements IRule {
 					//FIN [dipucr-Felipe 3#268]
 					
 					decretoNuevo.store(rulectx.getClientContext());
-					cct.endTX(true);
-					
-					try{
-						if (fileDecretoNuevo!=null && fileDecretoNuevo.exists() && !fileDecretoNuevo.delete()){
-							logger.error("No se pudo eliminar el documento: " + FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + fileDecretoNuevo.getName());
-						}
+					cct.endTX(true);					
+
+					if (fileDecretoNuevo!=null && fileDecretoNuevo.exists() && !fileDecretoNuevo.delete()){
+						LOGGER.error("No se pudo eliminar el documento: " + FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + fileDecretoNuevo.getName());
 					}
-					
-					catch(Exception e){}
 				}
 			}
 			
 			
 		}catch(ISPACException e){
-			logger.error("Error al generar el nuevo documento en el expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al generar el nuevo documento en el expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar el nuevo documento en el expediente: " + numexp + ". " + e.getMessage(), e);
 		}
 		
@@ -138,6 +132,6 @@ public class CreateTaskDocumentRule implements IRule {
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-
+		// Empty method
 	}  
 }

@@ -14,11 +14,11 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
  */
 public class InitPropuestaNegAdjudicacionRule extends InitPropuestaNegRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		STR_entidad = "SGN_NEGOCIADO";
-		STR_extracto = "Adjudicación de convocatoria de contratación";
-		return true;
-	}
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "SGN_NEGOCIADO";
+        strExtracto = "Adjudicación de convocatoria de contratación";
+        return true;
+    }
 
 
 }

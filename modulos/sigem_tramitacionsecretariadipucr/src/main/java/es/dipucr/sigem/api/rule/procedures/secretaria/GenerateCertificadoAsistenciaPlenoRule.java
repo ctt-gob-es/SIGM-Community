@@ -5,7 +5,7 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class GenerateCertificadoAsistenciaPlenoRule extends GenerateCertificadoAsistenciaRule{
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		STR_NombreDocCertificado  = "Certificado de Asistencia Pleno";
+		nombreDocCertificado  = "Certificado de Asistencia Pleno";
 		return true;
 	}
 }

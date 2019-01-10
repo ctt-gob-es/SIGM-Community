@@ -15,6 +15,7 @@ import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +35,7 @@ public class DipucrGeneraCartaDigital implements IRule {
 
 	private static final Logger logger = Logger.getLogger(DipucrGeneraCartaDigital.class);
 	private String plantillaCartaDigital = "";
+	private String nombretipoDocumento = "";
 	
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
 	}
@@ -41,7 +43,15 @@ public class DipucrGeneraCartaDigital implements IRule {
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {		
 		try{
 			logger.info("INICIO - " + this.getClass().getName());
-			plantillaCartaDigital = DocumentosUtil.getPlantillaDefecto(rulectx.getClientContext(), rulectx.getTaskProcedureId());
+			//plantillaCartaDigital = DocumentosUtil.getPlantillaDefecto(rulectx.getClientContext(), rulectx.getTaskProcedureId());
+			
+			IClientContext cct = rulectx.getClientContext();
+
+			plantillaCartaDigital = DocumentosUtil.getPlantillaDefecto(cct, rulectx.getTaskProcedureId());
+
+			if (StringUtils.isNotEmpty(plantillaCartaDigital)) {
+				nombretipoDocumento = DocumentosUtil.getTipoDocumentoByPlantilla(cct, plantillaCartaDigital);
+			}
 		}
 		catch(ISPACException e){
 			logger.error("Error al recuperar la plantilla específica del expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
@@ -72,7 +82,7 @@ public class DipucrGeneraCartaDigital implements IRule {
 			
 			// Variables
 			IItem entityDocument = null;
-			int documentTypeId = 0;
+			
 			int templateId = 0;
 			int taskId = rulectx.getTaskId();
 			numexp = rulectx.getNumExp();
@@ -80,7 +90,7 @@ public class DipucrGeneraCartaDigital implements IRule {
 			IItem processTask =  entitiesAPI.getTask(rulectx.getTaskId());
 			int idTramCtl = processTask.getInt("ID_TRAM_CTL");
 			
-	    	int documentId = 0;
+	    	int documentTypeId = 0;
 	    	Object connectorSession = null;	    	
 	    	
 			// Comprobar que el trámite tenga un tipo de documento asociado y obtenerlo
@@ -88,7 +98,7 @@ public class DipucrGeneraCartaDigital implements IRule {
     		Iterator it = taskTpDocCollection.iterator();
     		while (it.hasNext()){
     			IItem taskTpDoc = (IItem)it.next();
-    			if ((((String)taskTpDoc.get("CT_TPDOC:NOMBRE")).trim().toUpperCase()).equals(("Comunicación generica").trim().toUpperCase())){
+    			if ((((String)taskTpDoc.get("CT_TPDOC:NOMBRE")).trim().toUpperCase()).equals((nombretipoDocumento).trim().toUpperCase())){
     				
     				documentTypeId = taskTpDoc.getInt("TASKTPDOC:ID_TPDOC");
     			}
@@ -123,7 +133,7 @@ public class DipucrGeneraCartaDigital implements IRule {
 					
 	        		
 	        		entityDocument  = genDocAPI.createTaskDocument(taskId, documentTypeId);
-					documentId = entityDocument.getKeyInt();
+					int documentId = entityDocument.getKeyInt();
 
 					String sFileTemplate = DocumentosUtil.getFile(cct, infoPagT, null, null).getName();
 														
@@ -158,7 +168,7 @@ public class DipucrGeneraCartaDigital implements IRule {
 		    		if(doc != null){
 		    			String infoPag = doc.getString("INFOPAG");
 			        	File fileBases = DocumentosUtil.getFile(cct, infoPag, null, null);
-			        	DipucrCommonFunctions.Concatena(xComponent, "file://" + fileBases.getPath(), ooHelper);
+			        	DipucrCommonFunctions.concatena(xComponent, "file://" + fileBases.getPath());
 			        	fileBases.delete();
 					}
 		    		
@@ -181,8 +191,10 @@ public class DipucrGeneraCartaDigital implements IRule {
 		    		entityTemplateT.delete(cct);
 					entityDocumentT.delete(cct);
 					
-					ooHelper.dispose();  		
-	        	}
+					if(null != ooHelper){
+			        	ooHelper.dispose();
+			        }
+				}
     		}	
 			cct.endTX(true);
 		} catch(Exception e) {

@@ -47,7 +47,7 @@ public class LogotipoEntidad implements IRule{
 		String url = "http://" + dir + ":8080/SIGEM_TramitacionWeb/imagenesServlet/logos/logo.gif?idEntidad=" + entityId;
 		logger.info("URL: "+url);
 
-		TemplateGraphicInfo graphic = new TemplateGraphicInfo (url,false);
+		TemplateGraphicInfo graphic = new TemplateGraphicInfo (url,false, 1000, 1000);
 		return graphic;
 	}
 	

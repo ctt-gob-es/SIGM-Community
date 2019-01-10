@@ -65,11 +65,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.traversal.NodeIterator;
 
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 
 public class Expedients {
 
 	/** Logger de la clase. */
-	private static final Logger logger = Logger.getLogger(Expedients.class);
+	private static final Logger LOGGER = Logger.getLogger(Expedients.class);
 
 	private ClientContext mcontext;
 
@@ -93,7 +94,7 @@ public class Expedients {
 
     public String initExpedient(CommonData commonData,
 		  	 String specificDataXML,
-		  	 List documents, String initSystem) throws ISPACException {
+		  	 List<?> documents, String initSystem) throws ISPACException {
 
 		IInvesflowAPI invesFlowAPI = mcontext.getAPI();
 		IProcedureAPI procedureAPI = invesFlowAPI.getProcedureAPI();
@@ -102,7 +103,7 @@ public class Expedients {
 
 		// Lista de referencias de los documentos creados en el gestor documental
 		// para eliminarlos en caso de error
-		List documentRefs = new ArrayList();
+		List<String> documentRefs = new ArrayList<String>();
 
 		// Ejecución en un contexto transaccional
 		boolean ongoingTX = mcontext.ongoingTX();
@@ -140,7 +141,7 @@ public class Expedients {
 			mcontext.setUser(responsible);
 
 			// Crear el proceso del expediente
-			Map params = new HashMap();
+			Map<String, String> params = new HashMap<String, String>();
 			params.put("COD_PCD", procedure.getString("CTPROCEDIMIENTOS:COD_PCD"));
 			params.put("OMITIR_EVENTO_TRAS_INICIAR", "true");
 			params.put("specificDataXML", specificDataXML);
@@ -210,7 +211,7 @@ public class Expedients {
 
 			// Contruir el contexto de ejecución de eventos.
 			// Incluir en el contexto de ejecucion de las reglas el XML con los datos de entrada
-			params = new HashMap();
+			params = new HashMap<String, String>();
 			params.put("specificDataXML", specificDataXML);
 			EventManager eventmgr = new EventManager(mcontext, params);
 			eventmgr.newContext();
@@ -235,7 +236,7 @@ public class Expedients {
 
 		} catch (Exception e) {
 
-			logger.error("Error al iniciar expediente", e);
+			LOGGER.error("Error al iniciar expediente", e);
 
 			// Si se produce algún error
 			// se eliminan los ficheros subidos al gestor documental
@@ -265,7 +266,7 @@ public class Expedients {
      */
     public boolean initExpedient(CommonData commonData,
     						  	 String specificDataXML,
-    						  	 List documents) throws ISPACException {
+    						  	 List<?> documents) throws ISPACException {
     	String numExp = initExpedient(commonData, specificDataXML, documents, null);
     	return StringUtils.isNotEmpty(numExp);
 	}
@@ -331,7 +332,6 @@ public class Expedients {
 
 			// Generar un aviso en la bandeja de avisos electrónicos
 			String message = "notice.moveExpedient";
-			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 
 			Notices.generateNotice(mcontext, itemProcess.getKeyInt(), 0, 0, numExp, message, mcontext.getAPI().getProcess(itemProcess.getKeyInt()).getString("ID_RESP"), Notices.TIPO_AVISO_EXP_REUBICADO_WS);
 
@@ -350,13 +350,11 @@ public class Expedients {
      * @return Cierto si los documentos se han creado correctamente.
      * @throws ISPACException Si se produce algún error.
      */
-    public boolean addDocuments(String numExp, String regNum, Date regDate,
-    		List documents) throws ISPACException {
+    public boolean addDocuments(String numExp, String regNum, Date regDate, List<?> documents) throws ISPACException {
 
     	if (!CollectionUtils.isEmpty(documents)) {
 
 			IInvesflowAPI invesFlowAPI = mcontext.getAPI();
-			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 			IGenDocAPI genDocAPI = invesFlowAPI.getGenDocAPI();
 			
 			//[eCenpri-Manu Ticket #303] - INICIO - ALSIGM3 Dar información de los documentos anexados a los expedientes.
@@ -391,7 +389,7 @@ public class Expedients {
 
 			// Lista de referencias de los documentos creados en el gestor
 			// documental para eliminarlos en caso de error
-			List documentRefs = new ArrayList();
+			List<String> documentRefs = new ArrayList<String>();
 
 			// Ejecución en un contexto transaccional
 			boolean ongoingTX = mcontext.ongoingTX();
@@ -462,7 +460,7 @@ public class Expedients {
 
 			} catch (Exception e) {
 
-				logger.error("Error al añadir documentos al expediente", e);
+				LOGGER.error("Error al añadir documentos al expediente", e);
 
 				// Si se produce algún error
 				// se eliminan los ficheros subidos al gestor documental
@@ -591,8 +589,8 @@ public class Expedients {
 		IItem item = searchAPI.getSearchForm(searchFormName);
 		String configFile = item.getString("FRM_BSQ");
 
-		Map values = new HashMap();
-		Map operators = new HashMap();
+		Map<String, Object> values = new HashMap<String, Object>();
+		Map<String, String> operators = new HashMap<String, String>();
 		processSearchXML(searchXML, values, operators);
 		SearchInfo searchinfo = searchAPI.getSearchInfo(configFile, domain, expState);
 		searchinfo.setDescription(searchFormName);
@@ -616,7 +614,7 @@ public class Expedients {
      * @return Resultado de la busqueda
      * @throws ISPACException
      */
-    public List search(String groupName, String searchFormName, String searchXML, int domain) throws ISPACException {
+    public List<?> search(String groupName, String searchFormName, String searchXML, int domain) throws ISPACException {
     	if (!SearchDomain.isDomain(domain)){
     		throw new ISPACException("Dominio desconocido");
     	}
@@ -631,8 +629,8 @@ public class Expedients {
 		IItem item = searchAPI.getSearchForm(searchFormName);
 		String configFile = item.getString("FRM_BSQ");
 
-		Map values = new HashMap();
-		Map operators = new HashMap();
+		Map<String, Object> values = new HashMap<String, Object>();
+		Map<String, String> operators = new HashMap<String, String>();
 		processSearchXML(searchXML, values, operators);
 		SearchInfo searchinfo = searchAPI.getSearchInfo(configFile, domain, expState);
 		searchinfo.setDescription(searchFormName);
@@ -661,11 +659,11 @@ public class Expedients {
     	IItem itemExp = entitiesAPI.getExpedient(numExp);
     	IItem procedure = procedureAPI.getProcedureById(itemExp.getInt("ID_PCD"));
 
-    	List list = processSpecificDataXML(entitiesAPI, specificDataXML, procedure, numExp);
+    	List<?> list = processSpecificDataXML(entitiesAPI, specificDataXML, procedure, numExp);
     	if (list.isEmpty()){
     		return -1;
     	}
-    	List itemList = (List)list.get(0);
+    	List<?> itemList = (List<?>)list.get(0);
     	if (itemList.isEmpty()){
     		return -1;
     	}
@@ -704,7 +702,7 @@ public class Expedients {
      * @return Listado de registros
      * @throws ISPACException
      */
-    public List getAllRegsEntity(String entityName, String numExp) throws ISPACException{
+    public List<?> getAllRegsEntity(String entityName, String numExp) throws ISPACException{
     	IEntitiesAPI entitiesAPI = mcontext.getAPI().getEntitiesAPI();
 
     	IItem entityCT = entitiesAPI.getCatalogEntity(entityName);
@@ -714,7 +712,7 @@ public class Expedients {
     	return CollectionBean.getBeanList(itemcol);
     }
 
-	private void processSearchXML(String searchXML, Map values, Map operators) {
+	private void processSearchXML(String searchXML, Map<String, Object> values, Map<String, String> operators) {
 		XMLFacade xml = new XMLFacade(searchXML);
 		NodeIterator nodeItEntities = xml.getNodeIterator("search/entity");
 		for (Node nodeEntity = nodeItEntities.nextNode(); nodeEntity != null; nodeEntity = nodeItEntities.nextNode()){
@@ -742,14 +740,14 @@ public class Expedients {
 	}
 
 	private void populateWithDataAndOperators(SearchInfo searchinfo,
-			Map values, Map operators) throws ISPACException {
-		Set  valueKeys = values.keySet();
-		Iterator iter = valueKeys.iterator();
+			Map<?, Object> values, Map<?, String> operators) throws ISPACException {
+		Set<?>  valueKeys = values.keySet();
+		Iterator<?> iter = valueKeys.iterator();
 		while (iter.hasNext()) {
 			String key = (String) iter.next();
 			String[] keys = key.split(":");
 			if (values.get(key) instanceof List) {
-				List value = (List) values.get(key);
+				List<?> value = (List<?>) values.get(key);
 				searchinfo.setFieldValueForEntity(keys[0], keys[1], value);
 			} else {
 				String value = ((String) values.get(key)).replaceAll("'", "").trim();
@@ -772,7 +770,7 @@ public class Expedients {
      * @throws ISPACException Si se produce algún error al procesar los interesados.
      */
     private InterestedPerson processInterested(IEntitiesAPI entitiesAPI,
-    										   List interested,
+    										   List<?> interested,
     										   String numexp) throws ISPACException {
 
     	InterestedPerson interestedPrincipal = null;
@@ -780,7 +778,7 @@ public class Expedients {
 		if ((interested != null) &&
 			(!interested.isEmpty())) {
 
-			Iterator it = interested.iterator();
+			Iterator<?> it = interested.iterator();
 			while (it.hasNext()) {
 
 				InterestedPerson interestedPerson = (InterestedPerson) it.next();
@@ -827,26 +825,26 @@ public class Expedients {
      * @return listado de los item creados, que se corresponderan con los registros de las entidades creados
      * @throws ISPACException Si se produce algún error al procesar los datos específicos.
      */
-    private List processSpecificDataXML(IEntitiesAPI entitiesAPI,
+    private List<List<?>> processSpecificDataXML(IEntitiesAPI entitiesAPI,
     									 String specificDataXML,
     									 IItem procedure,
     									 String numexp) throws ISPACException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("specificDataXML: " + specificDataXML);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("specificDataXML: " + specificDataXML);
 		}
-		List list = new ArrayList();
+		List<List<?>> list = new ArrayList<List<?>>();
 		if (StringUtils.isNotBlank(specificDataXML)) {
 
     		String rtMappingXML = procedure.getString("CTPROCEDIMIENTOS:MAPEO_RT");
-    		if (logger.isDebugEnabled()) {
-    			logger.debug("MAPEO_RT: " + rtMappingXML);
+    		if (LOGGER.isDebugEnabled()) {
+    			LOGGER.debug("MAPEO_RT: " + rtMappingXML);
     		}
     		if (StringUtils.isNotBlank(rtMappingXML)) {
 		    	XMLFacade especificData = new XMLFacade(specificDataXML);
 		    	Procedure procedureRT = new Procedure(rtMappingXML);
 
 		    	// Procesar los mapeos de las tablas del procedimiento
-		    	Iterator it = procedureRT.getTableNames();
+		    	Iterator<?> it = procedureRT.getTableNames();
 		    	while (it.hasNext()) {
 
 		    		// Nombre de la tabla
@@ -856,7 +854,7 @@ public class Expedients {
 		    		Table table = procedureRT.getTable(name);
 
 		    		// Crear los items en la entidad
-		    		List items = table.createItems(mcontext, numexp, especificData);
+		    		List<?> items = table.createItems(mcontext, numexp, especificData);
 		    		if (!items.isEmpty()){
 		    			list.add(items);
 		    		}
@@ -880,9 +878,9 @@ public class Expedients {
     private void processDocuments(IEntitiesAPI entitiesAPI,
     							  IGenDocAPI genDocAPI,
     							  CommonData commonData,
-    							  List documents,
+    							  List<?> documents,
     							  String numexp,
-    							  List documentRefs) throws ISPACException {
+    							  List<String> documentRefs) throws ISPACException {
 
 		if ((documents != null) &&
 			(!documents.isEmpty())) {
@@ -890,7 +888,7 @@ public class Expedients {
 			// Obtener la fase activa
 			int stageId = getActiveStageId(numexp);
 
-			Iterator it = documents.iterator();
+			Iterator<?> it = documents.iterator();
 			while (it.hasNext()) {
 
 				Document document = (Document) it.next();
@@ -904,7 +902,7 @@ public class Expedients {
 					documentRefs.add(docEntity.getString("INFOPAG"));
 				}
 				catch (Exception e) {
-					logger.error("Error al generar el documento", e);
+					LOGGER.error("Error al generar el documento", e);
 					throw new ISPACException("No se pudo generar el documento: " + document.getName());
 				}
 			}
@@ -980,11 +978,11 @@ public class Expedients {
      * @param documentRefs Lista de referencias a los documentos creados en el gestor documental.
      */
     private void deleteAttachedFiles(IGenDocAPI genDocAPI,
-    						  		 List documentRefs) {
+    						  		 List<String> documentRefs) {
 
     	if (!documentRefs.isEmpty()) {
 
-    		Iterator it = documentRefs.iterator();
+    		Iterator<String> it = documentRefs.iterator();
     		while (it.hasNext()) {
 
     			String docref = (String) it.next();
@@ -1360,7 +1358,7 @@ public class Expedients {
 
 				// Lista de referencias de los documentos creados en el gestor
 				// documental para eliminarlos en caso de error
-				List documentRefs = new ArrayList();
+				List<String> documentRefs = new ArrayList<String>();
 
 				try {
 
@@ -1419,7 +1417,7 @@ public class Expedients {
 
 				} catch (Exception e) {
 
-					logger.error("Error al añadir documentos al expediente", e);
+					LOGGER.error("Error al añadir documentos al expediente", e);
 
 					// Eliminar los ficheros subidos al gestor documental
 					deleteAttachedFiles(genDocAPI, documentRefs);
@@ -1431,30 +1429,113 @@ public class Expedients {
     	}
 		return true;
 	}
+	
+	 /**
+     * Añade documentos al trámite de un expediente.
+     * @param numExp Número de expediente.
+     * @param idTramite Identificador del trámite al que asociar el documento.
+     * @param regNum Número de registro de entrada.
+     * @param regDate Fecha de registro de entrada.
+     * @param documents Lista de documentos asociados al expediente.
+     * @return Cierto si los documentos se han creado correctamente.
+     * @throws ISPACException Si se produce algún error.
+     */
+	 public boolean addDocuments(String numExp, int idTramite, String regNum, Date regDate, List<?> documents) throws ISPACException {
+		 
+		 boolean bCommit = false;
+		 
+		 if (!CollectionUtils.isEmpty(documents)) {
+
+			IInvesflowAPI invesFlowAPI = mcontext.getAPI();
+			IGenDocAPI genDocAPI = invesFlowAPI.getGenDocAPI();
+			
+			String asunto = ExpedientesUtil.getAsunto(mcontext, numExp);
+			if(StringUtils.isNotEmpty(asunto)){
+				asunto = "<b>Expediente: </b>" + asunto;
+			}
+			
+			// Obtener el responsable del expediente
+			IProcess exp = invesFlowAPI.getProcess(numExp);			
+			Responsible responsible = RespFactory.createResponsible( exp.getString("ID_RESP"));
+
+			// Establecer el responsable
+			mcontext.setUser(responsible);
+
+			// Inicia el contexto de ejecución para que se ejecuten
+            // las reglas asociadas a la entidad //////////////////
+            StateContext stateContext = mcontext.getStateContext();
+            if (stateContext == null) {
+                stateContext = new StateContext();
+                mcontext.setStateContext(stateContext);
+            }
+            stateContext.setPcdId(exp.getInt("ID_PCD"));
+            stateContext.setProcessId(exp.getKeyInt());
+            stateContext.setNumexp(numExp);
+
+			// Lista de referencias de los documentos creados en el gestor
+			// documental para eliminarlos en caso de error
+			List<String> documentRefs = new ArrayList<String>();
+
+			// Ejecución en un contexto transaccional
+			boolean ongoingTX = mcontext.ongoingTX();
+			
+
+			try {
+				// Abrir transacción para deshacer la creación del expediente en caso de error
+				if (!ongoingTX) {
+					mcontext.beginTX();
+				}
+
+				Document doc;
+				IItem docEntity;
+				for (int i = 0; i < documents.size(); i++) {
+
+					doc = (Document) documents.get(i);
+
+					if (-1 < idTramite) {
+						stateContext.setTaskId(idTramite);
+						stateContext.setStageId(getActiveStageId(idTramite));
+
+						// Generar el documento asociado al trámite
+						docEntity = createTaskDocument(idTramite, regNum, regDate, doc);
 
 
-//    private Responsible getProcedureGroupResp(IInvesflowAPI invesFlowAPI,
-//    									 	  IItem ctProcedure,
-//    									 	  String codeOrg) throws ISPACException {
-//
-//        IRespManagerAPI respAPI = invesFlowAPI.getRespManagerAPI();
-//
-//        // Obtener los responsables con permiso de creación
-//        IItemCollection resps = respAPI.getRespPermissions(ctProcedure.getKeyInt(), PERMISSION_CREATE_EXPEDIENTE);
-//        while (resps.next()) {
-//
-//        	IItem resp = resps.value();
-//        	if (resp instanceof Group) {
-//
-//        		// Grupo tramitador del procedimiento que pertenezca al organismo
-//        		Group group = (Group) resp;
-//        		if (group.getName().toUpperCase().startsWith(codeOrg)) {
-//
-//        			return group;
-//        		}
-//        	}
-//        }
-//
-//        return null;
-//    }
+						// Limpiar el contexto
+						stateContext.setTaskId(0);
+						stateContext.setStageId(0);
+	
+						// Añadir el GUID del documento a la lista
+						documentRefs.add(docEntity.getString("INFOPAG"));
+						String tipo = doc.getCode();
+						
+						if(null != tipo && !tipo.equals("Solicitud Registro")){
+							String nombreDoc = doc.getName();
+							asunto = asunto + ",<br/><b>Documento Anexado: </b>" + nombreDoc + ",<br/> <b>Tipo de documento: </b>" + tipo;			//Se recorta si excede los caracteres, ya que da error y no puede insertar.
+							//Se recorta si excede los caracteres, ya que da error y no puede insertar.
+							if(asunto.length() > 252){
+								asunto = asunto.substring(0, 250);
+							}
+							Notices.generateNotice(mcontext, exp.getInt("ID"), 0, 0, numExp, asunto, mcontext.getAPI().getProcess(exp.getInt("ID")).getString("ID_RESP"), Notices.TIPO_AVISO_DOCS_ANEXADOS_WS);
+						}//[eCenpri-Manu Ticket #303] - FIN - ALSIGM3 Dar información de los documentos anexados a los expedientes.
+					}
+				}
+					
+				//Si todo ha sido correcto se hace commit de la transacción
+				bCommit = true;
+
+			} catch (Exception e) {
+				LOGGER.error("Error al añadir documentos al tramite: " + idTramite + " en el expediente: " + numExp + ". " + e.getMessage(), e);
+				deleteAttachedFiles(genDocAPI, documentRefs);
+
+				throw new ISPACException("Error al añadir documentos al tramite: " + idTramite + " en el expediente: " + numExp + ". " + e.getMessage(), e);
+				
+			} finally {
+				if (!ongoingTX) {
+					mcontext.endTX(bCommit);
+				}
+			}
+    	}
+
+		return bCommit;
+	}
 }

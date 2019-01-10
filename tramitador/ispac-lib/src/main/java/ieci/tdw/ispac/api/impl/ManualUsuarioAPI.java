@@ -113,7 +113,7 @@ public class ManualUsuarioAPI implements IManualUsuarioAPI {
 			cnt.closeTX(false);
 			throw new ISPACException(e.getMessage());
 		} finally {
-			cnt.closeConnection();
+			context.releaseConnection(cnt);
 		}
 		
 		return manualUsuario;
@@ -134,7 +134,8 @@ public class ManualUsuarioAPI implements IManualUsuarioAPI {
 			cnt.closeTX(false);
 			throw new ISPACException(e.getMessage());
 		}finally{
-			cnt.closeConnection();
+			context.releaseConnection(cnt);
+
 		}
 
 	}
@@ -175,7 +176,7 @@ public class ManualUsuarioAPI implements IManualUsuarioAPI {
 			cnt.closeTX(false);
 			throw new ISPACException(e.getMessage());
 		}finally{
-			cnt.closeConnection();
+			context.releaseConnection(cnt);
 		}
 	}
 

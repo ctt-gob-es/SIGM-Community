@@ -46,8 +46,8 @@ public class SchedulerInitializerListener implements ServletContextListener {
         	// Configurar el scheduler
         	initScheduler(sce.getServletContext());
         	
-        } catch (Throwable t) {
-        	logger.error("Error al iniciar el Scheduler", t);
+        } catch (Exception e) {
+        	logger.error("Error al iniciar el Scheduler", e);
         }
     }
     

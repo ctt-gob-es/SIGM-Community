@@ -142,8 +142,8 @@
 				<module>ISicres-Desktop-Jar</module>
 				<module>ISicres-resources-configurable</module>
 				<module>ISicres-resources-config</module>
+				<module>ISicres-Desktop-Web</module>
 				<module>ISicres-resources-web</module>
-
 				<module>ISicres-Api</module>
 				<module>ISicres-Desktop-Api</module>
 				<module>ISicres-ConfigLocation</module>

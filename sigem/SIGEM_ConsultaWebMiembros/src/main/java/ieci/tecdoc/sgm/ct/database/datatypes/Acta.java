@@ -1,5 +1,8 @@
 package ieci.tecdoc.sgm.ct.database.datatypes;
 
+import java.util.Date;
+
+
 
 public class Acta {
 	
@@ -8,6 +11,8 @@ public class Acta {
 	private String extracto = "";
 	
 	private FicheroPropuesta documentoActa = null;
+	
+	private Date fechafirma = null;
 
 
 
@@ -33,6 +38,14 @@ public class Acta {
 
 	public void setDocumentoActa(FicheroPropuesta documentoActa) {
 		this.documentoActa = documentoActa;
+	}
+
+	public Date getFechafirma() {
+		return fechafirma;
+	}
+
+	public void setFechafirma(Date fechafirma) {
+		this.fechafirma = fechafirma;
 	}
 
 }

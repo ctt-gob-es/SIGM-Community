@@ -12,18 +12,6 @@
 	<packaging>jar</packaging>
 	<description>Invesdoc Core</description>
 
-	<repositories>
-		<repository>
-			<id>spring-release</id>
-			<url>http://maven.springframework.org/release</url>
-		</repository>
-		<repository>
-			<id>repo_arch</id>
-			<name>repo_arch</name>
-			<url>file:${project.basedir}/lib</url>
-		</repository>
-	</repositories>
-
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -38,17 +26,22 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>fplibrary</groupId>
-			<artifactId>fplibrary</artifactId>
-			<version>1.0</version>
-		</dependency>
-
 
 	</dependencies>
 
 	<build>
 		<finalName>invesdoc-core-${pom.version}</finalName>
 	</build>
+	<repositories>
+		<repository>
+			<id>spring-release</id>
+			<url>http://maven.springframework.org/release</url>
+		</repository>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/lib</url>
+		</repository>
+	</repositories>
 
 </project>

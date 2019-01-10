@@ -22,6 +22,9 @@ public class BasicForm extends ActionForm{
     int id;
     String nombre;
     String descripcion;
+    
+    //[Tere Ticket#362] Crear un campo con email departamento
+    String email;
     /*
     Date creationDate;
     Date updateDate;
@@ -41,7 +44,8 @@ public class BasicForm extends ActionForm{
     String managerId;
     String belongToDept; // Nombre del depto al que pertenece en caso de que sea usuario
     boolean bloqueado;
-    
+    Integer idorg;
+    Integer idPadre;
     
     // Permisos Genéricos
     boolean idocConsulta;
@@ -57,6 +61,7 @@ public class BasicForm extends ActionForm{
             logger.debug("# BasicForm Reset!");
         
         id = -1; 
+        idorg = null;
         guid =
         nombre = 
         descripcion =
@@ -68,6 +73,9 @@ public class BasicForm extends ActionForm{
         creatorName =
         managerId = "";
         
+        //[Tere Ticket#362] Crear un campo con email departamento
+        email = "";
+        
 		//[Manu Ticket#175] Crear un campo con dni en el usuario
         dni = "";         
         
@@ -76,7 +84,6 @@ public class BasicForm extends ActionForm{
         idocCreacion =
         idocBorrado= 
         idocImpresion =
-        
         bloqueado = false;
         
     }
@@ -153,6 +160,22 @@ public class BasicForm extends ActionForm{
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+    
+    /**
+     * @return Returns the descripcion.
+     */
+ // [Tere Ticket#362] Crear un campo con email departamento
+    public String getEmail() {
+        return email;
+    }
+    /**
+     * @param descripcion The descripcion to set.
+     */
+ // [Tere Ticket#362] Crear un campo con email departamento
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
     /**
      * @return Returns the id.
      */
@@ -297,4 +320,29 @@ public class BasicForm extends ActionForm{
     public void setGuid(String guid) {
         this.guid = guid;
     }
+    /**
+     * @return Returns the idorg.
+     */
+    public Integer getIdorg() {
+        return idorg;
+    }
+    /**
+     * @param idorg The guid to set.
+     */
+    public void setIdorg(Integer idorg) {
+        this.idorg = idorg;
+    }
+    /**
+     * @return Returns the idPadre.
+     */
+    public Integer getIdPadre() {
+        return idPadre;
+    }
+    /**
+     * @param idPadre The guid to set.
+     */
+    public void setIdPadre(Integer idPadre) {
+        this.idPadre = idPadre;
+    }
+    
 }

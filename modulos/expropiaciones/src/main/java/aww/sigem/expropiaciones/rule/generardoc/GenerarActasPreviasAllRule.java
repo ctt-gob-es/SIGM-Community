@@ -289,7 +289,7 @@ public class GenerarActasPreviasAllRule implements IRule{
 						cct.deleteSsVariable("METROS");
 						cct.deleteSsVariable("DESCRIPCION");				
 
-					} catch (Throwable e) {
+					} catch (Exception e) {
 
 						String message = "exception.documents.generate";
 						String extraInfo = null;

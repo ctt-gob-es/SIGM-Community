@@ -10,5 +10,14 @@
 			<directory>../${configurable.app.name}/src/main/resources/${configurable.app.name}</directory>
 			<outputDirectory>/${configurable.app.name}/</outputDirectory>	
 		</fileSet>
+		<!--[Dipucr-Manu Ticket #357] - ALSIGM3 Hacer que todos los módulos de sigem usen las imágenes del tramitador-->
+		<fileSet>
+			<filtered>true</filtered>
+			<directory>../SIGEM_TramitacionWeb/src/main/resources/SIGEM_TramitacionWeb</directory>
+			<outputDirectory>/${configurable.app.name}/</outputDirectory>
+			<includes>
+				<include>skin*/</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 </assembly>

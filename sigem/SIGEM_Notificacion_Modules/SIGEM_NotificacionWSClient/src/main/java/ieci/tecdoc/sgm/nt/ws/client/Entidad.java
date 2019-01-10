@@ -8,59 +8,26 @@
 package ieci.tecdoc.sgm.nt.ws.client;
 
 public class Entidad  implements java.io.Serializable {
-    private java.lang.String identificador;
-
-    private java.lang.String nombre;
+	
+    private String nombre;	
+	private String identificador;
+	private String nombreCorto;
+	private String nombreLargo;
+	private String codigo_ine;
+	private String cif;
+	private String password_entidad;
+	private String dir3;
+	private String sia;
+	private String deh;
 
     public Entidad() {
     }
 
-    public Entidad(
-           java.lang.String identificador,
-           java.lang.String nombre) {
+    public Entidad(String identificador, String nombre) {
            this.identificador = identificador;
            this.nombre = nombre;
     }
 
-
-    /**
-     * Gets the identificador value for this Entidad.
-     * 
-     * @return identificador
-     */
-    public java.lang.String getIdentificador() {
-        return identificador;
-    }
-
-
-    /**
-     * Sets the identificador value for this Entidad.
-     * 
-     * @param identificador
-     */
-    public void setIdentificador(java.lang.String identificador) {
-        this.identificador = identificador;
-    }
-
-
-    /**
-     * Gets the nombre value for this Entidad.
-     * 
-     * @return nombre
-     */
-    public java.lang.String getNombre() {
-        return nombre;
-    }
-
-
-    /**
-     * Sets the nombre value for this Entidad.
-     * 
-     * @param nombre
-     */
-    public void setNombre(java.lang.String nombre) {
-        this.nombre = nombre;
-    }
 
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
@@ -150,6 +117,110 @@ public class Entidad  implements java.io.Serializable {
         return 
           new  org.apache.axis.encoding.ser.BeanDeserializer(
             _javaType, _xmlType, typeDesc);
-    }
+    }	
+
+	public java.lang.Object get__equalsCalc() {
+		return __equalsCalc;
+	}
+
+	public void set__equalsCalc(java.lang.Object __equalsCalc) {
+		this.__equalsCalc = __equalsCalc;
+	}
+
+	public boolean is__hashCodeCalc() {
+		return __hashCodeCalc;
+	}
+
+	public void set__hashCodeCalc(boolean __hashCodeCalc) {
+		this.__hashCodeCalc = __hashCodeCalc;
+	}
+
+	public static void setTypeDesc(org.apache.axis.description.TypeDesc typeDesc) {
+		Entidad.typeDesc = typeDesc;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	public void setIdentificador(String identificador) {
+		this.identificador = identificador;
+	}
+
+	public String getNombreCorto() {
+		return nombreCorto;
+	}
+
+	public void setNombreCorto(String nombreCorto) {
+		this.nombreCorto = nombreCorto;
+	}
+
+	public String getNombreLargo() {
+		return nombreLargo;
+	}
+
+	public void setNombreLargo(String nombreLargo) {
+		this.nombreLargo = nombreLargo;
+	}
+
+	public String getCodigo_ine() {
+		return codigo_ine;
+	}
+
+	public void setCodigo_ine(String codigo_ine) {
+		this.codigo_ine = codigo_ine;
+	}
+
+	public String getCif() {
+		return cif;
+	}
+
+	public void setCif(String cif) {
+		this.cif = cif;
+	}
+
+	public String getPassword_entidad() {
+		return password_entidad;
+	}
+
+	public void setPassword_entidad(String password_entidad) {
+		this.password_entidad = password_entidad;
+	}
+
+	public String getDir3() {
+		return dir3;
+	}
+
+	public void setDir3(String dir3) {
+		this.dir3 = dir3;
+	}
+
+	public String getSia() {
+		return sia;
+	}
+
+	public void setSia(String sia) {
+		this.sia = sia;
+	}
+
+	public String getDeh() {
+		return deh;
+	}
+
+	public void setDeh(String deh) {
+		this.deh = deh;
+	}
+	
+	
+    
+    
 
 }

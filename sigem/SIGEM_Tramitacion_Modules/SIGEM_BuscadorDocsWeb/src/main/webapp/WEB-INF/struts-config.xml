@@ -46,6 +46,13 @@
 				validate="false">
 		</action>
 		<!-- FIN [eCenpri-Felipe #1216] -->
+		<!-- INICIO [dipucr-Felipe #745] -->
+		<action path="/getDocExpediente" 
+				type="com.tsol.modulos.buscador.actions.GetDocExpedienteAction"
+				scope="request"
+				validate="false">
+		</action>
+		<!-- FIN [dipucr-Felipe #745] -->
 	</action-mappings>
 	
 	<message-resources parameter="com.tsol.modulos.buscador.resources.BuscadorDocsMessage" />

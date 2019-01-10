@@ -38,7 +38,6 @@ import es.dipucr.sigem.api.rule.common.utils.FileBean;
 import es.dipucr.sigem.api.rule.common.utils.PdfUtil;
 import es.dipucr.sigem.api.rule.common.utils.ZipUtils;
 import es.dipucr.sigem.api.rule.procedures.Constants;
-import es.dipucr.webempleado.services.licencias.LicenciasWSProxy;
 //import com.lowagie.text.pdf.AcroFields;
 
 
@@ -63,9 +62,6 @@ public class EnviarSolicitudLicenciasAFirmaRule implements IRule
 	//[dipucr-Felipe 3#224] Firma personal previa a la firma del jefe para ciertos tipos de licencias
 	protected static final String _FIRMA_PERSONAL_JEFE = "RJ";
 	protected static final String _BOOLEANO_SI = "SI";
-	
-	protected static final String _COD_LICENCIA_VACACIONES = "05";
-	protected static final String _COD_LICENCIA_MOSCOSOS = "07";
 	
 	
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
@@ -119,9 +115,8 @@ public class EnviarSolicitudLicenciasAFirmaRule implements IRule
 			
 			//Comprobamos si hay licencias coincidentes para el empleado
 			//Puede haberse producido un error al firmar y que se solicite dos veces el mismo periodo
-			LicenciasWSProxy wsLicencias = new LicenciasWSProxy();
-			boolean bHayLicenciasCoincidentes = wsLicencias.
-				existenLicenciasCoincidentes(strNif, anio, calendarInicio, calendarFin);
+			boolean bHayLicenciasCoincidentes = LicenciasWSDispatcher.
+				existenLicenciasCoincidentes(cct, strNif, anio, calendarInicio, calendarFin);
 			
 			//Si hay licencias coincidentes, lo anotamos en el log y cerramos el expediente
 			//sin hacer nada más
@@ -139,8 +134,6 @@ public class EnviarSolicitudLicenciasAFirmaRule implements IRule
 			//Necesitamos sacar la fase y la fasePcd, que no vienen en el contexto
 			IItemCollection stages = invesFlowAPI.getStagesProcess(pid);
 			IItem itemFase = (IItem) stages.toList().get(0);
-//			int idFase = rulectx.getStageId();
-//			int idFasePcd = rulectx.getStageProcedureId();
 			int idFase = Integer.valueOf(itemFase.getString("ID_FASE_BPM"));
 			int idFasePcd = itemFase.getInt("ID_FASE");
 			
@@ -237,7 +230,8 @@ public class EnviarSolicitudLicenciasAFirmaRule implements IRule
 			//FIN [dipucr-Felipe #1350]
     		//FIN [eCenpri-Felipe #549]
 			
-			IItem itemDocSolicitud = DocumentosUtil.generaYAnexaDocumento(rulectx, idTramite, idTipoDocumento, itemSolicitudLicencias.getString("LICENCIA"), fileJustificante, Constants._EXTENSION_PDF);
+			IItem itemDocSolicitud = DocumentosUtil.generaYAnexaDocumento(rulectx, idTramite, idTipoDocumento, 
+					itemSolicitudLicencias.getString("LICENCIA"), fileJustificante, Constants._EXTENSION_PDF);
 			int idDocumento = itemDocSolicitud.getKeyInt();
 
     		//Mandamos el justificante a la firma
@@ -267,7 +261,7 @@ public class EnviarSolicitudLicenciasAFirmaRule implements IRule
     		//FIN [dipucr-Felipe 3#224]
     		else{
 	    		//Si es contratado tendremos que enviar inicialmente al departamento de personal
-	    		if (bContratado && tieneMaximoDias(strTipoLicencia)){
+	    		if (bContratado && LicenciasWSDispatcher.tieneMaximoDias(cct, itemSolicitudLicencias)){
 	    			strCodDepartamento = _DEP_OK_PERSONAL;
 	    		}
     		}
@@ -323,7 +317,8 @@ public class EnviarSolicitudLicenciasAFirmaRule implements IRule
 			//Esto se hace llamando al servicio web LicenciasWS de la WebEmpleado
 			//***********************************
 			//Obtenemos los datos de la solicitud
-			String strDias = String.valueOf(itemSolicitudLicencias.getInt("NUM_DIAS"));
+    		String strNumDias = itemSolicitudLicencias.getString("NUM_DIAS");
+    		String strDetalleDias = itemSolicitudLicencias.getString("FECHAS_SOLICITADAS");
 			String strObservaciones = itemSolicitudLicencias.getString("OBSERVACIONES");
 			if (null == strObservaciones) strObservaciones = "";
 			
@@ -333,9 +328,8 @@ public class EnviarSolicitudLicenciasAFirmaRule implements IRule
 			Date dFreg = itemExpediente.getDate("FREG");
 			Calendar calendarFreg = Calendar.getInstance();
 			calendarFreg.setTime(dFreg);
-			String strIdSolicitud = wsLicencias.crearLicenciaPendiente
-				(strNif, strTipoLicencia, anio, calendarInicio, calendarFin, strDias, strObservaciones,
-				 numexp, nreg, calendarFreg);
+			String strIdSolicitud = LicenciasWSDispatcher.crearLicenciaPendiente(cct, strNif, strTipoLicencia, anio, 
+					calendarInicio, calendarFin, strNumDias, strDetalleDias, strObservaciones, numexp, nreg, calendarFreg);
 			//FIN [dipucr-Felipe PE#105]
 			itemSolicitudLicencias.set("ID_SOLICITUD", strIdSolicitud);
 			itemSolicitudLicencias.store(cct);
@@ -348,17 +342,6 @@ public class EnviarSolicitudLicenciasAFirmaRule implements IRule
 		return null;
 	}
 
-	/**
-	 * Comprueba si la licencia recibida necesita control de número de días
-	 * @return
-	 */
-	public boolean tieneMaximoDias(String strTipoLicencia){
-		
-		return (strTipoLicencia.equals(_COD_LICENCIA_MOSCOSOS) ||
-				strTipoLicencia.equals(_COD_LICENCIA_VACACIONES));
-	}
-	
-	
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
 	}
 

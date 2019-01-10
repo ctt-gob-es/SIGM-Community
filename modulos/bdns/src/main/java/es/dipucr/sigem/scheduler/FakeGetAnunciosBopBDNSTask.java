@@ -322,6 +322,10 @@ public class FakeGetAnunciosBopBDNSTask extends SchedulerTask {
 		String filePathOut = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + fileNameOut;
 	    OpenOfficeHelper.saveDocument(xComponent,"file://" + filePathOut, "");
 	    
+		if(null != ooHelper){
+        	ooHelper.dispose();
+        }
+	    
 		return new File(filePathOut);
 	}
 

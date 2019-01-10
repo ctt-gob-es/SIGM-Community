@@ -113,6 +113,21 @@ public class GenerateActaComiRule extends GenerateActaBasePropuestaRule {
 						
 					}
 				}
+				//Hacienda y Promoción Económica
+				if(area.equals("0090")){
+					if(sesion.equals("ORD")){
+						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - FENAVIN - Ordinaria";
+					}
+					if(sesion.equals("EXTR")){
+						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - FENAVIN - Extra";
+					}
+					if(sesion.equals("EXUR")){
+						STR_nombreCabecera 			= STR_prefijo + " - Cabecera - FENAVIN - ExtraUrg";
+					}
+					if(sesion.equals("CONS")){
+						
+					}
+				}
 				if(sesion.equals("ORD")){
 
 					STR_propuestaBorrador       = STR_prefijo + " - Propuesta - Borrador";

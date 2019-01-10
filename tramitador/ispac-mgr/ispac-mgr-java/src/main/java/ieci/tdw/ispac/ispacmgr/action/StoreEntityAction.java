@@ -7,6 +7,7 @@ import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.item.Properties;
 import ieci.tdw.ispac.api.item.Property;
 import ieci.tdw.ispac.audit.IspacAuditConstants;
@@ -21,6 +22,7 @@ import ieci.tdw.ispac.audit.config.ConfigurationAuditFileKeys;
 import ieci.tdw.ispac.audit.config.ConfiguratorAudit;
 import ieci.tdw.ispac.audit.context.AuditContextHolder;
 import ieci.tdw.ispac.ispaclib.app.EntityApp;
+import ieci.tdw.ispac.ispaclib.app.ListEntityApp;
 import ieci.tdw.ispac.ispaclib.bean.ValidationError;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.utils.ArrayUtils;
@@ -114,24 +116,44 @@ public class StoreEntityAction extends BaseAction {
 				// crear una nueva entrada
 				if (keyId == ISPACEntities.ENTITY_NULLREGKEYID) {
 					
-					//creacion de un registro de entidad (al llamar a create se obtiene un id de la secuencia de la entidad)
-					IItem newitem = entapi.createEntity(entityId);
-					
-					//se almacena en el estado el id del objeto q se va a crear
-					currentstate.setEntityRegId(newitem.getKeyInt());
-					
-					// Se inserta el Numero de expediente en el registro de la entidad (si tiene campo NUMEXP)
-					IItem itemCat = entapi.getCatalogEntity(entityId);
-					String fieldNumExp = itemCat.getString("CAMPO_NUMEXP");
-					if (StringUtils.isNotEmpty(fieldNumExp)) {
-						newitem.set(fieldNumExp, currentstate.getNumexp());
-					}
-					
-					
-					newitem.store(cct);
+					//[Dipucr-Manu Ticket #502] - ALSIGM3 Registros duplicados en entidades de un solo registro.
 					entityapp = scheme.getEntityApp(currentstate, getRealPath(""), currentstate.getEntityRegId(), noDefault);
-					//TODO: Auditar el alta de una entidad
-					this.auditAltaEntidad(newitem, cct,entityapp);
+					boolean esNuevo = false;
+					if (entityapp instanceof ListEntityApp){
+						esNuevo = true;
+					}
+					else{
+						IItemCollection existeCollection = entapi.getEntities(entityId, currentstate.getNumexp());
+						Iterator<?> existeIterator = existeCollection.iterator();
+						if(!existeIterator.hasNext()){
+							esNuevo = true;
+						}
+						else{
+							currentstate.setEntityRegId(((IItem)existeIterator.next()).getKeyInt());
+						}
+					}
+					//[Dipucr-Manu Ticket #502] - ALSIGM3 Registros duplicados en entidades de un solo registro.
+					
+					if(esNuevo){
+						//creacion de un registro de entidad (al llamar a create se obtiene un id de la secuencia de la entidad)
+						IItem newitem = entapi.createEntity(entityId);
+						
+						//se almacena en el estado el id del objeto q se va a crear
+						currentstate.setEntityRegId(newitem.getKeyInt());
+						
+						// Se inserta el Numero de expediente en el registro de la entidad (si tiene campo NUMEXP)
+						IItem itemCat = entapi.getCatalogEntity(entityId);
+						String fieldNumExp = itemCat.getString("CAMPO_NUMEXP");
+						if (StringUtils.isNotEmpty(fieldNumExp)) {
+							newitem.set(fieldNumExp, currentstate.getNumexp());
+						}
+						
+						
+						newitem.store(cct);
+						
+						//TODO: Auditar el alta de una entidad
+						this.auditAltaEntidad(newitem, cct,entityapp);
+					}
 				}
 				
 				// No utilizar el formulario por defecto

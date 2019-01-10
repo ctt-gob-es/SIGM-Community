@@ -11,6 +11,7 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 
 import java.io.File;
@@ -32,17 +33,17 @@ public class TerminaTramiteInfTecnIncidenciasContratoRule implements IRule{
 	@SuppressWarnings("unchecked")
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
 		
-		try
-    	{
+		IClientContext cct = (ClientContext) rulectx.getClientContext();
+		DbCnt cnt = null;
+		try {
 			//----------------------------------------------------------------------------------------------
-	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 			IGenDocAPI genDocAPI = invesFlowAPI.getGenDocAPI();
 			ITXTransaction transaction = invesFlowAPI.getTransactionAPI();
 	        //----------------------------------------------------------------------------------------------
 			
-			DbCnt cnt = cct.getConnection();
+			cnt = cct.getConnection();
 			
 			//Obtengo el numero de expediente del procedimiento generico
 			String sQuery = "WHERE NUMEXP_PADRE='"+rulectx.getNumExp()+"' AND RELACION='Petición Contrato' ORDER BY ID ASC";
@@ -170,7 +171,6 @@ public class TerminaTramiteInfTecnIncidenciasContratoRule implements IRule{
 				
 			//cnt.closeTX(true);
 			
-			
     	 }
     	catch(Exception e) 
         {
@@ -179,6 +179,8 @@ public class TerminaTramiteInfTecnIncidenciasContratoRule implements IRule{
 			    throw new ISPACRuleException(e);
         	}
         	throw new ISPACRuleException("No se ha podido inicializar la propuesta. Numexp. "+rulectx.getNumExp()+" Error. "+e.getMessage(),e);
+        } finally {
+        	cct.releaseConnection(cnt);
         }
 		
 		return new Boolean(true);

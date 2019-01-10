@@ -10,7 +10,6 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
-import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +23,6 @@ import org.apache.log4j.Logger;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.parser.PdfTextExtractor;
 
-import es.dipucr.sigem.api.rule.common.DipucrProperties;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.PdfUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
@@ -112,10 +110,7 @@ public class DividirAnunciosBopRule extends GenerateLiquidacionRecibos implement
 			PdfReader reader = new PdfReader((InputStream) fisBop);
 			
 			//[eCenpri-Felipe #593bis] Posibilidad de probar en la máquina de pruebas
-			String TEXTO_NUM_ANUNCIO = DipucrProperties.getPropertyNoSingleton(KEY_TEXTO_ANUNCIO);
-			if (StringUtils.isEmpty(TEXTO_NUM_ANUNCIO)){
-				TEXTO_NUM_ANUNCIO = BopUtils._TEXTO_NUM_ANUNCIO; 
-			}
+			String TEXTO_NUM_ANUNCIO = BopUtils._TEXTO_NUM_ANUNCIO; 
 			
 			int numPags = reader.getNumberOfPages();
 			

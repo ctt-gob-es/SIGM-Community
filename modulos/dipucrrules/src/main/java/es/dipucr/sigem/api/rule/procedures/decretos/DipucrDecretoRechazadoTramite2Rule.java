@@ -16,16 +16,16 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.avisos.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class DipucrDecretoRechazadoTramite2Rule implements IRule{
 
-	private static final Logger logger = Logger.getLogger(DipucrDecretoRechazadoTramite2Rule.class);
+	private static final Logger LOGGER = Logger.getLogger(DipucrDecretoRechazadoTramite2Rule.class);
 	
-	public void cancel(IRuleContext paramIRuleContext)
-			throws ISPACRuleException {		
+	public void cancel(IRuleContext paramIRuleContext) throws ISPACRuleException {	
+		// Empty method
 	}
 
 	@SuppressWarnings("unchecked")
@@ -50,10 +50,10 @@ public class DipucrDecretoRechazadoTramite2Rule implements IRule{
 			IItem itemExpediente = ExpedientesUtil.getExpediente(cct, rulectx.getNumExp());
 			String asunto = itemExpediente.getString("ASUNTO");
 			
-			StringBuffer sbMessage = new StringBuffer();
+			StringBuilder sbMessage = new StringBuilder();
 			sbMessage.append("El decreto con número de expediente: "+rulectx.getNumExp()+" ha sido rechazado.");
 			sbMessage.append("<br/>");
-			sbMessage.append("Asunto: "+asunto);
+			sbMessage.append("Asunto: " + asunto);
 			sbMessage.append("<br/>");
 			sbMessage.append(" <b> Se procederá a cerrar el expediente. </b>");
 			
@@ -71,25 +71,27 @@ public class DipucrDecretoRechazadoTramite2Rule implements IRule{
 					String estado= item.getString("ESTADOFIRMA");
 					
 					//Si el documento ha sido rechazado ejecutamo la llamada de rechazar decreto
-					if(estado.equals("04")){
+					if("04".equals(estado)){
 						//Si tiene número de decreto lo insertamos en rechazar
 						String consulta = "WHERE NUMEXP = '"+rulectx.getNumExp()+"'";
 						IItemCollection tieneDecreto = entitiesAPI.queryEntities("SGD_DECRETO", consulta);
 						int numDec = 0;
 						try{
 							numDec = ((IItem)tieneDecreto.iterator().next()).getInt("NUMERO_DECRETO");
+						} catch(Exception e) {							
+							numDec = 0;
+							LOGGER.info("El decreto no tiene número de decreto", e);
 						}
-						catch(Exception e){numDec = 0;}
-						if( numDec > 0){						
+						if( numDec > 0) {
 							String consulta2 = "WHERE ID_TRAM_EXP = "+taskId;
 							IItemCollection tramitesAbiertos = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_DT_TRAMITES, consulta2);
 							IItem tramiteDAO = (IItem) tramitesAbiertos.iterator().next();
 							String motivoRechazo = tramiteDAO.getString("OBSERVACIONES");
 							
 							//Creamos el rechazo
-							IItem entidad_rechazo = entitiesAPI.createEntity("SGD_RECHAZO_DECRETO", rulectx.getNumExp());
-							entidad_rechazo.set("RECHAZO_DECRETO", motivoRechazo);
-							entidad_rechazo.store(cct);
+							IItem entidadRechazo = entitiesAPI.createEntity("SGD_RECHAZO_DECRETO", rulectx.getNumExp());
+							entidadRechazo.set("RECHAZO_DECRETO", motivoRechazo);
+							entidadRechazo.store(cct);
 						}
 						//Cerramos el expediente ya que el trámite ya está cerrado					
 						tx.closeProcess(rulectx.getProcessId());
@@ -97,20 +99,16 @@ public class DipucrDecretoRechazadoTramite2Rule implements IRule{
 						AvisosUtil.generarAviso(entitiesAPI, processId, rulectx.getNumExp(), sbMessage.toString(), sNombrePropietario, cct);
 					}
 				}
-			}
-			else{
+			} else {
 				IItem item = ExpedientesUtil.getExpediente(cct, rulectx.getNumExp());
-				if(item.getString("ESTADOADM").equals("RC")){
+				if("RC".equals(item.getString("ESTADOADM"))){
 					AvisosUtil.generarAviso(entitiesAPI, processId, rulectx.getNumExp(), sbMessage.toString(), sNombrePropietario, cct);
 					rulectx.setInfoMessage("El expediente "+rulectx.getNumExp()+" ha sido cerrado.");
 				}
 			}
-		}
-		
-			
-		catch(Exception e){
-			logger.error("ERROR.DecretoRechazadoTramite2Rule: "+e.getMessage(), e);
-		}		
+		} catch(Exception e) {
+			LOGGER.error("ERROR.DecretoRechazadoTramite2Rule: " + e.getMessage(), e);
+		}	
 		return null;
 	}
 

@@ -101,8 +101,7 @@ public class StampConnectorImpl implements StampConnector {
 					docFile = createDocFile(ctx, connectorSession, document);
 
 		            // Sellar el documento con la imagen generada
-		            OpenOfficeHelper.getInstance().stampDocument(docFile, imageFile, 
-		            		stampImage.getStampWidth(), stampImage.getStampHeight());
+		            OpenOfficeHelper.getInstance().stampDocument(docFile, imageFile, stampImage.getStampWidth(), stampImage.getStampHeight());
 		            
 				} catch (Throwable e) {
 					logger.error("Error al sellar el documento", e);

@@ -47,6 +47,7 @@ public class ElementoCuadro implements TreeModelItem {
 	protected int type;
 	protected String propertyName = null;
 	protected String propertyId = null;
+	private boolean esEspecific = false;
 	protected ElementoCuadro parentElement = null;
 	protected List childs = null;
 	protected String language = null;
@@ -62,7 +63,7 @@ public class ElementoCuadro implements TreeModelItem {
 		
 		if (isEntityTipoDocTramite()||isEntityTipoDocFase()) {
 			this.propertyId = "CT_TPDOC:ID";
-			this.propertyName = "CT_TPDOC:NOMBRE";
+			this.propertyName = "CT_TPDOC:NOMBRE";			
 		} else if (isEntityFlujoEntradaFase() 
 				|| isEntityFlujoSalidaFase()) {
 			this.propertyId = "FLOW:ID";
@@ -73,7 +74,15 @@ public class ElementoCuadro implements TreeModelItem {
 			this.propertyName = null;
 		} else {
 			this.propertyId = "ID";
-			this.propertyName = "NOMBRE";
+			this.propertyName = "NOMBRE";			
+		}
+		
+		if(	isEntityPlantillaTipoDoc() || isEntityPlantillaStageTipoDoc()){
+			try {
+				this.esEspecific = (Boolean) item.getProperty("isEspecific");
+			} catch (ISPACException e) {
+				logger.warn("Error al obtener el valor del elemento: isEspecific", e);
+			}
 		}
 		
 		this.language = language;
@@ -295,6 +304,14 @@ public class ElementoCuadro implements TreeModelItem {
 					+ prop, e);
 		}
 		return null;
+	}
+
+	protected boolean isEsEspecific() {
+		return esEspecific;
+	}
+
+	protected void setEsEspecific(boolean esEspecific) {
+		this.esEspecific = esEspecific;
 	}
 
 }

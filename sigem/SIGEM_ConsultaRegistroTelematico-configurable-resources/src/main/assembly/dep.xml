@@ -15,8 +15,10 @@
 				<include>consultaRegistroTelematicoWebConfig.properties</include>
 			</includes>
 		</fileSet>
+		<!--[Dipucr-Manu Ticket #357] - ALSIGM3 Hacer que todos los módulos de sigem usen las imágenes del tramitador-->
 		<fileSet>
-			<directory>../SIGEM_ConsultaRegistroTelematicoWeb/src/main/resources/SIGEM_ConsultaRegistroTelematicoWeb</directory>
+			<directory>../SIGEM_Tramitacion_Modules/SIGEM_TramitacionWeb/src/main/resources/SIGEM_TramitacionWeb</directory>
+			<!--<directory>../SIGEM_ConsultaRegistroTelematicoWeb/src/main/resources/SIGEM_ConsultaRegistroTelematicoWeb</directory>-->
 			<outputDirectory>/SIGEM_ConsultaRegistroTelematicoWeb</outputDirectory>
 			<includes>
 				<include>skin*/</include>

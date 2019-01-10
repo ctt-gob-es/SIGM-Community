@@ -7,6 +7,8 @@
 
 package es.dipucr.webempleado.services.trienios;
 
+import es.dipucr.webempleado.services.WSEmpleadoProperties;
+
 public class CumplimientoTrieniosServiceServiceLocator extends org.apache.axis.client.Service implements es.dipucr.webempleado.services.trienios.CumplimientoTrieniosServiceService {
 
     public CumplimientoTrieniosServiceServiceLocator() {
@@ -22,7 +24,7 @@ public class CumplimientoTrieniosServiceServiceLocator extends org.apache.axis.c
     }
 
     // Use to get a proxy class for CumplimientoTrieniosService
-    private java.lang.String CumplimientoTrieniosService_address = "http://10.12.200.151:8090/WebEmpleadoSW/services/CumplimientoTrieniosService";
+    private java.lang.String CumplimientoTrieniosService_address = WSEmpleadoProperties.getURL() + "CumplimientoTrieniosService";
 
     public java.lang.String getCumplimientoTrieniosServiceAddress() {
         return CumplimientoTrieniosService_address;

@@ -48,8 +48,9 @@ public class DipucrGeneraPropuestaPlanComarcasDeprimdasRule extends DipucrAutoGe
 	
 	@SuppressWarnings("rawtypes")
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
-		try
-    	{
+		OpenOfficeHelper ooHelper = null;
+		
+		try {
 			//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
@@ -59,7 +60,6 @@ public class DipucrGeneraPropuestaPlanComarcasDeprimdasRule extends DipucrAutoGe
 	        //----------------------------------------------------------------------------------------------
 	        
 	        Object connectorSession = null;
-	    	OpenOfficeHelper ooHelper = null;
 	    	
 	        //Obtiene el expediente
 	        String numexp = rulectx.getNumExp();
@@ -126,7 +126,7 @@ public class DipucrGeneraPropuestaPlanComarcasDeprimdasRule extends DipucrAutoGe
     		if(iteratorDoc.hasNext()){
     			String infoPagBases = ((IItem)iteratorDoc.next()).getString("INFOPAG");
 	        	File fileBases = DocumentosUtil.getFile(cct, infoPagBases, null, null);
-	        	DipucrCommonFunctions.Concatena(xComponent, "file://" + fileBases.getPath(), ooHelper);
+	        	DipucrCommonFunctions.concatena(xComponent, "file://" + fileBases.getPath());
 	        	fileBases.delete();
     		}
     		
@@ -151,7 +151,7 @@ public class DipucrGeneraPropuestaPlanComarcasDeprimdasRule extends DipucrAutoGe
     		if(iteratorDoc.hasNext()){
     			String infoPagAnexos = ((IItem)iteratorDoc.next()).getString("INFOPAG");
 	        	File fileAnexos = DocumentosUtil.getFile(cct, infoPagAnexos, null, null);
-	        	DipucrCommonFunctions.Concatena(xComponent, "file://" + fileAnexos.getPath(), ooHelper);
+	        	DipucrCommonFunctions.concatena(xComponent, "file://" + fileAnexos.getPath());
 	        	fileAnexos.delete();
     		}
 			
@@ -164,18 +164,18 @@ public class DipucrGeneraPropuestaPlanComarcasDeprimdasRule extends DipucrAutoGe
     		genDocAPI.setDocument(connectorSession, documentId, docref, in, (int)(fileOut.length()), mime);
 
     		cct.deleteSsVariable("NOMBRE_TRAMITE");
-    		if(ooHelper!= null) ooHelper.dispose();
     		
 	        return new Boolean(true);
-        }
-    	catch(Exception e) 
-        {
-        	if (e instanceof ISPACRuleException)
-        	{
+        } catch(Exception e)  {
+        	if (e instanceof ISPACRuleException) {
 			    throw new ISPACRuleException(e);
         	}
         	throw new ISPACRuleException("No se ha podido generar el documento.",e);
-        }
+        } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
 	}
 	
 	public void setSsVariables(IClientContext cct, IRuleContext rulectx) {

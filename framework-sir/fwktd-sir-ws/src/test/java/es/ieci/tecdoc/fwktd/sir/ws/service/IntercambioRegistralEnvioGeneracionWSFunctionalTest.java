@@ -42,7 +42,6 @@ import es.ieci.tecdoc.fwktd.util.date.DateUtils;
  * 
  */
 @ContextConfiguration( {
-		"classpath*:/beans/fwktd-sir-api-applicationContext.xml",
 		"/beans/fwktd-sir-ws-test-beans.xml" })
 public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		AbstractWSTest {
@@ -52,16 +51,16 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 	private static final ThreadLocal<String> IDENTIFICADOR_ASIENTO_REGISTRAL = new ThreadLocal<String>();
 
 	// sigem
-	protected static final String CODIGO_ENTIDAD_REGISTRAL_ORIGEN = "O00002062";
-	protected static final String DESCRIPCION_ENTIDAD_REGISTRAL_ORIGEN = "REGISTRO GENERAL DEL AYUNTAMIENTO DE COLINDRES";
-	protected static final String CODIGO_UNIDAD_TRAMITACION_ORIGEN = "L01390232";
-	protected static final String DESCRIPCION_UNIDAD_TRAMITACION_ORIGEN = "Ayuntamiento de Colindres";
+	protected static final String CODIGO_ENTIDAD_REGISTRAL_ORIGEN = "O00000250";
+	protected static final String DESCRIPCION_ENTIDAD_REGISTRAL_ORIGEN = "REGISTRO GENERAL DEL MINISTERIO DE SANIDAD, SERVICIOS SOCIALES E IGUALDAD";
+	protected static final String CODIGO_UNIDAD_TRAMITACION_ORIGEN = "E04921901";
+	protected static final String DESCRIPCION_UNIDAD_TRAMITACION_ORIGEN = "MINISTERIO DE SANIDAD, SERVICIOS SOCIALES E IGUALDAD";
 
 	// MINISTERIO
-	protected static final String CODIGO_ENTIDAD_REGISTRAL_DESTINO = "O00001223";
-	protected static final String DESCRIPCION_ENTIDAD_REGISTRAL_DESTINO = "MUTUALIDAD GENERAL DE FUNCIONARIOS CIVILES DEL ESTADO (MUFACE)";
-	protected static final String CODIGO_UNIDAD_TRAMITACION_DESTINO = "E00106103";
-	protected static final String DESCRIPCION_UNIDAD_TRAMITACION_DESTINO = "MUTUALIDAD GENERAL DE FUNCIONARIOS CIVILES DEL ESTADO (MUFACE)";
+	protected static final String CODIGO_ENTIDAD_REGISTRAL_DESTINO = "O00000322";
+	protected static final String DESCRIPCION_ENTIDAD_REGISTRAL_DESTINO = "REG. ADMINISTRACIÓN GENERAL DEL ESTADO";
+	protected static final String CODIGO_UNIDAD_TRAMITACION_DESTINO = "EA0000000";
+	protected static final String DESCRIPCION_UNIDAD_TRAMITACION_DESTINO = "ADMINISTRACIÓN GENERAL DEL ESTADO";
 
 	// SIGEM
 	protected static final String CODIGO_ENTIDAD_REGISTRAL_INICIAL = CODIGO_ENTIDAD_REGISTRAL_ORIGEN;
@@ -78,7 +77,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 	public void testEnviarGenerarAsientosRegistralesFuncional() {
 		logger.info("Enviando asiento registral...");
 
-		for (int i = 1; i <= 63; i++) {
+		for (int i = 46; i <= 46; i++) {
 			try {
 				String methodName = "createAsientoRegistralFormParaTest" + i;
 				Method m = this.getClass().getDeclaredMethod(methodName, null);
@@ -159,7 +158,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 	public void testEnviarGenerarAsientoRegistralFuncional() {
 		logger.info("Enviando asiento registral...");
 		
-		int i = 9;
+		int i =43;
 		try {
 			String methodName = "createAsientoRegistralFormParaTest" + i;
 			Method m = this.getClass().getDeclaredMethod(methodName, null);
@@ -246,7 +245,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		asientoForm.setObservacionesApunte(null);
 		asientoForm.setExpone(null);
 		asientoForm.setSolicita(null);
-
+		asientoForm.setResumen("SIR-GE-PR-001");
 		return asientoForm;
 	}
 
@@ -279,6 +278,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 
 		setInteresadoFisicoConRepresentanteFisico(asientoForm);
 		setDefaultAnexo(asientoForm);
+		asientoForm.setResumen("SIR-GE-PR-002");
 		return asientoForm;
 	}
 
@@ -308,7 +308,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-		
+		asientoForm.setResumen("SIR-GE-PR-003");
 		asientoForm.setCodigoAsunto(null);
 		return asientoForm;
 	}
@@ -341,6 +341,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoFisicoConRepresentanteFisicoCaracteresEspeciales(asientoForm);
 		setDefaultAnexoCaracteresEspeciales(asientoForm);
+		asientoForm.setResumen("SIR-GE-PR-004");
 		return asientoForm;
 	}
 
@@ -369,7 +370,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-
+		asientoForm.setResumen("SIR-GE-PR-005");
 		
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(null);
@@ -412,7 +413,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-
+		asientoForm.setResumen("SIR-GE-PR-006");
 		
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(null);
@@ -452,7 +453,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-
+		asientoForm.setResumen("SIR-GE-PR-007");
 		
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(TestUtils.getTimestamp());
@@ -491,7 +492,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-
+		asientoForm.setResumen("SIR-GE-PR-008");
 		
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(null);
@@ -531,7 +532,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-
+		asientoForm.setResumen("SIR-GE-PR-009");
 		
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(null);
@@ -587,6 +588,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		asientoForm.setObservacionesApunte(null);
 		asientoForm.setExpone(null);
 		asientoForm.setSolicita(null);
+		asientoForm.setResumen("SIR-GE-PR-010");
 		return asientoForm;
 	}
 
@@ -630,6 +632,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		asientoForm.setObservacionesApunte(null);
 		asientoForm.setExpone(null);
 		asientoForm.setSolicita(null);
+		asientoForm.setResumen("SIR-GE-PR-011");
 		return asientoForm;
 	}
 
@@ -680,6 +683,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		asientoForm.setObservacionesApunte(null);
 		asientoForm.setExpone(null);
 		asientoForm.setSolicita(null);
+		asientoForm.setResumen("SIR-GE-PR-012");
 		return asientoForm;
 	}
 
@@ -722,7 +726,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		interesado.setDocumentoIdentificacionInteresado("00000000T");
 		interesado.setNombreInteresado("Isidoro");
 		interesado.setPrimerApellidoInteresado("Álvarez");
-		
+		asientoForm.setResumen("SIR-GE-PR-013");
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.setCodigoAsunto(null);   
 		asientoForm.setReferenciaExterna(null);
@@ -776,7 +780,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		interesado.setDocumentoIdentificacionInteresado("Z0996302Q");
 		interesado.setNombreInteresado("Isidoro");
 		interesado.setPrimerApellidoInteresado("Álvarez");
-		
+		asientoForm.setResumen("SIR-GE-PR-014");
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.setCodigoAsunto(null);   
 		asientoForm.setReferenciaExterna(null);
@@ -830,7 +834,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		interesado.setDocumentoIdentificacionInteresado("AB123456");
 		interesado.setNombreInteresado("Isidoro");
 		interesado.setPrimerApellidoInteresado("Álvarez");
-		
+		asientoForm.setResumen("SIR-GE-PR-015");
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.setCodigoAsunto(null);   
 		asientoForm.setReferenciaExterna(null);
@@ -885,7 +889,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		interesado.setDocumentoIdentificacionInteresado("V123459729-O");
 		interesado.setNombreInteresado("Isidoro");
 		interesado.setPrimerApellidoInteresado("Álvarez");
-		
+		asientoForm.setResumen("SIR-GE-PR-016");
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.setCodigoAsunto(null);   
 		asientoForm.setReferenciaExterna(null);
@@ -931,7 +935,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		
 		InteresadoFormDTO interesado=asientoForm.getInteresados().get(0);
 		interesado.setRazonSocialInteresado("IECISA");
-		
+		asientoForm.setResumen("SIR-GE-PR-017");
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.setCodigoAsunto(null);   
 		asientoForm.setReferenciaExterna(null);
@@ -982,7 +986,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		interesado.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacionEnum.CIF.getValue());
 		interesado.setDocumentoIdentificacionInteresado("F9037286C");
 		interesado.setRazonSocialInteresado("IECISA");
-		
+		asientoForm.setResumen("SIR-GE-PR-018");
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.setCodigoAsunto(null);   
 		asientoForm.setReferenciaExterna(null);
@@ -1051,7 +1055,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		interesado.setTelefonoRepresentante(null);
 		interesado.setDireccionElectronicaHabilitadaRepresentante(null);
 		interesado.setCanalPreferenteComunicacionRepresentante(null);
-		
+		asientoForm.setResumen("SIR-GE-PR-019");
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.setCodigoAsunto(null);   
 		asientoForm.setReferenciaExterna(null);
@@ -1113,7 +1117,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		interesado.setTelefonoRepresentante(null);
 		interesado.setDireccionElectronicaHabilitadaRepresentante(null);
 		interesado.setCanalPreferenteComunicacionRepresentante(null);
-		
+		asientoForm.setResumen("SIR-GE-PR-020");
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.setCodigoAsunto(null);   
 		asientoForm.setReferenciaExterna(null);
@@ -1163,7 +1167,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		
 		vaciarRepresentantesInteresado(asientoForm);
 		setInteresadoFisicoSinRepresentante(asientoForm);
-		
+		asientoForm.setResumen("SIR-GE-PR-021");
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.setCodigoAsunto(null);   
 		asientoForm.setReferenciaExterna(null);
@@ -1214,7 +1218,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoFisicoSinRepresentante(asientoForm);
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
-
+		asientoForm.setResumen("SIR-GE-PR-022");
 		interesado.setCodigoPostalInteresado(null);
 		interesado.setCorreoElectronicoInteresado(null);
 		interesado.setTelefonoInteresado(null);
@@ -1253,6 +1257,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoFisicoSinRepresentante(asientoForm);
+		asientoForm.setResumen("SIR-GE-PR-023");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCodigoMunicipioInteresado(null);
@@ -1295,6 +1300,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoFisicoSinRepresentante(asientoForm);
+		asientoForm.setResumen("SIR-GE-PR-024");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCodigoMunicipioInteresado(null);
@@ -1335,6 +1341,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoFisicoSinRepresentante(asientoForm);
+		asientoForm.setResumen("SIR-GE-PR-025");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCodigoMunicipioInteresado(null);
@@ -1381,6 +1388,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoJuridicoSinRepresentante(asientoForm);
+		asientoForm.setResumen("SIR-GE-PR-026");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCodigoMunicipioInteresado(null);
@@ -1423,6 +1431,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoJuridicoSinRepresentante(asientoForm);
+		asientoForm.setResumen("SIR-GE-PR-027");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCodigoPostalInteresado(null);
@@ -1462,6 +1471,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoJuridicoSinRepresentante(asientoForm);
+		asientoForm.setResumen("SIR-GE-PR-028");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCodigoMunicipioInteresado(null);
@@ -1503,6 +1513,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoJuridicoSinRepresentante(asientoForm);
+		asientoForm.setResumen("SIR-GE-PR-029");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCodigoMunicipioInteresado(null);
@@ -1543,6 +1554,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoJuridicoSinRepresentante(asientoForm);
+		asientoForm.setResumen("SIR-GE-PR-030");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCodigoMunicipioInteresado(null);
@@ -1595,7 +1607,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoFisicoConRepresentanteFisico(asientoForm);
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
-
+		asientoForm.setResumen("SIR-GE-PR-031");
 		interesado.setCorreoElectronicoRepresentante(null);
 		interesado.setCodigoPostalRepresentante(null);
 		interesado.setTelefonoRepresentante(null);
@@ -1640,7 +1652,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		setInteresadoFisicoConRepresentanteFisico(asientoForm);
 		//Con este tengo dudas, lo explica un poco raro...
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
-		
+		asientoForm.setResumen("SIR-GE-PR-032");
 		interesado.setCorreoElectronicoInteresado(null);
 		interesado.setCodigoPostalInteresado(null);
 		interesado.setTelefonoInteresado(null);
@@ -1696,7 +1708,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoFisicoConRepresentanteFisico(asientoForm);
-
+		asientoForm.setResumen("SIR-GE-PR-033");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacionEnum.DIRECCION_ELECTRONICA_HABILITADA.getValue());
@@ -1741,7 +1753,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoFisicoConRepresentanteFisico(asientoForm);
-
+		asientoForm.setResumen("SIR-GE-PR-034");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacionEnum.COMPARECENCIA_ELECTRONICA.getValue());
@@ -1793,6 +1805,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		interesado.setCodigoMunicipioRepresentante(null);
 		interesado.setCorreoElectronicoRepresentante(null);
 		interesado.setTelefonoRepresentante(null);
+		asientoForm.setResumen("SIR-GE-PR-035");
 		return asientoForm;
 	}
 
@@ -1831,7 +1844,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoJuridicoConRepresentanteJuridico(asientoForm);
-
+		asientoForm.setResumen("SIR-GE-PR-036");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCorreoElectronicoRepresentante(null);
@@ -1873,7 +1886,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoJuridicoConRepresentanteJuridico(asientoForm);
-
+		asientoForm.setResumen("SIR-GE-PR-037");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCodigoPaisRepresentante("320");
@@ -1915,7 +1928,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoJuridicoConRepresentanteJuridico(asientoForm);
-
+		asientoForm.setResumen("SIR-GE-PR-038");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 
 		interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacionEnum.DIRECCION_ELECTRONICA_HABILITADA.getValue());
@@ -1959,6 +1972,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		setInteresadoJuridicoConRepresentanteJuridico(asientoForm);
+		asientoForm.setResumen("SIR-GE-PR-039");
 		InteresadoFormDTO interesado = asientoForm.getInteresados().get(0);
 		interesado.setCanalPreferenteComunicacionRepresentante(CanalNotificacionEnum.COMPARECENCIA_ELECTRONICA.getValue());
 		interesado.setCodigoProvinciaRepresentante(null);
@@ -2007,6 +2021,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		interesado.setCodigoPaisRepresentante(null);
 		interesado.setCodigoPostalRepresentante(null);
 		interesado.setDireccionRepresentante(null);
+		asientoForm.setResumen("SIR-GE-PR-040");
 		return asientoForm;
 	}
 
@@ -2046,6 +2061,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		interesado.setCodigoProvinciaInteresado(null);
 		interesado.setTelefonoInteresado(null);
 		interesado.setCorreoElectronicoInteresado(null);
+		asientoForm.setResumen("SIR-GE-PR-041");
 		return asientoForm;
 	}
 
@@ -2071,6 +2087,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
+		asientoForm.setResumen("SIR-GE-PR-042");
 		asientoForm.getAnexos().clear();
 		return asientoForm;
 	}
@@ -2115,6 +2132,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
+		asientoForm.setResumen("SIR-GE-PR-043");
 		asientoForm.getAnexos().clear();
 		AnexoFormDTO anexo = new AnexoFormDTO();
 		anexo.setNombreFichero("FicheroIntercambio.txt");
@@ -2155,6 +2173,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
+		asientoForm.setResumen("SIR-GE-PR-044");
 		return asientoForm;
 	}
 
@@ -2184,6 +2203,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
+		asientoForm.setResumen("SIR-GE-PR-045");
 		return asientoForm;
 	}
 
@@ -2224,6 +2244,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
+		asientoForm.setResumen("SIR-GE-PR-046");
 		asientoForm.getAnexos().clear();
 		AnexoFormDTO anexo = new AnexoFormDTO();
 		anexo.setNombreFichero("FicheroIntercambio.txt");
@@ -2267,6 +2288,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
+		asientoForm.setResumen("SIR-GE-PR-047");
 		asientoForm.getAnexos().clear();
 		AnexoFormDTO anexo = new AnexoFormDTO();
 		anexo.setNombreFichero("FicheroIntercambio.txt");
@@ -2305,6 +2327,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
+		asientoForm.setResumen("SIR-GE-PR-048");
 		asientoForm.getAnexos().clear();
 		AnexoFormDTO anexo = new AnexoFormDTO();
 		anexo.setNombreFichero("FicheroIntercambio.txt");
@@ -2340,6 +2363,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
+		asientoForm.setResumen("SIR-GE-PR-049");
 		asientoForm.getAnexos().clear();
 		AnexoFormDTO anexo = new AnexoFormDTO();
 		anexo.setNombreFichero("FicheroIntercambio.txt");
@@ -2373,6 +2397,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
+		asientoForm.setResumen("SIR-GE-PR-050");
 		//El asiento por defecto ya crea Expone y Solicita
 		return asientoForm;
 	}
@@ -2400,6 +2425,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
+		asientoForm.setResumen("SIR-GE-PR-051");
 		asientoForm.setTipoRegistro("0");
 		return asientoForm;
 	}
@@ -2427,6 +2453,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
+		asientoForm.setResumen("SIR-GE-PR-052");
 		asientoForm.setTipoRegistro("1");
 		return asientoForm;
 	}
@@ -2461,7 +2488,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-		
+		asientoForm.setResumen("SIR-GE-PR-053");
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.getInteresados().clear();
@@ -2512,7 +2539,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-		
+		asientoForm.setResumen("SIR-GE-PR-054");
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.getInteresados().clear();
@@ -2562,7 +2589,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-		
+		asientoForm.setResumen("SIR-GE-PR-055");
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.getInteresados().clear();
@@ -2604,7 +2631,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-		
+		asientoForm.setResumen("SIR-GE-PR-056");
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.getInteresados().clear();
@@ -2647,7 +2674,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-		
+		asientoForm.setResumen("SIR-GE-PR-057");
 		asientoForm.setTipoTransporte(TipoTransporteEnum.SERVICIO_MENSAJEROS.getValue());
 		
 		// Seteamos a null los innecesarios desde la aplicacion de registro
@@ -2691,7 +2718,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-		
+		asientoForm.setResumen("SIR-GE-PR-058");
 		asientoForm.setTipoTransporte(TipoTransporteEnum.CORREO_POSTAL.getValue());
 		
 		// Seteamos a null los innecesarios desde la aplicacion de registro
@@ -2735,7 +2762,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-		
+		asientoForm.setResumen("SIR-GE-PR-059");
 		asientoForm.setTipoTransporte(TipoTransporteEnum.CORREO_POSTAL_CERTIFICADO.getValue());
 		
 		// Seteamos a null los innecesarios desde la aplicacion de registro
@@ -2779,7 +2806,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_UNIDAD_TRAMITACION_DESTINO,
 				CODIGO_ENTIDAD_REGISTRAL_INICIAL,
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
-		
+		asientoForm.setResumen("SIR-GE-PR-060");
 		asientoForm.setTipoTransporte(TipoTransporteEnum.BUROFAX.getValue());
 		
 		// Seteamos a null los innecesarios desde la aplicacion de registro
@@ -2822,7 +2849,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		
 		asientoForm.setTipoTransporte(TipoTransporteEnum.EN_MANO.getValue());
-		
+		asientoForm.setResumen("SIR-GE-PR-061");
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.getInteresados().clear();
@@ -2863,7 +2890,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		
 		asientoForm.setTipoTransporte(TipoTransporteEnum.FAX.getValue());
-		
+		asientoForm.setResumen("SIR-GE-PR-062");
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.getInteresados().clear();
@@ -2904,7 +2931,7 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 				DESCRIPCION_ENTIDAD_REGISTRAL_INICIAL);
 		
 		asientoForm.setTipoTransporte(TipoTransporteEnum.OTROS.getValue());
-		
+		asientoForm.setResumen("SIR-GE-PR-063");
 		// Seteamos a null los innecesarios desde la aplicacion de registro
 		asientoForm.setTimestampRegistro(null);
 		asientoForm.getInteresados().clear();
@@ -3022,9 +3049,9 @@ public class IntercambioRegistralEnvioGeneracionWSFunctionalTest extends
 		interesado.setTipoDocumentoIdentificacionInteresado(TipoDocumentoIdentificacionEnum.NIF.getValue());
 		interesado.setDocumentoIdentificacionInteresado("11111111A");
 		interesado.setRazonSocialInteresado(null);
-		interesado.setNombreInteresado("Antonio");
+		interesado.setNombreInteresado("Casimiro");
 		interesado.setPrimerApellidoInteresado("Alonso");
-		interesado.setSegundoApellidoInteresado("Mendiburu");
+		interesado.setSegundoApellidoInteresado("Segundo");
 		interesado.setCodigoPaisInteresado(null);
 		interesado.setCodigoProvinciaInteresado(null);
 		interesado.setCodigoMunicipioInteresado(null);

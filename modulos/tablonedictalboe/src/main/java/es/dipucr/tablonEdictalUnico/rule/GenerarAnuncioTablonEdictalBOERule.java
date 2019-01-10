@@ -35,7 +35,7 @@ public class GenerarAnuncioTablonEdictalBOERule implements IRule{
 			if(fileXML!=null){
 				//Guarda el resultado en gestor documental Notificaciones
 				int tpdocXML = DocumentosUtil.getIdTipoDocByCodigo(rulectx.getClientContext(), "AnunTablonEdiBOE");
-				String nombreTipoDocXML = DocumentosUtil.getNombreTipoDocByCod(rulectx, "AnunTablonEdiBOE");
+				String nombreTipoDocXML = DocumentosUtil.getNombreTipoDocByCod(rulectx.getClientContext(), "AnunTablonEdiBOE");
 				IItem docXML = DocumentosUtil.generaYAnexaDocumento(rulectx, rulectx.getTaskId(), tpdocXML, nombreTipoDocXML, fileXML, "xml");
 				if(fileXML.exists()){
 					fileXML.delete();

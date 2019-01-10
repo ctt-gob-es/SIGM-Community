@@ -5,6 +5,7 @@
 				 titleKey='formatter.exprel.numExp' 
 				 fieldType='LINK' 
 				 columnClass='width20percent'
+				 sortable='true'
 				 comparator='ieci.tdw.ispac.ispacweb.comparators.NumexpComparator'
 				 media="html"
 				 />
@@ -12,16 +13,28 @@
 	<propertyfmt type="BeanPropertySimpleFmt" 
 				 property='EXP:NUMEXP' 
 				 titleKey='formatter.exprel.numExp' 
-				 fieldType='LIST' 
+				 fieldType='LINK' 
 				 columnClass='width20percent'
 				 media='csv excel xml pdf'
 				 />			 
-				 
+				
+	<propertyfmt type="BeanPropertyDateFmt" 
+				 property='EXP:FAPERTURA'
+				 readOnly='false'
+				 format='dd/MM/yyyy' 
+				 titleKey='formatter.exprel.fapertura' 
+				 fieldType='LIST' 
+				 columnClass="width10percent"
+				 sortable='true'
+				 comparator='ieci.tdw.ispac.ispacweb.comparators.DateComparator'
+				 />
+				  
 	<propertyfmt type="BeanPropertySimpleFmt" 
 				 property='EXP:ASUNTO' 
 				 titleKey='formatter.exprel.asunto' 
 				 fieldType='LIST' 
-				 columnClass='width25percent'
+				 columnClass='width30percent'
+				 sortable='true'
 				 />
 				 
 	<propertyfmt type="BeanPropertySimpleFmt" 
@@ -29,13 +42,15 @@
 				 titleKey='formatter.exprel.interesado' 
 				 fieldType='LIST' 
 				 columnClass='width30percent'
+				 sortable='true'
 				 />
 	
 	<propertyfmt type="BeanPropertySimpleFmt" 
 				 property='EXP_REL:RELACION' 
 				 titleKey='formatter.exprel.relacion' 
 				 fieldType='LIST' 
-				 columnClass='width20percent'
+				 columnClass='width15percent'
+				 sortable='true'
 				 />
 				 
 	<propertyfmt type="BeanPropertySimpleFmt" 

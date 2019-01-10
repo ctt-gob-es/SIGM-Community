@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.avisos.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ReglasUtil;
 import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
@@ -293,6 +293,11 @@ public class DipucrFaceRevisarFacturaRule implements IRule
 					sbQuery.append("WHERE NUMEXP = '");
 					sbQuery.append(numexp);
 					sbQuery.append("' AND FECHA_CIERRE IS NOT NULL");
+					//INICIO [dipucr-Felipe #491]
+					sbQuery.append(" AND ID_TRAM_CTL NOT IN (SELECT ID FROM SPAC_CT_TRAMITES "
+							+ "WHERE COD_TRAM = '" + DipucrFaceFacturasUtil.COD_TRAM_REVISION3 
+							+ "' OR COD_TRAM = '" + DipucrFaceFacturasUtil.COD_TRAM_FIRMA + "')");
+					//FIN [dipucr-Felipe #491]
 					sbQuery.append(" ORDER BY FECHA_INICIO DESC");
 					collection = entitiesAPI.queryEntities
 					(

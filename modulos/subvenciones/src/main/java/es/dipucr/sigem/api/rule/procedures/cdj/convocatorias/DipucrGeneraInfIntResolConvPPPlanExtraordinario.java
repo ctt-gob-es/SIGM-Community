@@ -4,21 +4,23 @@ package es.dipucr.sigem.api.rule.procedures.cdj.convocatorias;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
-import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
+import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.util.Calendar;
-
 import es.dipucr.sigem.api.rule.common.documento.DipucrAutoGeneraDocIniTramiteRule;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
-import es.dipucr.sigem.api.rule.procedures.Constants;
+import es.dipucr.sigem.api.rule.procedures.ConstantesSubvenciones;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrGeneraInfIntResolConvPPPlanExtraordinario extends DipucrAutoGeneraDocIniTramiteRule {
 
@@ -49,7 +51,7 @@ public class DipucrGeneraInfIntResolConvPPPlanExtraordinario extends DipucrAutoG
         String numexp = "";
         try {
             String anio = "" + Calendar.getInstance().get(Calendar.YEAR);
-            cct.setSsVariable("ANIO", anio);
+            cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO, anio);
             numexp = rulectx.getNumExp();
 
             String textoPrimero = "";
@@ -58,53 +60,26 @@ public class DipucrGeneraInfIntResolConvPPPlanExtraordinario extends DipucrAutoG
             double importeTotalObras = 0;
             double importeTotalAccesibilidad = 0;
 
-            // Obtenemos los expedientes relacionados y aprobados, ordenados por
-            // ayuntamiento
-            IItemCollection expRelacionadosCollection = cct.getAPI().getEntitiesAPI()
-                    .queryEntities(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, "WHERE NUMEXP_PADRE='" + rulectx.getNumExp() + "'");
-            Iterator<?> expRelacionadosIterator = expRelacionadosCollection.iterator();
-            String query = "";
-            while (expRelacionadosIterator.hasNext()) {
-                String numexpHijo = ((IItem) expRelacionadosIterator.next()).getString("NUMEXP_HIJO");
-                query += "'" + numexpHijo + "',";
-            }
+            List<String> expedientesRelacionados = ExpedientesRelacionadosUtil.getExpedientesRelacionadosHijosByEstadoAdm(rulectx, ExpedientesUtil.EstadoADM.RS, ExpedientesUtil.IDENTIDADTITULAR);
 
-            if (query.length() > 0) {
-                query = query.substring(0, query.length() - 1);
-            }
-            IItemCollection expedientesCollection = cct
-                    .getAPI()
-                    .getEntitiesAPI()
-                    .queryEntities(Constants.TABLASBBDD.SPAC_EXPEDIENTES,
-                            "WHERE NUMEXP IN (" + query + ") AND ESTADOADM='RS' ORDER BY IDENTIDADTITULAR");
-            Iterator<?> expedientesIterator = expedientesCollection.iterator();
-
-            while (expedientesIterator.hasNext()) {
-                IItem expediente = (IItem) expedientesIterator.next();
-                Iterator<?> resolucionIterator = cct.getAPI().getEntitiesAPI().getEntities("DPCR_RESOL_SOL_CONV_SUB", expediente.getString("NUMEXP"))
-                        .iterator();
+            for (String numexpHijo : expedientesRelacionados) {
+                Iterator<?> resolucionIterator = cct.getAPI().getEntitiesAPI().getEntities(ConstantesSubvenciones.DatosResolucion.NOMBRE_TABLA, numexpHijo).iterator();
+                
                 if (resolucionIterator.hasNext()) {
                     IItem resolucion = (IItem) resolucionIterator.next();
-                    try {
-                        Iterator<?> tipoExpIterator = cct.getAPI().getEntitiesAPI()
-                                .getEntities("DPCR_PP_TIPO_CONV_PLAN_OBRAS", expediente.getString("NUMEXP")).iterator();
-
-                        if (tipoExpIterator.hasNext()) {
-                            IItem tipoExp = (IItem) tipoExpIterator.next();
-                            String tipo = tipoExp.getString("TIPO");
-                            if ("1".equals(tipo)) {
-                                importeTotalObras += Double.parseDouble(resolucion.getString("IMPORTE") == null ? "0" : resolucion
-                                        .getString("IMPORTE"));
-                            } else {
-                                importeTotalAccesibilidad += Double.parseDouble(resolucion.getString("IMPORTE") == null ? "0" : resolucion
-                                        .getString("IMPORTE"));
-                            }
+                    Iterator<?> tipoExpIterator = cct.getAPI().getEntitiesAPI().getEntities("DPCR_PP_TIPO_CONV_PLAN_OBRAS", numexpHijo).iterator();
+                    
+                    if (tipoExpIterator.hasNext()) {
+                        IItem tipoExp = (IItem) tipoExpIterator.next();
+                        String tipo = SubvencionesUtils.getString(tipoExp, "TIPO");
+                        if ("1".equals(tipo)) {
+                            importeTotalObras += SubvencionesUtils.getDouble(resolucion, "IMPORTE");
+                        } else {
+                            importeTotalAccesibilidad += SubvencionesUtils.getDouble(resolucion, "IMPORTE");
                         }
-                    } catch (ISPACException e) {
-                        LOGGER.error(ConstantesString.LOGGER_ERROR + " al recuperar el importe de la solicitud: " + expediente.getString("NUMEXP") + ", " + e.getMessage(), e);
                     }
                 } else {
-                    cct.getAPI().getEntitiesAPI().createEntity("DPCR_RESOL_SOL_CONV_SUB", expediente.getString("NUMEXP"));
+                    cct.getAPI().getEntitiesAPI().createEntity(ConstantesSubvenciones.DatosResolucion.NOMBRE_TABLA, numexpHijo);
                 }
             }
 
@@ -129,7 +104,7 @@ public class DipucrGeneraInfIntResolConvPPPlanExtraordinario extends DipucrAutoG
 
     public void deleteSsVariables(IClientContext cct) {
         try {
-            cct.deleteSsVariable("ANIO");
+            cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO);
             cct.deleteSsVariable("textoPrimero");
             cct.deleteSsVariable("textoSegundo");
         } catch (ISPACException e) {

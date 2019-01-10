@@ -290,7 +290,7 @@ public class DipucrAvisoFirmanteRule implements IRule {
 			//Campo Asunto del expediente
 			 IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 		      IItem expediente = ExpedientesUtil.getExpediente(ctx, document.getString("NUMEXP"));
-		      StringBuffer asunto = new StringBuffer("");
+		      StringBuilder asunto = new StringBuilder("");
 		      
 		      if (expediente != null) {
 		    	  asunto.append(expediente.getString("ASUNTO"));

@@ -99,8 +99,7 @@ public class TerceroDaoImpl extends
 	 * {@inheritDoc}
 	 * @see es.ieci.tecdoc.isicres.terceros.business.dao.TerceroDao#findTerceroJuridicoByDocumentNumber(java.lang.String, int)
 	 */
-	public List<TerceroValidadoFisicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber,
-			int typeDoc) {
+	public List<TerceroValidadoJuridicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber, int typeDoc) {
 		
 		return terceroJuridicoDao.findTerceroJuridicoByDocumentNumber(phisicalNumber, typeDoc);
 	}
@@ -109,10 +108,27 @@ public class TerceroDaoImpl extends
 	 * {@inheritDoc}
 	 * @see es.ieci.tecdoc.isicres.terceros.business.dao.TerceroDao#findTerceroFisicoByDocumentNumber(java.lang.String, int)
 	 */
-	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber,
-			int typeDoc) {
+	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber, int typeDoc) {
 		
 		return terceroFisicoDao.findTerceroFisicoByDocumentNumber(phisicalNumber, typeDoc);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.isicres.terceros.business.dao.TerceroDao#findTerceroJuridicoByDocumentNumber(java.lang.String, int)
+	 */
+	public List<TerceroValidadoJuridicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber) {
+		
+		return terceroJuridicoDao.findTerceroJuridicoByDocumentNumber(phisicalNumber);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.isicres.terceros.business.dao.TerceroDao#findTerceroFisicoByDocumentNumber(java.lang.String, int)
+	 */
+	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber) {
+		
+		return terceroFisicoDao.findTerceroFisicoByDocumentNumber(phisicalNumber);
 	}
 
 	public TerceroFisicoDao getTerceroFisicoDao() {

@@ -56,7 +56,7 @@ public class NotifyDocumentsAction extends BaseAction {
 		String[] multibox = defaultForm.getMultibox();
 
 		if (ArrayUtils.isEmpty(multibox)) {
-			logger.warn("No se ha seleccionado ningún documento");
+			LOGGER.warn("No se ha seleccionado ningún documento");
 			throw new ISPACInfo(getResources(request).getMessage(
 					"forms.listdoc.notificarDocumentos.empty"), false);
 		}
@@ -89,7 +89,7 @@ public class NotifyDocumentsAction extends BaseAction {
 				documents_ok.add(new ItemBean(document));
 
 			} catch (ISPACException e) {
-				logger.error(
+				LOGGER.error(
 						"Error al iniciar la notificación del documento:"
 								+ document.getKeyInt() + " - "
 								+ document.getString("NOMBRE") + " ["

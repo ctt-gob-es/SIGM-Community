@@ -40,6 +40,13 @@ public class TipoAsunto {
 	private int forSreg;
 	
 	/**
+	 * Indica si el Tipo de Asunto se distribuirá automáticamente cuando se consolide del registro telemático
+	 * 0 - No Habilitado
+	 * 1 - Habilitado
+	 */
+	private int forDistRT;
+	
+	/**
 	 * Indica si el Tipo de Asunto puede usarse por todas las oficinas de registro
 	 * 0 - No
 	 * 1 - Si
@@ -136,6 +143,18 @@ public class TipoAsunto {
 	 */
 	public void setForSreg(int forSreg) {
 		this.forSreg = forSreg;
+	}
+	/**
+	 * @return
+	 */
+	public int getForDistRT() {
+		return forDistRT;
+	}
+	/**
+	 * @return
+	 */
+	public void setForDistRT(int forDistRT) {
+		this.forDistRT = forDistRT;
 	}
 	/**
 	 * @return
@@ -254,4 +273,5 @@ public class TipoAsunto {
 			this.disableDate = dateFormatter.parse(disableDate);
 		}
 	}
+	
 }

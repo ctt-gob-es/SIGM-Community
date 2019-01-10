@@ -15,6 +15,14 @@
 	<name>ispac-catalog-war</name>
 	<packaging>war</packaging>
 
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/../../../lib</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<!-- IECI dependencies -->

@@ -12,6 +12,9 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+import es.dipucr.sigem.api.rule.common.utils.FasesUtil;
+
 /**
  * [Ticket #990 Teresa] CONTRATACION-SIGEM añadir trámite para almacenar documento de 
  * solicitud de informe técnico en el procedimiento de petición
@@ -37,6 +40,8 @@ public class AnadirDocSolInfTecnIncidenciaContratPCPeticionContratacion extends 
 	        if(itExpRel.hasNext()){
 	        	IItem itemExpRel = itExpRel.next();
 	        	numexpProceContratacion = itemExpRel.getString("NUMEXP_PADRE");
+	        	IItem faseExpContr = FasesUtil.getFase(cct, numexpProceContratacion);
+	        	faseActual = faseExpContr.getInt("ID");;
 	        }
 	        
 	        sqlQueryPart = "WHERE NUMEXP_HIJO='"+numexpProceContratacion+"' AND RELACION='Petición Contrato'";

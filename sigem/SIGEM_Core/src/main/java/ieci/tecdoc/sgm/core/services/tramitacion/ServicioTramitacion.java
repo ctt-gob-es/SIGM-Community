@@ -261,4 +261,36 @@ public interface ServicioTramitacion {
      */
     public boolean setFicheroTemp(String idEntidad, String guid, byte[] data) throws TramitacionException;
 
+
+    /**
+     * [dipucr-Felipe #563]
+     * @param idEntidad
+     * @param entidad
+     * @param query
+     * @return
+     * @throws TramitacionException
+     */
+    public String[] queryEntities(String idEntidad, String entidad, String consulta) throws TramitacionException;
+    
+    /**
+     * [dipucr-Felipe #860 WE#153]
+     * @param idEntidad
+     * @param numexp
+     * @return
+     * @throws TramitacionException
+     */
+	public boolean anularLicenciaRRHH(String idEntidad, String numexp) throws TramitacionException;
+    
+    /**
+     * Añade documentos al trámite de un expediente.
+     * @param numExp Número de expediente.
+     * @param idTramite Identificador del trámite al que anexar los documentos.
+     * @param numReg Número de registro de entrada.
+     * @param fechaReg Fecha de registro de entrada.
+     * @param documentos Lista de documentos asociados al expediente.
+     * @return Cierto si los documentos se han creado correctamente.
+     * @throws TramitacionException Si se produce algún error.
+     */
+    public boolean anexarDocsTramite(String idEntidad, String numExp, int idTramite, String numReg, Date fechaReg, DocumentoExpediente[] documentos) throws TramitacionException;
+
 }

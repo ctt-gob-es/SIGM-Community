@@ -45,6 +45,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
 
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.sellar.action.SellarDocumentos;
 import es.ieci.tecdoc.fwktd.csv.core.vo.InfoDocumentoCSV;
@@ -275,8 +276,7 @@ public class InsertOutputRegistryAction extends RegistryBaseAction {
 	      		document.store(cct);			
 			}
 		} catch (SigemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("ERROR. " + e.getMessage(), e);
 		}
 	      //[Manu # 625] SIGEM CVE Consulta de documentos - Añadir campos para registros de salida
 
@@ -357,9 +357,26 @@ public class InsertOutputRegistryAction extends RegistryBaseAction {
 					IItem document = entitiesAPI.getEntity(SpacEntities.SPAC_DT_DOCUMENTOS,	Integer.parseInt((String)iterator.next()));
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					//[DipuCR-Agustin] #149 registrar salida pdf no odt, indicar INFOPAG_RDE					
-					genDocAPI.getDocument(connectorSession, document.getString("INFOPAG_RDE"), out);
-					String mimetype = genDocAPI.getMimeType(connectorSession, document.getString("INFOPAG_RDE"));
-					documentInfo[i] = new DocumentInfo(String.valueOf(document.getKeyInt()),String.valueOf(document.getKeyInt()) +"."+MimetypeMapping.getExtension(mimetype),out.toByteArray(), document.getDate("FDOC"));        	
+					genDocAPI.getDocument(connectorSession, document.getString(DocumentosUtil.INFOPAG_RDE), out);
+					String mimetype = genDocAPI.getMimeType(connectorSession, document.getString(DocumentosUtil.INFOPAG_RDE));
+					
+					String tipoDocumental = "";
+					try{
+						IItem item = entitiesAPI.getEntity(SpacEntities.SPAC_CT_TPDOC, document.getInt(DocumentosUtil.ID_TPDOC));
+						if(null != item){
+							tipoDocumental = item.getString("TIPO");
+						}
+					} catch (Exception e){
+						logger.error("ERROR. Capturamos todos los errores para que no falle al registrar. " + e.getMessage(), e);
+					}
+					if(StringUtils.isEmpty(tipoDocumental)){
+						tipoDocumental = "TD07 - Notificación.";
+					}
+					
+					String tipoFirma = "TF06 - PAdES.";
+					String csv = document.getString(DocumentosUtil.COD_COTEJO);
+					
+					documentInfo[i] = new DocumentInfo(String.valueOf(document.getKeyInt()),String.valueOf(document.getKeyInt()) +"."+MimetypeMapping.getExtension(mimetype),out.toByteArray(), document.getDate(DocumentosUtil.FDOC), tipoDocumental, tipoFirma, csv);        	
 				}
 			
 			}finally {

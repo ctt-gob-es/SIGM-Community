@@ -12,6 +12,7 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.join.TableJoinFactoryDAO;
+import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.gendoc.converter.DocumentConverter;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
@@ -19,12 +20,14 @@ import ieci.tdw.ispac.ispaclib.utils.DateUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
-import com.ibm.icu.text.SimpleDateFormat;
+import org.apache.cxf.configuration.security.DNConstraintsType;
+
 import com.lowagie.text.pdf.PdfWriter;
 import com.sun.star.lang.XComponent;
 import com.sun.star.text.XTextDocument;
@@ -164,7 +167,7 @@ public class LibroActas
 	public Object generarLibro(IRuleContext rulectx, boolean bLimitarPermisos,
 			String password, int tipoVisualizacion) throws ISPACRuleException {
 		
-		return generarLibroFinal(rulectx, bLimitarPermisos, password);
+		return generarLibroActas(rulectx, bLimitarPermisos, password, PdfWriter.PageModeUseOutlines, false);
 	}
 	
 	/**
@@ -179,7 +182,7 @@ public class LibroActas
 	 */
 	public Object generarDiligencia(IRuleContext rulectx) throws ISPACRuleException {
 		
-		return generarPreviaLibroYDiligencia(rulectx, false, null, PdfWriter.PageModeUseOutlines);
+		return generarLibroActas(rulectx, false, null, PdfWriter.PageModeUseOutlines, true);
 	}
 	
 	/**
@@ -191,8 +194,8 @@ public class LibroActas
 	 * @return
 	 * @throws ISPACRuleException
 	 */
-	public Object generarPreviaLibroYDiligencia(IRuleContext rulectx, boolean bLimitarPermisos,
-			String password, int tipoVisualizacion) throws ISPACRuleException {
+	public Object generarLibroActas(IRuleContext rulectx, boolean bLimitarPermisos,
+			String password, int tipoVisualizacion, boolean bPreviaLibroYFirmaDiligencia) throws ISPACRuleException {
 
 		int idDocumento = Integer.MIN_VALUE;
 		
@@ -227,21 +230,40 @@ public class LibroActas
 			//Creación del documento
 	        //Tendremos dos plantillas en función del Órgano
 	        //Una para PLENO y JGOB; otra para MESA y COMISIÓN
-	        if (sOrgano.equals(Constants.SECRETARIAPROC.TIPO_PLENO)
-	        	|| sOrgano.equals(Constants.SECRETARIAPROC.TIPO_JUNTA))
-	        {
-	        	itemDocDiligencia = crearDocumento
-	        		(rulectx, _DOC_DILIG_LIBACTAS_JUNTA, _DOC_DILIG_LIBACTAS_JUNTA);	        	
-	        }
-	        else{
-	        	itemDocDiligencia = crearDocumento
-	        		(rulectx, _DOC_DILIG_LIBACTAS_COMISION, _DOC_DILIG_LIBACTAS_COMISION);
-	        }
-	        itemDocDiligencia.set("NOMBRE", _DOC_LIBRO_ACTAS_DILIGENCIA);
-	        itemDocDiligencia.set("DESCRIPCION", _DOC_LIBRO_ACTAS_DILIGENCIA);
-	        int tipoDocDiligencia = DocumentosUtil.getTipoDoc(cct, _DOC_LIBRO_ACTAS_DILIGENCIA, DocumentosUtil.BUSQUEDA_EXACTA, false);
-	        itemDocDiligencia.set("ID_TPDOC", tipoDocDiligencia);
-	        itemDocDiligencia.store(cct);
+			if (bPreviaLibroYFirmaDiligencia){
+		        if (sOrgano.equals(Constants.SECRETARIAPROC.TIPO_PLENO)
+		        	|| sOrgano.equals(Constants.SECRETARIAPROC.TIPO_JUNTA))
+		        {
+		        	itemDocDiligencia = crearDocumento
+		        		(rulectx, _DOC_DILIG_LIBACTAS_JUNTA, _DOC_DILIG_LIBACTAS_JUNTA);	        	
+		        }
+		        else{
+		        	itemDocDiligencia = crearDocumento
+		        		(rulectx, _DOC_DILIG_LIBACTAS_COMISION, _DOC_DILIG_LIBACTAS_COMISION);
+		        }
+		        itemDocDiligencia.set("NOMBRE", _DOC_LIBRO_ACTAS_DILIGENCIA);
+		        itemDocDiligencia.set("DESCRIPCION", _DOC_LIBRO_ACTAS_DILIGENCIA);
+		        int tipoDocDiligencia = DocumentosUtil.getTipoDoc(cct, _DOC_LIBRO_ACTAS_DILIGENCIA, DocumentosUtil.BUSQUEDA_EXACTA, false);
+		        itemDocDiligencia.set("ID_TPDOC", tipoDocDiligencia);
+		        itemDocDiligencia.store(cct);
+			}
+			else{
+				try{
+					itemDocDiligencia = DocumentosUtil.getPrimerDocumentByNombre(rulectx.getNumExp(), rulectx, _DOC_LIBRO_ACTAS_DILIGENCIA);
+					if (null == itemDocDiligencia){
+						throw new ISPACRuleException("No existe el documento de diligencia firmada");
+					}
+				}
+				catch(Exception ex){
+	    			throw new ISPACRuleException("No existe el documento de diligencia firmada");
+	    		}
+				//La ponemos como primer documento de la lista de ficheros para que aparezca en el libro
+				String sInfopagDiligencia = itemDocDiligencia.getString("INFOPAG_RDE");
+				if (StringUtils.isEmpty(sInfopagDiligencia))
+					throw new ISPACRuleException("No existe el documento de diligencia firmada");
+				
+				listFicheros.add(0, sInfopagDiligencia);
+			}
 			
 			
 	        /*********************************************************************
@@ -315,152 +337,7 @@ public class LibroActas
 		return null;
 	}
 	
-	
-	/**
-	 * Código general para la generación del libro de actas
-	 * concatenando la previa del libro y la diligencia del 1er trámite
-	 * @param rulectx
-	 * @param bLimitarPermisos
-	 * @param password
-	 * @param tipoVisualizacion
-	 * @param bPreviaLibroYFirmaDiligencia
-	 * @return
-	 * @throws ISPACRuleException
-	 */
-	private Object generarLibroFinal(IRuleContext rulectx, boolean bLimitarPermisos,
-			String password) throws ISPACRuleException {
 
-		int idDocLibro = Integer.MIN_VALUE;
-		
-        IItem itemDocLibroActas = null;
-        IItem itemDocLibroActasTram1 = null;
-        IItem itemDocDiligenciaTram1 = null;
-        
-        File fileLibro = null;
-        File fileLibroTram1 = null;
-        File fileDiligencia = null;
-        File filePortada = null;
-        File fileRestoLibro = null;
-        
-        String sInfopag = null;
-        String sInfopagDiligencia = null;
-        
-        ArrayList<File> listFicherosConcatenar = null;
-        
-		try{
-			
-			//*********************************************
-			IClientContext cct = rulectx.getClientContext();
-	  	    invesFlowAPI = cct.getAPI();
-	  	    entitiesAPI = invesFlowAPI.getEntitiesAPI();
-			//*********************************************
-			
-			/*********************************************************************
-			 * OBTENEMOS LOS DOCUMENTOS DEL PRIMER TRÁMITE
-			 ********************************************************************/
-			
-			//Obtenemos el documento de Libro generado en el primer trámite
-			try{
-				itemDocLibroActasTram1 = DocumentosUtil.getPrimerDocumentByNombre(rulectx.getNumExp(), rulectx, _DOC_LIBRO_ACTAS);
-				if (null == itemDocLibroActasTram1){
-					throw new ISPACRuleException("No existe el documento de libro de actas del primer trámite");
-				}
-			}
-			catch(Exception ex){
-    			throw new ISPACRuleException("No existe el documento de libro de actas del primer trámite");
-    		}
-			
-			try{
-				itemDocDiligenciaTram1 = DocumentosUtil.getPrimerDocumentByNombre(rulectx.getNumExp(), rulectx, _DOC_LIBRO_ACTAS_DILIGENCIA);
-				if (null == itemDocDiligenciaTram1){
-					throw new ISPACRuleException("No existe el documento de diligencia firmada");
-				}
-			}
-			catch(Exception ex){
-    			throw new ISPACRuleException("No existe el documento de diligencia firmada");
-    		}
-	        
-	        /*********************************************************************
-			 * CONCATENAMOS LAS PARTES PARA GENERAR EL LIBRO DE ACTAS
-			 * Portada + Diligencia + Resto_del_Libro
-			 ********************************************************************/
-	        //Obtenemos el tipo de documento
-			itemDocLibroActas = DocumentosUtil.crearDocumentoTramite(rulectx, _DOC_LIBRO_ACTAS);
-			idDocLibro = itemDocLibroActas.getKeyInt();
-			
-			sInfopag = itemDocLibroActasTram1.getString("INFOPAG");
-			fileLibroTram1 = DocumentosUtil.getFile(cct, sInfopag, null, null);
-			
-			sInfopagDiligencia = itemDocDiligenciaTram1.getString("INFOPAG_RDE");
-			if (StringUtils.isEmpty(sInfopagDiligencia)){
-				throw new ISPACRuleException("No existe el documento de diligencia firmada");
-			}
-			fileDiligencia = DocumentosUtil.getFile(cct, sInfopagDiligencia, null, null);
-			
-			//Creamos el archivo del libro
-			fileLibro = FileTemporaryManager.getInstance().newFile();
-			listFicherosConcatenar = new ArrayList<File>();
-			
-			//Obtenemos la portada como la primera página del libro del primer trámite
-			filePortada = FileTemporaryManager.getInstance().newFile();
-			PdfUtil.obtenerSeccion(fileLibroTram1, filePortada, 1, 1);
-			listFicherosConcatenar.add(filePortada);
-			
-			//Añadimos la diligencia
-			listFicherosConcatenar.add(fileDiligencia);
-			
-			//Obtenemos el resto el libro (todo menos la portada)
-			fileRestoLibro = FileTemporaryManager.getInstance().newFile();
-			PdfUtil.obtenerSeccion(fileLibroTram1, fileRestoLibro, 2, Integer.MAX_VALUE);
-			listFicherosConcatenar.add(fileRestoLibro);
-			
-			//Concatenamos las partes
-			fileLibro = PdfUtil.concatenarArchivos(listFicherosConcatenar);
-			
-        	
-        	/*********************************************************************
-			 * AÑADIR DILIGENCIA COMO ADJUNTO
-			 * Añadir la diligencia al libro e incluirla también como adjunto
-			 ********************************************************************/
-        	
-        	PdfUtil.anexarDocumento(fileLibro, fileDiligencia, "Diligencia.pdf");
-        	
-        	
-	        /*********************************************************************
-			 * PERMISOS DEL LIBRO DE ACTAS
-			 ********************************************************************/
-
-        	//Protegemos el documento de Copiar, Pegar, Imprimir, etc
-//        	PdfUtil.limitarPermisosConPassword(fileLibro, "dipucr");
-        	if (null != password && !password.isEmpty()){
-        		if (bLimitarPermisos){
-                	PdfUtil.limitarPermisosConPassword(fileLibro, password);
-        		}
-        		else{
-        			PdfUtil.protegerConPassword(fileLibro, password);
-        		}
-        	}
-        	else{
-        		if (bLimitarPermisos){
-                	PdfUtil.limitarPermisos(fileLibro);
-        		}
-        	}
-        	
-    		DocumentosUtil.anexaDocumento(rulectx, rulectx.getTaskId(), idDocLibro, fileLibro, Constants._EXTENSION_PDF, _DOC_LIBRO_ACTAS);
-    		
-    		if(filePortada != null && filePortada.exists()) filePortada.delete();
-    		if(fileLibro != null && fileLibro.exists()) fileLibro.delete();
-    		if(fileLibroTram1 != null && fileLibroTram1.exists()) fileLibroTram1.delete();
-    		if(fileDiligencia != null && fileDiligencia.exists()) fileDiligencia.delete();
-    		if(fileRestoLibro != null && fileRestoLibro.exists()) fileRestoLibro.delete();
-		}
-		catch (Exception e) {
-			
-			throw new ISPACRuleException("Error al generar el libro de actas", e);
-		}
-		return null;
-	}
-	
 	/**
 	 * 
 	 * Calculo de los documentos de acta que formarán parte del libro
@@ -495,15 +372,20 @@ public class LibroActas
 			IItemCollection docsCollection = null;
 			
 			StringBuffer consultaDoc = new StringBuffer();
-			consultaDoc.append(" NOMBRE = '" + getDocumentoByOrgano() + "'");
-			consultaDoc.append(" AND FAPROBACION IS NOT NULL");
-			
 			String ordenDoc = "";
 			
 			if (sOrgano.equals(Constants.SECRETARIAPROC.TIPO_PLENO)){
+				
+				consultaDoc.append(" (NOMBRE = '" + Constants.TIPODOC.ACTA_PLENO + "' OR ");
+				consultaDoc.append(" NOMBRE = '" + Constants.TIPODOC.ACTA_PLENO_AUDIO + "')");//[dipucr-Felipe #663]
+				consultaDoc.append(" AND FAPROBACION IS NOT NULL");
+				
 				StringBuffer consultaTram = new StringBuffer();
 				consultaTram.append(" ((NOMBRE = '" + Constants.SECRETARIATRAMITES.SESION_PLENO_DEBATES + "'");
 				consultaTram.append(" OR NOMBRE = '" + Constants.SECRETARIATRAMITES.SESION_PLENO_EXTRACTO + "'");
+				consultaTram.append(" OR NOMBRE = '" + Constants.SECRETARIATRAMITES.SESION_PLENO_AUDIO + "'");//[dipucr-Felipe #663]
+				consultaTram.append(" OR NOMBRE = '" + Constants.SECRETARIATRAMITES.SESION_PLENO_AUDIO_BIS + "'");
+				//[dipucr-Felipe #663] En pruebas, y no sé si en alguna entidad más, se llama distinto el trámite
 				consultaTram.append(" OR NOMBRE = '" + Constants.SECRETARIATRAMITES.SESION_NO_CELEBRADA + "'))"); 
 				
 				IItemCollection dtTramitesCollection = TramitesUtil.getTramites(cct, numexp, consultaTram.toString(), "");
@@ -519,7 +401,9 @@ public class LibroActas
 				ordenDoc = " NUMEXP, ID_TRAMITE_PCD DESC LIMIT 1";
 			}
 			else{
-				
+
+				consultaDoc.append(" NOMBRE = '" + getDocumentoByOrgano() + "'");
+				consultaDoc.append(" AND FAPROBACION IS NOT NULL");
 				ordenDoc = " ID DESC LIMIT 1";				
 			}			
 			
@@ -540,7 +424,6 @@ public class LibroActas
 			}
 		}
 
-		System.gc();
 	}
 	
 	
@@ -572,9 +455,11 @@ public class LibroActas
 			factory.addTable("SPAC_CT_TRAMITES", "CTTRAM");
 
 			//Realizamos la query
-			CollectionDAO collectionJoin =
-				factory.queryTableJoin(cct.getConnection(), sbQuery.toString());
+			DbCnt cnt = cct.getConnection();
+			CollectionDAO collectionJoin = factory.queryTableJoin(cnt, sbQuery.toString());
 			collectionJoin.disconnect();
+			
+			cct.releaseConnection(cnt);
 	  	    
 			//Obtenemos el documento y lo eliminamos
 	        if (collectionJoin.next())
@@ -774,7 +659,7 @@ public class LibroActas
 		
 		String sDocumento = null;
 		
-		if (sOrgano.equals(Constants.SECRETARIAPROC.TIPO_PLENO)){
+		if (sOrgano.equals(Constants.SECRETARIAPROC.TIPO_PLENO)){//Sin usar
 			sDocumento = Constants.TIPODOC.ACTA_PLENO;
 		}
 		else if (sOrgano.equals(Constants.SECRETARIAPROC.TIPO_JUNTA)){

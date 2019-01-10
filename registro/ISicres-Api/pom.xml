@@ -11,6 +11,9 @@
 	<description>Modulo de logica del Api de InvesSicres</description>
 
 	<properties>
+		<sigem.version>3.0.1-M2</sigem.version>
+		<isicres.version>8.0.1</isicres.version>
+		<isicresMSSSI.version>3.0.0-msssi2.0.0</isicresMSSSI.version>
 		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory>
 	</properties>
 
@@ -37,12 +40,16 @@
 					<groupId>cglib</groupId>
 					<artifactId>cglib-full</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>es.msssi.tecdoc.sigem</groupId>
+					<artifactId>SIGEM_RegistroPresencialMSSSI</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-resources-configurable</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 			<type>zip</type>
 		</dependency>
 
@@ -55,7 +62,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>ISicres-PersonManager</artifactId>
-			<version>${project.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -65,13 +72,18 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>ISicres-Compulsa-Connector-Invesicres</artifactId>
-			<version>${project.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>ISicres-Document-Connector-Invesdoc</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+		  <groupId>junit</groupId>
+		  <artifactId>junit</artifactId>
+		  <version>4.8.1</version>
+</dependency>
 
 
 
@@ -95,14 +107,19 @@
 			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dir3</groupId>
 			<artifactId>fwktd-dir3-core</artifactId>
 			<version>${fwktd.dir3.version}</version>
-		</dependency>
-		<!--
+		</dependency>		
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
 			<artifactId>fwktd-sir-api</artifactId>
 			<version>${fwktd-sir.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+					<artifactId>invesdoc-business</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
- -->
+ 
 
 
 
@@ -282,7 +299,7 @@
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
-					<encoding>iso-8859-1</encoding>
+					<encoding>iso-8859-15</encoding>
 					<fork>true</fork>
           <!--					<executable>${JAVA_1_5_HOME}/bin/javac</executable>-->
 				</configuration>
@@ -305,13 +322,13 @@
 								<artifactItem>
 									<groupId>es.ieci.tecdoc.isicres</groupId>
 									<artifactId>ISicres-resources-config</artifactId>
-									<version>${pom.version}</version>
+									<version>${isicres.version}</version>
 									<type>zip</type>
 								</artifactItem>
 								<artifactItem>
 									<groupId>es.ieci.tecdoc.isicres</groupId>
 									<artifactId>ISicres-resources-configurable</artifactId>
-									<version>${pom.version}</version>
+									<version>${isicres.version}</version>
 									<type>zip</type>
 									<!--<excludes>log4j.xml</excludes> -->
 								</artifactItem>

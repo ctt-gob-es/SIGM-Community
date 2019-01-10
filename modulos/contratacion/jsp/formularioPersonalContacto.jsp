@@ -11,7 +11,7 @@
 <ispac:tabs>
 	<ispac:tab title='<%=aux0%>'>
 		<div id="dataBlock_CONTRATACION_PERS_CONTACTO"
-			style="position: relative; height: 500px; width: 600px">
+			style="position: relative; height: 670px; width: 600px">
 			<div id="label_SPAC_EXPEDIENTES:SEP_INTERESADO_PRINCIPAL"
 				style="position: absolute; top: 10px; left: 10px; width: 620px"
 				class="textbar">
@@ -278,6 +278,142 @@
 				style="position: absolute; top: 445px; left: 150px; width: 100%;">
 				<ispac:htmlText
 					property="property(CONTRATACION_PERS_CONTACTO:MOVILSECRE)"
+					readonly="false" propertyReadonly="readonly" styleClass="input"
+					styleClassReadonly="inputReadOnly" size="80" maxlength="10">
+				</ispac:htmlText>
+			</div>
+			
+			
+			<div id="label_SPAC_EXPEDIENTES:SEP_INTERESADO_PRINCIPAL"
+				style="position: absolute; top: 470px; left: 10px; width: 620px"
+				class="textbar">
+				ORGANO DE ASISTENCIA 
+				<hr class="formbar" />
+			</div>
+			
+			<div id="label_CONTRATACION_PERS_CONTACTO:EMAIL_OA"
+				style="position: absolute; top: 500px; left: 10px; width: 110px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm"
+					property="entityApp.label(CONTRATACION_PERS_CONTACTO:EMAIL_OA)" />
+				:
+			</div>
+			<div id="data_CONTRATACION_PERS_CONTACTO:EMAIL_OA"
+				style="position: absolute; top: 500px; left: 150px; width: 100%;">
+				<ispac:htmlText
+					property="property(CONTRATACION_PERS_CONTACTO:EMAIL_OA)"
+					readonly="false" propertyReadonly="readonly" styleClass="input"
+					styleClassReadonly="inputReadOnly" size="80" maxlength="100">
+				</ispac:htmlText>
+			</div>
+			<div id="label_CONTRATACION_PERS_CONTACTO:CALLE_OA"
+				style="position: absolute; top: 525px; left: 10px; width: 110px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm"
+					property="entityApp.label(CONTRATACION_PERS_CONTACTO:CALLE_OA)" />
+				:
+			</div>
+			<div id="data_CONTRATACION_PERS_CONTACTO:CALLE_OA"
+				style="position: absolute; top: 525px; left: 150px; width: 100%;">
+				<ispac:htmlText
+					property="property(CONTRATACION_PERS_CONTACTO:CALLE_OA)"
+					readonly="false" propertyReadonly="readonly" styleClass="input"
+					styleClassReadonly="inputReadOnly" size="80" maxlength="255">
+				</ispac:htmlText>
+			</div>
+			<div id="label_CONTRATACION_PERS_CONTACTO:NUMERO_OA"
+				style="position: absolute; top: 525px; left: 600px; width: 110px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm"
+					property="entityApp.label(CONTRATACION_PERS_CONTACTO:NUMERO_OA)" />
+				:
+			</div>
+			<div id="data_CONTRATACION_PERS_CONTACTO:NUMERO_OA"
+				style="position: absolute; top: 525px; left: 660px; width: 100%;">
+				<ispac:htmlText
+					property="property(CONTRATACION_PERS_CONTACTO:NUMERO_OA)"
+					readonly="false" propertyReadonly="readonly" styleClass="input"
+					styleClassReadonly="inputReadOnly" size="5" maxlength="255">
+				</ispac:htmlText>
+			</div>
+			<div id="label_CONTRATACION_PERS_CONTACTO:CP_OA"
+				style="position: absolute; top: 550px; left: 10px; width: 110px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm"
+					property="entityApp.label(CONTRATACION_PERS_CONTACTO:CP_OA)" />
+				:
+			</div>
+			<div id="data_CONTRATACION_PERS_CONTACTO:CP_OA"
+				style="position: absolute; top: 550px; left: 150px; width: 100%;">
+				<ispac:htmlText property="property(CONTRATACION_PERS_CONTACTO:CP_OA)"
+					readonly="false" propertyReadonly="readonly" styleClass="input"
+					styleClassReadonly="inputReadOnly" size="80" maxlength="5">
+				</ispac:htmlText>
+			</div>
+			<div id="label_CONTRATACION_PERS_CONTACTO:LOCALIDAD_OA"
+				style="position: absolute; top: 575px; left: 10px; width: 110px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm"
+					property="entityApp.label(CONTRATACION_PERS_CONTACTO:LOCALIDAD_OA)" />
+				:
+			</div>
+			<div id="data_CONTRATACION_PERS_CONTACTO:LOCALIDAD_OA"
+				style="position: absolute; top: 575px; left: 150px; width: 100%;">
+				<ispac:htmlText
+					property="property(CONTRATACION_PERS_CONTACTO:LOCALIDAD_OA)"
+					readonly="false" propertyReadonly="readonly" styleClass="input"
+					styleClassReadonly="inputReadOnly" size="80" maxlength="255">
+				</ispac:htmlText>
+			</div>
+			<div id="label_CONTRATACION_PERS_CONTACTO:PROVINCIA_OA"
+				style="position: absolute; top: 600px; left: 10px; width: 110px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm"
+					property="entityApp.label(CONTRATACION_PERS_CONTACTO:PROVINCIA_OA)" />
+				:
+			</div>
+			<div id="data_CONTRATACION_PERS_CONTACTO:PROVINCIA_OA"
+				style="position: absolute; top: 600px; left: 150px; width: 100%;">
+				<ispac:htmlText
+					property="property(CONTRATACION_PERS_CONTACTO:PROVINCIA_OA)"
+					readonly="false" propertyReadonly="readonly" styleClass="input"
+					styleClassReadonly="inputReadOnly" size="80" maxlength="255">
+				</ispac:htmlText>
+			</div>
+			
+			<div id="label_CONTRATACION_PERS_CONTACTO:LOCALIZACIONGEOGRAFICA_OA"
+				style="position: absolute; top: 625px; left: 10px; width: 250px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm"
+					property="entityApp.label(CONTRATACION_PERS_CONTACTO:LOCALIZACIONGEOGRAFICA_OA)" />
+				:
+			</div>
+			<div id="data_CONTRATACION_PERS_CONTACTO:LOCALIZACIONGEOGRAFICA_OA"
+				style="position: absolute; top: 625px; left: 150px; width: 100%;">
+				<nobr>
+					<ispac:htmlTextareaImageFrame property="property(CONTRATACION_PERS_CONTACTO:LOCALIZACIONGEOGRAFICA_OA)" readonly="true" readonlyTag="false" 
+					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="80" 
+					id="SEARCH_CONTRATACION_PERS_CONTACTO:LOCALIZACIONGEOGRAFICA_OA" target="workframe"
+					action="selectListadoCodicePliego.do?atributo=COD_LOCALIZACIONGEOGRAFICA" 
+					image="img/search-mg.gif" jsDelete="deleteAdjudicado" titleKeyLink="select.rol" imageDelete="img/borrar.gif" titleKeyImageDelete="title.delete.data.selection" 
+					styleClassDeleteLink="tdlink" confirmDeleteKey="msg.delete.data.selection" showDelete="true" showFrame="true" width="640" height="480" 
+					tabindex="113">
+						<ispac:parameter name="SEARCH_CONTRATACION_PERS_CONTACTO:LOCALIZACIONGEOGRAFICA_OA" id="property(CONTRATACION_PERS_CONTACTO:LOCALIZACIONGEOGRAFICA_OA)" property="SUSTITUTO" />
+					</ispac:htmlTextareaImageFrame>
+				</nobr>
+			</div>
+			
+			<div id="label_CONTRATACION_PERS_CONTACTO:MOVIL_OA"
+				style="position: absolute; top: 650px; left: 10px; width: 110px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm"
+					property="entityApp.label(CONTRATACION_PERS_CONTACTO:MOVIL_OA)" />
+				:
+			</div>
+			<div id="data_CONTRATACION_PERS_CONTACTO:MOVIL_OA"
+				style="position: absolute; top: 650px; left: 150px; width: 100%;">
+				<ispac:htmlText
+					property="property(CONTRATACION_PERS_CONTACTO:MOVIL_OA)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
 					styleClassReadonly="inputReadOnly" size="80" maxlength="10">
 				</ispac:htmlText>

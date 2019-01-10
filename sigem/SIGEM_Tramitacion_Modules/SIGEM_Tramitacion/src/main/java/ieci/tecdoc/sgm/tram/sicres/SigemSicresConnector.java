@@ -23,6 +23,9 @@ import ieci.tdw.ispac.ispaclib.sicres.vo.RegisterType;
 import ieci.tdw.ispac.ispaclib.sicres.vo.Subject;
 import ieci.tdw.ispac.ispaclib.sicres.vo.ThirdPerson;
 import ieci.tdw.ispac.ispaclib.sicres.vo.Transport;
+import ieci.tdw.ispac.ispaclib.thirdparty.ElectronicAddressAdapter;
+import ieci.tdw.ispac.ispaclib.thirdparty.IElectronicAddressAdapter;
+import ieci.tdw.ispac.ispaclib.thirdparty.PostalAddressAdapter;
 import ieci.tdw.ispac.ispaclib.utils.ArrayUtils;
 import ieci.tdw.ispac.ispaclib.utils.DateUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
@@ -1223,6 +1226,7 @@ public class SigemSicresConnector implements ISicresConnector {
 					intray
 							.setRegisterSender(getThirdPersons(sendersOrReceivers));
 				}
+				intray.setComentarios(distInfo.getComentarios());
 
 			} catch (Exception e) {
 				logger
@@ -1516,10 +1520,26 @@ public class SigemSicresConnector implements ISicresConnector {
 			organization.setCode(orgBean.getUid());
 			organization.setName(orgBean.getNombre());
 			organization.setAcronym(orgBean.getAbreviatura());
-			organization.setCreationDate(TypeConverter.toCalendar(orgBean
-					.getFechaAlta()));
-			organization.setDisabledDate(TypeConverter.toCalendar(orgBean
-					.getFechaBaja()));
+			organization.setCreationDate(TypeConverter.toCalendar(orgBean.getFechaAlta()));
+			organization.setDisabledDate(TypeConverter.toCalendar(orgBean.getFechaBaja()));
+			organization.setCif(orgBean.getCif());
+			
+			PostalAddressAdapter direccionPostal = new PostalAddressAdapter();
+			direccionPostal.setDireccionPostal(orgBean.getDireccion());
+			direccionPostal.setCodigoPostal(orgBean.getCodigoPostal());
+			direccionPostal.setPoblacion(orgBean.getCiudad());
+			direccionPostal.setMunicipio(orgBean.getCiudad());
+			direccionPostal.setProvincia(orgBean.getProvincia());
+			direccionPostal.setTelefono(orgBean.getTelefono());
+			
+			organization.setDireccionPostal(direccionPostal);
+
+			ElectronicAddressAdapter direccionElectronica = new ElectronicAddressAdapter();
+			direccionElectronica.setDireccion(orgBean.getUri());
+			direccionElectronica.setTipo(IElectronicAddressAdapter.MAIL_TYPE);
+			
+			organization.setDireccionElectronica(direccionElectronica);
+			
 		}
 		return organization;
 	}

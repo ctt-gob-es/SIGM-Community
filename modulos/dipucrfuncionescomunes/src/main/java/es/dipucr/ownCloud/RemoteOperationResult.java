@@ -125,8 +125,8 @@ public class RemoteOperationResult implements Serializable {
                 break;
             default:
                 mCode = ResultCode.UNHANDLED_HTTP_CODE;
-                logger.debug("RemoteOperationResult has processed UNHANDLED_HTTP_CODE: " +
-                        httpCode);
+                logger.debug("RemoteOperationResult has processed UNHANDLED_HTTP_CODE: " + httpCode);
+                break;
             }
         }
     }

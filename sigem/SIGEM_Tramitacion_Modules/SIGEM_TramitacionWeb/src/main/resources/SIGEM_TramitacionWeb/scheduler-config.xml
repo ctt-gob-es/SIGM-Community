@@ -11,10 +11,17 @@
 		delay="0" period="10m">
 	</task>
 
-	<!-- Tarea para actualizar los estados de las notificaciones -->
+	<!-- Tarea para actualizar los estados de las notificaciones 
 	<task
 		class="ieci.tdw.ispac.ispacmgr.scheduler.NotifyStateSchedulerTask"
 		delay="0" period="60m">
+	</task>
+	-->
+	
+	<!-- Tarea para actualizar los estados de las notificaciones -->
+	<task
+		class="ieci.tdw.ispac.ispacmgr.scheduler.NotifyStateNotificaSchedulerTask"
+		delay="0" period="120m">
 	</task>
 	
 	<!-- Tarea para lanzar el evento "Expirar plazo" en tramites, fases y procesos -->
@@ -26,6 +33,18 @@
 	<!-- Tarea que recupera los anuncios de la BBDD de subvenciones y genera un nuevo expediente -->
 	<task
 		class="es.dipucr.sigem.scheduler.GetAnunciosBopBDNSTask"
-		time="21:00:00"  period="1d">
+		time="07:00:00"  period="1d">
+	</task>
+	
+	<!-- Tarea que recupera pagos de concesiones de Sical y los envia a las BDNS-->
+	<task
+		class="es.dipucr.sigem.scheduler.EnviarPagosSicalBDNSTask"
+		time="06:15:00"  period="1d">
+	</task>
+	
+	<!-- Tarea que realiza alertas del llenado de volúmenes -->
+	<task
+		class="ieci.tdw.ispac.ispacmgr.scheduler.AvisoLlenadoRepositoriosTask"
+		time="06:45:00"  period="1d">
 	</task>
 </scheduler>

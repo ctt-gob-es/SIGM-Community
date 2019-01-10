@@ -42,13 +42,59 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 public class ParticipantesUtil {
 
 	/** Logger de la clase. */
-	protected static final Logger logger = Logger.getLogger(ParticipantesUtil.class);
+	protected static final Logger LOGGER = Logger.getLogger(ParticipantesUtil.class);
 	
 	public static final String _TIPO_TRASLADO = "TRAS";
 	public static final String _TIPO_INTERESADO = "INT";
+	public static final String _TIPO_LICITADOR = "LIC";
 	
 	public static final String _TIPO_PERSONA_FISICA = "F";
 	public static final String _TIPO_PERSONA_JURIDICA = "J";
+	
+	public static final String RECURSO_AYTOS_ADM_PUBL = "Aytos.Adm.Publ.";
+	public static final String RECURSO_PERSONAS_FISICAS_EMPR = "Pers.Fis.-Empr.";
+	
+	public static final String TIPO_DIRECCION_TELEMATICA = "T";
+	
+	public static final String SPAC_DT_INTERVINIENTES = "SPAC_DT_INTERVINIENTES";
+	public static final String SPAC_DT_INTERVINIENTES_H = "SPAC_DT_INTERVINIENTES_H";
+	
+	//Mapeo de las columnas de la tablas SPAC_DT_INTERVINIENTES y SPAC_DT_INTERVINIENTES_H
+	public static final String ID = "ID";
+	public static final String NUMEXP = "NUMEXP";
+	public static final String NOMBRE = "NOMBRE";
+	public static final String TIPO = "TIPO";
+	public static final String DIRNOT = "DIRNOT";
+	public static final String C_POSTAL = "C_POSTAL";
+	public static final String LOCALIDAD = "LOCALIDAD";
+	public static final String CAUT = "CAUT";
+	public static final String ID_EXT = "ID_EXT";
+	public static final String NDOC = "NDOC";
+	public static final String ROL = "ROL";
+	public static final String TIPO_PERSONA = "TIPO_PERSONA";
+	public static final String TIPO_DIRECCION = "TIPO_DIRECCION";
+	public static final String DIRECCIONTELEMATICA = "DIRECCIONTELEMATICA";
+	public static final String EMAIL = "EMAIL";
+	public static final String IDDIRECCIONPOSTAL = "IDDIRECCIONPOSTAL";
+	public static final String TFNO_FIJO = "TFNO_FIJO";
+	public static final String TFNO_MOVIL = "TFNO_MOVIL";	
+	public static final String DECRETO_NOTIFICADO = "DECRETO_NOTIFICADO";
+	public static final String DECRETO_TRASLADADO = "DECRETO_TRASLADADO";
+	public static final String ACUSE_GENERADO = "ACUSE_GENERADO";
+	public static final String RECURSO = "RECURSO";
+	public static final String OBSERVACIONES = "OBSERVACIONES";
+	public static final String FECHA_ACUSE = "FECHA_ACUSE";
+	public static final String MOTIVO_ACUSE = "MOTIVO_ACUSE";
+	public static final String RECURSO_TEXTO = "RECURSO_TEXTO";
+	public static final String ASISTE = "ASISTE";
+	public static final String TIPO_PODER = "TIPO_PODER";
+	public static final String FECHA_INI = "FECHA_INI";
+	public static final String FECHA_FIN = "FECHA_FIN";
+	public static final String SOLICITAR_OFERTA = "SOLICITAR_OFERTA";
+	public static final String SOLICITADA_OFERTA = "SOLICITADA_OFERTA";
+	public static final String CCC = "CCC";
+	public static final String DIR3 = "DIR3";
+
 	
 	/**
 	 * Inserta un participante por su NIF. Sin recurso
@@ -78,10 +124,17 @@ public class ParticipantesUtil {
 	 * @return
 	 * @throws ISPACException
 	 */
-	@SuppressWarnings("unchecked")
 	public static boolean insertarParticipanteByNIF(IRuleContext rulectx, String numexp,
 			String nif, String tipoRelacion, String tipoPersona, String email, String recurso)
 		throws ISPACException{
+		
+		return insertarParticipanteByNIF(rulectx.getClientContext(), numexp, nif, tipoRelacion, tipoPersona, email, recurso);		
+	}
+		
+	@SuppressWarnings("unchecked")
+	public static boolean insertarParticipanteByNIF(IClientContext cct, String numexp,
+				String nif, String tipoRelacion, String tipoPersona, String email, String recurso)
+			throws ISPACException{
 		ServicioTerceros servicioTerceros;
 		List<Tercero> terceros;//[dipucr-Felipe] Corregido error [Manu] dependencias cíclicas
 		String entityId = null;
@@ -95,13 +148,13 @@ public class ParticipantesUtil {
 			
 			terceros = servicioTerceros.lookup(entityId, nif, true);
 		} catch (TercerosException e) {
-			logger.error("Error al recuperar el participante con NIF " + nif + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar el participante con NIF " + nif + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar el participante con id " + nif + ". " + e.getMessage(), e);
 		} catch (EntidadesException e) {
-			logger.error("Error al recuperar el participante con NIF " + nif + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar el participante con NIF " + nif + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar el participante con id " + nif + ". " + e.getMessage(), e);
 		} catch (SigemException e) {
-			logger.error("Error al recuperar el participante con NIF " + nif + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar el participante con NIF " + nif + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar el participante con id " + nif + ". " + e.getMessage(), e);
 		}
 		if (terceros.size() == 0){ //[eCenpri-Felipe #632]
@@ -109,7 +162,7 @@ public class ParticipantesUtil {
 			return false;
 		}
 		else{
-			return insertarParticipante(rulectx, numexp, terceros.get(0), tipoRelacion, tipoPersona, email, recurso);
+			return insertarParticipante(cct, numexp, terceros.get(0), tipoRelacion, tipoPersona, email, recurso);
 		}
 	}
 
@@ -156,13 +209,13 @@ public class ParticipantesUtil {
 				entityId = info.getOrganizationId();
 			tercero = servicioTerceros.lookupById(entityId,idParticipante);
 		} catch (TercerosException e) {
-			logger.error("Error al recuperar el participante con id " + idParticipante + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar el participante con id " + idParticipante + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar el participante con id " + idParticipante + ". " + e.getMessage(), e);
 		} catch (EntidadesException e) {
-			logger.error("Error al recuperar el participante con id " + idParticipante + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar el participante con id " + idParticipante + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar el participante con id " + idParticipante + ". " + e.getMessage(), e);
 		} catch (SigemException e) {
-			logger.error("Error al recuperar el participante con id " + idParticipante + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar el participante con id " + idParticipante + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar el participante con id " + idParticipante + ". " + e.getMessage(), e);
 		}
 		return insertarParticipante(rulectx, numexp, tercero, tipoRelacion, tipoPersona, email, recurso);
@@ -202,7 +255,7 @@ public class ParticipantesUtil {
 	{
 		IItem itemParticipante = recuperarDatosParticipante(rulectx, codigo);
 		String idParticipante = itemParticipante.getString("ID_PARTICIPANTE");
-		String email = itemParticipante.getString("EMAIL");
+		String email = itemParticipante.getString(ParticipantesUtil.EMAIL);
 		return insertarParticipanteById(rulectx, numexp, idParticipante, tipoRelacion, tipoPersona, email, recurso);
 	}
 	
@@ -223,10 +276,19 @@ public class ParticipantesUtil {
 			Tercero tercero, String tipoRelacion, String tipoPersona, String email, String recurso)
 		throws ISPACRuleException
 	{
+		return insertarParticipante(rulectx.getClientContext(), numexp, tercero, tipoRelacion, tipoPersona, email, recurso);
+
+	}
 		
+		
+		
+	protected static boolean insertarParticipante(IClientContext cct, String numexp,
+				Tercero tercero, String tipoRelacion, String tipoPersona, String email, String recurso)
+			throws ISPACRuleException
+		{
+
 		try {
 			//----------------------------------------------------------------------------------------------
-	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();	        
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 	        //----------------------------------------------------------------------------------------------
@@ -237,34 +299,34 @@ public class ParticipantesUtil {
 			if(tercero != null && tercero.getIdExt()!= null){
 				//Comprobamos si existe ya el participante, si existe no hacemos nada
 	
-		    	IItemCollection participantes = ParticipantesUtil.getParticipantes( cct, numexp,  "ID_EXT = '" + tercero.getIdExt()+"'", "");
+		    	IItemCollection participantes = ParticipantesUtil.getParticipantes( cct, numexp,  ParticipantesUtil.ID_EXT + " = '" + tercero.getIdExt()+"'", "");
 			
 		    	//Si el tercero no está ya insertado
 		    	if(!participantes.iterator().hasNext()){
 		    		cct.beginTX();
 			        nuevoParticipante = entitiesAPI.createEntity(Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES, numexp);
 			        
-			        nuevoParticipante.set("ID_EXT", tercero.getIdExt());
-			        nuevoParticipante.set("ROL", tipoRelacion);
-			        nuevoParticipante.set("TIPO_PERSONA", tipoPersona);
-			        nuevoParticipante.set("NDOC", tercero.getIdentificacion());
-			        nuevoParticipante.set("NOMBRE", tercero.getNombreCompleto());
+			        nuevoParticipante.set(ParticipantesUtil.ID_EXT, tercero.getIdExt());
+			        nuevoParticipante.set(ParticipantesUtil.ROL, tipoRelacion);
+			        nuevoParticipante.set(ParticipantesUtil.TIPO_PERSONA, tipoPersona);
+			        nuevoParticipante.set(ParticipantesUtil.NDOC, tercero.getIdentificacion());
+			        nuevoParticipante.set(ParticipantesUtil.NOMBRE, tercero.getNombreCompleto());
 			        if (null != tercero.getDireccionPostalPredeterminada()){ //[eCenpri-Felipe #474]
-				        nuevoParticipante.set("DIRNOT", tercero.getDireccionPostalPredeterminada().getDireccionPostal());		        
-			            nuevoParticipante.set("C_POSTAL", tercero.getDireccionPostalPredeterminada().getCodigoPostal());
-			            nuevoParticipante.set("LOCALIDAD", tercero.getDireccionPostalPredeterminada().getMunicipio());
-			            nuevoParticipante.set("CAUT", tercero.getDireccionPostalPredeterminada().getProvincia());
-			            nuevoParticipante.set("TFNO_FIJO", tercero.getDireccionPostalPredeterminada().getTelefono());
+				        nuevoParticipante.set(ParticipantesUtil.DIRNOT, tercero.getDireccionPostalPredeterminada().getDireccionPostal());		        
+			            nuevoParticipante.set(ParticipantesUtil.C_POSTAL, tercero.getDireccionPostalPredeterminada().getCodigoPostal());
+			            nuevoParticipante.set(ParticipantesUtil.LOCALIDAD, tercero.getDireccionPostalPredeterminada().getMunicipio());
+			            nuevoParticipante.set(ParticipantesUtil.CAUT, tercero.getDireccionPostalPredeterminada().getProvincia());
+			            nuevoParticipante.set(ParticipantesUtil.TFNO_FIJO, tercero.getDireccionPostalPredeterminada().getTelefono());
 			        }
-		            nuevoParticipante.set("TIPO_DIRECCION", "T");	            
+		            nuevoParticipante.set(ParticipantesUtil.TIPO_DIRECCION, "T");	            
 		            //Debido a que en el registro telemático web no funciona la opción de recuperar el correo electrónico, lo introducimos manualmente
 		            if (StringUtils.isNotBlank(email)){
-			            nuevoParticipante.set("EMAIL", email);
-			            nuevoParticipante.set("DIRECCIONTELEMATICA", email);
+			            nuevoParticipante.set(ParticipantesUtil.EMAIL, email);
+			            nuevoParticipante.set(ParticipantesUtil.DIRECCIONTELEMATICA, email);
 		    		}
 		            //INICIO [eCenpri-Felipe/Agus #635]
 		            if (StringUtils.isNotBlank(recurso)){
-		            	nuevoParticipante.set("RECURSO", recurso);
+		            	nuevoParticipante.set(ParticipantesUtil.RECURSO, recurso);
 		            }
 		            //FIN [eCenpri-Felipe/Agus #635]
 		            
@@ -273,18 +335,18 @@ public class ParticipantesUtil {
 		            	cct.endTX(true);
 		            }
 		            catch(Exception e){
-		            	logger.error("Error al guardar el participante con NIF/CIF " + tercero.getIdentificacion() + ", en el expediente: " + numexp + ". " + e.getMessage(), e);
+		            	LOGGER.error("Error al guardar el participante con NIF/CIF " + tercero.getIdentificacion() + ", en el expediente: " + numexp + ". " + e.getMessage(), e);
 		            	cct.endTX(false);
 			    		return false;//[eCenpri-Felipe #632]
 		            }
 				}//Fin si !existe ya en el expediente
 			}//Fin si existe el tercero en la BBDD de terceros
 			else{ //INICIO [eCenpri-Felipe #632]
-            	logger.error("El participante con NIF/CIF " + tercero.getIdentificacion() + " no existe en la BBDD de Terceros. Expediente: " + numexp + ". ");
+            	LOGGER.error("El participante con NIF/CIF " + tercero.getIdentificacion() + " no existe en la BBDD de Terceros. Expediente: " + numexp + ". ");
 	    		return false;
 	    	}
 		} catch (ISPACException e) {
-			logger.error("Error al guardar el participante con NIF/CIF " + tercero.getIdentificacion() + ", en el expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al guardar el participante con NIF/CIF " + tercero.getIdentificacion() + ", en el expediente: " + numexp + ". " + e.getMessage(), e);
 			return false;
 		}//FIN [eCenpri-Felipe #632]
 		return true;
@@ -339,17 +401,16 @@ public class ParticipantesUtil {
 			
 			partExpedientes = ParticipantesUtil.queryParticipantes(cct, consulta.toString());
 		} catch (ISPACException e) {
-			logger.error("Error al recuperar los participantes de los hijos con estado administrativo: " + estadoAdm + ", del expediente: " + numexp + ". " + e.getMessage(), e);	
+			LOGGER.error("Error al recuperar los participantes de los hijos con estado administrativo: " + estadoAdm + ", del expediente: " + numexp + ". " + e.getMessage(), e);	
 			throw new ISPACRuleException("Error al recuperar los participantes de los hijos con estado administrativo: " + estadoAdm + ", del expediente: " + numexp + ". " + e.getMessage(), e);
 		}
 		return partExpedientes;
 		
 	}
 
-	@SuppressWarnings("rawtypes")
 	public static void importarParticipantes(ClientContext cct, IEntitiesAPI entitiesAPI, String expOrigen, String expDestino) throws ISPACRuleException{
 		try{
-			IItemCollection participantes = recuperaParticipanteRelacionadosByEstadoAdm(cct, expOrigen, "AP");
+			IItemCollection participantes = recuperaParticipanteRelacionadosByEstadoAdm(cct, expOrigen, ExpedientesUtil.EstadoADM.AP);
 			
 			
 		/*	probar
@@ -367,7 +428,7 @@ public class ParticipantesUtil {
 				participantes = ParticipantesUtil.getParticipantes( cct, expOrigen);
 			}
 			
-			Iterator it = participantes.iterator();
+			Iterator<?> it = participantes.iterator();
 			
 			IItem nuevoParticipante = null;
 	        IItem participante = null;
@@ -375,7 +436,7 @@ public class ParticipantesUtil {
 	        String dni = "";
 	        String nombre = "";
 	    	IItemCollection participantes2 = null;
-			Iterator it2 = null;
+			Iterator<?> it2 = null;
 			boolean existe = false;
 	
 		    while (it.hasNext()) {
@@ -383,9 +444,9 @@ public class ParticipantesUtil {
 		        participante = (IItem)it.next();
 		        		        	
 		        //MQE Comprobamos que no exista ya el participante
-		        id_ext = participante.getString("ID_EXT");
-		        dni = participante.getString("NDOC");
-		        nombre = participante.getString("NOMBRE");
+		        id_ext = participante.getString(ParticipantesUtil.ID_EXT);
+		        dni = participante.getString(ParticipantesUtil.NDOC);
+		        nombre = participante.getString(ParticipantesUtil.NOMBRE);
 	        	participantes2 = ParticipantesUtil.getParticipantes(cct, expDestino);
 				it2 = participantes2.iterator();
 				existe = false;
@@ -395,41 +456,42 @@ public class ParticipantesUtil {
 					//MQE si el id_ext es nulo lo consideramos como que no existe
 					if(id_ext != null && !id_ext.equals("")){
 						//MQE si el id_ext es igual es el mismo participante
-						if(participante2.getString("ID_EXT")!= null && participante2.getString("ID_EXT").equals(id_ext)) existe = true;
+						if(participante2.getString(ParticipantesUtil.ID_EXT)!= null && participante2.getString(ParticipantesUtil.ID_EXT).equals(id_ext)) existe = true;
 					}
 					//MQE si el dni es nulo lo consideramos como que no existe
 					if(dni != null && !dni.equals("")){
 						//MQE si el dni es igual es el mismo participante
-						if(participante2.getString("NDOC")!= null && participante2.getString("NDOC").equals(dni)) existe = true;
+						if(participante2.getString(ParticipantesUtil.NDOC)!= null && participante2.getString(ParticipantesUtil.NDOC).equals(dni)) existe = true;
 					}
 					//MQE si el nombre es igual es el mismo participante
-					if(participante2.getString("NOMBRE")!= null && participante2.getString("NOMBRE").toUpperCase().equals(nombre.toUpperCase())) existe = true;										
+					if(participante2.getString(ParticipantesUtil.NOMBRE)!= null && participante2.getString(ParticipantesUtil.NOMBRE).toUpperCase().equals(nombre.toUpperCase())) existe = true;										
 				}//Fin while it2
 				if(!existe){	
-			        nuevoParticipante.set("ID_EXT", participante.getString("ID_EXT"));
-			        nuevoParticipante.set("ROL", participante.getString("ROL"));
-			        nuevoParticipante.set("TIPO", participante.getString("TIPO"));
-			        nuevoParticipante.set("TIPO_PERSONA", participante.getString("TIPO_PERSONA"));
-			        nuevoParticipante.set("NDOC", participante.getString("NDOC"));
-			        nuevoParticipante.set("NOMBRE", participante.getString("NOMBRE"));
-			        nuevoParticipante.set("DIRNOT", participante.getString("DIRNOT"));
-			        nuevoParticipante.set("EMAIL", participante.getString("EMAIL"));
-		            nuevoParticipante.set("C_POSTAL", participante.getString("C_POSTAL"));
-		            nuevoParticipante.set("LOCALIDAD", participante.getString("LOCALIDAD"));
-		            nuevoParticipante.set("CAUT", participante.getString("CAUT"));
-		            nuevoParticipante.set("TFNO_FIJO", participante.getString("TFNO_FIJO"));
-		            nuevoParticipante.set("TFNO_MOVIL", participante.getString("TFNO_MOVIL"));
-		            nuevoParticipante.set("TIPO_DIRECCION", participante.getString("TIPO_DIRECCION"));
-		            nuevoParticipante.set("DIRECCIONTELEMATICA", participante.getString("DIRECCIONTELEMATICA"));
-		            nuevoParticipante.set("IDDIRECCIONPOSTAL", participante.getString("IDDIRECCIONPOSTAL"));
-		            nuevoParticipante.set("RECURSO", participante.getString("RECURSO"));
-		            nuevoParticipante.set("OBSERVACIONES", participante.getString("OBSERVACIONES"));
-		            nuevoParticipante.set("ASISTE", participante.getString("ASISTE"));
-		            nuevoParticipante.set("TIPO_PODER", participante.getString("TIPO_PODER"));
-		            nuevoParticipante.set("FECHA_INI", participante.getString("FECHA_INI"));
-		            nuevoParticipante.set("FECHA_FIN", participante.getString("FECHA_FIN"));
-		            nuevoParticipante.set("SOLICITAR_OFERTA", participante.getString("SOLICITAR_OFERTA"));
-		            nuevoParticipante.set("CCC", participante.getString("CCC"));	   
+			        nuevoParticipante.set(ParticipantesUtil.ID_EXT, participante.getString(ParticipantesUtil.ID_EXT));
+			        nuevoParticipante.set(ParticipantesUtil.ROL, participante.getString(ParticipantesUtil.ROL));
+			        nuevoParticipante.set(ParticipantesUtil.TIPO, participante.getString(ParticipantesUtil.TIPO));
+			        nuevoParticipante.set(ParticipantesUtil.TIPO_PERSONA, participante.getString(ParticipantesUtil.TIPO_PERSONA));
+			        nuevoParticipante.set(ParticipantesUtil.NDOC, participante.getString(ParticipantesUtil.NDOC));
+			        nuevoParticipante.set(ParticipantesUtil.NOMBRE, participante.getString(ParticipantesUtil.NOMBRE));
+			        nuevoParticipante.set(ParticipantesUtil.DIRNOT, participante.getString(ParticipantesUtil.DIRNOT));
+			        nuevoParticipante.set(ParticipantesUtil.EMAIL, participante.getString(ParticipantesUtil.EMAIL));
+		            nuevoParticipante.set(ParticipantesUtil.C_POSTAL, participante.getString(ParticipantesUtil.C_POSTAL));
+		            nuevoParticipante.set(ParticipantesUtil.LOCALIDAD, participante.getString(ParticipantesUtil.LOCALIDAD));
+		            nuevoParticipante.set(ParticipantesUtil.CAUT, participante.getString(ParticipantesUtil.CAUT));
+		            nuevoParticipante.set(ParticipantesUtil.TFNO_FIJO, participante.getString(ParticipantesUtil.TFNO_FIJO));
+		            nuevoParticipante.set(ParticipantesUtil.TFNO_MOVIL, participante.getString(ParticipantesUtil.TFNO_MOVIL));
+		            nuevoParticipante.set(ParticipantesUtil.TIPO_DIRECCION, participante.getString(ParticipantesUtil.TIPO_DIRECCION));
+		            nuevoParticipante.set(ParticipantesUtil.DIRECCIONTELEMATICA, participante.getString(ParticipantesUtil.DIRECCIONTELEMATICA));
+		            nuevoParticipante.set(ParticipantesUtil.IDDIRECCIONPOSTAL, participante.getString(ParticipantesUtil.IDDIRECCIONPOSTAL));
+		            nuevoParticipante.set(ParticipantesUtil.RECURSO, participante.getString(ParticipantesUtil.RECURSO));
+		            nuevoParticipante.set(ParticipantesUtil.OBSERVACIONES, participante.getString(ParticipantesUtil.OBSERVACIONES));
+		            nuevoParticipante.set(ParticipantesUtil.ASISTE, participante.getString(ParticipantesUtil.ASISTE));
+		            nuevoParticipante.set(ParticipantesUtil.TIPO_PODER, participante.getString(ParticipantesUtil.TIPO_PODER));
+		            nuevoParticipante.set(ParticipantesUtil.FECHA_INI, participante.getString(ParticipantesUtil.FECHA_INI));
+		            nuevoParticipante.set(ParticipantesUtil.FECHA_FIN, participante.getString(ParticipantesUtil.FECHA_FIN));
+		            nuevoParticipante.set(ParticipantesUtil.SOLICITAR_OFERTA, participante.getString(ParticipantesUtil.SOLICITAR_OFERTA));
+		            nuevoParticipante.set(ParticipantesUtil.CCC, participante.getString(ParticipantesUtil.CCC));
+		            nuevoParticipante.set(ParticipantesUtil.DIR3, participante.getString(ParticipantesUtil.DIR3));
 		            
 		            try{
 		            	nuevoParticipante.store(cct);
@@ -455,39 +517,40 @@ public class ParticipantesUtil {
 		
 		IItem interviniente_nuevo = entitiesAPI.createEntity(tabla, numexp);
 	
-		interviniente_nuevo.set("ID", interviniente_viejo.getInt("ID"));
-		interviniente_nuevo.set("ID_EXT", interviniente_viejo.getString("ID_EXT"));
-		interviniente_nuevo.set("NUMEXP", interviniente_viejo.getString("NUMEXP"));
-		interviniente_nuevo.set("ROL", interviniente_viejo.getString("ROL"));
-		interviniente_nuevo.set("TIPO", interviniente_viejo.getString("TIPO"));
-		interviniente_nuevo.set("TIPO_PERSONA",	interviniente_viejo.getString("TIPO_PERSONA"));
-		interviniente_nuevo.set("NDOC", interviniente_viejo.getString("NDOC"));
-		interviniente_nuevo.set("NOMBRE", interviniente_viejo.getString("NOMBRE"));
-		interviniente_nuevo.set("DIRNOT", interviniente_viejo.getString("DIRNOT"));
-		interviniente_nuevo.set("EMAIL", interviniente_viejo.getString("EMAIL"));
-		interviniente_nuevo.set("C_POSTAL",	interviniente_viejo.getString("C_POSTAL"));
-		interviniente_nuevo.set("LOCALIDAD", interviniente_viejo.getString("LOCALIDAD"));
-		interviniente_nuevo.set("CAUT", interviniente_viejo.getString("CAUT"));
-		interviniente_nuevo.set("TFNO_FIJO", interviniente_viejo.getString("TFNO_FIJO"));
-		interviniente_nuevo.set("TFNO_MOVIL", interviniente_viejo.getString("TFNO_MOVIL"));
-		interviniente_nuevo.set("TIPO_DIRECCION", interviniente_viejo.getString("TIPO_DIRECCION"));
-		interviniente_nuevo.set("DIRECCIONTELEMATICA", interviniente_viejo.getString("DIRECCIONTELEMATICA"));
-		interviniente_nuevo.set("IDDIRECCIONPOSTAL", interviniente_viejo.getString("IDDIRECCIONPOSTAL"));
-		interviniente_nuevo.set("DECRETO_NOTIFICADO", interviniente_viejo.getString("DECRETO_NOTIFICADO"));
-		interviniente_nuevo.set("DECRETO_TRASLADADO", interviniente_viejo.getString("DECRETO_TRASLADADO"));
-		interviniente_nuevo.set("ACUSE_GENERADO", interviniente_viejo.getString("ACUSE_GENERADO"));
-		interviniente_nuevo.set("RECURSO", interviniente_viejo.getString("RECURSO"));
-		interviniente_nuevo.set("OBSERVACIONES", interviniente_viejo.getString("OBSERVACIONES"));
-		interviniente_nuevo.set("FECHA_ACUSE", interviniente_viejo.getDate("FECHA_ACUSE"));
-		interviniente_nuevo.set("MOTIVO_ACUSE", interviniente_viejo.getString("MOTIVO_ACUSE"));
-		interviniente_nuevo.set("RECURSO_TEXTO", interviniente_viejo.getString("RECURSO_TEXTO"));
-		interviniente_nuevo.set("ASISTE", interviniente_viejo.getString("ASISTE"));
-		interviniente_nuevo.set("TIPO_PODER", interviniente_viejo.getString("TIPO_PODER"));
-		interviniente_nuevo.set("FECHA_INI", interviniente_viejo.getDate("FECHA_INI"));
-		interviniente_nuevo.set("FECHA_FIN", interviniente_viejo.getDate("FECHA_FIN"));
-		interviniente_nuevo.set("SOLICITAR_OFERTA", interviniente_viejo.getString("SOLICITAR_OFERTA"));
-		interviniente_nuevo.set("SOLICITADA_OFERTA", interviniente_viejo.getString("SOLICITADA_OFERTA"));
-		interviniente_nuevo.set("CCC", interviniente_viejo.getString("CCC"));
+		interviniente_nuevo.set(ParticipantesUtil.ID, interviniente_viejo.getInt(ParticipantesUtil.ID));
+		interviniente_nuevo.set(ParticipantesUtil.ID_EXT, interviniente_viejo.getString(ParticipantesUtil.ID_EXT));
+		interviniente_nuevo.set(ParticipantesUtil.NUMEXP, interviniente_viejo.getString(ParticipantesUtil.NUMEXP));
+		interviniente_nuevo.set(ParticipantesUtil.ROL, interviniente_viejo.getString(ParticipantesUtil.ROL));
+		interviniente_nuevo.set(ParticipantesUtil.TIPO, interviniente_viejo.getString(ParticipantesUtil.TIPO));
+		interviniente_nuevo.set(ParticipantesUtil.TIPO_PERSONA,	interviniente_viejo.getString(ParticipantesUtil.TIPO_PERSONA));
+		interviniente_nuevo.set(ParticipantesUtil.NDOC, interviniente_viejo.getString(ParticipantesUtil.NDOC));
+		interviniente_nuevo.set(ParticipantesUtil.NOMBRE, interviniente_viejo.getString(ParticipantesUtil.NOMBRE));
+		interviniente_nuevo.set(ParticipantesUtil.DIRNOT, interviniente_viejo.getString(ParticipantesUtil.DIRNOT));
+		interviniente_nuevo.set(ParticipantesUtil.EMAIL, interviniente_viejo.getString(ParticipantesUtil.EMAIL));
+		interviniente_nuevo.set(ParticipantesUtil.C_POSTAL,	interviniente_viejo.getString(ParticipantesUtil.C_POSTAL));
+		interviniente_nuevo.set(ParticipantesUtil.LOCALIDAD, interviniente_viejo.getString(ParticipantesUtil.LOCALIDAD));
+		interviniente_nuevo.set(ParticipantesUtil.CAUT, interviniente_viejo.getString(ParticipantesUtil.CAUT));
+		interviniente_nuevo.set(ParticipantesUtil.TFNO_FIJO, interviniente_viejo.getString(ParticipantesUtil.TFNO_FIJO));
+		interviniente_nuevo.set(ParticipantesUtil.TFNO_MOVIL, interviniente_viejo.getString(ParticipantesUtil.TFNO_MOVIL));
+		interviniente_nuevo.set(ParticipantesUtil.TIPO_DIRECCION, interviniente_viejo.getString(ParticipantesUtil.TIPO_DIRECCION));
+		interviniente_nuevo.set(ParticipantesUtil.DIRECCIONTELEMATICA, interviniente_viejo.getString(ParticipantesUtil.DIRECCIONTELEMATICA));
+		interviniente_nuevo.set(ParticipantesUtil.IDDIRECCIONPOSTAL, interviniente_viejo.getString(ParticipantesUtil.IDDIRECCIONPOSTAL));
+		interviniente_nuevo.set(ParticipantesUtil.DECRETO_NOTIFICADO, interviniente_viejo.getString(ParticipantesUtil.DECRETO_NOTIFICADO));
+		interviniente_nuevo.set(ParticipantesUtil.DECRETO_TRASLADADO, interviniente_viejo.getString(ParticipantesUtil.DECRETO_TRASLADADO));
+		interviniente_nuevo.set(ParticipantesUtil.ACUSE_GENERADO, interviniente_viejo.getString(ParticipantesUtil.ACUSE_GENERADO));
+		interviniente_nuevo.set(ParticipantesUtil.RECURSO, interviniente_viejo.getString(ParticipantesUtil.RECURSO));
+		interviniente_nuevo.set(ParticipantesUtil.OBSERVACIONES, interviniente_viejo.getString(ParticipantesUtil.OBSERVACIONES));
+		interviniente_nuevo.set(ParticipantesUtil.FECHA_ACUSE, interviniente_viejo.getDate(ParticipantesUtil.FECHA_ACUSE));
+		interviniente_nuevo.set(ParticipantesUtil.MOTIVO_ACUSE, interviniente_viejo.getString(ParticipantesUtil.MOTIVO_ACUSE));
+		interviniente_nuevo.set(ParticipantesUtil.RECURSO_TEXTO, interviniente_viejo.getString(ParticipantesUtil.RECURSO_TEXTO));
+		interviniente_nuevo.set(ParticipantesUtil.ASISTE, interviniente_viejo.getString(ParticipantesUtil.ASISTE));
+		interviniente_nuevo.set(ParticipantesUtil.TIPO_PODER, interviniente_viejo.getString(ParticipantesUtil.TIPO_PODER));
+		interviniente_nuevo.set(ParticipantesUtil.FECHA_INI, interviniente_viejo.getDate(ParticipantesUtil.FECHA_INI));
+		interviniente_nuevo.set(ParticipantesUtil.FECHA_FIN, interviniente_viejo.getDate(ParticipantesUtil.FECHA_FIN));
+		interviniente_nuevo.set(ParticipantesUtil.SOLICITAR_OFERTA, interviniente_viejo.getString(ParticipantesUtil.SOLICITAR_OFERTA));
+		interviniente_nuevo.set(ParticipantesUtil.SOLICITADA_OFERTA, interviniente_viejo.getString(ParticipantesUtil.SOLICITADA_OFERTA));
+		interviniente_nuevo.set(ParticipantesUtil.CCC, interviniente_viejo.getString(ParticipantesUtil.CCC));
+		interviniente_nuevo.set(ParticipantesUtil.DIR3, interviniente_viejo.getString(ParticipantesUtil.DIR3));
 	
 		interviniente_nuevo.store(cct);
 	}
@@ -512,14 +575,16 @@ public class ParticipantesUtil {
 
 		String consulta = "";
 		
-		if(StringUtils.isNotEmpty(numexp)) consulta += "WHERE NUMEXP = '" + numexp + "' ";
+		if(StringUtils.isNotEmpty(numexp)) consulta += " WHERE NUMEXP = '" + numexp + "' ";
 
 		if(StringUtils.isNotEmpty(sqlQuery)){
 			if(StringUtils.isNotEmpty(numexp)) consulta += " AND ";
 			else consulta += " WHERE ";
 			consulta += "  ( " + sqlQuery + " ) ";
 		}
-		if(StringUtils.isNotEmpty(order)) consulta += " ORDER BY " + order;
+		if(StringUtils.isNotEmpty(order)){
+			consulta += " ORDER BY " + order;
+		}
 		
 		resultado = ParticipantesUtil.queryParticipantes(cct, consulta);
 
@@ -547,7 +612,7 @@ public class ParticipantesUtil {
 			resultado = new ListCollection(part);
 		}
 		catch(Exception e){
-			logger.error("Error al recuperar los participantes. consulta: " + consulta + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar los participantes. consulta: " + consulta + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar los participantes. " + e.getMessage(), e);
 		}
 		
@@ -616,6 +681,48 @@ public class ParticipantesUtil {
 		
 		return dir; 
 	}
-	
+
+	public static IItemCollection getParticipantesByRol(IClientContext cct, String numexp, String rol) {
+		return getParticipantesByRol(cct, numexp, rol, "");
+	}
+		
+	public static IItemCollection getParticipantesByRol(IClientContext cct, String numexp, String rol, String orden) {
+		IItemCollection partCol = null;
+		try {
+			partCol = ParticipantesUtil.getParticipantes(cct, numexp, ParticipantesUtil.ROL + " = '" + rol + "'", orden);
+		} catch (ISPACException e) {
+			LOGGER.error("ERROR al recuperar los participantes del expediente: " + numexp + " , y rol: " + rol + ". " + e.getMessage(), e);
+			ArrayList<IItem> part = new ArrayList<IItem>();
+			partCol = new ListCollection(part);			
+		}
+		
+		return partCol;
+	}
 	//[eCenpri-Mayu] - FIN - Se eliminan dependencias cíclicas.
+	
+	public static boolean existeParticipante(IClientContext cct, String numexp, String nifParticipante) {
+		boolean existe = false;
+		try{
+			IItemCollection nuevoParticipanteCol = ParticipantesUtil.getParticipantes( cct, numexp, ParticipantesUtil.NDOC + " = '" + nifParticipante + "'", "");
+			
+			Iterator<?> nuevoParticipanteIt = nuevoParticipanteCol.iterator();
+			existe = nuevoParticipanteIt.hasNext();
+		} catch( ISPACException e){
+			LOGGER.error("ERROR al comprobar si el participante: " + nifParticipante + " existe en el expediente: " + numexp + ". " + e.getMessage(), e);
+		}
+		return existe;
+	}
+	
+	public static boolean tieneTrasladados(IClientContext cct, String numExp) throws ISPACException {
+        boolean tiene = false;
+
+        IItemCollection participantes = ParticipantesUtil.getParticipantesByRol(cct, numExp, ParticipantesUtil._TIPO_TRASLADO);
+        Iterator<?> itParticipantes = participantes.iterator();
+        
+        if (itParticipantes.hasNext()) {
+            tiene = true;
+        }
+        
+        return tiene;
+    }
 }

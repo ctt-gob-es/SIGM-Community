@@ -10,9 +10,9 @@
 </c1:set><jsp:useBean id="aux0" type="java.lang.String" />
 <ispac:tabs>
 	<ispac:tab title='<%=aux0%>'>
-		<div id="dataBlock_CONTRATACION_DATOS_LIC" style="position: relative; height: 780px; width: 600px">
+		<div id="dataBlock_CONTRATACION_DATOS_LIC" style="position: relative; height: 880px; width: 600px">
 		
-		<div id="label_CONTRATACION_DATOS_LIC:COD_PRESENT_OFERTA"
+			<div id="label_CONTRATACION_DATOS_LIC:COD_PRESENT_OFERTA"
 				style="position: absolute; top: 10px; left: 10px; width: 220px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_LIC:PRESENT_OFERTA)" /> (*):
@@ -29,21 +29,52 @@
 					</ispac:htmlTextareaImageFrame>
 				</nobr>
 			</div>
-			
-			
 			<div id="label_SPAC_EXPEDIENTES:SEP_INTERESADO_PRINCIPAL" style="position: absolute; top: 35px; left: 10px; width: 620px" class="textbar">
+			ORGANO ASISTENCIA
+			<hr class="formbar"/>
+			</div>
+			
+			<div id="label_CONTRATACION_DATOS_LIC:IDENT_OA"
+				style="position: absolute; top: 65px; left: 10px; width: 230px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_LIC:IDENT_OA)" />:
+			</div>
+			<div id="data_CONTRATACION_DATOS_LIC:IDENT_OA"
+				style="position: absolute; top: 65px; left: 170px;">
+				<ispac:htmlText property="property(CONTRATACION_DATOS_LIC:IDENT_OA)"
+					readonly="true" propertyReadonly="readonly" styleClass="input"
+					styleClassReadonly="inputReadOnly" size="81" maxlength="256"
+					tabindex="116">
+				</ispac:htmlText>
+			</div>
+			
+			<div id="label_CONTRATACION_DATOS_LIC:NOMBRE_OA"
+				style="position: absolute; top: 95px; left: 10px; width: 230px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_LIC:NOMBRE_OA)" />:
+			</div>
+			<div id="data_CONTRATACION_DATOS_LIC:NOMBRE_OA"
+				style="position: absolute; top: 95px; left: 170px;">
+				<ispac:htmlText property="property(CONTRATACION_DATOS_LIC:NOMBRE_OA)"
+					readonly="true" propertyReadonly="readonly" styleClass="input"
+					styleClassReadonly="inputReadOnly" size="81" maxlength="256"
+					tabindex="116">
+				</ispac:htmlText>
+			</div>
+			
+			<div id="label_SPAC_EXPEDIENTES:SEP_INTERESADO_PRINCIPAL" style="position: absolute; top: 135px; left: 10px; width: 620px" class="textbar">
 			APLICACIÓN PRESUPUESTARIA
 			<hr class="formbar"/>
 			</div>
 			
 			<div id="label_CONTRATACION_DATOS_LIC:APLICAPRESUP"
-				style="position: absolute; top: 60px; left: 10px; width: 410px;"
+				style="position: absolute; top: 160px; left: 10px; width: 410px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_LIC:APLICAPRESUP)" /> (aplipres-anualidad-importe):
 			</div>
 			
 			<div id="data_CONTRATACION_DATOS_LIC:APLICAPRESUP"
-				style="position: absolute; top: 60px; left: 350px; width: 100%;">
+				style="position: absolute; top: 160px; left: 350px; width: 100%;">
 				<nobr>
 					<ispac:htmlTextMultivalue
 						property="propertyMultivalue(CONTRATACION_DATOS_LIC:APLICAPRESUP)"
@@ -55,17 +86,17 @@
 			</div>
 
 			
-			<div id="label_CONTRATACION_DATOS_LIC:CRITERIOS" style="position: absolute; top: 140px; left: 10px; width: 620px" class="textbar">
+			<div id="label_CONTRATACION_DATOS_LIC:CRITERIOS" style="position: absolute; top: 240px; left: 10px; width: 620px" class="textbar">
 			CRITERIOS DE ADJUDICACIÓN
 			<hr class="formbar"/>
 			</div>
 			
 			<div id="label_CONTRATACION_DATOS_LIC:COD_CONTRATO_SUMIN"
-				style="position: absolute; top: 170px; left: 10px; width: 210px;"
+				style="position: absolute; top: 270px; left: 10px; width: 210px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_LIC:PROC_ADJUDICACION)" />:
 			</div>
-			<div id="data_CONTRATACION_DATOS_LIC:PROC_ADJUDICACION" style="position: absolute; top: 170px; left: 200px; width: 100%;">
+			<div id="data_CONTRATACION_DATOS_LIC:PROC_ADJUDICACION" style="position: absolute; top: 270px; left: 200px; width: 100%;">
 				<nobr>
 					<ispac:htmlTextareaImageFrame property="property(CONTRATACION_DATOS_LIC:PROC_ADJUDICACION)" readonly="true" readonlyTag="false" 
 					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="80" 
@@ -79,11 +110,11 @@
 			</div>
 			
 			<div id="label_CONTRATACION_DATOS_LIC:EVA_ECO"
-				style="position: absolute; top: 195px; left: 10px; width: 210px;"
+				style="position: absolute; top: 295px; left: 10px; width: 210px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_LIC:EVA_ECO)" />:
 			</div>
-			<div id="data_CONTRATACION_DATOS_LIC:EVA_ECO" style="position: absolute; top: 195px; left: 200px; width: 100%;">
+			<div id="data_CONTRATACION_DATOS_LIC:EVA_ECO" style="position: absolute; top: 295px; left: 200px; width: 100%;">
 				<nobr>
 					<ispac:htmlTextareaImageFrame property="property(CONTRATACION_DATOS_LIC:EVA_ECO)" readonly="true" readonlyTag="false" 
 					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="80" 
@@ -97,7 +128,7 @@
 			</div>
 			
 			<div id="label_CONTRATACION_DATOS_LIC:TERMADJ"
-					style="position: absolute; top: 225px; left: 10px; width: 400px"
+					style="position: absolute; top: 325px; left: 10px; width: 400px"
 					class="textbar1">
 					CONDICIONES DE ADJUDICACIÓN
 					<hr class="formbar1" />
@@ -107,11 +138,11 @@
 			title="Código de algoritmo de ponderación, describe el algoritmo de ponderación de los criterios de adjudicación establecidos por el 
 			órgano de contratación. Únicamente se utiliza en caso de adjudicación por multiplicidad de
 criterios. Indica cómo se calcula la puntuación total de una oferta a partir de la puntuación obtenida en cada uno de los criterios y su ponderación."
-				style="position: absolute; top: 255px; left: 10px; width: 230px;"
+				style="position: absolute; top: 355px; left: 10px; width: 230px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_LIC:ALG_CALC_POND)" />:
 			</div>
-			<div id="data_CONTRATACION_DATOS_LIC:COD_ALG_CALC_POND" style="position: absolute; top: 255px; left: 250px; width: 100%;">
+			<div id="data_CONTRATACION_DATOS_LIC:COD_ALG_CALC_POND" style="position: absolute; top: 355px; left: 250px; width: 100%;">
 				<nobr>
 					<ispac:htmlTextareaImageFrame property="property(CONTRATACION_DATOS_LIC:ALG_CALC_POND)" readonly="true" readonlyTag="false" 
 					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="80" 
@@ -126,12 +157,12 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 			
 			<div id="label_CONTRATACION_DATOS_LIC:DESCRIPCION"
 				title="Descripción textual de las condiciones de adjudicación."
-				style="position: absolute; top: 280px; left: 10px; width: 230px;"
+				style="position: absolute; top: 380px; left: 10px; width: 230px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_LIC:DESCRIPCION)" />:
 			</div>
 			<div id="data_CONTRATACION_DATOS_LIC:DESCRIPCION"
-				style="position: absolute; top: 280px; left: 250px;">
+				style="position: absolute; top: 380px; left: 250px;">
 				<ispac:htmlText property="property(CONTRATACION_DATOS_LIC:APLICPRES)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
 					styleClassReadonly="inputReadOnly" size="81" maxlength="256"
@@ -143,12 +174,12 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 				title="Descripción textual del comité de expertos que realizará la evaluación técnica y de los criterios evaluables mediante un juicio de  valor (subjetivos) de las ofertas recibidas. Únicamente es necesario describir el comité técnico en el caso que el contrato se adjudique 
 				por multiplicidad de criterios y 
 				además existan criterios subjetivos en la lista de criterios de adjudicación."
-				style="position: absolute; top: 305px; left: 10px; width: 230px;"
+				style="position: absolute; top: 405px; left: 10px; width: 230px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_LIC:DESCCOMITE)" />:
 			</div>
 			<div id="data_CONTRATACION_DATOS_LIC:DESCCOMITE"
-				style="position: absolute; top: 305px; left: 250px;">
+				style="position: absolute; top: 405px; left: 250px;">
 				<ispac:htmlText property="property(CONTRATACION_DATOS_LIC:DESCCOMITE)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
 					styleClassReadonly="inputReadOnly" size="81" maxlength="256"
@@ -158,12 +189,12 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 			
 			<div id="label_CONTRATACION_DATOS_LIC:DESCRIPCION_BAJA"
 				title="Descripción textual del sistema que establecerá el órgano de contratación para delimitar las ofertas que se considere que incurren en baja temeraria."
-				style="position: absolute; top: 330px; left: 10px; width: 230px;"
+				style="position: absolute; top: 430px; left: 10px; width: 230px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_LIC:DESCRIPCION_BAJA)" />:
 			</div>
 			<div id="data_CONTRATACION_DATOS_LIC:DESCRIPCION_BAJA"
-				style="position: absolute; top: 330px; left: 250px;">
+				style="position: absolute; top: 430px; left: 250px;">
 				<ispac:htmlText property="property(CONTRATACION_DATOS_LIC:DESCRIPCION_BAJA)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
 					styleClassReadonly="inputReadOnly" size="81" maxlength="256"
@@ -173,7 +204,7 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 
 			<div id="label_CONTRATACION_DATOS_LIC:COMITEEXPERTOS"
 				title="Describir a las personas del Comité de Expertos, necesarios encargados de evaluar los criterios de adjudicación susceptibles de un juicio de valor."
-				style="position: absolute; top: 355px; left: 10px; width: 230px;"
+				style="position: absolute; top: 455px; left: 10px; width: 230px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_DATOS_LIC:COMITEEXPERTOS)" />
@@ -181,7 +212,7 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 			</div>
 			<div id="data_CONTRATACION_DATOS_LIC:COMITEEXPERTOS"
 
-				style="position: absolute; top: 355px; left: 250px; width: 100%;">
+				style="position: absolute; top: 455px; left: 250px; width: 100%;">
 				<nobr>
 					<ispac:htmlTextMultivalue
 						property="propertyMultivalue(CONTRATACION_DATOS_LIC:COMITEEXPERTOS)"
@@ -192,21 +223,21 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 				</nobr>
 			</div>
 			
-			<div id="label_CONTRATACION_DATOS_LIC:VARIANTES" style="position: absolute; top: 435px; left: 10px; width: 620px" class="textbar">
+			<div id="label_CONTRATACION_DATOS_LIC:VARIANTES" style="position: absolute; top: 535px; left: 10px; width: 620px" class="textbar">
 			VARIANTES
 			<hr class="formbar"/>
 			</div>
 
 			<div id="label_CONTRATACION_DATOS_LIC:VARIANTEOFERTA"
 				title="Es una propiedad lógica (verdadero o falso) que sirve para indicar que se aceptan variantes a las ofertas presentadas por parte de los operadores económicos."
-				style="position: absolute; top: 465px; left: 10px; width: 230px;"
+				style="position: absolute; top: 565px; left: 10px; width: 230px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_DATOS_LIC:VARIANTEOFERTA)" />
 				:
 			</div>
 			<div id="data_CONTRATACION_DATOS_LIC:VARIANTEOFERTA"
-				style="position: absolute; top: 465px; left: 250px; width: 100%;">
+				style="position: absolute; top: 565px; left: 250px; width: 100%;">
 				<nobr>
 					<ispac:htmlTextImageFrame
 						property="property(CONTRATACION_DATOS_LIC:VARIANTEOFERTA)"
@@ -229,14 +260,14 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 			</div>
 			<div id="label_CONTRATACION_DATOS_LIC:NUM_VAR"
 			title="Sirve para indicar el número máximo de variantes permitido en las ofertas presentadas por un licitador."
-				style="position: absolute; top:490px; left: 10px; width: 230px;"
+				style="position: absolute; top:590px; left: 10px; width: 230px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_DATOS_LIC:NUM_VAR)" />
 				:
 			</div>
 			<div id="data_CONTRATACION_DATOS_LIC:NUM_VAR"
-				style="position: absolute; top: 490px; left: 250px; width: 100%;">
+				style="position: absolute; top: 590px; left: 250px; width: 100%;">
 				<ispac:htmlText property="property(CONTRATACION_DATOS_LIC:NUM_VAR)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
 					styleClassReadonly="inputReadOnly" size="80" maxlength="50">
@@ -244,14 +275,14 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 			</div>
 			<div id="label_CONTRATACION_DATOS_LIC:ELEM_ACEP"
 			title="Describe sobre qué elementos se permitirá que el operador económico presente variantes a sus ofertas."
-				style="position: absolute; top: 515px; left: 10px; width: 230px;"
+				style="position: absolute; top: 615px; left: 10px; width: 230px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_DATOS_LIC:ELEM_ACEP)" />
 				:
 			</div>
 			<div id="data_CONTRATACION_DATOS_LIC:ELEM_ACEP"
-				style="position: absolute; top: 515px; left: 250px; width: 100%;">
+				style="position: absolute; top: 615px; left: 250px; width: 100%;">
 				<ispac:htmlTextMultivalue
 					property="propertyMultivalue(CONTRATACION_DATOS_LIC:ELEM_ACEP)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
@@ -260,17 +291,17 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 				</ispac:htmlTextMultivalue>
 			</div>
 			
-			<div id="label_CONTRATACION_DATOS_LIC:PROGRAMA_FINANCIACION" style="position: absolute; top: 600px; left: 10px; width: 620px" class="textbar">
+			<div id="label_CONTRATACION_DATOS_LIC:PROGRAMA_FINANCIACION" style="position: absolute; top: 700px; left: 10px; width: 620px" class="textbar">
 			PROGRAMA FINANCIACIÓN
 			<hr class="formbar"/>
 			</div>
 			
 			<div id="label_CONTRATACION_DATOS_LIC:PROGRAMA_FINANCIACION"
-				style="position: absolute; top: 630px; left: 10px; width: 575px;"
+				style="position: absolute; top: 730px; left: 10px; width: 575px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_LIC:PROGRAMA_FINANCIACION)" />:
 			</div>
-			<div id="data_CONTRATACION_DATOS_LIC:PROGRAMA_FINANCIACION" style="position: absolute; top: 630px; left: 240px; width: 100%;">
+			<div id="data_CONTRATACION_DATOS_LIC:PROGRAMA_FINANCIACION" style="position: absolute; top: 730px; left: 240px; width: 100%;">
 				<nobr>
 					<ispac:htmlTextareaImageFrame property="property(CONTRATACION_DATOS_LIC:PROGRAMA_FINANCIACION)" readonly="true" readonlyTag="false" 
 					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="80" 
@@ -284,7 +315,7 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 			</div>
 			
 			<div id="label_CONTRATACION_DATOS_LIC:PROGRAMA"
-				style="position: absolute; top:655px; left: 10px; width: 230px;"
+				style="position: absolute; top:755px; left: 10px; width: 230px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_DATOS_LIC:PROGRAMA)" />
@@ -292,7 +323,7 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 			</div>
 			
 			<div id="data_CONTRATACION_DATOS_LIC:PROGRAMA"
-				style="position: absolute; top: 655px; left: 240px; width: 100%;">
+				style="position: absolute; top: 755px; left: 240px; width: 100%;">
 				<ispac:htmlTextarea
 					property="property(CONTRATACION_DATOS_LIC:PROGRAMA)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
@@ -301,13 +332,13 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 			</div>
 			
 			
-			<div id="label_CONTRATACION_DATOS_LIC:REVISION_PRECIOS" style="position: absolute; top: 700px; left: 10px; width: 620px" class="textbar">
+			<div id="label_CONTRATACION_DATOS_LIC:REVISION_PRECIOS" style="position: absolute; top: 800px; left: 10px; width: 620px" class="textbar">
 			REVISIÓN PRECIOS
 			<hr class="formbar"/>
 			</div>
 			
 			<div id="label_CONTRATACION_DATOS_LIC:REV_PRECIOS"
-				style="position: absolute; top:735px; left: 10px; width: 230px;"
+				style="position: absolute; top:835px; left: 10px; width: 230px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_DATOS_LIC:REV_PRECIOS)" />
@@ -324,3 +355,19 @@ criterios. Indica cómo se calcula la puntuación total de una oferta a partir de 
 		</div>
 	</ispac:tab>
 </ispac:tabs>
+<script> 
+financiacion = document.forms[0].elements['property(CONTRATACION_DATOS_LIC:PROGRAMA_FINANCIACION)'].value;
+if(financiacion == "EU - Subvencionado por la UE"){
+	programa = document.forms[0].elements['property(CONTRATACION_DATOS_LIC:PROGRAMA)'].value; 
+   	if (programa == ""){ 
+      	//si era la cadena vacía es que no era válido. Lo aviso 
+      	alert("Es obligatorio rellenar el programa cuando es subvencionado por la UE") 
+      	//selecciono el texto 
+      	document.forms[0].elements['property(CONTRATACION_DATOS_LIC:PROGRAMA)'].select(); 
+      	//coloco otra vez el foco 
+      	document.forms[0].elements['property(CONTRATACION_DATOS_LIC:PROGRAMA)'].focus();
+      	document.forms[0].elements['property(CONTRATACION_DATOS_LIC:PROGRAMA)'].style.borderColor = 'red';
+   	}else 
+      	document.f1.numero.value = enteroValidado 
+}    
+</script> 

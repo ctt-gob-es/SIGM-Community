@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.MailUtil;
-import es.dipucr.webempleado.services.licencias.LicenciasWSProxy;
 
 
 /**
@@ -89,16 +88,8 @@ public class AnularLicenciasRule implements IRule
 			//*********************************************
 			//Respuesta al portal del empleado -> Se actualiza el estado
 			//*********************************************
-    		//Desglosamos el nif, el año y el nlic
     		String strIdSolicitud = itemLicencias.getString("ID_SOLICITUD");
-			String [] arrIdSolicitud = strIdSolicitud.split("-");
-			String strNif = arrIdSolicitud[0];
-			int iAno = Integer.valueOf(arrIdSolicitud[1]);
-			String strNlic = arrIdSolicitud[2];
-			
-			//Hacemos la petición al servicio web
-			LicenciasWSProxy wsLicencias = new LicenciasWSProxy();
-			wsLicencias.ponerLicenciaAnulada(strNif, iAno, strNlic, strObservaciones);
+    		LicenciasWSDispatcher.ponerLicenciaAnulada(cct, strIdSolicitud, strObservaciones);
 			
 			//Cerramos el trámite y el expediente
 			ExpedientesUtil.cerrarExpediente(cct, numexp);

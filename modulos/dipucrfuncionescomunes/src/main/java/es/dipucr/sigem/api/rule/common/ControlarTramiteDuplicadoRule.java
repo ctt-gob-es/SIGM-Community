@@ -17,13 +17,11 @@ import java.util.Iterator;
  * @since 08.06.2010
  */
 public class ControlarTramiteDuplicadoRule implements IRule {
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-    {
+	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
         return true;
     }
 
-    public boolean validate(IRuleContext rulectx) throws ISPACRuleException
-    {
+    public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
     	try{    		
     		//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
@@ -41,7 +39,7 @@ public class ControlarTramiteDuplicadoRule implements IRule {
 	        
 	        //Obtenemos la lista de trámites del expediente
 	        IItemCollection itemCollection = entitiesAPI.getStageTasks(rulectx.getNumExp(), rulectx.getStageProcedureId());
-	        Iterator it = itemCollection.iterator();
+	        Iterator<?> it = itemCollection.iterator();
 			
 			while (it.hasNext() && bCrearTramite){
 				tramite = (IItem)it.next();
@@ -51,9 +49,9 @@ public class ControlarTramiteDuplicadoRule implements IRule {
 					//Controlamos que no aparezca dos veces: tramite actual más el ya existente
 					if (contador >= 2){
 						bCrearTramite = false;
-						rulectx.setInfoMessage("No se puede crear el trámite \""+
+						rulectx.setInfoMessage("No se puede crear el trámite \"" +
 								nombre
-								+"\". Ya existe un tramite de este tipo asociado a la fase actual.");
+								+ "\". Ya existe un tramite de este tipo asociado a la fase actual.");
 					}
 				}
 			}
@@ -65,13 +63,11 @@ public class ControlarTramiteDuplicadoRule implements IRule {
 	    } 
     }
 
-    public Object execute(IRuleContext rulectx) throws ISPACRuleException
-    {        
+    public Object execute(IRuleContext rulectx) throws ISPACRuleException {        
     	return null;
     }
 
-    public void cancel(IRuleContext rulectx) throws ISPACRuleException
-    {
+    public void cancel(IRuleContext rulectx) throws ISPACRuleException {
     }
 
 }

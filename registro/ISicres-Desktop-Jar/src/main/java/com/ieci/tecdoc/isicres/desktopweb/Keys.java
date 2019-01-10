@@ -614,6 +614,10 @@ public interface Keys {
 			+ ":" + "{0}" + "; " + XML_FONT_SIZE_TEXT + ":" + "{1}" + "pt; "
 			+ XML_FONT_COLOR_TEXT + ":" + "{2}" + "; " + XML_FONT_ALIGN_TEXT
 			+ ":" + "{3}" + ";{4}";
+	
+	public static final String XML_XTYLE_FORMAT_NO_HEIGHT = XML_LEFT_TEXT + ":" + "{0}"
+			+ "px; " + XML_TOP_TEXT + ":" + "{1}" + "px; " + XML_WIDTH_TEXT
+			+ ":" + "{2}" + "px;";
 
 	public static final String XML_XTYLE_FORMAT = XML_LEFT_TEXT + ":" + "{0}"
 			+ "px; " + XML_TOP_TEXT + ":" + "{1}" + "px; " + XML_WIDTH_TEXT

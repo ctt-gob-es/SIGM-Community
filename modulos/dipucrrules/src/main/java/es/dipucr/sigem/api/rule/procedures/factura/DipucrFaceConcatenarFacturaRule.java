@@ -190,6 +190,9 @@ public class DipucrFaceConcatenarFacturaRule implements IRule {
 		    		"factura.xsig"
 		    );
 			
+			//[Dipucr-Manu #533] + ALSIGM3 Al firmarse la conformación de la factura la banda gris sobreescribe el contenido
+			PdfUtil.anexarDocumento( fileResultadoTemp, fileFactura, "factura_xsig.pdf");
+			
 			fileResultado.delete();
 			fileFactura.delete();
 			fileFicheroXml.delete();
@@ -238,7 +241,7 @@ public class DipucrFaceConcatenarFacturaRule implements IRule {
 			fileResultado.delete();
 			return document;
 			
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new ISPACRuleException("Error al concatenar el documento de factura "
 					+ "con el justificante y con los anexos", e);
 		}
@@ -362,6 +365,9 @@ public class DipucrFaceConcatenarFacturaRule implements IRule {
 		}
 		else if(versionp.trim().toUpperCase().equals("3.2.1".trim().toUpperCase())){
 			rutaXSL = XslTemplatesUtil.getInstance().getPath("factura", "/UNEDOCS_321_PDF_ES.xsl");//[dipucr-Felipe 3#82]
+		}
+		else if(versionp.trim().toUpperCase().equals("3.2.2".trim().toUpperCase())){//[dipucr-Felipe #682]
+			rutaXSL = XslTemplatesUtil.getInstance().getPath("factura", "/UNEDOCS_322_PDF_ES.xsl");
 		}
 		else{
 			throw new Exception("Formato de factura no reconocido");

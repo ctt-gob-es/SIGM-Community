@@ -3,22 +3,31 @@ package es.dipucr.sigem.api.rule.common.utils;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
+import ieci.tdw.ispac.ispaclib.session.OrganizationUserInfo;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
+import ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigFilePathResolver;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.Image;
 import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.PdfAction;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.AcroFields;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfEncryptor;
@@ -28,7 +37,6 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfWriter;
 
-import es.dipucr.sigem.api.rule.common.pdf.PdfConfiguration;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 
@@ -46,9 +54,9 @@ public class PdfUtil extends FileUtils {
 	public static boolean _NIVEL_SEGURIDAD_POR_DEFECTO = PdfWriter.STRENGTH128BITS;
 //	public static boolean _NIVEL_SEGURIDAD_POR_DEFECTO = PdfWriter.STRENGTH40BITS;
 	
-	public static int _PERMISOS_TOTALES = PdfWriter.AllowCopy | PdfWriter.AllowPrinting
-		| PdfWriter.AllowModifyContents | PdfWriter.AllowScreenReaders | PdfWriter.AllowModifyAnnotations
-		| PdfWriter.AllowFillIn | PdfWriter.AllowAssembly | PdfWriter.AllowDegradedPrinting;
+	public static int _PERMISOS_TOTALES = PdfWriter.ALLOW_COPY | PdfWriter.ALLOW_PRINTING
+		| PdfWriter.ALLOW_MODIFY_CONTENTS | PdfWriter.ALLOW_SCREENREADERS | PdfWriter.ALLOW_MODIFY_ANNOTATIONS
+		| PdfWriter.ALLOW_FILL_IN | PdfWriter.ALLOW_ASSEMBLY | PdfWriter.ALLOW_DEGRADED_PRINTING;
 	
 	public static int _PERMISOS_PROTECCION_TOTAL = 0;
 	
@@ -149,22 +157,6 @@ public class PdfUtil extends FileUtils {
 		}
 	}
 	
-	/**
-	 * 
-	 * @param genDocAPI
-	 * @param listFicheros
-	 * @param filePortada
-	 * @param fileContraPortada
-	 * @return
-	 * @throws ISPACException
-	 */
-	public static File concatenarPublicacion(IClientContext cct, ArrayList<String> listFicheros,
-			File filePortada, File fileContraPortada) throws ISPACException {
-		
-		//El tipo de visualización por defecto para las publicaciones es escondiendo la barra de herramientas
-		return concatenarPublicacion(cct, listFicheros, filePortada, fileContraPortada, PdfWriter.HideToolbar);
-		
-	}
 
 	/** 
 	 * [eCenpri-Felipe ticket #164]
@@ -179,106 +171,49 @@ public class PdfUtil extends FileUtils {
 	 * @throws ISPACException 
 	 */
 	public static File concatenarPublicacion(IClientContext cct, ArrayList<String> listFicheros,
-			File filePortada, File fileContraPortada, int tipoVisualizacion) throws ISPACException {
-	    
-		File resultado = null;
+			File filePortada, File fileContraPortada) throws ISPACException {
 		
-		try {
-			// Creamos un reader para el documento
-	    	PdfReader reader = null;
-	    	    	
-			Document document = null;
-	        PdfCopy  writer = null;
-	        //Indica si es el primer fichero (sobre el que se concatenarán el resto de ficheros)
-	        boolean primero = true;
+		return concatenarPublicacion(cct, listFicheros, filePortada, fileContraPortada, PdfWriter.PageModeUseOutlines);
+	}
 	
-	        String sInfoPag = null;
-	        File file = null;
-	        InputStream is = null;
-
-	        for (int i = -1; i <= listFicheros.size(); i++){
-	        	
-	        	if (primero){
-	        		file = filePortada;
-	        	}
-	        	else if (i == listFicheros.size()){
-	        		file = fileContraPortada;
-	        	}
-	        	else{
-		        	sInfoPag = (String) listFicheros.get(i);
-		        	//INICIO [eCenpri-Felipe #804]
-		        	//Por si se ha borrado el fichero del repositorio
+	public static File concatenarPublicacion(IClientContext cct, ArrayList<String> listFicheros,
+			File filePortada, File fileContraPortada, int tipoVisualizacion) throws ISPACException {
+		
+		File resultado = null;
+		try{
+		    final int ITERATOR_PORTADA = -1;
+		    final int ITERATOR_CONTRAPORTADA = listFicheros.size();
+		    
+		    ArrayList<File> listArchivos = new ArrayList<File>();
+		    
+		    for (int i = ITERATOR_PORTADA; i <= ITERATOR_CONTRAPORTADA; i++){
+		    	
+		    	File file = null;
+		    	if (i == ITERATOR_PORTADA){
+		    		file = filePortada;
+		    	}
+		    	else if (i == ITERATOR_CONTRAPORTADA){
+		    		file = fileContraPortada;
+		    	}
+		    	else{
+		    		String sInfoPag = (String) listFicheros.get(i);
+		    		//Por si se ha borrado el fichero del repositorio
 		        	try{
 			        	file = DocumentosUtil.getFile(cct, sInfoPag, null, _EXTENSION_PDF);
 		        	}
 		        	catch(ISPACException ex){
 		        		continue;
 		        	}
-		        	//FIN [eCenpri-Felipe #804]
-	        	}
-	        	is = new FileInputStream(file);
-	        	try{
-	        		reader = new PdfReader(is);
-	        	}
-			    catch (Exception e) {
-					//TODO: Meter los errones en una lista
-			    	continue;
-				}
-	        	
-		    	reader.consolidateNamedDestinations();
-		        int n = reader.getNumberOfPages();
-		        		        
-		        if (primero) {
-		            // Creamos un objeto Document
-		            document = new Document(reader.getPageSizeWithRotation(1));
-		            // Creamos un writer que escuche al documento
-		            resultado = new File((String)file.getPath());
-		            
-		            writer = new PdfCopy(document, new FileOutputStream(resultado));		            
-		            
-		            writer.setViewerPreferences(tipoVisualizacion);
-		            
-		            // Abrimos el documento
-		            document.open();		        
-		        }
-		        
-		        // Añadimos el contenido
-		        PdfImportedPage page;
-		        document.newPage();
-		        
-		        for (int j = 1; j <= n; j++) {
-		            page = writer.getImportedPage(reader, j);
-		            writer.addPage(page);
-		        }
-		        
-		        if(is != null) is.close();
-		        if(reader != null) reader.close();
-		        if(!primero){
-		        	if(file != null && file.exists()) file.delete();
-		        }
-		        if(primero){
-		        	primero = false;
-		        }
-		        
-		        //Recolectamos basura cada 50 iteraciones
-		        if (i % 50 == 0){
-		        	System.gc();
-		        }
-		        
-	        }//while
-	        
-	        //Añadimos un mensaje para el botón guardar
-	        
-            String strMensaje = PdfConfiguration.getInstance(cct).getProperty(PdfConfiguration.ENCRIPTAR.MENSAJE_GUARDAR);//[dipucr-Felipe 3#99]
-            PdfAction action = PdfAction.javaScript("app.alert('" + strMensaje + "');\r", writer);
-            writer.setAdditionalAction(PdfWriter.WILL_SAVE, action);
-	        
-	        document.close();
-	        writer.close();
+		    	}
+		    	listArchivos.add(file);
+		    }
+		    
+		    resultado = concatenarArchivos(listArchivos);
+		
 	    }
 	    catch(Exception e) {
-	        logger.error("Error al concatenar los archivos del documento", e);
-	        throw new ISPACException("Error al concatenar los archivos del documento", e);
+	        logger.error("Error al concatenar los archivos del documento. " + e.getMessage(), e);
+	        throw new ISPACException("Error al concatenar los archivos del documento. " + e.getMessage(), e);
 	    }
 	    return resultado;
 	}
@@ -296,95 +231,105 @@ public class PdfUtil extends FileUtils {
 		return concatenarArchivos(listFicheros, false);
 		
 	}
-		
+	
+	/**
+	 * [dipucr-Felipe #791]
+	 * Concatenamos con iText 5 y renombrando los acroFields para que conserve la información de firma visible
+	 * @param listFicheros
+	 * @param ambasCaras
+	 * @return
+	 * @throws ISPACException
+	 */
 	public static File concatenarArchivos(ArrayList<File> listFicheros, boolean ambasCaras) throws ISPACException {
 	    
 		File resultado = null;
-		
-		try {
-			// Creamos un reader para el documento
-	    	PdfReader reader = null;
-	    	    	
-			Document document = null;
-	        PdfCopy  writer = null;
-	        //Indica si es el primer fichero (sobre el que se concatenarán el resto de ficheros)
-	        boolean primero = true;
+
+		if (listFicheros != null && !listFicheros.isEmpty()) {
+			try{
+				com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+				
+				resultado = FileTemporaryManager.getInstance().newFile("." + "pdf");
 	
-	        File file = null;
-	        InputStream is = null;
-	        
-	        for (int i = 0; i < listFicheros.size(); i++){
-	        	
-	        	file = (File) listFicheros.get(i);
-	        	is = new FileInputStream(file);
-	        	reader = new PdfReader(is);
-	        	
-		    	reader.consolidateNamedDestinations();
-		        int n = reader.getNumberOfPages();
-		        		        
-		        if (primero) {
-		            // Creamos un objeto Document
-		            document = new Document(reader.getPageSizeWithRotation(1));
-		            // Creamos un writer que escuche al documento
-		            resultado = new File((String)file.getPath());
-		            
-		            writer = new PdfCopy(document, new FileOutputStream(resultado));		            
-		            
-		            writer.setViewerPreferences(PdfCopy.PageModeUseOutlines);
-		            
-		            // Abrimos el documento
-		            document.open();
-		            primero = false;
-		        }
-		        
-		        // Añadimos el contenido
-		        PdfImportedPage page;
-		        document.newPage();
-		        
-		        for (int j = 1; j <= n; j++) {
-		            page = writer.getImportedPage(reader, j);
-		            writer.addPage(page);
-		        }
-		        
-		        //MQE Ticket #180 para poder imprimir en dos caras 
-		        if(ambasCaras && n%2==1 && i < (listFicheros.size()-1)){
-		        	document.newPage();
-		        	//[Ticket#153#Teresa] ALSIGM3 Quitar el fichero blanco.pdf del código para que no aparezca en '/tmpcenpri/SIGEM/temp/temporary'
-		        	//String rutaFileName = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/blanco.pdf";
-		        	//InputStream f = new FileInputStream(rutaFileName);
-		        	//File filePdf = FileTemporaryManager.getInstance().newFile("." + "pdf");
-		        	//InputStream f = new FileInputStream(filePdf.getAbsolutePath());
-		        	
-		        	//reader = new PdfReader(f);
-		        	//[Teresa Ticket#161] INICIO ALSIGM3 error al generar el registro de salida por eliminar el documento blanco.pdf
-		        	File fileCompareceNombre = FileTemporaryManager.getInstance().newFile("." + "pdf");
-					Document documentComparece = new Document();
-					PdfCopy.getInstance(documentComparece, new FileOutputStream(fileCompareceNombre));
-					documentComparece.open();
-					documentComparece.add(new Phrase("\n\n"));
-					documentComparece.close();
-					
-					InputStream iPStr = new FileInputStream (fileCompareceNombre);
-					//[Teresa Ticket#161] FIN ALSIGM3 error al generar el registro de salida por eliminar el documento blanco.pdf
-					reader = new PdfReader(iPStr);
-		        	page = writer.getImportedPage(reader, 1);
-		        	writer.addPage(page);
-		        }
-		        //MQE Fin modificaciones Ticket #180 para poder imprimir en dos caras
-		        
-		        file = null;
-		        if(null != is) is.close();
-		        if(null != reader) reader.close();
-	        }
-	        
-	        if(null != document) document.close();
-	        if(null != writer) writer.close();
-	    }
-	    catch(Exception e) {
-	        logger.error("Error al concatenar los archivos del documento. " + e.getMessage(), e);
-	        throw new ISPACException("Error al concatenar los archivos del documento. " + e.getMessage(), e);
-	    }
+				com.itextpdf.text.pdf.PdfSmartCopy copy = new com.itextpdf.text.pdf.PdfSmartCopy
+						(document, new FileOutputStream(resultado));
+			    document.open();
+			    
+			    for (int i = 0; i < listFicheros.size(); i++){
+			    	
+			    	FileInputStream fis = new FileInputStream(listFicheros.get(i)); 
+			    	com.itextpdf.text.pdf.PdfReader reader = 
+			    			new com.itextpdf.text.pdf.PdfReader(renameFields(fis, i));
+			        copy.addDocument(reader);
+			        
+			        int n = reader.getNumberOfPages();
+			        
+			        if(ambasCaras && n%2==1 && i < (listFicheros.size()-1)){
+			        	
+			        	File filePaginaBlanca = getPaginaBlanca();
+			    		InputStream is = new FileInputStream(filePaginaBlanca);
+			    		reader = new com.itextpdf.text.pdf.PdfReader(is);
+	
+						copy.addDocument(reader);
+			        }
+			        
+			        reader.close();
+			        fis.close();
+			    }
+			    document.close();
+			
+		    }
+		    catch(Exception e) {
+		        logger.error("Error al concatenar los archivos del documento. " + e.getMessage(), e);
+		        throw new ISPACException("Error al concatenar los archivos del documento. " + e.getMessage(), e);
+		    }
+		}
 	    return resultado;
+	}
+
+	/**
+	 * [dipucr-Felipe #791]
+	 * Cuando combinamos varios documentos con datos de firma visible, debemos renombrar los acroFields
+	 * para que no entren en conflicto
+	 * @param fis
+	 * @param i
+	 * @return
+	 * @throws IOException
+	 * @throws DocumentException
+	 */
+	public static byte[] renameFields(FileInputStream fis, int i) throws IOException, DocumentException {
+	    
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    PdfReader reader = new PdfReader(fis);
+	    PdfStamper stamper = new PdfStamper(reader, baos);
+	    AcroFields form = stamper.getAcroFields();
+	    @SuppressWarnings("unchecked")
+		Set<String> keys = new HashSet<String>(form.getFields().keySet());
+	    for (String key : keys) {
+	        form.renameField(key, String.format("%s_%d", key, i));
+	    }
+	    stamper.close();
+	    reader.close();
+	    return baos.toByteArray();
+	}
+	
+	/**
+	 * Recupera un archivo de página blanco
+	 * @return
+	 * @throws Exception
+	 */
+	public static File getPaginaBlanca() throws Exception {
+		
+		File filePaginaBlanca = FileTemporaryManager.getInstance().newFile("." + "pdf");
+		com.itextpdf.text.Document documentBlanco = new com.itextpdf.text.Document();
+		com.itextpdf.text.pdf.PdfWriter writer = com.itextpdf.text.pdf.PdfCopy.
+				getInstance(documentBlanco, new FileOutputStream(filePaginaBlanca));
+		documentBlanco.open();
+		writer.setPageEmpty(false);
+		documentBlanco.newPage();
+		documentBlanco.close();
+		
+		return filePaginaBlanca;
+		
 	}
 	
 	
@@ -442,8 +387,8 @@ public class PdfUtil extends FileUtils {
 			
 			//Obtenemos el reader
 			PdfReader reader = new PdfReader((InputStream) fis);
-			reader.removeFields(); //Eliminamos las firmas
-			reader.consolidateNamedDestinations();
+//			reader.removeFields(); //Eliminamos las firmas
+//			reader.consolidateNamedDestinations();
 
 			//[dipucr-Felipe 3#91] Creamos un nuevo documento, para que no se crucen las streams
 			File fileAux = FileTemporaryManager.getInstance().newFile();
@@ -546,6 +491,86 @@ public class PdfUtil extends FileUtils {
 				logger.error(ioe.getMessage(),ioe);
 			}
 		}
+	}
+
+
+	public static void anadeDocumentoPdf(PdfWriter writer, String rutaOriginal, String nombreDocumento, String descripcionAdjunto) throws ISPACRuleException {
+	
+		try{
+			
+			PdfFileSpecification pfs = PdfFileSpecification.fileEmbedded(writer, rutaOriginal, nombreDocumento, null);
+			if (pfs != null)
+				writer.addFileAttachment(descripcionAdjunto, pfs);
+			
+		}
+		catch(IOException e){
+			DocumentosUtil.LOGGER.error("Se produjo una excepciÃ³n "+e.getMessage(), e);
+			throw new ISPACRuleException("Error. "+e.getMessage(),e);
+		}
+		
+	}
+
+
+	public static void nuevaPagina(Document document, boolean imgCabecera, boolean hayFondo, boolean hayPie, Rectangle dimensiones) throws MalformedURLException,
+	IOException, DocumentException, DocumentException, ISPACException {
+		
+		OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+		String entityId = info.getOrganizationId();		
+		String dir = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entityId + File.separator + "img_exp_fol"+ File.separator, "/SIGEM_TramitacionWeb");
+		String imgFondo = dir + "fondo.png";
+		String imgLogoCabecera = dir + "/logoCabecera.gif";
+		String imgPie = dir + "pie.jpg";
+	
+		
+		// Añadimos el logotipo de la diputación
+		document.setMargins(document.leftMargin()+20, document.rightMargin(), document.topMargin(), document.bottomMargin());
+		document.setPageSize(dimensiones);
+		document.newPage();				
+		
+		Image imagen = null;
+		if(imgCabecera){
+			try{
+				imagen = Image.getInstance(imgLogoCabecera);
+				imagen.setAbsolutePosition(50, document.getPageSize().getHeight() - 100);
+				imagen.scalePercent(50);
+				document.add(imagen);
+			}
+			catch(Exception e){
+				DocumentosUtil.LOGGER.error("ERROR no se ha encontrado la imagen de logo de la entidad: " + imgLogoCabecera + ". " + e.getMessage(), e);
+				throw new ISPACRuleException("ERROR no se ha encontrado la imagen de logo de la entidad: " + imgLogoCabecera + ". " + e.getMessage(), e);
+			}	
+		}
+		
+		// Añadimos la imagen del fondo
+		if(hayFondo){
+			try{
+				imagen = Image.getInstance(imgFondo);
+				imagen.setAbsolutePosition(250, 50);
+				imagen.scalePercent(70);
+				document.add(imagen);
+			}
+			catch(Exception e){
+				DocumentosUtil.LOGGER.error("ERROR no se ha encontrado la imagen de fondo: " + imgFondo + ". " + e.getMessage(), e);
+				throw new ISPACRuleException("ERROR no se ha encontrado la imagen de fondo: " + imgFondo + ". " + e.getMessage(), e);
+			}
+		}
+		
+		// Añadimos el pie de página de la diputación
+		if(hayPie){
+			try{
+				imagen = Image.getInstance(imgPie);
+				imagen.setAbsolutePosition(document.getPageSize().getWidth()-550, 15);
+				imagen.scalePercent(80);
+				document.add(imagen);
+			}
+			catch(Exception e){
+				DocumentosUtil.LOGGER.error("ERROR no se ha encontrado la imagen de pie de página: " + imgPie + ". " + e.getMessage(), e);
+				throw new ISPACRuleException("ERROR no se ha encontrado la imagen de pie de página: " + imgPie + ". " + e.getMessage(), e);
+			}
+		}
+		document.setMargins(document.leftMargin()-20, document.rightMargin(), document.topMargin(), document.bottomMargin());
+		
+		
 	}
 		
 }

@@ -13,7 +13,7 @@
 <ispac:tabs>
 	<ispac:tab title='<%=aux0%>'>
 		<div id="dataBlock_CONTRATACION_DATOS_CONTRATO"
-			style="position: relative; height: 540px; width: 400px">
+			style="position: relative; height: 590px; width: 400px">
 			<div id="label_CONTRATACION_DATOS_CONTRATO:NCONTRATO"
 				style="position: absolute; top: 10px; left: 10px; width: 210px;"
 				class="formsTitleB">
@@ -26,21 +26,7 @@
 					readonly="true" propertyReadonly="readonly" styleClass="input"
 					styleClassReadonly="inputReadOnly" size="80" maxlength="255">
 				</ispac:htmlText>
-			</div>
-			
-			<div id="label_CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO"
-				style="position: absolute; top: 10px; left: 650px; width: 210px;"
-				class="formsTitleB">
-				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO)" />:
-			</div>
-			<div id="data_CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO"
-				style="position: absolute; top: 10px; left: 760px; width: 100%;">
-				<ispac:htmlText
-					property="property(CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO)"
-					readonly="true" propertyReadonly="readonly" value="13 - Ciudad Real" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="10" maxlength="255">
-				</ispac:htmlText>
-			</div>
+			</div>			
 			
 			<div id="label_CONTRATACION_DATOS_CONTRATO:TIPO_CONTRATO"
 				style="position: absolute; top: 35px; left: 10px; width: 210px;"
@@ -59,34 +45,6 @@
 						<ispac:parameter name="SEARCH_CODICE_PLIEGOS_TIPO_CONTRATO" id="property(CONTRATACION_DATOS_CONTRATO:TIPO_CONTRATO)" property="SUSTITUTO" />
 						<ispac:parameter name="SEARCH_CODICE_PLIEGOS_TIPO_CONTRATO" id="property(CONTRATACION_DATOS_CONTRATO:CONTRATO_SUMIN)" property="CONTRATO_SUMIN" />
 					</ispac:htmlTextareaImageFrame>
-				</nobr>
-			</div>
-			
-			<div id="LABEL_CONTRATACION_DATOS_CONTRATO:CARACTERISTICA_BIENES_RENDCUEN"
-				style="position: absolute; top: 35px; left: 650px; width: 160px;"
-				class="formsTitleB">
-				<bean:write name="defaultForm"
-					property="entityApp.label(CONTRATACION_DATOS_CONTRATO:CARACTERISTICA_BIENES_RENDCUEN)" />
-				:
-			</div>
-			<div id="data_CONTRATACION_DATOS_CONTRATO:CARACTERISTICA_BIENES_RENDCUEN"
-				style="position: absolute; top: 35px; left: 820px; width: 100%;">
-				<nobr>
-					<ispac:htmlTextImageFrame
-						property="property(CONTRATACION_DATOS_CONTRATO:CARACTERISTICA_BIENES_RENDCUEN)" readonly="true"
-						readonlyTag="false" propertyReadonly="readonly" styleClass="input"
-						styleClassReadonly="inputReadOnly" size="25"
-						id="SEARCH_CONTRATACION_DATOS_CONTRATO_CARACTERISTICA_BIENES_RENDCUEN" target="workframe"
-						action="selectValue.do?entity=RENDCUENTAS_VLDTBL_CARACBIEN"
-						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
-						imageDelete="img/borrar.gif"
-						titleKeyImageDelete="title.delete.data.selection"
-						styleClassDeleteLink="tdlink"
-						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
-						showFrame="true" width="640" height="480">
-						<ispac:parameter name="SEARCH_CONTRATACION_DATOS_CONTRATO_CARACTERISTICA_BIENES_RENDCUEN"
-							id="property(CONTRATACION_DATOS_CONTRATO:CARACTERISTICA_BIENES_RENDCUEN)" property="VALOR" />
-					</ispac:htmlTextImageFrame>
 				</nobr>
 			</div>
 
@@ -121,36 +79,7 @@
 					styleClassReadonly="inputReadOnly" size="80" maxlength="300">
 				</ispac:htmlText>
 			</div>
-			
-			
-			
-			<div id="label_CONTRATACION_DATOS_CONTRATO:PROCNEGARTICULO"
-				style="position: absolute; top: 85px; left: 650px; width: 210px;" 
-				class="formsTitleB">
-				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_CONTRATO:PROCNEGARTICULO)" />:
-			</div>
-			<div id="data_CONTRATACION_DATOS_CONTRATO:PROCNEGARTICULO"
-				style="position: absolute; top: 85px; left: 820px; width: 100%;">
-				<nobr>
-					<ispac:htmlTextImageFrame
-						property="property(CONTRATACION_DATOS_CONTRATO:PROCNEGARTICULO)" readonly="true"
-						readonlyTag="false" propertyReadonly="readonly" styleClass="input"
-						styleClassReadonly="inputReadOnly" size="25"
-						id="SEARCH_CONTRATACION_DATOS_CONTRATO_PROCNEGARTICULO" target="workframe"
-						action="selectValue.do?entity=CONTRATACION_RENDC_PROCNEGCA"
-						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
-						imageDelete="img/borrar.gif"
-						titleKeyImageDelete="title.delete.data.selection"
-						styleClassDeleteLink="tdlink"
-						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
-						showFrame="true" width="640" height="480">
-						<ispac:parameter name="SEARCH_CONTRATACION_DATOS_CONTRATO_PROCNEGARTICULO"
-							id="property(CONTRATACION_DATOS_CONTRATO:PROCNEGARTICULO)" property="VALOR" />
-					</ispac:htmlTextImageFrame>
-				</nobr>
-			</div>
-			
-
+	
 			<div id="label_CONTRATACION_DATOS_CONTRATO:PROC_ADJ"
 				style="position: absolute; top: 110px; left: 10px; width: 210px;"
 				class="formsTitleB">
@@ -167,34 +96,6 @@
 					tabindex="113">
 						<ispac:parameter name="SEARCH_CODICE_PLIEGOS_PROC_CONT_SECPUB" id="property(CONTRATACION_DATOS_CONTRATO:PROC_ADJ)" property="SUSTITUTO" />
 					</ispac:htmlTextareaImageFrame>
-				</nobr>
-			</div>
-			
-			<div id="LABEL_CONTRATACION_DATOS_CONTRATO:ABIERTO_CRITERIOS_MULTIPLES"
-				style="position: absolute; top: 110px; left: 650px; width: 160px;"
-				class="formsTitleB">
-				<bean:write name="defaultForm"
-					property="entityApp.label(CONTRATACION_DATOS_CONTRATO:ABIERTO_CRITERIOS_MULTIPLES)" />
-				:
-			</div>
-			<div id="data_CONTRATACION_DATOS_CONTRATO:ABIERTO_CRITERIOS_MULTIPLES"
-				style="position: absolute; top: 110px; left: 810px; width: 100%;">
-				<nobr>
-					<ispac:htmlTextImageFrame
-						property="property(CONTRATACION_DATOS_CONTRATO:ABIERTO_CRITERIOS_MULTIPLES)" readonly="true"
-						readonlyTag="false" propertyReadonly="readonly" styleClass="input"
-						styleClassReadonly="inputReadOnly" size="1"
-						id="SEARCH_CONTRATACION_DATOS_CONTRATO_ABIERTO_CRITERIOS_MULTIPLES" target="workframe"
-						action="selectValue.do?entity=SPAC_TBL_009"
-						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
-						imageDelete="img/borrar.gif"
-						titleKeyImageDelete="title.delete.data.selection"
-						styleClassDeleteLink="tdlink"
-						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
-						showFrame="true" width="640" height="480">
-						<ispac:parameter name="SEARCH_CONTRATACION_DATOS_CONTRATO_ABIERTO_CRITERIOS_MULTIPLES"
-							id="property(CONTRATACION_DATOS_CONTRATO:ABIERTO_CRITERIOS_MULTIPLES)" property="VALOR" />
-					</ispac:htmlTextImageFrame>
 				</nobr>
 			</div>
 			
@@ -234,8 +135,7 @@
 					</ispac:htmlTextareaImageFrame>
 				</nobr>
 			</div>
-			
-
+					
 			<div id="label_CONTRATACION_DATOS_CONTRATO:ORGANO_CONTRATACION"
 				style="position: absolute; top: 185px; left: 10px; width: 210px;"
 				class="formsTitleB">
@@ -243,33 +143,35 @@
 			</div>
 			<div id="data_CONTRATACION_DATOS_CONTRATO:ORGANO_CONTRATACION"
 				style="position: absolute; top: 185px; left: 180px; width: 100%;">
-				<nobr> 
-					<html:hidden property="property(CONTRATACION_DATOS_CONTRATO:ORGANO_CONTRATACION)" />
+				<nobr>
+					<html:hidden
+						property="property(CONTRATACION_DATOS_CONTRATO:ORGANO_CONTRATACION)" />
 					<ispac:htmlTextImageFrame
-						property="property(ORGANO_CONTRATACION_SECR_VLDTBL_ORGANOS:SUSTITUTO)"
+						property="property(ORGANO_CONTRATACION_CONTRATACION_ORGANO:SUSTITUTO)"
 						readonly="true" readonlyTag="false" propertyReadonly="readonly"
 						styleClass="input" styleClassReadonly="inputReadOnly" size="80"
+						imageTabIndex="true"
 						id="SEARCH_CONTRATACION_DATOS_CONTRATO_ORGANO_CONTRATACION"
 						target="workframe"
-						action="selectSubstitute.do?entity=SECR_VLDTBL_ORGANOS"
+						action="selectSubstitute.do?entity=CONTRATACION_ORGANO"
 						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
 						imageDelete="img/borrar.gif"
 						titleKeyImageDelete="title.delete.data.selection"
 						styleClassDeleteLink="tdlink"
 						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
 						showFrame="true" width="640" height="480">
-							<ispac:parameter
-								name="SEARCH_CONTRATACION_DATOS_CONTRATO_ORGANO_CONTRATACION"
-								id="property(CONTRATACION_DATOS_CONTRATO:ORGANO_CONTRATACION)"
-								property="VALOR" />
-							<ispac:parameter
-								name="SEARCH_CONTRATACION_DATOS_CONTRATO_ORGANO_CONTRATACION"
-								id="property(ORGANO_CONTRATACION_SECR_VLDTBL_ORGANOS:SUSTITUTO)"
-								property="SUSTITUTO" />
-					</ispac:htmlTextImageFrame> 
+						<ispac:parameter
+							name="SEARCH_CONTRATACION_DATOS_CONTRATO_ORGANO_CONTRATACION"
+							id="property(CONTRATACION_DATOS_CONTRATO:ORGANO_CONTRATACION)"
+							property="VALOR" />
+						<ispac:parameter
+							name="SEARCH_CONTRATACION_DATOS_CONTRATO_ORGANO_CONTRATACION"
+							id="property(ORGANO_CONTRATACION_CONTRATACION_ORGANO:SUSTITUTO)"
+							property="SUSTITUTO" />
+					</ispac:htmlTextImageFrame>
 				</nobr>
 			</div>
-			
+
 			<div id="label_CONTRATACION_DATOS_CONTRATO:CONT_SUJ_REG_ARMO"
 				style="position: absolute; top: 210px; left: 10px; width: 210px;"
 				class="formsTitleB">
@@ -392,12 +294,147 @@
 				</nobr>
 			</div>
 			
-			<div style="POSITION: absolute; WIDTH: 100%; TOP: 285px; LEFT:550px" id=data_CONTRATACION_DATOS_CONTRATO:CPV>
+			<div style="POSITION: absolute; WIDTH: 100%; TOP: 285px; LEFT:570px" id=data_CONTRATACION_DATOS_CONTRATO:CPV>
 				<ispac:htmlTextMultivalue
 					property="propertyMultivalue(CONTRATACION_DATOS_CONTRATO:CPV)" readonly="false"
-					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly"  size="50" divWidth="334" 
+					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly"  size="45" divWidth="334" 
 					maxlength="1024">
 				</ispac:htmlTextMultivalue>
+			</div>
+			
+			<div id="label_CONTRATACION_DATOS_CONTRATO:NUEVA_LEY"
+				style="position: absolute; top: 470px; left: 10px; width: 250px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_CONTRATO:NUEVA_LEY)" />:
+			</div>
+			<div id="data_CONTRATACION_DATOS_CONTRATO:NUEVA_LEY"
+				style="position: absolute; top: 466px; left: 280px; width: 100%;">
+				<nobr> 
+					<ispac:htmlTextImageFrame
+						property="property(CONTRATACION_DATOS_CONTRATO:NUEVA_LEY)"
+						readonly="true" readonlyTag="false" propertyReadonly="readonly"
+						styleClass="input" styleClassReadonly="inputReadOnly" size="1"
+						id="SEARCH_CONTRATACION_DATOS_CONTRATO_NUEVA_LEY"
+						target="workframe" action="selectValue.do?entity=SPAC_TBL_009"
+						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
+						imageDelete="img/borrar.gif"
+						titleKeyImageDelete="title.delete.data.selection"
+						styleClassDeleteLink="tdlink"
+						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
+						showFrame="true" width="640" height="480">
+							<ispac:parameter
+								name="SEARCH_CONTRATACION_DATOS_CONTRATO_NUEVA_LEY"
+								id="property(CONTRATACION_DATOS_CONTRATO:NUEVA_LEY)"
+								property="VALOR" />
+					</ispac:htmlTextImageFrame> 
+				</nobr>
+			</div>
+			
+			<div id="label_CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO"
+				style="position: absolute; top: 495px; left: 10px; width: 210px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO)" />:
+			</div>
+			<div id="data_CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO"
+				style="position: absolute; top: 495px; left: 180px; width: 100%;">
+				<nobr>
+					<ispac:htmlTextImageFrame
+						property="property(CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO)" readonly="true"
+						readonlyTag="false" propertyReadonly="readonly" styleClass="input"
+						styleClassReadonly="inputReadOnly" size="25"
+						id="SEARCH_CONTRATACION_DATOS_CONTRATO_PROVINCIA_CONTRATO" target="workframe"
+						action="selectListadoCodicePliego.do?atributo=NUTS"
+						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
+						imageDelete="img/borrar.gif"
+						titleKeyImageDelete="title.delete.data.selection"
+						styleClassDeleteLink="tdlink"
+						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
+						showFrame="true" width="640" height="480">
+						<ispac:parameter name="SEARCH_CONTRATACION_DATOS_CONTRATO_PROVINCIA_CONTRATO" id="property(CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO)" property="SUSTITUTO" />
+					</ispac:htmlTextImageFrame>
+				</nobr>
+			</div>
+			
+			<div id="LABEL_CONTRATACION_DATOS_CONTRATO:CARACTERISTICA_BIENES_RENDCUEN"
+				style="position: absolute; top: 520px; left: 10px; width: 160px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm"
+					property="entityApp.label(CONTRATACION_DATOS_CONTRATO:CARACTERISTICA_BIENES_RENDCUEN)" />
+				:
+			</div>
+			<div id="data_CONTRATACION_DATOS_CONTRATO:CARACTERISTICA_BIENES_RENDCUEN"
+				style="position: absolute; top: 520px; left: 180px; width: 100%;">
+				<nobr>
+					<ispac:htmlTextImageFrame
+						property="property(CONTRATACION_DATOS_CONTRATO:CARACTERISTICA_BIENES_RENDCUEN)" readonly="true"
+						readonlyTag="false" propertyReadonly="readonly" styleClass="input"
+						styleClassReadonly="inputReadOnly" size="25"
+						id="SEARCH_CONTRATACION_DATOS_CONTRATO_CARACTERISTICA_BIENES_RENDCUEN" target="workframe"
+						action="selectValue.do?entity=RENDCUENTAS_VLDTBL_CARACBIEN"
+						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
+						imageDelete="img/borrar.gif"
+						titleKeyImageDelete="title.delete.data.selection"
+						styleClassDeleteLink="tdlink"
+						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
+						showFrame="true" width="640" height="480">
+						<ispac:parameter name="SEARCH_CONTRATACION_DATOS_CONTRATO_CARACTERISTICA_BIENES_RENDCUEN"
+							id="property(CONTRATACION_DATOS_CONTRATO:CARACTERISTICA_BIENES_RENDCUEN)" property="VALOR" />
+					</ispac:htmlTextImageFrame>
+				</nobr>
+			</div>
+			
+			<div id="label_CONTRATACION_DATOS_CONTRATO:PROCNEGARTICULO"
+				style="position: absolute; top: 545px; left: 10px; width: 210px;" 
+				class="formsTitleB">
+				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_CONTRATO:PROCNEGARTICULO)" />:
+			</div>
+			<div id="data_CONTRATACION_DATOS_CONTRATO:PROCNEGARTICULO"
+				style="position: absolute; top: 545px; left: 180px; width: 100%;">
+				<nobr>
+					<ispac:htmlTextImageFrame
+						property="property(CONTRATACION_DATOS_CONTRATO:PROCNEGARTICULO)" readonly="true"
+						readonlyTag="false" propertyReadonly="readonly" styleClass="input"
+						styleClassReadonly="inputReadOnly" size="25"
+						id="SEARCH_CONTRATACION_DATOS_CONTRATO_PROCNEGARTICULO" target="workframe"
+						action="selectValue.do?entity=CONTRATACION_RENDC_PROCNEGCA"
+						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
+						imageDelete="img/borrar.gif"
+						titleKeyImageDelete="title.delete.data.selection"
+						styleClassDeleteLink="tdlink"
+						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
+						showFrame="true" width="640" height="480">
+						<ispac:parameter name="SEARCH_CONTRATACION_DATOS_CONTRATO_PROCNEGARTICULO"
+							id="property(CONTRATACION_DATOS_CONTRATO:PROCNEGARTICULO)" property="VALOR" />
+					</ispac:htmlTextImageFrame>
+				</nobr>
+			</div>
+			
+			<div id="LABEL_CONTRATACION_DATOS_CONTRATO:ABIERTO_CRITERIOS_MULTIPLES"
+				style="position: absolute; top: 570px; left: 10px; width: 160px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm"
+					property="entityApp.label(CONTRATACION_DATOS_CONTRATO:ABIERTO_CRITERIOS_MULTIPLES)" />
+				:
+			</div>
+			<div id="data_CONTRATACION_DATOS_CONTRATO:ABIERTO_CRITERIOS_MULTIPLES"
+				style="position: absolute; top: 570px; left: 180px; width: 100%;">
+				<nobr>
+					<ispac:htmlTextImageFrame
+						property="property(CONTRATACION_DATOS_CONTRATO:ABIERTO_CRITERIOS_MULTIPLES)" readonly="true"
+						readonlyTag="false" propertyReadonly="readonly" styleClass="input"
+						styleClassReadonly="inputReadOnly" size="1"
+						id="SEARCH_CONTRATACION_DATOS_CONTRATO_ABIERTO_CRITERIOS_MULTIPLES" target="workframe"
+						action="selectValue.do?entity=SPAC_TBL_009"
+						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
+						imageDelete="img/borrar.gif"
+						titleKeyImageDelete="title.delete.data.selection"
+						styleClassDeleteLink="tdlink"
+						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
+						showFrame="true" width="640" height="480">
+						<ispac:parameter name="SEARCH_CONTRATACION_DATOS_CONTRATO_ABIERTO_CRITERIOS_MULTIPLES"
+							id="property(CONTRATACION_DATOS_CONTRATO:ABIERTO_CRITERIOS_MULTIPLES)" property="VALOR" />
+					</ispac:htmlTextImageFrame>
+				</nobr>
 			</div>
 			
 		</div>
@@ -417,7 +454,13 @@ function save() {
 	document.defaultForm.target = "ParentWindow";
 	document.defaultForm.action = "storeEntity.do";
 	document.defaultForm.submit();
-	ispac_needToConfirm = true;
+	var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+	 if (is_chrome){
+	  ispac_needToConfirm = false;
+	 }
+	 else{
+	  ispac_needToConfirm = true;
+	 }
 }
 
 

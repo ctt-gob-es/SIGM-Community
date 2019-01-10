@@ -30,6 +30,7 @@ public class AsuntoForm extends RPAdminActionForm {
 	private String fechaBaja;
 	private Boolean usarParaEntrada;
 	private Boolean usarParaSalida;
+	private Boolean distribuirTelematico;
 	private String infoAuxiliar;
 	private Boolean usarParaTodasOficinas;
 
@@ -125,6 +126,14 @@ public class AsuntoForm extends RPAdminActionForm {
 
 	public void setUsarParaSalida(Boolean usarParaSalida) {
 		this.usarParaSalida = usarParaSalida;
+	}
+	
+	public Boolean getDistribuirTelematico() {
+		return distribuirTelematico;
+	}
+
+	public void setDistribuirTelematico(Boolean distribuirTelematico) {
+		this.distribuirTelematico = distribuirTelematico;
 	}
 
 	public String getInfoAuxiliar() {
@@ -263,6 +272,7 @@ public class AsuntoForm extends RPAdminActionForm {
 
 		setUsarParaEntrada(new Boolean(Utils.getBooleanValue(tipoAsuntoBean.getForEreg())));
 		setUsarParaSalida(new Boolean(Utils.getBooleanValue(tipoAsuntoBean.getForSreg())));
+		setDistribuirTelematico(new Boolean(Utils.getBooleanValue(tipoAsuntoBean.getForDistRT())));
 		setInfoAuxiliar(tipoAsuntoBean.getInformacionAuxiliar());
 		setUsarParaTodasOficinas(new Boolean(Utils.getBooleanValue(tipoAsuntoBean.getAllOfics())));
 	}
@@ -297,6 +307,7 @@ public class AsuntoForm extends RPAdminActionForm {
 
 		if(getUsarParaEntrada() != null) tipoAsuntoBean.setForEreg(Utils.getIntValue(getUsarParaEntrada().booleanValue()));
 		if(getUsarParaSalida() != null) tipoAsuntoBean.setForSreg(Utils.getIntValue(getUsarParaSalida().booleanValue()));
+		if(getDistribuirTelematico() != null) tipoAsuntoBean.setForDistRT(Utils.getIntValue(getDistribuirTelematico().booleanValue()));
 		if(getUsarParaTodasOficinas() != null)tipoAsuntoBean.setAllOfics(Utils.getIntValue(getUsarParaTodasOficinas().booleanValue()));
 
 		return tipoAsuntoBean;
@@ -364,7 +375,5 @@ public class AsuntoForm extends RPAdminActionForm {
 	public String[] getAttrsToUpper() {
 		return attrsToUpper;
 	}
-
-
-
+	
 }

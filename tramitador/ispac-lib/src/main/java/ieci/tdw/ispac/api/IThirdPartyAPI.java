@@ -149,5 +149,33 @@ public interface IThirdPartyAPI {
 			String municipio, String cpostal, String direccion,
 			String tfnoFijo, String tfnoMovil, String email)
 			throws ISPACException;
+	
+	
+	/**
+	 * [dipucr-Felipe #583]
+	 * @param idPerson
+	 * @param email
+	 * @return
+	 * @throws ISPACException 
+	 */
+	public boolean insertDefaultEmail(int idPerson, String email) throws ISPACException;
+	
+	
+	/**
+	 * [dipucr-Felipe #592]
+	 * @param idPerson
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @return
+	 * @throws ISPACException
+	 */
+	public boolean updateThirdParty(int idPerson, String nombre, String ape1, String ape2, 
+			String provincia, String municipio, String cpostal, String direccion) throws ISPACException;
+	
 
 }

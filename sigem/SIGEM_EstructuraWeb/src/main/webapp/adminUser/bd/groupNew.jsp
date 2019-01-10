@@ -160,6 +160,10 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 								<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.descripcion"/></label>
 								<label class="gr" style="width:190px;"><html:textarea property="descripcion" cols="65" rows="5" styleId="dept.description"/></label>
 							 </div>
+							 <div class="col" style="width: 490px;">
+								<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.email"/></label>
+								<label class="gr" style="width:190px;"><html:text property="email" style="width:350px;"/></label>
+							 </div>
 							 
 						</div>
 

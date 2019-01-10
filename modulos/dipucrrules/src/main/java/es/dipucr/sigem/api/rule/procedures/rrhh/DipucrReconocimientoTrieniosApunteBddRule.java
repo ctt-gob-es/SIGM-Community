@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
 import es.dipucr.webempleado.model.mapping.InfoTrienios;
 import es.dipucr.webempleado.services.trienios.CumplimientoTrieniosServiceProxy;
 
@@ -117,8 +118,8 @@ public class DipucrReconocimientoTrieniosApunteBddRule implements IRule
 			//Llamada al servicio web de web empleado para obtener trabajadores que cumplen trienio
 			//*********************************************
 			Object[] listaTrieniosFuncionarios = ctsp.listaCumplimientoTrienios(0,ExpedientesUtil.dameFechaInicioExp(cct, numExp));		
-			Object[] listaTrieniosLaborales = ctsp.listaCumplimientoTrienios(1,ExpedientesUtil.dameFechaInicioExp(cct, numExp));					
-			
+			Object[] listaTrieniosLaborales = ctsp.listaCumplimientoTrienios(1,ExpedientesUtil.dameFechaInicioExp(cct, numExp));			
+				
 			
 			//*********************************************
 			//Llamada al servicio web de web empleado para insertar apunte de vida laboral y trienio
@@ -126,7 +127,7 @@ public class DipucrReconocimientoTrieniosApunteBddRule implements IRule
 			if(listaTrieniosFuncionarios!=null)
 			{
 				logger.warn("Hay " + listaTrieniosFuncionarios.length + " trabajadores funcionarios que cumplen trienio este mes.");
-				info_salida = info_salida.concat("Apunte de " + listaTrieniosFuncionarios.length + " trabajadores FUNCIONARIOS.");
+				int contadorFuncionarios=0;
 				
 				for (int i = 0; i < listaTrieniosFuncionarios.length; i++) {
 		    			    		
@@ -134,51 +135,66 @@ public class DipucrReconocimientoTrieniosApunteBddRule implements IRule
 		    		
 			    	//Tomamos los valores		
 					nif = aux.getDni();
-					logger.warn("nif: "+nif);
 					
-					nombre = aux.getNombre_completo();				
-					fechaTrienioNuevo = aux.getFechaTrienio().getTime();	
-					numero_trienios =  aux.getNumTrienios();
-					grupo = aux.getGrupo();
-					SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
-					String fechaTrieniosNuevo=formatoDeFecha.format(fechaTrienioNuevo);
+					if (ParticipantesUtil.existeParticipante(cct, numExp, nif)){
+						
+						contadorFuncionarios++;
 					
-					logger.warn("FUNCIONARIOS");
-					logger.warn("Se inserta vida laboral para el nif: "+nif);
-					logger.warn("nif: "+nombre);
-					logger.warn("---- DATOS VIDA ADMINISTRATIVA ----");
-					logger.warn("nif: "+nif);					
-					logger.warn("fechaDecreto: "+this.fechaDecreto);
-					logger.warn("numero_trienios: "+numero_trienios);
-					logger.warn("fechaTrienioNuevo: "+fechaTrieniosNuevo);
-					logger.warn("numExp relacionado de decreto: "+expRel);
-					logger.warn("grupo: "+grupo);
-					logger.warn("Esta es la fecha del TRIENIO...: "+fechaTrienioNuevo.toString()); 				
-					
-		    		ctsp.insertarVidaAdministrativa(nif, this.fechaDecreto, Integer.toString(numero_trienios), fechaTrieniosNuevo, this.expRel, grupo);
+						logger.warn("nif: "+nif);											
+						
+						nombre = aux.getNombre_completo();				
+						fechaTrienioNuevo = aux.getFechaTrienio().getTime();	
+						numero_trienios =  aux.getNumTrienios();
+						grupo = aux.getGrupo();
+						SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
+						String fechaTrieniosNuevo=formatoDeFecha.format(fechaTrienioNuevo);
+						
+						logger.warn("FUNCIONARIOS");
+						logger.warn("Se inserta vida laboral para el nif: "+nif);
+						logger.warn("nif: "+nombre);
+						logger.warn("---- DATOS VIDA ADMINISTRATIVA ----");
+						logger.warn("nif: "+nif);					
+						logger.warn("fechaDecreto: "+this.fechaDecreto);
+						logger.warn("numero_trienios: "+numero_trienios);
+						logger.warn("fechaTrienioNuevo: "+fechaTrieniosNuevo);
+						logger.warn("numExp relacionado de decreto: "+expRel);
+						logger.warn("grupo: "+grupo);
+						logger.warn("Esta es la fecha del TRIENIO...: "+fechaTrienioNuevo.toString());
+						
+						//info_salida = info_salida.concat("\n");
+						//info_salida = info_salida.concat(nif);
+						//info_salida = info_salida.concat("--");
+						//info_salida = info_salida.concat(nombre);
+						//info_salida = info_salida.concat("--");
+						//info_salida = info_salida.concat(numero_trienios);
+						
+			    		ctsp.insertarVidaAdministrativa(nif, this.fechaDecreto, Integer.toString(numero_trienios), fechaTrieniosNuevo, this.expRel, grupo);
+			    		
+			    		logger.warn("Se inserta trienio para el nif: "+nif);
+			    		logger.warn("nif: "+nombre);
+			    		logger.warn("---- DATOS TRIENIO ----");
+						logger.warn("nif: "+nif);
+						logger.warn("numero_trienios: "+numero_trienios);
+						logger.warn("fechaTrienioNuevo: "+fechaTrieniosNuevo);
+						logger.warn("fechaDecreto: "+this.fechaDecreto);
+						logger.warn("numExp relacionado de decreto: "+expRel);
+			    		
+			    		ctsp.insertarApunteTrienio(nif,  Integer.toString(numero_trienios), fechaTrieniosNuevo, this.fechaDecreto, grupo, this.expRel);
+						
+			    		//info_salida = info_salida.concat("Funcionario--"+nif+"--"+nombre+"--"+numero_trienios+" trienios\n");
 		    		
-		    		logger.warn("Se inserta trienio para el nif: "+nif);
-		    		logger.warn("nif: "+nombre);
-		    		logger.warn("---- DATOS TRIENIO ----");
-					logger.warn("nif: "+nif);
-					logger.warn("numero_trienios: "+numero_trienios);
-					logger.warn("fechaTrienioNuevo: "+fechaTrieniosNuevo);
-					logger.warn("fechaDecreto: "+this.fechaDecreto);
-					logger.warn("numExp relacionado de decreto: "+expRel);
-		    		
-		    		ctsp.insertarApunteTrienio(nif,  Integer.toString(numero_trienios), fechaTrieniosNuevo, this.fechaDecreto, grupo, this.expRel);
-					
-		    		//info_salida = info_salida.concat("Funcionario--"+nif+"--"+nombre+"--"+numero_trienios+" trienios\n");
+					}
 				}				
 				
 				logger.warn("Saco mensaje de funcionarios");
+				info_salida = info_salida.concat("Apunte de " + contadorFuncionarios + "trabajadores FUNCIONARIOS.");
 				rulectx.setInfoMessage(info_salida);
 			}
 	    	
 	    	if(listaTrieniosLaborales!=null)
 	    	{
 	    		logger.warn("Hay " + listaTrieniosLaborales.length + "trabajadores laborales que cumplen trienio este mes.");
-	    		info_salida = info_salida.concat("\nApunte de " + listaTrieniosLaborales.length + " trabajadores LABORALES.");
+	    		int contadorLaborales=0;
 	    		for (int i = 0; i < listaTrieniosLaborales.length; i++) {
 		    		
 		    		aux = (InfoTrienios)listaTrieniosLaborales[i]; 
@@ -186,41 +202,47 @@ public class DipucrReconocimientoTrieniosApunteBddRule implements IRule
 		    		nif = aux.getDni();
 					logger.warn("nif: "+nif);
 					
-					nombre = aux.getNombre_completo();				
-					fechaTrienioNuevo = aux.getFechaTrienio().getTime();	
-					numero_trienios =  aux.getNumTrienios();
-					grupo = aux.getGrupo();
-					SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
-					String fechaTrieniosNuevo=formatoDeFecha.format(fechaTrienioNuevo);				
-		    		
-					logger.warn("LABORALES");
-					logger.warn("Se inserta vida laboral para el nif: "+nif);
-					logger.warn("nif: "+nombre);
-					logger.warn("---- DATOS VIDA ADMINISTRATIVA ----");
-					logger.warn("nif: "+nif);
-					logger.warn("fechaDecreto: "+this.fechaDecreto);
-					logger.warn("numero_trienios: "+numero_trienios);
-					logger.warn("fechaTrienioNuevo: "+fechaTrieniosNuevo);
-					logger.warn("numExp relacionado de decreto: "+expRel);
-					logger.warn("grupo: "+grupo);
+					if (ParticipantesUtil.existeParticipante(cct, numExp, nif)){
 					
-					ctsp.insertarVidaAdministrativa(nif, this.fechaDecreto, Integer.toString(numero_trienios), fechaTrieniosNuevo, this.expRel, this.dameGrupoLaborales(grupo));
-		    		
-					logger.warn("Se inserta trienio para el nif: "+nif);
-					logger.warn("nif: "+nombre);
-		    		logger.warn("---- DATOS TRIENIO ----");
-					logger.warn("nif: "+nif);
-					logger.warn("numero_trienios: "+numero_trienios);
-					logger.warn("numero_trienios: "+fechaTrieniosNuevo);
-					logger.warn("fechaDecreto: "+this.fechaDecreto);
-					logger.warn("numExp relacionado de decreto: "+expRel);
-					ctsp.insertarApunteTrienio(nif, Integer.toString(numero_trienios), fechaTrieniosNuevo, this.fechaDecreto, this.dameGrupoLaborales(grupo), this.expRel);
-										
-					//info_salida = info_salida.concat("Laboral--"+nif+"--"+nombre+"--"+numero_trienios+" trienios\n");
+						contadorLaborales++;
+						
+						nombre = aux.getNombre_completo();				
+						fechaTrienioNuevo = aux.getFechaTrienio().getTime();	
+						numero_trienios =  aux.getNumTrienios();
+						grupo = aux.getGrupo();
+						SimpleDateFormat formatoDeFecha = new SimpleDateFormat("dd/MM/yyyy");
+						String fechaTrieniosNuevo=formatoDeFecha.format(fechaTrienioNuevo);				
+			    		
+						logger.warn("LABORALES");
+						logger.warn("Se inserta vida laboral para el nif: "+nif);
+						logger.warn("nif: "+nombre);
+						logger.warn("---- DATOS VIDA ADMINISTRATIVA ----");
+						logger.warn("nif: "+nif);
+						logger.warn("fechaDecreto: "+this.fechaDecreto);
+						logger.warn("numero_trienios: "+numero_trienios);
+						logger.warn("fechaTrienioNuevo: "+fechaTrieniosNuevo);
+						logger.warn("numExp relacionado de decreto: "+expRel);
+						logger.warn("grupo: "+grupo);
+						
+						ctsp.insertarVidaAdministrativa(nif, this.fechaDecreto, Integer.toString(numero_trienios), fechaTrieniosNuevo, this.expRel, this.dameGrupoLaborales(grupo));
+			    		
+						logger.warn("Se inserta trienio para el nif: "+nif);
+						logger.warn("nif: "+nombre);
+			    		logger.warn("---- DATOS TRIENIO ----");
+						logger.warn("nif: "+nif);
+						logger.warn("numero_trienios: "+numero_trienios);
+						logger.warn("numero_trienios: "+fechaTrieniosNuevo);
+						logger.warn("fechaDecreto: "+this.fechaDecreto);
+						logger.warn("numExp relacionado de decreto: "+expRel);
+						ctsp.insertarApunteTrienio(nif, Integer.toString(numero_trienios), fechaTrieniosNuevo, this.fechaDecreto, this.dameGrupoLaborales(grupo), this.expRel);
+											
+						//info_salida = info_salida.concat("Laboral--"+nif+"--"+nombre+"--"+numero_trienios+" trienios\n");
+					}
 		    			    	
 	    		}
 		    	
 		    	logger.warn("Saco mensaje de laborales");
+				info_salida = info_salida.concat("\nApunte de " + contadorLaborales + "trabajadores LABORALES.");
 				rulectx.setInfoMessage(info_salida);
 				
 	    	}

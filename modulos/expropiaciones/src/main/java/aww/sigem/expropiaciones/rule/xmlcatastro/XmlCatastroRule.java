@@ -16,13 +16,17 @@ import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.xerces.parsers.SAXParser;
@@ -207,9 +211,8 @@ public class XmlCatastroRule implements IRule {
 					// expediente padre)
 					// En expropiaciones no va a haber registro
 					String numregistro = null;
-	
-					// logger.warn("**** Datos específicos del procedimiento");
-					CommonData commonData = new CommonData("1", Propiedades.getString("codExpropiacionFinca"), numregistro, new Date(), interested);
+
+					CommonData commonData = new CommonData("1", "CR-EXPR-02", numregistro, new Date(), interested);
 					// Datos específicos del procedimiento
 					String especificDataXML = "<?xml version=\"1.0\" encoding=\"iso-8859-15\" ?><datos_especificos></datos_especificos>";
 	
@@ -338,7 +341,7 @@ public class XmlCatastroRule implements IRule {
 						if (exprop.getNdoc() != null) {
 							// validacion
 							if (!expropiadosMap.containsKey(exprop.getNdoc().trim())) {
-								commonData = new CommonData("1", Propiedades.getString("codExpropiados"),numregistro, new Date(), interested);
+								commonData = new CommonData("1", "CR-EXPR-03",numregistro, new Date(), interested);
 								idExpExpropiado = expedientsAPI.initExpedient(commonData, especificDataXML,documents, null);
 	
 							} else {
@@ -347,7 +350,7 @@ public class XmlCatastroRule implements IRule {
 						}
 						else{
 							if (!expropiadosMapSinDNI.containsKey(exprop.getNombre().trim())) {
-								commonData = new CommonData("1", Propiedades.getString("codExpropiados"),numregistro, new Date(), interested);
+								commonData = new CommonData("1", "CR-EXPR-03",numregistro, new Date(), interested);
 								idExpExpropiado = expedientsAPI.initExpedient(commonData, especificDataXML,documents, null);
 	
 							} else {

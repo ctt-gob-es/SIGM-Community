@@ -42,7 +42,7 @@ public class DipucrFaceAvanzarFaseSiOKRule implements IRule {
 			String numexp = rulectx.getNumExp();
 			
 			IItemCollection collection = 
-				DocumentosUtil.getDocumentsByNombre(numexp, rulectx, DOCUMENTO_FACTURA);
+				DocumentosUtil.getDocumentsByNombre(cct, numexp, DOCUMENTO_FACTURA, "FDOC DESC");
 			IItem itemDocumento = (IItem) collection.iterator().next();
 			String estado = itemDocumento.getString("ESTADOFIRMA");
 			

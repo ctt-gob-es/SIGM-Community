@@ -139,7 +139,7 @@ public class ASN1CertParser {
 				// Problema extraño detectado con los certificados corruptos.
 				// OID: 2.5.29.14 :java.lang.IllegalStateException: DER length
 				// more than 4 bytes
-				e.printStackTrace();
+				logger.error("ERROR. " + e.getMessage(), e);
 			}
 
 		} else if (extension instanceof DERInteger) {

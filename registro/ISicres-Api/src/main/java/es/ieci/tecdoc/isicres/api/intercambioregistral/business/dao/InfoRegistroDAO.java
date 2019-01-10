@@ -35,4 +35,6 @@ public interface InfoRegistroDAO {
 
 	public List<InfoRegistroPageRepositoryVO> getInfoRegistroPageRepositories(Long idLibro, Long idRegistro);
 	public InfoRegistroInfoDocumentoVO getInfoRegistroInfoDocumento(Integer idDocumento);
+	public List<InfoRegistroPageRepositoryVO> getInfoRegistroPageRepositoriesWithNewReport(
+		Long idLibro, Long idRegistro);
 }

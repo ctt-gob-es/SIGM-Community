@@ -6,7 +6,11 @@ import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
+
 public class OrganizationUserInfo implements Serializable{
+	
+	private static final Logger LOGGER = Logger.getLogger(OrganizationUserInfo.class);
 
 	/**
 	 * 
@@ -58,7 +62,7 @@ public class OrganizationUserInfo implements Serializable{
 			try {
 				config = ISPACConfiguration.getInstance();
 			} catch (ISPACException e) {
-				e.printStackTrace();
+				LOGGER.error("ERROR. " + e.getMessage(), e);
 			}			
 			pattern = config.get(propertyPoolNamePattern);
 		}

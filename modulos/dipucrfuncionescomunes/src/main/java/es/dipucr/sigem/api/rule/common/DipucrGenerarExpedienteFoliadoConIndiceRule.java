@@ -83,14 +83,13 @@ import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+import es.dipucr.sigem.api.rule.common.utils.FileUtils;
 
 public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 
-	private static final Logger logger = Logger
-			.getLogger(DipucrGenerarExpedienteFoliadoConIndiceRule.class);
+	private static final Logger LOGGER = Logger.getLogger(DipucrGenerarExpedienteFoliadoConIndiceRule.class);
 
-	public OrganizationUserInfo info = OrganizationUser
-			.getOrganizationUserInfo();
+	public OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
 	public String entityId = info.getOrganizationId();
 
 	public String dir = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entityId + File.separator + "img_exp_fol"+ File.separator, "/SIGEM_TramitacionWeb");
@@ -98,14 +97,14 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 	// "/sigem/app/SIGEM/conf/SIGEM_TramitacionWeb/skinEntidad_" + entityId +
 	// "/img_exp_fol/";
 
-	public final String imgContraportada = dir + "contraPortada.png";
-	public final String imgFondo = dir + "fondo.png";
-	public final String imgLogoCabecera = dir + "logoCabecera.gif";
-	public final String imgLogoPortada = dir + "logoPortada.png";
-	public final String imgPie = dir + "pie.jpg";
-	public final String imgPortada = dir + "portada.png";
+	public final String IMG_CONTRAPORTADA = dir + "contraPortada.png";
+	public final String IMG_FONDO = dir + "fondo.png";
+	public final String IMG_LOGO_CABECERA = dir + "logoCabecera.gif";
+	public final String IMG_LOGO_PORTADA = dir + "logoPortada.png";
+	public final String IMG_PIE = dir + "pie.jpg";
+	public final String IMG_PORTADA = dir + "portada.png";
 
-	public static final Properties extsToPdf = new Properties();
+	public static final Properties EXTS_TO_PDF = new Properties();
 	public static final int DOCUMENTOS_POR_PAGINA = 25;
 
 	public ArrayList<String[]> camposIndice = new ArrayList<String[]>();
@@ -138,15 +137,14 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 	public String getNumExpFoliar(IRuleContext rulectx, IEntitiesAPI entitiesAPI) {
 		String resultado = "";
 		try {
-			IItemCollection expedienteDestino = entitiesAPI.getEntities(
-					"DIPUCR_EXPEDIENTE_FOLIADO", rulectx.getNumExp());
+			IItemCollection expedienteDestino = entitiesAPI.getEntities( "DIPUCR_EXPEDIENTE_FOLIADO", rulectx.getNumExp());
 			Iterator itExpedienteDestino = expedienteDestino.iterator();
 
-			if (itExpedienteDestino.hasNext())
-				resultado = ((IItem) itExpedienteDestino.next()).getString(
-						"EXPEDIENTEDESTINO").trim();
+			if (itExpedienteDestino.hasNext()){
+				resultado = ((IItem) itExpedienteDestino.next()).getString( "EXPEDIENTEDESTINO").trim();
+			}
 		} catch (ISPACException e) {
-			logger.error("Error al recuperar el expediente a foliar.", e);
+			LOGGER.error("Error al recuperar el expediente a foliar.", e);
 		}
 
 		return resultado;
@@ -165,16 +163,16 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 			// ----------------------------------------------------------------------------------------------
 
-			logger.info("Inicio " + this.getClass().getName());
+			LOGGER.info("Inicio " + this.getClass().getName());
 
 			numexp = rulectx.getNumExp();
 			numExpPadre = getNumExpFoliar(rulectx, entitiesAPI);
+			
+			LOGGER.warn("Se inicia foliado en el expediente -> "+ numexp + "con expediente padre -> " + numExpPadre);
 
 			ArrayList<DocIncluir> docsDelExp = new ArrayList<DocIncluir>();
 
-			ArrayList<String> expedientes = ExpedientesRelacionadosUtil
-					.getProcedimientosRelacionadosHijos(numExpPadre,
-							entitiesAPI);
+			ArrayList<String> expedientes = ExpedientesRelacionadosUtil.getProcedimientosRelacionadosHijos(numExpPadre, entitiesAPI);
 
 			if (expedientes != null && expedientes.size() > 0) {
 				FileTemporaryManager ftMgr = FileTemporaryManager.getInstance();
@@ -183,33 +181,22 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				errores = ftMgr.newFile(".txt");
 				erroresFW = new FileWriter(errores);
 
-				erroresFW
-						.write("\t\tDocumentos el expediente '"
-								+ numExpPadre
-								+ "' que no se han incluido en el expediente foliado:\n\n");
+				erroresFW.write("\t\tDocumentos el expediente '" + numExpPadre + "' que no se han incluido en el expediente foliado:\n\n");
 
-				IItem expedienteOriginal = ExpedientesUtil.getExpediente(cct,
-						numExpPadre);
+				IItem expedienteOriginal = ExpedientesUtil.getExpediente(cct, numExpPadre);
 
-				String consultaDocumentos = getConsultaDocumentos(expedientes,
-						rulectx, expedienteOriginal);
+				String consultaDocumentos = getConsultaDocumentos(expedientes, rulectx, expedienteOriginal);
 
-				logger.info("MQE consulta documentos: " + consultaDocumentos);
+				LOGGER.info("MQE consulta documentos: " + consultaDocumentos);
 
-				IItemCollection documentsCollection = DocumentosUtil
-						.queryDocumentos(cct, consultaDocumentos);
+				IItemCollection documentsCollection = DocumentosUtil.queryDocumentos(cct, consultaDocumentos);
 				docsDelExp = getDocsDelExp(documentsCollection);
 
-				String varColorAsunto = DipucrCommonFunctions
-						.getVarGlobal("COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
+				String varColorAsunto = DipucrCommonFunctions.getVarGlobal("COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
+				
 				if (StringUtils.isEmpty(varColorAsunto)) {
-					logger.error("Error al obtener el color del texto del asunto de la portada del expediente "
-							+ numexp
-							+ ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
-					throw new ISPACRuleException(
-							"Error al obtener el color del texto del asunto de la portada del expediente "
-									+ numexp
-									+ ". Avise al administrador del sistema");
+					LOGGER.error("Error al obtener el color del texto del asunto de la portada del expediente " + numexp + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
+					throw new ISPACRuleException( "Error al obtener el color del texto del asunto de la portada del expediente " + numexp + ". Avise al administrador del sistema");
 				} else {
 					String[] varColorAsuntoSplit = varColorAsunto.split(",");
 					try {
@@ -223,27 +210,17 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 								Integer.parseInt(varColorAsuntoSplit[1]),
 								Integer.parseInt(varColorAsuntoSplit[2]),
 								Integer.parseInt(varColorAsuntoSplit[3]));
+						
 					} catch (Exception e) {
-						logger.error("Error al obtener el color del texto del asunto de la portada del expediente "
-								+ numexp
-								+ ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
-						throw new ISPACRuleException(
-								"Error al obtener el color del texto del asunto de la portada del expediente "
-										+ numexp
-										+ ". Avise al administrador del sistema");
+						LOGGER.error("Error al obtener el color del texto del asunto de la portada del expediente " + numexp + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO", e);
+						throw new ISPACRuleException( "Error al obtener el color del texto del asunto de la portada del expediente " + numexp + ". Avise al administrador del sistema", e);
 					}
 				}
 
-				String varColorNumPag = DipucrCommonFunctions
-						.getVarGlobal("COLOR_NUM_PAG_INDICE_FOLIADO");
+				String varColorNumPag = DipucrCommonFunctions.getVarGlobal("COLOR_NUM_PAG_INDICE_FOLIADO");
 				if (StringUtils.isEmpty(varColorNumPag)) {
-					logger.error("Error al obtener el color del texto del asunto de la portada del expediente "
-							+ numexp
-							+ ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
-					throw new ISPACRuleException(
-							"Error al obtener el color del texto del asunto de la portada del expediente "
-									+ numexp
-									+ ". Avise al administrador del sistema");
+					LOGGER.error("Error al obtener el color del texto del asunto de la portada del expediente " + numexp + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
+					throw new ISPACRuleException( "Error al obtener el color del texto del asunto de la portada del expediente " + numexp + ". Avise al administrador del sistema");
 				} else {
 					String[] varColorNumPagSplit = varColorNumPag.split(",");
 					try {
@@ -258,19 +235,13 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 								Integer.parseInt(varColorNumPagSplit[2]),
 								Integer.parseInt(varColorNumPagSplit[3]));
 					} catch (Exception e) {
-						logger.error("Error al obtener el color del texto del asunto de la portada del expediente "
-								+ numexp
-								+ ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
-						throw new ISPACRuleException(
-								"Error al obtener el color del texto del asunto de la portada del expediente "
-										+ numexp
-										+ ". Avise al administrador del sistema");
+						LOGGER.error("Error al obtener el color del texto del asunto de la portada del expediente " + numexp + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO", e);
+						throw new ISPACRuleException( "Error al obtener el color del texto del asunto de la portada del expediente " + numexp + ". Avise al administrador del sistema", e);
 					}
 				}
 
-				documentoResumen = generarPdf(docsDelExp,
-						documentoResumen.getPath(), entitiesAPI, cct, rulectx);
-
+				documentoResumen = generarPdf(docsDelExp, documentoResumen.getPath(), entitiesAPI, cct, rulectx);
+				
 				erroresFW.flush();
 				erroresFW.close();
 
@@ -278,70 +249,54 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				 * [Teresa] Para que cambie el tipo de documento y lo coja de
 				 * datos específicos.
 				 **/
-				String plantilla = DocumentosUtil.getPlantillaDefecto(cct,
-						rulectx.getTaskProcedureId());
+				String plantilla = DocumentosUtil.getPlantillaDefecto(cct, rulectx.getTaskProcedureId());
 				int idTypeDocument = 0;
 				if (StringUtils.isNotEmpty(plantilla)) {
-					String tipoDocumento = DocumentosUtil
-							.getTipoDocumentoByPlantilla(cct, plantilla);
-					idTypeDocument = DocumentosUtil.getTipoDoc(cct,
-							tipoDocumento, DocumentosUtil.BUSQUEDA_LIKE, true);
+					String tipoDocumento = DocumentosUtil.getTipoDocumentoByPlantilla(cct, plantilla);
+					idTypeDocument = DocumentosUtil.getTipoDoc(cct, tipoDocumento, DocumentosUtil.BUSQUEDA_LIKE, true);
 				} else {
-					idTypeDocument = DocumentosUtil.getTipoDoc(cct, tipoDoc,
-							DocumentosUtil.BUSQUEDA_LIKE, true);
+					idTypeDocument = DocumentosUtil.getTipoDoc(cct, tipoDoc, DocumentosUtil.BUSQUEDA_LIKE, true);
 				}
 
 				if (idTypeDocument == Integer.MIN_VALUE) {
-					throw new ISPACInfo(
-							"Error al obtener el tipo de documento '" + tipoDoc
-									+ "' del expediente " + numexp);
+					throw new ISPACInfo( "Error al obtener el tipo de documento '" + tipoDoc + "' del expediente " + numexp);
 				}
 
 				String sName = "";
+				
 				if (StringUtils.isNotEmpty(nombreDoc)) {
 					sName = nombreDoc;
 				} else {
 					sName = expedienteOriginal.getString("ASUNTO");
 				}
 
-				DocumentosUtil.generaYAnexaDocumento(rulectx, idTypeDocument,
-						sName, documentoResumen, "pdf");
+				DocumentosUtil.generaYAnexaDocumento(rulectx, idTypeDocument, sName, documentoResumen, "pdf");
 
 				documentoResumen.delete();
 
 				if (hayErrores) {
-					DocumentosUtil.generaYAnexaDocumento(rulectx,
-							idTypeDocument, "Documentos no incluidos", errores,
-							"txt");
+					DocumentosUtil.generaYAnexaDocumento(rulectx, idTypeDocument, "Documentos no incluidos", errores, "txt");
 				}
-				if (errores != null && errores.exists())
+				if (errores != null && errores.exists()){
 					errores.delete();
+				}
 			}
-			logger.info("FIN " + this.getClass().getName());
+			LOGGER.info("FIN " + this.getClass().getName());
 
 		} catch (ISPACException e) {
-			logger.error("ERROR generando expediente foliado: " + numExpPadre,
-					e);
-			throw new ISPACRuleException("ERROR generando expediente foliado: "
-					+ numExpPadre, e);
+			LOGGER.error("ERROR generando expediente foliado: " + numExpPadre, e);
+			throw new ISPACRuleException("ERROR generando expediente foliado: " + numExpPadre, e);
 		} catch (FileNotFoundException e) {
-			logger.error("ERROR generando expediente foliado: " + numExpPadre,
-					e);
-			throw new ISPACRuleException("ERROR generando expediente foliado: "
-					+ numExpPadre, e);
+			LOGGER.error("ERROR generando expediente foliado: " + numExpPadre, e);
+			throw new ISPACRuleException("ERROR generando expediente foliado: " + numExpPadre, e);
 		} catch (IOException e) {
-			logger.error("ERROR generando expediente foliado: " + numExpPadre,
-					e);
-			throw new ISPACRuleException("ERROR generando expediente foliado: "
-					+ numExpPadre, e);
+			LOGGER.error("ERROR generando expediente foliado: " + numExpPadre, e);
+			throw new ISPACRuleException("ERROR generando expediente foliado: " + numExpPadre, e);
 		}
 		return "";
 	}
 
-	public void extraeDocs(File archivo, String extension, String nombreDoc,
-			String descripcion, Date fechaDoc, Date fechaAprobacion,
-			String idPlantilla, int idTipDoc, ArrayList<DocIncluir> resultado,
-			IClientContext cct, String infoPag) throws Exception {
+	public void extraeDocs(File archivo, String extension, String nombreDoc, String descripcion, Date fechaDoc, Date fechaAprobacion, String idPlantilla, int idTipDoc, ArrayList<DocIncluir> resultado, IClientContext cct, String infoPag) throws Exception {
 
 		DocIncluir docAIncluir = null;
 		File getFile = null;
@@ -350,7 +305,7 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		// Si es archivo hay que ver si se trata de zip, rar o ya es un fichero
 		// final
 
-		if (extension.toUpperCase().equals("ZIP")) {
+		if ("ZIP".equalsIgnoreCase(extension)) {
 			try {
 				descripcion += ".zip - " + nombreDoc;
 
@@ -364,99 +319,64 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 
 				entradas = zipArchivo.entries();
 				ZipEntry entrada;
+				
 				while (entradas.hasMoreElements()) {
 					entrada = entradas.nextElement();
 
 					if (!entrada.isDirectory()) {
-						nombreDoc = StringUtils
-								.substring(
-										entrada.getName(),
-										0,
-										StringUtils.lastIndexOf(
-												entrada.getName(), '.'));
+						nombreDoc = StringUtils.substring( entrada.getName(), 0, StringUtils.lastIndexOf( entrada.getName(), '.'));
 
 						nombreDoc = nombreDoc.replace("(", "");
 						nombreDoc = nombreDoc.replace(")", "");
 						nombreDoc = nombreDoc.trim();
 
-						try {
-							extension = StringUtils.substring(
-									entrada.getName(), StringUtils.lastIndexOf(
-											entrada.getName(), '.') + 1);
+						extension = FileUtils.getExtensionByNombreDoc(entrada.getName());
+						if(StringUtils.isNotEmpty(extension)){
 							extension = extension.replace("(", "");
 							extension = extension.replace(")", "");
 							extension = extension.trim();
-						} catch (Exception e) {
-							extension = "";
 						}
 
 						InputStream in = zipArchivo.getInputStream(entrada);
-						getFile = new File(FileTemporaryManager.getInstance()
-								.getFileTemporaryPath()
-								+ "/"
-								+ FileTemporaryManager.getInstance()
-										.newFileName("." + extension));
+						getFile = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + FileTemporaryManager.getInstance().newFileName("." + extension));
 
 						FileOutputStream fos = new FileOutputStream(getFile);
 						int leido;
 						byte[] buffer = new byte[1024];
+						
 						if (in != null && fos != null) {
 							while (0 < (leido = in.read(buffer))) {
 								fos.write(buffer, 0, leido);
 							}
+							
 							fos.flush();
 							fos.close();
 							in.close();
 
-							extraeDocs(getFile, extension, nombreDoc,
-									descripcion, fechaDoc, fechaAprobacion,
-									idPlantilla, idTipDoc, resultado, cct,
-									infoPag);
+							extraeDocs(getFile, extension, nombreDoc, descripcion, fechaDoc, fechaAprobacion, idPlantilla, idTipDoc, resultado, cct, infoPag);
 						}
 
 					}
 				}
 				zipArchivo.close();
-				if (archivo != null && archivo.exists())
+				if (archivo != null && archivo.exists()){
 					archivo.delete();
+				}
+				
 			} catch (ZipException e) {
-				logger.error(
-						"Error al extraer los documentos del archivo ZIP: "
-								+ nombreDoc, e);
-				erroresFW
-						.write("\t - Error al extraer los documentos del archivo ZIP: "
-								+ nombreDoc
-								+ "'\n\t\t'"
-								+ descripcion
-								+ "."
-								+ extension.trim() + "'\n\n");
+				LOGGER.error( "Error al extraer los documentos del archivo ZIP: " + nombreDoc, e);
+				erroresFW.write("\t - Error al extraer los documentos del archivo ZIP: " + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\n");
 				hayErrores = true;
 			} catch (IOException e) {
-				logger.error(
-						"Error al extraer los documentos del archivo ZIP: "
-								+ nombreDoc, e);
-				erroresFW
-						.write("\t - Error al extraer los documentos del archivo ZIP: "
-								+ nombreDoc
-								+ "'\n\t\t'"
-								+ descripcion
-								+ "."
-								+ extension.trim() + "'\n\n");
+				LOGGER.error( "Error al extraer los documentos del archivo ZIP: " + nombreDoc, e);
+				erroresFW.write("\t - Error al extraer los documentos del archivo ZIP: " + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\n");
 				hayErrores = true;
 			} catch (Exception e) {
-				logger.error(
-						"Error al extraer los documentos del archivo ZIP: "
-								+ nombreDoc, e);
-				erroresFW
-						.write("\t - Error al extraer los documentos del archivo ZIP: "
-								+ nombreDoc
-								+ "'\n\t\t'"
-								+ descripcion
-								+ "."
-								+ extension.trim() + "'\n\n");
+				LOGGER.error( "Error al extraer los documentos del archivo ZIP: " + nombreDoc, e);
+				erroresFW.write("\t - Error al extraer los documentos del archivo ZIP: " + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\n");
 				hayErrores = true;
 			}
-		} else if (extension.toUpperCase().equals("RAR")) {
+		} else if ("RAR".equalsIgnoreCase(extension)) {
 			try {
 				descripcion += ".rar - " + nombreDoc;
 
@@ -474,25 +394,16 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 					FileHeader entrada = fileHeaderIterator.next();
 
 					if (!entrada.isDirectory()) {
-						getFile = new File(FileTemporaryManager.getInstance()
-								.getFileTemporaryPath()
-								+ "/"
-								+ entrada.getFileNameString());
+						getFile = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + entrada.getFileNameString());
 						int cont = 0;
+						
 						while (getFile.exists()) {
-							getFile = new File(FileTemporaryManager
-									.getInstance().getFileTemporaryPath()
-									+ "/"
-									+ cont + entrada.getFileNameString());
+							getFile = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + cont + entrada.getFileNameString());
 							cont++;
 						}
 						FileOutputStream fos = new FileOutputStream(getFile);
 
-						nombreDoc = StringUtils.substring(
-								entrada.getFileNameString(),
-								0,
-								StringUtils.lastIndexOf(
-										entrada.getFileNameString(), '.'));
+						nombreDoc = StringUtils.substring( entrada.getFileNameString(), 0, StringUtils.lastIndexOf( entrada.getFileNameString(), '.'));
 
 						nombreDoc = nombreDoc.replace("(", "");
 						nombreDoc = nombreDoc.replace(")", "");
@@ -503,110 +414,74 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 						fos.flush();
 						fos.close();
 
-						try {
-							extension = StringUtils
-									.substring(
-											entrada.getFileNameString(),
-											StringUtils.lastIndexOf(
-													entrada.getFileNameString(),
-													'.') + 1);
+						extension = FileUtils.getExtensionByNombreDoc(entrada.getFileNameString());
+						if(StringUtils.isNotEmpty(extension)){
 							extension = extension.replace("(", "");
 							extension = extension.replace(")", "");
 							extension = extension.trim();
-						} catch (Exception e) {
-							extension = "";
 						}
 
-						extraeDocs(getFile, extension, nombreDoc, descripcion,
-								fechaDoc, fechaAprobacion, idPlantilla,
-								idTipDoc, resultado, cct, infoPag);
+						extraeDocs(getFile, extension, nombreDoc, descripcion, fechaDoc, fechaAprobacion, idPlantilla, idTipDoc, resultado, cct, infoPag);
 					}
 				}
 				a.close();
-				if (archivo != null && archivo.exists())
+				if (archivo != null && archivo.exists()){
 					archivo.delete();
+				}
 			} catch (RarException e) {
-				logger.error("Error al contar los documentos del archivo RAR: "
-						+ nombreDoc, e);
-				erroresFW
-						.write("\t - Error al extraer los documentos del archivo RAR: "
-								+ nombreDoc
-								+ "'\n\t\t'"
-								+ descripcion
-								+ "."
-								+ extension.trim() + "'\n\n");
+				LOGGER.error("Error al contar los documentos del archivo RAR: " + nombreDoc, e);
+				erroresFW.write("\t - Error al extraer los documentos del archivo RAR: " + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\n");
 				hayErrores = true;
+				
 			} catch (IOException e) {
-				logger.error("Error al contar los documentos del archivo RAR: "
-						+ nombreDoc, e);
-				erroresFW
-						.write("\t - Error al extraer los documentos del archivo RAR: "
-								+ nombreDoc
-								+ "'\n\t\t'"
-								+ descripcion
-								+ "."
-								+ extension.trim() + "'\n\n");
+				LOGGER.error("Error al contar los documentos del archivo RAR: " + nombreDoc, e);
+				erroresFW.write("\t - Error al extraer los documentos del archivo RAR: " + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\n");
 				hayErrores = true;
+				
 			} catch (Exception e) {
-				logger.error("Error al contar los documentos del archivo RAR: "
-						+ nombreDoc, e);
-				erroresFW
-						.write("\t - Error al extraer los documentos del archivo RAR: "
-								+ nombreDoc
-								+ "'\n\t\t'"
-								+ descripcion
-								+ "."
-								+ extension.trim() + "'\n\n");
+				LOGGER.error("Error al contar los documentos del archivo RAR: " + nombreDoc, e);
+				erroresFW.write("\t - Error al extraer los documentos del archivo RAR: " + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\n");
 				hayErrores = true;
 			}
-		} else if (!extension.toUpperCase().equals("PDF")) {
+		} else if (!"PDF".equalsIgnoreCase(extension)) {
 
 			String docFilePath = "";
 
 			docFilePath = convert2PDF(cct, archivo, extension);
+			
 			if (StringUtils.isNotEmpty(docFilePath)) {
 				getFile = new File(docFilePath);
 
-				nombreDoc = StringUtils.substring(nombreDoc,
-						StringUtils.lastIndexOf(nombreDoc, '/') + 1);
-				nombreDoc = StringUtils.substring(nombreDoc,
-						StringUtils.lastIndexOf(nombreDoc, '\\') + 1);
-
+				nombreDoc = StringUtils.substring(nombreDoc, StringUtils.lastIndexOf(nombreDoc, '/') + 1);
+				nombreDoc = StringUtils.substring(nombreDoc, StringUtils.lastIndexOf(nombreDoc, '\\') + 1);
+				
 				nombreDoc = nombreDoc.replace("(", "");
 				nombreDoc = nombreDoc.replace(")", "");
 				nombreDoc = nombreDoc.replace(".", "-");
 				nombreDoc = nombreDoc.trim();
 
-				docAIncluir = new DocIncluir(getFile, nombreDoc, extension,
-						descripcion, fechaDoc, fechaAprobacion, archivo,
-						idPlantilla, idTipDoc);
+				docAIncluir = new DocIncluir(getFile, nombreDoc, extension,	descripcion, fechaDoc, fechaAprobacion, archivo, idPlantilla, idTipDoc);
 
 				resultado.add(docAIncluir);
 			}
 		} else {
 			// Si es PDF lo incluimos directamente
-			nombreDoc = StringUtils.substring(nombreDoc,
-					StringUtils.lastIndexOf(nombreDoc, '/') + 1);
-			nombreDoc = StringUtils.substring(nombreDoc,
-					StringUtils.lastIndexOf(nombreDoc, '\\') + 1);
+			nombreDoc = StringUtils.substring(nombreDoc, StringUtils.lastIndexOf(nombreDoc, '/') + 1);
+			nombreDoc = StringUtils.substring(nombreDoc, StringUtils.lastIndexOf(nombreDoc, '\\') + 1);
 
 			nombreDoc = nombreDoc.replace("(", "");
 			nombreDoc = nombreDoc.replace(")", "");
 			nombreDoc = nombreDoc.replace(".", "-");
 			nombreDoc = nombreDoc.trim();
 
-			docAIncluir = new DocIncluir(archivo, nombreDoc, extension,
-					descripcion, fechaDoc, fechaAprobacion, archivo,
-					idPlantilla, idTipDoc);
+			docAIncluir = new DocIncluir(archivo, nombreDoc, extension, descripcion, fechaDoc, fechaAprobacion, archivo, idPlantilla, idTipDoc);
 
 			resultado.add(docAIncluir);
 		}
 	}
 
 	@SuppressWarnings("rawtypes")
-	public ArrayList<DocIncluir> getDocsDelExp(
-			IItemCollection documentsCollection) throws ISPACException,
-			IOException {
+	public ArrayList<DocIncluir> getDocsDelExp( IItemCollection documentsCollection) throws ISPACException, IOException {
 
 		ArrayList<DocIncluir> resultado = new ArrayList<DocIncluir>();
 
@@ -618,47 +493,43 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				IItem documento = (IItem) documentos.next();
 				String infoPagRDE = documento.getString("INFOPAG_RDE");
 				String extension = documento.getString("EXTENSION_RDE");
-				if (infoPagRDE == null || infoPagRDE.equals("")) {
+				
+				if (StringUtils.isEmpty(infoPagRDE)) {
 					infoPagRDE = documento.getString("INFOPAG");
 					extension = documento.getString("EXTENSION");
 				}
+				
 				String numExp = documento.getString("NUMEXP");
 				String nombreDocumento = documento.getString("NOMBRE");
-				String descripcionDocumento = documento
-						.getString("DESCRIPCION");
+				String descripcionDocumento = documento.getString("DESCRIPCION");
 				Date fechaDocumento = documento.getDate("FFIRMA");
 
 				Date fechaAprobacion = documento.getDate("FAPROBACION");
-				if (fechaAprobacion == null)
+				if (fechaAprobacion == null){
 					fechaAprobacion = fechaDocumento;
+				}
 
 				String tipoRegistro = documento.getString("TP_REG");
 				String nreg = documento.getString("NREG");
 				String freg = documento.getString("FREG");
 				String idPlantilla = documento.getString("ID_PLANTILLA");
 				int idTipDoc = documento.getInt("ID_TPDOC");
-				if (tipoRegistro == null
-						|| tipoRegistro.toUpperCase().equals("NINGUNO"))
+				
+				if ("NINGUNO".equalsIgnoreCase(tipoRegistro)){
 					tipoRegistro = "";
+				}
+				
 				if (nreg == null) {
 					nreg = "";
 					freg = "";
 				}
+				
 				if (infoPagRDE != null) {
-					DocIncluir doc = new DocIncluir(infoPagRDE, numExp,
-							tipoRegistro, nreg, freg,
-							normalizar(nombreDocumento), extension,
-							descripcionDocumento, fechaDocumento,
-							fechaAprobacion, idPlantilla, idTipDoc);
+					DocIncluir doc = new DocIncluir(infoPagRDE, numExp, tipoRegistro, nreg, freg, normalizar(nombreDocumento), extension, descripcionDocumento, fechaDocumento,	fechaAprobacion, idPlantilla, idTipDoc);
 					resultado.add(doc);
 				} else {
-					logger.error("Error no existe el documento '"
-							+ nombreDocumento + "' del expediente: '" + numExp
-							+ "'");
-					erroresFW.write("\t - Error no existe el documento '"
-							+ nombreDocumento + "'\n\t\t'"
-							+ descripcionDocumento + "." + extension.trim()
-							+ "'\n\t\tExpediente: '" + numExp + "'\n\n");
+					LOGGER.error("Error no existe el documento '" + nombreDocumento + "' del expediente: '" + numExp + "'");
+					erroresFW.write("\t - Error no existe el documento '" + nombreDocumento + "'\n\t\t'" + descripcionDocumento + "." + extension.trim() + "'\n\t\tExpediente: '" + numExp + "'\n\n");
 					hayErrores = true;
 				}
 			}
@@ -667,27 +538,25 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public String getConsultaDocumentos(ArrayList<String> expedientes,
-			IRuleContext rulectx, IItem expedienteOriginal)
-			throws ISPACException {
+	public String getConsultaDocumentos(ArrayList<String> expedientes, IRuleContext rulectx, IItem expedienteOriginal) throws ISPACException {
 
 		IClientContext cct = rulectx.getClientContext();
 		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
 
 		String nombre = "";
-		StringBuffer nombreSinDni = new StringBuffer("");
+		StringBuilder nombreSinDni = new StringBuilder("");
 		String[] identidad = null;
 		String nif = "";
 
-		if (expedienteOriginal.getString("NREG") != null) {
-		}
-		if (expedienteOriginal.getString("IDENTIDADTITULAR") != null)
+		if (expedienteOriginal.getString("IDENTIDADTITULAR") != null){
 			nombre = expedienteOriginal.getString("IDENTIDADTITULAR");
-		if (expedienteOriginal.getString("NIFCIFTITULAR") != null)
+		}
+		if (expedienteOriginal.getString("NIFCIFTITULAR") != null){
 			nif = expedienteOriginal.getString("NIFCIFTITULAR");
+		}
 
-		if (nif == null || nif.equals("")) {
-			if (nombre != null && !nombre.equals("")) {
+		if (StringUtils.isEmpty(nif)) {
+			if (StringUtils.isNotEmpty(nombre)) {
 				identidad = nombre.split(" ");
 				nombreSinDni.append(identidad[1]);
 
@@ -696,7 +565,7 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				}
 			}
 		} else {
-			nombreSinDni = new StringBuffer(nombre);
+			nombreSinDni = new StringBuilder(nombre);
 		}
 
 		String consultaDocumentos = "";
@@ -707,15 +576,14 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		String consultaElse = "";
 
 		// Comprobamos si es de secretaría, si lo es, buscamos la propuesta
-		String expedientePropuesta = getExpedientePropuesta(expedientes,
-				entitiesAPI, rulectx);
+		String expedientePropuesta = getExpedientePropuesta(expedientes, entitiesAPI, rulectx);
 
 		// Recorremos todos los expedientes en función del expediente u
 		// obtenemos todos los firmados y las entradas
 		// o únicamente los certificados y las notificaciones
 		for (int i = 0; i < expedientes.size(); i++) {
-			IItem itemProc = ExpedientesUtil.getExpediente(
-					rulectx.getClientContext(), expedientes.get(i));
+			IItem itemProc = ExpedientesUtil.getExpediente( rulectx.getClientContext(), expedientes.get(i));
+			
 			if (itemProc != null) {
 				int idProcedimiento = itemProc.getInt("ID_PCD");
 				// Comprobamos si el expediente es de los que no hay que sacar
@@ -726,7 +594,7 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 					String id = "";
 					String consultaDecretos = "";
 					String orden = "";
-					if (!nombreSinDni.toString().equals("")) {
+					if (StringUtils.isNotEmpty(nombreSinDni.toString())) {
 						// Es de tipo decreto recuperamos solo las
 						// notificaciones y los acuses
 						consultaDecretos = " (UPPER(DESCRIPCION) LIKE UPPER('NOTIFICA%"
@@ -748,32 +616,35 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 						orden = "ID DESC LIMIT 1";
 					}
 
-					IItemCollection icDoc = DocumentosUtil.getDocumentos(cct,
-							expedientes.get(i), consultaDecretos, orden);
+					IItemCollection icDoc = DocumentosUtil.getDocumentos(cct, expedientes.get(i), consultaDecretos, orden);
 					Iterator docNotificaciones;
+					
 					if (icDoc.next()) {
 						docNotificaciones = icDoc.iterator();
+						
+						List<String> elementos = new ArrayList<String>();
 						while (docNotificaciones.hasNext()) {
-							id += ((IItem) docNotificaciones.next())
-									.getString("ID");
-							if (docNotificaciones.hasNext())
-								id += ",";
+							elementos.add(((IItem) docNotificaciones.next()).getString("ID"));
+						}
+						
+						if(null != elementos && !elementos.isEmpty()){
+							id += StringUtils.join(elementos, ",");
 						}
 					}
 
-					if (!id.equals("")) {
-						if (!consultaDecre.equals(""))
+					if (StringUtils.isNotEmpty(id)) {
+						if (StringUtils.isNotEmpty(consultaDecre)){
 							consultaDecre += " OR (ID IN (" + id + "))";
-						else
+						} else {
 							consultaDecre = " (ID IN (" + id + "))";
+						}
 					}
-				} else if (esProcTipo(entitiesAPI, idProcedimiento, "SECRETAR")
-						&& !expedientes.get(i).equals(expedientePropuesta)) {
+				} else if (esProcTipo(entitiesAPI, idProcedimiento, "SECRETAR") && !expedientes.get(i).equals(expedientePropuesta)) {
+					
 					String id = "";
-					IItemCollection icDoc = DocumentosUtil.getDocumentos(cct,
-							expedientes.get(i), "DESCRIPCION LIKE '%"
-									+ expedientePropuesta + "%'", "");
+					IItemCollection icDoc = DocumentosUtil.getDocumentos(cct, expedientes.get(i), "DESCRIPCION LIKE '%" + expedientePropuesta + "%'", "");
 					Iterator docNotificaciones;
+					
 					if (icDoc.next()) {
 						String tipoPropuesta = "";
 						String numeroPropuesta = "";
@@ -781,171 +652,141 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 						String esUrgencia2 = "";
 
 						docNotificaciones = icDoc.iterator();
+						
 						if (docNotificaciones.hasNext()) {
-							String descripcion = ((IItem) docNotificaciones
-									.next()).getString("DESCRIPCION");
-							String[] vectorDescripcion = descripcion
-									.split(" . ");
+							String descripcion = ((IItem) docNotificaciones.next()).getString("DESCRIPCION");
+							String[] vectorDescripcion = descripcion.split(" . ");
+							
 							if (vectorDescripcion.length > 1) {
 								tipoPropuesta = vectorDescripcion[0];
 								numeroPropuesta = vectorDescripcion[1];
 							}
-							if (tipoPropuesta.toUpperCase().equals(
-									"PROPUESTA URGENCIA")) {
+							if ("PROPUESTA URGENCIA".equalsIgnoreCase(tipoPropuesta)) {
 								esUrgencia = ".- Urgencia Certificado";
 								esUrgencia2 = "Urgencia";
-							} else
+							} else{
 								esUrgencia = ".-Certificado";
+							}
 
-							String consulta = "((UPPER(DESCRIPCION) LIKE UPPER('"
-									+ numeroPropuesta + esUrgencia + "%')";
+							String consulta = "((UPPER(DESCRIPCION) LIKE UPPER('" + numeroPropuesta + esUrgencia + "%')";
 
-							if (!nombre.equals(""))
+							if (StringUtils.isNotEmpty(nombre)){
 								consulta += "OR UPPER(DESCRIPCION) LIKE UPPER('"
 										+ numeroPropuesta
 										+ "%"
 										+ esUrgencia2
 										+ "%" + nombre + "%')";
+							}
 
 							consulta += ") AND ESTADOFIRMA IN ('02','03')) OR (TP_REG = 'ENTRADA' AND (UPPER(EXTENSION) = 'PDF' OR UPPER(EXTENSION_RDE) ='PDF'))";
-							IItemCollection icDoc2 = DocumentosUtil
-									.getDocumentos(
-											cct,
-											expedientes.get(i),
-											consulta,
-											"CASE WHEN FAPROBACION IS NULL THEN FFIRMA ELSE FAPROBACION END, DESCRIPCION DESC");
+							IItemCollection icDoc2 = DocumentosUtil.getDocumentos( cct, expedientes.get(i), consulta, " CASE WHEN FAPROBACION IS NULL THEN FFIRMA ELSE FAPROBACION END, DESCRIPCION DESC");
 							Iterator it2 = icDoc2.iterator();
+							
+							List<String> elementos = new ArrayList<String>();
 							while (it2.hasNext()) {
-								id += ((IItem) it2.next()).getString("ID");
-								if (it2.hasNext())
-									id += ",";
+								elementos.add(((IItem) it2.next()).getString("ID"));
+							}
+							
+							if(null != elementos && !elementos.isEmpty()){
+								id += StringUtils.join(elementos, ",");
 							}
 						}
 
 					}
-					if (!id.equals("")) {
-						if (!consultaSecre.equals(""))
+					if (StringUtils.isNotEmpty(id)) {
+						if (StringUtils.isNotEmpty(consultaSecre)){
 							consultaSecre += " OR (ID IN (" + id + "))";
-						else
+						} else {
 							consultaSecre += " (ID IN (" + id + "))";
+						}
 					}
 				} else if (esProcTipo(entitiesAPI, idProcedimiento, "BOP")) {
 					String idPropuestaAnuncio = "";
 					String idAnuncioPublicado = "";
 
-					IItemCollection solBopCollection = entitiesAPI.getEntities(
-							"BOP_SOLICITUD", expedientes.get(i));
+					IItemCollection solBopCollection = entitiesAPI.getEntities( "BOP_SOLICITUD", expedientes.get(i));
 					Iterator solBopIterator = solBopCollection.iterator();
+					
 					if (solBopIterator.hasNext()) {
 						IItem solBop = (IItem) solBopIterator.next();
-						Date fecha_publicacion = solBop
-								.getDate("FECHA_PUBLICACION");
-						String num_anuncio = solBop
-								.getString("NUM_ANUNCIO_BOP");
+						Date fechaPublicacion = solBop.getDate("FECHA_PUBLICACION");
+						String numAnuncio = solBop.getString("NUM_ANUNCIO_BOP");
 
-						if (fecha_publicacion != null) {
-							IItemCollection publicacionBOPCollection = entitiesAPI
-									.queryEntities("BOP_PUBLICACION",
-											"WHERE FECHA = '"
-													+ fecha_publicacion + "'");
-							Iterator publicacionBOPIterator = publicacionBOPCollection
-									.iterator();
+						if (fechaPublicacion != null) {
+							IItemCollection publicacionBOPCollection = entitiesAPI.queryEntities("BOP_PUBLICACION", " WHERE FECHA = '" + fechaPublicacion + "'");
+							Iterator publicacionBOPIterator = publicacionBOPCollection.iterator();
+							
 							if (publicacionBOPIterator.hasNext()) {
-								IItem publicacionBOP = (IItem) publicacionBOPIterator
-										.next();
-								String numexpPublicacion = publicacionBOP
-										.getString("NUMEXP");
+								IItem publicacionBOP = (IItem) publicacionBOPIterator.next();
+								String numexpPublicacion = publicacionBOP.getString("NUMEXP");
 
-								IItemCollection documentosPublicacionBOPCollection = DocumentosUtil
-										.getDocumentos(cct, numexpPublicacion,
-												"DESCRIPCION LIKE '"
-														+ num_anuncio + " -%'",
-												"");
-								Iterator documentosPublicacionBOPIterator = documentosPublicacionBOPCollection
-										.iterator();
+								IItemCollection documentosPublicacionBOPCollection = DocumentosUtil.getDocumentos(cct, numexpPublicacion, " DESCRIPCION LIKE '" + numAnuncio + " -%'", "");
+								Iterator documentosPublicacionBOPIterator = documentosPublicacionBOPCollection.iterator();
+								
 								if (documentosPublicacionBOPIterator.hasNext()) {
-									IItem documentosPublicacion = (IItem) documentosPublicacionBOPIterator
-											.next();
-									idAnuncioPublicado = documentosPublicacion
-											.getString("ID");
+									IItem documentosPublicacion = (IItem) documentosPublicacionBOPIterator.next();
+									idAnuncioPublicado = documentosPublicacion.getString("ID");
 								}
 							}
 						}
 					}
-					if (idAnuncioPublicado.equals("")) {
-						IItemCollection docPropAnuncioCollection = DocumentosUtil
-								.getDocumentos(
-										cct,
-										expedientes.get(i),
-										"",
-										"CASE WHEN FAPROBACION IS NULL THEN FFIRMA ELSE FAPROBACION END, DESCRIPCION ASC");
-						Iterator docPropAnuncioIterator = docPropAnuncioCollection
-								.iterator();
+					if (StringUtils.isEmpty(idAnuncioPublicado)) {
+						IItemCollection docPropAnuncioCollection = DocumentosUtil.getDocumentos( cct, expedientes.get(i), "", " CASE WHEN FAPROBACION IS NULL THEN FFIRMA ELSE FAPROBACION END, DESCRIPCION ASC");
+						Iterator docPropAnuncioIterator = docPropAnuncioCollection .iterator();
 						if (docPropAnuncioIterator.hasNext()) {
-							IItem docPropAnuncio = (IItem) docPropAnuncioIterator
-									.next();
+							IItem docPropAnuncio = (IItem) docPropAnuncioIterator.next();
 							idPropuestaAnuncio = docPropAnuncio.getString("ID");
 						}
 					}
 
-					if (!idAnuncioPublicado.equals("")) {
-						if (!consultaBOP.equals(""))
-							consultaBOP += " OR (ID IN (" + idAnuncioPublicado
-									+ "))";
-						else
-							consultaBOP += " (ID IN (" + idAnuncioPublicado
-									+ "))";
-					} else if (!idPropuestaAnuncio.equals("")) {
-						if (!consultaBOP.equals(""))
-							consultaBOP += " OR (ID IN (" + idPropuestaAnuncio
-									+ "))";
-						else
-							consultaBOP += " (ID IN (" + idPropuestaAnuncio
-									+ "))";
+					if (StringUtils.isNotEmpty(idAnuncioPublicado)) {
+						if (StringUtils.isNotEmpty(consultaBOP)){
+							consultaBOP += " OR (ID IN (" + idAnuncioPublicado + "))";
+						} else {
+							consultaBOP += " (ID IN (" + idAnuncioPublicado + "))";
+						}
+					} else if (StringUtils.isNotEmpty(idPropuestaAnuncio)) {
+						if (StringUtils.isNotEmpty(consultaBOP)){
+							consultaBOP += " OR (ID IN (" + idPropuestaAnuncio + "))";
+						} else{
+							consultaBOP += " (ID IN (" + idPropuestaAnuncio + "))";
+						}
 					}
 
 				} else if (esProcTipo(entitiesAPI, idProcedimiento, "ETABLÓN")) {
 					String idDocTablon = "";
 
-					IItemCollection docTablonCollection = DocumentosUtil
-							.getDocumentos(
-									cct,
-									expedientes.get(i),
-									"UPPER(NOMBRE) LIKE 'ETABLON - DILIGENCIA%'",
-									"");
-					Iterator docTabloniIterator = docTablonCollection
-							.iterator();
+					IItemCollection docTablonCollection = DocumentosUtil.getDocumentos( cct, expedientes.get(i), " UPPER(NOMBRE) LIKE 'ETABLON - DILIGENCIA%'", "");
+					Iterator docTabloniIterator = docTablonCollection.iterator();
+					
 					if (docTabloniIterator.hasNext()) {
 						IItem docTablon = (IItem) docTabloniIterator.next();
 						idDocTablon = docTablon.getString("ID");
 					}
-					if (!idDocTablon.equals("")) {
-						if (!consultaTablon.equals(""))
-							consultaTablon += " OR (ID IN (" + idDocTablon
-									+ "))";
-						else
+					
+					if (StringUtils.isNotEmpty(idDocTablon)) {
+						if (StringUtils.isNotEmpty(consultaTablon)){
+							consultaTablon += " OR (ID IN (" + idDocTablon + "))";
+						} else{
 							consultaTablon += " (ID IN (" + idDocTablon + "))";
+						}
 					}
 				} else {
 					String idFoliado = "";
-					IItemCollection docFoliadoCollection = DocumentosUtil
-							.getDocumentos(
-									cct,
-									expedientes.get(i),
-									"UPPER(NOMBRE) LIKE 'EXPEDIENTE FOLIADO%' AND UPPER(DESCRIPCION) NOT LIKE 'DOCUMENTOS NO INCLUIDOS'",
-									"");
-					Iterator docFoliadoiIterator = docFoliadoCollection
-							.iterator();
+					IItemCollection docFoliadoCollection = DocumentosUtil.getDocumentos( cct, expedientes.get(i), " UPPER(NOMBRE) LIKE 'EXPEDIENTE FOLIADO%' AND UPPER(DESCRIPCION) NOT LIKE 'DOCUMENTOS NO INCLUIDOS'", "");
+					Iterator docFoliadoiIterator = docFoliadoCollection.iterator();
+					
 					if (docFoliadoiIterator.hasNext()) {
 						IItem docFoliado = (IItem) docFoliadoiIterator.next();
 						idFoliado = docFoliado.getString("ID");
 					}
 
-					if (!idFoliado.equals("")) {
-						if (!consultaElse.equals(""))
+					if (StringUtils.isNotEmpty(idFoliado)) {
+						if (StringUtils.isNotEmpty(consultaElse)){
 							consultaElse += " OR (ID IN (" + idFoliado + "))";
-						else
+						} else {
 							consultaElse += " (ID IN (" + idFoliado + "))";
+						}
 					}
 				}
 			}
@@ -953,75 +794,76 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		// Finalmente tomamos todos los documentos del expediente en el que nos
 		// encontramos
 		String idDocsExpOriginal = "";
-		IItemCollection docsExpCollection = DocumentosUtil.getDocumentos(cct,
-				expedienteOriginal.getString("NUMEXP"));
+		IItemCollection docsExpCollection = DocumentosUtil.getDocumentos(cct, expedienteOriginal.getString("NUMEXP"));
 		Iterator docsExpIterator = docsExpCollection.iterator();
+		
 		while (docsExpIterator.hasNext()) {
 			IItem docExp = (IItem) docsExpIterator.next();
-			if (!docExp.getString("NOMBRE").toUpperCase()
-					.equals("DOCUMENTACIÓN DE PROPUESTA")
-					&& !docExp.getString("NOMBRE").toUpperCase()
-							.equals("Propuesta Anuncio".toUpperCase())
-					&& !docExp.getString("NOMBRE").toUpperCase()
-							.contains("EXPEDIENTE FOLIADO")) {
-				if (nif == null || nif.equals("")) {
-					if (!docExp.getString("NOMBRE").toUpperCase()
-							.contains("NOTIFICACI")
-							&& !docExp.getString("NOMBRE").toUpperCase()
-									.contains("ACUSE"))
-						if (idDocsExpOriginal.equals(""))
+			if (!"DOCUMENTACIÓN DE PROPUESTA".equalsIgnoreCase(docExp.getString("NOMBRE")) && !"Propuesta Anuncio".equalsIgnoreCase(docExp.getString("NOMBRE")) && !StringUtils.containsIgnoreCase(docExp.getString("NOMBRE"), "EXPEDIENTE FOLIADO")) {
+				if (StringUtils.isEmpty(nif)) {
+					if (!StringUtils.containsIgnoreCase(docExp.getString("NOMBRE"), "NOTIFICACI") && !StringUtils.containsIgnoreCase(docExp.getString("NOMBRE"), "ACUSE")){
+						if (StringUtils.isEmpty(idDocsExpOriginal)){
 							idDocsExpOriginal = docExp.getString("ID");
-						else
+						} else {
 							idDocsExpOriginal += ", " + docExp.getString("ID");
+						}
+					}
 				} else {
-					if (idDocsExpOriginal.equals(""))
+					if (StringUtils.isEmpty(idDocsExpOriginal)){
 						idDocsExpOriginal = docExp.getString("ID");
-					else
+					} else {
 						idDocsExpOriginal += ", " + docExp.getString("ID");
+					}
 				}
 			}
 		}
-		if (!idDocsExpOriginal.equals("")) {
+		if (StringUtils.isNotEmpty(idDocsExpOriginal)) {
 			consultaDocumentos += " (ID IN (" + idDocsExpOriginal + "))";
 		}
 
-		if (!consultaDecre.equals(""))
+		if (StringUtils.isNotEmpty(consultaDecre)){
 			consultaDocumentos += " OR " + consultaDecre;
+		}
 
-		if (!consultaSecre.equals(""))
+		if (StringUtils.isNotEmpty(consultaSecre)){
 			consultaDocumentos += " OR " + consultaSecre;
+		}
 
-		if (!consultaBOP.equals(""))
+		if (StringUtils.isNotEmpty(consultaBOP)){
 			consultaDocumentos += " OR " + consultaBOP;
+		}
 
-		if (!consultaTablon.equals(""))
+		if (StringUtils.isNotEmpty(consultaTablon)){
 			consultaDocumentos += " OR " + consultaTablon;
+		}
 
-		if (!consultaElse.equals(""))
+		if (StringUtils.isNotEmpty(consultaElse)){
 			consultaDocumentos += " OR " + consultaElse;
+		}
 
-		if (!consultaDocumentos.equals("")) {
+		if (StringUtils.isNotEmpty(consultaDocumentos)) {
 			consultaDocumentos += " ORDER BY CASE WHEN FAPROBACION IS NULL THEN FFIRMA ELSE FAPROBACION END, DESCRIPCION ASC";
 
 			consultaDocumentos = " WHERE " + consultaDocumentos;
-		} else
+		} else{
 			consultaDocumentos = " WHERE 1=2 ";
+		}
 
 		return consultaDocumentos;
 	}
 
-	public String getExpedientePropuesta(ArrayList<String> expedientes,
-			IEntitiesAPI entitiesAPI, IRuleContext rulectx)
-			throws ISPACException {
+	public String getExpedientePropuesta(ArrayList<String> expedientes, IEntitiesAPI entitiesAPI, IRuleContext rulectx) throws ISPACException {
+		
 		String resultado = "";
 		String expedientePropuesta = "";
+		
 		for (int i = 0; i < expedientes.size(); i++) {
 			expedientePropuesta = expedientes.get(i);
-			IItem itemProc = ExpedientesUtil.getExpediente(
-					rulectx.getClientContext(), expedientes.get(i));
+			IItem itemProc = ExpedientesUtil.getExpediente( rulectx.getClientContext(), expedientes.get(i));
+			
 			if (itemProc != null) {
-				String nombreProcedimiento = itemProc
-						.getString("NOMBREPROCEDIMIENTO");
+				String nombreProcedimiento = itemProc.getString("NOMBREPROCEDIMIENTO");
+				
 				if (nombreProcedimiento.toUpperCase().indexOf("PROPUESTA") > -1) {
 					resultado = expedientePropuesta;
 				}
@@ -1030,28 +872,30 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		return resultado;
 	}
 
-	public boolean esProcTipo(IEntitiesAPI entitiesAPI, int idProcedimiento,
-			String tipo) {
+	public boolean esProcTipo(IEntitiesAPI entitiesAPI, int idProcedimiento, String tipo) {
 
 		boolean resultado = false;
+		
 		try {
-			IItem catalogo = entitiesAPI.getEntity(
-					SpacEntities.SPAC_CT_PROCEDIMIENTOS, idProcedimiento);
+			IItem catalogo = entitiesAPI.getEntity( SpacEntities.SPAC_CT_PROCEDIMIENTOS, idProcedimiento);
 
-			int id_padre = catalogo.getInt("ID_PADRE");
-			if (id_padre != -1) {
-				resultado = esProcTipo(entitiesAPI, id_padre, tipo);
+			int idPadre = catalogo.getInt("ID_PADRE");
+			
+			if (idPadre != -1) {
+				resultado = esProcTipo(entitiesAPI, idPadre, tipo);
 			} else {
-				String nom_pcd = "";
+				String nomPcd = "";
+				
 				if (catalogo.getString("NOMBRE") != null) {
-					nom_pcd = catalogo.getString("NOMBRE");
-					if (nom_pcd.toUpperCase().indexOf(tipo.toUpperCase()) >= 0) {
+					nomPcd = catalogo.getString("NOMBRE");
+					
+					if (nomPcd.toUpperCase().indexOf(tipo.toUpperCase()) >= 0) {
 						resultado = true;
 					}
 				}
 			}
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 		return resultado;
 	}
@@ -1065,9 +909,7 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public File generarPdf(ArrayList<DocIncluir> docsDelExp,
-			String filePathNotificaciones, IEntitiesAPI entitiesAPI,
-			ClientContext cct, IRuleContext rulectx) {
+	public File generarPdf(ArrayList<DocIncluir> docsDelExp, String filePathNotificaciones, IEntitiesAPI entitiesAPI, ClientContext cct, IRuleContext rulectx) {
 
 		File resultado = null;
 		PdfReader reader = null;
@@ -1094,10 +936,7 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 
 			ArrayList<Integer> numPagsDocs = new ArrayList<Integer>();
 
-			String filePathNotificacionesDoc = FileTemporaryManager
-					.getInstance().getFileTemporaryPath()
-					+ "/"
-					+ FileTemporaryManager.getInstance().newFileName(".pdf");
+			String filePathNotificacionesDoc = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + FileTemporaryManager.getInstance().newFileName(".pdf");
 
 			boolean primero = true;// Indica si es el primer fichero (sobre el
 									// que se concatenarán el resto de ficheros)
@@ -1144,80 +983,56 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 					docsResultado = new ArrayList<DocIncluir>();
 
 					try {
-						archivoOriginal = DocumentosUtil.getFile(cct, infoPag,
-								null, extension.trim());
+						archivoOriginal = DocumentosUtil.getFile(cct, infoPag, null, extension.trim());
 					} catch (ISPACException e) {
 						if (archivoOriginal != null && archivoOriginal.exists()) {
 							archivoOriginal.delete();
 							archivoOriginal = null;
 						}
-						logger.error("Error al recuperar el documento '"
-								+ nombreDoc + "' del expediente: '" + numexp
-								+ "'", e);
-						erroresFW
-								.write("\t - Error al recuperar el documento '"
-										+ nombreDoc + "'\n\t\t'" + descripcion
-										+ "." + extension.trim()
-										+ "'\n\t\tExpediente: '" + numexp
-										+ "'\n\n");
+						LOGGER.error("Error al recuperar el documento '" + nombreDoc + "' del expediente: '" + numexp + "'", e);
+						erroresFW.write("\t - Error al recuperar el documento '" + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\t\tExpediente: '" + numexp + "'\n\n");
 						hayErrores = true;
+						
 					} catch (Exception e) {
 						if (archivoOriginal != null && archivoOriginal.exists()) {
 							archivoOriginal.delete();
 							archivoOriginal = null;
 						}
-						logger.error("Error al recuperar el documento '"
-								+ nombreDoc + "' del expediente: '" + numexp
-								+ "'", e);
-						erroresFW
-								.write("\t - Error al recuperar el documento '"
-										+ nombreDoc + "'\n\t\t'" + descripcion
-										+ "." + extension.trim()
-										+ "'\n\t\tExpediente: '" + numexp
-										+ "'\n\n");
+						
+						LOGGER.error("Error al recuperar el documento '" + nombreDoc + "' del expediente: '" + numexp + "'", e);
+						erroresFW.write("\t - Error al recuperar el documento '" + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\t\tExpediente: '" + numexp + "'\n\n");
 						hayErrores = true;
 					}
 
 					try {
-						if (archivoOriginal != null && archivoOriginal.exists())
-							extraeDocs(archivoOriginal, extension, nombreDoc,
-									descripcion, fechaDoc, fechaAprobacion,
-									idPlantilla, idTipDoc, docsResultado, cct,
-									infoPag);
+						if (archivoOriginal != null && archivoOriginal.exists()){
+							extraeDocs(archivoOriginal, extension, nombreDoc, descripcion, fechaDoc, fechaAprobacion, idPlantilla, idTipDoc, docsResultado, cct, infoPag);
+						}
 					} catch (ISPACException e) {
 						if (archivoOriginal != null && archivoOriginal.exists()) {
 							archivoOriginal.delete();
 							archivoOriginal = null;
 						}
-						logger.error("Error al extraer el documento '"
-								+ nombreDoc + "' del expediente: '" + numexp
-								+ "'", e);
-						erroresFW.write("\t - Error al extraer el documento '"
-								+ nombreDoc + "'\n\t\t'" + descripcion + "."
-								+ extension.trim() + "'\n\t\tExpediente: '"
-								+ numexp + "'\n\n");
+						
+						LOGGER.error("Error al extraer el documento '" + nombreDoc + "' del expediente: '" + numexp + "'", e);
+						erroresFW.write("\t - Error al extraer el documento '" + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\t\tExpediente: '" + numexp + "'\n\n");
 						hayErrores = true;
 					} catch (Exception e) {
 						if (archivoOriginal != null && archivoOriginal.exists()) {
 							archivoOriginal.delete();
 							archivoOriginal = null;
 						}
-						logger.error("Error al extraer el documento '"
-								+ nombreDoc + "' del expediente: '" + numexp
-								+ "'", e);
-						erroresFW.write("\t - Error al extraer el documento '"
-								+ nombreDoc + "'\n\t\t'" + descripcion + "."
-								+ extension.trim() + "'\n\t\tExpediente: '"
-								+ numexp + "'\n\n");
+						
+						LOGGER.error("Error al extraer el documento '" + nombreDoc + "' del expediente: '" + numexp + "'", e);
+						erroresFW.write("\t - Error al extraer el documento '" + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\t\tExpediente: '" + numexp + "'\n\n");
 						hayErrores = true;
 					}
 
 					if (docsResultado != null && !docsResultado.isEmpty()) {
-						Iterator docsResultadoIterator = docsResultado
-								.iterator();
+						Iterator docsResultadoIterator = docsResultado.iterator();
+						
 						while (docsResultadoIterator.hasNext()) {
-							DocIncluir documento = (DocIncluir) docsResultadoIterator
-									.next();
+							DocIncluir documento = (DocIncluir) docsResultadoIterator.next();
 
 							File archivo = documento.docPdf;
 							nombreDoc = documento.nombreDoc;
@@ -1250,30 +1065,22 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 								reader = new PdfReader((InputStream) file);
 							} catch (IOException e) {
 								try {
-									String docFilePath = convert2PDF(cct,
-											archivo, "");
+									LOGGER.error("Error al crear el PdfReader para el documento: " + archivo.getName(), e);
+									String docFilePath = convert2PDF(cct, archivo, "");
+									
 									if (StringUtils.isNotEmpty(docFilePath)) {
 										archivo = new File(docFilePath);
 
 										file.close();
 										file = new FileInputStream(archivo);
 
-										rutaOriginal = archivo
-												.getAbsolutePath();
+										rutaOriginal = archivo.getAbsolutePath();
 
-										reader = new PdfReader(
-												(InputStream) file);
+										reader = new PdfReader((InputStream) file);
 									}
 								} catch (Exception e1) {
-									erroresFW
-											.write("\t - Error al recuperar el documento '"
-													+ nombreDoc
-													+ "'\n\t\t'"
-													+ descripcion
-													+ "."
-													+ extension.trim()
-													+ "'\n\t\tExpediente: '"
-													+ numexp + "'\n\n");
+									LOGGER.error("Error al volver a intentar crear el PdfReader para el documento: " + archivo.getName(), e1);
+									erroresFW.write("\t - Error al recuperar el documento '" + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\t\tExpediente: '" + numexp + "'\n\n");
 									hayErrores = true;
 								}
 							}
@@ -1287,43 +1094,33 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 
 								if (primero) {
 									primero = false;
-									documentDoc = new Document(
-											reader.getPageSize(1));
+									documentDoc = new Document(reader.getPageSize(1));
 
-									documentDoc.setMargins(100,
-											documentDoc.rightMargin(),
-											documentDoc.topMargin(), 27);
+									documentDoc.setMargins(100, documentDoc.rightMargin(), documentDoc.topMargin(), 27);
 
-									Font fuentePagina = new Font(
-											Font.TIMES_ROMAN);
+									Font fuentePagina = new Font( Font.TIMES_ROMAN);
 									fuentePagina.setStyle(Font.BOLD);
 									fuentePagina.setSize(13);
 
-									if (colorNumPag == null)
+									if (colorNumPag == null){
 										colorNumPag = new Color(255, 255, 255);
+									}
 									fuentePagina.setColor(colorNumPag);
 
-									HeaderFooter nPaginaFooterDoc = new HeaderFooter(
-											new Phrase("", fuentePagina), true);
-									nPaginaFooterDoc
-											.setAlignment(Element.ALIGN_RIGHT);
+									HeaderFooter nPaginaFooterDoc = new HeaderFooter( new Phrase("", fuentePagina), true);
+									nPaginaFooterDoc.setAlignment(Element.ALIGN_RIGHT);
 									nPaginaFooterDoc.setBorder(0);
 									nPaginaFooterDoc.setRight(0);
 									nPaginaFooterDoc.setBottom(0);
 
 									// Como es la primera página añadimos la
 									// portada
-									resultadoDoc = new File(
-											filePathNotificacionesDoc);
-									resultadoDocFO = new FileOutputStream(
-											resultadoDoc, true);
+									resultadoDoc = new File(filePathNotificacionesDoc);
+									resultadoDocFO = new FileOutputStream(resultadoDoc, true);
 
-									writerDoc = PdfWriter.getInstance(
-											documentDoc, resultadoDocFO);
-									writerDoc
-											.setPdfVersion(PdfWriter.VERSION_1_4);
-									writerDoc
-											.setViewerPreferences(PdfWriter.PageModeUseOutlines);
+									writerDoc = PdfWriter.getInstance(documentDoc, resultadoDocFO);
+									writerDoc.setPdfVersion(PdfWriter.VERSION_1_4);
+									writerDoc.setViewerPreferences(PdfWriter.PageModeUseOutlines);
 
 									if (añadeIndice) {
 										numPagsIndice = (numeroTotalDeDoc / DOCUMENTOS_POR_PAGINA) + 1;
@@ -1338,15 +1135,12 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 									nPagActual = numPagsIndice;
 
 									if (añadePortada) {
-										nPaginaFooterDoc
-												.setPageNumber(nPagActual - 1);
+										nPaginaFooterDoc.setPageNumber(nPagActual - 1);
 										documentDoc.setFooter(nPaginaFooterDoc);
-										documentDoc
-												.setPageCount(nPagActual - 1);
+										documentDoc.setPageCount(nPagActual - 1);
 										documentDoc.open();
 									} else {
-										nPaginaFooterDoc
-												.setPageNumber(nPagActual);
+										nPaginaFooterDoc.setPageNumber(nPagActual);
 										documentDoc.setFooter(nPaginaFooterDoc);
 										documentDoc.setPageCount(nPagActual);
 										documentDoc.open();
@@ -1360,93 +1154,74 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 										map.put("Title", "Índice");
 										map.put("Action", "GoTo");
 
-										if (añadePortada)
+										if (añadePortada){
 											map.put("Page", "2");
-										else
+										} else {
 											map.put("Page", "1");
+										}
 
 										marcas.add(map);
 									}
-
 								}
 
 								String numDocMostrar = "";
-								if (numeroTotalDeDoc < 10)
-									numDocMostrar = ""
-											+ (contadorDocumentos + 1);
-								else if (numeroTotalDeDoc < 100) {
-									if (contadorDocumentos < 9)
-										numDocMostrar = "0"
-												+ (contadorDocumentos + 1);
-									else
-										numDocMostrar = ""
-												+ (contadorDocumentos + 1);
+								if (numeroTotalDeDoc < 10){
+									numDocMostrar = "" + (contadorDocumentos + 1);
+								}else if (numeroTotalDeDoc < 100) {
+									if (contadorDocumentos < 9){
+										numDocMostrar = "0" + (contadorDocumentos + 1);
+									} else{
+										numDocMostrar = "" + (contadorDocumentos + 1);
+									}
 								} else if (numeroTotalDeDoc < 1000) {
-									if (contadorDocumentos < 9)
-										numDocMostrar = "00"
-												+ (contadorDocumentos + 1);
-									else if (contadorDocumentos < 99)
-										numDocMostrar = "0"
-												+ (contadorDocumentos + 1);
-									else
-										numDocMostrar = ""
-												+ (contadorDocumentos + 1);
+									if (contadorDocumentos < 9){
+										numDocMostrar = "00" + (contadorDocumentos + 1);
+									} else if (contadorDocumentos < 99){
+										numDocMostrar = "0" + (contadorDocumentos + 1);
+									} else {
+										numDocMostrar = "" + (contadorDocumentos + 1);
+									}
 								}
 
 								else if (numeroTotalDeDoc < 10000) {
-									if (contadorDocumentos < 9)
-										numDocMostrar = "000"
-												+ (contadorDocumentos + 1);
-									else if (contadorDocumentos < 99)
-										numDocMostrar = "00"
-												+ (contadorDocumentos + 1);
-									else if (contadorDocumentos < 999)
-										numDocMostrar = "0"
-												+ (contadorDocumentos + 1);
-									else
-										numDocMostrar = ""
-												+ (contadorDocumentos + 1);
+									if (contadorDocumentos < 9){
+										numDocMostrar = "000" + (contadorDocumentos + 1);
+									} else if (contadorDocumentos < 99) {
+										numDocMostrar = "00" + (contadorDocumentos + 1);
+									} else if (contadorDocumentos < 999){
+										numDocMostrar = "0" + (contadorDocumentos + 1);
+									} else {
+										numDocMostrar = "" + (contadorDocumentos + 1);
+									}
 								}
 
 								String[] entrada;
-								SimpleDateFormat format = new SimpleDateFormat(
-										"dd/MM/yyyy");
-								if (añadePortada)
-									entrada = new String[] { numDocMostrar,
-											descripcion,
-											format.format(fechaAprobacion),
-											"" + numPag, "" + (nPagActual - 1) };
-								else
-									entrada = new String[] { numDocMostrar,
-											descripcion,
-											format.format(fechaAprobacion),
-											"" + numPag, "" + nPagActual };
+								SimpleDateFormat format = new SimpleDateFormat( "dd/MM/yyyy");
+								if (añadePortada){
+									entrada = new String[] { numDocMostrar, descripcion, format.format(fechaAprobacion), "" + numPag, "" + (nPagActual - 1) };
+								} else {
+									entrada = new String[] { numDocMostrar, descripcion, format.format(fechaAprobacion), "" + numPag, "" + nPagActual };
+								}
 								camposIndice.add(entrada);
 
-								logger.info("Se añade el documento: "
-										+ numDocMostrar + " - " + descripcion
-										+ "." + extension);
+								LOGGER.info("Se añade el documento: " + numDocMostrar + " - " + descripcion + "." + extension);
 
-								añadeDocumento(reader, documentDoc, writerDoc,
-										rutaOriginal,
-										numDocMostrar + " - " + descripcion
-												+ "." + extension, null,
-										descripcion + "-" + nombreDoc,
-										nPagActual, archivoSinConvertir);
+								añadeDocumento(reader, documentDoc, writerDoc, rutaOriginal, numDocMostrar + " - " + descripcion + "." + extension, null, descripcion + "-" + nombreDoc, nPagActual, archivoSinConvertir);
 								nPagActual += numPag;
 
 								contadorDocumentos++;
 
 								reader.close();
 
-								if (file != null)
+								if (file != null){
 									file.close();
-								if (archivo != null
-										&& archivoSinConvertir.exists())
+								}
+								if (archivo != null && archivoSinConvertir.exists()){
 									archivo.delete();
-								if (archivoSinConvertir != null
-										&& archivoSinConvertir.exists())
+								}
+								if (archivoSinConvertir != null && archivoSinConvertir.exists()){
 									archivoSinConvertir.delete();
+								}
 							}// while docsResultadoIterator
 						}
 					}
@@ -1455,22 +1230,25 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 						archivoOriginal = null;
 					}
 				}// while
-				if (añadeContraportada)
+				if (añadeContraportada){
 					añadeContraPortada(documentDoc);
+				}
 
-				if (documentDoc != null)
+				if (documentDoc != null){
 					documentDoc.close();
-				if (writerDoc != null)
+				}
+				if (writerDoc != null){
 					writerDoc.close();
-				if (resultadoDocFO != null)
+				}
+				if (resultadoDocFO != null){
 					resultadoDocFO.close();
+				}
 
 				if (resultadoDoc != null && resultadoDoc.exists()) {
 					ArrayList<File> listFicheros = new ArrayList<File>();
 					listFicheros.add(resultadoDoc);
 
-					concatenarArchivos(listFicheros, entitiesAPI, resultado,
-							rulectx);
+					concatenarArchivos(listFicheros, entitiesAPI, resultado, rulectx);
 
 					resultadoDoc.delete();
 				}
@@ -1485,12 +1263,12 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				fuentePagina.setStyle(Font.BOLD);
 				fuentePagina.setSize(13);
 
-				if (colorNumPag == null)
+				if (colorNumPag == null){
 					colorNumPag = new Color(255, 255, 255);
+				}
 				fuentePagina.setColor(colorNumPag);
 
-				HeaderFooter nPaginaFooterDoc = new HeaderFooter(new Phrase("",
-						fuentePagina), true);
+				HeaderFooter nPaginaFooterDoc = new HeaderFooter(new Phrase("", fuentePagina), true);
 				nPaginaFooterDoc.setAlignment(Element.ALIGN_RIGHT);
 				nPaginaFooterDoc.setBorder(0);
 				nPaginaFooterDoc.setRight(0);
@@ -1503,8 +1281,9 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				documentDoc.setPageCount(0);
 
 				// Como es la primera página añadimos la portada
-				if (añadePortada)
+				if (añadePortada){
 					añadePortada(documentDoc, entitiesAPI, rulectx);
+				}
 
 				nuevaPagina(documentDoc, true, true, true, PageSize.A4);
 
@@ -1522,30 +1301,34 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				parrafo.add(frase);
 				documentDoc.add(parrafo);
 
-				if (añadeContraportada)
+				if (añadeContraportada){
 					añadeContraPortada(documentDoc);
+				}
 
-				if (documentDoc != null)
+				if (documentDoc != null){
 					documentDoc.close();
-				if (writerDoc != null)
+				}
+				if (writerDoc != null){
 					writerDoc.close();
-				if (resultadoDocFO != null)
+				}
+				if (resultadoDocFO != null){
 					resultadoDocFO.close();
+				}
 			}
 		} catch (Exception e) {
-			logger.error("Error al concatenar los PDF's: " + e.getMessage(), e);
+			LOGGER.error("Error al concatenar los PDF's: " + e.getMessage(), e);
 		} finally {
-			if (documentDoc != null)
+			if (documentDoc != null){
 				documentDoc.close();
-			if (writerDoc != null)
+			}
+			if (writerDoc != null){
 				writerDoc.close();
+			}
 			if (resultadoDocFO != null)
 				try {
 					resultadoDocFO.close();
 				} catch (IOException e) {
-					logger.error(
-							"ERROR al concatenar los PDF's: " + e.getMessage(),
-							e);
+					LOGGER.error( "ERROR al concatenar los PDF's: " + e.getMessage(), e);
 				}
 		}
 		return resultado;
@@ -1570,38 +1353,22 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 					File archivo = null;
 
 					try {
-						archivo = DocumentosUtil.getFile(cct, infoPag, null,
-								extension.trim());
+						archivo = DocumentosUtil.getFile(cct, infoPag, null, extension.trim());
 					} catch (ISPACException e) {
-						logger.error("Error al recuperar el documento '"
-								+ nombreDoc + "' del expediente: '" + numexp
-								+ "'", e);
-						erroresFW
-								.write("\t - Error al recuperar el documento '"
-										+ nombreDoc + "'\n\t\t'" + descripcion
-										+ "." + extension.trim()
-										+ "'\n\t\tExpediente: '" + numexp
-										+ "'\n\n");
+						LOGGER.error("Error al recuperar el documento '" + nombreDoc + "' del expediente: '" + numexp + "'", e);
+						erroresFW.write("\t - Error al recuperar el documento '" + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\t\tExpediente: '" + numexp + "'\n\n");
 						hayErrores = true;
 					} catch (Exception e) {
-						logger.error("Error al recuperar el documento '"
-								+ nombreDoc + "' del expediente: '" + numexp
-								+ "'", e);
-						erroresFW
-								.write("\t - Error al recuperar el documento '"
-										+ nombreDoc + "'\n\t\t'" + descripcion
-										+ "." + extension.trim()
-										+ "'\n\t\tExpediente: '" + numexp
-										+ "'\n\n");
+						LOGGER.error("Error al recuperar el documento '" + nombreDoc + "' del expediente: '" + numexp + "'", e);
+						erroresFW.write("\t - Error al recuperar el documento '" + nombreDoc + "'\n\t\t'" + descripcion + "." + extension.trim() + "'\n\t\tExpediente: '" + numexp + "'\n\n");
 						hayErrores = true;
 					}
 
 					if (archivo != null) {
-						if (extension.toUpperCase().equals("ZIP")) {
+						if ("ZIP".equalsIgnoreCase(extension)) {
 							try {
 								ZipFile zipArchivo = new ZipFile(archivo);
-								Enumeration<? extends ZipEntry> entradas = zipArchivo
-										.entries();
+								Enumeration<? extends ZipEntry> entradas = zipArchivo.entries();
 
 								entradas = zipArchivo.entries();
 
@@ -1612,145 +1379,99 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 
 									if (!entrada.isDirectory()) {
 
-										try {
-											extension = StringUtils.substring(
-													entrada.getName(),
-													StringUtils.lastIndexOf(
-															entrada.getName(),
-															'.') + 1);
-										} catch (Exception e) {
-											extension = "";
-										}
-										InputStream in;
-										in = zipArchivo.getInputStream(entrada);
+										extension = FileUtils.getExtensionByNombreDoc(entrada.getName());
 
-										getFile = new File(
-												FileTemporaryManager
-														.getInstance()
-														.getFileTemporaryPath()
-														+ "/"
-														+ FileTemporaryManager
-																.getInstance()
-																.newFileName(
-																		"."
-																				+ extension));
+										InputStream in = zipArchivo.getInputStream(entrada);
 
-										FileOutputStream fos = new FileOutputStream(
-												getFile);
+										getFile = new File( FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + FileTemporaryManager.getInstance().newFileName( "." + extension));
+
+										FileOutputStream fos = new FileOutputStream( getFile);
 										int leido;
 										byte[] buffer = new byte[1024];
+										
 										if (in != null && fos != null) {
 											while (0 < (leido = in.read(buffer))) {
 												fos.write(buffer, 0, leido);
 											}
+											
 											fos.flush();
 											fos.close();
 											in.close();
 
-											resultado += cuentaDocs(getFile,
-													extension);
-											if (getFile != null
-													&& getFile.exists())
+											resultado += cuentaDocs(getFile, extension);
+											
+											if (getFile != null && getFile.exists()){
 												getFile.delete();
+											}
 										}
 									}
 								}
 								zipArchivo.close();
 							} catch (ZipException e) {
-								logger.error(
-										"Error al contar los documentos del archivo ZIP: "
-												+ nombreDoc, e);
+								LOGGER.error( "Error al contar los documentos del archivo ZIP: " + nombreDoc, e);
 							} catch (IOException e) {
-								logger.error(
-										"Error al contar los documentos del archivo ZIP: "
-												+ nombreDoc, e);
+								LOGGER.error( "Error al contar los documentos del archivo ZIP: " + nombreDoc, e);
 							} catch (Exception e) {
-								logger.error(
-										"Error al contar los documentos del archivo ZIP: "
-												+ nombreDoc, e);
+								LOGGER.error( "Error al contar los documentos del archivo ZIP: " + nombreDoc, e);
 							}
-						} else if (extension.toUpperCase().equals("RAR")) {
+						} else if ("RAR".equalsIgnoreCase(extension)) {
 							try {
 								Archive a = new Archive(archivo);
 								List<FileHeader> headers = a.getFileHeaders();
 
-								Iterator<FileHeader> fileHeaderIterator = headers
-										.iterator();
+								Iterator<FileHeader> fileHeaderIterator = headers.iterator();
 
 								while (fileHeaderIterator.hasNext()) {
-									FileHeader entrada = fileHeaderIterator
-											.next();
+									FileHeader entrada = fileHeaderIterator.next();
 
 									if (!entrada.isDirectory()) {
-										getFile = new File(FileTemporaryManager
-												.getInstance()
-												.getFileTemporaryPath()
-												+ "/"
-												+ entrada.getFileNameString());
+										getFile = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + entrada.getFileNameString());
+										
 										int cont = 0;
+										
 										while (getFile.exists()) {
-											getFile = new File(
-													FileTemporaryManager
-															.getInstance()
-															.getFileTemporaryPath()
-															+ "/"
-															+ cont
-															+ entrada
-																	.getFileNameString());
+											getFile = new File( FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + cont + entrada .getFileNameString());
 											cont++;
 										}
-										FileOutputStream fos = new FileOutputStream(
-												getFile);
+										
+										FileOutputStream fos = new FileOutputStream(getFile);
 
 										a.extractFile(entrada, fos);
 
 										fos.flush();
 										fos.close();
 
-										try {
-											extension = StringUtils
-													.substring(
-															entrada.getFileNameString(),
-															StringUtils
-																	.lastIndexOf(
-																			entrada.getFileNameString(),
-																			'.') + 1);
-										} catch (Exception e) {
-											extension = "";
-										}
+										extension = FileUtils.getExtensionByNombreDoc(entrada.getFileNameString());
 
-										resultado += cuentaDocs(getFile,
-												extension);
-										if (getFile != null && getFile.exists())
+										resultado += cuentaDocs(getFile, extension);
+										
+										if (getFile != null && getFile.exists()){
 											getFile.delete();
+										}
 									}
 								}
 								a.close();
 							} catch (RarException e) {
-								logger.error(
-										"Error al contar los documentos del archivo RAR: "
-												+ nombreDoc, e);
+								LOGGER.error( "Error al contar los documentos del archivo RAR: " + nombreDoc, e);
 							} catch (IOException e) {
-								logger.error(
-										"Error al contar los documentos del archivo RAR: "
-												+ nombreDoc, e);
+								LOGGER.error( "Error al contar los documentos del archivo RAR: " + nombreDoc, e);
 							} catch (Exception e) {
-								logger.error(
-										"Error al contar los documentos del archivo RAR: "
-												+ nombreDoc, e);
+								LOGGER.error( "Error al contar los documentos del archivo RAR: " + nombreDoc, e);
 							}
 						} else {
 							resultado++;
 						}
-						if (archivo != null && archivo.exists())
+						if (archivo != null && archivo.exists()){
 							archivo.delete();
-						if (getFile != null && getFile.exists())
+						}
+						if (getFile != null && getFile.exists()){
 							getFile.delete();
+						}
 					}
 				}
 			}
 		} catch (Exception e) {
-			logger.error("Error al contar los documentos", e);
+			LOGGER.error("Error al contar los documentos", e);
 		}
 
 		return resultado;
@@ -1759,13 +1480,13 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 	public int cuentaDocs(File archivo, String extension) {
 		int resultado = 0;
 		File getFile = null;
+		
 		try {
-			if (extension.toUpperCase().equals("ZIP")) {
+			if ("ZIP".equalsIgnoreCase(extension)) {
 				try {
 					ZipFile zipArchivo;
 					zipArchivo = new ZipFile(archivo);
-					Enumeration<? extends ZipEntry> entradas = zipArchivo
-							.entries();
+					Enumeration<? extends ZipEntry> entradas = zipArchivo.entries();
 					entradas = zipArchivo.entries();
 
 					ZipEntry entrada;
@@ -1774,31 +1495,19 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 						entrada = entradas.nextElement();
 
 						if (!entrada.isDirectory()) {
-							try {
-								extension = StringUtils.substring(
-										entrada.getName(),
-										StringUtils.lastIndexOf(
-												entrada.getName(), '.') + 1);
-							} catch (Exception e) {
-								extension = "";
-							}
-							if (!extension.toUpperCase().equals("ZIP")
-									&& !extension.toUpperCase().equals("RAR")) {
+							extension = FileUtils.getExtensionByNombreDoc(entrada.getName());
+
+							if (!"ZIP".equalsIgnoreCase(extension) && !"RAR".equalsIgnoreCase(extension)) {
 								resultado = 1;
 							} else {
-								InputStream in = zipArchivo
-										.getInputStream(entrada);
+								InputStream in = zipArchivo.getInputStream(entrada);
 
-								getFile = new File(FileTemporaryManager
-										.getInstance().getFileTemporaryPath()
-										+ "/"
-										+ FileTemporaryManager.getInstance()
-												.newFileName("." + extension));
+								getFile = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + FileTemporaryManager.getInstance().newFileName("." + extension));
 
-								FileOutputStream fos = new FileOutputStream(
-										getFile);
+								FileOutputStream fos = new FileOutputStream(getFile);
 								int leido;
 								byte[] buffer = new byte[1024];
+								
 								if (in != null && fos != null) {
 									while (0 < (leido = in.read(buffer))) {
 										fos.write(buffer, 0, leido);
@@ -1808,66 +1517,46 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 									in.close();
 
 									resultado += cuentaDocs(getFile, extension);
-									if (getFile != null && getFile.exists())
+									if (getFile != null && getFile.exists()){
 										getFile.delete();
+									}
 								}
 							}
 						}
 						zipArchivo.close();
 					}
 				} catch (ZipException e) {
-					logger.error(
-							"Error al contar los documentos del archivo ZIP", e);
+					LOGGER.error( "Error al contar los documentos del archivo ZIP", e);
 				} catch (IOException e) {
-					logger.error(
-							"Error al contar los documentos del archivo ZIP", e);
+					LOGGER.error( "Error al contar los documentos del archivo ZIP", e);
 				} catch (Exception e) {
-					logger.error(
-							"Error al contar los documentos del archivo ZIP", e);
+					LOGGER.error( "Error al contar los documentos del archivo ZIP", e);
 				}
-			} else if (extension.toUpperCase().equals("RAR")) {
+			} else if ("RAR".equalsIgnoreCase(extension)) {
 				try {
 
 					Archive a = new Archive(archivo);
 					List<FileHeader> headers = a.getFileHeaders();
 
-					Iterator<FileHeader> fileHeaderIterator = headers
-							.iterator();
+					Iterator<FileHeader> fileHeaderIterator = headers.iterator();
 
 					while (fileHeaderIterator.hasNext()) {
 
 						FileHeader entrada = fileHeaderIterator.next();
 
 						if (!entrada.isDirectory()) {
-							try {
-								extension = StringUtils.substring(entrada
-										.getFileNameString(), StringUtils
-										.lastIndexOf(
-												entrada.getFileNameString(),
-												'.') + 1);
-							} catch (Exception e) {
-								extension = "";
-							}
+							extension = FileUtils.getExtensionByNombreDoc(entrada.getFileNameString());
 
-							if (!extension.toUpperCase().equals("ZIP")
-									&& !extension.toUpperCase().equals("RAR")) {
+							if (!"ZIP".equalsIgnoreCase(extension) && !"RAR".equalsIgnoreCase(extension)) {
 								resultado = 1;
 							} else {
-								getFile = new File(FileTemporaryManager
-										.getInstance().getFileTemporaryPath()
-										+ "/" + entrada.getFileNameString());
+								getFile = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + entrada.getFileNameString());
 								int cont = 0;
 								while (getFile.exists()) {
-									getFile = new File(FileTemporaryManager
-											.getInstance()
-											.getFileTemporaryPath()
-											+ "/"
-											+ cont
-											+ entrada.getFileNameString());
+									getFile = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + cont + entrada.getFileNameString());
 									cont++;
 								}
-								FileOutputStream fos = new FileOutputStream(
-										getFile);
+								FileOutputStream fos = new FileOutputStream( getFile);
 
 								a.extractFile(entrada, fos);
 
@@ -1875,37 +1564,34 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 								fos.close();
 
 								resultado += cuentaDocs(getFile, extension);
-								if (getFile != null && getFile.exists())
+								if (getFile != null && getFile.exists()){
 									getFile.delete();
+								}
 							}
 						}
 					}
 					a.close();
 				} catch (RarException e) {
-					logger.error(
-							"Error al contar los documentos del archivo RAR", e);
+					LOGGER.error( "Error al contar los documentos del archivo RAR", e);
 				} catch (IOException e) {
-					logger.error(
-							"Error al contar los documentos del archivo RAR", e);
+					LOGGER.error( "Error al contar los documentos del archivo RAR", e);
 				} catch (Exception e) {
-					logger.error(
-							"Error al contar los documentos del archivo RAR", e);
+					LOGGER.error( "Error al contar los documentos del archivo RAR", e);
 				}
 			} else {
 				resultado = 1;
 			}
-			if (getFile != null && getFile.exists())
+			if (getFile != null && getFile.exists()){
 				getFile.delete();
+			}
 		} catch (Exception e) {
-			logger.error("ERROR al contar los documentos", e);
+			LOGGER.error("ERROR al contar los documentos", e);
 		}
 
 		return resultado;
 	}
 
-	public void concatenarArchivos(ArrayList<File> listFicheros,
-			IEntitiesAPI entitiesAPI, File resultado, IRuleContext rulectx)
-			throws ISPACException {
+	public void concatenarArchivos(ArrayList<File> listFicheros, IEntitiesAPI entitiesAPI, File resultado, IRuleContext rulectx) throws ISPACException {
 
 		PdfReader reader = null;
 		File file = null;
@@ -1933,13 +1619,10 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 
 				if (i == 0) {
 					// Creamos un objeto Document
-					document = new Document(
-							PageSize.A4);
-					document.setMargins(document.leftMargin(),
-							document.rightMargin(), document.topMargin(), 27);
+					document = new Document( PageSize.A4);
+					document.setMargins(document.leftMargin(), document.rightMargin(), document.topMargin(), 27);
 
-					copy = PdfWriter.getInstance(
-							document, new FileOutputStream(resultado));
+					copy = PdfWriter.getInstance( document, new FileOutputStream(resultado));
 
 					copy.setPdfVersion(PdfCopy.VERSION_1_4);
 					copy.setViewerPreferences(PdfCopy.PageModeUseOutlines);
@@ -1947,10 +1630,12 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 					document.open();
 					document.setPageCount(0);
 
-					if (añadePortada)
+					if (añadePortada){
 						document = añadePortada2(document, entitiesAPI, rulectx);
-					if (añadeIndice)
+					}
+					if (añadeIndice){
 						document = añadeIndice(document, copy);
+					}
 
 					desfaseIndice = numPagsIndiceReales - numPagsIndice;
 				}
@@ -1964,22 +1649,20 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 					document.setPageSize(reader.getPageSizeWithRotation(j));
 					document.newPage();
 					page = copy.getImportedPage(reader, j);
-					Image img = Image
-							.getInstance(page);
+					Image img = Image.getInstance(page);
 
 					img.setAbsolutePosition(0.0F, 0.0F);
 
 					if (cont < camposIndice.size()) {
 						String nPagActual = camposIndice.get(cont)[4];
 						int pagActual = Integer.parseInt(nPagActual);
-						if (añadePortada)
+						if (añadePortada){
 							pagActual++;
+						}
 						// if(j == pagActual-numPagsIndice){
 						if (j == pagActual - numPagsIndiceReales) {
-							// Si estamos en la página que debe tener destino,
-							// lo añadimos
-							document.add(new Chunk(" ")
-									.setLocalDestination(nPagActual));
+							// Si estamos en la página que debe tener destino, lo añadimos
+							document.add(new Chunk(" ").setLocalDestination(nPagActual));
 							cont++;
 						}
 					}
@@ -1989,17 +1672,19 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				// Añadimos los adjuntos
 				root = reader.getCatalog();
 				names = root.getAsDict(PdfName.NAMES);
+				
 				if (names != null) {
-					files = names
-							.getAsDict(PdfName.EMBEDDEDFILES);
+					files = names.getAsDict(PdfName.EMBEDDEDFILES);
+					
 					if (files != null) {
-						filespecs = files
-								.getAsArray(PdfName.NAMES);
+						filespecs = files.getAsArray(PdfName.NAMES);
 
 						String descripcionAdjunto = "";
+						
 						if (filespecs != null) {
 							for (int k = 0; k < filespecs.size(); k++) {
 								PdfDictionary temp = filespecs.getAsDict(k);
+								
 								if (temp != null) {
 									refs = temp.getAsDict(PdfName.EF);									
 									for (Object key : refs.getKeys()) {
@@ -2032,49 +1717,42 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 			PdfDictionary top = new PdfDictionary();
 			PdfIndirectReference topRef = copy
 					.getPdfIndirectReference();
-			Object[] kids = SimpleBookmark
-					.iterateOutlines(copy, topRef, newBookmarks, false);
+			Object[] kids = SimpleBookmark.iterateOutlines(copy, topRef, newBookmarks, false);
 
-			top.put(PdfName.FIRST,
-					(PdfIndirectReference) kids[0]);
-			top.put(PdfName.LAST,
-					(PdfIndirectReference) kids[1]);
-			top.put(PdfName.COUNT,
-					new PdfNumber(((Integer) kids[2])
-							.intValue()));
+			top.put(PdfName.FIRST, (PdfIndirectReference) kids[0]);
+			top.put(PdfName.LAST, (PdfIndirectReference) kids[1]);
+			top.put(PdfName.COUNT, new PdfNumber(((Integer) kids[2]).intValue()));
 			copy.addToBody(top, topRef);
-			copy.getExtraCatalog().put(PdfName.OUTLINES,
-					topRef);
+			copy.getExtraCatalog().put(PdfName.OUTLINES, topRef);
 
 		} catch (Exception e) {
-			logger.error("ERROR al concatenar los PDF's " + e.getMessage(), e);
-			throw new ISPACException(
-					"Error al concatenar los archivos del documento. "
-							+ e.getMessage(), e);
+			LOGGER.error("ERROR al concatenar los PDF's " + e.getMessage(), e);
+			throw new ISPACException( "Error al concatenar los archivos del documento. " + e.getMessage(), e);
 		} finally {
 			// Cerramos todo
-			if (document != null)
+			if (document != null){
 				document.close();
-			if (copy != null)
+			}
+			if (copy != null){
 				copy.close();
-			if (file != null)
+			}
+			if (file != null){
 				file = null;
-			if (is != null)
+			}
+			if (is != null){
 				try {
 					is.close();
 				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
+					LOGGER.error(e.getMessage(), e);
 				}
-			if (reader != null)
+			}
+			if (reader != null){
 				reader.close();
+			}
 		}
 	}
 
-	public Document añadeIndice(
-			Document document,
-			PdfWriter writer) throws ISPACException,
-			DocumentException, MalformedURLException, IOException,
-			DocumentException {
+	public Document añadeIndice( Document document, PdfWriter writer) throws ISPACException, DocumentException, MalformedURLException, IOException, DocumentException {
 
 		String texto = "";
 		Phrase frase = null;
@@ -2082,45 +1760,46 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		PdfPTable tabla = null;
 		Paragraph parrafo = null;
 
-		Font fuentePagina = new Font(
-				Font.TIMES_ROMAN);
+		Font fuentePagina = new Font( Font.TIMES_ROMAN);
 		fuentePagina.setStyle(Font.BOLD);
 		fuentePagina.setSize(13);
-		if (bColorNumPag == null)
+		
+		if (bColorNumPag == null){
 			bColorNumPag = Color.WHITE;
+		}
+		
 		fuentePagina.setColor(bColorNumPag);
 
 		// Fuentes de los textos
-		Font fuente = new Font(
-				Font.TIMES_ROMAN);
+		Font fuente = new Font( Font.TIMES_ROMAN);
 		fuente.setStyle(Font.BOLD);
 		fuente.setSize(30);
 
-		Font fuente2 = new Font(
-				Font.TIMES_ROMAN);
+		Font fuente2 = new Font( Font.TIMES_ROMAN);
 		fuente2.setStyle(Font.BOLD);
 		fuente2.setSize(13);
 
-		Font fuenteNoIncluir = new Font(
-				Font.TIMES_ROMAN);
+		Font fuenteNoIncluir = new Font( Font.TIMES_ROMAN);
 		fuenteNoIncluir.setStyle(Font.BOLD);
 		fuenteNoIncluir.setSize(20);
 
-		Font fuente3 = new Font(
-				Font.TIMES_ROMAN);
+		Font fuente3 = new Font( Font.TIMES_ROMAN);
 		fuente3.setStyle(Font.NORMAL);
+		
 		/**
 		 * [Teresa#1255#SIGEM#3SP] Cambiar el tamaño de indice en el foliado.
 		 * **/
 		// fuente3.setSize(13);
 		fuente3.setSize(9);
 
-		if (parrafo == null)
+		if (parrafo == null){
 			parrafo = new Paragraph();
+		}
 		boolean primeraPag = true;
 		int docIndice = 0;
 		int contadorDocs = 0;
 		int numPag = 0;
+		
 		// MQE Añadimos la Información del documento
 		if (camposIndice != null && camposIndice.size() > 0) {
 			while (contadorDocs < camposIndice.size()) {
@@ -2157,13 +1836,14 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 					// Tabla columnas y filas
 					tabla = inicializaTabla(fuente2);
 					numPagsIndiceReales++;
-					if (añadePortada)
-						document.add(new Chunk(" ")
-								.setLocalDestination("" + 1));
+					if (añadePortada){
+						document.add(new Chunk(" ").setLocalDestination("" + 1));
+					}
 				}
 
-				if (tabla == null)
+				if (tabla == null){
 					tabla = inicializaTabla(fuente2);
+				}
 
 				texto = "";
 
@@ -2173,13 +1853,9 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 
 					// Añadimos el número de página a la página anterior
 					Rectangle rect = document.getPageSize();
-					ColumnText.showTextAligned(writer.getDirectContent(),
-							Element.ALIGN_RIGHT,
-							new Phrase("" + numPag,
-									fuentePagina), rect.getWidth() - 35, 27, 0);
+					ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_RIGHT, new Phrase("" + numPag, fuentePagina), rect.getWidth() - 35, 27, 0);
 
-					nuevaPagina2(document, true, true, true,
-							PageSize.A4);
+					nuevaPagina2(document, true, true, true, PageSize.A4);
 					numPag++;
 
 					parrafo = new Paragraph();
@@ -2206,23 +1882,23 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				frase = new Phrase(numDoc + " ", fuente3);
 				parrafoAux.add(frase);
 
-				if (doc.length() > 243)
+				if (doc.length() > 243){
 					docIndice += 3;
-				else if (doc.length() > 162)
+				} else if (doc.length() > 162){
 					docIndice += 2;
-				else if (doc.length() > 81)
+				} else if (doc.length() > 81){
 					docIndice++;
+				}
 
 				if (doc.length() > 45) {
-					Font fuente4 = new Font(
-							Font.TIMES_ROMAN);
+					Font fuente4 = new Font( Font.TIMES_ROMAN);
 					fuente4.setStyle(Font.NORMAL);
 					fuente4.setSize(9);
 					frase = new Phrase(doc, fuente4);
 				} else if (doc.length() > 40) {
-					Font fuente5 = new Font(
-							Font.TIMES_ROMAN);
+					Font fuente5 = new Font( Font.TIMES_ROMAN);
 					fuente5.setStyle(Font.NORMAL);
+					
 					/**
 					 * [Teresa#1255#SIGEM#3SP] Cambiar el tamaño de indice en el
 					 * foliado.
@@ -2231,9 +1907,9 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 					fuente3.setSize(9);
 					frase = new Phrase(doc, fuente5);
 				} else if (doc.length() > 35) {
-					Font fuente6 = new Font(
-							Font.TIMES_ROMAN);
+					Font fuente6 = new Font( Font.TIMES_ROMAN);
 					fuente6.setStyle(Font.NORMAL);
+					
 					/**
 					 * [Teresa#1255#SIGEM#3SP] Cambiar el tamaño de indice en el
 					 * foliado.
@@ -2263,10 +1939,7 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				celda.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 				tabla.addCell(celda);
 
-				celda = new PdfPCell(
-						new Paragraph(
-								new Chunk(nPagActual, fuente3)
-										.setLocalGoto(nPagActual)));
+				celda = new PdfPCell( new Paragraph( new Chunk(nPagActual, fuente3).setLocalGoto(nPagActual)));
 				celda.setBorder(0);
 				celda.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 				tabla.addCell(celda);
@@ -2285,19 +1958,12 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 
 		// Añadimos el número de página
 		Rectangle rect = document.getPageSize();
-		ColumnText.showTextAligned(writer.getDirectContent(),
-				Element.ALIGN_RIGHT,
-				new Phrase("" + numPag, fuentePagina),
-				rect.getWidth() - 35, 27, 0);
+		ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_RIGHT, new Phrase("" + numPag, fuentePagina), rect.getWidth() - 35, 27, 0);
 
 		return document;
 	}
 
-	public void añadeDocumento(PdfReader reader, Document document,
-			PdfWriter writer, String rutaOriginal, String nombreDocumento,
-			Anchor referenciaIndice, String descripcionAdjunto, int nPagActual,
-			File archivoSinConvertir) throws ISPACException, DocumentException,
-			MalformedURLException, IOException {
+	public void añadeDocumento(PdfReader reader, Document document, PdfWriter writer, String rutaOriginal, String nombreDocumento, Anchor referenciaIndice, String descripcionAdjunto, int nPagActual, File archivoSinConvertir) throws ISPACException, DocumentException, MalformedURLException, IOException {
 
 		PdfImportedPage page;
 
@@ -2337,15 +2003,15 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 			document.add(imagen);
 		}
 
-		PdfFileSpecification pfs = PdfFileSpecification.fileEmbedded(writer,
-				archivoSinConvertir.getAbsolutePath(), nombreDocumento, null);
-		if (pfs != null)
+		PdfFileSpecification pfs = PdfFileSpecification.fileEmbedded(writer, archivoSinConvertir.getAbsolutePath(), nombreDocumento, null);
+		
+		if (pfs != null){
 			writer.addFileAttachment(descripcionAdjunto, pfs);
+		}
 	}
 
-	public PdfPTable inicializaTabla(
-			Font fuente2)
-			throws DocumentException {
+	public PdfPTable inicializaTabla( Font fuente2) throws DocumentException {
+		
 		PdfPTable tabla = null;
 		tabla = new PdfPTable(4);
 		tabla.setWidthPercentage(100);
@@ -2353,8 +2019,7 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		float[] anchoColumnas = new float[] { 60, 20, 10, 10 };
 		tabla.setWidths(anchoColumnas);
 
-		Phrase frase = new Phrase(
-				"Nombre Documento", fuente2);
+		Phrase frase = new Phrase( "Nombre Documento", fuente2);
 		PdfPCell celda;
 		celda = new PdfPCell(frase);
 		celda.setBorder(0);
@@ -2382,181 +2047,140 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		return tabla;
 	}
 
-	public void nuevaPagina2(Document document,
-			boolean imgCabecera, boolean hayFondo, boolean hayPie,
-			Rectangle dimensiones)
-			throws MalformedURLException, IOException, DocumentException,
-			DocumentException, ISPACException {
+	public void nuevaPagina2(Document document, boolean imgCabecera, boolean hayFondo, boolean hayPie, Rectangle dimensiones) throws MalformedURLException, IOException, DocumentException, DocumentException, ISPACException {
+		
 		// Añadimos el logotipo de la diputación
-		document.setMargins(document.leftMargin() + 20, document.rightMargin(),
-				document.topMargin(), document.bottomMargin());
+		document.setMargins(document.leftMargin() + 20, document.rightMargin(), document.topMargin(), document.bottomMargin());
 		document.setPageSize(dimensiones);
 		document.newPage();
 
 		Image imagen = null;
 		if (imgCabecera) {
 			try {
-				imagen = Image.getInstance(imgLogoCabecera);
-				imagen.setAbsolutePosition(50, document.getPageSize()
-						.getHeight() - 100);
+				imagen = Image.getInstance(IMG_LOGO_CABECERA);
+				imagen.setAbsolutePosition(50, document.getPageSize().getHeight() - 100);
 				imagen.scalePercent(50);
 				document.add(imagen);
 			} catch (Exception e) {
-				logger.error(
-						"ERROR no se ha encontrado la imagen de logo de la entidad: "
-								+ imgLogoCabecera + ". " + e.getMessage(), e);
-				throw new ISPACRuleException(
-						"ERROR no se ha encontrado la imagen de logo de la entidad: "
-								+ imgLogoCabecera + ". " + e.getMessage(), e);
+				LOGGER.error( "ERROR no se ha encontrado la imagen de logo de la entidad: " + IMG_LOGO_CABECERA + ". " + e.getMessage(), e);
+				throw new ISPACRuleException( "ERROR no se ha encontrado la imagen de logo de la entidad: " + IMG_LOGO_CABECERA + ". " + e.getMessage(), e);
 			}
 		}
 
 		// Añadimos la imagen del fondo
 		if (hayFondo) {
 			try {
-				imagen = Image.getInstance(imgFondo);
+				imagen = Image.getInstance(IMG_FONDO);
 				imagen.setAbsolutePosition(250, 50);
 				imagen.scalePercent(70);
 				document.add(imagen);
 			} catch (Exception e) {
-				logger.error("ERROR no se ha encontrado la imagen de fondo: "
-						+ imgFondo + ". " + e.getMessage(), e);
-				throw new ISPACRuleException(
-						"ERROR no se ha encontrado la imagen de fondo: "
-								+ imgFondo + ". " + e.getMessage(), e);
+				LOGGER.error("ERROR no se ha encontrado la imagen de fondo: " + IMG_FONDO + ". " + e.getMessage(), e);
+				throw new ISPACRuleException( "ERROR no se ha encontrado la imagen de fondo: " + IMG_FONDO + ". " + e.getMessage(), e);
 			}
 		}
 
 		// Añadimos el pie de página de la diputación
 		if (hayPie) {
 			try {
-				imagen = Image.getInstance(imgPie);
-				imagen.setAbsolutePosition(
-						document.getPageSize().getWidth() - 550, 15);
+				imagen = Image.getInstance(IMG_PIE);
+				imagen.setAbsolutePosition( document.getPageSize().getWidth() - 550, 15);
 				imagen.scalePercent(80);
 				document.add(imagen);
 			} catch (Exception e) {
-				logger.error(
-						"ERROR no se ha encontrado la imagen de pie de página: "
-								+ imgPie + ". " + e.getMessage(), e);
-				throw new ISPACRuleException(
-						"ERROR no se ha encontrado la imagen de pie de página: "
-								+ imgPie + ". " + e.getMessage(), e);
+				LOGGER.error( "ERROR no se ha encontrado la imagen de pie de página: " + IMG_PIE + ". " + e.getMessage(), e);
+				throw new ISPACRuleException( "ERROR no se ha encontrado la imagen de pie de página: " + IMG_PIE + ". " + e.getMessage(), e);
 			}
 		}
-		document.setMargins(document.leftMargin() - 20, document.rightMargin(),
-				document.topMargin(), document.bottomMargin());
+		document.setMargins(document.leftMargin() - 20, document.rightMargin(), document.topMargin(), document.bottomMargin());
 	}
 
-	public void nuevaPagina(Document document, boolean hayCabecera,
-			boolean hayFondo, boolean hayPie, Rectangle dimensiones)
-			throws MalformedURLException, IOException, DocumentException,
-			ISPACException {
+	public void nuevaPagina(Document document, boolean hayCabecera, boolean hayFondo, boolean hayPie, Rectangle dimensiones) throws MalformedURLException, IOException, DocumentException, ISPACException {
 		// Añadimos el logotipo de la diputación
 		document.setPageSize(dimensiones);
 		document.newPage();
 		Image imagen = null;
+		
 		if (hayCabecera) {
 			try {
-				imagen = Image.getInstance(imgLogoCabecera);
-				imagen.setAbsolutePosition(50, document.getPageSize()
-						.getHeight() - 100);
+				imagen = Image.getInstance(IMG_LOGO_CABECERA);
+				imagen.setAbsolutePosition(50, document.getPageSize() .getHeight() - 100);
 				imagen.scalePercent(50);
 				document.add(imagen);
 			} catch (Exception e) {
-				logger.error(
-						"ERROR no se ha encontrado la imagen de logo de la entidad: "
-								+ imgLogoCabecera + ". " + e.getMessage(), e);
-				throw new ISPACRuleException(
-						"ERROR no se ha encontrado la imagen de logo de la entidad: "
-								+ imgLogoCabecera + ". " + e.getMessage(), e);
+				LOGGER.error( "ERROR no se ha encontrado la imagen de logo de la entidad: " + IMG_LOGO_CABECERA + ". " + e.getMessage(), e);
+				throw new ISPACRuleException( "ERROR no se ha encontrado la imagen de logo de la entidad: " + IMG_LOGO_CABECERA + ". " + e.getMessage(), e);
 			}
 		}
 
 		// Añadimos la imagen del fondo
 		if (hayFondo) {
 			try {
-				imagen = Image.getInstance(imgFondo);
+				imagen = Image.getInstance(IMG_FONDO);
 				imagen.setAbsolutePosition(250, 50);
 				imagen.scalePercent(70);
 				document.add(imagen);
 			} catch (Exception e) {
-				logger.error("ERROR no se ha encontrado la imagen de fondo: "
-						+ imgFondo + ". " + e.getMessage(), e);
-				throw new ISPACRuleException(
-						"ERROR no se ha encontrado la imagen de fondo: "
-								+ imgFondo + ". " + e.getMessage(), e);
+				LOGGER.error("ERROR no se ha encontrado la imagen de fondo: " + IMG_FONDO + ". " + e.getMessage(), e);
+				throw new ISPACRuleException( "ERROR no se ha encontrado la imagen de fondo: " + IMG_FONDO + ". " + e.getMessage(), e);
 			}
 		}
 
 		// Añadimos el pie de página de la diputación
 		if (hayPie) {
 			try {
-				imagen = Image.getInstance(imgPie);
-				imagen.setAbsolutePosition(
-						document.getPageSize().getWidth() - 550, 15);
+				imagen = Image.getInstance(IMG_PIE);
+				imagen.setAbsolutePosition( document.getPageSize().getWidth() - 550, 15);
 				imagen.scalePercent(80);
 				document.add(imagen);
 			} catch (Exception e) {
-				logger.error(
-						"ERROR no se ha encontrado la imagen de pie de página: "
-								+ imgPie + ". " + e.getMessage(), e);
-				throw new ISPACRuleException(
-						"ERROR no se ha encontrado la imagen de pie de página: "
-								+ imgPie + ". " + e.getMessage(), e);
+				LOGGER.error( "ERROR no se ha encontrado la imagen de pie de página: " + IMG_PIE + ". " + e.getMessage(), e);
+				throw new ISPACRuleException( "ERROR no se ha encontrado la imagen de pie de página: " + IMG_PIE + ". " + e.getMessage(), e);
 			}
 		}
 	}
 
-	public void añadePortada(Document document, IEntitiesAPI entitiesAPI,
-			IRuleContext rulectx) throws ISPACException, DocumentException,
-			MalformedURLException, IOException {
+	public void añadePortada(Document document, IEntitiesAPI entitiesAPI, IRuleContext rulectx) throws ISPACException, DocumentException, MalformedURLException, IOException {
 
-		IItem expediente = ExpedientesUtil.getExpediente(
-				rulectx.getClientContext(), numExpPadre);
+		IItem expediente = ExpedientesUtil.getExpediente( rulectx.getClientContext(), numExpPadre);
 		String cadena = numExpPadre;
+		
 		if (expediente != null) {
-			if (StringUtils.isNotEmpty(expediente.getString("ASUNTO")))
+			if (StringUtils.isNotEmpty(expediente.getString("ASUNTO"))){
 				cadena += " - " + expediente.getString("ASUNTO");
+			}
 		}
 
 		document.newPage();
 		// Añadimos el fondo
 		try {
-			Image imagenFondo = Image.getInstance(imgPortada);
-			imagenFondo.scaleAbsolute(document.getPageSize().getWidth(),
-					document.getPageSize().getHeight());
+			Image imagenFondo = Image.getInstance(IMG_PORTADA);
+			imagenFondo.scaleAbsolute(document.getPageSize().getWidth(), document.getPageSize().getHeight());
 			imagenFondo.setAbsolutePosition(0, 0);
 			document.add(imagenFondo);
 		} catch (Exception e) {
-			logger.error("ERROR no se ha encontrado la imagen de portada: "
-					+ imgPortada + ". " + e.getMessage(), e);
-			throw new ISPACRuleException(
-					"ERROR no se ha encontrado la imagen de portada: "
-							+ imgPortada + ". " + e.getMessage(), e);
+			LOGGER.error("ERROR no se ha encontrado la imagen de portada: " + IMG_PORTADA + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "ERROR no se ha encontrado la imagen de portada: " + IMG_PORTADA + ". " + e.getMessage(), e);
 		}
 
 		// Añadimos el logotipo de la diputación
 		try {
-			Image imagen = Image.getInstance(imgLogoPortada);
+			Image imagen = Image.getInstance(IMG_LOGO_PORTADA);
 			imagen.setAbsolutePosition(50, 250);
 			imagen.scalePercent(50);
 			document.add(imagen);
 		} catch (Exception e) {
-			logger.error(
-					"ERROR no se ha encontrado la imagen logotipo de la entidad: "
-							+ imgLogoPortada + ". " + e.getMessage(), e);
-			throw new ISPACRuleException(
-					"ERROR no se ha encontrado la imagen logotipo de la entidad: "
-							+ imgLogoPortada + ". " + e.getMessage(), e);
+			LOGGER.error( "ERROR no se ha encontrado la imagen logotipo de la entidad: " + IMG_LOGO_PORTADA + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "ERROR no se ha encontrado la imagen logotipo de la entidad: " + IMG_LOGO_PORTADA + ". " + e.getMessage(), e);
 		}
 
 		// Fuentes de los textos
 		Font fuente = new Font(Font.TIMES_ROMAN);
 		fuente.setStyle(Font.BOLD);
 
-		if (colorAsunto == null)
+		if (colorAsunto == null){
 			colorAsunto = new Color(153, 0, 0, 240);
+		}
 
 		fuente.setColor(colorAsunto);
 		fuente.setSize(15);
@@ -2565,31 +2189,34 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		Paragraph parrafo = new Paragraph();
 		parrafo.setAlignment(Element.ALIGN_JUSTIFIED);
 
-		StringBuffer texto = new StringBuffer("");
+		StringBuilder texto = new StringBuilder("");
 		com.lowagie.text.Phrase frase = null;
 
 		fuente.setSize(20);
 		// texto = cadena;
 		texto.append("\n\n\n\n\n\n\n");
-		StringBuffer cadenaAux = new StringBuffer(cadena);
-		StringBuffer cadena2 = new StringBuffer("");
+		StringBuilder cadenaAux = new StringBuilder(cadena);
+		StringBuilder cadena2 = new StringBuilder("");
 		String[] cadenaSplit;
+		
 		while (cadenaAux.toString().length() > 20) {
-			cadena2 = new StringBuffer("");
+			cadena2 = new StringBuilder("");
 			cadenaSplit = cadenaAux.toString().split(" ");
 			cadena2.append(cadenaSplit[0]);
 			cadena2.append(" ");
 			int j = 1;
+			
 			while (j < cadenaSplit.length && cadena2.toString().length() < 20) {
 				cadena2.append(cadenaSplit[j]);
 				cadena2.append(" ");
 				j++;
 			}
+			
 			texto.append("\n\t");
 			texto.append(cadena2);
 			texto.append("\n");
-			cadenaAux = new StringBuffer("");
-			;
+			cadenaAux = new StringBuilder("");
+			
 			for (int i = j; i < cadenaSplit.length; i++) {
 				cadenaAux.append(cadenaSplit[i]);
 				cadenaAux.append(" ");
@@ -2606,61 +2233,49 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		// Fin de la portada
 	}
 
-	public Document añadePortada2(
-			Document document, IEntitiesAPI entitiesAPI,
-			IRuleContext rulectx) throws ISPACException, DocumentException,
-			MalformedURLException, IOException,
-			DocumentException {
+	public Document añadePortada2( Document document, IEntitiesAPI entitiesAPI, IRuleContext rulectx) throws ISPACException, DocumentException, MalformedURLException, IOException, DocumentException {
 
-		IItem expediente = ExpedientesUtil.getExpediente(
-				rulectx.getClientContext(), numExpPadre);
+		IItem expediente = ExpedientesUtil.getExpediente( rulectx.getClientContext(), numExpPadre);
 		String cadena = numExpPadre;
-		if (expediente != null) {
-			if (StringUtils.isNotEmpty(expediente.getString("ASUNTO")))
+		
+		if (null != expediente) {
+			if (StringUtils.isNotEmpty(expediente.getString("ASUNTO"))){
 				cadena += " - " + expediente.getString("ASUNTO");
+			}
 		}
 
 		document.newPage();
 		document.setPageSize(PageSize.A4);
 		// Añadimos el fondo
 		try {
-			Image imagenFondo = Image
-					.getInstance(imgPortada);
-			imagenFondo.scaleAbsolute(document.getPageSize().getWidth(),
-					document.getPageSize().getHeight());
+			Image imagenFondo = Image .getInstance(IMG_PORTADA);
+			imagenFondo.scaleAbsolute(document.getPageSize().getWidth(), document.getPageSize().getHeight());
 			imagenFondo.setAbsolutePosition(0, 0);
 			document.add(imagenFondo);
+			
 		} catch (Exception e) {
-			logger.error("ERROR no se ha encontrado la imagen de portada: "
-					+ imgPortada + ". " + e.getMessage(), e);
-			throw new ISPACRuleException(
-					"ERROR no se ha encontrado la imagen de portada: "
-							+ imgPortada + ". " + e.getMessage(), e);
+			LOGGER.error("ERROR no se ha encontrado la imagen de portada: " + IMG_PORTADA + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "ERROR no se ha encontrado la imagen de portada: " + IMG_PORTADA + ". " + e.getMessage(), e);
 		}
 
 		// Añadimos el logotipo de la diputación
 		try {
-			Image imagen = Image
-					.getInstance(imgLogoPortada);
+			Image imagen = Image.getInstance(IMG_LOGO_PORTADA);
 			imagen.setAbsolutePosition(50, 250);
 			imagen.scalePercent(50);
 			document.add(imagen);
 		} catch (Exception e) {
-			logger.error(
-					"ERROR no se ha encontrado la imagen de logo de la entidad: "
-							+ imgLogoPortada + ". " + e.getMessage(), e);
-			throw new ISPACRuleException(
-					"ERROR no se ha encontrado la imagen de logo de la entidad: "
-							+ imgLogoPortada + ". " + e.getMessage(), e);
+			LOGGER.error( "ERROR no se ha encontrado la imagen de logo de la entidad: " + IMG_LOGO_PORTADA + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "ERROR no se ha encontrado la imagen de logo de la entidad: " + IMG_LOGO_PORTADA + ". " + e.getMessage(), e);
 		}
 
 		// Fuentes de los textos
-		Font fuente = new Font(
-				Font.TIMES_ROMAN);
+		Font fuente = new Font( Font.TIMES_ROMAN);
 		fuente.setStyle(Font.BOLD);
 
-		if (bColorAsunto == null)
+		if (bColorAsunto == null){
 			bColorAsunto = new Color(153, 0, 0, 240);
+		}
 		fuente.setColor(bColorAsunto);
 		fuente.setSize(15);
 
@@ -2668,30 +2283,33 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		Paragraph parrafo = new Paragraph();
 		parrafo.setAlignment(Element.ALIGN_JUSTIFIED);
 
-		StringBuffer texto = new StringBuffer("");
+		StringBuilder texto = new StringBuilder("");
 		Phrase frase = null;
 
 		fuente.setSize(20);
 		texto.append("\n\n\n\n\n\n\n");
-		StringBuffer cadenaAux = new StringBuffer(cadena);
-		StringBuffer cadena2 = new StringBuffer("");
+		StringBuilder cadenaAux = new StringBuilder(cadena);
+		StringBuilder cadena2 = new StringBuilder("");
 		String[] cadenaSplit;
+		
 		while (cadenaAux.toString().length() > 20) {
-			cadena2 = new StringBuffer("");
+			cadena2 = new StringBuilder("");
 			cadenaSplit = cadenaAux.toString().split(" ");
 			cadena2.append(cadenaSplit[0]);
 			cadena2.append(" ");
 			int j = 1;
+		
 			while (j < cadenaSplit.length && cadena2.toString().length() < 20) {
 				cadena2.append(cadenaSplit[j]);
 				cadena2.append(" ");
 				j++;
 			}
+			
 			texto.append("\n");
 			texto.append(cadena2);
 			texto.append("\n");
-			cadenaAux = new StringBuffer("");
-			;
+			cadenaAux = new StringBuilder("");
+			
 			for (int i = j; i < cadenaSplit.length; i++) {
 				cadenaAux.append(cadenaSplit[i]);
 				cadenaAux.append(" ");
@@ -2713,17 +2331,16 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		// Fin de la portada
 	}
 
-	public void añadeContraPortada(Document document) throws ISPACException,
-			DocumentException, MalformedURLException, IOException {
+	public void añadeContraPortada(Document document) throws ISPACException, DocumentException, MalformedURLException, IOException {
 
 		document.resetFooter();
 		// Añadimos el fondo
 		document.setPageSize(PageSize.A4);
 		document.newPage();
+		
 		try {
-			Image imagenFondo = Image.getInstance(imgContraportada);
-			imagenFondo.scaleAbsolute(document.getPageSize().getWidth(),
-					document.getPageSize().getHeight());
+			Image imagenFondo = Image.getInstance(IMG_CONTRAPORTADA);
+			imagenFondo.scaleAbsolute(document.getPageSize().getWidth(), document.getPageSize().getHeight());
 			imagenFondo.setAbsolutePosition(0, 0);
 
 			// Quitamos el número de página
@@ -2732,12 +2349,8 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 
 			// Fin de la portada
 		} catch (Exception e) {
-			logger.error(
-					"ERROR no se ha encontrado la imagen de contraportada: "
-							+ imgContraportada + ". " + e.getMessage(), e);
-			throw new ISPACRuleException(
-					"ERROR no se ha encontrado la imagen de contraportada: "
-							+ imgContraportada + ". " + e.getMessage(), e);
+			LOGGER.error( "ERROR no se ha encontrado la imagen de contraportada: " + IMG_CONTRAPORTADA + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "ERROR no se ha encontrado la imagen de contraportada: " + IMG_CONTRAPORTADA + ". " + e.getMessage(), e);
 		}
 	}
 
@@ -2752,8 +2365,7 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		return name;
 	}
 
-	protected String convert2PDF(Object connectorSession, File archivo,
-			String extension) throws ISPACException, IOException {
+	protected String convert2PDF(Object connectorSession, File archivo, String extension) throws ISPACException, IOException {
 		String resultado = "";
 		File temporal = null;
 
@@ -2765,70 +2377,64 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 		OpenOfficeHelper ooHelper;
 
 		try {
-			FileTemporaryManager fileTmpMgr = FileTemporaryManager
-					.getInstance();
+			FileTemporaryManager fileTmpMgr = FileTemporaryManager.getInstance();
 
 			// Si es xml el OpenOfficeHelper da error
 			// Si es xml se crea un archivo temporal txt que es el que se parsea
 			// y se incluye el original en el pdf
 
-			if (extension.trim().toUpperCase().equals("XML")
-					|| extension.trim().toUpperCase().equals("TXT")) {
+			if ("XML".equalsIgnoreCase(extension.trim()) || "TXT".equalsIgnoreCase(extension.trim())) {
 				extension = "txt";
-				temporal = new File(FileTemporaryManager.getInstance()
-						.getFileTemporaryPath() + "/tempXML.txt");
+				temporal = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/tempXML.txt");
+				
 				try {
 					fr = new FileReader(archivo);
 					in = new BufferedReader(fr);
 					out = new PrintWriter(temporal);
 
 					String linea = "";
-					while ((linea = in.readLine()) != null)
+					while ((linea = in.readLine()) != null){
 						out.println(linea);
+					}
 
-					sourceFileURL = new StringBuffer().append("file:///")
-							.append(temporal.getPath()).toString();
+					sourceFileURL = new StringBuilder().append("file:///").append(temporal.getPath()).toString();
+					
 				} catch (Exception e) {
-					logger.error("ERROR al convertir fichero con extensión: "
-							+ extensionOrig, e);
+					LOGGER.error("ERROR al convertir fichero con extensión: " + extensionOrig, e);
 
 					extension = extensionOrig;
-					sourceFileURL = new StringBuffer().append("file:///")
-							.append(temporal.getPath()).toString();
+					sourceFileURL = new StringBuilder().append("file:///").append(temporal.getPath()).toString();
+					
 				} finally {
-					if (in != null)
+					if (in != null){
 						in.close();
-					if (out != null)
+					}
+					if (out != null){
 						out.close();
-					if (fr != null)
+					}
+					if (fr != null){
 						fr.close();
+					}
 				}
 			} else {
-				sourceFileURL = new StringBuffer().append("file:///")
-						.append(archivo.getPath()).toString();
+				sourceFileURL = new StringBuilder().append("file:///").append(archivo.getPath()).toString();
 			}
 
 			String mime = MimetypeMapping.getMimeType(extension);
 			checkSourceMimeType(mime);
+			
 			try {
-				extsToPdf
-						.load(DocumentConverter.class
-								.getClassLoader()
-								.getResourceAsStream(
-										"ieci/tdw/ispac/ispaclib/gendoc/converter/ConversorToGeneratePdf.properties"));
+				EXTS_TO_PDF.load(DocumentConverter.class.getClassLoader().getResourceAsStream("ieci/tdw/ispac/ispaclib/gendoc/converter/ConversorToGeneratePdf.properties"));
 			} catch (IOException e) {
-				logger.error(
-						"Error loading internal ieci/tdw/ispac/ispaclib/gendoc/converter/ConversorToGeneratePdf.properties",
-						e);
+				LOGGER.error("Error loading internal ieci/tdw/ispac/ispaclib/gendoc/converter/ConversorToGeneratePdf.properties", e);
 			}
 
-			if (extsToPdf.containsKey(extension)) {
-				extension = extsToPdf.getProperty(extension);
+			if (EXTS_TO_PDF.containsKey(extension)) {
+				extension = EXTS_TO_PDF.getProperty(extension);
 			}
 
 			// Comprobar si los formatos de origen y destino son iguales
-			if (!"pdf".equalsIgnoreCase(extension)
-					&& !extension.trim().toUpperCase().equals("XML")) {
+			if (!"pdf".equalsIgnoreCase(extension) && !"XML".equalsIgnoreCase(extension.trim())) {
 				// Path del fichero destino
 				File finalFile = fileTmpMgr.newFile(".pdf");
 				@SuppressWarnings("deprecation")
@@ -2837,28 +2443,20 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				// Llama a OpenOffice para convertir el fichero a PDF
 				try {
 					ooHelper = OpenOfficeHelper.getInstance();
-					ooHelper.load_and_Convert(sourceFileURL, finalFileURL,
-							extension, "pdf");
+					ooHelper.load_and_Convert(sourceFileURL, finalFileURL, extension, "pdf");
 					ooHelper.dispose();
 				} catch (Exception e) {
-					logger.error(
-							"ERROR al convertir el documento a PDF, vamos a intentar reconectar",
-							e);
+					LOGGER.error( "ERROR al convertir el documento a PDF, vamos a intentar reconectar", e);
 					ooHelper = OpenOfficeHelper.getInstance();
-					ooHelper.load_and_Convert(sourceFileURL, finalFileURL,
-							extension, "pdf");
+					ooHelper.load_and_Convert(sourceFileURL, finalFileURL, extension, "pdf");
 					ooHelper.dispose();
 				}
 
-				if (finalFile == null || !finalFile.exists()
-						|| finalFile.length() == 0) {
-					erroresFW
-							.write("\t - ERROR al convertir el documento a PDF '"
-									+ archivo.getAbsolutePath()
-									+ "'\n\t\t'"
-									+ extension + "'\n\n");
-					if (finalFile != null && finalFile.exists())
+				if (finalFile == null || !finalFile.exists() || finalFile.length() == 0) {
+					erroresFW.write("\t - ERROR al convertir el documento a PDF '" + archivo.getAbsolutePath() + "'\n\t\t'" + extension + "'\n\n");
+					if (finalFile != null && finalFile.exists()){
 						finalFile.delete();
+					}
 				} else {
 					resultado = finalFile.getAbsolutePath();
 				}
@@ -2867,17 +2465,15 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 				resultado = archivo.getAbsolutePath();
 			}
 		} catch (ISPACInfo e) {
-			logger.error("Extension " + extension
-					+ " no permitida para convertir a pdf", e);
+			LOGGER.error("Extension " + extension + " no permitida para convertir a pdf", e);
 			throw new ISPACInfo(e, false);
 		} catch (Exception e) {
-			logger.error("Error al convertir el documento a PDF: guid=["
-					+ archivo.getAbsolutePath() + "], extension=[" + extension
-					+ "]", e);
+			LOGGER.error("Error al convertir el documento a PDF: guid=[" + archivo.getAbsolutePath() + "], extension=[" + extension + "]", e);
 			throw new ISPACException(e);
 		} finally {
-			if (temporal != null && temporal.exists())
+			if (temporal != null && temporal.exists()){
 				temporal.delete();
+			}
 		}
 		return resultado;
 	}
@@ -2885,108 +2481,46 @@ public class DipucrGenerarExpedienteFoliadoConIndiceRule implements IRule {
 	protected static void checkSourceMimeType(String mimeType) throws ISPACInfo {
 		if (StringUtils.isBlank(mimeType)
 				|| !(mimeType.equalsIgnoreCase("application/msword")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/excel")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/x-excel") // INICIO [eCenpri-Felipe
-														// #449]
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/x-msexcel") // Metemos todos los
-															// alias posibles
-															// del Excel. El
-															// último es el
-															// oficial
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/vndms-excel")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/vnd.ms-excel") // FIN
-															// [eCenpri-Felipe
-															// #449]
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/pdf")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/rtf")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/powerpoint")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/vnd.oasis.opendocument.text")
-						|| mimeType
-								.equalsIgnoreCase("application/vnd.oasis.opendocument.text-template") // odt
-																										// sxw
-																										// stw
-																										// sdw
-																										// ott
-																										// oth
-																										// odm
-						|| StringUtils
-								.containsIgnoreCase(mimeType,
-										"application/vnd.oasis.opendocument.spreadsheet")
-						|| mimeType
-								.equalsIgnoreCase("application/vnd.oasis.opendocument.spreadsheet-template") // sxc
-																												// stc
-																												// sdc
-																												// ods
-																												// ots
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/vnd.oasis.opendocument.chart") // *.odc
-						|| StringUtils
-								.containsIgnoreCase(mimeType,
-										"application/vnd.oasis.opendocument.presentation")
-						|| mimeType
-								.equalsIgnoreCase("application/vnd.oasis.opendocument.presentation-template") // sxi
-																												// sti
-																												// sdd
-																												// sdp
-																												// odp
-																												// otp
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/vnd.oasis.opendocument.graphics") // *.odG
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/vnd.oasis.opendocument.formula") // *.odf
-						|| mimeType
-								.equalsIgnoreCase("application/vnd.oasis.opendocument.image")
-						|| mimeType
-								.equalsIgnoreCase("application/vnd.oasis.opendocument.graphics-template")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"image/jpeg")
-						|| StringUtils
-								.containsIgnoreCase(mimeType, "image/gif")
-						|| StringUtils
-								.containsIgnoreCase(mimeType, "image/dib")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"image/x-xbitmap")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"image/tiff")
-						|| StringUtils
-								.containsIgnoreCase(mimeType, "image/tif")
-						|| StringUtils
-								.containsIgnoreCase(mimeType, "image/png")
-						|| StringUtils
-								.containsIgnoreCase(mimeType, "image/bmp")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"text/plain")
-						|| StringUtils.containsIgnoreCase(mimeType, "text/xml")
-						|| StringUtils
-								.containsIgnoreCase(mimeType, "text/html")
-						|| StringUtils.containsIgnoreCase(mimeType, "text/rtf")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/xml")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/x-rtf")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/vndms-powerpoint")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"image/x-windows-bmp")
-						|| StringUtils.containsIgnoreCase(mimeType,
-								"application/octet-stream")
-						|| StringUtils
-								.containsIgnoreCase(mimeType,
-										"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") || StringUtils
-							.containsIgnoreCase(mimeType,
-									"application/vnd.openxmlformats-officedocument.wordprocessingml.document"))) {
-			throw new ISPACInfo(
-					"El tipo del documento a convertir no es correcto '"
-							+ mimeType + "'", false);
+				|| StringUtils.containsIgnoreCase(mimeType, "application/excel")
+				|| StringUtils.containsIgnoreCase(mimeType, "application/x-excel") // INICIO [eCenpri-Felipe #449]
+				|| StringUtils.containsIgnoreCase(mimeType, "application/x-msexcel") // Metemos todos los alias posibles del Excel. El último es el oficial
+				|| StringUtils.containsIgnoreCase(mimeType, "application/vndms-excel")
+				|| StringUtils.containsIgnoreCase(mimeType, "application/vnd.ms-excel") // FIN [eCenpri-Felipe #449]
+				|| StringUtils.containsIgnoreCase(mimeType, "application/pdf")
+				|| StringUtils.containsIgnoreCase(mimeType, "application/rtf")
+				|| StringUtils.containsIgnoreCase(mimeType, "application/powerpoint")
+				|| StringUtils.containsIgnoreCase(mimeType, "application/vnd.oasis.opendocument.text")
+				|| mimeType.equalsIgnoreCase("application/vnd.oasis.opendocument.text-template") // odt, sxw, stw, sdw, ott, oth, odm
+				|| StringUtils.containsIgnoreCase(mimeType, "application/vnd.oasis.opendocument.spreadsheet")
+				|| mimeType.equalsIgnoreCase("application/vnd.oasis.opendocument.spreadsheet-template") // sxc, stc, sdc, ods, ots
+				|| StringUtils.containsIgnoreCase(mimeType, "application/vnd.oasis.opendocument.chart") // *.odc
+				|| StringUtils.containsIgnoreCase(mimeType, "application/vnd.oasis.opendocument.presentation")
+				|| mimeType.equalsIgnoreCase("application/vnd.oasis.opendocument.presentation-template") // sxi, sti, sdd, sdp, odp, otp
+				|| StringUtils.containsIgnoreCase(mimeType, "application/vnd.oasis.opendocument.graphics") // *.odG
+				|| StringUtils.containsIgnoreCase(mimeType, "application/vnd.oasis.opendocument.formula") // *.odf
+				|| mimeType.equalsIgnoreCase("application/vnd.oasis.opendocument.image")
+				|| mimeType.equalsIgnoreCase("application/vnd.oasis.opendocument.graphics-template")
+				|| StringUtils.containsIgnoreCase(mimeType, "image/jpeg")
+				|| StringUtils.containsIgnoreCase(mimeType, "image/gif")
+				|| StringUtils.containsIgnoreCase(mimeType, "image/dib")
+				|| StringUtils.containsIgnoreCase(mimeType, "image/x-xbitmap")
+				|| StringUtils.containsIgnoreCase(mimeType, "image/tiff")
+				|| StringUtils.containsIgnoreCase(mimeType, "image/tif")
+				|| StringUtils.containsIgnoreCase(mimeType, "image/png")
+				|| StringUtils.containsIgnoreCase(mimeType, "image/bmp")
+				|| StringUtils.containsIgnoreCase(mimeType, "text/plain")
+				|| StringUtils.containsIgnoreCase(mimeType, "text/xml")
+				|| StringUtils.containsIgnoreCase(mimeType, "text/html")
+				|| StringUtils.containsIgnoreCase(mimeType, "text/rtf")
+				|| StringUtils.containsIgnoreCase(mimeType, "application/xml")
+				|| StringUtils.containsIgnoreCase(mimeType, "application/x-rtf")
+				|| StringUtils.containsIgnoreCase(mimeType, "application/vndms-powerpoint")
+				|| StringUtils.containsIgnoreCase(mimeType, "image/x-windows-bmp")
+				|| StringUtils.containsIgnoreCase(mimeType, "application/octet-stream")
+				|| StringUtils.containsIgnoreCase(mimeType, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+				|| StringUtils.containsIgnoreCase(mimeType, "application/vnd.openxmlformats-officedocument.wordprocessingml.document"))) {
+			
+			throw new ISPACInfo( "El tipo del documento a convertir no es correcto '" + mimeType + "'", false);
 		}
 	}
 }

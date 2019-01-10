@@ -4,7 +4,7 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dir3</groupId>
-		<artifactId>fwktd-dir3</artifactId>
+		<artifactId>fwktd-dir3-parent</artifactId>
 		<version>1.0</version>
 	</parent>
 
@@ -37,7 +37,7 @@
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dir3</groupId>
-			<artifactId>fwktd-dir3-dco-wsclient</artifactId>
+			<artifactId>fwktd-dir3-dco-wsclientjaxws</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -84,7 +84,7 @@
 			<version>8.3-603.jdbc3</version>
 			<scope>test</scope>
 		</dependency>
-
+	
 	</dependencies>
 
 	<build>
@@ -109,6 +109,14 @@
 						<phase>package</phase>
 					</execution>
 				</executions>
+			</plugin>
+			 <plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+		        <configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

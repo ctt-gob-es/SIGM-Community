@@ -165,6 +165,10 @@
 													<td class="txt" valign="top"><html:checkbox property="usarParaSalida"/></td>
 												</tr>
 												<tr class="col">
+													<td class="txt" nowrap="nowrap" valign="top"><bean:message key="ieci.tecdoc.sgm.rpadmin.asuntos.distribuir.telematico"/>&nbsp;&nbsp;</td>
+													<td class="txt" valign="top"><html:checkbox property="distribuirTelematico"/></td>
+												</tr>												
+												<tr class="col">
 													<td class="txt" nowrap="nowrap" valign="top"><bean:message key="ieci.tecdoc.sgm.rpadmin.asuntos.informacion.auxiliar"/>&nbsp;&nbsp;</td>
 													<td class="txt" valign="top"><html:textarea property="infoAuxiliar" rows="2" cols="70"/></td>
 												</tr>

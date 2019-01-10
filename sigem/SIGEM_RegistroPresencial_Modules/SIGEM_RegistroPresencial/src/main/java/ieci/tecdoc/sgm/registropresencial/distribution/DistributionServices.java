@@ -70,11 +70,10 @@ public class DistributionServices implements Keys, ServerKeys {
 					Interested[] interesados = RegisterServicesUtil
 							.getInterestedForFolder(sessionID, bookID,
 									new Integer(fdrid), entidad);
+					
+					String comentarios = RegisterServicesUtil.getComentariosForFolder(sessionID, bookID, new Integer(fdrid), user.getLocale(), entidad);
 
-					result = ConsultDistribution.consultDistributionInfo(
-							sessionID, user, axsf, scrDistreg, scrRegstate
-									.getIdocarchhdr(), interesados, entidad);
-
+					result = ConsultDistribution.consultDistributionInfo( sessionID, user, axsf, scrDistreg, scrRegstate.getIdocarchhdr(), interesados, entidad, comentarios);
 				}
 
 			}
@@ -132,53 +131,48 @@ public class DistributionServices implements Keys, ServerKeys {
 			DistributionServicesUtil.validateUserDeptByOficAsoc(sessionID,
 					oficAsoc);
 
-			DistributionResults distributionResults = DistributionSession
-					.getDistribution(sessionID, state, firstRow, maxResults,
-							typeDistr, "STATE=" + state, "", oficAsoc, user
-									.getLocale(), entidad, booksOpenList);
+	// [Dipucr-Manu Ticket #505] - INICIO - ALSIGM3 Velocidad listado de distribuciones
+//			DistributionResults distributionResults = DistributionSession.getDistribution(sessionID, state, firstRow, maxResults,typeDistr, "STATE=" + state, "", oficAsoc, user.getLocale(), entidad, booksOpenList);
+			
+			DistributionResults distributionResults = DistributionSession.getDistribution(sessionID, user, state, firstRow, maxResults, typeDistr, "STATE=" + state, "", oficAsoc, user.getLocale(), entidad, booksOpenList);
+			
+			result = distributionResults.getDistInfo();
 
-			for (Iterator it = distributionResults.getBooks().iterator(); it
-					.hasNext();) {
-				String key = it.next().toString();
-				StringTokenizer tokenizer = new StringTokenizer(key, "_");
-				Integer bookID = new Integer(tokenizer.nextToken());
-				int fdrid = Integer.parseInt(tokenizer.nextToken());
-
-				BookSession.openBook(sessionID, bookID, entidad);
-				AxSf axsf = FolderSession.getBookFolder(sessionID, bookID,
-						fdrid, user.getLocale(), entidad);
+//			for (Iterator it = distributionResults.getBooks().iterator(); it.hasNext();) {
+//				String key = it.next().toString();
+//				StringTokenizer tokenizer = new StringTokenizer(key, "_");
+//				Integer bookID = new Integer(tokenizer.nextToken());
+//				int fdrid = Integer.parseInt(tokenizer.nextToken());
+//
+//				BookSession.openBook(sessionID, bookID, entidad);
+//				AxSf axsf = FolderSession.getBookFolder(sessionID, bookID, fdrid, user.getLocale(), entidad);
 
 				// ScrDistreg distReg = null;
-				for (Iterator it2 = distributionResults.getResults().keySet()
-						.iterator(); it2.hasNext();) {
-					Integer distId = (Integer) it2.next();
-					Map aux = (Map) distributionResults.getResults()
-							.get(distId);
-					String id = (String) aux.keySet().iterator().next();
-					ScrDistreg distReg = (ScrDistreg) aux.get(id);
-
-
-					Idocarchhdr idocarch = new Idocarchhdr();
-					BeanUtils.copyProperties(idocarch, distributionResults
-							.getIdocarchhdr().get(
-									new Integer(distReg.getIdArch())));
-
-					if (distReg.getIdFdr() == fdrid) {
-						Interested[] interesados = RegisterServicesUtil
-								.getInterestedForFolder(sessionID, bookID,
-										new Integer(fdrid), entidad);
-						if (!ConsultDistribution.isDistributionInList(result,
-								bookID, new Integer(fdrid), distReg.getId())) {
-							InfoDistribution distInfo = ConsultDistribution
-									.consultDistributionInfo(sessionID, user,
-											axsf, distReg, idocarch,
-											interesados, entidad);
-							result.add(distInfo);
-						}
-					}
-				}
-			}
-
+//				for (Iterator it2 = distributionResults.getResults().keySet().iterator(); it2.hasNext();) {
+//					Integer distId = (Integer) it2.next();
+//					Map aux = (Map) distributionResults.getResults().get(distId);
+//					String id = (String) aux.keySet().iterator().next();
+//					ScrDistreg distReg = (ScrDistreg) aux.get(id);
+//					
+//					Integer bookID = new Integer(distReg.getIdArch());
+//					int fdrid = distReg.getIdFdr();
+//					
+//					BookSession.openBook(sessionID, bookID, entidad);
+//					AxSf axsf = FolderSession.getBookFolder(sessionID, bookID, fdrid, user.getLocale(), entidad);
+//
+//					Idocarchhdr idocarch = new Idocarchhdr();
+//					BeanUtils.copyProperties(idocarch, distributionResults.getIdocarchhdr().get(new Integer(distReg.getIdArch())));
+//
+////					if (distReg.getIdFdr() == fdrid) {
+//						Interested[] interesados = RegisterServicesUtil.getInterestedForFolder(sessionID, bookID, new Integer(fdrid), entidad);
+//						if (!ConsultDistribution.isDistributionInList(result, bookID, new Integer(fdrid), distReg.getId())) {
+//							InfoDistribution distInfo = ConsultDistribution.consultDistributionInfo(sessionID, user,axsf, distReg, idocarch,interesados, entidad);
+//							result.add(distInfo);
+//						}
+////					}
+//				}
+//			}
+	// [Dipucr-Manu Ticket #505] - FIN - ALSIGM3 Velocidad listado de distribuciones
 		} finally {
 			CacheFactory.getCacheInterface().removeCacheEntry(sessionID);
 		}

@@ -23,7 +23,7 @@ public class XmlAyuntamiento{
 			fileName = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/ayuntamiento.xml";		
 			fichero = new FileWriter(fileName);
 			  
-		    StringBuffer sbAyu = new StringBuffer();
+		    StringBuilder sbAyu = new StringBuilder();
 	        sbAyu.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><listado>");
 	        
 	        Vector listAyuntamiento = new Vector();

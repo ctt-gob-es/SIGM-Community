@@ -12,6 +12,7 @@ import ieci.tdw.ispac.ispaclib.thirdparty.IThirdPartyAdapter;
 import ieci.tdw.ispac.ispaclib.thirdparty.PostalAddressAdapter;
 import ieci.tdw.ispac.ispaclib.thirdparty.ThirdPartyAdapter;
 import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tecdoc.sgm.core.exception.SigemException;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.terceros.ServicioTerceros;
@@ -26,8 +27,12 @@ import org.apache.log4j.Logger;
 
 public class AccesoBBDDRegistro {
 	
+	public static final int TIPO_USUARIO = 1;
+	public static final int TIPO_DEPARTAMENTO = 2;
+	public static final int TIPO_GRUPO = 3;
+	
 	/** Logger de la clase. */
-	private static final Logger logger = Logger.getLogger(AccesoBBDDRegistro.class);
+	private static final Logger LOGGER = Logger.getLogger(AccesoBBDDRegistro.class);
 	
 	/** Nombre del origen de datos por defecto. */
 	private static final String DEFAULT_DATASOURCE_NAME = "java:comp/env/jdbc/registroDS_";
@@ -70,17 +75,19 @@ public class AccesoBBDDRegistro {
 		String entityId = null;
 
 		try{
-			servicioTerceros = LocalizadorServicios.getServicioTerceros();
-			servicioTerceros.setDsName(dsName);
-			
-			OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
-			if (info != null)
-				entityId = info.getOrganizationId();
-			
-			tercero = servicioTerceros.lookupById(entityId, idTercero);
+			if(StringUtils.isNotBlank(idTercero)){
+				servicioTerceros = LocalizadorServicios.getServicioTerceros();
+				servicioTerceros.setDsName(dsName);
+				
+				OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+				if (info != null)
+					entityId = info.getOrganizationId();
+				
+				tercero = servicioTerceros.lookupById(entityId, idTercero);
+			}
 		}
 		catch (SigemException e) {
-			logger.error("Error al recuperar los datos del tercero con id: " + idTercero + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar los datos del tercero con id: " + idTercero + ". " + e.getMessage(), e);
 		}
 		return tercero;
 	}
@@ -94,21 +101,24 @@ public class AccesoBBDDRegistro {
 	public IThirdPartyAdapter getDatosTerceroByNif(String nif){
 		
 		ServicioTerceros servicioTerceros;
-		List tercero = null;
+		List<?> tercero = null;
 		String entityId = null;
 
 		try{
-			servicioTerceros = LocalizadorServicios.getServicioTerceros();
-			servicioTerceros.setDsName(dsName);
-			
-			OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
-			if (info != null)
-				entityId = info.getOrganizationId();
-			
-			tercero = servicioTerceros.lookup(entityId, nif);
+			if(StringUtils.isNotBlank(nif)){
+				servicioTerceros = LocalizadorServicios.getServicioTerceros();
+				servicioTerceros.setDsName(dsName);
+				
+				OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+				if (info != null){
+					entityId = info.getOrganizationId();
+				}
+				
+				tercero = servicioTerceros.lookup(entityId, nif);
+			}
 		}
 		catch (SigemException e) {
-			logger.error("Error al recuperar los datos del tercero con id: " + nif + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar los datos del tercero con id: " + nif + ". " + e.getMessage(), e);
 		}
 		if(null == tercero || tercero.size() == 0){
 			return null;
@@ -129,17 +139,18 @@ public class AccesoBBDDRegistro {
 		String idParticpante = "";
 		
 		try {
-			
-			cnt.getConnection();
-			dbQuery = cnt.executeDbQuery("SELECT ID FROM SCR_PJUR WHERE NAME LIKE '%" + nameParticipante + "%'");
-			while (dbQuery.next()) {
-				idParticpante = dbQuery.getString("ID");
+			if(StringUtils.isNotBlank(nameParticipante)){
+				cnt.getConnection();
+				dbQuery = cnt.executeDbQuery("SELECT ID FROM SCR_PJUR WHERE NAME LIKE '%" + nameParticipante + "%'");
+				while (dbQuery.next()) {
+					idParticpante = dbQuery.getString("ID");
+				}
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda de participantes", e);
+			LOGGER.error("Error en la búsqueda de participantes", e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda de participantes", e);
+			LOGGER.error("Error en la búsqueda de participantes", e);
 			throw new ISPACException("Error en la búsqueda de participantes", e);
 		} finally {
 			if (dbQuery != null) {
@@ -170,7 +181,7 @@ public class AccesoBBDDRegistro {
 				email = dbQuery.getString("EMAIL");
 			}
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda de departamentos", e);
+			LOGGER.error("Error en la búsqueda de departamentos", e);
 			throw new ISPACException("Error en la búsqueda de departamentos", e);
 		} finally {
 			if (dbQuery != null) {
@@ -179,6 +190,108 @@ public class AccesoBBDDRegistro {
 			cnt.closeConnection();
 		}
 		return email;
+	}
+	
+	/**
+	 * 
+	 * @param tipoTercero
+	 * @param id
+	 * @return
+	 * @throws ISPACException
+	 */
+	public String getEmailResponsable(int tipoTercero, String id)  throws ISPACException{
+		
+		DbCnt cnt = new DbCnt(dsName);
+		DbQuery dbQuery = null;
+		String email = "";
+		
+		try {
+			
+			cnt.getConnection();
+			
+			String tableName = "";
+			switch (tipoTercero) {
+			case TIPO_USUARIO:
+				tableName = "IUSERDATA";
+				break;
+			case TIPO_DEPARTAMENTO:
+				tableName = "IUSERDEPTHDR";
+				break;
+			case TIPO_GRUPO:
+				tableName = "IUSERGROUPHDR";
+				break;
+			default:
+				throw new ISPACException("Tipo de tercero inválido: " + tipoTercero);
+			}
+			
+			dbQuery = cnt.executeDbQuery("SELECT EMAIL FROM " + tableName + " WHERE ID = '" + id + "'");
+			if (dbQuery.next()) {
+				email = dbQuery.getString("EMAIL");
+			}
+			
+		} catch (Exception e) {
+			LOGGER.error("Error en la búsqueda de departamentos", e);
+			throw new ISPACException("Error en la búsqueda de departamentos", e);
+		} finally {
+			if (dbQuery != null) {
+				dbQuery.close();
+			}
+			cnt.closeConnection();
+		}
+		return email;
+	}
+	
+	/**
+	 * 
+	 * @param tipoTercero
+	 * @param id
+	 * @return
+	 * @throws ISPACException
+	 */
+	public String getNombreResponsable(String idCompleto)  throws ISPACException{
+		
+		String[] arrId = idCompleto.split("-");
+		int tipoTercero = Integer.valueOf(arrId[0]);
+		String id = arrId[1];
+		
+		DbCnt cnt = new DbCnt(dsName);
+		DbQuery dbQuery = null;
+		String nombre = "";
+		
+		try {
+			
+			cnt.getConnection();
+			
+			String tableName = "";
+			switch (tipoTercero) {
+			case TIPO_USUARIO:
+				tableName = "IUSERDATA";
+				break;
+			case TIPO_DEPARTAMENTO:
+				tableName = "IUSERDEPTHDR";
+				break;
+			case TIPO_GRUPO:
+				tableName = "IUSERGROUPHDR";
+				break;
+			default:
+				throw new ISPACException("Tipo de tercero inválido: " + tipoTercero);
+			}
+			
+			dbQuery = cnt.executeDbQuery("SELECT NOMBRE FROM " + tableName + " WHERE ID = '" + id + "'");
+			if (dbQuery.next()) {
+				nombre = dbQuery.getString("NOMBRE");
+			}
+			
+		} catch (Exception e) {
+			LOGGER.error("Error en la búsqueda de departamentos", e);
+			throw new ISPACException("Error en la búsqueda de departamentos", e);
+		} finally {
+			if (dbQuery != null) {
+				dbQuery.close();
+			}
+			cnt.closeConnection();
+		}
+		return nombre;
 	}
 	
 	/**
@@ -223,7 +336,7 @@ public class AccesoBBDDRegistro {
 				email = dbQuery.getString("EMAIL");
 			}
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda de departamentos", e);
+			LOGGER.error("Error en la búsqueda de departamentos", e);
 			throw new ISPACException("Error en la búsqueda de departamentos", e);
 		} finally {
 			if (dbQuery != null) {
@@ -233,6 +346,7 @@ public class AccesoBBDDRegistro {
 		}
 		return email;
 	}
+	
 	
 	/**
 	 * Insertar el registro de entrada y el registro de salida en la tabla 'SCR_REGASOC'	
@@ -288,15 +402,15 @@ public class AccesoBBDDRegistro {
 		try {
 			
 			cnt.getConnection();
-			dbQuery = cnt.executeDbQuery("SELECT GROUPID FROM IUSERGROUPUSER WHERE USERID = "+	user +"");
+			dbQuery = cnt.executeDbQuery("SELECT GROUPID FROM IUSERGROUPUSER WHERE USERID = " +	user + "");
 			while (dbQuery.next()) {
 				groupsUser.add(dbQuery.getInt("GROUPID"));
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda de departamentos", e);
+			LOGGER.error("Error en la búsqueda de departamentos", e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda de departamentos", e);
+			LOGGER.error("Error en la búsqueda de departamentos", e);
 			throw new ISPACException("Error en la búsqueda de departamentos", e);
 		} finally {
 			if (dbQuery != null) {
@@ -324,7 +438,7 @@ public class AccesoBBDDRegistro {
 		
 		sConsultaWhere = "ID="+idGroup.get(0)+"";
 		for(int i = 1; i< idGroup.size(); i++){
-			sConsultaWhere += " OR ID="+idGroup.get(i)+"";
+			sConsultaWhere += " OR ID = " + idGroup.get(i) + "";
 		}
 		
 		DbCnt cnt = new DbCnt(dsName);
@@ -335,13 +449,13 @@ public class AccesoBBDDRegistro {
 			cnt.getConnection();
 			dbQuery = cnt.executeDbQuery("SELECT NAME, ID FROM IUSERGROUPHDR WHERE "+sConsultaWhere+"");
 			while (dbQuery.next()) {
-				nombreGrupo.add(dbQuery.getString("NAME")+"&"+dbQuery.getInt("ID"));
+				nombreGrupo.add(dbQuery.getString("NAME") + "&" + dbQuery.getInt("ID"));
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda de departamentos", e);
+			LOGGER.error("Error en la búsqueda de departamentos", e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda de departamentos", e);
+			LOGGER.error("Error en la búsqueda de departamentos", e);
 			throw new ISPACException("Error en la búsqueda de departamentos", e);
 		} finally {
 			if (dbQuery != null) {
@@ -361,7 +475,6 @@ public class AccesoBBDDRegistro {
 	public String getNumExpRegistro(String numRegistro)throws ISPACException{
 		String numexpReg = "";
 		
-
 		String sConsultaWhere = "FLD1='"+numRegistro+"'";		
 		
 		DbCnt cnt = new DbCnt(dsName);
@@ -371,9 +484,9 @@ public class AccesoBBDDRegistro {
 			
 			cnt.getConnection();
 			
-			String sQuery = "SELECT FLD19 FROM A1SF WHERE "+sConsultaWhere;
+			String sQuery = "SELECT FLD19 FROM A1SF WHERE " + sConsultaWhere;
 			
-			logger.info("sQuery "+sQuery);
+			LOGGER.info("sQuery "+sQuery);
 			
 			dbQuery = cnt.executeDbQuery(sQuery);
 			
@@ -381,10 +494,10 @@ public class AccesoBBDDRegistro {
 				numexpReg = dbQuery.getString("FLD19");
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la busqueda del registro " + numRegistro + ". " + e.getMessage(), e);
+			LOGGER.error("Error en la busqueda del registro " + numRegistro + ". " + e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la busqueda del registro " + numRegistro + ". " + e.getMessage(), e);
+			LOGGER.error("Error en la busqueda del registro " + numRegistro + ". " + e.getMessage(), e);
 			throw new ISPACException("Error en la busqueda del registro " + numRegistro + ". " + e.getMessage(), e);
 		} finally {
 			if (dbQuery != null) {
@@ -394,6 +507,42 @@ public class AccesoBBDDRegistro {
 		}
 		
 		return numexpReg;		
+	}
+	
+	/**
+	 * 
+	 * @param numRegistro
+	 * @return
+	 * @throws ISPACException
+	 */
+	public boolean modificaInteresadoRegistroEntrada(String nreg, String nombreInteresado) throws ISPACException{
+		
+		DbCnt cnt = new DbCnt(dsName);
+		boolean bResult = false;
+		
+		try {
+			cnt.getConnection();
+			
+			String sQuery = "UPDATE A1SF SET FLD9 = '" + nombreInteresado + "' WHERE FLD1 = '" + nreg + "'";
+			LOGGER.info("sQuery "+sQuery);
+			bResult = cnt.execute(sQuery);
+			
+			sQuery = "UPDATE SCR_REGINT SET NAME = '" + nombreInteresado + "' WHERE ID_FDR IN "
+					+ "(SELECT FDRID FROM A1SF WHERE FLD1 = '" + nreg + "')";
+			LOGGER.info("sQuery "+sQuery);
+			bResult = cnt.execute(sQuery);
+			
+		} catch (ISPACException e) {
+			LOGGER.error("Error al modificar el interesado del registro " + nreg + ". " + e.getMessage(), e);
+			throw e;
+		} catch (Exception e) {
+			LOGGER.error("Error al modificar el interesado del registro " + nreg + ". " + e.getMessage(), e);
+			throw new ISPACException("Error al modificar el interesado del registro " + nreg + ". " + e.getMessage(), e);
+		} finally {
+			cnt.closeConnection();
+		}
+		
+		return bResult;		
 	}
 	
 	/**
@@ -415,10 +564,10 @@ public class AccesoBBDDRegistro {
 				resultado = dbQuery.getInt("DEPTID");
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda de departamentos", e);
+			LOGGER.error("Error en la búsqueda de departamentos", e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda de departamentos", e);
+			LOGGER.error("Error en la búsqueda de departamentos", e);
 			throw new ISPACException("Error en la búsqueda de departamentos", e);
 		} finally {
 			if (dbQuery != null) {
@@ -458,10 +607,10 @@ public class AccesoBBDDRegistro {
 				resultado = dbQuery.getInt("FDRID");
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda de departamentos", e);
+			LOGGER.error("Error en la búsqueda de departamentos", e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda de departamentos", e);
+			LOGGER.error("Error en la búsqueda de departamentos", e);
 			throw new ISPACException("Error en la búsqueda de departamentos", e);
 		} finally {
 			if (dbQuery != null) {
@@ -562,10 +711,10 @@ public class AccesoBBDDRegistro {
 				resultado = dbQuery.getString("CODE");
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda de departamentos. No se ha encontrado el departamento: '" + nombre + "'. " + e.getMessage(), e);
+			LOGGER.error("Error en la búsqueda de departamentos. No se ha encontrado el departamento: '" + nombre + "'. " + e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda de departamentos. No se ha encontrado el departamento: '" + nombre + "'. " + e.getMessage(), e);
+			LOGGER.error("Error en la búsqueda de departamentos. No se ha encontrado el departamento: '" + nombre + "'. " + e.getMessage(), e);
 			throw new ISPACException("Error en la búsqueda de departamentos. No se ha encontrado el departamento: '" + nombre + "'. " + e.getMessage(), e);
 		} finally {
 			if (dbQuery != null) {
@@ -597,10 +746,10 @@ public class AccesoBBDDRegistro {
 				resultado = dbQuery.getString("CODE");
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda de departamentos. No se ha encontrado el departamento con id " + id + ". " + e.getMessage(), e);
+			LOGGER.error("Error en la búsqueda de departamentos. No se ha encontrado el departamento con id " + id + ". " + e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda de departamentos. No se ha encontrado el departamento con id " + id + ". " + e.getMessage(), e);
+			LOGGER.error("Error en la búsqueda de departamentos. No se ha encontrado el departamento con id " + id + ". " + e.getMessage(), e);
 			throw new ISPACException("Error en la búsqueda de departamentos. No se ha encontrado el departamento con id " + id + ". " + e.getMessage(), e);
 		} finally {
 			if (dbQuery != null) {
@@ -692,5 +841,37 @@ public class AccesoBBDDRegistro {
 		}
 		
 		return dir; 
+	}
+	
+	/**
+	 * [dipucr-Felipe #791bis-3]
+	 * @param nombreResp
+	 * @return
+	 * @throws ISPACException
+	 */
+	public String getUserNameByNif(String dni) throws ISPACException{
+		
+		DbCnt cnt = new DbCnt(dsName);
+		DbQuery dbQuery = null;
+		String userName = "";
+		
+		try {
+			
+			cnt.getConnection();
+			dbQuery = cnt.executeDbQuery("SELECT * FROM IUSERUSERHDR WHERE ID IN "
+					+ "(SELECT ID FROM IUSERDATA WHERE DNI = '" + dni + "') ORDER BY ID DESC");
+			if (dbQuery.next()) {
+				userName = dbQuery.getString("NAME");
+			}
+		} catch (Exception e) {
+			LOGGER.error("Error en la búsqueda de departamentos", e);
+			throw new ISPACException("Error en la búsqueda de departamentos", e);
+		} finally {
+			if (dbQuery != null) {
+				dbQuery.close();
+			}
+			cnt.closeConnection();
+		}
+		return userName;
 	}
 }

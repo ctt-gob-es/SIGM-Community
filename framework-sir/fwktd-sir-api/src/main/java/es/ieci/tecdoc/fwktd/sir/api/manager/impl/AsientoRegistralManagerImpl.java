@@ -1,5 +1,6 @@
 package es.ieci.tecdoc.fwktd.sir.api.manager.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -233,20 +234,20 @@ public class AsientoRegistralManagerImpl extends
     	asiento.setDescripcionEntidadRegistralInicio(asiento.getDescripcionEntidadRegistralInicio());
 
 //    	asiento.setTipoRegistro(asientoForm.getTipoRegistro());
-//    	asiento.setNumeroRegistro(asientoForm.getNumeroRegistro());
-//    	asiento.setFechaRegistro(asientoForm.getFechaRegistro());
-//    	asiento.setTimestampRegistro(asientoForm.getTimestampRegistro());
+    	asiento.setNumeroRegistro(asientoForm.getNumeroRegistro());
+    	asiento.setFechaRegistro(asientoForm.getFechaRegistro());
+    	asiento.setTimestampRegistro(asientoForm.getTimestampRegistro());
 
         asiento.setNumeroRegistroInicial(asiento.getNumeroRegistro());
         asiento.setFechaRegistroInicial(asiento.getFechaRegistro());
         asiento.setTimestampRegistroInicial(asiento.getTimestampRegistro());
 
-//    	asiento.setResumen(asientoForm.getResumen());
-//    	asiento.setCodigoAsunto(asientoForm.getCodigoAsunto());
+    	asiento.setResumen(asientoForm.getResumen());
+    	asiento.setCodigoAsunto(asientoForm.getCodigoAsunto());
 //    	asiento.setReferenciaExterna(asientoForm.getReferenciaExterna());
-//    	asiento.setNumeroExpediente(asientoForm.getNumeroExpediente());
-//    	asiento.setTipoTransporte(asientoForm.getTipoTransporte());
-//    	asiento.setNumeroTransporte(asientoForm.getNumeroTransporte());
+    	asiento.setNumeroExpediente(asientoForm.getNumeroExpediente());
+    	asiento.setTipoTransporte(asientoForm.getTipoTransporte());
+    	asiento.setNumeroTransporte(asientoForm.getNumeroTransporte());
 //    	asiento.setNombreUsuario(asientoForm.getNombreUsuario());
 //    	asiento.setContactoUsuario(asientoForm.getContactoUsuario());
 
@@ -255,12 +256,12 @@ public class AsientoRegistralManagerImpl extends
         asiento.setTipoAnotacion(TipoAnotacionEnum.PENDIENTE);
         //asiento.setDescripcionTipoAnotacion(null);
 
-//    	asiento.setDocumentacionFisica(asientoForm.getDocumentacionFisica());
-//    	asiento.setObservacionesApunte(asientoForm.getObservacionesApunte());
-//    	asiento.setIndicadorPrueba(asientoForm.getIndicadorPrueba());
+    	asiento.setDocumentacionFisica(asientoForm.getDocumentacionFisica());
+    	asiento.setObservacionesApunte(asientoForm.getObservacionesApunte());
+    	asiento.setIndicadorPrueba(asientoForm.getIndicadorPrueba());
 //
-//    	asiento.setExpone(asientoForm.getExpone());
-//    	asiento.setSolicita(asientoForm.getSolicita());
+    	asiento.setExpone(asientoForm.getExpone());
+    	asiento.setSolicita(asientoForm.getSolicita());
 
         asiento.setEstado(EstadoAsientoRegistralEnum.PENDIENTE_ENVIO);
         asiento.setFechaEstado(getFechaManager().getFechaActual());
@@ -531,12 +532,13 @@ public class AsientoRegistralManagerImpl extends
     	if (logger.isInfoEnabled()){
     		logger.info("Enviando el asiento registral: [{}]", ToStringLoggerHelper.toStringLogger(asientoForm));
     	}
-
         Assert.notNull(asientoForm, "'asientoForm' must not be null");
 
         // Salvar el asiento registral
         AsientoRegistralVO asiento = saveAsientoRegistral(asientoForm);
-
+        logger.info("----------------------------------------");
+	logger.info("----ENVIANDO ASIENTO REGISTRAL "+asiento.getIdentificadorIntercambio()+ "----");
+	logger.info("------------------------------------------");
         // Enviar el asiento registral
         enviarAsientoRegistral(asiento.getId());
 
@@ -548,15 +550,17 @@ public class AsientoRegistralManagerImpl extends
      * @see es.ieci.tecdoc.fwktd.sir.api.manager.AsientoRegistralManager#enviarAsientoRegistral(java.lang.String)
      */
     public void enviarAsientoRegistral(String id) {
-
-    	logger.info("Enviando el asiento registral con identificador: [{}]", id);
-
+	
         Assert.hasText(id, "'id' must not be empty");
 
         // Obtener la información del asiento registral
         AsientoRegistralVO asiento = get(id);
+        logger.info("----------------------------------------");
+	logger.info("----ENVIANDO ASIENTO REGISTRAL "+asiento.getIdentificadorIntercambio()+ "----");
+	logger.info("------------------------------------------");
         if (asiento != null) {
         	enviarAsientoRegistral(asiento);
+        	
         } else {
             logger.error("No se ha encontrado el asiento registral a enviar con identificador [{}]", id);
             throw new SIRException("error.sir.enviarAsientoRegistral.asientoNoEncontrado", null,
@@ -565,9 +569,10 @@ public class AsientoRegistralManagerImpl extends
     }
 
     protected void enviarAsientoRegistral(AsientoRegistralVO asiento) {
-
+	logger.info("----------------------------------------");
+	logger.info("----ENVIANDO ASIENTO REGISTRAL "+asiento.getIdentificadorIntercambio()+ "----");
+	logger.info("------------------------------------------");
     	logger.debug("Enviando el asiento registral: [{}]", asiento);
-
     	Assert.notNull(asiento, "'asiento' must not be null");
 
         // Comprobar que el estado del asiento registral sea PENDIENTE_ENVIO
@@ -727,13 +732,13 @@ public class AsientoRegistralManagerImpl extends
 
 	    // Comprobar que el estado del asiento registral sea RECIBIDO o DEVUELTO
 	    if (!EstadoAsientoRegistralEnum.RECIBIDO.equals(asiento.getEstado())
-	            && !EstadoAsientoRegistralEnum.DEVUELTO.equals(asiento.getEstado())
-	            && !EstadoAsientoRegistralEnum.REENVIADO.equals(asiento.getEstado())
+	           && !EstadoAsientoRegistralEnum.DEVUELTO.equals(asiento.getEstado()) &&
+	             !EstadoAsientoRegistralEnum.REENVIADO.equals(asiento.getEstado())
 	            && !EstadoAsientoRegistralEnum.REENVIADO_Y_ERROR.equals(asiento.getEstado())) {
 	        logger.error("El asiento registral a reenviar con identificador [{}] está en estado [{}]",
 	        		asiento.getId(), asiento.getEstado());
 	        throw new SIRException("error.sir.reenviarAsientoRegistral.estadoNoValido", null,
-	                "El asiento registral a reenviar no está en estado RECIBIDO, DEVUELTO, REENVIADO o REENVIADO con ERROR");
+	                "El asiento registral a reenviar no está en estado REENVIADO o REENVIADO con ERROR");
 	    }
 
 	    Assert.hasText(asiento.getCodigoEntidadRegistralDestino(), "'codigoEntidadRegistralDestino' must not be empty");
@@ -1086,5 +1091,18 @@ public class AsientoRegistralManagerImpl extends
 		
 		return numReintentos;
     }
+    
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.fwktd.sir.api.manager.AsientoRegistralManager#getEstado(java.lang.String)
+	 */
+	public EstadoAsientoRegistraVO getEstadoByCode(String code) {
+
+		logger.info("Obteniendo el estado del asiento registral [{}]", code);
+
+		Assert.hasText(code, "'code' must not be empty");
+
+		return ((AsientoRegistralDao)getDao()).getEstadoByCode(code);
+	}
 
 }

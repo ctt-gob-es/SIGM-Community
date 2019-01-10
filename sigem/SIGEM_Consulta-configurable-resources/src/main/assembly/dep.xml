@@ -15,13 +15,6 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>../SIGEM_ConsultaWeb/src/main/resources/SIGEM_ConsultaWeb</directory>
-			<outputDirectory>/SIGEM_ConsultaWeb</outputDirectory>
-			<includes>
-				<include>skin*/</include>
-			</includes>
-		</fileSet>
-		<fileSet>
 			<filtered>true</filtered>
 			<directory>../SIGEM_ConsultaWS/src/main/resources/SIGEM_ConsultaWS</directory>
 			<outputDirectory>/SIGEM_ConsultaWS</outputDirectory>
@@ -36,8 +29,18 @@
 				<include>log4j.*</include>
 			</includes>
 		</fileSet>
+		<!--[Dipucr-Manu Ticket #357] - ALSIGM3 Hacer que todos los módulos de sigem usen las imágenes del tramitador-->
 		<fileSet>
-			<directory>../SIGEM_ConsultaWebMiembros/src/main/resources/SIGEM_ConsultaWebMiembros</directory>
+			<directory>../SIGEM_Tramitacion_Modules/SIGEM_TramitacionWeb/src/main/resources/SIGEM_TramitacionWeb</directory>
+			<!--<directory>../SIGEM_ConsultaWeb/src/main/resources/SIGEM_ConsultaWeb</directory>-->
+			<outputDirectory>/SIGEM_ConsultaWeb</outputDirectory>
+			<includes>
+				<include>skin*/</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>../SIGEM_Tramitacion_Modules/SIGEM_TramitacionWeb/src/main/resources/SIGEM_TramitacionWeb</directory>
+			<!--<directory>../SIGEM_ConsultaWebMiembros/src/main/resources/SIGEM_ConsultaWebMiembros</directory>-->
 			<outputDirectory>/SIGEM_ConsultaWebMiembros</outputDirectory>
 			<includes>
 				<include>skin*/</include>

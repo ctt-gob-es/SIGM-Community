@@ -21,6 +21,15 @@ public interface DocumentoManager extends BaseManager<DocumentoVO, String> {
 	 * @return Información del documento.
 	 */
 	public DocumentoVO getDocumentoByCSV(String csv);
+	
+	/**
+	 * Obtiene la información del documento a partir del nombre.
+	 *
+	 * @param nombreDoc
+	 *            Nombre del documento.
+	 * @return Información del documento.
+	 */
+	public DocumentoVO getDocumentoByNombre(String nombreDoc);
 
 	/**
 	 * Elimina un documento a partir del CSV

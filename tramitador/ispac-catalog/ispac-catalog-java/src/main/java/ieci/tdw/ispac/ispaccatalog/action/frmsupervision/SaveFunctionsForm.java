@@ -73,7 +73,9 @@ public class SaveFunctionsForm extends ActionForm {
 	// Funciones relacionadas con la gestión de permisos
 	private boolean readPermissions;
 	private boolean editPermissions;
-
+	
+	//[Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+	private boolean editRepositorioComun;
 
   /**
    * Reset all properties to their default values.
@@ -502,4 +504,12 @@ public class SaveFunctionsForm extends ActionForm {
 		this.editPermissions = editPermissions;
 	}
 	
+	//[Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+	public boolean isEditRepositorioComun() {
+		return editRepositorioComun;
+	}
+
+	public void setEditRepositorioComun(boolean editRepositorioComun) {
+		this.editRepositorioComun = editRepositorioComun;
+	}
 }

@@ -23,10 +23,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import es.gob.afirma.utils.UtilsBase64;
 
 
 public class ValidationManagerBCImpl implements ServicioCriptoValidacion{
+	
+	private static final Logger LOGGER = Logger.getLogger(ValidationManagerBCImpl.class);
 
     static{
     	java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -193,8 +197,7 @@ public class ValidationManagerBCImpl implements ServicioCriptoValidacion{
 			rv=vmbcimpl.validateCertificate(psB64Certificate);
 			rv.toString();
 		} catch (CriptoValidacionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 		}
 		
 	}

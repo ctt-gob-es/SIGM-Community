@@ -228,6 +228,16 @@
 						</ispac:hasFunction>
             			<!-- [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento. -->
             			
+            			<!-- [Dipucr-Manu Ticket #] INICIO - ALSIGM3 Mantenimiento de mensajes. -->
+						<ispac:hasFunction functions="FUNC_COMP_REPORTS_READ, FUNC_COMP_REPORTS_EDIT">
+            			<li>
+							<html:link action="showCTMantenimientoMensajesList">
+								<bean:message key="menu.mantenimientoMensajes"/>
+				  			</html:link>
+            			</li>
+						</ispac:hasFunction>
+            			<!-- [Dipucr-Manu Ticket #] FIN - ALSIGM3 Mantenimiento de mensajes. -->
+            			
 						<ispac:hasFunction functions="FUNC_COMP_HELPS_READ, FUNC_COMP_HELPS_EDIT">
             			<li>
 							<html:link action="showCTHelpList">

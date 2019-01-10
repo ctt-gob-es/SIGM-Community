@@ -113,6 +113,28 @@ public class SearchDAO {
 	}
 	
 	/**
+	 * [dipucr-Felipe #745]
+	 * Recupera el documento del expediente
+	 * @param numexp
+	 * @param tipodoc
+	 * @return
+	 * @throws ISPACException 
+	 */
+	public SearchBean searchDocExpediente(ClientContext ctx, String numexp, String tipodoc) 
+			throws ISPACException{
+		
+		StringBuffer sbQuery = new StringBuffer();
+		sbQuery.append(" WHERE numexp = '");
+		sbQuery.append(numexp);
+		sbQuery.append("' AND ID_TPDOC = ");
+		sbQuery.append("(SELECT ID FROM SPAC_CT_TPDOC WHERE COD_TPDOC = '");
+		sbQuery.append(tipodoc);
+		sbQuery.append("') ORDER BY id DESC");
+
+		return searchDocumentQuery(ctx, sbQuery.toString());
+	}
+	
+	/**
 	 * Antigua función searchDocument modificada [dipucr-Felipe #828]
 	 * @param ctx
 	 * @param strQuery [dipucr-Felipe #828]

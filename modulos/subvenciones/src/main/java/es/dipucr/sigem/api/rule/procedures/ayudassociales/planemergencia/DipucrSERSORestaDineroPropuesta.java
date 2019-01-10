@@ -11,12 +11,15 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
-import es.dipucr.sigem.api.rule.procedures.Constants;
+import es.dipucr.sigem.api.rule.procedures.ConstantesSubvenciones;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrSERSORestaDineroPropuesta implements IRule{
     private static final Logger LOGGER = Logger.getLogger(DipucrSERSORestaDineroPropuesta.class);
@@ -38,8 +41,9 @@ public class DipucrSERSORestaDineroPropuesta implements IRule{
             IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
             //----------------------------------------------------------------------------------------------
             LOGGER.info(ConstantesString.INICIO + this.getClass().getName());
+            
             numexp = rulectx.getNumExp();
-            ArrayList<String> expedientesResolucion = new ArrayList<String>();
+            List<String> expedientesResolucion = new ArrayList<String>();
                                 
             String tipoAyuda = "";
             String trimestre = "";
@@ -66,46 +70,18 @@ public class DipucrSERSORestaDineroPropuesta implements IRule{
             
             int total = 0;
             
-            //Recuperamos los expedientes relacionados
-            String strQuery = "WHERE NUMEXP_PADRE='" + numexp + "'";
-            IItemCollection expRelCol = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, strQuery);
-            Iterator<?> expRelIt = expRelCol.iterator();                  
-            if(expRelIt.hasNext()){
-                while (expRelIt.hasNext()){
-                    IItem expRel = (IItem)expRelIt.next();
-                    //Solo trabajamos con aquellos expedientes en estado RESOLUCION - RS
-                    String numexpHijo = expRel.getString("NUMEXP_HIJO");
-                    
-                    IItem expHijo = ExpedientesUtil.getExpediente(cct, numexpHijo); 
-                    if(expHijo != null && "RS".equals(expHijo.get("ESTADOADM"))){
-                        expedientesResolucion.add(numexpHijo);
-                    }                    
-                }
-            }    
+            expedientesResolucion = ExpedientesRelacionadosUtil.getExpedientesRelacionadosHijosByEstadoAdm(rulectx, ExpedientesUtil.EstadoADM.RS);
+            
             //Ya tenemos los expedientes que vamos a decretar en esta iteración
             if(!expedientesResolucion.isEmpty()){
-                strQuery = "WHERE NUMEXP IN (";
-                Iterator<String> expedientesResolucionIt = expedientesResolucion.listIterator();
-                while(expedientesResolucionIt.hasNext()){
-                    strQuery += "'" +expedientesResolucionIt.next()+"',";
-                }
-                strQuery = strQuery.substring(0,strQuery.length()-1);
-                strQuery += ")";
-                 
-                //Recuperamos las solicitudes
-                
+
+                String strQuery = ConstantesString.WHERE + ExpedientesUtil.NUMEXP + " IN " + SubvencionesUtils.getWhereInFormat(expedientesResolucion);               
                 IItemCollection expSolicitudesCiudadCol = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, strQuery);
-                Iterator<?> expSolicitudesCiudadIt = expSolicitudesCiudadCol.iterator();
-                String strQuery2 = "";
-                strQuery2 = "WHERE VALOR IN (";
-                while(expSolicitudesCiudadIt.hasNext()){
-                    strQuery2 +="'" +((IItem) expSolicitudesCiudadIt.next()).getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD)+"',";                                                        
-                }
-                strQuery2 = strQuery2.substring(0,strQuery2.length()-1);
-                strQuery2 += ") ORDER BY SUSTITUTO";
                 
-                IItemCollection ciudadOrdenCol = entitiesAPI.queryEntities("REC_VLDTBL_MUNICIPIOS", strQuery2);
+                String strQuery2 = ConstantesString.WHERE + ConstantesSubvenciones.MunicipiosValidationTable.VALOR + " IN " + SubvencionesUtils.getWhereInFormat(expSolicitudesCiudadCol, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD) + ConstantesString.ORDER_BY + ConstantesSubvenciones.MunicipiosValidationTable.SUSTITUTO;                
+                IItemCollection ciudadOrdenCol = entitiesAPI.queryEntities(ConstantesSubvenciones.MunicipiosValidationTable.NOMBRE_TABLA, strQuery2);
                 Iterator<?> ciudadOrdenIt = ciudadOrdenCol.iterator();
+                
                 while(ciudadOrdenIt.hasNext()){
                     
                     IItemCollection expSolicitudesCol = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, strQuery+" AND CIUDAD = '" +((IItem)ciudadOrdenIt.next()).getString("VALOR")+"' ORDER BY TIPOAYUDA, NOMBRESOLICITANTE");
@@ -129,48 +105,30 @@ public class DipucrSERSORestaDineroPropuesta implements IRule{
                         importeCheques4 = 0;
                         
                         IItem expSolicitud = (IItem) expSolicitudesIt.next();
-                        trimestre = expSolicitud.getString(ConstantesPlanEmergencia.TRIMESTRE);
+                        trimestre = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.TRIMESTRE);
                                                 
-                        tipoAyuda = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);                                     
+                        tipoAyuda = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);                                     
     
-                        IItemCollection numChequesCol = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSONVales.NOMBRE_TABLA, expSolicitud.getString("NUMEXP"));
+                        IItemCollection numChequesCol = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSONVales.NOMBRE_TABLA, SubvencionesUtils.getString(expSolicitud, "NUMEXP"));
                         Iterator<?> numChequesIt = numChequesCol.iterator();
+                        
                         if(numChequesIt.hasNext()){   
-                            IItem numCheq = (IItem)numChequesIt.next(); 
-                            numCheques1 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE1);
-                            try{
-                                semestreImpresos1 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE1IMPRESOS);
-                            } catch(Exception e){
-                                LOGGER.debug("El campo ConstantesPlanEmergencia.SEMESTRE1IMPRESOS es nulo, vacío o no numérico. " + e.getMessage(), e);
-                                semestreImpresos1 = 0;
-                            }
+                            IItem numCheq = (IItem)numChequesIt.next();
+                            
+                            numCheques1 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE1);
+                            semestreImpresos1 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE1IMPRESOS);
                             importeCheques1 = (numCheques - semestreImpresos) * 30;
                             
-                            numCheques2 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE2);
-                            try{
-                                semestreImpresos2 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE2IMPRESOS);
-                            } catch(Exception e){
-                                LOGGER.debug("El campo SEMESTRE2IMPRESOS es nulo, vacío o no numérico. " + e.getMessage(), e);
-                                semestreImpresos2 = 0;
-                            }
+                            numCheques2 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE2);
+                            semestreImpresos2 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE2IMPRESOS);
                             importeCheques2 = (numCheques2 - semestreImpresos2) * 30;
                             
-                            numCheques3 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE3);
-                            try{
-                                semestreImpresos3 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE3IMPRESOS);
-                            } catch(Exception e){
-                                LOGGER.debug("El campo SEMESTRE3IMPRESOS es nulo, vacío o no numérico. " + e.getMessage(), e);
-                                semestreImpresos3 = 0;
-                            }
+                            numCheques3 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE3);
+                            semestreImpresos3 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE3IMPRESOS);
                             importeCheques3 = (numCheques3 - semestreImpresos3) * 30;
                             
-                            numCheques4 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE4);
-                            try{
-                                semestreImpresos4 = numCheq.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE4IMPRESOS);
-                            } catch(Exception e){
-                                LOGGER.debug("El campo SEMESTRE4IMPRESOS es nulo, vacío o no numérico. " + e.getMessage(), e);
-                                semestreImpresos4 = 0;
-                            }
+                            numCheques4 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE4);
+                            semestreImpresos4 = SubvencionesUtils.getInt(numCheq, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE4IMPRESOS);
                             importeCheques4 = (numCheques4 - semestreImpresos4) * 30;
                         }
                                             
@@ -201,14 +159,14 @@ public class DipucrSERSORestaDineroPropuesta implements IRule{
             
             //Comprobamos que no nos hayamos pasado de los 500000
             //Recuperamos las cantidades del ayuntamiento en cuestión
-            IItemCollection cantidadesCol = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.NOMBRE_TABLA, " WHERE LOCALIDAD = '999' AND NUMEXPCONVOCATORIA = '" +numexp+"'");
+            IItemCollection cantidadesCol = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.NOMBRE_TABLA, ConstantesString.WHERE + " LOCALIDAD = '999' AND NUMEXPCONVOCATORIA = '" +numexp+"'");
             Iterator<?> cantidadesIt = cantidadesCol.iterator();
             if(cantidadesIt.hasNext()){                        
                 IItem cantidades = (IItem)cantidadesIt.next();
-                double primerTrim = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.PRIMERTRIMESTRE));
-                double segundoTrim = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.SEGUNDOTRIMESTRE)); 
-                double tercerTrim = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TERCERTRIMESTRE));
-                double cuartoTrim = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.CUARTOTRIMESTRE));
+                double primerTrim = SubvencionesUtils.getDouble( cantidades, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.PRIMERTRIMESTRE);
+                double segundoTrim = SubvencionesUtils.getDouble( cantidades, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.SEGUNDOTRIMESTRE); 
+                double tercerTrim = SubvencionesUtils.getDouble( cantidades, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TERCERTRIMESTRE);
+                double cuartoTrim = SubvencionesUtils.getDouble( cantidades, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.CUARTOTRIMESTRE);
                                 
                 if(ConstantesPlanEmergencia.PRIMER_TRIMESTRE.equals(trimestre)){
                     primerTrim -= total;
@@ -237,7 +195,7 @@ public class DipucrSERSORestaDineroPropuesta implements IRule{
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
 }

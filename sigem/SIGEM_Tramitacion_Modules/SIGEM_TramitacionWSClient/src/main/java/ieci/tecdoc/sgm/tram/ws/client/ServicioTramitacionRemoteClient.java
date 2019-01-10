@@ -20,7 +20,6 @@ import ieci.tecdoc.sgm.core.services.tramitacion.dto.Interesado;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.InteresadoExpediente;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.OrganoProductor;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.Procedimiento;
-import ieci.tecdoc.sgm.tram.ws.client.dto.Cadena;
 
 import java.rmi.RemoteException;
 import java.util.Date;
@@ -974,5 +973,31 @@ public class ServicioTramitacionRemoteClient implements ServicioTramitacion {
 		return false;
 	}
 
+	//[dipucr-Felipe ]
+	public String[] queryEntities(String idEntidad, String entidad,
+			String consulta) throws TramitacionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	//[dipucr-Felipe #860]
+	public boolean anularLicenciaRRHH(String idEntidad, String numexp)
+			throws TramitacionException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	public boolean anexarDocsTramite(String idEntidad, String numExp, int idTramite, String numReg, Date fechaReg, DocumentoExpediente[] documentos) throws TramitacionException {
+		try {
+			ieci.tecdoc.sgm.tram.ws.client.dto.Booleano ret =  service.anexarDocsTramite(idEntidad, numExp, idTramite, numReg, fechaReg, getWSDocumentosExpediente(documentos));
+			if (ServiciosUtils.isReturnOK((IRetornoServicio)ret)) {
+				return ret.isValor();
+			} else {
+				throw getTramitacionException((IRetornoServicio)ret);
+			}
+		} catch (RemoteException e) {
+			throw new TramitacionException( TramitacionException.EXC_GENERIC_EXCEPCION, e.getMessage(), e);
+		}
+	}
 
 }

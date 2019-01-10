@@ -97,12 +97,10 @@
 				var i=0;
 				if (validar != undefined){
 					if (validar.length > 0){
-						for(i=0; i<validar.length; i++){
-							//alert("validar["+i+"][0]");
-							var campo = document.getElementById(validar[i][0]);
-							//alert(campo.value);
+						for(i=0; i<validar.length; i++){							
+							var campo = document.getElementById(validar[i][0]);							
 							if(campo.value == ""){
-								//alert("<bean:message key="registro.formulario.mensaje.obligatorio1"/> '" + validar[i][1] + "' <bean:message key="registro.formulario.mensaje.obligatorio2"/>");
+								alert("<bean:message key="registro.formulario.mensaje.obligatorio1"/> '" + validar[i][1] + "' <bean:message key="registro.formulario.mensaje.obligatorio2"/>");
 								campo.focus();
 								return false;
 							}else{

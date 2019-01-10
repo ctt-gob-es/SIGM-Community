@@ -17,15 +17,18 @@ package es.dipucr.ownCloud;
  *
  */
 
-
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.log4j.Logger;
+
 public class WebdavUtils {
+	public static final Logger LOGGER =  Logger.getLogger(WebdavUtils.class);
+
     public static final SimpleDateFormat DISPLAY_DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+    
     private static final SimpleDateFormat DATETIME_FORMATS[] = {
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US),
             new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US),
@@ -48,10 +51,12 @@ public class WebdavUtils {
         Date returnDate = null;
         for (int i = 0; i < DATETIME_FORMATS.length; ++i) {
             try {
-                returnDate = DATETIME_FORMATS[i].parse(date);
-                return returnDate;
+                returnDate = DATETIME_FORMATS[i].parse(date);                
             } catch (ParseException e) {
+            	LOGGER.error(e.getMessage(), e);
             }
+            if(returnDate!=null)            
+            	return returnDate;
         }
         return null;
     }
@@ -68,6 +73,20 @@ public class WebdavUtils {
         if (!remoteFilePath.startsWith("/"))
         	remoteFilePath = "/" + remoteFilePath;
         return remoteFilePath;
+    }
+    
+    
+    
+    public static void main(String args[]){
+    	
+    	//Test
+    	
+    	String arg= "Tue, 07 Aug 2018 08:07:04 GMT";
+    	    	    	
+    	Date test = WebdavUtils.parseResponseDate(arg);
+    	
+    	System.out.print(test);
+    	
     }
     
 }

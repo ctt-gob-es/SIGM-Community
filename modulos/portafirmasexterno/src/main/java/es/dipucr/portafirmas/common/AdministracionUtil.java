@@ -36,13 +36,16 @@ public class AdministracionUtil {
 	public static boolean relacionarCargoConUsuario(IRuleContext rulectx, IEntitiesAPI entitiesAPI) throws ISPACRuleException {
 		boolean asignado = false;
 		try {
+			//----------------------------------------------------------------------------------------------
+	        ClientContext cct = (ClientContext) rulectx.getClientContext();
+	      //----------------------------------------------------------------------------------------------
 		
 			//String direccionPortaFirmaExterno = DipucrCommonFunctions.getVarGlobal(Configuracion.DIRECCION_PORTAFIRMASEXTERNOADMIN);
 			String direccionPortaFirmaExterno = ServiciosWebPortaFirmasFunciones.getDireccionSWAdmin();
 			
 			AdminServiceStub admin = new AdminServiceStub(direccionPortaFirmaExterno);
 			
-			_0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication authentication = Configuracion.getAuthenticationAdminPADES();
+			_0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication authentication = Configuracion.getAuthenticationAdminPADES(cct);
 			
 			//Obtención de los firmante para dar de alta
 			IItemCollection itCollectionFirmantes = entitiesAPI.queryEntities("FIRMA_DOC_EXTERNO", "WHERE NUMEXP='"+rulectx.getNumExp()+"'");
@@ -75,7 +78,7 @@ public class AdministracionUtil {
 					//COmprobamos que este dado de alta el cargo
 					boolean cargoCreado = false;
 					try{
-						admin.insertEnhancedJobs(CreacionObjetosPortafirmas.crearObjetoInsertEnhancedJobs(authentication, Configuracion.getSeatAdmin(), job));
+						admin.insertEnhancedJobs(CreacionObjetosPortafirmas.crearObjetoInsertEnhancedJobs(authentication, Configuracion.getSeatAdmin(cct), job));
 						cargoCreado = true;
 						
 					}catch (RemoteException e) {
@@ -104,7 +107,7 @@ public class AdministracionUtil {
 								
 								//Comprobamos cual es el cargo asociado al dni.
 								QueryEnhancedUserJobAssociatedToUser queryEnhancedUserJobAssociatedToUser = new QueryEnhancedUserJobAssociatedToUser();
-								queryEnhancedUserJobAssociatedToUser.setAuthentication(Configuracion.getAuthenticationConsultaPADES());
+								queryEnhancedUserJobAssociatedToUser.setAuthentication(Configuracion.getAuthenticationConsultaPADES(cct));
 								queryEnhancedUserJobAssociatedToUser.setUserIdentifier(dni);
 								try {
 									QueryEnhancedUserJobAssociatedToUserResponse respuesta = consulta.queryEnhancedUserJobAssociatedToUser(queryEnhancedUserJobAssociatedToUser);
@@ -171,9 +174,9 @@ public class AdministracionUtil {
 			AdminServiceStub ws = new AdminServiceStub(direccionPortaFirmaExterno);
 
 			ClientContext cct = (ClientContext) rulectx.getClientContext();
-			_0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication authentication = Configuracion.getAuthenticationAdminPADES();
+			_0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication authentication = Configuracion.getAuthenticationAdminPADES(cct);
 			
-			Seat seat = Configuracion.getSeatAdmin();			
+			Seat seat = Configuracion.getSeatAdmin(cct);			
 			
 			//Obtención de los firmante para dar de alta
 			IItemCollection itCollectionFirmantes = entitiesAPI.queryEntities("FIRMA_DOC_EXTERNO", "WHERE NUMEXP='"+rulectx.getNumExp()+"'");

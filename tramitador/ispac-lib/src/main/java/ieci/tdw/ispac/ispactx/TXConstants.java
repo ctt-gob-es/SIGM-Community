@@ -76,5 +76,10 @@ public class TXConstants
 //	public static final int SYNCNODE_OR_FIRST_OK 			= 3;
 //	public static final int SYNCNODE_OR_ALREADY_EVALUATED_OK= 4;
 //	public static final int SYNCNODE_OR_EVALUATE_ALL_OK 	= 5;
+	
+	
+	public static final int MILESTONE_DOCUMENTO_CREATED		= 101;
+	public static final int MILESTONE_DOCUMENTO_DELETED		= 102;
+	public static final int MILESTONE_DOCUMENTO_EDITED		= 103;
 }
 

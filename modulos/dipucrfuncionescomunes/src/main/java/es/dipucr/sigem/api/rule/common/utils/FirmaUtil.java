@@ -47,7 +47,7 @@ public class FirmaUtil {
 		if (it.hasNext()) {
 			item = (IItem) it.next();
 			String estadoFirma = item.getString("ESTADOFIRMA");
-			if (!estadoFirma.equals("02")) {
+			if (!"02".equals(estadoFirma)) {
 				return false;
 			} else {
 				return true;

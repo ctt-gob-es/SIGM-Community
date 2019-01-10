@@ -35,4 +35,14 @@ public interface IPostalAddressAdapter {
     
     public String getTelefono();
     
+    /** INICIO [dipucr-Felipe 3#333] **/
+    public String getCodMunicipio();
+    
+    public String getCodMunicipioDir3();
+    
+    public String getCodProvincia();
+    
+    public String getCodProvinciaDir3();
+    /** FIN [dipucr-Felipe 3#333] **/
+    
 }

@@ -7,7 +7,7 @@
 		 -->
 		<content-type id="1" name="fwktdsir" type="bd">
 			<properties>
-		    	<property name="JDBC_DATASOURCE">java:comp/env/jdbc/fwktd-sirDS</property>
+		    	<property name="JDBC_DATASOURCE">jdbc/fwktd-sirDS</property>
 			</properties>
 			<mappings>
 				<mapping>
@@ -54,7 +54,7 @@
 		 -->
 		<content-type id="2" name="fwktdsir-auditoria-mensajes" type="bd">
 			<properties>
-		    	<property name="JDBC_DATASOURCE">java:comp/env/jdbc/fwktd-sirDS</property>
+		    	<property name="JDBC_DATASOURCE">jdbc/fwktd-sirDS</property>
 			</properties>
 			<mappings>
 				<mapping>
@@ -113,7 +113,7 @@
 		 -->
 		<content-type id="3" name="fwktdsir-auditoria-ficherosIntercambio" type="bd">
 			<properties>
-		    	<property name="JDBC_DATASOURCE">java:comp/env/jdbc/fwktd-sirDS</property>
+		    	<property name="JDBC_DATASOURCE">jdbc/fwktd-sirDS</property>
 			</properties>
 			<mappings>
 				<mapping>

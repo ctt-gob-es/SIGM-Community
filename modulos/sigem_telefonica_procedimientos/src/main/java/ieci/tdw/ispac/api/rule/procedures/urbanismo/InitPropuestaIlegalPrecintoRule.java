@@ -5,12 +5,11 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitPropuestaIlegalPrecintoRule extends InitPropuestaIlegalRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "URB_ILEGAL";
-		STR_extracto = "Resolución de precinto de obras";
-		STR_estado = "ESTADO_PRECINTO";
-		STR_queryDocumento = "DESCRIPCION = 'Decreto de precinto de obra - Obra ilegal'";		
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "URB_ILEGAL";
+        strExtracto = "Resolución de precinto de obras";
+        strEstado = "ESTADO_PRECINTO";
+        strQueryDocumento = "DESCRIPCION = 'Decreto de precinto de obra - Obra ilegal'";        
         return true;
     }
 }

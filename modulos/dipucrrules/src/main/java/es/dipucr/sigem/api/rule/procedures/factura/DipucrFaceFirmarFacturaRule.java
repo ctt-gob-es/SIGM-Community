@@ -19,7 +19,7 @@ import java.io.File;
 import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.avisos.AvisoFinFirmaRule;
-import es.dipucr.sigem.api.rule.common.avisos.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 import es.dipucr.sigem.api.rule.common.utils.BloqueosFirmaUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ReglasUtil;

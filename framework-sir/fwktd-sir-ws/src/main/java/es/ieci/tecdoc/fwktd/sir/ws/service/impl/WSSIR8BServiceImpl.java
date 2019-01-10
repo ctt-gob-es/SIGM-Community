@@ -72,7 +72,12 @@ public class WSSIR8BServiceImpl implements WS_SIR8_B_PortType {
 
 		} catch (ServiceException e) {
 			logger.error("Error en el envío del fichero de intercambio a la aplicación", e);
-			respuesta = createRespuestaWS(e.getError());
+			if (e.getCause() != null && e.getCause().getMessage() != null){
+			    respuesta = createRespuestaWS(e.getError(),e.getCause().getMessage());
+			}else {
+			    respuesta = createRespuestaWS(e.getError());
+			}
+			
 		} catch (Throwable e) {
 			logger.error("Error en el envío del fichero de intercambio a la aplicación", e);
 			respuesta = createRespuestaWS(ErroresEnum.ERROR_INESPERADO);
@@ -99,4 +104,17 @@ public class WSSIR8BServiceImpl implements WS_SIR8_B_PortType {
 		return respuesta;
 	}
 
+	/**
+	 * Crea la respuesta de retorno del servicio.
+	 *
+	 * @param error
+	 *            Información del error.
+	 * @return Información de respuesta.
+	 */
+	protected static RespuestaWS createRespuestaWS(ErroresEnum error, String details) {
+		RespuestaWS respuesta = new RespuestaWS();
+		respuesta.setCodigo(error.getValue());
+		respuesta.setDescripcion(details);
+		return respuesta;
+	}
 }

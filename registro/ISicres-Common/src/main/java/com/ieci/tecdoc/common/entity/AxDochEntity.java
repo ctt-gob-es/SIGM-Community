@@ -138,13 +138,13 @@ public class AxDochEntity implements ServerKeys {
 			setAccessType(rs.getInt(index++));
 			setAcsId(rs.getInt(index++));
 			setCrtrId(rs.getInt(index++));
-			setCrtnDate(rs.getDate(index++));
+			setCrtnDate(BBDDUtils.getDateFromTimestamp(rs.getTimestamp(index++)));
 			setUpdrId(rs.getInt(index++));
-			setUpdDate(rs.getDate(index++));
+			setUpdDate(BBDDUtils.getDateFromTimestamp(rs.getTimestamp(index++)));
 			setAccrId(rs.getInt(index++));
-			setAccDate(rs.getDate(index++));
+			setAccDate(BBDDUtils.getDateFromTimestamp(rs.getTimestamp(index++)));
 			setAcccount(rs.getInt(index++));
-			setTimeStamp(rs.getDate(index++));
+			setTimeStamp(BBDDUtils.getDateFromTimestamp(rs.getTimestamp(index++)));
 		} catch (SQLException ex) {
 			log.error("Error en método load.PK [" + getPrimaryKey() + "]", ex);
 			throw new Exception(ex);
@@ -181,16 +181,16 @@ public class AxDochEntity implements ServerKeys {
 			ps.setInt(index++, getAccessType());
 			ps.setInt(index++, getAcsId());
 			ps.setInt(index++, getCrtrId());
-			ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+			ps.setTimestamp(index++, BBDDUtils.getTimestamp(getCrtnDate()));
 			ps.setInt(index++, getUpdrId());
-			ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+			ps.setTimestamp(index++, BBDDUtils.getTimestamp(getUpdDate()));
 			ps.setInt(index++, getAccrId());
-			ps.setDate(index++, BBDDUtils.getDate(getAccDate()));
+			ps.setTimestamp(index++, BBDDUtils.getTimestamp(getAccDate()));
 			ps.setInt(index++, getAcccount());
-			ps.setDate(index++, BBDDUtils.getDate(getTimeStamp()));
+			ps.setTimestamp(index++, BBDDUtils.getTimestamp(getTimeStamp()));
 
-			ps.setInt(index++, getId());
 			ps.setInt(index++, getFdrId());
+			ps.setInt(index++, getId());
 
 			ps.executeUpdate();
 		} catch (SQLException ex) {
@@ -243,13 +243,13 @@ public class AxDochEntity implements ServerKeys {
 			ps.setInt(index++, getAccessType());
 			ps.setInt(index++, getAcsId());
 			ps.setInt(index++, getCrtrId());
-			ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+			ps.setTimestamp(index++, timestamp);
 			ps.setInt(index++, getUpdrId());
-			ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+			ps.setTimestamp(index++, timestamp);
 			ps.setInt(index++, getAccrId());
-			ps.setDate(index++, BBDDUtils.getDate(getAccDate()));
+			ps.setTimestamp(index++, timestamp);
 			ps.setInt(index++, getAcccount());
-			ps.setDate(index++, BBDDUtils.getDate(getTimeStamp()));
+			ps.setTimestamp(index++, timestamp);
 
 			ps.executeUpdate();
 			return getPrimaryKey();

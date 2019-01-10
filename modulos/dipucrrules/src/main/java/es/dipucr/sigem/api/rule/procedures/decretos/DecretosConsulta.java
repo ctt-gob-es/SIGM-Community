@@ -16,6 +16,7 @@ import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 import ieci.tdw.ispac.ispaclib.utils.DateUtil;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +24,6 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.text.SimpleDateFormat;
 import com.lowagie.text.pdf.PdfWriter;
 import com.sun.star.lang.XComponent;
 import com.sun.star.text.XTextDocument;
@@ -423,11 +423,14 @@ public class DecretosConsulta{
 	        	IItem doc = (IItem)it.next();
 	        	entitiesAPI.deleteDocument(doc);
 	        }
-	        ooHelper.dispose();
 		}
 		catch(Exception e){
 			logger.error("Error al crear el documento " + nombreCompleto + "." + e.getMessage(), e);
 			throw new Exception("Error al crear el documento " + nombreCompleto + "." + e.getMessage(), e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 		return entityDoc;
 	}

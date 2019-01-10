@@ -35,7 +35,7 @@ if (rutaImagenes == null) rutaImagenes = "";
 			
 			function descargarAutofirma()
 			{
-				document.getElementById('iframe_descarga_autofirma').src = "https://cloud.dipucr.es/owncloud/index.php/s/BT7tN8BfI58CUKg/download";
+				document.getElementById('iframe_descarga_autofirma').src = "https://cloud.dipucr.es/owncloud/index.php/s/tIkHBHanU5i7XGF/download";
 			}
 			
 			

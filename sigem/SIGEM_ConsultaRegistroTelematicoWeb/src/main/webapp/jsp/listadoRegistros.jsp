@@ -125,7 +125,7 @@ if (rutaImagenes == null) rutaImagenes = "";
   												  + registry.getRegistryNumber() + "', '"
   												  + registry.getTopic().replaceAll("'", "\\\\'") + "', '"
   												  + new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(registry.getRegistryDate()) + "', '"
-  												  + new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(registry.getEffectiveDate()) + "', '"
+  												  + (null != registry.getEffectiveDate() ? new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss").format(registry.getEffectiveDate()):"") + "', '"
   													+ registry.getAddressee() + "', '"
   												  + registry.getName().replaceAll("'", "\\\\'") + "');";
   									}
@@ -159,27 +159,9 @@ if (rutaImagenes == null) rutaImagenes = "";
 									</acronym>
 								</display:column>
 
-								<display:column  media="html" titleKey="tabla.organoDestinatario" sortable="true" headerClass="cabeceraTabla anchoNReg" sortProperty="addressee">
-									<acronym title='<bean:message key="tabla.detalleRegistro"/>'>
-										<table id="tabla2<%=i%>" width="100%" height="100%" style="cursor: pointer"
-											onclick="<%=mostrarRegistro%>"
-											onmouseover="javascript:changeColor(<%=i%>, 'true');"
-											onmouseout="javascript:changeColor(<%=i%>, 'false');">
-											<tr style="height: 100%">
-												<td width="100%" height="100%">
-													<bean:write name="registro" property="addressee"/>
-												</td>
-											</tr>
-										</table>
-									</acronym>
-								</display:column>
-
 								<display:column  media="csv excel xml pdf" titleKey="tabla.numeroRegistroExport" sortable="true" headerClass="cabeceraTabla anchoNReg" sortProperty="registryNumber"  property="registryNumber" decorator="ieci.tecdoc.sgm.consulta_telematico.web.decorators.NumRegistroExcelDecorator">
-
 								</display:column>
-								<display:column  media="csv excel xml pdf" titleKey="tabla.organoDestinatario" sortable="true" headerClass="cabeceraTabla anchoNReg" sortProperty="addressee">
-									<bean:write name="registro" property="addressee"/>
-								</display:column>
+								
 								<display:column  media="html" titleKey="tabla.asuntoRegistro" sortable="true" headerClass="cabeceraTabla anchoSbjt" sortProperty="name">
 									<acronym title='<bean:message key="tabla.detalleRegistro"/>'>
 										<table id="tabla3<%=i%>" width="100%" height="100%" style="cursor: pointer"

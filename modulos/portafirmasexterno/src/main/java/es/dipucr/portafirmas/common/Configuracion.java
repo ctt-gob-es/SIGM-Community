@@ -1,93 +1,88 @@
 package es.dipucr.portafirmas.common;
 
-import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import _0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Seat;
 import _0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.Authentication;
 import _0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.User;
+import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
+import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.ispaclib.context.ClientContext;
 
 public class Configuracion {
 	
-	//private static final Logger logger = Logger.getLogger(Configuracion.class);
-	//public static final String DIRECCION_PORTAFIRMASEXTERNOMODIFY = "DIRECCION_PORTAFIRMASEXTERNOMODIFY";
-	//public static final String DIRECCION_PORTAFIRMASEXTERNOADMIN = "DIRECCION_PORTAFIRMASEXTERNOADMIN";
-	//public static final String DIRECCION_PORTAFIRMASEXTERNO_CONSULTA = "DIRECCION_PORTAFIRMASEXTERNO_CONSULTA";
-
-	public static User getRemitentePeticionPADES()
-			throws ISPACRuleException {
+	public static User getRemitentePeticionPADES(ClientContext cct) throws ISPACException {
 		User usuario = new User();
-		usuario.setIdentifier("DIPUCR_WS_PADES");
-		usuario.setName("DIPUCR_WS_PADES");
-		usuario.setSurname1("DIPUCR_WS_PADES");
-		usuario.setSurname2("DIPUCR_WS_PADES");
+		usuario.setIdentifier(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_REMITENTE_PADES_IDENT+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		usuario.setName(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_REMITENTE_PADES_NAME+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		usuario.setSurname1(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_REMITENTE_PADES_SURNAME1+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		usuario.setSurname2(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_REMITENTE_PADES_SURNAME2+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
 		return usuario;
 	}
-
-	public static _0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication getAuthenticationAdminPADES(){
+	
+	public static User getRemitentePeticionXADES(ClientContext cct) throws ISPACException {
+		User usuario = new User();
+		usuario.setIdentifier(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_REMITENTE_XADES_IDENT+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		usuario.setName(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_REMITENTE_XADES_NAME+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		usuario.setSurname1(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_REMITENTE_XADES_SURNAME1+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		usuario.setSurname2(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_REMITENTE_XADES_SURNAME2+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		return usuario;
+	}
+	
+	public static _0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication getAuthenticationAdminPADES(ClientContext cct) throws ISPACException{
 		_0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication authentication = new _0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication();
-		authentication.setUserName("DIPUCR_WS_PADES");
-		authentication.setPassword("DIPUCR_WS_PADES");
+		authentication.setUserName(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_PADES_USER+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		authentication.setPassword(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_PADES_PASSW+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
 		return authentication;
 	}
 
-	public static Authentication getAuthenticationModifyPADES()
-			throws ISPACRuleException {
+	public static Authentication getAuthenticationModifyPADES(ClientContext cct) throws ISPACException {
 		Authentication authentication = new Authentication();
-		authentication.setUserName("DIPUCR_WS_PADES");
-		authentication.setPassword("DIPUCR_WS_PADES");
+		authentication.setUserName(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_PADES_USER+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		authentication.setPassword(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_PADES_PASSW+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
 		return authentication;
 	}
 	
-	public static User getRemitentePeticionXADES()
-			throws ISPACRuleException {
-		User usuario = new User();
-		usuario.setIdentifier("DIPUCR_WS");
-		usuario.setName("DIPUCR_WS");
-		usuario.setSurname1("DIPUCR_WS");
-		usuario.setSurname2("DIPUCR_WS");
-		return usuario;
-	}
-
-	public static _0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication getAuthenticationAdminXADES(){
-		_0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication authentication = new _0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication();
-		authentication.setUserName("DIPUCR_WS");
-		authentication.setPassword("DIPUCR_WS");
-		return authentication;
-	}
-
-	public static Authentication getAuthenticationModifyXADES()
-			throws ISPACRuleException {
-		Authentication authentication = new Authentication();
-		authentication.setUserName("DIPUCR_WS");
-		authentication.setPassword("DIPUCR_WS");
-		return authentication;
-	}
-	public static _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Authentication getAuthenticationConsultaXADES()
-			throws ISPACRuleException {
+	public static _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Authentication getAuthenticationConsultaPADES(ClientContext cct) throws ISPACException {
 		_0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Authentication authentication = new _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Authentication();
-		authentication.setUserName("DIPUCR_WS");
-		authentication.setPassword("DIPUCR_WS");
+		authentication.setUserName(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_PADES_USER+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		authentication.setPassword(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_PADES_PASSW+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
 		return authentication;
-	}
-	public static _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Authentication getAuthenticationConsultaPADES()
-			throws ISPACRuleException {
-		_0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Authentication authentication = new _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Authentication();
-		authentication.setUserName("DIPUCR_WS_PADES");
-		authentication.setPassword("DIPUCR_WS_PADES");
-		return authentication;
-	}
-
-	public static String getAplicacionXADES() {
-		return "DIPUCR_WS";
 	}
 	
-	public static String getAplicacionPADES() {
-		return "DIPUCR_WS_PADES";
+	
+
+	public static _0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication getAuthenticationAdminXADES(ClientContext cct) throws ISPACException{
+		_0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication authentication = new _0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.Authentication();
+		authentication.setUserName(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_XADES_USER+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		authentication.setPassword(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_XADES_PASSW+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		return authentication;
 	}
 
-	public static Seat getSeatAdmin() {
+	public static Authentication getAuthenticationModifyXADES(ClientContext cct) throws ISPACException {
+		Authentication authentication = new Authentication();
+		authentication.setUserName(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_XADES_USER+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		authentication.setPassword(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_XADES_PASSW+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		return authentication;
+	}
+	public static _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Authentication getAuthenticationConsultaXADES(ClientContext cct) throws ISPACException {
+		_0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Authentication authentication = new _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Authentication();
+		authentication.setUserName(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_XADES_USER+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		authentication.setPassword(PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_XADES_PASSW+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador()));
+		return authentication;
+	}
+
+
+	public static String getAplicacionXADES(ClientContext cct) throws ISPACException {
+		return PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_APLICACION_XADES+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador());
+	}
+	
+	public static String getAplicacionPADES(ClientContext cct) throws ISPACException {
+		return PortafirmasConfiguration.getInstance().getProperty(PortafirmasConfiguration.PORTAFIRMAS.PORTAFIRMAS_APLICACION_PADES+EntidadesAdmUtil.obtenerEntidadObject(cct).getIdentificador());
+	}
+
+	public static Seat getSeatAdmin(ClientContext cct) {
 		Seat seat = new Seat();
-		seat.setCode("L02000013");
-		seat.setDescription("Diputación de Ciudad Real");
+		seat.setCode(EntidadesAdmUtil.obtenerEntidadObject(cct).getDir3());
+		seat.setDescription(EntidadesAdmUtil.obtenerEntidadObject(cct).getNombreLargo());
 		return seat;
 	}
 

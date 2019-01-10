@@ -42,6 +42,19 @@ public class DocumentoManagerImpl extends BaseManagerImpl<DocumentoVO, String>
 
 		return ((DocumentoDao)getDao()).getDocumentoByCSV(csv);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.fwktd.csv.api.manager.DocumentoManager#getDocumentoByNombre(java.lang.String)
+	 */
+	public DocumentoVO getDocumentoByNombre(String nombredoc) {
+
+		logger.info("Obteniendo el documento a partir del nombre [{}]", nombredoc);
+
+		Assert.hasText(nombredoc, "'nombredoc' must not be empty");
+
+		return ((DocumentoDao)getDao()).getDocumentoByNombre(nombredoc);
+	}
 
 	/**
 	 * {@inheritDoc}

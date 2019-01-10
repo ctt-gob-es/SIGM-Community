@@ -631,4 +631,79 @@ public interface IGenDocAPI {
 	public void updateNotificationStatus(int documentId, String status, 
 			Date date) throws ISPACException;
 
+	/**
+	 * [Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+	 * 
+	 * Anexa un fichero a una fase reemplazando previamente los tags.
+	 * @param connectorSession Conexión con el conector documental
+	 * @param stageId Identificador de la fase instanciada
+	 * @param docId Identificador del registro de la entidad documentos
+	 * @param in Representación del fichero a anexar
+	 * @param length Tamaño del fichero
+	 * @param sMimeType Tipo mime del fichero
+	 * @param sName Nombre del fichero
+	 * @return Registro de la entidad documentos
+	 * @throws ISPACException
+	 */
+	public IItem attachStageInputStreamReplaceVars(Object connectorSession, int stageId,int docId,InputStream in,int length,String sMimeType,String sName)
+	throws ISPACException;
+
+
+	/**
+	 * [Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+	 * 
+	 *  Anexa un fichero a una fase incluyendo propiedades para la metainformación del documento reemplazando previamente los tags.
+	 * @param connectorSession Conexión con el conector documental
+	 * @param obj objeto a pasar al instanciar al gestor documental dependiente 
+	 * @param stageId Identificador de la fase instanciada
+	 * @param docId Identificador del registro de la entidad documentos
+	 * @param in Representación del fichero a anexar
+	 * @param length Tamaño del fichero
+	 * @param mimeType Tipo mime del fichero
+	 * @param sName Nombre del fichero
+	 * @param properties Propiedades a asociar al documento
+	 * @return Registro de la entidad documentos
+	 * @throws ISPACException
+	 */
+	public IItem attachStageInputStreamReplaceVars(Object connectorSession, Object obj, int stageId, int docId, InputStream in, int length, String mimeType, String sName, String properties)
+	throws ISPACException;
+
+	/**
+	 * [Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+	 * 
+	 * Anexa un fichero a un trámite reemplazando previamente los tags.
+	 * @param connectorSession Conexón con el conector documental
+	 * @param taskId Identificador del trámite instanciado
+	 * @param docId Identificador del registro de la entidad documentos
+	 * @param in Representación del fichero a anexar
+	 * @param length Tamaño del fichero
+	 * @param sMimeType Tipo mime del fichero
+	 * @param sName Nombre del fichero
+	 * @return Registro de la entidad documentos
+	 * @throws ISPACException
+	 */
+	public IItem attachTaskInputStreamReplaceVars(Object connectorSession, int taskId,int docId,InputStream in,int length,String sMimeType,String sName)
+	throws ISPACException;
+
+	
+	
+	/**
+	 * [Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+	 * 
+	 * Anexa un fichero a un trámite incluyendo propiedades para la metainformación del documento reemplazando previamente los tags.
+	 * @param connectorSession Conexón con el conector documental
+	 * @param obj objeto a pasar al instanciar al gestor documental dependiente 
+	 * @param taskId Identificador del trámite instanciado
+	 * @param docId Identificador del registro de la entidad documentos
+	 * @param in Representación del fichero a anexar
+	 * @param length Tamaño del fichero
+	 * @param sMimeType Tipo mime del fichero
+	 * @param sName Nombre del fichero
+	 * @param properties Propiedades a asociar al documento
+	 * @return Registro de la entidad documentos
+	 * @throws ISPACException
+	 */
+	public IItem attachTaskInputStreamReplaceVars(Object connectorSession, Object obj, int taskId, int docId, InputStream in, int length, String sMimeType, String sName, String properties)
+	throws ISPACException;	
+
 }

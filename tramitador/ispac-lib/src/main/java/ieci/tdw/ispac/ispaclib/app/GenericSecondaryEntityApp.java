@@ -385,8 +385,19 @@ public class GenericSecondaryEntityApp extends SecondaryEntityApp {
 								+ secondaryEntityDef.getName() + PrefixBuilder.PREFIX_DB + fldSecondary;
 
 			try {
+				//[Ticket671#Teresa#INICIO]Cambio para que muestro el valor de la tabla de validación que le corresponda
+				// compruebo si fldPrimary no sea ese campo de otra entidad
+				//x ejemplo CONTRATACION_DATOS_CONTRATO:ORGANO_CONTRATACION
+				String [] vCampoOtraEntidad = fldPrimary.split(":");
+				if(vCampoOtraEntidad.length>1){
+					itemPrefix = vCampoOtraEntidad[0];
+					fldPrimary = vCampoOtraEntidad[1];
+				}
+				//[Ticket671#Teresa#FIN]
+				
 				///valuePrimary = mitem.getString(itemPrefix + ":" + fldPrimary);
 				valuePrimary = mitem.get(itemPrefix + ":" + fldPrimary);
+				
 			}
 			catch (ISPACException ie) {
 			}

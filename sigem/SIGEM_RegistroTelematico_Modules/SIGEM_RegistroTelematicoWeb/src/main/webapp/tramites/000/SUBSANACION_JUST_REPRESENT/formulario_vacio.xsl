@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:output encoding="ISO-8859-1" method="html"/>
 
+<xsl:include href="../templates_comunes.xsl" />
+
+<xsl:output encoding="ISO-8859-1" method="html"/>
 	<xsl:variable name="lang.titulo" select="'SUBSANACIÓN DE DEFECTOS Y TRAMITACIÓN DE INCIDENTES EN UN EXPEDIENTE INICIADO'"/>
-	
+
 	<xsl:variable name="lang.id_nif" select="'Documento de identidad'"/>
 	<xsl:variable name="lang.id_nombre" select="'Nombre'"/>
-	
-	
 
 	<xsl:variable name="lang.datosRepresentante" select="'Datos de la persona física o del representante de la persona jurídica'"/>
 	<xsl:variable name="lang.datosInteresado" select="'Datos del solicitante o del representado'"/>
 	<xsl:variable name="lang.datosSolicitud" select="'Datos de la Solicitud'"/>
 	<xsl:variable name="lang.datosDeclarativos" select="'Declaraciones Preceptivas que formula el solicitante'"/>
-	
+
 	<xsl:variable name="lang.representante" select="'En representación de:'"/>
 	<xsl:variable name="lang.cif" select="'CIF'"/>
 
@@ -26,7 +26,7 @@
 	<xsl:variable name="lang.solicita" select="'Solicita'"/>	
 
 	<xsl:variable name="lang.declaro" select="'Asimismo, declaro bajo mi Responsabilidad (obligatorio marcar con una x cada cuadro para poder seguir el trámite)'"/>
-	
+
 	<xsl:variable name="lang.declaro1" select="'Que la entidad solicitante no se encuentra incursa en ninguna de las circunstancias de prohibición para la obtención de la condición de beneficiario de ayuda o subvención, así como que se encuentra al corriente en el cumplimiento de sus obligaciones fiscales con la Diputación Provincial de Ciudad Real.'"/>
 	<xsl:variable name="lang.declaro2" select="'Que esta entidad se encuentra al corriente en el cumplimiento de sus obligaciones tributarias y frente a la Seguridad Social, y no es deudora por resolución de procedencia de reintegro de subvenciones.'"/>
 	<xsl:variable name="lang.declaro3" select="'Que la persona o entidad solicitante autoriza expresamente a la Diputación de Ciudad Real para consultar las expresadas circunstancias ante las entidades señaladas.'"/>	
@@ -38,39 +38,49 @@
 	<xsl:variable name="lang.documentoTipo_DOC_ODT" select="'Archivo ODT/DOC'"/>
 	<xsl:variable name="lang.documentoTipoPDF" select="'Archivo PDF'"/>
 	<xsl:variable name="lang.documentoTipoJPEG" select="'Archivo JPG'"/>
-	
-		
+
+	<xsl:variable name="lang.mensajePopUps" select="'Si está viendo este mensaje debe &lt;b&gt;deshabilitar&lt;/b&gt; el bloqueador de elementos emergentes de su navegador para &lt;b&gt;permitir los PopUps en Diputación de Ciudad Real&lt;/b&gt;.'"/>
+	<xsl:variable name="lang.mensajeAlert" select="'Debe deshabilitar el bloqueador de elementos emergentes de su navegador para permitir los PopUps en Diputación de Ciudad Real y poder comprobar sus representados antes de continuar.'"/>
+
+	<xsl:variable name="lang.mensajeRepresentante" select="'No tiene ningún representado dado de alta en Comparece para este NIF/NIE o bien su solicitud de alta de representación está siendo tramitada en el departamento correspondiente.&lt;br&gt;Si no ha realizado dicha solicitud cierre el navegador, acceda a Comparece y rellene el formulario &lt;b&gt;Solicitud de alta, modificación y baja de datos de usuarios en Comparece para AYUNTAMIENTOS, ASOCIACIONES Y EMPRESAS&lt;/b&gt;.'"/>
+
 	<xsl:template match="/"  xmlns:java="http://xml.apache.org/xslt/java">
 		<script language="Javascript">
 			//array de campos obligatorios -> ('id_campo','nombre_campo')
 			//----------------------------
 			var validar = new Array(4);
-			
+
 			validar[0] = new Array('documentoIdentidad', '<xsl:value-of select="$lang.id_nif"/>');
-			validar[1] = new Array('nombreSolicitante','<xsl:value-of select="$lang.id_nombre"/>');				
+			validar[1] = new Array('nombreSolicitante','<xsl:value-of select="$lang.id_nombre"/>');
 			validar[2] = new Array('expone','<xsl:value-of select="$lang.expone"/>');
 			validar[3] = new Array('solicita','<xsl:value-of select="$lang.solicita"/>');
 
 
 			//Array con los datos especificos del formilario -> -> ('id_campo','tag_xml')
 			//----------------------------------------------
-			var especificos = new Array(8);
-			
-			especificos[0] = new Array('ayuntamiento','ayuntamiento');			
+			var especificos = new Array(10);
+
+			especificos[0] = new Array('ayuntamiento','ayuntamiento');
 			especificos[1] = new Array('asunto','asunto');
-			especificos[2] = new Array('numExpediente','numExpediente');						
+			especificos[2] = new Array('numExpediente','numExpediente');
 			especificos[3] = new Array('documentoIdentidad','documentoIdentidad');
-			especificos[4] = new Array('nombreSolicitante','nombreSolicitante');				
+			especificos[4] = new Array('nombreSolicitante','nombreSolicitante');
 			especificos[5] = new Array('expone','expone');
-			especificos[6] = new Array('solicita','solicita');			
+			especificos[6] = new Array('solicita','solicita');
 			especificos[7] = new Array('emailSolicitante','emailSolicitante');
-			
-			
-			
+			especificos[8] = new Array('texto_legal_comun','texto_legal_comun');
+			especificos[9] = new Array('texto_datos_personales_comun','texto_datos_personales_comun');
+
+
+
 			//Array de validaciones
 			//----------------------------------------------
 			var validarNumero;
 			function verificacionesEspecificas() {
+				if(document.getElementById('asociaciones_div').style.display == ''){
+					alert('<xsl:value-of select="$lang.mensajeAlert"/>');
+					return false;
+				}
 				if(document.getElementById('numExpediente').value == ''){
 					alert('Debe seleccionar el expediente que va a subsanar, justificar o modificar');
 					document.getElementById('expedientes').focus();
@@ -81,7 +91,6 @@
 					document.getElementById('expedientes').focus();
 					return false;
 				}
-
 				
 				return true;
 			}
@@ -97,7 +106,7 @@
 				document.getElementById('expedientes').value='-------';
 				document.getElementById('cif').value = cifRepre;
 			}
-			
+
 			function getAsuntoNumexp(numExpediente){
 				window.open('tramites/000/SUBSANACION_JUST_REPRESENT/buscaAsuntoNumExp.jsp?valor='+numExpediente+';000','','width=700,height=300,resizable=1');
 			}
@@ -111,7 +120,7 @@
 				}
 				window.open('tramites/000/SUBSANACION_JUST_REPRESENT/dameExpedientes.jsp?valor='+dni+';'+anio.value+';000','','width=3,height=3,left=10000,top=10000');
 			}
-			
+
 			function getRepresentados(){
 				window.open('tramites/000/SUBSANACION_JUST_REPRESENT/dameRepresentantes.jsp?valor='+document.getElementById('documentoIdentidad').value+';000','','width=3,height=3,left=10000,top=10000');
 			}
@@ -120,8 +129,8 @@
 		</script>
 		<h1><xsl:value-of select="$lang.titulo"/></h1>
    		<br/>
-   		
-   		<div class="cuadro" style="">	
+
+   		<div class="cuadro" style="">
 			<div class="col">
 				<label class="gr">
 					<xsl:attribute name="style">width:150px;</xsl:attribute>
@@ -148,17 +157,42 @@
 					<xsl:attribute name="disabled"></xsl:attribute>
 				</input>
 			</div>
-				
+
 		</div>
-   		
-   		<div class="submenu" style="display:none">
+
+   		<div class="submenu">
    			<h1><xsl:value-of select="$lang.datosInteresado"/></h1>
    		</div>
-   		
-   		<div class="cuadro" style="display:none">	
-   		
-	
-			<div class="col">
+
+   		<div class="cuadro" style="">
+
+			<div id="asociaciones_div" class="col">
+				<img>
+					<xsl:attribute name="src">img/close.png</xsl:attribute>
+					<xsl:attribute name="id">aviso_img</xsl:attribute>
+				</img>
+				<label>
+					<xsl:attribute name="style">color:#006699; width:100%; line-height:15px; padding-left:20px;</xsl:attribute>
+					<xsl:attribute name="name">asociaciones_lbl</xsl:attribute>
+					<xsl:attribute name="id">asociaciones_lbl</xsl:attribute>
+				</label>
+			</div>
+
+			<div id="mensajeRepresente_div" class="col" style="display:none">
+				<img>
+					<xsl:attribute name="src">img/close.png</xsl:attribute>
+					<xsl:attribute name="id">aviso_img</xsl:attribute>
+				</img>
+
+				<label>
+					<xsl:attribute name="style">color:#006699; width:100%; line-height:15px; padding-left:20px;</xsl:attribute>
+					<xsl:attribute name="name">mensajeRepresente_lbl</xsl:attribute>
+					<xsl:attribute name="id">mensajeRepresente_lbl</xsl:attribute>
+
+				</label>
+			</div>
+
+			<div id="ayuntamiento_div" class="col" style="display:none">
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:150px;</xsl:attribute>
 					<xsl:value-of select="$lang.representante"/>*
@@ -171,9 +205,9 @@
 					<option>
 						<xsl:attribute name="value">-------</xsl:attribute>----------------------------------------------------
 					</option>
-				</select>					
-			</div>	    
-			<div class="col">
+				</select>
+			</div>
+			<div id="remitente_div" class="col" style="display:none">
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:150px;</xsl:attribute>
 					<xsl:value-of select="$lang.cif"/>:*
@@ -186,7 +220,7 @@
 					<xsl:attribute name="disabled"></xsl:attribute>
 				</input>
 			</div>
-			
+
 		</div>
 		<br/>
    		<div class="submenu">
@@ -196,7 +230,7 @@
 			<div class="col">
 				<label class="gr">
 					<xsl:attribute name="style">width:150px;</xsl:attribute>
-					<xsl:value-of select="$lang.anio"/>
+					<xsl:value-of select="$lang.anio"/>:
 				</label>
 				<select>
 					<xsl:attribute name="style">color:#006699;</xsl:attribute>
@@ -216,17 +250,17 @@
 						document.getElementById('anio').options[i] = new Option (anio+i,anio+i);
 					}
 				</script>
-				<br/>	
-			</div>	
+				<br/>
+			</div>
 
-	<!-- MQE Cargamos los expedientes sobre los que puede subsanar-->	
+	<!-- MQE Cargamos los expedientes sobre los que puede subsanar-->
 			<div class="col">
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:100%;</xsl:attribute>
 					<xsl:value-of select="$lang.selecSol"/>:
 				</label>
 			</div>
-	
+
 			<select class="gr">
 				<xsl:attribute name="style">border:none; width:650px;color:#006699;</xsl:attribute>
 				<xsl:attribute name="name">expedientes</xsl:attribute>
@@ -236,7 +270,7 @@
 						<xsl:attribute name="value">-------</xsl:attribute>----------------------------------------------------
 					</option>
 			</select>
-		</div>  
+		</div> 
 	<!-- MQE fin modificaciones -->
 
 
@@ -256,7 +290,7 @@
 			</div>
 
 			<br/>
-	
+
    			<div class="col" style="display:none;">
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:150px;</xsl:attribute>
@@ -270,7 +304,7 @@
 					<xsl:attribute name="disabled"></xsl:attribute>
 				</input>
 			</div>
-			
+
 			<div class="col">
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:150px;</xsl:attribute>
@@ -287,7 +321,7 @@
 			<div class="col">
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:150px;</xsl:attribute>
-					<xsl:value-of select="$lang.solicita"/>:*	
+					<xsl:value-of select="$lang.solicita"/>:*
 				</label>
 				<textarea class="gr">
 					<xsl:attribute name="style">position: relative; width:490px; font:normal 100%/normal 'Arial', Tahoma, Helvetica, sans-serif;</xsl:attribute>
@@ -296,8 +330,8 @@
 					<xsl:attribute name="rows">7</xsl:attribute>
 					<xsl:value-of select="Datos_Registro/datos_especificos/solicita"/>
 				</textarea>
-			</div>	
-			
+			</div>
+
 			<br/>
 
 			</div>
@@ -307,20 +341,21 @@
    			<div class="cuadro" style="">	
 				<input type="checkbox" id="declaro1" checked="Yes" style="border:none;color:#006699;position: relative; width:20px;" DISABLED="Yes"/>
 				<xsl:value-of select="$lang.declaro1"/>
-				
+
 				<br/>
-				
+
 				<input type="checkbox" id="declaro2" checked="Yes" style="border:none;color:#006699;position: relative; width:20px;" DISABLED="Yes"/>
 				<xsl:value-of select="$lang.declaro2"/>
 				<br/>
-				
+
 				<input type="checkbox" id="declaro3" checked="Yes" style="border:none;color:#006699;position: relative; width:20px;" DISABLED="Yes"/>
 				<xsl:value-of select="$lang.declaro3"/>
 				<br/>
 			</div>
-		
    			<br/>
-			<div class="submenu">
+			<xsl:call-template name="TEXTO_LEGAL_COMUN" />
+	   		<br/>
+				<div class="submenu">
    			<h1><xsl:value-of select="$lang.anexar"/></h1>
    			</div>
    			<div class="cuadro" style="">
@@ -332,7 +367,7 @@
 		   			<xsl:value-of select="$lang.anexarInfo2"/><br/>
 				</label>
 			<br/><br/>
-			
+
 			<div class="col">
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:200px; text-indent:40px</xsl:attribute>
@@ -396,15 +431,11 @@
 					<xsl:attribute name="value">JPG</xsl:attribute>
 				</input>
 			</div>
-			<br/>
-			<div style="color: grey; text-align:justify">
-				<label class="gr">
-					<xsl:attribute name="style">position: relative; width:650px;</xsl:attribute>
-					Los datos personales, identificativos y de contacto, aportados mediante esta comunicación se entienden facilitados voluntariamente, y serán incorporados a un fichero cuya finalidad es la de mantener con Vd. relaciones dentro del ámbito de las competencias de esta Administración Pública así como informarle de nuestros servicios presentes y futuros ya sea por correo ordinario o por medios telemáticos y enviarle invitaciones para eventos y felicitaciones en fechas señaladas. Entenderemos que presta su consentimiento tácito para este tratamiento de datos si en el plazo de un mes no expresa su voluntad en contra. Podrá ejercer sus derechos de acceso, rectificación, cancelación y oposición ante el Responsable del Fichero, la Diputación Provincial de Ciudad Real en C/ Toledo, 17, 13071 Ciudad Real - España, siempre acreditando conforme a Derecho su identidad en la comunicación. En cumplimiento de la L.O. 34/2002 le informamos de que puede revocar en cualquier momento el consentimiento que nos otorga dirigiéndose a la dirección citada ut supra o bien al correo electrónico lopd@dipucr.es o bien por telefono al numero gratuito 900 714 080.	
-				</label>
-			</div>
    		</div>
    		<br/>
+		<xsl:call-template name="TEXTO_DATOS_PERSONALES_COMUN" />
+   		<br/>
+		<xsl:call-template name="TEXTO_COMPARECE_COMUN" />
    		<input type="hidden">
 			<xsl:attribute name="name">datosEspecificos</xsl:attribute>
 			<xsl:attribute name="id">datosEspecificos</xsl:attribute>
@@ -416,6 +447,8 @@
 			<xsl:attribute name="value"></xsl:attribute>
 		</input>
 		<script language="Javascript">
+			document.getElementById('asociaciones_lbl').innerHTML = '<xsl:value-of select="$lang.mensajePopUps"/>';
+			document.getElementById('mensajeRepresente_lbl').innerHTML = '<xsl:value-of select="$lang.mensajeRepresentante"/>';
 			getRepresentados();
 		</script>
 	</xsl:template>

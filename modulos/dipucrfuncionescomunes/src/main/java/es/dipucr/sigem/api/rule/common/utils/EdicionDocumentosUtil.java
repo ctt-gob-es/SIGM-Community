@@ -68,7 +68,7 @@ public class EdicionDocumentosUtil {
 	 * @param ooHelper Variable privada de clase OpenOfficeHelper.
 	 * @throws ISPACException Debido a errores en la API de SIGEM.
 	 */	
-	public static void Concatena(XComponent xComponent , String file, OpenOfficeHelper ooHelper)throws ISPACException
+	public static void Concatena(XComponent xComponent , String file)throws ISPACException
 	{
 		// La función ooHelper.concatFiles mete saltos de página cuando quiere. 
 		// Yo quiero concatenar a continuación así que no la puedo usar y tengo

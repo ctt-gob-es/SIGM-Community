@@ -20,6 +20,15 @@ public interface DocumentoDao extends BaseDao<DocumentoVO, String> {
 	 * @return Información del documento.
 	 */
 	public DocumentoVO getDocumentoByCSV(String csv);
+	
+	/**
+	 * Obtiene la información del documento a partir del Nombre.
+	 *
+	 * @param nombre
+	 *            Nombre del documento.
+	 * @return Información del documento.
+	 */
+	public DocumentoVO getDocumentoByNombre(String nombredoc);
 
 	/**
 	 * Elimina un documento a partir del CSV

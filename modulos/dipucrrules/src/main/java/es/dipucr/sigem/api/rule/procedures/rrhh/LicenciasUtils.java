@@ -72,4 +72,5 @@ public class LicenciasUtils {
 		variables.put("FECHAS_SOLICITADAS", itemLicencias.getString("FECHAS_SOLICITADAS"));
 		return variables;	
 	}
+	
 }

@@ -96,7 +96,7 @@
 									</td>
 									<td height="20">
 										<ispac:htmlTextarea property="property(SPAC_DT_TRAMITES:OBSERVACIONES)"
-											readonly="false" styleClass="input" rows="2" cols="85" style="color:red"></ispac:htmlTextarea>
+											readonly="false" styleClass="input" rows="6" cols="85" style="color:red"></ispac:htmlTextarea>
 										<!-- [eCenpri-Felipe #467] color rojo: rechazos y reparos-->
 									</td>
 								</tr>

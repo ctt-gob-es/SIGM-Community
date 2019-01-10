@@ -24,7 +24,7 @@
 
 
 - [Dipucr-Manu 28/06/2016] 
-    Instrucciones para montar el código de AL-SIGM, compilarlo y generar el despliegue 
+     Instrucciones para montar el código de AL-SIGM, compilarlo y generar el despliegue 
 completo de la aplicación para poder ser arrancado en un servidor de aplicaciones.
 
 ===================

@@ -30,7 +30,7 @@ public class AplicacionExternaCSVConnectorWS {
 	/**
 	 * Logger de la clase.
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(AplicacionExternaCSVConnectorWS.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AplicacionExternaCSVConnectorWS.class);
 
 	/*
 	 *
@@ -40,8 +40,8 @@ public class AplicacionExternaCSVConnectorWS {
 
 	public boolean existeDocumento(java.lang.String csv, String entidad) throws java.rmi.RemoteException {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("AplicacionExternaCSVConnectorWS - existeDocumento(CSV: [{}], Entidad: [{}]) - Inicio", csv, entidad);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("AplicacionExternaCSVConnectorWS - existeDocumento(CSV: [{}], Entidad: [{}]) - Inicio", csv, entidad);
 		}
 
 		boolean existe = false;
@@ -60,11 +60,11 @@ public class AplicacionExternaCSVConnectorWS {
 			existe = DocumentsHelper.existeDocumento(context, csv);
 
 		} catch (Throwable e){
-			logger.error("Error al comprobar si existe el documento para el CSV: [" + csv + "]", e);
+			LOGGER.error("Error al comprobar si existe el documento para el CSV: [" + csv + "]", e);
 		}
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("AplicacionExternaCSVConnectorWS - existeDocumento(CSV: [{}], Entidad: [{}]) - Fin", csv, entidad);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("AplicacionExternaCSVConnectorWS - existeDocumento(CSV: [{}], Entidad: [{}]) - Fin", csv, entidad);
 		}
 
 		return existe;
@@ -77,8 +77,8 @@ public class AplicacionExternaCSVConnectorWS {
 		// Contenido del documento
 		byte[] content = null;
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("AplicacionExternaCSVConnectorWS - getContenidoDocumento(CSV: [{}], Entidad: [{}]) - Inicio", csv, entidad);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("AplicacionExternaCSVConnectorWS - getContenidoDocumento(CSV: [{}], Entidad: [{}]) - Inicio", csv, entidad);
 		}
 
 		try {
@@ -94,11 +94,11 @@ public class AplicacionExternaCSVConnectorWS {
 			content = DocumentsHelper.getContenidoDocumento(context, csv);
 
 		} catch (Throwable e){
-			logger.error("Error al obtener el contenido del documento con CSV: [" + csv + "]", e);
+			LOGGER.error("Error al obtener el contenido del documento con CSV: [" + csv + "]", e);
 		}
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("AplicacionExternaCSVConnectorWS - getContenidoDocumento(CSV: [{}], Entidad: [{}]) - Fin", csv, entidad);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("AplicacionExternaCSVConnectorWS - getContenidoDocumento(CSV: [{}], Entidad: [{}]) - Fin", csv, entidad);
 		}
 
 		return content;
@@ -117,8 +117,8 @@ public class AplicacionExternaCSVConnectorWS {
 
 		OrganizationUser.setOrganizationUserInfo(info);
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("Establecida la entidad en la sesion de tramitacion: " + idEntidad);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Establecida la entidad en la sesion de tramitacion: " + idEntidad);
 		}
 	}
 
@@ -134,8 +134,8 @@ public class AplicacionExternaCSVConnectorWS {
 		context.setAPI(new InvesflowAPI(context));
 		context.setLocale(new Locale("es", "ES"));
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("Creado el contexto de tramitacion.");
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Creado el contexto de tramitacion.");
 		}
 
 		return context;
@@ -176,7 +176,7 @@ public class AplicacionExternaCSVConnectorWS {
 			try {
 				userIP = InetUtils.getLocalHostAddress();
 			} catch (Exception e) {
-				logger.debug("Error al obtener la IP de LocalHost", e);
+				LOGGER.debug("Error al obtener la IP de LocalHost", e);
 			}
 		}
 

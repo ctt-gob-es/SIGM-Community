@@ -1,6 +1,19 @@
 package es.dipucr.contratacion.rule;
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
+
+import org.apache.log4j.Logger;
+
+import es.dipucr.contratacion.common.DipucrFuncionesComunes;
+import es.dipucr.contratacion.dao.procedure.ContratacionDatosContratoSDAO;
+import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.ITXTransaction;
@@ -14,18 +27,8 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
-
-import org.apache.log4j.Logger;
-
-import es.dipucr.contratacion.dao.procedure.ContratacionDatosContratoSDAO;
-import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
+import ieci.tdw.ispac.ispaclib.db.DbResultSet;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 
 public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
@@ -43,11 +46,11 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
         	generaProcedimientoEspecifico(rulectx);		
 			logger.warn("FIN GenerarProcedimientoAutomaticoEspecifico");
 		} catch (ISPACException e) { 
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
+			logger.error("Error al crear el procedimiento específico de contratación en el expediente "+rulectx.getNumExp()+" - "+e.getMessage(),e);
+			throw new ISPACRuleException("Error al crear el procedimiento específico de contratación en el expediente "+rulectx.getNumExp()+" - "+e.getMessage(),e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
+			logger.error("Error al crear el procedimiento específico de contratación en el expediente "+rulectx.getNumExp()+" - "+e.getMessage(),e);
+			throw new ISPACRuleException("Error al crear el procedimiento específico de contratación en el expediente "+rulectx.getNumExp()+" - "+e.getMessage(),e);
 		}
 		return null;
 	}
@@ -60,6 +63,30 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
 		IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 		ITXTransaction tx = invesflowAPI.getTransactionAPI();
 		
+		
+		boolean booleanProcNuevaLey = false;
+		/*//Compruebo si es procedimiento de la nueva Ley.
+		IItem expediente = ExpedientesUtil.getExpediente(cct, rulectx.getNumExp());
+		if(StringUtils.isNotEmpty(expediente.getString(ExpedientesUtil.CODPROCEDIMIENTO))){
+			String cocProc = expediente.getString(ExpedientesUtil.CODPROCEDIMIENTO);
+			//"TRAM-CONT" -> Tramitación de Contrato (Padre de todos la Tramitación )
+			IItem procTramContrato = ProcedimientosUtil.getProcedimientoByCodPcd(rulectx, "TRAM-CONT");
+			IItem expIniciadoDepartamento = ProcedimientosUtil.getProcedimientoByCodPcd(rulectx, cocProc);
+			if(expIniciadoDepartamento!=null && procTramContrato!=null){
+				int idProcPadreExpIniciado = 0;
+				if(expIniciadoDepartamento.getInt("ID_PADRE")>0){
+					idProcPadreExpIniciado = expIniciadoDepartamento.getInt("ID_PADRE");
+				}
+				int idTramContrato = 0;
+				if(procTramContrato.getInt("ID")>0){
+					idTramContrato = procTramContrato.getInt("ID");
+				}
+				if(idProcPadreExpIniciado == idTramContrato){
+					procNuevaLey = true;
+				}
+			}
+		}*/
+		
 		//Obtengo el procedimiento que le corresponde
 		//Dependiendo de los datos que se han obtenido.
 		String consulta = "WHERE NUMEXP = '"+rulectx.getNumExp()+"'";
@@ -67,11 +94,20 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
         Iterator<IItem> it = collection.iterator();
         String tipo_contrato = "";
         String proc_adjudicacion = "";
+        int cpv = 0;
+        String nuevaLey = "";
         while (it.hasNext()){
         	IItem contrato = (IItem)it.next();
         	tipo_contrato = contrato.getString("TIPO_CONTRATO");
         	proc_adjudicacion = contrato.getString("PROC_ADJ");
+        	cpv = contrato.getInt("ID");
+        	nuevaLey = contrato.getString("NUEVA_LEY");
+        	if(nuevaLey.equals("SI")){
+        		booleanProcNuevaLey = true;
+        	}
         }
+        
+        
         logger.warn("tipo_contrato. "+tipo_contrato);
         logger.warn("proc_adjudicacion. "+proc_adjudicacion);
         String cod_tipo_contrato = "";
@@ -103,6 +139,10 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
             consulta = "WHERE TIPO_CONTRATO = '"+cod_tipo_contrato+"' AND PROCEDIMIENTO_ADJUDICACION='"+cod_proc_adjudicacion+"'";
         }
         
+        if(!booleanProcNuevaLey){
+        	consulta = consulta + " AND NUMEXP='ANTIGUO'";
+        }
+        
         logger.warn(consulta);
 		collection = entitiesAPI.queryEntities("CONTRATACION_RELACION_PROCED", consulta);
         it = collection.iterator();
@@ -112,6 +152,8 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
              	IItem procExpediente = (IItem)it.next();
              	procedimiento = procExpediente.getString("PROCEDIMIENTO_RELACION");
              }
+        	 
+        	 logger.warn("Procedimiento a iniciar. "+procedimiento);
              
      		// Obtener el código de procedimiento para el número de expediente
      		Map<String, String> params = new HashMap<String, String>();
@@ -145,6 +187,8 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
      		registro.set("RELACION", "Petición Contrato");
 
      		registro.store(cct);
+     		
+     		TramitesUtil.cargarObservacionesTramite(cct, true,rulectx.getNumExp(), rulectx.getTaskId(), " Exp.Relacionado: "+numExpHijo);
 
      		
      		cct.endTX(true);
@@ -171,7 +215,16 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
      		 * [Teresa] INICIO Ticket #237#SIGEM Subvenciones importar participantes a proced. de propuesta y decreto
      		 * **/
      		//Importar participantes.
-     		ParticipantesUtil.importarParticipantes(cct, entitiesAPI, rulectx.getNumExp(), numExpHijo);
+     		//Compruebo si es un contrato menor y miro si el CPV corresponde con algún expediente de Registro Contratistas
+     		if(cod_proc_adjudicacion.equals("6")){
+     			if(cpv>0){
+     				DipucrFuncionesComunes.obtenerParticipantesCPV(rulectx, cpv, numExpHijo);     				
+     			}
+     		}
+     		else{
+     			ParticipantesUtil.importarParticipantes(cct, entitiesAPI, rulectx.getNumExp(), numExpHijo);
+     		}
+     		
      		/**
      		 * [Teresa] FIN Ticket #237#SIGEM Subvenciones importar participantes a proced. de propuesta y decreto
      		 * **/
@@ -327,12 +380,17 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
 	private void clonar_tabla_s(IEntitiesAPI entitiesAPI,
 			IRuleContext rulectx, String numExpHijo, ClientContext cct,
 			int[] idDatos, String tablaBD) throws ISPACRuleException {
+		DbCnt cnt = null;
+		DbResultSet rs = null;
 		try{
 			//Inicializa los datos de la CONTRATACION_PETICION
 			logger.warn("INICIO  "+tablaBD);
 	        
 	        String consulta="SELECT FIELD,REG_ID,VALUE FROM "+tablaBD+" WHERE REG_ID = "+idDatos[0]+"";
-	        ResultSet datos = cct.getConnection().executeQuery(consulta).getResultSet();
+	        cnt = cct.getConnection();
+	        rs = cnt.executeQuery(consulta);
+	        
+	        ResultSet datos = rs.getResultSet();
 	        String field = "";
 	        String value = "";
 	        Vector<String[]> valores = new Vector<String[]> ();
@@ -347,7 +405,6 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
 	          		valores.add(vDatos);
 	          	}
 	      	}
-	        DbCnt cnt = cct.getConnection();
 	        
 	        for (int i = 0; i < valores.size(); i++){
 	        	String [] vDatos = (String[])valores.get(i);
@@ -361,11 +418,13 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
 			
 			logger.warn("CREADA "+tablaBD);
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
+			logger.error("Error Numexp "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Error Numexp "+rulectx.getNumExp()+" - "+e.getMessage(), e);
 		} catch (SQLException e) {
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
+			logger.error("Error Numexp "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Error Numexp "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+		} finally {
+			cct.releaseConnection(cnt);
 		}
 		
 	}
@@ -544,6 +603,9 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
 	        String proc_neg_art = null;
 	        String abierto_crit_multip = null;
 	        String provincia_contrato = null;
+	        String presupuestoconimpuestos = null;
+	        String presupuestosinimpuestos = null;
+	        String nuevaLey = null;
 	        
 	        while (it.hasNext()){
 	        	IItem procExpediente = (IItem)it.next();
@@ -557,9 +619,12 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
 	            cont_suj_reg_armo = procExpediente.getString("CONT_SUJ_REG_ARMO");
 	            precio_estimado_contrato = procExpediente.getString("PRECIO_ESTIMADO_CONTRATO");
 	            idDatosContrato = procExpediente.getInt("ID");
+	            presupuestoconimpuestos = procExpediente.getString("PRESUPUESTOCONIMPUESTO");
+	            presupuestosinimpuestos = procExpediente.getString("PRESUPUESTOSINIMPUESTO");
 	            resultado[0] = idDatosContrato;
 	            tram_gasto = procExpediente.getString("TRAM_GASTO");
 	            contrato_sumin = procExpediente.getString("CONTRATO_SUMIN");
+	            nuevaLey = procExpediente.getString("NUEVA_LEY");
 	            if(procExpediente.getString("CARACTERISTICA_BIENES_RENDCUEN")!=null) caracteristicas_bienes= procExpediente.getString("CARACTERISTICA_BIENES_RENDCUEN");
 	            if(procExpediente.getString("PROCNEGARTICULO")!=null) proc_neg_art = procExpediente.getString("PROCNEGARTICULO");
 	            if(procExpediente.getString("ABIERTO_CRITERIOS_MULTIPLES")!=null) abierto_crit_multip=procExpediente.getString("ABIERTO_CRITERIOS_MULTIPLES");
@@ -585,6 +650,9 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
 	            contrato.set("TRAM_GASTO", tram_gasto);
 	            contrato.set("CONTRATO_SUMIN", contrato_sumin);
 	            contrato.set("PRECIO_ESTIMADO_CONTRATO", precio_estimado_contrato);
+	            contrato.set("PRESUPUESTOCONIMPUESTO", presupuestoconimpuestos);
+	            contrato.set("PRESUPUESTOSINIMPUESTO", presupuestosinimpuestos);
+	            contrato.set("NUEVA_LEY", nuevaLey);
 	            if(caracteristicas_bienes!=null)	contrato.set("CARACTERISTICA_BIENES_RENDCUEN", caracteristicas_bienes);
 	            if(proc_neg_art!=null) contrato.set("PROCNEGARTICULO", proc_neg_art);
 	            if(abierto_crit_multip!=null) contrato.set("ABIERTO_CRITERIOS_MULTIPLES", abierto_crit_multip);
@@ -611,37 +679,69 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
 	        String consulta = "WHERE NUMEXP = '"+rulectx.getNumExp()+"'";
 			collection = entitiesAPI.queryEntities("CONTRATACION_PETICION", consulta);
 			Iterator<IItem> it = collection.iterator();
-	        String motivo_peticion = "";
-	        String iva = "";
-	        String presupuesto = "";
-	        String total = "";
-	        String serv_resp = "";
-	        String resp_contrato = "";
-	        String director_obra = "";
-	        while (it.hasNext()){
+			
+	        while (it.hasNext()){        	
+	        	
 	        	IItem procExpediente = (IItem)it.next();
-	        	motivo_peticion = procExpediente.getString("MOTIVO_PETICION");
-	        	iva = procExpediente.getString("IVA");
-	        	presupuesto = procExpediente.getString("PRESUPUESTO");
-	        	total = procExpediente.getString("TOTAL");
-	        	serv_resp = procExpediente.getString("SERVICIO_RESPONSABLE");
-	        	resp_contrato = procExpediente.getString("RESP_CONTRATO");
-	        	director_obra = procExpediente.getString("DIRECTOR_OBRA");
+	        	IItem peticion = entitiesAPI.createEntity("CONTRATACION_PETICION", numExpHijo);
+	        	
+	        	String motivo_peticion = "";
+	        	if(StringUtils.isNotEmpty(procExpediente.getString("MOTIVO_PETICION"))){
+	        		motivo_peticion = procExpediente.getString("MOTIVO_PETICION");
+	        		peticion.set("MOTIVO_PETICION", motivo_peticion);
+	        	}
+	        	
+	        	String iva = "";
+	        	if(StringUtils.isNotEmpty(procExpediente.getString("IVA"))){
+	        		iva = procExpediente.getString("IVA");
+	        		peticion.set("IVA", iva);
+	        	}
+	        	
+	        	String presupuesto = "";
+	        	if(StringUtils.isNotEmpty(procExpediente.getString("PRESUPUESTO"))){
+	        		presupuesto = procExpediente.getString("PRESUPUESTO");
+	        		peticion.set("PRESUPUESTO", presupuesto);
+	        	}
+	        	
+	        	String total = "";
+	        	if(StringUtils.isNotEmpty(procExpediente.getString("TOTAL"))){
+	        		total = procExpediente.getString("TOTAL");
+	        		peticion.set("TOTAL", total);
+	        	}
+	        	
+	        	String serv_resp = "";
+	        	if(StringUtils.isNotEmpty(procExpediente.getString("SERVICIO_RESPONSABLE"))){
+	        		serv_resp = procExpediente.getString("SERVICIO_RESPONSABLE");
+	        		peticion.set("SERVICIO_RESPONSABLE", serv_resp);
+	        	}
+	        	
+	        	String resp_contrato = "";
+	        	if(StringUtils.isNotEmpty(procExpediente.getString("RESP_CONTRATO"))){
+	        		resp_contrato = procExpediente.getString("RESP_CONTRATO");
+	        		peticion.set("RESP_CONTRATO", resp_contrato);
+	        	}
+	        	
+	        	String director_obra = "";
+	        	if(StringUtils.isNotEmpty(procExpediente.getString("DIRECTOR_OBRA"))){
+	        		director_obra = procExpediente.getString("DIRECTOR_OBRA");
+	        		peticion.set("DIRECTOR_OBRA", director_obra);
+	        	}
+	        	
+	        	String tipoContrato = "";
+	        	if(StringUtils.isNotEmpty(procExpediente.getString("TIPO_CONTRATO"))){
+	        		tipoContrato = procExpediente.getString("TIPO_CONTRATO");
+	        		peticion.set("TIPO_CONTRATO",tipoContrato);
+	        	}
+	        	
+	        	
+				if (peticion != null)
+				{					
+					peticion.store(cct);
+				}
+				logger.warn("CREADA CONTRATACION_PETICION ");
 	        }
 	        
-			IItem peticion = entitiesAPI.createEntity("CONTRATACION_PETICION", numExpHijo);
-			if (peticion != null)
-			{
-				peticion.set("MOTIVO_PETICION", motivo_peticion);
-				peticion.set("IVA", iva);
-				peticion.set("PRESUPUESTO", presupuesto);
-				peticion.set("TOTAL", total);
-				peticion.set("SERVICIO_RESPONSABLE", serv_resp);
-				peticion.set("RESP_CONTRATO", resp_contrato);
-				peticion.set("DIRECTOR_OBRA", director_obra);
-				peticion.store(cct);
-			}
-			logger.warn("CREADA CONTRATACION_PETICION ");
+			
 		} catch (ISPACException e) {
 			logger.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);
@@ -682,15 +782,25 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
 	        	if(v_cod_tipo_contrato.length > 0){
 	        		cod_tipo_contrato = v_cod_tipo_contrato[0];
 	        	}
-	        	String [] v_cod_proc_adjudicacion = proc_adjudicacion.split(" - ");
-	        	if(v_cod_proc_adjudicacion.length > 0){
-	        		cod_proc_adjudicacion = v_cod_proc_adjudicacion[0];
+	        	if(proc_adjudicacion!=null){
+	        		String [] v_cod_proc_adjudicacion = proc_adjudicacion.split(" - ");
+		        	if(v_cod_proc_adjudicacion.length > 0){
+		        		cod_proc_adjudicacion = v_cod_proc_adjudicacion[0];
+		        	}
 	        	}
+	        	
 	        	
 	        }
 	        collection = null;
 	        it = null;
-	        consulta = "WHERE TIPO_CONTRATO = '"+cod_tipo_contrato+"' AND PROCEDIMIENTO_ADJUDICACION='"+cod_proc_adjudicacion+"'";
+	        String query_cod_adju = "";
+	        if(!cod_proc_adjudicacion.equals("")){
+	        	query_cod_adju =  " AND PROCEDIMIENTO_ADJUDICACION='"+cod_proc_adjudicacion+"'";
+	        }
+	        else{
+	        	query_cod_adju =  " AND PROCEDIMIENTO_ADJUDICACION IS NULL";
+	        }
+	        consulta = "WHERE TIPO_CONTRATO = '"+cod_tipo_contrato+"'"+query_cod_adju;
 	        logger.warn(consulta);
 			collection = entitiesAPI.queryEntities("CONTRATACION_RELACION_PROCED", consulta);
 	        it = collection.iterator();
@@ -698,6 +808,13 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
 	        	logger.warn("No existe procedimiento aosciado");
 	        	rulectx.setInfoMessage("No puede cerrarse el trámite porque no existe procedimiento asociado");
 	        	cerrar = false;
+	        }else{
+	        	IItem relacionProc = it.next();
+	        	if(StringUtils.isEmpty(relacionProc.getString("PROCEDIMIENTO_RELACION"))){
+	        		logger.warn("No existe procedimiento aosciado");
+		        	rulectx.setInfoMessage("No puede cerrarse el trámite porque no existe procedimiento asociado");
+		        	cerrar = false;
+	        	}
 	        }
 		}catch (ISPACException e) {
 			logger.error(e.getMessage(), e);

@@ -49,49 +49,49 @@
 		<table class="tablaListado">	
 			<tr>
 				<td class="formsTitle">NIF solicitante:</td>
-				<td >P1300000E</td>
+				<td><input type="text" size="100" id="solicitante" name="solicitante" class="inputReadOnly" readonly="true" value='P1300000E'/></td>
 				
 			</tr>
 			<tr>
 				<td class="formsTitle">Nombre solicitante:</td>
-				<td><input maxlength="60" type="text" id="nombreSolicitanteOriginal" readonly="true" value="Diputación Provincial de Ciudad Real"/></td>
+				<td><input maxlength="60" size="100" type="text" id="nombreSolicitanteOriginal" class="inputReadOnly" readonly="true" value="Diputación Provincial de Ciudad Real"/></td>
 			</tr>
 			<tr>
 				<td class="formsTitle">Nombre Funcionario:</td>
-				<td><input type="text" id="nombreFuncionario" name="nombreFuncionario" readonly="true" value='<%=nombreFuncionario%>'/></td>
+				<td><input type="text" size="100" id="nombreFuncionario" name="nombreFuncionario" class="inputReadOnly" readonly="true" value='<%=nombreFuncionario%>'/></td>
 			</tr>
 			<tr>
 				<td class="formsTitle">NIF funcionario:</td>
-				<td><input type="text" id="cifFuncionario" name="cifFuncionario" readonly="true" value='<%=cifFuncionario%>'/></td>
+				<td><input type="text" size="100" id="cifFuncionario" name="cifFuncionario" class="inputReadOnly" readonly="true" value='<%=cifFuncionario%>'/></td>
 			</tr>
 			<tr>
 				<td class="formsTitle">Consentimiento:</td>
-				<td>Si</td>
+				<td><input type="text" size="100" id="consentimiento" name="consentimiento" class="inputReadOnly" readonly="true" value='Si'/></td>
 			</tr>
 			<tr>
 				<td class="formsTitle">Finalidad:</td>
 				<td class="borde">
-					<textarea name="finalidad" id="finalidad" class="inputReadOnly" readonly="true" rows="3" cols="40"><%=sFinalidad%></textarea>
+					<textarea  size="100" name="finalidad" id="finalidad" class="inputReadOnly" readonly="true" rows="3" cols="40"><%=sFinalidad%></textarea>
 				</td>
 			</tr>
 			
 			<tr>
 				<td class="formsTitle">Código procedimiento:</td>
-				<td ><input type="text" id="codigoProcedimiento" name="codigoProcedimiento" readonly="true" value='<%=codigoProcedimiento%>'/></td>
+				<td ><input type="text"  size="100" id="codigoProcedimiento" name="codigoProcedimiento" class="inputReadOnly" readonly="true" value='<%=codigoProcedimiento%>'/></td>
 			</tr>
 			<tr>
 				<td class="formsTitle">Nombre procedimiento:</td>
-				<td ><input type="text" id="nombreProcedimiento" name="nombreProcedimiento" readonly="true" value='<%=nombreProcedimiento%>'/></td>
+				<td ><input type="text"  size="100" id="nombreProcedimiento" name="nombreProcedimiento" class="inputReadOnly" readonly="true" value='<%=nombreProcedimiento%>'/></td>
 			</tr>
 			
 			
 			<tr>
 				<td class="formsTitle">Unidad tramitadora:</td>
-				<td ><input type="text" id="unidadTramitadora" readonly="true" value='<%=unidadTramitadora%>'/></td>
+				<td ><input type="text"  size="100" id="unidadTramitadora" readonly="true" class="inputReadOnly" value='<%=unidadTramitadora%>'/></td>
 			</tr>
 			<tr>
 				<td class="formsTitle">Número de expediente:</td>
-				<td ><input type="text" id="idExpediente" readonly="true" value='<%=numexp%>'/></td>
+				<td ><input type="text"  size="100" id="idExpediente" readonly="true" class="inputReadOnly" value='<%=numexp%>'/></td>
 			</tr>
 		</table>
 		<%
@@ -133,11 +133,27 @@
 					<input type="text" id="documentacion" readonly="true" value='<%=ndocPartic%>'/>
 				</td>
 			</tr>
+			<tr>
+				<font color=#FF0000>Importante rellenar NOMBRE, PRIMER APELLIDO y SEGUNDO APELLIDO</font>
+			<tr>
 			<tr id="trNombre">
-				<td class="formsTitle">Nombre:</td>
+				<td class="formsTitle">Nombre (*):</td>
 				<td >
-					<input type="text" id="nombreCompletoTitular" readonly="true" value='<%=nombrePartic%>'/>
+					<input type="text"  size="100" id="nombre" name="nombre" value='<%=nombrePartic%>'/>
 				</td>
+			</tr>
+			<tr id="tr1Ape">
+				<td class="formsTitle">Primer apellido (*):</td>
+				<td >
+					<input type="text"  size="100" id="priApellido" name="priApellido" value=''/>
+				</td>
+			</tr>
+			<tr id="tr2Ape">
+				<td class="formsTitle">Segundo apellido (*):</td>
+				<td >
+					<input type="text"  size="100" id="segApellido" name="segApellido" value=''/>
+				</td>
+				
 			</tr>
 		</table>
 	</div>
@@ -153,10 +169,7 @@
 				<jsp:include page="datosEspecificosALSGM.jsp" />
 			</div>
 			
-			<div id="datosEspecificosXML" style="display:none">
-				<p>Esta opción le permite establecer los datos específicos a través de un fichero XML, el cual tendrá la estructura del esquema de datos específicos correspondiente al certificado a consultar. </p>
-				<textarea name="datosEspecificos">${strDatosEspecificos}</textarea>
-			</div>
+			
 			</br>
 			<div id="divEnviarPeticion" align="center">
 				<input type="button" value="Enviar petición" id="enviarPeticion" class="form_button_white"

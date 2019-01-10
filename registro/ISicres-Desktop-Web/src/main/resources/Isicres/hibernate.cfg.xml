@@ -36,6 +36,7 @@
         <mapping resource="com/ieci/tecdoc/common/invesdoc/Iuserobjhdr.hbm.xml"/>
         <mapping resource="com/ieci/tecdoc/common/invesdoc/Idoccompusg.hbm.xml"/>
         <mapping resource="com/ieci/tecdoc/common/invesdoc/Iuseruserhdr.hbm.xml"/>
+        <mapping resource="com/ieci/tecdoc/common/invesdoc/Iuserdata.hbm.xml"/>
         <mapping resource="com/ieci/tecdoc/common/invesdoc/Idocsrvstatehdr.hbm.xml"/>
         <mapping resource="com/ieci/tecdoc/common/invesdoc/Idocautonumctlg.hbm.xml"/>
         <mapping resource="com/ieci/tecdoc/common/invesdoc/Ivolfileft.hbm.xml"/>
@@ -189,6 +190,11 @@
         <mapping resource="com/ieci/tecdoc/common/invesicres/ScrPageInfo.hbm.xml"/>
         <mapping resource="com/ieci/tecdoc/common/invesicres/ScrPagerepository.hbm.xml"/>
         <mapping resource="com/ieci/tecdoc/common/invesicres/ScrUsrloc.hbm.xml"/>
+        
+        <mapping resource="com/ieci/tecdoc/common/invesicres/ScrCCAA.hbm.xml"/>
+        <mapping resource="com/ieci/tecdoc/common/invesicres/ScrTramunit.hbm.xml"/>
+        <mapping resource="com/ieci/tecdoc/common/invesicres/ScrModifDoc.hbm.xml"/>
+        <mapping resource="com/ieci/tecdoc/common/invesicres/ScrDocumentMetadatos.hbm.xml"/>
         
     </session-factory>
 </hibernate-configuration>

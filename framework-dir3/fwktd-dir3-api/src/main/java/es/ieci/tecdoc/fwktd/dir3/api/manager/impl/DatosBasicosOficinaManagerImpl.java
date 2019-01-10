@@ -103,19 +103,16 @@ public class DatosBasicosOficinaManagerImpl extends
 			oficina = itr.next();
 
 			// Buscamos datos sobre la oficina
-			DatosBasicosOficinaVO datosBasicosOficina = getDatosBasicosOficinaByCode(oficina
-					.getDatosIdentificativos().getCodigoOficina());
+			DatosBasicosOficinaVO datosBasicosOficina = getDatosBasicosOficinaByCode(oficina.getDatosIdentificativos().getCodigoOficina());
 
 			if (null != datosBasicosOficina) {
 				// Actualizamos o Borramos
-				actualizarOBorrarDatosBasicosOficina(oficina,
-						datosBasicosOficina);
+				actualizarOBorrarDatosBasicosOficina(oficina, datosBasicosOficina);
 			} else {
 				// Guardamos datos
 				guardarDatosBasicosOficina(oficina);
 			}
 		}
-
 	}
 
 	/**

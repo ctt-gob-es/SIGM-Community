@@ -50,7 +50,18 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>DipucrRules</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr.contratacion</groupId>
+		  	<artifactId>Contratacion</artifactId>
+  			<version>3.0</version>
+  		</dependency>
 	</dependencies>
 
 	<build>

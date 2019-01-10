@@ -20,6 +20,7 @@ import ieci.tdw.ispac.ispacweb.api.IScheme;
 import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
 import ieci.tdw.ispac.ispacweb.api.ManagerState;
+import ieci.tdw.ispac.ispacweb.api.impl.states.ExpedientState;
 import ieci.tdw.ispac.ispacweb.api.impl.states.SubProcessState;
 
 import java.util.HashMap;
@@ -80,10 +81,13 @@ public class ShowSubProcessAction extends BaseAction {
             request.getSession(false).removeAttribute("userLock");
         }
         else {
-            String username = ((SubProcessState)state).getLockedActivityUser(cct, state.getActivityId());
-            //Insertamos el atributo que indica el usuario que tiene bloqueado 
-            //el expediente
-            request.getSession(false).setAttribute("userLock",username);            
+            //INICIO [dipucr-Felipe #427]
+			// Insertamos el atributo que indica el usuario que tiene bloqueado el expediente
+			if (StateContext.READONLYREASON_LOCK == state.getReadonlyReason()){
+				String username = ((SubProcessState)state).getLockedActivityUser(cct);
+				request.setAttribute(ActionsConstants.LOCKUSERNAME, " por " + username);
+			}
+			//FIN [dipucr-Felipe #427]
         }
 
         //////////////////////////////////////////////////////////////////////

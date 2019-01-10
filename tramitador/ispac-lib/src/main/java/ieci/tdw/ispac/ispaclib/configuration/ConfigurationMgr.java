@@ -1,26 +1,28 @@
 package ieci.tdw.ispac.ispaclib.configuration;
 
 import ieci.tdw.ispac.api.IEntitiesAPI;
+import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.entities.SpacEntities;
 import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.api.impl.InvesflowAPI;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.item.Properties;
 import ieci.tdw.ispac.api.item.Property;
 import ieci.tdw.ispac.api.item.util.ListCollection;
 import ieci.tdw.ispac.ispaclib.bean.CollectionBean;
+import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.item.GenericItem;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.sql.Types;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
 
 /**
@@ -29,6 +31,8 @@ import org.apache.struts.util.MessageResources;
  */
 public class ConfigurationMgr {
     
+	private static final Logger LOGGER = Logger.getLogger(ConfigurationMgr.class);
+	
     //--------------------------------------------------------------------------------------------------
     // Variables Globales
     //--------------------------------------------------------------------------------------------------
@@ -76,10 +80,17 @@ public class ConfigurationMgr {
     public static String getVarGlobal(IClientContext cct, String varName) throws ISPACException {
 		
     	String valor = "";
-		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+    	
+    	IInvesflowAPI invesFlowAPI = null;
+    	
+    	if (null == cct.getAPI()) {
+			invesFlowAPI = new InvesflowAPI((ClientContext) cct);
+		} else {
+			invesFlowAPI = cct.getAPI();
+		}
+		IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 
-		IItemCollection collection = entitiesAPI.queryEntities(SpacEntities.SPAC_VARS, "WHERE NOMBRE = '"
-						+ DBUtil.replaceQuotes(varName) + "'");
+		IItemCollection collection = entitiesAPI.queryEntities(SpacEntities.SPAC_VARS, "WHERE NOMBRE = '" + DBUtil.replaceQuotes(varName) + "'");
 		Iterator it = collection.iterator();
 		if (it.hasNext()) {
 			valor = ((IItem) it.next()).getString("VALOR");
@@ -100,13 +111,18 @@ public class ConfigurationMgr {
 	}
 
     public static boolean getVarGlobalBoolean(IClientContext cct, String varName, boolean defaultValue) throws ISPACException {
-    	String value = getVarGlobal(cct, varName);
+    	try{
+    		String value = getVarGlobal(cct, varName);
     	
-    	if (StringUtils.equalsIgnoreCase(value, "si") || StringUtils.equalsIgnoreCase(value, "yes") || StringUtils.equalsIgnoreCase(value, "true")){
-    		return true;
-    	}else if (StringUtils.equalsIgnoreCase(value, "no") || StringUtils.equalsIgnoreCase(value, "false")){
-    		return false;
+    		if (StringUtils.equalsIgnoreCase(value, "si") || StringUtils.equalsIgnoreCase(value, "yes") || StringUtils.equalsIgnoreCase(value, "true")){
+    			return true;
+    		}else if (StringUtils.equalsIgnoreCase(value, "no") || StringUtils.equalsIgnoreCase(value, "false")){
+    			return false;
+    		}
+    	} catch(Exception e){
+    		LOGGER.info("ERROR. Se devuelve el valor por defecto si da error. " + e.getMessage(), e);
     	}
+    	
     	return defaultValue;
     }
     

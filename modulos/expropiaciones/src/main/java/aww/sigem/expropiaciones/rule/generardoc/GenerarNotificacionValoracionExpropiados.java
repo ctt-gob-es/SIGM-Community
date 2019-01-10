@@ -286,7 +286,7 @@ public class GenerarNotificacionValoracionExpropiados implements IRule {
 							entityDocumentT.delete(cct);
 							deleteFile(sFileTemplate);
 
-						} catch (Throwable e) {
+						} catch (Exception e) {
 
 							String message = "exception.documents.generate";
 							String extraInfo = null;

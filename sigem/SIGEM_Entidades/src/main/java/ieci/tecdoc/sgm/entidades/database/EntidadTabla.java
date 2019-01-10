@@ -35,7 +35,13 @@ public class EntidadTabla {
    private static final String CN_NOMBRECORTO = "nombreCorto";
    private static final String CN_NOMBRELARGO = "nombreLargo";
    private static final String CN_CODIGOINE = "codigo_ine";
-   private static final String ALL_COLUMN_NAMES = CN_ID + SEPARATOR + CN_NOMBRECORTO + SEPARATOR + CN_NOMBRELARGO + SEPARATOR + CN_CODIGOINE;
+   private static final String CN_PASSWORDENTIDAD = "password_entidad";
+   private static final String CN_CIF = "cif";
+   private static final String CN_DIR3 = "dir3";
+   private static final String CN_SIA = "sia";
+   private static final String CN_DEH = "deh";
+   private static final String ALL_COLUMN_NAMES = CN_ID + SEPARATOR + CN_NOMBRECORTO + SEPARATOR + CN_NOMBRELARGO + SEPARATOR + CN_CODIGOINE + SEPARATOR + CN_PASSWORDENTIDAD + SEPARATOR + CN_CIF + SEPARATOR + CN_DIR3 + SEPARATOR + CN_SIA + SEPARATOR + CN_DEH;
+
    private static final String MAX_ID_ENTIDAD = "max (" + CN_ID + ")";
 
 
@@ -52,7 +58,9 @@ public class EntidadTabla {
     * @return El nombre de las columnas separados por comas.
     */
    public String getUpdateColumnNames() {
-	  StringBuffer sbAux = new StringBuffer(CN_NOMBRECORTO).append(SEPARATOR).append(CN_NOMBRELARGO).append(SEPARATOR).append(CN_CODIGOINE);
+
+	  StringBuffer sbAux = new StringBuffer(CN_NOMBRECORTO).append(SEPARATOR).append(CN_NOMBRELARGO).append(SEPARATOR).append(CN_CODIGOINE).append(SEPARATOR).append(CN_PASSWORDENTIDAD).append(SEPARATOR).append(CN_CIF).append(SEPARATOR).append(CN_DIR3).append(SEPARATOR).append(CN_SIA).append(SEPARATOR).append(CN_DEH);
+
 	  return sbAux.toString();
    }
 
@@ -103,7 +111,7 @@ public class EntidadTabla {
    public String getCodigoINEColumnName(){
      return CN_CODIGOINE;
    }
-
+   
    /**
     * Devuelve el nombre de la columna para obtener el identificador
     * @return String Nombre de la columna para max identificador
@@ -111,8 +119,82 @@ public class EntidadTabla {
    public String getMaxIdEntidad(){
      return MAX_ID_ENTIDAD;
    }
+   
+   
+   /**
+    * Devuelve el nombre de la columna código id
+    * @return
+    */
+   public static String getCnId() {
+	return CN_ID;
+   }
 
    /**
+    *  Devuelve el nombre de la columna código Nombrecorto
+    * @return
+    */
+	public static String getCnNombrecorto() {
+		return CN_NOMBRECORTO;
+	}
+	
+	/**
+	 *  Devuelve el nombre de la columna código Nombrelargo
+	 * @return
+	 */
+	public static String getCnNombrelargo() {
+		return CN_NOMBRELARGO;
+	}
+	
+	/**
+	 *  Devuelve el nombre de la columna código Codigoine
+	 * @return
+	 */
+	public static String getCnCodigoine() {
+		return CN_CODIGOINE;
+	}
+	
+	/**
+	 *  Devuelve el nombre de la columna código Passwordentidad
+	 * @return
+	 */
+	public static String getCnPasswordentidad() {
+		return CN_PASSWORDENTIDAD;
+	}
+	
+	/**
+	 *  Devuelve el nombre de la columna código Cif
+	 * @return
+	 */
+	public static String getCnCif() {
+		return CN_CIF;
+	}
+	
+	/**
+	 *  Devuelve el nombre de la columna código Dir3
+	 * @return
+	 */
+	public static String getCnDir3() {
+		return CN_DIR3;
+	}
+	
+	/**
+	 *  Devuelve el nombre de la columna código Sia
+	 * @return
+	 */
+	public static String getCnSia() {
+		return CN_SIA;
+	}
+	
+	/**
+	 *  Devuelve el nombre de la columna código Deh
+	 * @return
+	 */
+	public static String getCnDeh() {
+		return CN_DEH;
+	}
+
+
+/**
     * Devuelve la clausula de consulta por id
     * @param id Valor del campo id
     * @return String Clausula de consulta por id

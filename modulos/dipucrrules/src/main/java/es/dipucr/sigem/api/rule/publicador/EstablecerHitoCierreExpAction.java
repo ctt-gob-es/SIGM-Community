@@ -96,7 +96,7 @@ public class EstablecerHitoCierreExpAction extends SigemBaseAction {
 
 	        // Log del hito
 	        logOk(hito);
-        } catch (Throwable e) {
+        } catch (Exception e) {
         	setInfo("Error al establecer hito actual: " + e.toString());
         	logError(hito, e);
             throw new ActionException(e);
@@ -198,7 +198,7 @@ public class EstablecerHitoCierreExpAction extends SigemBaseAction {
 		} catch (ConsultaExcepcion e) {
 			logger.error("Error cerrando expediente.", e);
 			throw getConsultaExpedientesException(e);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Error cerrando expediente.", e);
 			throw new ConsultaExpedientesException(ConsultaExpedientesException.EXC_GENERIC_EXCEPCION, e);
 		}

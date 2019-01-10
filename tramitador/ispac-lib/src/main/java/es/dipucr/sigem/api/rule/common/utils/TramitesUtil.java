@@ -31,11 +31,53 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 public class TramitesUtil {
 
 	/** Logger de la clase. */
-	protected static final Logger logger = Logger.getLogger(TramitesUtil.class);
+	protected static final Logger LOGGER = Logger.getLogger(TramitesUtil.class);
 	
 	public static final String SEPARADOR_PROPIEDADES_DATOS_ESPECIFICOS = "##";
 	public static final String CORREOS_FIN_TRAMITE = "CORREOS_FIN_TRAMITE";
 	
+	public static final String SPAC_DT_TRAMITES = "SPAC_DT_TRAMITES";
+	public static final String SPAC_DT_TRAMITES_H = "SPAC_DT_TRAMITES_H";
+	
+	//Mapeo de las columnas de la tablas SPAC_DT_TRAMITES y SPAC_DT_TRAMITES_H
+	public static final String NUMEXP = "NUMEXP";
+	public static final String ID_TRAM_PCD = "ID_TRAM_PCD";
+	public static final String NOMBRE = "NOMBRE";
+	public static final String FECHA_CIERRE = "FECHA_CIERRE";
+	
+	
+	//Mapeo de las propiedades que se incluyen en los datos específicos.
+	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA1 = "TABLA1";
+	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA2 = "TABLA2";
+	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA3 = "TABLA3";
+	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA4 = "TABLA4";
+	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA5 = "TABLA5";
+	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA6 = "TABLA6";
+	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA7 = "TABLA7";
+	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA8 = "TABLA8";
+	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA9 = "TABLA9";
+	
+	public static void cargarObservacionesTramite (ClientContext cct, boolean campoFormateo, String numexp, int tramite, String texto) throws ISPACRuleException, ISPACException{
+		try{
+	        IItem itTram = TramitesUtil.getTramite(cct, numexp, tramite);
+			String observaciones = "";
+			if(StringUtils.isNotEmpty(itTram.getString("OBSERVACIONES"))){
+				observaciones = itTram.getString("OBSERVACIONES");			
+			}
+			if(campoFormateo){
+				observaciones=texto;
+			}
+			else{
+				observaciones=observaciones+"\n"+texto;
+			}
+			itTram.set("OBSERVACIONES", observaciones);
+			itTram.store(cct);
+		
+		} catch(ISPACException e){
+			LOGGER.error("Error al cargar las observaciones en el numExp " + numexp+ " . " + e.getMessage(), e);
+			throw new ISPACException("Error al cargar las observaciones en el numExp " + numexp+ " . " + e.getMessage(), e);
+		}
+	}
 	public static IItem getPTramiteById (IRuleContext rulectx, int idTramite) throws ISPACRuleException{
 		IClientContext cct = rulectx.getClientContext();
 		return getPTramiteById(cct, idTramite);
@@ -56,26 +98,30 @@ public class TramitesUtil {
 	        	itTramite = (IItem)it.next();
 	        }
 		} catch(Exception e){
-			logger.error("Error al recuperar el trámite con id " + idTramite+ " . " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar el trámite con id " + idTramite+ " . " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al recuperar el trámite con id " + idTramite+ " . " + e.getMessage(), e);
 		}
 		
 		return itTramite;		
 	}
 	
-	public static IItem getTramiteByCode (IRuleContext rulectx, String codTramite) throws ISPACRuleException{
+	@Deprecated
+	public static IItem getTramiteByCode (IRuleContext rulectx, String codTramite) throws ISPACRuleException {
+		return getTramiteByCode(rulectx.getClientContext(), rulectx.getNumExp(), codTramite);
+	}
+		
+	public static IItem getTramiteByCode (IClientContext cct, String numexp, String codTramite) throws ISPACRuleException {
 		IItem itTramite  = null;
 		
 		try{
 			//----------------------------------------------------------------------------------------------
-	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 	        //----------------------------------------------------------------------------------------------
 		
 			//Obtenemos el id del trámite de "Preparación del Anuncio" en el Catálogo a partir de su código
 			String strQuery = "WHERE COD_TRAM = '"+ codTramite +"'";
-			logger.debug("strQuery: "+strQuery);
+			LOGGER.debug("strQuery: "+strQuery);
 			IItemCollection collection = entitiesAPI.queryEntities("SPAC_CT_TRAMITES", strQuery);
 			Iterator<?> it = collection.iterator();
 	        if (it.hasNext()){
@@ -85,8 +131,8 @@ public class TramitesUtil {
 	        }
 	        
 		} catch(Exception e){
-			logger.error("Error al crear el trámite " + codTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error al crear el trámite " + codTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+			LOGGER.error("Error al crear el trámite " + codTramite + " en el expediente " + numexp + ". " + e.getMessage(), e);
+			throw new ISPACRuleException("Error al crear el trámite " + codTramite + " en el expediente " + numexp + ". " + e.getMessage(), e);
 		}
 		
 		
@@ -113,7 +159,7 @@ public class TramitesUtil {
 			
 			//Obtenemos el id del trámite de "Preparación del Anuncio" en el Catálogo a partir de su código
 			String strQuery = "WHERE COD_TRAM = '"+ codTramite +"'";
-			logger.debug("strQuery: "+strQuery);
+			LOGGER.debug("strQuery: "+strQuery);
 			IItemCollection collection = entitiesAPI.queryEntities("SPAC_CT_TRAMITES", strQuery);
 			Iterator it = collection.iterator();
 	        if (it.hasNext()){
@@ -125,7 +171,7 @@ public class TramitesUtil {
 			//Obtenemos el id de la fase actual "Preparación" en el procedimiento, no en el catálogo
 	        int idStagePcd = 0;
 	        strQuery = "WHERE ID = '"+ stageId +"'";
-			logger.debug("strQuery: "+strQuery);
+			LOGGER.debug("strQuery: "+strQuery);
 	        collection = entitiesAPI.queryEntities(SpacEntities.SPAC_FASES, strQuery);
 	        it = collection.iterator();
 	        if (it.hasNext()){
@@ -137,7 +183,7 @@ public class TramitesUtil {
 			//Obtenemos el id del trámite de "Preparación del Anuncio" en el procedimiento, no en el catálogo
 	        int idTaskPcd = 0;
 	        strQuery = "WHERE ID_FASE = '"+ idStagePcd +"' AND ID_CTTRAMITE = '"+ taskIdCat +"'";
-			logger.debug("strQuery: "+strQuery);
+			LOGGER.debug("strQuery: "+strQuery);
 	        collection = entitiesAPI.queryEntities(SpacEntities.SPAC_P_TRAMITES, strQuery);
 	        it = collection.iterator();
 	        if (it.hasNext()){
@@ -150,7 +196,49 @@ public class TramitesUtil {
 			idTask = tx.createTask(stageId, idTaskPcd);
 			
 		} catch(Exception e){
-			logger.error("Error al crear el trámite " + codTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+			LOGGER.error("Error al crear el trámite " + codTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+			throw new ISPACRuleException("Error al crear el trámite " + codTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+		}
+		
+		return idTask;
+	}
+	
+	public static int crearTramiteDesdeRegistro(String codTramite, IRuleContext rulectx) throws ISPACRuleException{
+		
+		int idTask = Integer.MIN_VALUE;
+		
+		try{
+			//----------------------------------------------------------------------------------------------
+	        ClientContext cct = (ClientContext) rulectx.getClientContext();
+	        IInvesflowAPI invesFlowAPI = cct.getAPI();
+	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+			ITXTransaction tx = invesFlowAPI.getTransactionAPI();
+	        //----------------------------------------------------------------------------------------------
+			
+			IItem itemCtTramite = TramitesUtil.getTramiteByCode(rulectx, codTramite);
+			String nombreTramite = itemCtTramite.getString("NOMBRE");
+			
+			String strQuery = null;
+			IItemCollection collection = null;
+			int pid = rulectx.getProcessId();
+			
+			//Necesitamos sacar la fase y la fasePcd, que no vienen en el contexto
+			IItemCollection stages = invesFlowAPI.getStagesProcess(pid);
+			IItem itemFase = (IItem) stages.toList().get(0);
+			int idFase = Integer.valueOf(itemFase.getString("ID_FASE_BPM"));
+			int idFasePcd = itemFase.getInt("ID_FASE");
+			
+			//Obtenemos primero el id del trámite en el diseño, tabla spac_p_tramites
+			strQuery = "WHERE ID_FASE = " + idFasePcd + " AND NOMBRE = '" + nombreTramite + "'";
+			collection = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_P_TRAMITES, strQuery);
+			IItem itemTramite = (IItem)collection.iterator().next();
+			int idTramitePcd = itemTramite.getInt("ID"); 
+			
+			//Creamos el trámite
+			tx.createTask(idFase, idTramitePcd);
+			
+		} catch(Exception e){
+			LOGGER.error("Error al crear el trámite " + codTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al crear el trámite " + codTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
 		}
 		
@@ -200,7 +288,7 @@ public class TramitesUtil {
 	        }
 	        
 	        strQuery = "WHERE ID_FASE="+Id_fase_spac_p_tramites+" AND ID_CTTRAMITE = '"+ taskIdCat +"'";
-			logger.debug("strQuery: "+strQuery);
+			LOGGER.debug("strQuery: "+strQuery);
 	        collection = entitiesAPI.queryEntities(SpacEntities.SPAC_P_TRAMITES, strQuery);
 	        it = collection.iterator();
 	        int idTramite = 0;
@@ -215,7 +303,7 @@ public class TramitesUtil {
 			idTask = tx.createTask(idFase, idTramite);
 			
 		} catch(Exception e){
-			logger.error("Error al crear el trámite " + codTramite + " en el expediente " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al crear el trámite " + codTramite + " en el expediente " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al crear el trámite " + codTramite + " en el expediente " + numexp + ". " + e.getMessage(), e);
 		}
 		
@@ -242,7 +330,7 @@ public class TramitesUtil {
 			
 			//Obtenemos el id del trámite de "Preparación del Anuncio" en el Catálogo a partir de su código
 			String strQuery = "WHERE ID = "+ idTramite +"";
-			logger.debug("strQuery: "+strQuery);
+			LOGGER.debug("strQuery: "+strQuery);
 			IItemCollection collection = entitiesAPI.queryEntities("SPAC_CT_TRAMITES", strQuery);
 			Iterator it = collection.iterator();
 	        if (it.hasNext()){
@@ -254,7 +342,7 @@ public class TramitesUtil {
 			//Obtenemos el id de la fase actual "Preparación" en el procedimiento, no en el catálogo
 	        int idStagePcd = 0;
 	        strQuery = "WHERE ID = '"+ stageId +"'";
-			logger.debug("strQuery: "+strQuery);
+			LOGGER.debug("strQuery: "+strQuery);
 	        collection = entitiesAPI.queryEntities(SpacEntities.SPAC_FASES, strQuery);
 	        it = collection.iterator();
 	        if (it.hasNext()){
@@ -266,7 +354,7 @@ public class TramitesUtil {
 			//Obtenemos el id del trámite de "Preparación del Anuncio" en el procedimiento, no en el catálogo
 	        int idTaskPcd = 0;
 	        strQuery = "WHERE ID_FASE = '"+ idStagePcd +"' AND ID_CTTRAMITE = '"+ taskIdCat +"'";
-			logger.debug("strQuery: "+strQuery);
+			LOGGER.debug("strQuery: "+strQuery);
 	        collection = entitiesAPI.queryEntities(SpacEntities.SPAC_P_TRAMITES, strQuery);
 	        it = collection.iterator();
 	        if (it.hasNext()){
@@ -279,7 +367,7 @@ public class TramitesUtil {
 			idTask = tx.createTask(stageId, idTaskPcd);
 			
 		} catch(Exception e){
-			logger.error("Error al crear el trámite " + idTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+			LOGGER.error("Error al crear el trámite " + idTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al crear el trámite " + idTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
 		}
 		
@@ -292,8 +380,51 @@ public class TramitesUtil {
 	 * @param rulectx
 	 * @throws ISPACRuleException
 	 */
-	@SuppressWarnings("rawtypes")
+	@Deprecated
 	public static void cerrarTramite(int idTramite, IRuleContext rulectx) throws ISPACRuleException{
+		cerrarTramite(rulectx.getClientContext(), idTramite, rulectx.getNumExp());
+	}
+	
+	/**
+	 * Cierra el trámite a partir de su id
+	 * @param idTramBpm
+	 * @param rulectx
+	 * @throws ISPACRuleException
+	 */
+	public static void cerrarTramite(IClientContext cct, int idTramite, String numexp) throws ISPACRuleException{
+		
+		try{
+			//----------------------------------------------------------------------------------------------
+	        IInvesflowAPI invesFlowAPI = cct.getAPI();
+	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+			ITXTransaction tx = invesFlowAPI.getTransactionAPI();
+	        //----------------------------------------------------------------------------------------------
+			
+			//Cerramos el trámite
+	        String strQuery = "WHERE ID = '" + idTramite + "'";
+	        IItemCollection collectionTrams = entitiesAPI.queryEntities("SPAC_TRAMITES", strQuery);
+	        Iterator<?> itTrams = collectionTrams.iterator();
+        	IItem tram = null;
+	        if (itTrams.hasNext()){
+	        	tram = ((IItem)itTrams.next());
+	        	int idTram = tram.getInt("ID");
+	        	tx.closeTask(idTram);
+	        }
+			
+		} catch(Exception e) {
+			LOGGER.error("Error al cerrar el trámite " + idTramite + " en el expediente " + numexp + ". " + e.getMessage(), e);
+			throw new ISPACRuleException("Error al cerrar el trámite " + idTramite + " en el expediente " + numexp + ". " + e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * Tramites abiertos
+	 * @param query
+	 * @param rulectx
+	 * @throws ISPACRuleException
+	 */
+	@SuppressWarnings("rawtypes")
+	public static IItemCollection tramitesAbiertos(IRuleContext rulectx, String query) throws ISPACRuleException{
 		
 		try{
 			//----------------------------------------------------------------------------------------------
@@ -304,8 +435,7 @@ public class TramitesUtil {
 	        //----------------------------------------------------------------------------------------------
 			
 			//Cerramos el trámite
-	        String strQuery = "WHERE ID='" + idTramite + "'";
-	        IItemCollection collectionTrams = entitiesAPI.queryEntities("SPAC_TRAMITES", strQuery);
+	        IItemCollection collectionTrams = entitiesAPI.queryEntities("SPAC_TRAMITES", query);
 	        Iterator itTrams = collectionTrams.iterator();
         	IItem tram = null;
 	        if (itTrams.hasNext()) 
@@ -314,11 +444,13 @@ public class TramitesUtil {
 	        	int idTram = tram.getInt("ID");
 	        	tx.closeTask(idTram);
 	        }
+	        return collectionTrams;
 			
 		} catch(Exception e){
-			logger.error("Error al cerrar el trámite " + idTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error al cerrar el trámite " + idTramite + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+			LOGGER.error("Error en la consulta " + query + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+			throw new ISPACRuleException("Error en la consulta " + query + " en el expediente " + rulectx.getNumExp() + ". " + e.getMessage(), e);
 		}
+		
 	}
 	
 	
@@ -352,7 +484,7 @@ public class TramitesUtil {
 	        return codTram;
 			
 		} catch(Exception e){
-			logger.error("Error al recuperar el código del trámite " + idTramiteCtl + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar el código del trámite " + idTramiteCtl + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al recuperar el código del trámite " + idTramiteCtl + ". " + e.getMessage(), e);
 		}
 	}
@@ -369,18 +501,18 @@ public class TramitesUtil {
 		try{
 			IClientContext cct = rulectx.getClientContext();
 			
-	        IItemCollection tramitesCollection = TramitesUtil.getTramites(cct, rulectx.getNumExp(), "NOMBRE = '" + nombreTramite + "'", "");
+	        IItemCollection tramitesCollection = TramitesUtil.getTramites(cct, rulectx.getNumExp(), " NOMBRE = '" + nombreTramite + "'", "");
 	        for(Object tramiteItem : tramitesCollection.toList()){
 	        	//Parece que existe pero puede ser este mismo trámite
 	        	String strId = ((IItem)tramiteItem).getString("ID");
 	        	int id = Integer.parseInt(strId);
 	        	existe = id != rulectx.getTaskId();
 	        }
-		}
-		catch(Exception e)
-		{
-			throw new ISPACException(e); 	
-		}
+	        
+		} catch(Exception e) {
+            LOGGER.error("Error al obtener el existeTramite. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+            throw new ISPACException("Error al obtener el existeTramite. "+rulectx.getNumExp()+" - "+e.getMessage(), e);        
+        }
 		
 		return existe;
 	}
@@ -425,6 +557,24 @@ public class TramitesUtil {
 		tramite_nuevo.set("ID_RESP_CLOSED", tramite_viejo.getString("ID_RESP_CLOSED"));
 
 		tramite_nuevo.store(cct);
+	}
+	
+	public static IItem getTramite(IClientContext cct, String numexp, int idTramite)throws ISPACException{
+		IItem resultado = null;
+		
+		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+		
+		IItemCollection tramites = entitiesAPI.getEntities(Constants.TABLASBBDD.SPAC_DT_TRAMITES, numexp, "ID_TRAM_EXP="+idTramite);	        
+		
+		if(tramites == null || tramites.toList().size() == 0){
+			tramites = entitiesAPI.getEntities(Constants.TABLASBBDD.SPAC_DT_TRAMITES_H, numexp, "ID_TRAM_EXP="+idTramite);	        
+		}
+		Iterator <?> itTramites = tramites.iterator();
+		if(itTramites.hasNext()){
+			resultado = (IItem) itTramites.next();
+		}
+
+		return resultado;
 	}
 	
 	public static IItemCollection getTramites(IClientContext cct, String numexp)throws ISPACException{
@@ -481,7 +631,7 @@ public class TramitesUtil {
 			resultado = new ListCollection(part);
 		}
 		catch(Exception e){
-			logger.error("Error al recuperar los trámites. consulta: " + consulta + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar los trámites. consulta: " + consulta + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar los trámites. " + e.getMessage(), e);
 		}
 		
@@ -506,7 +656,7 @@ public class TramitesUtil {
 						.next()).getString("OTROS_DATOS");
 			}
 		} catch (Exception e) {
-			logger.error("ERROR al recuperar los datos específicos del trámite. "	+ e.getMessage(), e);
+			LOGGER.error("ERROR al recuperar los datos específicos del trámite. "	+ e.getMessage(), e);
 		}
 		return otrosDatos;
 	}
@@ -537,7 +687,7 @@ public class TramitesUtil {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("ERROR al recuperar la propiedad " + procedureTaskId + " de los datos específicos del trámite " + procedureTaskId + ".	" + e.getMessage(), e);
+			LOGGER.error("ERROR al recuperar la propiedad " + propiedad + " de los datos específicos del trámite " + procedureTaskId + ".	" + e.getMessage(), e);
 		}
 		return valorPropiedad;
 	}
@@ -555,7 +705,7 @@ public class TramitesUtil {
 		try {
 			sCorreos = TramitesUtil.getPropiedadDatosEspecificos(cct, procedureTaskId, TramitesUtil.CORREOS_FIN_TRAMITE);			
 		} catch (Exception e) {
-			logger.error("ERROR al recuperar los datos específicos del trámite. "	+ e.getMessage(), e);
+			LOGGER.error("ERROR al recuperar los datos específicos del trámite. "	+ e.getMessage(), e);
 		}
 		return sCorreos;
 	}
@@ -572,8 +722,56 @@ public class TramitesUtil {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("ERROR al recuperar los datos específicos del trámite. "	+ e.getMessage(), e);
+			LOGGER.error("ERROR al recuperar los datos específicos del trámite. "	+ e.getMessage(), e);
 		}
 		return lCorreos;
+	}
+	
+	public static int cuentaTramites(IClientContext cct, String numexp, int id_tram_pcd){
+		int numero_tramites = 0;
+		IItemCollection tramitesCollection;
+		try {
+            tramitesCollection = TramitesUtil.getTramites(cct, numexp, TramitesUtil.ID_TRAM_PCD + " = '" + id_tram_pcd +"'", "");
+
+			List<?> tramitesList = tramitesCollection.toList();
+			if(null != tramitesList){
+				numero_tramites = tramitesList.size();
+			}
+		} catch (ISPACException e) {
+			LOGGER.error("ERROR al contar los trámites iguales del expediente: " + numexp + ", " + TramitesUtil.ID_TRAM_PCD  + ": " + id_tram_pcd + ". "	+ e.getMessage(), e);
+		}
+        return numero_tramites;
+	}
+	
+	public static int cuentaTramitesByNombreTramite(IClientContext cct, String numexp, String nombreTramite){
+		int numero_tramites = 0;
+		IItemCollection tramitesCollection;
+		try {
+            tramitesCollection = TramitesUtil.getTramites(cct, numexp, TramitesUtil.NOMBRE + " = '" + nombreTramite + "'", "");
+            List <?> tramitesList = tramitesCollection.toList();
+
+			if(null != tramitesList){
+				numero_tramites = tramitesList.size();
+			}
+		} catch (ISPACException e) {
+			LOGGER.error("ERROR al contar los trámites iguales del expediente: " + numexp + ", " + TramitesUtil.NOMBRE + ": " + nombreTramite + ". "	+ e.getMessage(), e);
+		}
+        return numero_tramites;
+	}
+	public static String getNombreTramite(IClientContext cct, int taskId) {
+		
+		String nombreTramite = "";
+
+		try {
+			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+			IItem processTask = entitiesAPI.getTask(taskId);
+			nombreTramite = processTask.getString(TramitesUtil.NOMBRE);
+			
+		} catch (ISPACException e) {
+			LOGGER.error("ERROR al recuperar el nombre del trámite con id: " + taskId + ". " + e.getMessage(), e);
+			nombreTramite = "";
+		}
+        
+		return nombreTramite;
 	}
 }

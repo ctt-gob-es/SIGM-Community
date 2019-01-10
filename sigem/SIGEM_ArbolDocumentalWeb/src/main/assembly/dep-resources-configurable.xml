@@ -10,5 +10,14 @@
 			<directory>${basedir}/src/main/resources/SIGEM_ArbolDocumentalWeb</directory>
 			<outputDirectory>/SIGEM_ArbolDocumentalWeb</outputDirectory>
 		</fileSet>
+		<!--[Dipucr-Manu Ticket #357] - ALSIGM3 Hacer que todos los módulos de sigem usen las imágenes del tramitador-->
+		<fileSet>
+			<directory>${basedir}/../SIGEM_Tramitacion_Modules/SIGEM_TramitacionWeb/src/main/resources/SIGEM_TramitacionWeb</directory>
+			<!--<directory>${basedir}/src/main/resources/SIGEM_ArbolDocumentalWeb</directory>-->
+			<outputDirectory>/SIGEM_ArbolDocumentalWeb</outputDirectory>
+			<includes>
+				<include>skin*/logos/logo.gif</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 </assembly>

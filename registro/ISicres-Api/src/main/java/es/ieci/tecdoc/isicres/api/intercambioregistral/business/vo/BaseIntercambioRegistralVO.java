@@ -1,5 +1,6 @@
 package es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo;
 
+import java.io.Serializable;
 import java.util.List;
 
 import es.ieci.tecdoc.fwktd.sir.core.vo.TrazabilidadVO;
@@ -8,8 +9,12 @@ import es.ieci.tecdoc.fwktd.sir.core.vo.TrazabilidadVO;
  * Clase base de los vos de intercambio registral
  * 
  */
-public abstract class BaseIntercambioRegistralVO {
+public abstract class BaseIntercambioRegistralVO implements Serializable{
 
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 	private List<TrazabilidadVO> trazas;
 
 	/**

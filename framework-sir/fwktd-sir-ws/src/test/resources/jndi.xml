@@ -1,14 +1,33 @@
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:http-conf="http://cxf.apache.org/transports/http/configuration"
+       xsi:schemaLocation="http://cxf.apache.org/transports/http/configuration
+                           http://cxf.apache.org/schemas/configuration/http-conf.xsd
+                           http://www.springframework.org/schema/beans
+                             http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
 
 	<bean id="jndi" class="org.apache.xbean.spring.jndi.DefaultContext">
 		<property name="entries">
 			<map>
-				<entry key="java:comp/env/jdbc/fwktd-sirDS">
+				<entry key="jdbc/fwktd-sirDS">
+					<!--
+					<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+						destroy-method="close" singleton="false">
+					-->
 					<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-						<property name="driverClassName" value="org.h2.Driver" />
-						<property name="url" value="jdbc:h2:~/fwktd-sir;MVCC=TRUE" />
-						<property name="username" value="fwktdsir" />
-						<property name="password" value="fwktdsir" />
+						<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+						<property name="url" value="jdbc:oracle:thin:@ora-dbdesa10.msc.es:2008:dbdesa10" />
+						<property name="username" value="SIGM_FWKTD_SIR" />
+						<property name="password" value="dessigm09" />
+					</bean>
+				</entry>
+				<entry key="jdbc/fwktd-dir3DS">
+					<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+						<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+						<property name="url" value="jdbc:oracle:thin:@ora-dbdesa10.msc.es:2008:dbdesa10" />
+						<property name="username" value="SIGM_FWKTD_DIR" />
+						<property name="password" value="dessigm09" />
 					</bean>
 				</entry>
 			</map>

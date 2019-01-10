@@ -35,6 +35,7 @@ import es.ieci.tecdoc.isicres.api.audit.business.vo.IsicresAuditoriaValorModific
 import es.ieci.tecdoc.isicres.api.audit.business.vo.events.IsicresAuditEventAccesoAplicacionVO;
 import es.ieci.tecdoc.isicres.api.audit.business.vo.events.IsicresAuditEventAccesoRegistroVO;
 import es.ieci.tecdoc.isicres.api.audit.business.vo.events.IsicresAuditEventCreacionRegistroVO;
+import es.ieci.tecdoc.isicres.api.audit.business.vo.events.IsicresAuditEventFalloAccesoAplicacionVO;
 import es.ieci.tecdoc.isicres.api.audit.business.vo.events.IsicresAuditEventModificacionRegistroVO;
 
 public class ISicresAuditHelper {
@@ -94,6 +95,28 @@ public class ISicresAuditHelper {
 		}
 	}
 
+	/**
+	 * Método que audita el fallo en el acceso a la aplicación
+	 *
+	 * @param user - Datos del usuario logeado
+	 *
+	 */
+	public static void auditarFalloLogin(String user) {
+		try{
+			// Auditamos acceso a la aplicación
+			IsicresAuditoriaManager auditoria = new IsicresAuditoriaManagerImpl();
+
+			// obtenemos el evento
+			IsicresAuditEventFalloAccesoAplicacionVO evento = adapterEventoAuditFalloAccesoAplicacion(
+					user);
+
+			// auditamos
+			auditoria.audit(evento);
+		}catch (Exception e){
+			log.warn("No se ha podido realizar la auditoría de la autenticación de la aplicación", e);
+		}
+	}
+	
 	/**
 	 * Método que audita el acceso de un registro
 	 *
@@ -780,12 +803,16 @@ public class ISicresAuditHelper {
 	private static Element getXMLInteresados(List<FlushFdrInter> inter) {
 		Document document = DocumentHelper.createDocument();
 		Element elementXMLinteresados = document.addElement(XML_INTERESADOS);
-
-		for(Iterator<FlushFdrInter> it = inter.iterator(); it.hasNext();){
-			FlushFdrInter interesado = (FlushFdrInter) it.next();
-
-			getXMLInteresado(elementXMLinteresados, interesado);
+		if (inter != null && inter.size() > 0){
+		    if (inter.get(0) instanceof FlushFdrInter){
+				for(Iterator<FlushFdrInter> it = inter.iterator(); it.hasNext();){
+					FlushFdrInter interesado = (FlushFdrInter) it.next();
+	
+					getXMLInteresado(elementXMLinteresados, interesado);
+				}
+		    }
 		}
+		
 		return elementXMLinteresados;
 	}
 
@@ -887,4 +914,39 @@ public class ISicresAuditHelper {
 		return result;
 	}
 
+	/**
+	 * Método que adapta los datos del usuario con fallo en el logado a los datos necesarios para la auditoria
+	 *
+	 * @param user - Datos del usuario logeado
+	 * @return {@link IsicresAuditEventAccesoAplicacionVO} - Datos del evento de acceso
+	 */
+	private static IsicresAuditEventFalloAccesoAplicacionVO adapterEventoAuditFalloAccesoAplicacion(
+			String user) {
+
+		IsicresAuditEventFalloAccesoAplicacionVO eventoAcceso = new IsicresAuditEventFalloAccesoAplicacionVO();
+
+		AuditContext auditContext = AuditContextHolder.getAuditContext();
+
+		eventoAcceso.setAppId(ISicresAuditConstants.getAppId());
+		eventoAcceso.setAppDescription(ISicresAuditConstants.getAppDescription());
+
+		// Fecha actual
+		eventoAcceso.setFecha(new Date());
+
+		// Id del usuario logado
+		eventoAcceso.setIdUser("-1");
+		// Nombre del usuario logado
+		eventoAcceso.setUser(user);
+
+		if (auditContext != null) {
+			eventoAcceso.setUserHostName(getStringInfoIPHost(auditContext.getUserHost()));
+			eventoAcceso.setUserIp(getStringInfoIPHost(auditContext.getUserIP()));
+		} else {
+			eventoAcceso.setUserHostName(getStringInfoIPHost(null));
+			eventoAcceso.setUserIp(getStringInfoIPHost(null));
+			log.warn("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría. Faltan los siguientes valores por auditar: userHost y userIp");
+		}
+
+		return eventoAcceso;
+	}
 }

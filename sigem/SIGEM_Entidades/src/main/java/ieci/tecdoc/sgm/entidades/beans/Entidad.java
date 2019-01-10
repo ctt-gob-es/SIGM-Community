@@ -1,11 +1,20 @@
 package ieci.tecdoc.sgm.entidades.beans;
 
+/**
+ * @author agustin
+ *
+ */
 public class Entidad {
 
 	private String identificador;
 	private String nombreCorto;
 	private String nombreLargo;
-	private String codigoINE;
+	private String codigo_ine;
+	private String password_entidad;
+	private String cif;
+	private String dir3;
+	private String sia;
+	private String deh;
 	
 	public String getIdentificador() {
 		return identificador;
@@ -25,10 +34,41 @@ public class Entidad {
 	public void setNombreLargo(String nombreLargo) {
 		this.nombreLargo = nombreLargo;
 	}
-	public String getCodigoINE() {
-		return codigoINE;
+	public String getCodigo_ine() {
+		return codigo_ine;
 	}
-	public void setCodigoINE(String codigoINE) {
-		this.codigoINE = codigoINE;
+	public void setCodigo_ine(String codigo_ine) {
+		this.codigo_ine = codigo_ine;
 	}
+	public String getDir3() {
+		return dir3;
+	}
+	public void setDir3(String dir3) {
+		this.dir3 = dir3;
+	}
+	public String getSia() {
+		return sia;
+	}
+	public void setSia(String sia) {
+		this.sia = sia;
+	}
+	public String getDeh() {
+		return deh;
+	}
+	public void setDeh(String deh) {
+		this.deh = deh;
+	}
+	public String getPassword_entidad() {
+		return password_entidad;
+	}
+	public void setPassword_entidad(String password_entidad) {
+		this.password_entidad = password_entidad;
+	}
+	public String getCif() {
+		return cif;
+	}
+	public void setCif(String cif) {
+		this.cif = cif;
+	}
+		
 }

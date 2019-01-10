@@ -17,7 +17,13 @@
 		document.defaultForm.target = "ParentWindow";
 		document.defaultForm.action = "storeEntity.do";
 		document.defaultForm.submit();
-		ispac_needToConfirm = true;
+		var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+		 if (is_chrome){
+		  ispac_needToConfirm = false;
+		 }
+		 else{
+		  ispac_needToConfirm = true;
+		 }
 	}
 
 //--></script>
@@ -47,7 +53,7 @@
 				style="position: absolute; top: 10px; left: 180px; width: 100%;">
 				<nobr>
 					<ispac:htmlTextareaImageFrame property="property(CONTRATACION_CRIT_ADJ:CRIT_ADJ)" readonly="true" readonlyTag="false" 
-					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="80" 
+					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="50" 
 					id="SEARCH_CONTRATACION_CRIT_ADJ:CRIT_ADJ" target="workframe" action="selectListadoCodicePliego.do?atributo=COD_CRITERIO_CODIGO" 
 					image="img/search-mg.gif" titleKeyLink="select.rol" imageDelete="img/borrar.gif" titleKeyImageDelete="title.delete.data.selection" 
 					styleClassDeleteLink="tdlink" confirmDeleteKey="msg.delete.data.selection" showDelete="true" showFrame="true" width="640" height="480" 
@@ -56,6 +62,27 @@
 					</ispac:htmlTextareaImageFrame>
 				</nobr>
 			</div>
+			<div id="label_CONTRATACION_CRIT_ADJ:CRIT_ADJ_SUB"
+				style="position: absolute; top: 10px; left: 520px; width: 210px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm"
+					property="entityApp.label(CONTRATACION_CRIT_ADJ:CRIT_ADJ_SUB)" />
+				:
+			</div>
+			<div id="data_CONTRATACION_CRIT_ADJ:CRIT_ADJ_SUB"
+				style="position: absolute; top: 10px; left: 600px; width: 100%;">
+				<nobr>
+					<ispac:htmlTextareaImageFrame property="property(CONTRATACION_CRIT_ADJ:CRIT_ADJ_SUB)" readonly="true" readonlyTag="false" 
+					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="50" 
+					id="SEARCH_CONTRATACION_CRIT_ADJ:CRIT_ADJ_SUB" target="workframe" action="selectListadoCodicePliego.do?atributo=COD_SUB_CRITERIO_CODIGO" 
+					image="img/search-mg.gif" titleKeyLink="select.rol" imageDelete="img/borrar.gif" titleKeyImageDelete="title.delete.data.selection" 
+					styleClassDeleteLink="tdlink" confirmDeleteKey="msg.delete.data.selection" showDelete="true" showFrame="true" width="640" height="480" 
+					tabindex="113">
+						<ispac:parameter name="SEARCH_CONTRATACION_CRIT_ADJ:CRIT_ADJ_SUB" id="property(CONTRATACION_CRIT_ADJ:CRIT_ADJ_SUB)" property="SUSTITUTO" />
+					</ispac:htmlTextareaImageFrame>
+				</nobr>
+			</div>
+			
 			<div id="label_CONTRATACION_CRIT_ADJ:DESCRIPCION"
 			title="Descripción textual del criterio de adjudicación."
 				style="position: absolute; top: 35px; left: 10px; width: 210px;"
@@ -69,7 +96,7 @@
 				<ispac:htmlText
 					property="property(CONTRATACION_CRIT_ADJ:DESCRIPCION)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="80" maxlength="256">
+					styleClassReadonly="inputReadOnly" size="50" maxlength="256">
 				</ispac:htmlText>
 			</div>
 			<div id="label_CONTRATACION_CRIT_ADJ:PONDERACION"
@@ -85,7 +112,7 @@
 				<ispac:htmlText
 					property="property(CONTRATACION_CRIT_ADJ:PONDERACION)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="80" maxlength="500">
+					styleClassReadonly="inputReadOnly" size="50" maxlength="500">
 				</ispac:htmlText>
 			</div>
 			<div id="label_CONTRATACION_CRIT_ADJ:DESC_PONDERACION"
@@ -101,7 +128,7 @@
 				<ispac:htmlText
 					property="property(CONTRATACION_CRIT_ADJ:DESC_PONDERACION)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="80" maxlength="256">
+					styleClassReadonly="inputReadOnly" size="50" maxlength="256">
 				</ispac:htmlText>
 			</div>
 			<div id="label_CONTRATACION_CRIT_ADJ:EXP_MAT"
@@ -116,7 +143,7 @@
 				style="position: absolute; top: 110px; left: 180px; width: 100%;">
 				<ispac:htmlText property="property(CONTRATACION_CRIT_ADJ:EXP_MAT)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="80" maxlength="256">
+					styleClassReadonly="inputReadOnly" size="50" maxlength="256">
 				</ispac:htmlText>
 			</div>
 			<div id="label_CONTRATACION_CRIT_ADJ:COD_EXP"
@@ -131,7 +158,7 @@
 				style="position: absolute; top: 135px; left: 180px; width: 100%;">
 				<nobr>
 					<ispac:htmlTextareaImageFrame property="property(CONTRATACION_CRIT_ADJ:COD_EXP)" readonly="true" readonlyTag="false" 
-					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="80" 
+					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="50" 
 					id="SEARCH_CONTRATACION_CRIT_ADJ:COD_EXP" target="workframe" action="selectListadoCodicePliego.do?atributo=COD_EXPRESIONES_CALCULO_VAL" 
 					image="img/search-mg.gif" titleKeyLink="select.rol" imageDelete="img/borrar.gif" titleKeyImageDelete="title.delete.data.selection" 
 					styleClassDeleteLink="tdlink" confirmDeleteKey="msg.delete.data.selection" showDelete="true" showFrame="true" width="640" height="480" 
@@ -152,7 +179,7 @@
 				style="position: absolute; top: 160px; left: 180px; width: 100%;">
 				<ispac:htmlText property="property(CONTRATACION_CRIT_ADJ:CANT_MIN)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="80" maxlength="50">
+					styleClassReadonly="inputReadOnly" size="50" maxlength="50">
 				</ispac:htmlText>
 			</div>
 			<div id="label_CONTRATACION_CRIT_ADJ:CANT_MAX"
@@ -167,7 +194,7 @@
 				style="position: absolute; top: 185px; left: 180px; width: 100%;">
 				<ispac:htmlText property="property(CONTRATACION_CRIT_ADJ:CANT_MAX)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="80" maxlength="100">
+					styleClassReadonly="inputReadOnly" size="50" maxlength="100">
 				</ispac:htmlText>
 			</div>
 			<div id="label_CONTRATACION_CRIT_ADJ:IMP_MINIMO"
@@ -183,7 +210,7 @@
 				<ispac:htmlText
 					property="property(CONTRATACION_CRIT_ADJ:IMP_MINIMO)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="80" maxlength="100">
+					styleClassReadonly="inputReadOnly" size="50" maxlength="100">
 				</ispac:htmlText>
 			</div>
 			<div id="label_CONTRATACION_CRIT_ADJ:IMP_MAXIMO"
@@ -199,7 +226,7 @@
 				<ispac:htmlText
 					property="property(CONTRATACION_CRIT_ADJ:IMP_MAXIMO)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="80" maxlength="100">
+					styleClassReadonly="inputReadOnly" size="50" maxlength="100">
 				</ispac:htmlText>
 			</div>
 			<div id="label_CONTRATACION_CRIT_ADJ:DESC_PUJA_MIN"
@@ -215,7 +242,7 @@
 				<ispac:htmlText
 					property="property(CONTRATACION_CRIT_ADJ:DESC_PUJA_MIN)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
-					styleClassReadonly="inputReadOnly" size="80" maxlength="256">
+					styleClassReadonly="inputReadOnly" size="50" maxlength="256">
 				</ispac:htmlText>
 			</div>
 		</div>

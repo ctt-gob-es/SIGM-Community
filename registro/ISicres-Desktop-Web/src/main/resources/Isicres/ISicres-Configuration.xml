@@ -22,6 +22,9 @@
 
 		<!-- Provincia por defecto en las direcciones físicas de los terceros -->
 		<DefaultProvincia>${direccion.provincia.por.defecto}</DefaultProvincia>
+		
+		<!-- País por defecto en las direcciones físicas de los terceros -->
+		<DefaultPais>${direccion.pais.por.defecto}</DefaultPais>
 
 		<Distribution>
 			<!-- Indica si en el listado de distribuciones se mostraran las distribuciones a los
@@ -151,7 +154,6 @@
 			<JasperReportsLib>${reports.jasperreports.lib}</JasperReportsLib>
 		</Reports>
 
-
 	</ISicres-DesktopWeb>
 	<ISicres-Server>
 	    <Authentication>
@@ -261,6 +263,10 @@
 			- 1: Comienza por 1
 		 -->
 		<FirstCollectionsInitValue>1</FirstCollectionsInitValue>
+				
+		<UrlCheckForUpdatesScan>${url.check.for.updates.scan}</UrlCheckForUpdatesScan>
+		<UrlCheckForUpdatesCompulsa>${url.check.for.updates.compulsa}</UrlCheckForUpdatesCompulsa>		
+		
 	</ISicres-WS>
 
 </ISicres-Configuration>

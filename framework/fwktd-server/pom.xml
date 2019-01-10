@@ -3,13 +3,16 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd</groupId>
-		<artifactId>fwktd</artifactId>
+		<artifactId>fwktd-parent</artifactId>
 		<version>0.7</version>
 	</parent>
 
 	<artifactId>fwktd-server</artifactId>
 
 	<name>Modulo con clases server</name>
+	<properties>
+		<fwktd.version>0.7</fwktd.version>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -40,7 +43,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>fwktd-test</artifactId>
-			<version>${project.version}</version>
+			<version>${fwktd.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

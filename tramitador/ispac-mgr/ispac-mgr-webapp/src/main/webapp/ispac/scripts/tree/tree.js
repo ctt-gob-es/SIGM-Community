@@ -304,14 +304,14 @@ function item_upstatus (b_clear) {
 }
 
 var clickWaiting = null;
-function nodeClicked(tree_id, node_id) {
-	var str = 'viewNodeContent('+tree_id+','+node_id+')';
+function nodeClicked(tree_id, node_id, esEspecifica) {
+	var str = 'viewNodeContent('+tree_id+','+node_id+','+esEspecifica+')';
 	setTimeout(str,200);
 	clickWaiting = str;
 	//alert(clickWaiting);
 }
 
-function nodeDoubleClicked(tree_id, node_id) {
+function nodeDoubleClicked(tree_id, node_id, esEspecifica) {
 	//alert("doubleclick");
 	if (clickWaiting != null) {
 		clearTimeout(clickWaiting);
@@ -319,13 +319,13 @@ function nodeDoubleClicked(tree_id, node_id) {
 		clickWaiting = null;
 	}
 	trees[tree_id].toggle(node_id);
-	viewNodeContent(tree_id, node_id);
+	viewNodeContent(tree_id, node_id, esEspecifica);
 	/*var str = 'trees[' + tree_id + '].toggle(' node_id ')
 	var str = 'viewNodeContent('+tree_id+','+node_id+')';
 	setTimeout(str,500);*/
 }
 
-function viewNodeContent(tree_id, node_id) {
+function viewNodeContent(tree_id, node_id, esEspecifica) {
 	var tree = trees[tree_id];
 	tree.select(node_id);
 	var nodeViewForm = document.forms['viewNodeForm'];
@@ -336,7 +336,7 @@ function viewNodeContent(tree_id, node_id) {
 	
 	var ids = nodeViewForm.node.value.split('item');
 	if(ids.length == 6){
-		consultaEdicionTemplate(ids[5]);
+		consultaEdicionTemplate(ids[5], esEspecifica);
 	}
 }
 
@@ -349,9 +349,9 @@ function item_init () {
 	}
 	var item_label = '<img src="' + this.get_icon() + '" border="0" align="absbottom" name="i_img' + this.o_root.n_id + '_' + this.n_id + '" class="t' + this.o_root.n_id + 'im"> ' +this.a_config[0];
 	if (this.a_config[2])
-		item_label = '<a href="javascript: trees[' + this.o_root.n_id + '].toggle(' + this.n_id + ')" onclick="viewNodeContent(' +this.o_root.n_id +','+this.n_id + ')" onmouseover="trees[' + this.o_root.n_id + '].mover(' + this.n_id + ')" onmouseout="trees[' + this.o_root.n_id + '].mout(' + this.n_id + ')" class="t' + this.o_root.n_id + 'i" id="i_txt' + this.o_root.n_id + '_' + this.n_id + '" style="font-weight:'+(this.selected?'bold':'normal')+';color:'+(this.selected?'#D75454':'#363538')+'">'+item_label +'</a>';
+		item_label = '<a href="javascript: trees[' + this.o_root.n_id + '].toggle(' + this.n_id + ')" onclick="viewNodeContent(' +this.o_root.n_id +','+this.n_id + ',' + this.a_config[1].ES_PLANTILLA_ESPECIFICA + ')" onmouseover="trees[' + this.o_root.n_id + '].mover(' + this.n_id + ')" onmouseout="trees[' + this.o_root.n_id + '].mout(' + this.n_id + ')" class="t' + this.o_root.n_id + 'i" id="i_txt' + this.o_root.n_id + '_' + this.n_id + '" style="font-weight:'+(this.selected?'bold':'normal')+';color:'+(this.selected?'#D75454':'#363538')+'">'+item_label +'</a>';
 	var result ='<table cellpadding="0" cellspacing="0" border="0"><tr><td nowrap>' + (this.n_depth ? a_offset.join('') + (this.a_config[3]
-		? '<a href="javascript: trees[' + this.o_root.n_id + '].toggle(' + this.n_id + ')" onclick="viewNodeContent(' +this.o_root.n_id +','+this.n_id + ')" onmouseover="trees[' + this.o_root.n_id + '].mover(' + this.n_id + ')" onmouseout="trees[' + this.o_root.n_id + '].mout(' + this.n_id + ')"><img src="' + this.get_icon(true) + '" border="0" align="absbottom" name="j_img' + this.o_root.n_id + '_' + this.n_id + '"></a>'
+		? '<a href="javascript: trees[' + this.o_root.n_id + '].toggle(' + this.n_id + ')" onclick="viewNodeContent(' +this.o_root.n_id +','+this.n_id + ',' + this.a_config[1].ES_PLANTILLA_ESPECIFICA + ')" onmouseover="trees[' + this.o_root.n_id + '].mover(' + this.n_id + ')" onmouseout="trees[' + this.o_root.n_id + '].mout(' + this.n_id + ')"><img src="' + this.get_icon(true) + '" border="0" align="absbottom" name="j_img' + this.o_root.n_id + '_' + this.n_id + '"></a>'
 		: '<img src="' + this.get_icon(true) + '" border="0" align="absbottom">') : '') 
 		+ item_label + '<div id="i_div' + this.o_root.n_id + '_' + this.n_id + '" style="display:none"></div>' + '</td></tr></table>';
 	return result;

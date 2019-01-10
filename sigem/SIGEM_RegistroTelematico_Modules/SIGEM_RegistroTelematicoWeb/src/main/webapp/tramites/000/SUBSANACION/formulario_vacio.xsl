@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<xsl:include href="../templates_comunes.xsl" />
+
 <xsl:output encoding="ISO-8859-1" method="html"/>
 	<xsl:variable name="lang.titulo" select="'Formulario de Anexado de Documentos'"/>
 	<xsl:variable name="lang.datosRegistro" select="'Datos del Registro'"/>
 	<xsl:variable name="lang.expediente" select="'Número de expediente'"/>
 	<xsl:variable name="lang.registro" select="'Número de registro'"/>
-	<xsl:variable name="lang.fechaPresentacion" select="'Fecha de presentación'"/>
+	<xsl:variable name="lang.fechaRegistro" select="'Fecha de registro'"/>
 	<xsl:variable name="lang.docIdentidad" select="'Documento de identidad'"/>
 	<xsl:variable name="lang.nombre" select="'Nombre'"/>
 	<xsl:variable name="lang.email" select="'Correo electrónico'"/>
@@ -17,17 +20,17 @@
 	<xsl:variable name="lang.documento1" select="'Documento #1'"/>
 	<xsl:variable name="lang.documento2" select="'Documento #2'"/>
 	<xsl:variable name="lang.documento3" select="'Documento #3'"/>
-
+		
 	<xsl:template match="/">
 		<h1><xsl:value-of select="$lang.titulo"/></h1>
    		<br/>
    		<div class="submenu">
    			<h1><xsl:value-of select="$lang.datosRegistro"/></h1>
    		</div>
-   		<div class="cuadro" style="">
+   		<div class="cuadro" style="">	
 	   		<div class="col">
 				<label class="gr" style="position: relative; width:150px;">
-					<xsl:value-of select="$lang.asunto"/>:
+					<xsl:value-of select="$lang.asunto"/>:	
 				</label>
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:500px;</xsl:attribute>
@@ -37,7 +40,7 @@
 			</div>
 	   		<div class="col">
 				<label class="gr" style="position: relative; width:150px;">
-					<xsl:value-of select="$lang.expediente"/>:
+					<xsl:value-of select="$lang.expediente"/>:	
 				</label>
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:500px;</xsl:attribute>
@@ -45,33 +48,30 @@
 				</label>
 				<br/>
 			</div>
-			<xsl:variable name="numRegistroInicial" select="Solicitud_Registro/Datos_Registro/Numero_Registro"/>
-			<xsl:if test="$numRegistroInicial != ''">
-	   			<div class="col">
-					<label class="gr" style="position: relative; width:150px;">
-						<xsl:value-of select="$lang.registro"/>:
-					</label>
-					<label class="gr">
-						<xsl:attribute name="style">position: relative; width:500px;</xsl:attribute>
-						<xsl:value-of select="Solicitud_Registro/Datos_Registro/Numero_Registro"/>
-					</label>
-					<br/>
-				</div>
-	   			<div class="col">
-					<label class="gr" style="position: relative; width:150px;">
-						<xsl:value-of select="$lang.fechaPresentacion"/>:
-					</label>
-					<label class="gr">
-						<xsl:attribute name="style">position: relative; width:500px;</xsl:attribute>
-						<xsl:value-of select="Solicitud_Registro/Datos_Registro/Hora_Presentacion"/>,
-						<xsl:value-of select="Solicitud_Registro/Datos_Registro/Fecha_Presentacion"/>
-					</label>
-					<br/>
-				</div>
-			</xsl:if>
    			<div class="col">
 				<label class="gr" style="position: relative; width:150px;">
-					<xsl:value-of select="$lang.docIdentidad"/>:
+					<xsl:value-of select="$lang.registro"/>:	
+				</label>
+				<label class="gr">
+					<xsl:attribute name="style">position: relative; width:500px;</xsl:attribute>
+					<xsl:value-of select="Solicitud_Registro/Datos_Registro/Numero_Registro"/>
+				</label>
+				<br/>
+			</div>
+   			<div class="col">
+				<label class="gr" style="position: relative; width:150px;">
+					<xsl:value-of select="$lang.fechaRegistro"/>:	
+				</label>
+				<label class="gr">
+					<xsl:attribute name="style">position: relative; width:500px;</xsl:attribute>
+					<xsl:value-of select="Solicitud_Registro/Datos_Registro/Hora_Registro"/>,
+					<xsl:value-of select="Solicitud_Registro/Datos_Registro/Fecha_Registro"/>
+				</label>
+				<br/>
+			</div>
+   			<div class="col">
+				<label class="gr" style="position: relative; width:150px;">
+					<xsl:value-of select="$lang.docIdentidad"/>:	
 				</label>
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:500px;</xsl:attribute>
@@ -81,7 +81,7 @@
 			</div>
    			<div class="col">
 				<label class="gr" style="position: relative; width:150px;">
-					<xsl:value-of select="$lang.nombre"/>:
+					<xsl:value-of select="$lang.nombre"/>:	
 				</label>
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:500px;</xsl:attribute>
@@ -91,7 +91,7 @@
 			</div>
    			<div class="col">
 				<label class="gr" style="position: relative; width:150px;">
-					<xsl:value-of select="$lang.email"/>:
+					<xsl:value-of select="$lang.email"/>:	
 				</label>
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:500px;</xsl:attribute>
@@ -101,6 +101,8 @@
 			</div>
    		</div>
    		<br/>
+		<xsl:call-template name="TEXTO_LEGAL_COMUN" />
+		<br/>
 		<div class="submenu">
    			<h1><xsl:value-of select="$lang.anexar"/></h1>
    		</div>
@@ -148,6 +150,10 @@
 				</input>
 			</div>
    		</div>
+			<xsl:call-template name="TEXTO_DATOS_PERSONALES_COMUN" />
+   		<br/>
+			<xsl:call-template name="TEXTO_COMPARECE_COMUN" />
+   		<br/>
 	</xsl:template>
 	<xsl:template name="transformaFecha">
 		<xsl:param name="node"/>

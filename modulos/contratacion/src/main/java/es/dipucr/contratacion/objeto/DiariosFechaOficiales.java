@@ -2,6 +2,9 @@ package es.dipucr.contratacion.objeto;
 
 import java.util.Calendar;
 
+import es.dipucr.contratacion.services.PlataformaContratacionStub.Campo;
+
+
 public class DiariosFechaOficiales {
 	
 	private Calendar anunLicitacionPerfilContratante = null;
@@ -15,6 +18,9 @@ public class DiariosFechaOficiales {
 	private Calendar anuncioLicitacionDOUE = null;
 	private Calendar anuncioFormalizacionDOUE = null;
 	private Calendar anuncioAdjudicacionDOUE = null;
+	
+	private Campo contratoSujetoRegArmon = null;
+	private Boolean adjudicatarioPYME = null;
 	
 	
 	
@@ -72,7 +78,17 @@ public class DiariosFechaOficiales {
 	public void setAnunAdjudicacionPerfilContratante(Calendar anunAdjudicacionPerfilContratante) {
 		this.anunAdjudicacionPerfilContratante = anunAdjudicacionPerfilContratante;
 	}
-
-	
+	public Campo getContratoSujetoRegArmon() {
+		return contratoSujetoRegArmon;
+	}
+	public void setContratoSujetoRegArmon(Campo contratoSujetoRegArmon) {
+		this.contratoSujetoRegArmon = contratoSujetoRegArmon;
+	}
+	public Boolean getAdjudicatarioPYME() {
+		return adjudicatarioPYME;
+	}
+	public void setAdjudicatarioPYME(Boolean adjudicatarioPYME) {
+		this.adjudicatarioPYME = adjudicatarioPYME;
+	}	
 
 }

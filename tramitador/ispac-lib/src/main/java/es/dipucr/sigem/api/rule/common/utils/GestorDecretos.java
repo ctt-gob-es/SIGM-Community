@@ -365,8 +365,12 @@ public class GestorDecretos {
 	public static void actualizarSecuenciaAuxiliar(IClientContext cct) throws ISPACException{
 		
 		DbCnt conn = cct.getConnection();
-		int numDecretoReal = IdSequenceMgr.currVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_REAL);
-		IdSequenceMgr.setVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_AUX, numDecretoReal);
+		try{
+			int numDecretoReal = IdSequenceMgr.currVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_REAL);
+			IdSequenceMgr.setVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_AUX, numDecretoReal);
+		} finally {
+			cct.releaseConnection(conn);
+		}
 	}
 	
 	/**
@@ -378,7 +382,11 @@ public class GestorDecretos {
 	public static void actualizarSecuenciaAuxiliar(IClientContext cct, int valor) throws ISPACException{
 		
 		DbCnt conn = cct.getConnection();
-		IdSequenceMgr.setVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_AUX, valor);
+		try{
+			IdSequenceMgr.setVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_AUX, valor);
+		} finally {
+			cct.releaseConnection(conn);
+		}
 	}
 	
 	/**
@@ -389,8 +397,12 @@ public class GestorDecretos {
 	public static void actualizarSecuenciaReal(IClientContext cct) throws ISPACException{
 		
 		DbCnt conn = cct.getConnection();
-		int numDecretoReal = IdSequenceMgr.currVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_AUX);
-		IdSequenceMgr.setVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_REAL, numDecretoReal);
+		try{
+			int numDecretoReal = IdSequenceMgr.currVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_AUX);
+			IdSequenceMgr.setVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_REAL, numDecretoReal);
+		} finally {
+			cct.releaseConnection(conn);
+		}
 	}
 	
 	/**
@@ -402,7 +414,11 @@ public class GestorDecretos {
 	public static void actualizarSecuenciaReal(IClientContext cct, int valor) throws ISPACException{
 		
 		DbCnt conn = cct.getConnection();
-		IdSequenceMgr.setVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_REAL, valor);
+		try{
+			IdSequenceMgr.setVal(conn, GestorDecretos.SEQUENCE_NUM_DECRETOS_REAL, valor);
+		} finally {
+			 cct.releaseConnection(conn);
+		}
 	}
 	
 	/**

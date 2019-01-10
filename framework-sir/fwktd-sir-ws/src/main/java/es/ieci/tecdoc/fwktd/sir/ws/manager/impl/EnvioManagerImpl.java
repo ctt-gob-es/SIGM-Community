@@ -69,7 +69,7 @@ public class EnvioManagerImpl implements EnvioManager {
 			throw new ServiceException(ErroresEnum.ERROR_0065, e);
 		} catch (ValidacionException e) {
 			logger.error("Error en la recepción del fichero de datos de intercambio", e);
-			throw new ServiceException(e.getErrorValidacion(), e.getErrorException());
+			throw new ServiceException(e.getErrorValidacion(), new ValidacionException (e.getErrorValidacion(), e.getMessage()));
 		}
     }
 

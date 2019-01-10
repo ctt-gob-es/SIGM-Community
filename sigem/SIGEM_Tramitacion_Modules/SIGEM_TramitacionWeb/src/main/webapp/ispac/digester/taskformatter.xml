@@ -50,7 +50,17 @@
 		         columnClass='width7percent'
 		         headerClass='sortable'
 		         sortable='true'
-				 />	
+				 />
+				 
+  	<propertyfmt type="BeanPropertySimpleFmt" 
+	           property='DESTINO_TIPO' 
+	           readOnly='false'
+		         titleKey='formatter.tasks.tipoPersona' 
+		         fieldType='DESTINOTIPO' 
+		         columnClass='width7percent'
+		         headerClass='sortable'
+		         sortable='true'
+				 />		
 
 	<propertyfmt type="BeanPropertySimpleFmt" 
 				 property='ESTADOFIRMA' 

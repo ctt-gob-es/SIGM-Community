@@ -10,11 +10,14 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 
+import java.util.Date;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
+import es.dipucr.sigem.api.rule.common.utils.FechasUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class IniciaExpedienteHijoDevolucionFianza implements IRule{
@@ -44,9 +47,15 @@ public class IniciaExpedienteHijoDevolucionFianza implements IRule{
 				IItem procs = (IItem) procsIterator.next();
 				idCtProcedimientoNuevo = procs.getInt("ID");
 			}
-			IItem numexpHijo = ExpedientesRelacionadosUtil.iniciaExpedienteRelacionadoHijo(cct, idCtProcedimientoNuevo, rulectx.getNumExp(), "Devolucion Fianza", true, null);			
-			numexpHijo.set("ASUNTO", "Devolucion Fianza");
-			numexpHijo.store(cct);
+			String relacion = "Devolucion Fianza - "+ FechasUtil.getFormattedDate(new Date());
+			IItem numexpHijo = ExpedientesRelacionadosUtil.iniciaExpedienteRelacionadoHijo(cct, idCtProcedimientoNuevo, rulectx.getNumExp(), relacion, true, null);		
+			if(null!=numexpHijo){
+				
+				numexpHijo.set("ASUNTO", relacion);
+				numexpHijo.store(cct);
+				
+				TramitesUtil.cargarObservacionesTramite(cct, true,rulectx.getNumExp(), rulectx.getTaskId(), relacion+" - Exp.Relacionado: "+numexpHijo.getString("NUMEXP"));
+			}
 
 		}catch(ISPACRuleException e){
 			logger.error(e.getMessage(), e);

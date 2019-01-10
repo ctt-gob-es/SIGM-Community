@@ -25,6 +25,7 @@
 		<result property="direccion" column="address" />
 		<result property="ciudad.nombre" column="city" />
 		<result property="provincia.nombre" column="country" />
+		<result property="provincia.ciudades" select="CiudadVO.getCiudadesByNombreProvincia" column="country" />
 		<result property="pais" select="PaisVO.findByNombre" column="pais" />
 		<result property="codigoPostal" column="zip" />
 	</resultMap>

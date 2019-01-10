@@ -168,7 +168,8 @@ function LoadFrameTable(cadena, Mode)
 
 		for (var i = 0; i < arrInt.length; i++) {
 			var datas = arrInt[i].split("#");
-				insertRowTableInt(datas[0]?datas[0]:"", datas[1]?datas[1]:"", datas[2]?datas[2]:"", datas[3]?datas[3]:"", datas[4]?datas[4]:"", datas[5]?datas[5]:"", datas[6]?datas[6]:"", datas[7]?datas[7]:"", datas[8]?datas[8]:"");
+			//[Dipucr-Manu Ticket#383] - ALSIGM3 no muestra el DNI en los interesados de los registros
+			insertRowTableInt(datas[0]?datas[0]:"", datas[1]?datas[1]:"", datas[2]?datas[2]:"", datas[3]?datas[3]:"", datas[4]?datas[4]:"", datas[5]?datas[5]:"", datas[6]?datas[6]:"", datas[7]?datas[7]:"", datas[8]?datas[8]:"", datas[9]?datas[9]:"");
 		}
 	}
 
@@ -241,7 +242,8 @@ function LoadFrameInt()
 	}
 }
 
-function insertRowTableInt(uidInt, nomInt, uidDom, domInt, domType, uidRepre, nomRepre, uidDomRepre, domRepre, domRepreType)
+//[Dipucr-Manu Ticket#383] - ALSIGM3 no muestra el DNI en los interesados de los registros
+function insertRowTableInt(uidInt, nomInt, nifInt, uidDom, domInt, domType, uidRepre, nomRepre, uidDomRepre, domRepre, domRepreType)
 {
 	var tabData = document.getElementById("TabInt");
 	var newRow;
@@ -259,20 +261,25 @@ function insertRowTableInt(uidInt, nomInt, uidDom, domInt, domType, uidRepre, no
 	newCell[0].setAttribute("idType", domType);
 
 	newCell[1] = newRow.insertCell(1);
-	top.SetInnerText(newCell[1], domInt);
+	top.SetInnerText(newCell[1], nifInt);
 	newCell[1].className = "report";
-	newCell[1].uid = uidDom;
-
+	newCell[1].uid = nifInt;
+	
 	newCell[2] = newRow.insertCell(2);
-	top.SetInnerText(newCell[2], nomRepre);
+	top.SetInnerText(newCell[2], domInt);
 	newCell[2].className = "report";
-	newCell[2].uid = uidRepre;
-	newCell[2].setAttribute("idType", domRepreType);
+	newCell[2].uid = uidDom;
 
 	newCell[3] = newRow.insertCell(3);
-	top.SetInnerText(newCell[3], domRepre);
+	top.SetInnerText(newCell[3], nomRepre);
 	newCell[3].className = "report";
-	newCell[3].uid = uidDomRepre;
+	newCell[3].uid = uidRepre;
+	newCell[3].setAttribute("idType", domRepreType);
+
+	newCell[4] = newRow.insertCell(4);
+	top.SetInnerText(newCell[4], domRepre);
+	newCell[4].className = "report";
+	newCell[4].uid = uidDomRepre;
 
 	SetTabSize();
 }

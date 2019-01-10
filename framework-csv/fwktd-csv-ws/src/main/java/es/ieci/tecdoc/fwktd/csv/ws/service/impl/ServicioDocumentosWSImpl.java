@@ -86,6 +86,20 @@ public class ServicioDocumentosWSImpl implements ServicioDocumentosPortType {
 
 		return getDocumentosDelegate().getInfoDocumentoByCSV(csv);
 	}
+	
+	/**
+	 * Obtiene la información almacenada del documento.
+	 *
+	 * @param nombreDoc
+	 *            Nombre del documento.
+	 * @return Información del documento.
+	 */
+	public InfoDocumentoCSV getInfoDocumentoByNombre(String nombreDoc) {
+
+		logger.info("Llamada a getInfoDocumentoByCSV: nombre=[{}]", nombreDoc);
+
+		return getDocumentosDelegate().getInfoDocumentoByNombre(nombreDoc);
+	}
 
 	/**
 	 * Obtiene la información almacenada del documento junto con el contenido.

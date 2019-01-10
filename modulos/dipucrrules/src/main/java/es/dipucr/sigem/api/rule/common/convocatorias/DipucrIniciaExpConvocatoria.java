@@ -28,6 +28,7 @@ public class DipucrIniciaExpConvocatoria implements IRule{
 	public static String nombre_tabla = "DPCR_CONV_EXP_CONV";
 	public static String nombre_tabla2 = "DPCR_CONV_EXP_CONV_ASO";
 	public static String nombre_tabla3 = "DPCR_CONV_EXP_CONV_CIU";
+	public static String nombre_tabla4 = "DPCR_EXP_ALTA_CONVENIOS_CULT";
 	
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
 		
@@ -69,6 +70,9 @@ public class DipucrIniciaExpConvocatoria implements IRule{
 					}
 					if(expedienteSolicitudCollection.toList().size()==0){
 						expedienteSolicitudCollection = entitiesAPI.queryEntities(nombre_tabla3, "WHERE VALOR = '"+codProcedimientoConvocatoria+"'" );
+					}
+					if(expedienteSolicitudCollection.toList().size()==0){
+						expedienteSolicitudCollection = entitiesAPI.queryEntities(nombre_tabla4, "WHERE VALOR = '"+codProcedimientoConvocatoria+"'" );
 					}
 					Iterator expedienteSolicitudIterator = expedienteSolicitudCollection.iterator();
 					if(expedienteSolicitudIterator.hasNext()){

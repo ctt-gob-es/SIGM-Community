@@ -22,9 +22,6 @@ public class ISPACConfiguration extends PropertiesConfiguration {
 
 	// Path del repositorio temporal
 	public final static String TEMPORARY_PATH = "TEMPORARY_PATH";
-	public final static String OPEN_OFFICE_CONNECT = "OPEN_OFFICE_CONNECT";
-	public final static String OPEN_OFFICE_ADDITIONAL_INSTANCES = "OPEN_OFFICE_ADDITIONAL_INSTANCES";
-	public final static String OPEN_OFFICE_TIMEOUT = "OPEN_OFFICE_TIMEOUT";
 
 	public final static String PASSWORD = "PASSWORD";
 	public final static String POOLNAME = "POOLNAME";
@@ -200,11 +197,25 @@ public class ISPACConfiguration extends PropertiesConfiguration {
 	/** Nivel de anidamiento de marcadores de plantillas*/
 	public final static String PARSER_CONNECTOR_TAGS_NESTING_LEVEL = "PARSER_CONNECTOR_TAGS_NESTING_LEVEL";
 	
-	/** [dipucr-Felipe #304] Ruta de certificados**/
+	/* =========================================================================
+	 * [dipucr-Felipe #304] Ruta de certificados
+	 * ====================================================================== */
 	public final static String CERTIFICADOS_PATH = "CERTIFICADOS_PATH";
 	public static final String TRAMITES_RT_SUBPATH = "TRAMITES_RT_SUBPATH";
+	
+	
+	//[Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+	public final static String REPOSITORIO_PLANTILLAS_COMUN_PATH = "REPOSITORIO_PLANTILLAS_COMUN_PATH";
+	
+	
+	//[Dipucr-Manu Ticket #] + 
+	public final static String PASSWORD_ENVIO_MENSAJES_MASIVO = "PASSWORD_ENVIO_MENSAJES_MASIVO";
 
-
+	public static final String URL_MENSAJE_INFO = "URL_MENSAJE_INFO";
+	public static final String URL_MENSAJE_AVISO = "URL_MENSAJE_AVISO";
+	public static final String URL_MENSAJE_URGENTE = "URL_MENSAJE_URGENTE";
+	public static final String URL_MENSAJE_CRITICO = "URL_MENSAJE_CRITICO";
+	
 	/**
 	 * Constructor.
 	 */

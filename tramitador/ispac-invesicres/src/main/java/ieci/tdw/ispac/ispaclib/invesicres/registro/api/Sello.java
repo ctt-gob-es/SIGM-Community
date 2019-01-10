@@ -13,9 +13,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.ImageOutputStream;
+
 
 /**
  * @author RAULHC
@@ -74,13 +79,20 @@ public class Sello {
         String absolutePath = "";
         try {
             FileOutputStream out = new FileOutputStream(file);
-            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-
-            JPEGEncodeParam param = encoder.getDefaultJPEGEncodeParam(mBufferedImage);
-            param.setQuality(1.0f, false);
-            encoder.setJPEGEncodeParam(param);
-            encoder.encode(mBufferedImage);
+            
+            ImageWriter imageWriter = ImageIO.getImageWritersBySuffix("jpg").next();
+            ImageOutputStream ios = ImageIO.createImageOutputStream(out);
+            imageWriter.setOutput(ios);
+            
+            IIOMetadata imageMetaData = imageWriter.getDefaultImageMetadata(new ImageTypeSpecifier(mBufferedImage), null);
+            
+            JPEGImageWriteParam jpegParams = (JPEGImageWriteParam) imageWriter.getDefaultWriteParam();
+            jpegParams.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
+            jpegParams.setCompressionQuality(1.0f);
+            
+            imageWriter.write(imageMetaData, new IIOImage(mBufferedImage, null, null), null);
             out.close();
+            imageWriter.dispose();
         }
         catch (IOException ioException) {
             throw new ISPACException("Error al guardar fichero de imagen.", ioException);

@@ -59,6 +59,16 @@ a { text-decoration:none; color:#000000
 	text-indent: -3000px;
 }
 
+#cabecera .logosigm {
+	position: absolute;
+	margin: 0px;
+	width: 150px;
+	height: 60px;
+	top: 8px;
+	left: 240px;
+	margin: 0px;
+}
+
 #cabecera .salir {
 	position: absolute;
 	background: url("../img/exit.gif") top left no-repeat;

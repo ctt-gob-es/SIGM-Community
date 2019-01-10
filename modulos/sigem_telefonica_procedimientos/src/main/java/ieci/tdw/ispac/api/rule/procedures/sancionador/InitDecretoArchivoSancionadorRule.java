@@ -12,10 +12,9 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitDecretoArchivoSancionadorRule extends InitDecretoSancionadorRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "URB_SANCIONADOR";
-		STR_extracto = "Resolución de archivo del procedimiento Sancionador";
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "URB_SANCIONADOR";
+        strExtracto = "Resolución de archivo del procedimiento Sancionador";
         return true;
     }
 }

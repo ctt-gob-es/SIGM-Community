@@ -17,40 +17,32 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitTaskResolucionProvisionalPlaneamientoRule extends InitTaskResolucionPlaneamientoRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "PLAN_POM";
-		STR_queryDocumentos = "NOMBRE = 'Providencia' OR " +  
-								"NOMBRE = 'Documento de Avance'"; 
-		
-		try
-		{
-	        IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
-	        int pcdId = rulectx.getProcedureId();
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "PLAN_POM";
+        strQueryDocumentos = "NOMBRE = 'Providencia' OR " + "NOMBRE = 'Documento de Avance'"; 
+        
+        try {
+            IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
+            int pcdId = rulectx.getProcedureId();
 
-	        String strQuery = "WHERE ID_PCD="+pcdId+" AND NOMBRE='Providencia'";
-			IItemCollection col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
-	        Iterator it = col.iterator();
-	        if (it.hasNext())
-	        {
-		        IItem tramite = (IItem)it.next();
-		        int tramiteId = tramite.getInt("ID");
-			
-				STR_queryDocumentos +=
-					" OR " +
-					"ID_TRAMITE_PCD="+tramiteId;
-	        }
+            String strQuery = "WHERE ID_PCD = " + pcdId + " AND NOMBRE = 'Providencia'";
+            IItemCollection col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
+            Iterator<?> it = col.iterator();
+            
+            if (it.hasNext()) {
+                IItem tramite = (IItem)it.next();
+                int tramiteId = tramite.getInt("ID");
+            
+                strQueryDocumentos += " OR " + "ID_TRAMITE_PCD="+tramiteId;
+            }
 
+        } catch(ISPACRuleException e) {
+            throw new ISPACRuleException(e);
+        
+        } catch(Exception e) {
+            throw new ISPACRuleException("No se ha podido iniciar el trámite de resolución.",e);
         }
-    	catch(Exception e) 
-        {
-        	if (e instanceof ISPACRuleException)
-        	{
-			    throw new ISPACRuleException(e);
-        	}
-        	throw new ISPACRuleException("No se ha podido iniciar el trámite de resolución.",e);
-        }
-		
+        
         return true;
     }
 }

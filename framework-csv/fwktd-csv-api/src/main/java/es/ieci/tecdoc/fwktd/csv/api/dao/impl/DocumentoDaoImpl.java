@@ -1,5 +1,7 @@
 package es.ieci.tecdoc.fwktd.csv.api.dao.impl;
 
+import java.util.List;
+
 import es.ieci.tecdoc.fwktd.csv.api.dao.DocumentoDao;
 import es.ieci.tecdoc.fwktd.csv.api.vo.DocumentoVO;
 import es.ieci.tecdoc.fwktd.server.dao.ibatis.IbatisGenericDaoImpl;
@@ -15,6 +17,7 @@ public class DocumentoDaoImpl extends IbatisGenericDaoImpl<DocumentoVO, String>
 		implements DocumentoDao {
 
 	protected static final String GET_DOCUMENTO_BY_CSV = "DocumentoVO.getDocumentoVOByCSV";
+	protected static final String GET_DOCUMENTO_BY_NOMBRE = "DocumentoVO.getDocumentoVOByNombre";
 	protected static final String DELETE_DOCUMENTO_BY_CSV = "DocumentoVO.deleteDocumentoVOByCSV";
 
 	/**
@@ -52,6 +55,24 @@ public class DocumentoDaoImpl extends IbatisGenericDaoImpl<DocumentoVO, String>
 
 		return (DocumentoVO) getSqlMapClientTemplate().queryForObject(
 				GET_DOCUMENTO_BY_CSV, csv);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.api.dao.DocumentoDao#getDocumentoByNombre(java.lang.String)
+	 */
+	public DocumentoVO getDocumentoByNombre(String nombreDoc) {
+
+		logger.info("Obteniendo el documento a partir del nombre [{}]", nombreDoc);
+		
+		DocumentoVO documento = null;
+		List <DocumentoVO> documentos = getSqlMapClientTemplate().queryForList(GET_DOCUMENTO_BY_NOMBRE, nombreDoc);
+
+		if(null != documentos && documentos.size() > 0){
+			documento = documentos.get(documentos.size()-1);
+		}
+		return documento;
 	}
 
 	/**

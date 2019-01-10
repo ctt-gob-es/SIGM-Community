@@ -212,7 +212,7 @@ public class EnviarMailCertPersonal  implements IRule {
 			boolean enviadoEmail = false;
 			Date dFechaEnvio = new Date();
 			
-			MailUtil.enviarCorreo(rulectx, emailSolicitante, cAsunto, sbContenido.toString(), fileDocSellados, imagenes);
+			MailUtil.enviarCorreo(rulectx.getClientContext(), emailSolicitante, cAsunto, sbContenido.toString(), fileDocSellados, imagenes);
 			enviadoEmail = true;
 			dFechaEnvio = new Date();
 			DipucrCommonFunctions.insertarAcuseEmail(emailSolicitante ,dFechaEnvio, "", "", enviadoEmail, emailSolicitante, descripError, rulectx);

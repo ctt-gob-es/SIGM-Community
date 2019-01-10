@@ -12,10 +12,12 @@ import org.apache.log4j.Logger;
 
 public abstract class PropertiesConfiguration extends Properties {
 
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Logger de la clase.
 	 */
-	private static final Logger logger = Logger.getLogger(PropertiesConfiguration.class);
+	private static final Logger LOGGER = Logger.getLogger(PropertiesConfiguration.class);
 	
 //	public final static String FOLDER = "FOLDER";
 //	public final static String HOST = "HOST";
@@ -34,8 +36,8 @@ public abstract class PropertiesConfiguration extends Properties {
 		
 		try {
 
-			if (logger.isInfoEnabled()) {
-				logger.info("Cargando fichero de configuración: " + configFileName);
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Cargando fichero de configuración: " + configFileName);
 			}
 
 //			// Almacenar la ruta del directorio de configuración
@@ -50,7 +52,7 @@ public abstract class PropertiesConfiguration extends Properties {
 			in.close();
 			
 		} catch (Exception e) {
-			logger.error("Error al inicializar el fichero de configuración: " + configFileName, e);
+			LOGGER.info("Error al inicializar el fichero de configuración: " + configFileName, e);
 			throw new ISPACException(e);
 		}
 	}

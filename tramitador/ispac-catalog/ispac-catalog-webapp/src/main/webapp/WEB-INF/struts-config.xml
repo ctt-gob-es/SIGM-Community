@@ -1544,6 +1544,65 @@
 		</action>		
 		<!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->
 		
+
+		<!-- [Dipucr-Manu Ticket #478] - INICIO - ALSIGM3 Nueva opción Repositorio Común -->
+		<action path="/showTemplatesRepositorioComunList"
+			type="ieci.tdw.ispac.ispaccatalog.action.ShowTemplatesRepositorioComunListAction"
+			name="defaultForm" scope="request" validate="false">
+			<forward name="success" path="templatesRepositorioComunlist"/>
+		</action>
+		
+		<action path="/showTemplateRepositorioComun"
+			type="ieci.tdw.ispac.ispaccatalog.action.ShowTemplateRepositorioComunAction"
+			name="uploadForm" scope="request" validate="false">			
+		</action>
+		
+		<action path="/deleteTemplatesRepositorioComunList"
+			type="ieci.tdw.ispac.ispaccatalog.action.DeleteTemplatesRepositorioComunListAction"
+			name="defaultForm" scope="request" validate="false">
+			<forward name="success" path="/showTemplatesRepositorioComunList.do"/>
+		</action>
+		
+		<action path="/newTemplateRepositorioComun"
+			type="ieci.tdw.ispac.ispaccatalog.action.NewTemplateRepositorioComunAction"
+			name="uploadForm" scope="request" validate="false">
+			<forward name="success" path="newTemplateRepositorioComun"/>
+		</action>
+		
+		<action path="/storeTemplateRepositorioComun"
+			type="ieci.tdw.ispac.ispaccatalog.action.StoreTemplateRepositorioComunAction"
+			name="uploadForm" scope="request" validate="false">
+			<forward name="success" path="/showTemplatesRepositorioComunList.do" redirect="true"/>
+		</action>
+		<!-- [Dipucr-Manu Ticket #478] - FIN - ALSIGM3 Nueva opción Repositorio Común -->
+		
+		<!-- [Dipucr-Manu Ticket #] - FIN - Mantenimiento de Avisos -->		
+		<action path="/showCTMantenimientoMensajesList"
+			type="es.dipucr.sigem.actions.mensajes.catalogo.ShowCTMantenimientoMensajesListAction"
+			name="defaultForm" scope="request" validate="false" parameter="method" >
+			<forward name="success" path="ct.mantenimientoMensajesList"/>
+		</action>
+		
+		<action path="/showMensaje"
+		 type="es.dipucr.sigem.actions.mensajes.catalogo.ShowMensajeAction"
+			name="uploadForm" scope="request" validate="false">
+			<forward name="success" path="ct.entity" />
+		</action>
+		
+		<action path="/storeMensaje"
+			type="es.dipucr.sigem.actions.mensajes.catalogo.StoreMensajeAction"
+			name="uploadForm" scope="request" validate="true" input="/storeMensaje.do">			
+			<forward name="success" path="/showCTMantenimientoMensajesList.do"/>
+			<forward name="successUpdate" path="/showMensaje.do" redirect="true"/>
+		</action>
+		
+		<action path="/deleteMensaje"
+			type="es.dipucr.sigem.actions.mensajes.catalogo.DeleteMensajeAction"
+			name="defaultForm" scope="request" validate="false" parameter="method" >
+			<forward name="success" path="/showCTMantenimientoMensajesList.do"/>
+		</action>
+		<!-- [Dipucr-Manu Ticket #] - FIN - Mantenimiento de Avisos -->
+
 	</action-mappings>
 
 	<controller nocache="true"

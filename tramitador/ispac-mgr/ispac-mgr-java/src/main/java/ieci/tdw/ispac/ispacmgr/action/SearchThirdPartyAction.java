@@ -1,11 +1,16 @@
 package ieci.tdw.ispac.ispacmgr.action;
 
 import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.IRegisterAPI;
 import ieci.tdw.ispac.api.IThirdPartyAPI;
 import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.sicres.vo.Organization;
+import ieci.tdw.ispac.ispaclib.thirdparty.IElectronicAddressAdapter;
+import ieci.tdw.ispac.ispaclib.thirdparty.IPostalAddressAdapter;
 import ieci.tdw.ispac.ispaclib.thirdparty.IThirdPartyAdapter;
+import ieci.tdw.ispac.ispaclib.thirdparty.ThirdPartyAdapter;
 import ieci.tdw.ispac.ispaclib.utils.ArrayUtils;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacmgr.action.form.ThirdPartyForm;
@@ -29,42 +34,39 @@ import org.apache.struts.action.ActionMapping;
 public class SearchThirdPartyAction extends BaseAction {
 
 	/** Logger de la clase. */
-	private static final Logger logger = 
-		Logger.getLogger(SearchThirdPartyAction.class);
+	private static final Logger logger = Logger.getLogger(SearchThirdPartyAction.class);
 	
 	
-	public ActionForward executeAction(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response,
-			SessionAPI session) throws Exception {
+	public ActionForward executeAction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response, SessionAPI session) throws Exception {
 		
-		if(StringUtils.isNotEmpty(request.getParameter("search"))){
+		String tipoBusqueda = request.getParameter("search");
+		if("1".equals(tipoBusqueda)){
 			if(StringUtils.isNotEmpty(request.getParameter("nombre"))){
 				request.setAttribute("nombre", request.getParameter("nombre"));
-			}
-			else{
+			} else{
 				request.setAttribute("nombre", "");
 			}
+			
 			if(StringUtils.isNotEmpty(request.getParameter("apellido1"))){
 				request.setAttribute("apellido1", request.getParameter("apellido1"));
-			}
-			else{
+			} else{
 				request.setAttribute("apellido1", "");
 			}
+			
 			if(StringUtils.isNotEmpty(request.getParameter("apellido2"))){
 				request.setAttribute("apellido2", request.getParameter("apellido2"));
-			}
-			else{
+			} else{
 				request.setAttribute("apellido2", "");
 			}
 			return mapping.findForward("search");
 		}
 		
 		ClientContext cct = session.getClientContext();
-		IManagerAPI managerAPI = ManagerAPIFactory.getInstance()
-			.getManagerAPI(cct);
+		IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(cct);
 		IState currentstate = managerAPI.currentState(getStateticket(request));
 		IInvesflowAPI invesflowAPI = session.getAPI();
 		IThirdPartyAPI thirdPartyAPI = invesflowAPI.getThirdPartyAPI();
+		IRegisterAPI registerAPI = invesflowAPI.getRegisterAPI();
 		
 		int entity = currentstate.getEntityId();
 		int key = currentstate.getEntityRegId();
@@ -78,49 +80,75 @@ public class SearchThirdPartyAction extends BaseAction {
 		if(StringUtils.isNotEmpty(idThirdParty)){
 			request.setAttribute("return", "1");
 		}
+		
 		String paramDefaultValues = (String)request.getParameter("defaultValues");
 		boolean defaultValues = (StringUtils.equalsIgnoreCase(paramDefaultValues, "TRUE") ? true : false);  
+		
 		if (StringUtils.isNotEmpty(idThirdParty)){
 			IThirdPartyAdapter tercero = thirdPartyAPI.lookupById(idThirdParty, defaultValues);
+			
 			if (tercero == null){
 				throw new ISPACInfo("exception.info.tercero.notFoundById", new Object[] {idThirdParty},false);
 			}
 			terceros = new IThirdPartyAdapter[]{tercero};
-		}else{
 			
+		} else {			
 			if (thirdPartyAPI == null) {
 				throw new ISPACInfo("exception.thirdparty.notConfigured",false);
 			}
 			//Comprobamos si tenemos que buscar por nombre 
 			String buscarPorNombre=(String)request.getParameter("searchByNombre");
 			String nifcif="";
+			String dir3 = "";
+			
 			if("1".equalsIgnoreCase(buscarPorNombre)){
 				terceros=thirdPartyAPI.lookup(thirdForm.getNombre(), thirdForm.getApellido1(), thirdForm.getApellido2());
 				request.setAttribute("searchByNombre", "1");
-				
-			}
-			else{
+			
+			} else {
 				// Nombre del campo que contiene el valor de la búsqueda.
 				String field = request.getParameter("field");
 		
-				// NIF/CIF del tercero a buscar
-				nifcif = thirdForm.getProperty(field);
-				
-				if (StringUtils.isEmpty(nifcif)) {
-					 if(StringUtils.isNotBlank(thirdForm.getNif())){ 
-						  nifcif=thirdForm.getNif(); 
-					 } 
-					else{ 
-						  throw new ISPACInfo("exception.info.emptyNifCif",false); 
-					} 
-				} 
-				request.setAttribute("nif", nifcif); 
+				if("2".equals(tipoBusqueda)){
+					dir3 = thirdForm.getProperty(field);
 					
-				// Buscar el tercero a partir del NIF/CIF
-				if (defaultValues){
-					terceros = thirdPartyAPI.lookup(nifcif);
-				}else{
-					terceros = thirdPartyAPI.lookup(nifcif, false);
+					if (StringUtils.isEmpty(dir3)) {
+						 if(StringUtils.isNotBlank(thirdForm.getDir3())){ 
+							 dir3 = thirdForm.getDir3(); 
+						 } 
+						else{ 
+							  throw new ISPACInfo("exception.info.emptyDIR3",false); 
+						} 
+					} 
+					request.setAttribute("dir3", dir3);
+
+					Organization org = registerAPI.getOrganizationByCode(dir3);
+					
+					if(null != org){
+						IThirdPartyAdapter tercero = getOrgAsTercero(org);
+						terceros = new IThirdPartyAdapter[]{tercero};
+					}
+					
+				} else {
+					// NIF/CIF del tercero a buscar
+					nifcif = thirdForm.getProperty(field);
+					
+					if (StringUtils.isEmpty(nifcif)) {
+						 if(StringUtils.isNotBlank(thirdForm.getNif())){ 
+							  nifcif=thirdForm.getNif(); 
+						 } else {
+							 throw new ISPACInfo("exception.info.emptyNifCif",false); 
+						} 
+					} 
+					request.setAttribute("nif", nifcif); 
+						
+					// Buscar el tercero a partir del NIF/CIF
+					if (defaultValues){
+						terceros = thirdPartyAPI.lookup(nifcif);
+						
+					} else {
+						terceros = thirdPartyAPI.lookup(nifcif, false);
+					}
 				}
 			}
 			if (ArrayUtils.isEmpty(terceros)) {
@@ -131,8 +159,8 @@ public class SearchThirdPartyAction extends BaseAction {
 					    logger.info("No se han encontrado datos para el NIF/CIF '" + nifcif + "'");
 				    }
 					throw new ISPACInfo("exception.info.tercero.noDataNifCif", new Object[] {nifcif},false);
-				}
-				else{
+				
+				} else {
 					if (logger.isInfoEnabled()) {
 					    logger.info("No se han encontrado datos para el Nobmre: '" +
 					    			thirdForm.getNombre() + "' , Apellido1: '"+
@@ -147,15 +175,19 @@ public class SearchThirdPartyAction extends BaseAction {
 			request.setAttribute(ActionsConstants.THIRDPARTY_LIST, terceros);
 			ActionForward action = mapping.findForward("thirdPartyList");
 			String squeryString = "";
-			if (defaultValues)
+			
+			if (defaultValues){
 				squeryString = "?defaultValus=true";
+			}
+			
 			return new ActionForward(action.getName(), action.getPath() + squeryString , false);
+			
 		} else {
 			IThirdPartyAdapter tercero = terceros[0];
 			request.setAttribute(ActionsConstants.THIRDPARTY, tercero);
 			
 			//Si solo hay un tercero con (0 ó 1) ninguna direccion postal y una o nidireccion electronica se establece sin falta de confirmacion
-			if (	   tercero.getDireccionesPostales()!= null 
+			if ( tercero.getDireccionesPostales()!= null 
 					&& tercero.getDireccionesPostales().length <2 
 					&& tercero.getDireccionesElectronicas()!= null 
 					&& tercero.getDireccionesElectronicas().length <2
@@ -167,13 +199,34 @@ public class SearchThirdPartyAction extends BaseAction {
 					.append("&entity=").append(entity)
 					.append("&key=").append(key)
 					.toString();
-				return new ActionForward(action.getName(), action.getPath() 
-						+ squeryString, false);
-			}
-			else{
+				return new ActionForward(action.getName(), action.getPath() + squeryString, false);
+				
+			} else{
 				return mapping.findForward("summaryInterested");
 			}
 		}
+	}
 
+	public IThirdPartyAdapter getOrgAsTercero(Organization org) {
+
+		ThirdPartyAdapter tercero = new ThirdPartyAdapter();
+
+		tercero.setTipoPersona(ThirdPartyAdapter.TIPO_PERSONA_JURIDICA);		
+		tercero.setNombre(org.getName());
+		tercero.setDir3(org.getCode());
+		tercero.setIdentificacion(org.getCif());
+		
+		IPostalAddressAdapter direccionPostal = org.getDireccionPostal() ;
+		
+		IPostalAddressAdapter[] direccionesPostales = {direccionPostal};
+		tercero.setDireccionesPostales(direccionesPostales);
+		tercero.setDefaultDireccionPostal(direccionPostal);
+		
+		IElectronicAddressAdapter direccionElectronica = org.getDireccionElectronica();
+		IElectronicAddressAdapter[] direccionesElectronicas = {direccionElectronica};
+		tercero.setDireccionesElectronicas(direccionesElectronicas);
+		tercero.setDefaultDireccionElectronica(direccionElectronica);
+		
+		return tercero;
 	}
 }

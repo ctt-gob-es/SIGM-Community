@@ -2,10 +2,12 @@ package es.dipucr.sigem.scheduler;
 
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.IRespManagerAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.impl.InvesflowAPI;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
+import ieci.tdw.ispac.api.item.IResponsible;
 import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
@@ -13,12 +15,14 @@ import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 import ieci.tdw.ispac.ispaclib.utils.CollectionUtils;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import ieci.tdw.ispac.ispactx.TXConstants;
 import ieci.tdw.ispac.ispacweb.scheduler.SchedulerTask;
 import ieci.tecdoc.sgm.core.services.dto.Entidad;
 import ieci.tecdoc.sgm.tram.helpers.EntidadHelper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +31,10 @@ import org.apache.log4j.Logger;
 
 import BDNS.respuestaAnuncio.RespuestaAnuncio;
 import BDNS.respuestaAnuncio.RespuestaAnuncioAnunciosAnuncio;
+import BDNS.respuestaAnuncio.RespuestaAnuncioAnunciosAnuncioCabecera;
+import BDNS.respuestaAnuncio.RespuestaAnuncioAnunciosAnuncioExtracto;
+import BDNS.respuestaAnuncio.RespuestaAnuncioAnunciosAnuncioExtractoES;
+import BDNS.respuestaAnuncio.RespuestaAnuncioAnunciosAnuncioExtractoESPieFirmaES;
 
 import com.sun.star.lang.XComponent;
 import com.sun.star.text.XText;
@@ -36,11 +44,16 @@ import com.sun.star.uno.UnoRuntime;
 
 import es.dipucr.bdns.api.impl.BDNSAPI;
 import es.dipucr.bdns.boletinoficial.client.BDNSBopClient;
+import es.dipucr.bdns.common.BDNSDipucrFuncionesComunes;
+import es.dipucr.bdns.constantes.Constantes;
 import es.dipucr.sigem.api.rt.DipucrFileAdjuntoRT;
 import es.dipucr.sigem.api.rt.DipucrSigemRegistroTelematicoAPI;
+import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 import es.dipucr.sigem.api.rule.common.utils.EntidadesUtil;
 import es.dipucr.sigem.api.rule.common.utils.FechasUtil;
+import es.dipucr.sigem.api.rule.common.utils.HitosUtils;
 import es.dipucr.sigem.api.rule.common.utils.MailUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 
 
 /**
@@ -51,8 +64,11 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
 
 	/** Constantes **/
 	public final static String GET_ANUNCIOS_BDNS_VARNAME = "GET_ANUNCIOS_BDNS";
-	public final static String TEXTO_ENLACE_ANUNCIO = "BOP_BDNS_TEXTO_ENLACE_ANUNCIO";
-	public final static String TEXTO_ENLACE_ANUNCIO_TAGCONV = "[COD_CONVOCATORIA]";
+	public final static String TEXTO_ENLACE_DOCUMENTO = "BOP_BDNS_TEXTO_ENLACE_DOCUMENTO";
+	public final static String TEXTO_ENLACE_DOCUMENTO_TAGCONV = "[ID_DOCUMENTO]";
+	public final static String TEXTO_NO_DOCUMENTO_RESOL = "BOP_BDNS_TEXTO_NO_DOCUMENTO_RESOL";//[dipucr-Felipe #522]
+	public final static String TEXTO_ENLACE_CONVOCATORIA = "BOP_BDNS_TEXTO_ENLACE_ANUNCIO";
+	public final static String TEXTO_ENLACE_CONVOCATORIA_TAGCONV = "[COD_CONVOCATORIA]";
 	public final static String MAIL_ERROR_SUBJECT_VARNAME = "BOP_BDNS_ERROR_MAIL_SUBJECT";
 	public final static String MAIL_ERROR_CONTENT_VARNAME = "BOP_BDNS_ERROR_MAIL_CONTENT";
 	public final static String MAIL_ERROR_TO_VARNAME = "BOP_BDNS_ERROR_MAIL_TO";
@@ -67,10 +83,13 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
 	public final static int MAX_LENGTH_SUMARIO = 250;
 	public final static int MAX_LENGTH_FIRMANTE = 100;
 	
+	//[dipucr-Felipe #872]
+	public final static String COD_TRAM_ALTA_CONV = "BDNS-CONV-ALTA";
+	public final static String COD_TRAM_MODIF_CONV = "BDNS-CONV-MODIF";
+	
 	
 	/** Logger de la clase. */
-    private static final Logger logger = 
-    	Logger.getLogger(GetAnunciosBopBDNSTask.class);
+    private static final Logger LOGGER = Logger.getLogger(GetAnunciosBopBDNSTask.class);
     
     
     /**
@@ -84,7 +103,8 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
     	
     	try{
     		
-	        logger.warn("INICIO Ejecución GetAnunciosBopBDNSTask");
+	        LOGGER.warn("INICIO Ejecución GetAnunciosBopBDNSTask");
+	        LOGGER.warn("***************************************");
 	        
 			List<Entidad> entidades = EntidadesUtil.obtenerListaEntidades();
 	        
@@ -103,33 +123,30 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
 	        				sBDNSEntidad = ConfigurationMgr.getVarGlobal(cct, GET_ANUNCIOS_BDNS_VARNAME);
 	        			}
 	        			catch(ISPACException ex){
-	        				logger.error("Error al recuperar la variable GET_ANUNCIOS_BDNS de la entidad", ex);
+	        				LOGGER.info("Error al recuperar la variable GET_ANUNCIOS_BDNS de la entidad", ex);
 	        			}
 	        			
 	        			boolean bProcesarEntidad = !StringUtils.isEmpty(sBDNSEntidad) && Boolean.valueOf(sBDNSEntidad).booleanValue();
 	        			if (bProcesarEntidad){
 	        			
-		                    if (logger.isInfoEnabled()) {
-		                        logger.info("Inicio de proceso de entidad: " 
-		                        		+ entidad.getIdentificador() + " - " + entidad.getNombre());
-		                    }
+	                        LOGGER.warn("*** Inicio de proceso de entidad: " 
+	                        		+ entidad.getIdentificador() + " - " + entidad.getNombre());
 		        			
 		    				// Comprobar el estado de notificación
 		    				execute(entidad);
 		
-		                    if (logger.isInfoEnabled()) {
-		                        logger.info("Fin de proceso de entidad: " 
-		                        		+ entidad.getIdentificador() + " - " + entidad.getNombre());
-		                    }
+	                        LOGGER.warn("*** Fin de proceso de entidad: " 
+	                        		+ entidad.getIdentificador() + " - " + entidad.getNombre());
 	        			}
 	        		}
 	        	}
 	        }
 	        
-	        logger.warn("FIN Ejecución GetAnunciosBopBDNSTask");
+	        LOGGER.warn("FIN Ejecución GetAnunciosBopBDNSTask");
+	        LOGGER.warn("************************************");
     	}
     	catch(Exception ex){
-    		logger.error("Error el recorrer las entidades y recuperar sus anuncios BDNS", ex);
+    		LOGGER.error("Error el recorrer las entidades y recuperar sus anuncios BDNS", ex);
     		enviarCorreoError(cct, ex);
     	}
     }
@@ -158,8 +175,8 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
     			int idAnuncio = itemAnuncio.getKeyInt();
     			
     			idPeticion = BDNSAPI.getIdPeticion(cct, entitiesAPI);
-        		logger.warn("Id petición BDNS: " + idPeticion);
-        		logger.warn("Id anuncio: " + idAnuncio);
+        		LOGGER.warn("Id petición BDNS: " + idPeticion);
+        		LOGGER.warn("Id anuncio: " + idAnuncio);
         		
         		respuesta = client.solicitarAnuncios(idPeticion, idAnuncio);
         		procesarAnuncio(cct, entidad, respuesta, respuesta.getAnuncios()[0]);
@@ -170,11 +187,15 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
     		 * Solicitud y procesamiento de nuevos anuncios
     		 */
     		idPeticion = BDNSAPI.getIdPeticion(cct, entitiesAPI);
-    		logger.warn("Id petición BDNS: " + idPeticion);
+    		LOGGER.warn("Id petición BDNS: " + idPeticion);
     		respuesta = client.solicitarAnuncios(idPeticion);
     		RespuestaAnuncioAnunciosAnuncio[] arrAnuncios = respuesta.getAnuncios();
+    		//[PRUEBAS]
+//    		respuesta = createFakeRespuesta(idPeticion);
+//    		RespuestaAnuncioAnunciosAnuncio[] arrAnuncios = createFakeArrAnuncios();
+    		
     		if (null != arrAnuncios){
-    			logger.warn("Se han recuperado " + arrAnuncios.length + " anuncios");
+    			LOGGER.warn("Se han recuperado " + arrAnuncios.length + " anuncios");
     			
     			for (RespuestaAnuncioAnunciosAnuncio anuncio : arrAnuncios){
         			
@@ -194,7 +215,7 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
     		
     	}
     	catch (Exception e){
-        	logger.error("Error al procesar los anuncios BDNS de la entidad", e);
+        	LOGGER.error("Error al procesar los anuncios BDNS de la entidad", e);
         	throw e;
     	}
     }
@@ -211,7 +232,7 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
 			RespuestaAnuncioAnunciosAnuncio anuncio) throws Exception {
 		
 		int idAnuncio = anuncio.getCabecera().getIdAnuncio();
-		logger.warn("Se va a procesar el anuncio " + idAnuncio);
+		LOGGER.warn("Se va a procesar el anuncio " + idAnuncio);
 		
 		//Ponemos el texto en B64
 		String[] arrTextoParrafos = anuncio.getExtracto().getES().getTextoES();
@@ -226,6 +247,10 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
 		ArrayList<DipucrFileAdjuntoRT> listAdjuntos = new ArrayList<DipucrFileAdjuntoRT>();
 		listAdjuntos.add(oFileAdjunto);
 		
+		//[dipucr-Felipe #872] Usuario tramitador
+		String numexp = anuncio.getCabecera().getRefConvocatoria();
+		IResponsible usuario = getUsuarioTramitador(cct, numexp);
+		
 		//Solicitud de registro e inicio del expediente
 		DipucrSigemRegistroTelematicoAPI.registrarFacturaAndIniciarExpediente
 		(
@@ -234,11 +259,11 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
 				anuncio.getCabecera().getCodAdminPublica(),
 				anuncio.getCabecera().getAdminPublica(),
 				createXMLRegistro(respuesta, anuncio, textoBase64), 
-				createDatosEspecificos(respuesta, anuncio, textoBase64),
+				createDatosEspecificos(respuesta, anuncio, textoBase64, usuario),//[dipucr-Felipe #872]
 				listAdjuntos
 		);
 		
-		logger.warn("Anuncio " + idAnuncio + " procesado correctamente");
+		LOGGER.warn("Anuncio " + idAnuncio + " procesado correctamente");
 	}
 
 	
@@ -291,7 +316,8 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
 	 * @return
 	 * @throws Exception
 	 */
-	private String createDatosEspecificos(RespuestaAnuncio respuesta, RespuestaAnuncioAnunciosAnuncio anuncio, String textoBase64) throws Exception
+	private String createDatosEspecificos(RespuestaAnuncio respuesta, RespuestaAnuncioAnunciosAnuncio anuncio, 
+			String textoBase64, IResponsible usuario) throws Exception
 	{
 		StringBuffer sbXml = new StringBuffer();
 
@@ -318,6 +344,13 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
 			firmante = firmante.substring(0, MAX_LENGTH_FIRMANTE - 5).concat("...");
 		}
 		sbXml.append("<Firmante>" + getCDATASection(firmante) + "</Firmante>");
+		
+		//INICIO [dipucr-Felipe #872]
+		if (null != usuario){
+			sbXml.append("<Id_Usuario>" + usuario.getUID() + "</Id_Usuario>");
+			sbXml.append("<Nombre_Usuario>" + usuario.getName() + "</Nombre_Usuario>");
+		}
+		//FIN [dipucr-Felipe #872]
 				
 		return sbXml.toString();
 	}
@@ -373,16 +406,45 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
 //	    	xText.insertControlCharacter(xTextCursor, com.sun.star.text.ControlCharacter.PARAGRAPH_BREAK, false);
 	    }
 	    
+	    //INICIO [dipucr-Felipe #343] Enlace a nuestro documento de anuncio (sólo si dipucr)
+	    if (anuncio.getCabecera().getCodAdminPublica().equals(Constantes.DIR3_DIPUCR)){
+	    	LOGGER.warn("Convocatoria de Diputación. Vamos a buscar el documento de resolución");
+	    	String textoEnlace1 = ConfigurationMgr.getVarGlobal(cct, TEXTO_ENLACE_DOCUMENTO);
+	    	IItem itemDocResolucion = BDNSDipucrFuncionesComunes.getDocumentoResolucionConvocatoria
+	    			(cct, anuncio.getCabecera().getCodigoConvocatoria());
+	    	if(null != itemDocResolucion){
+		    	int idDoc = itemDocResolucion.getKeyInt();
+		    	textoEnlace1 = textoEnlace1.replace(TEXTO_ENLACE_DOCUMENTO_TAGCONV, String.valueOf(idDoc));
+		    	xText.insertString(xTextCursor, textoEnlace1, false);
+		    	xText.insertString(xTextCursor, "\r\r", false);
+	    	}
+	    	else{
+	    		//INICIO [dipucr-Felipe #522]
+	    		String textoNoDocumento = ConfigurationMgr.getVarGlobal(cct, TEXTO_NO_DOCUMENTO_RESOL);
+	    		xText.insertString(xTextCursor, textoNoDocumento, false);
+		    	xText.insertString(xTextCursor, "\r\r", false);
+//	    		throw new Exception("No se encontrado ningún documento de resolución para la convocatoria de "
+//	    				+ "Diputación Ciudad Real. Columna NUM_ACTO de SPAC_DT_DOCUMENTOS. Id.Convocatoria: " 
+//	    				+ anuncio.getCabecera().getCodigoConvocatoria() + ". Revisar los logs de SIGEM_TramitacionWeb");
+		    	//FIN [dipucr-Felipe #522]
+	    	}
+	    }
+	    //FIN [dipucr-Felipe #343]
+	    
 	    //Enlace al anuncio en la BDNS
-	    String textoEnlace = ConfigurationMgr.getVarGlobal(cct, TEXTO_ENLACE_ANUNCIO);
+	    String textoEnlace2 = ConfigurationMgr.getVarGlobal(cct, TEXTO_ENLACE_CONVOCATORIA);
 	    String codConvocatoria = anuncio.getCabecera().getCodigoConvocatoria();
-	    textoEnlace = textoEnlace.replace(TEXTO_ENLACE_ANUNCIO_TAGCONV, codConvocatoria);
-	    xText.insertString(xTextCursor, textoEnlace, false);
+	    textoEnlace2 = textoEnlace2.replace(TEXTO_ENLACE_CONVOCATORIA_TAGCONV, codConvocatoria);
+	    xText.insertString(xTextCursor, textoEnlace2, false);
     	xText.insertString(xTextCursor, "\r", false);
 	    
 	    String fileNameOut = FileTemporaryManager.getInstance().newFileName(".odt");
 		String filePathOut = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + fileNameOut;
 	    OpenOfficeHelper.saveDocument(xComponent,"file://" + filePathOut, "");
+	    
+		if(null != ooHelper){
+        	ooHelper.dispose();
+        }
 	    
 		return new File(filePathOut);
 	}
@@ -391,11 +453,13 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
 	 * Para las zonas XML de texto, genera una sección CDATA
 	 * @param content
 	 * @return
+	 * @throws Exception 
 	 */
-	protected String getCDATASection(String content){
+	protected String getCDATASection(String content) throws Exception{
 		StringBuffer sbContentCData = new StringBuffer();
 		sbContentCData.append("<![CDATA[");
-		sbContentCData.append(content);
+//		sbContentCData.append(content);
+		sbContentCData.append(new String(content.getBytes("ISO-8859-1")));//[dipucr-Felipe #374]
 		sbContentCData.append("]]>");
 		return sbContentCData.toString();
 	}
@@ -414,10 +478,115 @@ public class GetAnunciosBopBDNSTask extends SchedulerTask {
 			variables.put("EXCEPCION", ex.getMessage());
 			MailUtil.enviarCorreoConVariables
 				(cct, strDirNotif, MAIL_ERROR_SUBJECT_VARNAME, MAIL_ERROR_CONTENT_VARNAME, null, variables);
+			String idEntidad = EntidadesAdmUtil.obtenerEntidad(cct);
+			LOGGER.error("[" + idEntidad + "] Correo de error enviado: " + ex.getMessage() + " : " + ex.getCause(), ex);
 		}
 		catch(Exception ex1){
-			logger.error("Se produjo una excepción al enviar el correo de error", ex1);
+			LOGGER.error("Se produjo una excepción al enviar el correo de error", ex1);
 		}
+	}
+	
+	/**
+	 * [dipucr-Felipe #872]
+	 * Devolver usuario tramitador de los trámites de alta convocatoria
+	 * @return
+	 * @throws ISPACException 
+	 */
+	private IResponsible getUsuarioTramitador(IClientContext cct, String numexp) throws ISPACException{
+		
+		IInvesflowAPI invesflowAPI = cct.getAPI();
+		IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
+		
+		//Obtenemos el id proceso
+		IResponsible usuario = null;
+		IItem itemExpedient = entitiesAPI.getExpedient(numexp);
+		
+		if (null != itemExpedient){//Puede que sea un anuncio externo y no de diputación
+		
+			int idProceso = itemExpedient.getInt("IDPROCESO");
+			
+			//Obtenemos los nombres de los trámites de alta y modif de convocatorias
+			StringBuffer sbQuery = new StringBuffer();
+			sbQuery.append("WHERE NUMEXP = '" + numexp + "' AND NOMBRE IN ");
+			sbQuery.append("(SELECT NOMBRE FROM SPAC_CT_TRAMITES WHERE COD_TRAM IN ");
+			sbQuery.append("('" + COD_TRAM_ALTA_CONV + "', '" + COD_TRAM_MODIF_CONV + "'))");
+			sbQuery.append(" ORDER BY ID DESC");
+	
+			IItemCollection colTramites = TramitesUtil.queryTramites(cct, sbQuery.toString());
+	
+			if (colTramites.next()){
+				
+				IItem itemTramite = colTramites.value();
+				int idTramExp = itemTramite.getInt("ID_TRAM_EXP");
+				
+				sbQuery = new StringBuffer();
+				sbQuery.append("INFO LIKE '%" + idTramExp + "%'");
+				sbQuery.append(" AND HITO = " + TXConstants.MILESTONE_TASK_START);
+				IItemCollection colHitos = HitosUtils.getHitos(cct, idProceso, sbQuery.toString());
+				
+				if (colHitos.next()){
+					IItem itemHito = colHitos.value();
+					String idAutor = itemHito.getString("AUTOR");
+					
+					IRespManagerAPI respAPI = invesflowAPI.getRespManagerAPI();
+					usuario = respAPI.getResp(idAutor);
+				}
+			}
+		}
+		
+		return usuario;
+	}
+	
+	/**
+	 * Método que crea una respuesta fake sin necesidad de llamar al servicio web
+	 * @param idPeticion 
+	 * @return
+	 */
+	private RespuestaAnuncio createFakeRespuesta(String idPeticion) {
+
+		RespuestaAnuncio respuesta = new RespuestaAnuncio();
+		respuesta.setIdPeticion(idPeticion);
+		respuesta.setTimestamp(FechasUtil.getFormattedDate(new Date()));
+		return respuesta;
+	}
+
+	/**
+	 * Método que crea un listado de anuncios fake sin necesidad de llamar al servicio web
+	 * @return
+	 */
+	private RespuestaAnuncioAnunciosAnuncio[] createFakeArrAnuncios() {
+
+		RespuestaAnuncioAnunciosAnuncio anuncio = new RespuestaAnuncioAnunciosAnuncio();
+		
+		RespuestaAnuncioAnunciosAnuncioCabecera cabecera = new RespuestaAnuncioAnunciosAnuncioCabecera(); 
+		cabecera.setIdAnuncio(1111);
+		cabecera.setCodAdminPublica("L02000013");
+		cabecera.setAdminPublica("DIPUTACIÓN PROVINCIAL DE CIUDAD REAL");
+		cabecera.setCodOrgano("L02000013");
+		cabecera.setOrgano("DIPUTACIÓN PROVINCIAL DE CIUDAD REAL");
+		cabecera.setCodigoConvocatoria("307224");
+		cabecera.setRefConvocatoria("DPCR2017/244");
+		cabecera.setDesConvocatoria("Convocatoria de Subvención Campaña de Fomento Teatral");
+		anuncio.setCabecera(cabecera);
+		
+		RespuestaAnuncioAnunciosAnuncioExtracto extracto = new RespuestaAnuncioAnunciosAnuncioExtracto();
+		RespuestaAnuncioAnunciosAnuncioExtractoES ES = new RespuestaAnuncioAnunciosAnuncioExtractoES();
+		ES.setTituloES("titulo");
+		String[] arrTexto = new String[1];
+		arrTexto[0] = "QkROUyhJZGVudGlmLik6MzA3MjI0fHx0ZXh0b3x8";
+		ES.setTextoES(arrTexto);
+		RespuestaAnuncioAnunciosAnuncioExtractoESPieFirmaES pieFirma = new RespuestaAnuncioAnunciosAnuncioExtractoESPieFirmaES(); 
+		pieFirma.setLugarFirmaES("Ciudad Real");
+		pieFirma.setFechaFirmaES(new Date());
+		pieFirma.setFirmanteES("José Manuel Caballero Serrano");
+		ES.setPieFirmaES(pieFirma);
+		extracto.setES(ES);
+		anuncio.setExtracto(extracto);
+		
+		RespuestaAnuncioAnunciosAnuncio[] arrAnuncios = new RespuestaAnuncioAnunciosAnuncio[1];
+		arrAnuncios[0] = anuncio;
+		
+		return arrAnuncios;
 	}
 	
 }

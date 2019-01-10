@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+<xsl:include href="../templates_comunes.xsl" />
+
 <xsl:output encoding="ISO-8859-1" method="html"/>
 
 	<xsl:variable name="lang.titulo" select="'CONVOCATORIA DE SUBVENCIÓN PARA ASOCIACIONES'"/>
-	
+
 	<xsl:variable name="lang.id_nif" select="'Documento de identidad'"/>
 	<xsl:variable name="lang.id_nombre" select="'Nombre'"/>
 	<xsl:variable name="lang.cargo" select="'Cargo*'"/>
@@ -13,7 +15,7 @@
 	<xsl:variable name="lang.datosInteresado" select="'Datos de la Asociación solicitante'"/>
 	<xsl:variable name="lang.datosSolicitud" select="'Datos de la Solicitud'"/>
 	<xsl:variable name="lang.datosDeclarativos" select="'Declaraciones Preceptivas que formula el solicitante'"/>
-	
+
 	<xsl:variable name="lang.nif_repre" select="'NIF/CIF'"/>
 	<xsl:variable name="lang.nombre_repre" select="'Apellidos y Nombre o Denominación Social'"/>
 	<xsl:variable name="lang.domicilio_repre" select="'Domicilio'"/>
@@ -44,12 +46,12 @@
 	<xsl:variable name="lang.subvencion" select="'Subvención que se solicita (xxxx.xx)'"/>
 	<xsl:variable name="lang.otrasSubvenciones" select="'Otras subvenciones solicitadas y/o concedidas para la actividad, servicio y/o inversión'"/>
 	<xsl:variable name="lang.fecha" select="'Fecha prevista de realización actividad / suministro / terminación de las obras'"/>
-	
-	
+
+
 	<xsl:variable name="lang.expone" select="'Expone'"/>
 	<xsl:variable name="lang.solicita" select="'Solicita'"/>
 	<xsl:variable name="lang.declaro" select="'Asimismo, declaro bajo mi Responsabilidad (obligatorio marcar con una x cada cuadro para poder seguir el trámite)'"/>
-	
+
 	<xsl:variable name="lang.declaro1" select="'Que al día de la fecha, esta entidad se encuentra al corriente en el cumplimiento de sus obligaciones tributarias y frente a la Seguidad Social, así como de sus obligaciones fiscales con la Excma. Diputación Provincial de Ciudad Real, no es deudora por resolución de procedencia de reintegro de subvenciones, y autorizo a la Diputación Provincial para la obtención de los certificados de la Agencia Estatal de la Administración Tributaria y de la Tesorería Territorial de la Seguridad de estar al corriente en el cumplimiento de dichas obligaciones.'"/>
 	<xsl:variable name="lang.declaro2" select="'Que no me encuentro/esta entidad no se encuentra incursa en ninguna de las circunstancias de prohibición para la obtención de la condición de beneficiario de ayuda o subvención, previstas en el artículo 13 de la Ley General de Subvenciones, de 17 de noviembre de 2003.'"/>
 	<xsl:variable name="lang.declaro3" select="'Que la persona o entidad solicitante autoriza expresamente a la Diputación de Ciudad Real para consultar las expresadas circunstancias ante las entidades señaladas.'"/>	
@@ -67,8 +69,8 @@
 	<xsl:variable name="lang.documentoTipo_DOC_ODT" select="'Archivo ODT/DOC'"/>
 	<xsl:variable name="lang.documentoTipoPDF" select="'Archivo PDF'"/>
 	<xsl:variable name="lang.documentoTipoJPEG" select="'Archivo JPEG'"/>
-	
-		
+
+
 	<xsl:template match="/"  xmlns:java="http://xml.apache.org/xslt/java">
 		<script language="Javascript">
 			//array de campos obligatorios -> ('id_campo','nombre_campo')
@@ -99,7 +101,7 @@
 
 			//Array con los datos especificos del formilario -> -> ('id_campo','tag_xml')
 			//----------------------------------------------
-			var especificos = new Array(31);
+			var especificos = new Array(33);
 			
 			especificos[0] = new Array('ayuntamiento','ayuntamiento');
 			especificos[1] = new Array('domicilioNotificacion','domicilioNotificacion');
@@ -141,8 +143,11 @@
 
 			especificos[29] = new Array('cargo','cargo');
 			especificos[30] = new Array('Descripcion_ayuntamiento','Descripcion_ayuntamiento');
-			
-			
+
+			especificos[31] = new Array('texto_legal_comun','texto_legal_comun');
+			especificos[32] = new Array('texto_datos_personales_comun','texto_datos_personales_comun');
+
+
 			//Array de validaciones
 			//----------------------------------------------
 			var validarNumero;
@@ -213,78 +218,78 @@
 			}
 
 
-		function validaCIF(cif){
-			var par = 0;
-			var non = 0;
-			var letras = "ABCDEFGHJKLMNPRQSUVW";
-			var caracterControlLetra = "KPQS";
-			var caracterControlNum = "ABEH";
-			var i;
-			var parcial;
-			var control;
-			var controlLetra = "JABCDEFGHIJ";
-			var letraIni = cif.charAt(0);
-			 
-			if (cif.length!=9){
-			    alert("El Cif debe tener 9 dígitos",3);
-				    return -2;
-			}
-			else{
-			    if (letras.indexOf(letraIni.toUpperCase())==-1)
-			    {
-				alert("La letra del CIF introducido no es correcta",3);
-				    return -2;
-			    }
-			    var i = 2;
-			    while (i!=8){
-				par = par + parseInt(cif.charAt(i));
-				i = i+2;
-			    }
-			 
-			    i = 1;
-			    while ( i!= 9){
-				var nn = 2 * parseInt(cif.charAt(i));
-				if (nn > 9) nn = 1 + (nn-10);
-				non = non + nn;
-				i = i+2;
-			    }
-			 
-			    parcial = par + non;			 
-			    control = (10 - ( parcial % 10));
-			 			 
-			    if (caracterControlLetra.indexOf(letraIni.toUpperCase()) != -1){
-				// El caracter de control deberá ser una letra
-			 
-				if (controlLetra.charAt(control) != cif.charAt(8).toUpperCase()){
-				    alert("El Cif no es válido",3);
-				    return -2;
+			function validaCIF(cif){
+				var par = 0;
+				var non = 0;
+				var letras = "ABCDEFGHJKLMNPRQSUVW";
+				var caracterControlLetra = "KPQS";
+				var caracterControlNum = "ABEH";
+				var i;
+				var parcial;
+				var control;
+				var controlLetra = "JABCDEFGHIJ";
+				var letraIni = cif.charAt(0);
+				 
+				if (cif.length!=9){
+				    alert("El Cif debe tener 9 dígitos",3);
+					    return -2;
 				}
-			    }
-			    if (caracterControlNum.indexOf(letraIni.toUpperCase()) != -1)
-			    {
-				// El caracter de control deberá ser un número
-			 
-				if (control == 10) control = 0;			 
-				if (control != cif.charAt(8)){
-				    alert("El Cif no es válido",3);
-				    return -2;
-				}
-			    }
-			    if (caracterControlLetra.indexOf(letraIni.toUpperCase()) == -1)
-				if(caracterControlNum.indexOf(letraIni.toUpperCase()) == -1){
-				// En este caso el carácter de control puede ser una letra o un número			 
-					if (control == 10){
-					    control = 0;
+				else{
+				    if (letras.indexOf(letraIni.toUpperCase())==-1)
+				    {
+					alert("La letra del CIF introducido no es correcta",3);
+					    return -2;
+				    }
+				    var i = 2;
+				    while (i!=8){
+					par = par + parseInt(cif.charAt(i));
+					i = i+2;
+				    }
+				 
+				    i = 1;
+				    while ( i!= 9){
+					var nn = 2 * parseInt(cif.charAt(i));
+					if (nn > 9) nn = 1 + (nn-10);
+					non = non + nn;
+					i = i+2;
+				    }
+				 
+				    parcial = par + non;			 
+				    control = (10 - ( parcial % 10));
+							 
+				    if (caracterControlLetra.indexOf(letraIni.toUpperCase()) != -1){
+					// El caracter de control deberá ser una letra
+				 
+					if (controlLetra.charAt(control) != cif.charAt(8).toUpperCase()){
+					    alert("El Cif no es válido",3);
+					    return -2;
 					}
-					if (controlLetra.charAt(control) != cif.charAt(8).toUpperCase())
-						if(control != cif.charAt(8)){
-						    alert("El Cif no es válido",3);
-						    return -2;
+				    }
+				    if (caracterControlNum.indexOf(letraIni.toUpperCase()) != -1)
+				    {
+					// El caracter de control deberá ser un número
+				 
+					if (control == 10) control = 0;			 
+					if (control != cif.charAt(8)){
+					    alert("El Cif no es válido",3);
+					    return -2;
+					}
+				    }
+				    if (caracterControlLetra.indexOf(letraIni.toUpperCase()) == -1)
+					if(caracterControlNum.indexOf(letraIni.toUpperCase()) == -1){
+					// En este caso el carácter de control puede ser una letra o un número			 
+						if (control == 10){
+						    control = 0;
 						}
-			    }
+						if (controlLetra.charAt(control) != cif.charAt(8).toUpperCase())
+							if(control != cif.charAt(8)){
+							    alert("El Cif no es válido",3);
+							    return -2;
+							}
+				    }
+				}
+				return 2;
 			}
-			return 2;
-		}
 
 
 			//Retorna: 1 = NIF ok, 2 = CIF ok, 3 = NIE ok, -1 = NIF error, -2 = CIF error, -3 = NIE error, 0 = ??? error
@@ -794,7 +799,8 @@ document.getElementById('solicita').value = 'Que se conceda la más alta subvenci
 				<xsl:value-of select="$lang.declaro3"/>
 				<br/>
 			</div>
-		
+			<br/>
+			<xsl:call-template name="TEXTO_LEGAL_COMUN" />
    			<br/>
 			<div class="submenu">
    			<h1><xsl:value-of select="$lang.anexar"/></h1>
@@ -888,15 +894,10 @@ document.getElementById('solicita').value = 'Que se conceda la más alta subvenci
 					<xsl:attribute name="value">XSIG</xsl:attribute>
 				</input>
 			</div>
-			<br/>
-			<div style="color: grey; text-align:justify">
-				<label class="gr">
-					<xsl:attribute name="style">position: relative; width:650px;</xsl:attribute>
-					Los datos personales, identificativos y de contacto, aportados mediante esta comunicación se entienden facilitados voluntariamente, y serán incorporados a un fichero cuya finalidad es la de mantener con Vd. relaciones dentro del ámbito de las competencias de esta Administración Pública así como informarle de nuestros servicios presentes y futuros ya sea por correo ordinario o por medios telemáticos y enviarle invitaciones para eventos y felicitaciones en fechas señaladas. Entenderemos que presta su consentimiento tácito para este tratamiento de datos si en el plazo de un mes no expresa su voluntad en contra. Podrá ejercer sus derechos de acceso, rectificación, cancelación y oposición ante el Responsable del Fichero, la Diputación Provincial de Ciudad Real en C/ Toledo, 17, 13071 Ciudad Real - España, siempre acreditando conforme a Derecho su identidad en la comunicación. En cumplimiento de la L.O. 34/2002 le informamos de que puede revocar en cualquier momento el consentimiento que nos otorga dirigiéndose a la dirección citada ut supra o bien al correo electrónico lopd@dipucr.es o bien por telefono al numero gratuito 900 714 080.	
-				</label>
-			</div>
-   		</div>
+   		</div>   		
+		<xsl:call-template name="TEXTO_DATOS_PERSONALES_COMUN" />
    		<br/>
+		<xsl:call-template name="TEXTO_COMPARECE_COMUN" />
    		<input type="hidden">
 			<xsl:attribute name="name">datosEspecificos</xsl:attribute>
 			<xsl:attribute name="id">datosEspecificos</xsl:attribute>

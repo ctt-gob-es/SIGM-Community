@@ -8,6 +8,8 @@
 <%@page import="ieci.tecdoc.sgm.core.services.telematico.ConstantesGestionTelematicoCiudadano"%>
 <%@page import="ieci.tecdoc.sgm.core.services.idioma.ConstantesIdioma"%>
 <%@page import="ieci.tecdoc.sgm.core.web.locale.LocaleFilterHelper"%>
+<%@page import="ieci.tecdoc.sgm.core.services.LocalizadorServicios"%>
+
 
 <%
 String rutaEstilos = (String)session.getAttribute("PARAMETRO_RUTA_ESTILOS");
@@ -19,6 +21,8 @@ String entidadId = (String)request.getParameter("ENTIDAD_ID");
 if (entidadId == null || entidadId.equals(""))
 	entidadId = (String)request.getSession().getAttribute("ENTIDAD_ID");
 session.setAttribute(ConstantesGestionTelematicoCiudadano.PARAMETRO_ID_ENTIDAD, entidadId);
+
+String descEntidad = LocalizadorServicios.getServicioEntidades().obtenerEntidad(entidadId).getNombreLargo();
 %>
 
 
@@ -36,12 +40,18 @@ session.setAttribute(ConstantesGestionTelematicoCiudadano.PARAMETRO_ID_ENTIDAD, 
 
 
 	<div id="cabecera">
-		<h1>
+			<!--
 			<img src="img/minetur.jpg" alt="GOBIERNO DE ESPAÑA. MINISTERIO DE INDUSTRIA, ENERGÍA Y TURISMO " />
-			<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="SIgem" />
-		</h1>
-		<h3>&nbsp;</h3>
-		<p class="salir"><a href="<html:rewrite page="/desconectar.do"/>"><bean:message key="salir"/></a></p>
+			-->
+			<div class="logo">
+				<img src="<%=request.getContextPath()%>/resourceServlet/logos/logo.gif" alt="SIgem"/>
+			</div>
+			<div class="nombre_entidad">
+				<h1><%=descEntidad%></h1>
+			</div>
+			<div class="salir">
+				<p><a href="<html:rewrite page="/desconectar.do"/>"><bean:message key="salir"/></a></p>
+			</div>
 	</div>
 
 	<div id="usuario">

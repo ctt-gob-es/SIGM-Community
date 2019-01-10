@@ -28,6 +28,9 @@ public class ScrCa implements Serializable {
 
     /** nullable persistent field */
     private Integer forSreg;
+    
+    /** nullable persistent field */
+    private Integer forDistRT;
 
     /** nullable persistent field */
     private Integer allOfics;
@@ -51,12 +54,13 @@ public class ScrCa implements Serializable {
     private Set scrCaadms;
 
     /** full constructor */
-    public ScrCa(Integer id, String code, String matter, Integer forEreg, Integer forSreg, Integer allOfics, int idArch, Date creationDate, Date disableDate, Integer enabled, int idOrg, Set scrCaadms) {
+    public ScrCa(Integer id, String code, String matter, Integer forEreg, Integer forSreg, Integer forDistRT, Integer allOfics, int idArch, Date creationDate, Date disableDate, Integer enabled, int idOrg, Set scrCaadms) {
         this.id = id;
         this.code = code;
         this.matter = matter;
         this.forEreg = forEreg;
         this.forSreg = forSreg;
+        this.forDistRT = forDistRT;
         this.allOfics = allOfics;
         this.idArch = idArch;
         this.creationDate = creationDate;
@@ -152,6 +156,20 @@ public class ScrCa implements Serializable {
 
     public void setForSreg(Integer forSreg) {
         this.forSreg = forSreg;
+    }
+    
+    /** 
+     *            @hibernate.property
+     *             column="FOR_DIST_RT"
+     *             length="10"
+     *         
+     */
+    public Integer getForDistRT() {
+    	return forDistRT;
+    }
+
+    public void setForDistRT(Integer forDistRT) {
+    	this.forDistRT = forDistRT;
     }
 
     /** 
@@ -322,5 +340,4 @@ public int hashCode() {
             .append(getId())
             .toHashCode();
     }
-
 }

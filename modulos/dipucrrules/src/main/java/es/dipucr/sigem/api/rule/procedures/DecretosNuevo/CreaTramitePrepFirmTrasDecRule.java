@@ -6,6 +6,7 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.common.constants.SignStatesConstants;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import org.apache.log4j.Logger;
 
@@ -34,7 +35,7 @@ public class CreaTramitePrepFirmTrasDecRule implements IRule{
 			//Comprobamos que no tenga número de decreto
 			String numDecreto = DecretosUtil.getNumDecreto(rulectx);
 			
-			if(!itemDocumento.iterator().hasNext() && !itemTramites.iterator().hasNext() && numDecreto==null){
+			if(!itemDocumento.iterator().hasNext() && !itemTramites.iterator().hasNext() && StringUtils.isEmpty(numDecreto)){
 				TramitesUtil.crearTramite("PREP_FIRMAS_DEC", rulectx);
 			}			
 			

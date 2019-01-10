@@ -36,6 +36,7 @@ public class DipucrInitDecretoExtensionDocRule implements IRule {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+		OpenOfficeHelper ooHelper = null;
 		try
     	{
 			//----------------------------------------------------------------------------------------------
@@ -44,7 +45,7 @@ public class DipucrInitDecretoExtensionDocRule implements IRule {
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 	        IGenDocAPI genDocAPI = invesFlowAPI.getGenDocAPI();
 	        ITXTransaction transaction = invesFlowAPI.getTransactionAPI();
-	        OpenOfficeHelper ooHelper = OpenOfficeHelper.getInstance();
+	        ooHelper = OpenOfficeHelper.getInstance();
 	        //----------------------------------------------------------------------------------------------
 	        
 	        String taskId = cct.getSsVariable("taskId");
@@ -199,12 +200,10 @@ public class DipucrInitDecretoExtensionDocRule implements IRule {
 			        
 			        //Cuerpo de decreto
 		        	file = DocumentosUtil.getFile(cct, infopag, null, null);
-//		        	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper); [eCenpri-Felipe #1004]
 		        	DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), DipucrCommonFunctions._FORMAT_DOC);
 		    		file.delete();
 		    		//Cuerpo de notificaciones
 		    		fileNotificaciones = DocumentosUtil.getFile(cct, infopag, null, null);
-//		        	DipucrCommonFunctions.Concatena(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), ooHelper); [eCenpri-Felipe #1004]
 		    		DipucrCommonFunctions.ConcatenaByFormat(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), DipucrCommonFunctions._FORMAT_DOC);
 		        	fileNotificaciones.delete();
 		    		
@@ -216,7 +215,6 @@ public class DipucrInitDecretoExtensionDocRule implements IRule {
 			    	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, Constants.PLANTILLADOC.DECRETO_PIE);
 			    	logger.info(strInfoPag);
 			    	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-//			    	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper); [eCenpri-Felipe #1004]
 			    	DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), DipucrCommonFunctions._FORMAT_DOC);
 					file.delete();
 					logger.info("FIN PIE DECRETO");
@@ -228,7 +226,6 @@ public class DipucrInitDecretoExtensionDocRule implements IRule {
 			    	strInfoPagNotificaciones = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, Constants.PLANTILLADOC.NOTIFICACIONES_PIE);
 			    	logger.info(strInfoPagNotificaciones);
 			    	fileNotificaciones = DocumentosUtil.getFile(cct, strInfoPagNotificaciones, null, null);
-//			    	DipucrCommonFunctions.Concatena(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), ooHelper); [eCenpri-Felipe #1004]
 			    	DipucrCommonFunctions.ConcatenaByFormat(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), DipucrCommonFunctions._FORMAT_DOC);
 			    	fileNotificaciones.delete();
 					logger.info("FIN PIE DECRETO");
@@ -266,10 +263,6 @@ public class DipucrInitDecretoExtensionDocRule implements IRule {
 			        	IItem doc = (IItem)it.next();
 			        	entitiesAPI.deleteDocument(doc);
 			        }
-			       /* infopag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, descripcion);
-		    		file = DocumentosUtil.getFile(cct, infopag, null, null);
-			        DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
-			    	file.delete();*/
 			    	
 			    	if(fileNotificaciones != null && fileNotificaciones.exists()) fileNotificaciones.delete();
 	    		}
@@ -302,18 +295,18 @@ public class DipucrInitDecretoExtensionDocRule implements IRule {
 			/**
 			 * [Teresa] FIN Ticket #237#SIGEM Subvenciones importar participantes a proced. de propuesta y decreto
 			 * **/
-			if(ooHelper!= null) ooHelper.dispose();
 	        return new Boolean(true);
-        }
-    	catch(Exception e) 
-        {
+        } catch(Exception e) {
     		logger.error("Error generando los documentos de la resolución: "+e.getMessage());
-        	if (e instanceof ISPACRuleException)
-        	{
+        	if (e instanceof ISPACRuleException) {
 			    throw new ISPACRuleException(e);
         	}
         	throw new ISPACRuleException("No se ha podido inicializar el decreto.",e);
-        }
+        } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
 	}
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException{

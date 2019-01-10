@@ -37,6 +37,7 @@ public class InitDecretoAutomaticoRule implements IRule {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+		OpenOfficeHelper ooHelper = null;
 		try
     	{
 			//----------------------------------------------------------------------------------------------
@@ -44,7 +45,7 @@ public class InitDecretoAutomaticoRule implements IRule {
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 	        IGenDocAPI genDocAPI = invesFlowAPI.getGenDocAPI();
-	        OpenOfficeHelper ooHelper = OpenOfficeHelper.getInstance();
+	        ooHelper = OpenOfficeHelper.getInstance();
 	        String extensionEntidad = DocumentosUtil.obtenerExtensionDocPorEntidad();
 	        //----------------------------------------------------------------------------------------------
 	        	        
@@ -58,6 +59,7 @@ public class InitDecretoAutomaticoRule implements IRule {
 	        Iterator it = col.iterator();
 	        if (!it.hasNext())
 	        {
+	        	logger.error("Expediente. "+ rulectx.getNumExp()+ "- No tiene expediente relacionados");
 	        	return new Boolean(false);
 	        }
         	IItem relacion = (IItem)it.next();
@@ -66,6 +68,7 @@ public class InitDecretoAutomaticoRule implements IRule {
 	        it = col.iterator();
 	        if (!it.hasNext())
 	        {
+	        	logger.error("Expediente. "+ rulectx.getNumExp()+ "- No existe en SUBV_CONVOCATORIA");
 	        	return new Boolean(false);
 	        }
 	        IItem convocatoria = (IItem)it.next();
@@ -89,26 +92,31 @@ public class InitDecretoAutomaticoRule implements IRule {
         		 IItem expediente = ExpedientesUtil.getExpediente(cct, numexp_ent);
     	        if (expediente == null)
     	        {
+    	        	logger.error("Expediente. "+ rulectx.getNumExp()+ "- No existe expediente");
     	        	return new Boolean(false);
     	        }
     	        titulo = expediente.getString("ASUNTO");
         	}
+        	logger.warn("numexp decreto "+numexp_decr);
+        	logger.warn("numexp padre "+numexp_ent);
 			if (decreto != null)
 			{
 				decreto.set("EXTRACTO_DECRETO", titulo);
 				decreto.set("AUTOMATIZACION", "SI");
 				decreto.store(cct);
 			}else{
+				logger.error("Expediente. "+ rulectx.getNumExp()+ "- Problemas al almacenarlo en la tabla SGD_DECRETO");
 				return new Boolean(false);
 			}
-			
+			logger.warn("Añadido en la entidad SGD_DECRETO la información del titulo "+titulo);
 		
 			int codTramiteCreac = TramitesUtil.crearTramite(cct, "CREAR_DECRETOS", numexp_decr);
-			logger.info("idTramitePropuesta "+codTramiteCreac);			
-			logger.info("Creado el tramite");
+			logger.warn("Expediente. "+ rulectx.getNumExp()+ "- Creado el trámite "+codTramiteCreac);			
 			
 			//Se busca el id del tramite
 			String sQueryTramite = "WHERE ID_TRAM_EXP="+taskId+" AND FECHA_CIERRE IS NULL AND NUMEXP='"+numexp_ent+"' ORDER BY FECHA_INICIO";
+			logger.warn("query tramites. "+sQueryTramite);
+			
 			IItemCollection icTramite = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_DT_TRAMITES, sQueryTramite);
 			Iterator<IItem> itTramite = icTramite.iterator();
 			int tramiteExpPadre = 0;
@@ -116,6 +124,7 @@ public class InitDecretoAutomaticoRule implements IRule {
 				IItem itemTramite = itTramite.next();
 				tramiteExpPadre = itemTramite.getInt("ID_TRAM_EXP");
 			}
+			logger.warn("En contrato el trámite del padre. "+tramiteExpPadre);
 			
 			IItemCollection documentsCollection = entitiesAPI.getDocuments(numexp_ent, "ID_TRAMITE = "+tramiteExpPadre, "FDOC DESC");
 			
@@ -126,8 +135,26 @@ public class InitDecretoAutomaticoRule implements IRule {
 			while(itDocProp.hasNext()){
 				IItem documentacionPropuesta = itDocProp.next();
 				
-				IItem nuevoDocumentoDocPropuesta = (IItem)genDocAPI.createTaskDocument(codTramiteCreac, documentacionPropuesta.getInt("ID_TPDOC"));
-				logger.info("Creado el documento");
+				String infopag = "";
+				if(documentacionPropuesta.getString("INFOPAG_RDE")!=null){
+					infopag = documentacionPropuesta.getString("INFOPAG_RDE");
+				}
+				else{
+					infopag = documentacionPropuesta.getString("INFOPAG");
+				}
+				descripcion = documentacionPropuesta.getString("DESCRIPCION");
+				File fileFoliado = DocumentosUtil.getFile(cct, infopag, null, null);
+				
+				IItem nuevoDocumento = DocumentosUtil.generaYAnexaDocumento(rulectx, codTramiteCreac, documentacionPropuesta.getInt("ID_TPDOC"), descripcion, fileFoliado, documentacionPropuesta.getString("EXTENSION"));	
+				nuevoDocumento.set("NOMBRE", Constants.TIPODOC.DOCUMENTACION);
+				nuevoDocumento.store(cct);
+				if(fileFoliado != null && fileFoliado.exists()) fileFoliado.delete();
+				logger.warn("Añadido el foliado en el expdiente del decreto");
+				
+				
+				/*IItem nuevoDocumentoDocPropuesta = (IItem)genDocAPI.createTaskDocument(codTramiteCreac, documentacionPropuesta.getInt("ID_TPDOC"));
+				logger.warn("Añadido el foliado en el expdiente del decreto");
+				
 				
 				String infopag = documentacionPropuesta.getString("INFOPAG");
 				descripcion = documentacionPropuesta.getString("DESCRIPCION");
@@ -136,7 +163,7 @@ public class InitDecretoAutomaticoRule implements IRule {
 				nuevoDocumentoDocPropuesta.set("NOMBRE", Constants.TIPODOC.DOCUMENTACION);
 				nuevoDocumentoDocPropuesta.set("DESCRIPCION", descripcion);
 				nuevoDocumentoDocPropuesta.set("EXTENSION", extension);
-				nuevoDocumentoDocPropuesta.store(cct);
+				nuevoDocumentoDocPropuesta.store(cct);*/
 			}
 			
 			
@@ -150,7 +177,7 @@ public class InitDecretoAutomaticoRule implements IRule {
         	File file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
         	XComponent xComponent = ooHelper.loadDocument("file://" + file.getPath());
     		file.delete();
-    		logger.info("FIN CABECERA DECRETO");
+    		logger.warn("CABECERA DECRETO creado");
     		
     		//CABECERA NOTIFICACIONES
     		logger.info("NOTIFICACIONES CABECERA INICIO "+Constants.PLANTILLADOC.NOTIFICACIONES_CABECERA);
@@ -159,7 +186,7 @@ public class InitDecretoAutomaticoRule implements IRule {
         	File fileNotificaciones = DocumentosUtil.getFile(cct, strInfoPagNotificaciones, null, null);
         	XComponent xComponentNotificaciones = ooHelper.loadDocument("file://" + fileNotificaciones.getPath());
         	fileNotificaciones.delete();
-    		logger.info("FIN CABECERA NOTIFICACIÓN");
+    		logger.warn("CABECERA NOTIFICACIÓN creado");
     		  		
 			
     		//Cuerpo
@@ -172,15 +199,14 @@ public class InitDecretoAutomaticoRule implements IRule {
 		        String infopag = iPropuesta.getString("INFOPAG");
 		        autor = iPropuesta.getString("AUTOR");
 		        autorInfo = iPropuesta.getString("AUTOR_INFO");
+		        logger.warn("infopag "+infopag+" autor "+autor+" autorInfo "+autorInfo);
 		        
 		        //Cuerpo de decreto
 	        	file = DocumentosUtil.getFile(cct, infopag, null, null);
-	        	//DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
 	        	DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 	    		file.delete();
 	    		//Cuerpo de notificaciones
 	    		fileNotificaciones = DocumentosUtil.getFile(cct, infopag, null, null);
-	        	//DipucrCommonFunctions.Concatena(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), ooHelper);
 	    		DipucrCommonFunctions.ConcatenaByFormat(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), extensionEntidad);
 	        	fileNotificaciones.delete();
 	    		
@@ -191,7 +217,6 @@ public class InitDecretoAutomaticoRule implements IRule {
 		    	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, Constants.PLANTILLADOC.DECRETO_PIE);
 		    	logger.info(strInfoPag);
 		    	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-		    	//DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
 		    	DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 				file.delete();
 				logger.info("FIN PIE DECRETO");
@@ -202,7 +227,6 @@ public class InitDecretoAutomaticoRule implements IRule {
 		    	strInfoPagNotificaciones = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, Constants.PLANTILLADOC.NOTIFICACIONES_PIE);
 		    	logger.info(strInfoPagNotificaciones);
 		    	fileNotificaciones = DocumentosUtil.getFile(cct, strInfoPagNotificaciones, null, null);
-		    	//DipucrCommonFunctions.Concatena(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), ooHelper);
 		    	DipucrCommonFunctions.ConcatenaByFormat(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), extensionEntidad);
 		    	fileNotificaciones.delete();
 				logger.info("FIN PIE DECRETO");
@@ -250,7 +274,6 @@ public class InitDecretoAutomaticoRule implements IRule {
 		        }
 		       /* infopag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, descripcion);
 	    		file = DocumentosUtil.getFile(cct, infopag, null, null);
-		        DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
 		    	file.delete();*/
 		    	
 		    	if(fileNotificaciones != null && fileNotificaciones.exists()) fileNotificaciones.delete();
@@ -290,17 +313,16 @@ public class InitDecretoAutomaticoRule implements IRule {
 	        
 	        logger.warn("Fin carga documento decreto");
 			
-			if(ooHelper!= null) ooHelper.dispose();
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+	        
 	        return new Boolean(true);
         }
     	catch(Exception e) 
         {
-    		logger.error("Error generando los documentos de la resolución: "+e.getMessage());
-        	if (e instanceof ISPACRuleException)
-        	{
-			    throw new ISPACRuleException(e);
-        	}
-        	throw new ISPACRuleException("No se ha podido inicializar el decreto.",e);
+    		logger.error("Error generando los documentos de la resolución en el expediente "+rulectx.getNumExp()+ " - " +e.getMessage(), e);
+        	throw new ISPACRuleException("Error generando los documentos de la resolución en el expediente "+rulectx.getNumExp()+ " - " +e.getMessage(), e);
         }
 	}
 

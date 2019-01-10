@@ -12,6 +12,8 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.utils.FasesUtil;
+
 public class AnadirDocDevFianzaPCPeticionContratacion extends AnadirDocExpedienteTramite{
 
 	private static final Logger logger = Logger.getLogger(AnadirDocSolInfTecnPCPeticionContratacion.class);
@@ -26,15 +28,17 @@ public class AnadirDocDevFianzaPCPeticionContratacion extends AnadirDocExpedient
 	        //-----------------------------------------------------------------------------
 
 	        //Obtengo el numexp del procedimiento de Petición de contratación
-	        String sqlQueryPart = "WHERE NUMEXP_HIJO='"+rulectx.getNumExp()+"' AND RELACION='Devolucion Fianza'";
+	        String sqlQueryPart = "WHERE NUMEXP_HIJO='"+rulectx.getNumExp()+"' AND RELACION LIKE 'Devolucion Fianza%'";
 	        logger.warn("numexpContratacion "+rulectx.getNumExp());
 	        IItemCollection exp_relacionados = entitiesAPI.queryEntities("SPAC_EXP_RELACIONADOS", sqlQueryPart);
 	        Iterator<IItem> itExpRel = exp_relacionados.iterator();
 	        if(itExpRel.hasNext()){
 	        	IItem itemExpRel = itExpRel.next();
-	        	numexpPeticionContratacion = itemExpRel.getString("NUMEXP_PADRE");
+	        	String numexpProceContratacion = itemExpRel.getString("NUMEXP_PADRE");
+	        	IItem faseExpContr = FasesUtil.getFase(cct, numexpProceContratacion);
+	        	faseActual = faseExpContr.getInt("ID");
 	        	
-	        	sqlQueryPart = "WHERE NUMEXP_HIJO='"+numexpPeticionContratacion+"' AND RELACION='Petición Contrato'";
+	        	sqlQueryPart = "WHERE NUMEXP_HIJO='"+numexpProceContratacion+"' AND RELACION='Petición Contrato'";
 	        	exp_relacionados = entitiesAPI.queryEntities("SPAC_EXP_RELACIONADOS", sqlQueryPart);
 		        itExpRel = exp_relacionados.iterator();
 		        if(itExpRel.hasNext()){

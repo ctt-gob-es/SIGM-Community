@@ -182,7 +182,7 @@ public class DeleteRegEntityAction extends BaseAction {
 			} else {
 				//logger.error("ERROR EN LA AUDITORÍA. No está disponible el contexto de auditoría en el thread local. Faltan los siguientes valores por auditar: userId, user, userHost y userIp");
 			}
-			logger.info("Auditando la modificación de la entidad");
+			LOGGER.info("Auditando la modificación de la entidad");
 			auditoriaManager.audit(evento);
     	}
 	}

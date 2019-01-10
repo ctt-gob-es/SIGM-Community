@@ -100,6 +100,8 @@ public interface ConfigurationKeys {
 	public static final String KEY_DESKTOP_REPORTS_JASPERREPORTS_LIB = "/ISicres-Configuration/ISicres-DesktopWeb/Reports/JasperReportsLib";
 
 	public static final String KEY_DESKTOP_PROVINCIA_POR_DEFECTO = "/ISicres-Configuration/ISicres-DesktopWeb/DefaultProvincia";
+	
+	public static final String KEY_DESKTOP_PAIS_POR_DEFECTO = "/ISicres-Configuration/ISicres-DesktopWeb/DefaultPais";
 
 	// Configuración de intercambio registral
 	public static final String KEY_INTERCAMBIO_ENABLE_INTERCAMBIO_REGISTRAL = "/ISicres-Configuration/ISicres-IntercambioRegistral/EnableIntercambioRegistral";
@@ -110,6 +112,8 @@ public interface ConfigurationKeys {
 	
 	// Configuración de la actualización del 
 	public static final String KEY_COMPONETES_USUARIO_URL_DESCARGA = "";
-	
+		
+	public static final String KEY_URL_CHECK_FOR_UPDATES_SCAN = "/ISicres-Configuration/ISicres-WS/UrlCheckForUpdatesScan";
+	public static final String KEY_URL_CHECK_FOR_UPDATES_COMPULSA = "/ISicres-Configuration/ISicres-WS/UrlCheckForUpdatesCompulsa"; 
 
 }

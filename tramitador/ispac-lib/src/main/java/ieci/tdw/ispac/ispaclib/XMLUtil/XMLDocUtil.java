@@ -17,6 +17,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.log4j.Logger;
 import org.apache.xalan.processor.TransformerFactoryImpl;
 import org.apache.xerces.jaxp.DocumentBuilderFactoryImpl;
 import org.w3c.dom.Document;
@@ -32,6 +33,8 @@ import org.w3c.dom.NodeList;
  */
 public class XMLDocUtil
 {
+	
+	private static final Logger LOGGER = Logger.getLogger(XMLDocUtil.class);
 
 	/**
 	 *
@@ -125,7 +128,7 @@ public class XMLDocUtil
             // Create the builder and parse the fileww
             doc = factory.newDocumentBuilder().parse(in);
         } catch (Exception e) {
-            e.printStackTrace();
+        	LOGGER.error("ERROR. " + e.getMessage(), e);
             throw new ISPACException(e);
         }
         if (doc != null)

@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 public class RellenarPersonaContactoRule implements IRule{
 	
-	public static final Logger logger = Logger.getLogger(RellenarPersonaContactoRule.class);
+	public static final Logger LOGGER = Logger.getLogger(RellenarPersonaContactoRule.class);
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		return true;
@@ -43,10 +43,10 @@ public class RellenarPersonaContactoRule implements IRule{
 			item.store(cct);
 			
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. "+e.getMessage(),e);
 		}
-		return new Boolean(true);
+		return Boolean.TRUE;
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {

@@ -11,6 +11,9 @@ import ieci.tdw.ispac.ispaclib.common.constants.SignStatesConstants;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
+import java.util.Date;
+import java.util.Iterator;
+
 import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.procedures.Constants;
@@ -95,11 +98,11 @@ public class BopUtils {
 			throws ISPACRuleException, ISPACException {
 		
 		IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
-		StringBuffer sbQuery;
+		StringBuilder sbQuery;
 		IItemCollection collection;
 		//Obtenemos el documento boletín
 		//= Documento firmado del expediente con nombre "BOP - General"
-		sbQuery = new StringBuffer();
+		sbQuery = new StringBuilder();
 		sbQuery.append("ID_FASE = ");
 		sbQuery.append(rulectx.getStageId());
 		sbQuery.append(" AND ESTADOFIRMA = '");
@@ -111,5 +114,50 @@ public class BopUtils {
 		collection = entitiesAPI.getDocuments(rulectx.getNumExp(),
 				sbQuery.toString(), "FDOC DESC");
 		return collection;
+	}
+
+	public static Date getFechaPublicacion(IClientContext cct, String numexp) throws ISPACRuleException {
+		Date fechaBop = new Date();
+
+		try {
+			// *********************************************
+			IInvesflowAPI invesFlowAPI = cct.getAPI();
+			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+			// *********************************************
+			
+            IItemCollection boletinCollection = entitiesAPI.getEntities("BOP_SOLICITUD", numexp);
+            Iterator<?> boletinIterator = boletinCollection.iterator();
+            if(boletinIterator.hasNext()){
+                IItem boletin = (IItem)boletinIterator.next();                
+                fechaBop = boletin.getDate("FECHA_PUBLICACION");
+			}
+
+		} catch (Exception e) {
+			logger.error( "Error al obtener la fecha del boletín: " + numexp + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "Error al obtener la fecha del boletín: " + numexp + ". " + e.getMessage(), e);
+		}
+		return fechaBop;
+	}
+
+	public static int getNumBoletin(IClientContext cct, Date fechaBoletin) throws ISPACRuleException {
+		int numBoletin = 0;
+
+		try {
+			// *********************************************
+			IInvesflowAPI invesFlowAPI = cct.getAPI();
+			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+			// *********************************************
+						
+			 IItemCollection boletinesCollection = entitiesAPI.queryEntities("BOP_PUBLICACION", " WHERE FECHA = '" + fechaBoletin + "'");
+             Iterator<?> boletinesIterator = boletinesCollection.iterator();
+             if(boletinesIterator.hasNext()){
+                 numBoletin = ((IItem)boletinesIterator.next()).getInt("NUM_BOP");
+             }
+
+		} catch (Exception e) {
+			logger.error( "Error al obtener número del BOP de fecha: " + fechaBoletin + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "Error al obtener número del BOP de fecha: " + fechaBoletin + ". " + e.getMessage(), e);
+		}
+		return numBoletin;
 	}
 }

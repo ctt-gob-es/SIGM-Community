@@ -20,7 +20,7 @@
 	</appender>	
 
     <root>
-		<priority value ="WARN" />
+		<priority value ="ERROR" />
 		<appender-ref ref="FICHERO"/>
     </root>
 

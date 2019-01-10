@@ -145,8 +145,11 @@ public class Notices {
 		TableJoinFactoryDAO factory = new TableJoinFactoryDAO();
 		factory.addTable(NOTICES_TBL, NOTICES_TBL);
 		factory.addTable("SPAC_PROCESOS", "SPAC_PROCESOS");
-
-		return factory.countTableJoin(mctx.getConnection(), getSqlWhereToGetNotices());
+		
+		DbCnt cnt = mctx.getConnection();
+		int cuenta = factory.countTableJoin(cnt, getSqlWhereToGetNotices());
+		mctx.releaseConnection(cnt);
+		return cuenta;
 	}
 
 	public void modifyNotice(int noticeId, int newstate) throws ISPACException {

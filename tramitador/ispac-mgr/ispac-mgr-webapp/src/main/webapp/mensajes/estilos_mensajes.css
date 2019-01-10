@@ -1,8 +1,52 @@
-.tituloMensaje {
-	color: #892031;
+.tituloMensajeInformacion {
+	color: #0000FF;
 	font-size:22px;
 }
 
-.cuerpoMensaje {
-	color: #892031;
+.tituloMensajeAviso {
+	color: #00ff40;
+	font-size:22px;
+}
+
+.tituloMensajeUrgente {
+	color: #D7DF01;
+	font-size:22px;
+}
+
+.tituloMensajeCritico {
+	color: #FF0000;
+	font-size:22px;
+}
+
+.fechaMensaje{
+	margin: 0 0 25px;
+	font-size:8px;
+}
+
+.cuerpoMensajeInformacion,.cuerpoMensajeAviso,.cuerpoMensajeUrgente,.cuerpoMensajeCritico{
+	margin: 0 0 10px;
+	overflow: hidden;
+	padding: 20px;
+	width: 75%;
+	font-size: 14px;
+}
+.cuerpoMensajeInformacion {
+	background-color: #d8ecf7;
+	border: 1px solid #afcde3;
+	color: #0B0B61
+}
+
+.cuerpoMensajeAviso {
+	background-color: #d9edc2;
+	border: 1px solid #b2ce96;
+}
+
+.cuerpoMensajeUrgente {
+	background-color: #fef5c4;
+	border: 1px solid #fadf98;
+}
+
+.cuerpoMensajeCritico {
+	background-color: #f9dbdb;
+	border: 1px solid #e9b3b3;
 }

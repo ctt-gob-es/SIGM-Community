@@ -16,14 +16,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfCopyFields;
-import com.lowagie.text.pdf.PdfReader;
+import es.dipucr.sigem.api.rule.common.utils.PdfUtil;
 
 /**
  * Clase que convierte documentos de un formato a otro.
@@ -248,6 +247,8 @@ public class DocumentConverter {
 	protected static String convert2PDF(Object connectorSession, IGenDocAPI genDocAPI, String guid, String extension) throws ISPACException {
 
 		try {
+			
+			OpenOfficeHelper ooHelper;
 
 			String mime = genDocAPI.getMimeType(connectorSession, guid);
 
@@ -282,7 +283,9 @@ public class DocumentConverter {
 				String finalFileURL = finalFile.toURL().toString();
 
 				// Llama a OpenOffice para convertir el fichero a PDF
-				OpenOfficeHelper.getInstance().load_and_Convert(sourceFileURL, finalFileURL, extension, "pdf");
+				ooHelper = OpenOfficeHelper.getInstance();
+				ooHelper.load_and_Convert(sourceFileURL, finalFileURL, extension, "pdf");
+				ooHelper.dispose();
 
 				// Eliminar el fichero temporal de origen
 				sourceFile.delete();
@@ -419,21 +422,17 @@ public class DocumentConverter {
 				targetFilePath = files[0];
 			} else {
 
-				File targetFile = FileTemporaryManager.getInstance().newFile(".pdf");
-
-				PdfCopyFields copy = new PdfCopyFields(new FileOutputStream(targetFile));
-				for (int i = 0; i < files.length; i++) {
-					copy.addDocument(new PdfReader(files[i]));
+				//INICIO [dipucr-Felipe #791bis-4]
+				ArrayList<File> listFicheros = new ArrayList<File>();
+				for (int i = 0; i < files.length; i++){
+					listFicheros.add(new File(files[i]));
 				}
-				copy.close();
-
+				File targetFile = PdfUtil.concatenarArchivos(listFicheros); 
+				//FIN [dipucr-Felipe #791bis-4]
 				targetFilePath = targetFile.getAbsolutePath();
 			}
 
-		} catch (IOException e) {
-			logger.error("Error al concatenar documentos en PDF", e);
-			throw new ISPACException(e);
-		} catch (DocumentException e) {
+		} catch (Exception e) {
 			logger.error("Error al concatenar documentos en PDF", e);
 			throw new ISPACException(e);
 		}

@@ -157,10 +157,13 @@ public class ShowExpedientAction extends BaseAction {
 			// bloqueado el expediente
 			request.getSession(false).removeAttribute("userLock");
 		} else {
-			String username = ((ExpedientState) state).getLockedStageUser(cct, state.getStageId());
-			// Insertamos el atributo que indica el usuario que tiene bloqueado
-			// el expediente
-			request.getSession(false).setAttribute("userLock", username);
+			//INICIO [dipucr-Felipe #427]
+			// Insertamos el atributo que indica el usuario que tiene bloqueado el expediente
+			if (StateContext.READONLYREASON_LOCK == state.getReadonlyReason()){
+				String username = ((ExpedientState) state).getLockedStageUser(cct);
+				request.setAttribute(ActionsConstants.LOCKUSERNAME, " por " + username);
+			}
+			//FIN [dipucr-Felipe #427]
 		}
 
 		// enviamos un mapa con parámetros para el enlace de los hitos y la otra
@@ -279,7 +282,7 @@ public class ShowExpedientAction extends BaseAction {
 
 		// TODO: Auditar la consulta de la entidad
 
-		logger.info("Auditando la consulta de la entidad");
+		LOGGER.info("Auditando la consulta de la entidad");
 		String numExpediente = state.getNumexp();
 		auditConsultaEntidad(request, cct, entityapp,numExpediente);
 

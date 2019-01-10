@@ -42,7 +42,7 @@ public class DipucrCambiaRespConvSubGenInicioExp implements IRule {
             // Obtenemos la opción que se ha indicado en la solicitud haya
             // participado
 
-            String strQuery = "WHERE NUMEXP_HIJO = '" + rulectx.getNumExp() + "'";
+            String strQuery = ConstantesString.WHERE + " NUMEXP_HIJO = '" + rulectx.getNumExp() + "'";
 
             IItemCollection datos = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, strQuery);
 
@@ -54,10 +54,9 @@ public class DipucrCambiaRespConvSubGenInicioExp implements IRule {
 
             if (StringUtils.isNotEmpty(numexpPadre)) {
                 
-                strQuery = "WHERE NUMEXP = '" + rulectx.getNumExp() + "'";
+                strQuery = ConstantesString.WHERE + " NUMEXP = '" + rulectx.getNumExp() + "'";
                 
-                IItem fase = (IItem) entitiesAPI.queryEntities("SPAC_FASES",
-                        strQuery).iterator().next();
+                IItem fase = (IItem) entitiesAPI.queryEntities("SPAC_FASES", strQuery).iterator().next();
 
                 if ("DPCR2012/18380".equals(numexpPadre)) {
                     fase.set("ID_RESP", idCristina);
@@ -75,7 +74,7 @@ public class DipucrCambiaRespConvSubGenInicioExp implements IRule {
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
     public boolean validate(IRuleContext rulectx) throws ISPACRuleException {

@@ -8,9 +8,10 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigFilePathResolver;
 
 import java.io.File;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -25,25 +26,6 @@ import es.dipucr.sigem.api.rule.common.utils.MailUtil;
 import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
 
 public class DipucrTrasladarDictamenRule implements IRule {
-	
-	//ACCESO A LA BASE DE DATOS DE REGISTRO
-	/** Nombre del origen de datos por defecto. */
-	private static final String DEFAULT_DATASOURCE_NAME = "java:comp/env/jdbc/sicres";
-	/** Nombre del origen de datos. */
-	protected String dsName = DEFAULT_DATASOURCE_NAME;
-	
-	/**
-	 * Variables que se utilizarán para insertar en la bbdd los datos 
-	 * sobre el envío correcto o incorrecto del email.
-	 * */
-	String nombreNotif = "";
-	Date fechaEnvío = null;
-	String nombreDoc = "";
-	boolean enviadoEmail = false;
-	String emailNotif = "";
-	String descripError = "";
-	String descripcionDoc = "";
-	
 	
 	protected static final Logger logger = Logger.getLogger(DipucrTrasladarDictamenRule.class);
 
@@ -65,6 +47,11 @@ public class DipucrTrasladarDictamenRule implements IRule {
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 	        //----------------------------------------------------------------------------------------------
+	        
+	        String rutaImg = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + EntidadesAdmUtil.obtenerEntidad(rulectx.getClientContext()), "/SIGEM_TramitacionWeb");
+			Object[] imagen = {rutaImg, new Boolean(true), "logoCabecera.gif", "escudo"};
+			List<Object[]> imagenes = new ArrayList<Object[]>();
+			imagenes.add(imagen);
 	        
         	//Comprobar que el acuerdo esté firmado
 			// --> Está ya hecho en ValidateFirmaRule, ejecutada antes que esta regla
@@ -115,8 +102,6 @@ public class DipucrTrasladarDictamenRule implements IRule {
 					AccesoBBDDRegistro accsRegistro = new AccesoBBDDRegistro(entidad);
 					String direccionesCorreo = accsRegistro.getEmailDepartamento(seccionIniciadora);
 
-					nombreNotif = seccionIniciadora;
-					emailNotif = direccionesCorreo;
 					
 					if (direccionesCorreo != null){
 						StringTokenizer tokens = new StringTokenizer(direccionesCorreo, ";");
@@ -124,17 +109,18 @@ public class DipucrTrasladarDictamenRule implements IRule {
 						{
 							String cCorreoDestino = tokens.nextToken();	
 							String cContenido = "<br/>Adjunto se envía el Certificado del Dictamen "+orden+" ";
-							String cAsunto= "[SIGEM] Traslado";
+							String cAsunto= "[SIGEM] Traslado Dictamen";
 							
 							// Fichero a adjuntar
 							IItem doc = (IItem)documentos.iterator().next();
 							String infoPag = doc.getString("INFOPAG_RDE");
 							
-							nombreDoc = doc.getString("NOMBRE");
-							descripcionDoc = doc.getString("DESCRIPCION");
 							file = DocumentosUtil.getFile(cct, infoPag, null, null);
 							
-							MailUtil.enviarCorreoConAcuses(rulectx, cCorreoDestino, file, cContenido, cAsunto, nombreDoc, cAsunto, false);
+							cContenido = MailUtil.formateContenidoEmail(rulectx, cAsunto, cContenido);
+			        		MailUtil.enviarCorreoVarios(rulectx, cCorreoDestino, cAsunto, cContenido, false, file, imagenes);
+							
+							//MailUtil.enviarCorreoConAcuses(rulectx, cCorreoDestino, file, cContenido, cAsunto, nombreDoc, cAsunto, false);
 						}
 					}
 				}

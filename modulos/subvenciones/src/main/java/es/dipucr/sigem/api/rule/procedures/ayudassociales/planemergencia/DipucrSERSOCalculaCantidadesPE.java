@@ -17,13 +17,14 @@ import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrSERSOCalculaCantidadesPE implements IRule {
 
     public static final Logger LOGGER = Logger.getLogger(DipucrSERSOCalculaCantidadesPE.class);
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
     public Object execute(IRuleContext rulectx) throws ISPACRuleException {
@@ -112,175 +113,130 @@ public class DipucrSERSOCalculaCantidadesPE implements IRule {
             double totalTotal = 0;          
             
             IItemCollection solicitudCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, numexp);
-            Iterator<?> solicitudIterator = solicitudCollection.iterator();                
+            Iterator<?> solicitudIterator = solicitudCollection.iterator();
+            
             if (solicitudIterator.hasNext()){
                 IItem solicitud = (IItem)solicitudIterator.next();
-                nifBenef = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
-                numexpConvocatoria = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CONVOCATORIA);
+                
+                nifBenef = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
+                numexpConvocatoria = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CONVOCATORIA);
+                
                 //Buscamos todas las solicitudes que tiene este beneficiario en esta convocatoria
-                IItemCollection solicitudesBenefCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, "WHERE UPPER(NIF) = UPPER('" +nifBenef+"') AND CONVOCATORIA = '" +numexpConvocatoria+"' ORDER BY SUBSTR(NUMEXP, 5,4)::INT, SUBSTR(NUMEXP, 10)::INT DESC");
+                IItemCollection solicitudesBenefCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, ConstantesString.WHERE + " UPPER(NIF) = UPPER('" +nifBenef+"') AND CONVOCATORIA = '" +numexpConvocatoria+"' ORDER BY SUBSTR(NUMEXP, 5,4)::INT, SUBSTR(NUMEXP, 10)::INT DESC");
                 Iterator<?> solicitudesBenefIterator = solicitudesBenefCollection.iterator();
                 
                 //Comprobamos si han sido rechazadas, si no, seguimos con ellas
                 boolean fin = false;
+                
                 while(solicitudesBenefIterator.hasNext() && !fin){
                     IItem solicitudBenf = (IItem) solicitudesBenefIterator.next();
-                    String numexpSolicitudesBenef = solicitudBenf.getString("NUMEXP");
+                    String numexpSolicitudesBenef = SubvencionesUtils.getString(solicitudBenf, "NUMEXP");
                     
-                    IItem expediente = ExpedientesUtil.getExpediente(cct, numexpSolicitudesBenef);
-                    if(expediente != null){
-                        String estado = expediente.getString("ESTADOADM");
-                        //Cojemos el último no rechazado y que no sea la convocatoria
-                        if(!"RC".equals(estado) && ExpedientesUtil.esMayor(numexp, numexpSolicitudesBenef)){
-                            fin = true;
-                            IItemCollection expedienteSolicitudAteriorCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, "WHERE NUMEXP='" +numexpSolicitudesBenef+"' ORDER BY SUBSTR(NUMEXP, 5,4)::INT, SUBSTR(NUMEXP, 10)::INT DESC");
-                            IItemCollection expedienteCantidadesAnteriorCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NOMBRE_TABLA, numexpSolicitudesBenef);
-                            Iterator<?> expedienteSolicitudAnteriorIterator = expedienteSolicitudAteriorCollection.iterator();
-                            Iterator<?> expedienteCantidadesAnteriorIterator = expedienteCantidadesAnteriorCollection.iterator();
+                    String estado = ExpedientesUtil.getEstadoAdm(cct, numexpSolicitudesBenef);
+                    //Cojemos el último no rechazado y que no sea la convocatoria
+                    if(!ExpedientesUtil.EstadoADM.RC.equals(estado) && ExpedientesUtil.esMayor(numexp, numexpSolicitudesBenef)){
+                        fin = true;
+                        IItemCollection expedienteSolicitudAteriorCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, ConstantesString.WHERE + " NUMEXP = '" +numexpSolicitudesBenef+"' ORDER BY SUBSTR(NUMEXP, 5,4)::INT, SUBSTR(NUMEXP, 10)::INT DESC");                        
+                        Iterator<?> expedienteSolicitudAnteriorIterator = expedienteSolicitudAteriorCollection.iterator();
+                        
+                        if(expedienteSolicitudAnteriorIterator.hasNext()){
                             
-                            if(expedienteSolicitudAnteriorIterator.hasNext()){
-                                
-                                IItem expedienteSolicitudAnterior = null;
-                                try{
-                                    expedienteSolicitudAnterior = (IItem)expedienteSolicitudAnteriorIterator.next();    
-                                } catch(Exception e){
-                                    LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                                }
-                                IItem expedienteCantidadesAnterior = null;
-                                try{
-                                    if(expedienteCantidadesAnteriorIterator.hasNext()){
-                                        expedienteCantidadesAnterior = (IItem)expedienteCantidadesAnteriorIterator.next();
-                                    } else{
-                                        expedienteCantidadesAnterior = entitiesAPI.createEntity(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NOMBRE_TABLA, numexpSolicitudesBenef);
-                                    }
-                                } catch(Exception e){
-                                    LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                                }
-                                if(expedienteCantidadesAnterior != null && expedienteSolicitudAnterior!= null){
-                                    try{
-                                        numMiembros1 = Integer.parseInt(expedienteSolicitudAnterior.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NFAMILIAR).trim());
-                                    } catch(Exception e){
-                                        numMiembros1 = 0;
-                                        LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                                    }                            
-                                    try{
-                                        menores3anios1 = expedienteSolicitudAnterior.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.MENORES3ANIOS);
-                                        numMenores = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMMENORES);
-                                    } catch(Exception e){
-                                        menores3anios1 = "NO";
-                                        LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                                    }                                                                                    
-                                    try{
-                                        porMiembros1 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMIEMBROS).trim());
-                                        porMenores1 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMENORES).trim());
-                                        totalMes1 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALMES).trim());
-                                        maximosemestre1 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE).trim());
-                                        propuesta11 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA11).trim());
-                                        propuesta12 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA12).trim());
-                                        propuesta1Exc = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA13).trim());
-                                        total11 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL11).trim());
-                                        total12 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL12).trim());
-                                        totalSemestre1 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALCONCEDIDO).trim());
-                                        total1E = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALSEMESTRE1).trim());
-                                        countAyuda11 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMAYUDA1).trim());
-                                        countAyuda1E = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMEXC1).trim());
-                                    } catch(Exception e){
-                                        LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                                    }
-                                    try{
-                                        propuesta21 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA21).trim());
-                                        propuesta22 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA22).trim());
-                                        propuesta2Exc = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA23).trim());
-                                        total21 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL21).trim());
-                                        total22 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL22).trim());
-                                        totalSemestre2 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALCONCEDIDO2).trim());
-                                        porMiembros2 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMIEMBROS2).trim());
-                                        porMenores2 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMENORES2).trim());
-                                        totalMes2 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALMES2).trim());
-                                        maximosemestre2 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE2).trim());
-                                        total2E = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALSEMESTRE2).trim());
-                                        countAyuda21 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMAYUDA2).trim());
-                                        countAyuda2E = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMEXC2).trim());
-                                    } catch(Exception e){
-                                        LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                                    }
-                                    try{
-                                        porMiembros3 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMIEMBROS3).trim());
-                                        porMenores3 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMENORES3).trim());
-                                        totalMes3 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALMES3).trim());
-                                        maximosemestre3 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE3).trim());
-                                        propuesta31 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA31).trim());
-                                        propuesta32 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA32).trim());
-                                        propuesta3Exc = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA33).trim());
-                                        total31 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL31).trim());
-                                        total32 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL32).trim());
-                                        total3E = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALSEMESTRE3).trim());
-                                        totalSemestre3 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALCONCEDIDO3).trim());
-                                        countAyuda31 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMAYUDA3).trim());
-                                        countAyuda3E = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMEXC3).trim());
-                                    } catch(Exception e){
-                                        LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                                    }
-                                    try{
-                                        porMiembros4 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMIEMBROS4).trim());
-                                        porMenores4 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMENORES4).trim());
-                                        totalMes4 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALMES4).trim());
-                                        maximosemestre4 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE4).trim());
-                                        propuesta41 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA41).trim());
-                                        propuesta42 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA42).trim());
-                                        propuesta4Exc = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA43).trim());
-                                        total41 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL41).trim());
-                                        total42 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL42).trim());
-                                        total4E = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALSEMESTRE4).trim());
-                                        totalSemestre4 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALCONCEDIDO4).trim());
-                                        countAyuda41 = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMAYUDA4).trim());
-                                        countAyuda4E = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMEXC4).trim());
-                                    } catch(Exception e){
-                                        LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                                    }
-                                    try{
-                                        totalTotal = Double.parseDouble(expedienteCantidadesAnterior.getString(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALTOTAL).trim());
-                                    } catch(Exception e){
-                                        LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                                    }
-                                }
+                            IItem expedienteSolicitudAnterior =  (IItem)expedienteSolicitudAnteriorIterator.next();    
+                            numMiembros1 = SubvencionesUtils.getInt(expedienteSolicitudAnterior, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NFAMILIAR);
+                            menores3anios1 = SubvencionesUtils.getString(expedienteSolicitudAnterior, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.MENORES3ANIOS);
+                            
+                            if(StringUtils.isEmpty(menores3anios1)){
+                                menores3anios1 = "NO";
                             }
                         }
-                    }
-                }//While
-                String trimestre = solicitud.getString(ConstantesPlanEmergencia.TRIMESTRE);
-                String tipoAyuda = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
-                //Miramos si han cambiado los datos de la solicitud, si no han cambiado nos quedamos con los que había
-                if(StringUtils.isNotEmpty(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NFAMILIAR))){
-                    try{
-                        numMiembros1 = Integer.parseInt(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NFAMILIAR).trim());                        
-                    } catch(Exception e){    
-                        LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                    }                    
-                } else{
-                    try{
-                        solicitud.set(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NFAMILIAR, numMiembros1);
-                        solicitud.store(cct);
-                    } catch(Exception e){
-                        LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
+                        
+                        IItemCollection expedienteCantidadesAnteriorCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NOMBRE_TABLA, numexpSolicitudesBenef);
+                        Iterator<?> expedienteCantidadesAnteriorIterator = expedienteCantidadesAnteriorCollection.iterator();                        
+                        IItem expedienteCantidadesAnterior = null;
+                        if(expedienteCantidadesAnteriorIterator.hasNext()){
+                            expedienteCantidadesAnterior = (IItem)expedienteCantidadesAnteriorIterator.next();
+                        } else{
+                            expedienteCantidadesAnterior = entitiesAPI.createEntity(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NOMBRE_TABLA, numexpSolicitudesBenef);
+                        }
+
+                        porMiembros1 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMIEMBROS);
+                        porMenores1 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMENORES);
+                        totalMes1 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALMES);
+                        maximosemestre1 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE);
+                        propuesta11 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA11);
+                        propuesta12 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA12);
+                        propuesta1Exc = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA13);
+                        total11 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL11);
+                        total12 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL12);
+                        totalSemestre1 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALCONCEDIDO);
+                        total1E = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALSEMESTRE1);
+                        countAyuda11 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMAYUDA1);
+                        countAyuda1E = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMEXC1);
+                        
+                        propuesta21 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA21);
+                        propuesta22 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA22);
+                        propuesta2Exc = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA23);
+                        total21 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL21);
+                        total22 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL22);
+                        totalSemestre2 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALCONCEDIDO2);
+                        porMiembros2 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMIEMBROS2);
+                        porMenores2 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMENORES2);
+                        totalMes2 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALMES2);
+                        maximosemestre2 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE2);
+                        total2E = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALSEMESTRE2);
+                        countAyuda21 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMAYUDA2);
+                        countAyuda2E = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMEXC2);
+
+                        porMiembros3 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMIEMBROS3);
+                        porMenores3 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMENORES3);
+                        totalMes3 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALMES3);
+                        maximosemestre3 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE3);
+                        propuesta31 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA31);
+                        propuesta32 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA32);
+                        propuesta3Exc = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA33);
+                        total31 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL31);
+                        total32 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL32);
+                        total3E = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALSEMESTRE3);
+                        totalSemestre3 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALCONCEDIDO3);
+                        countAyuda31 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMAYUDA3);
+                        countAyuda3E = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMEXC3);
+
+                        porMiembros4 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMIEMBROS4);
+                        porMenores4 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PORMENORES4);
+                        totalMes4 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALMES4);
+                        maximosemestre4 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.MAXIMOSEMESTRE4);
+                        propuesta41 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA41);
+                        propuesta42 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA42);
+                        propuesta4Exc = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.PROPUESTA43);
+                        total41 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL41);
+                        total42 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTAL42);
+                        total4E = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALSEMESTRE4);
+                        totalSemestre4 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALCONCEDIDO4);
+                        countAyuda41 = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMAYUDA4);
+                        countAyuda4E = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NUMEXC4);
+
+                        totalTotal = SubvencionesUtils.getDouble(expedienteCantidadesAnterior, ConstantesPlanEmergencia.SERSOPlanEmerConcesion.TOTALTOTAL);
                     }
                 }
+                String trimestre = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.TRIMESTRE);
+                String tipoAyuda = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
+                
                 //Miramos si han cambiado los datos de la solicitud, si no han cambiado nos quedamos con los que había
-                if(StringUtils.isNotEmpty(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.MENORES3ANIOS))){
-                    try{                    
-                        menores3anios1 = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.MENORES3ANIOS);
-                        numMenores = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMMENORES);
-                    } catch(Exception e){    
-                        LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                    }                    
-                } else{
-                    try{
-                        solicitud.set(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.MENORES3ANIOS, menores3anios1);
-                        solicitud.set(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMMENORES, numMenores);
-                        solicitud.store(cct);
-                    } catch(Exception e){
-                        LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                    }
+                if(StringUtils.isNotEmpty(SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NFAMILIAR))){
+                    numMiembros1 = SubvencionesUtils.getInt(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NFAMILIAR);
+                } else {
+                    solicitud.set(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NFAMILIAR, numMiembros1);
+                    solicitud.store(cct);
+                }
+                
+                //Miramos si han cambiado los datos de la solicitud, si no han cambiado nos quedamos con los que había
+                if(StringUtils.isNotEmpty(SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.MENORES3ANIOS))){
+                    menores3anios1 = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.MENORES3ANIOS);
+                    numMenores = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMMENORES);
+                } else {
+                    solicitud.set(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.MENORES3ANIOS, menores3anios1);
+                    solicitud.set(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMMENORES, numMenores);
+                    solicitud.store(cct);
                 }
                 
                 //[Manu Ticket #1028] * INICIO - SIGEM Modificar cantidades del plan de emergencia.                
@@ -316,39 +272,35 @@ public class DipucrSERSOCalculaCantidadesPE implements IRule {
                     maximosemestre1 = totalMes1*2;
                     
                     if(ConstantesPlanEmergencia.EXCEPCIONAL.equals(tipoAyuda)){
-                        try{
-                            propuesta1Exc += Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());
-                        } catch(Exception e){
-                            LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                        }
+                        propuesta1Exc += SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
                         countAyuda1E++;
                     } else if(ConstantesPlanEmergencia.ALIMENTACION.equals(tipoAyuda)){
-                        try{
-                            if(propuesta11 == 0){
-                                propuesta11 = Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());        
-                                if(propuesta11 <= maximosemestre1){
-                                    total11 = propuesta11;
-                                } else {
-                                    total11 = maximosemestre1;
-                                }
-                                total12 = 0;
-                            } else if(propuesta12 == 0){
-                                propuesta12 = Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());        
-                                double resto = maximosemestre1 - total11;
-                                if(propuesta12 <= resto){
-                                    total12 = propuesta12;
-                                } else{
-                                    total12 = resto;
-                                }
+                        if(propuesta11 == 0){
+                            propuesta11 = SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
+                            
+                            if(propuesta11 <= maximosemestre1){
+                                total11 = propuesta11;
+                            } else {
+                                total11 = maximosemestre1;
                             }
-                        } catch(Exception e){    
-                            LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                        }                        
+                            total12 = 0;
+                            
+                        } else if(propuesta12 == 0){
+                            propuesta12 = SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
+                            
+                            double resto = maximosemestre1 - total11;
+                            if(propuesta12 <= resto){
+                                total12 = propuesta12;
+                            } else{
+                                total12 = resto;
+                            }
+                        }
                         countAyuda11++;
                     }                    
                     
                     total1E = propuesta1Exc;                
                     totalSemestre1 = total11 + total12;
+                    
                 } else if(ConstantesPlanEmergencia.SEGUNDO_TRIMESTRE.equals(trimestre)){
                     porMiembros2 = porMiembros;
                     porMenores2 = porMenores;
@@ -357,33 +309,27 @@ public class DipucrSERSOCalculaCantidadesPE implements IRule {
                     maximosemestre2 = totalMes2*2;
                     
                     if(ConstantesPlanEmergencia.EXCEPCIONAL.equals(tipoAyuda)){
-                        try{
-                            propuesta2Exc += Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());
-                        } catch(Exception e){    
-                            LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                        }
+                        propuesta2Exc += SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
                         countAyuda2E++;
                     } else if(ConstantesPlanEmergencia.ALIMENTACION.equals(tipoAyuda)){
-                        try{
-                            if(propuesta21 == 0){                            
-                                propuesta21 = Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());
-                                if(propuesta21 <= maximosemestre2){
-                                    total21 = propuesta21;
-                                } else{
-                                    total21 = maximosemestre2;
-                                }
-                                total22 = 0;
-                            } else if(propuesta22 == 0){
-                                propuesta22 = Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());
-                                double resto = maximosemestre2 - total21;
-                                if(propuesta22 <= resto){
-                                    total22 = propuesta22;
-                                } else{
-                                    total22 = resto;
-                                }
+                        if(propuesta21 == 0){
+                            propuesta21 = SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
+                            
+                            if(propuesta21 <= maximosemestre2){
+                                total21 = propuesta21;
+                            } else{
+                                total21 = maximosemestre2;
                             }
-                        } catch(Exception e){
-                            LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
+                            total22 = 0;
+                        } else if(propuesta22 == 0){
+                            propuesta22 = SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
+                            double resto = maximosemestre2 - total21;
+                            
+                            if(propuesta22 <= resto){
+                                total22 = propuesta22;
+                            } else{
+                                total22 = resto;
+                            }
                         }
                         countAyuda21++;
                     }                     
@@ -398,34 +344,28 @@ public class DipucrSERSOCalculaCantidadesPE implements IRule {
                     maximosemestre3 = totalMes3*2;
 
                     if(ConstantesPlanEmergencia.EXCEPCIONAL.equals(tipoAyuda)){
-                        try{
-                            propuesta3Exc += Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());
-                        } catch(Exception e){
-                            LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                        }
+                        propuesta3Exc += SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
                         countAyuda3E++;
                     } else if(ConstantesPlanEmergencia.ALIMENTACION.equals(tipoAyuda)){
-                        try{
-                            if(propuesta31 == 0){
-                                propuesta31 = Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());
-                                if(propuesta31 <= maximosemestre3){
-                                    total31 = propuesta31;
-                                } else{
-                                    total31 = maximosemestre3;
-                                }
-                                total32 = 0;
-                            } else if(propuesta32 == 0){
-                                propuesta32 = Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());
-                                double resto = maximosemestre3 - total31;
-                                if(propuesta32 <= resto){
-                                    total32 = propuesta32;
-                                } else{
-                                    total32 = resto;
-                                }
+                        if(propuesta31 == 0){
+                            propuesta31 = SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
+                            
+                            if(propuesta31 <= maximosemestre3){
+                                total31 = propuesta31;
+                            } else{
+                                total31 = maximosemestre3;
                             }
-                        } catch(Exception e){    
-                            LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                        }                
+                            total32 = 0;
+                        } else if(propuesta32 == 0){
+                            propuesta32 = SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
+                            double resto = maximosemestre3 - total31;
+                            
+                            if(propuesta32 <= resto){
+                                total32 = propuesta32;
+                            } else{
+                                total32 = resto;
+                            }
+                        }
                         countAyuda31++;
                     }   
                     total3E = propuesta3Exc;                
@@ -438,34 +378,26 @@ public class DipucrSERSOCalculaCantidadesPE implements IRule {
                     maximosemestre4 = totalMes4*2;
                     
                     if(ConstantesPlanEmergencia.EXCEPCIONAL.equals(tipoAyuda)){
-                        try{
-                            propuesta4Exc += Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());
-                        } catch(Exception e){
-                            LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(), e);
-                        }
+                        propuesta4Exc += SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
                         countAyuda4E++;
                     } else if(ConstantesPlanEmergencia.ALIMENTACION.equals(tipoAyuda)){
-                        try{
-                            if(propuesta41 == 0){
-                                propuesta41 = Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());
-                                if(propuesta41 <= maximosemestre4){
-                                    total41 = propuesta41;
-                                } else{
-                                    total41 = maximosemestre4;
-                                }
-                                total42 = 0;
-                            } else if(propuesta42 == 0){
-                                propuesta42 = Double.parseDouble(solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE).trim());
-                                double resto = maximosemestre4 - total41;
-                                if(propuesta42 <= resto){
-                                    total42 = propuesta42;
-                                } else{
-                                    total42 = resto;
-                                }
+                        if(propuesta41 == 0){
+                            propuesta41 = SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
+                            if(propuesta41 <= maximosemestre4){
+                                total41 = propuesta41;
+                            } else{
+                                total41 = maximosemestre4;
                             }
-                        } catch(Exception e){    
-                            LOGGER.error(ConstantesString.LOGGER_ERROR + ". " + e.getMessage(),e);
-                        }                
+                            total42 = 0;
+                        } else if(propuesta42 == 0){
+                            propuesta42 = SubvencionesUtils.getDouble(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.PROPUESTA1_IMPORTE);
+                            double resto = maximosemestre4 - total41;
+                            if(propuesta42 <= resto){
+                                total42 = propuesta42;
+                            } else{
+                                total42 = resto;
+                            }
+                        }
                         countAyuda41++;
                     }
                     
@@ -595,21 +527,12 @@ public class DipucrSERSOCalculaCantidadesPE implements IRule {
                 
                 vales.store(cct);
                                 
-                //if(mas2Solicitudes){
                 if(comparaDosSolicitudes(countAyuda11, ConstantesPlanEmergencia.PRIMER_TRIMESTRE, trimestre) ||
                         comparaDosSolicitudes(countAyuda21, ConstantesPlanEmergencia.SEGUNDO_TRIMESTRE, trimestre)|| 
                         comparaDosSolicitudes(countAyuda31, ConstantesPlanEmergencia.TERCER_TRIMESTRE, trimestre) ||                        
                         comparaDosSolicitudes(countAyuda41, ConstantesPlanEmergencia.CUARTO_TRIMESTRE, trimestre)){
-                    IItem expediente = ExpedientesUtil.getExpediente(cct,  numexp);
-
-                    if (expediente != null){
-                        String asunto = expediente.getString("ASUNTO");
-                        if(!asunto.contains(" - AVISO MÁS DE 2 SOLICITUDES EN UN TRIMESTRE")){
-                            asunto += " - AVISO MÁS DE 2 SOLICITUDES EN UN TRIMESTRE";
-                            expediente.set("ASUNTO", asunto);
-                        }
-                        expediente.store(cct);                        
-                    }
+                    
+                    SubvencionesUtils.concatenaTextoAAsunto(cct, numexp, ConstantesPlanEmergencia.DpcrSERSOAvisos.TEXTOASUNTO_2_SOL);
                 }
             }
         } catch (ISPACException e) {

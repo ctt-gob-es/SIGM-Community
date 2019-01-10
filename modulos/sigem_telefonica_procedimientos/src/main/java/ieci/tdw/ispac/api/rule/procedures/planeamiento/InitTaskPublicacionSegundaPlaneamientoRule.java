@@ -12,10 +12,9 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitTaskPublicacionSegundaPlaneamientoRule extends InitTaskPublicacionPlaneamientoRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "PLAN_POM";
-		STR_template = "Anuncio BOP aprobación provisional POM";		
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "PLAN_POM";
+        strTemplate = "Anuncio BOP aprobación provisional POM";        
         return true;
     }
 }

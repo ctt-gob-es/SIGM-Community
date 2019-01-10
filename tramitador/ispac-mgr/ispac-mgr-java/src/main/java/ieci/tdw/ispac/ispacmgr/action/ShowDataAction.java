@@ -6,6 +6,7 @@ import ieci.tdw.ispac.api.errors.ISPACNullObject;
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.ispaclib.app.EntityApp;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.StateContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacmgr.action.form.EntityForm;
 import ieci.tdw.ispac.ispacmgr.action.form.SearchForm;
@@ -18,6 +19,7 @@ import ieci.tdw.ispac.ispacweb.api.IScheme;
 import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
 import ieci.tdw.ispac.ispacweb.api.ManagerState;
+import ieci.tdw.ispac.ispacweb.api.impl.states.DataState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +58,19 @@ public class ShowDataAction extends BaseAction {
         
     	// Cargamos los datos del esquema
     	IScheme scheme = SchemeMgr.loadScheme(mapping, request, session, state);
+    	
+    	//INICIO [dipucr-Felipe #427]
+		if (!state.getReadonly()) {
+			// Eliminamos si existe el atributo que indica el usuario que tiene bloqueado el expediente
+			request.getSession(false).removeAttribute("userLock");
+		} else {
+			// Insertamos el atributo que indica el usuario que tiene bloqueado el expediente
+			if (StateContext.READONLYREASON_LOCK == state.getReadonlyReason()){
+				String username = ((DataState) state).getLockedDataUser(cct);
+				request.setAttribute(ActionsConstants.LOCKUSERNAME, " por " + username);
+			}
+		}
+		//FIN [dipucr-Felipe #427]
 
         //////////////////////////////////////////////////////////////////////
         // Formulario asociado a la acción

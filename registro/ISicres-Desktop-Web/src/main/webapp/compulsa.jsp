@@ -42,7 +42,8 @@
 		<!-- applet de escaneo-->
 		<APPLET MAYSCRIPT="true" id="appletScanCompulsa" width="0" height="0" CODE="es.ieci.tecdoc.fwktd.applets.scan.applet.IdocAppletLauncher" 
 			ALT="If you could run this applet, you'd see some animation"
-			ARCHIVE="applets/fwktd-scan-applet-0.7.jar;jsessionid=<%=session.getId()%>">
+			ARCHIVE="applets/fwktd-scan-applet-0.7.jar">
+			<!-- ARCHIVE="applets/fwktd-scan-applet-0.7.jar;jsessionid=<%=session.getId()%>"> -->
 			<param name="java_arguments"  value="-Xmx512m"/>
 			<param name="returnJSFunction" value="compulsar"/> 
 		</APPLET>
@@ -54,7 +55,7 @@
 		
 		<APPLET MAYSCRIPT="true" id="appletSendFiles" width="0" height="0" CODE="es.ieci.tecdoc.fwktd.applets.sendfiles.applet.SendFilesApplet" 
 			ALT="If you could run this applet, you'd see some animation"
-			ARCHIVE="applets/fwktd-sendFiles-applet-0.7.jar;jsessionid=<%=session.getId()%>">
+			</APPLET>ARCHIVE="applets/fwktd-sendFiles-applet-0.7.jar;jsessionid=<%=session.getId()%>">
 			<PARAM name="SESSIONID" value="<%=session.getId()%>"/>
 			<PARAM name="codebase_lookup" value="false"/> 
 		</APPLET>

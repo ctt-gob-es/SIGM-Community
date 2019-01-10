@@ -9,6 +9,9 @@
 	<name>ISicres-Server</name>
 	<packaging>jar</packaging>
 	<description>Modulo de Lógica de Negocio de InveSicres</description>
+	<properties>
+		<isicres.version>8.0.1</isicres.version>
+	</properties>
 	<dependencies>
 		<!-- Dependencias de Inves Sicres -->
 		<dependency>
@@ -24,7 +27,7 @@
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-EventsManager</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
@@ -118,6 +121,13 @@
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
 			<version>2.6.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>sigem_core</artifactId>
+			<version>3.0.1-M2</version>
+			<scope>compile</scope>
 		</dependency>
 
 	</dependencies>

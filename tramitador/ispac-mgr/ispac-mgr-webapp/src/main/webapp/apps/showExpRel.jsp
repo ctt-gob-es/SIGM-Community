@@ -39,7 +39,9 @@
 </head>
 <body>
 <form>
-<div id="contenido" class="move">
+<!-- [dipucr-felipe #397] El nuevo estilo 'moveHuge' no funciona -->
+<div id="contenido" class="moveHuge" >
+<!-- <div id="contenido" class="move"> -->
 <div class="ficha">
 <div class="encabezado_ficha">
 <div class="titulo_ficha">

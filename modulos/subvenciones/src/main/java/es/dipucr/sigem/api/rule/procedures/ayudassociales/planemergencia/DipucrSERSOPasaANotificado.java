@@ -13,8 +13,10 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrSERSOPasaANotificado implements IRule{
     private static final Logger LOGGER = Logger.getLogger(DipucrSERSOPasaANotificado.class);
@@ -30,6 +32,7 @@ public class DipucrSERSOPasaANotificado implements IRule{
     
     public Object execute(IRuleContext rulectx) throws ISPACRuleException{
         String numexpSolicitud="";
+        String descripcion = "";
         try{
             //----------------------------------------------------------------------------------------------
             ClientContext cct = (ClientContext) rulectx.getClientContext();
@@ -41,34 +44,36 @@ public class DipucrSERSOPasaANotificado implements IRule{
             int tramiteId = rulectx.getTaskId();
             
             //Recuperamos los expedientes relacionados
-            IItemCollection docsCol = entitiesAPI.getDocuments(numexp, "ID_TRAMITE = '" +tramiteId+"' AND UPPER(NOMBRE) = 'NOTIFICACIÓN'", "");
-            Iterator<?> docsIt = docsCol.iterator();                  
-            if(docsIt.hasNext()){
-                while (docsIt.hasNext()){
-                    IItem doc = (IItem)docsIt.next();
+            IItemCollection docsCol = entitiesAPI.getDocuments(numexp, "ID_TRAMITE = '" + tramiteId + "' AND UPPER(NOMBRE) = 'NOTIFICACIÓN'", "");
+            Iterator<?> docsIt = docsCol.iterator();
+            
+            while (docsIt.hasNext()){
+                IItem doc = (IItem)docsIt.next();
 
-                    String descripcion = doc.getString("DESCRIPCION");
-                    numexpSolicitud = (descripcion.split("-"))[2].trim();
-                                     
-                    //Cambiamos el estado
+                descripcion = SubvencionesUtils.getString(doc, DocumentosUtil.DESCRIPCION);
+                numexpSolicitud = (descripcion.split("-"))[2].trim();
+                                 
+                //Cambiamos el estado
+                String estadoAdmSolicitud = ExpedientesUtil.getEstadoAdm(cct, numexpSolicitud);
+                
+                if (ExpedientesUtil.EstadoADM.NE.equals(estadoAdmSolicitud)){
                     IItem expediente = ExpedientesUtil.getExpediente(cct, numexpSolicitud);
-                    if (expediente != null && "NE".equals(expediente.get("ESTADOADM"))){
-                        expediente.set("ESTADOADM", "NT");
-                        expediente.store(cct);
-                    }
+                    
+                    expediente.set(ExpedientesUtil.ESTADOADM, ExpedientesUtil.EstadoADM.NT);
+                    expediente.store(cct);
                 }
             }
             LOGGER.info(ConstantesString.FIN + this.getClass());
             return true;
             
         } catch(Exception e) {
-            LOGGER.error(ConstantesString.LOGGER_ERROR + " al cambiar el estado del expediente: " + numexpSolicitud + ". " + e.getMessage(), e);
-            throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + " al cambiar el estado del expediente: " + numexpSolicitud + ". " + e.getMessage(), e);
+            LOGGER.error(ConstantesString.LOGGER_ERROR + ". Procesando el documento: " + descripcion + ". Error al cambiar el estado del expediente: " + numexpSolicitud + ". " + e.getMessage(), e);
+            throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + ". Procesando el documento: " + descripcion + ". Error al cambiar el estado del expediente: " + numexpSolicitud + ". " + e.getMessage(), e);
         }
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
 }

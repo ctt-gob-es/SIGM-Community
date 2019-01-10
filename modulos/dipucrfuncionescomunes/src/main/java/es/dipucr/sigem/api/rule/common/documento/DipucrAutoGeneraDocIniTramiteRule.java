@@ -10,6 +10,7 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.dao.cat.TemplateDAO;
+import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
@@ -27,14 +28,18 @@ import com.sun.star.uno.Exception;
 
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class DipucrAutoGeneraDocIniTramiteRule implements IRule {
 
-	private static final Logger logger = Logger.getLogger(DipucrAutoGeneraDocIniTramiteRule.class);
+	private static final Logger LOGGER = Logger.getLogger(DipucrAutoGeneraDocIniTramiteRule.class);
 
 	protected String tipoDocumento;
 	protected String plantilla;
+	protected int templateId = 0;
+    protected int documentTypeId = 0;
+    
 	protected String refTablas;
 	protected boolean bEditarTextos;
 
@@ -50,7 +55,7 @@ public class DipucrAutoGeneraDocIniTramiteRule implements IRule {
 		String numexp = "";
 		
 		try {
-			logger.info("INICIO - " + this.getClass().getName());
+			LOGGER.info("INICIO - " + this.getClass().getName());
 
 			numexp = rulectx.getNumExp();
 			
@@ -61,8 +66,6 @@ public class DipucrAutoGeneraDocIniTramiteRule implements IRule {
 
 				cct.endTX(true);
 	
-				int documentTypeId = 0;
-				int templateId = 0;
 				int taskId = rulectx.getTaskId();
 	
 				IItem processTask = entitiesAPI.getTask(rulectx.getTaskId());
@@ -75,9 +78,9 @@ public class DipucrAutoGeneraDocIniTramiteRule implements IRule {
 
 					cct.beginTX();
 					setSsVariables(cct, rulectx);
-					cct.setSsVariable("NOMBRE_TRAMITE", processTask.getString("NOMBRE"));
+					cct.setSsVariable("NOMBRE_TRAMITE", processTask.getString(TramitesUtil.NOMBRE));
 		
-					IItem template = TemplateDAO.getTemplate(cct.getConnection(), plantilla, documentTypeId);
+					IItem template = TemplateDAO.getTemplate(cct, plantilla, documentTypeId);
 											
 					if(template != null){
 						templateId = template.getInt("ID");
@@ -86,23 +89,36 @@ public class DipucrAutoGeneraDocIniTramiteRule implements IRule {
 						/**
 				         * [Teresa# Ticket194] INICIO ALSIGM3 Cambio en la regla DipucrAutoGeneraDocIniTramiteRule para que añada el destino en el documento
 				         * **/
-						if(documento!=null){
+						if(documento != null){
 							String tipoRegistro = "";
-							if((String)documento.getString("TP_REG")!=null) tipoRegistro = documento.getString("TP_REG");
-							if(tipoRegistro.equals("SALIDA")){
-								IItemCollection partCol = ParticipantesUtil.getParticipantes(cct, numexp, "ROL='INT'", "");
+							if((String)documento.getString(DocumentosUtil.TP_REG) != null) {
+								tipoRegistro = documento.getString(DocumentosUtil.TP_REG);
+							}
+							
+							if(tipoRegistro.equals(DocumentosUtil.TiposRegistros.SALIDA)){
+								IItemCollection partCol = ParticipantesUtil.getParticipantesByRol(cct, numexp, ParticipantesUtil._TIPO_INTERESADO);
 								Iterator<?> partIt = partCol.iterator();
+								
 								if(partIt.hasNext()){
 									IItem part = (IItem)partIt.next();
-									String id_ext = "";
-									if ((String)part.getString("ID_EXT")!=null) id_ext = (String)part.getString("ID_EXT"); else id_ext = "";
-									documento.set("DESTINO_ID", id_ext);
+									
+									String idExt = "";
+									if (StringUtils.isNotEmpty(part.getString(ParticipantesUtil.ID_EXT))) {
+										idExt = (String)part.getString(ParticipantesUtil.ID_EXT); 
+									}
+									documento.set(DocumentosUtil.DESTINO_ID, idExt);
 									
 									String nombreDoc = "";
-									if((String)documento.getString("NOMBRE")!=null) nombreDoc = documento.getString("NOMBRE");
+									if(StringUtils.isNotEmpty(documento.getString(DocumentosUtil.NOMBRE))) {
+										nombreDoc = documento.getString(DocumentosUtil.NOMBRE);
+									}
+									
 									String nombre = "";
-									if ((String)part.getString("NOMBRE")!=null) nombre = (String)part.getString("NOMBRE");
-									documento.set("DESCRIPCION", nombreDoc+" - "+nombre);
+									if (StringUtils.isNotEmpty(part.getString(ParticipantesUtil.NOMBRE))) {
+										nombre = (String)part.getString(ParticipantesUtil.NOMBRE);
+									}
+									
+									documento.set(DocumentosUtil.DESCRIPCION, nombreDoc + " - " + nombre);
 									documento.store(cct);
 								}
 							}							
@@ -123,16 +139,16 @@ public class DipucrAutoGeneraDocIniTramiteRule implements IRule {
 				}
 				cct.endTX(true);
 			}
-			logger.info("FIN - " + this.getClass().getName());
+			LOGGER.info("FIN - " + this.getClass().getName());
 		} catch (ISPACException e) {
 			if(cct != null)
 				try {
 					cct.endTX(false);
 				} catch (ISPACException e1) {
-					logger.error("Error al generar el documento en el expediente: " + numexp + ". " + e1.getMessage(), e1);
+					LOGGER.error("Error al generar el documento en el expediente: " + numexp + ". " + e1.getMessage(), e1);
 				}
 			
-			logger.error("Error al generar el documento en el expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al generar el documento en el expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar el documento en el expediente: " + numexp + ". " + e.getMessage(), e);
 		}
 		return true;
@@ -186,18 +202,28 @@ public class DipucrAutoGeneraDocIniTramiteRule implements IRule {
 			gendocAPI.setDocument(connectorSession, documentId, docref, in, (int)(fileOut.length()), mime);
 			
 			//Borra archivos temporales
-			file.delete();
-			fileOut.delete();
-			if(in!=null) in.close();
+			if (null != file) {
+				file.delete();
+			}
+			if(null != fileOut){
+				fileOut.delete();
+			}
+			if(null != in){
+				in.close();
+			}
 			
     	} catch (ISPACException e) {
-			logger.error("Error al generar el documento. " + e.getMessage(), e);
+			LOGGER.error("Error al generar el documento. " + e.getMessage(), e);
 		} catch (FileNotFoundException e) {
-			logger.error("Error al generar el documento. " + e.getMessage(), e);
+			LOGGER.error("Error al generar el documento. " + e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error("Error al generar el documento. " + e.getMessage(), e);
+			LOGGER.error("Error al generar el documento. " + e.getMessage(), e);
 		} catch (java.lang.Exception e) {
-			logger.error("Error al generar el documento. " + e.getMessage(), e);
+			LOGGER.error("Error al generar el documento. " + e.getMessage(), e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 	}	
 
@@ -211,7 +237,7 @@ public class DipucrAutoGeneraDocIniTramiteRule implements IRule {
 	 */
 	public void insertaTabla(IRuleContext rulectx, XComponent component,
 			String refTabla, IEntitiesAPI entitiesAPI, String numexp) {
-		logger.debug("Método insertaTabla de la clase: "+this.getClass().getName());
+		LOGGER.debug("Método insertaTabla de la clase: "+this.getClass().getName());
 	}
 	
 	/**
@@ -223,7 +249,7 @@ public class DipucrAutoGeneraDocIniTramiteRule implements IRule {
 	 * @param numexp
 	 */
 	public void editarTextosDocumento(IRuleContext rulectx, XComponent component) {
-		logger.debug("Método insertaTabla de la clase: "+this.getClass().getName());
+		LOGGER.debug("Método insertaTabla de la clase: "+this.getClass().getName());
 	}
 	
 	

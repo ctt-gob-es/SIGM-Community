@@ -87,6 +87,8 @@ public interface ICatalogAPI
     public int ENTITY_CT_MANUALES_USUARIO = 65;
     public int ENTITY_P_MANUALES_USUARIO = 66;
     //[eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+    
+    public int ENTITY_S_SESION_MENSAJE = 67;
 
     public static String ID_FIELD_NAME 			= "id";
     public static String NUMEXP_FIELD_NAME 		= "numexp";
@@ -1152,5 +1154,16 @@ public interface ICatalogAPI
 	
 	//[eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
 
+	
+	//[eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	
+	/**
+	 * Obtiene los Avisos a los usuario.
+	 *
+	 * @param pattern  Patrón del nombre del informe.
+	 * @return Lista de informes del catálogo.
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	public IItemCollection getSMensajes(String pattern) throws ISPACException;
 	
 }

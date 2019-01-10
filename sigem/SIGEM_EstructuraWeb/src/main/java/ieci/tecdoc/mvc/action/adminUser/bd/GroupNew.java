@@ -86,6 +86,7 @@ public class GroupNew extends BaseAction {
         // General
         group.setName(form.getNombre());
         group.setDescription(form.getDescripcion());
+        group.setEmail(form.getEmail()); //[dipucr-Felipe #541]
         group.store(entidad);
         
         if (logger.isDebugEnabled())

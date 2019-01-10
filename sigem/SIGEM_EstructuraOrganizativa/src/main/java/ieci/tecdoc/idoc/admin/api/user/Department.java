@@ -138,7 +138,34 @@ public interface Department
    public void setDescription(String description);
    
    /**
-	 * Obtiene el identificador del usuario que ha creado el departamento. 
+   * Obtiene la email del departamento.
+    * 
+    * @return El nombre mencionado.
+    */
+   public String getEmail();
+   
+   /**
+    * Establece la email del departamento.
+    * 
+    * @param email La descripción del grupo.
+    */
+   public void setEmail(String email);
+   
+   /**
+    * Obtiene la descripción del idorg.
+    * 
+    * @return El idorg mencionado.
+    */
+   public Integer getIdorg();
+   
+   /**
+    * Establece la descripción del idorg.
+    * 
+    * @param idorg La descripción del grupo.
+    */
+   public void setIdorg(Integer idorg);
+   
+   /**	 * Obtiene el identificador del usuario que ha creado el departamento. 
 	 * 
 	 * @return El identificador mencionado.
 	 */

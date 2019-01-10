@@ -11,6 +11,9 @@ import ieci.tdw.ispac.ispaclib.bean.CollectionBean;
 import ieci.tdw.ispac.ispaclib.bean.ItemBean;
 import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.resp.Responsible;
+import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacmgr.action.form.SearchForm;
 import ieci.tdw.ispac.ispacmgr.common.constants.ActionsConstants;
@@ -22,6 +25,9 @@ import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
 import ieci.tdw.ispac.ispacweb.api.ManagerState;
 import ieci.tdw.ispac.ispacweb.manager.ISPACRewrite;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -41,12 +47,12 @@ public class ShowProcedureListAction extends BaseAction {
 									   HttpServletResponse response,
 									   SessionAPI session) throws Exception {
 		
-		ClientContext cct = session.getClientContext();
+		IClientContext cct = session.getClientContext();
 		
 		IInvesflowAPI invesflowAPI = session.getAPI();
-		IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(cct);
+		IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI((ClientContext) cct);
 		
-		Map params = request.getParameterMap();
+		Map<?, ?> params = request.getParameterMap();
 		
 		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 		int iAnio = 0;
@@ -63,12 +69,12 @@ public class ShowProcedureListAction extends BaseAction {
 		//Eliminamos la busqueda de expedientes de sesión
 		request.getSession().removeAttribute("numExpsSearch");
 		//Si el usuario ha establecido valores se han de tener en cuenta para mostrar los valores introducido en caso de error o retorno
-		Map values=null;
-		Map operators=null;
-		SearchForm searchForm=(SearchForm) request.getSession().getAttribute(ActionsConstants.FORM_SEARCH_RESULTS);
+		Map<String, String> values = null;
+		Map<?, ?> operators = null;
+		SearchForm searchForm = (SearchForm) request.getSession().getAttribute(ActionsConstants.FORM_SEARCH_RESULTS);
 		if(searchForm!=null){
 			request.setAttribute("formSelect", searchForm.getIdxml()+"");
-			values=searchForm.getValuesMap();
+			values = searchForm.getValuesMap();
 			operators=searchForm.getOperatorsMap();
 		}
 		
@@ -91,13 +97,13 @@ public class ShowProcedureListAction extends BaseAction {
 		    ///////////////////////////////////////////////
 		    //Menus
 			//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
-			request.setAttribute("menus", MenuFactory.getSingleMenu(cct, getResources(request), state));
+			request.setAttribute("menus", MenuFactory.getSingleMenu((ClientContext) cct, getResources(request), state));
 			
 			//////////////////////////////////////////////
 			// Formulario de búsqueda
 			ISearchAPI searchAPI = invesflowAPI.getSearchAPI();
 			
-			List forms = (List) request.getAttribute("formList");
+			List<?> forms = (List<?>) request.getAttribute("formList");
 			if (forms == null) {
 				
 				IItemCollection icForms = searchAPI.getSearchForms();
@@ -140,6 +146,30 @@ public class ShowProcedureListAction extends BaseAction {
 			if (formSelect != null) {
 				
 				try {
+					
+					// Parametrizamos los formularios de búsqueda con el nombre de usuario. Permite restringir los procedimientos [Josemi #595908]
+					if (values == null) {
+					   values = new HashMap<String, String>();
+					}
+					values.put("USERNAME_PARAM", session.getUserName());
+					Responsible user = cct.getUser();					
+
+					values.put("USER_UID_PARAM", "'" + user.getUID() + "'");
+					values.put("USER_DEPT_UID_PARAM", "'" + user.getOrgUnit().getUID() + "'");
+							
+					Collection<?> groups = user.getUserGroups();
+					if ((groups != null) && !groups.isEmpty()) {
+						String userGroups = "";
+						for (Iterator<?> it = groups.iterator(); it.hasNext();) {
+							Responsible group = (Responsible) it.next();
+							if (StringUtils.isNotBlank(userGroups)) {
+								userGroups += ",";
+							}
+							userGroups += "'" + DBUtil.replaceQuotes(group.getUID()) + "'";
+						}						
+						values.put("USER_GROUPS_UID_PARAM", userGroups);
+					}
+					
 					frm = searchAPI.buildHTMLSearchForm(Integer.parseInt(formSelect), xslurl, ResourceBundle.getBundle(BUNDLE_NAME, cct.getLocale()), cct.getLocale(), params,values,operators);
 				}
 				catch (ISPACException e) {

@@ -60,10 +60,15 @@ public class UasDaoDeptTbl
 	
 	public static final DbColumnDef    CD_UPDATE	    = new DbColumnDef
 	("UPDDATE", DbDataType.DATE_TIME,true);									 
-	
+	// [Tere Ticket#362] Crear un campo con email departamento 
+	public static final DbColumnDef    CD_EMAIL	    = new DbColumnDef
+	("EMAIL", DbDataType.SHORT_TEXT,300,true);
+
+	public static final DbColumnDef    CD_IDORG         = new DbColumnDef
+	("IDORG",DbDataType.NULL_LONG_INTEGER, true);
 	
 	private static final DbColumnDef [] ACD  = 
-	{ CD_ID, CD_NAME, CD_PARENTID, CD_MGRID, CD_TYPE, CD_REMARKS, CD_CRTRID,CD_CRTNDATE, CD_UPDRID, CD_UPDATE};
+	{ CD_ID, CD_NAME, CD_PARENTID, CD_MGRID, CD_TYPE, CD_REMARKS, CD_CRTRID,CD_CRTNDATE, CD_UPDRID, CD_UPDATE, CD_EMAIL, CD_IDORG};
 	
 	private static final String   ACN = DbUtil.getColumnNames(ACD);
 	

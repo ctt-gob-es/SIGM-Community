@@ -5,6 +5,7 @@ import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.IProcedureAPI;
 import ieci.tdw.ispac.api.ITXTransaction;
 import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
@@ -14,6 +15,7 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -29,237 +31,268 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class SecretariaUtil {
 
-	private static final Logger logger = Logger.getLogger(SecretariaUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(SecretariaUtil.class);
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static List getUrgencias(IRuleContext rulectx,
-			IEntitiesAPI entitiesAPI) throws ISPACException {
-		List list=null, numbers=null, sorted=null;
-		IItem item=null;
+	public static List getUrgencias(IRuleContext rulectx, IEntitiesAPI entitiesAPI) throws ISPACException {
+		
+		List list = null, numbers = null, sorted = null;
+		IItem item = null;
 		Integer number;
 		int orden;
 		String strOrden;
 		
-		try
-		{
+		try {
 			//Obtención de la lista de propuestas y urgencias
-			String strQuery = "WHERE NUMEXP = '" + rulectx.getNumExp() + "' ORDER BY ORDEN ASC";
-			logger.info("strQuery Urgencias "+strQuery);
+			String strQuery = " WHERE NUMEXP = '" + rulectx.getNumExp() + "' ORDER BY ORDEN ASC";
+			LOGGER.info("strQuery Urgencias "+strQuery);
 	        IItemCollection collection = entitiesAPI.queryEntities("SECR_URGENCIAS", strQuery);
 	        list = collection.toList();
 	        
 	        //Ordenación de la lista
 	        numbers = new ArrayList();
 	        Iterator it = list.iterator();
-	        while (it.hasNext())
-	        {
+	        while (it.hasNext()) {
 	        	item = (IItem)it.next();
 	        	strOrden = item.getString("ORDEN");
-	        	if (strOrden != null)
-	        	{
+	        	if (strOrden != null) {
 	        		orden = Integer.parseInt(strOrden); 
-	        	}
-	        	else
-	        	{
+	        	} else {
 	        		orden = Integer.MAX_VALUE;
 	        	}
 	        	numbers.add(new Integer(orden));
 	        }
+	        
 	        Collections.sort(numbers);
 	        sorted = new ArrayList();
 	        it = numbers.iterator();
-	        while (it.hasNext())
-	        {
+	        
+	        while (it.hasNext()){
 	        	number = (Integer)it.next();
 	        	orden = number.intValue();
 	        	moveItem(list, sorted, orden);
-	        }	        
-		}
-		catch(ISPACException e)
-		{
-			logger.error(e.getMessage(), e);
+	        }
+	        
+		} catch(ISPACException e) {
+			LOGGER.error(e.getMessage(), e);
         	throw new ISPACException(e);
         }
+		
 		return sorted;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private static void moveItem(List origen, List destino, int orden) throws ISPACException 
-	{
+	private static void moveItem(List<?> origen, List<Serializable> destino, int orden) throws ISPACException {
 		IItem item = null;
 		int n;
 		String strOrden;
 
-		try
-		{
+		try {
 			boolean found = false;
-			Iterator it = origen.iterator();
-			while (!found && it.hasNext())
-			{
+			Iterator<?> it = origen.iterator();
+		
+			while (!found && it.hasNext()) {
 				item = (IItem)it.next();
 	        	strOrden = item.getString("ORDEN");
-	        	if (strOrden != null)
-	        	{
+	        
+	        	if (strOrden != null) {
 	        		n = Integer.parseInt(strOrden); 
-	        	}
-	        	else
-	        	{
+	        	} else {
 	        		n = Integer.MAX_VALUE;
 	        	}
 				found = n==orden; 
 			}
-			if(found)
-			{
+			
+			if(found) {
 				destino.add(item);
 				it.remove();
 			}
-		}
-		catch(ISPACException e)
-		{
-			logger.error(e.getMessage(), e);
+		} catch(ISPACException e) {
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);
         }
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static List getPropuestas(IRuleContext rulectx, IEntitiesAPI entitiesAPI) throws ISPACException 
-	{
+	public static List getPropuestas(IRuleContext rulectx, IEntitiesAPI entitiesAPI) throws ISPACException {
 		List list=null, numbers=null, sorted=null;
 		IItem item=null;
 		Integer number;
 		int orden;
 		String strOrden;
 		
-		try
-		{
+		try {
 			//Obtención de la lista de propuestas y urgencias
 			String strQuery = "WHERE NUMEXP = '" + rulectx.getNumExp() + "' ORDER BY ORDEN ASC";
-			logger.info("strQuery Propuestas "+strQuery);
+			LOGGER.info("strQuery Propuestas "+strQuery);
 	        IItemCollection collection = entitiesAPI.queryEntities("SECR_PROPUESTA", strQuery);
 	        list = collection.toList();
 	        
 	        //Ordenación de la lista
 	        numbers = new ArrayList();
 	        Iterator it = list.iterator();
-	        while (it.hasNext())
-	        {
+	        
+	        while (it.hasNext()) {
 	        	item = (IItem)it.next();
 	        	strOrden = item.getString("ORDEN");
-	        	if (strOrden != null)
-	        	{
+	        	
+	        	if (strOrden != null) {
 	        		orden = Integer.parseInt(strOrden); 
-	        	}
-	        	else
-	        	{
+	        	} else {
 	        		orden = Integer.MAX_VALUE;
 	        	}
 	        	numbers.add(new Integer(orden));
 	        }
+	        
 	        Collections.sort(numbers);
 	        sorted = new ArrayList();
 	        it = numbers.iterator();
-	        while (it.hasNext())
-	        {
+	        
+	        while (it.hasNext()) {
 	        	number = (Integer)it.next();
 	        	orden = number.intValue();
 	        	moveItem(list, sorted, orden);
 	        }	        
-		}
-		catch(ISPACException e)
-		{
-			logger.error(e.getMessage(), e);
+		} catch(ISPACException e) {
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);
         }
+		
 		return sorted;
 	}
 	
-	public static String getOrganoSesion(IRuleContext rulectx, String numexp)  throws ISPACException
-	{
+	@SuppressWarnings("unchecked")
+	public static List<Serializable> getPropuestasYUrgencias(IClientContext cct, String numexp) throws ISPACException {
+        
+        List<?> list=null;
+        List<Integer> numbers=null;
+        List<Serializable> sorted=null;
+        IItem item=null;
+        Integer number;
+        int orden;
+        String strOrden;
+
+        try {
+        	IInvesflowAPI invesflowAPI = cct.getAPI();
+        	IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
+        	
+            //Obtención de la lista de propuestas y urgencias
+            String strQuery = "WHERE NUMEXP = '" + numexp + "' ORDER BY ORDEN ASC";
+            IItemCollection collection = entitiesAPI.queryEntities("SECR_PROPUESTA", strQuery);
+            list = collection.toList();
+            collection = entitiesAPI.queryEntities("SECR_URGENCIAS", strQuery);
+            list.addAll(collection.toList());
+            
+            //Ordenación de la lista
+            numbers = new ArrayList<Integer>();
+            Iterator<?> it = list.iterator();
+            
+            while (it.hasNext()) {
+                item = (IItem)it.next();
+                strOrden = item.getString("ORDEN");
+                
+                if (strOrden != null) {
+                    orden = Integer.parseInt(strOrden);
+                    
+                } else {
+                    orden = Integer.MAX_VALUE;
+                }
+                numbers.add(new Integer(orden));
+            }
+            Collections.sort(numbers);
+            sorted = new ArrayList<Serializable>();
+            it = numbers.iterator();
+            
+            while (it.hasNext()) {
+                number = (Integer)it.next();
+                orden = number.intValue();
+                moveItem(list, sorted, orden);
+            }
+            
+        } catch(ISPACException e) {
+            LOGGER.error("Error al obtener las propuestas. " +numexp + " - " + e.getMessage(), e);
+            throw new ISPACException("Error al obtener las propuestas. " + numexp + " - " + e.getMessage(), e);
+        }
+        
+        return sorted;
+    }
+	
+	public static String getOrganoSesion(IRuleContext rulectx, String numexp)  throws ISPACException {
 		String strOrgano = "";
-		try
-		{
+		
+		try {
 			IItem sesion = getSesion(rulectx, numexp);
 			strOrgano = sesion.getString("ORGANO"); 
-		}
-		catch(Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
+		} catch(Exception e) {
+			LOGGER.error("Error . "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+            throw new ISPACException("Error . "+rulectx.getNumExp()+" - "+e.getMessage(), e);
 		}
 		return strOrgano;
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public static String getNombreOrganoSesion(IRuleContext rulectx, String numexp)  throws ISPACException
-	{
+	public static String getNombreOrganoSesion(IRuleContext rulectx, String numexp)  throws ISPACException {
 		String tipo = "";
-		try
-		{
-			String strTipo = getOrganoSesion(rulectx, numexp); 
+		
+		try {
+			String strTipo = SecretariaUtil.getOrganoSesion(rulectx, numexp); 
 	        IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
 	        String strQuery = "WHERE VALOR='" + strTipo + "'";
 	        IItemCollection coll = entitiesAPI.queryEntities("SECR_VLDTBL_ORGANOS", strQuery);
-	        Iterator it = coll.iterator();
-	        if (it.hasNext())
-	        {
+	        Iterator<?> it = coll.iterator();
+	        
+	        if (it.hasNext()) {
 	        	IItem item = (IItem)it.next();
 	        	tipo = item.getString("SUSTITUTO");
 	        }
-		}
-		catch(ISPACException e)
-		{
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
-		}
+	        
+		} catch(Exception e) {
+            LOGGER.error("Error. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+            throw new ISPACException("Error . "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+        }
+		
 		return tipo;
 	}
 	
-	public static String getAreaSesion(IRuleContext rulectx, String numexp)  throws ISPACException
-	{
+	public static String getAreaSesion(IRuleContext rulectx, String numexp)  throws ISPACException {
 		String strOrgano = "";
-		try
-		{
+		
+		try {
 			IItem sesion = getSesion(rulectx, numexp);
-			strOrgano = sesion.getString("AREA"); 
-		}
-		catch(Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
-		}
+			strOrgano = sesion.getString("AREA");
+			
+		} catch(Exception e) {
+            LOGGER.error("Error. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+            throw new ISPACException("Error . "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+        }
 		return strOrgano;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public static String getNombreAreaSesion(IRuleContext rulectx, String numexp)  throws ISPACException
-	{
+	public static String getNombreAreaSesion(IRuleContext rulectx, String numexp)  throws ISPACException {
 		String tipo = "";
-		try
-		{
-			String strTipo = getAreaSesion(rulectx,numexp); 
+
+		try {
+			String strTipo = SecretariaUtil.getAreaSesion(rulectx,numexp); 
 	        IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
-	        String strQuery = "WHERE VALOR='" + strTipo + "'";
+	        
+	        String strQuery = "WHERE VALOR = '" + strTipo + "'";
 	        IItemCollection coll = entitiesAPI.queryEntities("SECR_VLDTBL_AREAS", strQuery);
-	        Iterator it = coll.iterator();
-	        if (it.hasNext())
-	        {
+	        Iterator<?> it = coll.iterator();
+	        
+	        if (it.hasNext()) {
 	        	IItem item = (IItem)it.next();
 	        	tipo = item.getString("SUSTITUTO");
 	        }
-		}
-		catch(Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
-		}
+	        
+		} catch(Exception e) {
+            LOGGER.error("Error. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+            throw new ISPACException("Error . "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+        }
+		
 		return tipo;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void createPropuestaAprobacionActaAnterior(IRuleContext rulectx) throws ISPACException
-	{
-		try
-		{
+	public static void createPropuestaAprobacionActaAnterior(IRuleContext rulectx) throws ISPACException {
+		try {
 			//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
@@ -270,27 +303,29 @@ public class SecretariaUtil {
 	        //Voy a obtener el nombre la propuesta que le corresponde según el órgano resolutor
 	      
 	        IItemCollection itColprop = buscaTodosExpDelDepartamento(cct, rulectx.getNumExp(), "WHERE COD_PCD LIKE 'PROPUESTA-%'");
-	        IItem itPropuestaScpa_ct_procedimiento = (IItem) itColprop.iterator().next();
-	        String nombrePropuesta = itPropuestaScpa_ct_procedimiento.getString("NOMBRE");
+	        IItem itPropuestaScpaCtProcedimiento = (IItem) itColprop.iterator().next();
+	        String nombrePropuesta = itPropuestaScpaCtProcedimiento.getString("NOMBRE");
 	        //Creación del expediente
-	        String strQuery = "WHERE NOMBRE='"+nombrePropuesta+"'";
+	        String strQuery = "WHERE NOMBRE = '"+nombrePropuesta+"'";
 	        IItemCollection coll = entitiesAPI.queryEntities("SPAC_CT_PROCEDIMIENTOS", strQuery);
 	        Iterator it = coll.iterator();
 	        int nProcedure = 0;
 	        IItem proc = null;
 	        int n;
-	        String cod_pcd = "";
+	        String codPcd = "";
+	    
 	        while (it.hasNext()) {
 	        	proc = (IItem)it.next();
 	        	n = proc.getInt("ID");
-	        	if ( n > nProcedure )
-	        	{
+	        
+	        	if ( n > nProcedure ) {
 	        		nProcedure = n;
-	        		cod_pcd = proc.getString("COD_PCD");
+	        		codPcd = proc.getString("COD_PCD");
 	        	}
 	        }
+	        
 	        Map params = new HashMap();
-			params.put("COD_PCD", cod_pcd);
+			params.put("COD_PCD", codPcd);
 	        int idExp = tx.createProcess(nProcedure, params);
 			IProcess process = invesFlowAPI.getProcess(idExp);
 			String numexp = process.getString("NUMEXP");	        
@@ -306,31 +341,18 @@ public class SecretariaUtil {
 			//Campo Asunto del expediente de la propuesta
         	String strEstado = getEstadoAdmPropuesta(rulectx);
         	IItem iExp  = ExpedientesUtil.getExpediente(cct, numexp);
-	        if (iExp != null) 
-	        {
-	        	iExp.set("ASUNTO", "Propuesta aprobación acta anterior");
-	        	iExp.set("ESTADOADM", strEstado);
+	        
+        	if (iExp != null) {
+	        	iExp.set(ExpedientesUtil.ASUNTO, "Propuesta aprobación acta anterior");
+	        	iExp.set(ExpedientesUtil.ESTADOADM, strEstado);
 	        	iExp.store(cct);
 	        }
 			
 	        //Relación con expediente de sesión
-	        strQuery = "WHERE NOMBRE='SPAC_EXP_RELACIONADOS'";
-	        coll = entitiesAPI.queryEntities("SPAC_CT_ENTIDADES", strQuery);
-	        it = coll.iterator();
-	        if (it.hasNext())
-	        {
-	        	IItem iExpRel = (IItem)it.next();
-	        	int id = iExpRel.getInt("ID");
-		        IItem iRelacion = entitiesAPI.createEntity(id);
-		        iRelacion.set("NUMEXP_PADRE", numexp);
-		        iRelacion.set("NUMEXP_HIJO", rulectx.getNumExp());
-		        iRelacion.set("RELACION", "Sesión/Propuesta");
-		        iRelacion.store(cct);
-	        }
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
+        	ExpedientesRelacionadosUtil.relacionaExpedientes(cct, numexp, rulectx.getNumExp(), "Sesión/Propuesta");
+
+		} catch (Exception e){
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);
 		}
 	}
@@ -342,53 +364,47 @@ public class SecretariaUtil {
 			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 			IProcedureAPI procedureAPI = invesflowAPI.getProcedureAPI();
 			
-			int id_pcd_actual = ExpedientesUtil.getExpediente(cct, numexpPadre).getInt("ID_PCD");
+			int idPcdActual = ExpedientesUtil.getExpediente(cct, numexpPadre).getInt("ID_PCD");
 			
 			//Buscamos el procedimiento asociado a dicho código para recuperar el departamento
-			IItem procedimiento = procedureAPI.getProcedureById(id_pcd_actual);
+			IItem procedimiento = procedureAPI.getProcedureById(idPcdActual);
 			if(procedimiento != null){
-				String org_rsltr = (String) procedimiento.get("CTPROCEDIMIENTOS:ORG_RSLTR");
-				if(StringUtils.isNotEmpty(org_rsltr)){
-					procedimientosDelDepartamento = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_CT_PROCEDIMIENTOS, "WHERE ORG_RSLTR = '" + org_rsltr + "' AND COD_PCD LIKE 'PROPUESTA-%'");
-					
+				String orgRsltr = (String) procedimiento.get("CTPROCEDIMIENTOS:ORG_RSLTR");
+				if(StringUtils.isNotEmpty(orgRsltr)){
+					procedimientosDelDepartamento = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_CT_PROCEDIMIENTOS, "WHERE ORG_RSLTR = '" + orgRsltr + "' AND COD_PCD LIKE 'PROPUESTA-%'");					
 				}
 			}
 		}
 		catch(Exception e){
-			logger.error("Error al recuperar el expediente hijo. " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar el expediente hijo. " + e.getMessage(), e);
 			throw new ISPACException( "Error al recuperar el expediente hijo. " + e.getMessage(), e);
 		}
+		
 		return procedimientosDelDepartamento;
 	}
 	
-	public static String getEstadoAdmPropuesta(IRuleContext rulectx) throws ISPACException
-	{
+	public static String getEstadoAdmPropuesta(IRuleContext rulectx) throws ISPACException {
 		String strEstado = "PR";
-		try
-		{
-			String strOrgano = getOrganoSesion(rulectx,null);
-        	if (strOrgano.compareTo("PLEN")==0)
-        	{
+		try {
+			String strOrgano = SecretariaUtil.getOrganoSesion(rulectx, null);
+			if (strOrgano.compareTo("PLEN")==0) {
         		strEstado = "SEC_PL";
-        	}
-        	else if (strOrgano.compareTo("JGOB")==0)
-        	{
+        		
+        	} else if (strOrgano.compareTo("JGOB")==0) {
         		strEstado = "SEC_JG";
-        	}
-        	else if (strOrgano.compareTo("COMI")==0)
-        	{
+        		
+        	} else if (strOrgano.compareTo("COMI")==0) {
         		strEstado = "SEC_CI";
-        	}
-        	else if (strOrgano.compareTo("MESA")==0)
-        	{
+        		
+        	} else if (strOrgano.compareTo("MESA")==0) {
         		strEstado = "SEC_MS";
         	}
-		}
-		catch (Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
-		}
+			
+		} catch (Exception e) {
+            LOGGER.error("Error. " + rulectx.getNumExp() + " - " + e.getMessage(), e);
+            throw new ISPACException("Error . " + rulectx.getNumExp() + " - " + e.getMessage(), e);
+        }
+		
 		return strEstado;
 	}
 	
@@ -401,7 +417,7 @@ public class SecretariaUtil {
 		IClientContext cct = rctx.getClientContext();
 		
 		try {
-			logger.info("rctx.getNumExp() "+rctx.getNumExp());
+			LOGGER.info("rctx.getNumExp() "+rctx.getNumExp());
 			IInvesflowAPI invesflowAPI = cct.getAPI();
 			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 			IItemCollection itemCollection = entitiesAPI.getEntities("SECR_SESION", rctx.getNumExp(), "");
@@ -410,72 +426,72 @@ public class SecretariaUtil {
 	        IItem item = null;
 	        
 	        while (it.hasNext()) {
-	        	
                 item = ((IItem)it.next());
                 sesion = item.getString("TIPO");
 	        }
+	        
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);
 		}
-		if(sesion == null) sesion = "ORD";
+		
+		if(sesion == null){
+			sesion = "ORD";
+		}
 		return sesion;
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public static IItem getSesion(IRuleContext rulectx, String numexp)  throws ISPACException
-	{
+	public static IItem getSesion(IRuleContext rulectx, String numexp)  throws ISPACException {
 		IItem sesion = null;
-		try
-		{
-			if (numexp==null) numexp=rulectx.getNumExp();
+		
+		try {
+			if (null == numexp){
+				numexp=rulectx.getNumExp();
+			}
+			
 	        IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
-			String strQuery = "WHERE NUMEXP='"+numexp+"'";
+			String strQuery = "WHERE NUMEXP = '"+numexp+"'";
 			IItemCollection sesiones = entitiesAPI.queryEntities("SECR_SESION", strQuery);
-			Iterator it = sesiones.iterator();
-			if (it.hasNext())
-			{
+			Iterator<?> it = sesiones.iterator();
+			
+			if (it.hasNext()) {
 				sesion = (IItem)it.next();
 			}
-		}
-		catch(Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
-		}
+		} catch(Exception e) {
+            LOGGER.error("Error. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+            throw new ISPACException("Error . "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+        }
+		
 		return sesion;
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public static String getTipoSesion(IRuleContext rulectx, String numexp)  throws ISPACException
-	{
+	public static String getTipoSesion(IRuleContext rulectx, String numexp)  throws ISPACException {
 		String tipo = "";
-		try
-		{
+		
+		try {
 			IItem sesion = getSesion(rulectx, numexp);
 			String strTipo = sesion.getString("TIPO"); 
 	        IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
-	        String strQuery = "WHERE VALOR='" + strTipo + "'";
+	        String strQuery = "WHERE VALOR = '" + strTipo + "'";
 	        IItemCollection coll = entitiesAPI.queryEntities("SECR_VLDTBL_TIPOSESION", strQuery);
-	        Iterator it = coll.iterator();
-	        if (it.hasNext())
-	        {
+	        Iterator<?> it = coll.iterator();
+	        
+	        if (it.hasNext()) {
 	        	IItem item = (IItem)it.next();
 	        	tipo = item.getString("SUSTITUTO");
 	        }
-		}
-		catch(Exception e)
-		{
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
-		}
+	        
+		 } catch(Exception e) {
+			 LOGGER.error("Error . "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+			 throw new ISPACException("Error. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+		 }
+		
 		return tipo;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public static String createNumConvocatoria(IRuleContext rulectx, String organo, String area) throws ISPACException
-	{
+	public static String createNumConvocatoria(IRuleContext rulectx, String organo, String area) throws ISPACException {
 		String numconv = "?";
+		
     	try{
 			//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
@@ -485,29 +501,29 @@ public class SecretariaUtil {
 	        Calendar c = Calendar.getInstance();
 	        int year = c.get(Calendar.YEAR);
 
-	        String strQuery = "WHERE YEAR='"+String.valueOf(year)+"' and ORGANO='"+organo+"'";
-	        if(organo.equals("COMI")){
-	        	strQuery += " and AREA='"+area+"'";
+	        String strQuery = "WHERE YEAR = '" + String.valueOf(year) + "' and ORGANO = '" + organo + "'";
+	        if("COMI".equals(organo)){
+	        	strQuery += " and AREA = '" + area + "'";
 	        }
-	        logger.info("strQuery "+strQuery);
-	        IItemCollection collection = entitiesAPI.queryEntities("SECR_CONVOCATORIA", strQuery+" ORDER BY ID");
+	        
+	        LOGGER.info("strQuery "+strQuery);
+	        IItemCollection collection = entitiesAPI.queryEntities("SECR_CONVOCATORIA", strQuery + " ORDER BY ID");
 	        int numero = 0;
+	        
 	        if(collection.toList().size() != 0){
-	        	Iterator it = collection.iterator();
+	        	Iterator<?> it = collection.iterator();
 		        
 		        IItem col=null;
-		        
 		        while (it.hasNext()) {
 		        	int num = 0;
 		        	col = (IItem)it.next();
 		        	num = col.getInt("NUMERO");
-		        	logger.info("num "+num);
+		        	LOGGER.info("num "+num);
 		        	if(!it.hasNext()){
 		        		numero = num;
 		        	}
 		        }
 	        }
-	        
 	        
 	        numero = numero + 1;
 	        numconv = String.valueOf(numero) + "/" + String.valueOf(year);
@@ -522,10 +538,8 @@ public class SecretariaUtil {
 	        
         	return numconv;
     		
-        } 
-		catch(ISPACException e)
-		{
-			logger.error(e.getMessage(), e);
+        } catch(ISPACException e) {
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);
 		}
 	}
@@ -551,16 +565,20 @@ public class SecretariaUtil {
                 item = ((IItem)it.next());
                 sesion = item.getString("ORGANO");
 	        }
-	        if(sesion==null) sesion="JGOB";
+	        
+	        if(sesion == null){
+	        	sesion = "JGOB";
+	        }
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);
 		}
+		
 		return sesion;
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public static Vector orderPropuestas(IItemCollection collection) throws ISPACRuleException {
+	
+	/*public static Vector orderPropuestas(IItemCollection collection) throws ISPACRuleException {
 		Iterator it = collection.iterator();
 		Vector <IItem> res = new Vector <IItem> ();
 		
@@ -604,6 +622,47 @@ public class SecretariaUtil {
         	throw new ISPACRuleException(e);
         }
 		return res;
+	}*/
+	
+	@SuppressWarnings("unchecked")
+	public static Vector<IItem> orderPropuestas(IRuleContext rulectx) throws ISPACRuleException {
+	
+		Vector <IItem> res = new Vector <IItem> ();
+
+		try{
+			// ----------------------------------------------------------------------------------------------
+			ClientContext cct = (ClientContext) rulectx.getClientContext();		
+			IInvesflowAPI invesFlowAPI = cct.getAPI();
+			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+			// ----------------------------------------------------------------------------------------------
+			
+			String strQuery = "WHERE NUMEXP = '" + rulectx.getNumExp() + "' ORDER BY ORDEN ASC";
+			IItemCollection collection = entitiesAPI.queryEntities("SECR_PROPUESTA", strQuery);
+			Iterator<IItem> it = collection.iterator();
+			int ordenPropuesta = 1;
+
+			while(it.hasNext()){
+				IItem prop = it.next();
+				String numexpOrigen = prop.getString("NUMEXP_ORIGEN");
+				IItemCollection itColDoc = DocumentosUtil.getDocumentos(cct, rulectx.getNumExp(), "numexp='"+rulectx.getNumExp()+"' and descripcion like '%"+numexpOrigen+"%'", "");
+				Iterator<IItem> itProcProp = itColDoc.iterator();
+
+				if(itProcProp.hasNext()){
+					IItem docProp = itProcProp.next();
+					
+					if(res.size()<=ordenPropuesta){
+						res.setSize(ordenPropuesta+1);
+					}
+					res.set(ordenPropuesta, docProp);
+				}
+				ordenPropuesta ++;
+			}
+		}catch(Exception e) {
+			LOGGER.error("Error al ordenar las propuestas. "+e.getMessage(), e);
+        	throw new ISPACRuleException("Error al ordenar las propuestas. "+e.getMessage(), e);
+        }
+		
+		return res;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -620,46 +679,45 @@ public class SecretariaUtil {
 		
 			        	desc = desc.replaceFirst("Propuesta Urgencia - ", "");
 
-			        	logger.info("desc "+desc);
+			        	LOGGER.info("desc "+desc);
 			        	char sNumPropuesta = desc.charAt(0);
-			        	logger.info("sNumPropuesta "+sNumPropuesta);
+			        	LOGGER.info("sNumPropuesta "+sNumPropuesta);
 			        	char sNumPropuestaDecima = desc.charAt(1);
-			        	logger.info("sNumPropuestaDecima "+sNumPropuestaDecima);
+			        	LOGGER.info("sNumPropuestaDecima "+sNumPropuestaDecima);
 			        	int val = 0;
 			        	if(sNumPropuestaDecima != ' '){
 			        		String numD = desc.substring(0, 2);
 			        		val = Integer.parseInt(numD);
-			        	}
-			        	else{
+			        	} else{
 			        		val = Integer.parseInt(sNumPropuesta+"");
 			        	}
+			        	
 			        	if(res.size()<=val){
 			        		res.setSize(val+1);
 			        	}
 			        	
-			        	logger.info("val "+val);
+			        	LOGGER.info("val "+val);
 			        	res.set(val, item);
 			        }
 				}
 			}
-		}catch(Exception e)
-		{
-        	if (e instanceof ISPACRuleException)
-        	{
+		} catch(Exception e) {
+			
+        	if (e instanceof ISPACRuleException) {
 			    throw new ISPACRuleException(e);
         	}
-        	logger.error(e.getMessage(), e);
+        	LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);
         }
+		
 		return res;
 	}
 
 	@SuppressWarnings("unchecked")
 	public static IItem obtenerPuntoDiaSesion(IRuleContext rulectx, String numExp) throws ISPACRuleException {
 		IItem propuesta = null;
+		
 		try{
-			
-			
 			/****************************************************************************/
 			IClientContext cct = rulectx.getClientContext();
 			IInvesflowAPI invesFlow = cct.getAPI();
@@ -668,15 +726,15 @@ public class SecretariaUtil {
 			String sQuery = "WHERE numexp='"+numExp+"'";
 			IItemCollection itSecretaria = entitiesAPI.queryEntities("SECR_PROPUESTA", sQuery);
 			Iterator<IItem> iteratorSec = itSecretaria.iterator();
+			
 			while(iteratorSec.hasNext()){
 				propuesta = iteratorSec.next();
-				
 			}
-		}
-		catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+		} catch (ISPACException e) {
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);
 		}
+		
 		return propuesta;
 	}
 
@@ -687,22 +745,23 @@ public class SecretariaUtil {
 			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 			IProcedureAPI procedureAPI = invesflowAPI.getProcedureAPI();
 			
-			int id_pcd_actual = ExpedientesUtil.getExpediente(cct, numexpPadre).getInt("ID_PCD");
+			int idPcdActual = ExpedientesUtil.getExpediente(cct, numexpPadre).getInt("ID_PCD");
 			
 			//Buscamos el procedimiento asociado a dicho código para recuperar el departamento
-			IItem procedimiento = procedureAPI.getProcedureById(id_pcd_actual);
+			IItem procedimiento = procedureAPI.getProcedureById(idPcdActual);
+			
 			if(procedimiento != null){
-				String org_rsltr = (String) procedimiento.get("CTPROCEDIMIENTOS:ORG_RSLTR");
-				if(StringUtils.isNotEmpty(org_rsltr)){
-					String query = sQuery+" AND ORG_RSLTR = '" + org_rsltr + "'";
+				String orgRsltr = (String) procedimiento.get("CTPROCEDIMIENTOS:ORG_RSLTR");
+				if(StringUtils.isNotEmpty(orgRsltr)){
+					String query = sQuery + " AND ORG_RSLTR = '" + orgRsltr + "'";
 					procedimientosDelDepartamento = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_CT_PROCEDIMIENTOS, query);					
 				}
 			}
-		}
-		catch(Exception e){
-			logger.error("Error al recuperar el expediente hijo. " + e.getMessage(), e);
+		} catch(Exception e){
+			LOGGER.error("Error al recuperar el expediente hijo. " + e.getMessage(), e);
 			throw new ISPACException( "Error al recuperar el expediente hijo. " + e.getMessage(), e);
 		}
+		
 		return procedimientosDelDepartamento;
 	}
 	
@@ -713,19 +772,18 @@ public class SecretariaUtil {
 			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 			IProcedureAPI procedureAPI = invesflowAPI.getProcedureAPI();
 			
-			int id_pcd_actual = ExpedientesUtil.getExpediente(cct, numexpPadre).getInt("ID_PCD");
+			int idPcdActual = ExpedientesUtil.getExpediente(cct, numexpPadre).getInt("ID_PCD");
 			
 			//Buscamos el procedimiento asociado a dicho código para recuperar el departamento
-			IItem procedimiento = procedureAPI.getProcedureById(id_pcd_actual);
+			IItem procedimiento = procedureAPI.getProcedureById(idPcdActual);
 			if(procedimiento != null){
-				String org_rsltr = (String) procedimiento.get("CTPROCEDIMIENTOS:ORG_RSLTR");
-				if(StringUtils.isNotEmpty(org_rsltr)){
+				String orgRsltr = (String) procedimiento.get("CTPROCEDIMIENTOS:ORG_RSLTR");
+				if(StringUtils.isNotEmpty(orgRsltr)){
 					procedimientosDelDepartamento = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_CT_PROCEDIMIENTOS, sQuery);					
 				}
 			}
-		}
-		catch(Exception e){
-			logger.error("Error al recuperar el expediente hijo. " + e.getMessage(), e);
+		} catch(Exception e){
+			LOGGER.error("Error al recuperar el expediente hijo. " + e.getMessage(), e);
 			throw new ISPACException( "Error al recuperar el expediente hijo. " + e.getMessage(), e);
 		}
 		return procedimientosDelDepartamento;
@@ -735,89 +793,95 @@ public class SecretariaUtil {
 	 * Junta Gobierno, Pleno, ... excluyendo las propuestas ya que todas
 	 * tienen como código de procedimiento PROPUESTA-
 	 * **/
-	public static boolean esExpedienteProcedimientoOrganosColegiados(
-			IRuleContext rulectx, String numexp) throws ISPACRuleException {
+	public static boolean esExpedienteProcedimientoOrganosColegiados( IRuleContext rulectx, String numexp) throws ISPACRuleException {
 		boolean esOrganoColegiado = false;
 		try{
 			/****************************************************************************/
 			IClientContext cct = rulectx.getClientContext();
 			/****************************************************************************/
 			IItem expediente = ExpedientesUtil.getExpediente(cct, numexp);
+			
 			if(expediente!=null){
-				String cod_pcd_expediente = expediente.getString("CODPROCEDIMIENTO");
+				String codPcdExpediente = expediente.getString(ExpedientesUtil.CODPROCEDIMIENTO);
 				//Obtenemos el id del procedimiento de RESOLUCION-SECRETARIA
 				IItem procedimiento = ProcedimientosUtil.getProcedimientoByCodPcd(rulectx, "RESOLUCION-SECRETARIA");
+				
 				if(procedimiento!=null){
 					//padre de órganos colegiados
-					int idProc_Resol_Secr = procedimiento.getInt("ID");
+					int idProcResolSecr = procedimiento.getInt("ID");
 					//Con el cod de procedimiento del expediente compruebo que sea hijo del anterior y que no contega el código
 					//de procedimiento PROPUESTA-
-					if(!cod_pcd_expediente.contains("PROPUESTA-")){
-						String consulta = "WHERE ID_PADRE="+idProc_Resol_Secr+" AND COD_PCD='"+cod_pcd_expediente+"'";
+					if(!codPcdExpediente.contains("PROPUESTA-")){
+						String consulta = "WHERE ID_PADRE = " + idProcResolSecr + " AND COD_PCD = '" + codPcdExpediente + "'";
 						IItem proced = ProcedimientosUtil.getProcedimientoByConsulta(rulectx, consulta);
-						if(proced!=null){
+						
+						if(proced != null){
 							esOrganoColegiado = true;
 						}
 					}
 				}
 			}
-			
-			
-		}catch (ISPACRuleException e) {
-			logger.error(e.getMessage(), e);
+		} catch (ISPACRuleException e) {
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error en la busqueda del tipo de procedimiento de Órgano Colegiados. "+e.getMessage(),e);
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error en la busqueda del tipo de procedimiento de Órgano Colegiados. "+e.getMessage(),e);
 		}
+		
 		return esOrganoColegiado;
 	}
 
 	public static String obtenerPlantillasCOMISesion(IRuleContext rulectx, String sesion, String area) throws ISPACRuleException {
 		String nombrePlantilla = "";
 		String nombreTabla = "";
-		if(sesion.equals("ORD")){
+		
+		if("ORD".equals(sesion)){
 			nombreTabla = "SECR_PLANTILLAS_SESION_ORD";
-		}
-		if(sesion.equals("EXTR")){
+		} else if("EXTR".equals(sesion)){
 			nombreTabla = "SECR_PLANTILLAS_SESION_EXTR";
-		}
-		if(sesion.equals("EXUR")){
+		} else if("EXUR".equals(sesion)){
 			nombreTabla = "SECR_PLANTILLAS_SESION_EXUR";
-		}
-		if(sesion.equals("CONS")){
+		} else if("CONS".equals(sesion)){
 			nombreTabla = "SECR_PLANTILLAS_SESION_CONS";
 		}
+		
 		try {
 			Iterator<IItem> resultadoPlantillas = ConsultasGenericasUtil.queryEntities(rulectx, nombreTabla, "VALOR='"+area+"'");
+			
 			while(resultadoPlantillas.hasNext()){
 				IItem plantilla = resultadoPlantillas.next();
 				nombrePlantilla = plantilla.getString("SUSTITUTO");
 			}
 		} catch (ISPACRuleException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error al obtener las plantillas de la tabla: "+nombreTabla+" del área: "+area+ " sesion: "+sesion+" en el expediente:  "+rulectx.getNumExp()+" - "+e.getMessage(),e);
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error al obtener el nombre de la plantilla de la tabla: "+nombreTabla+" del área: "+area+ " sesion: "+sesion+" en el expediente:  "+rulectx.getNumExp()+" - "+e.getMessage(),e);
 		}
+		
 		return nombrePlantilla;
 	}
+	
+	public static String getNumero(IClientContext cct, String numExp, String strTabla) throws ISPACException {
+		
+		String numAcuerdo = "?";
+		
+		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+		
+		String strQuery = "WHERE NUMEXP_ORIGEN = '" + numExp + "'";
+		IItemCollection itemCollection = entitiesAPI.queryEntities(strTabla, strQuery);
+		Iterator<?> it = itemCollection.iterator();
+		
+		if (it.hasNext()) {
+			IItem iAcuerdo = (IItem)it.next();
+			numAcuerdo = iAcuerdo.getString("NUMERO") + "/" + iAcuerdo.getString("YEAR");
+			
+		} else {
+			throw new ISPACInfo("Se ha producido un error al obtener el número de acuerdo o dictamen.");
+		}
+		
+		return numAcuerdo;
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

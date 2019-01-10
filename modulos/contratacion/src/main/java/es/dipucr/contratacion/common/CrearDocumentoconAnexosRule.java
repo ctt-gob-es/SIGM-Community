@@ -17,6 +17,7 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.PdfUtil;
 import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 import ieci.tdw.ispac.api.IEntitiesAPI;
@@ -38,11 +39,20 @@ public class CrearDocumentoconAnexosRule implements IRule{
 	protected static final Logger logger = Logger.getLogger(CrearDocumentoconAnexosRule.class);
 	private IItemCollection docAnexos = null;
 	private IItem plantillaInicial = null;
-	private String codPlantillaGenerar = "SOLINFTECNDOCTE";
-	private String codTramiteGenerar = "SOLINFTECNDOCTE";
+	private String codPlantillaGenerar = null;
+	private String codTipoDocGenerar = null;
+	private String codTramiteGenerar = null;
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		return true;
+	}
+
+	public String getCodTipoDocGenerar() {
+		return codTipoDocGenerar;
+	}
+
+	public void setCodTipoDocGenerar(String codTipoDocGenerar) {
+		this.codTipoDocGenerar = codTipoDocGenerar;
 	}
 
 	public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
@@ -93,9 +103,19 @@ public class CrearDocumentoconAnexosRule implements IRule{
 				//plantilla final
 				IItem tipoDocFinal = null;
 				int templateIdFinal = 0;
-				String plantillaFinal = DocumentosUtil.getNombrePlantillaByCod(cct, codPlantillaGenerar);		
+				String plantillaFinal = null;
+				if(StringUtils.isNotEmpty(codPlantillaGenerar)){
+					plantillaFinal = DocumentosUtil.getNombrePlantillaByCod(cct, codPlantillaGenerar);
+				}
+						
 				if(StringUtils.isNotEmpty(plantillaFinal)){
 					tipoDocFinal = DocumentosUtil.getTipoDocumentoByPlantillaIItem(cct, plantillaFinal);			
+				}
+				else{
+					tipoDocFinal = DocumentosUtil.getTipoDocByCodigo(cct, codTipoDocGenerar);
+					if(tipoDocFinal!=null){
+						plantillaFinal = tipoDocFinal.getString("NOMBRE");
+					}					
 				}
 				if(tipoDocFinal!=null){
 					templateIdFinal = tipoDocFinal.getInt("ID");
@@ -170,7 +190,7 @@ public class CrearDocumentoconAnexosRule implements IRule{
 					
 					nombreDocumento = descripcion + "." + ext;
 					
-					DocumentosUtil.anadeDocumentoPdf(writer, fileAnexo.getAbsolutePath(), nombreDocumento, normalizar(descripcion));
+					PdfUtil.anadeDocumentoPdf(writer, fileAnexo.getAbsolutePath(), nombreDocumento, normalizar(descripcion));
 	
 					fileAnexo.delete();
 					fileAnexo = null;

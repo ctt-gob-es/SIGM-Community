@@ -286,8 +286,8 @@ public class FileTemporary {
       
       for (int i = 0; i < names.length; i++) {
         // Sólo elimina los ficheros creados por el manejador
-        if (names[i].startsWith( "ispac"))
-          mFileDirContext.unbind( names[i]);
+        if (names[i].startsWith( "ispac") || names[i].startsWith(".~lock"))
+          mFileDirContext.unbindHora( names[i]);
       }
     }
     catch(NamingException e) 

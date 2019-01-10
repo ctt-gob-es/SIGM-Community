@@ -13,15 +13,15 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
  */
 public class CreateDocPropuestaNegAprobacionRule extends CreateDocPropuestaNegRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		STR_entidad = "SGN_NEGOCIADO";
-		STR_queryDocumentos = 
-			"COD_TPDOC = 'Pet suministro' OR " +
-			"COD_TPDOC = 'Elab pliego' OR " +
-			"COD_TPDOC = 'Inf jur contrata' OR " +
-			"COD_TPDOC = 'Inf jur compras' OR " +
-			"COD_TPDOC = 'Inf Intervencion'" ;	
-		return true;
-	}
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "SGN_NEGOCIADO";
+        strQueryDocumentos = 
+            "COD_TPDOC = 'Pet suministro' OR " +
+            "COD_TPDOC = 'Elab pliego' OR " +
+            "COD_TPDOC = 'Inf jur contrata' OR " +
+            "COD_TPDOC = 'Inf jur compras' OR " +
+            "COD_TPDOC = 'Inf Intervencion'" ;    
+        return true;
+    }
 
 }

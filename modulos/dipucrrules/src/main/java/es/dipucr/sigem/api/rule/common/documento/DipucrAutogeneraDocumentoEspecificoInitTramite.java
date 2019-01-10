@@ -10,11 +10,10 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
+import java.util.Calendar;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
-
-import com.ibm.icu.util.Calendar;
 
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;

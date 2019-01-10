@@ -20,13 +20,14 @@ import org.apache.log4j.Logger;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.QueryUtils;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrSERSOCompSol15DiasPE implements IRule {
 
     public static final Logger LOGGER = Logger.getLogger(DipucrSERSOCompSol15DiasPE.class);
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
     public Object execute(IRuleContext rulectx) throws ISPACRuleException {
@@ -44,28 +45,46 @@ public class DipucrSERSOCompSol15DiasPE implements IRule {
             String numexpConvocatoria = "";
             
             IItemCollection solicitudCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, numexp);
-            Iterator<?> solicitudIterator = solicitudCollection.iterator();                
-            if (solicitudIterator.hasNext()) {
+            Iterator<?> solicitudIterator = solicitudCollection.iterator();
+            
+            if (solicitudIterator.hasNext()) {                
                 IItem solicitud = (IItem)solicitudIterator.next();
-                nifBenef = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
-                numexpConvocatoria = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CONVOCATORIA);
+                
+                nifBenef = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
+                numexpConvocatoria = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CONVOCATORIA);
+                
                 //Buscamos todas las solicitudes que tiene este beneficiario en esta convocatoria
-                IItemCollection solicitudesBenefCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, "WHERE UPPER(NIF) = UPPER('" +nifBenef+"') AND CONVOCATORIA = '" +numexpConvocatoria+"' AND SUBSTR(NUMEXP, 10)::INT < SUBSTR('" +numexp+"', 10)::INT AND TIPOAYUDA != 'EXCEPCIONAL' AND TIPOAYUDA != 'COMEDOR' AND TIPOAYUDA != 'LIBROS' AND NUMEXP NOT IN ( SELECT NUMEXP FROM SPAC_EXPEDIENTES WHERE ESTADOADM ='RC') AND NUMEXP NOT IN ( SELECT NUMEXP FROM SPAC_EXPEDIENTES_H WHERE ESTADOADM ='RC') ORDER BY " + QueryUtils.NUMEXP_YEAR + " DESC, " + QueryUtils.NUMEXP_NUMBER + " DESC");
+                IItemCollection solicitudesBenefCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, 
+                        ConstantesString.WHERE + " UPPER(" + ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF + ") = UPPER('" +nifBenef+"')"
+                        + ConstantesString.AND + ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CONVOCATORIA + " = '" +numexpConvocatoria+"'"
+                        + " AND SUBSTR(NUMEXP, 10)::INT < SUBSTR('" +numexp+"', 10)::INT"
+                        + ConstantesString.AND + ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA + " != '" + ConstantesPlanEmergencia.EXCEPCIONAL + "'"
+                        + ConstantesString.AND + ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA + " != '" + ConstantesPlanEmergencia.COMEDOR + "'"
+                        + ConstantesString.AND + ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA + " != '" + ConstantesPlanEmergencia.LIBROS + "'"
+                        + " AND NUMEXP NOT IN ( SELECT NUMEXP FROM SPAC_EXPEDIENTES WHERE ESTADOADM ='RC')"
+                        + " AND NUMEXP NOT IN ( SELECT NUMEXP FROM SPAC_EXPEDIENTES_H WHERE ESTADOADM ='RC')"
+                        + " ORDER BY " + QueryUtils.NUMEXP_YEAR + " DESC, " + QueryUtils.NUMEXP_NUMBER + " DESC");
+                
                 Iterator<?> solicitudesBenefIterator = solicitudesBenefCollection.iterator();
                 
                 //Si tenemos solicitud anterior comprobamos lo de los 15 días
                 if(solicitudesBenefIterator.hasNext()){
+                    
                     IItem solicitudBenf = (IItem) solicitudesBenefIterator.next();
-                    String numexpSolicitudesBenef = solicitudBenf.getString("NUMEXP");                    
+                    
+                    String numexpSolicitudesBenef = SubvencionesUtils.getString(solicitudBenf, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMEXP);
+                    
                     IItem expedienteAnt = ExpedientesUtil.getExpediente(cct, numexpSolicitudesBenef);
+                    
                     Date fechaRegAnterior = null;
-                    if(expedienteAnt != null){
-                        fechaRegAnterior = expedienteAnt.getDate("FREG");                    
+                    if(null != expedienteAnt){
+                        fechaRegAnterior = SubvencionesUtils.getDate(expedienteAnt, ExpedientesUtil.FREG);                    
                     }
-                    if(fechaRegAnterior != null){
+                    if(null != fechaRegAnterior){
                         IItem expediente = ExpedientesUtil.getExpediente(cct,  numexp);
+                        
                         if (expediente != null){
-                            Date fechaReg = expediente.getDate("FREG");
+                            Date fechaReg = SubvencionesUtils.getDate(expediente, ExpedientesUtil.FREG);
                             
                             GregorianCalendar fechaRegAnteriorCalendar = new GregorianCalendar();
                             fechaRegAnteriorCalendar.setTime(fechaRegAnterior);
@@ -77,13 +96,8 @@ public class DipucrSERSOCompSol15DiasPE implements IRule {
                             
                             //Solicitan que sean dos solicitudes en 30 días
                             if(diasSolicitud <= 30){
-                                String asunto = expediente.getString("ASUNTO");
-                                if(asunto.toUpperCase().indexOf("30 DÍAS") < 0){
-                                    asunto += " - AVISO 2 SOLICITUDES EN MENOS DE 30 DÍAS (" +numexpSolicitudesBenef+")";
-                                    expediente.set("ASUNTO", asunto);
-                                                                    
-                                    expediente.store(cct);
-                                }
+                                String textoAsunto = ConstantesPlanEmergencia.DpcrSERSOAvisos.TEXTOASUNTO_30_DIAS + " (" +numexpSolicitudesBenef+")";
+                                SubvencionesUtils.concatenaTextoAAsunto(cct, numexp, ConstantesPlanEmergencia.DpcrSERSOAvisos.INDEXOF_30_DIAS, textoAsunto);
                             }
                         }
                     }

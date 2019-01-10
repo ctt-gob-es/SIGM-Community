@@ -153,7 +153,8 @@ public final class TransformersProperties {
 	String path = afirmaConfigFilePathResolver.getConfigFilePath(afirmaConfigFilePathResolver.ISPAC_BASE_CONFIG_SUBDIR_KEY_AFIRMA + File.separator + TransformersConstants.TRANSFORMERS_FILE_PROPERTIES);	
 		
 	if (path == null) {
-	    throw new URISyntaxException("Error", Language.getFormatResIntegra(ILogConstantKeys.TP_LOG005, new Object[ ] { TransformersConstants.TRANSFORMERS_FILE_PROPERTIES }));
+	    //throw new URISyntaxException("Error", Language.getFormatResIntegra(ILogConstantKeys.TP_LOG005, new Object[ ] { TransformersConstants.TRANSFORMERS_FILE_PROPERTIES }));
+		path = "/config/SIGEM/conf/SIGEM_Tramitacion/integra_afirma/transformers.properties";
 	}
 	
 	res = new File(path);

@@ -11,6 +11,7 @@ import es.ieci.tecdoc.isicres.terceros.business.manager.DireccionManager;
 import es.ieci.tecdoc.isicres.terceros.business.manager.TerceroManager;
 import es.ieci.tecdoc.isicres.terceros.business.vo.BaseDireccionVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoFisicoVO;
+import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoJuridicoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.search.CriteriaVO;
 
@@ -86,7 +87,7 @@ public class TerceroManagerImpl extends
 	 * {@inheritDoc}
 	 * @see es.ieci.tecdoc.isicres.terceros.business.manager.TerceroManager#findTerceroJuridicoByDocumentNumber(java.lang.String, int)
 	 */
-	public List<TerceroValidadoFisicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber,
+	public List<TerceroValidadoJuridicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber,
 			int typeDoc) {
 		
 		return ((TerceroDao) getDao()).findTerceroJuridicoByDocumentNumber(phisicalNumber, typeDoc);
@@ -119,5 +120,13 @@ public class TerceroManagerImpl extends
 
 	// Members
 	protected DireccionManager direccionManager;
+	
+	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber) {
+		return ((TerceroDao) getDao()).findTerceroFisicoByDocumentNumber(phisicalNumber);
+	}
+	
+	public List<TerceroValidadoJuridicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber) {
+		return ((TerceroDao) getDao()).findTerceroJuridicoByDocumentNumber(phisicalNumber);
+	}
 
 }

@@ -3,6 +3,7 @@
  */
 package com.ieci.tecdoc.isicres.session.folder;
 
+import es.ieci.tecdoc.fwktd.util.file.FileUtils;
 import gnu.trove.THashMap;
 
 import java.io.InputStream;
@@ -89,7 +90,7 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 	 * PUBLIC METHOD
 	 **************************************************************************/
 
-	public static List getOrigDocFdr(String sessionID, Integer bookID,
+	public static List<?> getOrigDocFdr(String sessionID, Integer bookID,
 			int folderID, String entidad) throws BookException,
 			SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
@@ -97,7 +98,8 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
 
 		Transaction tran = null;
-		List result = new ArrayList();
+		@SuppressWarnings("rawtypes")
+		List<?> result = new ArrayList();
 		try {
 			Session session = HibernateUtil.currentSession(entidad);
 			tran = session.beginTransaction();
@@ -199,14 +201,14 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 		}
 	}
 
-	public static List getBookFolderDocsWithPages(String sessionID,
+	public static List<AxDoch> getBookFolderDocsWithPages(String sessionID,
 			Integer bookID, int fdrid, String entidad) throws BookException,
 			SessionException, ValidationException {
 		Validator.validate_String_NotNull_LengthMayorZero(sessionID,
 				ValidationException.ATTRIBUTE_SESSION);
 		Validator.validate_Integer(bookID, ValidationException.ATTRIBUTE_BOOK);
 
-		List result = new ArrayList();
+		List<AxDoch> result = new ArrayList<AxDoch>();
 		Transaction tran = null;
 		try {
 			Session session = HibernateUtil.currentSession(entidad);
@@ -224,10 +226,10 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 			AxDochEntity axDochEntity = new AxDochEntity();
 			AxPagehEntity axPagehEntity = new AxPagehEntity();
 
-			Collection pages = null;
-			Collection docs = axDochEntity.findByFdrid(bookID, fdrid, entidad);
+			Collection<?> pages = null;
+			Collection<?> docs = axDochEntity.findByFdrid(bookID, fdrid, entidad);
 
-			for (Iterator it = docs.iterator(); it.hasNext();) {
+			for (Iterator<?> it = docs.iterator(); it.hasNext();) {
 				AxPKById axPKById = (AxPKById) it.next();
 				axDochEntity.load(axPKById, entidad);
 				AxDoch axdoch = axDochEntity.getAxDoch();
@@ -235,7 +237,7 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 				pages = axPagehEntity.findByFdridDocid(bookID, fdrid, axdoch
 						.getId(), entidad);
 
-				for (Iterator it2 = pages.iterator(); it2.hasNext();) {
+				for (Iterator<?> it2 = pages.iterator(); it2.hasNext();) {
 					AxPKById axPKByIdPage = (AxPKById) it2.next();
 					axPagehEntity.load(axPKByIdPage, entidad);
 					axdoch.addPage(axPagehEntity.getAxPageh());
@@ -428,8 +430,8 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 			ISicresReturnCompulsaVO returnCompulsa = CompulsaFactory
 					.getCurrentPolicy().compulsarDocuments(compulsa);
 
-			List fileItems = returnCompulsa.getFilesInfo();
-			for (Iterator it = fileItems.iterator(); it.hasNext();) {
+			List<?> fileItems = returnCompulsa.getFilesInfo();
+			for (Iterator<?> it = fileItems.iterator(); it.hasNext();) {
 				FlushFdrFile file = (FlushFdrFile) it.next();
 				file.setOrder(order++);
 
@@ -504,8 +506,8 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 		}
 	}
 
-	public static Map createDocuments(Integer bookID, int folderId,
-			Map documents, Integer userId, String entidad) throws BookException {
+	public static Map<?, ?> createDocuments(Integer bookID, int folderId,
+			Map<?, ?> documents, Integer userId, String entidad) throws BookException {
 		Transaction tran = null;
 		try {
 			Session session = HibernateUtil.currentSession(entidad);
@@ -513,7 +515,7 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 
 			Timestamp timestamp = DBEntityDAOFactory.getCurrentDBEntityDAO()
 					.getDBServerDate(entidad);
-			for (Iterator it = documents.keySet().iterator(); it.hasNext();) {
+			for (Iterator<?> it = documents.keySet().iterator(); it.hasNext();) {
 				String key = (String) it.next();
 				FlushFdrDocument document = (FlushFdrDocument) documents
 						.get(key);
@@ -552,6 +554,78 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 
 		return documents;
 	}
+	
+	public static void modificarNombreCarpeta(Integer bookId, int folderId, String nombreViejoCarpeta, String nombreNuevoCarpeta, String entidad) throws BookException {
+		Transaction tran = null;
+		try {
+			Session session = HibernateUtil.currentSession(entidad);
+			tran = session.beginTransaction();
+			
+			int docID = -1;
+
+			try {
+				AxDochEntity axDochEntity = new AxDochEntity();
+				docID = axDochEntity.lookForName(bookId.toString(), folderId, nombreViejoCarpeta, entidad);
+				AxPKById docPk = new AxPKById(bookId.toString(), folderId, docID);
+				
+				axDochEntity.load(docPk, entidad);
+
+				if (log.isDebugEnabled()) {
+					log.debug("docID recuperado => " + docID);
+				}
+				
+				axDochEntity.setName(nombreNuevoCarpeta);
+				axDochEntity.store(entidad);
+				
+			} catch (Exception e) {
+				log.warn("Error al crear documento", e);
+			}
+
+			HibernateUtil.commitTransaction(tran);
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction(tran);
+			log.error("Impossible to update a folder for bookID [" + bookId + "]", e);
+			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
+		} finally {
+			HibernateUtil.closeSession(entidad);
+		}
+	}
+	
+	public static void modificarNombreDocumento(Integer bookId, int folderId, int docId, String nombreViejoDocumento, String nombreNuevoDocumento, String entidad) throws BookException {
+		Transaction tran = null;
+		try {
+			Session session = HibernateUtil.currentSession(entidad);
+			tran = session.beginTransaction();
+			
+			int pageId = -1;
+
+			try {
+				AxPagehEntity axPagehEntity = new AxPagehEntity();
+				pageId = axPagehEntity.lookForName(bookId, folderId, docId, nombreViejoDocumento, entidad);
+				AxPKById docPk = new AxPKById(bookId.toString(), folderId, pageId);
+				
+				axPagehEntity.load(docPk, entidad);
+
+				if (log.isDebugEnabled()) {
+					log.debug("docID recuperado => " + pageId);
+				}
+				
+				axPagehEntity.setName(nombreNuevoDocumento);
+				axPagehEntity.store(entidad);
+				
+			} catch (Exception e) {
+				log.warn("Error al crear documento", e);
+			}
+
+			HibernateUtil.commitTransaction(tran);
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction(tran);
+			log.error("Impossible to update a folder for bookID [" + bookId + "]", e);
+			throw new BookException(BookException.ERROR_UPDATE_FOLDER);
+		} finally {
+			HibernateUtil.closeSession(entidad);
+		}
+	}
 
 	/**
 	 * Este método sustituye al que se usaba anteriormente
@@ -568,8 +642,8 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 	 * @return
 	 * @throws BookException
 	 */
-	public static Map saveDocuments(String sessionID, Integer bookID,
-			int folderId, Map documents, BookTypeConf bookTypeConf,
+	public static Map<?, ?> saveDocuments(String sessionID, Integer bookID,
+			int folderId, Map<?, ?> documents, BookTypeConf bookTypeConf,
 			BookConf bookConf, Integer userId, Locale locale, String entidad)
 			throws BookException {
 
@@ -577,7 +651,7 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 		try {
 
 			// obtenemos todos los documentos y ficheros del registro
-			List docsRegistro = getBookFolderDocsWithPages(sessionID, bookID,
+			List<?> docsRegistro = getBookFolderDocsWithPages(sessionID, bookID,
 					folderId, entidad);
 
 			Session session = HibernateUtil.currentSession(entidad);
@@ -618,17 +692,17 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 			int imageAuth = regState.getImageAuth();
 			AxPagehEntity axPagehEntity = new AxPagehEntity();
 
-			for (Iterator it = documents.keySet().iterator(); it.hasNext();) {
+			for (Iterator<?> it = documents.keySet().iterator(); it.hasNext();) {
 				String key = (String) it.next();
 				FlushFdrDocument document = (FlushFdrDocument) documents
 						.get(key);
-				List pages = document.getPages();
+				List<?> pages = document.getPages();
 				int order = axPagehEntity.getOrderID(bookID, folderId,
 						document.getDocID(), entidad);
 				int totalNumPages = axPagehEntity.findByFdridDocid(bookID,
 						folderId, document.getDocID(), entidad).size();
 
-				for (Iterator it2 = pages.iterator(); it2.hasNext();) {
+				for (Iterator<?> it2 = pages.iterator(); it2.hasNext();) {
 					FlushFdrPage page = (FlushFdrPage) it2.next();
 					FlushFdrFile file = page.getFile();
 
@@ -706,11 +780,11 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 	 *         documento
 	 */
 	private static boolean comprobarNombreLogicoFicheroEnDocumento(
-			List docsRegister, int idDoc, String name) {
-		for (Iterator itDocs = docsRegister.iterator(); itDocs.hasNext();) {
+			List<?> docsRegister, int idDoc, String name) {
+		for (Iterator<?> itDocs = docsRegister.iterator(); itDocs.hasNext();) {
 			AxDoch axdoch = (AxDoch) itDocs.next();
 			if (axdoch.getId() == idDoc) {
-				for (Iterator itPages = axdoch.getPages().iterator(); itPages
+				for (Iterator<?> itPages = axdoch.getPages().iterator(); itPages
 						.hasNext();) {
 					AxPageh page = (AxPageh) itPages.next();
 					if (page.getName().equals(name)) {
@@ -727,16 +801,28 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 	 * PRIVATE METHOD
 	 **************************************************************************/
 
-	private static int createDoc(AxDochEntity axDochEntity, Integer bookId,
-			Integer folderId, int docID, Integer userId, Timestamp timestamp,
-			String name, String entidad) throws SQLException, Exception {
+	private static int createDoc(AxDochEntity axDochEntity, Integer bookId, Integer folderId, int docID, Integer userId, Timestamp timestamp, String name, String entidad) throws SQLException, Exception {
+		
 		if (docID == -1) {
-			docID = DBEntityDAOFactory.getCurrentDBEntityDAO().getNextDocID(
-					bookId, entidad);
-			AxPKById docPk = new AxPKById(bookId.toString(),
-					folderId.intValue(), docID);
-			axDochEntity.create(docPk, userId.intValue(), name, timestamp,
-					entidad);
+			docID = DBEntityDAOFactory.getCurrentDBEntityDAO().getNextDocID( bookId, entidad);
+			AxPKById docPk = new AxPKById(bookId.toString(), folderId.intValue(), docID);
+			
+			String nombreDoc = "";			
+			String extension = FileUtils.getExtension(name);			
+
+			if(StringUtils.isNotEmpty(name) && name.length() > 31){
+				if(StringUtils.isNotEmpty(extension)){
+					nombreDoc = name.substring(0, 25 - extension.length()) + "(...)." + extension;
+					
+				} else {
+					nombreDoc = name.substring(0, 26) + "(...)";
+				}
+			} else {
+				nombreDoc = name;
+			}
+			
+			axDochEntity.create(docPk, userId.intValue(), nombreDoc, timestamp, entidad);
+			
 			if (log.isDebugEnabled()) {
 				log.debug("docID creado => " + docID);
 			}
@@ -744,13 +830,13 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 
 		return docID;
 	}
-
+	
 	private static void validateOrigDocs(Session session,
 			SaveOrigDocDatasInput datas) throws HibernateException {
-		for (Iterator it = datas.getDocs().values().iterator(); it.hasNext();) {
+		for (Iterator<?> it = datas.getDocs().values().iterator(); it.hasNext();) {
 			SaveOrigDocDataDocInput doc = (SaveOrigDocDataDocInput) it.next();
 			if (doc.getProcId() != null && doc.getProcId().intValue() < 0) {
-				List aux = ISicresQueries.getScrTypeproc(session,
+				List<?> aux = ISicresQueries.getScrTypeproc(session,
 						doc.getProcName());
 				if (aux != null && !aux.isEmpty()) {
 					ScrTypeproc proc = (ScrTypeproc) aux.get(0);
@@ -767,7 +853,7 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 			SaveOrigDocDatasInput datas, Integer userId, Integer bookID,
 			int folderID, AxSf axsf, ScrOfic scrofic, String entidad)
 			throws HibernateException, SQLException, Exception {
-		for (Iterator it = datas.getDocs().values().iterator(); it.hasNext();) {
+		for (Iterator<?> it = datas.getDocs().values().iterator(); it.hasNext();) {
 			SaveOrigDocDataDocInput doc = (SaveOrigDocDataDocInput) it.next();
 
 			if (doc.getProcId().intValue() >= 0) {
@@ -792,23 +878,34 @@ public class FolderFileSession extends FolderSessionUtil implements ServerKeys,
 		}
 	}
 
-	private static int createPage(FlushFdrFile file, Integer bookId,
-			Integer folderId, Integer userId, int docID, int fileID,
-			Timestamp timestamp, String entidad) throws Exception {
+	private static int createPage(FlushFdrFile file, Integer bookId, Integer folderId, Integer userId, int docID, int fileID, Timestamp timestamp, String entidad) throws Exception {
+		
 		AxXnidEntity axXnidEntity = new AxXnidEntity();
-		int pageID = axXnidEntity.getNextID(bookId, folderId.intValue(),
-				entidad);
+		int pageID = axXnidEntity.getNextID(bookId, folderId.intValue(), entidad);
 
 		if (log.isDebugEnabled()) {
 			log.debug("creando page pageID  => " + pageID);
 		}
 
-		AxPKById pagePk = new AxPKById(bookId.toString(), folderId.intValue(),
-				pageID);
+		AxPKById pagePk = new AxPKById(bookId.toString(), folderId.intValue(), pageID);
 		AxPagehEntity axPagehEntity = new AxPagehEntity();
-		axPagehEntity.create(pagePk, userId.intValue(), file.getFileNameLog(),
-				file.getOrder(), docID, fileID, file.getExtension(), timestamp,
-				entidad);
+		
+		String nombreDoc = "";			
+		String extension = FileUtils.getExtension(file.getFileNameLog());			
+
+		if(StringUtils.isNotEmpty(file.getFileNameLog()) && file.getFileNameLog().length() > 61){
+			if(StringUtils.isNotEmpty(extension)){
+				nombreDoc = file.getFileNameLog().substring(0, 55 - extension.length()) + "(...)." + extension;
+				
+			} else {
+				nombreDoc = file.getFileNameLog().substring(0, 56) + "(...)";
+			}
+		} else {
+			nombreDoc = file.getFileNameLog();
+		}
+		
+		
+		axPagehEntity.create(pagePk, userId.intValue(), nombreDoc, file.getOrder(), docID, fileID, file.getExtension(), timestamp, entidad);
 
 		return pageID;
 	}

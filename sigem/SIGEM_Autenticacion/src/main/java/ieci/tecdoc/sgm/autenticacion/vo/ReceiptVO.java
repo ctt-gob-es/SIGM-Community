@@ -3,6 +3,8 @@
  */
 package ieci.tecdoc.sgm.autenticacion.vo;
 
+import java.util.Date;
+
 /**
  * @author IECISA
  * 
@@ -20,6 +22,11 @@ public class ReceiptVO {
 	 * Array de bytes con el contenido del documento
 	 */
 	private byte[] content;
+	
+	/**
+	 * Fecha de firma del documento
+	 */
+	private Date fechaFirma;
 
 	/**
 	 * @return el csv
@@ -49,4 +56,17 @@ public class ReceiptVO {
 		this.content = content;
 	}
 
+	/**
+	 * @return la fecha de firma
+	 */
+	public Date getFechaFirma() {
+		return fechaFirma;
+	}
+
+	/**
+	 * @param fechaFirma la fecha de firma
+	 */
+	public void setFechaFirma(Date fechaFirma) {
+		this.fechaFirma = fechaFirma;
+	}
 }

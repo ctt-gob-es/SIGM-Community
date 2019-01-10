@@ -129,7 +129,7 @@ public class DipucrGeneraInformeServicioConvSubEELLRule extends DipucrAutoGenera
     		if(iteratorDoc.hasNext()){
     			String infoPagBases = ((IItem)iteratorDoc.next()).getString("INFOPAG");
 	        	File fileBases = DocumentosUtil.getFile(cct, infoPagBases, null, null);
-	        	DipucrCommonFunctions.Concatena(xComponent, "file://" + fileBases.getPath(), ooHelper);
+	        	DipucrCommonFunctions.concatena(xComponent, "file://" + fileBases.getPath());
 	        	fileBases.delete();
     		}
     		
@@ -154,7 +154,7 @@ public class DipucrGeneraInformeServicioConvSubEELLRule extends DipucrAutoGenera
     		if(iteratorDoc.hasNext()){
     			String infoPagAnexos = ((IItem)iteratorDoc.next()).getString("INFOPAG");
 	        	File fileAnexos = DocumentosUtil.getFile(cct, infoPagAnexos, null, null);
-	        	DipucrCommonFunctions.Concatena(xComponent, "file://" + fileAnexos.getPath(), ooHelper);
+	        	DipucrCommonFunctions.concatena(xComponent, "file://" + fileAnexos.getPath());
 	        	fileAnexos.delete();
     		}
 			
@@ -167,16 +167,14 @@ public class DipucrGeneraInformeServicioConvSubEELLRule extends DipucrAutoGenera
     		genDocAPI.setDocument(connectorSession, documentId, docref, in, (int)(fileOut.length()), mime);
 
     		cct.deleteSsVariable("NOMBRE_TRAMITE");
-    		if(ooHelper!= null) ooHelper.dispose();
 	        return new Boolean(true);
-        }
-    	catch(Exception e) 
-        {
+        } catch(Exception e) {
         	logger.error("No se ha podido generar el documento. " + e.getMessage(), e);
         	throw new ISPACRuleException("No se ha podido generar el documento. " + e.getMessage(), e);
-        }
-		finally{
-			ooHelper.dispose();
+        } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 	}
 	

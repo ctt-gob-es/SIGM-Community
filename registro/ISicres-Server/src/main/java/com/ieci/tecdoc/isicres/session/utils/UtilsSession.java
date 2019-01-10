@@ -61,6 +61,7 @@ import com.ieci.tecdoc.common.invesicres.ScrOrg;
 import com.ieci.tecdoc.common.invesicres.ScrRegstate;
 import com.ieci.tecdoc.common.invesicres.ScrUserfilter;
 import com.ieci.tecdoc.common.invesicres.ScrUsrIdent;
+import com.ieci.tecdoc.common.invesicres.ScrUsrloc;
 import com.ieci.tecdoc.common.isicres.AxPK;
 import com.ieci.tecdoc.common.isicres.AxSf;
 import com.ieci.tecdoc.common.isicres.AxSfIn;
@@ -280,6 +281,19 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 			} catch (HibernateException e) {
 			}
 
+			List<ScrUsrloc> scrUsrlocs = null;
+			ScrUsrloc scrUsrloc = null;
+			try {
+			    scrUsrlocs = (List<ScrUsrloc>) ISicresQueries.getUsrLoc(session, user.getId());
+			    if (scrUsrlocs != null && scrUsrlocs.size()>0){
+				scrUsrloc = scrUsrlocs.get(0);
+				if (scrUsrloc.getTelephone() != null && !"".equals(scrUsrloc.getTelephone())){
+				    sessionInformation.setUserContact(scrUsrloc.getTelephone());
+				}
+			    }
+			} catch (HibernateException e) {
+			}
+			
 			if (!isLdap) {
 				sessionInformation.setUserName(getUserName(scrUsrIdent, user
 						.getName()));
@@ -287,6 +301,13 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 				sessionInformation.setOtherOffice(String
 						.valueOf(getOtherOffices(session, sessionID, locale,
 								entidad).size()));
+				if (user.getDeptid() != null){
+				    Iuserdepthdr departament = ISicresQueries.getUserDeptHdrByDeptId(session, user.getDeptid());
+				    if (departament != null) {
+					sessionInformation.setDepartamentName(departament.getName());
+					sessionInformation.setDepartamentFather(departament.getNameDepFather());
+				    }
+				}
 			} else {
 				sessionInformation.setUserName(getUserNameLdap(session, user,
 						entidad));
@@ -496,73 +517,68 @@ public class UtilsSession implements ServerKeys, Keys, HibernateKeys {
 		return sourceDescription;
 	}
 
-	public static String getDistributionTargetDescription(Session session,
-			ScrDistreg scr, boolean isLdap) {
+	public static String getDistributionTargetDescription(Session session, ScrDistreg scr, boolean isLdap) {
 
 		String targetDescription = "";
 		switch (scr.getTypeDest()) {
-		case 1: {
-			try {
-				if (isLdap) {
-					Iuserldapuserhdr userLdap = ISicresQueries.getUserLdapUser(
-							session, new Integer(scr.getIdDest()));
-					targetDescription = userLdap.getLdapfullname();
-				} else {
-					Iuseruserhdr userIdoc = (Iuseruserhdr) session.load(
-							Iuseruserhdr.class, new Integer(scr.getIdDest()));
-					if ((userIdoc.getRemarks() == null)
-							|| (StringUtils.isEmpty(userIdoc.getRemarks()))) {
-						targetDescription = userIdoc.getName();
+			case 1: {
+				try {
+					if (isLdap) {
+						Iuserldapuserhdr userLdap = ISicresQueries.getUserLdapUser( session, new Integer(scr.getIdDest()));
+						targetDescription = userLdap.getLdapfullname();
 					} else {
-						targetDescription = userIdoc.getRemarks();
+						Iuseruserhdr userIdoc = (Iuseruserhdr) session.load( Iuseruserhdr.class, new Integer(scr.getIdDest()));
+						targetDescription = userIdoc.getName();
+						if (!StringUtils.isEmpty(userIdoc.getRemarks())) {
+							targetDescription = targetDescription + " - " + userIdoc.getRemarks();
+						}
 					}
+				} catch (HibernateException e) {
+					targetDescription = " - ";
 				}
-			} catch (HibernateException e) {
-				targetDescription = " - ";
+				break;
 			}
-			break;
-		}
-		case 2: {
-			Iuserdepthdr idoc = null;
-			try {
-				idoc = (Iuserdepthdr) session.load(Iuserdepthdr.class,
-						new Integer(scr.getIdDest()));
-				targetDescription = idoc.getName();
-			} catch (HibernateException e) {
-				targetDescription = " - ";
-			}
-			break;
-		}
-		case 3: {
-
-			try {
-				if (isLdap) {
-					Iuserldapgrphdr ldapGrp = ISicresQueries.getUserLdapPgrp(
-							session, new Integer(scr.getIdDest()));
-					targetDescription = ldapGrp.getLdapfullname();
-				} else {
-					Iusergrouphdr idoc = (Iusergrouphdr) session.load(
-							Iusergrouphdr.class, new Integer(scr.getIdDest()));
+			case 2: {
+				Iuserdepthdr idoc = null;
+				try {
+					idoc = (Iuserdepthdr) session.load(Iuserdepthdr.class, new Integer(scr.getIdDest()));
 					targetDescription = idoc.getName();
+				} catch (HibernateException e) {
+					targetDescription = " - ";
 				}
-			} catch (HibernateException e) {
-				targetDescription = " - ";
+				break;
 			}
-			break;
-		}
-		case 4: {
-			ScrOrg idoc = null;
-			try {
-				idoc = (ScrOrg) session.load(ScrOrg.class, new Integer(scr
-						.getIdDest()));
-				targetDescription = idoc.getName();
-			} catch (HibernateException e) {
-				targetDescription = " - ";
+			case 3: {
+	
+				try {
+					if (isLdap) {
+						Iuserldapgrphdr ldapGrp = ISicresQueries.getUserLdapPgrp( session, new Integer(scr.getIdDest()));
+						targetDescription = ldapGrp.getLdapfullname();
+					} else {
+						Iusergrouphdr idoc = (Iusergrouphdr) session.load( Iusergrouphdr.class, new Integer(scr.getIdDest()));
+						targetDescription = idoc.getName();
+						
+						if (!StringUtils.isEmpty(idoc.getRemarks())) {
+							targetDescription = targetDescription + " - " + idoc.getRemarks();
+						}
+					}
+				} catch (HibernateException e) {
+					targetDescription = " - ";
+				}
+				break;
 			}
-			break;
-		}
-		default:
-			break;
+			case 4: {
+				ScrOrg idoc = null;
+				try {
+					idoc = (ScrOrg) session.load(ScrOrg.class, new Integer(scr.getIdDest()));
+					targetDescription = idoc.getName();
+				} catch (HibernateException e) {
+					targetDescription = " - ";
+				}
+				break;
+			}
+			default:
+				break;
 		}
 
 		return targetDescription;

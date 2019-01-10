@@ -117,11 +117,11 @@ public class DipucrCreaCarpetaOwnCod implements IRule {
 			        	String nreg = expediente.getString("NREG");
 			        	Date freg = expediente.getDate("FREG");
 			        	
-			        	IItemCollection solicitudCollection = entitiesAPI.getEntities("DPCR_DAT_PET_TRAB_IMPRENTA", numexp);
+			        	IItemCollection solicitudCollection = entitiesAPI.getEntities(ConstantesImprenta.TABLA_DATOS_PETICION_TRABAJO, numexp);
 				        if(solicitudCollection.toList().size() > 0){
 				        	IItem solicitud = (IItem) solicitudCollection.iterator().next(); 
-				        	String emails = solicitud.getString("EMAILCONTACTO");
-				        	String tipo_trabajo = solicitud.getString("TIPO_TRABAJO");
+				        	String emails = solicitud.getString(ConstantesImprenta.COLUMNA_EMAILCONTACTO);
+				        	String tipo_trabajo = solicitud.getString(ConstantesImprenta.COLUMNA_TIPO_TRABAJO);
 		
 				        	if(StringUtils.isNotEmpty(emails)){		        								
 				        		if(StringUtils.isNotEmpty(tipo_trabajo)){
@@ -168,7 +168,7 @@ public class DipucrCreaCarpetaOwnCod implements IRule {
 								for(String email : emailsSplit){
 									try{	
 										if(StringUtils.isNotEmpty(email)){
-											MailUtil.enviarCorreo(rulectx, email.trim(), subject, content, imagenes);
+											MailUtil.enviarCorreo(rulectx.getClientContext(), email.trim(), subject, content, imagenes);
 											logger.info("[DipucrEnviaMailSolicitudRecibida:execute()] Email enviado a: "	+ email.trim());
 										}
 									}
@@ -179,7 +179,7 @@ public class DipucrCreaCarpetaOwnCod implements IRule {
 										try{
 											CorreoConfiguration correoConfig = CorreoConfiguration.getInstance(rulectx.getClientContext());
 											email = correoConfig.get("correo_imprenta_error");
-											MailUtil.enviarCorreo(rulectx, email, subject, content, imagenes);
+											MailUtil.enviarCorreo(rulectx.getClientContext(), email, subject, content, imagenes);
 										}catch(Exception e1){
 											logger.error(this.getClass().getName()+": Error al enviar e-mail a: " + email + ". " + e1.getMessage(), e1);
 										}

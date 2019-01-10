@@ -46,11 +46,16 @@ public class ModificarEntidadAction extends AdministracionWebAction {
 						((EntidadForm)form).setIdEntidad(entidad.getIdentificador());
 						((EntidadForm)form).setNombreCorto(entidad.getNombreCorto());
 						((EntidadForm)form).setNombreLargo(entidad.getNombreLargo());
-						((EntidadForm)form).setCodigoINE(entidad.getCodigoINE());
+						((EntidadForm)form).setCodigo_ine(entidad.getCodigo_ine());
+						((EntidadForm)form).setCif((entidad.getCif()));
+						((EntidadForm)form).setDir3(entidad.getDir3());
+						((EntidadForm)form).setSia(entidad.getSia());
+						((EntidadForm)form).setDeh(entidad.getDeh());
+						((EntidadForm)form).setPassword_entidad(entidad.getPassword_entidad());
 						ServicioGeoLocalizacion oServicioGeo = LocalizadorServicios.getServicioGeoLocalizacion();
-						if (!Utilidades.esNuloOVacio(entidad.getCodigoINE())) {
-							String prov = entidad.getCodigoINE().substring(0, 2);
-							String mun = entidad.getCodigoINE().substring(2, entidad.getCodigoINE().length());
+						if (!Utilidades.esNuloOVacio(entidad.getCodigo_ine())) {
+							String prov = entidad.getCodigo_ine().substring(0, 2);
+							String mun = entidad.getCodigo_ine().substring(2, entidad.getCodigo_ine().length());
 							((EntidadForm)form).setProvincia(prov);
 							((EntidadForm)form).setMunicipio(mun);
 							//session.setAttribute(Defs.PARAMETRO_MUNICIPIOS, oServicioGeo.obtenerMunicipios(new Integer(prov).intValue()));
@@ -97,7 +102,12 @@ public class ModificarEntidadAction extends AdministracionWebAction {
 					entidad.setIdentificador(entidadForm.getIdEntidad().toUpperCase());
 					entidad.setNombreCorto(entidadForm.getNombreCorto());
 					entidad.setNombreLargo(entidadForm.getNombreLargo());
-					entidad.setCodigoINE(entidadForm.getCodigoINE());
+					entidad.setCodigo_ine(entidadForm.getCodigo_ine());
+					entidad.setCif(entidadForm.getCif());
+					entidad.setDir3(entidadForm.getDir3());
+					entidad.setSia(entidadForm.getSia());
+					entidad.setDeh(entidadForm.getDeh());
+					entidad.setPassword_entidad(entidadForm.getPassword_entidad());
 					oServicio.actualizarEntidad(entidad);
 	
 					request.setAttribute(Defs.MENSAJE_INFORMATIVO, "mensaje.informativo.entidad.modificacion_correcta");

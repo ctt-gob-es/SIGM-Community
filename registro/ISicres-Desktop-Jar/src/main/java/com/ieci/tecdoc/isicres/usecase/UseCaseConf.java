@@ -16,6 +16,10 @@ import com.ieci.tecdoc.common.utils.Configurator;
  */
 public class UseCaseConf implements Serializable{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5490848112721495530L;
     /*******************************************************************************************************************
      * Attributes
      ******************************************************************************************************************/
@@ -32,7 +36,8 @@ public class UseCaseConf implements Serializable{
     private Boolean useLdap = Boolean.FALSE;
     private Boolean usingOSAuth = Boolean.FALSE;
     private String entidadId = null;
-
+    /*TIPO DE INTERESADO POR DEFECTO. P:persona física; J: persona jurídica.*/
+    private String interestedType = "P";
     /*******************************************************************************************************************
      * Constructors
      ******************************************************************************************************************/
@@ -267,6 +272,17 @@ public class UseCaseConf implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public String getInterestedType() {
+	    return interestedType;
+	}
+
+	public void setInterestedType(
+	    String interestedType) {
+	    this.interestedType = interestedType;
+	}
+	
+	
 
     /*******************************************************************************************************************
      * Protected methods

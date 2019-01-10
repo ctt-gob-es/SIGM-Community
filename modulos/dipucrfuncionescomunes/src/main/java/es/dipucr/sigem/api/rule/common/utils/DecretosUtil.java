@@ -16,6 +16,7 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.awt.Color;
 import java.io.File;
@@ -23,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -51,9 +53,46 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 public class DecretosUtil {
 
 	/** Logger de la clase. */
-	protected static final Logger logger = Logger.getLogger(DecretosUtil.class);
+	protected static final Logger LOGGER = Logger.getLogger(DecretosUtil.class);
 
 	protected static final String _REGLA_INIT_DECRETO = "DipucrInitDecretoRelacionadoRule";
+	
+	/**
+	  *	Tabla con los datos del decreto
+	  * Tabla SGD_DECRETO
+	  **/
+	public interface DecretoTabla{
+		public static final String NOMBRE_TABLA = "SGD_DECRETO";
+		
+		public static final String NUMEXP = "NUMEXP";
+		public static final String ANIO = "ANIO";
+		public static final String NUMERO_DECRETO = "NUMERO_DECRETO";
+		public static final String FECHA_DECRETO = "FECHA_DECRETO";
+		public static final String EXTRACTO_DECRETO = "EXTRACTO_DECRETO";
+	}
+	
+	public static IItem getDecreto(IClientContext cct, String numexp) throws ISPACRuleException{
+		IItem decreto = null;
+		
+		try {
+			// *********************************************
+			IInvesflowAPI invesFlowAPI = cct.getAPI();
+			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+			// *********************************************
+			
+			IItemCollection colDecreto = entitiesAPI.getEntities(DecretoTabla.NOMBRE_TABLA, numexp);
+			Iterator<?> iterDecreto = colDecreto.iterator();
+			if (iterDecreto.hasNext()) {
+				decreto = (IItem) iterDecreto.next();
+			}
+
+		} catch (Exception e) {
+			LOGGER.error( "Error al obtener el decreto: " + numexp + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "Error al obtener el decreto: " + numexp + ". " + e.getMessage(), e);
+		}
+		
+		return decreto;
+	}
 
 	/**
 	 * Crea el decreto relacionado para el informe pasado como parámetro
@@ -161,6 +200,9 @@ public class DecretosUtil {
 			// ------------------------------------------------------------------
 			ClientContext cct = (ClientContext) rulectx.getClientContext();
 			// ------------------------------------------------------------------
+			
+			String numExp = rulectx.getNumExp();
+			
 			if (ooHelper != null)
 				ooHelper.dispose();
 
@@ -181,22 +223,22 @@ public class DecretosUtil {
 			writer.setViewerPreferences(PdfCopy.PageModeUseOutlines);
 
 			document.open();
-			DocumentosUtil.nuevaPagina(document, true, true, true, PageSize.A4);
+			PdfUtil.nuevaPagina(document, true, true, true, PageSize.A4);
 
 			Paragraph parrafo = new Paragraph();
 			Font fuente = new Font(Font.TIMES_ROMAN);
 			fuente.setStyle(Font.BOLD);
 			fuente.setSize(15);
-			StringBuffer texto = new StringBuffer("\n\n\n\n\n");
+			StringBuilder texto = new StringBuilder("\n\n\n\n\n");
 
 			PdfPTable tabla = new PdfPTable(2);
 
 			// Obtengo los participantes interesados
 			IItemCollection collectionPart = ParticipantesUtil
-					.getParticipantes(cct, rulectx.getNumExp(),
+					.getParticipantes(cct, numExp,
 							"(ROL = 'TRAS')", "NOMBRE");
 			Iterator<IItem> itPart = collectionPart.iterator();
-			texto.append("Traslados: " + collectionPart.toList().size());
+			texto.append("Traslados Exp. " + numExp + ": " + collectionPart.toList().size());
 			Phrase frase = new Phrase(texto.toString(), fuente);
 			parrafo.add(frase);
 
@@ -225,7 +267,7 @@ public class DecretosUtil {
 					contFilas = 0;
 					parrafo.add(tabla);
 					document.add(parrafo);
-					DocumentosUtil.nuevaPagina(document, true, true, true,
+					PdfUtil.nuevaPagina(document, true, true, true,
 							PageSize.A4);
 					tabla = new PdfPTable(2);
 					parrafo = new Paragraph();
@@ -246,16 +288,15 @@ public class DecretosUtil {
 
 			// Obtengo los traslados
 
-			DocumentosUtil.nuevaPagina(document, true, true, true, PageSize.A4);
+			PdfUtil.nuevaPagina(document, true, true, true, PageSize.A4);
 
 			collectionPart = ParticipantesUtil.getParticipantes(cct,
-					rulectx.getNumExp(), "(ROL != 'TRAS' OR ROL IS NULL)",
+					numExp, "(ROL != 'TRAS' OR ROL IS NULL)",
 					"NOMBRE");
 			itPart = collectionPart.iterator();
 
-			texto = new StringBuffer("\n\n\n\n\n");
-			texto.append("Participantes Interesados: "
-					+ collectionPart.toList().size());
+			texto = new StringBuilder("\n\n\n\n\n");
+			texto.append("Participantes Interesados Exp. " + numExp + ": " + collectionPart.toList().size());
 			frase = new Phrase(texto.toString(), fuente);
 
 			tabla = new PdfPTable(2);
@@ -283,7 +324,7 @@ public class DecretosUtil {
 					contFilas = 0;
 					parrafo.add(tabla);
 					document.add(parrafo);
-					DocumentosUtil.nuevaPagina(document, true, true, true,
+					PdfUtil.nuevaPagina(document, true, true, true,
 							PageSize.A4);
 					tabla = new PdfPTable(2);
 					tabla.setWidths(medidaCeldas);
@@ -315,19 +356,19 @@ public class DecretosUtil {
 			entityDocument.store(cct);
 
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ", e);
 		} catch (FileNotFoundException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ", e);
 		} catch (DocumentException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ", e);
 		} catch (MalformedURLException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ", e);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ", e);
 		}
 	}
@@ -372,7 +413,7 @@ public class DecretosUtil {
 			}
 
 		} catch (ISPACException e) {
-			logger.error("Error al comprobar el doc: " + rulectx.getNumExp()
+			LOGGER.error("Error al comprobar el doc: " + rulectx.getNumExp()
 					+ ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al comprobar el doc: "
 					+ rulectx.getNumExp() + ". " + e.getMessage(), e);
@@ -381,8 +422,7 @@ public class DecretosUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void setAutomatizacion(IRuleContext rulectx, boolean valor)
-			throws ISPACRuleException {
+	public static void setAutomatizacion(IRuleContext rulectx, boolean valor) throws ISPACRuleException {
 		try {
 			// *********************************************
 			IClientContext cct = rulectx.getClientContext();
@@ -390,16 +430,14 @@ public class DecretosUtil {
 			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 			// *********************************************
 
-			IItemCollection colDecreto = entitiesAPI.getEntities("SGD_DECRETO",
-					rulectx.getNumExp());
+			IItemCollection colDecreto = entitiesAPI.getEntities("SGD_DECRETO", rulectx.getNumExp());
 			Iterator<IItem> iterDecreto = colDecreto.iterator();
 			IItem decreto = null;
 			if (iterDecreto.hasNext()) {
 				decreto = iterDecreto.next();
 
 			} else {
-				decreto = entitiesAPI.createEntity("SGD_DECRETO",
-						rulectx.getNumExp());
+				decreto = entitiesAPI.createEntity("SGD_DECRETO", rulectx.getNumExp());
 
 			}
 			String auto = "NO";
@@ -410,18 +448,13 @@ public class DecretosUtil {
 			decreto.store(cct);
 
 		} catch (Exception e) {
-			logger.error(
-					"Error al generar el nuevo documento en el expediente: "
-							+ rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException(
-					"Error al generar el nuevo documento en el expediente: "
-							+ rulectx.getNumExp() + ". " + e.getMessage(), e);
+			LOGGER.error( "Error al generar el nuevo documento en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "Error al generar el nuevo documento en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public static boolean decretoAutomatizacion(IRuleContext rulectx)
-			throws ISPACRuleException {
+	public static boolean decretoAutomatizacion(IRuleContext rulectx) throws ISPACRuleException {
 		boolean automatizacion = false;
 
 		try {
@@ -430,27 +463,19 @@ public class DecretosUtil {
 			IInvesflowAPI invesFlowAPI = cct.getAPI();
 			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 			// *********************************************
-			IItemCollection colDecreto = entitiesAPI.getEntities("SGD_DECRETO",
-					rulectx.getNumExp());
+			IItemCollection colDecreto = entitiesAPI.getEntities("SGD_DECRETO", rulectx.getNumExp());
 			Iterator<IItem> iterDecreto = colDecreto.iterator();
 			if (iterDecreto.hasNext()) {
 				IItem itemDecre = iterDecreto.next();
 				String automati = itemDecre.getString("AUTOMATIZACION");
-				if (automati != null) {
-					if (automati.equals("SI")) {
-						automatizacion = true;
-					}
+				if ("SI".equals(automati)) {
+					automatizacion = true;
 				}
-
 			}
 
 		} catch (Exception e) {
-			logger.error(
-					"Error al generar el nuevo documento en el expediente: "
-							+ rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException(
-					"Error al generar el nuevo documento en el expediente: "
-							+ rulectx.getNumExp() + ". " + e.getMessage(), e);
+			LOGGER.error( "Error al generar el nuevo documento en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "Error al generar el nuevo documento en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
 		}
 		return automatizacion;
 	}
@@ -480,13 +505,13 @@ public class DecretosUtil {
 								docFirma.getInt("ID"));
 					}
 				} else {
-					logger.warn("El circuito de firma del trámite específico es diferente a quien a firmado el documento de decreto");
+					LOGGER.warn("El circuito de firma del trámite específico es diferente a quien a firmado el documento de decreto");
 				}
 			} else {
-				logger.warn("No acepta la automatización");
+				LOGGER.warn("No acepta la automatización");
 			}
 		} catch (Exception e) {
-			logger.error(
+			LOGGER.error(
 					"Error al generar el nuevo documento en el expediente: "
 							+ rulectx.getNumExp() + ". " + e.getMessage(), e);
 			throw new ISPACRuleException(
@@ -495,33 +520,106 @@ public class DecretosUtil {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public static String getNumDecreto(IRuleContext rulectx)
-			throws ISPACRuleException {
-		String numDec = "";
-
+	public static String getNumDecreto(IRuleContext rulectx) throws ISPACRuleException {
+		
+		String sNumDecreto = "";
+		int iNumDec = getNumDecreto(rulectx.getClientContext(), rulectx.getNumExp());
+		
+		if(Integer.MIN_VALUE < iNumDec){
+			sNumDecreto = Integer.toString(iNumDec);
+		}
+		
+		return sNumDecreto;
+	}
+	
+	public static String getCampoSGDDecreto(IClientContext cct, String numexp, String campo) throws ISPACRuleException {
+		String valor = "";
+		
 		try {
-			// *********************************************
-			IClientContext cct = rulectx.getClientContext();
-			IInvesflowAPI invesFlowAPI = cct.getAPI();
-			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
-			// *********************************************
-			IItemCollection colDecreto = entitiesAPI.getEntities("SGD_DECRETO",
-					rulectx.getNumExp());
-			Iterator<IItem> iterDecreto = colDecreto.iterator();
-			if (iterDecreto.hasNext()) {
-				IItem itemDecre = iterDecreto.next();
-				numDec = itemDecre.getString("NUMERO_DECRETO");
+			IItem itemDecre = DecretosUtil.getDecreto(cct, numexp);
+			
+			if(null != itemDecre){
+				valor = itemDecre.getString(campo);
 			}
 
 		} catch (Exception e) {
-			logger.error(
-					"Error al obtener el número de decreto: "
-							+ rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException(
-					"Error al obtener el número de decreto: "
-							+ rulectx.getNumExp() + ". " + e.getMessage(), e);
+			LOGGER.error( "Error al obtener el campo: " + campo + " de SGD_DECRETO del expediente: " + numexp + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "Error al obtener el campo: " + campo + " de SGD_DECRETO del expediente: " + numexp + ". " + e.getMessage(), e);
 		}
+		
+		return valor;
+	}
+	
+	public static int getNumDecreto(IClientContext cct, String numexp) throws ISPACRuleException {
+
+		int numDec = Integer.MIN_VALUE;
+		
+		String valor = DecretosUtil.getCampoSGDDecreto(cct, numexp, DecretoTabla.NUMERO_DECRETO);
+
+		if(StringUtils.isNotEmpty(valor)){
+			numDec = Integer.parseInt(valor);
+		}
+		
 		return numDec;
+	}
+	
+	public static String getAnioDecreto(IClientContext cct, String numexp) throws ISPACRuleException {
+		String anioDec = "";
+
+		String valor = DecretosUtil.getCampoSGDDecreto(cct, numexp, DecretoTabla.ANIO);
+
+		if(StringUtils.isNotEmpty(valor)){
+			anioDec = valor;
+		}
+		
+		return anioDec;
+	}
+	
+	public static String getNumeroDecretoCompleto(IClientContext cct, String numexp) throws ISPACRuleException {
+		String numDec = "";
+
+		String anio = DecretosUtil.getCampoSGDDecreto(cct, numexp, DecretoTabla.ANIO);
+		String numDecreto = DecretosUtil.getCampoSGDDecreto(cct, numexp, DecretoTabla.NUMERO_DECRETO);
+
+		if(StringUtils.isNotEmpty(anio)){
+			numDec = anio;
+		}
+		
+		numDec += "/";
+		
+		if(StringUtils.isNotEmpty(numDecreto)){
+			numDec += numDecreto;
+		}
+		
+		return numDec;
+	}
+	
+	public static Date getFechaDecreto(IClientContext cct, String numexp) throws ISPACRuleException {
+		Date fechaDec = new Date();
+
+		try {
+			IItem itemDecre = DecretosUtil.getDecreto(cct, numexp);
+			
+			if(null != itemDecre){
+				fechaDec = itemDecre.getDate(DecretoTabla.FECHA_DECRETO);
+			}
+
+		} catch (Exception e) {
+			LOGGER.error( "Error al obtener el extracto del decreto: " + numexp + ". " + e.getMessage(), e);
+			throw new ISPACRuleException( "Error al obtener el extracto del decreto: " + numexp + ". " + e.getMessage(), e);
+		}
+		return fechaDec;
+	}
+	
+	public static String getExtractoDecreto(IClientContext cct, String numexp) throws ISPACRuleException {
+		String extractoDec = "";
+
+		String valor = DecretosUtil.getCampoSGDDecreto(cct, numexp, DecretoTabla.EXTRACTO_DECRETO);
+
+		if(StringUtils.isNotEmpty(valor)){
+			extractoDec = valor;
+		}
+		
+		return extractoDec;
 	}
 }

@@ -26,7 +26,14 @@ function cargarMiniApplet3f(host) {
 	batchPreSignerUrl = host + "/afirma-server-triphase-signer/BatchPresigner";
 	batchPostSignerUrl = host + "/afirma-server-triphase-signer/BatchPostsigner";
 	
-	MiniApplet.cargarAppAfirma(host + "/afirma", MiniApplet.KEYSTORE_WINDOWS);
+	var es_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+	if(es_firefox){
+			   MiniApplet.cargarAppAfirma(host + "/afirma", MiniApplet.KEYSTORE_MOZILLA);
+	}
+	else{
+				 MiniApplet.cargarAppAfirma(host + "/afirma", MiniApplet.KEYSTORE_WINDOWS);
+  }
+	
 	//MiniApplet.cargarAppAfirma(host + "/afirma", MiniApplet.KEYSTORE_WINDOWS);
 	
 	//QUITAN LA DEPENDENCIA DEL SERVIDOR INTERMEDIO 1/9/2015

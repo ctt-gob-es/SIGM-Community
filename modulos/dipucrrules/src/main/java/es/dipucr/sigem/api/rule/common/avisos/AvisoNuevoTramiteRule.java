@@ -9,9 +9,12 @@ import ieci.tdw.ispac.api.item.IResponsible;
 import ieci.tdw.ispac.api.item.ITask;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
+import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 
 /**
  * Ticket #36 - Aviso nuevo trámite
@@ -72,6 +75,16 @@ public class AvisoNuevoTramiteRule implements IRule {
 					"</a>.<br/>Asunto: " + asunto;
 				
 				AvisosUtil.generarAviso(entitiesAPI, processId, numexp, message, sRespTramite, ctx);
+				
+				IResponsible responsableTramite = respAPI.getResp(sRespTramite);
+				String sNombrePropietarioTramite = "";
+				if(null!=responsableTramite){
+					sNombrePropietarioTramite = responsableTramite.getName();
+				}
+				else{
+					sNombrePropietarioTramite = sNombrePropietario;
+				}
+				TramitesUtil.cargarObservacionesTramite((ClientContext) ctx, true,rulectx.getNumExp(), rulectx.getTaskId(), "Trámite delegado a: "+sNombrePropietarioTramite);
 			}
 			
 			return true;

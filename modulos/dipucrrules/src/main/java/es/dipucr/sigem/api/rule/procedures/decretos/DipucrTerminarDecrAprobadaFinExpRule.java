@@ -25,6 +25,7 @@ import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.FasesUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class DipucrTerminarDecrAprobadaFinExpRule implements IRule {
@@ -96,7 +97,8 @@ public class DipucrTerminarDecrAprobadaFinExpRule implements IRule {
 			        consultaSQL = "WHERE NUMEXP='"+rulectx.getNumExp()+"' AND " +
 			        		"(NOMBRE='"+Constants.DECRETOSTRAMITES.FIRMASTRASLADO+"') AND ESTADO=3";
 			        
-			        itemCollection = entitiesAPI.queryEntities(SpacEntities.SPAC_DT_TRAMITES, consultaSQL);
+//			        itemCollection = entitiesAPI.queryEntities(SpacEntities.SPAC_DT_TRAMITES, consultaSQL);
+			        itemCollection = TramitesUtil.queryTramites(cct, consultaSQL); //[dipucr-Felipe #842]
 		
 			        it = itemCollection.iterator();
 			        if(it.hasNext()){

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<xsl:include href="../templates_comunes.xsl" />
+
 <xsl:output encoding="ISO-8859-1" method="html"/>
 	<xsl:variable name="lang.docIdentidad" select="'Documento de identidad'"/>
 	<xsl:variable name="lang.nombre" select="'Nombre'"/>
@@ -13,9 +16,9 @@
 	<xsl:variable name="lang.fechaFacturaSolicitud" select="'Fecha factura'"/>
 	<xsl:variable name="lang.importe" select="'Importe'"/>
     
-    <xsl:variable name="lang.origenTitle" select="'ORIGEN'"/>
-    <xsl:variable name="lang.destinoTitle" select="'DESTINO'"/>
-    <xsl:variable name="lang.solicitudTitle" select="'SOLICITUD'"/>
+	<xsl:variable name="lang.origenTitle" select="'ORIGEN'"/>
+	<xsl:variable name="lang.destinoTitle" select="'DESTINO'"/>
+	<xsl:variable name="lang.solicitudTitle" select="'SOLICITUD'"/>
 		
 	<xsl:template match="/">
 		<h1><xsl:value-of select="$lang.titulo"/></h1>
@@ -163,7 +166,7 @@
                     </input>
                 </div>
 				
-				<div class="col">
+		<div class="col">
                     <label class="gr">
                         <xsl:attribute name="style">position: relative; width:150px;</xsl:attribute>
                         <xsl:value-of select="$lang.importe"/>:
@@ -177,6 +180,12 @@
                 </div>
             </div>
           </div>
+	  <br/>
+	  <xsl:call-template name="TEXTO_LEGAL_COMUN" />
+	  <br/>
+	  <xsl:call-template name="TEXTO_DATOS_PERSONALES_COMUN" />
+	  <br/>
+	  <xsl:call-template name="TEXTO_COMPARECE_COMUN" />
 			
 	</xsl:template>
 </xsl:stylesheet>

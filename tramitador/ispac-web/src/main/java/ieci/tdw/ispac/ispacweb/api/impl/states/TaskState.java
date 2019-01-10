@@ -436,4 +436,15 @@ public class TaskState extends BaseState {
 		return (taskLockStatus == LockManager.LOCKED_CURSESSION);
 	}
 	
+	/**
+	 * [dipucr-Felipe #427] Devuelve el usuario que tiene bloqueado un trámite
+	 * @param ctx
+	 * @return
+	 * @throws ISPACException
+	 */
+    public String getLockedTaskUser(IClientContext ctx) throws ISPACException {
+    	
+    	return getLockedEntityUser(ctx, mStateContext.getTaskId(), LockManager.LOCKTYPE_TASK);
+    }
+	
 }

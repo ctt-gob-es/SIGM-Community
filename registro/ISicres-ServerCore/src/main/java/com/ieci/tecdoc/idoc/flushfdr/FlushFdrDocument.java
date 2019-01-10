@@ -21,6 +21,18 @@ public class FlushFdrDocument implements Serializable {
     private List pages = new ArrayList();
     private int docID = 0;
     
+    /* Tipo documental
+     */
+    private String tipoDocumental;
+
+    /* Tipo de firma del documento
+     */
+    private String tipoFirma;
+    
+    /* CSV del documento
+     */
+    private String csv;
+    
     /**
      * @return Returns the docID.
      */
@@ -143,4 +155,28 @@ public class FlushFdrDocument implements Serializable {
     public void setPages(List pages) {
         this.pages = pages;
     }
+    
+    public String getTipoDocumental() {
+		return tipoDocumental;
+	}
+
+	public void setTipoDocumental(String tipoDocumental) {
+		this.tipoDocumental = tipoDocumental;
+	}
+
+	public String getTipoFirma() {
+		return tipoFirma;
+	}
+
+	public void setTipoFirma(String tipoFirma) {
+		this.tipoFirma = tipoFirma;
+	}
+
+	public String getCsv() {
+		return csv;
+	}
+
+	public void setCsv(String csv) {
+		this.csv = csv;
+	}
 }

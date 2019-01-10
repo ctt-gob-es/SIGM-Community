@@ -11,6 +11,7 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.io.File;
 import java.util.Iterator;
@@ -44,25 +45,27 @@ public class AnexaConvenioRule implements IRule {
 			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 
 			String numexp_padre = "";
-			Vector<String> resultado = ExpedientesRelacionadosUtil.obtenerExpRelacionadoByExpediente_Columna(entitiesAPI, rulectx.getNumExp(), "NUMEXP_HIJO", "NUMEXP_PADRE");
+			Vector<String> resultado = ExpedientesRelacionadosUtil.getExpRelacionadosPadres(entitiesAPI, rulectx.getNumExp());
 			for (int i = 0; i < resultado.size(); i++) {
 				numexp_padre = resultado.get(i);
 			}
+			if(StringUtils.isNotEmpty(numexp_padre)){
+				IItemCollection documentsCollection = DocumentosUtil.getDocumentos(cct, numexp_padre, "NOMBRE='Convenio'", "FDOC DESC");
+				Iterator<IItem> exp_documentsCollection = documentsCollection.iterator();
+				IItem contenido = null;
+				while (exp_documentsCollection.hasNext()) {
+					contenido = (IItem) exp_documentsCollection.next();
+					String infopag_rde = contenido.getString("INFOPAG_RDE");
+					File fileInfTecnRde = DocumentosUtil.getFile(cct, infopag_rde, null, null);
+					
+					DocumentosUtil.generaYAnexaDocumento(rulectx, contenido.getInt("ID_TPDOC"), contenido.getString("DESCRIPCION"), fileInfTecnRde, contenido.getString("EXTENSION_RDE"));
+					
+					if(fileInfTecnRde != null && fileInfTecnRde.exists()) fileInfTecnRde.delete();
+				}
+				ParticipantesUtil.importarParticipantes(cct, entitiesAPI, numexp_padre, rulectx.getNumExp());
 
-			IItemCollection documentsCollection = DocumentosUtil.getDocumentos(cct, numexp_padre, "NOMBRE='Convenio'", "FDOC DESC");
-			Iterator<IItem> exp_documentsCollection = documentsCollection.iterator();
-			IItem contenido = null;
-			while (exp_documentsCollection.hasNext()) {
-				contenido = (IItem) exp_documentsCollection.next();
-				String infopag_rde = contenido.getString("INFOPAG_RDE");
-				File fileInfTecnRde = DocumentosUtil.getFile(cct, infopag_rde, null, null);
-				
-				DocumentosUtil.generaYAnexaDocumento(rulectx, contenido.getInt("ID_TPDOC"), contenido.getString("DESCRIPCION"), fileInfTecnRde, contenido.getString("EXTENSION_RDE"));
-				
-				if(fileInfTecnRde != null && fileInfTecnRde.exists()) fileInfTecnRde.delete();
 			}
-			ParticipantesUtil.importarParticipantes(cct, entitiesAPI, numexp_padre, rulectx.getNumExp());
-
+			
 		} catch (ISPACException e) {
 			logger.error("Error al generar la comunicación administrativa. NUMEXP. "+rulectx.getNumExp()+" - "+ e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar la comunicación administrativa. NUMEXP. "+rulectx.getNumExp()+" - "+ e.getMessage(), e);

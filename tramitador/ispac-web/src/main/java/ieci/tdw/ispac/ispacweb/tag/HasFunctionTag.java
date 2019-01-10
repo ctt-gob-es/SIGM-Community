@@ -6,6 +6,7 @@ import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacweb.security.UserCredentials;
 import ieci.tdw.ispac.ispacweb.security.UserCredentialsHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,10 +79,26 @@ public class HasFunctionTag extends ConditionalTagSupport {
 			List<String> functionList = getFunctionList();
 			if (!CollectionUtils.isEmpty(functionList)) {
 				UserCredentials credentials = UserCredentialsHelper.getUserCredentials(request, null);
-				result = credentials.isCatalogAdministrator()
-						|| credentials.containsAnyFunction(functionList);
+
+				// [Dipucr-Manu Ticket #478] - INICIO - ALSIGM3 Nueva opción Repositorio Común
+				//Esto es un apaño hasta que se decida si los administradores pueden modificar el repositorio común, de momento no pueden, sólo los usuarios privilegiados para ello.
+				//Cuado se decida se deja como estaba y ya funciona tanto para usuarios privilegiados como para administradores.
+				List<String> permisoEspecial = new ArrayList<String>();
+				permisoEspecial.add("FUNC_INV_REPOSITORIO_COMUN_EDIT");
+				
+				if(functionList.contains("FUNC_INV_REPOSITORIO_COMUN_EDIT")){
+					if(credentials.containsAnyFunction(permisoEspecial)){
+						result = credentials.isCatalogAdministrator() || credentials.containsAnyFunction(functionList);
+					}
+					else{
+						result = false;
+					}
+				}
+				else{
+					result = credentials.isCatalogAdministrator() || credentials.containsAnyFunction(functionList);
+				}
 			}
-			
+			// [Dipucr-Manu Ticket #478] - FIN - ALSIGM3 Nueva opción Repositorio Común
 		} catch (ISPACException e) {
 			LOGGER.error("Error al comprobar las funciones del usuario", e);
 			throw new JspTagException(e.toString());

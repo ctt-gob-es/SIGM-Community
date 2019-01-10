@@ -13,9 +13,7 @@
 	
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-
 		<jdk.version>1.5</jdk.version>
-	
 		<log4j.version>1.2.8</log4j.version>
 		<xerces.version>2.7.1</xerces.version>
 		<bcprov.version>136</bcprov.version>

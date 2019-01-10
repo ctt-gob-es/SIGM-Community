@@ -1,18 +1,5 @@
 package es.dipucr.portafirmas;
 
-import ieci.tdw.ispac.api.IEntitiesAPI;
-import ieci.tdw.ispac.api.errors.ISPACException;
-import ieci.tdw.ispac.api.errors.ISPACRuleException;
-import ieci.tdw.ispac.api.item.IItem;
-import ieci.tdw.ispac.api.item.IItemCollection;
-import ieci.tdw.ispac.api.rule.IRule;
-import ieci.tdw.ispac.api.rule.IRuleContext;
-import ieci.tdw.ispac.ispaclib.configuration.ConfigurationHelper;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
-import ieci.tdw.ispac.ispaclib.db.DbCnt;
-import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
-import ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigFilePathResolver;
-
 import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,13 +18,19 @@ import javax.activation.DataHandler;
 import org.apache.axis2.AxisFault;
 import org.apache.log4j.Logger;
 
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfCopy;
+
 import _0.v2.query.pfirma.cice.juntadeandalucia.PfirmaException;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Authentication;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Comment;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.CommentList;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Document;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.DocumentList;
-import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.DownloadDocumentResponse;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.DownloadSignResponse;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.GetCVSResponse;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.ImportanceLevel;
@@ -54,45 +47,40 @@ import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Signature;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.Signer;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.SignerList;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.State;
-import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.TimestampInfo;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.User;
 import _0.v2.query.pfirma.cice.juntadeandalucia.QueryServiceStub.UserJob;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.ApplicationLogin;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.CSVInfo;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.ContenidoInfo;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.CopiaInfo;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.FirmaInfo;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.GenerarCSV;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.GenerarCSVE;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.GenerarCSVResponse;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.GenerarCSVResponseE;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.GenerarCopiaFirma;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.GenerarCopiaFirmaE;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.GenerarCopiaFirmaResponse;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.GenerarCopiaFirmaResponseE;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.InformacionFirmas_type0;
-import es.mpt.dsic.inside.ws.service.impl.EeUtilServiceImplServiceStub.ListaFirmaInfo;
-import es.mpt.dsic.inside.ws.service.impl.InSideException;
-
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Font;
-import com.lowagie.text.Image;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.PdfCopy;
-
 import es.dipucr.portafirmas.client.PortaFirmasConsultaClient;
 import es.dipucr.portafirmas.common.Configuracion;
 import es.dipucr.portafirmas.common.ServiciosWebPortaFirmasFunciones;
 import es.dipucr.portafirmas.dao.procedure.FirmaDocExternoInformSDAO;
 import es.dipucr.sigem.api.rule.common.comparece.CompareceConfiguration;
+import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 import es.dipucr.sigem.api.rule.common.utils.FechasUtil;
+import es.dipucr.sigem.api.rule.common.utils.GestorMetadatos;
 import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
 import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
+import ieci.tdw.ispac.api.IEntitiesAPI;
+import ieci.tdw.ispac.api.IGenDocAPI;
+import ieci.tdw.ispac.api.ISignAPI;
+import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.api.errors.ISPACRuleException;
+import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
+import ieci.tdw.ispac.api.rule.IRule;
+import ieci.tdw.ispac.api.rule.IRuleContext;
+import ieci.tdw.ispac.ispaclib.common.constants.DocumentLockStates;
+import ieci.tdw.ispac.ispaclib.common.constants.SignStatesConstants;
+import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.db.DbCnt;
+import ieci.tdw.ispac.ispaclib.sign.SignDocument;
+import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
+import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
+import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigFilePathResolver;
 
 public class RecibirDocPortaFirmasExternoRule implements IRule{
 	
@@ -125,7 +113,7 @@ public class RecibirDocPortaFirmasExternoRule implements IRule{
 			
 			IItem itTramite = TramitesUtil.getTramiteByCode(rulectx, "gen-doc-firmar");
 			
-			IItemCollection itColTramites = TramitesUtil.queryTramites(cct, "WHERE ID_TRAM_CTL="+itTramite.getInt("ID"));
+			IItemCollection itColTramites = TramitesUtil.queryTramites(cct, "WHERE ID_TRAM_CTL="+itTramite.getInt("ID")+"AND NUMEXP='"+rulectx.getNumExp()+"'");
 			Iterator<IItem> itTramites = itColTramites.iterator();
 			StringBuffer queryTramite = new StringBuffer("");
 			queryTramite.append("(ID_TRAMITE='"+ itTramites.next().getInt("ID_TRAM_EXP")+"'");
@@ -136,41 +124,43 @@ public class RecibirDocPortaFirmasExternoRule implements IRule{
 			queryTramite.append(")");
 			
 			//Obtengo el identificador de la peticion
-			String query = "WHERE NUMEXP='"+rulectx.getNumExp()+"' AND ID_FASE='"+rulectx.getStageId()+"' AND "+queryTramite.toString();
+			String query = "WHERE NUMEXP='"+rulectx.getNumExp()+"' AND ID_FASE='"+rulectx.getStageId()+"' AND ESTADOFIRMA=0 AND "+queryTramite.toString();
 			IItemCollection itColPeticion = entitiesAPI.queryEntities("FIRMA_DOC_EXTERNO_IDDOC", query);
 			Iterator<IItem> itPeticion = itColPeticion.iterator();
-			while(itPeticion.hasNext()){
-
-				IItem peticion = itPeticion.next();		
-				String direccionPortaFirmaExternoConsulta = ServiciosWebPortaFirmasFunciones.getDireccionSWConsulta();
-				PortaFirmasConsultaClient consulta = new PortaFirmasConsultaClient(direccionPortaFirmaExternoConsulta);
-				Authentication authentication = new Authentication();		
-				String userName = "DIPUCR_WS_PADES";
-				authentication.setUserName(userName);
-				String password = "DIPUCR_WS_PADES";
-				authentication.setPassword(password);
-				
-				QueryRequestResponse informacion = consulta.recuperaDetallePeticion(authentication, peticion.getString("ID_PETICION"));
-				String valorPet = informacion.getRequest().getRequestStatus().getValue();
-				if (!valorPet.equals("EN PROCESO")) {
-					cerrar = true;
-				}
+			if(!itPeticion.hasNext()){
+				rulectx.setInfoMessage("No ha sido firmado el convenio por el interesado");
 			}
+			else{
+				while(itPeticion.hasNext()){
+
+					IItem peticion = itPeticion.next();		
+					String direccionPortaFirmaExternoConsulta = ServiciosWebPortaFirmasFunciones.getDireccionSWConsulta();
+					PortaFirmasConsultaClient consulta = new PortaFirmasConsultaClient(direccionPortaFirmaExternoConsulta);					
+					Authentication authentication = Configuracion.getAuthenticationConsultaPADES(cct);
+					
+					QueryRequestResponse informacion = consulta.recuperaDetallePeticion(authentication, peticion.getString("ID_PETICION"));
+					String valorPet = informacion.getRequest().getRequestStatus().getValue();
+					if (!valorPet.equals("EN PROCESO")) {
+						cerrar = true;
+					}
+				}	
+			}
+			
 		}catch (ISPACRuleException e){
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
+			logger.error("Expediente. "+rulectx.getNumExp() +" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Expediente. "+rulectx.getNumExp() +" - "+e.getMessage(), e);
 		} catch (AxisFault e) {
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
+			logger.error("Expediente. "+rulectx.getNumExp() +" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Expediente. "+rulectx.getNumExp() +" - "+e.getMessage(), e);
 		} catch (RemoteException e) {
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
+			logger.error("Expediente. "+rulectx.getNumExp() +" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Expediente. "+rulectx.getNumExp() +" - "+e.getMessage(), e);
 		} catch (PfirmaException e) {
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
+			logger.error("Expediente. "+rulectx.getNumExp() +" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Expediente. "+rulectx.getNumExp() +" - "+e.getMessage(), e);
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
-			throw new ISPACRuleException("Error. ",e);
+			logger.error("Expediente. "+rulectx.getNumExp() +" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Expediente. "+rulectx.getNumExp() +" - "+e.getMessage(), e);
 		}
 		return cerrar;
 	}
@@ -181,6 +171,7 @@ public class RecibirDocPortaFirmasExternoRule implements IRule{
 			/*************************************************************************************/
 			ClientContext cct = (ClientContext)rulectx.getClientContext();
 			IEntitiesAPI entitiesAPI =  cct.getAPI().getEntitiesAPI();
+			ISignAPI signAPI = cct.getAPI().getSignAPI();
 			/**************************************************************************************/
 			IItem itTramite = TramitesUtil.getTramiteByCode(rulectx, "gen-doc-firmar");
 			
@@ -202,11 +193,8 @@ public class RecibirDocPortaFirmasExternoRule implements IRule{
 				IItem peticion = itPeticion.next();		
 				String direccionPortaFirmaExternoConsulta = ServiciosWebPortaFirmasFunciones.getDireccionSWConsulta();				
 				PortaFirmasConsultaClient consulta = new PortaFirmasConsultaClient(direccionPortaFirmaExternoConsulta);
-				Authentication authentication = new Authentication();		
-				String userName = "DIPUCR_WS_PADES";
-				authentication.setUserName(userName);
-				String password = "DIPUCR_WS_PADES";
-				authentication.setPassword(password);
+				Authentication authentication = Configuracion.getAuthenticationConsultaPADES(cct);
+				
 				DownloadSignResponse downloadSign = consulta.recuperaDocumentosBySolicitud(authentication, peticion.getString("ID_DOCUMENTO"));
 				
 				if(downloadSign!=null){
@@ -233,15 +221,80 @@ public class RecibirDocPortaFirmasExternoRule implements IRule{
 							
 							//Código de verificación electrónica de la firma digital.							
 							GetCVSResponse responseCVS = consulta.devolverCVS(authentication, signature);							
-							IItem docTramite = DocumentosUtil.generaYAnexaDocumento(rulectx, documentId, "", documento, Constants._EXTENSION_PDF);
-							docTramite.set("COD_VERIFICACION", responseCVS.getCvs());
-							docTramite.set("COD_COTEJO", responseCVS.getCvs());
-							//Obtener el nombre del documento
-							docTramite.set("DESCRIPCION", docTramite.getString("NOMBRE"));
-							docTramite.store(cct);
+							IItem docDocFirmadoPortafirmas = DocumentosUtil.generaYAnexaDocumento(rulectx, documentId, "", documento, Constants._EXTENSION_PDF);
+							
 							ie.close();
+							
+							
+							IItemCollection itDocExpPorFirmas = DocumentosUtil.getDocumentos(cct, rulectx.getNumExp(), "INFOPAG_RDE IS NOT NULL", "FDOC DESC");
+							if(itDocExpPorFirmas.toList().size()==0){
+								String queryDocFirmadoExpRelacionado = "where id_tramite in (select id_tram_exp from spac_dt_tramites where id_tramite in (select id_tramite_padre from spac_exp_relacionados_info where numexp_hijo='"+rulectx.getNumExp()+"') and INFOPAG_RDE IS NOT NULL)";
+								itDocExpPorFirmas = DocumentosUtil.queryDocumentos(cct, queryDocFirmadoExpRelacionado);
+							}
+
+
+							Iterator<IItem> itConv = itDocExpPorFirmas.iterator();
+							IItem docFirmaPreviamenteExpeRelacionado = null;
+							if(itConv.hasNext()){
+								docFirmaPreviamenteExpeRelacionado = itConv.next();
+								
+								IItemCollection collectionPasosFirma = signAPI.getStepsByDocument(docFirmaPreviamenteExpeRelacionado.getInt("ID"));
+								Iterator <IItem> iterPasosFirmar = collectionPasosFirma.iterator();
+								while(iterPasosFirmar.hasNext()){
+									IItem pasoFirma = iterPasosFirmar.next();
+									int idCircuitoFirma = signAPI.addFirmanteCtosFirma(pasoFirma.getInt("ID_CIRCUITO"), docDocFirmadoPortafirmas.getInt("ID"), pasoFirma.getInt("ID_PASO"), pasoFirma.getString("ID_FIRMANTE"), pasoFirma.getString("NOMBRE_FIRMANTE"), pasoFirma.getDate("FECHA"));
+								}								
+							}
+							if(null == docFirmaPreviamenteExpeRelacionado){
+								docFirmaPreviamenteExpeRelacionado = docDocFirmadoPortafirmas;
+							}
+
+								
+							SignDocument signDocBefore = new SignDocument(docFirmaPreviamenteExpeRelacionado);
+							SignDocument signDocAfter = new SignDocument(docDocFirmadoPortafirmas);
+							signDocAfter.setDocument(dh.getInputStream());
+							signDocAfter.setFechaCreacion(docFirmaPreviamenteExpeRelacionado.getDate("FDOC"));
+							signDocAfter.setLength((int) documento.length());
+							String sMimeType = MimetypeMapping.getMimeType(Constants._EXTENSION_PDF);
+							signDocAfter.setMimetype(sMimeType);
+							String infoPagRDE = store(rulectx, signDocAfter);
+							logger.warn("infoPagRDE---"+infoPagRDE);
+							//updateDataDoc(rulectx, infoPagRDE, Constants._EXTENSION_PDF, false, signDocAfter);
+							
+							String hash = signAPI.generateHashCode(signDocAfter);
+							signDocAfter.setHash(hash);
+							String nombreFirmante = obtenerFirmante(rulectx);
+							if(nombreFirmante.length()>=31){
+								nombreFirmante = nombreFirmante.substring(0, 31);
+							}
+							
+							Date fechaFirma = obtenerInformacionPeticion(authentication, signature, consulta, rulectx, peticion.getString("ID_PETICION"));
+							
+							
+							int idCircuitoFirma = signAPI.addFirmanteCtosFirma(0, docDocFirmadoPortafirmas.getInt("ID"), 0, "", nombreFirmante, fechaFirma);
+							
+							GestorMetadatos.storeMetadaDocBeforeDocAfter(rulectx, signDocBefore, signDocAfter, infoPagRDE, nombreFirmante);
+							docDocFirmadoPortafirmas.set(DocumentosUtil.COD_VERIFICACION, responseCVS.getCvs());
+							docDocFirmadoPortafirmas.set(DocumentosUtil.COD_COTEJO, responseCVS.getCvs());
+							//Obtener el nombre del documento
+							docDocFirmadoPortafirmas.set(DocumentosUtil.DESCRIPCION, docDocFirmadoPortafirmas.getString(DocumentosUtil.NOMBRE));
+							docDocFirmadoPortafirmas.set(DocumentosUtil.INFOPAG_RDE, infoPagRDE);
+							Iterator<IItem> rellenadoFirmantesContinuacion = ConsultasGenericasUtil.queryEntities(rulectx, "FIRMA_DOC_MASFIRMANTES", "NUMEXP='"+rulectx.getNumExp()+"'");
+							if(rellenadoFirmantesContinuacion.hasNext()){
+								IItem firmanteDespues = rellenadoFirmantesContinuacion.next();
+								String firmaDespues = "";
+								if(StringUtils.isNotEmpty(firmanteDespues.getString("FIRMA_FINAL"))) firmaDespues = firmanteDespues.getString("FIRMA_FINAL");
+								if(firmaDespues.equals("NO")){
+									docDocFirmadoPortafirmas.set(DocumentosUtil.ESTADOFIRMA, SignStatesConstants.FIRMADO);
+								}
+							}							
+							//docTramite.set(DocumentosUtil.INFOPAG_RDE, docTramite.getString(DocumentosUtil.INFOPAG));
+							docDocFirmadoPortafirmas.set(DocumentosUtil.EXTENSION_RDE, DocumentosUtil.Extensiones.PDF);
+							//docTramite.set(DocumentosUtil.FAPROBACION, responseCVS.get);
+							docDocFirmadoPortafirmas.store(cct);
+							
 							if(documento != null && documento.exists())documento.delete();
-							obtenerInformacionPeticion(authentication, signature, consulta, rulectx, peticion.getString("ID_PETICION"));
+							
 							peticion.set("ESTADOFIRMA", 1);
 							peticion.store(cct);
 						}
@@ -269,15 +322,104 @@ public class RecibirDocPortaFirmasExternoRule implements IRule{
 		} catch (IOException e) {
 			logger.error("Error en el numExp. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
 			throw new ISPACRuleException("Error en el numExp. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error("Error en el numExp. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Error en el numExp. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
 		}
 
 		return new Boolean(true);
 	}
+	
+	private String obtenerFirmante(IRuleContext rulectx) throws ISPACRuleException {
+		StringBuffer firmante = new StringBuffer("");
+		try {
+			Iterator<IItem> iteFirma = ConsultasGenericasUtil.queryEntities(rulectx, "FIRMA_DOC_EXTERNO", "NUMEXP='"+rulectx.getNumExp()+"'");
+			while(iteFirma.hasNext()){
+				IItem itFirmante = iteFirma.next();
+				String firma = itFirmante.getString("DNI"); 
+				String [] vFirma = firma.split(" - ");
+				if(vFirma.length>=2){
+					firmante.append(vFirma[1]);
+				}
+			}
+		} catch (ISPACRuleException e) {
+			logger.error("Error en el numExp. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Error en el numExp. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+		} catch (ISPACException e) {
+			logger.error("Error en el numExp. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Error en el numExp. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+		}
+		return firmante.toString();
+	}
+
+	public String store(IRuleContext rulectx, SignDocument signDocAfter) throws ISPACException {
+		String docref = null;
+
+		//Cuando son documentos firmados en el infopadRDE el valor es 4
+		// si es sin firma el infopag 3 
+		// y como no tengo manera de obtener estos valores sin pasar por las clases de firma
+		// pongo el valor directamente.
+		Integer rdeArchiveId = 4;
+		IGenDocAPI genDocAPI = rulectx.getClientContext().getAPI().getGenDocAPI();
+		Object connectorSession = null;
+
+		try {
+			connectorSession = genDocAPI.createConnectorSession();
+			docref = genDocAPI.newDocument(connectorSession, rdeArchiveId, signDocAfter.getDocument(), signDocAfter.getLength(), signDocAfter.getProperties());
+
+			// Cerramos el fichero
+			signDocAfter.getDocument().close();
+			
+		} catch (ISPACException e) {
+			logger.error("Error al guardar el documento firmado", e);
+			throw e;
+		} catch (Exception e) {
+			logger.error("Error al guardar el documento firmado", e);
+			throw new ISPACException(e);
+		} finally {
+			if (connectorSession != null) {
+				genDocAPI.closeConnectorSession(connectorSession);
+			}
+		}
+		return docref;
+	}
+	
+	protected void updateDataDoc(IRuleContext rulectx, String infoPagRDE, String extension,
+			boolean changeState, SignDocument signDocAfter) throws ISPACException {
+		// Actualizar la referencia en el campo INFOPAG_RDE en la tabla de
+		// documentos, que es la referencia para el gestor documental
+		// Se Establece el repositorio y la extension del documento (El
+		// repositorio es una constante a extraer de fichero de configuracion)
+		// Obtenemos el repositorio
+		ISPACConfiguration config = ISPACConfiguration.getInstance();
+		String repositorio = config.getProperty(ISPACConfiguration.REPOSITORY);
+		IItem itemDoc = signDocAfter.getItemDoc();
+		//itemDoc.set("INFOPAG_RDE", infoPagRDE);
+		//itemDoc.set("EXTENSION_RDE", extension);
+		//itemDoc.set("REPOSITORIO", repositorio);
+
+		// Se cambia el estado del documento a FIRMADO si asi esta indicado,
+		// se establece la fecha de firma y se asigna tambien esta fecha al
+		// campo que indica la fecha de aprobacion
+		if (changeState)
+			itemDoc.set("ESTADOFIRMA", SignStatesConstants.FIRMADO);
+		itemDoc.set("FFIRMA", new Date());
+		//itemDoc.set("FAPROBACION", new Date());
+		// Bloqueamos el documento para la edicion
+		
+		//[Manu Ticket #584] INICIO - SIGEM regla decretos evitar borrado tramite y documento.
+		String bloqueo = itemDoc.getString("BLOQUEO");
+		if(StringUtils.isEmpty(bloqueo) || (StringUtils.isNotEmpty(bloqueo) && !bloqueo.trim().equals(DocumentLockStates.TOTAL_LOCK)))
+			itemDoc.set("BLOQUEO", DocumentLockStates.EDIT_LOCK);
+		//[Manu Ticket #584] FIN - SIGEM regla decretos evitar borrado tramite y documento.
+				
+		itemDoc.store(rulectx.getClientContext());
+	}
 
 
 	@SuppressWarnings("unchecked")
-	private void obtenerInformacionPeticion(Authentication authentication, Signature signature, PortaFirmasConsultaClient consulta, IRuleContext rulectx, String idPeticion) throws ISPACRuleException {
-		
+	private Date obtenerInformacionPeticion(Authentication authentication, Signature signature, PortaFirmasConsultaClient consulta, IRuleContext rulectx, String idPeticion) throws ISPACRuleException {
+		Calendar fechaFirma = null;
 		try {
 			
 			/********************************************************************/
@@ -619,7 +761,7 @@ public class RecibirDocPortaFirmasExternoRule implements IRule{
 								//Indica la fecha del último cambio de estado. Este campo sólo está relleno cuando se recibe
 								//información desde el servidor de portafirma, y será ignorado si se envía para mdoficiar una
 								//petición
-								Calendar fecha = signer.getFstate();
+								fechaFirma = signer.getFstate();
 								//Indica el estado de la linea de firma a la que pertenece el firmante. Este campo sólo está
 								//relleno cuando se recibe información desde el servidor y será ignorado si se envía para mdoficiar
 								//una petición.
@@ -645,14 +787,14 @@ public class RecibirDocPortaFirmasExternoRule implements IRule{
 								}
 								
 								documentJustificante.add(new Phrase("\n"));
-								documentJustificante.add(new Phrase("* "+identFirmante +": "+nombreFirmante+" - "+FechasUtil.getFormattedDateTimeForQuery(fecha.getTime())+" - "+ident, fuenteNegraNormal12));
+								documentJustificante.add(new Phrase("* "+identFirmante +": "+nombreFirmante+" - "+FechasUtil.getFormattedDateTimeForQuery(fechaFirma.getTime())+" - "+ident, fuenteNegraNormal12));
 								documentJustificante.add(new Phrase("\n"));
 								
 								FirmaDocExternoInformSDAO pcftdao = new FirmaDocExternoInformSDAO(cnt);
 								pcftdao.createNew(cnt);
 								pcftdao.set("FIELD", "SIGNLINELIST");
 								pcftdao.set("REG_ID", id);
-								pcftdao.set("VALUE", identFirmante+" - "+FechasUtil.getFormattedDateTimeForQuery(fecha.getTime())+" - "+ident);
+								pcftdao.set("VALUE", identFirmante+" - "+FechasUtil.getFormattedDateTimeForQuery(fechaFirma.getTime())+" - "+ident);
 								pcftdao.store(cnt);
 							}
 						}
@@ -696,7 +838,8 @@ public class RecibirDocPortaFirmasExternoRule implements IRule{
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);
-		}		
+		}
+		return fechaFirma.getTime();
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {

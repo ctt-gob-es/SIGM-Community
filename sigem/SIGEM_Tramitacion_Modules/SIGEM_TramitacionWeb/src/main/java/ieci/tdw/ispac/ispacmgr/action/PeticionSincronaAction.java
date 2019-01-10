@@ -33,7 +33,7 @@ import org.apache.struts.action.ActionMapping;
 
 public class PeticionSincronaAction extends BaseDispatchAction {
 	
-	private static final Logger log = Logger.getLogger(PeticionSincronaAction.class);
+	private static final Logger LOG = Logger.getLogger(PeticionSincronaAction.class);
 
 	public ActionForward defaultExecute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response,
@@ -44,8 +44,8 @@ public class PeticionSincronaAction extends BaseDispatchAction {
 		request.setAttribute("codigoCertificado", codigoCertificado);
 		request.setAttribute("nombreCertificado", nombreCertificado);
 		
-		if (log.isDebugEnabled()){
-			log.debug("Seleccioando el servicio '("+codigoCertificado+")" + nombreCertificado + "' para realizar la consulta al servicio de Intermediacion");
+		if (LOG.isDebugEnabled()){
+			LOG.debug("Seleccioando el servicio '("+codigoCertificado+")" + nombreCertificado + "' para realizar la consulta al servicio de Intermediacion");
 		}
 		
 		return mapping.findForward("form");
@@ -147,8 +147,7 @@ public class PeticionSincronaAction extends BaseDispatchAction {
 			file.delete();		
 			
 		} catch (IOException e) {
-			log.error(e.getMessage());
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
 		}finally {
 			if (connectorSession != null) {
 				gendocAPI.closeConnectorSession(connectorSession);

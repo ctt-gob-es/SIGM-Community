@@ -17,44 +17,37 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitTaskResolucionSancionSancionadorRule extends InitTaskResolucionSancionadorRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "URB_SANCIONADOR";
-		STR_queryDocumentos = "NOMBRE = 'Providencia de Alcaldía' OR " +  
-								"NOMBRE = 'Resolución/Acuerdo de Inicio' OR " +
-								"NOMBRE = 'Pliego de Cargos' OR " +
-								"NOMBRE = 'Propuesta de Resolución' OR " +
-								"NOMBRE = 'Informe de Valoración de Alegaciones'"; 
-		 
-		
-		try
-		{
-	        IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
-	        int pcdId = rulectx.getProcedureId();
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "URB_SANCIONADOR";
+        strQueryDocumentos = "NOMBRE = 'Providencia de Alcaldía' OR " +  
+                                "NOMBRE = 'Resolución/Acuerdo de Inicio' OR " +
+                                "NOMBRE = 'Pliego de Cargos' OR " +
+                                "NOMBRE = 'Propuesta de Resolución' OR " +
+                                "NOMBRE = 'Informe de Valoración de Alegaciones'"; 
+         
+        
+        try {
+            IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
+            int pcdId = rulectx.getProcedureId();
 
-	        String strQuery = "WHERE ID_PCD="+pcdId+" AND NOMBRE='Inicio de Oficio del Expediente'";
-			IItemCollection col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
-	        Iterator it = col.iterator();
-	        if (it.hasNext())
-	        {
-		        IItem tramite = (IItem)it.next();
-		        int tramCuentaId = tramite.getInt("ID");
-			
-				STR_queryDocumentos +=
-					" OR " +
-					"ID_TRAMITE_PCD="+tramCuentaId;
-	        }
+            String strQuery = "WHERE ID_PCD = " + pcdId + " AND NOMBRE = 'Inicio de Oficio del Expediente'";
+            IItemCollection col = entitiesAPI.queryEntities("SPAC_P_TRAMITES", strQuery);
+            Iterator<?> it = col.iterator();
+            
+            if (it.hasNext()) {
+                IItem tramite = (IItem)it.next();
+                int tramCuentaId = tramite.getInt("ID");
+            
+                strQueryDocumentos += " OR " + "ID_TRAMITE_PCD="+tramCuentaId;
+            }
 
+        } catch(ISPACRuleException e) {
+            throw new ISPACRuleException(e);
+        
+        } catch(Exception e) {
+            throw new ISPACRuleException("No se ha podido iniciar el trámite de resolución.",e);
         }
-    	catch(Exception e) 
-        {
-        	if (e instanceof ISPACRuleException)
-        	{
-			    throw new ISPACRuleException(e);
-        	}
-        	throw new ISPACRuleException("No se ha podido iniciar el trámite de resolución.",e);
-        }
-		
+        
         return true;
     }
 }

@@ -72,7 +72,7 @@ public class XMLSignatureElement
 //                    }
 //                    catch (Throwable e)
 //                    {
-//                        e.printStackTrace();
+//                        LOGGER.error("ERROR. " + e.getMessage(), e);
 //                    }
 //                }
                 return null;

@@ -5,6 +5,8 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.DipucrIniciaExpGenerico;
+
 public class DipucrIniciaExpContratacion extends DipucrIniciaExpGenerico {
 	
 	protected static final Logger logger = Logger.getLogger(DipucrIniciaExpContratacion.class);

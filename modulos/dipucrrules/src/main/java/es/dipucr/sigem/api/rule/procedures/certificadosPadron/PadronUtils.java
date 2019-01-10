@@ -1,5 +1,6 @@
 package es.dipucr.sigem.api.rule.procedures.certificadosPadron;
 
+import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
@@ -9,18 +10,24 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.axis.message.MessageElement;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.datacontract.schemas._2004._07.ATMPMH_WS_DOCUMENTOS.ClsHabitanteResponse;
+import org.datacontract.schemas._2004._07.ATMPMH_WS_DOCUMENTOS.ETipoDocumento;
+import org.tempuri.IPadronProxy;
 
-import es.atm2.ObtenerPersonaPorNIFResponseObtenerPersonaPorNIFResult;
-import es.atm2.PadronSoapProxy;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class PadronUtils {
 	
-	private static final Logger logger = Logger.getLogger(PadronUtils.class);
+//	private static final Logger LOGGER = Logger.getLogger(PadronUtils.class);
+	public static final String COD_PROVINCIA_CR = "13";
+	
+	public static final int TIPO_CERTIFICADO = 1;
+	public static final int TIPO_VOLANTE = 2;
+	public static final int TIPO_CERTIFICADO_EMPADRONAMIENTO_HISTORICO = 3;
+	public static final int TIPO_CERTIFICADO_HISTORICO_MOVIMIENTOS_ALTAS_Y_BAJAS = 4;
+	public static final int TIPO_CERTIFICADO_HISTORICO_MOVIMIENTOS_ALTAS_Y_BAJAS_CON_CAMBIO_DOMICILIO = 5;
+	public static final int TIPO_CERTIFICADO_CONVIVENCIA = 6;
+	
 
 	/**
 	 * Devuelve el tipo de documento en función del documento recibido
@@ -65,72 +72,93 @@ public class PadronUtils {
 	
 	/**
 	 * Devuelve la información del usuario por su NIF, NIE o PTE
+	 * @throws  
 	 * @throws RemoteException
 	 * @throws Exception
 	 * @throws IOException
 	 * @throws FileNotFoundException
-	 */
-	public static String getNombrePersona(String codInstitucion, String documentoIdentidad)
-			throws Exception {
+	 * [dipucr-Felipe #515] Actualización servicios web padrón ATM
+	 * [dipucr-Alberto #798]
+	 */	
+	public static String getNombrePersona(String codInstitucion, String documentoIdentidad) throws Exception {
+		return getPersona(codInstitucion, documentoIdentidad).getNombre();
+	}
+	
+	public static PersonaPadron getPersona(String codInstitucion, String documentoIdentidad) throws Exception {
 		
-		PadronSoapProxy wsPadron = new PadronSoapProxy();
-		MessageElement[] arrResponse = null;
-		MessageElement msgElement = null;
+		codInstitucion = retocarCodInstitucion(codInstitucion);
 		
 		int tipoDocumento = PadronUtils.getTipoDocumento(documentoIdentidad);
 		if (tipoDocumento == Constants.CERTPADRON._TIPO_DOC_NIE){
-			documentoIdentidad = PadronUtils.retocarNIE(documentoIdentidad);
-		}
-
-		String tipoFisica = Constants.CERTPADRON._TIPO_PERSONA_FISICA;
-		ObtenerPersonaPorNIFResponseObtenerPersonaPorNIFResult datosPersona =
-				wsPadron.obtenerPersonaPorNIF(codInstitucion, tipoFisica, documentoIdentidad);
-		
-		arrResponse = datosPersona.get_any();
-		msgElement = arrResponse[0];
-		logger.warn(msgElement);
-		
-		//Obtenemos el nodo documento
-		Node nodoPersona = null;
-		NodeList listNodosDoc = msgElement.getElementsByTagName("Persona");
-		if (listNodosDoc.getLength() == 0){
-			//Se ha producido un error
-			Node nodoError = msgElement.getElementsByTagName("MensajeError").item(0);
-			String textoError = nodoError.getFirstChild().getFirstChild().getNodeValue();
-			String codigoError = nodoError.getLastChild().getFirstChild().getNodeValue();
-			throw new Exception(codigoError + ": " + textoError);
-		}
-		nodoPersona = listNodosDoc.item(0);
-		
-		Node nodo = nodoPersona.getFirstChild();
-		String nombre, ape1, ape2;
-		nombre = ape1 = ape2 = null;
-		while ((nodo = nodo.getNextSibling()) != null){
-			if (nodo.getNodeName() == "Nombre"){
-				nombre = nodo.getFirstChild().getNodeValue();
-			}
-			else if (nodo.getNodeName() == "Apellido1"){
-				ape1 = nodo.getFirstChild().getNodeValue();
-			}
-			else if (nodo.getNodeName() == "Apellido2"){
-				//Muchos extranjeros no tiene segundo apellido
-				if (nodo.getChildNodes().getLength() > 0){
-					ape2 = nodo.getFirstChild().getNodeValue();
-				}
-			}
-		}
-		StringBuffer sbNombreCompleto = new StringBuffer();
-		sbNombreCompleto.append(nombre);
-		sbNombreCompleto.append(" ");
-		sbNombreCompleto.append(ape1);
-		if (StringUtils.isNotEmpty(ape2)){
-			sbNombreCompleto.append(" ");
-			sbNombreCompleto.append(ape2);
+			return getPersonaNie(codInstitucion, documentoIdentidad);
 		}
 		
-		return sbNombreCompleto.toString();
+		return getPersonaATM(codInstitucion, documentoIdentidad);
 	}
 	
+	private static PersonaPadron getPersonaNie(String codInstitucion, String documentoIdentidad) throws Exception {
+
+		String documentoIdentidadRetocado = PadronUtils.retocarNIE(documentoIdentidad);
+		
+		// Probamos con el NIE retocado (añadido el 0) y si no lo encuentra probamos con el NIE sin retocar
+		try {
+			return getPersonaATM(codInstitucion, documentoIdentidadRetocado);
+		} catch (Exception e) {
+			return getPersonaATM(codInstitucion, documentoIdentidad);
+		}
+	}
+
+	private static PersonaPadron getPersonaATM(String codInstitucion, String documentoIdentidad) throws RemoteException, ISPACException {
+		
+		String nombre;
+		IPadronProxy wsPadron = new IPadronProxy();
+		
+		ClsHabitanteResponse response = wsPadron.getNombrePersona(codInstitucion, documentoIdentidad);
+		
+		if (response.getCORRECTO()){			
+			nombre = response.getHABITANTE();
+			return new PersonaPadron(nombre, documentoIdentidad);
+		}
+		else{
+			throw new ISPACException(PadronExceptions.getDescripcion(response.getCODIGO_RESULTADO()));
+		}
+	}
+	
+	
+	/**
+	 * [dipucr-Felipe #515]
+	 * Cada elemento de la enumeración tiene asignado un ID en la tabla VLDTBL_CERT_PADRON
+	 * @param tipoCert
+	 * @return
+	 * @throws ISPACException
+	 */
+	public static ETipoDocumento getEnumTipoCert(int tipoCert) throws ISPACException{
+		
+		ETipoDocumento enumTipoCert = null;
+		switch (tipoCert) {
+		case TIPO_CERTIFICADO:
+			enumTipoCert = ETipoDocumento.CERTIFICADO;
+			break;
+		case TIPO_VOLANTE:
+			enumTipoCert = ETipoDocumento.VOLANTE;
+			break;
+		case TIPO_CERTIFICADO_EMPADRONAMIENTO_HISTORICO:
+			enumTipoCert = ETipoDocumento.CERTIFICADO_EMPADRONAMIENTO_HISTORICO;
+			break;
+		case TIPO_CERTIFICADO_HISTORICO_MOVIMIENTOS_ALTAS_Y_BAJAS:
+			enumTipoCert = ETipoDocumento.CERTIFICADO_HISTORICO_MOVIMIENTOS_ALTAS_Y_BAJAS;
+			break;
+		case TIPO_CERTIFICADO_HISTORICO_MOVIMIENTOS_ALTAS_Y_BAJAS_CON_CAMBIO_DOMICILIO:
+			enumTipoCert = ETipoDocumento.CERTIFICADO_HISTORICO_MOVIMIENTOS_ALTAS_Y_BAJAS_CON_CAMBIO_DOMICILIO;
+			break;
+		case TIPO_CERTIFICADO_CONVIVENCIA:
+			enumTipoCert = ETipoDocumento.CERTIFICADO_CONVIVENCIA;
+			break;
+		default:
+			throw new ISPACException("Tipo de certificado no reconocido");
+		}
+		return enumTipoCert;
+	}
 	
 	/**
 	 * Añade un 0 a la izquierda del NIE para seguir el formato del padrón de ATM
@@ -145,5 +173,23 @@ public class PadronUtils {
 			result = nie.charAt(0) + "0" + nie.substring(1);
 		}
 		return result;
+	}
+
+	/**
+	 * Adaptar código de institución INE a los webservices de ATM
+	 * @param codInstitucion
+	 * @return
+	 */
+	public static String retocarCodInstitucion(String codInstitucion) {
+		
+		return codInstitucion.substring(0,5);
+	}
+	
+	/**
+	 * Devuelve si el documento es de tipo certificado y se debe firmar
+	 * @return
+	 */
+	public static boolean esTipoCertificado(int tipoCert){
+		return (tipoCert != PadronUtils.TIPO_VOLANTE);
 	}
 }

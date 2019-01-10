@@ -10,7 +10,7 @@ public class DipucrInsertarParticipanteTrasladoResidenciaUnivRule extends Dipucr
 		TrasladoConfiguration trasladoConfig = TrasladoConfiguration.getInstance(rulectx.getClientContext());
 		
 		email = trasladoConfig.get(TrasladoConfiguration.RESIDENCIA_UNIVERSITARIA_TRASLADO_EMAIL);
-		idTraslado = trasladoConfig.get(TrasladoConfiguration.RESIDENCIA_UNIVERSITARIA_TRASLADO_EMAIL);
+		idTraslado = trasladoConfig.get(TrasladoConfiguration.RESIDENCIA_UNIVERSITARIA_TRASLADO_ID);
 		return true;
 	}
 }

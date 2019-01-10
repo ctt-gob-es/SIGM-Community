@@ -288,7 +288,7 @@ public class LibroAdapter {
 	 */
 	protected EstadoLibroVO getEstadoLibroAdapter(ScrRegstate scrregstate) {
 		EstadoLibroVO estadoLibroVO = new EstadoLibroVO();
-		estadoLibroVO.setId(scrregstate.getId().toString());
+		estadoLibroVO.setId(scrregstate.getIdocarchhdr().getId().toString());
 		String idEstado = String.valueOf(EstadoLibroEnum.getEnum(
 				scrregstate.getState()).getValue());
 		estadoLibroVO.setIdEstado(idEstado);

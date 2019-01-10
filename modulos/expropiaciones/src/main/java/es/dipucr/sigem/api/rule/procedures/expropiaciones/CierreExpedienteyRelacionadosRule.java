@@ -3,6 +3,8 @@ package es.dipucr.sigem.api.rule.procedures.expropiaciones;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 import ieci.tdw.ispac.api.IEntitiesAPI;
@@ -14,6 +16,8 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class CierreExpedienteyRelacionadosRule implements IRule{
+	
+	private static final Logger LOGGER = Logger.getLogger(CierreExpedienteyRelacionadosRule.class);
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		return true;
@@ -41,8 +45,7 @@ public class CierreExpedienteyRelacionadosRule implements IRule{
 			ExpedientesUtil.cerrarExpedientes(rulectx.getClientContext(), expCerrar);
 			
 		} catch (ISPACException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 		}
 		
 		return new Boolean(true);

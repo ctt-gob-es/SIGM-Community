@@ -21,7 +21,7 @@ public class AxSfQuery implements Serializable {
     private Integer bookId = null;
     private int pageSize = 0;
     private Map fields = new TreeMap();
-    private String whereField9 = " fdrid in (select id_fdr from scr_regint where name";
+    private String whereField9 = " fdrid in (select id_fdr from scr_regint where unaccent(upper(name)) ";
     private String whereIdarchField9 = "' and id_arch=";
     private String whereOprDependOfIn = " in (select id from scr_orgs where type != 0 start with code=";
     private String whereOprDependOfConnect = " connect by prior id = id_father";
@@ -31,8 +31,15 @@ public class AxSfQuery implements Serializable {
     
     private String whereDistNotRegister = " fdrid in (select id_fdr from scr_distreg where state";
 	private String selectDefWhere2 = null;
-
-    /*******************************************************************************************************************
+	private String whereField1001_01_S = " EXISTS (SELECT 'S' FROM a";
+	private String whereField1001_01_N = "  NOT EXISTS (SELECT 'S' FROM a";
+	private String whereField1001_02 = "xf X WHERE X.FLDID=1001 AND TEXT = 'S' and '1'=? and X.FDRID=R.FDRID ) " ;
+	private String whereField507_01 = " EXISTS (SELECT 'S' FROM SCR_EXREG_IN SE WHERE SE.ID_FDR=R.fdrid AND SE.ID_ARCH=";
+	private String whereField507_02 = "  AND UPPER(ID_EXCHANGE_SIR)  ";
+	private String whereFieldExtend_01 = " EXISTS (SELECT 'S' FROM  A";
+	private String whereFieldExtend_02 = "XF XF WHERE XF.FDRID=R.FDRID AND FLDID= ";
+	private String whereFieldExtend_03 = " AND UPPER(XF.TEXT)  ";
+	/*******************************************************************************************************************
      * Constructors
      ******************************************************************************************************************/
 
@@ -241,5 +248,83 @@ public class AxSfQuery implements Serializable {
 	public void setSelectDefWhere2(String selectDefWhere2) {
 		this.selectDefWhere2 = selectDefWhere2;
 	}
+	/**
+	 * @return the whereField1001_01_S
+	 */
+	public String getWhereField1001_01_S() {
+	    return whereField1001_01_S;
+	}
+	/**
+	 * @param whereField1001_01_S the whereField1001_01_S to set
+	 */
+	public void setWhereField1001_01_S(String whereField1001_01_S) {
+	    this.whereField1001_01_S = whereField1001_01_S;
+	}
+	/**
+	 * @return the whereField1001_02
+	 */
+	public String getWhereField1001_02() {
+	    return whereField1001_02;
+	}
+	/**
+	 * @param whereField1001_02 the whereField1001_02 to set
+	 */
+	public void setWhereField1001_02(String whereField1001_02) {
+	    this.whereField1001_02 = whereField1001_02;
+	}
+	
+	/**
+	 * @return the whereField1001_01_N
+	 */
+	public String getWhereField1001_01_N() {
+	    return whereField1001_01_N;
+	}
+	/**
+	 * @param whereField1001_02_N the whereField1001_01_N to set
+	 */
+	public void setWhereField1001_01_N(String whereField1001_01_N) {
+	    this.whereField1001_01_N = whereField1001_01_N;
+	}
+
+	public String getWhereField507_01() {
+	    return whereField507_01;
+	}
+
+	public void setWhereField507_01(String whereField507_01) {
+	    this.whereField507_01 = whereField507_01;
+	}
+
+	public String getWhereField507_02() {
+	    return whereField507_02;
+	}
+
+	public void setWhereField507_02(String whereField507_02) {
+	    this.whereField507_02 = whereField507_02;
+	}
+
+	public String getWhereFieldExtend_01() {
+	    return whereFieldExtend_01;
+	}
+
+	public void setWhereFieldExtend_01(String whereFieldExtend_01) {
+	    this.whereFieldExtend_01 = whereFieldExtend_01;
+	}
+
+	public String getWhereFieldExtend_02() {
+	    return whereFieldExtend_02;
+	}
+
+	public void setWhereFieldExtend_02(String whereFieldExtend_02) {
+	    this.whereFieldExtend_02 = whereFieldExtend_02;
+	}
+
+	public String getWhereFieldExtend_03() {
+	    return whereFieldExtend_03;
+	}
+
+	public void setWhereFieldExtend_03(String whereFieldExtend_03) {
+	    this.whereFieldExtend_03 = whereFieldExtend_03;
+	}
+	
 }
 

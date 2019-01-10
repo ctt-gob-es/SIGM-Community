@@ -31,12 +31,12 @@ import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 public class ActualizaInteresadosPublicadorAction implements IRule {
 	
 	/** Logger de la clase. */
-    private static final Logger logger = Logger.getLogger(ActualizaInteresadosPublicadorAction.class);
+    private static final Logger LOGGER = Logger.getLogger(ActualizaInteresadosPublicadorAction.class);
 
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
     	
-        logger.info("INICIO - " + this.getClass().getName());
+        LOGGER.info("INICIO - " + this.getClass().getName());
 
         IItem responsable = null;
         String numexp = rulectx.getNumExp();
@@ -53,9 +53,11 @@ public class ActualizaInteresadosPublicadorAction implements IRule {
 				Expediente expedientePublic = null;
 				try{
 					expedientePublic = consulta.obtenerDetalle(numexp, EntidadHelper.getEntidad());
+				} catch(ConsultaExpedientesException e){
+					LOGGER.info("No se ha podido obtener el expediente", e);
+				} catch(Exception e){
+					LOGGER.info("No se ha podido obtener el expediente", e);
 				}
-				catch(ConsultaExpedientesException e){}
-				catch(Exception e){}
 				
 				if(expedientePublic != null){
 					consulta.eliminarInteresadoExpediente(numexp, EntidadHelper.getEntidad());
@@ -76,14 +78,14 @@ public class ActualizaInteresadosPublicadorAction implements IRule {
 		        }
 			}
         } catch (ISPACException e) {
-        	logger.error("Error en el al insertar el responsable como interesado en el publicador del expediente: " + numexp + ". " + e.getMessage(), e);
+        	LOGGER.error("Error en el al insertar el responsable como interesado en el publicador del expediente: " + numexp + ". " + e.getMessage(), e);
         	throw new ISPACRuleException("Error en el al insertar el responsable como interesado en el publicador del expediente: " + numexp + ". " + e.getMessage(), e);
-        } catch (Throwable e) {
-        	logger.error("Error en el al insertar el responsable como interesado en el publicador del expediente: " + numexp + ". " + e.getMessage(), e);
+        } catch (Exception e) {
+        	LOGGER.error("Error en el al insertar el responsable como interesado en el publicador del expediente: " + numexp + ". " + e.getMessage(), e);
         	throw new ISPACRuleException("Error en el al insertar el responsable como interesado en el publicador del expediente: " + numexp + ". " + e.getMessage(), e);
         }
         
-        logger.info("FIN - " + this.getClass().getName());
+        LOGGER.info("FIN - " + this.getClass().getName());
         return true;
     }
     
@@ -109,5 +111,6 @@ public class ActualizaInteresadosPublicadorAction implements IRule {
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
+		// empty
 	}
 }

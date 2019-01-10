@@ -162,16 +162,14 @@ public class WebServiceInvoker {
 		try {
 			imprimirErrorEnvio(call);
 		} catch (AxisFault e1) {
-			LOGGER.error("Error en el envío. "+e1.getMessage());
-			e1.printStackTrace();
+			LOGGER.error("Error en el envío. "+e1.getMessage(), e1);
 		}
 	    throw new Afirma5ServiceInvokerException(e);
 	} catch (ServiceException e) {
 		try {
 			imprimirErrorEnvio(call);
 		} catch (AxisFault e1) {
-			LOGGER.error("Error en el envío. "+e1.getMessage());
-			e1.printStackTrace();
+			LOGGER.error("Error en el envío. "+e1.getMessage(), e1);
 		}
 	    throw new Afirma5ServiceInvokerException(e);
 	}

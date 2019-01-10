@@ -2,9 +2,9 @@ package ieci.tdw.ispac.ispaclib.gendoc.openoffice;
 
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
 import ieci.tdw.ispac.ispaclib.templates.TemplateDocumentInfo;
 import ieci.tdw.ispac.ispaclib.templates.TemplateTableInfo;
-import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.MapUtils;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
@@ -57,22 +57,23 @@ import com.sun.star.uno.XNamingService;
 import com.sun.star.util.XReplaceDescriptor;
 import com.sun.star.util.XReplaceable;
 
+import es.dipucr.sigem.api.rule.common.libreoffice.LibreOfficeConfiguration;
+
 public class OpenOfficeHelper {
 	/**
 	 * Logger de la clase.
 	 */
 	private static final Logger logger = Logger.getLogger(OpenOfficeHelper.class);
 	
-	private static XDesktop mxDesktop = null;
-
-	private static XMultiServiceFactory xFactory = null;
-
+	//INICIO [dipucr-Felipe #486]
+	//Evitamos que estas variables sean de tipo static, para que no sean un cuello de botella
+	private XDesktop mxDesktop = null; 
+	private XMultiServiceFactory xFactory = null;
+	//FIN [dipucr-Felipe #486]
 	
+	@SuppressWarnings("unused")
 	private final int BACKGROUND_COLOR_TITLE_COLUMN =  16777215;
 	private final static int BACKGROUND_WHITE_COLOR =  0;
-
-	//private final int DEFAULT_BACKGROUND_COLOR_TABLE = 13421823;
-	//private final int DEFAULT_BACKGROUND_COLOR_TABLEROW = 6710932;
 	
 	private final int DEFAULT_BACKGROUND_COLOR_TABLE = 16777215;
 	private final int DEFAULT_BACKGROUND_COLOR_TABLEROW = 10263708;
@@ -125,27 +126,35 @@ public class OpenOfficeHelper {
 		return new OpenOfficeHelper(cnt);
 	}
 
+	/**
+	 * [Manu Ticket #86] ALSIGM3 Usar varias instancias de OpenOffice
+	 * @return
+	 * @throws ISPACException
+	 */
 	public synchronized static OpenOfficeHelper getInstance() throws ISPACException {
-		//[Manu Ticket #86] INICIO - ALSIGM3 Usar varias instancias de OpenOffice
-		//String cnt = ISPACConfiguration.getInstance().get(ISPACConfiguration.OPEN_OFFICE_CONNECT);
+
+		//INICIO [dipucr-Felipe #681]
+//		ISPACConfiguration config = ISPACConfiguration.getInstance();
+//		String cnt = config.get( ISPACConfiguration.OPEN_OFFICE_CONNECT);
+		String idEntidad = OrganizationUser.getOrganizationUserInfo().getOrganizationId();
+		LibreOfficeConfiguration config = LibreOfficeConfiguration.getInstance(idEntidad);
+		String cnt = config.get(LibreOfficeConfiguration.OPEN_OFFICE_CONNECT); 
+		//FIN [dipucr-Felipe #681]
 	
-		ISPACConfiguration config = ISPACConfiguration.getInstance();
-		String cnt = config.get( ISPACConfiguration.OPEN_OFFICE_CONNECT);
 		try {
 			XComponentContext xcomponentcontext = Bootstrap.createInitialComponentContext(null);
 			XMultiComponentFactory xLocalServiceManager = xcomponentcontext.getServiceManager();
 			Object xUrlResolver = xLocalServiceManager.createInstanceWithContext(	"com.sun.star.bridge.UnoUrlResolver", xcomponentcontext);
-			XUnoUrlResolver urlResolver =
-					(XUnoUrlResolver) UnoRuntime.queryInterface( XUnoUrlResolver.class, xUrlResolver);
+			XUnoUrlResolver urlResolver = (XUnoUrlResolver) UnoRuntime.queryInterface( XUnoUrlResolver.class, xUrlResolver);
 			urlResolver.resolve(cnt);
 		}catch (java.lang.Exception e){
 			logger.warn("Error al establecer la conexión con OpenOffice (OPEN_OFFICE_CONNECT): " + cnt + ". " + e.getMessage(), e);
-		
-			String parameter = config.get( ISPACConfiguration.OPEN_OFFICE_ADDITIONAL_INSTANCES);
+
+			String parameter = config.get(LibreOfficeConfiguration.OPEN_OFFICE_ADDITIONAL_INSTANCES);//[dipucr-Felipe #681]
 			if (parameter != null){
 				int count = Integer.parseInt( parameter);
 				for (int i = 0; i < count; i++){
-					cnt = config.get( ISPACConfiguration.OPEN_OFFICE_CONNECT + "_" + i);
+					cnt = config.get(LibreOfficeConfiguration.OPEN_OFFICE_CONNECT + "_" + i);//[dipucr-Felipe #681]
 					try {
 						XComponentContext xcomponentcontext = Bootstrap.createInitialComponentContext(null);
 						XMultiComponentFactory xLocalServiceManager = xcomponentcontext.getServiceManager();
@@ -159,7 +168,6 @@ public class OpenOfficeHelper {
 				}
 			}
 		}
-		//[Manu Ticket #86] FIN - ALSIGM3 Usar varias instancias de OpenOffice
 		
 		return new OpenOfficeHelper(cnt);
 	}
@@ -299,7 +307,7 @@ public class OpenOfficeHelper {
             insertIntoCell(""+((char)(65+i))+"1",tableInfo.getTitleColumns()[i], xTextTable, BACKGROUND_WHITE_COLOR);
         }
         int i = 2;
-        for (Iterator iterator = tableInfo.getResults().iterator(); iterator.hasNext();i++) {
+        for (Iterator<?> iterator = tableInfo.getResults().iterator(); iterator.hasNext();i++) {
 			IItem item = (IItem) iterator.next();
 			for(int j=0; j<columns; j++){
 				insertIntoCell(""+((char)(65+j))+ i, item.getString((String)tableInfo.getColumns()[j]), xTextTable, BACKGROUND_WHITE_COLOR);

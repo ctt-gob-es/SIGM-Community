@@ -30,7 +30,7 @@ import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
 public class TramiteCertifNotifIndividualizadoRule implements IRule{
 	
 	private OpenOfficeHelper ooHelper = null;
-	private static final Logger logger = Logger.getLogger(TramiteCertifNotifIndividualizadoRule.class);
+	private static final Logger LOGGER = Logger.getLogger(TramiteCertifNotifIndividualizadoRule.class);
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
 		
@@ -51,9 +51,8 @@ public class TramiteCertifNotifIndividualizadoRule implements IRule{
 			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 			IGenDocAPI gendocAPI = cct.getAPI().getGenDocAPI();
 			//----------------------------------------------------------------------------------------------
-			logger.info("INICIO - " + this.getClass().getName());
+			LOGGER.info("INICIO - " + this.getClass().getName());
 			
-			ooHelper = OpenOfficeHelper.getInstance();
 			boolean urgencia = false;
 			/**
 			 * [Ticket#380# Teresa]
@@ -96,32 +95,27 @@ public class TramiteCertifNotifIndividualizadoRule implements IRule{
 		    	        }
 		        	}
 	        	}
-	        }
-	        if(ooHelper!= null) ooHelper.dispose();
+	        }	        
 		}catch(Exception e){
 			try {
 				throw new Exception("Error a la hora de recorrer las propuestas " + e.getMessage(), e);
 			} catch (Exception e1) {
-				logger.error("Error a la hora de recorrer las propuestas " + e1.getMessage(), e1);
+				LOGGER.error("Error a la hora de recorrer las propuestas " + e1.getMessage(), e1);
 			}
 		}
-		finally{
-			ooHelper.dispose();
-		}
-		logger.info("FIN - " + this.getClass().getName());
+		
+		LOGGER.info("FIN - " + this.getClass().getName());
 		return new Boolean(validate);
 	}
 
 	@SuppressWarnings("rawtypes")
 	private void generarCertificadoIndividualizado(IRuleContext rulectx, ClientContext cct, IEntitiesAPI entitiesAPI, IGenDocAPI gendocAPI, boolean urgencia, String descripcionPropuesta, String ordenPropuesta) {
 		
-		
 		String organo = "";
 		try {
 			organo = SecretariaUtil.getOrgano(rulectx);
 		} catch (ISPACRuleException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			LOGGER.error("ERROR al recuperar el organo");
 		}
 		String strNombreDocCab = "";
 		String strNombreDoc = "";
@@ -139,6 +133,7 @@ public class TramiteCertifNotifIndividualizadoRule implements IRule{
 		String fecha = dateformat.format(new Date());
 		
 		try {
+			ooHelper = OpenOfficeHelper.getInstance();
 			cct.setSsVariable("FECHA", fecha);
 			
 			//logger.warn("NOTIFICACION CABECERA INICIO "+strNombreDocCab);
@@ -153,7 +148,7 @@ public class TramiteCertifNotifIndividualizadoRule implements IRule{
     		//Cuerpo
         	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, descripcionPropuesta);
         	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-        	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+        	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
     		file.delete();
     		
     		//Pie
@@ -162,7 +157,7 @@ public class TramiteCertifNotifIndividualizadoRule implements IRule{
 	    	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, strNombreDocPie);
 	    	//logger.warn(strInfoPag);
 	    	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-	    	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+	    	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
 			file.delete();
 			//logger.warn("FIN PIE NOTIFICACION");
 			
@@ -198,15 +193,23 @@ public class TramiteCertifNotifIndividualizadoRule implements IRule{
 	        }
     		strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, descripcionPropuesta);
         	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-        	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+        	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
     		file.delete();
     		
     		cct.deleteSsVariable("FECHA");
+    		
+    		if (xComponent != null){
+    			xComponent.dispose();
+    		}
 
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 	}
 
@@ -272,7 +275,7 @@ public class TramiteCertifNotifIndividualizadoRule implements IRule{
 			try {
 				throw new Exception("Error a la hora de recorrer las propuestas. " + e.getMessage(), e);
 			} catch (Exception e1) {
-				logger.error("Error a la hora de recorrer las propuestas. " + e1.getMessage() , e1);
+				LOGGER.error("Error a la hora de recorrer las propuestas. " + e1.getMessage() , e1);
 			}
 		}
 		if(!validate){

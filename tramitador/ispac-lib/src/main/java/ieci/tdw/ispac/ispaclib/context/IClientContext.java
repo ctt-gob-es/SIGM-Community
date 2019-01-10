@@ -4,6 +4,7 @@ import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.item.IResponsible;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
+import ieci.tdw.ispac.ispaclib.resp.Responsible;
 
 import java.util.Locale;
 
@@ -114,6 +115,7 @@ public interface IClientContext
 	 * @return El contexto del estado actual de tramitación
 	 */
 	public StateContext getStateContext();
-
+	
+	public Responsible getUser();
 
 }

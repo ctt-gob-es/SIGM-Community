@@ -41,9 +41,19 @@
 	    <ispac:javascriptLanguage/>
 	    <script type="text/javascript" src='<ispac:rewrite href="../scripts/numberFormat.js"/>'> </script>
 		<script type="text/javascript" src='<ispac:rewrite href="../scripts/utils.js"/>'> </script>
+		
+		<!-- [dipucr-Felipe-Alberto #510] -->
+		<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery-1.12.2.min.js"/>'></script>
+		<script type="text/javascript">
+			var jQ1_12_2 = $.noConflict(true);
+		</script>
 		<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery-1.3.2.min.js"/>'></script>
+
   		<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery-ui-1.7.2.custom.min.js"/>'></script>
  		<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery.alerts.js"/>'></script>
+ 		
+		<!-- [dipucr-Felipe-Alberto #510] -->
+		<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery.quicksearch.js"/>'></script>
 		
 	    <script>
 	    	window.name="ParentWindow";

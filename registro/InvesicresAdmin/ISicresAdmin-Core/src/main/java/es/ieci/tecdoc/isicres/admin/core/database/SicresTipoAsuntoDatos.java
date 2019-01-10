@@ -107,6 +107,7 @@ public class SicresTipoAsuntoDatos extends TipoAsunto{
 		statement.setDateTime(index++,getDisableDate());
 		statement.setLongInteger(index++,getEnabled());
 		statement.setLongInteger(index++,getIdOrg());
+		statement.setLongInteger(index++,getForDistRT());
 
 		return new Integer(index);
 	}
@@ -208,6 +209,7 @@ public class SicresTipoAsuntoDatos extends TipoAsunto{
 		setDisableDate(statement.getDateTime(index++));
 		setEnabled(statement.getLongInteger(index++));
 		setIdOrg(statement.getLongInteger(index++));
+		setForDistRT(statement.getLongInteger(index++));
 
 		return new Integer(index);
 	}
@@ -226,6 +228,7 @@ public class SicresTipoAsuntoDatos extends TipoAsunto{
 		statement.setDateTime(index++,getDisableDate());
 		statement.setLongInteger(index++,getEnabled());
 		statement.setLongInteger(index++,getIdOrg());
+		statement.setLongInteger(index++,getForDistRT());
 
 		return new Integer(index);
 	}

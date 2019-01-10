@@ -264,13 +264,27 @@ public class AuditoriaFicheroIntercambioManagerImpl extends
         		? ficheroIntercambio.getTipoAnotacion().getValue() : null)));
         metadatos.add(new MetadatoVO("descripcionTipoAnotacion", (ficheroIntercambio.getTipoAnotacion() != null
         		? ficheroIntercambio.getTipoAnotacion().getName() : null)));
-        metadatos.add(new MetadatoVO("tipoRegistro", (ficheroIntercambio.getTipoRegistro() != null
+        try {
+            metadatos.add(new MetadatoVO("tipoRegistro", (ficheroIntercambio.getTipoRegistro() != null
         		? ficheroIntercambio.getTipoRegistro().getValue() : null)));
-        metadatos.add(new MetadatoVO("documentacionFisica", (ficheroIntercambio.getDocumentacionFisica() != null
-        		? ficheroIntercambio.getDocumentacionFisica().getValue() : null)));
+        }catch (IllegalArgumentException e){
+            metadatos.add(new MetadatoVO("tipoRegistro",null));
+        }
+        
+        try {
+            metadatos.add(new MetadatoVO("documentacionFisica", (ficheroIntercambio.getDocumentacionFisica() != null
+    		? ficheroIntercambio.getDocumentacionFisica().getValue() : null)));
+        }catch (IllegalArgumentException e){
+            metadatos.add(new MetadatoVO("documentacionFisica",null));
+        }
+        try {
+            metadatos.add(new MetadatoVO("indicadorPrueba", (ficheroIntercambio.getIndicadorPrueba() != null
+    		? ficheroIntercambio.getIndicadorPrueba().getValue() : null)));
+        }catch (IllegalArgumentException e){
+            metadatos.add(new MetadatoVO("indicadorPrueba",null));
+        }
+
         metadatos.add(new MetadatoVO("observacionesApunte", ficheroIntercambio.getObservacionesApunte()));
-        metadatos.add(new MetadatoVO("indicadorPrueba", (ficheroIntercambio.getIndicadorPrueba() != null
-        		? ficheroIntercambio.getIndicadorPrueba().getValue() : null)));
         metadatos.add(new MetadatoVO("codigoEntidadRegistralInicio", ficheroIntercambio.getCodigoEntidadRegistralInicio()));
         metadatos.add(new MetadatoVO("descripcionEntidadRegistralInicio", ficheroIntercambio.getDescripcionEntidadRegistralInicio()));
         metadatos.add(new MetadatoVO("expone", ficheroIntercambio.getExpone()));

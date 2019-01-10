@@ -77,7 +77,7 @@ public class IntercambioRegistralGeneradorObjetosManagerImpl implements
 
 		infoRegistro.setEntidadRegistralOrigen(entidadRegistralOrigen);
 
-		AsientoRegistralFormVO registro = registroMapper.toAsientoRegistralFormVO(infoRegistro);
+		AsientoRegistralFormVO registro = registroMapper.toAsientoRegistralFormVO(infoRegistro, TipoRegistroEnum.getTipoRegistro(intercambioSalidaVO.getTipoOrigen().toString()));
 		registro.setTipoRegistro(TipoRegistroEnum.getTipoRegistro(intercambioSalidaVO.getTipoOrigen().toString()));
 		return registro;
 	}
@@ -105,7 +105,7 @@ public class IntercambioRegistralGeneradorObjetosManagerImpl implements
 		infoRegistro.setEntidadRegistralOrigen(entidadRegistralOrigen);
 		infoRegistro.setUnidadTramitacionDestino(unidadTramitacionDestino);
 		infoRegistro.setUnidadTramitacionOrigen(unidadTramitacionOrigen);
-		AsientoRegistralFormVO registro = registroMapper.toAsientoRegistralFormVO(infoRegistro);
+		AsientoRegistralFormVO registro = registroMapper.toAsientoRegistralFormVO(infoRegistro, TipoRegistroEnumVO.getTipoRegistroSIR(intercambioSalidaVO.getTipoOrigen()));
 		registro.setTipoRegistro(TipoRegistroEnumVO.getTipoRegistroSIR(intercambioSalidaVO.getTipoOrigen()));
 		return registro;
 	}
@@ -117,7 +117,7 @@ public class IntercambioRegistralGeneradorObjetosManagerImpl implements
 	 */
 	private List<InfoRegistroPageRepositoryVO> getInfoRegistroDocumentos(
 			IntercambioRegistralSalidaVO intercambioSalidaVO) {
-		List<InfoRegistroPageRepositoryVO> listaDocumentos = getInfoRegistroDAO().getInfoRegistroPageRepositories(intercambioSalidaVO.getIdLibro(), intercambioSalidaVO.getIdRegistro());
+		List<InfoRegistroPageRepositoryVO> listaDocumentos = getInfoRegistroDAO().getInfoRegistroPageRepositoriesWithNewReport(intercambioSalidaVO.getIdLibro(), intercambioSalidaVO.getIdRegistro());
 		List<DocumentoElectronicoAnexoVO> listaDocumentosElectronicos = getDocumentoElectronicoAnexoManager().getDocumentosElectronicoAnexoByRegistro(intercambioSalidaVO.getIdLibro(), intercambioSalidaVO.getIdRegistro());
 
 		try{
@@ -206,7 +206,8 @@ public class IntercambioRegistralGeneradorObjetosManagerImpl implements
 		}
 		List<InfoRegistroInteresadoVO> interesados = getInteresados(infoRegistro);
 		infoRegistro.setInteresados(interesados);
-
+		infoRegistro.setContactoUsuario(intercambioSalidaVO.getUsercontact());
+		infoRegistro.setNombreUsuario(intercambioSalidaVO.getUsername());
 		validateInfoRegistroForIR(infoRegistro);
 
 		return infoRegistro;
@@ -240,6 +241,12 @@ public class IntercambioRegistralGeneradorObjetosManagerImpl implements
 						IntercambioRegistralExceptionCodes.ERROR_CODE_VALIDACION_TIPO_TRANSPORTE);
 			}
 		}
+		if (infoRegistro.getDocFisicaComplementaria() == null && infoRegistro.getDocFisicaRequerida() == null && infoRegistro.getSinDocFisica() == null ){
+		    throw new IntercambioRegistralException(
+				"Debe indicar en el registro el campo Documentación física soportes.",
+				IntercambioRegistralExceptionCodes.ERROR_CODE_VALIDACION_SOPORTEDOC);
+		}
+		    
 	}
 
 	/**
@@ -262,34 +269,34 @@ public class IntercambioRegistralGeneradorObjetosManagerImpl implements
 				InfoRegistroDireccionVO direccion = getInfoRegistroDAO()
 						.getInfoRegistroDireccion(interesado);
 				// Si la dirección es nula lanzar una excepción
-				if (direccion == null) {
+				/*if (direccion == null) {
 					throw new IntercambioRegistralException(
 							"El interesado debe de tener al menos una dirección registrada",
 							IntercambioRegistralExceptionCodes.ERROR_CODE_VALIDACION_INTERESADOS_DIRECCION);
-				}
-
-				InfoRegistroDireccionTelematicaInteresadoVO direccionTelematica = getInfoRegistroDAO()
-						.getInfoRegistroDireccionTelematicaInteresado(direccion);
-				direccion.setDireccionTelematicaInteresado(direccionTelematica);
-				try {
-					InfoRegistroDomicilioInteresadoVO domicilio = getInfoRegistroDAO()
-							.getInfoRegistroDomicilioInteresado(direccion);
-					// Si el domicilio es nulo lanzar una excepción
-					if (domicilio == null) {
+				}*/
+				if (direccion != null){
+					InfoRegistroDireccionTelematicaInteresadoVO direccionTelematica = getInfoRegistroDAO()
+							.getInfoRegistroDireccionTelematicaInteresado(direccion);
+					direccion.setDireccionTelematicaInteresado(direccionTelematica);
+					try {
+						InfoRegistroDomicilioInteresadoVO domicilio = getInfoRegistroDAO()
+								.getInfoRegistroDomicilioInteresado(direccion);
+						// Si el domicilio es nulo lanzar una excepción
+						if (domicilio == null) {
+							throw new IntercambioRegistralException(
+									"La localidad o provincia de alguno de los interesados no tiene equivalente en el Directorio Comun.",
+									IntercambioRegistralExceptionCodes.ERROR_CODE_PROVINCIA_LOCALIDAD_NO_MAPEADAS);
+						}
+						direccion.setDomicilioInteresado(domicilio);
+					} catch (Exception e) {
+	
 						throw new IntercambioRegistralException(
 								"La localidad o provincia de alguno de los interesados no tiene equivalente en el Directorio Comun.",
 								IntercambioRegistralExceptionCodes.ERROR_CODE_PROVINCIA_LOCALIDAD_NO_MAPEADAS);
 					}
-					direccion.setDomicilioInteresado(domicilio);
-				} catch (Exception e) {
-
-					throw new IntercambioRegistralException(
-							"La localidad o provincia de alguno de los interesados no tiene equivalente en el Directorio Comun.",
-							IntercambioRegistralExceptionCodes.ERROR_CODE_PROVINCIA_LOCALIDAD_NO_MAPEADAS);
+	
+					interesado.setDireccion(direccion);
 				}
-
-				interesado.setDireccion(direccion);
-
 				// Obtenemos la información del representante
 				interesado.setInfoRepresentante(getRepresentanteByInteresado(interesado));
 
@@ -331,38 +338,39 @@ public class IntercambioRegistralGeneradorObjetosManagerImpl implements
 			InfoRegistroDireccionVO direccionRepresentante = getInfoRegistroDAO()
 					.getInfoRegistroDireccion(auxInfoRegistroInteresado);
 			// Si la dirección es nula lanzar una excepción
-			if (direccionRepresentante == null) {
+			/*if (direccionRepresentante == null) {
 				throw new IntercambioRegistralException(
 						"El representante debe de tener al menos una dirección registrada",
 						IntercambioRegistralExceptionCodes.ERROR_CODE_VALIDACION_REPRESENTANTES_DIRECCION);
 			}
-
-			InfoRegistroDireccionTelematicaInteresadoVO direccionTelematica = getInfoRegistroDAO()
-					.getInfoRegistroDireccionTelematicaInteresado(
-							direccionRepresentante);
-			direccionRepresentante
-					.setDireccionTelematicaInteresado(direccionTelematica);
-			try {
-				InfoRegistroDomicilioInteresadoVO domicilio = getInfoRegistroDAO()
-						.getInfoRegistroDomicilioInteresado(
+			 */
+			if (direccionRepresentante != null) {
+				InfoRegistroDireccionTelematicaInteresadoVO direccionTelematica = getInfoRegistroDAO()
+						.getInfoRegistroDireccionTelematicaInteresado(
 								direccionRepresentante);
-				// Si el domicilio es nulo lanzar una excepción
-				if (domicilio == null) {
+				direccionRepresentante
+						.setDireccionTelematicaInteresado(direccionTelematica);
+				try {
+					InfoRegistroDomicilioInteresadoVO domicilio = getInfoRegistroDAO()
+							.getInfoRegistroDomicilioInteresado(
+									direccionRepresentante);
+					// Si el domicilio es nulo lanzar una excepción
+					if (domicilio == null) {
+						throw new IntercambioRegistralException(
+								"La localidad o provincia de alguno del representante no tiene equivalente en el Directorio Comun.",
+								IntercambioRegistralExceptionCodes.ERROR_CODE_PROVINCIA_LOCALIDAD_REPRESENTANTES_NO_MAPEADAS);
+					}
+					direccionRepresentante.setDomicilioInteresado(domicilio);
+				} catch (Exception e) {
+	
 					throw new IntercambioRegistralException(
 							"La localidad o provincia de alguno del representante no tiene equivalente en el Directorio Comun.",
 							IntercambioRegistralExceptionCodes.ERROR_CODE_PROVINCIA_LOCALIDAD_REPRESENTANTES_NO_MAPEADAS);
 				}
-				direccionRepresentante.setDomicilioInteresado(domicilio);
-			} catch (Exception e) {
-
-				throw new IntercambioRegistralException(
-						"La localidad o provincia de alguno del representante no tiene equivalente en el Directorio Comun.",
-						IntercambioRegistralExceptionCodes.ERROR_CODE_PROVINCIA_LOCALIDAD_REPRESENTANTES_NO_MAPEADAS);
+	
+				//seteamos los datos de la dirección en los datos del interesado
+				interesado.setDireccionRepresentante(direccionRepresentante);
 			}
-
-			//seteamos los datos de la dirección en los datos del interesado
-			interesado.setDireccionRepresentante(direccionRepresentante);
-
 		}
 
 		return result;
@@ -383,10 +391,13 @@ public class IntercambioRegistralGeneradorObjetosManagerImpl implements
 
 		result = getInfoRegistroDAO().getInfoRegistroPersonaFisica(
 				infoRegistroInteresado);
+		
 		if (result == null) {
 			result = getInfoRegistroDAO().getInfoRegistroPersonaJuridica(
 					infoRegistroInteresado);
-
+			result.setTipoPersona("J");
+		}else {
+		    result.setTipoPersona("P");
 		}
 
 		return result;

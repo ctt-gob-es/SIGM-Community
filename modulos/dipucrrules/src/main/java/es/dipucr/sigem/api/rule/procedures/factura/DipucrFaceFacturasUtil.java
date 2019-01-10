@@ -75,7 +75,7 @@ public class DipucrFaceFacturasUtil
 						"El expediente no se ha creado con los datos de la factura "
 						+ "y el adjunto (mediante los datos especificos)");
 			return (IItem) facturas.get(0);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new ISPACException("Error al obtener la entidad EFACTURA", e);
 		}
 	}
@@ -101,7 +101,7 @@ public class DipucrFaceFacturasUtil
 				throw new IllegalArgumentException(
 						"El expediente no se ha creado con los datos de anulación de la factura");
 			return (IItem) facturas.get(0);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new ISPACException("Error al obtener la entidad EFACTURA", e);
 		}
 	}

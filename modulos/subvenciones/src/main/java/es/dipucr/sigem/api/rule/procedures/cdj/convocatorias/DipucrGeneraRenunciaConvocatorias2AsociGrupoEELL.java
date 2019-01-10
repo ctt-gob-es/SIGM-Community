@@ -5,47 +5,28 @@ import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
-import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.text.DecimalFormat;
-import com.ibm.icu.util.Calendar;
-import com.sun.star.awt.FontWeight;
-import com.sun.star.beans.PropertyVetoException;
-import com.sun.star.beans.UnknownPropertyException;
-import com.sun.star.beans.XPropertySet;
-import com.sun.star.lang.IllegalArgumentException;
-import com.sun.star.lang.WrappedTargetException;
 import com.sun.star.lang.XComponent;
-import com.sun.star.lang.XMultiServiceFactory;
-import com.sun.star.style.ParagraphAdjust;
-import com.sun.star.table.XCell;
-import com.sun.star.text.ParagraphVertAlign;
-import com.sun.star.text.TableColumnSeparator;
-import com.sun.star.text.VertOrientation;
-import com.sun.star.text.XText;
-import com.sun.star.text.XTextContent;
-import com.sun.star.text.XTextCursor;
-import com.sun.star.text.XTextDocument;
-import com.sun.star.text.XTextRange;
 import com.sun.star.text.XTextTable;
-import com.sun.star.uno.Exception;
-import com.sun.star.uno.UnoRuntime;
-import com.sun.star.uno.XInterface;
-import com.sun.star.util.XSearchDescriptor;
-import com.sun.star.util.XSearchable;
 
 import es.dipucr.sigem.api.rule.common.documento.DipucrAutoGeneraDocIniTramiteRule;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+import es.dipucr.sigem.api.rule.common.utils.LibreOfficeUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
-import es.dipucr.sigem.api.rule.procedures.Constants;
+import es.dipucr.sigem.api.rule.procedures.ConstantesSubvenciones;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrGeneraRenunciaConvocatorias2AsociGrupoEELL extends DipucrAutoGeneraDocIniTramiteRule {
 
@@ -63,7 +44,7 @@ public class DipucrGeneraRenunciaConvocatorias2AsociGrupoEELL extends DipucrAuto
                 tipoDocumento = DocumentosUtil.getTipoDocumentoByPlantilla(cct, plantilla);
             }
 
-            refTablas = "%TABLA1%,%TABLA2%";
+            refTablas = LibreOfficeUtil.ReferenciasTablas.TABLA1 + "," + LibreOfficeUtil.ReferenciasTablas.TABLA2;
 
         } catch (ISPACException e) {
             LOGGER.error(ConstantesString.LOGGER_ERROR + " al recuperar la plantilla específica del expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
@@ -76,7 +57,7 @@ public class DipucrGeneraRenunciaConvocatorias2AsociGrupoEELL extends DipucrAuto
     public void setSsVariables(IClientContext cct, IRuleContext rulectx) {
         String numexp = "";
         try {
-            cct.setSsVariable("ANIO", "" + Calendar.getInstance().get(Calendar.YEAR));
+            cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO, "" + Calendar.getInstance().get(Calendar.YEAR));
         } catch (ISPACException e) {
             LOGGER.error(ConstantesString.LOGGER_ERROR + " en el expediente: " + numexp + ". " + e.getMessage(), e);
         }
@@ -84,7 +65,7 @@ public class DipucrGeneraRenunciaConvocatorias2AsociGrupoEELL extends DipucrAuto
 
     public void deleteSsVariables(IClientContext cct) {
         try {
-            cct.deleteSsVariable("ANIO");
+            cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO);
         } catch (ISPACException e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -92,215 +73,86 @@ public class DipucrGeneraRenunciaConvocatorias2AsociGrupoEELL extends DipucrAuto
 
     public void insertaTabla(IRuleContext rulectx, XComponent component, String refTabla, IEntitiesAPI entitiesAPI, String numexp) {
 
-        ArrayList<String[]> datosRenuncia1 = new ArrayList<String[]>();
-        ArrayList<String[]> datosRenuncia2 = new ArrayList<String[]>();
+        int numFilas = 0;
+        
+        String identidadTitular = "";
+        
+        List<String[]> datosRenuncia = new ArrayList<String[]>();
+        List<String[]> datosRenuncia1 = new ArrayList<String[]>();
+        List<String[]> datosRenuncia2 = new ArrayList<String[]>();
 
+        List<String> expedientesList;
         try {
-            IItemCollection expedientesCollection = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_EXPEDIENTES,
-                    "WHERE NUMEXP IN ( SELECT NUMEXP_HIJO FROM SPAC_EXP_RELACIONADOS WHERE NUMEXP_PADRE = '" + numexp + "') AND ESTADOADM = 'JF' ORDER BY IDENTIDADTITULAR");
+            IClientContext cct = rulectx.getClientContext();
+            
+            expedientesList = ExpedientesRelacionadosUtil.getExpedientesRelacionadosHijosByEstadoAdm(rulectx, ExpedientesUtil.EstadoADM.JF, ExpedientesUtil.IDENTIDADTITULAR);
 
-            for (Object oItem : expedientesCollection.toList()) {
-                IItem expediente = (IItem) oItem;
+            for (String numexpHijo : expedientesList) {
+                
+                IItem expediente = ExpedientesUtil.getExpediente(cct, numexpHijo);                
+                identidadTitular = SubvencionesUtils.getString(expediente, ExpedientesUtil.IDENTIDADTITULAR);
 
-                Iterator<?> expResolucion = entitiesAPI.getEntities("DPCR_RESOL_SOL_CONV_SUB", expediente.getString("NUMEXP")).iterator();
+                Iterator<?> expResolucion = entitiesAPI.getEntities(ConstantesSubvenciones.DatosResolucion.NOMBRE_TABLA, numexpHijo).iterator();
+                
                 if (expResolucion.hasNext()) {
                     IItem resolucion = (IItem) expResolucion.next();
-                    if (StringUtils.isNotEmpty(resolucion.getString("RENUNCIA1")) && "SI".equals(resolucion.getString("RENUNCIA1"))) {
-                        String[] datoRenuncia = { expediente.getString("IDENTIDADTITULAR"), resolucion.getString("NOMBREGRUPOASOCIACION"),
-                                resolucion.getString("CIFGRUPOASOCIACION"), "" + new DecimalFormat("#,##0.00").format(resolucion.getDouble("IMPORTE")) };
+                    
+                    String renuncia1 = SubvencionesUtils.getString(resolucion, ConstantesSubvenciones.DatosResolucion.RENUNCIA1);
+                    String nombreGrupoAsociacion1 = SubvencionesUtils.getString(resolucion, ConstantesSubvenciones.DatosResolucion.NOMBREGRUPOASOCIACION);
+                    String cifGrupoAsociacion1 = SubvencionesUtils.getString(resolucion, ConstantesSubvenciones.DatosResolucion.CIFGRUPOASOCIACION);
+                    String importe1 = SubvencionesUtils.formateaDouble(ConstantesString.FORMATO_IMPORTE, SubvencionesUtils.getDouble(resolucion, ConstantesSubvenciones.DatosResolucion.IMPORTE));
+                    
+                    String renuncia2 = SubvencionesUtils.getString(resolucion, ConstantesSubvenciones.DatosResolucion.RENUNCIA2);
+                    String nombreGrupoAsociacion2 = SubvencionesUtils.getString(resolucion, ConstantesSubvenciones.DatosResolucion.NOMBREGRUPOASOCIACION2);
+                    String cifGrupoAsociacion2 = SubvencionesUtils.getString(resolucion, ConstantesSubvenciones.DatosResolucion.CIFGRUPOASOCIACION2);
+                    String importe2 = SubvencionesUtils.formateaDouble(ConstantesString.FORMATO_IMPORTE, SubvencionesUtils.getDouble(resolucion, ConstantesSubvenciones.DatosResolucion.IMPORTE2));
+
+                    
+                    if ("SI".equals(renuncia1)) {
+                        String[] datoRenuncia = { identidadTitular, nombreGrupoAsociacion1, cifGrupoAsociacion1, importe1};
                         datosRenuncia1.add(datoRenuncia);
                     }
-
-                    if (StringUtils.isNotEmpty(resolucion.getString("RENUNCIA2")) && "SI".equals(resolucion.getString("RENUNCIA2"))) {
-                        String[] datoRenuncia = { expediente.getString("IDENTIDADTITULAR"), resolucion.getString("NOMBREGRUPOASOCIACION2"),
-                                resolucion.getString("CIFGRUPOASOCIACION2"), "" + new DecimalFormat("#,##0.00").format(resolucion.getDouble("IMPORTE2")) };
+                    
+                    if ("SI".equals(renuncia2)) {
+                        String[] datoRenuncia = { identidadTitular, nombreGrupoAsociacion2, cifGrupoAsociacion2, importe2};
                         datosRenuncia2.add(datoRenuncia);
                     }
                 }
             }
+            
+            
 
-            if ("%TABLA1%".equals(refTabla)) {
-
-                int numFilas = datosRenuncia1.size();
-
-                XTextDocument xTextDocument = (XTextDocument) UnoRuntime.queryInterface(XTextDocument.class, component);
-                XText xText = xTextDocument.getText();
-                XSearchable xSearchable = (XSearchable) UnoRuntime.queryInterface(XSearchable.class, component);
-                XSearchDescriptor xSearchDescriptor = xSearchable.createSearchDescriptor();
-                xSearchDescriptor.setSearchString(refTabla);
-                XInterface xSearchInterface = null;
-                XTextRange xSearchTextRange = null;
-                xSearchInterface = (XInterface) xSearchable.findFirst(xSearchDescriptor);
-                if (xSearchInterface != null) {
-                    xSearchTextRange = (XTextRange) UnoRuntime.queryInterface(XTextRange.class, xSearchInterface);
-                    xSearchTextRange.setString("");
-
-                    XMultiServiceFactory xDocMSF = (XMultiServiceFactory) UnoRuntime.queryInterface(XMultiServiceFactory.class, xTextDocument);
-                    Object xObject = xDocMSF.createInstance("com.sun.star.text.TextTable");
-                    XTextTable xTable = (XTextTable) UnoRuntime.queryInterface(XTextTable.class, xObject);
-
-                    xTable.initialize(numFilas + 1, 4);
-                    XTextContent xTextContent = (XTextContent) UnoRuntime.queryInterface(XTextContent.class, xTable);
-                    xText.insertTextContent(xSearchTextRange, xTextContent, false);
-
-                    colocaColumnas(xTable);
-
-                    setHeaderCellText(xTable, "A1", "AYUNTAMIENTO");
-                    setHeaderCellText(xTable, "B1", "GRUPO / ASOCIACIÓN");
-                    setHeaderCellText(xTable, "C1", "C.I.F.");
-                    setHeaderCellText(xTable, "D1", "SUBVENCIÓN");
-
-                    int i = 0;
-                    for (String[] datoRenuncia : datosRenuncia1) {
-                        i++;
-                        setCellText(xTable, "A" +  (i + 1), datoRenuncia[0]);
-                        setCellText(xTable, "B" +  (i + 1), datoRenuncia[1]);
-                        setCellText(xTable, "C" +  (i + 1), datoRenuncia[2]);
-                        setCellText(xTable, "D" +  (i + 1), datoRenuncia[3]);
-                    }
-                }
+            if (LibreOfficeUtil.ReferenciasTablas.TABLA1.equals(refTabla)) {                
+                datosRenuncia = datosRenuncia1;
+            } else if (LibreOfficeUtil.ReferenciasTablas.TABLA2.equals(refTabla)) {                
+                datosRenuncia = datosRenuncia2;
             }
-            if ("%TABLA2%".equals(refTabla)) {
-                int numFilas = datosRenuncia2.size();
-
-                XTextDocument xTextDocument = (XTextDocument) UnoRuntime.queryInterface(XTextDocument.class, component);
-                XText xText = xTextDocument.getText();
-                XSearchable xSearchable = (XSearchable) UnoRuntime.queryInterface(XSearchable.class, component);
-                XSearchDescriptor xSearchDescriptor = xSearchable.createSearchDescriptor();
-                xSearchDescriptor.setSearchString(refTabla);
-                XInterface xSearchInterface = null;
-                XTextRange xSearchTextRange = null;
-                xSearchInterface = (XInterface) xSearchable.findFirst(xSearchDescriptor);
-                if (xSearchInterface != null) {
-                    xSearchTextRange = (XTextRange) UnoRuntime.queryInterface(XTextRange.class, xSearchInterface);
-                    xSearchTextRange.setString("");
-
-                    XMultiServiceFactory xDocMSF = (XMultiServiceFactory) UnoRuntime.queryInterface(XMultiServiceFactory.class, xTextDocument);
-                    Object xObject = xDocMSF.createInstance("com.sun.star.text.TextTable");
-                    XTextTable xTable = (XTextTable) UnoRuntime.queryInterface(XTextTable.class, xObject);
-
-                    xTable.initialize(numFilas + 1, 4);
-                    XTextContent xTextContent = (XTextContent) UnoRuntime.queryInterface(XTextContent.class, xTable);
-                    xText.insertTextContent(xSearchTextRange, xTextContent, false);
-
-                    colocaColumnas(xTable);
-
-                    setHeaderCellText(xTable, "A1", "AYUNTAMIENTO");
-                    setHeaderCellText(xTable, "B1", "GRUPO / ASOCIACIÓN");
-                    setHeaderCellText(xTable, "C1", "C.I.F.");
-                    setHeaderCellText(xTable, "D1", "SUBVENCIÓN");
-
-                    int i = 0;
-                    for (String[] datoRenuncia : datosRenuncia2) {
-                        i++;
-                        setCellText(xTable, "A" +  (i + 1), datoRenuncia[0]);
-                        setCellText(xTable, "B" +  (i + 1), datoRenuncia[1]);
-                        setCellText(xTable, "C" +  (i + 1), datoRenuncia[2]);
-                        setCellText(xTable, "D" +  (i + 1), datoRenuncia[3]);
-                    }
-                }
+            
+            numFilas = datosRenuncia.size();
+                
+            XTextTable tabla = LibreOfficeUtil.insertaTablaEnPosicion(component, refTabla, numFilas + 1, 4);
+            if(null != tabla){
+                double[] distribucionColumnas = {35, 35, 15, 15};
+                LibreOfficeUtil.colocaColumnas(tabla, distribucionColumnas);
+                
+                LibreOfficeUtil.setTextoCeldaCabecera(tabla, 1, ConstantesString.CabeceraTabla.AYUNTAMIENTO);
+                LibreOfficeUtil.setTextoCeldaCabecera(tabla, 2, ConstantesString.CabeceraTabla.GRUPO_ASOCIACION);
+                LibreOfficeUtil.setTextoCeldaCabecera(tabla, 3, ConstantesString.CabeceraTabla.CIF);
+                LibreOfficeUtil.setTextoCeldaCabecera(tabla, 4, ConstantesString.CabeceraTabla.SUBVENCION);
+    
+                   int i = 1;
+                   for (String[] datoRenuncia : datosRenuncia) {
+                       i++;
+                       LibreOfficeUtil.setTextoCelda(tabla, 1, i, datoRenuncia[0]);
+                       LibreOfficeUtil.setTextoCelda(tabla, 2, i, datoRenuncia[1]);
+                       LibreOfficeUtil.setTextoCelda(tabla, 3, i, datoRenuncia[2]);
+                       LibreOfficeUtil.setTextoCelda(tabla, 4, i, datoRenuncia[3]);
+                   }   
             }
         } catch (ISPACException e) {
             LOGGER.error(ConstantesString.LOGGER_ERROR + " en el expediente: " + numexp + ". " + e.getMessage(), e);
-        } catch (IllegalArgumentException e) {
-            LOGGER.error(ConstantesString.LOGGER_ERROR + " en el expediente: " + numexp + ". " + e.getMessage(), e);
         } catch (Exception e) {
             LOGGER.error(ConstantesString.LOGGER_ERROR + " en el expediente: " + numexp + ". " + e.getMessage(), e);
-        }
-    }
-
-    private void setHeaderCellText(XTextTable xTextTable, String cellName, String strText) throws UnknownPropertyException, PropertyVetoException, IllegalArgumentException, WrappedTargetException {
-        XCell xCell = xTextTable.getCellByName(cellName);
-        XText xCellText = (XText) UnoRuntime.queryInterface(XText.class, xTextTable.getCellByName(cellName));
-
-        // Propiedades
-        XTextCursor xTC = xCellText.createTextCursor();
-        XPropertySet xTPS = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xTC);
-        xTPS.setPropertyValue("CharFontName", "Arial");
-        xTPS.setPropertyValue("CharHeight", new Float(8.0));
-        xTPS.setPropertyValue("CharWeight", new Float(FontWeight.BOLD));
-        xTPS.setPropertyValue("ParaAdjust", ParagraphAdjust.CENTER);
-        xTPS.setPropertyValue("ParaVertAlignment", ParagraphVertAlign.BOTTOM);
-        xTPS.setPropertyValue("ParaTopMargin", new Short((short) 60));
-        xTPS.setPropertyValue("ParaBottomMargin", new Short((short) 60));
-        XPropertySet xCPS = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xCell);
-        xCPS.setPropertyValue("VertOrient", new Short(VertOrientation.CENTER));
-        xCPS.setPropertyValue("BackColor", Integer.valueOf(0xC0C0C0));
-
-        // Texto de la celda
-        xCellText.setString(strText);
-    }
-
-    private void setCellText(XTextTable xTextTable, String cellName, String strText) throws UnknownPropertyException, PropertyVetoException, IllegalArgumentException, WrappedTargetException {
-        XCell xCell = xTextTable.getCellByName(cellName);
-        XText xCellText = (XText) UnoRuntime.queryInterface(XText.class, xCell);
-
-        // Propiedades
-        XTextCursor xTC = xCellText.createTextCursor();
-        XPropertySet xTPS = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xTC);
-        xTPS.setPropertyValue("CharFontName", "Arial");
-        xTPS.setPropertyValue("CharHeight", new Float(8.0));
-        xTPS.setPropertyValue("ParaAdjust", ParagraphAdjust.CENTER);
-        xTPS.setPropertyValue("ParaVertAlignment", ParagraphVertAlign.BOTTOM);
-        xTPS.setPropertyValue("ParaTopMargin", new Short((short) 0));
-        xTPS.setPropertyValue("ParaBottomMargin", new Short((short) 0));
-        XPropertySet xCPS = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xCell);
-        xCPS.setPropertyValue("VertOrient", new Short(VertOrientation.CENTER));
-
-        // Texto de la celda
-        xCellText.setString(strText);
-    }
-
-    private void colocaColumnas(XTextTable xTextTable) {
-
-        XPropertySet xPS = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xTextTable);
-
-        // Get table Width and TableColumnRelativeSum properties values
-        int iWidth;
-        try {
-            iWidth = (Integer) xPS.getPropertyValue("Width");
-
-            short sTableColumnRelativeSum = (Short) xPS.getPropertyValue("TableColumnRelativeSum");
-
-            // Get table column separators
-            Object xObj = xPS.getPropertyValue("TableColumnSeparators");
-
-            TableColumnSeparator[] xSeparators = (TableColumnSeparator[]) UnoRuntime.queryInterface(TableColumnSeparator[].class, xObj);
-
-            // Calculamos el tamaño que le queremos dar a la celda
-            // Se empieza colocando de la última a la primera
-            double dRatio = (double) sTableColumnRelativeSum / (double) iWidth;
-            double dRelativeWidth = (double) 15000 * dRatio;
-
-            // Last table column separator position
-            double dPosition = sTableColumnRelativeSum - dRelativeWidth;
-
-            // Set set new position for all column separators
-            // Número de separadores
-            int i = xSeparators.length - 1;
-            xSeparators[i].Position = (short) Math.ceil(dPosition);
-
-            i--;
-            dRelativeWidth = (double) 15000 * dRatio;
-            dPosition -= dRelativeWidth;
-            xSeparators[i].Position = (short) Math.ceil(dPosition);
-
-            i--;
-            dRelativeWidth = (double) 40000 * dRatio;
-            dPosition -= dRelativeWidth;
-            xSeparators[i].Position = (short) Math.ceil(dPosition);
-
-            // Do not forget to set TableColumnSeparators back! Otherwise, it
-            // doesn't work.
-            xPS.setPropertyValue("TableColumnSeparators", xSeparators);
-        } catch (UnknownPropertyException e) {
-            LOGGER.error(e.getMessage(), e);
-        } catch (WrappedTargetException e) {
-            LOGGER.error(e.getMessage(), e);
-        } catch (PropertyVetoException e) {
-            LOGGER.error(e.getMessage(), e);
-        } catch (IllegalArgumentException e) {
-            LOGGER.error(e.getMessage(), e);
         }
     }
 }

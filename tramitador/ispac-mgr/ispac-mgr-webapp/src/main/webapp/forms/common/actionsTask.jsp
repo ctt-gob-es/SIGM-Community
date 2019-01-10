@@ -46,40 +46,6 @@
 			<td width="100%"><img height="1" src='<ispac:rewrite href="img/pixel.gif"/>'/></td>
 		</logic:equal>
 
-		<!-- ELIMINAR TRÁMITE -->
-		<logic:notEqual name="expedientState" value="closed" >
-			
-			<logic:equal value="false" property="readonly" name="defaultForm">
-				
-				<td class="formaction">
-				
-					<c:url value="deleteTsk.do" var="_link">
-						<c:param name="idsTask">
-							<bean:write name="defaultForm" property="property(SPAC_DT_TRAMITES:ID_TRAM_EXP)"/>
-						</c:param>
-					</c:url>
-					<logic:notEqual name="existCircuit" value="true">					
-		                <a href="javascript:sure('<c:out value="${_link}"/>','<bean:message key="ispac.action.task.delete.msg"/>','<bean:message key="common.confirm"/>','<bean:message key="common.message.ok"/>','<bean:message key="common.message.cancel"/>')" class="formaction">
-		                	<nobr><bean:message key="forms.button.eliminartramite"/></nobr>
-		                </a>
-	                </logic:notEqual>	                
-	                <logic:equal name="existCircuit" value="true">					
-		                <a href="javascript:sure('<c:out value="${_link}"/>','<bean:message key="ispac.action.task.delete2.msg"/>','<bean:message key="common.confirm"/>','<bean:message key="common.message.ok"/>','<bean:message key="common.message.cancel"/>')" class="formaction">
-		                	<nobr><bean:message key="forms.button.eliminartramite"/></nobr>
-		                </a>
-	                </logic:equal>
-	                
-				</td>
-				<td width="4px"><img height="1" width="4px" src='<ispac:rewrite href="img/pixel.gif"/>'/></td>
-				<td width="1px"><img height="20px" width="1px" src='<ispac:rewrite href="img/barra.gif"/>' align="absmiddle"/></td>
-				<td width="4px"><img height="1" width="4px" src='<ispac:rewrite href="img/pixel.gif"/>'/></td>
-				
-	    	</logic:equal>
-	            
-		</logic:notEqual>
-		
-		<td width="100%"><img height="1" src='<ispac:rewrite href="img/pixel.gif"/>'/></td>
-		
 		<!-- DELEGAR TRÁMITE -->
 		<logic:equal value="false" property="readonly" name="defaultForm">
 		
@@ -114,6 +80,40 @@
 				<td width="4px"><img height="1" width="4px" src='<ispac:rewrite href="img/pixel.gif"/>'/></td>
 			</logic:present>			
 		</logic:equal>
+		
+		<!-- ELIMINAR TRÁMITE -->
+		<logic:notEqual name="expedientState" value="closed" >
+			
+			<logic:equal value="false" property="readonly" name="defaultForm">
+				
+				<td class="formaction">
+				
+					<c:url value="deleteTsk.do" var="_link">
+						<c:param name="idsTask">
+							<bean:write name="defaultForm" property="property(SPAC_DT_TRAMITES:ID_TRAM_EXP)"/>
+						</c:param>
+					</c:url>
+					<logic:notEqual name="existCircuit" value="true">					
+		                <a href="javascript:sure('<c:out value="${_link}"/>','<bean:message key="ispac.action.task.delete.msg"/>','<bean:message key="common.confirm"/>','<bean:message key="common.message.ok"/>','<bean:message key="common.message.cancel"/>')" class="formaction danger">
+		                	<nobr><bean:message key="forms.button.eliminartramite"/></nobr>
+		                </a>
+	                </logic:notEqual>	                
+	                <logic:equal name="existCircuit" value="true">					
+		                <a href="javascript:sure('<c:out value="${_link}"/>','<bean:message key="ispac.action.task.delete2.msg"/>','<bean:message key="common.confirm"/>','<bean:message key="common.message.ok"/>','<bean:message key="common.message.cancel"/>')" class="formaction danger">
+		                	<nobr><bean:message key="forms.button.eliminartramite"/></nobr>
+		                </a>
+	                </logic:equal>
+	                
+				</td>
+				<td width="4px"><img height="1" width="4px" src='<ispac:rewrite href="img/pixel.gif"/>'/></td>
+				<td width="1px"><img height="20px" width="1px" src='<ispac:rewrite href="img/barra.gif"/>' align="absmiddle"/></td>
+				<td width="4px"><img height="1" width="4px" src='<ispac:rewrite href="img/pixel.gif"/>'/></td>
+				
+	    	</logic:equal>
+	            
+		</logic:notEqual>
+		
+		<td width="100%"><img height="1" src='<ispac:rewrite href="img/pixel.gif"/>'/></td>
 
 		
 	</tr>

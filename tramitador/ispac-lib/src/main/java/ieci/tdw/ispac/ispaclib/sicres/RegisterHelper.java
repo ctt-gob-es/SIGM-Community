@@ -12,6 +12,7 @@ import ieci.tdw.ispac.api.item.IResponsible;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.dao.entity.EntityDAO;
+import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.sicres.vo.Annexe;
 import ieci.tdw.ispac.ispaclib.sicres.vo.Register;
 import ieci.tdw.ispac.ispaclib.sicres.vo.RegisterInfo;
@@ -30,7 +31,11 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 public class RegisterHelper {
+	
+	private static final Logger LOGGER = Logger.getLogger(RegisterHelper.class);
 
 
 	public static void insertParticipants(ClientContext ctx, String registerNumber, String registerType, String numExp, boolean insertarMainInterestedAsParticipant) throws ISPACException {
@@ -212,7 +217,9 @@ public class RegisterHelper {
 				String extension = annexes[i].getExt();
 				entityDocument.set("EXTENSION", extension);
 				//Se invoca al store que NO procesa reglas asociadas al evento guardar
-				entityDocument.store(ctx.getConnection());
+				DbCnt cnt = ctx.getConnection();
+				entityDocument.store(cnt);
+				ctx.releaseConnection(cnt);
 
 				//Anexamos el documento al gestor documental
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -248,30 +255,38 @@ public class RegisterHelper {
 
 
 	public static void insertRegistroES(ClientContext ctx, Register register,  ThirdPerson destiny, String numExp, int taskId) throws ISPACException {
-		IEntitiesAPI entitiesAPI = ctx.getAPI().getEntitiesAPI();
-		//Comprobamos si la entidad SPAC_REGISTROS_ES esta vinculada al procedimiento
-		if (!isAssocitedRegistrosESEntity(ctx, numExp)){
-			return;
-		}
-
-		String asunto = null;
-        if (register.getRegisterData() != null) {
-	    	if (register.getRegisterData().getSummary() != null) {
-	    		asunto = register.getRegisterData().getSummary();
+		try{
+			IEntitiesAPI entitiesAPI = ctx.getAPI().getEntitiesAPI();
+			//Comprobamos si la entidad SPAC_REGISTROS_ES esta vinculada al procedimiento
+			if (!isAssocitedRegistrosESEntity(ctx, numExp)){
+				return;
 			}
-        }
-		IItem itemRegisterES = entitiesAPI.createEntity(SpacEntities.SPAC_REGISTROS_ES_NAME, numExp);
-		itemRegisterES.set("NREG", register.getRegisterOrigin().getRegisterNumber());
-		itemRegisterES.set("FREG", register.getRegisterOrigin().getRegisterDate().getTime());
-		itemRegisterES.set("ASUNTO", asunto);
-		itemRegisterES.set("ID_INTERESADO", destiny.getId());
-		itemRegisterES.set("INTERESADO", destiny.getName());
-		itemRegisterES.set("TP_REG", register.getRegisterOrigin().getRegisterType());
-		itemRegisterES.set("ID_TRAMITE",taskId);
-		itemRegisterES.set("ORIGINO_EXPEDIENTE", "NO");
-
-		itemRegisterES.store(ctx);
-
+	
+			String asunto = null;
+	        if (register.getRegisterData() != null) {
+		    	if (register.getRegisterData().getSummary() != null) {
+		    		asunto = register.getRegisterData().getSummary();
+				}
+	        }
+			IItem itemRegisterES = entitiesAPI.createEntity(SpacEntities.SPAC_REGISTROS_ES_NAME, numExp);
+			itemRegisterES.set("NREG", register.getRegisterOrigin().getRegisterNumber());
+			itemRegisterES.set("FREG", register.getRegisterOrigin().getRegisterDate().getTime());
+			itemRegisterES.set("ASUNTO", asunto);
+			itemRegisterES.set("ID_INTERESADO", destiny.getId());
+			String nombreDestino = destiny.getName();
+			
+			if(StringUtils.isNotEmpty(nombreDestino) && nombreDestino.length() > 128){
+				nombreDestino = nombreDestino.substring(0, 127);
+			}
+			itemRegisterES.set("INTERESADO", nombreDestino);
+			itemRegisterES.set("TP_REG", register.getRegisterOrigin().getRegisterType());
+			itemRegisterES.set("ID_TRAMITE",taskId);
+			itemRegisterES.set("ORIGINO_EXPEDIENTE", "NO");
+	
+			itemRegisterES.store(ctx);
+		} catch (Exception e){
+			LOGGER.warn("ERROR al insertar en SPAC_REGISTROS_ES, pero el registro ya está hecho, así que se captura el error para que lo marque como registrado ya que sí se ha registrado, pero para que quede constancia del que no se ha insertado en esta tabla. " + e.getMessage(), e);
+		}
 	}
 
 	public static boolean isAssocitedRegistrosESEntity(ClientContext ctx, String numExp) throws ISPACException{

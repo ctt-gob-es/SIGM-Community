@@ -34,11 +34,11 @@ public class DipucrBorraIdPropuestasFinExp implements IRule {
 			
 			String numexp = rulectx.getNumExp();
 			
-			IItemCollection ids_prop_Collection = entitiesAPI.getEntities("DPCR_ID_PROPUESTA", numexp);
-			Iterator ids_prop_Iterator = ids_prop_Collection.iterator();
-			while(ids_prop_Iterator.hasNext()){
-				IItem id_prop = (IItem) ids_prop_Iterator.next();
-				id_prop.delete(cct);
+			IItemCollection idsPropCollection = entitiesAPI.getEntities("DPCR_ID_PROPUESTA", numexp);
+			Iterator<?> idsPropIterator = idsPropCollection.iterator();
+			while(idsPropIterator.hasNext()){
+				IItem idProp = (IItem) idsPropIterator.next();
+				idProp.delete(cct);
 			}
 			
 		}

@@ -11,9 +11,52 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<unpack.config.directory>
-			${project.build.directory}/generated-resources
-		</unpack.config.directory>
+		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory>
+		<sigem.version>3.0.1-M2</sigem.version>	
+		<sigemMSSSI.version>3.0.0-msssi2.0.0</sigemMSSSI.version>
+		<fwktd-sirMSSSI.version>3.0.0-msssi2.0.0</fwktd-sirMSSSI.version>
+		<fwktd-sir.version>1.0.1</fwktd-sir.version>
+		<isicresMSSSI.version>3.0.0-msssi2.0.0</isicresMSSSI.version>
+		<weblogic.dataSource.jndi.name.sigemadmin>jdbc/sigemAdmin</weblogic.dataSource.jndi.name.sigemadmin>
+		<!--<weblogic.dataSource.jndi.name.registroDS_000>jdbc/registroDS_000</weblogic.dataSource.jndi.name.registroDS_000-->
+		<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+		<weblogic.dataSource.jndi.name.fwktdsirDS>jdbc/fwktd-sirDS</weblogic.dataSource.jndi.name.fwktdsirDS>
+		<sigem.log.path>D:/Repositorio/SIGEM/logs</sigem.log.path>
+		<sigem.config.location.path>D:/Repositorio/SIGEM/config/</sigem.config.location.path>
+		<SIGEM_CONFIG_DIR>D:/Repositorio/SIGEM/config/</SIGEM_CONFIG_DIR> 
+		<sigem.url.adm_ses_bckoff_ws>http://localhost:8080/SIGEM_AdministracionSesionesBackOfficeWS/services/AdministracionSesionesBackOfficeWebService</sigem.url.adm_ses_bckoff_ws>
+		<sigem.url.adm_ses_adm_ws>http://localhost:8080/SIGEM_AdministracionSesionesAdmWS/services/AdministracionSesionesAdministradorWebService?wsdl</sigem.url.adm_ses_adm_ws>
+		<sigem.url.autenticacion_ws>http://localhost:8080/SIGEM_AutenticacionUsuariosWS/services/AdministracionUsuariosPortalWebService</sigem.url.autenticacion_ws>
+		<sigem.url.firmae_ws>http://localhost:8080/SIGEM_FirmaDigitalWS/services/FirmaDigitalWebService</sigem.url.firmae_ws>
+		<sigem.url.validacion_ws>http://localhost:8080/SIGEM_CriptoValidacionWS/services/CriptoValidacionWebService</sigem.url.validacion_ws> 
+		<sigem.url.pagotelematico_ws>http://localhost:8080/SIGEM_PagoElectronicoWS/services/PagoTelematicoWebService</sigem.url.pagotelematico_ws>
+		<sigem.url.consexpedientes_ws>http://localhost:8080/SIGEM_ConsultaWS/services/ConsultaExpedientesWebService</sigem.url.consexpedientes_ws>
+		<sigem.url.ses_usuario_ws>http://localhost:8080/SIGEM_SessionUsuarioWS/services/SesionUsuarioWebService</sigem.url.ses_usuario_ws>
+		<sigem.url.notificaciones_ws>http://localhost:8080/SIGEM_NotificacionWS/services/NotificacionesWebService</sigem.url.notificaciones_ws>
+		<sigem.url.repositorio_docs_tramitacion_ws>http://localhost:8080/SIGEM_RdeWS/services/RepositorioDocumentosWebService</sigem.url.repositorio_docs_tramitacion_ws> 
+		<sigem.url.tramitacion_ws>http://localhost:8080/SIGEM_TramitacionWS/services/TramitacionWebService</sigem.url.tramitacion_ws> 
+		<sigem.url.publicador_ws>http://localhost:8080/SIGEM_PublicadorWS/services/PublicadorWebService</sigem.url.publicador_ws> 
+		<sigem.url.terceros_ws>http://localhost:8080/SIGEM_TercerosWS/services/TercerosWebService</sigem.url.terceros_ws> 
+		<sigem.url.registro_presencial_ws>http://localhost:8080/SIGEM_RegistroPresencialWS/services/ServicioRegistroWebService</sigem.url.registro_presencial_ws> 
+		<sigem.url.catalogo_tramites_ws>http://localhost:8080/SIGEM_CatalogoTramitesWS/services/CatalogoTramitesWebService</sigem.url.catalogo_tramites_ws>
+		<sigem.url.registro_telematico_ws>http://localhost:8080/SIGEM_RegistroTelematicoWS/services/RegistroTelematicoWebService</sigem.url.registro_telematico_ws> 
+		<sigem.url.certificacion_ws>http://localhost:8080/SIGEM_CertificacionWS/services/CertificacionWebService</sigem.url.certificacion_ws>
+		<sigem.url.sesion_adm_ws>http://localhost:8080/SIGEM_CertificacionWS/services/CertificacionWebService</sigem.url.sesion_adm_ws> 
+		<sigem.url.gest_usu_bckoff_ws>http://localhost:8080/SIGEM_GestionUsuariosBackOfficeWS/services/GestionUsuariosBackOfficeWebService</sigem.url.gest_usu_bckoff_ws> 
+		<sigem.url.entidades_ws>http://localhost:8080/SIGEM_EntidadesWS/services/EntidadesWebService</sigem.url.entidades_ws> 
+		<sigem.url.catastro_ws>http://localhost:8080/SIGEM_CatastroWS/services/CatastroWebService</sigem.url.catastro_ws>
+		<sigem.url.geolocalizacion_ws>http://localhost:8080/SIGEM_GeoLocalizacionWS/services/GeoLocalizacionWebService</sigem.url.geolocalizacion_ws> 
+		<sigem.url.antivirus_ws>http://localhost:8080/SIGEM_AntivirusWS/services/AntivirusWebService</sigem.url.antivirus_ws>
+		<sigem.url.mens_cortos_ws>http://localhost:8080/SIGEM_MensajesCortosWS/services/MensajesCortosWebService</sigem.url.mens_cortos_ws>
+		<sigem.url.calendario_ws>http://localhost:8080/SIGEM_CalendarioWS/services/CalendarioWebService</sigem.url.calendario_ws> 
+		<sigem.url.gestion_csv_ws>http://localhost:8080/SIGEM_GestionCSVWS/services/GestionCSVWebService</sigem.url.gestion_csv_ws> 
+		<sigem.http_port>8080</sigem.http_port> 
+		<sigem.https_port>4443</sigem.https_port>
+		<sigem.cert_port>8443</sigem.cert_port>
+		<sigem.http_frontend_port>80</sigem.http_frontend_port>
+		<sigem.https_frontend_port>443</sigem.https_frontend_port> 
+		<sigem.https_frontend_authclient_port>843</sigem.https_frontend_authclient_port> 
+	
 	</properties>
 
 	<repositories>
@@ -109,7 +152,40 @@
 			<classifier>configurableSigem</classifier>
 			<type>zip</type>
 		</dependency>
-
+<!-- 		<dependency> -->
+<!-- 			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId> -->
+<!-- 			<artifactId>fwktd-sir-api</artifactId> -->
+<!-- 			<version>${fwktd-sir.version}</version> -->
+<!-- 		</dependency> -->
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
+			<artifactId>fwktd-sir-api</artifactId>
+			<version>${fwktd.sir.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>fwktd-dm-alfresco</artifactId>
+					<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>axis-wsdl4j</artifactId>
+					<groupId>axis</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>invesdoc-business</artifactId>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>invesdoc-core</artifactId>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>quartz-jboss</artifactId>
+					<groupId>org.quartz-scheduler</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
 		<!-- AXIS -->
 		<dependency>
 			<groupId>axis</groupId>
@@ -145,6 +221,35 @@
 			<artifactId>jai-codec</artifactId>
 			<version>1.1.3</version>
 		</dependency>
+		<dependency>
+			<groupId>es.msssi.tecdoc.sigem</groupId>
+			<artifactId>sigem_init</artifactId>
+			<version>${sigemMSSSI.version}</version>	
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- [Dipucr-Manu Ticket # 485] - INICIO - ALSIGM3 Recuperar Documentos por CSV del registro presencial. --> 
+		<dependency>
+			<groupId>es.msssi.tecdoc.sigem</groupId>
+			<artifactId>SIGEM_RegistroPresencialMSSSI</artifactId>
+			<version>${sigemMSSSI.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>2.1.1-b04</version>
+		</dependency>
+		<!-- [Dipucr-Manu Ticket # 485] - FIN - ALSIGM3 Recuperar Documentos por CSV del registro presencial. --> 
 
 	</dependencies>
 
@@ -180,6 +285,7 @@
 			            </manifest>
 			            <manifestEntries>
 			              <Implementation-Build>${buildNumber}</Implementation-Build>
+			               <Weblogic-Application-Version>${project.version}</Weblogic-Application-Version>
 			            </manifestEntries>
 			          </archive>
 				</configuration>
@@ -261,6 +367,49 @@
 			</build>
 		</profile>
 		<profile>
+			<id>generateCSVConnectorWSDL</id>
+			<activation>
+				<property>
+					<name>generateCSVConnectorWSDL</name>
+					<value>true</value>					
+				</property>
+      		</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>axistools-maven-plugin</artifactId>
+						<version>1.3</version>
+						<configuration>
+							<filename>${project.artifactId}-csv-connector.wsdl</filename>
+							<namespace>http://server.connector.csv.ws.sgm.tecdoc.ieci</namespace>
+							<namespaceImpl>http://server.connector.csv.ws.sgm.tecdoc.ieci</namespaceImpl>
+							<classOfPortType>ieci.tecdoc.sgm.ws.csv.connector.server.AplicacionExternaCSVConnectorWS</classOfPortType>
+							<location>http://localhost:8080/SIGEM_RegistroTelematicoWS/services/AplicacionExternaCSVConnectorService</location>
+							<bindingName>AplicacionExternaCSVConnectorServiceSoapBinding</bindingName>
+							<style>WRAPPED</style>
+							<use>literal</use>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>java2wsdl</goal>
+								</goals>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>axis</groupId>
+								<artifactId>axis</artifactId>
+								<version>1.3</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
+			</build>
+
+		</profile>
+		<profile>
 			<id>wsdl2java</id>
 			<activation>
 				<property>
@@ -311,8 +460,60 @@
 				</plugins>
 			</build>
 		</profile>
+			
+		<profile>
+			<id>msssi_local</id>
+			<activation>
+				<property>
+					<name>msssi_local</name>
+				</property>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+
+				<weblogic.dataSource.jndi.name.sigemadmin>jdbc/sigemAdmin</weblogic.dataSource.jndi.name.sigemadmin>
+				<!--<weblogic.dataSource.jndi.name.registroDS_000>jdbc/registroDS_000</weblogic.dataSource.jndi.name.registroDS_000-->
+				<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+				<weblogic.dataSource.jndi.name.fwktdsirDS>jdbc/fwktd-sirDS</weblogic.dataSource.jndi.name.fwktdsirDS>
+		
+				<sigem.log.path>D:/Repositorio/SIGEM/logs</sigem.log.path>
+				<sigem.config.location.path>D:/Repositorio/SIGEM/config/</sigem.config.location.path>
+				<sigem.url.adm_ses_bckoff_ws>http://localhost:7001/SIGEM_AdministracionSesionesBackOfficeWS/services/AdministracionSesionesBackOfficeWebService</sigem.url.adm_ses_bckoff_ws>
+				<sigem.url.adm_ses_adm_ws>http://localhost:7001/SIGEM_AdministracionSesionesAdmWS/services/AdministracionSesionesAdministradorWebService?wsdl</sigem.url.adm_ses_adm_ws>
+				<sigem.url.autenticacion_ws>http://localhost:7001/SIGEM_AutenticacionUsuariosWS/services/AdministracionUsuariosPortalWebService</sigem.url.autenticacion_ws>
+				<sigem.url.firmae_ws>http://localhost:7001/SIGEM_FirmaDigitalWS/services/FirmaDigitalWebService</sigem.url.firmae_ws>
+				<sigem.url.validacion_ws>http://localhost:7001/SIGEM_CriptoValidacionWS/services/CriptoValidacionWebService</sigem.url.validacion_ws> 
+				<sigem.url.pagotelematico_ws>http://localhost:7001/SIGEM_PagoElectronicoWS/services/PagoTelematicoWebService</sigem.url.pagotelematico_ws>
+				<sigem.url.consexpedientes_ws>http://localhost:7001/SIGEM_ConsultaWS/services/ConsultaExpedientesWebService</sigem.url.consexpedientes_ws>
+				<sigem.url.ses_usuario_ws>http://localhost:7001/SIGEM_SessionUsuarioWS/services/SesionUsuarioWebService</sigem.url.ses_usuario_ws>
+				<sigem.url.notificaciones_ws>http://localhost:7001/SIGEM_NotificacionWS/services/NotificacionesWebService</sigem.url.notificaciones_ws>
+				<sigem.url.repositorio_docs_tramitacion_ws>http://localhost:7001/SIGEM_RdeWS/services/RepositorioDocumentosWebService</sigem.url.repositorio_docs_tramitacion_ws> 
+				<sigem.url.tramitacion_ws>http://localhost:7001/SIGEM_TramitacionWS/services/TramitacionWebService</sigem.url.tramitacion_ws> 
+				<sigem.url.publicador_ws>http://localhost:7001/SIGEM_PublicadorWS/services/PublicadorWebService</sigem.url.publicador_ws> 
+				<sigem.url.terceros_ws>http://localhost:7001/SIGEM_TercerosWS/services/TercerosWebService</sigem.url.terceros_ws> 
+				<sigem.url.registro_presencial_ws>http://localhost:7001/SIGEM_RegistroPresencialWS/services/ServicioRegistroWebService</sigem.url.registro_presencial_ws> 
+				<sigem.url.catalogo_tramites_ws>http://localhost:7001/SIGEM_CatalogoTramitesWS/services/CatalogoTramitesWebService</sigem.url.catalogo_tramites_ws>
+				<sigem.url.registro_telematico_ws>http://localhost:7001/SIGEM_RegistroTelematicoWS/services/RegistroTelematicoWebService</sigem.url.registro_telematico_ws> 
+				<sigem.url.certificacion_ws>http://localhost:7001/SIGEM_CertificacionWS/services/CertificacionWebService</sigem.url.certificacion_ws>
+				<sigem.url.sesion_adm_ws>http://localhost:7001/SIGEM_CertificacionWS/services/CertificacionWebService</sigem.url.sesion_adm_ws> 
+				<sigem.url.gest_usu_bckoff_ws>http://localhost:7001/SIGEM_GestionUsuariosBackOfficeWS/services/GestionUsuariosBackOfficeWebService</sigem.url.gest_usu_bckoff_ws> 
+				<sigem.url.entidades_ws>http://localhost:7001/SIGEM_EntidadesWS/services/EntidadesWebService</sigem.url.entidades_ws> 
+				<sigem.url.catastro_ws>http://localhost:7001/SIGEM_CatastroWS/services/CatastroWebService</sigem.url.catastro_ws>
+				<sigem.url.geolocalizacion_ws>http://localhost:7001/SIGEM_GeoLocalizacionWS/services/GeoLocalizacionWebService</sigem.url.geolocalizacion_ws> 
+				<sigem.url.antivirus_ws>http://localhost:7001/SIGEM_AntivirusWS/services/AntivirusWebService</sigem.url.antivirus_ws>
+				<sigem.url.mens_cortos_ws>http://localhost:7001/SIGEM_MensajesCortosWS/services/MensajesCortosWebService</sigem.url.mens_cortos_ws>
+				<sigem.url.calendario_ws>http://localhost:7001/SIGEM_CalendarioWS/services/CalendarioWebService</sigem.url.calendario_ws> 
+				<sigem.url.gestion_csv_ws>http://localhost:7001/SIGEM_GestionCSVWS/services/GestionCSVWebService</sigem.url.gestion_csv_ws> 
+				<sigem.http_port>7001</sigem.http_port> 
+				<sigem.https_port>7002</sigem.https_port>
+				<sigem.cert_port>7002</sigem.cert_port>
+				<sigem.http_frontend_port>7001</sigem.http_frontend_port>
+				<sigem.https_frontend_port>7002</sigem.https_frontend_port> 
+				<sigem.https_frontend_authclient_port>7002</sigem.https_frontend_authclient_port> 
+			
+			</properties>
+			
+		</profile>
+		
 	</profiles>
-
-
-
 </project>

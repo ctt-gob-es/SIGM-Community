@@ -5,12 +5,11 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitDecretoIlegalParalizacionRule extends InitDecretoIlegalRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "URB_ILEGAL";
-		STR_extracto = "Resolución de paralización de obras";
-		STR_estado = "ESTADO_PARALIZACION";
-		STR_queryDocumento = "DESCRIPCION = 'Decreto de paralización de obra - Obra ilegal'";		
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "URB_ILEGAL";
+        strExtracto = "Resolución de paralización de obras";
+        strEstado = "ESTADO_PARALIZACION";
+        strQueryDocumento = "DESCRIPCION = 'Decreto de paralización de obra - Obra ilegal'";        
         return true;
     }
 }

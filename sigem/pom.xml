@@ -30,6 +30,7 @@
 				<module>SIGEM_Notificacion_Modules</module>
 				<module>SIGEM_PagoElectronico_Modules</module>
 				<module>SIGEM_RegistroPresencial_Modules</module>
+				<module>SIGEM_RegistroPresencialMSSSI_Modules</module>
 				<module>SIGEM_RegistroTelematico_Modules</module>
 				<module>SIGEM_Tramitacion_Modules</module>
 				<module>SIGEM_Archivo_Modules</module>
@@ -42,6 +43,9 @@
 				<module>SIGEM_Terceros_Modules</module>
 				<module>SIGEM_GestionCSV_Modules</module>
 				<module>SIGEM_SignoWS_Modules</module>
+
+				<module>SIGEM_ORVE_Modules</module>
+
 				<module>SIGEM_ConsultaRegistroTelematico-configurable-resources</module>
 				<module>SIGEM_ConsultaRegistroTelematicoBackOffice-configurable-resources</module>
 				<module>SIGEM_ConsultaExpedienteBackOffice-configurable-resources</module>
@@ -130,6 +134,7 @@
 				<module>SIGEM_CatastroWSClient</module>
 				<module>SIGEM_PagoElectronico_Modules</module>
 				<module>SIGEM_RegistroPresencial_Modules</module>
+				<module>SIGEM_RegistroPresencialMSSSI_Modules</module>
 				<module>SIGEM_RegistroTelematico_Modules</module>
 				<module>SIGEM_Tramitacion_Modules</module>
 				<module>SIGEM_Terceros_Modules</module>
@@ -150,6 +155,8 @@
 				<module>SIGEM_Catastro-configurable-resources</module>
 				<module>SIGEM_GestionCSV_Modules</module>
 				<module>SIGEM_SignoWS_Modules</module>
+
+				<module>SIGEM_ORVE_Modules</module>
 
 			</modules>
 
@@ -212,8 +219,10 @@
 				<module>SIGEM_Notificacion_Modules</module>  <!--WAR-->
 				<module>SIGEM_PagoElectronico_Modules</module> <!--WAR-->
 				<module>SIGEM_portal</module>  <!--WAR-->
+				<module>SIGEM_portal_Entidades</module>  <!--WAR-->
 				<module>SIGEM_RdeWS</module>  <!--WAR-->
 				<module>SIGEM_RegistroPresencial_Modules</module>  <!--WAR-->
+				<module>SIGEM_RegistroPresencialMSSSI_Modules</module>
 				<module>SIGEM_RepositoriosDocumentalesWeb</module>  <!--WAR-->
 				<module>SIGEM_SessionUsuarioWS</module>   <!--WAR-->
 				<module>SIGEM_RegistroTelematico_Modules</module>   <!--WAR-->
@@ -230,6 +239,8 @@
 			<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto 햞bol Documental.-->
 				<module>SIGEM_ArbolDocumentalWeb</module>
 			<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto 햞bol Documental.-->
+
+				<module>SIGEM_ORVE_Modules</module>
 
 				<module>SIGEM_Config_Fwktd</module>
 				<module>SIGEM_Config</module>
@@ -282,6 +293,7 @@
 				<module>SIGEM_EstructuraOrganizativaWS</module>
 				<module>SIGEM_EstructuraWeb</module>
 				<module>SIGEM_RegistroPresencial_Modules</module>
+				<module>SIGEM_RegistroPresencialMSSSI_Modules</module>
 				<module>SIGEM_SessionUsuarioWS</module>
 			</modules>
 		</profile>
@@ -350,10 +362,14 @@
 											<fileset dir="${basedir}\SIGEM_PagoElectronico_Modules\SIGEM_PagoElectronicoWeb\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_PagoElectronico_Modules\SIGEM_PagoElectronicoWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_portal\target" includes="*.war"/>
+											<fileset dir="${basedir}\SIGEM_portal_Entidades\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_RdeWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_RegistroPresencial_Modules\SIGEM_RegistroPresencialAdminWeb\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_RegistroPresencial_Modules\SIGEM_RegistroPresencialWeb\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_RegistroPresencial_Modules\SIGEM_RegistroPresencialWS\target" includes="*.war"/>
+
+											<fileset dir="${basedir}\SIGEM_RegistroPresencialMSSSI_Modules\SIGEM_RegistroPresencialMSSSIWeb\target" includes="*.war"/>
+
 											<fileset dir="${basedir}\SIGEM_RegistroPresencial_Modules\SIGEM_fwktd-sir-ws\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_RepositoriosDocumentalesWeb\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_SessionUsuarioWS\target" includes="*.war"/>
@@ -381,6 +397,9 @@
 										<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto 햞bol Documental.-->
 											<fileset dir="${basedir}\SIGEM_ArbolDocumentalWeb\target" includes="*.war"/>
 										<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto 햞bol Documental.-->
+
+											<fileset dir="${basedir}\SIGEM_ORVE_Modules\SIGEM_ORVE_Web\target" includes="*.war"/>
+
 
 											<fileset dir="${basedir}\SIGEM_Config\target" includes="*.zip"/>
 											<fileset dir="${basedir}\SIGEM_BD_DIST\target" includes="*.zip"/>
@@ -432,9 +451,13 @@
 											<fileset dir="${basedir}\SIGEM_EstructuraOrganizativaWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_EstructuraWeb\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_portal\target" includes="*.war"/>
+											<fileset dir="${basedir}\SIGEM_portal_Entidades\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_RegistroPresencial_Modules\SIGEM_RegistroPresencialAdminWeb\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_RegistroPresencial_Modules\SIGEM_RegistroPresencialWeb\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_RegistroPresencial_Modules\SIGEM_RegistroPresencialWS\target" includes="*.war"/>
+
+											<fileset dir="${basedir}\SIGEM_RegistroPresencialMSSSI_Modules\SIGEM_RegistroPresencialMSSSIWeb\target" includes="*.war"/>
+
 											<fileset dir="${basedir}\SIGEM_SessionUsuarioWS\target" includes="*.war"/>
 										</copy>
 									</tasks>

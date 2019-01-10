@@ -22,13 +22,13 @@ import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
-import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.MailUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrSERSOComprDineroConcedidoMaximoAnualDipu implements IRule {
-    private static final Logger LOGGER = Logger
-            .getLogger(DipucrSERSOComprDineroConcedidoMaximoAnualDipu.class);
+    
+    private static final Logger LOGGER = Logger.getLogger(DipucrSERSOComprDineroConcedidoMaximoAnualDipu.class);
 
     public boolean init(IRuleContext rulectx) throws ISPACRuleException {
         return true;
@@ -59,11 +59,11 @@ public class DipucrSERSOComprDineroConcedidoMaximoAnualDipu implements IRule {
 
             String anio = "DPCR" + Calendar.getInstance().get(Calendar.YEAR) + "/";
 
-            StringBuilder sql = new StringBuilder("WHERE ");
+            StringBuilder sql = new StringBuilder(ConstantesString.WHERE);
             sql.append(" NUMEXP IN (SELECT NUMEXP FROM SPAC_EXPEDIENTES WHERE ");
             sql.append(" NUMEXP IN (SELECT NUMEXP_HIJO FROM SPAC_EXP_RELACIONADOS WHERE NUMEXP_PADRE IN ( ");
             sql.append(" SELECT DISTINCT NUMEXP_PADRE FROM SPAC_EXP_RELACIONADOS ");
-            sql.append(" WHERE NUMEXP_PADRE NOT IN (SELECT NUMEXP_HIJO FROM SPAC_EXP_RELACIONADOS WHERE UPPER(RELACION) LIKE 'SOLICITUD%EMERGENCIA') ");
+            sql.append(ConstantesString.WHERE + " NUMEXP_PADRE NOT IN (SELECT NUMEXP_HIJO FROM SPAC_EXP_RELACIONADOS WHERE UPPER(RELACION) LIKE 'SOLICITUD%EMERGENCIA') ");
             sql.append(" AND UPPER(RELACION) LIKE 'SOLICITUD%EMERGENCIA' AND NUMEXP_HIJO LIKE '%" + anio + "%') ");
             sql.append(" AND UPPER(RELACION) LIKE 'SOLICITUD%EMERGENCIA') ");
             sql.append(" AND NUMEXP NOT IN (SELECT NUMEXP_PADRE FROM SPAC_EXP_RELACIONADOS WHERE UPPER(RELACION) LIKE 'SOLICITUDES%EMERGENCIA') ");
@@ -72,7 +72,7 @@ public class DipucrSERSOComprDineroConcedidoMaximoAnualDipu implements IRule {
             sql.append(" NUMEXP IN (SELECT NUMEXP FROM SPAC_EXPEDIENTES_H WHERE ");
             sql.append(" NUMEXP IN (SELECT NUMEXP_HIJO FROM SPAC_EXP_RELACIONADOS WHERE NUMEXP_PADRE IN ( ");
             sql.append(" SELECT DISTINCT NUMEXP_PADRE FROM SPAC_EXP_RELACIONADOS ");
-            sql.append(" WHERE NUMEXP_PADRE NOT IN (SELECT NUMEXP_HIJO FROM SPAC_EXP_RELACIONADOS WHERE UPPER(RELACION) LIKE 'SOLICITUD%EMERGENCIA') ");
+            sql.append(ConstantesString.WHERE + " NUMEXP_PADRE NOT IN (SELECT NUMEXP_HIJO FROM SPAC_EXP_RELACIONADOS WHERE UPPER(RELACION) LIKE 'SOLICITUD%EMERGENCIA') ");
             sql.append(" AND UPPER(RELACION) LIKE 'SOLICITUD%EMERGENCIA' AND NUMEXP_HIJO LIKE '%" + anio + "%') ");
             sql.append(" AND UPPER(RELACION) LIKE 'SOLICITUD%EMERGENCIA') ");
             sql.append(" AND NUMEXP NOT IN (SELECT NUMEXP_PADRE FROM SPAC_EXP_RELACIONADOS WHERE UPPER(RELACION) LIKE 'SOLICITUDES%EMERGENCIA') ");
@@ -80,50 +80,19 @@ public class DipucrSERSOComprDineroConcedidoMaximoAnualDipu implements IRule {
 
             IItemCollection expedientesCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.SERSOPlanEmerConcesion.NOMBRE_TABLA, sql.toString());
             Iterator<?> expedientesIterator = expedientesCollection.iterator();
+            
             while (expedientesIterator.hasNext()) {
                 IItem expediente = (IItem) expedientesIterator.next();
 
-                try {
-                    totalconcedido += Double.parseDouble(expediente.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO));
-                } catch (Exception e) {
-                    LOGGER.debug("El campo TOTALCONCEDIDO es nulo o vacío. " + e.getMessage(), e);
-                }
-                try {
-                    totalconcedido2 += Double.parseDouble(expediente.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO2));
-                } catch (Exception e) {
-                    LOGGER.debug("El campo TOTALCONCEDIDO2 es nulo o vacío. " + e.getMessage(), e);
-                }
-                try {
-                    totalconcedido3 += Double.parseDouble(expediente.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO3));
-                } catch (Exception e) {
-                    LOGGER.debug("El campo TOTALCONCEDIDO3 es nulo o vacío. " + e.getMessage(), e);
-                }
-                try {
-                    totalconcedido4 += Double.parseDouble(expediente.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO4));
-                } catch (Exception e) {
-                    LOGGER.debug("El campo TOTALCONCEDIDO4 es nulo o vacío. " + e.getMessage(), e);
-                }
-
-                try {
-                    totalsemestre1 += Double.parseDouble(expediente.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE1));
-                } catch (Exception e) {
-                    LOGGER.debug("El campo TOTALSEMESTRE1 es nulo o vacío. " + e.getMessage(), e);
-                }
-                try {
-                    totalsemestre2 += Double.parseDouble(expediente.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE2));
-                } catch (Exception e) {
-                    LOGGER.debug("El campo TOTALSEMESTRE2 es nulo o vacío. " + e.getMessage(), e);
-                }
-                try {
-                    totalsemestre3 += Double.parseDouble(expediente.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE3));
-                } catch (Exception e) {
-                    LOGGER.debug("El campo TOTALSEMESTRE3 es nulo o vacío. " + e.getMessage(), e);
-                }
-                try {
-                    totalsemestre4 += Double.parseDouble(expediente.getString(ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE4));
-                } catch (Exception e) {
-                    LOGGER.debug("El campo TOTALSEMESTRE4 es nulo o vacío. " + e.getMessage(), e);
-                }
+                totalconcedido += SubvencionesUtils.getDouble(expediente, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO);
+                totalconcedido2 += SubvencionesUtils.getDouble(expediente, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO2);
+                totalconcedido3 += SubvencionesUtils.getDouble(expediente, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO3);
+                totalconcedido4 += SubvencionesUtils.getDouble(expediente, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALCONCEDIDO4);
+                
+                totalsemestre1 += SubvencionesUtils.getDouble(expediente, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE1);
+                totalsemestre2 += SubvencionesUtils.getDouble(expediente, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE2);
+                totalsemestre3 += SubvencionesUtils.getDouble(expediente, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE3);
+                totalsemestre4 += SubvencionesUtils.getDouble(expediente, ConstantesPlanEmergencia.DpcrSERSOPeCantAcum.TOTALSEMESTRE4);
             }
 
             double totalDipu = Double.parseDouble(DipucrCommonFunctions.getVarGlobal("MAX_ANUAL_DIPU_PLAN_EMER"));
@@ -152,15 +121,8 @@ public class DipucrSERSOComprDineroConcedidoMaximoAnualDipu implements IRule {
                 List<Object[]> imagenes = new ArrayList<Object[]>();
                 imagenes.add(imagen);
                 
-                IItem expediente = ExpedientesUtil.getExpediente(cct, numexp);
-                if (expediente != null) {
-                    String asunto = expediente.getString("ASUNTO");
-                    if (asunto.indexOf(subject) < 0) {
-                        asunto += subject;
-                    }
-                    expediente.set("ASUNTO", asunto);
-                    expediente.store(cct);
-                }
+                SubvencionesUtils.concatenaTextoAAsunto(cct, numexp, subject, subject);
+                
                 String correo = "";
 
                 String correos = ConfigurationMgr.getVarGlobal(cct, ConstantesPlanEmergencia.CORREOS_PLAN_EMERGENCIA);
@@ -170,18 +132,13 @@ public class DipucrSERSOComprDineroConcedidoMaximoAnualDipu implements IRule {
                         correosArray = correos.split(" ");
                     }
                     for (int i = 0; i < correosArray.length; i++){
-                        try{
-                            correo = correosArray[i];
-                            if(StringUtils.isNotEmpty(correo)){
-                                MailUtil.enviarCorreo(rulectx, correo, subject, contenido, imagenes);
-                            }
-                        } catch (ISPACException e) {
-                            LOGGER.error(this.getClass().getName() + ": Error al enviar e-mail a: " + correo + ". " + e.getMessage(), e);
-                        }
+                        correo = correosArray[i];
+                        enviaCorreo (rulectx, correo, subject, contenido, imagenes);
                     }
                 }
             }
             LOGGER.info(ConstantesString.FIN + this.getClass().getName());
+            
             return Boolean.TRUE;
 
         } catch (Exception e) {
@@ -191,7 +148,16 @@ public class DipucrSERSOComprDineroConcedidoMaximoAnualDipu implements IRule {
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
-
+   
+    public void enviaCorreo(IRuleContext rulectx, String direccionCorreo, String subject, String contenido, List<Object[]> imagenes) {
+        try{
+            if(StringUtils.isNotEmpty(direccionCorreo)){
+                MailUtil.enviarCorreo(rulectx.getClientContext(), direccionCorreo, subject, contenido, imagenes);
+            }
+        } catch (ISPACException e) {
+            LOGGER.error(this.getClass().getName() + ": Error al enviar e-mail a: " + direccionCorreo + ". " + e.getMessage(), e);
+        }
+    }
 }

@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
 
 public class RegistrosDistribuidosUtil {
 	
-	private static final Logger logger = Logger.getLogger(RegistrosDistribuidosUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(RegistrosDistribuidosUtil.class);
 
 	private static final String DOC_ORIGIN_TELEMATIC 	= "REGISTRO TELEMÁTICO";
 	private static final String DOC_ORIGIN_PRESENTIAL	= "REGISTRO PRESENCIAL";
@@ -85,19 +85,19 @@ public class RegistrosDistribuidosUtil {
 							
 							// Crear fichero temporal
 							file = fileTempMgr.newFile();
-							logger.info("file "+file.getAbsolutePath());
+							LOGGER.info("file "+file.getAbsolutePath());
 							
-							logger.info("intray.getId() "+intray.getId());
-							logger.info("annex.getId() "+annex.getId());
+							LOGGER.info("intray.getId() "+intray.getId());
+							LOGGER.info("annex.getId() "+annex.getId());
 							
 
 							// Obtener fichero del anexo
 							FileOutputStream out = new FileOutputStream(file);
-							logger.info("out "+out);
+							LOGGER.info("out "+out);
 							inboxAPI.getAnnexe(intray.getId(), annex.getId(), out);
 							out.close();
-							logger.info("file "+file);
-							logger.info("file "+file.length());
+							LOGGER.info("file "+file);
+							LOGGER.info("file "+file.length());
 							
 							// Componer información del documento
 							Document doc = new Document();
@@ -112,7 +112,7 @@ public class RegistrosDistribuidosUtil {
 							IItem docEntity = createStageDocument(cct, activaStageId, 
 									intray.getRegisterNumber(), intray.getRegisterDate(), 
 									doc, false); 
-							logger.info("docEntity "+docEntity);
+							LOGGER.info("docEntity "+docEntity);
 							
 							in.close();
 							
@@ -130,7 +130,7 @@ public class RegistrosDistribuidosUtil {
 					
 				} catch (Exception e) {
 		
-					logger.error("Error al añadir documentos al expediente", e);
+					LOGGER.error("Error al añadir documentos al expediente", e);
 					
 					// Eliminar los ficheros subidos al gestor documental
 					deleteAttachedFiles(genDocAPI, documentRefs);
@@ -185,7 +185,7 @@ public class RegistrosDistribuidosUtil {
     	
 		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
 		
-		String sql = new StringBuffer("WHERE NUMEXP = '").append(DBUtil.replaceQuotes(numExp)).append("'").toString();
+		String sql = new StringBuilder("WHERE NUMEXP = '").append(DBUtil.replaceQuotes(numExp)).append("'").toString();
 		
 		IItemCollection collection = entitiesAPI.queryEntities(SpacEntities.SPAC_FASES, sql);
 		IItem item = collection.value();
@@ -200,8 +200,7 @@ public class RegistrosDistribuidosUtil {
      * @param documentRefs Lista de referencias a los documentos creados en el gestor documental.
      */
     @SuppressWarnings("rawtypes")
-	private static void deleteAttachedFiles(IGenDocAPI genDocAPI,
-    						  		 List documentRefs) {
+	private static void deleteAttachedFiles(IGenDocAPI genDocAPI, List documentRefs) {
     	
     	if (!documentRefs.isEmpty()) {
     		
@@ -210,8 +209,7 @@ public class RegistrosDistribuidosUtil {
     			
     			String docref = (String) it.next();
     			
-		    	if ((docref != null) &&
-			    	(!docref.equals(""))) {
+		    	if (StringUtils.isNotEmpty(docref)) {
 		    		
 		    		Object connectorSession = null;
 		    		try {
@@ -219,12 +217,16 @@ public class RegistrosDistribuidosUtil {
 		    			// Eliminar el documento fisico del gestor documental
 			            genDocAPI.deleteDocument(connectorSession, docref);
 			    	}
-		    		catch (Exception e) {}
+		    		catch (Exception e) {
+		    			LOGGER.error("Error al borrar el documento: " + docref + ". ", e);
+		    		}
 		    		finally {
 						if (connectorSession != null) {
 							try{
 								genDocAPI.closeConnectorSession(connectorSession);
-							}catch(Exception e){}
+							}catch(Exception e){
+								LOGGER.error("Error al cerrar la conexión con genDocAPI.", e);
+							}
 						}
 			    	}
 		    	}
@@ -240,13 +242,10 @@ public class RegistrosDistribuidosUtil {
     }
     
     
-    private static IItem createDocument(ClientContext cct, ExpedientContext ctx,int docType)
-	throws ISPACException
-	{
+    private static IItem createDocument(ClientContext cct, ExpedientContext ctx,int docType) throws ISPACException {
 		DbCnt cnt = null;
 
-		try
-		{
+		try {
 			cnt = cct.getConnection();
 
 			CTTpDocDAO tpdoc = new CTTpDocDAO(cnt,docType);
@@ -294,9 +293,7 @@ public class RegistrosDistribuidosUtil {
 			}
 
 			return document;
-		}
-		finally
-		{
+		} finally {
 			cct.releaseConnection(cnt);
 		}
 	}
@@ -310,9 +307,7 @@ public class RegistrosDistribuidosUtil {
 	 * @param sMimeType tipo mime del fichero
 	 * @param sName Nombre del fichero
 	 */
-	public static IItem attachStageInputStream(ClientContext cct, Object connectorSession, int stageId,int docId,InputStream in,int length,String sMimeType,String sName)
-	throws ISPACException
-	{
+	public static IItem attachStageInputStream(ClientContext cct, Object connectorSession, int stageId,int docId,InputStream in,int length,String sMimeType,String sName) throws ISPACException {
 		ExpedientContext expctx=new ExpedientContext(cct);
 		expctx.setStage(stageId);
 
@@ -326,9 +321,7 @@ public class RegistrosDistribuidosUtil {
 		return attachInputStream(cct, connectorSession,obj,expctx,docId,in,length,sMimeType,sName,sProperties);
 	}
     
-	private static IItem attachInputStream(ClientContext cct, Object connectorSession, Object obj, ExpedientContext ctx,int docId,InputStream in,int length,String sMimeType,String sName, String sProperties)
-	throws ISPACException
-	{
+	private static IItem attachInputStream(ClientContext cct, Object connectorSession, Object obj, ExpedientContext ctx,int docId,InputStream in,int length,String sMimeType,String sName, String sProperties) throws ISPACException {
 		DbCnt cnt = null;
 		String sDocRefAnt = null;
 		String sDocRefNew = null;
@@ -339,10 +332,11 @@ public class RegistrosDistribuidosUtil {
 			cnt = cct.getConnection();
 
 			// Obtiene el conector de almacenamiento
-			if (obj != null)
+			if (obj != null){
 				connector = DMConnectorFactory.getInstance(cct).getConnector(obj);
-			else
+			} else {
 				connector = DMConnectorFactory.getInstance(cct).getConnector();
+			}
 
 			DMDocumentManager manager = new DMDocumentManager(cct,ctx);
 
@@ -351,8 +345,9 @@ public class RegistrosDistribuidosUtil {
 			CTTpDocDAO tpdoc = new CTTpDocDAO(cnt,document.getInt("ID_TPDOC"));
 			
 			String documentName = sName;
-			if (StringUtils.indexOf(documentName, ".") == -1)
+			if (StringUtils.indexOf(documentName, ".") == -1){
 				documentName += "."+document.getString("EXTENSION");
+			}
 			
 			DocumentData docdata =
 			new DocumentData(ctx.getNumExp(),
@@ -374,8 +369,9 @@ public class RegistrosDistribuidosUtil {
 
 			
 			// Obtiene el documento XML con las propiedades del documento
-			if (sProperties == null)
+			if (sProperties == null){
 				sProperties = manager.getProperties(docdata);
+			}
 
 			// Referencia al fichero del documento
 			sDocRefAnt = document.getString("INFOPAG");
@@ -422,8 +418,7 @@ public class RegistrosDistribuidosUtil {
 				} else if (ctx.getStagePCD() != 0) {
 				    txapi.executeEvents(EventsDefines.EVENT_OBJ_STAGE,ctx.getStagePCD(),EventsDefines.EVENT_TEMPLATE_EXTERNAL,ctx);
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				
 				// Eliminar el nuevo fichero
 				connector.deleteDocument(connectorSession, sDocRefNew);
@@ -437,9 +432,7 @@ public class RegistrosDistribuidosUtil {
 			}
 			
 			return document;
-		}
-		finally
-		{
+		} finally {
 			cct.releaseConnection(cnt);
 		}
 	}

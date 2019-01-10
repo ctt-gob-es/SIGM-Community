@@ -21,10 +21,13 @@ package net.java.xades.security.xml.XAdES;
 
 import net.java.xades.util.Base64;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
 public class SignatureTimeStampDetails extends XAdESStructure
 {
+	
+	private static final Logger LOGGER = Logger.getLogger(SignatureTimeStampDetails.class);
     public SignatureTimeStampDetails(XAdESStructure parent, SignatureTimeStamp signatureTimeStamp,
             String xadesPrefix, String xadesNamespace, String xmlSignaturePrefix, String tsaURL)
     {
@@ -42,7 +45,7 @@ public class SignatureTimeStampDetails extends XAdESStructure
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+        	LOGGER.error("ERROR. " + e.getMessage(), e);
         }
     }
 }

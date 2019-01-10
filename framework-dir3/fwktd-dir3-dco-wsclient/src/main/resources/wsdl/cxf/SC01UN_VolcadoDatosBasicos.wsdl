@@ -91,7 +91,7 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       <wsdl:port binding="impl:SC01UN_VolcadoDatosBasicosSoapBinding" name="SC01UN_VolcadoDatosBasicos">
 
-         <wsdlsoap:address location="http://pre-wsdir3.inter060.es/directorio/services/SC01UN_VolcadoDatosBasicos"/>
+         <wsdlsoap:address location="http://dir3ws.redsara.es/directorio/services/SC01UN_VolcadoDatosBasicos"/>
 
       </wsdl:port>
 

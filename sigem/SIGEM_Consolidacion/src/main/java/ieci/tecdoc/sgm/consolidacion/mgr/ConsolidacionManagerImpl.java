@@ -232,19 +232,19 @@ public class ConsolidacionManagerImpl implements ConsolidacionManager {
 	        	for (Iterator it2 = listadoInformacion.iterator(); it2.hasNext();) {
 					Page page = (Page) it2.next();
 					
-					logger.warn("- Registro Presencial:");
-		        	logger.warn("Identificador del documento. "+docReg.getDocID());
-		        	logger.warn("Identificador del fichero en registo. "+page.getFileID());
-		        	logger.warn("Nombre del documento. "+docReg.getDocumentName());
-		        	logger.warn("Número registro. "+regInfo.getNumber());
+					logger.info("- Registro Presencial:");
+		        	logger.info("Identificador del documento. "+docReg.getDocID());
+		        	logger.info("Identificador del fichero en registo. "+page.getFileID());
+		        	logger.info("Nombre del documento. "+docReg.getDocumentName());
+		        	logger.info("Número registro. "+regInfo.getNumber());
 		        	RegistroDocumento docRegTelema = servicioRegistroTelemático.obtenerDocumentoRegistro("", registro.getRegistryNumber(), docReg.getDocumentName(), entidad);
-		        	logger.warn("- Registro Telemático:");
-	        		logger.warn("guid: "+docRegTelema.getGuid());
-	        		logger.warn("Nombre: "+docRegTelema.getCode());	        	
+		        	logger.info("- Registro Telemático:");
+	        		logger.info("guid: "+docRegTelema.getGuid());
+	        		logger.info("Nombre: "+docRegTelema.getCode());	        	
 		        	//[**2]Almacenar ese identificador en la tabla sgmrdedocumentos. 
 		        	//Hay que crear un servicio web que elimine el contenido y añada el identificador.
 	        		servicioDocumentos.insertarIdFileBorrarContenido(docRegTelema.getGuid(), page.getFileID(), entidad);
-	        		logger.warn("MODIFICADO ");
+	        		logger.info("MODIFICADO ");
 	        	}
 			}
 
@@ -351,21 +351,22 @@ public class ConsolidacionManagerImpl implements ConsolidacionManager {
 		 * de registro original fld13 => Registro original fld14 => Tipo de
 		 * transporte fld15 => Número de transporte fld16 => Tipo de asunto
 		 * fld17 => Resumen fld18 => Comentario fld19 => Referencia de
-		 * Expediente fld20 => Fecha del documento
+		 * Expediente fld20 => Fecha del documento 506 => No acompaña documentación física ni otros soportes
 		 */
 		return new FieldInfo[] {
 				getFieldInfo("1", registro.getRegistryNumber()),
-				getFieldInfo("2",
-						(effectiveDate != null ? longFormatter.format(effectiveDate) : "")),
+				getFieldInfo("2", (effectiveDate != null ? longFormatter.format(effectiveDate) : "")),
 				getFieldInfo("3", config.getUserName()),
-				getFieldInfo(
-						"4",
-						(registro.getRegistryDate() != null ? shortFormatter.format(registro
-								.getRegistryDate()) : "")),
-				getFieldInfo("5", registro.getOficina()), getFieldInfo("6", AXSF_COMPLETE_STATE),
-				getFieldInfo("8", registro.getAddressee()), getFieldInfo("9", personName),
-				getFieldInfo("16", topic), getFieldInfo("18", additionalInfo),
-				getFieldInfo("19", registro.getNumeroExpediente()) };
+				getFieldInfo("4", (registro.getRegistryDate() != null ? shortFormatter.format(registro.getRegistryDate()) : "")),
+				getFieldInfo("5", registro.getOficina()), 
+				getFieldInfo("6", AXSF_COMPLETE_STATE),				
+				getFieldInfo("8", registro.getAddressee()), 
+				getFieldInfo("9", personName),
+				getFieldInfo("16", topic), 
+				getFieldInfo("17", registro.getTopic()),
+				getFieldInfo("18", additionalInfo),
+				getFieldInfo("19", registro.getNumeroExpediente()),
+				getFieldInfo("506", "1")};
 	}
 
 	protected PersonInfo[] getPersons(Registro registro,String idEntidad) {

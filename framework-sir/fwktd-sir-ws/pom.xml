@@ -3,7 +3,7 @@
 
 	<parent>
 		<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
-		<artifactId>fwktd-sir</artifactId>
+		<artifactId>fwktd-sir-parent</artifactId>
 		<version>1.0.1</version>
 	</parent>
 
@@ -12,8 +12,10 @@
 	<name>fwktd-sir-ws</name>
 
 	<properties>
+		<sigemMSSSI.version>3.0.0-msssi2.0.0</sigemMSSSI.version>
 		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory>
 		<tomcat.context.file>${project.basedir}/src/test/resources/tomcat/context.xml</tomcat.context.file>
+		<PATH_REPO>D:/Repositorio/SIGEM/</PATH_REPO>
 	</properties>
 
 	<dependencies>
@@ -23,8 +25,27 @@
 			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
 			<artifactId>fwktd-sir-api</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>invesdoc-business</artifactId>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>invesdoc-core</artifactId>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-
+		<dependency>
+			<groupId>es.ieci.tecdoc.invesdoc</groupId>
+			<artifactId>invesdoc-core</artifactId>
+			<version>9.2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.invesdoc</groupId>
+			<artifactId>invesdoc-stdbizobj</artifactId>
+			<version>9.2.3.1</version>
+		</dependency>
 		<!-- Third party -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -36,7 +57,11 @@
 			<artifactId>log4j</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>2.1.0-b03</version>
+		</dependency>
 		<!-- Dependencias para Axis -->
 		<dependency>
 			<groupId>axis</groupId>
@@ -54,7 +79,10 @@
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxws</artifactId>
 			<version>${cxf.version}</version>
+			<exclusions>
+      </exclusions>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-transports-http</artifactId>
@@ -110,7 +138,11 @@
 			<version>${servlet-api.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>es.msssi.tecdoc.sigem</groupId>
+			<artifactId>sigem_init</artifactId>
+			<version>${sigemMSSSI.version}</version>
+		</dependency>
 	</dependencies>
 
 
@@ -144,6 +176,14 @@
     	</testResources>
 
 		<plugins>
+			 <plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+		        <configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -371,6 +411,34 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1-alpha-1</version>
+				<configuration>
+					<webXml>
+						${basedir}/src/main/webapp/WEB-INF/web.xml
+					</webXml>
+					<webResources>
+						<resource>
+							<directory>
+								src/main/webapp/WEB-INF
+							</directory>
+							<targetPath>WEB-INF</targetPath>
+							<filtering>true</filtering>
+						</resource>
+					</webResources>
+				
+					<archive>
+			            <manifest>
+			              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+			            </manifest>
+			            <manifestEntries>
+			              <Implementation-Build>${buildNumber}</Implementation-Build>
+			              <Weblogic-Application-Version>${project.version}</Weblogic-Application-Version>
+			            </manifestEntries>
+			          </archive>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -541,6 +609,8 @@
 		<!-- Entorno: local -->
 		<profile>
 			<id>local</id>
+			<activation>
+			</activation>
 			<build>
 				<filters>
 					<filter>${basedir}/src/main/filters/environment/local.properties</filter>
@@ -557,7 +627,73 @@
 				</filters>
 			</build>
 		</profile>
-
+	<profile>
+			<id>msssi_local</id>
+			<activation>
+				
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>msssi_local</name>
+				</property>
+			</activation>
+			<properties>
+				<PATH_REPO>D:/Repositorio/SIGEM/</PATH_REPO>
+					<!--<weblogic.dataSource.jndi.name.sigemaudit_000>jdbc/fwktd-auditDS_000</weblogic.dataSource.jndi.name.sigemaudit_000-->
+					<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+					<!--<weblogic.dataSource.jndi.name.fwktdsirDS_000>jdbc/fwktd-sirDS_000</weblogic.dataSource.jndi.name.fwktdsirDS_000-->
+			</properties>
+			<build>
+			</build>
+		</profile>
+	<profile>
+			<id>msssi_desarrollo</id>
+			<activation>
+				<property>
+					<name>msssi_desarrollo</name>
+				</property>
+			</activation>
+			<properties>
+				<filter.generic.system>${basedir}/../../SIGEM_Config/src/main/filters/system/msssi.properties</filter.generic.system>
+				<PATH_REPO>/repositorio/SIGM/</PATH_REPO>
+				<!--<weblogic.dataSource.jndi.name.sigemaudit_000>jdbc/fwktd-auditDS_000</weblogic.dataSource.jndi.name.sigemaudit_000-->
+				<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+				<!--<weblogic.dataSource.jndi.name.fwktdsirDS_000>jdbc/fwktd-sirDS_000</weblogic.dataSource.jndi.name.fwktdsirDS_000-->
+			</properties>
+			<build>
+			</build>
+	</profile>
+	<profile>
+			<id>msssi_preproduccion</id>
+			<activation>
+				<property>
+					<name>msssi_preproduccion</name>
+				</property>
+			</activation>
+			<properties>
+				<filter.generic.system>${basedir}/../../SIGEM_Config/src/main/filters/system/msssi.properties</filter.generic.system>
+					<!--<weblogic.dataSource.jndi.name.sigemaudit_000>jdbc/fwktd-auditDS_000</weblogic.dataSource.jndi.name.sigemaudit_000-->
+					<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+					<!--<weblogic.dataSource.jndi.name.fwktdsirDS_000>jdbc/fwktd-sirDS_000</weblogic.dataSource.jndi.name.fwktdsirDS_000-->
+					<PATH_REPO>/repositorio/SIGM/</PATH_REPO>
+			</properties>
+			<build>
+			</build>
+	</profile>
+		<profile>
+			<id>msssi_produccion</id>
+			<activation>
+				<property>
+					<name>msssi_produccion</name>
+				</property>
+			</activation>
+			<properties>
+				<filter.generic.system>${basedir}/../../SIGEM_Config/src/main/filters/system/msssi.properties</filter.generic.system>
+					<!--<weblogic.dataSource.jndi.name.sigemaudit_000>jdbc/fwktd-auditDS_000</weblogic.dataSource.jndi.name.sigemaudit_000-->
+					<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+					<!--<weblogic.dataSource.jndi.name.fwktdsirDS_000>jdbc/fwktd-sirDS_000</weblogic.dataSource.jndi.name.fwktdsirDS_000-->
+					<PATH_REPO>/repositorio/SIGM/</PATH_REPO>
+			</properties>
+			<build></build>
+	</profile>
 	</profiles>
-
 </project>

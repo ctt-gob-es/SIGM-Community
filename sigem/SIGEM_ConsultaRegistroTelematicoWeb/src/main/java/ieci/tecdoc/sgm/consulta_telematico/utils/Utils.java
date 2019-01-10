@@ -47,63 +47,64 @@ public class Utils {
 
 			Registro registro = (Registro) registros.get(i);
 
-				try {
-					// Solicitud de Registro
-					// Obtener la solicitud no firmada ya que siempre existe para todos los trámites
-					// y la solicitud firmada sólo existe en los trámites que requieren firma
-					// byte[] solicitud = oServicioRT.obtenerPeticionRegistro(registro.getRegistryNumber(), entidad);
-					byte[] solicitud = oServicioRT.obtenerDocumento(registro.getRegistryNumber(), Definiciones.REGISTRY_REQUEST_NOTSIGNED_CODE, entidad);
-
-					if (solicitud != null) {
-
-						// Obtener los datos del XML de la solicitud
-						XmlDocument xmlDoc = new XmlDocument();
-
-			        	xmlDoc.createFromStringText(Goodies.fromUTF8ToStr(solicitud));
-			        	// Obtener la descripción del asunto en la solicitud de registro
-			        	XmlElement rootElement = xmlDoc.getRootElement();
-			        	XmlElement descElement = null;
-
-			        	if (registro.getTopic() == null) {
-			        		// Subsanación
-			        		registro.setTopic("SUBSANACION");
-
-			        		descElement = rootElement.getDescendantElement(Definiciones.XPATH_GENERIC_DATA + "/" +
-			        															  Definiciones.TOPIC + "/" +
-			        															  Definiciones.DESCRIPTION);
-
-			        		registro.setName(descElement.getValue());
-			        	}
-
-			        	XmlElement destino = rootElement.getDescendantElement(Definiciones.XPATH_GENERIC_DATA + "/" +
-								  Definiciones.ADDRESSEE + "/" +
-								  Definiciones.CODE);
-
-		        		if(destino != null) {
-			        		try{
-			        			OrganoDestinatario organo = oServicioCatalogo.getAddressee(destino.getValue(), entidad);
-			        			registro.setAddressee(organo.getDescription());
-			        		}catch (Exception e) {
-			        			logger.warn("No se ha podido obtener el organo destinatario de la solicitud: "+registro.getRegistryNumber());
-							}
-		        		}
-
-			        	descElement = rootElement.getDescendantElement(Definiciones.XPATH_SPECIFIC_DATA + "/" +
-								  Definiciones.IDIOMA);
-
-			        	if(descElement != null) {
-			        		registro.setIdioma(descElement.getValue());
-			        	}
-
-			        	listado.add(registros.get(i));
-					}
-			        else {
-			        	logger.warn("No se ha podido obtener la solicitud del registro: "+registro.getRegistryNumber());
-			        }
-				}
-				catch (Exception e) {
-					logger.error("Error al obtener la solicitud del registro: "+registro.getRegistryNumber(), e);
-				}
+//				try {
+//					// Solicitud de Registro
+//					// Obtener la solicitud no firmada ya que siempre existe para todos los trámites
+//					// y la solicitud firmada sólo existe en los trámites que requieren firma
+//					// byte[] solicitud = oServicioRT.obtenerPeticionRegistro(registro.getRegistryNumber(), entidad);
+//					byte[] solicitud = oServicioRT.obtenerDocumento(registro.getRegistryNumber(), Definiciones.REGISTRY_REQUEST_NOTSIGNED_CODE, entidad);
+//
+//					if (solicitud != null) {
+//
+//						// Obtener los datos del XML de la solicitud
+//						XmlDocument xmlDoc = new XmlDocument();
+//
+//			        	xmlDoc.createFromStringText(Goodies.fromUTF8ToStr(solicitud));
+//			        	// Obtener la descripción del asunto en la solicitud de registro
+//			        	XmlElement rootElement = xmlDoc.getRootElement();
+//			        	XmlElement descElement = null;
+//
+//			        	if (registro.getTopic() == null) {
+//			        		// Subsanación
+//			        		registro.setTopic("SUBSANACION");
+//
+//			        		descElement = rootElement.getDescendantElement(Definiciones.XPATH_GENERIC_DATA + "/" +
+//			        															  Definiciones.TOPIC + "/" +
+//			        															  Definiciones.DESCRIPTION);
+//
+//			        		registro.setName(descElement.getValue());
+//			        	}
+//
+//			        	XmlElement destino = rootElement.getDescendantElement(Definiciones.XPATH_GENERIC_DATA + "/" +
+//								  Definiciones.ADDRESSEE + "/" +
+//								  Definiciones.CODE);
+//
+//		        		if(destino != null) {
+//			        		try{
+//			        			OrganoDestinatario organo = oServicioCatalogo.getAddressee(destino.getValue(), entidad);
+//			        			registro.setAddressee(organo.getDescription());
+//			        		}catch (Exception e) {
+//			        			logger.warn("No se ha podido obtener el organo destinatario de la solicitud: "+registro.getRegistryNumber());
+//							}
+//		        		}
+//
+//			        	descElement = rootElement.getDescendantElement(Definiciones.XPATH_SPECIFIC_DATA + "/" +
+//								  Definiciones.IDIOMA);
+//
+//			        	if(descElement != null) {
+//			        		registro.setIdioma(descElement.getValue());
+//			        	}
+//
+//			        	listado.add(registros.get(i));
+//					}
+//			        else {
+//			        	logger.warn("No se ha podido obtener la solicitud del registro: "+registro.getRegistryNumber());
+//			        }
+//				}
+//				catch (Exception e) {
+//					logger.error("Error al obtener la solicitud del registro: "+registro.getRegistryNumber(), e);
+//				}
+			listado.add(registro);
 			}
 
 		return listado;

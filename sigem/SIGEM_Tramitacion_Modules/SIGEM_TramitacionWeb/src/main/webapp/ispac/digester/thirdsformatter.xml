@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <beanformatter defaultSort="2"
-			   pageSize="110"
-			   export="false">
+			   pageSize="110">
 
 	<!-- Ponemos 2 veces la propiedad Nombre, 
 		 una para mostrarla solo en html (media='html')
@@ -32,6 +31,22 @@
 				 sortable='true'/>
 				 
 	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='DIR3' 
+				 titleKey='SPAC_DT_INTERVINIENTES:DIR3' 
+				 fieldType='LIST'
+				 columnClass='width40percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE' 
+				 titleKey='SPAC_DT_INTERVINIENTES:NOMBRE' 
+				 fieldType='LIST'
+				 columnClass='width40percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
 				 property='DIRNOT' 
 				 titleKey='SPAC_DT_INTERVINIENTES:DIRNOT' 
 				 fieldType='LIST' 
@@ -39,4 +54,43 @@
 				 headerClass='sortable'
 				 sortable='true'/>
 				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='C_POSTAL' 
+				 titleKey='SPAC_DT_INTERVINIENTES:C_POSTAL' 
+				 fieldType='LIST'
+				 columnClass='width40percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='LOCALIDAD' 
+				 titleKey='SPAC_DT_INTERVINIENTES:LOCALIDAD' 
+				 fieldType='LIST'
+				 columnClass='width40percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='ROL' 
+				 titleKey='SPAC_DT_INTERVINIENTES:ROL' 
+				 fieldType='LIST'
+				 columnClass='width40percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='DIRECCIONTELEMATICA' 
+				 titleKey='SPAC_DT_INTERVINIENTES:DIRECCIONTELEMATICA' 
+				 fieldType='LIST'
+				 columnClass='width40percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='TFNO_MOVIL' 
+				 titleKey='SPAC_DT_INTERVINIENTES:TFNO_MOVIL' 
+				 fieldType='LIST'
+				 columnClass='width40percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
 </beanformatter>

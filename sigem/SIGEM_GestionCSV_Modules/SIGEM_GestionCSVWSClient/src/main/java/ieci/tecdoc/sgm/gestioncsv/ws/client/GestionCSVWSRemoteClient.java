@@ -176,6 +176,40 @@ public class GestionCSVWSRemoteClient implements ServicioGestionCSV {
 			throw new CSVException(CSVException.EXC_GENERIC_EXCEPCION, e);
 		}
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see ieci.tecdoc.sgm.core.services.gestioncsv.ServicioGestionCSV#getInfoDocumentoByNombre(ieci.tecdoc.sgm.core.services.dto.Entidad,
+	 *      java.lang.String)
+	 */
+	public InfoDocumentoCSV getInfoDocumentoByNombre(Entidad entidad, String nombreDoc) throws CSVException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("getInfoDocumentoByNombre(Entidad, String) - start");
+		}
+
+		InfoDocumentoCSV infoDocumentoCSV;
+
+		try {
+			InfoDocumentoCSVRetorno infoDocumentoCSVRetorno = getService().getInfoDocumentoByCSV( getEntidadWS(entidad), nombreDoc);
+			
+			if (ServiciosUtils.isReturnOK((IRetornoServicio) infoDocumentoCSVRetorno)) {
+				infoDocumentoCSV = getInfoDocumentoCSV(infoDocumentoCSVRetorno);
+
+				if (logger.isDebugEnabled()) {
+					logger.debug("getInfoDocumentoByCSV(Entidad, String) - end");
+				}
+				return infoDocumentoCSV;
+			} else {
+				throw getCSVException((IRetornoServicio) infoDocumentoCSVRetorno);
+			}
+
+		} catch (RemoteException e) {
+			logger.error("getInfoDocumentoByCSV(Entidad, String)", e);
+
+			throw new CSVException(CSVException.EXC_GENERIC_EXCEPCION, e);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}

@@ -1,4 +1,4 @@
-/*Generales*/
+﻿/*Generales*/
 body {
 	padding:0px;
 	margin: 5px 5px 10px 5px;
@@ -56,6 +56,16 @@ a { text-decoration:none; color:#000000
 	height: 60px;
 /*	background: url("../img/portal_organismo.gif") 0px 0px no-repeat;*/
 	text-indent: -3000px;
+}
+
+#cabecera .logosigm {
+	position: absolute;
+	margin: 0px;
+	width: 150px;
+	height: 60px;
+	top: 8px;
+	left: 240px;
+	margin: 0px;
 }
 
 #cabecera .salir {

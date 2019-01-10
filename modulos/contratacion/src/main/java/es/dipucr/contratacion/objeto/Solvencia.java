@@ -1,7 +1,7 @@
 package es.dipucr.contratacion.objeto;
 
-import es.dipucr.contratacion.client.beans.SolvenciaEconomica;
-import es.dipucr.contratacion.client.beans.SolvenciaTecnica;
+import es.dipucr.contratacion.services.PlataformaContratacionStub.SolvenciaEconomica;
+import es.dipucr.contratacion.services.PlataformaContratacionStub.SolvenciaTecnica;
 
 public class Solvencia {
 	private SolvenciaTecnica[] solvenciaTecn;

@@ -6,7 +6,7 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 
@@ -35,10 +35,11 @@ public class CreacionDecretoRule implements IRule{
 
 	@SuppressWarnings("unchecked")
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+		OpenOfficeHelper ooHelper = null;
 		try{
 			//------------------------------------------------------------------
-	        ClientContext cct = (ClientContext) rulectx.getClientContext();
-	        OpenOfficeHelper ooHelper = OpenOfficeHelper.getInstance();
+	        IClientContext cct = rulectx.getClientContext();
+	        ooHelper = OpenOfficeHelper.getInstance();
 	        String extensionEntidad = DocumentosUtil.obtenerExtensionDocPorEntidad();
 	        //------------------------------------------------------------------
 	        logger.warn("Inicio carga documento decreto");
@@ -49,7 +50,7 @@ public class CreacionDecretoRule implements IRule{
 	        
 	        //Monto el decreto y la plantilla de notificaciones.
 	        
-	        String tipoDocDecreto = DocumentosUtil.getNombreTipoDocByCod(rulectx, "Decretos");
+	        String tipoDocDecreto = DocumentosUtil.getNombreTipoDocByCod(cct, "Decretos");
 	        String nombrePlantillaDecretoCabecera = DocumentosUtil.getNombrePlantillaByCod(cct, "Decr-Cab");
 	        logger.warn("DECRETO CABECERA INICIO tipoDocDecreto "+tipoDocDecreto);
 	        logger.warn("nombrePlantilla "+nombrePlantillaDecretoCabecera);
@@ -61,7 +62,7 @@ public class CreacionDecretoRule implements IRule{
     		logger.info("FIN CABECERA DECRETO");
     		
     		//CABECERA NOTIFICACIONES
-    		String tipoDocNotif = DocumentosUtil.getNombreTipoDocByCod(rulectx, "Not-Tram-Res");
+    		String tipoDocNotif = DocumentosUtil.getNombreTipoDocByCod(cct, "Not-Tram-Res");
 	        String nombrePlantillaNotiCabecera = DocumentosUtil.getNombrePlantillaByCod(cct, "Plant-Noti-Cab");
     		logger.info("NOTIFICACIONES CABECERA INICIO "+tipoDocNotif);
         	DocumentosUtil.generarDocumento(rulectx, nombrePlantillaNotiCabecera, tipoDocNotif, null, rulectx.getNumExp(), codTramiteCreac);
@@ -85,12 +86,10 @@ public class CreacionDecretoRule implements IRule{
 	        	
 		        //Cuerpo de decreto
 	        	file = DocumentosUtil.getFile(cct, infopag, null, null);
-	        	//DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
 	        	DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 	    		file.delete();
 	    		//Cuerpo de notificaciones
 	    		fileNotificaciones = DocumentosUtil.getFile(cct, infopag, null, null);
-	        	//DipucrCommonFunctions.Concatena(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), ooHelper);
 	    		DipucrCommonFunctions.ConcatenaByFormat(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), extensionEntidad);
 	        	fileNotificaciones.delete();
 	        }
@@ -103,7 +102,6 @@ public class CreacionDecretoRule implements IRule{
 	    	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, nombrePlantillaDecretoPie);
 	    	logger.info(strInfoPag);
 	    	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-	    	//DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
 	    	DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 			file.delete();
 			logger.info("FIN PIE DECRETO");
@@ -115,7 +113,6 @@ public class CreacionDecretoRule implements IRule{
 	    	strInfoPagNotificaciones = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, nombrePlantillaNotiPie);
 	    	logger.info(strInfoPagNotificaciones);
 	    	fileNotificaciones = DocumentosUtil.getFile(cct, strInfoPagNotificaciones, null, null);
-	    	//DipucrCommonFunctions.Concatena(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), ooHelper);
 	    	DipucrCommonFunctions.ConcatenaByFormat(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), extensionEntidad);
 	    	fileNotificaciones.delete();
 			logger.info("FIN PIE DECRETO");
@@ -170,7 +167,12 @@ public class CreacionDecretoRule implements IRule{
         } catch (Exception e) {
         	logger.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);
-		} 
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
+		
 		return new Boolean(true);
 	}
 

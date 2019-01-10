@@ -5,7 +5,13 @@
 	
 <sqlMap namespace="InfoRegistroPageRepositoryVO">
 	<select id="getInfoRegistroPageRepositories" resultMap="infoRegistroPageRepositoryResultMap" parameterClass="java.util.HashMap">
-		select * from scr_pagerepository where bookid=#idLibro# AND fdrid=#idRegistro#
+		select * from scr_pagerepository where bookid=#idLibro# AND fdrid=#idRegistro#  AND DELETEDATE IS NULL 
 	</select>
-
+	<select id="getInfoRegistroPageRepositoriesWithNewReport" resultMap="infoRegistroPageRepositoryResultMap" parameterClass="java.util.HashMap">
+		SELECT * 
+    		FROM scr_pagerepository PA
+    		WHERE PA.bookid=#idLibro# AND PA.fdrid=#idRegistro#  AND PA.DELETEDATE IS NULL 
+    		AND (PA.FLAG IS NULL OR  PA.FLAG = (SELECT NVL(MAX(PA1.FLAG), 0)  
+                    FROM scr_pagerepository PA1 WHERE PA1.BOOKID = PA.BOOKID AND PA1.FDRID = PA.FDRID) )
+	</select>
 </sqlMap>	

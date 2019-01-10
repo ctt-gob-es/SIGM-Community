@@ -597,6 +597,34 @@
 				appid='0'
 				type='0'/>
 <!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->	
+
+<!--  [Dipucr-Manu #] INICIO - ALSIGM3 -->
+<!-- Mensajes -->	
+		<entitydef	id='67'
+				name='SPAC_S_SESION_MENSAJE'
+				keyfield='ID'
+				sequence='SPAC_SQ_2081913613'
+				description='Mesajes de Usuarios.'
+				schemaexpr='TEXTO'
+				keynumexp=''
+				appid='67'
+				type='0'/>				
+<!--  [Dipucr-Manu #] FIN - ALSIGM3  --> 	
+
+
+<!--Información Exp. Relacionados -->
+<!-- [eCenpri-Teresa #604] INICIO - [ALSIGM] Creación de una tabla oculta para almacenar información de dos expedientes relacionados.-->		
+		<entitydef	id='68'
+				name='SPAC_EXP_RELACIONADOS_INFO'
+				keyfield='ID'
+				sequence='SPAC_SQ_EXP_RELACIONADOS_INFO'
+				description='Información Exp. Relacionados'
+				schemaexpr=''
+				keynumexp=''
+				appid='68'
+				type='0'/>
+<!-- [eCenpri-Teresa #604] FIN - [ALSIGM] Creación de una tabla oculta para almacenar información de dos expedientes relacionados.-->	
+
 <!--
 	====================================
 		Definición de las aplicaciones
@@ -870,5 +898,15 @@
 				page='/forms/catalog/ctmanualusuarioform.jsp'
 				parameters=''
 				formatter='' />
-	<!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->		
+	<!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->
+	
+	<!--  [Dipucr-Manu #] INICIO - ALSIGM3 -->
+	<applicationdef	id='67'
+				name='EditMensaje'
+				description='Formulario para editar mensajes'
+				class='ieci.tdw.ispac.ispaclib.app.SimpleEntityApp'
+				page='/forms/catalog/ctmensajeform.jsp'
+				parameters=''
+				formatter='' />
+	<!--  [Dipucr-Manu #] FIN - ALSIGM3 -->
 </catalogdef>

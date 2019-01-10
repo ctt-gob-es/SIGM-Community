@@ -90,6 +90,9 @@ public class DeptNew extends BaseAction {
         
         dept.setName(form.getNombre());
         dept.setDescription(form.getDescripcion());
+        dept.setEmail(form.getEmail());//[Tere Ticket#362] Crear un campo con email departamento
+
+        dept.setIdorg(form.getIdorg());
         
         String managerId = form.getManagerId();
         dept.setManagerId(Integer.parseInt(managerId));

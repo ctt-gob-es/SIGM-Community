@@ -8,6 +8,7 @@ import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.IInboxAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.IManualUsuarioAPI;
+import ieci.tdw.ispac.api.IMensajeAPI;
 import ieci.tdw.ispac.api.IProcedureAPI;
 import ieci.tdw.ispac.api.IPublisherAPI;
 import ieci.tdw.ispac.api.IRegisterAPI;
@@ -560,5 +561,16 @@ public class InvesflowAPI implements IInvesflowAPI {
 	  **/
 	public IManualUsuarioAPI getManualUsuarioAPI() throws ISPACException {
 		return new ManualUsuarioAPI(mcontext);
+	}
+	
+	/**
+	  * [Dipucr-Manu Ticket #] ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.
+	  * 
+	  * Obtiene el API de los manuales de usuario.
+	  * @return API de los manuales de usuario.
+	  * @throws ISPACException si ocurre algún error.
+	  **/
+	public IMensajeAPI getMensajeAPI() throws ISPACException {
+		return new MensajeAPI(mcontext);
 	}
 }

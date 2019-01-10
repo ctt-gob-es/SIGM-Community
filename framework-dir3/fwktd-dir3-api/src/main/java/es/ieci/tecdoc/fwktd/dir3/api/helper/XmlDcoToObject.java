@@ -1,6 +1,9 @@
 package es.ieci.tecdoc.fwktd.dir3.api.helper;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -44,6 +47,12 @@ public class XmlDcoToObject {
 	{
 		XStream xstream = new XStream();
 		File file = new File(xmlFilePath);
+		InputStream fileIS = null;
+		try {
+			 fileIS = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		
 		//Anotaciones para el mapeo de las clases con los nodos del XML
 		xstream.processAnnotations(OficinasVO.class);
@@ -54,7 +63,7 @@ public class XmlDcoToObject {
 		xstream.processAnnotations(OficinaDatosDependenciaJerarquicaVO.class);
 		xstream.processAnnotations(OficinaDatosLocalizacionVO.class);
 		
-		return (OficinasVO)xstream.fromXML(file);
+		return (OficinasVO)xstream.fromXML(fileIS);
 	}
 	
 	/**
@@ -66,6 +75,12 @@ public class XmlDcoToObject {
 	{
 		XStream xstream = new XStream();
 		File file = new File(xmlFilePath);
+		InputStream fileIS = null;
+		try {
+			 fileIS = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		
 		//Anotaciones para el mapeo de las clases con los nodos del XML
 		xstream.processAnnotations(OrganismosVO.class);
@@ -74,6 +89,6 @@ public class XmlDcoToObject {
 		xstream.processAnnotations(OrganismoDatosDependenciaVO.class);
 		xstream.processAnnotations(OrganismoDatosVigenciaVO.class);
 		
-		return (OrganismosVO)xstream.fromXML(file);
+		return (OrganismosVO)xstream.fromXML(fileIS);
 	}
 }

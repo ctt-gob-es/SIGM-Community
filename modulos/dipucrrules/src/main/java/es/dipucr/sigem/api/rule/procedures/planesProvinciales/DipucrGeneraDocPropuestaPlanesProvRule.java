@@ -68,6 +68,7 @@ public class DipucrGeneraDocPropuestaPlanesProvRule implements IRule {
 
 	@SuppressWarnings("rawtypes")
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+		OpenOfficeHelper ooHelper = null;
 		try{
 			logger.info("INICIO - DipucrGeneraDocPropuestaPlanesProvRule");
 			
@@ -102,7 +103,6 @@ public class DipucrGeneraDocPropuestaPlanesProvRule implements IRule {
 			String numExp = rulectx.getNumExp();
 	    	int documentId = 0;
 	    	Object connectorSession = null;
-	    	OpenOfficeHelper ooHelper = null;
 	    	
 			// 1. Obtener participantes del expediente actual, con relación != "Trasladado"
 			IItemCollection participantes = ParticipantesUtil.getParticipantes( cct, numExp, " (ROL != 'TRAS' OR ROL IS NULL) ", "ID");
@@ -206,7 +206,6 @@ public class DipucrGeneraDocPropuestaPlanesProvRule implements IRule {
 			    		
 			    		entityTemplateT.delete(cct);
 						entityDocumentT.delete(cct);
-						ooHelper.dispose();
 			    		
 		        	}
         		}
@@ -218,7 +217,12 @@ public class DipucrGeneraDocPropuestaPlanesProvRule implements IRule {
         	if (e instanceof ISPACRuleException)
 			    throw new ISPACRuleException(e);
         	throw new ISPACRuleException(e);
-        }
+        } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
+		
 		return null;
 	}
 

@@ -60,7 +60,7 @@ public class DipucrFaceNotificarFacturaRule implements IRule {
 	 */
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
 
-		FileInputStream input = null;
+		File fileFactura = null;
 		try{
 			IClientContext cct = rulectx.getClientContext();
 			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
@@ -116,8 +116,10 @@ public class DipucrFaceNotificarFacturaRule implements IRule {
 				
 				//Archivo
 				String infoPagRde = itemDocumento.getString("INFOPAG_RDE");
-				String nombreFichero = "Factura_" + nregRCF.replace("/", "_") + "." + Constants._EXTENSION_PDF;
-				File fileFactura = DocumentosUtil.getFile(cct, infoPagRde, nombreFichero, Constants._EXTENSION_PDF);
+				String nombreFichero = "Factura_" + nregRCF.replace("/", "_");
+				fileFactura = DocumentosUtil.getFile(cct, infoPagRde, nombreFichero, Constants._EXTENSION_PDF);
+				
+//				String nombreFichero = "Factura_" + nregRCF.replace("/", "_") + "." + Constants._EXTENSION_PDF;
 //				input = new FileInputStream(fileFactura);
 //				Attachment attachment = new Attachment(nombreFichero, IOUtils.toByteArray(input));
 				
@@ -166,13 +168,10 @@ public class DipucrFaceNotificarFacturaRule implements IRule {
 			logger.error(error);
 			throw new ISPACRuleException(error, ex);
 		}
-		finally{
-			if (null != input){
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+		finally{	
+			//[Dipucr-Manu Ticket#399] - ALSIGM3 Temporales Factura en Sigem
+			if(null != fileFactura && fileFactura.exists()){
+				fileFactura.delete();
 			}
 		}
 		

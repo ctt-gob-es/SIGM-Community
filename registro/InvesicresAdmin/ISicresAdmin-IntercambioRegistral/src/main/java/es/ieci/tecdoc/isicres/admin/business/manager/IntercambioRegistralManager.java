@@ -111,6 +111,13 @@ public interface IntercambioRegistralManager {
 	 * @return Listado de objetos {@link DatosBasicosOficinaDCVO}
 	 */
 	public List<DatosBasicosOficinaDCVO> findOficinasDirectorioComun(Criterios<CriterioOficinaEnum> criteriosBusqueda);
+	
+	/**
+	 * Cuenta oficinas en la réplica del directorio común (DIR3) según los <code>criteriosBusqueda</code>
+	 * @param criteriosBusqueda
+	 * @return Número de oficinas
+	 */
+	public int countOficinasDirectorioComun(Criterios<CriterioOficinaEnum> criteriosBusqueda);	
 
 	/**
 	 * Busca unidades orgánicas en la réplica del directorio común (DIR3) según los <code>criteriosBusqueda</code>

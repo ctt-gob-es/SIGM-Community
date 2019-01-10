@@ -60,11 +60,11 @@ public class DMDocumentManager {
 			connector.mergeDocument(sOpenDocURL, sSaveDocURL, data);
 
 		} catch (ISPACException e) {
-			logger.error("Error al combinar el documento", e);
+			logger.error("Error al combinar el documento - "+e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error al combinar el documento", e);
-			throw new ISPACException(e);
+			logger.error("Error al combinar el documento - "+e.getMessage(), e);
+			throw new ISPACException("Error al combinar el documento - "+e.getMessage(), e);
 		}
 	}
 
@@ -83,8 +83,8 @@ public class DMDocumentManager {
 		}
 		catch (ISPACException ie)
 		{
-			logger.error("Error al crear el documento", ie);
-			throw new ISPACException("Error en createDocument", ie);
+			logger.error("Error al crear el documento - "+ie.getMessage(), ie);
+			throw new ISPACException("Error en createDocument - "+ie.getMessage(), ie);
 		}
 		finally
 		{
@@ -106,8 +106,8 @@ public class DMDocumentManager {
 		}
 		catch (ISPACException ie)
 		{
-			logger.error("Error al obtener el documento", ie);
-			throw new ISPACException("Error en getDocumentEntity", ie);
+			logger.error("Error al obtener el documento - "+ie.getMessage(), ie);
+			throw new ISPACException("Error en getDocumentEntity - "+ie.getMessage(), ie);
 		}
 		finally
 		{

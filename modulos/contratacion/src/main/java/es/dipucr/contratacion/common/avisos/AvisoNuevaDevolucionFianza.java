@@ -1,7 +1,5 @@
 package es.dipucr.contratacion.common.avisos;
 
-import java.util.Iterator;
-
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
@@ -13,9 +11,11 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
+import java.util.Iterator;
+
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.avisos.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ResponsablesUtil;
 
 public class AvisoNuevaDevolucionFianza implements IRule 

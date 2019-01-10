@@ -12,11 +12,11 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
  */
 public class CreateDocPropuestaNegAdjudicacionRule extends CreateDocPropuestaNegRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		STR_entidad = "SGN_NEGOCIADO";
-		STR_queryDocumentos = 
-			"COD_TPDOC = 'Prop adjudic def'" ;	
-		return true;
-	}
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "SGN_NEGOCIADO";
+        strQueryDocumentos = 
+            "COD_TPDOC = 'Prop adjudic def'" ;    
+        return true;
+    }
 
 }

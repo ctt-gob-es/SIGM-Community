@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -6,25 +8,42 @@
 		<artifactId>sigem_main</artifactId>
 		<version>3.0.1-M2</version>
 	</parent>
-	
+
 	<artifactId>sigem_autenticacionAdministracionWeb</artifactId>
 	<packaging>war</packaging>
-	
+	<properties>
+		<sigem.version>3.0.1-M2</sigem.version>
+		<sigemMSSSI.version>3.0.0-msssi2.0.0</sigemMSSSI.version>
+		<weblogic.dataSource.jndi.name.sigemadmin>jdbc/sigemAdmin</weblogic.dataSource.jndi.name.sigemadmin>
+		<!--<weblogic.dataSource.jndi.name.sigemaudit_000>jdbc/fwktd-auditDS_000</weblogic.dataSource.jndi.name.sigemaudit_000>
+		<weblogic.dataSource.jndi.name.registroDS_000>jdbc/registroDS_000</weblogic.dataSource.jndi.name.registroDS_000>
+		<weblogic.dataSource.jndi.name.eTramitacionDS_000>jdbc/eTramitacionDS_000</weblogic.dataSource.jndi.name.eTramitacionDS_000>
+		<weblogic.dataSource.jndi.name.tramitadorDS_000>jdbc/tramitadorDS_000</weblogic.dataSource.jndi.name.tramitadorDS_000-->
+		<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+		<!--<weblogic.dataSource.jndi.name.fwktdsirDS_000>jdbc/fwktd-sirDS_000</weblogic.dataSource.jndi.name.fwktdsirDS_000-->
+		<PATH_REPO>D:/Repositorio/SIGEM/</PATH_REPO>
+		<sigem.url.webservices>http://localhost:7005</sigem.url.webservices>
+		<URLRoot>http://localhost:7005/SIGEM_AutenticacionAdministracionWeb/resources</URLRoot>
+		<targetPathStatic>resources</targetPathStatic>
+		<source.exclude></source.exclude>
+		<URLRootRelative>/SIGEM_AutenticacionAdministracionWeb/resources</URLRootRelative>
+	</properties>
+
 	
 	
 	<dependencies>
-		
-				
+
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_core</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_clasesBase</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-net</groupId>
@@ -36,18 +55,18 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_administracionSesionesAdmWsClient</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_utilidadesAdministracion</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>es.ieci.tecdoc.sigem</groupId>
@@ -55,25 +74,25 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_aplicacionesAdministracion</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_entidades</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_entidadesWsClient</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_gestionUsuariosBackOffice</artifactId>
@@ -91,19 +110,27 @@
 					<groupId>es.ieci.tecdoc.invesdoc</groupId>
 					<artifactId>invesdoc-stdbizobj</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>bcmail-jdk15</artifactId>
+					<groupId>bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcprov-jdk14</artifactId>
+					<groupId>bouncycastle</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_estructuraOrganizativa</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>
 			<artifactId>sigem_estructuraOrganizativaCore</artifactId>
-			<version>${pom.version}</version>
+			<version>${sigem.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>fplibrary</groupId>
@@ -115,8 +142,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>struts</groupId>
 			<artifactId>struts</artifactId>
@@ -138,16 +165,16 @@
 					<groupId>struts</groupId>
 					<artifactId>struts-legacy</artifactId>
 				</exclusion>
-  			</exclusions>
+			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.3</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>axis</groupId>
 			<artifactId>axis</artifactId>
@@ -160,10 +187,19 @@
 			<artifactId>xercesImpl</artifactId>
 			<version>2.6.2</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>es.msssi.tecdoc.sigem</groupId>
+			<artifactId>sigem_init</artifactId>
+			<version>${sigemMSSSI.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<finalName>SIGEM_AutenticacionAdministracionWeb</finalName>
 		<filters>
@@ -174,9 +210,80 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
-		</resources>		
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<warSourceExcludes>${source.exclude}</warSourceExcludes>
+					<skipTests>true</skipTests>
+					<archive>
+						<manifestEntries>
+							<Weblogic-Application-Version>${project.version}</Weblogic-Application-Version>
+						</manifestEntries>
+					</archive>
+					<webResources>
+						<resource>
+							<filtering>true</filtering>
+							<directory>src/main/webapp</directory>
+							<includes>
+								<include>**/*.xml</include>
+							</includes>
+						</resource>
+						 <resource>
+					        <directory>src/main/webapp/resources</directory>
+					        <filtering>true</filtering>
+					        <targetPath>${targetPathStatic}</targetPath>
+					        <excludes>
+					          <exclude>**/*.css</exclude>
+					          <exclude>**/*.js</exclude>
+					           <exclude>**/*.png</exclude>
+					           <exclude>**/*.jpg</exclude>
+					           <exclude>**/*.gif</exclude>
+					           <exclude>**/*.pdf</exclude>
+					        </excludes>
+					      </resource>
+					</webResources>
+					<packagingExcludes>
+					<!--	WEB-INF/lib/activation*.jar,
+						WEB-INF/lib/bc*.jar,
+						WEB-INF/lib/commons-lang*.jar,
+						WEB-INF/lib/commons-logging*.jar,
+						WEB-INF/lib/commons-net*.jar,
+						WEB-INF/lib/dom4j*.jar,
+						WEB-INF/lib/icu4j*.jar,
+						WEB-INF/lib/jaxen*.jar,
+						WEB-INF/lib/jcommon*.jar,
+						WEB-INF/lib/jdom*.jar,
+						WEB-INF/lib/jdtcore*.jar,
+						WEB-INF/lib/jfreechart*.jar,
+						WEB-INF/lib/jstl*.jar,
+						WEB-INF/lib/log4j*.jar,
+						WEB-INF/lib/mail*.jar,
+						WEB-INF/lib/oro*.jar,
+						WEB-INF/lib/saaj-api*.jar,
+						WEB-INF/lib/saaj-impl*.jar,
+						WEB-INF/lib/serializer*.jar,
+						WEB-INF/lib/slf4j-api*.jar,
+						WEB-INF/lib/slf4j-log4j12*.jar,
+						WEB-INF/lib/standard*.jar,
+						WEB-INF/lib/wss4j*.jar,
+						WEB-INF/lib/xalan*.jar,
+						WEB-INF/lib/xercesImpl*.jar,
+						WEB-INF/lib/xml-apis*.jar,
+						WEB-INF/lib/xmlParserAPIs*.jar,
+						WEB-INF/lib/xom*.jar,
+						WEB-INF/lib/alfresco-repository*.jar,
+						WEB-INF/lib/alfresco-web-service-client*.jar,
+						WEB-INF/lib/sigem_clasesBase*.jar -->
+					</packagingExcludes>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
-	
+
 	<profiles>
 		<!-- Perfiles de construccion en funcion del S.O. -->
 		<profile>
@@ -213,6 +320,57 @@
 				<finalName>SIGEM_AutAdminWeb</finalName>
 			</build>
 		</profile>
+		<profile>
+			<id>msssi_local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>msssi_local</name>
+				</property>
+			</activation>
+			<properties>
+				<source.exclude></source.exclude>
+				<filter.generic.system>${project.basedir}/../SIGEM_Config/src/main/filters/system/msssi.properties</filter.generic.system>
+				<weblogic.dataSource.jndi.name.sigemadmin>jdbc/sigemAdmin</weblogic.dataSource.jndi.name.sigemadmin>
+				<!--<weblogic.dataSource.jndi.name.sigemaudit_000>jdbc/fwktd-auditDS_000</weblogic.dataSource.jndi.name.sigemaudit_000>
+				<weblogic.dataSource.jndi.name.registroDS_000>jdbc/registroDS_000</weblogic.dataSource.jndi.name.registroDS_000>
+				<weblogic.dataSource.jndi.name.eTramitacionDS_000>jdbc/eTramitacionDS_000</weblogic.dataSource.jndi.name.eTramitacionDS_000>
+				<weblogic.dataSource.jndi.name.tramitadorDS_000>jdbc/tramitadorDS_000</weblogic.dataSource.jndi.name.tramitadorDS_000-->
+				<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+				<!--<weblogic.dataSource.jndi.name.fwktdsirDS_000>jdbc/fwktd-sirDS_000</weblogic.dataSource.jndi.name.fwktdsirDS_000-->
+				<PATH_REPO>D:/Repositorio/SIGEM/</PATH_REPO>
+				<sigem.url.webservices>http://localhost:7005</sigem.url.webservices>
+				<URLRoot>http://localhost:7005/SIGEM_AutenticacionAdministracionWeb/resources</URLRoot>
+				<targetPathStatic>resources</targetPathStatic>
+				<URLRootRelative>/SIGEM_AutenticacionAdministracionWeb/resources</URLRootRelative>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>2.4</version>
+						<executions>
+							<execution>
+								<id>assembly-common-resources</id>
+								<phase>install</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<finalName>SIGM_autenticacionAdmin_rweb-${sigm.project.version}</finalName>
+									<appendAssemblyId>false</appendAssemblyId>
+									<descriptors>
+										<descriptor>
+											assembly.xml
+										</descriptor>
+									</descriptors>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
-	
+
 </project>

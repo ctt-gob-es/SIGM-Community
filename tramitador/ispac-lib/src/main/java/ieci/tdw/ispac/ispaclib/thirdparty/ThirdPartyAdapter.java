@@ -36,6 +36,8 @@ public class ThirdPartyAdapter implements IThirdPartyAdapter {
 	
 	/** Direcciones electronicas asociadas al tercero. */
 	IElectronicAddressAdapter [] electronicAddresses = null;
+	
+	private String dir3 = null;
 
     
     /**
@@ -193,4 +195,13 @@ public class ThirdPartyAdapter implements IThirdPartyAdapter {
 	public void setDireccionesPostales(IPostalAddressAdapter[] postalAddresses) {
 		this.postalAddresses = postalAddresses;
 	}
+
+	public String getDir3() {
+		return dir3;
+	}
+
+	public void setDir3(String dir3) {
+		this.dir3 = dir3;
+	}
+
 }

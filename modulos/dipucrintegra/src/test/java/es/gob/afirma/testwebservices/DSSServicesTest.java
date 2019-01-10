@@ -74,7 +74,7 @@ public class DSSServicesTest extends TestCase {
     /**
      * Attribute that represents application name for tests.
      */
-    private static final String APPLICATION_NAME = "idquesea";
+    private static final String APPLICATION_NAME = "dipucr.sigem_quijote";
     
     private static final Logger LOGGER = Logger.getLogger(WebServiceInvoker.class);
 
@@ -111,7 +111,7 @@ public class DSSServicesTest extends TestCase {
     /**
      * Attribute that represents certificate path.
      */
-    private static final String CERTIFICATE_NAME = "evisor/probarconuncertificado.cer";
+    private static final String CERTIFICATE_NAME = "evisor/NOMBRE_JIMENEZ_MORENO_AGUSTIN_NIF_47062508T_s_FNMT_ID_old.cer";
 
     public void testDSSAfirmaSign() throws Exception {
 

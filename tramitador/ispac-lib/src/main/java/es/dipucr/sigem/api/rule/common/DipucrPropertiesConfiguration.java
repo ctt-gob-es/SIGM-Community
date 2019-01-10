@@ -2,6 +2,7 @@ package es.dipucr.sigem.api.rule.common;
 
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
+import ieci.tdw.ispac.ispaclib.configuration.ConfigurationHelper;
 import ieci.tdw.ispac.ispaclib.util.PropertiesConfiguration;
 
 import java.io.File;
@@ -15,6 +16,8 @@ public abstract class DipucrPropertiesConfiguration extends PropertiesConfigurat
 	 * Logger de la clase.
 	 */
 	private static final Logger logger = Logger.getLogger(DipucrPropertiesConfiguration.class);
+	
+	protected static String baseFilePath;//[dipucr-Felipe #507]
 	
 	/**
 	 * Constructor.
@@ -46,6 +49,7 @@ public abstract class DipucrPropertiesConfiguration extends PropertiesConfigurat
 				catch (ISPACException e1) {
 					try {
 						logger.warn("No existe el fichero de configuración: " + filePath);
+						filePath = "";//[dipucr-Felipe #507]
 						this.initiate(configFileName);
 					} 
 					catch (ISPACException e2) {
@@ -61,6 +65,8 @@ public abstract class DipucrPropertiesConfiguration extends PropertiesConfigurat
 			logger.error(error, e3);
 			throw new ISPACRuleException(error, e3);
 		}
+		String basePath = filePath.replace(File.separator + configFileName, "");
+		baseFilePath = ConfigurationHelper.getConfigFilePath(basePath);//[dipucr-Felipe #507]
 	}
 	
 	/**
@@ -79,5 +85,9 @@ public abstract class DipucrPropertiesConfiguration extends PropertiesConfigurat
 			logger.error(error, e2);
 			throw new ISPACRuleException(error, e2);
 		}
+	}
+	
+	public String getBaseFilePath() {
+		return baseFilePath;
 	}
 }

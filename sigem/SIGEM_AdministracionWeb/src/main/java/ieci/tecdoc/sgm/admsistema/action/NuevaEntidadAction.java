@@ -64,8 +64,18 @@ public class NuevaEntidadAction extends AdministracionWebAction {
 				entidad.setIdentificador(oServicio.obtenerIdentificadorEntidad());
 				entidad.setNombreCorto(entidadForm.getNombreCorto());
 				entidad.setNombreLargo(entidadForm.getNombreLargo());
-				if (!Utilidades.esNuloOVacio(entidadForm.getCodigoINE()))
-					entidad.setCodigoINE(entidadForm.getCodigoINE());
+				if (!Utilidades.esNuloOVacio(entidadForm.getCodigo_ine()))
+					entidad.setCodigo_ine(entidadForm.getCodigo_ine());
+				if (!Utilidades.esNuloOVacio(entidadForm.getCodigo_ine()))
+					entidad.setPassword_entidad(entidadForm.getPassword_entidad());
+				if (!Utilidades.esNuloOVacio(entidadForm.getDir3()))
+					entidad.setDir3(entidadForm.getDir3());
+				if (!Utilidades.esNuloOVacio(entidadForm.getSia()))
+					entidad.setSia(entidadForm.getSia());
+				if (!Utilidades.esNuloOVacio(entidadForm.getDeh()))
+					entidad.setDeh(entidadForm.getDeh());
+				if (!Utilidades.esNuloOVacio(entidadForm.getCif()))
+					entidad.setCif(entidadForm.getCif());
 
 				String accion = (String)session.getAttribute(Defs.ACTION_FORMULARIO_NUEVA_ENTIDAD);
 				if (Defs.ACCION_NUEVA_ENTIDAD.equals(accion)) {

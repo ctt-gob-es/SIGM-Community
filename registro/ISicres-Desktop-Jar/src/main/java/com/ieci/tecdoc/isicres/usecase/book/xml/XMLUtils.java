@@ -39,6 +39,10 @@ public class XMLUtils implements Keys {
         parent.addElement(XML_STYLEVALIMG_TEXT).addText(formatStyleText(newLeft, top + 5));
     }
 
+    public static void addStyleNode(Element parent, int left, int top, int width) {
+        parent.addElement(XML_STYLE_TEXT).addText(formatStyleText(left, top, width));
+    }
+    
     public static void addStyleNode(Element parent, int left, int top, int width, int height) {
         parent.addElement(XML_STYLE_TEXT).addText(formatStyleText(left, top, width, height));
     }
@@ -63,6 +67,15 @@ public class XMLUtils implements Keys {
         return MessageFormat.format(XML_XTYLE_FORMAT_2, new String[] { Integer.toString(left), Integer.toString(top + AMPL_TOP)});
     }
 
+    public static String formatStyleText(int left, int top, int width) {
+        left = convertWidth(left);
+        top = convertHeight(top);
+        width = convertWidth(width);
+
+        return MessageFormat.format(XML_XTYLE_FORMAT_NO_HEIGHT, new String[] { Integer.toString(left), Integer.toString(top + AMPL_TOP) ,
+                Integer.toString(width - left)});
+    }
+    
     public static String formatStyleText(int left, int top, int width, int height) {
         left = convertWidth(left);
         top = convertHeight(top);

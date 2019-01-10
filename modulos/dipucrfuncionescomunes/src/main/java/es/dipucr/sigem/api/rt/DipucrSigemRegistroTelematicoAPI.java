@@ -1,8 +1,6 @@
 package es.dipucr.sigem.api.rt;
 
 import ieci.tdw.ispac.api.errors.ISPACException;
-import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
-import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.catalogo.Documentos;
@@ -18,11 +16,15 @@ import ieci.tecdoc.sgm.core.services.telematico.ServicioRegistroTelematico;
 import java.io.File;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import es.dipucr.sigem.api.rule.common.serviciosWeb.ServiciosWebSecurityConfiguration;
 
 
 public class DipucrSigemRegistroTelematicoAPI {
 
+	private static final Logger LOGGER = Logger.getLogger(DipucrSigemRegistroTelematicoAPI.class);
+	
 	public static final String PLANTILLA_JASPER_NAME = "plantilla.jasper";
 	
 	public static byte[] registrarFacturaAndIniciarExpediente
@@ -63,7 +65,9 @@ public class DipucrSigemRegistroTelematicoAPI {
 			return respuestaSigem;
 
 		} catch (Exception ex) {
-			throw new ISPACException("Error al crear el registro e iniciar el expediente en SIGEM", ex);
+			String error = "Error al crear el registro e iniciar el expediente en SIGEM";
+			LOGGER.error(error, ex);
+			throw new ISPACException(error, ex);
 		}
 	}
 	

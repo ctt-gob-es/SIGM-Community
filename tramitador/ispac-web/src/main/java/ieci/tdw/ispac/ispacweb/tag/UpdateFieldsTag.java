@@ -295,6 +295,7 @@ public String getParameters() {
 	              sValue = StringUtils.replace(sValue, "\\", "\\\\");
 	              sValue = StringUtils.replace(sValue, "'", "\\'");
 	              sValue = StringUtils.replace(sValue, "\n", "\\n");
+	              sValue = StringUtils.replace(sValue, "\r", "\\r");
 	              
 	              if (listById != null && listById.contains(sId)){
 		              //sId = StringUtils.replace(sId, JSPBuilder.COUNTER_REPLACE, multivalueId);

@@ -5,7 +5,6 @@ import java.util.List;
 
 import es.ieci.tecdoc.fwktd.server.dao.ibatis.IbatisGenericDaoImpl;
 import es.ieci.tecdoc.isicres.terceros.business.dao.TerceroJuridicoDao;
-import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoFisicoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoJuridicoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.search.CriteriaVO;
@@ -38,13 +37,20 @@ public class TerceroJuridicoDaoImpl extends
 	 * {@inheritDoc}
 	 * @see es.ieci.tecdoc.isicres.terceros.business.dao.TerceroJuridicoDao#findTerceroJuridicoByDocumentNumber(java.lang.String, int)
 	 */
-	public List<TerceroValidadoFisicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber,
-			int typeDoc) {
+	public List<TerceroValidadoJuridicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber, int typeDoc) {
 		HashMap map = new HashMap();
 		map.put("type_doc", typeDoc);
 		map.put("nif",phisicalNumber);
-		return getSqlMapClientTemplate().queryForList("TerceroValidadoJuridicoVO.findByDocumentNumber",map);
+		return getSqlMapClientTemplate().queryForList("TerceroValidadoJuridicoVO.findByDocumentNumberTipoDoc",map);
 	}
 	
-	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.isicres.terceros.business.dao.TerceroJuridicoDao#findTerceroJuridicoByDocumentNumber(java.lang.String, int)
+	 */
+	public List<TerceroValidadoJuridicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber) {
+		HashMap map = new HashMap();
+		map.put("nif",phisicalNumber);
+		return getSqlMapClientTemplate().queryForList("TerceroValidadoJuridicoVO.findByDocumentNumber",map);
+	}
 }

@@ -283,7 +283,9 @@ public class TXTransactionDataContainer
 	{
 		TXProcesoDAO process=getProcess(nIdProc);
 		mprocessMap.remove(process.getKeyInteger());
-		process.delete(mccxt.getConnection());
+		DbCnt cnt = mccxt.getConnection();
+		process.delete(cnt);
+		mccxt.releaseConnection(cnt);
 	}
 
 	public void deleteStage(int nIdStage)
@@ -291,7 +293,9 @@ public class TXTransactionDataContainer
 	{
 		TXFaseDAO stage=getStage(nIdStage);
 		mstageMap.remove(stage.getKeyInteger());
-		stage.delete(mccxt.getConnection());
+		DbCnt cnt = mccxt.getConnection();
+		stage.delete(cnt);
+		mccxt.releaseConnection(cnt);
 	}
 
 	public TXTramiteDAO newTask()
@@ -303,6 +307,8 @@ public class TXTransactionDataContainer
 		task.createNew(cnt);
 
 		mtaskMap.put(task.getKeyInteger(),task);
+		
+		mccxt.releaseConnection(cnt);
 		return task;
 	}
 
@@ -331,7 +337,10 @@ public class TXTransactionDataContainer
 	{
 		TXTramiteDAO task=getTask(nIdTask);
 		mtaskMap.remove(task.getKeyInteger());
-		task.delete(mccxt.getConnection());
+		
+		DbCnt cnt = mccxt.getConnection();
+		task.delete(cnt);
+		mccxt.releaseConnection(cnt);
 	}
 
 
@@ -366,7 +375,9 @@ public class TXTransactionDataContainer
 	{
 		TXSincNodoDAO syncnode=getSyncNode(nIdSyncNode);
 		msyncnodeMap.remove(syncnode.getKeyInteger());
-		syncnode.delete(mccxt.getConnection());
+		DbCnt cnt = mccxt.getConnection();
+		syncnode.delete(cnt);
+		mccxt.releaseConnection(cnt);
 	}
 
 
@@ -443,7 +454,7 @@ public class TXTransactionDataContainer
 		
 		milestone.delete(cnt, nIdProc, query);
 	
-		
+		mccxt.releaseConnection(cnt);
 	}
 	
 	/**
@@ -528,7 +539,9 @@ public class TXTransactionDataContainer
 			TXTramiteDAO task=(TXTramiteDAO)entry.getValue();
 			if (task.getInt("ID_EXP")==nIdProc)
 				it.remove();
-			task.delete(mccxt.getConnection());
+			DbCnt cnt = mccxt.getConnection();
+			task.delete(cnt);
+			mccxt.releaseConnection(cnt);
 		}
 	}
 	/**
@@ -544,7 +557,9 @@ public class TXTransactionDataContainer
 			TXFaseDAO stage=(TXFaseDAO)entry.getValue();
 			if (stage.getInt("ID_EXP")==nIdProc)
 				it.remove();
-			stage.delete(mccxt.getConnection());
+			DbCnt cnt = mccxt.getConnection();
+			stage.delete(cnt);
+			mccxt.releaseConnection(cnt);
 		}
 	}
 	/**
@@ -560,7 +575,9 @@ public class TXTransactionDataContainer
 			TXSincNodoDAO sincnodo=(TXSincNodoDAO)entry.getValue();
 			if (sincnodo.getInt("ID_EXP")==nIdProc)
 				it.remove();
-			sincnodo.delete(mccxt.getConnection());
+			DbCnt cnt = mccxt.getConnection();
+			sincnodo.delete(cnt);
+			mccxt.releaseConnection(cnt);
 		}
 	}
 
@@ -584,6 +601,9 @@ public class TXTransactionDataContainer
 		EntityManager entmgr=new EntityManager(mccxt);
 		EntityDAO entity=entmgr.createEntity(cnt,idEntity,numexp);
 		entity.store(mccxt);
+		
+		mccxt.releaseConnection(cnt);
+		
 		return entity;
 	}
 
@@ -594,6 +614,9 @@ public class TXTransactionDataContainer
 		EntityManager entmgr=new EntityManager(mccxt);
 		EntityDAO entity=entmgr.createExpedient(cnt, process);
 		entity.store(mccxt);
+		
+		mccxt.releaseConnection(cnt);
+
 		return entity;
 	}
 
@@ -605,6 +628,8 @@ public class TXTransactionDataContainer
 			entity.set("FCIERRE", new Date());
 			entity.store(mccxt);
 		}
+		
+		mccxt.releaseConnection(cnt);
 	}
 
 	public EntityDAO createTaskEntity(TXTramiteDAO task)
@@ -617,6 +642,9 @@ public class TXTransactionDataContainer
 		if (task.isComplex())
 			entity.set("ID_SUBPROCESO", task.getInt("ID_SUBPROCESO"));
 		entity.store(mccxt);
+		
+		mccxt.releaseConnection(cnt);
+
 		return entity;
 	}
 
@@ -627,6 +655,8 @@ public class TXTransactionDataContainer
 		String sql="WHERE NUMEXP = '" + DBUtil.replaceQuotes(numexp) + "'";
 		int count = EntityFactoryDAO.getInstance().countEntities(cnt,
 				ISPACEntities.DT_ID_EXPEDIENTES,sql);
+
+		mccxt.releaseConnection(cnt);
 
 		return count > 0;
 	}
@@ -648,6 +678,8 @@ public class TXTransactionDataContainer
 		entity.set("FECHA_CIERRE",new Date());
 		entity.set("ID_RESP_CLOSED", idRespClosedTask);
 		entity.store(mccxt);
+		
+		mccxt.releaseConnection(cnt);
 	}
 
 	public void deleteTaskEntity(int nIdTask)

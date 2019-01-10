@@ -294,7 +294,23 @@ public class SearchMgr
 		StringWriter sw = null;
 
 		try
-		{
+		{			
+			// Parametrizamos los formularios de búsqueda por usuario. Permite restringir los procedimientos [Josemi #595908]
+			String userName = (String) values.get("USERNAME_PARAM");
+			String userUID = (String) values.get("USER_UID_PARAM");
+			String userDeptUID = (String) values.get("USER_DEPT_UID_PARAM");
+			String userGroupsUID = (String) values.get("USER_GROUPS_UID_PARAM");
+			
+			values.remove("USERNAME_PARAM");
+			values.remove("USER_UID_PARAM");
+			values.remove("USER_DEPT_UID_PARAM");
+			values.remove("USER_GROUPS_UID_PARAM");
+			
+			xml = xml.replace("USERNAME_PARAM", userName);
+			xml = xml.replace("USER_UID_PARAM", userUID);
+			xml = xml.replace("USER_DEPT_UID_PARAM", userDeptUID);
+			xml = xml.replace("USER_GROUPS_UID_PARAM", userGroupsUID);
+						
 			TransformerFactory tFactory = TransformerFactory.newInstance();
 			Source xmlSource = new StreamSource(new StringReader(xml));
 			Source xslSource = new StreamSource(new java.net.URL("file", "", xslpath).openStream());
@@ -423,7 +439,8 @@ public class SearchMgr
 			if(StringUtils.isNotBlank(sMaxResultados)){
 				max=TypeConverter.parseInt(sMaxResultados.trim(),0);
 				if(max>0){
-					searchResultVO.setNumMaxRegistros(max);
+//					searchResultVO.setNumMaxRegistros(max);
+					searchResultVO.setNumMaxRegistros(max * 2);//[dipucr-Felipe #847] Actuales + histórico
 					results.query(cnt, conditions, order ,max);
 				}
 			}
@@ -437,20 +454,20 @@ public class SearchMgr
 				results.query(cnt, conditions);
 			}
 
+			searchResultVO.setNumTotalRegistros(results.count(cnt, conditions));//[dipucr-Felipe #847]
+			
 			// INICIO [dipucr-Felipe] MQE #1023 Tablas de Histórico
 			// Esta mejora estaba añadida en el getSearchResults pero no en getLimitedSearchResults
 			// Concatenamos los resultados normales con los de la tablas de los históricos
 			IItemCollection resultados = results.disconnect();
 			List lista = resultados.toList();
 			GestionTablasHistorico gh = new GestionTablasHistorico();
-			ListCollection listaConHistorico = gh.buscaEnHistorico(cnt, tableNames, fromClause, columns, conditions, lista);
+			ListCollection listaConHistorico = gh.buscaEnHistorico
+					(cnt, tableNames, fromClause, columns, conditions, lista, order, max, searchResultVO);
 //			searchResultVO.setResultados(results.disconnect());
 			searchResultVO.setResultados(listaConHistorico);			
 			// FIN [dipucr-Felipe] MQE #1023
 			
-			int tamLista=searchResultVO.getResultados().toList().size();
-			searchResultVO.setNumTotalRegistros(tamLista);
-
 			// Crear hito de búsqueda
 			mcctx.getAPI().getTransactionAPI().newMilestone(0, 0, 0,
 					InformationMilestonesConstants.SEARCH_MILESTONE,
@@ -460,14 +477,6 @@ public class SearchMgr
 						.append("</infoaux>")
 						.toString(),
 					"Búsqueda avanzada");
-
-			//Si la lista resultante de la búsqueda es igual al número maximo de resultados permitidos
-			//realizamos un consulta count para saber cuantos registros satisfacen la consulta
-			if(searchResultVO.getNumMaxRegistros()!=SearchResultVO.NO_LIMITED){
-				if(tamLista==searchResultVO.getNumMaxRegistros()){
-					searchResultVO.setNumTotalRegistros(results.count(cnt, conditions));
-				}
-			}
 
 		}catch(ISPACException e){
 			logger.error("Error al ejecutar la búsqueda avanzada", e);

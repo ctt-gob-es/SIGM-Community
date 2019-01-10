@@ -114,7 +114,7 @@ public class XMLAdvancedSignature
 //                    }
 //                    catch (Throwable e)
 //                    {
-//                        e.printStackTrace();
+//                        LOGGER.error("ERROR. " + e.getMessage(), e);
 //                    }
 //                }
                 return null;

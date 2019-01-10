@@ -32,8 +32,7 @@ public class AvanzarFaseRule implements IRule {
 	        return true;
 			
 		} catch (Exception e) {
-	        throw new ISPACRuleException("Error al avanzar fase del expediente. " +
-	        		" Numexp:" + numexp, e);
+	        throw new ISPACRuleException("Error al avanzar fase del expediente. Numexp:" + numexp + " - "+ e.getMessage(), e);
 	    } 
     }
 

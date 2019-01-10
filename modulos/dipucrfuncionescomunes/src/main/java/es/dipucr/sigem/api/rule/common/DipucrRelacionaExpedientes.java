@@ -37,11 +37,11 @@ public class DipucrRelacionaExpedientes implements IRule{
 			IItemCollection entidades = entitiesAPI.getEntities("DPCR_RELACIONA_EXP_REG_TEL", rulectx.getNumExp());
 			Iterator<?> it = entidades.iterator();			
 			if(it.hasNext()){
-				String numexp_padre = ((IItem)it.next()).getString("NUMEXP_PADRE");
+				String numexpPadre = ((IItem)it.next()).getString("NUMEXP_PADRE");
 				
 				IItem registro = entitiesAPI.createEntity(SpacEntities.SPAC_EXP_RELACIONADOS);
 
-				registro.set("NUMEXP_PADRE", numexp_padre);
+				registro.set("NUMEXP_PADRE", numexpPadre);
 				registro.set("NUMEXP_HIJO", rulectx.getNumExp());
 				registro.set("RELACION", relacion);
 

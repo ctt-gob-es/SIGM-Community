@@ -23,11 +23,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.util.Calendar;
 import com.sun.star.awt.FontWeight;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
@@ -231,7 +231,6 @@ public class DipucrGeneraDocsObligacionesReconocidas implements IRule {
 			DocumentosUtil.deleteFile(fileName);
 			if(in!=null) in.close();
 			if(out != null) out.close();
-			ooHelper.dispose();
 			
 			if (connectorSession != null) {
 				gendocAPI.closeConnectorSession(connectorSession);
@@ -245,6 +244,10 @@ public class DipucrGeneraDocsObligacionesReconocidas implements IRule {
     		logger.error(e.getMessage(),e);
 		} catch (java.lang.Exception e) {
     		logger.error(e.getMessage(),e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 	}
 	

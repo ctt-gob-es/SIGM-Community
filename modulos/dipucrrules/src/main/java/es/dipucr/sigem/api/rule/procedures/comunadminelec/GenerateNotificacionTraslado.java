@@ -40,10 +40,10 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class GenerateNotificacionTraslado implements IRule{
 	
-	private static final Logger logger = Logger.getLogger(GenerateNotificacionTraslado.class);
+	private static final Logger LOGGER = Logger.getLogger(GenerateNotificacionTraslado.class);
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-		
+		// Empty method
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -96,7 +96,7 @@ public class GenerateNotificacionTraslado implements IRule{
         		Iterator it = taskTpDocCollection.iterator();
         		while (it.hasNext()){
         			IItem taskTpDoc = (IItem)it.next();
-        			if (taskTpDoc.get("CT_TPDOC:NOMBRE").equals("Carta digital")){
+        			if ("Carta digital".equals(taskTpDoc.get("CT_TPDOC:NOMBRE"))){
         				documentTypeId = taskTpDoc.getInt("TASKTPDOC:ID_TPDOC");
         			}
         		}
@@ -130,10 +130,9 @@ public class GenerateNotificacionTraslado implements IRule{
 			        	 * INICIO
 			        	 * ##Ticket #172 SIGEM decretos y secretaria, modificar el recurso
 			        	 * **/
-			        	if (recurso.equals("")){
+			        	if ("".equals(recurso)){
 			        		recurso += es.dipucr.sigem.api.rule.procedures.Constants.SECRETARIAPROC.sinRECUSO;
-			        	}
-			        	else{
+			        	} else {
 			        		recurso += es.dipucr.sigem.api.rule.procedures.Constants.SECRETARIAPROC.conRECUSO;
 			        	}
 			        	
@@ -153,7 +152,6 @@ public class GenerateNotificacionTraslado implements IRule{
 				        	templateId = tpDocsTemplate.getInt("ID");
 			        	}
 			    		
-			    		//IItem entityTemplate = DocumentosUtil.generaYAnexaDocumento(rulectx, documentTypeId, "Prueba Carta Digital Plantilla", resultado1, Constants._EXTENSION_ODT);
 			        	IItem entityTemplate = DocumentosUtil.generaYAnexaDocumento(rulectx, rulectx.getTaskId(), documentTypeId, templateId, "Prueba Carta Digital Plantilla", resultado1, "pdf");
 			    		
 			    		entityTemplate.set("DESTINO", nombre);
@@ -166,8 +164,9 @@ public class GenerateNotificacionTraslado implements IRule{
 			    		
 			    		// Obtener la información del fichero convertido
 			    		file = new File(docFilePath);
-			    		if (!file.exists())
+			    		if (!file.exists()) {
 			    			throw new ISPACException("No se ha podido convertir el documento a PDF");
+			    		}
 		
 						String rutaFileName = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/"+FileTemporaryManager.getInstance().newFileName()+".pdf";
 						File resultado = new File(rutaFileName);
@@ -190,8 +189,7 @@ public class GenerateNotificacionTraslado implements IRule{
 							document.newPage();
 							Image imagen = Image.getInstance(writer.getImportedPage(reader, i));
 							imagen.scalePercent(100);
-							document.add(imagen);
-							
+							document.add(imagen);							
 						}
 
 						while(iDocAnexar.hasNext()){
@@ -202,8 +200,7 @@ public class GenerateNotificacionTraslado implements IRule{
 							if(docAnexar.getString("INFOPAG_RDE")!=null){
 								infoPagAnexar = docAnexar.getString("INFOPAG_RDE");
 								 ext = docAnexar.getString("EXTENSION_RDE");
-							}
-							else{
+							} else {
 								infoPagAnexar = docAnexar.getString("INFOPAG");
 								 ext = docAnexar.getString("EXTENSION");
 							}
@@ -213,11 +210,10 @@ public class GenerateNotificacionTraslado implements IRule{
 							
 							nombreDocumento = descripcion + "." + ext;
 							
-							añadeDocumento(writer, fileAnexo.getAbsolutePath(), nombreDocumento, normalizar(descripcion));
+							addDocumento(writer, fileAnexo.getAbsolutePath(), nombreDocumento, normalizar(descripcion));
 			
 							fileAnexo.delete();
-							fileAnexo = null;
-							
+							fileAnexo = null;							
 						}
 						
 						document.close();								
@@ -238,8 +234,7 @@ public class GenerateNotificacionTraslado implements IRule{
 			    		//Borra los documentos intermedios del gestor documental
 				        IItemCollection collectionBorrar = entitiesAPI.getDocuments(rulectx.getNumExp(), "DESCRIPCION = 'Prueba Carta Digital Plantilla'", "");
 				        Iterator itBorrar = collectionBorrar.iterator();
-				        while (itBorrar.hasNext())
-				        {
+				        while (itBorrar.hasNext()) {
 				        	IItem docBorrar = (IItem)itBorrar.next();
 				        	entitiesAPI.deleteDocument(docBorrar);
 				        }
@@ -252,15 +247,12 @@ public class GenerateNotificacionTraslado implements IRule{
 				        writer.close();
 				        writer = null;
 				        DocumentosUtil.deleteFile(docFilePath);
-						System.gc();
 					}
 				}//fin if
-			}
-			//No existen documentos de anexo
-			else{
+			} else { //No existen documentos de anexo
 				
-				String DocNotifTexto = "Plantilla Carta digital";
-				String DocNotif = "Carta digital";
+				String docNotifTexto = "Plantilla Carta digital";
+				String docNotif = "Carta digital";
 				int templateId = 0;
 				
 				// 1. Obtener participantes del expediente actual, con relación != "Trasladado"
@@ -279,7 +271,7 @@ public class GenerateNotificacionTraslado implements IRule{
 		        		Iterator it = taskTpDocCollection.iterator();
 		        		while (it.hasNext()){
 		        			IItem taskTpDoc = (IItem)it.next();
-		        			if (taskTpDoc.get("CT_TPDOC:NOMBRE").equals(DocNotif)){
+		        			if (taskTpDoc.get("CT_TPDOC:NOMBRE").equals(docNotif)){
 		        				documentTypeId = taskTpDoc.getInt("TASKTPDOC:ID_TPDOC");
 		        			}
 		        		}
@@ -303,7 +295,7 @@ public class GenerateNotificacionTraslado implements IRule{
 							        IItem entityDocument = gendocAPI.createTaskDocument(taskId, documentTypeId);
 							        documentTypeId = entityDocument.getKeyInt();
 									
-									String  infoPag =getInfoDoc(rulectx, DocNotifTexto);
+									String  infoPag =getInfoDoc(rulectx, docNotifTexto);
 									
 									//Plantilla de Notificaciones
 									String sFileTemplate = DocumentosUtil.getFile(cct, infoPag, null, null).getName();
@@ -323,7 +315,7 @@ public class GenerateNotificacionTraslado implements IRule{
 									        
 									DocumentosUtil.deleteFile(sFileTemplate);
 							        
-								}catch (Throwable e) {
+								}catch (Exception e) {
 									// Si se produce algún error se hace rollback de la transacción
 									cct.endTX(false);
 									
@@ -333,12 +325,10 @@ public class GenerateNotificacionTraslado implements IRule{
 									
 									if (eCause instanceof ISPACException) {
 										extraInfo = eCause.getCause().getMessage();
-									}
-									
-									else {
+									} else {
 										extraInfo = e.getMessage();
 									}
-						        	logger.error("Error en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
+						        	LOGGER.error("Error en el expediente: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
 									throw new ISPACInfo(message, extraInfo);
 									
 								}finally {
@@ -348,27 +338,26 @@ public class GenerateNotificacionTraslado implements IRule{
 									}
 								}
 				        	}
-		        		}
-		        		else{
+		        		} else {
 	        				throw new ISPACInfo("No existe el tipo de documento 'Carta digital' en el expediente: " + numexp+" asociado al trámite");
 	        			}		
 		        	}
 				}
 			}
 		} catch (ISPACException e) {
-			logger.error("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
 		} catch (FileNotFoundException e) {
-			logger.error("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
 		} catch (IOException e) {
-			logger.error("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
 		} catch (DocumentException e) {
-			logger.error("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar los documentos en el expediente: " + numexp + ". " + e.getMessage(), e);
 		}
-		return new Boolean (true);
+		return true;
 	}
 	
 	private static String normalizar(String name) {
@@ -377,16 +366,15 @@ public class GenerateNotificacionTraslado implements IRule{
 		return name;
 	}
 	
-	private void añadeDocumento(PdfWriter writer, String rutaOriginal, String nombreDocumento, String descripcionAdjunto) {
+	private void addDocumento(PdfWriter writer, String rutaOriginal, String nombreDocumento, String descripcionAdjunto) {
 
-		try{
-			
+		try{			
 			PdfFileSpecification pfs = PdfFileSpecification.fileEmbedded(writer, rutaOriginal, nombreDocumento, null);
-			if (pfs != null)
+			if (pfs != null) {
 				writer.addFileAttachment(descripcionAdjunto, pfs);
-		}
-		catch(IOException e){
-        	logger.error("Error al añadir el documento. " + e.getMessage(), e);
+			}
+		} catch(IOException e) {
+        	LOGGER.error("Error al añadir el documento. " + e.getMessage(), e);
 		}
 	}
 
@@ -419,7 +407,7 @@ public class GenerateNotificacionTraslado implements IRule{
 			}
 			return infoPag;
 		}catch(Exception e){
-        	logger.error("Error en getInfoPag al obtener el valor INFOPAG del documento: " + docNotifTexto + " del expediente: " + numexp + ". " + e.getMessage(), e);			
+        	LOGGER.error("Error en getInfoPag al obtener el valor INFOPAG del documento: " + docNotifTexto + " del expediente: " + numexp + ". " + e.getMessage(), e);			
 			return null;
 		}
 	}

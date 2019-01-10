@@ -12,7 +12,10 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
+
 public class ListadoRuegosPreguntasRule implements IRule{
+	private static final Logger logger = Logger.getLogger(ListadoRuegosPreguntasRule.class);
 
     public boolean init(IRuleContext rulectx) throws ISPACRuleException{
         return true;
@@ -39,22 +42,26 @@ public class ListadoRuegosPreguntasRule implements IRule{
 	        int orden = 1;
 	        while (it.hasNext()) {
                 item = ((IItem)it.next());
-                listado += String.valueOf(orden) + ".- " + item.getString("ASUNTO") + "\r";
-                String str = item.getString("OBSERVACIONES");
-                str = str.replaceAll("\r\n", "\r"); //Evita saltos de línea duplicados                
-                if ( str != null )
+                String asunto = "";
+                if(item.getString("ASUNTO")!=null) asunto = item.getString("ASUNTO");
+                listado += String.valueOf(orden) + ".- " + asunto + "\r";
+                String str = "";
+                if(item.getString("OBSERVACIONES")!=null){
+                	str = item.getString("OBSERVACIONES");
+                	str = str.replaceAll("\r\n", "\r"); //Evita saltos de línea duplicados                              
+                }
+                if ( str != null && !str.equals(""))
                 {
                 	listado += str + "\r";
                 }
-            	listado += "\r";
+            	listado += "\r";   
                 orden++;
 	        }
     		return listado;
     		
         } catch(Exception e) {
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException("No se ha podido obtener la lista de ruegos y preguntas",e);
+        	logger.error("No se ha podido obtener la lista de ruegos y preguntas" + rulectx.getNumExp()+" - "+e.getMessage() ,e);
+        	throw new ISPACRuleException("No se ha podido obtener la lista de ruegos y preguntas" + rulectx.getNumExp()+" - "+e.getMessage() ,e);
         }
     }
 

@@ -1,5 +1,8 @@
 package es.ieci.tecdoc.fwktd.dir3.api.service.impl;
 
+import java.io.File;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,17 +45,31 @@ public class ServicioInicializacionDirectorioComunImpl implements ServicioInicia
 		String fileInicializarOficinas = getServicioObtenerInicializacionDCO().getFicheroInicializarOficinasDCO();
 		String fileInicializarUnidades = getServicioObtenerInicializacionDCO().getFicheroInicializarUnidadesDCO();
 
-		OficinasVO oficinasDCO = XmlDcoToObject.getInstance().getOficinasFromXmlFile(fileInicializarOficinas);
-		getDatosBasicosOficinaManager().saveDatosBasicosOficinas(oficinasDCO);
-		if(logger.isDebugEnabled()){
-			logger.debug("Oficinas inicializadas");
+		if(StringUtils.isNotEmpty(fileInicializarOficinas)){
+			OficinasVO oficinasDCO = XmlDcoToObject.getInstance().getOficinasFromXmlFile(fileInicializarOficinas);
+			getDatosBasicosOficinaManager().saveDatosBasicosOficinas(oficinasDCO);
+			
+			File ficheroBorrar = new File(fileInicializarOficinas);
+			if(null != ficheroBorrar && ficheroBorrar.exists()){
+				ficheroBorrar.delete();
+			}
+			if(logger.isDebugEnabled()){
+				logger.debug("Oficinas inicializadas");
+			}
 		}
-
-		OrganismosVO organismosDCO = XmlDcoToObject.getInstance().getOrganismosFromXmlFile(fileInicializarUnidades);
-		getDatosBasicosUnidadOrganicaManager().saveDatosBasicosUnidadesOrganicas(organismosDCO);
-		if(logger.isDebugEnabled()){
-			logger.debug("Organismos inicializados");
-			logger.debug("Finalizada la inicialización del sistema");
+		
+		if(StringUtils.isNotEmpty(fileInicializarUnidades)){
+			OrganismosVO organismosDCO = XmlDcoToObject.getInstance().getOrganismosFromXmlFile(fileInicializarUnidades);
+			getDatosBasicosUnidadOrganicaManager().saveDatosBasicosUnidadesOrganicas(organismosDCO);
+			
+			File ficheroBorrar = new File(fileInicializarUnidades);
+			if(null != ficheroBorrar && ficheroBorrar.exists()){
+				ficheroBorrar.delete();
+			}
+			if(logger.isDebugEnabled()){
+				logger.debug("Organismos inicializados");
+				logger.debug("Finalizada la inicialización del sistema");
+			}
 		}
 	}
 

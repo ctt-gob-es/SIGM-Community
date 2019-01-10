@@ -169,6 +169,12 @@ public class DipucrSigemSicresConnector extends SigemSicresConnector{
 				if (register.getRegisterData() != null) {
 					fieldInfoList.add(createFieldInfo("13", register.getRegisterData().getSummary()));
 				}
+				
+				// Está involucrado en cambio registral
+				fieldInfoList.add(createFieldInfo("503", "0"));
+				
+				// No acompaña documentación física ni en otros soportes
+				fieldInfoList.add(createFieldInfo("506", "1"));
 
 				// Destinatarios
 				PersonInfo[] personInfos = null;
@@ -189,7 +195,7 @@ public class DipucrSigemSicresConnector extends SigemSicresConnector{
 			}
 		} catch (RegistroException e) {
 			logger.warn("Error al insertar el registro", e);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Error al insertar el registro", e);
 			throw new ISPACException("Error al insertar el registro", e);
 		}

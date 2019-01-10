@@ -28,6 +28,31 @@
 				</ispac:htmlText>
 			</div>
 			
+			<div id="label_CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO"
+				style="position: absolute; top: 10px; left: 650px; width: 210px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO)" />:
+			</div>
+			<div id="data_CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO"
+				style="position: absolute; top: 10px; left: 760px; width: 100%;">
+				<nobr>
+					<ispac:htmlTextImageFrame
+						property="property(CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO)" readonly="true"
+						readonlyTag="false" propertyReadonly="readonly" styleClass="input"
+						styleClassReadonly="inputReadOnly" size="25"
+						id="SEARCH_CONTRATACION_DATOS_CONTRATO_PROVINCIA_CONTRATO" target="workframe"
+						action="selectListadoCodicePliego.do?atributo=NUTS"
+						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
+						imageDelete="img/borrar.gif"
+						titleKeyImageDelete="title.delete.data.selection"
+						styleClassDeleteLink="tdlink"
+						confirmDeleteKey="msg.delete.data.selection" showDelete="true"
+						showFrame="true" width="640" height="480">
+						<ispac:parameter name="SEARCH_CONTRATACION_DATOS_CONTRATO_PROVINCIA_CONTRATO" id="property(CONTRATACION_DATOS_CONTRATO:PROVINCIA_CONTRATO)" property="SUSTITUTO" />
+					</ispac:htmlTextImageFrame>
+				</nobr>
+			</div>
+			
 			<div id="label_CONTRATACION_DATOS_CONTRATO:TIPO_CONTRATO"
 				style="position: absolute; top: 35px; left: 10px; width: 210px;"
 				class="formsTitleB">
@@ -153,7 +178,7 @@
 						styleClass="input" styleClassReadonly="inputReadOnly" size="80"
 						id="SEARCH_CONTRATACION_DATOS_CONTRATO_ORGANO_CONTRATACION"
 						target="workframe"
-						action="selectSubstitute.do?entity=SECR_VLDTBL_ORGANOS"
+						action="selectSubstitute.do?entity=CONTRATACION_ORGANO"
 						image="img/search-mg.gif" titleKeyLink="title.link.data.selection"
 						imageDelete="img/borrar.gif"
 						titleKeyImageDelete="title.delete.data.selection"
@@ -268,6 +293,12 @@ function save() {
 	document.defaultForm.target = "ParentWindow";
 	document.defaultForm.action = "storeEntity.do";
 	document.defaultForm.submit();
-	ispac_needToConfirm = true;
+	var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+	 if (is_chrome){
+	  ispac_needToConfirm = false;
+	 }
+	 else{
+	  ispac_needToConfirm = true;
+	 }
 }
 //--></script>

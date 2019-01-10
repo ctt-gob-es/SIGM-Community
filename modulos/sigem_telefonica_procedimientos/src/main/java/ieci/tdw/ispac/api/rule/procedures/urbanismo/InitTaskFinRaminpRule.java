@@ -5,15 +5,14 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 public class InitTaskFinRaminpRule extends InitTaskResolucionRaminpRule {
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException
-	{
-		STR_entidad = "URB_LIC_RAMINP";
-		STR_queryDocumentos = 
-			"NOMBRE = 'Providencia' OR " +
-			"NOMBRE = 'Informe jurídico' OR " +		
-			"NOMBRE = 'Informe técnico' OR " +
-			"NOMBRE = 'Informe Jefe Local de Sanidad' OR " +		
-			"NOMBRE = 'Informe comisión prov. saneamiento'";		
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        strEntidad = "URB_LIC_RAMINP";
+        strQueryDocumentos = 
+            "NOMBRE = 'Providencia' OR " +
+            "NOMBRE = 'Informe jurídico' OR " +        
+            "NOMBRE = 'Informe técnico' OR " +
+            "NOMBRE = 'Informe Jefe Local de Sanidad' OR " +        
+            "NOMBRE = 'Informe comisión prov. saneamiento'";        
         return true;
     }
 }

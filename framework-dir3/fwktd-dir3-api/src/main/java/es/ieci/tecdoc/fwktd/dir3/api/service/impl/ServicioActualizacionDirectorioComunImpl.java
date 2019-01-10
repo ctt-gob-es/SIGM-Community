@@ -1,8 +1,10 @@
 package es.ieci.tecdoc.fwktd.dir3.api.service.impl;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,7 @@ import es.ieci.tecdoc.fwktd.dir3.api.vo.oficina.OficinasVO;
 import es.ieci.tecdoc.fwktd.dir3.api.vo.unidad.OrganismosVO;
 import es.ieci.tecdoc.fwktd.dir3.core.service.ServicioActualizacionDirectorioComun;
 import es.ieci.tecdoc.fwktd.dir3.services.ServicioObtenerActualizacionesDCO;
+import eu.medsea.util.StringUtil;
 
 /**
  * Implementacion por defecto del servicio de actualización del DCO
@@ -43,8 +46,7 @@ public class ServicioActualizacionDirectorioComunImpl implements ServicioActuali
 	protected GenerateScriptSQLManager generateScriptSQLOficinaManager;
 	protected GenerateScriptSQLManager generateScriptSQLUnidadOrganicaManagerImpl;
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ServicioActualizacionDirectorioComunImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(ServicioActualizacionDirectorioComunImpl.class);
 
 	/*
 	 * (non-Javadoc)
@@ -68,25 +70,32 @@ public class ServicioActualizacionDirectorioComunImpl implements ServicioActuali
 		}
 
 		//Obtenemos los ficheros con los datos
-		String fileInicializarOficinas = getServicioObtenerActualizacionesDCO()
-				.getFicheroActualizarOficinasDCO(
-						estadoActualizacion.getFechaActualizacion());
+		String fileInicializarOficinas = getServicioObtenerActualizacionesDCO().getFicheroActualizarOficinasDCO(estadoActualizacion.getFechaActualizacion());
+		String fileInicializarUnidades = getServicioObtenerActualizacionesDCO().getFicheroActualizarUnidadesDCO(estadoActualizacion.getFechaActualizacion());
 
-		String fileInicializarUnidades = getServicioObtenerActualizacionesDCO()
-				.getFicheroActualizarUnidadesDCO(
-						estadoActualizacion.getFechaActualizacion());
+		//Transformamos los datos de los ficheros a VOs y actualizamos los datos
+		if(StringUtils.isNotEmpty(fileInicializarOficinas)){
+			OficinasVO oficinasDCO = XmlDcoToObject.getInstance().getOficinasFromXmlFile(fileInicializarOficinas);
+			getDatosBasicosOficinaManager().updateDatosBasicosOficinas(oficinasDCO);
 
-		//Transformamos los datos de los ficheros a VOs
-		OficinasVO oficinasDCO = XmlDcoToObject.getInstance().getOficinasFromXmlFile(fileInicializarOficinas);
-		OrganismosVO organismosDCO = XmlDcoToObject.getInstance().getOrganismosFromXmlFile(fileInicializarUnidades);
-
-		//Actualizamos los datos
-		getDatosBasicosOficinaManager().updateDatosBasicosOficinas(oficinasDCO);
-		getDatosBasicosUnidadOrganicaManager().updateDatosBasicosUnidadesOrganicas(organismosDCO);
+			File ficheroBorrar = new File(fileInicializarOficinas);
+			if(null != ficheroBorrar && ficheroBorrar.exists()){
+				ficheroBorrar.delete();
+			}
+		}
+		if(StringUtils.isNotEmpty(fileInicializarUnidades)){
+			OrganismosVO organismosDCO = XmlDcoToObject.getInstance().getOrganismosFromXmlFile(fileInicializarUnidades);
+			getDatosBasicosUnidadOrganicaManager().updateDatosBasicosUnidadesOrganicas(organismosDCO);
+		
+			File ficheroBorrar = new File(fileInicializarUnidades);
+			if(null != ficheroBorrar && ficheroBorrar.exists()){
+				ficheroBorrar.delete();
+			}
+		}
+		
 		if(logger.isDebugEnabled()){
 			logger.debug("Actualizados los datos de oficinas y organismos");
 		}
-
 
 		//Actualizamos la fecha de ultima actualizacion
 		estadoActualizacion.setFechaActualizacion(Calendar.getInstance().getTime());
@@ -127,6 +136,7 @@ public class ServicioActualizacionDirectorioComunImpl implements ServicioActuali
 		//Generamos los script
 		getGenerateScriptSQLOficinaManager().generateScriptActualizacion(fileInicializarOficinas);
 		getGenerateScriptSQLUnidadOrganicaManagerImpl().generateScriptActualizacion(fileInicializarUnidades);
+		
 		if(logger.isDebugEnabled()){
 			logger.debug("Finaliza la generación de los script de actualización del sistema");
 		}

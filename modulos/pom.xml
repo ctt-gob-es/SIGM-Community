@@ -39,7 +39,14 @@
 				<module>portafirmasexterno</module>
 				<module>subvenciones</module>
 				<module>bdns</module>
+				<module>msssi-core-base</module>
+				<!--<module>dipucrarangi</module-->
 				<module>dipucrintegra</module>
+				<module>clienteligero</module>
+				<module>notifica</module>
+				<module>Metadatos</module>
+				<module>orve</module>
+				<module>dipucrclaveautenticacion</module>
 			</modules>
 		</profile>
 

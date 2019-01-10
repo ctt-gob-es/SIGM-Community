@@ -73,13 +73,13 @@ public class BookSessionUtil extends UtilsSession implements ServerKeys, Keys,
 	/***************************************************************************
 	 * PROTECTED METHOD
 	 **************************************************************************/
-
+	
 	protected static List getBooks(String sessionID, int bookType,
 			boolean oficAsoc, Locale locale, String entidad)
 			throws BookException, SessionException, ValidationException {
 		return getBooks(sessionID, bookType, oficAsoc, null, locale, entidad);
 	}
-
+	
 	protected static List getBooks(String sessionID, int bookType,
 			boolean oficAsoc, Integer perm, Locale locale, String entidad)
 			throws BookException, SessionException, ValidationException {

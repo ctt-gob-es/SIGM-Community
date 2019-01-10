@@ -33,12 +33,12 @@ public class EntidadesUtil {
 		for (int i = 0; i < oLista.size(); i++) {
 			ieci.tecdoc.sgm.core.services.entidades.Entidad oEntidad =
 					(ieci.tecdoc.sgm.core.services.entidades.Entidad) oLista.get(i);
-			listEntidades.add(getEntidad(oEntidad));
+			listEntidades.add(getEntidadDto(oEntidad));
 		}
 		return listEntidades;
 	}
 
-	private static Entidad getEntidad(ieci.tecdoc.sgm.core.services.entidades.Entidad oEntidad) {
+	public static Entidad getEntidadDto(ieci.tecdoc.sgm.core.services.entidades.Entidad oEntidad) {
 		
 		if (oEntidad == null) return null;
 

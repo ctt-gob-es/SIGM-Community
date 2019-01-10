@@ -24,6 +24,8 @@
 	<sqlMap resource="sqlmaps/ISicres-Api/intercambioRegistral/entidadRegistral-queries.xml" />
 	<sqlMap resource="sqlmaps/ISicres-Api/intercambioRegistral/unidadTramitacion-mapping.xml" />
 	<sqlMap resource="sqlmaps/ISicres-Api/intercambioRegistral/unidadTramitacion-queries.xml" />
+	<sqlMap resource="sqlmaps/ISicres-Api/intercambioRegistral/unidadTramitacionSIR-mapping.xml" />
+	<sqlMap resource="sqlmaps/ISicres-Api/intercambioRegistral/unidadTramitacionSIR-queries.xml" />
 	<sqlMap resource="sqlmaps/ISicres-Api/intercambioRegistral/intercambioRegistralSalida-mapping.xml" />
 	<sqlMap resource="sqlmaps/ISicres-Api/intercambioRegistral/intercambioRegistralSalida-queries.xml" />
 	<sqlMap resource="sqlmaps/ISicres-Api/intercambioRegistral/intercambioRegistralEntrada-mapping.xml" />

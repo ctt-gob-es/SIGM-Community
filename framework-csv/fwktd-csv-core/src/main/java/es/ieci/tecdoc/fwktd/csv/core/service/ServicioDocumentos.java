@@ -42,6 +42,17 @@ public interface ServicioDocumentos {
 	 * @return Información del documento.
 	 */
 	public InfoDocumentoCSV getInfoDocumentoByCSV(String csv);
+	
+	
+	/**
+	 * Obtiene la información almacenada del documento.
+	 *
+	 * @param nombreDoc
+	 *            nombre del documento.
+	 * @return Información del documento.
+	 */
+	public InfoDocumentoCSV getInfoDocumentoByNombre(String nombreDoc);
+
 
 	/**
 	 * Obtiene la información almacenada del documento junto con el contenido.

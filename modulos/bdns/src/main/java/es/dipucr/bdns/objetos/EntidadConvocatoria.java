@@ -3,8 +3,8 @@ package es.dipucr.bdns.objetos;
 import java.util.Date;
 
 
-
 public class EntidadConvocatoria {
+	
 	private String idConvocatoria=null;
 	private String DescripcionCov=null;
 	private String nomenclatura=null;
@@ -15,33 +15,10 @@ public class EntidadConvocatoria {
 	private String abierto=null;
 	private String inicioSolicitud=null;
 	private Date fechaInicioSolicitud=null;
-	public Date getFechaInicioSolicitud() {
-		return fechaInicioSolicitud;
-	}
-	public void setFechaInicioSolicitud(Date fechaInicioSolicitud) {
-		this.fechaInicioSolicitud = fechaInicioSolicitud;
-	}
-	public Date getFechaFinSolicitud() {
-		return fechaFinSolicitud;
-	}
-	public void setFechaFinSolicitud(Date fechaFinSolicitud) {
-		this.fechaFinSolicitud = fechaFinSolicitud;
-	}
-	public Date getFechaJustificacion() {
-		return fechaJustificacion;
-	}
-	public void setFechaJustificacion(Date fechaJustificacion) {
-		this.fechaJustificacion = fechaJustificacion;
-	}
-	public Date getFechaFirma() {
-		return fechaFirma;
-	}
-	public void setFechaFirma(Date fechaFirma) {
-		this.fechaFirma = fechaFirma;
-	}
 	private String finSolicitud=null;
 	private Date fechaFinSolicitud=null;
 	private String sede=null;
+	private Date fechaConcesion=null; 
 	private String justificacion=null;
 	private Date fechaJustificacion=null;
 	//INFORMACION DE UN TIPO DE FINANCIACION
@@ -65,6 +42,7 @@ public class EntidadConvocatoria {
 	private String finalidad=null;
 	private String impactoGenero=null;
 	private String concesionPublicable=null;
+	private String ayudaDirecta=null;
 	private String subvencionNominativa=null;
 	//INFORMACION DEL EXTRACTO DE LA CONVOCATORIA
 	private String diarioOficial=null;
@@ -73,27 +51,13 @@ public class EntidadConvocatoria {
 	private Date fechaFirma=null;
 	private String lugarFirma=null;
 	private String firmante=null;
+	//DATOS ECONÓMICOS
+	private String aplicacion;
+	private String ejercicio;
+	private String refContable;
+	//[dipucr-Felipe #343] DOCUMENTO DE RESOLUCIÓN: DECRETO O JUNTA
+	private String idDocResolucion;
 	
-	public String[] getTextoExtracto() {
-		return textoExtracto;
-	}
-	public void setTextoExtracto(String[] textoExtracto) {
-		this.textoExtracto = textoExtracto;
-	}
-
-
-	public String getLugarFirma() {
-		return lugarFirma;
-	}
-	public void setLugarFirma(String lugarFirma) {
-		this.lugarFirma = lugarFirma;
-	}
-	public String getFirmante() {
-		return firmante;
-	}
-	public void setFirmante(String firmante) {
-		this.firmante = firmante;
-	}
 	public String getIdConvocatoria() {
 		return idConvocatoria;
 	}
@@ -142,11 +106,23 @@ public class EntidadConvocatoria {
 	public void setInicioSolicitud(String inicioSolicitud) {
 		this.inicioSolicitud = inicioSolicitud;
 	}
+	public Date getFechaInicioSolicitud() {
+		return fechaInicioSolicitud;
+	}
+	public void setFechaInicioSolicitud(Date fechaInicioSolicitud) {
+		this.fechaInicioSolicitud = fechaInicioSolicitud;
+	}
 	public String getFinSolicitud() {
 		return finSolicitud;
 	}
 	public void setFinSolicitud(String finSolicitud) {
 		this.finSolicitud = finSolicitud;
+	}
+	public Date getFechaFinSolicitud() {
+		return fechaFinSolicitud;
+	}
+	public void setFechaFinSolicitud(Date fechaFinSolicitud) {
+		this.fechaFinSolicitud = fechaFinSolicitud;
 	}
 	public String getSede() {
 		return sede;
@@ -154,11 +130,23 @@ public class EntidadConvocatoria {
 	public void setSede(String sede) {
 		this.sede = sede;
 	}
+	public Date getFechaConcesion() {
+		return fechaConcesion;
+	}
+	public void setFechaConcesion(Date fechaConcesion) {
+		this.fechaConcesion = fechaConcesion;
+	}
 	public String getJustificacion() {
 		return justificacion;
 	}
 	public void setJustificacion(String justificacion) {
 		this.justificacion = justificacion;
+	}
+	public Date getFechaJustificacion() {
+		return fechaJustificacion;
+	}
+	public void setFechaJustificacion(Date fechaJustificacion) {
+		this.fechaJustificacion = fechaJustificacion;
 	}
 	public Tipo[] getFinanciacion() {
 		return financiacion;
@@ -256,5 +244,59 @@ public class EntidadConvocatoria {
 	public void setTituloExtracto(String tituloExtracto) {
 		this.tituloExtracto = tituloExtracto;
 	}
-
+	public String[] getTextoExtracto() {
+		return textoExtracto;
+	}
+	public void setTextoExtracto(String[] textoExtracto) {
+		this.textoExtracto = textoExtracto;
+	}
+	public Date getFechaFirma() {
+		return fechaFirma;
+	}
+	public void setFechaFirma(Date fechaFirma) {
+		this.fechaFirma = fechaFirma;
+	}
+	public String getLugarFirma() {
+		return lugarFirma;
+	}
+	public void setLugarFirma(String lugarFirma) {
+		this.lugarFirma = lugarFirma;
+	}
+	public String getFirmante() {
+		return firmante;
+	}
+	public void setFirmante(String firmante) {
+		this.firmante = firmante;
+	}
+	public String getAyudaDirecta() {
+		return ayudaDirecta;
+	}
+	public void setAyudaDirecta(String ayudaDirecta) {
+		this.ayudaDirecta = ayudaDirecta;
+	}
+	public String getAplicacion() {
+		return aplicacion;
+	}
+	public void setAplicacion(String aplicacion) {
+		this.aplicacion = aplicacion;
+	}
+	public String getEjercicio() {
+		return ejercicio;
+	}
+	public void setEjercicio(String ejercicio) {
+		this.ejercicio = ejercicio;
+	}
+	public String getRefContable() {
+		return refContable;
+	}
+	public void setRefContable(String refContable) {
+		this.refContable = refContable;
+	}
+	public String getIdDocResolucion() {
+		return idDocResolucion;
+	}
+	public void setIdDocResolucion(String idDocResolucion) {
+		this.idDocResolucion = idDocResolucion;
+	}
+	
 }

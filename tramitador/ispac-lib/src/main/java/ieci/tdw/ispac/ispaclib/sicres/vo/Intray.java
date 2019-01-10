@@ -86,6 +86,8 @@ public class Intray implements Serializable {
 	 */
 	private ThirdPerson[] registerAddressee = null;
 	
+	private String comentarios = null;
+	
 	
 	/**
 	 * Constructor.
@@ -253,7 +255,15 @@ public class Intray implements Serializable {
 	public void setRegisterAddressee(ThirdPerson[] registerAddressee) {
 		this.registerAddressee = registerAddressee;
 	}
+	
+	public String getComentarios() {
+		return comentarios;
+	}
 
+
+	public void setComentarios(String comentarios) {
+		this.comentarios = comentarios;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -294,10 +304,9 @@ public class Intray implements Serializable {
 		builder.append(registerDestination);
 		builder.append(", registerAddressee=");
 		builder.append(Arrays.toString(registerAddressee));
+		builder.append(", comentarios=");
+		builder.append(comentarios);
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
-	
 }

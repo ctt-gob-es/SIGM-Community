@@ -299,5 +299,14 @@ public interface HibernateKeys {
 			+ "Ivolarchlist";
 	public static final String HIBERNATE_Iuserusersys = HIBERNATE_INVESDOC_OBJ_PATH
 			+ "Iuserusersys";
+	
+	public static final String HIBERNATE_ScrCCAA = HIBERNATE_INVESICRES_OBJ_PATH
+			+ "ScrCCAA";
+	
+	public static final String HIBERNATE_Iuserdata = HIBERNATE_INVESDOC_OBJ_PATH + "Iuserdata";
+	
+	public static final String HIBERNATE_ScrModifDoc = HIBERNATE_INVESICRES_OBJ_PATH + "ScrModifDoc";
+	
+	public static final String HIBERNATE_ScrDocumentMetadatos = HIBERNATE_INVESICRES_OBJ_PATH + "ScrDocumentMetadatos";
 
 }

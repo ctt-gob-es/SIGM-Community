@@ -23,6 +23,16 @@ public class ISicresServiceNonSpringImpl {
 		new ClassPathXmlApplicationContext(
 				"/beans/isicres-server-applicationContext.xml");
 	}
+	
+	/**
+	* [Dipucr-Manu Ticket#381] - INICIO - ALSIGM3 Registro Presencial va súper lento.
+	* constructor implementacion por defecto del a traves del modulo api
+	*/
+	public ISicresServiceNonSpringImpl(boolean refresh) {
+		super();
+		new ClassPathXmlApplicationContext(new String[] {"/beans/isicres-server-applicationContext.xml"}, refresh);
+	}
+	//[Dipucr-Manu Ticket#381] - fin - ALSIGM3 Registro Presencial va súper lento.
 
 	/**
 	 * constructor para implementaciones personalizadas

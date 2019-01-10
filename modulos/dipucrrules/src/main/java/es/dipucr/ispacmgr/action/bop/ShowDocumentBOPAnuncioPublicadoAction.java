@@ -34,27 +34,22 @@ import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 public class ShowDocumentBOPAnuncioPublicadoAction extends BaseAction {
 
 	// [dipucr-Felipe #1088]
-	private static final Logger logger = Logger
-			.getLogger(ShowDocumentBOPAnuncioPublicadoAction.class);
+	private static final Logger LOGGER = Logger.getLogger(ShowDocumentBOPAnuncioPublicadoAction.class);
 
-	public ActionForward executeAction(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response,
-			SessionAPI session) throws Exception {
+	public ActionForward executeAction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response, SessionAPI session) throws Exception {
 
 		// Creación de los API
 		ClientContext cct = session.getClientContext();
 		IInvesflowAPI invesflowAPI = session.getAPI();
 		IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
-		IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(
-				cct);
+		IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI( cct);
 
 		// Recuperamos el número de expediente del anuncio
 		IState state = managerAPI.currentState(getStateticket(request));
 		String numexp = state.getNumexp();
 
 		// Obtenemos los datos de la solicitud de anuncio
-		IItemCollection collection = entitiesAPI.getEntities("BOP_SOLICITUD",
-				numexp);
+		IItemCollection collection = entitiesAPI.getEntities("BOP_SOLICITUD", numexp);
 		IItem itemBopAnuncio = (IItem) collection.iterator().next();
 
 		// INICIO [dipucr-Felipe #1088]
@@ -64,8 +59,7 @@ public class ShowDocumentBOPAnuncioPublicadoAction extends BaseAction {
 		// Publicación
 		int idDocument = itemBopAnuncio.getInt("ID_DOCUMENTO");
 		String sIdDocument = String.valueOf(idDocument);
-		IItem itemDocumento = DocumentosUtil.getDocumento(entitiesAPI,
-				idDocument);
+		IItem itemDocumento = DocumentosUtil.getDocumento(entitiesAPI, idDocument);
 		// FIN [dipucr-Felipe #1088]
 
 		// TODO: [Felipe] A partir de aquí va copiado de showDocumentAction,
@@ -73,8 +67,7 @@ public class ShowDocumentBOPAnuncioPublicadoAction extends BaseAction {
 		// Buscar alguna forma de sacar este código a una clase común
 
 		// Comprobar si el usuario tiene responsabilidad para ver el documento
-		isResponsible(invesflowAPI, itemDocumento, session.getClientContext()
-				.getRespId());
+		isResponsible(invesflowAPI, itemDocumento, session.getClientContext().getRespId());
 
 		String docref = getDocRef(itemDocumento);
 		if (docref != null) {
@@ -85,8 +78,7 @@ public class ShowDocumentBOPAnuncioPublicadoAction extends BaseAction {
 			try {
 				connectorSession = genDocAPI.createConnectorSession();
 
-				String mimetype = genDocAPI.getMimeType(connectorSession,
-						docref);
+				String mimetype = genDocAPI.getMimeType(connectorSession, docref);
 				ServletOutputStream out = response.getOutputStream();
 				response.setHeader("Pragma", "public");
 				response.setHeader("Cache-Control", "max-age=0");
@@ -95,22 +87,18 @@ public class ShowDocumentBOPAnuncioPublicadoAction extends BaseAction {
 
 				String extension = getDocExtension(itemDocumento);
 				if (StringUtils.isBlank(extension)) {
-					response.setHeader("Content-Disposition",
-							"attachment; filename=\"" + sIdDocument + "\"");
+					response.setHeader("Content-Disposition", "attachment; filename=\"" + sIdDocument + "\"");
 				} else {
-					response.setHeader("Content-Disposition",
-							"inline; filename=\"" + sIdDocument + "."
-									+ extension + "\"");
+					response.setHeader("Content-Disposition", "inline; filename=\"" + sIdDocument + "." + extension + "\"");
 				}
 
-				response.setContentLength(genDocAPI.getDocumentSize(
-						connectorSession, docref));
+				response.setContentLength(genDocAPI.getDocumentSize( connectorSession, docref));
 				try {
 					genDocAPI.getDocument(connectorSession, docref, out);
 				} catch (ISPACException e) {
 					// Se saca el mensaje de error en la propia ventana, que
 					// habra sido lanzada con un popup
-					logger.error(e);
+					LOGGER.error(e.getMessage(), e);
 					response.setContentType("text/html");
 					out.write(e.getCause().getMessage().getBytes());
 				} finally {
@@ -152,13 +140,10 @@ public class ShowDocumentBOPAnuncioPublicadoAction extends BaseAction {
 		}
 	}
 
-	protected void isResponsible(IInvesflowAPI invesflowAPI, IItem entity,
-			String uid) throws ISPACException {
+	protected void isResponsible(IInvesflowAPI invesflowAPI, IItem entity, String uid) throws ISPACException {
 
-		IItem pcdStage = invesflowAPI.getProcedureStage(entity
-				.getInt("ID_FASE_PCD"));
-		IProcedure procedure = invesflowAPI.getProcedure(pcdStage
-				.getInt("ID_PCD"));
+		IItem pcdStage = invesflowAPI.getProcedureStage(entity.getInt("ID_FASE_PCD"));
+		IProcedure procedure = invesflowAPI.getProcedure(pcdStage.getInt("ID_PCD"));
 
 		if (procedure.getInt("TIPO") == IProcedure.PROCEDURE_TYPE) { // Procedimiento
 
@@ -182,8 +167,7 @@ public class ShowDocumentBOPAnuncioPublicadoAction extends BaseAction {
 		}
 	}
 
-	private void checkTaskReponsible(IInvesflowAPI invesflowAPI, IItem entity,
-			String uid) throws ISPACException {
+	private void checkTaskReponsible(IInvesflowAPI invesflowAPI, IItem entity, String uid) throws ISPACException {
 
 		// Comprobamos la responsabilidad para saber si el usuario tiene
 		// permisos para consultar el documento,
@@ -197,19 +181,16 @@ public class ShowDocumentBOPAnuncioPublicadoAction extends BaseAction {
 		try {
 			task = invesflowAPI.getTask(entity.getInt("ID_TRAMITE"));
 		} catch (ISPACNullObject e) {
+			LOGGER.info("No hace nada, solo captura la excepcion. " + e.getMessage(), e);
 		}
 
 		if (task != null) {
 			String sUID = task.getString("ID_RESP");
-			if (!((invesflowAPI.getWorkListAPI().isInResponsibleList(sUID,
-					ISecurityAPI.SUPERV_ANY))
-					|| (invesflowAPI.getSignAPI().isResponsible(
-							entity.getKeyInt(), uid)) || (invesflowAPI
-						.getSignAPI().isResponsibleSubstitute(
-					entity.getKeyInt(), uid)))) // [eCenpri-Felipe #425]
+			if (!((invesflowAPI.getWorkListAPI().isInResponsibleList(sUID, ISecurityAPI.SUPERV_ANY)) 
+					|| (invesflowAPI.getSignAPI().isResponsible( entity.getKeyInt(), uid)) 
+					|| (invesflowAPI.getSignAPI().isResponsibleSubstitute( entity.getKeyInt(), uid)))) // [eCenpri-Felipe #425]
 			{
-				throw new ISPACInfo("exception.documents.noResponsability",
-						false);
+				throw new ISPACInfo("exception.documents.noResponsability", false);
 			}
 		}
 	}
@@ -233,18 +214,16 @@ public class ShowDocumentBOPAnuncioPublicadoAction extends BaseAction {
 			try {
 				stage = invesflowAPI.getStage(entity.getInt("ID_FASE"));
 			} catch (ISPACNullObject e) {
+				LOGGER.info("No hace nada, solo captura la excepcion. " + e.getMessage(), e);
 			}
 
 			if (stage != null) {
 				String sUID = stage.getString("ID_RESP");
-				if (!((invesflowAPI.getWorkListAPI().isInResponsibleList(sUID,
-						ISecurityAPI.SUPERV_ANY)) || (invesflowAPI.getSignAPI()
-						.isResponsible(entity.getKeyInt(), uid)))) {
-					throw new ISPACInfo("exception.documents.noResponsability",
-							false);
+				if (!((invesflowAPI.getWorkListAPI().isInResponsibleList(sUID, ISecurityAPI.SUPERV_ANY)) 
+						|| (invesflowAPI.getSignAPI().isResponsible(entity.getKeyInt(), uid)))) {
+					throw new ISPACInfo("exception.documents.noResponsability", false);
 				}
 			}
 		}
 	}
-
 }

@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
 import es.dipucr.sigem.api.rule.common.utils.CircuitosUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
-import es.dipucr.webempleado.services.licencias.LicenciasWSProxy;
 
 
 /**
@@ -75,17 +74,10 @@ public class ValidacionLicenciasPersonalRule implements IRule
 				String strMotivo = itemDocumento.getString("MOTIVO_RECHAZO");
 				//Desglosamos el id de solicitud en NIF, año y NºLicencia
 				String strIdSolicitud = itemSolicitudLicencias.getString("ID_SOLICITUD");
-				String [] arrIdSolicitud = strIdSolicitud.split("-");
-				String strNif = arrIdSolicitud[0];
-				int iAno = Integer.valueOf(arrIdSolicitud[1]);
-				String strNlic = arrIdSolicitud[2];
 				
 				//Hacemos la petición al servicio web
-				LicenciasWSProxy wsLicencias = new LicenciasWSProxy();
-				//[eCenpri-Felipe #601] Datos del circuito de firma
 				String firmantes = CircuitosUtil.getFirmantesCircuito(rulectx);
-//				wsLicencias.ponerLicenciaValidada(strNif, iAno, strNlic, false, strMotivo);
-				wsLicencias.ponerLicenciaValidada(strNif, iAno, strNlic, false, strMotivo, firmantes);
+				LicenciasWSDispatcher.ponerLicenciaValidada(cct, strIdSolicitud, false, strMotivo, firmantes);
 				
 				//Cerramos el trámite y el expediente
 				ExpedientesUtil.cerrarExpediente(cct, numexp);

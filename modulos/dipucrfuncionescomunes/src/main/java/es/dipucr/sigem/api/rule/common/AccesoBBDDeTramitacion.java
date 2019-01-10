@@ -46,6 +46,38 @@ public class AccesoBBDDeTramitacion{
 	
 	/**
 	 * 
+	 * @param numRegistro
+	 * @return
+	 * @throws ISPACException
+	 */
+	public boolean modificaInteresadoRegistroEntrada(String nreg, String nif, String nombre) throws ISPACException{
+		
+		DbCnt cnt = new DbCnt(dsName);
+		boolean bResult = false;
+		
+		try {
+			cnt.getConnection();
+			
+			String sQuery = "UPDATE SGMRTREGISTRO SET EMISOR_ID = '" + nif + "', NOMBRE = '" + nombre + 
+					"' WHERE NUMERO_REGISTRO = '" + nreg + "'";
+			logger.info("sQuery "+sQuery);
+			bResult = cnt.execute(sQuery);
+			
+		} catch (ISPACException e) {
+			logger.error("Error al modificar el interesado del registro " + nreg + ". " + e.getMessage(), e);
+			throw e;
+		} catch (Exception e) {
+			logger.error("Error al modificar el interesado del registro " + nreg + ". " + e.getMessage(), e);
+			throw new ISPACException("Error al modificar el interesado del registro " + nreg + ". " + e.getMessage(), e);
+		} finally {
+			cnt.closeConnection();
+		}
+		
+		return bResult;		
+	}
+	
+	/**
+	 * 
 	 * @param asunto: Asunto que va asociado al trámite del registro telématico
 	 * @return Listado de procedimientos que estan asociados a ese tipo de asunto.
 	 * @throws ISPACException
@@ -53,15 +85,15 @@ public class AccesoBBDDeTramitacion{
 	public Vector<String> getIdProcedimiento(String asunto) throws ISPACException{
 		DbCnt cnt = new DbCnt(dsName);
 		DbQuery dbQuery = null;
-		Vector<String> idProcedimiento = new Vector<String>();
+		Vector<String> idsProcedimiento = new Vector<String>();
 		
 		try {
 			cnt.getConnection();
 			dbQuery = cnt.executeDbQuery("SELECT ID_PROCEDIMIENTO FROM SGMRTCATALOGO_TRAMITES WHERE ASUNTO = '" + asunto + "'");
 			while (dbQuery.next()) {
-				String id_procedimiento = dbQuery.getString("ID_PROCEDIMIENTO");
-				if( StringUtils.isNotEmpty(id_procedimiento)){
-					idProcedimiento.add(dbQuery.getString("ID_PROCEDIMIENTO"));
+				String idProcedimiento = dbQuery.getString("ID_PROCEDIMIENTO");
+				if( StringUtils.isNotEmpty(idProcedimiento)){
+					idsProcedimiento.add(dbQuery.getString("ID_PROCEDIMIENTO"));
 				}
 			}
 		} catch (ISPACException e) {
@@ -76,7 +108,7 @@ public class AccesoBBDDeTramitacion{
 			}
 			cnt.closeConnection();
 		}
-		return idProcedimiento;		
+		return idsProcedimiento;		
 	}
 	
 	public void actualizaRegistroTelematico (String nreg, String estado, String campo, String valor) throws ISPACException{
@@ -84,7 +116,7 @@ public class AccesoBBDDeTramitacion{
 		
 		try {
 			cnt.getConnection();
-			StringBuffer consulta = new StringBuffer();
+			StringBuilder consulta = new StringBuilder();
 			consulta.append("UPDATE SGMRTREGISTRO SET " + campo + " = '" + valor + "' WHERE NUMERO_REGISTRO = '" + nreg + "'");
 			if(StringUtils.isNotEmpty(estado)){
 				consulta.append(" AND ESTADO = '" + estado + "'");

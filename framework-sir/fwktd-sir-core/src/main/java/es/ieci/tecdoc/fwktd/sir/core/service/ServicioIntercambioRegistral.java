@@ -304,4 +304,24 @@ public interface ServicioIntercambioRegistral {
 	 * envíos de ficheros de datos de intercambio.
 	 */
 	public void comprobarTimeOutEnvios();
+
+	/**
+	 * Obtiene el histórico de un asiento registral.
+	 *
+	 * @param entity
+	 *            Identificador de la entidad.
+	 * @param code
+	 *            codigo del asiento registral.
+	 * @return Histórico del asiento registral.
+	 */
+	public List<TrazabilidadVO> getHistoricoAsientoRegistralCode(String entity, String code);
+
+	/**
+	 * Obtiene el estado de un asiento registral.
+	 *
+	 * @param code
+	 *            codigo del asiento registral.
+	 * @return Estado de un asiento registral.
+	 */
+	public EstadoAsientoRegistraVO getEstadoAsientoRegistralByCode(String code);
 }

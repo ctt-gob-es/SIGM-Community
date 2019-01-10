@@ -40,7 +40,7 @@
 			</c:when>
 			<c:otherwise>
 				<logic:notEmpty scope="request" name="formName">
-				<ispac:updatefields name="Substitute" parameters='<%= _parameters %>'  frame='<%=_frame %>' formName='<%= ((String)request.getAttribute("formName")) %>'/>
+					<ispac:updatefields name="Substitute" parameters='<%= _parameters %>'  frame='<%=_frame %>' formName='<%= ((String)request.getAttribute("formName")) %>'/>
 				</logic:notEmpty>
 				<logic:empty scope="request" name="formName">
 					<ispac:updatefields name="Substitute" parameters='<%= _parameters %>' frame='<%=_frame %>'/>

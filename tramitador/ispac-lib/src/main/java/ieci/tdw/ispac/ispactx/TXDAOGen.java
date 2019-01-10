@@ -243,6 +243,7 @@ public class TXDAOGen
 			        process.set("NUMEXP", numexp);
 			    }
 			}
+			mccxt.releaseConnection(cnt);
 		}		
 		
 	}

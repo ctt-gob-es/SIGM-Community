@@ -16,6 +16,8 @@ import ieci.tdw.ispac.api.item.IProcess;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
+import ieci.tdw.ispac.ispaclib.dao.join.TableJoinFactoryDAO;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.DatosComunesExpediente;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.InteresadoExpediente;
@@ -33,7 +35,20 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class ExpedientesRelacionadosUtil {
 	
-	private static final Logger logger = Logger.getLogger(ExpedientesRelacionadosUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(ExpedientesRelacionadosUtil.class);
+	
+	public static final String VAR_PROCEDIMIENTOS_EXCLUIDOS_GET_TODOS_RELACIONADOS = "VAR_PROCEDIMIENTOS_EXCLUIDOS_GET_TODOS_RELACIONADOS"; 
+	
+	public static final String NUMEXP_PADRE = "NUMEXP_PADRE";
+	public static final String NUMEXP_HIJO = "NUMEXP_HIJO";
+	public static final String RELACION = "RELACION";
+	
+	public static final String ORDER_BY_HIJO_DESC = getOrderByHijoDesc();
+	public static final String ORDER_BY_HIJO_ASC = getOrderByHijoAsc();
+	
+	public static final String STR_ORDER_BY = " ORDER BY SUBSTR(SPLIT_PART(%s, '/',1), 5)::INT %s, SPLIT_PART(%s, '/',2)::INT %s";
+	public static final String ORDER_DESC = "DESC";
+	public static final String ORDER_ASC = "ASC";
 
 	public static final String NOMBREPROCPADRECARTADIGITAL = "Comunicación Administrativa Electrónica";
 	public static final String RELACIONCARTADIGITAL = "Comunicación Administrativa Electrónica";
@@ -47,35 +62,30 @@ public class ExpedientesRelacionadosUtil {
 	public static final String NOMBREPROCPADRETABLONEDICTOS = "eTablón";
 	public static final String RELACIONTABLONEDICOTOS = "Publicación en Tablón de Edictos";
 	
-	public static final String NOMBREPROCPADREPORTAFIRMA = "Firma Documentos Externos";
+	public static final String NOMBREPROCPADREPORTAFIRMA = "Firma de documentos en Port@firmas";
 	public static final String RELACIONPORTAFIRMA = "Firma Doc. Externos";
 	
-	@SuppressWarnings("unchecked")
-	public static Vector<String> obtenerExpRelacionadoByExpediente_Columna( IEntitiesAPI entitiesAPI, String numexp, String nombreColumna, String campoBusqueda) throws ISPACRuleException {
-		Vector<String> resultado = null;
-		try{
-			//Buscamos los expedientes relacionados hijos
-	        String consultaSQL = "WHERE "+nombreColumna+" = '" + numexp + "'";
-	        IItemCollection itemCollection = entitiesAPI.queryEntities(SpacEntities.SPAC_EXP_RELACIONADOS, consultaSQL);
-	        
-	        //Si no tenemos hijos padre no hacemos nada
-	        if(itemCollection != null && itemCollection.toList().size()>0){
-				Iterator<IItem> it = itemCollection.iterator();
-		        IItem item = null;
-		        resultado = new Vector<String>();
-		        String numexp_padre = "";
-		        //Para cada hijo
-		        while (it.hasNext()) {
-		        	 item = it.next();
-		             numexp_padre = item.getString(campoBusqueda);
-		             resultado.add(numexp_padre);
-		        }
-	        }
-		}catch(ISPACException e){
-            	logger.error("ERROR al recuperar los expedientes relacionados hijos: "+e.getMessage(), e);
-            	throw new ISPACRuleException("ERROR al recuperar los expedientes relacionados hijos: "+e.getMessage(), e);
-         }
-		return resultado;
+	private ExpedientesRelacionadosUtil(){
+	}
+	
+	public static String getOrderByHijoDesc(){
+		return getOrderBy(NUMEXP_HIJO, ORDER_DESC);
+	}
+	
+	public static String getOrderByHijoAsc(){
+		return getOrderBy(NUMEXP_HIJO, ORDER_ASC);
+	}
+	
+	public static String getOrderByPadreDesc(){
+		return getOrderBy(NUMEXP_PADRE, ORDER_DESC);
+	}
+	
+	public static String getOrderByPadreAsc(){
+		return getOrderBy(NUMEXP_PADRE, ORDER_ASC);
+	}
+	
+	public static String getOrderBy(String tipoExp, String orden){
+		return String.format(STR_ORDER_BY, tipoExp, orden, tipoExp, orden);
 	}
 	
 	public static String iniciaExpedienteHijoFirmaDocExternos(IClientContext cct, String numexpPadre, boolean importaParticipantes, boolean relacionaExpedientes) throws ISPACException{	
@@ -141,13 +151,16 @@ public class ExpedientesRelacionadosUtil {
 			if(idProcedimientoHijo > 0){
 				numexpHijo = (iniciaExpediente(cct, idProcedimientoHijo, expedienteOrig)).getString("NUMEXP");
 				if(StringUtils.isNotEmpty(numexpHijo)){
-					if(importaParticipantes)ParticipantesUtil.importarParticipantes((ClientContext)cct, entitiesAPI, numexpPadre, numexpHijo);
-					if(relacionaExpedientes)relacionaExpedientes(cct, numexpPadre, numexpHijo, relacion);
+					if(importaParticipantes){
+						ParticipantesUtil.importarParticipantes((ClientContext)cct, entitiesAPI, numexpPadre, numexpHijo);
+					}
+					if(relacionaExpedientes){
+						relacionaExpedientes(cct, numexpPadre, numexpHijo, relacion);
+					}
 				}
 			}
-		}
-		catch(Exception e){
-			logger.error("Error al iniciar el expediente relacionado de tipo " + nombreProcedimientoPadre + ". " + e.getMessage(), e);
+		} catch(Exception e){
+			LOGGER.error("Error al iniciar el expediente relacionado de tipo " + nombreProcedimientoPadre + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al iniciar el expediente relacionado de tipo " + nombreProcedimientoPadre + ". " + e.getMessage(), e);
 		}
 		return numexpHijo;	
@@ -160,20 +173,19 @@ public class ExpedientesRelacionadosUtil {
 			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 			IProcedureAPI procedureAPI = invesflowAPI.getProcedureAPI();
 			
-			int id_pcd_actual = ExpedientesUtil.getExpediente(cct, numexpPadre).getInt("ID_PCD");
+			int idPcdActual = ExpedientesUtil.getExpediente(cct, numexpPadre).getInt("ID_PCD");
 			
 			//Buscamos el procedimiento asociado a dicho código para recuperar el departamento
-			IItem procedimiento = procedureAPI.getProcedureById(id_pcd_actual);
+			IItem procedimiento = procedureAPI.getProcedureById(idPcdActual);
 			if(procedimiento != null){
-				String org_rsltr = (String) procedimiento.get("CTPROCEDIMIENTOS:ORG_RSLTR");
-				if(StringUtils.isNotEmpty(org_rsltr)){
-					procedimientosDelDepartamento = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_CT_PROCEDIMIENTOS, "WHERE ORG_RSLTR = '" + org_rsltr + "'");
+				String orgRsltr = (String) procedimiento.get("CTPROCEDIMIENTOS:ORG_RSLTR");
+				if(StringUtils.isNotEmpty(orgRsltr)){
+					procedimientosDelDepartamento = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_CT_PROCEDIMIENTOS, "WHERE ORG_RSLTR = '" + orgRsltr + "'");
 					
 				}
 			}
-		}
-		catch(Exception e){
-			logger.error("Error al recuperar el expediente hijo. " + e.getMessage(), e);
+		} catch(Exception e){
+			LOGGER.error("Error al recuperar el expediente hijo. " + e.getMessage(), e);
 			throw new ISPACException( "Error al recuperar el expediente hijo. " + e.getMessage(), e);
 		}
 		return procedimientosDelDepartamento;
@@ -187,15 +199,18 @@ public class ExpedientesRelacionadosUtil {
 			Iterator procsIterator = procsCollection.iterator();
 			boolean encontrado = false;
 			while(procsIterator.hasNext() && !encontrado){
-				IItem procs = (IItem) procsIterator.next();
-				idProcedimientoHijo = procs.getInt("ID");				
+				IItem procs = (IItem) procsIterator.next();	
+				idProcedimientoHijo = procs.getInt("ID");
 				if(esProcTipo(cct, idProcedimientoHijo, nombreProcedimientoPadre)){
 					encontrado = true;
+					idProcedimientoHijo = procs.getInt("ID");
+				}
+				else{
+					idProcedimientoHijo = 0;
 				}
 			}
-		}
-		catch(Exception e){
-			logger.error( "Error al recuperar el expediente hijo. " + e.getMessage(), e);
+		} catch(Exception e){
+			LOGGER.error( "Error al recuperar el expediente hijo. " + e.getMessage(), e);
 			throw new ISPACException( "Error al recuperar el expediente hijo. " + e.getMessage(), e);
 		}
 		return idProcedimientoHijo;
@@ -208,7 +223,6 @@ public class ExpedientesRelacionadosUtil {
 
 		// Ejecución en un contexto transaccional
 		boolean ongoingTX = cct.ongoingTX();
-		boolean bCommit = false;
 		try{
 			IInvesflowAPI invesflowAPI = cct.getAPI();
 			ITXTransaction tx = invesflowAPI.getTransactionAPI();
@@ -223,28 +237,28 @@ public class ExpedientesRelacionadosUtil {
 					if (!ongoingTX) {
 						cct.beginTX();
 					}
-					asunto = expedienteOrig.getString("ASUNTO");
-					nreg = expedienteOrig.getString("NREG");					
+					asunto = expedienteOrig.getString(ExpedientesUtil.ASUNTO);
+					nreg = expedienteOrig.getString(ExpedientesUtil.NREG);					
 					
 					InteresadoExpediente interesadoPrincipal = new InteresadoExpediente();
-					interesadoPrincipal.setNifcif(expedienteOrig.getString("NIFCIFTITULAR"));
-					interesadoPrincipal.setName(expedienteOrig.getString("IDENTIDADTITULAR"));
-					interesadoPrincipal.setPostalCode(expedienteOrig.getString("CPOSTAL"));
-					interesadoPrincipal.setRegionCountry(expedienteOrig.getString("REGIONPAIS"));
-					interesadoPrincipal.setPostalAddress(expedienteOrig.getString("DOMICILIO"));
-					interesadoPrincipal.setPlaceCity(expedienteOrig.getString("CIUDAD"));
-					interesadoPrincipal.setNotificationAddressType(expedienteOrig.getString("TIPODIRECCIONINTERESADO"));
+					interesadoPrincipal.setNifcif(expedienteOrig.getString(ExpedientesUtil.NIFCIFTITULAR));
+					interesadoPrincipal.setName(expedienteOrig.getString(ExpedientesUtil.IDENTIDADTITULAR));
+					interesadoPrincipal.setPostalCode(expedienteOrig.getString(ExpedientesUtil.CPOSTAL));
+					interesadoPrincipal.setRegionCountry(expedienteOrig.getString(ExpedientesUtil.REGIONPAIS));
+					interesadoPrincipal.setPostalAddress(expedienteOrig.getString(ExpedientesUtil.DOMICILIO));
+					interesadoPrincipal.setPlaceCity(expedienteOrig.getString(ExpedientesUtil.CIUDAD));
+					interesadoPrincipal.setNotificationAddressType(expedienteOrig.getString(ExpedientesUtil.TIPODIRECCIONINTERESADO));
 					interesadoPrincipal.setIndPrincipal(InterestedPerson.IND_PRINCIPAL);
 					
 					InteresadoExpediente[] interesados = new InteresadoExpediente[1];
 					interesados[0] = interesadoPrincipal;
 					
 					DatosComunesExpediente datosComunes = new DatosComunesExpediente();
-					datosComunes.setFechaRegistro(expedienteOrig.getDate("FREG"));
+					datosComunes.setFechaRegistro(expedienteOrig.getDate(ExpedientesUtil.FREG));
 					datosComunes.setInteresados(interesados);
 					datosComunes.setNumeroRegistro(nreg);
-					datosComunes.setTipoAsunto(expedienteOrig.getString("ASUNTO"));
-					datosComunes.setIdOrganismo(expedienteOrig.getString("ASUNTO"));
+					datosComunes.setTipoAsunto(expedienteOrig.getString(ExpedientesUtil.ASUNTO));
+					datosComunes.setIdOrganismo(expedienteOrig.getString(ExpedientesUtil.ASUNTO));
 			        
 			        CommonData commonData = getCommonData(datosComunes);
 			        commonData.setSubjectType(codigoProcedimientoNuevo);
@@ -252,18 +266,18 @@ public class ExpedientesRelacionadosUtil {
 					// Crear el API de expedientes
 			    	Expedients expedientsAPI = new Expedients((ClientContext) cct);
 			        numexpNuevo =  expedientsAPI.initExpedient(commonData, null, null, "RT");
-				}
-				catch(Exception e){
-					logger.error("Error al iniciar un nuevo expediente para el registro: " + nreg + ". " + e.getMessage(), e);
-					throw new ISPACException("Error al iniciar un nuevo expediente para el registro: " + nreg + ". " + e.getMessage(), e);
-				}
-				finally {
+				} catch(Exception e){
+					LOGGER.error("Error al iniciar un nuevo expediente para el registro: " + nreg + ". " + e.getMessage(), e);
 					if (!ongoingTX) {
-						cct.endTX(bCommit);
+						cct.endTX(false);
 					}
-				}				
-			}
-			else{				
+					throw new ISPACException("Error al iniciar un nuevo expediente para el registro: " + nreg + ". " + e.getMessage(), e);
+				} finally {
+					if (!ongoingTX) {
+						cct.endTX(true);
+					}
+				}			
+			} else{				
 				Map<String, String> params = new HashMap<String, String>();
 				params.put("COD_PCD", codigoProcedimientoNuevo);
 		
@@ -277,14 +291,12 @@ public class ExpedientesRelacionadosUtil {
 			}
 			
 			expNuevo = cct.getAPI().getEntitiesAPI().getExpedient(numexpNuevo);
-			if(StringUtils.isNotEmpty(asunto) && expNuevo != null)
+			if(StringUtils.isNotEmpty(asunto) && expNuevo != null){
 				expNuevo.set("ASUNTO", asunto); 
+			}
 			expNuevo.store(cct);
-			
-			bCommit = true;
-		}
-		catch(Exception e){
-			logger.error("Error al iniciar un nuevo expediente. " + e.getMessage(), e);
+		} catch(Exception e){
+			LOGGER.error("Error al iniciar un nuevo expediente. " + e.getMessage(), e);
 			throw new ISPACException("Error al iniciar un nuevo expediente. " + e.getMessage(), e);
 		}
 		
@@ -294,13 +306,12 @@ public class ExpedientesRelacionadosUtil {
 	public static void relacionaExpedientes(IClientContext cct, String numexpPadre, String numexpHijo, String relacion) throws ISPACException{
 		try{
 			IItem registro = cct.getAPI().getEntitiesAPI().createEntity(SpacEntities.SPAC_EXP_RELACIONADOS);
-			registro.set("NUMEXP_PADRE", numexpPadre);
-			registro.set("NUMEXP_HIJO", numexpHijo);
-			registro.set("RELACION", relacion);
+			registro.set(ExpedientesRelacionadosUtil.NUMEXP_PADRE, numexpPadre);
+			registro.set(ExpedientesRelacionadosUtil.NUMEXP_HIJO, numexpHijo);
+			registro.set(ExpedientesRelacionadosUtil.RELACION, relacion);
 			registro.store(cct);
-		}
-		catch(Exception e){
-			logger.error("Error al relacionar expedientes (" +numexpPadre + ", " + numexpHijo + ", " + relacion +")." + e.getMessage(), e);
+		} catch(Exception e){
+			LOGGER.error("Error al relacionar expedientes (" +numexpPadre + ", " + numexpHijo + ", " + relacion +")." + e.getMessage(), e);
 			throw new ISPACException("Error al relacionar expedientes (" +numexpPadre + ", " + numexpHijo + ", " + relacion +")." + e.getMessage(), e);
 		}
 	}
@@ -311,14 +322,14 @@ public class ExpedientesRelacionadosUtil {
 			expHijo = iniciaExpediente(cct, idCtProcedimientoNuevo, expedienteOrig);
 			String numexpHijo = expHijo.getString("NUMEXP");
 			relacionaExpedientes(cct, numexpPadre, numexpHijo, relacion);	
-			if(importaParticipantes)
+			if(importaParticipantes){
 				ParticipantesUtil.importarParticipantes((ClientContext)cct, cct.getAPI().getEntitiesAPI(), numexpPadre, numexpHijo);
-		}
-		catch(ISPACRuleException e){
-			logger.error("Error al iniciar y relacionar un expediente hijo del expediente: " + numexpPadre + ". " +e.getMessage(), e);
+			}
+		} catch(ISPACRuleException e){
+			LOGGER.error("Error al iniciar y relacionar un expediente hijo del expediente: " + numexpPadre + ". " +e.getMessage(), e);
 			throw new ISPACRuleException("Error al iniciar y relacionar un expediente hijo del expediente: " + numexpPadre + ". " +e.getMessage(), e);
 		} catch (ISPACException e) {
-			logger.error("Error al iniciar y relacionar un expediente hijo del expediente: " + numexpPadre + ". " +e.getMessage(), e);
+			LOGGER.error("Error al iniciar y relacionar un expediente hijo del expediente: " + numexpPadre + ". " +e.getMessage(), e);
 			throw new ISPACRuleException("Error al iniciar y relacionar un expediente hijo del expediente: " + numexpPadre + ". " +e.getMessage(), e);
 		}
 		return expHijo;
@@ -330,20 +341,20 @@ public class ExpedientesRelacionadosUtil {
 		boolean resultado = false;
 		try {
 			IItem catalogo = cct.getAPI().getProcedureAPI().getProcedureById( idProcedimiento);
-			int id_padre = catalogo.getInt("CTPROCEDIMIENTOS:ID_PADRE");			
-			if (id_padre != -1) {				
-				resultado = esProcTipo(cct, id_padre, tipo);
+			int idPadre = catalogo.getInt("CTPROCEDIMIENTOS:ID_PADRE");			
+			if (idPadre != -1) {				
+				resultado = esProcTipo(cct, idPadre, tipo);
 			} else {
-				String nom_pcd = "";
+				String nomPcd = "";
 				if (catalogo.getString("CTPROCEDIMIENTOS:NOMBRE") != null){
-					nom_pcd = catalogo.getString("CTPROCEDIMIENTOS:NOMBRE");
-					if (nom_pcd.toUpperCase().indexOf(tipo.toUpperCase()) >= 0) {
+					nomPcd = catalogo.getString("CTPROCEDIMIENTOS:NOMBRE");
+					if (nomPcd.toUpperCase().indexOf(tipo.toUpperCase()) >= 0) {
 						resultado = true;					
 					}
 				}
 			}
-		}catch(Exception e){
-			logger.error("Erro al consultar el tipo de procedimiento." + e.getMessage(), e);
+		} catch(Exception e){
+			LOGGER.error("Erro al consultar el tipo de procedimiento." + e.getMessage(), e);
 			throw new ISPACException("Erro al consultar el tipo de procedimiento." + e.getMessage(), e);
 		}
 		return resultado;
@@ -369,7 +380,7 @@ public class ExpedientesRelacionadosUtil {
 
 		try{
 			//Buscamos los expedientes relacionados hijos
-	        String consultaSQL = "WHERE NUMEXP_PADRE = '" + numExpPadre + "'";
+	        String consultaSQL = "WHERE " + ExpedientesRelacionadosUtil.NUMEXP_PADRE + " = '" + numExpPadre + "'";
 	        IItemCollection itemCollection = entitiesAPI.queryEntities(SpacEntities.SPAC_EXP_RELACIONADOS, consultaSQL);
 	        
 	        //Si no tenemos hijos padre no hacemos nada
@@ -377,28 +388,28 @@ public class ExpedientesRelacionadosUtil {
 				Iterator it = itemCollection.iterator();
 		        IItem item = null;
 		        
-		        String numexp_hijo = "";
+		        String numexpHijo = "";
 		        //Para cada hijo
 		        while (it.hasNext()) {
 	                item = ((IItem)it.next());
-	                numexp_hijo = item.getString("NUMEXP_HIJO");
+	                numexpHijo = item.getString(ExpedientesRelacionadosUtil.NUMEXP_HIJO);
 
 	                //Si ya está incluido en resultado de esta llamada, no hacemos nada
 	                boolean existe = false;
 	                for (int i = 0; i < resultado.size() && !existe; i++){                	
-	                	if(numexp_hijo.equals(resultado.get(i))){
+	                	if(numexpHijo.equals(resultado.get(i))){
 	                			existe = true;
 	                	}
 	                }
 	                //Si ya está incluido en los resultado temporales que llevamos tampoco hacemos nada
 	                boolean existe2 = false;
 	                for (int i = 0; i < resultadoTemp.size() && !existe2; i++){                	
-	                	if(numexp_hijo.equals(resultadoTemp.get(i)))
+	                	if(numexpHijo.equals(resultadoTemp.get(i)))
 	                			existe2 = true;	                	
 	                }
 	                //Si no existe lo añadimos y buscamos sus hijos y los añadimos al resultado
 	                if(!existe && !existe2) {	                		       
-	                	resultadoAux = getProcedimientosRelacionadosHijos(numexp_hijo, entitiesAPI, resultado);
+	                	resultadoAux = getProcedimientosRelacionadosHijos(numexpHijo, entitiesAPI, resultado);
 	                	//Añadimos al resultado el resultado de resultadoTemp
 		                for (int j=  0; j < resultadoAux.size(); j++){
 		                	resultado.add(resultadoAux.get(j));
@@ -406,13 +417,80 @@ public class ExpedientesRelacionadosUtil {
 	                }			
 		        }
 	        }
-		}
-        catch(ISPACException e){
-        	logger.error("ERROR al recuperar los expedientes relacionados hijos: "+e.getMessage(), e);
+		} catch(ISPACException e){
+        	LOGGER.error("ERROR al recuperar los expedientes relacionados hijos: "+e.getMessage(), e);
         	throw new ISPACRuleException("ERROR al recuperar los expedientes relacionados hijos: "+e.getMessage(), e);
         }
         return resultado;
 	}
+	
+	public static List<String> getProcedimientosRelacionadosHijosByVariosEstadosAdm(IRuleContext rulectx, String numExpPadre, List<String> resultadoTemp, List<String> estadosAdm)throws ISPACRuleException{
+        
+        List<String> resultado = new ArrayList<String>();
+        List<String> resultadoAux = new ArrayList<String>();
+        
+        try{
+        	IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
+        	
+            //En primer lugar añadimos el padre, como primer expediente
+            if(null != estadosAdm && !estadosAdm.isEmpty()){
+            	IItem expediente = ExpedientesUtil.getExpediente(rulectx.getClientContext(), numExpPadre);
+            	if(expediente != null){
+            		String estadoAdm = expediente.getString(ExpedientesUtil.ESTADOADM);
+            		if(estadosAdm.contains(estadoAdm)){
+            			resultado.add(numExpPadre);
+            		}
+                }
+            } else {
+            	resultado.add(numExpPadre);
+            }
+            //Buscamos los expedientes relacionados hijos
+            String consultaSQL = "WHERE " + ExpedientesRelacionadosUtil.NUMEXP_PADRE + " = '" + numExpPadre + "'";
+            IItemCollection itemCollection = entitiesAPI.queryEntities(SpacEntities.SPAC_EXP_RELACIONADOS, consultaSQL);
+            
+            //Si no tenemos hijos padre no hacemos nada
+            if(itemCollection != null && itemCollection.next()){
+                Iterator<?> it = itemCollection.iterator();
+                IItem item = null;
+                
+                String numexpHijo = "";
+                //Para cada hijo
+                while (it.hasNext()) {
+                    item = ((IItem)it.next());
+                    numexpHijo = item.getString(ExpedientesRelacionadosUtil.NUMEXP_HIJO);
+
+                    //Si ya está incluido en resultado de esta llamada, no hacemos nada
+                    boolean existe = false;
+                    for (int i = 0; i < resultado.size() && !existe; i++){                    
+                        if(numexpHijo.equals(resultado.get(i))){
+                                existe = true;
+                        }
+                    }
+                    //Si ya está incluido en los resultado temporales que llevamos tampoco hacemos nada
+                    boolean existe2 = false;
+                    for (int i = 0; i < resultadoTemp.size() && !existe2; i++){                    
+                        if(numexpHijo.equals(resultadoTemp.get(i))){
+                            existe2 = true;                        
+                        }
+                    }
+                    //Si no existe lo añadimos y buscamos sus hijos y los añadimos al resultado
+                    if(!existe && !existe2) {                                   
+                        resultadoAux = getProcedimientosRelacionadosHijosByVariosEstadosAdm(rulectx, numexpHijo, (ArrayList<String>) resultado, estadosAdm);
+                        //Añadimos al resultado el resultado de resultadoTemp
+                        for (int j=  0; j < resultadoAux.size(); j++){
+                            resultado.add(resultadoAux.get(j));
+                        }
+                    }            
+                }
+            }
+        } catch(ISPACException e){
+            LOGGER.error("ERROR al recuperar los expedientes relacionados hijos del expediente: " + numExpPadre + ". " + e.getMessage(), e);
+            throw new ISPACRuleException("ERROR  al recuperar los expedientes relacionados hijos del expediente: " + numExpPadre + ". " +  e.getMessage(), e);
+        }
+        return resultado;
+    }
+	
+	
 	/**
 	 * MQE fin moficaciones
 	 */
@@ -435,7 +513,7 @@ public class ExpedientesRelacionadosUtil {
 
 		try{
 			//Buscamos los expedientes relacionados hijos
-	        String consultaSQL = "WHERE NUMEXP_HIJO = '" + numExpHijo + "'";
+	        String consultaSQL = "WHERE " + ExpedientesRelacionadosUtil.NUMEXP_HIJO + " = '" + numExpHijo + "'";
 	        IItemCollection itemCollection = entitiesAPI.queryEntities(SpacEntities.SPAC_EXP_RELACIONADOS, consultaSQL);
 	        
 	        //Si no tenemos hijos padre no hacemos nada
@@ -443,27 +521,27 @@ public class ExpedientesRelacionadosUtil {
 				Iterator it = itemCollection.iterator();
 		        IItem item = null;
 		        
-		        String numexp_padre = "";
+		        String numexpPadre = "";
 		        //Para cada hijo
 		        while (it.hasNext()) {
 	                item = ((IItem)it.next());
-	                numexp_padre = item.getString("NUMEXP_PADRE");
+	                numexpPadre = item.getString(ExpedientesRelacionadosUtil.NUMEXP_PADRE);
 	                //Si ya está incluido en resultado de esta llamada, no hacemos nada
 	                boolean existe = false;
 	                for (int i = 0; i < resultado.size() && !existe; i++){                	
-	                	if(numexp_padre.equals(resultado.get(i))){
+	                	if(numexpPadre.equals(resultado.get(i))){
 	                			existe = true;
 	                	}
 	                }
 	                //Si ya está incluido en los resultado temporales que llevamos tampoco hacemos nada
 	                boolean existe2 = false;
 	                for (int i = 0; i < resultadoTemp.size() && !existe2; i++){                	
-	                	if(numexp_padre.equals(resultadoTemp.get(i)))
+	                	if(numexpPadre.equals(resultadoTemp.get(i)))
 	                			existe2 = true;	                	
 	                }
 	                //Si no existe lo añadimos y buscamos sus hijos y los añadimos al resultado
 	                if(!existe && !existe2) {	                		       
-	                	resultadoAux = getProcedimientosRelacionadosPadres(numexp_padre, entitiesAPI, resultado);
+	                	resultadoAux = getProcedimientosRelacionadosPadres(numexpPadre, entitiesAPI, resultado);
 	                	//Añadimos al resultado el resultado de resultadoTemp
 		                for (int j=  0; j < resultadoAux.size(); j++){
 		                	resultado.add(resultadoAux.get(j));
@@ -471,70 +549,190 @@ public class ExpedientesRelacionadosUtil {
 	                }			
 		        }
 	        }
-		}
-        catch(ISPACException e){
-        	logger.error("ERROR al recuperar los expedientes relacionados padres: "+e.getMessage(), e);
+		} catch(ISPACException e){
+        	LOGGER.error("ERROR al recuperar los expedientes relacionados padres: "+e.getMessage(), e);
         	throw new ISPACRuleException("ERROR al recuperar los expedientes relacionados padres: "+e.getMessage(), e);
         }
         return resultado;
 	}
+	
 	/**
 	 * MQE fin moficaciones
 	 */
 	
-	 private static CommonData getCommonData(DatosComunesExpediente datosComunes) {
-		 CommonData commonData = null;
-		 
-		 if (datosComunes != null) {
-			 commonData = new CommonData();
-			 commonData.setOrganismId(datosComunes.getIdOrganismo());			 
-			 commonData.setRegisterNumber(datosComunes.getNumeroRegistro());
-			 commonData.setRegisterDate(datosComunes.getFechaRegistro());
-			 commonData.setInterested(
-					 getInterestedList(datosComunes.getInteresados()));
+	private static CommonData getCommonData(DatosComunesExpediente datosComunes) {
+		CommonData commonData = null;
+
+		if (datosComunes != null) {
+			commonData = new CommonData();
+			commonData.setOrganismId(datosComunes.getIdOrganismo());
+			commonData.setRegisterNumber(datosComunes.getNumeroRegistro());
+			commonData.setRegisterDate(datosComunes.getFechaRegistro());
+			commonData.setInterested(getInterestedList(datosComunes.getInteresados()));
 		}
-		 return commonData;
-	 }
+		return commonData;
+	}
 	 
-	 private static List<InterestedPerson> getInterestedList(InteresadoExpediente[] interesados) {
-		 List<InterestedPerson> interestedList = new ArrayList<InterestedPerson>();
-		 if (interesados != null) {
-			 for (int i = 0; i < interesados.length; i++) {
-				 interestedList.add(getInterestedPerson(interesados[i]));
-			 }
-		 }
-		 return interestedList;
-    }
-	 
+	private static List<InterestedPerson> getInterestedList(InteresadoExpediente[] interesados) {
+		List<InterestedPerson> interestedList = new ArrayList<InterestedPerson>();
+		
+		if (interesados != null) {
+			for (int i = 0; i < interesados.length; i++) {
+				interestedList.add(getInterestedPerson(interesados[i]));
+			}
+		}
+		
+		return interestedList;
+	}
+	
 	private static InterestedPerson getInterestedPerson(InteresadoExpediente inter) {
-	   	InterestedPerson interested = null;
-	    	
-	    if (inter != null) {
-	    	interested = new InterestedPerson();
-	    	interested.setThirdPartyId(inter.getThirdPartyId());
-	    	interested.setIndPrincipal(inter.getIndPrincipal());
-	    	interested.setNifcif(inter.getNifcif());
-	    	interested.setName(inter.getName());
-	    	interested.setPostalAddress(inter.getPostalAddress());
-	    	interested.setPostalCode(inter.getPostalCode());
-	    	interested.setPlaceCity(inter.getPlaceCity());
-	    	interested.setRegionCountry(inter.getRegionCountry());
-	    	interested.setTelematicAddress(inter.getTelematicAddress());
-	   		interested.setNotificationAddressType(inter.getNotificationAddressType());
-	   		interested.setPhone(inter.getPhone());
-	   		interested.setMobilePhone(inter.getMobilePhone());
-	   	}
-	    	
-	   	return interested;
-	 }
+		InterestedPerson interested = null;
+
+		if (null != inter) {
+			interested = new InterestedPerson();
+			interested.setThirdPartyId(inter.getThirdPartyId());
+			interested.setIndPrincipal(inter.getIndPrincipal());
+			interested.setNifcif(inter.getNifcif());
+			interested.setName(inter.getName());
+			interested.setPostalAddress(inter.getPostalAddress());
+			interested.setPostalCode(inter.getPostalCode());
+			interested.setPlaceCity(inter.getPlaceCity());
+			interested.setRegionCountry(inter.getRegionCountry());
+			interested.setTelematicAddress(inter.getTelematicAddress());
+			interested.setNotificationAddressType(inter.getNotificationAddressType());
+			interested.setPhone(inter.getPhone());
+			interested.setMobilePhone(inter.getMobilePhone());
+		}
+		
+		return interested;
+	}
+	
+	public static List<String> getExpedientesRelacionadosHijosByEstadoAdm(IRuleContext rulectx, String estadoAdm) throws ISPACException{
+		return getExpedientesRelacionadosHijosByEstadoAdm(rulectx, estadoAdm, "", "");
+	}
+	
+	public static List<String> getExpedientesRelacionadosHijosByEstadoAdm(IRuleContext rulectx, String estadoAdm, String orderBy) throws ISPACException{
+		return getExpedientesRelacionadosHijosByEstadoAdm(rulectx, estadoAdm, "", orderBy);
+	}
+	
+	public static List<String> getExpedientesRelacionadosHijosByEstadoAdmCondicion(IRuleContext rulectx, String estadoAdm, String condicion) throws ISPACException{
+		return getExpedientesRelacionadosHijosByEstadoAdm(rulectx, estadoAdm, condicion, "");
+	}
+		
+	public static List<String> getExpedientesRelacionadosHijosByEstadoAdm(IRuleContext rulectx, String estadoAdm, String condicion, String orderBy) throws ISPACException{
+		List<String> estadosAdmList = new ArrayList<String>();
+		estadosAdmList.add(estadoAdm);
+		
+		return getExpedientesRelacionadosHijosByVariosEstadosAdm(rulectx, estadosAdmList, condicion, orderBy);
+	}
+	
+	public static List<String> getExpedientesRelacionadosHijosByVariosEstadosAdm(IRuleContext rulectx, List<String> estadosAdmList) throws ISPACException{
+		return getExpedientesRelacionadosHijosByVariosEstadosAdm(rulectx, estadosAdmList, "", "");
+	}
+	
+	public static List<String> getExpedientesRelacionadosHijosByVariosEstadosAdm(IRuleContext rulectx, List<String> estadosAdmList, String orderBy) throws ISPACException{
+		return getExpedientesRelacionadosHijosByVariosEstadosAdm(rulectx, estadosAdmList, "", orderBy);
+	}
+	
+	public static List<String> getExpedientesRelacionadosHijosByVariosEstadosAdmCondicion(IRuleContext rulectx, List<String> estadosAdmList, String condicion) throws ISPACException{
+		return getExpedientesRelacionadosHijosByVariosEstadosAdm(rulectx, estadosAdmList, condicion, "");
+	}
+	
+	public static List<String> getExpedientesRelacionadosHijosByVariosEstadosAdm(IRuleContext rulectx, List<String> estadosAdmList, String condicion, String orderBy) throws ISPACException{
+		String numexp = null;
+		
+		try{
+			numexp = rulectx.getNumExp();
+			IClientContext cct = rulectx.getClientContext();
+			String strQuery = " WHERE R.NUMEXP_PADRE = '" + numexp + "' AND R.NUMEXP_HIJO = E.NUMEXP " + " AND ESTADOADM IN ";
+			
+			strQuery += " ('";
+			if(null != estadosAdmList && !estadosAdmList.isEmpty()){
+				strQuery += StringUtils.join(estadosAdmList, "','");
+			} 	
+			strQuery += "') ";
+
+			if(StringUtils.isNotEmpty(condicion)){
+				if(!condicion.trim().toUpperCase().startsWith("AND") || ! !condicion.trim().toUpperCase().startsWith("OR")){
+					strQuery += " AND ";
+				}
+				strQuery += condicion;
+			}
+			
+			if(StringUtils.isNotEmpty(orderBy)){
+				if(orderBy.toUpperCase().indexOf("ORDER BY") > 0){
+					strQuery += orderBy;
+				} else {
+					strQuery += " ORDER BY " + orderBy;
+				}
+			}
+
+			TableJoinFactoryDAO factory = new TableJoinFactoryDAO();
+			factory.addTable(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, "R");
+			factory.addTable(Constants.TABLASBBDD.SPAC_EXPEDIENTES, "E");
+
+			CollectionDAO collectionJoin = factory.queryTableJoin(cct.getConnection(), strQuery);
+			collectionJoin.disconnect();
+			
+			//Recorremos los registros recuperados
+			ArrayList<String> listNumexpRel = new ArrayList<String>();
+			while (collectionJoin.next()){
+				IItem item = (IItem) collectionJoin.value();
+				listNumexpRel.add(item.getString("E:NUMEXP"));
+			}
+			return listNumexpRel;
+			
+		} catch(Exception ex) {
+			String error = "Error al obtener los expedientes relacionados hijos del expediente " + numexp + " para los estados administrativos " + estadosAdmList;
+			LOGGER.error(error, ex);
+			throw new ISPACException(error, ex);
+		}
+	}
+	
+	public static List<String> getExpedientesRelacionadosHijosByQuery(IClientContext cct, String consulta) throws ISPACException{
+		
+		List<String> listNumexpRel = new ArrayList<String>();
+		
+		try{
+			if(StringUtils.isNotEmpty(consulta)){
+				if(!consulta.toUpperCase().trim().startsWith("WHERE")){
+					consulta = " WHERE " + consulta;
+				}
+
+				TableJoinFactoryDAO factory = new TableJoinFactoryDAO();
+				factory.addTable(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, "R");
+				factory.addTable(Constants.TABLASBBDD.SPAC_EXPEDIENTES, "E");
+	
+				CollectionDAO collectionJoin = factory.queryTableJoin(cct.getConnection(), consulta);
+				collectionJoin.disconnect();
+				
+				while (collectionJoin.next()) {
+					IItem item = (IItem) collectionJoin.value();
+					listNumexpRel.add(item.getString("E:NUMEXP"));
+				}
+			}
+			return listNumexpRel;
+		} catch(Exception ex){
+			String error = "Error al obtener los expedientes relacionados hijos del expediente para la consulta: " + consulta;
+			LOGGER.error(error, ex);
+			throw new ISPACException(error, ex);
+		}
+	}
 
 	/**
 	 * [1239 SIGEM - CONTRATACIÓN] 
 	 * Inicio
 	 * Crear un trámite que genere un foliado de todo el expediente de contratación ordenado por fecha de creación del documento.
 	 * **/
-	public static Vector<String> recuperarTodosExpRelacionados(IRuleContext rulectx, String numexp, Vector<String> resultadoAux) throws ISPACRuleException {
+	public static Vector<String> getTodosExpRelacionados(IRuleContext rulectx, String numexp) throws ISPACRuleException {
 		Vector<String> resultado = new Vector<String>();
+
+		getTodosExpRelacionados(rulectx, numexp, resultado);
+		
+		return resultado;
+	}
+	
+	public static void getTodosExpRelacionados(IRuleContext rulectx, String numexp, Vector<String> resultado) throws ISPACRuleException {
 		try{
 			/****************************************************************************/
 			IClientContext cct = rulectx.getClientContext();
@@ -542,33 +740,89 @@ public class ExpedientesRelacionadosUtil {
 			IEntitiesAPI entitiesAPI = invesFlow.getEntitiesAPI();
 			/****************************************************************************/
 			
-			Vector<String> numexpHijo = obtenerExpRelacionadoByExpediente_Columna(entitiesAPI, numexp, "NUMEXP_HIJO", "NUMEXP_PADRE");
-			Vector<String> numexpPadre = obtenerExpRelacionadoByExpediente_Columna(entitiesAPI, numexp, "NUMEXP_PADRE", "NUMEXP_HIJO");
-			Vector<String> numexpAmbos = new Vector<String>();
-			if(numexpHijo!=null){
-				numexpAmbos.addAll(numexpHijo);
-			}
-			if(numexpPadre!=null){
-				numexpAmbos.addAll(numexpPadre);
-			}			
-			for(int i=0; i<numexpAmbos.size(); i++){
-				String numexpAux = numexpAmbos.get(i);
-				if(!resultadoAux.contains(numexpAux)){
-					//Compruebo que no sea un expediente del BOP o de órganos Colegiados
-					//Ya que esos expedientes tienen muchos expedientes relacionados que no nos interesan
-					//Hablando con Felipe el BOP no tiene expedientes relacionados.
-					resultadoAux.add(numexpAux);
-					if(!SecretariaUtil.esExpedienteProcedimientoOrganosColegiados(rulectx, numexp)){
-						resultadoAux.addAll(recuperarTodosExpRelacionados(rulectx, numexpAux, resultadoAux));
+			Vector<String> numexpRelacionados = getExpedientesRelacionados(entitiesAPI, numexp);
+			
+			if (null != numexpRelacionados && !numexpRelacionados.isEmpty()){
+				for(String numexpAux : numexpRelacionados){					
+					if(!resultado.contains(numexpAux)){
+						resultado.add(numexpAux);
+						if(!isEnProcedimientosExcluidosGetTodosExpRelacionados(rulectx, numexpAux)){
+							getTodosExpRelacionados(rulectx, numexpAux, resultado);
+						}
 					}
 				}				
 			}
-			resultado.addAll(resultadoAux);	
-		}catch(ISPACException e){
-        	logger.error("ERROR al recuperar los expedientes relacionados hijos: "+e.getMessage(), e);
+		} catch(ISPACException e) {
+        	LOGGER.error("ERROR al recuperar los expedientes relacionados hijos: "+e.getMessage(), e);
         	throw new ISPACRuleException("ERROR al recuperar los expedientes relacionados hijos: "+e.getMessage(), e);
 		}
-		return resultado;
 	}
 	
+	public static boolean isEnProcedimientosExcluidosGetTodosExpRelacionados(IRuleContext rulectx, String numexp) throws ISPACRuleException {
+		boolean estaExcluido = false;
+		try{
+			String sListaExcluidos = DipucrCommonFunctions.getVarGlobal(VAR_PROCEDIMIENTOS_EXCLUIDOS_GET_TODOS_RELACIONADOS);
+			if(StringUtils.isNotEmpty(sListaExcluidos)){
+				IItem expediente = ExpedientesUtil.getExpediente(rulectx.getClientContext(), numexp);
+				if(null != expediente){
+					String codPcdExpediente = expediente.getString(ExpedientesUtil.CODPROCEDIMIENTO);
+					String[] listaCodProcedimientosExcluidos = sListaExcluidos.split(";");
+					
+					if(null != listaCodProcedimientosExcluidos && listaCodProcedimientosExcluidos.length > 0){
+						for(String codProcedimientoExcluido : listaCodProcedimientosExcluidos){
+							if(codPcdExpediente.equals(codProcedimientoExcluido)){
+								estaExcluido = true;
+							}
+						}
+					}
+				}
+			} else {
+				estaExcluido = true;
+			}
+		} catch (ISPACRuleException e) {
+			LOGGER.error("Error al comprobar si está en la lista de excluidos al recuperar todos los relaionados. " + e.getMessage(), e);
+			throw new ISPACRuleException("Error al comprobar si está en la lista de excluidos al recuperar todos los relaionados. " + e.getMessage(), e);
+		} catch (ISPACException e) {
+			LOGGER.error("Error al comprobar si está en la lista de excluidos al recuperar todos los relaionados. " + e.getMessage(), e);
+			throw new ISPACRuleException("Error al comprobar si está en la lista de excluidos al recuperar todos los relaionados. " + e.getMessage(), e);
+		}
+		return estaExcluido;
+	}
+
+	public static Vector<String> getExpedientesRelacionados(IEntitiesAPI entitiesAPI, String numexp) throws ISPACRuleException{
+		Vector<String> numexpRelacionados = new Vector<String>();
+		
+		numexpRelacionados.addAll(getExpRelacionadosHijos(entitiesAPI, numexp));
+		numexpRelacionados.addAll(getExpRelacionadosPadres(entitiesAPI, numexp));
+
+		return numexpRelacionados;
+	}
+	
+	public static Vector<String> getExpRelacionadosPadres (IEntitiesAPI entitiesAPI, String numexp) throws ISPACRuleException{
+		return getExpRelacionadoByExpediente_Columna(entitiesAPI, numexp, NUMEXP_HIJO, NUMEXP_PADRE);	
+	}
+	public static Vector<String> getExpRelacionadosHijos (IEntitiesAPI entitiesAPI, String numexp) throws ISPACRuleException{
+		return getExpRelacionadoByExpediente_Columna(entitiesAPI, numexp, NUMEXP_PADRE, NUMEXP_HIJO);	
+	}
+	
+	private static Vector<String> getExpRelacionadoByExpediente_Columna(IEntitiesAPI entitiesAPI, String numexp, String nombreColumna, String campoBusqueda) throws ISPACRuleException {
+		Vector<String> resultado = new Vector<String>();
+		try{
+	        String consultaSQL = "WHERE " + nombreColumna + " = '" + numexp + "'";
+	        IItemCollection itemCollection = entitiesAPI.queryEntities(SpacEntities.SPAC_EXP_RELACIONADOS, consultaSQL);       
+			Iterator<?> it = itemCollection.iterator();
+			
+	        while (it.hasNext()) {
+	        	 IItem item = (IItem)it.next();
+	        	 String numexpRelacionado = item.getString(campoBusqueda);
+	        	 if(StringUtils.isNotEmpty(numexpRelacionado) && !"null".equals(numexpRelacionado)){
+	        		 resultado.add(numexpRelacionado);
+	        	 }
+	        }
+		} catch(ISPACException e){
+            LOGGER.error("ERROR al recuperar los expedientes relacionados del expediente: " + numexp + ". " + e.getMessage(), e);
+            throw new ISPACRuleException("ERROR al recuperar los expedientes relacionados del expediente: " + numexp + ". " + e.getMessage(), e);
+        }
+		return resultado;
+	}
 }

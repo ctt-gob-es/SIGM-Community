@@ -7,7 +7,7 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 
@@ -47,7 +47,7 @@ public class DipucrGenerateNotificacionesRule implements IRule {
     	String numexp = "";
     	try{
     		//----------------------------------------------------------------------------------------------
-			ClientContext cct = (ClientContext) rulectx.getClientContext();
+			IClientContext cct = rulectx.getClientContext();
             IInvesflowAPI invesFlowAPI = cct.getAPI();
             IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
             String extensionEntidad = DocumentosUtil.obtenerExtensionDocPorEntidad();
@@ -55,9 +55,9 @@ public class DipucrGenerateNotificacionesRule implements IRule {
             numexp = rulectx.getNumExp();
             ooHelper = OpenOfficeHelper.getInstance();
             
-            String strNombreDoc = DocumentosUtil.getNombreTipoDocByCod(rulectx, "Secr-NotifAc");
-            String strNombreDocCab = DocumentosUtil.getNombreTipoDocByCod(rulectx, "Secr-NotifAcCab");
-            String strNombreDocPie = DocumentosUtil.getNombreTipoDocByCod(rulectx, "Secr-NotifAcPie");
+            String strNombreDoc = DocumentosUtil.getNombreTipoDocByCod(cct, "Secr-NotifAc");
+            String strNombreDocCab = DocumentosUtil.getNombreTipoDocByCod(cct, "Secr-NotifAcCab");
+            String strNombreDocPie = DocumentosUtil.getNombreTipoDocByCod(cct, "Secr-NotifAcPie");
             
             boolean urgencia = false;
             Vector <IItem> vPropuesta = null;
@@ -75,7 +75,7 @@ public class DipucrGenerateNotificacionesRule implements IRule {
   	  		  	}
     		}
     		else{
-    			vPropuesta = SecretariaUtil.orderPropuestas(collection);
+    			vPropuesta = SecretariaUtil.orderPropuestas(rulectx);
     		}
     		
     		SimpleDateFormat dateformat = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es"));
@@ -94,73 +94,16 @@ public class DipucrGenerateNotificacionesRule implements IRule {
 			        	IItemCollection participantes = ParticipantesUtil.getParticipantes( cct, numexp_origen, "ROL != 'TRAS' OR ROL IS NULL", "ID");
 			        	Iterator itParticipante = participantes.iterator();
 
-			        	String ndoc = "";
-						String nombre = "";
-				    	String dirnot = "";
-				    	String c_postal = "";
-				    	String localidad = "";
-				    	String caut = "";
-				    	String recurso = "";
-				    	/**
-				    	 * INICIO[Teresa] Ticket #106 añadir el id_ext
-				    	 * **/
-				    	String id_ext = "";
-				    	/**
-				    	 * FIN[Teresa] Ticket #106 añadir el id_ext
-				    	 * **/
 			        	while (itParticipante.hasNext())
 			        	{
+			        		ooHelper = OpenOfficeHelper.getInstance();
+			        		
 			        		cct.setSsVariable("FECHA", fecha);
 			        		IItem participante = (IItem)itParticipante.next();
 			        		
-			        		recurso = "";
-
 							// Añadir a la sesion los datos para poder utilizar <ispatag sessionvar='var'> en la plantilla
-				        	if ((String)participante.getString("NDOC")!=null) ndoc = (String)participante.getString("NDOC"); else ndoc="";
-				        	if ((String)participante.getString("NOMBRE")!=null) nombre = (String)participante.getString("NOMBRE"); else nombre="";
-				        	if ((String)participante.getString("DIRNOT")!=null) dirnot = (String)participante.getString("DIRNOT");else dirnot = "";
-				        	if ((String)participante.getString("C_POSTAL")!=null) c_postal = (String)participante.getString("C_POSTAL"); else c_postal="";
-				        	if ((String)participante.getString("LOCALIDAD")!=null) localidad = (String)participante.getString("LOCALIDAD"); else localidad = "";
-				        	if ((String)participante.getString("CAUT")!=null) caut = (String)participante.getString("CAUT"); else caut = "";
-				        	if ((String)participante.getString("RECURSO")!=null) recurso = (String)participante.getString("RECURSO"); else recurso = "";
-				        	/**
-					    	 * INICIO[Teresa] Ticket #106 añadir el id_ext
-					    	 * **/
-				        	if ((String)participante.getString("ID_EXT")!=null) id_ext = (String)participante.getString("ID_EXT"); else id_ext = "";
-					    	/**
-					    	 * FIN[Teresa] Ticket #106 añadir el id_ext
-					    	 * **/
+			        		DocumentosUtil.setParticipanteAsSsVariable(cct, participante);
 				        	
-				        	cct.setSsVariable("NDOC", ndoc);
-				        	cct.setSsVariable("NOMBRE", nombre);
-				        	cct.setSsVariable("DIRNOT", dirnot);
-				        	cct.setSsVariable("C_POSTAL", c_postal);
-				        	cct.setSsVariable("LOCALIDAD", localidad);
-				        	cct.setSsVariable("CAUT", caut);
-				        	
-				        	// Obtener el sustituto del recurso en la tabla SPAC_VLDTBL_RECURSOS
-				        	String sqlQueryPart = "WHERE VALOR = '"+recurso+"'";
-				        	IItemCollection colRecurso = entitiesAPI.queryEntities("DPCR_RECURSOS", sqlQueryPart);
-				        	if (colRecurso.iterator().hasNext()){
-				        		IItem iRecurso = (IItem)colRecurso.iterator().next();
-				        		recurso = iRecurso.getString("SUSTITUTO");
-				        	}
-				        	/**
-				        	 * INICIO
-				        	 * ##Ticket #172 SIGEM decretos y secretaria, modificar el recurso
-				        	 * **/
-				        	if (recurso.equals("")){
-				        		recurso += Constants.SECRETARIAPROC.sinRECUSO;
-				        	}
-				        	else{
-				        		recurso += Constants.SECRETARIAPROC.conRECUSO;
-				        	}
-				        	/**
-				        	 * FIN
-				        	 * ##Ticket #172 SIGEM decretos y secretaria, modificar el recurso
-				        	 * **/
-				        	cct.setSsVariable("RECURSO", recurso);
-			        		
 			        		//logger.warn("NOTIFICACION CABECERA INICIO "+strNombreDocCab);
 			            	DocumentosUtil.generarDocumento(rulectx, strNombreDocCab, null);
 			            	String strInfoPag = DocumentosUtil.getInfoPagByDescripcion(numexp, rulectx, strNombreDocCab);
@@ -173,7 +116,6 @@ public class DipucrGenerateNotificacionesRule implements IRule {
 			        		//Cuerpo
 			 	        	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(numexp, rulectx, descripcion);
 			 	        	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-			 	        	//DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
 			 	        	DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 			 	    		file.delete();
 			        		
@@ -183,7 +125,6 @@ public class DipucrGenerateNotificacionesRule implements IRule {
 			    	    	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(numexp, rulectx, strNombreDocPie);
 			    	    	//logger.warn(strInfoPag);
 			    	    	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-			    	    	//DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
 			    	    	DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 			    			file.delete();
 			    			//logger.warn("FIN PIE NOTIFICACION");
@@ -211,17 +152,17 @@ public class DipucrGenerateNotificacionesRule implements IRule {
 			    				orden = i+"";
 			    			}
 			    			if(!urgencia){
-			    				entityDoc.set("DESCRIPCION", orden +".-"+strNombreDoc+" - "+nombre);
+			    				entityDoc.set("DESCRIPCION", orden +".-"+strNombreDoc+" - "+participante.getString(ParticipantesUtil.NOMBRE));
 			    			}
 			    			else{
-			    				entityDoc.set("DESCRIPCION", orden +".- Urgencia "+strNombreDoc+" - "+nombre);
+			    				entityDoc.set("DESCRIPCION", orden +".- Urgencia "+strNombreDoc+" - "+participante.getString(ParticipantesUtil.NOMBRE));
 			    			}
-			    			entityDoc.set("DESTINO", nombre);
+			    			entityDoc.set("DESTINO", participante.getString(ParticipantesUtil.NOMBRE));
 			    			
 			    			/**
 					    	 * INICIO[Teresa] Ticket #106 añadir el id_ext
 					    	 * **/
-			    			entityDoc.set("DESTINO_ID", id_ext);
+			    			entityDoc.set("DESTINO_ID", participante.getString(ParticipantesUtil.ID_EXT));
 					    	/**
 					    	 * FIN[Teresa] Ticket #106 añadir el id_ext
 					    	 * **/
@@ -239,25 +180,21 @@ public class DipucrGenerateNotificacionesRule implements IRule {
 			    	        }
 			        		strInfoPag = DocumentosUtil.getInfoPagByDescripcion(numexp, rulectx, descripcion);
 			 	        	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-			 	        	//DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
 			 	        	DipucrCommonFunctions.ConcatenaByFormat(xComponent, "file://" + file.getPath(), extensionEntidad);
 			 	    		file.delete();
 			 	    		file = null;
-			 	    		xComponent.dispose();
 				        	
 				        	//Generación del acuse de recibo
 				        	//DipucrCommonFunctions.generarDocumento(rulectx, strNombreDocAcu, strDescr);
 				        	
-							cct.deleteSsVariable("NDOC");
-							cct.deleteSsVariable("NOMBRE");
-							cct.deleteSsVariable("DIRNOT");
-							cct.deleteSsVariable("C_POSTAL");
-							cct.deleteSsVariable("LOCALIDAD");
-							cct.deleteSsVariable("CAUT");
-							cct.deleteSsVariable("RECURSO");
-							cct.deleteSsVariable("FECHA");
+			 	    		DocumentosUtil.borraParticipanteSsVariable(cct);
 							
 							DocumentosUtil.deleteFile(fileName);
+							
+							if(null != ooHelper){
+						       	ooHelper.dispose();
+						    }
+			 	    		if (xComponent != null) xComponent.dispose();
 			        	}
 	 	        	}
 	 	        	
@@ -281,10 +218,11 @@ public class DipucrGenerateNotificacionesRule implements IRule {
         } catch(Exception e) {
         	logger.error("No se ha podido generar las notificaciones del expediente: " + numexp + ". " + e.getMessage(), e);
         	throw new ISPACRuleException("No se ha podido generar las notificaciones del expediente: " + numexp + ". " + e.getMessage(), e);
-        }
-        finally{
-        	if(ooHelper != null) ooHelper.dispose();
-        }
+        } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
     }
 
 	private String sacarNumExp(String descripcion) throws ISPACRuleException {
@@ -308,6 +246,7 @@ public class DipucrGenerateNotificacionesRule implements IRule {
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException{
+		// Empty method
     }
 
 }

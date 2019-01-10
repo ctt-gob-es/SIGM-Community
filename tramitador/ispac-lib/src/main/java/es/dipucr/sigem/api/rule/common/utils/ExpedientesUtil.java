@@ -12,6 +12,7 @@ import ieci.tdw.ispac.api.item.IStage;
 import ieci.tdw.ispac.api.item.util.ListCollection;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.thirdparty.IThirdPartyAdapter;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.text.ParseException;
@@ -34,12 +35,61 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
  */
 public class ExpedientesUtil {
 	
-	private static final Logger logger = Logger.getLogger(ExpedientesUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(ExpedientesUtil.class);
+	
+	public static final String SPAC_EXPEDIENTES = "SPAC_EXPEDIENTES";
+	public static final String SPAC_EXPEDIENTES_H = "SPAC_EXPEDIENTES_H";
+	
+	//Mapeo de las columnas de la tablas SPAC_EXPEDINTES y SPAC_EXPEDIENTES_H
+	public static final String ID = "ID";
+	public static final String NUMEXP = "NUMEXP";
+	public static final String ASUNTO = "ASUNTO";
+	public static final String ESTADOADM = "ESTADOADM";
+	public static final String IDENTIDADTITULAR = "IDENTIDADTITULAR";
+	public static final String NIFCIFTITULAR = "NIFCIFTITULAR";
+	public static final String NOMBREPROCEDIMIENTO = "NOMBREPROCEDIMIENTO";
+	public static final String CIUDAD = "CIUDAD";
+	public static final String CODPROCEDIMIENTO = "CODPROCEDIMIENTO";
+	public static final String FCIERRE = "FCIERRE";
+	public static final String OBSERVACIONES = "OBSERVACIONES";
+	public static final String CPOSTAL = "CPOSTAL";
+	public static final String REGIONPAIS = "REGIONPAIS";
+	public static final String DOMICILIO = "DOMICILIO";
+	public static final String TIPODIRECCIONINTERESADO = "TIPODIRECCIONINTERESADO";
+	public static final String TFNOFIJO = "TFNOFIJO";
+	public static final String ROLTITULAR = "ROLTITULAR";
+	public static final String IDDIRECCIONPOSTAL = "IDDIRECCIONPOSTAL";
+	public static final String DIRECCIONTELEMATICA = "DIRECCIONTELEMATICA";
+	public static final String TFNOMOVIL = "TFNOMOVIL";
+	public static final String TIPOPERSONA = "TIPOPERSONA";	
+	
+	public static final String NREG = "NREG";
+	public static final String FREG = "FREG";
+	public static final String ID_PCD = "ID_PCD";
 	
 	//Expediente iniciado de forma manual
 	public static final String _TIPO_MANUAL = "MANUAL";
 	//Expediente iniciado de forma automática (desde RT)
 	public static final String _TIPO_AUTO = "AUTO";
+
+	
+	//Valores del campo ESTADOADM
+	public interface EstadoADM{
+        String RS = "RS";
+        String AP = "AP";
+        String AP25 = "AP25";
+        String RC = "RC";
+		String RN = "RN";
+		String NT = "NT";
+		String NE = "NE";
+		String JF = "JF";
+		String JS = "JS";
+		String JI = "JI";
+		String CR = "CR";
+		String NT25 = "NT25";
+		String DI = "DI";
+		String DF = "DF";		
+    }
 	
 	
 	public static void cerrarExpedientes (IClientContext cct, Vector<String> numexpCerrar) throws ISPACRuleException{
@@ -48,7 +98,7 @@ public class ExpedientesUtil {
 				try {
 					ExpedientesUtil.avanzarFase(cct, numexpCerrar.get(i));			
 				} catch (ISPACRuleException e) {
-					logger.error(e.getMessage(), e);
+					LOGGER.error(e.getMessage(), e);
 					throw new ISPACRuleException("No se puede cerrar el expediente " +numexpCerrar.get(i)+". Error: "+ e.getMessage(), e);
 				}
 		}	        					
@@ -103,7 +153,7 @@ public class ExpedientesUtil {
 	        		
 		}
 		catch (Exception e) {
-			logger.error("Error al cerrar el expediente de Licencias, expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al cerrar el expediente de Licencias, expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al cerrar el expediente de Licencias, expediente: " + numexp + ". " + e.getMessage(), e);
 		}
 	}
@@ -115,8 +165,8 @@ public class ExpedientesUtil {
 	 * @param numexp
 	 * @throws ISPACRuleException
 	 */
-	public static void avanzarFase(IClientContext cct, String numexp) throws ISPACRuleException{
-		
+	public static IStage avanzarFase(IClientContext cct, String numexp) throws ISPACRuleException{
+		IStage stage = null;
 		try{
 			//APIs
 			IInvesflowAPI invesflowAPI = cct.getAPI();
@@ -133,7 +183,7 @@ public class ExpedientesUtil {
 			Iterator<?> itStages = collectionStages.iterator();
         	if (itStages.hasNext()) 
 	        {
-        		IStage stage = (IStage) itStages.next();
+        		stage = (IStage) itStages.next();
         		int idPcdStage = stage.getInt("ID_FASE");
         		int idStage = stage.getInt("ID");
         		tx.deployNextStage(idProcess, idPcdStage, idStage);
@@ -143,9 +193,10 @@ public class ExpedientesUtil {
 	        		
 		}
 		catch (Exception e) {
-			logger.error("Error al cerrar el expediente de Licencias, expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al cerrar el expediente de Licencias, expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al cerrar el expediente de Licencias, expediente: " + numexp + ". " + e.getMessage(), e);
 		}
+		return stage;
 	}
 
 	/**
@@ -217,7 +268,7 @@ public class ExpedientesUtil {
     		    }    		    	
     	    	
     	    } catch (ISPACException e) {
-    			logger.error("Error al recuperar la fecha de inicio del expediente: " + numexp + ". " + e.getMessage(), e);
+    			LOGGER.error("Error al recuperar la fecha de inicio del expediente: " + numexp + ". " + e.getMessage(), e);
     		}
 			
 			if(fechaExp != null){
@@ -225,7 +276,7 @@ public class ExpedientesUtil {
 				fechaExp = sdfr.format(d);
 			}		
 			
-			logger.info("La fecha de inicio del expediente: " + numexp + " es " + fechaExp);
+			LOGGER.info("La fecha de inicio del expediente: " + numexp + " es " + fechaExp);
 			
 			return fechaExp;
 			
@@ -255,7 +306,7 @@ public class ExpedientesUtil {
         	cct.endTX(true);
 		}
 		catch(ISPACException e){
-			logger.error("Error al retroceder el expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al retroceder el expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al retroceder el expediente: " + numexp + ". " + e.getMessage(), e);
 		}
 	}
@@ -330,17 +381,18 @@ public class ExpedientesUtil {
 		
 		try{
 			resultado = entitiesAPI.getExpedient(numexp);
-		}
-		catch(Exception e){
-			logger.debug("No se ha recuperado ningún expediente de SPAC_EXPEDIENTES con numexp: " + numexp);
+			
+		} catch(Exception e){
+			LOGGER.debug("No se ha recuperado ningún expediente de SPAC_EXPEDIENTES con numexp: " + numexp);
 			resultado = null;
 		}
 		
 		if(resultado == null){
 			if(EntidadesAdmUtil.tieneEntidadTablaHistoricos()){
 				IItemCollection itemset = entitiesAPI.getEntities(Constants.TABLASBBDD.SPAC_EXPEDIENTES_H, numexp, null);
-		        if (itemset.next())
+		        if (itemset.next()){
 		        	resultado = itemset.value();
+		        }
 			}
 		}
 
@@ -388,7 +440,7 @@ public class ExpedientesUtil {
 			resultado = new ListCollection(part);
 		}
 		catch(Exception e){
-			logger.error("Error al recuperar los participantes. consulta: " + consulta + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar los participantes. consulta: " + consulta + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar los participantes. " + e.getMessage(), e);
 		}
 		
@@ -451,10 +503,51 @@ public class ExpedientesUtil {
 
 	public static String getAsunto(IClientContext cct, String numexp) throws ISPACException {
 		try {
-			return ExpedientesUtil.getExpediente(cct, numexp).getString("ASUNTO");
+			return ExpedientesUtil.getExpediente(cct, numexp).getString(ExpedientesUtil.ASUNTO);
 		} catch (ISPACException e) {
-			logger.error("Error al recuperar el asunto del expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al recuperar el asunto del expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar el asunto del expediente: " + numexp + ". " + e.getMessage(), e);
+		}
+	}
+
+
+	public static String getEstadoAdm(IClientContext cct, String numexp) {
+		String estadoAdm = "";
+		
+		try{
+			IItem expediente = ExpedientesUtil.getExpediente(cct, numexp);
+			estadoAdm = expediente.getString(ExpedientesUtil.ESTADOADM);
+			
+		} catch (ISPACException e) {
+			LOGGER.error("Error al recuperar el estado administrativo del expediente: " + numexp + ". " + e.getMessage(), e);
+			estadoAdm = "";
+		}
+		
+        return estadoAdm;
+	}
+
+
+	public static void setTerceroAsInteresadoPrincipal(IClientContext cct, String numExp, IThirdPartyAdapter tercero) {
+		try{
+			IItem expediente = ExpedientesUtil.getExpediente(cct, numExp);
+	        
+	        expediente.set(ExpedientesUtil.NIFCIFTITULAR, tercero.getIdentificacion());
+	        expediente.set(ExpedientesUtil.IDENTIDADTITULAR, tercero.getNombreCompleto());
+	
+	        if (null != tercero.getDefaultDireccionPostal()){
+	            expediente.set(ExpedientesUtil.CPOSTAL, tercero.getDefaultDireccionPostal().getCodigoPostal());
+	            expediente.set(ExpedientesUtil.DOMICILIO,tercero.getDefaultDireccionPostal().getDireccionPostal());
+	            expediente.set(ExpedientesUtil.CIUDAD, tercero.getDefaultDireccionPostal().getMunicipio());
+	            expediente.set(ExpedientesUtil.REGIONPAIS,tercero.getDefaultDireccionPostal().getProvincia());
+	            expediente.set(ExpedientesUtil.TFNOFIJO,tercero.getDefaultDireccionPostal().getTelefono());
+	        }
+	        
+	        expediente.set(ExpedientesUtil.ROLTITULAR, "INT");
+	        
+	        expediente.store(cct);
+	        
+		} catch(ISPACException e){
+			LOGGER.error("ERROR al rellenar el interesado principal del expediente: " + numExp + ". " + e.getMessage(), e);
 		}
 	}
 }

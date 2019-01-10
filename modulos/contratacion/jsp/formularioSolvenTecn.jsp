@@ -27,7 +27,13 @@
 		document.defaultForm.target = "ParentWindow";
 		document.defaultForm.action = "storeEntity.do";
 		document.defaultForm.submit();
-		ispac_needToConfirm = true;
+		var is_chrome= navigator.userAgent.toLowerCase().indexOf('chrome/') > -1;
+		 if (is_chrome){
+		  ispac_needToConfirm = false;
+		 }
+		 else{
+		  ispac_needToConfirm = true;
+		 }
 	}
 
 //--></script>
@@ -39,7 +45,7 @@
 <ispac:tabs>
 	<ispac:tab title='<%=aux0%>'>
 		<div id="dataBlock_CONTRATACION_SOLVENCIA_TECN"
-			style="position: relative; height: 380px; width: 600px">
+			style="position: relative; height: 550px; width: 600px">
 
 			<div id="label_SPAC_EXPEDIENTES:SEP_INTERESADO_PRINCIPAL"
 				title="Criterios para evaluar la solvencia técnica que determina la capacidad de un operador económico para participar en la licitación."
@@ -185,24 +191,49 @@
 				</nobr>
 			</div>
 			
-			<div id="label_SPAC_EXPEDIENTES:SEP_INTERESADO_PRINCIPAL" 
+			
+			 
+  			<div id="label_SPAC_EXPEDIENTES:SEP_INTERESADO_PRINCIPAL" style="position: absolute; top: 205px; left: 10px; width: 720px">
+				Para acreditar el requisito es necesario seleccionar al menos uno de los siguientes: (SOLO en caso de Licitación Electrónica).
+			</div>
+			
+			<div id="label_CONTRATACION_SOLVENCIA_TECN:EVIDENCE_CRIT_SOLVENCIA"
+				style="position: absolute; top: 230px; left: 10px; width: 220px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_SOLVENCIA_TECN:EVIDENCE_CRIT_SOLVENCIA)" /> (*):
+			</div>
+			<div id="data_CONTRATACION_SOLVENCIA_TECN:EVIDENCE_CRIT_SOLVENCIA" style="position: absolute; top: 230px; left: 240px; width: 100%;">
+				<nobr>
+					<ispac:htmlTextareaImageFrame property="property(CONTRATACION_SOLVENCIA_TECN:EVIDENCE_CRIT_SOLVENCIA)" readonly="true" readonlyTag="false" 
+					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="80" 
+					id="SEARCH_CODICE_LICITACION_EVIDENCE_CRIT_SOLVENCIA" target="workframe" action="selectListadoCodicePliego.do?atributo=COD_EVIDENCE" 
+					image="img/search-mg.gif" titleKeyLink="select.rol" imageDelete="img/borrar.gif" titleKeyImageDelete="title.delete.data.selection" 
+					styleClassDeleteLink="tdlink" confirmDeleteKey="msg.delete.data.selection" showDelete="true" showFrame="true" width="640" height="480" 
+					tabindex="113">
+						<ispac:parameter name="SEARCH_CODICE_LICITACION_EVIDENCE_CRIT_SOLVENCIA" id="property(CONTRATACION_SOLVENCIA_TECN:EVIDENCE_CRIT_SOLVENCIA)" property="SUSTITUTO" />
+					</ispac:htmlTextareaImageFrame>
+				</nobr>
+			</div>
+			
+			
+		<div id="label_SPAC_EXPEDIENTES:SEP_INTERESADO_PRINCIPAL" 
 			title="Criterios económico-financieros requeridos a un operador económico para evaluar su solvencia 
 			económica y determinar su capacidad de participar en la licitación." 
-			style="position: absolute; top: 200px; left: 10px; width: 620px" class="textbar">
+			style="position: absolute; top: 290px; left: 10px; width: 620px" class="textbar">
 				CRITERIOS DE SOLVENCIA ECONÓMICA Y FINANCIERA
 				<hr class="formbar"/>
 			</div>
 			
 			<div id="label_CONTRATACION_SOLVENCIA_TECN:CRIT_SOLVENCIA_ECO"
 				title="Código que tipifica el criterio de solvencia. En este caso se trata de un criterio de solvencia económico-financiera."
-				style="position: absolute; top: 230px; left: 10px; width: 160px;"
+				style="position: absolute; top: 325px; left: 10px; width: 160px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_SOLVENCIA_TECN:CRIT_SOLVENCIA_ECO)" />
 				:
 			</div>
 			<div id="data_CONTRATACION_SOLVENCIA_TECN:CRIT_SOLVENCIA_ECO"
-				style="position: absolute; top: 230px; left: 170px; width: 100%;">
+				style="position: absolute; top: 325px; left: 170px; width: 100%;">
 
 				<nobr>
 					<ispac:htmlTextareaImageFrame
@@ -228,14 +259,14 @@
 			</div>
 			<div id="label_CONTRATACION_SOLVENCIA_TECN:DESCRIPCION_ECO"
 				title="Descripción textual del criterio de solvencia técnica."
-				style="position: absolute; top: 255px; left: 10px; width: 160px;"
+				style="position: absolute; top: 350px; left: 10px; width: 160px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_SOLVENCIA_TECN:DESCRIPCION_ECO)" />
 				:
 			</div>
 			<div id="data_CONTRATACION_SOLVENCIA_TECN:DESCRIPCIO_ECON"
-				style="position: absolute; top: 255px; left: 170px; width: 100%;">
+				style="position: absolute; top: 350px; left: 170px; width: 100%;">
 				<ispac:htmlText
 					property="property(CONTRATACION_SOLVENCIA_TECN:DESCRIPCION_ECO)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
@@ -244,14 +275,14 @@
 			</div>
 			<div id="label_CONTRATACION_SOLVENCIA_TECN:VALORUMBRALIMPORTE_ECO"
 				title="Valor umbral del criterio cuando se trata de un importe, como por ejemplo el valor del volumen de negocios."
-				style="position: absolute; top: 280px; left: 10px; width: 160px;"
+				style="position: absolute; top: 375px; left: 10px; width: 160px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_SOLVENCIA_TECN:VALORUMBRALIMPORTE_ECO)" />
 				:
 			</div>
 			<div id="data_CONTRATACION_SOLVENCIA_TECN:VALORUMBRALIMPORTE_ECO"
-				style="position: absolute; top: 280px; left: 170px; width: 100%;">
+				style="position: absolute; top: 375px; left: 170px; width: 100%;">
 				<ispac:htmlText
 					property="property(CONTRATACION_SOLVENCIA_TECN:VALORUMBRALIMPORTE_ECO)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
@@ -260,14 +291,14 @@
 			</div>
 			<div id="label_CONTRATACION_SOLVENCIA_TECN:VALORUMBRALNOIMPORTE_ECO"
 				title="Valor umbral del criterio cuando no es un importe, como por ejemplo el número de ingenieros superiores dedicados al proyecto."
-				style="position: absolute; top: 305px; left: 10px; width: 160px;"
+				style="position: absolute; top: 400px; left: 10px; width: 160px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_SOLVENCIA_TECN:VALORUMBRALNOIMPORTE_ECO)" />
 				:
 			</div>
 			<div id="data_CONTRATACION_SOLVENCIA_TECN:VALORUMBRALNOIMPORTE_ECO"
-				style="position: absolute; top: 305px; left: 170px; width: 100%;">
+				style="position: absolute; top: 400px; left: 170px; width: 100%;">
 				<ispac:htmlText
 					property="property(CONTRATACION_SOLVENCIA_TECN:VALORUMBRALNOIMPORTE_ECO)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
@@ -277,14 +308,14 @@
 
 			<div id="label_CONTRATACION_SOLVENCIA_TECN:PERIODODURACION_ECO"
 				title="Período o lapso de tiempo de aplicabilidad del criterio"
-				style="position: absolute; top: 330px; left: 10px; width: 160px;"
+				style="position: absolute; top: 425px; left: 10px; width: 160px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_SOLVENCIA_TECN:PERIODODURACION_ECO)" />
 				:
 			</div>
 			<div id="data_CONTRATACION_SOLVENCIA_TECN:PERIODODURACION_ECO"
-				style="position: absolute; top: 330px; left: 170px; width: 100%;">
+				style="position: absolute; top: 425px; left: 170px; width: 100%;">
 				<nobr>
 					<ispac:htmlTextCalendar
 						property="property(CONTRATACION_SOLVENCIA_TECN:PERIODODURACION_ECO)"
@@ -298,7 +329,7 @@
 
 			<div id="label_CONTRATACION_SOLVENCIA_TECN:EXPMAT_ECO"
 				title="Código que define la expresión matemática que servirá para evaluar el criterio de evaluación. Hace referencia a como se tratará el valor umbral, si es máximo o mínimo."
-				style="position: absolute; top: 355px; left: 10px; width: 160px;"
+				style="position: absolute; top: 450px; left: 10px; width: 160px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(CONTRATACION_SOLVENCIA_TECN:EXPMAT_ECO)" />
@@ -306,7 +337,7 @@
 			</div>
 
 			<div id="data_CONTRATACION_SOLVENCIA_TECN:EXPMAT_ECO"
-				style="position: absolute; top: 355px; left: 170px; width: 100%;">
+				style="position: absolute; top: 450px; left: 170px; width: 100%;">
 
 				<nobr>
 					<ispac:htmlTextareaImageFrame
@@ -327,9 +358,30 @@
 							property="SUSTITUTO" />
 					</ispac:htmlTextareaImageFrame>
 				</nobr>
+			</div>			
+			 
+  			<div id="label_SPAC_EXPEDIENTES:SEP_INTERESADO_PRINCIPAL" style="position: absolute; top: 490px; left: 10px; width: 720px">
+				Para acreditar el requisito es necesario seleccionar al menos uno de los siguientes: (SOLO en caso de Licitación Electrónica).
 			</div>
 			
-			
+			<div id="label_CONTRATACION_SOLVENCIA_TECN:EVIDENCE_CRIT_SOLVENCIA_ECO"
+				style="position: absolute; top: 515px; left: 10px; width: 220px;"
+				class="formsTitleB">
+				<bean:write name="defaultForm" property="entityApp.label(CONTRATACION_SOLVENCIA_TECN:EVIDENCE_CRIT_SOLVENCIA_ECO)" /> (*):
+			</div>
+			<div id="data_CONTRATACION_SOLVENCIA_TECN:EVIDENCE_CRIT_SOLVENCIA_ECO" style="position: absolute; top: 515px; left: 240px; width: 100%;">
+				<nobr>
+					<ispac:htmlTextareaImageFrame property="property(CONTRATACION_SOLVENCIA_TECN:EVIDENCE_CRIT_SOLVENCIA_ECO)" readonly="true" readonlyTag="false" 
+					propertyReadonly="readonly" styleClass="input" styleClassReadonly="inputReadOnly" rows="1" cols="80" 
+					id="SEARCH_CODICE_LICITACION_EVIDENCE_CRIT_SOLVENCIA_ECO" target="workframe" action="selectListadoCodicePliego.do?atributo=COD_EVIDENCE" 
+					image="img/search-mg.gif" titleKeyLink="select.rol" imageDelete="img/borrar.gif" titleKeyImageDelete="title.delete.data.selection" 
+					styleClassDeleteLink="tdlink" confirmDeleteKey="msg.delete.data.selection" showDelete="true" showFrame="true" width="640" height="480" 
+					tabindex="113">
+						<ispac:parameter name="SEARCH_CODICE_LICITACION_EVIDENCE_CRIT_SOLVENCIA_ECO" id="property(CONTRATACION_SOLVENCIA_TECN:EVIDENCE_CRIT_SOLVENCIA_ECO)" property="SUSTITUTO" />
+					</ispac:htmlTextareaImageFrame>
+				</nobr>
+			</div>			
+
 		</div>
 	</ispac:tab>
 </ispac:tabs>

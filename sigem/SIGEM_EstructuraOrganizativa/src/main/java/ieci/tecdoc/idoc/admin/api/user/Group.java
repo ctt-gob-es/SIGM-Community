@@ -113,6 +113,23 @@ public interface Group
     */
    public void setDescription(String description);
    
+   // INICIO [dipucr-Felipe #541]
+	/**
+	 * Obtiene el email del grupo.
+	 * 
+	 * @return El email.
+	 */
+	public String getEmail();
+	
+	/**
+	 * Establece el email del grupo.
+	 * 
+	 * @param description
+	 *            El email del grupo.
+	 */
+	public void setEmail(String email);
+	// FIN [dipucr-Felipe #541]
+   
    /**
 	 * Obtiene el identificador del usuario que ha creado el grupo. 
 	 * 

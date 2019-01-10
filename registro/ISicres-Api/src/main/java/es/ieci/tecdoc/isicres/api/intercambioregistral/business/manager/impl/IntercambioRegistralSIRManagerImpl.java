@@ -63,6 +63,20 @@ public class IntercambioRegistralSIRManagerImpl implements
 		getServicioIntercambioRegistral().rechazarAsientoRegistral(identificadorIntercambio,infoRechazo);
 	}
 
+	public void rechazarAsientoRegistral(String identificadorIntercambio,
+		String usuario, String contacto, TipoRechazoEnum tipoRechazoEnum, String motivo) {
+	InfoRechazoVO infoRechazo = new InfoRechazoVO();
+	infoRechazo.setTipoRechazo(tipoRechazoEnum);
+	infoRechazo.setDescripcion(motivo);
+	if (contacto != null &&  contacto.length()<= 160){
+	    infoRechazo.setContacto(contacto);
+	}
+	if (usuario != null &&  usuario.length()<= 80){
+	    infoRechazo.setUsuario(usuario);
+	}
+	getServicioIntercambioRegistral().rechazarAsientoRegistral(identificadorIntercambio,infoRechazo);
+}
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -74,8 +88,12 @@ public class IntercambioRegistralSIRManagerImpl implements
 
 		//TODO ¿Código de aplicación? es opcional no se envia
 		//infoReenvio.setAplicacion("app1");
-		infoReenvio.setContacto(contacto);
-		infoReenvio.setUsuario(usuario);
+		if (contacto != null &&  contacto.length()<= 160){
+		    infoReenvio.setContacto(contacto);
+		}
+		if (usuario != null &&  usuario.length()<= 80){
+		    infoReenvio.setUsuario(usuario);
+		}
 		infoReenvio.setDescripcion(descripcionReenvio);
 		getServicioIntercambioRegistral().reenviarAsientoRegistral(identificadorIntercambio, infoReenvio);
 
@@ -107,4 +125,24 @@ public class IntercambioRegistralSIRManagerImpl implements
 		
 		return servicioIntercambioRegistral.getHistoricoAsientoRegistral(id);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.IntercambioRegistralSIRManager#getHistoricoAsientoRegistral(java.lang.String)
+	 */
+	public List<TrazabilidadVO> getHistoricoAsientoRegistralCode(String entity, String code) {
+		
+		return servicioIntercambioRegistral.getHistoricoAsientoRegistralCode(entity, code);
+	}
+	
+	public int countAsientosRegistrales(
+		CriteriosVO criterios) {
+	return getServicioIntercambioRegistral().countAsientosRegistrales(criterios);
+	}
+	
+	public EstadoAsientoRegistraVO getEstadoAsientoRegistralByCode(
+		String codigoIntercambio) {
+	EstadoAsientoRegistraVO result = getServicioIntercambioRegistral().getEstadoAsientoRegistralByCode(codigoIntercambio);
+	return result;
+}
 }

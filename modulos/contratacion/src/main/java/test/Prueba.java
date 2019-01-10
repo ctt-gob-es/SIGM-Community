@@ -23,19 +23,20 @@ public class Prueba {
 
 		
 		ArrayList<ValorXML> nodos = new ArrayList<ValorXML>();	
-		logger.warn("---------------------------------- inicio PARSEO---------------------------------------------");
+		System.out.println("---------------------------------- inicio PARSEO---------------------------------------------");
 		//String url = "http://contrataciondelestado.es/codice/cl/2.0/CalculationExpressionCode-2.0.gc";
-		String url = "https://contrataciondelestado.es/codice/cl/1.04/DocumentIDTypeCode-1.04.gc";
-		logger.warn("url--- "+url);
+		String url = "https://contrataciondelestado.es/codice/cl/2.08/ContractCode-2.08.gc";
+		System.out.println("url--- "+url);
 		LectorXML lector = new LectorXML(nodos);
 		lector.leer(url);
-		logger.warn("----------------------------------realizado PARSEO--------------------------------------------");
+		System.out.println("----------------------------------realizado PARSEO--------------------------------------------");
 		
 		//Recorrer el listado y ordenarlo.
 		for(int i = 0; i < nodos.size(); i++){
 			//Recorrer el vector y cada valor de code ver si es un número y
 			//ordenador en un vector
 			ValorXML valorXml = (ValorXML) nodos.get(i);
+			System.out.println(valorXml.getCodeKey() +" - "+ valorXml.getNombre());
 			try{
 			}
 			catch(NumberFormatException e){

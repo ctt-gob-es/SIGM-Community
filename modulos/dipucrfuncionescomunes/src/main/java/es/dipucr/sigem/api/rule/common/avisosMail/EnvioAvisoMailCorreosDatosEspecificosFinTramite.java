@@ -41,8 +41,8 @@ public class EnvioAvisoMailCorreosDatosEspecificosFinTramite extends DipucrEnvia
 			else{
 				IItem itemTramite = entitiesAPI.getTask(rulectx.getTaskId());
 				
-				contenido = "Tiene un nuevo Trámite " + itemTramite.get("NOMBRE") + " a gestionar en el expediente " + numexp;
-				asunto = "[AL-SIGM] Tiene un nuevo trámite: " + itemTramite.get("NOMBRE") + " a gestionar en el expediente " + numexp;				
+				contenido = "Fin del Trámite " + itemTramite.get("NOMBRE") + " en el expediente " + numexp;
+				asunto = "[AL-SIGM] " + contenido;			
 			}
 			conDocumento = false;
 		} catch (ISPACException e) {

@@ -2,6 +2,9 @@ package es.dipucr.sigem.api.rule.common.utils;
 
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
+
+import es.dipucr.sigem.api.rule.procedures.Constants;
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
@@ -9,10 +12,7 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
-
-import org.apache.log4j.Logger;
-
-import es.dipucr.sigem.api.rule.procedures.Constants;
+import ieci.tdw.ispac.ispaclib.db.DbResultSet;
 
 /**
  * [ecenpri-Felipe Ticket #39] Nuevo procedimiento Propuesta de Solicitud de Anuncio
@@ -23,6 +23,42 @@ public class FasesUtil {
 
 	/** Logger de la clase. */
 	protected static final Logger logger = Logger.getLogger(FasesUtil.class);
+	
+	public static String getNombreSpacCTFasesByCodFase(IClientContext cct, String codFase) throws ISPACRuleException{
+		String resultado = "";
+		try{
+			StringBuffer consulta = new StringBuffer(" SELECT NOMBRE FROM SPAC_CT_FASES WHERE COD_FASE='"+codFase+"'");
+			DbResultSet fasesRS = cct.getConnection().executeQuery(consulta.toString());
+        	if(fasesRS != null){
+        		while (fasesRS.getResultSet().next()){
+        			resultado = fasesRS.getResultSet().getString("NOMBRE");        			
+        		}
+        	}
+		} 
+		catch(Exception e){
+			logger.error("Error al recuperar la getSpacCTFases del codFase: " + codFase + ". " + e.getMessage(), e);
+			throw new ISPACRuleException("Error al recuperar la getSpacCTFases del codFase: " + codFase + ". " + e.getMessage(), e);
+		}
+		return resultado;
+	}
+	
+	public static String getCodFaseSpacCTFasesById(IClientContext cct, int id) throws ISPACRuleException{
+		String resultado = "";
+		try{
+			StringBuffer consulta = new StringBuffer(" SELECT COD_FASE FROM SPAC_CT_FASES WHERE ID='"+id+"'");
+			DbResultSet fasesRS = cct.getConnection().executeQuery(consulta.toString());
+        	if(fasesRS != null){
+        		while (fasesRS.getResultSet().next()){
+        			resultado = fasesRS.getResultSet().getString("COD_FASE");        			
+        		}
+        	}
+		} 
+		catch(Exception e){
+			logger.error("Error al recuperar la getSpacCTFases del id: " + id + ". " + e.getMessage(), e);
+			throw new ISPACRuleException("Error al recuperar la getSpacCTFases del id: " + id + ". " + e.getMessage(), e);
+		}
+		return resultado;
+	}
 	
 	public static IItem getFase(IClientContext cct, String numexp) throws ISPACRuleException{
 		IItem resultado = null;
@@ -66,6 +102,23 @@ public class FasesUtil {
 		return fase;
 	}
 	
+	public static IItem getSpacPFasesById(IRuleContext rulectx, int idFase) throws ISPACRuleException{
+		IItem resultado = null;
+		
+		try {
+			String sQuery = "ID="+idFase+"";
+			Iterator<IItem> itSpacPFases = ConsultasGenericasUtil.queryEntities(rulectx, "SPAC_P_FASES", sQuery);
+	        
+	        while (itSpacPFases.hasNext()) {
+	        	resultado = ((IItem)itSpacPFases.next());
+	        }
+			
+		} catch (ISPACRuleException e) {
+			logger.error("Error al recuperar la fase del idFase: " + idFase + ". " + e.getMessage(), e);
+			throw new ISPACRuleException("Error al recuperar la fase del idFase: " + idFase + ". " + e.getMessage(), e);
+		}
+		return resultado;
+	}
 	/**
 	 * FIN [Teresa] #Ticket#181# SIGEM metodo que devuelve la fase en la que se encuentra un tramite
 	 * **/

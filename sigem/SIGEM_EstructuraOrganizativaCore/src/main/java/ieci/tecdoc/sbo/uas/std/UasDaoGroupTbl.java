@@ -4,7 +4,6 @@ import ieci.tecdoc.sgm.base.collections.IeciTdLongIntegerArrayList;
 import ieci.tecdoc.sgm.base.collections.IeciTdShortTextArrayList;
 import ieci.tecdoc.sgm.base.dbex.DbColumnDef;
 import ieci.tecdoc.sgm.base.dbex.DbConnection;
-import ieci.tecdoc.sgm.base.dbex.DbConnectionConfig;
 import ieci.tecdoc.sgm.base.dbex.DbDataType;
 import ieci.tecdoc.sgm.base.dbex.DbIndexDef;
 import ieci.tecdoc.sgm.base.dbex.DbSelectFns;
@@ -35,6 +34,10 @@ public final class UasDaoGroupTbl
 	
 	public static final DbColumnDef    CD_REMARKS	 = new DbColumnDef
 	("REMARKS", DbDataType.SHORT_TEXT,254,true);
+
+	//[dipucr-Felipe #541]
+	public static final DbColumnDef    CD_EMAIL	 = new DbColumnDef
+	("EMAIL", DbDataType.SHORT_TEXT,254,true);
 	
 	public static final DbColumnDef    CD_CRTRID	    = new DbColumnDef
 	("CRTRID",DbDataType.LONG_INTEGER,false);
@@ -50,7 +53,7 @@ public final class UasDaoGroupTbl
 	
 	
 	private static final DbColumnDef [] ACD  = 
-	{ CD_ID, CD_NAME, CD_MGRID, CD_TYPE, CD_REMARKS, CD_CRTRID,CD_CRTNDATE, CD_UPDRID, CD_UPDATE};
+	{ CD_ID, CD_NAME, CD_MGRID, CD_TYPE, CD_REMARKS, CD_EMAIL, CD_CRTRID,CD_CRTNDATE, CD_UPDRID, CD_UPDATE};
 	
 	private static final String   ACN = DbUtil.getColumnNames(ACD);
 	

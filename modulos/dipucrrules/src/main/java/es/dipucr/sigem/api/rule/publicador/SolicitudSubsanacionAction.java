@@ -175,7 +175,7 @@ public class SolicitudSubsanacionAction extends SigemBaseAction {
         	setInfo("Error en el alta de solicitud de subsanación para el expediente "
         			+ rctx.getIdObjeto() + ": " + e.toString());
             throw e;
-        } catch (Throwable e) {
+        } catch (Exception e) {
         	setInfo("Error en el alta de solicitud de subsanación para el expediente "
         			+ rctx.getIdObjeto() + ": " + e.toString());
             throw new ActionException(e);

@@ -9,19 +9,22 @@ import ieci.tecdoc.core.db.DbDataType;
 import ieci.tecdoc.core.exception.IeciTdException;
 import ieci.tecdoc.sbo.acs.base.AcsAccessToken;
 import ieci.tecdoc.sbo.acs.base.AcsAccessType;
+import ieci.tecdoc.sbo.config.CfgFtsConfig;
+import ieci.tecdoc.sbo.config.CfgMdoConfig;
 import ieci.tecdoc.sbo.idoc.acs.AcsInfo;
 import ieci.tecdoc.sbo.idoc.acs.AcsMdoArchive;
 import ieci.tecdoc.sbo.idoc.acs.AcsMdoFolder;
 import ieci.tecdoc.sbo.idoc.acs.AcsTokenArchive;
+import ieci.tecdoc.sbo.idoc.archive.base.ArchiveFlag;
 import ieci.tecdoc.sbo.idoc.archive.base.ArchiveToken;
 import ieci.tecdoc.sbo.idoc.archive.base.ArchiveTokenArchHdr;
 import ieci.tecdoc.sbo.idoc.archive.base.ArchiveTokenFlds;
-import ieci.tecdoc.sbo.idoc.archive.base.ArchiveFlag;
 import ieci.tecdoc.sbo.idoc.archive.std.ArchiveMdoToken;
 import ieci.tecdoc.sbo.idoc.dao.DaoArchHdrTbl;
 import ieci.tecdoc.sbo.idoc.dao.DaoFdrHdrRow;
 import ieci.tecdoc.sbo.idoc.dao.DaoFdrHdrTbl;
 import ieci.tecdoc.sbo.idoc.dao.DaoUtil;
+import ieci.tecdoc.sbo.idoc.folder.base.FolderDocUpdIds;
 import ieci.tecdoc.sbo.idoc.folder.base.FolderToken;
 import ieci.tecdoc.sbo.idoc.folder.base.FolderTokenDivider;
 import ieci.tecdoc.sbo.idoc.folder.base.FolderTokenDividers;
@@ -33,16 +36,13 @@ import ieci.tecdoc.sbo.idoc.folder.base.FolderTokenExtFlds;
 import ieci.tecdoc.sbo.idoc.folder.base.FolderTokenFlds;
 import ieci.tecdoc.sbo.idoc.folder.base.FolderTokenMultFld;
 import ieci.tecdoc.sbo.idoc.folder.base.FolderTokenMultFlds;
-import ieci.tecdoc.sbo.idoc.folder.base.FolderDocUpdIds;
 import ieci.tecdoc.sbo.idoc.folder.divider.FolderMdoDivider;
 import ieci.tecdoc.sbo.idoc.folder.document.FolderMdoDocument;
+import ieci.tecdoc.sbo.idoc.folder.document.FolderMdoDocumentAnn;
 import ieci.tecdoc.sbo.idoc.folder.document.FolderMdoDocumentFile;
 import ieci.tecdoc.sbo.idoc.folder.fdrlink.FolderMdoFdrLink;
 import ieci.tecdoc.sbo.idoc.folder.field.FolderMdoFlds;
-import ieci.tecdoc.sbo.idoc.folder.document.FolderMdoDocumentAnn;
 import ieci.tecdoc.sbo.util.types.SboType;
-import ieci.tecdoc.sbo.config.CfgMdoConfig;
-import ieci.tecdoc.sbo.config.CfgFtsConfig;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -392,11 +392,17 @@ public class FolderMdoFdr
       }
       
       insertFolderValues(userId, arch, fdr);
-      storeDocumentTree(userId, arch, fdr);           
+      if(existFolder(userId, arch, fdr.getId())){
+    	  storeDocumentTree(userId, arch, fdr);           
+      }
       
    }
    
-   public static boolean canEditFolder(AcsAccessToken accToken,
+   public static boolean existFolder(int userId, ArchiveToken arch, int fdrId) throws Exception{
+	   return canEditFolder(null, arch, fdrId);	   
+   }
+
+public static boolean canEditFolder(AcsAccessToken accToken,
                                        int archId, int fdrId)
                          throws Exception
    { 

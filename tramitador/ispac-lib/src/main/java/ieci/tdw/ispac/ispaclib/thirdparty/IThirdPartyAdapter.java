@@ -103,5 +103,8 @@ public interface IThirdPartyAdapter extends Serializable {
      * @param direccion dirección postal por defecto para el tercero
      */
     public void setDefaultDireccionPostal(IPostalAddressAdapter direccion);
+    
+    public String getDir3();
+	public void setDir3(String dir3);
 
 }

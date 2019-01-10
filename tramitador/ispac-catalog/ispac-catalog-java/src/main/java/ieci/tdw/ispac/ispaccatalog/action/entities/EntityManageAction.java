@@ -310,7 +310,7 @@ public class EntityManageAction extends BaseDispatchAction {
 				
 				return collator.compare(label1, label2);
 			} catch (ISPACException e) {
-				e.printStackTrace();
+				logger.error("ERROR. " + e.getMessage(), e);
 			}
 			return 0;
 		}

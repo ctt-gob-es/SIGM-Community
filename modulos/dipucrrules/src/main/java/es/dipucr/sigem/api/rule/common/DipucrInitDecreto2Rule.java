@@ -37,8 +37,8 @@ public class DipucrInitDecreto2Rule implements IRule {
 
 	@SuppressWarnings("rawtypes")
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
-		try
-    	{
+		OpenOfficeHelper ooHelper = null;
+		try {
 			logger.info("INICIO - " + this.getClass().getName());
 			//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
@@ -46,7 +46,7 @@ public class DipucrInitDecreto2Rule implements IRule {
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 	        IGenDocAPI genDocAPI = invesFlowAPI.getGenDocAPI();
 	        ITXTransaction transaction = invesFlowAPI.getTransactionAPI();
-	        OpenOfficeHelper ooHelper = OpenOfficeHelper.getInstance();
+	        ooHelper = OpenOfficeHelper.getInstance();
 	        //----------------------------------------------------------------------------------------------
 	        
 	        //Obtiene el expediente de la entidad
@@ -168,11 +168,11 @@ public class DipucrInitDecreto2Rule implements IRule {
 	        
 	        //Cuerpo de decreto
         	file = DocumentosUtil.getFile(cct, infopag, null, null);
-        	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+        	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
     		file.delete();
     		//Cuerpo de notificaciones
     		fileNotificaciones = DocumentosUtil.getFile(cct, infopag, null, null);
-        	DipucrCommonFunctions.Concatena(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), ooHelper);
+        	DipucrCommonFunctions.concatena(xComponentNotificaciones, "file://" + fileNotificaciones.getPath());
         	fileNotificaciones.delete();
     		
     		
@@ -180,7 +180,7 @@ public class DipucrInitDecreto2Rule implements IRule {
 	    	DocumentosUtil.generarDocumento(rulectx, Constants.PLANTILLADOC.DECRETO_PIE, Constants.TIPODOC.DECRETOS_CONVOCATORIA, null, numexp_ent, idTramitePropuesta);
 	    	strInfoPag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, Constants.PLANTILLADOC.DECRETO_PIE);
 	    	file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
-	    	DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+	    	DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
 			file.delete();
 //			FIN PIE 
 			
@@ -188,7 +188,7 @@ public class DipucrInitDecreto2Rule implements IRule {
 	    	DocumentosUtil.generarDocumento(rulectx, Constants.PLANTILLADOC.NOTIFICACIONES_PIE, Constants.TIPODOC.PLANTILLA_NOTIFICACIONES_TRAMITE_RESOLUCION, null, numexp_ent, idTramitePropuesta);
 	    	strInfoPagNotificaciones = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, Constants.PLANTILLADOC.NOTIFICACIONES_PIE);
 	    	fileNotificaciones = DocumentosUtil.getFile(cct, strInfoPagNotificaciones, null, null);
-	    	DipucrCommonFunctions.Concatena(xComponentNotificaciones, "file://" + fileNotificaciones.getPath(), ooHelper);
+	    	DipucrCommonFunctions.concatena(xComponentNotificaciones, "file://" + fileNotificaciones.getPath());
 	    	fileNotificaciones.delete();
 //			FIN PIE 
 			
@@ -225,7 +225,7 @@ public class DipucrInitDecreto2Rule implements IRule {
 	        }
 	        infopag = DocumentosUtil.getInfoPagByDescripcion(rulectx.getNumExp(), rulectx, descripcion);
     		file = DocumentosUtil.getFile(cct, infopag, null, null);
-	        DipucrCommonFunctions.Concatena(xComponent, "file://" + file.getPath(), ooHelper);
+	        DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
 	    	file.delete();
 			
 			IItem iPropuestaExp = ExpedientesUtil.getExpediente(cct, numexp_decr);
@@ -250,12 +250,14 @@ public class DipucrInitDecreto2Rule implements IRule {
 			ooHelper.dispose();
 			logger.info("FIN - " + this.getClass().getName());
 	        return new Boolean(true);
-        }
-    	catch(Exception e) 
-        {
+        } catch(Exception e) {
     		logger.error(e.getMessage(), e);
         	throw new ISPACRuleException("No se ha podido inicializar el decreto. " + e.getMessage(), e);
-        }
+        } finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
+		}
 	}
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException{

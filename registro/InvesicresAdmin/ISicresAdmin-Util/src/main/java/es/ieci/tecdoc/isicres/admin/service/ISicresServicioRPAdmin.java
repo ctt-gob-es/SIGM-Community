@@ -1484,14 +1484,20 @@ public interface ISicresServicioRPAdmin {
 	 * @return Lista de oficinas con sus datos básicos
 	 */
 	public List<DatosBasicosOficinaDCVO> findOficinasDirectorioComun(Criterios<CriterioOficinaEnum> criteriosBusqueda) throws ISicresAdminIntercambioRegistralException ;
+	
+	/**
+	 * Método que cuenta oficinas en la réplica del DIR3 según unos criterios
+	 * @param criteriosBusqueda
+	 * @return Número de oficinas
+	 */
+	public int countOficinasDirectorioComun(Criterios<CriterioOficinaEnum> criteriosBusqueda) throws ISicresAdminIntercambioRegistralException;
 
 	/**
 	 * Método que busca unidades orgánicas en la réplica del DIR3 según unos criterios
 	 * @param criteriosBusqueda
 	 * @return Lista de las unidades orgánicas con sus datos básicos
 	 */
-	public List<DatosBasicosUnidadOrganicaDCVO> findUnidadesOrganicasDirectorioComun(Criterios<CriterioUnidadOrganicaEnum> criteriosBusqueda) throws ISicresAdminIntercambioRegistralException ;
-
+	public List<DatosBasicosUnidadOrganicaDCVO> findUnidadesOrganicasDirectorioComun(Criterios<CriterioUnidadOrganicaEnum> criteriosBusqueda) throws ISicresAdminIntercambioRegistralException ;	
 
 	public void actualizarDCO();
 	public void inicializarDCO();

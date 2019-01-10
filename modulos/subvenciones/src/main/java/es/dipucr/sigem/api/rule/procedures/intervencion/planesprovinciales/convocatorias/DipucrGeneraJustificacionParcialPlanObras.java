@@ -7,15 +7,15 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
+import java.util.Calendar;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.util.Calendar;
-
 import es.dipucr.sigem.api.rule.common.documento.DipucrAutoGeneraDocIniTramiteRule;
 import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.ConstantesSubvenciones;
 
     public class DipucrGeneraJustificacionParcialPlanObras  extends
             DipucrAutoGeneraDocIniTramiteRule {
@@ -28,7 +28,7 @@ import es.dipucr.sigem.api.rule.procedures.ConstantesString;
 
             tipoDocumento = "Informe de Justificación";
             plantilla = "Informe de Justificación Parcial";
-
+ 
             LOGGER.info(ConstantesString.FIN +this.getClass().getName());
             return true;
         }
@@ -37,7 +37,7 @@ import es.dipucr.sigem.api.rule.procedures.ConstantesString;
         public void setSsVariables(IClientContext cct, IRuleContext rulectx) {
             String numexp = "";
             try {
-                cct.setSsVariable("ANIO", "" +Calendar.getInstance().get(Calendar.YEAR));
+                cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO, "" +Calendar.getInstance().get(Calendar.YEAR));
                 
                 numexp = rulectx.getNumExp();
                 
@@ -60,7 +60,7 @@ import es.dipucr.sigem.api.rule.procedures.ConstantesString;
 
         public void deleteSsVariables(IClientContext cct) {
             try {
-                cct.deleteSsVariable("ANIO");
+                cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO);
                 cct.deleteSsVariable("NOMBRE");
                 cct.deleteSsVariable("DIRNOT");
                 cct.deleteSsVariable("C_POSTAL");

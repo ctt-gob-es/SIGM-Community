@@ -190,10 +190,14 @@ public class LockManager
 						 " AND ID_OBJ = "  + idObj;
 			LockDAO bloqueo = new LockDAO(cnt);
 			bloqueo.load(cnt, sql);
-			if (ticket.equals(bloqueo.getString("ID")))
+
+//			[Dipucr-Felipe-Manu Ticket #596] * ALSIGM3 Error al registrar WS y Web con creación de documentos - Hitos de creación y borrado de documentos - LockManager.lock
+			if ((null == ticket && null == bloqueo.getString("ID")) || (null != ticket && ticket.equals(bloqueo.getString("ID")))){
 				result = LOCKED_CURSESSION;
-			else
+			}
+			else{
 				result = LOCKED;
+			}
 
 		} catch (ISPACNullObject e)
 		{

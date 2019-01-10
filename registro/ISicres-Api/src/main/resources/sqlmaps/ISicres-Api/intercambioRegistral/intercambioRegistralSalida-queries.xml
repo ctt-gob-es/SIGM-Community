@@ -104,7 +104,7 @@
 
 	<select id="getIntercambiosRegistralesByIdRegistroIdLibroIdOficina" parameterClass="java.util.HashMap"
 			resultMap="intercambioRegistralSalidaResultMap">
-		select exreg.id, exreg.id_arch, exreg.id_fdr, exreg.id_ofic, exreg.type_orig, exreg.exchange_date,
+		select exreg.id, exreg.exchange_date,exreg.id_arch, exreg.id_fdr, exreg.id_ofic, exreg.type_orig, exreg.exchange_date,
 		       exreg.state, exreg.username, exreg.code_entity, exreg.name_entity, exreg.name_tramunit,
 		        exreg.code_tramunit, exreg.state_date, exreg.id_exchange, exreg.id_exchange_sir, exreg.comments, ofic.name as nameOfic
 		  from SCR_EXREG exreg, SCR_OFIC ofic
@@ -121,7 +121,7 @@
 	</select>
 
 	<select id="getBandejaSalidaByEstadoOficinaYLibro" parameterClass="java.util.HashMap"  resultMap="bandejaSalidaItemResultmap">
-		select exreg.id as id, exreg.id_arch as id_arch, exreg.id_fdr as id_fdr, exreg.type_orig as type_orig, exreg.id_exchange as id_exchange,
+		select exreg.id as id, exreg.exchange_date, exreg.id_arch as id_arch, exreg.id_fdr as id_fdr, exreg.type_orig as type_orig, exreg.id_exchange as id_exchange,
 		exreg.id_exchange_sir as id_exchange_sir, exreg.code_entity as code_entity, exreg.name_entity as name_entity, exreg.code_tramunit as code_tramunit, exreg.name_tramunit as name_tramunit,
 		exreg.state_date as state_date, exreg.state as state, exreg.id_ofic as id_ofic, exreg.comments as comments,
 		 libro.fld1 as fld1, libro.fld2 as fld2, libro.fld6 as fld6, libro.fld8 as fld8
@@ -134,7 +134,7 @@
 	</select>
 
 	<select id="getIntercambiosRegistralesSalida" parameterClass="java.lang.Integer"  resultMap="intercambioRegistralSalidaResultMap">
-	select *, 'NULL' as nameOfic from SCR_EXREG where STATE=#value#
+	select SCR_EXREG.*, 'NULL' as nameOfic from SCR_EXREG where STATE=#value#
 	</select>
 
 

@@ -93,6 +93,7 @@ public class ActionsConstants {
 	public static final String USER = getKey("user");
 	public static final String READONLYSTATE = getKey("readonlyState");
 	public static final String PWD=getKey("pwd");
+	public static final String LOCKUSERNAME = getKey("userLock");//[dipucr-Felipe #427]
 
 	public static final String FILTER_ID = "filterId";
 	public static final String HIERARCHICAL_ID = "hierarchicalId";
@@ -130,4 +131,5 @@ public class ActionsConstants {
 	public static final String RECHAZAR_FIRMA = "rechazarFirma";
 	public static final String CONFIRMAR_RECHAZO = "confirmaRechazo";
     //[MQE Ticket #31] Fin Rechazar firma
+	
 }

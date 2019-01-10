@@ -11,6 +11,20 @@
 <%
 	String key = (String) session
 			.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO);
+
+	if(key == null || "null".equals(key)){
+		key = (String) request.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO);
+	}
+
+	String name = (String) session.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_USUARIO);
+	if(name == null || "null".equals(name)){
+		name = (String) request.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_USUARIO);
+	}
+
+	String idEntidad = (String) session.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD);
+	
+	String datosSesion = (String) session.getAttribute(ConstantesGestionUsuariosBackOffice.PARAMETRO_DATOS_SESION);
+
 	String url = (String) request.getAttribute(Defs.PARAMETRO_URL);
 
 	// SLuna-20081217-I
@@ -57,6 +71,9 @@
 	<form action="<html:rewrite href="<%=url%>"/>" method="POST">
 		<input type="hidden" name="<%=ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO%>" id="<%=ConstantesGestionUsuariosBackOffice.PARAMETRO_KEY_SESION_USUARIO%>" value="<%=key%>" />
 		<input type="hidden" name="<%=Defs.PARAMETRO_IDIOMA_STR%>" id="<%=Defs.PARAMETRO_IDIOMA_STR%>" value="<%=idiomaStr%>" />
+		<input type="hidden" name="<%=ConstantesGestionUsuariosBackOffice.PARAMETRO_USUARIO%>" id="<%=ConstantesGestionUsuariosBackOffice.PARAMETRO_USUARIO%>" value="<%=name%>" />
+		<input type="hidden" name="<%=ConstantesGestionUsuariosBackOffice.PARAMETRO_DATOS_SESION%>" id="<%=ConstantesGestionUsuariosBackOffice.PARAMETRO_DATOS_SESION%>" value="<%=datosSesion%>" />
+		<input type="hidden" name="<%=ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD%>" id="<%=ConstantesGestionUsuariosBackOffice.PARAMETRO_ID_ENTIDAD%>" value="<%=idEntidad%>" />
 	</form>
 </body>
 </html>

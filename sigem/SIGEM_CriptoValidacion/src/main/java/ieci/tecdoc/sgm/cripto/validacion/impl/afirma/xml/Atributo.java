@@ -1,5 +1,7 @@
 package ieci.tecdoc.sgm.cripto.validacion.impl.afirma.xml;
 
+import org.apache.log4j.Logger;
+
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 
 /**
@@ -12,6 +14,8 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
  * no tocar esta clase si no se sabe que se esta haciendo
  */
 public abstract class Atributo extends Nodo implements SingleValueConverter {
+	
+	private static final Logger LOGGER = Logger.getLogger(Atributo.class);
 
     // atributos que han sido registrados, necesario para evitar llamadas recursivas en el constructor
     static java.util.Set registrados=new java.util.HashSet();
@@ -31,7 +35,7 @@ public abstract class Atributo extends Nodo implements SingleValueConverter {
 		    Gestion.getXStream().registerConverter((SingleValueConverter)c.newInstance(new String[]{""}));
 		}
 	    } catch (Exception e) {
-		e.printStackTrace();
+	    	LOGGER.error("ERROR. " + e.getMessage(), e);
 	    }
 	}
     }
@@ -51,7 +55,7 @@ public abstract class Atributo extends Nodo implements SingleValueConverter {
 	    java.lang.reflect.Constructor c=this.getClass().getConstructor(new Class[]{String.class});
 	    return c.newInstance(new Object[]{name});
 	} catch (Exception e) {
-	    e.printStackTrace();
+		LOGGER.error("ERROR. " + e.getMessage(), e);
 	    return null;
 	}
     }

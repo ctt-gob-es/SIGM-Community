@@ -3042,18 +3042,16 @@ public class ISicresServicioRPAdminAdapter implements ISicresServicioRPAdmin {
 
 	}
 
-	public List<DatosBasicosOficinaDCVO> findOficinasDirectorioComun(
-			Criterios<CriterioOficinaEnum> criteriosBusqueda)
-			throws ISicresAdminIntercambioRegistralException {
-
-		IntercambioRegistralManager intercambioRegistralManager = (IntercambioRegistralManager) AppContext
-				.getApplicationContext().getBean("intercambioRegistralManager");
-
-		List<DatosBasicosOficinaDCVO> oficinas = intercambioRegistralManager
-				.findOficinasDirectorioComun(criteriosBusqueda);
-
+	public List<DatosBasicosOficinaDCVO> findOficinasDirectorioComun(Criterios<CriterioOficinaEnum> criteriosBusqueda) throws ISicresAdminIntercambioRegistralException {
+		IntercambioRegistralManager intercambioRegistralManager = (IntercambioRegistralManager) AppContext.getApplicationContext().getBean("intercambioRegistralManager");
+		List<DatosBasicosOficinaDCVO> oficinas = intercambioRegistralManager.findOficinasDirectorioComun(criteriosBusqueda);
 		return oficinas;
-
+	}
+	
+	public int countOficinasDirectorioComun(Criterios<CriterioOficinaEnum> criteriosBusqueda) throws ISicresAdminIntercambioRegistralException {
+		IntercambioRegistralManager intercambioRegistralManager = (IntercambioRegistralManager) AppContext.getApplicationContext().getBean("intercambioRegistralManager");
+		int numeroOficinas = intercambioRegistralManager.countOficinasDirectorioComun(criteriosBusqueda);
+		return numeroOficinas;
 	}
 
 	public List<DatosBasicosUnidadOrganicaDCVO> findUnidadesOrganicasDirectorioComun(

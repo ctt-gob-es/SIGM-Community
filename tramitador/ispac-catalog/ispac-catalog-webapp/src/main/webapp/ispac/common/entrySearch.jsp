@@ -144,6 +144,10 @@
 							value='<c:out value="${param['entityAppName']}"/>' />
 						<input type="hidden" name="readonly"
 							value='<c:out value="${param['readonly']}"/>' />
+							
+						<input type="hidden" name="formName"
+							value='<c:out value="${param['formName']}"/>' />
+							
 							<label class="popUp">
 								<label class="popUp"><bean:message key="select.object.nombre.label" />:</label>
 								<ispac:htmlText property="filter" readonly="false" size="38%"
@@ -192,6 +196,9 @@
 							
 						<input type="hidden" name="uid"/>
 						<input type="hidden" name="view"/>
+						
+						<input type="hidden" name="formName"
+							value='<c:out value="${param['formName']}"/>' />
 					
 						<display:table name="items" id="item" export="false" 
 							class="tableDisplay" sort="list" pagesize="20" style="width:95%" requestURI="/entrySearch.do">		

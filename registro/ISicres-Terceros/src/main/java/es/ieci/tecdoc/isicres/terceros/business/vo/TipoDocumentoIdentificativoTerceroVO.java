@@ -12,6 +12,11 @@ public class TipoDocumentoIdentificativoTerceroVO extends Entity {
 	private static final long serialVersionUID = 1875988551007999102L;
 
 	/**
+	 * Id asociado al tipo de documento identificativo.
+	 */
+	protected String id;
+	
+	/**
 	 * Código asociado al tipo de documento identificativo.
 	 */
 	protected String codigo;
@@ -28,6 +33,14 @@ public class TipoDocumentoIdentificativoTerceroVO extends Entity {
 		// nothing to do
 	}
 
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 	public String getCodigo() {
 		return codigo;
 	}
@@ -43,5 +56,15 @@ public class TipoDocumentoIdentificativoTerceroVO extends Entity {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+	
+	public String toString(){
+		return descripcion;
+	}
 
+	public boolean equals(Object o){
+		if (null == o || !(o instanceof TipoDocumentoIdentificativoTerceroVO)){
+			return false;
+		}
+		return ((TipoDocumentoIdentificativoTerceroVO) o).getId().equals(this.id);			
+	}
 }

@@ -20,6 +20,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.utils.DIR3IneUtils;
+
 /**
  * Implementación del API de acceso a terceros en SICRES.
  *
@@ -57,6 +59,7 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 	private static final String TABLAS_PFIS_PJUR="PERSONS";
 	private static final String TABLA_ADDRESS="SCR_ADDRESS";
 	/**FIN [eCenpri-Felipe #477]*/
+	
 	
 	
 	/**
@@ -577,7 +580,7 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 	 * @return Dirección postal.
 	 * @throws ISPACException si ocurre algún error.
 	 */
-	private static IPostalAddressAdapter createPostalAddressAdapter(DbQuery dbQuery) throws ISPACException {
+	private IPostalAddressAdapter createPostalAddressAdapter(DbQuery dbQuery) throws ISPACException {
 
 		PostalAddressAdapter direccion = new PostalAddressAdapter();
 		
@@ -597,6 +600,25 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 				direccion.setProvincia(provinciaPais);
 			}
 		}
+		
+		//INICIO [dipucr-Felipe 3#333 / 3#468]
+		try{
+			String codProvincia = getProvCode(direccion.getProvincia());
+			direccion.setCodProvincia(codProvincia);
+			String codProvinciaDir3 = DIR3IneUtils.getCodDir3Provincia(codProvincia);
+			direccion.setCodProvinciaDir3(codProvinciaDir3);
+			
+			String[] codes = getCityCodes(direccion.getMunicipio(), codProvinciaDir3);
+			String codMunicipio = codes[0];
+			String codMunicipioDir3 = codes[1];
+			codMunicipioDir3 = DIR3IneUtils.getCodDir3Municipio(codMunicipioDir3);
+			direccion.setCodMunicipio(codMunicipio);
+			direccion.setCodMunicipioDir3(codMunicipioDir3);
+		}
+		catch(Exception ex){
+			logger.info(ex.getMessage());
+		}
+		//FIN [dipucr-Felipe 3#333]
 		
 		return direccion;
 	}
@@ -665,10 +687,10 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 				pjurCondition.append(" WHERE ");
 			}
 
-			pfisCondition.append("PERSON.NIF='").append(
+			pfisCondition.append("UPPER(PERSON.NIF)='").append(
 					nifcif.toUpperCase().trim()).append("'");
 
-			pjurCondition.append("PERSON.CIF='").append(
+			pjurCondition.append("UPPER(PERSON.CIF)='").append(
 					nifcif.toUpperCase().trim()).append("'");
 		}
 
@@ -684,9 +706,9 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 				} else {
 					pfisCondition.append(" WHERE ");
 				}
-				pfisCondition.append("PERSON.SURNAME LIKE '%")
+				pfisCondition.append("UPPER(PERSON.SURNAME) LIKE UPPER('%")
 							 .append(DBUtil.replaceQuotes(name.toUpperCase().trim()))
-							 .append("%'");
+							 .append("%')");
 				
 				pjurName.append("%").append(name.toUpperCase().trim());
 			}
@@ -697,9 +719,9 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 				} else {
 					pfisCondition.append(" WHERE ");
 				}
-				pfisCondition.append("PERSON.FIRST_NAME LIKE '%")
+				pfisCondition.append("UPPER(PERSON.FIRST_NAME) LIKE UPPER('%")
 							 .append(DBUtil.replaceQuotes(surname1.toUpperCase().trim()))
-							 .append("%'");
+							 .append("%')");
 				
 				pjurName.append("%").append(surname1.toUpperCase().trim());
 			}
@@ -710,9 +732,9 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 				} else {
 					pfisCondition.append(" WHERE ");
 				}
-				pfisCondition.append("PERSON.SECOND_NAME LIKE '%")
+				pfisCondition.append("UPPER(PERSON.SECOND_NAME) LIKE UPPER('%")
 							 .append(DBUtil.replaceQuotes(surname2.toUpperCase().trim()))
-							 .append("%'");
+							 .append("%')");
 				
 				pjurName.append("%").append(surname2.toUpperCase().trim());
 			}
@@ -722,9 +744,9 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 			} else {
 				pjurCondition.append(" WHERE ");
 			}
-			pjurCondition.append("PERSON.NAME LIKE '")
+			pjurCondition.append("UPPER(PERSON.NAME) LIKE UPPER('")
 						 .append(DBUtil.replaceQuotes(pjurName.toString()))
-						 .append("%'");
+						 .append("%')");
 		}
 
 		String sql = new StringBuffer()
@@ -959,7 +981,7 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 
 				// Obtenemos el id en scr_address
 				int idAddress = getContador(cnt, TABLA_ADDRESS) + 1;
-				strQuery = getInsertScrDomSQLQuery(idAddress, direccion,
+				strQuery = getInsertScrDomSQLQuery(idAddress, direccion, provincia,
 						municipio, cpostal, "ESPAÑA", 1);
 				cnt.execute(strQuery);
 
@@ -1097,13 +1119,13 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 	 * @return Consulta SQL.
 	 */
 	private static String getInsertScrDomSQLQuery(int idAddress,
-			String direccion, String ciudad, String cpostal, String pais,
+			String direccion, String provincia, String ciudad, String cpostal, String pais,
 			int preferencia) {
 
 		String sql = new StringBuffer()
-				.append("INSERT INTO SCR_DOM (ID, ADDRESS, CITY, ZIP, COUNTRY, PREFERENCE) VALUES (")
+				.append("INSERT INTO SCR_DOM (ID, ADDRESS, CITY, ZIP, COUNTRY, PAIS, PREFERENCE) VALUES (")
 				.append(idAddress).append(",'").append(direccion).append("','")
-				.append(ciudad).append("','").append(cpostal).append("','")
+				.append(ciudad).append("','").append(cpostal).append("','").append(provincia).append("','")
 				.append(pais).append("',").append(preferencia).append(")")
 				.toString();
 
@@ -1153,7 +1175,7 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 
 		return true;
 	}
-
+	
 	/**
 	 * [eCenpri-Felipe #477] Devuelve la sentencia SQL de la inserción en la
 	 * dirección telemática
@@ -1173,6 +1195,262 @@ public class SicresThirdPartyAPI extends BasicThirdPartyAPI {
 				.append(tipo).append(",").append(preferencia).append(")")
 				.toString();
 		return strQuery;
+	}
+	
+	/**
+	 * [dipucr-Felipe #583]
+	 * @param idPerson
+	 * @param email
+	 * @return
+	 * @throws ISPACException 
+	 */
+	public boolean insertDefaultEmail(int idPerson, String email) throws ISPACException{
+		
+		DbCnt cnt = new DbCnt(dsName);
+		try{
+			cnt.getConnection();
+			return insertDireccionTelematica(cnt, idPerson, email, TYPE_DT_MAIL, 1);
+		}
+		catch(ISPACException ex){
+			logger.error("Error al insertar mail por defecto " + email + " para el tercero " + idPerson);
+			throw ex;
+		}
+		finally{
+			if (null != cnt){
+				cnt.closeConnection();
+			}
+		}
+	}
+	
+
+	/**
+	 * [dipucr-Felipe 3#333]
+	 * Devuelve el código de la ciudad por su nombre
+	 * Devuelve el código DIR3 de la ciudad por su nombre
+	 * Ambos resultados se devuelven en un array de dos posiciones
+	 * @param cityName
+	 * @param provCode [dipucr-Felipe #468]
+	 * @return
+	 * @throws ISPACException
+	 */
+    private String[] getCityCodes(String cityName, String provCode) throws ISPACException {
+
+    	String[] codes = new String[2];
+		DbCnt cnt = new DbCnt(dsName);
+		DbQuery dbQuery = null;
+		
+		try {
+			cnt.getConnection();
+			dbQuery = cnt.executeDbQuery(getCityByNameSQLQuery(cityName, provCode));
+			if (dbQuery.next()) {
+				codes[0] = dbQuery.getString("CODE");
+				codes[1] = dbQuery.getString("DIR3");
+			}
+
+		} catch (ISPACException e) {
+			logger.error("Error al buscar el código de la ciudad por nombre: " + cityName, e);
+			throw e;
+		} catch (Exception e) {
+			logger.error("Error al buscar el código de la ciudad por nombre: " + cityName, e);
+			throw new ISPACException("Error al buscar el código de la ciudad por nombre: " + cityName, e);
+		} finally {
+			if (dbQuery != null) {
+				dbQuery.close();
+			}
+			cnt.closeConnection();
+		}
+		
+		return codes;
+    }
+
+	private static String getCityByNameSQLQuery(String cityName, String provCode) {
+		
+		String sql = new StringBuffer()
+			.append(" SELECT ID, CODE, NAME, ID_PROV, DIR3 ")
+			.append(" FROM SCR_CITIES")
+			.append(" WHERE NAME=E'").append(cityName.replace("'", "\\'"))
+			//[dipucr-Felipe 3#333] Escapo las comillas simples con E delante. Ejemplo: E'Hospitalet, L\''
+			.append("' AND ID_PROV = ")
+			.append(provCode) //[dipucr-Felipe #468]
+			.toString();
+
+		return sql;
+	}
+	
+	
+	/**
+	 * [dipucr-Felipe 3#333]
+	 * Devuelve el código de la provincia por su nombre
+	 * @param provName
+	 * @return
+	 * @throws ISPACException
+	 */
+    private String getProvCode(String provName) throws ISPACException {
+
+    	String code = null;
+		DbCnt cnt = new DbCnt(dsName);
+		DbQuery dbQuery = null;
+		
+		try {
+			cnt.getConnection();
+			dbQuery = cnt.executeDbQuery(getProvByNameSQLQuery(provName));
+			if (dbQuery.next()) {
+				code = dbQuery.getString("CODE");
+			}
+
+		} catch (ISPACException e) {
+			logger.error("Error al buscar el código de la provincia por nombre: " + provName, e);
+			throw e;
+		} catch (Exception e) {
+			logger.error("Error al buscar el código de la provincia por nombre: " + provName, e);
+			throw new ISPACException("Error al buscar el código de la provincia por nombre: " + provName, e);
+		} finally {
+			if (dbQuery != null) {
+				dbQuery.close();
+			}
+			cnt.closeConnection();
+		}
+		
+		return code;
+    }
+
+	private static String getProvByNameSQLQuery(String provName) {
+		
+		String sql = new StringBuffer()
+			.append(" SELECT ID, CODE, NAME ")
+			.append(" FROM SCR_PROV")
+			.append(" WHERE NAME='").append(provName)
+			.append("'")
+			.toString();
+
+		return sql;
+	}
+	
+	
+	/**
+	 * [eCenpri-Felipe #592] Actualiza los datos del terceros en la base de datos
+	 * @param idPerson
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @return
+	 * @throws ISPACException
+	 */
+	public boolean updateThirdParty(int idPerson, String nombre, String ape1, String ape2, 
+			String provincia, String municipio, String cpostal, String direccion) throws ISPACException {
+
+		String strQuery = null;
+
+		DbCnt cnt = new DbCnt(dsName);
+		DbQuery dbQuery = null;
+
+		try {
+
+			cnt.getConnection();
+
+			nombre = StringUtils.escapeSql(nombre);
+			ape1 = StringUtils.escapeSql(ape1);
+			ape2 = StringUtils.escapeSql(ape2);
+			provincia = StringUtils.escapeSql(provincia);
+			municipio = StringUtils.escapeSql(municipio);
+			direccion = StringUtils.escapeSql(direccion);
+
+			// Actualizamos nombre y apellidos
+			strQuery = getUpdatePfisSQLQuery(idPerson, nombre, ape1, ape2);
+			cnt.execute(strQuery);
+
+			// Obtenemos el id en scr_address
+			IPostalAddressAdapter postalAddress = lookupDefaultPostalAddress(String.valueOf(idPerson));
+			
+			if (null != postalAddress){ // Actualizamos la dirección
+				String idAddress = postalAddress.getId();
+				
+				strQuery = getUpdateScrAddressSQLQuery(idAddress, provincia, municipio, cpostal, direccion);
+				cnt.execute(strQuery);
+			}
+			else{ //Inserción de dirección
+				int idAddress = getContador(cnt, TABLA_ADDRESS) + 1;
+				strQuery = getInsertScrDomSQLQuery(idAddress, direccion, provincia, municipio, cpostal, "ESPAÑA", 1);
+				cnt.execute(strQuery);
+
+				strQuery = getInsertScrAddressSQLQuery(idAddress, idPerson, 
+						Integer.valueOf(TYPE_DIR_DOMICILIO).intValue());
+				cnt.execute(strQuery);
+
+				updateContador(cnt, TABLA_ADDRESS, idAddress);
+			}
+
+		} catch (Exception e) {
+			String error = "Error en la actualización del tercero " + idPerson;
+			logger.error(error, e);
+			throw new ISPACException(error, e);
+			
+		} finally {
+			if (dbQuery != null) {
+				dbQuery.close();
+			}
+			cnt.closeConnection();
+		}
+
+		return true;
+	}
+	
+	/**
+	 * [dipucr-Felipe #592]
+	 * @param idPerson
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @return
+	 */
+	private static String getUpdatePfisSQLQuery(int idPerson, String nombre, String ape1, String ape2) {
+
+		StringBuffer sbQuery = new StringBuffer();
+		sbQuery.append("UPDATE SCR_PFIS SET SURNAME = '");
+		sbQuery.append(nombre);
+		sbQuery.append("', FIRST_NAME='");
+		sbQuery.append(ape1);
+		sbQuery.append("'");
+		if (!StringUtils.isEmpty(ape2)){
+			sbQuery.append(", SECOND_NAME='");
+			sbQuery.append(ape2);
+			sbQuery.append("'");
+		}
+		sbQuery.append(" WHERE ID = " + idPerson);
+
+		return sbQuery.toString();
+	}
+	
+	/**
+	 * [dipucr-Felipe #592]
+	 * @param idAddress
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @return
+	 */
+	private static String getUpdateScrAddressSQLQuery
+			(String idAddress, String provincia, String municipio, String cpostal, String direccion){
+		
+		StringBuffer sbQuery = new StringBuffer();
+		sbQuery.append("UPDATE SCR_DOM SET ADDRESS = '");
+		sbQuery.append(direccion);
+		sbQuery.append("', CITY = '");
+		sbQuery.append(municipio);
+		sbQuery.append("', ZIP = '");
+		sbQuery.append(cpostal);
+		sbQuery.append("', COUNTRY = '");
+		sbQuery.append(provincia);
+		sbQuery.append("' WHERE ID = ");
+		sbQuery.append(idAddress);
+		
+		return sbQuery.toString();
+		
 	}
 
 //	/**

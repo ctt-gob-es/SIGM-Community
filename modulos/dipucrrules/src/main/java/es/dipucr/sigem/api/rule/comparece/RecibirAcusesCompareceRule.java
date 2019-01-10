@@ -10,6 +10,7 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.configuration.ConfigurationHelper;
+import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
@@ -123,7 +124,7 @@ public class RecibirAcusesCompareceRule implements IRule {
           	PdfCopy.getInstance(documentComparece, new FileOutputStream(fileCompareceNombre));
         	documentComparece.open();
         	
-        	String imageLogoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_LOGO_PATH_DIPUCR);
+        	String imageLogoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath(new StringBuilder("skinEntidad_").append(entidad).append(File.separator).toString(), "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty("imagen_cabecera");
 			
         	//String imagePath = ConfigurationHelper.getConfigFilePath("config_"+entidad+"/"+IMAGE_PATH_DIPUCR);
 			
@@ -203,13 +204,22 @@ public class RecibirAcusesCompareceRule implements IRule {
 							String nombre = acuse.getName();
 				        	file = new File(nombre);
 				        	
+				        	String descripcion_documento = "";
+				        	
+				        	IItem iDoc = DocumentosUtil.getDocumento(entitiesAPI, Integer.valueOf(sIdent_doc));
+				        	
+							if (iDoc.getString("DESTINO")!=null)
+								descripcion_documento = iDoc.getString("DESCRIPCION").concat(" - certificado de Comparece");
+							else throw new ISPACRuleException("El identificador de documento:"+sIdent_doc+" ya no existe en la base de datos, borrar de los envíos de Comparece");
+							
+				        	
 				        	IItem newdoc = genDocAPI.createTaskDocument(rulectx.getTaskId(), idTipDoc);
 				        	int docId = newdoc.getInt("ID");
 				        	logger.warn("Hago transacción de documento auxiliar vacio en spac_dt_dcoumetos docId="+docId);
 				        	newdoc.store(cct);				        	
 				        	logger.warn("Antes de pasar el documento a SIGEM: docId="+docId);
 				        	logger.warn("Antes de pasar el documento a SIGEM: rulectx.getTaskId()="+rulectx.getTaskId());
-				        	IItem entityDocument1 = DocumentosUtil.anexaDocumento(rulectx, rulectx.getTaskId(), docId, file, "pdf", nombreDesc);
+				        	IItem entityDocument1 = DocumentosUtil.anexaDocumento(rulectx, rulectx.getTaskId(), docId, file, "pdf", descripcion_documento);
 				        	logger.warn("Después de pasar el documento a SIGEM: entityDocument1.getKeyInteger()="+entityDocument1.getKeyInteger());
 				        	//entityDocument1.set("ID_PLANTILLA", idPlantillaCompar1);
 				        	//logger.warn("Antes de realizarentityDocument1.store(cct);");
@@ -229,7 +239,7 @@ public class RecibirAcusesCompareceRule implements IRule {
 		        	}
 		        	else{
 		        		
-		        		//El estado es = 0 y a demas la fecha ha caducado
+		        		//El estado es = 0 y ademas la fecha ha caducado
 		        		String ident_doc = "";
 			        	if (iAcuse.getString("IDENT_DOC")!=null) ident_doc = iAcuse.getString("IDENT_DOC"); else ident_doc="";
 		    	        IItem itemDocument = entitiesAPI.getDocument(Integer.parseInt(ident_doc));
@@ -278,17 +288,19 @@ public class RecibirAcusesCompareceRule implements IRule {
 		        	}
 	        	}
 	        }
+	        
+	        documentComparece.close();
 	                
 	        fileConcatenado = concatenaPdf(inputStreamNotificaciones, filePathNotificaciones, genDocAPI);
 	        
 	        if(fileConcatenado != null){
-				IItem entityDocument = DocumentosUtil.generaYAnexaDocumento(rulectx, idTipDoc, "Notificación Usuarios Caducados", fileConcatenado,  "pdf");
+				IItem entityDocument = DocumentosUtil.generaYAnexaDocumento(rulectx, idTipDoc, "Notificación Usuarios Caducados Comparece", fileConcatenado,  "pdf");
 				entityDocument.set("ID_PLANTILLA", idPlantilla);
 				entityDocument.store(cct);
 	        }
 	        
 	        if(fileCompareceNombre != null && tieneParticipantesComparece){	        	       
-				IItem entityDocumentListado = DocumentosUtil.generaYAnexaDocumento(rulectx, idTipDoc, "Listado Usuarios Caducados", fileCompareceNombre, "pdf");
+				IItem entityDocumentListado = DocumentosUtil.generaYAnexaDocumento(rulectx, idTipDoc, "Listado Usuarios Caducados Comparece", fileCompareceNombre, "pdf");
 		        entityDocumentListado.set("ID_PLANTILLA", idPlantillaCompar1);
 		        entityDocumentListado.store(cct);
 	        }
@@ -326,7 +338,14 @@ public class RecibirAcusesCompareceRule implements IRule {
 		}finally{
 			 try {
 				 
-				 documentComparece.close();
+				if(null!=documentComparece){
+			    		
+				    	if(documentComparece.isOpen())
+				    		documentComparece.close();
+				    	
+			    }
+				 
+				
 				 
 				for (int i=0; i<inputStreamNotificaciones.size(); i++)					
 						((FileInputStream)inputStreamNotificaciones.get(i)).close();		
@@ -628,7 +647,7 @@ public class RecibirAcusesCompareceRule implements IRule {
 
 	@SuppressWarnings("unchecked")
 	public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
-		boolean cierraTramite = false;
+		boolean cierraTramiteComparece = false;
 		try {
 			//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
@@ -644,17 +663,30 @@ public class RecibirAcusesCompareceRule implements IRule {
 			IItemCollection collection = entitiesAPI.queryEntities("DPCR_ACUSES_COMPARECE", strQuery);
 	        Iterator<IItem> it = collection.iterator();
 	       
-	        if (!it.hasNext()){
-	        	cierraTramite = true;
-	        }
-	        if(!cierraTramite){
-	        	rulectx.setInfoMessage("No se puede cerrar el trámite porque todavía quedan notificaciones sin recibir.");
-	        }
+	        try{
+				
+				if (!it.hasNext()){
+			        	cierraTramiteComparece = true;
+			        	
+			    }
+			    if(!cierraTramiteComparece){
+			        	rulectx.setInfoMessage("No se puede cerrar el trámite porque todavía quedan notificaciones sin recibir en COMPARECE.");
+			    }
+			     
+			
+			}
+		    catch(Exception e){
+		    	
+		    	logger.error("La entidad no tiene configurado la variable de sistema API_KEY_NOTIFICA");
+		    	
+		    }
+	        
+	        
 		} catch (ISPACException e) {
 			throw new ISPACRuleException("Error validate. ",e);
 		} 
 		
-		return cierraTramite;
+		return cierraTramiteComparece;
 	}
 
 }

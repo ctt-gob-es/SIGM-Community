@@ -29,7 +29,7 @@ import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 
 public class DipucrGenerarExpedienteFoliadoAccTelExp extends DipucrGenerarExpedienteFoliadoConIndiceRule {
 
-	private static final Logger logger = Logger.getLogger(DipucrGenerarExpedienteFoliadoAccTelExp.class);
+	private static final Logger LOGGER = Logger.getLogger(DipucrGenerarExpedienteFoliadoAccTelExp.class);
 	
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
         tipoDoc = "Anexo";
@@ -45,19 +45,20 @@ public class DipucrGenerarExpedienteFoliadoAccTelExp extends DipucrGenerarExpedi
 		try {
 			resultado = rulectx.getNumExp();
 		} catch (ISPACRuleException e) {
-			logger.error("Error al recuperar el expediente a foliar.", e);
+			LOGGER.error("Error al recuperar el expediente a foliar.", e);
 		} 
 		
 		return resultado;
 	} 
 	
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
+		// No es necesario
 	}
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
 
 		try {
-			logger.info("INICIO - " + this.getClass().getName());
+			LOGGER.info("INICIO - " + this.getClass().getName());
 
 			// ----------------------------------------------------------------------------------------------
 			ClientContext cct = (ClientContext) rulectx.getClientContext();
@@ -70,6 +71,8 @@ public class DipucrGenerarExpedienteFoliadoAccTelExp extends DipucrGenerarExpedi
 			
 			//Generamos el foliado
 			numExpPadre = getNumExpFoliar(rulectx, entitiesAPI);
+			
+			LOGGER.warn("Se inicia foliado en el expediente -> "+ numExp + "con expediente padre -> " + numExpPadre);
 			
 			ArrayList<DocIncluir> docsDelExp = new ArrayList<DocIncluir>();
 
@@ -88,34 +91,30 @@ public class DipucrGenerarExpedienteFoliadoAccTelExp extends DipucrGenerarExpedi
 			
 			String varColorAsunto =  DipucrCommonFunctions.getVarGlobal("COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
 			if(StringUtils.isEmpty(varColorAsunto)){
-				logger.error("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
+				LOGGER.error("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
 				throw new ISPACRuleException("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Avise al administrador del sistema");
-			}
-			else{
+			} else {
 				String[] varColorAsuntoSplit = varColorAsunto.split(",");
-				try{
+				try {
 					colorAsunto = new Color( Integer.parseInt(varColorAsuntoSplit[0]), Integer.parseInt(varColorAsuntoSplit[1]), Integer.parseInt(varColorAsuntoSplit[2]), Integer.parseInt(varColorAsuntoSplit[3]));
 					bColorAsunto = new Color( Integer.parseInt(varColorAsuntoSplit[0]), Integer.parseInt(varColorAsuntoSplit[1]), Integer.parseInt(varColorAsuntoSplit[2]), Integer.parseInt(varColorAsuntoSplit[3]));
-				}	
-				catch(Exception e){
-					logger.error("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
+				} catch(Exception e) {
+					LOGGER.error("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO", e);
 					throw new ISPACRuleException("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Avise al administrador del sistema");					
 				}
 			}
 			
 			String varColorNumPag =  DipucrCommonFunctions.getVarGlobal("COLOR_NUM_PAG_INDICE_FOLIADO");
 			if(StringUtils.isEmpty(varColorNumPag)){
-				logger.error("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
+				LOGGER.error("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
 				throw new ISPACRuleException("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Avise al administrador del sistema");
-			}
-			else{
+			} else {
 				String[] varColorNumPagSplit = varColorNumPag.split(",");
-				try{
+				try {
 					colorNumPag = new Color( Integer.parseInt(varColorNumPagSplit[0]), Integer.parseInt(varColorNumPagSplit[1]), Integer.parseInt(varColorNumPagSplit[2]), Integer.parseInt(varColorNumPagSplit[3]));
 					bColorNumPag = new Color( Integer.parseInt(varColorNumPagSplit[0]), Integer.parseInt(varColorNumPagSplit[1]), Integer.parseInt(varColorNumPagSplit[2]), Integer.parseInt(varColorNumPagSplit[3]));
-				}	
-				catch(Exception e){
-					logger.error("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO");
+				} catch(Exception e) {
+					LOGGER.error("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Revise el valor de la varibale de sistema: COLOR_ASUNTO_EXPEDIENTE_FOLIADO", e);
 					throw new ISPACRuleException("Error al obtener el color del texto del asunto de la portada del expediente " + numExpPadre + ". Avise al administrador del sistema");					
 				}
 			}
@@ -134,19 +133,18 @@ public class DipucrGenerarExpedienteFoliadoAccTelExp extends DipucrGenerarExpedi
 			documentoResumen = null;
 			cct.endTX(true);
 			
-			logger.info("FIN - " + this.getClass().getName());
+			LOGGER.info("FIN - " + this.getClass().getName());
 		} catch (ISPACException e) {
-			logger.error("ERROR generando expediente foliado: " + e.getMessage(), e);
+			LOGGER.error("ERROR generando expediente foliado: " + e.getMessage(), e);
 			throw new ISPACRuleException("ERROR generando expediente foliado: " + e.getMessage(), e);
 		} catch (FileNotFoundException e) {
-			logger.error("ERROR generando expediente foliado: " + e.getMessage(), e);
+			LOGGER.error("ERROR generando expediente foliado: " + e.getMessage(), e);
 			throw new ISPACRuleException("ERROR generando expediente foliado: " + e.getMessage(), e);
 		} catch (IOException e) {
-			logger.error("ERROR generando expediente foliado: " + e.getMessage(), e);
+			LOGGER.error("ERROR generando expediente foliado: " + e.getMessage(), e);
 			throw new ISPACRuleException("ERROR generando expediente foliado: " + e.getMessage(), e);
-		}
-		catch (Exception e) {
-			logger.error("ERROR generando expediente foliado: " + e.getMessage(), e);
+		} catch (Exception e) {
+			LOGGER.error("ERROR generando expediente foliado: " + e.getMessage(), e);
 			throw new ISPACRuleException("ERROR generando expediente foliado: " + e.getMessage(), e);
 		}
 		return true;
@@ -165,28 +163,34 @@ public class DipucrGenerarExpedienteFoliadoAccTelExp extends DipucrGenerarExpedi
 		Iterator docsExpIterator = docsExpCollection.iterator();
 		while(docsExpIterator.hasNext()){
 			IItem docExp = (IItem) docsExpIterator.next();
-			if(!docExp.getString("NOMBRE").toUpperCase().equals("DOCUMENTACIÓN DE PROPUESTA") && !docExp.getString("NOMBRE").toUpperCase().equals("Propuesta Anuncio".toUpperCase())){
-				if(nif == null || nif.equals("")){
+			if(!"DOCUMENTACIÓN DE PROPUESTA".equalsIgnoreCase(docExp.getString("NOMBRE")) && !"Propuesta Anuncio".equalsIgnoreCase(docExp.getString("NOMBRE"))){
+				if(nif == null || "".equals(nif)){
 					if(!docExp.getString("NOMBRE").toUpperCase().contains("NOTIFICACI") && !docExp.getString("NOMBRE").toUpperCase().contains("ACUSE")) 
-						if(idDocsExpOriginal.equals("")) idDocsExpOriginal = docExp.getString("ID");
-						else idDocsExpOriginal += ", " + docExp.getString("ID");
-				}
-				else{
-					if(idDocsExpOriginal.equals("")) idDocsExpOriginal = docExp.getString("ID");
-					else idDocsExpOriginal += ", " + docExp.getString("ID");
+						if("".equals(idDocsExpOriginal)) {
+							idDocsExpOriginal = docExp.getString("ID");
+						} else {
+							idDocsExpOriginal += ", " + docExp.getString("ID");
+						}
+				} else {
+					if("".equals(idDocsExpOriginal)) {
+						idDocsExpOriginal = docExp.getString("ID");
+					} else {
+						idDocsExpOriginal += ", " + docExp.getString("ID");
+					}
 				}
 			}			
 		}
-		if (!idDocsExpOriginal.equals("")) {
+		if (!"".equals(idDocsExpOriginal)) {
 			consultaDocumentos += " (ID IN (" + idDocsExpOriginal + "))";
 		}
 		
-		if(!consultaDocumentos.equals("")){
+		if(!"".equals(consultaDocumentos)){
 			consultaDocumentos += " ORDER BY CASE WHEN FAPROBACION IS NULL THEN FFIRMA ELSE FAPROBACION END, DESCRIPCION";		
 
 			consultaDocumentos = " WHERE " + consultaDocumentos;
-		} else
+		} else{
 			consultaDocumentos = " WHERE 1=2 ";
+		}
 
 		return consultaDocumentos;
 	}	

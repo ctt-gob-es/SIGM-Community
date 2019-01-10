@@ -23,6 +23,9 @@ import ieci.tdw.ispac.ispactx.TXTransactionDataContainer;
 import java.util.Date;
 import java.util.Map;
 
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+
 /**
  * Acción para delegar un trámite.
  */
@@ -152,9 +155,25 @@ public class TXDelegateTask implements ITXAction {
 						 desc);
 		hito.set("INFO", composeInfo());		
 
+		//[dipucr-Felipe #823]
+		String numexp = task.getString("NUMEXP");
+		IItem itemExpediente = ExpedientesUtil.getExpediente(cs, numexp);
+		String asunto = itemExpediente.getString("ASUNTO");
+		
 		//Se crea un aviso electrónico indicando que el tramite ha sido delegado
 		Notices notices = new Notices(cs);
-		notices.generateDelegateObjectNotice(task.getInt("ID_EXP"), task.getInt("ID_FASE_EXP"), task.getKeyInt(), cs.getStateContext().getNumexp(), "notice.delegateTask", mIdResp,Notices.TIPO_AVISO_TRAMITE_DELEGADO);
+		String nombreTramite = task.getString("NOMBRE");
+		
+		String avisoElectronico = "<a href=\"/SIGEM_TramitacionWeb/showTask.do?taskId=" + mnIdTask +"\" class=\"displayLink\"> Nuevo Trámite delegado: " +  nombreTramite + "</a><br/>Asunto: " + asunto;//[dipucr-Felipe #823]
+		if (avisoElectronico.length() > AvisosUtil._MAXLENGTH_MESSAGE){
+			avisoElectronico = avisoElectronico.substring(0, (AvisosUtil._MAXLENGTH_MESSAGE - 5));
+			avisoElectronico = avisoElectronico + "...";
+		}
+		
+//		String avisoElectronico = "<a href=\"/SIGEM_TramitacionWeb/showTask.do?taskId=" + mnIdTask +"\" class=\"displayLink\"> Nuevo Trámite: " +  nombreTramite + " desde " + mNameResp +"</a>";
+		//notices.generateDelegateObjectNotice(task.getInt("ID_EXP"), task.getInt("ID_FASE_EXP"), task.getKeyInt(), cs.getStateContext().getNumexp(), "notice.delegateTask", mIdResp,Notices.TIPO_AVISO_TRAMITE_DELEGADO);
+		
+		notices.generateDelegateObjectNotice(task.getInt("ID_EXP"), task.getInt("ID_FASE_EXP"), task.getKeyInt(), cs.getStateContext().getNumexp(), avisoElectronico, mIdResp,Notices.TIPO_AVISO_TRAMITE_DELEGADO);
 	}
 
 	

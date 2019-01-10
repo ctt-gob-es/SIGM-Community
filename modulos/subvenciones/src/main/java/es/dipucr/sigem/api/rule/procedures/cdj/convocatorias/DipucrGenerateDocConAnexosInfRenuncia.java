@@ -61,7 +61,7 @@ public class DipucrGenerateDocConAnexosInfRenuncia implements IRule {
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
     public Object execute(IRuleContext rulectx) throws ISPACRuleException {

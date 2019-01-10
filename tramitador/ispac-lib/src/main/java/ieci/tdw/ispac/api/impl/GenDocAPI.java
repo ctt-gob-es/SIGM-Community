@@ -41,6 +41,7 @@ import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.entity.DocumentData;
 import ieci.tdw.ispac.ispaclib.gendoc.DMConnectorFactory;
 import ieci.tdw.ispac.ispaclib.gendoc.DMDocumentManager;
+import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.sicres.vo.RegisterType;
 import ieci.tdw.ispac.ispaclib.tageval.ITagTranslator;
 import ieci.tdw.ispac.ispaclib.tageval.TagTranslator;
@@ -49,9 +50,12 @@ import ieci.tdw.ispac.ispaclib.util.FileTemplateManager;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import ieci.tdw.ispac.ispactx.TXConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -466,8 +470,10 @@ public class GenDocAPI implements IGenDocAPI {
 
 		// actualizar en tramitaciones agrupadas el ultimo tipo de documento,
 		// plantilla y tramite
-		TXTramitacionAgrupadaDAO batchTaskDAO = new TXTramitacionAgrupadaDAO(
-				m_clientCtx.getConnection(), batchTaskId);
+		DbCnt cnt = m_clientCtx.getConnection();
+		TXTramitacionAgrupadaDAO batchTaskDAO = new TXTramitacionAgrupadaDAO(cnt, batchTaskId);
+		m_clientCtx.releaseConnection(cnt);
+		
 		batchTaskDAO.set("ID_ULTIMO_TRAMITE", idTramite);
 		batchTaskDAO.set("ID_ULTIMO_TIPODOC", docType);
 		batchTaskDAO.set("ID_ULTIMO_TEMPLATE", idTemplate);
@@ -794,8 +800,13 @@ public class GenDocAPI implements IGenDocAPI {
 			 * .RCTX_DOCUMENTAUTHOR,docdata.getAuthor());
 			 */
 			ITXTransaction txapi = m_clientCtx.getAPI().getTransactionAPI();
-			StateContext stateContext = m_clientCtx.getStateContext();
+			StateContext stateContext = m_clientCtx.getStateContext();			
+			
 
+//			[Dipucr-Felipe-Manu Ticket #596] * ALSIGM3 Error al registrar WS y Web con creación de documentos - Hitos de creación y borrado de documentos - LockManager.lock
+			txapi.newMilestone(ctx.getProcess(), ctx.getStagePCD(), ctx.getTaskPCD(), TXConstants.MILESTONE_DOCUMENTO_CREATED,
+					new StringBuffer("<?xml version='1.0' encoding='ISO-8859-1'?>").append("<infoaux>").append(docTypeName).append("</infoaux>").toString(), "Documento '" + docTypeName + "' creado");
+			
 			//[Manu Ticket #891] SIGEM Error al iniciar expediente o anexar documento a expediente desde registros distribuidos			
 			if ((stateContext != null ) && (stateContext.getActivityId() != 0)) {
 				txapi.executeEvents(EventsDefines.EVENT_OBJ_ACTIVITY,ctx.getStagePCD(),EventsDefines.EVENT_DOCUMENT_NEW,ctx);
@@ -1001,9 +1012,17 @@ public class GenDocAPI implements IGenDocAPI {
 		}
 	}
 
+	// [Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
 	private IItem attachInputStream(Object connectorSession, Object obj, ExpedientContext ctx,
 			int docId, InputStream in, int length, String sMimeType, String sName,
 			String sProperties) throws ISPACException {
+		return attachInputStream(connectorSession, obj, ctx, docId, in, length, sMimeType, sName, sProperties, false);
+	}
+
+	private IItem attachInputStream(Object connectorSession, Object obj, ExpedientContext ctx,
+			int docId, InputStream in, int length, String sMimeType, String sName,
+			String sProperties, boolean mergeDocument) throws ISPACException {
+		File fileTempIn = null;
 		DbCnt cnt = null;
 		String sDocRefAnt = null;
 		String sDocRefNew = null;
@@ -1058,6 +1077,75 @@ public class GenDocAPI implements IGenDocAPI {
 			// Referencia al fichero del documento
 			sDocRefAnt = document.getString("INFOPAG");
 
+			// [Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+			if(mergeDocument && OpenOfficeHelper.isMimeTypeSupportedForMerging(sMimeType)){
+				FileTemporaryManager temporaryManager = null;
+				File fileTempOut = null;
+				OutputStream out = null;
+				
+				String sourceTemporalURL = "";
+				String sourceURL = "";
+				String sSourceName = "";
+				
+				String sTargetName = "";
+				String sTargetPath = "";
+				try {
+					temporaryManager = FileTemporaryManager.getInstance();
+					
+					sSourceName = temporaryManager.newFileName("." + document.getString("EXTENSION"));
+					sourceTemporalURL = temporaryManager.getFileTemporaryPath() + "/" + sSourceName;
+
+					sTargetName = temporaryManager.newFileName("." + document.getString("EXTENSION"));
+					sTargetPath = temporaryManager.getFileTemporaryPath() + "/" + sTargetName;
+					
+					fileTempOut = new File(sourceTemporalURL);
+					out = new FileOutputStream(fileTempOut);
+					
+					int read = 0;
+					byte[] bytes = new byte[1024];
+
+					while ((read = in.read(bytes)) != -1) {
+						out.write(bytes, 0, read);
+					}
+					if (null != in){
+						in.close();
+					}
+					if (null != out){
+						out.close();
+					}
+					
+					sourceURL = "file:///" + sourceTemporalURL; 
+					String targetURL = "file:///" + sTargetPath;
+		
+					// Genera el nuevo documento a partir de la plantilla con el contexto calculado.
+					manager.mergeDocument(sourceURL, targetURL, docdata);
+					
+					// Salva el documento
+					fileTempIn = new File(sTargetPath);
+					in = new FileInputStream(fileTempIn);
+					
+					length = (int) fileTempIn.length();
+				} catch (FileNotFoundException e) {				
+					logger.error("ERROR al recuperar el fichero: " + sourceTemporalURL + ". " + e.getMessage(), e);
+					throw new ISPACException("ERROR al recuperar el fichero: " + sourceTemporalURL + ". " + e.getMessage(), e);
+				} catch (IOException e) {
+					logger.error("ERROR al escribir el fichero: " + sourceTemporalURL + ". " + e.getMessage(), e);
+					throw new ISPACException("ERROR al escribir el fichero: " + sourceTemporalURL + ". " + e.getMessage(), e);
+				}
+				finally{					
+					if (null != out){
+						try {
+							out.close();
+							if(null != fileTempOut && fileTempOut.exists()){
+								fileTempOut.delete();
+							}
+						} catch (IOException e) {
+							logger.error("ERROR al cerrar el OutputStream. " + e.getMessage(), e);							
+						}
+					}
+				}
+			}
+			
 			// Referencia al nuevo fichero del documento
 			sDocRefNew = connector.newDocument(connectorSession, in, length, sProperties);
 
@@ -1120,6 +1208,11 @@ public class GenDocAPI implements IGenDocAPI {
 			return document;
 		} finally {
 			m_clientCtx.releaseConnection(cnt);
+
+			// [Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+			if(mergeDocument && null != fileTempIn && fileTempIn.exists()){
+				fileTempIn.delete();
+			}
 		}
 	}
 
@@ -1326,25 +1419,43 @@ public class GenDocAPI implements IGenDocAPI {
 		}
 	}
 
+//	public void deleteDocument(Object connectorSession, String sDocRef) throws ISPACException {
+//		IDocConnector connector = null;
+//
+//		try {
+//			// Obtiene el conector de almacenamiento
+//			connector = DMConnectorFactory.getInstance(m_clientCtx).getConnector();
+//			String properties = connector.getProperties(connectorSession, sDocRef);
+//			ExpedientContext ctx = new ExpedientContext(m_clientCtx);
+//
+//
+//			DMDocumentManager manager = new DMDocumentManager(m_clientCtx, ctx);
+//			//TODO: No tenemos acceso al contexto del expediente para obtener el número del expediente.
+//			//EntityDAO document = manager.getDocumentEntity(Integer.valueOf(sDocRef).intValue());
+//			properties = this.getDocumentProperties(connectorSession, sDocRef);
+//
+//
+//			//EntityDAO entityDao = manager.getDocumentEntity(Integer.valueOf(sDocRef).intValue());
+//			//numExp = entityDao.getString("NUMEXP");
+//			connector.deleteDocument(connectorSession, sDocRef);
+//			//Auditar la eliminación del documento
+//			auditEliminacionDocumento(sDocRef);
+//		} catch (ISPACNullObject e) {
+//			throw e;
+//		} catch (ISPACException ie) {
+//			throw new ISPACException("Error en GenDocAPI::deleteDocument()", ie);
+//		}
+//	}
+	
+	//[dipucr-Felipe #854]
 	public void deleteDocument(Object connectorSession, String sDocRef) throws ISPACException {
 		IDocConnector connector = null;
 
 		try {
 			// Obtiene el conector de almacenamiento
 			connector = DMConnectorFactory.getInstance(m_clientCtx).getConnector();
-			String properties = connector.getProperties(connectorSession, sDocRef);
-			ExpedientContext ctx = new ExpedientContext(m_clientCtx);
-
-
-			DMDocumentManager manager = new DMDocumentManager(m_clientCtx, ctx);
-			//TODO: No tenemos acceso al contexto del expediente para obtener el número del expediente.
-			//EntityDAO document = manager.getDocumentEntity(Integer.valueOf(sDocRef).intValue());
-			properties = this.getDocumentProperties(connectorSession, sDocRef);
-
-
-			//EntityDAO entityDao = manager.getDocumentEntity(Integer.valueOf(sDocRef).intValue());
-			//numExp = entityDao.getString("NUMEXP");
 			connector.deleteDocument(connectorSession, sDocRef);
+			
 			//Auditar la eliminación del documento
 			auditEliminacionDocumento(sDocRef);
 		} catch (ISPACNullObject e) {
@@ -1884,4 +1995,38 @@ public class GenDocAPI implements IGenDocAPI {
 		}
 	}
 
+	// [Dipucr-Manu Ticket #478] - INICIO - ALSIGM3 Nueva opción Repositorio Común
+	public IItem attachStageInputStreamReplaceVars(Object connectorSession,
+			int stageId, int docId, InputStream in, int length, String sMimeType, String sName) throws ISPACException {
+		ExpedientContext expctx = new ExpedientContext(m_clientCtx);
+		expctx.setStage(stageId);
+
+		return attachInputStream(connectorSession, null, expctx, docId, in, length, sMimeType, sName, null, true);
+	}
+
+	public IItem attachStageInputStreamReplaceVars(Object connectorSession,
+			Object obj, int stageId, int docId, InputStream in, int length,
+			String sMimeType, String sName, String sProperties) throws ISPACException {
+		ExpedientContext expctx = new ExpedientContext(m_clientCtx);
+		expctx.setStage(stageId);
+
+		return attachInputStream(connectorSession, obj, expctx, docId, in, length, sMimeType, sName, sProperties, true);
+	}
+
+	public IItem attachTaskInputStreamReplaceVars(Object connectorSession,
+			int taskId, int docId, InputStream in, int length, String sMimeType, String sName) throws ISPACException {
+		ExpedientContext expctx = new ExpedientContext(m_clientCtx);
+		expctx.setTask(taskId);
+		
+		return attachInputStream(connectorSession, null, expctx, docId, in, length, sMimeType, sName, null, true);
+	}
+
+	public IItem attachTaskInputStreamReplaceVars(Object connectorSession, Object obj, int taskId, int docId,
+			InputStream in, int length, String sMimeType, String sName, String properties) throws ISPACException {
+		ExpedientContext expctx = new ExpedientContext(m_clientCtx);
+		expctx.setTask(taskId);
+
+		return attachInputStream(connectorSession, obj, expctx, docId, in, length, sMimeType, sName, properties, true);
+	}
+	// [Dipucr-Manu Ticket #478] - FIN- ALSIGM3 Nueva opción Repositorio Común
 }

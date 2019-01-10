@@ -16,6 +16,7 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
 import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
@@ -91,6 +92,7 @@ public class ListadoAsistentesPorGrupoRule implements IRule{
         	        	if(patriCargo!=null){
 	        	        	String particargoSusti = htCargosGob.get(patriCargo);
 	        	        	if(particargoSusti!= null){
+	        	        		LOGGER.warn("nombreParti "+nombreParti);
 	        	        		String nomParticipante = itemExp.getString("OBSERVACIONES")+" "+ DipucrCommonFunctions.transformarMayusMinus(nombreParti);
 	        	        		insertarCargoSustituto(htResultAsistentes,nomParticipante, particargoSusti);
 	        	        	}
@@ -104,9 +106,7 @@ public class ListadoAsistentesPorGrupoRule implements IRule{
     		
         } catch(Exception e) {
         	LOGGER.error("Error al obtener los participantes. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException("No se ha podido obtener la lista de asistentes",e);
+        	throw new ISPACRuleException("No se ha podido obtener la lista de asistentes "+rulectx.getNumExp()+" - "+e.getMessage(), e);
         }
     }
 
@@ -160,17 +160,18 @@ public class ListadoAsistentesPorGrupoRule implements IRule{
 		String [] htResult = null;
 		
         try {
-			IItemCollection collection = entitiesAPI.queryEntities("SECR_VLDTBL_CARGOSGOB","");
+			IItemCollection collection = entitiesAPI.queryEntities("SECR_VLDTBL_CARGOSGOB","ORDER BY ORDEN");
 			Iterator it = collection.iterator();
 	        IItem item = null;
 	        htResult = new String [collection.toList().size()];
+	        int i = 0;
 	        while (it.hasNext()) {
 	        	item = ((IItem)it.next());
 	        	String valor = item.getString("VALOR");
 	        	String sustituto = item.getString("SUSTITUTO");
-	        	String orden = item.getString("ORDEN");
 	        	htCargos.put(valor, sustituto);
-	        	htResult[new Integer(orden).intValue()-1] = valor;
+	        	htResult[i] = valor;
+	        	i++;
 	        } 
 		} catch (ISPACException e) {
 			LOGGER.error("Error al obtener los participantes.  - "+e.getMessage(), e);

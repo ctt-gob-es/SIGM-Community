@@ -283,7 +283,7 @@ public class XMLQueryBook implements Keys {
         }
 
 
-        XMLUtils.addStyleNode(node, left, top, width, height);
+        XMLUtils.addStyleNode(node, left, top, width);
         addOperators(oprs, text, node, locale, dataBaseType, fldId);
     }
 

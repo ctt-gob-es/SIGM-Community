@@ -251,7 +251,7 @@ public class CargarTercerosExcelRule implements IRule
 				
 				//Inserción en la BBDD
 				thirdpartyAPI.insertThirdParty(cifnif, tipoDocumento, nombre, ape1, ape2, tipoPersona, 
-						municipio, provincia, cpostal, direccion, tfnoFijo, tfnoMovil, email);
+						provincia, municipio, cpostal, direccion, tfnoFijo, tfnoMovil, email);
 			}
 			
 			//Creamos la lista de errores
@@ -366,7 +366,9 @@ public class CargarTercerosExcelRule implements IRule
 			throw new Exception("Error al crear el documento " + nombreCompleto + "." + e.getMessage());
 		}
 		finally{
-			if(ooHelper!= null) ooHelper.dispose();
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 	}
 	

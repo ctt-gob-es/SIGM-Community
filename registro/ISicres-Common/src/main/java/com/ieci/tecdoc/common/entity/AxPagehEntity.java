@@ -136,11 +136,11 @@ public class AxPagehEntity implements ServerKeys {
          setAccessType(rs.getInt(index++));
          setAcsId(rs.getInt(index++));
          setCrtrId(rs.getInt(index++));
-         setCrtnDate(rs.getDate(index++));
+         setCrtnDate(BBDDUtils.getDateFromTimestamp(rs.getTimestamp(index++)));
          setUpdrId(rs.getInt(index++));
-         setUpdDate(rs.getDate(index++));
+         setUpdDate(BBDDUtils.getDateFromTimestamp(rs.getTimestamp(index++)));
          setAccrId(rs.getInt(index++));
-         setAccDate(rs.getDate(index++));
+         setAccDate(BBDDUtils.getDateFromTimestamp(rs.getTimestamp(index++)));
          setAcccount(rs.getInt(index++));
      } catch (SQLException ex) {
          log.error("Error en método load.PK [" + getPrimaryKey() + "]", ex);
@@ -178,11 +178,11 @@ public class AxPagehEntity implements ServerKeys {
          ps.setInt(index++, getAccessType());
          ps.setInt(index++, getAcsId());
          ps.setInt(index++, getCrtrId());
-         ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+         ps.setTimestamp(index++, BBDDUtils.getTimestamp(getCrtnDate()));
          ps.setInt(index++, getUpdrId());
-         ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+         ps.setTimestamp(index++, BBDDUtils.getTimestamp(getUpdDate()));
          ps.setInt(index++, getAccrId());
-         ps.setDate(index++, BBDDUtils.getDate(getAccDate()));
+         ps.setTimestamp(index++, BBDDUtils.getTimestamp(getAccDate()));
          ps.setInt(index++, getAcccount());
 
          ps.setInt(index++, getFdrId());
@@ -240,11 +240,11 @@ public class AxPagehEntity implements ServerKeys {
          ps.setInt(index++, getAccessType());
          ps.setInt(index++, getAcsId());
          ps.setInt(index++, getCrtrId());
-         ps.setDate(index++, BBDDUtils.getDate(getCrtnDate()));
+         ps.setTimestamp(index++, timestamp);
          ps.setInt(index++, getUpdrId());
-         ps.setDate(index++, BBDDUtils.getDate(getUpdDate()));
+         ps.setTimestamp(index++, timestamp);
          ps.setInt(index++, getAccrId());
-         ps.setDate(index++, BBDDUtils.getDate(getAccDate()));
+         ps.setTimestamp(index++, timestamp);
          ps.setInt(index++, getAcccount());
 
          ps.executeUpdate();
@@ -294,13 +294,13 @@ public class AxPagehEntity implements ServerKeys {
      return new AxPKById(pk.getType(), pk.getFdrId(), pk.getId());
  }
 
- public Collection findByFdridDocid(Integer bookID, int fdrid, int docid, String entidad) throws Exception {
+ public Collection<AxPKById> findByFdridDocid(Integer bookID, int fdrid, int docid, String entidad) throws Exception {
      this.type = bookID.toString();
 
      Connection con = null;
      PreparedStatement ps = null;
      ResultSet rs = null;
-     List result = new ArrayList();
+     List<AxPKById> result = new ArrayList<AxPKById>();
 
      try {
          con = BBDDUtils.getConnection(entidad);
@@ -329,13 +329,13 @@ public class AxPagehEntity implements ServerKeys {
      return result;
  }
 
- public Collection findByFileID(Integer bookID, int fileid, String entidad) throws Exception {
+ public Collection<AxPKById> findByFileID(Integer bookID, int fileid, String entidad) throws Exception {
      this.type = bookID.toString();
 
      Connection con = null;
      PreparedStatement ps = null;
      ResultSet rs = null;
-     List result = new ArrayList();
+     List<AxPKById> result = new ArrayList<AxPKById>();
 
      try {
          con = BBDDUtils.getConnection(entidad);
@@ -592,4 +592,40 @@ public class AxPagehEntity implements ServerKeys {
      return axPageh;
  }
 
+	public int lookForName(Integer bookId, int folderId, int docID, String nombre, String entidad) throws Exception {
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int result = -1;
+	
+		String select = "SELECT ID FROM A" + bookId.toString() + "PAGEH WHERE FDRID=? AND DOCID=? AND NAME=?";
+	
+		try {
+			con = BBDDUtils.getConnection(entidad);
+	
+			ps = con.prepareStatement(select);
+			ps.setInt(1, folderId);
+			ps.setInt(2, docID);
+			ps.setString(3, nombre);
+			rs = ps.executeQuery();
+	
+			while (rs.next()) {
+				result = rs.getInt(1);
+			}
+	
+		} catch (SQLException ex) {
+			log.fatal("findName. Sentence [" + select + "] name " + name, ex);
+			throw new Exception(ex);
+		} catch (NamingException ex) {
+			log.fatal("findName. Sentence [" + select + "] name " + name, ex);
+			throw new Exception(ex);
+		} finally {
+			BBDDUtils.close(rs);
+			BBDDUtils.close(ps);
+			BBDDUtils.close(con);
+		}
+	
+		return result;
+	}
 }

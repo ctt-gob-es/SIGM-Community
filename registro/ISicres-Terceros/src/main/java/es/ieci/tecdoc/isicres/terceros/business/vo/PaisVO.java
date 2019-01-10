@@ -31,5 +31,18 @@ public class PaisVO extends Entity {
 	protected String codigo;
 
 	private static final long serialVersionUID = -5130959923569845639L;
+	
+	public String toString() {
+		return nombre;
+	}
+	
+	public boolean equals(Object o) {
+		if (null == o || !(o instanceof PaisVO)){
+			return false;
+		}
+		
+		PaisVO comparador = (PaisVO) o;
+		return comparador.getNombre().equals(nombre);
+	}
 
 }

@@ -21,9 +21,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -31,14 +31,14 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.util.Calendar;
-
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 import es.dipucr.sigem.api.rule.common.utils.JasperReportUtil;
 import es.dipucr.sigem.api.rule.common.utils.PdfUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
 import es.dipucr.sigem.api.rule.procedures.Constants;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrConcatNotChePlanEmer implements IRule {
 
@@ -51,7 +51,7 @@ public class DipucrConcatNotChePlanEmer implements IRule {
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        // No puede darse este caso        
     }
 
     public Object execute(IRuleContext rulectx) throws ISPACRuleException {
@@ -69,14 +69,9 @@ public class DipucrConcatNotChePlanEmer implements IRule {
             int nConvocatoria = 0;
             // Calculamos el nª de resolución en el que estamos
             String tramite = "2ª Propuesta";
-            IItemCollection tramitesCollection = cct.getAPI().getEntitiesAPI()
-                    .queryEntities(Constants.TABLASBBDD.SPAC_DT_TRAMITES, "WHERE NUMEXP='" + rulectx.getNumExp() + "' AND NOMBRE='" + tramite + "'");
-            List<?> tramitesList = tramitesCollection.toList();
 
-            try {
-                nConvocatoria = tramitesList.size();
-            } catch (Exception e) {
-                LOGGER.debug("No existe ningún trámite: " + tramite + ". " + e.getMessage(), e);
+            nConvocatoria = TramitesUtil.cuentaTramitesByNombreTramite(cct, numexp, tramite);
+            if(nConvocatoria <= 0){
                 nConvocatoria = 1;
             }
 
@@ -84,8 +79,7 @@ public class DipucrConcatNotChePlanEmer implements IRule {
             // convocatoria
             String resolucion = "-P" + nConvocatoria + "-" + Calendar.getInstance().get(Calendar.YEAR);
 
-            IItemCollection valesBorrarCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOChequesGenerados.NOMBRE_TABLA, "WHERE NUMEXP = '" + rulectx.getNumExp()
-                    + "' AND CODIGO LIKE '%" + resolucion + "'");
+            IItemCollection valesBorrarCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOChequesGenerados.NOMBRE_TABLA, ConstantesString.WHERE + ConstantesPlanEmergencia.DpcrSERSOChequesGenerados.NUMEXP + " = '" + rulectx.getNumExp() + "' AND " + ConstantesPlanEmergencia.DpcrSERSOChequesGenerados.CODIGO + " LIKE '%" + resolucion + "'");
             Iterator<?> valesBorrarIterator = valesBorrarCollection.iterator();
             while (valesBorrarIterator.hasNext()) {
                 IItem valeBorrar = (IItem) valesBorrarIterator.next();
@@ -94,20 +88,19 @@ public class DipucrConcatNotChePlanEmer implements IRule {
 
             // Recuperamos todas las notificaciones del trámite anterior
             // Tomamos el tramite ID anterior
-            IItemCollection tramiteAnteriorCollection = entitiesAPI.getDocuments(numexp, "NOMBRE = 'Notificación'", "FDOC DESC");
+            IItemCollection tramiteAnteriorCollection = entitiesAPI.getDocuments(numexp, DocumentosUtil.NOMBRE + " = 'Notificación'", DocumentosUtil.FDOC + " DESC");
             Iterator<?> tramiteAnteriorIterator = tramiteAnteriorCollection.iterator();
             if (tramiteAnteriorIterator.hasNext()){
-                idTramiteAnterior = ((IItem) tramiteAnteriorIterator.next()).getInt("ID_TRAMITE");
+                idTramiteAnterior = ((IItem) tramiteAnteriorIterator.next()).getInt(DocumentosUtil.ID_TRAMITE);
             }
 
-            IItemCollection notificacionesCollection = entitiesAPI.getDocuments(numexp, "ID_TRAMITE = '" + idTramiteAnterior + "' AND NOMBRE = 'Notificación'",
-                    "");
+            IItemCollection notificacionesCollection = entitiesAPI.getDocuments(numexp, DocumentosUtil.ID_TRAMITE + " = '" + idTramiteAnterior + "' AND " + DocumentosUtil.NOMBRE + " = 'Notificación'", "");
             Iterator<?> notificacionesIterator = notificacionesCollection.iterator();
             int contador = 0;
             while (notificacionesIterator.hasNext()) {
                 IItem notificacion = (IItem) notificacionesIterator.next();
                 contador++;
-                generaNotificacion(contador, notificacion, rulectx, entitiesAPI, "" + nConvocatoria, numexp);
+                generaNotificacion(contador, notificacion, rulectx, "" + nConvocatoria, numexp);
             }
         } catch (ISPACException e) {
             LOGGER.error(e.getMessage(), e);
@@ -119,7 +112,7 @@ public class DipucrConcatNotChePlanEmer implements IRule {
         return true;
     }
 
-    private void generaNotificacion(int contador, IItem notificacion, IRuleContext rulectx, IEntitiesAPI entitiesAPI, String nConvocatoria, String numexpConv) {
+    private void generaNotificacion(int contador, IItem notificacion, IRuleContext rulectx, String nConvocatoria, String numexpConv) {
 
         String nombre = "";
         String descripcion = "";
@@ -140,18 +133,13 @@ public class DipucrConcatNotChePlanEmer implements IRule {
         String numexp = "";
 
         try {
+            IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
             cct.beginTX();
-            // Sacamos el número de expediente del nombre del documento
-            String nombreNotif = notificacion.getString("DESCRIPCION");
-            String[] splitNombreNotif = nombreNotif.split("DPCR");
-            // LOGGER.warn("splitNombreNotif " +splitNombreNotif);
-            // Error xq en el expediente se generero una notificación sin DPCR,
-            // por lo tanto no se controla
-            // Así obligamos que sea mayor o igual de dos
-            // [Ticket #1008] SIGEM Error en la 'Notificación Plan Emergencia
-            // Social'
-            if (splitNombreNotif != null && splitNombreNotif.length >= 2) {
-                numexp = "DPCR" + splitNombreNotif[1].trim();
+            String nombreNotif = SubvencionesUtils.getString(notificacion, DocumentosUtil.DESCRIPCION);
+            String[] splitNombreNotif = nombreNotif.split("-");
+            
+            if (null != splitNombreNotif && splitNombreNotif.length >= 2) {
+                numexp = splitNombreNotif[0].trim();
 
                 LOGGER.debug("" + contador + " vamos a generar los cheques del expediente: " + numexp);
 
@@ -160,14 +148,16 @@ public class DipucrConcatNotChePlanEmer implements IRule {
 
                 if (solicitudIterator.hasNext()) {
                     IItem solicitud = (IItem) solicitudIterator.next();
-                    nombreInteresado = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE);
-                    nifInteresado = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
-                    codCiudad = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD);
-                    trimestre = solicitud.getString(ConstantesPlanEmergencia.TRIMESTRE);
+                    
+                    nombreInteresado = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE);
+                    nifInteresado = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
+                    codCiudad = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD);
+                    trimestre = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.TRIMESTRE);
+                    
                     descripcion = contador + ".- Notificación - " + numexp + " - " + nombreInteresado;
                     nombre = contador + ".- Notificación - " + nombreInteresado;
                     codigo = codCiudad + "-" + nifInteresado;
-                    tipoAyuda = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
+                    tipoAyuda = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
 
                     LOGGER.debug("nombreInteresado: " + nombreInteresado);
                     LOGGER.debug("nifInteresado: " + nifInteresado);
@@ -186,26 +176,28 @@ public class DipucrConcatNotChePlanEmer implements IRule {
                         IItem cantidades = (IItem) cantidadesIterator.next();
 
                         if (ConstantesPlanEmergencia.PRIMER_TRIMESTRE.equals(trimestre)) {
-                            valesYaImpresos = cantidades.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE1IMPRESOS);
-                            maxVales = cantidades.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE1);
+                            valesYaImpresos = SubvencionesUtils.getInt(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE1IMPRESOS);
+                            maxVales = SubvencionesUtils.getInt(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE1);
                         } else if (ConstantesPlanEmergencia.SEGUNDO_TRIMESTRE.equals(trimestre)) {
-                            valesYaImpresos = cantidades.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE2IMPRESOS);
-                            maxVales = cantidades.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE2);
+                            valesYaImpresos = SubvencionesUtils.getInt(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE2IMPRESOS);
+                            maxVales = SubvencionesUtils.getInt(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE2);
                         } else if (ConstantesPlanEmergencia.TERCER_TRIMESTRE.equals(trimestre)) {
-                            valesYaImpresos = cantidades.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE3IMPRESOS);
-                            maxVales = cantidades.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE3);
+                            valesYaImpresos = SubvencionesUtils.getInt(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE3IMPRESOS);
+                            maxVales = SubvencionesUtils.getInt(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE3);
                         } else {
-                            valesYaImpresos = cantidades.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE4IMPRESOS);
-                            maxVales = cantidades.getInt(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE4);
+                            valesYaImpresos = SubvencionesUtils.getInt(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE4IMPRESOS);
+                            maxVales = SubvencionesUtils.getInt(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE4);
                         }
 
-                        nCheques = maxVales - valesYaImpresos;
+                        nCheques = maxVales - valesYaImpresos;                        
 
-                        fileVales = generaVales(nombre, nCheques, nombreInteresado, importe, codigo, rulectx, entitiesAPI, nConvocatoria, numexpConv);
-                        notificacionPDF = getFile(notificacion.getString("INFOPAG"));
+                        InformacionVales vales = new InformacionVales(nombre, nCheques, nombreInteresado, importe, codigo, nConvocatoria, numexpConv);
+                        
+                        fileVales = generaVales(rulectx, vales);
+                        
+                        notificacionPDF = getFile(SubvencionesUtils.getString(notificacion, DocumentosUtil.INFOPAG));
 
-                        if (fileVales != null) {
-
+                        if (null != fileVales) {
                             ArrayList<File> documentos = new ArrayList<File>();
                             documentos.add(notificacionPDF);
                             documentos.add(fileVales);
@@ -216,21 +208,21 @@ public class DipucrConcatNotChePlanEmer implements IRule {
                         }
                     }
                 } else {
-                    notificacionFile = getFile(notificacion.getString("INFOPAG"));
+                    notificacionFile = getFile(SubvencionesUtils.getString(notificacion, DocumentosUtil.INFOPAG));
                 }
                 LOGGER.debug("Tenemos notifiacion?");
 
                 if (notificacionFile != null) {
                     LOGGER.debug("SÍ");
-                    int tpdoc = DocumentosUtil.getTipoDoc(cct, "Notificación", DocumentosUtil.BUSQUEDA_EXACTA, false);
+                    int tpdoc = DocumentosUtil.getIdTipoDocByCodigo(cct, "NOT-CHEQUES");
                     LOGGER.debug("tenemos tipo de documento: " + tpdoc);
                     LOGGER.debug("descripcion: " + descripcion);
                     LOGGER.debug("notificacionFile: " + notificacionFile);
 
                     IItem entityDoc = DocumentosUtil.generaYAnexaDocumento(rulectx, tpdoc, descripcion, notificacionFile, Constants._EXTENSION_PDF);
 
-                    entityDoc.set("DESTINO", notificacion.getString("DESTINO"));
-                    entityDoc.set("DESTINO_ID", notificacion.getString("DESTINO_ID"));
+                    entityDoc.set(DocumentosUtil.DESTINO, SubvencionesUtils.getString(notificacion, DocumentosUtil.DESTINO));
+                    entityDoc.set(DocumentosUtil.DESTINO_ID, SubvencionesUtils.getString(notificacion, DocumentosUtil.DESTINO_ID));
 
                     entityDoc.store(cct);
                 }
@@ -252,14 +244,14 @@ public class DipucrConcatNotChePlanEmer implements IRule {
         }
     }
 
-    private File generaVales(String nombre, int cheques, String nombreInteresado, String importe, String codigo,
-            IRuleContext rulectx, IEntitiesAPI entitiesAPI, String nConvocatoria, String numexpConv) {
+    private File generaVales(IRuleContext rulectx, InformacionVales vales) {
         String rutaVales = "";
         File fileVales = null;
         try {
             LOGGER.debug("ahora vamos a generar los cheques.");
+            IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
 
-            String nombreFicheroSalida1 = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + nombre + ".pdf";
+            String nombreFicheroSalida1 = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + vales.getNombre() + ".pdf";
 
             HashMap<String, String> map = new HashMap<String, String>();
             /**
@@ -276,39 +268,79 @@ public class DipucrConcatNotChePlanEmer implements IRule {
             String codigo1, codigo2, codigo3, codigo4;
             codigo1 = codigo2 = codigo3 = codigo4 = "";
             int i = 0;
-            for (i = 0; i < cheques; i++) {
-                IItem codigoGuardar = entitiesAPI.createEntity(ConstantesPlanEmergencia.DpcrSERSOChequesGenerados.NOMBRE_TABLA, numexpConv);
+            for (i = 0; i < vales.getCheques(); i++) {
+                IItem codigoGuardar = entitiesAPI.createEntity(ConstantesPlanEmergencia.DpcrSERSOChequesGenerados.NOMBRE_TABLA, vales.getNumexpConv());
                 if (i % 4 == 0) {
-                    codigo1 = codigo + "-" + (i + 1) + "-" + cheques + "-P" + nConvocatoria + "-" + Calendar.getInstance().get(Calendar.YEAR);
+                    codigo1 = vales.getCodigo() + "-" + (i + 1) + "-" + vales.getCheques() + "-P" + vales.getnConvocatoria() + "-" + Calendar.getInstance().get(Calendar.YEAR);
                     codigoGuardar.set(ConstantesPlanEmergencia.DpcrSERSOChequesGenerados.CODIGO, codigo1);
                     LOGGER.debug("guardamos el codigo: " + codigo1 + " en la tabla");
                 }
                 if (i % 4 == 1) {
-                    codigo2 = codigo + "-" + (i + 1) + "-" + cheques + "-P" + nConvocatoria + "-" + Calendar.getInstance().get(Calendar.YEAR);
+                    codigo2 = vales.getCodigo() + "-" + (i + 1) + "-" + vales.getCheques() + "-P" + vales.getnConvocatoria() + "-" + Calendar.getInstance().get(Calendar.YEAR);
                     codigoGuardar.set(ConstantesPlanEmergencia.DpcrSERSOChequesGenerados.CODIGO, codigo2);
                     LOGGER.debug("guardamos el codigo: " + codigo2 + " en la tabla");
                 }
                 if (i % 4 == 2) {
-                    codigo3 = codigo + "-" + (i + 1) + "-" + cheques + "-P" + nConvocatoria + "-" + Calendar.getInstance().get(Calendar.YEAR);
+                    codigo3 = vales.getCodigo() + "-" + (i + 1) + "-" + vales.getCheques() + "-P" + vales.getnConvocatoria() + "-" + Calendar.getInstance().get(Calendar.YEAR);
                     codigoGuardar.set(ConstantesPlanEmergencia.DpcrSERSOChequesGenerados.CODIGO, codigo3);
                     LOGGER.debug("guardamos el codigo: " + codigo3 + " en la tabla");
                 }
                 if (i % 4 == 3) {
-                    codigo4 = codigo + "-" + (i + 1) + "-" + cheques + "-P" + nConvocatoria + "-" + Calendar.getInstance().get(Calendar.YEAR);
+                    codigo4 = vales.getCodigo() + "-" + (i + 1) + "-" + vales.getCheques() + "-P" + vales.getnConvocatoria() + "-" + Calendar.getInstance().get(Calendar.YEAR);
                     codigoGuardar.set(ConstantesPlanEmergencia.DpcrSERSOChequesGenerados.CODIGO, codigo4);
                     LOGGER.debug("guardamos el codigo: " + codigo4 + " en la tabla");
                 }
                 if (i % 4 == 3) {
-                    objetos.add(new SERSOPlanEmergencia(codigo1, nombreInteresado, importe, "", codigo2, nombreInteresado, importe, "", codigo3,
-                            nombreInteresado, importe, "", codigo4, nombreInteresado, importe, ""));
+                    SERSOPlanEmergencia cheques = new SERSOPlanEmergencia();
+                    cheques.setCodigo1(codigo1); 
+                    cheques.setNombre1(vales.getNombreInteresado());
+                    cheques.setImporte1(vales.getImporte());
+                    cheques.setFecha1("");
+                    
+                    cheques.setCodigo2(codigo2); 
+                    cheques.setNombre2(vales.getNombreInteresado());
+                    cheques.setImporte2(vales.getImporte());
+                    cheques.setFecha1("");
+                    
+                    cheques.setCodigo3(codigo3); 
+                    cheques.setNombre3(vales.getNombreInteresado());
+                    cheques.setImporte3(vales.getImporte());
+                    cheques.setFecha1("");
+                    
+                    cheques.setCodigo4(codigo4); 
+                    cheques.setNombre4(vales.getNombreInteresado());
+                    cheques.setImporte4(vales.getImporte());
+                    cheques.setFecha1("");
+                    
+                    objetos.add(cheques);
                     codigo1 = codigo2 = codigo3 = codigo4 = "";
                 }
 
                 codigoGuardar.store(cct);
             }
             if ((i - 1) % 4 != 3) {
-                objetos.add(new SERSOPlanEmergencia(codigo1, nombreInteresado, importe, "", codigo2, nombreInteresado, importe, "", codigo3, nombreInteresado,
-                        importe, "", codigo4, nombreInteresado, importe, ""));
+                SERSOPlanEmergencia cheques = new SERSOPlanEmergencia();
+                cheques.setCodigo1(codigo1); 
+                cheques.setNombre1(vales.getNombreInteresado());
+                cheques.setImporte1(vales.getImporte());
+                cheques.setFecha1("");
+                
+                cheques.setCodigo2(codigo2); 
+                cheques.setNombre2(vales.getNombreInteresado());
+                cheques.setImporte2(vales.getImporte());
+                cheques.setFecha1("");
+                
+                cheques.setCodigo3(codigo3); 
+                cheques.setNombre3(vales.getNombreInteresado());
+                cheques.setImporte3(vales.getImporte());
+                cheques.setFecha1("");
+                
+                cheques.setCodigo4(codigo4); 
+                cheques.setNombre4(vales.getNombreInteresado());
+                cheques.setImporte4(vales.getImporte());
+                cheques.setFecha1("");
+                
+                objetos.add(cheques);
             }
             JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(objetos);
 
@@ -335,7 +367,7 @@ public class DipucrConcatNotChePlanEmer implements IRule {
                 JasperReportUtil.exportarReportAPdf(rutaVales, print);
             }
         } catch (ISPACException e) {
-            LOGGER.error(ConstantesString.LOGGER_ERROR + " al generar los vales del plan de emergencia con código de barras del expediente: " + numexpConv + ". " + e.getMessage(), e);
+            LOGGER.error(ConstantesString.LOGGER_ERROR + " al generar los vales del plan de emergencia con código de barras del expediente: " + vales.getNumexpConv() + ". " + e.getMessage(), e);
         }
         return fileVales;
     }
@@ -420,28 +452,27 @@ public class DipucrConcatNotChePlanEmer implements IRule {
         private String importe4;
         private String fecha4;
 
-        public SERSOPlanEmergencia(String codigo1, String nombre1, String importe1, String fecha1, String codigo2, String nombre2, String importe2,
-                String fecha2, String codigo3, String nombre3, String importe3, String fecha3, String codigo4, String nombre4, String importe4, String fecha4) {
+        public SERSOPlanEmergencia() {
 
-            this.codigo1 = codigo1;
-            this.nombre1 = nombre1;
-            this.importe1 = importe1;
-            this.fecha1 = fecha1;
+            this.codigo1 = "";
+            this.nombre1 = "";
+            this.importe1 = "";
+            this.fecha1 = "";
 
-            this.codigo2 = codigo2;
-            this.nombre2 = nombre2;
-            this.importe2 = importe2;
-            this.fecha2 = fecha2;
+            this.codigo2 = "";
+            this.nombre2 = "";
+            this.importe2 = "";
+            this.fecha2 = "";
 
-            this.codigo3 = codigo3;
-            this.nombre3 = nombre3;
-            this.importe3 = importe3;
-            this.fecha3 = fecha3;
+            this.codigo3 = "";
+            this.nombre3 = "";
+            this.importe3 = "";
+            this.fecha3 = "";
 
-            this.codigo4 = codigo4;
-            this.nombre4 = nombre4;
-            this.importe4 = importe4;
-            this.fecha4 = fecha4;
+            this.codigo4 = "";
+            this.nombre4 = "";
+            this.importe4 = "";
+            this.fecha4 = "";
         }
 
         public void setCodigo1(String codigo1) {
@@ -571,5 +602,69 @@ public class DipucrConcatNotChePlanEmer implements IRule {
         public String getFecha4() {
             return fecha4;
         }
+    }
+    
+    public class InformacionVales{
+        private String nombre;
+        private int cheques;
+        private String nombreInteresado;
+        private String importe;
+        private String codigo;    
+        private String nConvocatoria;
+        private String numexpConv;
+        
+        public InformacionVales(String nombre, int cheques, String nombreInteresado, String importe, String codigo, String nConvocatoria, String numexpConv) {
+            this.nombre = nombre;
+            this.cheques = cheques;
+            this.nombreInteresado = nombreInteresado;
+            this.importe = importe;
+            this.codigo = codigo;
+            this.nConvocatoria = nConvocatoria;
+            this.numexpConv = numexpConv;
+            
+        }
+        
+        public String getNombre() {
+            return nombre;
+        }
+        public void setNombre(String nombre) {
+            this.nombre = nombre;
+        }
+        public int getCheques() {
+            return cheques;
+        }
+        public void setCheques(int cheques) {
+            this.cheques = cheques;
+        }
+        public String getNombreInteresado() {
+            return nombreInteresado;
+        }
+        public void setNombreInteresado(String nombreInteresado) {
+            this.nombreInteresado = nombreInteresado;
+        }
+        public String getImporte() {
+            return importe;
+        }
+        public void setImporte(String importe) {
+            this.importe = importe;
+        }
+        public String getCodigo() {
+            return codigo;
+        }
+        public void setCodigo(String codigo) {
+            this.codigo = codigo;
+        }
+        public String getnConvocatoria() {
+            return nConvocatoria;
+        }
+        public void setnConvocatoria(String nConvocatoria) {
+            this.nConvocatoria = nConvocatoria;
+        }
+        public String getNumexpConv() {
+            return numexpConv;
+        }
+        public void setNumexpConv(String numexpConv) {
+            this.numexpConv = numexpConv;
+        }        
     }
 }

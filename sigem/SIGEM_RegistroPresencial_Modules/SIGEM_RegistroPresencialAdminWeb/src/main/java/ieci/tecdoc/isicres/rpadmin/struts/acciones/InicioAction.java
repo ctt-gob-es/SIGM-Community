@@ -3,7 +3,9 @@ package ieci.tecdoc.isicres.rpadmin.struts.acciones;
 import ieci.tecdoc.isicres.rpadmin.struts.util.PermisosInternosUtils;
 import ieci.tecdoc.isicres.rpadmin.struts.util.SesionHelper;
 import ieci.tecdoc.sgm.core.admin.web.AutenticacionAdministracion;
+import ieci.tecdoc.sgm.core.exception.SigemException;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.administracion.ServicioAdministracion;
 import ieci.tecdoc.sgm.core.services.admsesion.administracion.ServicioAdministracionSesionesAdministrador;
 import ieci.tecdoc.sgm.core.services.gestion_administracion.ConstantesGestionUsuariosAdministracion;
 import ieci.tecdoc.sgm.sesiones.administrador.ws.client.Sesion;
@@ -39,7 +41,15 @@ import es.ieci.tecdoc.isicres.admin.core.manager.DBSessionManager;
 /*$Id*/
 
 public class InicioAction extends RPAdminWebAction {
-
+	private static ServicioAdministracion oServicio;
+	
+	static {
+		try {
+			oServicio = LocalizadorServicios.getServicioAdministracion();
+		}
+		catch (SigemException e) {
+		}
+	}
 	public ActionForward executeAction(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

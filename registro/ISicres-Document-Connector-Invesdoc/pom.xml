@@ -10,13 +10,17 @@
 	<packaging>jar</packaging>
 	<description>Modulo de gestion documental para Invesdoc</description>
 	
+	<properties>
+		<isicres.version>8.0.1</isicres.version>
+		<invesdocMSSSI.version>3.0.0-msssi2.0.0</invesdocMSSSI.version>
+	</properties>
 	
 	<dependencies>
 		<!-- Dependencias de InvesSicres -->
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>
 			<artifactId>ISicres-Document-Connector</artifactId>
-			<version>${pom.version}</version>
+			<version>${isicres.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.isicres</groupId>

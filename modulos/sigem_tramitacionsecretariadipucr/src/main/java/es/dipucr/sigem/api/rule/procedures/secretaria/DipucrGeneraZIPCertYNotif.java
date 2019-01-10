@@ -47,7 +47,7 @@ public class DipucrGeneraZIPCertYNotif  implements IRule{
 			//Recuperamos los expedientes relacionados de la comisión o el pleno, que son propuestas
 			
 			 String consultaSQL = "WHERE NUMEXP_HIJO = '" + rulectx.getNumExp() + "'";
-		     IItemCollection itemCollection = entitiesAPI.queryEntities(41, consultaSQL);
+		     IItemCollection itemCollection = entitiesAPI.queryEntities("SPAC_EXP_RELACIONADOS", consultaSQL);
 		     //Si no hay expedientes padres (propuestas) no hacemos nada
 		     if ((itemCollection != null) && (itemCollection.next())) {
 			        Iterator<?> it = itemCollection.iterator();
@@ -133,7 +133,7 @@ public class DipucrGeneraZIPCertYNotif  implements IRule{
 	        	{
 	        		IItem participante = (IItem)itParticipante.next();
 	        		String nombrePar = participante.getString("NOMBRE");
-	        		sNombreSQL.append("DESCRIPCION LIKE '%"+nombrePar+"%' ");
+	        		sNombreSQL.append("DESCRIPCION LIKE '%"+documento+"%"+nombrePar+"%' ");
 	        		if(itParticipante.hasNext()){
 	        			sNombreSQL.append("OR ");
 	        		}

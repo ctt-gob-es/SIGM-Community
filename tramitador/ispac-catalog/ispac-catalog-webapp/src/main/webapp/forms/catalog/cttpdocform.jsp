@@ -14,6 +14,14 @@ function showTemplates()
 	document.forms[0].action =url ;
     document.forms[0].submit();
 }
+
+// [Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+function showTemplatesRepositorioComun()
+{
+	var url = '<%= request.getContextPath() + "/showTemplatesRepositorioComunList.do?type=" + type%>';
+	document.forms[0].action =url ;
+    document.forms[0].submit();
+}
 </script>
 
 
@@ -55,6 +63,11 @@ function showTemplates()
 			<li>
 				<a href='javascript:showTemplates()'>
 					<bean:message key="show.templates"/>
+				</a>
+			</li>
+			<li>
+				<a href='javascript:showTemplatesRepositorioComun()'>
+					<bean:message key="show.templatesRepositorioComun"/>
 				</a>
 			</li>
 			<li>
@@ -288,6 +301,34 @@ function showTemplates()
 																					styleId="texta" onkeypress="javascript:maxlength('texta', 512)"/>
 																				<div id="formErrors">
 																					<html:errors property="property(OBSERVACIONES)"/>
+																				</div>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td colspan="2"><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" height="8px"/></td>
+																		</tr>
+																		<tr>
+																			<td height="20" class="formsTitle">
+																				<ispac:tooltipLabel labelKey="form.tpdoc.propertyLabel.signPosition" tooltipKey="form.tpdoc.propertyLabel.signPosition.tooltip"/>
+																			</td>
+																			<td height="20">
+																				&nbsp;&nbsp;<html:text property="property(SIGN_POSITION)" styleClass="input" size="10" readonly="false" maxlength="16"/>
+																				<div id="formErrors">
+																					<html:errors property="property(SIGN_POSITION)"/>
+																				</div>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td colspan="2"><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" height="8px"/></td>
+																		</tr>
+																		<tr>
+																			<td height="20" class="formsTitle">
+																				<ispac:tooltipLabel labelKey="form.tpdoc.propertyLabel.signPage" tooltipKey="form.tpdoc.propertyLabel.signPage.tooltip"/>
+																			</td>
+																			<td height="20">
+																				&nbsp;&nbsp;<html:text property="property(SIGN_PAGE)" styleClass="input" size="10" readonly="false" maxlength="16"/>
+																				<div id="formErrors">
+																					<html:errors property="property(SIGN_PAGE)"/>
 																				</div>
 																			</td>
 																		</tr>

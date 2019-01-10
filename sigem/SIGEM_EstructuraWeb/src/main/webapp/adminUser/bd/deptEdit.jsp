@@ -156,7 +156,22 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 									<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.descripcion"/></label>
 									<label class="gr" style="width:190px;"><html:textarea property="descripcion" cols="65" rows="6" styleId="dept.description"/></label>
 							    </div>
+							    <!-- [Tere Ticket#362] Crear un campo con email departamento  -->
+							    <div class="col" style="width: 490px;">
+									<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.email"/></label>
+									<label class="gr" style="width:190px;"><html:text property="email" style="width:350px;"/></label>
+							    </div>
+
+								<!-- [dipucr-Felipe #459] [Dipucr-Manu]-->
+							    <div class="col" style="width: 490px; display:none;">
+									<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.organismo"/></label>
+									<label class="gr" style="width:190px;"><html:textarea property="idorg" cols="65" rows="6" styleId="dept.idorg"/></label>
 							    
+							    </div>
+							     <div class="col" style="width: 490px; display:none;">
+									<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.padre"/></label>
+									<label class="gr" style="width:190px;"><html:textarea property="idPadre" cols="65" rows="6" styleId="dept.idPadre"/></label>
+							    </div>
 							</div>
 							
 		       			</div>

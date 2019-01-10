@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 public class SignCircuitMgr {
 
 	/**
@@ -29,6 +31,11 @@ public class SignCircuitMgr {
 	 * instanciado
 	 */
 	private static final String IDSEQUENCE = "SPAC_SQ_ID_CTOS_FIRMA_INSTANCE";
+	
+	/**
+	 * Logger
+	 */
+	public static final Logger logger = Logger.getLogger(SignCircuitMgr.class);
 
 	/**
 	 * Contexto de cliente.
@@ -76,6 +83,34 @@ public class SignCircuitMgr {
 			processCircuitEvents(EventsDefines.EVENT_EXEC_START, circuitId, instancedCircuitId, documentId);
 
 			instanceNextStep(cnt, circuitId, instancedCircuitId, documentId);
+
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+
+		return instancedCircuitId;
+	}
+	
+	public int addCtosFirma(int circuitId, int documentId, int idPaso, String idFirmante, String nombreFirmante, Date fechaFirma) throws ISPACException {
+
+        DbCnt cnt = mcontext.getConnection();
+        int instancedCircuitId;
+
+		try {
+			//Obtenemos la definicion del circuito (pasos que lo componen)
+			instancedCircuitId = IdSequenceMgr.getIdSequence(cnt,IDSEQUENCE);
+
+			SignCircuitInstanceDAO instanceDAO = new SignCircuitInstanceDAO(cnt);
+			instanceDAO.createNew(cnt);
+			instanceDAO.set("ID_INSTANCIA_CIRCUITO", instancedCircuitId);
+			instanceDAO.set("FECHA", fechaFirma);
+			instanceDAO.set("ID_DOCUMENTO", new Integer(documentId));
+			instanceDAO.set("ID_CIRCUITO", circuitId);
+			instanceDAO.set("ID_PASO", idPaso);
+			instanceDAO.set("ID_FIRMANTE", idFirmante);
+			instanceDAO.set("NOMBRE_FIRMANTE", nombreFirmante);
+			instanceDAO.set("ESTADO", SignCircuitStates.SIN_INICIAR);
+			instanceDAO.store(cnt);
 
 		} finally {
 			mcontext.releaseConnection(cnt);
@@ -178,11 +213,17 @@ public class SignCircuitMgr {
 
 			// Actualizar estado de firma del documento
 			IItem document = mcontext.getAPI().getEntitiesAPI().getDocument(documentId);
+			logger.warn("AJM ESTADOFIRMA instanceNextStep---------> No hay mas pasos, se marca como firmado 02");
+			logger.warn("AJM ESTADOFIRMA instanceNextStep---------> se marca como firmado ID: "+document.getString("ID"));
+			logger.warn("AJM ESTADOFIRMA instanceNextStep---------> se marca como firmado NUMEXP: "+document.getString("NUMEXP"));
+			logger.warn("AJM ESTADOFIRMA instanceNextStep---------> se marca como firmado NOMBRE: "+document.getString("NOMBRE"));
 			document.set("ESTADOFIRMA", SignStatesConstants.FIRMADO);
 			document.store(mcontext);
+			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> realizada transaccion, ha actualizado el estado de firma a 02");
 
 			// EVENTO: Fin del circuito de firma
 			processCircuitEvents(EventsDefines.EVENT_EXEC_END, circuitId, instancedCircuitId, documentId);
+			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> Termina el metodo");
 		}
 	}
 

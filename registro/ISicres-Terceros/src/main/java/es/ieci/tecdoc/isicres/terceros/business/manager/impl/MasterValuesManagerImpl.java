@@ -56,7 +56,11 @@ public class MasterValuesManagerImpl implements MasterValuesManager {
 	}
 
 	public List<ProvinciaVO> getProvincias() {
-		return getProvinciaDao().getAll();
+		List<ProvinciaVO> provincias = getProvinciaDao().getAll();
+		for (ProvinciaVO provincia : provincias){
+			provincia.setCiudades(getCiudades(provincia));
+		}
+		return provincias;
 	}
 
 	public List<PaisVO> getPaises() {
@@ -79,7 +83,9 @@ public class MasterValuesManagerImpl implements MasterValuesManager {
 	}
 
 	public ProvinciaVO getProvincia(String codigo) {
-		return getProvinciaDao().findByCodigo(codigo);
+		ProvinciaVO provincia = getProvinciaDao().findByCodigo(codigo);
+		provincia.setCiudades(getCiudades(provincia));
+		return provincia;
 	}
 
 	
@@ -89,11 +95,15 @@ public class MasterValuesManagerImpl implements MasterValuesManager {
 	 * @see es.ieci.tecdoc.isicres.terceros.business.manager.MasterValuesManager#getProvinciaById(java.lang.Long)
 	 */
 	public ProvinciaVO getProvinciaById(Long id) {	
-		return getProvinciaDao().get(String.valueOf(id));
+		ProvinciaVO provincia = getProvinciaDao().get(String.valueOf(id));
+		provincia.setCiudades(getCiudades(provincia));
+		return provincia;
 	}
 
 	public ProvinciaVO getProvinciaByNombre(String nombre) {
-		return getProvinciaDao().findByNombre(nombre);
+		ProvinciaVO provincia = getProvinciaDao().findByNombre(nombre);
+		provincia.setCiudades(getCiudades(provincia));
+		return provincia;
 	}
 
 	public PaisVO getPais(String codigo) {

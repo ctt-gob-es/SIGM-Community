@@ -45,5 +45,18 @@ public class TipoDireccionTelematicaVO extends Entity {
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
+	
+	public String toString() {
+		return descripcion;
+	}
+	
+	public boolean equals(Object o) {
+		if (null == o || !(o instanceof TipoDireccionTelematicaVO)){
+			return false;
+		}
+		
+		TipoDireccionTelematicaVO comparador = (TipoDireccionTelematicaVO) o;
+		return comparador.getCodigo().equals(codigo);
+	}
 
 }

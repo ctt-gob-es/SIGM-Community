@@ -262,7 +262,7 @@ public class GenerateDocumentFromTemplateEntityAction extends BaseAction {
 					errors.add(stage.getString("NUMEXP") + "<br/>("+  extraInfo+")");
 					break;
 				default:
-					logger.error(message + " >>" +  extraInfo);
+					LOGGER.error(message + " >>" +  extraInfo);
 					throw new ISPACInfo(message, extraInfo, false);
 				}
 				continue;

@@ -247,31 +247,7 @@ if (bFirma) {
 
 					<div class="cuerpobt" id="divButtons" style="display: block;">
       					<div class="cuerporightbt">
-        					<div class="cuerpomidbt">
-        					
-        						<br/>
-											  <p style="color:red;text-align:justify;margin-left:15px;margin-right:15px"> 
-												ATENCIÓN: A PARTIR DEL 18 de ENERO de 2016 se introducen modificaciones técnicas que simplifican y facilitan el proceso de presentación y recepción de documentos electrónicos.
-											  <br/>
-											  <br/>
-												Descargue e instale en su ordenador el software AUTOFIRMA, la versión actual es la 1.4.2. Si ya tenía instalado AUTOFIRMA y tiene problemas al firmar descargue e instale de nuevo AUTOFIRMA. Autofirma requiere version 11 de Internet Explorer y superior, también funciona en otros navegadores como Google Chrome. 
-											  <br/>
-											  <br/>
-											  Haga click en el siguiente enlace y siga las instrucciones:</p>
-											  <br/>
-											  <br/>
-												<a style="color:#0080FF;font-size:12px"
-													 target="_blank" 
-													 href="https://cloud.dipucr.es/owncloud/index.php/s/BT7tN8BfI58CUKg">DESCARGAR SOFTWARE AUTOFIRMA</a>	
-											  <br/>	
-											  <br/>											  
-											  <a style="color:#0080FF"
-													 target="_blank" 
-													 href="https://www.youtube.com/watch?v=i0Uebz-HyiU">En caso de duda puede consultar este video tutorial</a>	
-											  <br/>
-											  <br/>										    
-								<br/>
-        					
+        					<div class="cuerpomidbt">      					
 								<input type="button" value="<bean:message key="resultado.ver_solicitud"/>" class="ok" id="aceptar_registro" onclick="window.open('<%=request.getSession().getAttribute(Defs.XML_REQUEST_FILE)%>','ventana1','width=600px,height=800px,scrollbars=yes');"/>
 								<%									
 								if (!bVirus || (bVirus && bRegistrar)) {

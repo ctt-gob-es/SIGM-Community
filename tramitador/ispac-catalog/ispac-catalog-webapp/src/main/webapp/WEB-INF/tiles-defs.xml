@@ -922,5 +922,25 @@
     <put name="body" value="/ispac/common/procedure/pcdManualUsuario.jsp"/>
   </definition>
   <!--  [eCenpri-Manu #120] FIN - ALSIGM3 Crear opción de menú que devuelva el manual de usuario del procedimento.-->
+
+	<!-- [Dipucr-Manu Ticket #478] - INICIO - ALSIGM3 Nueva opción Repositorio Común -->
+  <definition name="templatesRepositorioComunlist" extends="ispac_mainlayout">
+    <put name="body" value="/ispac/common/templatesRepositorioComunList.jsp"/>
+  </definition>
+  
+  <definition name="newTemplateRepositorioComun" extends="ispac_mainlayout">
+    <put name="body" value="/forms/catalog/cttemplaterepositoriocomunform.jsp"/>
+  </definition>
+	<!-- [Dipucr-Manu Ticket #478] FIN ALSIGM3 Nueva opción Repositorio Común -->
+	
+  <!--  [Dipucr-Manu Ticket #] INICIO - ALSIGM3 Mantenimiento de Mensajes. -->
+  <definition name="ct.mantenimientoMensajesList" extends="ispac_mainlayout">
+    <put name="body" value="/ispac/common/ctMantenimientoMensajesList.jsp"/>  
+  </definition>
+  
+  <definition name="ct.mensaje" extends="ispac_mainlayout">
+    <put name="body" value="/ispac/common/ctMensaje.jsp"/>  
+  </definition>
+<!--  [Dipucr-Manu Ticket #] INICIO - ALSIGM3 Mantenimiento de Mensajes. -->
   
 </tiles-definitions>

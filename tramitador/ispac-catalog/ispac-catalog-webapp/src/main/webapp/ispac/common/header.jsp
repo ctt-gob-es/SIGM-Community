@@ -23,7 +23,11 @@
 	<tr style="width:100%;">
 	    <td width="100%">
 		<div id="cabecera_int_left">
-			<h1><bean:message key="main.company"/></h1>
+			<!-- [eCenpri-Manu Ticket#267] + ALSIGM3 Logotipo de la entidad sale feas en registro presencial y tramitador -->
+			<!-- <h1><bean:message key="main.company"/></h1>-->
+			<img id="img_cab" src="/SIGEM_CatalogoProcedimientosWeb/resourceServlet/logos/logo.gif"/>
+
+			<!-- [eCenpri-Manu Ticket#267] + ALSIGM3 Logotipo de la entidad sale feas en registro presencial y tramitador -->
 		</div>
 		<div id="cabecera_int_right">
 			<h3><bean:message key="main.productName"/></h3>		

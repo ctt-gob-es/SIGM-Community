@@ -52,7 +52,7 @@ public class EnvioAvisoEmailFinFirmaRule implements IRule
 			String contenido = "Fin de firma de Trámite de Intervención en SIGEM a visualizar con el número de expediente "+numexp;
 			String asunto = "Fin de firma de Trámite de Intervención en SIGEM a visualizar con el número de expediente "+numexp;
 	
-			MailUtil.enviarCorreo(rulectx, emailNotif, asunto, contenido);
+			MailUtil.enviarCorreo(rulectx.getClientContext(), emailNotif, asunto, contenido);
 			logger.warn("[EnvioMailTesoreriaRule:execute()]Email enviado a: "+emailNotif);
 	 
 		 } catch (ISPACException e) {

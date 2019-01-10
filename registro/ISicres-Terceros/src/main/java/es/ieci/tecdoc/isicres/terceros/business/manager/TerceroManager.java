@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.ieci.tecdoc.fwktd.server.manager.BaseManager;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoFisicoVO;
+import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoJuridicoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.search.CriteriaVO;
 
@@ -45,7 +46,7 @@ public interface TerceroManager extends BaseManager<TerceroValidadoVO, String> {
 	 * @param typeDoc
 	 * @return
 	 */
-	public List<TerceroValidadoFisicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber, int typeDoc);
+	public List<TerceroValidadoJuridicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber, int typeDoc);
 
 	/**
 	 * Devuelve un listado de terceros físicos a partir del tipo de documento y el número de documento
@@ -55,4 +56,20 @@ public interface TerceroManager extends BaseManager<TerceroValidadoVO, String> {
 	 * @return
 	 */
 	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber, int typeDoc);
+	
+	/**
+	 * Devuelve un listado de terceros físicos a partir del tipo de documento y el número de documento
+	 * 
+	 * @param phisicalNumber
+	 * @return
+	 */
+	public List<TerceroValidadoFisicoVO> findTerceroFisicoByDocumentNumber(String phisicalNumber);
+	
+	/**
+	 * Devuelve un listado de terceros jurídicos a partir del tipo de documento y el número de documento
+	 * 
+	 * @param phisicalNumber
+	 * @return
+	 */
+	public List<TerceroValidadoJuridicoVO> findTerceroJuridicoByDocumentNumber(String phisicalNumber);
 }

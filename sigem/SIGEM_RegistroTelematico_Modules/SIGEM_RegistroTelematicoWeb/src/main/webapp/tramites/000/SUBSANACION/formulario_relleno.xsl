@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<xsl:include href="../templates_comunes.xsl" />
+
 <xsl:output encoding="ISO-8859-1" method="html"/>
 	<xsl:variable name="lang.docIdentidad" select="'Documento de identidad'"/>
 	<xsl:variable name="lang.nombre" select="'Nombre'"/>
@@ -130,6 +133,12 @@
 				<br/>
 			</div>
 		</xsl:if>
+		<br/>
+		<xsl:call-template name="TEXTO_LEGAL_COMUN_RELLENO" />
+
+		<xsl:call-template name="TEXTO_DATOS_PERSONALES_COMUN_RELLENO" />
+
+		<xsl:call-template name="TEXTO_AUTOFIRMA_COMUN_RELLENO" />
 		<br/>
 	</xsl:template>
 </xsl:stylesheet>

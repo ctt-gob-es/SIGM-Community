@@ -35,8 +35,7 @@ import org.apache.log4j.Logger;
 public class TramitacionManager extends ServiceManager {
 
 	/** Logger de la clase. */
-	protected static final Logger logger = 
-		Logger.getLogger(TramitacionManager.class);
+	protected static final Logger LOGGER = Logger.getLogger(TramitacionManager.class);
 
 	private final String TAG_RESULTS = "results";
 	private final String TAG_ERROR = "error"; 
@@ -73,15 +72,12 @@ public class TramitacionManager extends ServiceManager {
 	 * </p>
 	 * @return Lista de identificadores de expedientes.
 	 */
-	public String[] getIdsExpedientes(final String idProc, 
-				final Date fechaIni, final Date fechaFin, final int tipoOrd) 
-			throws ISPACException {
+	public String[] getIdsExpedientes(final String idProc, final Date fechaIni, final Date fechaFin, final int tipoOrd)	throws ISPACException {
 		DbCommand dbCommand = new DbCommand(getContext()){
 			public Object logic(DbCnt cnt) throws ISPACException {
-				return TramitadorDAO.recuperarIdsExpedientes(cnt, idProc, 
-						fechaIni, fechaFin, tipoOrd);
+				return TramitadorDAO.recuperarIdsExpedientes(cnt, idProc, fechaIni, fechaFin, tipoOrd);
 		}};
-		List ids = (List)dbCommand.exec();
+		List<?> ids = (List<?>)dbCommand.exec();
 		return (String []) ids.toArray(new String[ids.size()]);
 	}
 
@@ -91,16 +87,14 @@ public class TramitacionManager extends ServiceManager {
 	 * @param idExps Identificadores de expedientes.
 	 * @return Lista de expedientes.
 	 */
-	public InfoBExpediente[] getExpedientes(final String[] idExps) 
-			throws ISPACException {
-		List expedientes = null;
+	public InfoBExpediente[] getExpedientes(final String[] idExps) throws ISPACException {
+		List<?> expedientes = null;
 		DbCommand dbCommand = new DbCommand(getContext()){
 			public Object logic(DbCnt cnt) throws ISPACException {
 				return TramitadorDAO.recuperarInfoBExpedientes(cnt, idExps);
 			}};
-		expedientes = (List)dbCommand.exec();
-		return (InfoBExpediente[]) expedientes.toArray(
-				new InfoBExpediente[expedientes.size()]);
+		expedientes = (List<?>)dbCommand.exec();
+		return (InfoBExpediente[]) expedientes.toArray( new InfoBExpediente[expedientes.size()]);
 	}
 
 	/**
@@ -108,8 +102,7 @@ public class TramitacionManager extends ServiceManager {
 	 * @param idExp Identificador del expediente.
 	 * @return Información de un expediente.
 	 */
-	public Expediente getExpediente(final String idExp) 
-			throws ISPACException {
+	public Expediente getExpediente(final String idExp) throws ISPACException {
 		DbCommand dbCommand = new DbCommand(getContext()){
 			public Object logic(DbCnt cnt) throws ISPACException {
 				return TramitadorDAO.recuperarExpediente(cnt, idExp);
@@ -123,8 +116,7 @@ public class TramitacionManager extends ServiceManager {
 	 * @throws ISPACException
 	 */
 
-	public void archivarExpedientes(String[] idExps) throws ISPACException
-	{
+	public void archivarExpedientes(String[] idExps) throws ISPACException {
 		IInvesflowAPI invesflowAPI = getContext().getAPI();
 		ITXTransaction transactionAPI = invesflowAPI.getTransactionAPI();
 		
@@ -147,16 +139,13 @@ public class TramitacionManager extends ServiceManager {
      * @return Cierto si el expediente se ha iniciado correctamente.
      * @throws ISPACException Si se produce algún error al iniciar el expediente.
      */
-    public boolean iniciarExpediente(DatosComunesExpediente commonData, 
-    			String specificDataXML, DocumentoExpediente[] documents) 
-    		throws ISPACException {
+    public boolean iniciarExpediente(DatosComunesExpediente commonData,  String specificDataXML, DocumentoExpediente[] documents) throws ISPACException {
 
     	// Crear el API de expedientes
     	Expedients expedientsAPI = new Expedients();
     	
         // Iniciar el expediente
-        return expedientsAPI.initExpedient(getCommonData(commonData), 
-        		specificDataXML, getDocumentList(documents));
+        return expedientsAPI.initExpedient(getCommonData(commonData), specificDataXML, getDocumentList(documents));
     }
 
     
@@ -172,13 +161,13 @@ public class TramitacionManager extends ServiceManager {
     public String busquedaAvanzada(String nombreGrupo, String nombreFrmBusqueda, String xmlBusqueda, int dominio)throws ISPACException{
     	// Crear el API de expedientes
     	Expedients expedientsAPI = new Expedients();
-        if (logger.isInfoEnabled()){
-        	logger.info("Realizando busqueda avanzada: '" + xmlBusqueda + "'");
+        if (LOGGER.isInfoEnabled()){
+        	LOGGER.info("Realizando busqueda avanzada: '" + xmlBusqueda + "'");
         }
     	
 		SearchResultVO searchResultVO = expedientsAPI.limitedSearch(nombreGrupo, nombreFrmBusqueda, xmlBusqueda, dominio); 
-        if (logger.isInfoEnabled()){
-        	logger.info("Obtenidos resultados de busqueda avanzada");
+        if (LOGGER.isInfoEnabled()){
+        	LOGGER.info("Obtenidos resultados de busqueda avanzada");
         }
         return prepareSearchResults(searchResultVO);
     }
@@ -194,16 +183,13 @@ public class TramitacionManager extends ServiceManager {
      * @return Numero de expediente creado
      * @throws ISPACException Si se produce algún error al iniciar el expediente.
      */
-    public String iniciarExpediente(final DatosComunesExpediente commonData, 
-    		final String specificDataXML, final DocumentoExpediente[] documents, final String initSystem) 
-    		throws ISPACException {
+    public String iniciarExpediente(final DatosComunesExpediente commonData, final String specificDataXML, final DocumentoExpediente[] documents, final String initSystem) throws ISPACException {
 
     	// Crear el API de expedientes
     	Expedients expedientsAPI = new Expedients();
     	
         // Iniciar el expediente
-        return expedientsAPI.initExpedient(getCommonData(commonData), 
-        		specificDataXML, getDocumentList(documents), initSystem);
+        return expedientsAPI.initExpedient(getCommonData(commonData), specificDataXML, getDocumentList(documents), initSystem);
     }
     
     /**
@@ -246,16 +232,14 @@ public class TramitacionManager extends ServiceManager {
      * @return Cierto si los documentos se han creado correctamente.
      * @throws ISPACException Si se produce algún error.
      */
-    public boolean anexarDocsExpediente(String numExp, String regNum, 
-    			Date regDate, DocumentoExpediente[] documents) 
+    public boolean anexarDocsExpediente(String numExp, String regNum, Date regDate, DocumentoExpediente[] documents) 
     		throws ISPACException {
 
     	// Crear el API de expedientes
     	Expedients expedientsAPI = new Expedients();
     	
         // Iniciar el expediente
-        return expedientsAPI.addDocuments(numExp, regNum, regDate, 
-        		getDocumentList(documents));
+        return expedientsAPI.addDocuments(numExp, regNum, regDate, getDocumentList(documents));
     }
 
     /**
@@ -282,15 +266,14 @@ public class TramitacionManager extends ServiceManager {
      * @return Información del registro obtenido
      * @throws ISPACException
      */    
-    public String obtenerRegistroEntidad(String nombreEntidad, String numExp,
-			int idRegistro)throws ISPACException{
+    public String obtenerRegistroEntidad(String nombreEntidad, String numExp, int idRegistro)throws ISPACException{
     	// Crear el API de expedientes
     	Expedients expedientsAPI = new Expedients();
     	
         // Obtener datos de un registro
         IItem item = expedientsAPI.getRegEntity(nombreEntidad, numExp, idRegistro);
     	
-        List list = new ArrayList();
+        List<ItemBean> list = new ArrayList<ItemBean>();
         list.add(new ItemBean(item));
         return prepareResults(list);
     }
@@ -308,7 +291,7 @@ public class TramitacionManager extends ServiceManager {
     	Expedients expedientsAPI = new Expedients();
     	
         // Obtencion de todos los registros
-        List list = expedientsAPI.getAllRegsEntity(nombreEntidad, numExp);
+        List<?> list = expedientsAPI.getAllRegsEntity(nombreEntidad, numExp);
     	return prepareResults(list);
     }
 
@@ -331,8 +314,8 @@ public class TramitacionManager extends ServiceManager {
     	return commonData;
     }
     
-    private List getInterestedList(InteresadoExpediente[] interesados) {
-    	List interestedList = new ArrayList();
+    private List<InterestedPerson> getInterestedList(InteresadoExpediente[] interesados) {
+    	List<InterestedPerson> interestedList = new ArrayList<InterestedPerson>();
     	
     	if (interesados != null) {
     		for (int i = 0; i < interesados.length; i++) {
@@ -365,8 +348,8 @@ public class TramitacionManager extends ServiceManager {
     	return interested;
     }
     
-    private List getDocumentList(DocumentoExpediente[] documentos) {
-    	List documentList = new ArrayList();
+    private List<Document> getDocumentList(DocumentoExpediente[] documentos) {
+    	List<Document> documentList = new ArrayList<Document>();
     	
     	if (documentos != null) {
     		for (int i = 0; i < documentos.length; i++) {
@@ -395,10 +378,10 @@ public class TramitacionManager extends ServiceManager {
     	
     	return document;
     }
-    private String prepareResults(List list) throws ISPACException {
+    private String prepareResults(List<?> list) throws ISPACException {
 		StringBuffer buffer = new StringBuffer("<?xml version='1.0' encoding='" + ENCONDING + "'?>");
 		buffer.append("<"+TAG_RESULTS+">");
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+		for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
 			ItemBean item = (ItemBean) iterator.next();
 			buffer.append("<"+TAG_ITEM+">"+item.getItem().getXmlValues()+"</"+TAG_ITEM+">");
 		}
@@ -407,7 +390,7 @@ public class TramitacionManager extends ServiceManager {
 	}
 
     private String prepareSearchResults(SearchResultVO searchResultVO ) throws ISPACException{
-    	List list= CollectionBean.getBeanList(searchResultVO.getResultados());
+    	List<?> list= CollectionBean.getBeanList(searchResultVO.getResultados());
     	StringBuffer buffer = new StringBuffer("<?xml version='1.0' encoding='" + ENCONDING + "'?>");
 		buffer.append("<"+TAG_RESULTS+">");
 			if(list.size()< searchResultVO.getNumTotalRegistros()){ 
@@ -421,12 +404,31 @@ public class TramitacionManager extends ServiceManager {
 		   
 		 	 }  
 		 	 
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+		for (Iterator<?> iterator = list.iterator(); iterator.hasNext();) {
 			ItemBean item = (ItemBean) iterator.next();
 			buffer.append("<"+TAG_ITEM+">"+item.getItem().getXmlValues()+"</"+TAG_ITEM+">");
 		}
 		buffer.append("</"+TAG_RESULTS+">");
 		return buffer.toString();   
 		
+    }
+    
+    /**
+     * Añade documentos al trámite de un expediente.
+     * @param numExp Número de expediente.
+     * @param idTramite Identificador del trámite al que anexar los documentos.
+     * @param regNum Número de registro de entrada.
+     * @param regDate Fecha de registro de entrada.
+     * @param documents Lista de documentos asociados al expediente.
+     * @return Cierto si los documentos se han creado correctamente.
+     * @throws ISPACException Si se produce algún error.
+     */
+    public boolean anexarDocsTramite(String numExp, int idTramite, String regNum,  Date regDate, DocumentoExpediente[] documents) throws ISPACException {
+
+    	// Crear el API de expedientes
+    	Expedients expedientsAPI = new Expedients();
+    	
+        
+        return expedientsAPI.addDocuments(numExp, idTramite, regNum, regDate, getDocumentList(documents));
     }
 }

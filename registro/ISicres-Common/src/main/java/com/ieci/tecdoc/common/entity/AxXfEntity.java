@@ -149,7 +149,11 @@ public class AxXfEntity implements ServerKeys {
 			if (dataBaseType.equals("DB2")) {
 				stringClobType.nullSafeSet1(ps, value, 4);
 			} else {
-				stringClobType.nullSafeSet(ps, value, 4);
+				if (value != null){
+					stringClobType.nullSafeSet(ps, value, 4);
+				}else{
+					ps.setObject(4,null);
+				}
 			}
 			// ps.setString(4, value);
 			ps.setDate(5, BBDDUtils.getDate(timestamp));
@@ -256,6 +260,49 @@ public class AxXfEntity implements ServerKeys {
 		axXf.setText(getText());
 		axXf.setTimeStamp(getTimeStamp());
 		return axXf;
+	}
+	
+	//[Dipucr-Manu Ticket # 485] + ALSIGM3 Recuperar Documentos por CSV del registro presencial.	
+	public void loadByCSV(String tipoLibro, String entidad, String csv) throws Exception {
+		
+		this.type = tipoLibro;
+
+//		String SELECT_SENTENCE_BY_CVE = "SELECT id, fdrid, fldid, text, timestamp FROM {0} WHERE text like '%,\"csv\":\"" + csv + "\"}]'";
+		String SELECT_SENTENCE_BY_CVE = "SELECT id, fdrid, fldid, text, timestamp FROM " + getFinalTableName() + " WHERE text like '%,\"csv\":\"" + csv + "\"}]'";
+
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			con = BBDDUtils.getConnection(entidad);
+//			String sentence = MessageFormat.format(SELECT_SENTENCE_BY_CVE, new String[] { getFinalTableName() });
+//			ps = con.prepareStatement(sentence);
+			ps = con.prepareStatement(SELECT_SENTENCE_BY_CVE);
+//			ps.setString(1, csv);			
+			rs = ps.executeQuery();
+			if (!rs.next()) {
+				throw new Exception();
+			}
+			setId(rs.getInt(1));
+			setFdrId(rs.getInt(2));
+			setFldId(rs.getInt(3));
+			StringClobType stringClobType = new StringClobType();
+			String[] names = { "TEXT" };
+			Object o = stringClobType.nullSafeGet(rs, names, null);
+			String text = (String) o;			
+			setText(text);
+			setTimeStamp(rs.getDate(5));
+		} catch (SQLException ex) {
+			log.error("Error en método load.PK [" + getPrimaryKey() + "]", ex);
+			throw new Exception(ex);
+		} catch (NamingException ex) {
+			log.error("Error en método load.PK [" + getPrimaryKey() + "]", ex);
+			throw new Exception(ex);
+		} finally {
+			BBDDUtils.close(rs);
+			BBDDUtils.close(ps);
+			BBDDUtils.close(con);
+		}
 	}
 
 }

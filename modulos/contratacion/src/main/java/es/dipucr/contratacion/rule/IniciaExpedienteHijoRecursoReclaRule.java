@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
 import es.dipucr.sigem.api.rule.common.utils.FechasUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class IniciaExpedienteHijoRecursoReclaRule implements IRule{
@@ -36,15 +37,13 @@ public class IniciaExpedienteHijoRecursoReclaRule implements IRule{
 			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 			//IGenDocAPI genDocAPI = cct.getAPI().getGenDocAPI();
 			 /***********************************************************************/
-			/**Inicio de expediente de 'Certificación de obra'**/
 			
-			/**Creación del expediente de 'Certificación de obra'**/
 			//calculo el número de certificación de obra por el número de expedientes relacionados que son Certificación de obra
 			String strQuery = "WHERE NUMEXP_PADRE='" + rulectx.getNumExp() + "' AND RELACION LIKE 'Recursos y reclamaciones - %'";
 			IItemCollection collectExpRel = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, strQuery);
 					
 			//Obtenemos el id del procedimiento 'Certificación obra'
-			IItemCollection procedimientosDelDepartamento = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_CT_PROCEDIMIENTOS, "WHERE COD_PCD = 'RECURSOS' ");
+			IItemCollection procedimientosDelDepartamento = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_CT_PROCEDIMIENTOS, "WHERE COD_PCD = 'REC-RECL-CONTR' ");
 			Iterator <IItem> procsIterator = procedimientosDelDepartamento.iterator();
 			int idCtProcedimientoNuevo = 0;
 			while(procsIterator.hasNext()){
@@ -52,11 +51,14 @@ public class IniciaExpedienteHijoRecursoReclaRule implements IRule{
 				idCtProcedimientoNuevo = procs.getInt("ID");
 			}
 			String relacion = "Recursos y reclamaciones -  "+(collectExpRel.toList().size()+1)+ " - "+ FechasUtil.getFormattedDate(new Date());
-			IItem numexpHijo = ExpedientesRelacionadosUtil.iniciaExpedienteRelacionadoHijo(cct, idCtProcedimientoNuevo, rulectx.getNumExp(), relacion, true, null);			
-			numexpHijo.set("ASUNTO", relacion);
-			numexpHijo.store(cct);
-			/**Fin del expediente de 'Certificación de obra'**/
-			
+			IItem numexpHijo = ExpedientesRelacionadosUtil.iniciaExpedienteRelacionadoHijo(cct, idCtProcedimientoNuevo, rulectx.getNumExp(), relacion, true, null);	
+			if(null!=numexpHijo){
+				
+				numexpHijo.set("ASUNTO", relacion);
+				numexpHijo.store(cct);
+				
+				TramitesUtil.cargarObservacionesTramite(cct, true,rulectx.getNumExp(), rulectx.getTaskId(), relacion+" - Exp.Relacionado: "+numexpHijo.getString("NUMEXP"));
+			}			
 		}catch(ISPACRuleException e){
 			logger.error(e.getMessage(), e);
 			throw new ISPACRuleException("Error. ",e);

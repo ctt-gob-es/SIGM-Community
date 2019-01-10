@@ -654,7 +654,7 @@ div.fixedHeaderTable {
 }
 
 div.fixedHeaderTable tbody {
-    height: 390px;
+    //height: 390px;
     overflow-y: auto;
     overflow-x: auto;
     background-color: #FFFFFF;

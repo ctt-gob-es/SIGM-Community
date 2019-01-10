@@ -8,8 +8,10 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.utils.FileUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Map;
 
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
@@ -81,9 +83,7 @@ public class EnviarMailCertPadronRule  implements IRule {
 			
 			//Sólo los certificados irán firmados, los volantes no
 			String strInfoPag = null;
-			if (tipoCert == Constants.CERTPADRON._TIPO_CERTIFICADO
-					|| tipoCert == Constants.CERTPADRON._TIPO_CERT_FAMILIAR)
-			{
+			if (PadronUtils.esTipoCertificado(tipoCert)){//[dipucr-Felipe #515]
 				strInfoPag = itemDocumento.getString("INFOPAG_RDE");
 			}
 			else{
@@ -96,9 +96,21 @@ public class EnviarMailCertPadronRule  implements IRule {
 			//Enviamos el mail
 			Map<String, String> variables = PadronUtils.getVariablesPadron
 					(itemSolicitudCertificado, itemExpediente, null);
-			String nombreAdjunto = nombreCert.replace(" ", "_") + "." + Constants._EXTENSION_PDF;
-			MailUtil.enviarCorreoConAcusesYVariables(rulectx, mailInteresado, EMAIL_SUBJECT_VAR_NAME,
-					EMAIL_CONTENT_VAR_NAME, variables, fileCert, nombreAdjunto, nombre, false);
+			
+			//INICIO [dipucr-Felipe 3#703]
+			File fileCertNombre = File.createTempFile(nombreCert.replace(" ", "_"), "." + Constants._EXTENSION_PDF);
+			
+			FileOutputStream fos = new FileOutputStream(fileCertNombre);
+			FileUtils.copy(fileCert, fos);
+			
+//			MailUtil.enviarCorreoConAcusesYVariables(rulectx, mailInteresado, EMAIL_SUBJECT_VAR_NAME,
+//					EMAIL_CONTENT_VAR_NAME, variables, fileCert, nombreAdjunto, nombre, false);
+			MailUtil.enviarCorreoConVariablesUsoExterno(rulectx, mailInteresado, EMAIL_SUBJECT_VAR_NAME,
+					EMAIL_CONTENT_VAR_NAME, fileCertNombre, variables, false);
+
+			fos.close();
+			fileCertNombre.delete();
+			//FIN [dipucr-Felipe 3#703]
 			
 			return new Boolean(true);
 		}

@@ -38,7 +38,7 @@ Recuperando datos de solicitudes anteriores.
 	String entidad = cadenaSplit[2];	
 
 	//Borramos las opciones que había y añadimos las nuevas
-	String ficheroSolAyto = XmlCargaDatos.getDatosConsulta("Subsanacion", "select a.numexp, case when (select trim(a.numexp || # - # ||d.asunto|| # - # ||a.asunto) from  dpcr_sol_conv_sub c, spac_expedientes d where c.numexp = a.numexp and c.numexp_padre = d.numexp) is null then trim(a.numexp || # - # ||a.asunto) else (select trim(a.numexp || # - # ||d.asunto|| # - # ||a.asunto) from  dpcr_sol_conv_sub c, spac_expedientes d where c.numexp = a.numexp and c.numexp_padre = d.numexp) end from  spac_expedientes a where upper(a.nifciftitular) like upper(#%"+ nifCif +"%#) and a.numexp like #DPCR"+anio+"/%# and a.estadoadm in (#PR#,#RS#,#AP#,#NT#,#NE#,#JF#,#DC#,#DI#,#ES#,#EJ#,#CT#,#JP#,#VE#,#PENREI#) and a.fcierre is null and nombreprocedimiento not like #%BOP - Solicitud de inserción de anuncio%# and nombreprocedimiento not like #%Datos del Tercero y Gestión de Representantes%# and nombreprocedimiento not like #%Comunicación administrativa electrónica Registro (Carta digital)%#",entidad);	
+	String ficheroSolAyto = XmlCargaDatos.getDatosConsulta("Subsanacion", "select a.numexp, replace(replace(replace(case when (select trim(a.numexp || # - # ||d.asunto|| # - # ||a.asunto) from  dpcr_sol_conv_sub c, spac_expedientes d where c.numexp = a.numexp and c.numexp_padre = d.numexp) is null then trim(a.numexp || # - # ||a.asunto) else (select trim(a.numexp || # - # ||d.asunto|| # - # ||a.asunto) from  dpcr_sol_conv_sub c, spac_expedientes d where c.numexp = a.numexp and c.numexp_padre = d.numexp) end , '</br>', ' '), '<b>', ' '), '</b>', ' ') from  spac_expedientes a where trim(upper(a.nifciftitular)) = trim(upper(#"+ nifCif +"#)) and a.nifciftitular is not null and a.nifciftitular != ## and a.numexp like #%"+anio+"/%# and a.estadoadm in (#PR#,#RS#,#AP#,#NT#,#NE#,#JF#,#DC#,#DI#,#ES#,#EJ#,#CT#,#JP#,#VE#,#PENREI#) and a.fcierre is null and nombreprocedimiento not like #%BOP - Solicitud de inserción de anuncio%# and nombreprocedimiento not like #%Datos del Tercero y Gestión de Representantes%# and nombreprocedimiento not like #%Comunicación administrativa electrónica Registro (Carta digital)%#",entidad);	
 	Document dom;
 	DocumentBuilderFactory dbf;
 	DocumentBuilder db;
@@ -69,7 +69,7 @@ Recuperando datos de solicitudes anteriores.
 					%>						
 						op = opener.document.createElement('option');  
 						op.value = '<%=numexp%>'; 
-						op.text = '<%=asunto.replaceAll("[\n\r]","")%>'; 
+						op.text = '<%=asunto.replaceAll("[\n\r]","").replaceAll("\'","\\\\'")%>'; 
 						expedientes.add(op); 
 					<%
 				}

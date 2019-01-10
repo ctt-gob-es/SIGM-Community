@@ -147,6 +147,19 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			
+			<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.0.2</version>
+					<configuration>
+						<source>${jdk.version}</source>
+						<target>${jdk.version}</target>
+						<encoding>CP1252</encoding>
+						<fork>true</fork>
+						<executable>${JAVA_1_7_HOME}/bin/javac</executable>
+					</configuration>
+				</plugin>
 		</plugins>
 	</build>
 

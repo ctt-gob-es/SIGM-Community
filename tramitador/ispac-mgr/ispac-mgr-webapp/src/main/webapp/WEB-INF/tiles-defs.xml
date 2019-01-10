@@ -222,4 +222,10 @@
   	<put name="body" value="/ispac/common/manuales.jsp"/>
   </definition>  
   <!-- FIN [dipucr-Felipe #120] -->
+  
+  <!-- [eCenpri-Manu #281] - INICIO - Edición de plantillas desde el tramitador por usuarios -->
+  <definition name="seleccionarEditorArbol"  extends="ispac_simplelayout">
+  	<put name="body" value="/ispac/common/procedure/seleccionarEditorArbol.jsp"/>
+  </definition>
+  <!-- [eCenpri-Manu #281] - FIN - Edición de plantillas desde el tramitador por usuarios -->
 </tiles-definitions>

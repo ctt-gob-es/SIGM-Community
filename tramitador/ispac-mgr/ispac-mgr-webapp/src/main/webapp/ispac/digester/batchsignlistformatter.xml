@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<beanformatter defaultSort="2" pageSize="50" >
+<beanformatter defaultSort="2" pageSize="1000" >
 
 	<propertyfmt type="BeanPropertySimpleFmt" 
 				 property='SPAC_CTOS_FIRMA:ID' 

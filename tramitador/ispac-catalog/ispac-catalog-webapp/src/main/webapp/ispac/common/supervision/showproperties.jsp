@@ -272,7 +272,8 @@
 					$("#editPubConditions"),
 					$("#editPubRules"),
 					$("#editPubMilestones"),
-					$("#editPermissions")
+					$("#editPermissions"),
+					$("#editRepositorioComun")					
 				];
 
 				checkAdminPermission(false);
@@ -629,6 +630,24 @@
 													</div>
 												</div>
 											</div>
+											<%-- REPOSIOTORIO COMUN --%>
+											<c:if test="${RESPONSIBLE.user}">
+											<div class="onecol">
+												<h2><bean:message key="catalog.templateRepositorioComun.function.section.mgr"/></h2>
+												<div class="twocol">
+													<div class="column first">
+														<table>
+															<tr>
+																<td class="label" align="left">
+																	<bean:message key="catalog.templateRepositorioComun.manageRepositorioComun"/>
+																</td>
+																<td class="checkbox"><html:checkbox property="editRepositorioComun" /></td>																
+															</tr>
+														</table>
+													</div>
+												</div>
+											</div>
+											</c:if>
 										</html:form>
 									</td>
 								</tr>

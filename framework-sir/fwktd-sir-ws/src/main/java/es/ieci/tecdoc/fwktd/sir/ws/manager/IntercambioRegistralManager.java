@@ -298,6 +298,8 @@ public interface IntercambioRegistralManager {
 	 */
 	public void comprobarTimeOutEnvios();
 
+	public List<TrazabilidadDTO> getHistoricoAsientoRegistralCode(String entity, String code);
+
 //	/**
 //	 * Valida los anexos de un asiento registral.
 //	 *

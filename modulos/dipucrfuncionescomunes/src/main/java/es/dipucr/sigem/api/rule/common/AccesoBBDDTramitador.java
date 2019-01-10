@@ -17,7 +17,7 @@ import es.dipucr.sigem.registroTelematicoWeb.formulario.common.Dato;
 
 public class AccesoBBDDTramitador{
 	/** Logger de la clase. */
-	private static final Logger logger = Logger.getLogger(AccesoBBDDTramitador.class);
+	private static final Logger LOGGER = Logger.getLogger(AccesoBBDDTramitador.class);
 	
 	/** Nombre del origen de datos por defecto. */
 	private static final String DEFAULT_DATASOURCE_NAME = "java:comp/env/jdbc/tramitadorDS_";
@@ -68,10 +68,10 @@ public class AccesoBBDDTramitador{
 				listAyunt.add(ayto);
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
+			LOGGER.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
+			LOGGER.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
 			throw new ISPACException("Error en la búsqueda del asunto. " + e.getMessage(), e);
 		} finally {
 			if (dbQuery != null) {
@@ -96,10 +96,10 @@ public class AccesoBBDDTramitador{
 				asunto = dbQuery.getString("ASUNTO");
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
+			LOGGER.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
+			LOGGER.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
 			throw new ISPACException("Error en la búsqueda del asunto. " + e.getMessage(), e);
 		} finally {
 			if (dbQuery != null) {
@@ -155,10 +155,10 @@ public class AccesoBBDDTramitador{
 			}
 			
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
+			LOGGER.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
+			LOGGER.error("Error en la búsqueda del asunto. " + e.getMessage(), e);
 			throw new ISPACException("Error en la búsqueda del asunto. " + e.getMessage(), e);
 		} finally {
 			if (dbQuery != null) {
@@ -209,7 +209,7 @@ public class AccesoBBDDTramitador{
 		String valor = "";
 		String sustituto = "";
 		Vector listDatos = new Vector();
-		logger.info("consulta: SELECT VALOR, SUSTITUTO FROM "+nombreTabla+" ORDER BY " + orderColumn);
+		LOGGER.info("consulta: SELECT VALOR, SUSTITUTO FROM "+nombreTabla+" ORDER BY " + orderColumn);
 		try {			
 			cnt.getConnection();
 			dbQuery = cnt.executeDbQuery("SELECT VALOR, SUSTITUTO FROM "+nombreTabla+" ORDER BY " + orderColumn);
@@ -220,10 +220,10 @@ public class AccesoBBDDTramitador{
 				listDatos.add(ayto);
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda del asunto", e);
+			LOGGER.error("Error en la búsqueda del asunto", e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda del asunto", e);
+			LOGGER.error("Error en la búsqueda del asunto", e);
 			throw new ISPACException("Error en la búsqueda del asunto", e);
 		} finally {
 			if (dbQuery != null) {
@@ -257,10 +257,10 @@ public class AccesoBBDDTramitador{
 				listDatos.add(ayto);
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda del asunto", e);
+			LOGGER.error("Error en la búsqueda del asunto", e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda del asunto", e);
+			LOGGER.error("Error en la búsqueda del asunto", e);
 			throw new ISPACException("Error en la búsqueda del asunto", e);
 		} finally {
 			if (dbQuery != null) {
@@ -300,10 +300,10 @@ public class AccesoBBDDTramitador{
 				listDatos.add(ayto);
 			}
 		} catch (ISPACException e) {
-			logger.error("Error en la búsqueda del asunto", e);
+			LOGGER.error("Error en la búsqueda del asunto", e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error en la búsqueda del asunto", e);
+			LOGGER.error("Error en la búsqueda del asunto", e);
 			throw new ISPACException("Error en la búsqueda del asunto", e);
 		} finally {
 			if (dbQuery != null) {
@@ -333,10 +333,10 @@ public class AccesoBBDDTramitador{
 				result = dbQuery.getString(1);
 			}
 		} catch (ISPACException e) {
-			logger.error("Error al realizar la consulta " + consulta, e);
+			LOGGER.error("Error al realizar la consulta " + consulta, e);
 			throw e;
 		} catch (Exception e) {
-			logger.error("Error al realizar la consulta " + consulta, e);
+			LOGGER.error("Error al realizar la consulta " + consulta, e);
 			throw new ISPACException("Error al realizar la consulta " + consulta, e);
 		} finally {
 			if (dbQuery != null) {
@@ -357,7 +357,7 @@ public class AccesoBBDDTramitador{
 	public boolean borrarBloqueo(int tipoObjeto, int idObjeto) throws ISPACException{
 
 		DbCnt cnt = new DbCnt(dsName);
-		StringBuffer sbConsulta = new StringBuffer();
+		StringBuilder sbConsulta = new StringBuilder();
 
 		try {			
 			cnt.getConnection();
@@ -369,6 +369,7 @@ public class AccesoBBDDTramitador{
 			return cnt.execute(sbConsulta.toString());
 			
 		} catch (ISPACException e) {
+			LOGGER.error("Error al realizar la consulta " + sbConsulta.toString(), e);
 			throw e;
 		}
 		finally {

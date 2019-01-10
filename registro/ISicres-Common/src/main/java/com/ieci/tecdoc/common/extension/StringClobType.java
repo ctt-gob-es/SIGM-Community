@@ -1,5 +1,6 @@
 package com.ieci.tecdoc.common.extension;
 
+import java.beans.Encoder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -8,9 +9,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.UserType;
+
 import org.apache.commons.lang.StringUtils;
+
+import com.thoughtworks.xstream.converters.extended.EncodedByteArrayConverter;
+
+import es.dipucr.api.helper.UTFHelper;
 
 public class StringClobType implements UserType
 {
@@ -65,8 +72,10 @@ public class StringClobType implements UserType
     public void nullSafeSet(PreparedStatement st, Object value, int index)
         throws HibernateException, SQLException
     {
-        StringReader r = new StringReader( (String)value );
-        st.setCharacterStream( index, r, ((String)value).length() );
+    	String valueLatin9 = UTFHelper.parseUTF8ToISO885916((String)value);
+    	
+        StringReader r = new StringReader( valueLatin9 );
+        st.setCharacterStream( index, r, valueLatin9.length() );
     }
     
     public void nullSafeSet1(PreparedStatement st, Object value, int index)

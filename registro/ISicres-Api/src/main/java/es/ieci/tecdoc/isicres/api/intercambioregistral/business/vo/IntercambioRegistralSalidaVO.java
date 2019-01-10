@@ -38,6 +38,8 @@ public class IntercambioRegistralSalidaVO extends BaseIntercambioRegistralVO {
 	protected List<EstadoIntercambioRegistralSalidaVO> estadosIntercambioRegistralSalida;
 
 	protected String username;
+	
+	protected String usercontact;
 
 	/**
 	 * Codigo de entidad al que ha sido enviado el intercambio
@@ -258,6 +260,14 @@ public class IntercambioRegistralSalidaVO extends BaseIntercambioRegistralVO {
 
 	public void setComentarios(String comentarios) {
 		this.comentarios = comentarios;
+	}
+
+	public String getUsercontact() {
+	    return usercontact;
+	}
+
+	public void setUsercontact(String usercontact) {
+	    this.usercontact = usercontact;
 	}
 
 }

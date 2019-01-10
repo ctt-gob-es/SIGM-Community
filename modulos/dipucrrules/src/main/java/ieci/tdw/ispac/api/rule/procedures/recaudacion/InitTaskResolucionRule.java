@@ -29,10 +29,10 @@ import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 
 public class InitTaskResolucionRule implements IRule {
 
-	private static final Logger logger = Logger.getLogger(InitTaskResolucionRule.class);
+	private static final Logger LOGGER = Logger.getLogger(InitTaskResolucionRule.class);
 
-	protected String STR_queryDocumentos = "";
-	protected String STR_entidad = "";
+	protected String strQueryDocumentos = "";
+	protected String strEntidad = "";
 	
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException{
         return true;
@@ -43,11 +43,9 @@ public class InitTaskResolucionRule implements IRule {
     }
 
     @SuppressWarnings("rawtypes")
-	public Object execute(IRuleContext rulectx) throws ISPACRuleException
-    {
+	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
     	String numexp = "";
-    	try
-    	{
+    	try	{
 			//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
@@ -58,16 +56,13 @@ public class InitTaskResolucionRule implements IRule {
 	        //Actualiza el campo estado de la entidad
 	        //de modo que permita mostrar los enlaces para crear Propuesta/Decreto
 	        numexp = rulectx.getNumExp();
-	        IItemCollection col = entitiesAPI.getEntities(STR_entidad, numexp);
+	        IItemCollection col = entitiesAPI.getEntities(strEntidad, numexp);
 	        Iterator it = col.iterator();
 	        IItem entidad = null;
-	        if (it.hasNext())
-	        {
+	        if (it.hasNext()) {
 		        entidad = (IItem)it.next();
-	        }
-	        else
-	        {
-	        	entidad = entitiesAPI.createEntity(STR_entidad, numexp);
+	        } else {
+	        	entidad = entitiesAPI.createEntity(strEntidad, numexp);
 	        }
 	        entidad.set("ESTADO", "Inicio");
 	        entidad.store(cct);
@@ -78,7 +73,7 @@ public class InitTaskResolucionRule implements IRule {
 	        //Obtenemos los documentos a partir de su nombre
 			ArrayList<IItem> filesConcatenate = new ArrayList<IItem>();
 
-			IItemCollection documentsCollection = entitiesAPI.getDocuments(numexp, STR_queryDocumentos, "FDOC DESC");
+			IItemCollection documentsCollection = entitiesAPI.getDocuments(numexp, strQueryDocumentos, "FDOC DESC");
 	        it = documentsCollection.iterator();
 	        IItem itemDoc = null;
 	        while (it.hasNext()){
@@ -103,19 +98,21 @@ public class InitTaskResolucionRule implements IRule {
 			cct.beginTX();
 			DocumentosUtil.generaYAnexaDocumento(rulectx, idTypeDocument, sName, zipFile, sExtension);
 			cct.endTX(true);
-			if(zipFile != null && zipFile.exists()) zipFile.delete();
-        }
-    	catch(ISPACRuleException e){
-    		logger.error("Error al iniciar el trámite de resolución del expediente " + numexp + ". " + e.getMessage(), e);
+			if(zipFile != null && zipFile.exists()) {
+				zipFile.delete();				
+			}
+        } catch(ISPACRuleException e){
+    		LOGGER.error("Error al iniciar el trámite de resolución del expediente " + numexp + ". " + e.getMessage(), e);
         	throw new ISPACRuleException("Error al iniciar el trámite de resolución del expediente " + numexp + ". " + e.getMessage(), e);
         } catch (ISPACException e) {
-    		logger.error("Error al iniciar el trámite de resolución del expediente " + numexp + ". " + e.getMessage(), e);
+    		LOGGER.error("Error al iniciar el trámite de resolución del expediente " + numexp + ". " + e.getMessage(), e);
         	throw new ISPACRuleException("Error al iniciar el trámite de resolución del expediente " + numexp + ". " + e.getMessage(), e);
 		}
-    	return new Boolean(true);
+    	return true;
     }
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException{
+		// No es necesario
     }
 	
 	/**
@@ -150,6 +147,7 @@ public class InitTaskResolucionRule implements IRule {
 				// Finalizar el zip
 				out.close();
 			} catch (IOException e) {
+				LOGGER.info("Error al generar el zip", e);
 			}
 		}
 
@@ -181,7 +179,8 @@ public class InitTaskResolucionRule implements IRule {
 				}
 			}
 		} catch (IOException e) {
-		}finally {
+			LOGGER.info("Error al generar el zip", e);
+		} finally {
 			if (connectorSession != null) {
 				genDocAPI.closeConnectorSession(connectorSession);
 			}
@@ -189,7 +188,7 @@ public class InitTaskResolucionRule implements IRule {
 	}
 	
 	private static String getDocumentName(IItem doc) throws ISPACException {
-		StringBuffer fullName = new StringBuffer();
+		StringBuilder fullName = new StringBuilder();
 		
 		// Número de expediente
 		String numExp = doc.getString("NUMEXP");
@@ -200,7 +199,7 @@ public class InitTaskResolucionRule implements IRule {
 		if (StringUtils.isBlank(name)) {
 			name = doc.getString("NOMBRE");
 			if (StringUtils.isBlank(name)) {
-				name = new StringBuffer("unknown_").append(doc.getString("ID"))
+				name = new StringBuilder("unknown_").append(doc.getString("ID"))
 						.toString();
 			}
 		}

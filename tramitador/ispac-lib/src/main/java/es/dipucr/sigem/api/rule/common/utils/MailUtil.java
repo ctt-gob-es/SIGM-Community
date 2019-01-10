@@ -136,7 +136,7 @@ public class MailUtil {
 		}
 		else{
 			try{
-				resultado = enviarCorreo(rulectx, "", emailNotif, asunto, contenido, attachment, embebed);
+				resultado = enviarCorreo(rulectx.getClientContext(), "", emailNotif, asunto, contenido, attachment, embebed);
 				enviadoEmail = true;
 				dFechaEnvio = new Date();
 				DipucrCommonFunctions.insertarAcuseEmail(nombreAcuse ,dFechaEnvio, nombreAttachment, nombreAttachment, enviadoEmail,
@@ -353,6 +353,7 @@ public class MailUtil {
 			throws ISPACException{
 		enviarCorreoVarios(rulectx, strTo, strAsunto, strContenido, bAnadirCita, null, embebed);
 	}
+	
 
 	public static void enviarCorreoVarios(IRuleContext rulectx, String strTo, 
 			String strAsunto, String strContenido, boolean bAnadirCita, File docAnexo, List<Object[]> embebed)
@@ -374,11 +375,29 @@ public class MailUtil {
 					strContenido, docAnexo, (docAnexo == null ? "" : docAnexo.getName()), destinatario, bAnadirCita);
 			}
 			else{
-				resultado = enviarCorreo(rulectx, "", destinatario, strAsunto, strContenido, docAnexo, embebed);
+				resultado = enviarCorreo(rulectx.getClientContext(), "", destinatario, strAsunto, strContenido, docAnexo, embebed);
 				enviadoEmail = true;
 				dFechaEnvio = new Date();
-				DipucrCommonFunctions.insertarAcuseEmail(destinatario ,dFechaEnvio, "", "", enviadoEmail, destinatario, descripError, rulectx);
+				if (null != docAnexo){
+					DipucrCommonFunctions.insertarAcuseEmail(destinatario, dFechaEnvio, docAnexo.getName(), docAnexo.getName(), enviadoEmail, destinatario, descripError, rulectx);
+				}
+				else{
+					DipucrCommonFunctions.insertarAcuseEmail(destinatario, dFechaEnvio, "", "", enviadoEmail, destinatario, descripError, rulectx);
+				}
 			}
+		}
+	}
+	
+	public static void enviarCorreoVarios(ClientContext cct, String strTo, 
+			String strAsunto, String strContenido, boolean bAnadirCita, File docAnexo, List<Object[]> embebed)
+			throws ISPACException{
+		
+		String[] arrTo = separarDestinatarios(strTo);
+		
+		String destinatario = null;
+		for (int i = 0; i < arrTo.length; i++){
+			destinatario = arrTo[i];
+			enviarCorreo(cct, "", destinatario, strAsunto, strContenido, docAnexo, embebed);
 		}
 	}
 	
@@ -391,14 +410,12 @@ public class MailUtil {
 	 * @param strContenido Contenido del mail
 	 * @throws ISPACException
 	 */
-	public static void enviarCorreo(IRuleContext rulectx, String strTo, String strAsunto, String strContenido) throws ISPACException
-	{
-		enviarCorreo(rulectx, strTo, strAsunto, strContenido, null, null);
+	public static void enviarCorreo(IClientContext cct, String strTo, String strAsunto, String strContenido) throws ISPACException {
+		enviarCorreo(cct, strTo, strAsunto, strContenido, null, null);
 	}
 	
-	public static void enviarCorreo(IRuleContext rulectx, String strTo, String strAsunto, String strContenido, List<Object[]> embebed) throws ISPACException
-	{		
-		enviarCorreo(rulectx, strTo, strAsunto, strContenido, null, embebed);		
+	public static void enviarCorreo(IClientContext cct, String strTo, String strAsunto, String strContenido, List<Object[]> embebed) throws ISPACException {		
+		enviarCorreo(cct, strTo, strAsunto, strContenido, null, embebed);		
 	}
 	/**
 	 * Envía un correo al destinatario especificado con un fichero adjunto
@@ -412,17 +429,17 @@ public class MailUtil {
 	 */
 	public static void enviarCorreo(IRuleContext rulectx, String strTo, String strAsunto, String strContenido, File attachment) throws ISPACException 
 	{
-		enviarCorreo(rulectx, strTo, strAsunto, strContenido, attachment, null);
+		enviarCorreo(rulectx.getClientContext(), strTo, strAsunto, strContenido, attachment, null);
 	}
 	
-	public static void enviarCorreo(IRuleContext rulectx, String strTo, String strAsunto, String strContenido, File attachment, List<Object[]> embebed) throws ISPACException{
-		enviarCorreo(rulectx, "", strTo, strAsunto, strContenido, attachment, embebed);
+	public static void enviarCorreo(IClientContext cct, String strTo, String strAsunto, String strContenido, File attachment, List<Object[]> embebed) throws ISPACException{
+		enviarCorreo(cct, "", strTo, strAsunto, strContenido, attachment, embebed);
 	}
-	public static String[] enviarCorreo(IRuleContext rulectx, String from, String strTo, String strAsunto, String strContenido, File attachment, List<Object[]> embebed) throws ISPACException{
+	public static String[] enviarCorreo(IClientContext cct, String from, String strTo, String strAsunto, String strContenido, File attachment, List<Object[]> embebed) throws ISPACException{
 		try{
 			String dir[] = null;
 			
-			CorreoConfiguration correoConfig = CorreoConfiguration.getInstance(rulectx.getClientContext());
+			CorreoConfiguration correoConfig = CorreoConfiguration.getInstance(cct);
 			
 			String strHost = correoConfig.get(CorreoConfiguration.HOST_MAIL);
 			String strPort = correoConfig.get(CorreoConfiguration.PORT_MAIL);
@@ -431,19 +448,19 @@ public class MailUtil {
 //			String strFrom = Messages.getString("cDecr_From"); //[eCenpri-Felipe #306]
 			String strFrom = from;
 			if(StringUtils.isEmpty(strFrom))
-				strFrom = ConfigurationMgr.getVarGlobal(rulectx.getClientContext(), EMAIL_FROM_VAR_NAME);
+				strFrom = ConfigurationMgr.getVarGlobal(cct, EMAIL_FROM_VAR_NAME);
 			//MQE Fin modificaciones No responder
 			
         	String strUser = correoConfig.get(CorreoConfiguration.USR_MAIL);
         	String strPwd = correoConfig.get(CorreoConfiguration.PWD_MAIL);
 
         	//MQE ticket #817 Añadir información de no responder
-        	String notasNoResponder = ConfigurationMgr.getVarGlobal(rulectx.getClientContext(), NOTA_NO_RESPONDER);
+        	String notasNoResponder = ConfigurationMgr.getVarGlobal(cct, NOTA_NO_RESPONDER);
 //			strContenido = strContenido +  "</br></br>"+notasNoResponder; //[eCenpri-Felipe #817] Eliminar los br del mensaje, añadirlos a la constante
         	strContenido += notasNoResponder;
 			//MQE Fin modificaciones no responder
         	
-        	strContenido = MailUtil.anadePieEmail(rulectx.getClientContext(), strContenido);
+        	strContenido = MailUtil.anadePieEmail(cct, strContenido);
         	       	
 			// Configurar correo
 			Correo oCorreo = new Correo(strHost, Integer.parseInt(strPort), strUser, strPwd);
@@ -471,7 +488,86 @@ public class MailUtil {
 						error = error + '\r' + dir[nI];
 					}
 					throw new ISPACRuleException(error);
-				}				
+				}
+			} 
+			else{
+				String cTexto = 
+					"No es posible enviar el correo electrónico a '" + strTo + "'" +
+					"Por favor, póngase en contacto con el administrador del sistema";
+				throw new ISPACInfo(cTexto);
+			}
+			return dir;
+		}
+		catch(SendFailedException e){
+			String descripError = "Error en el envío a '" + strTo + "'. " + e.getMessage();
+			throw new ISPACException(descripError, e);
+
+		}
+		catch(AddressException e){
+			String descripError = "Error en la dirección de correo '" + strTo + "'. " + e.getMessage();
+        	throw new ISPACException(descripError ,e);
+		}
+		catch(Exception e) {
+        	if (e instanceof ISPACRuleException)
+			    throw new ISPACRuleException(e);
+        	throw new ISPACRuleException("Error al enviar el correo electrónico a '" + strTo + "'. " + e.getMessage(), e);
+        }
+	}
+	
+	public static String[] enviarCorreo(ClientContext cct, String from, String strTo, String strAsunto, String strContenido, File attachment, List<Object[]> embebed) throws ISPACException{
+		try{
+			String dir[] = null;
+			
+			CorreoConfiguration correoConfig = CorreoConfiguration.getInstance(cct);
+			
+			String strHost = correoConfig.get(CorreoConfiguration.HOST_MAIL);
+			String strPort = correoConfig.get(CorreoConfiguration.PORT_MAIL);
+
+			//MQE ticket #817 Añadir información de no responder
+//			String strFrom = Messages.getString("cDecr_From"); //[eCenpri-Felipe #306]
+			String strFrom = from;
+			if(StringUtils.isEmpty(strFrom))
+				strFrom = ConfigurationMgr.getVarGlobal(cct, EMAIL_FROM_VAR_NAME);
+			//MQE Fin modificaciones No responder
+			
+        	String strUser = correoConfig.get(CorreoConfiguration.USR_MAIL);
+        	String strPwd = correoConfig.get(CorreoConfiguration.PWD_MAIL);
+
+        	//MQE ticket #817 Añadir información de no responder
+        	String notasNoResponder = ConfigurationMgr.getVarGlobal(cct, NOTA_NO_RESPONDER);
+//			strContenido = strContenido +  "</br></br>"+notasNoResponder; //[eCenpri-Felipe #817] Eliminar los br del mensaje, añadirlos a la constante
+        	strContenido += notasNoResponder;
+			//MQE Fin modificaciones no responder
+        	
+        	strContenido = MailUtil.anadePieEmail(cct, strContenido);
+        	       	
+			// Configurar correo
+			Correo oCorreo = new Correo(strHost, Integer.parseInt(strPort), strUser, strPwd);
+			oCorreo.ponerTo(0, strTo);
+			if (strFrom != null && !strFrom.equals("")){
+				oCorreo.ponerFrom(strFrom);
+				oCorreo.ponerAsunto(strAsunto);
+				oCorreo.ponerContenido(strContenido, true);
+				// Adjuntar fichero al email
+				if (null != attachment){
+					oCorreo.adjuntar(attachment.getParent(), true, attachment.getName());
+				}
+				
+				if(embebed != null){
+					for(Object[] archivo : embebed){
+						oCorreo.embeber((String)archivo[0], (Boolean)archivo[1], (String)archivo[2], (String)archivo[3]);
+					}
+					
+				}
+				// Enviar email
+				dir = oCorreo.enviar();
+				String error = "";
+				if (dir != null){
+					for (int nI = 0; nI < dir.length; nI++){
+						error = error + '\r' + dir[nI];
+					}
+					throw new ISPACRuleException(error);
+				}
 			} 
 			else{
 				String cTexto = 
@@ -531,6 +627,7 @@ public class MailUtil {
 			(IRuleContext rulectx, IItem signStep, String spacVarAsunto, String spacVarContent, Map<String,String> variables)
 			throws ISPACException, SigemException
 	{
+		logger.warn(signStep.getString("ID_CIRCUITO") + "; " + signStep.getString("NOMBRE_FIRMANTE") + "; " + signStep.getString("DIR_NOTIF"));
 		String strTipoNotif = signStep.getString("TIPO_NOTIF");
 		String strDirNotif = signStep.getString("DIR_NOTIF");
 		
@@ -822,6 +919,27 @@ public class MailUtil {
 		
 		return contenido;
 		
+	}
+	
+	/**
+	 * Envío de correos para tareas de monitoriación/demonios
+	 * @param rulectx
+	 * @param strTo
+	 * @param strAsunto
+	 * @param strContenido
+	 * @throws Exception 
+	 */
+	public static void enviarCorreoInfoTask(IClientContext ctx, String strTo, String strAsunto, String strContenido)
+			throws Exception{
+		
+		String from = ConfigurationMgr.getVarGlobal(ctx, EMAIL_FROM_VAR_NAME);
+		
+		String notasNoResponder = ConfigurationMgr.getVarGlobal(ctx, NOTA_NO_RESPONDER_TEXTO_PLANO);
+		strContenido += notasNoResponder;
+		
+		ServicioMensajesCortos svc = LocalizadorServicios.getServicioMensajesCortos();
+		String[] arrTo = separarDestinatarios(strTo);
+		svc.sendMail(from, arrTo, null, null, strAsunto, strContenido, null);
 	}
 	
 }

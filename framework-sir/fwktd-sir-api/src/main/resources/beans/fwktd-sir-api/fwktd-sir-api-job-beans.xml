@@ -11,9 +11,6 @@
 		<property name="jobClass" value="es.ieci.tecdoc.fwktd.sir.api.job.RecepcionFicherosJob" />
 		<property name="jobDataAsMap">
 			<map>
-				<entry key="servicioIntercambioRegistral">
-					<ref bean="fwktd_sir_servicioIntercambioRegistralImpl" />
-				</entry>
 			</map>
 		</property>
 	</bean>
@@ -24,9 +21,6 @@
 		<property name="jobClass" value="es.ieci.tecdoc.fwktd.sir.api.job.ComprobarTimeOutEnviosJob" />
 		<property name="jobDataAsMap">
 			<map>
-				<entry key="servicioIntercambioRegistral">
-					<ref bean="fwktd_sir_servicioIntercambioRegistralImpl" />
-				</entry>
 			</map>
 		</property>
 	</bean>
@@ -37,10 +31,6 @@
 		<property name="jobClass" value="es.ieci.tecdoc.fwktd.sir.api.job.EliminarAsientosPorEstadosJob" />
 		<property name="jobDataAsMap">
 			<map>
-				<entry key="servicioIntercambioRegistral">
-					<ref bean="fwktd_sir_servicioIntercambioRegistralImpl" />
-				</entry>
-
 				<!--
 					Estados en EstadoAsientoRegistralEnum:
 						PENDIENTE_ENVIO 	= 0;

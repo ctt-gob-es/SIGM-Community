@@ -32,6 +32,7 @@ private static final Logger logger = Logger.getLogger(GenerateNotificacion.class
 	 * **/
 	@SuppressWarnings("unchecked")
 	public static boolean GenerarNotificaciones(IRuleContext rulectx, String STR_Relacion, String DocNotifTexto, String DocNotif) throws ISPACRuleException {
+		String numExp = "";
 		try{
 			logger.info("GenerateNotificacion - Init");
 		
@@ -40,6 +41,7 @@ private static final Logger logger = Logger.getLogger(GenerateNotificacion.class
 			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
 			IGenDocAPI gendocAPI = cct.getAPI().getGenDocAPI();
 			IProcedureAPI procedureAPI = cct.getAPI().getProcedureAPI();
+			String extensionEntidad = DocumentosUtil.obtenerExtensionDocPorEntidad();
 			
 			// Variables
 			IItem entityDocument = null;
@@ -50,7 +52,7 @@ private static final Logger logger = Logger.getLogger(GenerateNotificacion.class
 			IItem processTask =  entitiesAPI.getTask(rulectx.getTaskId());
 			int idTramCtl = processTask.getInt("ID_TRAM_CTL");
 			
-			String numExp = rulectx.getNumExp();
+			numExp = rulectx.getNumExp();
 			String nombre = "";
 	    	String dirnot = "";
 	    	String c_postal = "";
@@ -178,15 +180,13 @@ private static final Logger logger = Logger.getLogger(GenerateNotificacion.class
 										String  infoPag =getInfoDoc(rulectx, DocNotifTexto);
 										//Plantilla de Notificaciones
 										
-										String sFileTemplate = DocumentosUtil.getFile(cct, infoPag, null, null).getName();
+										String sFileTemplate = DocumentosUtil.getFile(cct, infoPag, null, extensionEntidad).getName();
 										
 										// Generar el documento a partir la plantilla "Notificación Decreto"
 										IItem entityTemplate = gendocAPI.attachTaskTemplate(connectorSession, taskId, documentId, templateId, sFileTemplate);
 										//IItem entityTemplate = gendocAPI.attachTaskTemplate(gendocAPI,connectorSession, taskId, documentId, templateId, sFileTemplate, infoPag);										
 										// Referencia al fichero del documento en el gestor documental
-										String docref = entityTemplate.getString("INFOPAG");
-										String sMimetype = gendocAPI.getMimeType(connectorSession, docref);
-										entityTemplate.set("EXTENSION", MimetypeMapping.getExtension(sMimetype));
+										entityTemplate.set("EXTENSION", extensionEntidad);
 										String templateDescripcion = entityTemplate.getString("DESCRIPCION");
 										templateDescripcion = templateDescripcion + " - " + cct.getSsVariable("NOMBRE");
 										entityTemplate.set("DESCRIPCION", templateDescripcion);
@@ -212,7 +212,7 @@ private static final Logger logger = Logger.getLogger(GenerateNotificacion.class
 										
 										DocumentosUtil.deleteFile(sFileTemplate);
 							        }
-								}catch (Throwable e) {
+								}catch (Exception e) {
 									
 									// Si se produce algún error se hace rollback de la transacción
 									cct.endTX(false);
@@ -249,16 +249,16 @@ private static final Logger logger = Logger.getLogger(GenerateNotificacion.class
 	        		}
 	        	}
         		else{
-        			throw new ISPACInfo("No existe el tipo de documento Notificación Decreto.");
+        			throw new ISPACInfo("No existe el tipo de documento " + DocNotif + " para el expediente " + numExp + ".");
         		}			
     		}
 		}
 		return new Boolean(true);
 		}catch(Exception e) {
-			logger.error("No existe el tipo de documento Notificación Decreto. " + e.getMessage(), e);
+			logger.error("Error al generar el documento: " + DocNotifTexto + ", en el expediente: " + numExp + ", con tipo de documento: " + DocNotif + ". " + e.getMessage(), e);
 	    	if (e instanceof ISPACRuleException)
 			    throw new ISPACRuleException(e);
-	    	throw new ISPACRuleException("No existe el tipo de documento Notificación Decreto. " + e.getMessage(), e);
+	    	throw new ISPACRuleException("Error al generar el documento: " + DocNotifTexto + ", en el expediente: " + numExp + ", con tipo de documento: " + DocNotif + ". " + e.getMessage(), e);
 	    }
 	}
 	

@@ -33,6 +33,11 @@ public final class EstadoIntercambioRegistralSalidaEnumVO extends ValuedEnum {
 
 	  public static final int ANULADO_VALUE = EstadoAsientoRegistralEnum.ANULADO.getValue();
 
+	  public static final int VALIDADO_VALUE = EstadoAsientoRegistralEnum.VALIDADO.getValue();
+	  
+	  public static final int REENVIADO_VALUE = EstadoAsientoRegistralEnum.REENVIADO.getValue();
+	  
+	  public static final int RECTIFICADO_VALUE = 999;
 
 	  private static final java.lang.String PENDIENTE_ENVIO_STRING = "Pendiente de envío";
 
@@ -46,14 +51,21 @@ public final class EstadoIntercambioRegistralSalidaEnumVO extends ValuedEnum {
 	  
 	  private static final java.lang.String ANULADO_STRING = "Anulado";
 	  
+	  private static final java.lang.String VALIDADO_STRING = "Validado";
 	 
+	  private static final java.lang.String REENVIADO_STRING = "Reenviado";
 	
+	  private static final java.lang.String RECTIFICADO_STRING = "Rectificado";
+	  
 	  public static final EstadoIntercambioRegistralSalidaEnumVO  PENDIENTE  = new EstadoIntercambioRegistralSalidaEnumVO( PENDIENTE_ENVIO_STRING, PENDIENTE_ENVIO_VALUE );
 	   public static final EstadoIntercambioRegistralSalidaEnumVO  ENVIADO  = new EstadoIntercambioRegistralSalidaEnumVO( ENVIADO_STRING, ENVIADO_VALUE );
 	   public static final EstadoIntercambioRegistralSalidaEnumVO  ENVIADO_ERROR  = new EstadoIntercambioRegistralSalidaEnumVO(ENVIADO_Y_ERROR_STRING, ENVIADO_Y_ERROR_VALUE );
 	   public static final EstadoIntercambioRegistralSalidaEnumVO  ANULADO  = new EstadoIntercambioRegistralSalidaEnumVO( ANULADO_STRING, ANULADO_VALUE );
 	   public static final EstadoIntercambioRegistralSalidaEnumVO  ACEPTADO = new EstadoIntercambioRegistralSalidaEnumVO( ACEPTADO_STRING, ACEPTADO_VALUE);
 	   public static final EstadoIntercambioRegistralSalidaEnumVO  DEVUELTO = new EstadoIntercambioRegistralSalidaEnumVO( DEVUELTO_STRING, DEVUELTO_VALUE);	   
+	   public static final EstadoIntercambioRegistralSalidaEnumVO  VALIDADO = new EstadoIntercambioRegistralSalidaEnumVO( VALIDADO_STRING, VALIDADO_VALUE);	   
+	   public static final EstadoIntercambioRegistralSalidaEnumVO  REENVIADO = new EstadoIntercambioRegistralSalidaEnumVO( REENVIADO_STRING, REENVIADO_VALUE);	   
+	   public static final EstadoIntercambioRegistralSalidaEnumVO  RECTIFICADO = new EstadoIntercambioRegistralSalidaEnumVO( RECTIFICADO_STRING, RECTIFICADO_VALUE);	   
 	   
 	   private EstadoIntercambioRegistralSalidaEnumVO(String name, int value) {
 	     super( name, value );

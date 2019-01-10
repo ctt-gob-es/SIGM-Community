@@ -865,7 +865,8 @@ public class Registro {
         			organization.setAcronym(rs.getString("ACRON"));
         			organization.setCreationDate(TypeConverter.toCalendar(rs.getDate("CREATION_DATE")));
         			organization.setDisabledDate(TypeConverter.toCalendar(rs.getDate("DISABLE_DATE")));
-                }
+        			organization.setCif(rs.getString("CIF"));
+        		}
             } 
         } catch (Exception e) {
         	logger.error("Error al obtener la organización por código [" + code + "]", e);

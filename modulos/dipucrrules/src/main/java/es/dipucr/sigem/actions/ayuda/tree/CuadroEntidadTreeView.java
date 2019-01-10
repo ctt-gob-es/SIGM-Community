@@ -11,6 +11,7 @@ import java.util.List;
 public class CuadroEntidadTreeView extends TreeView implements TreeModelListener {
  
 	public static final String NOMBRE_ATRIBUTO_TIPO_ELEMENTO = "TIPO_ELEMENTO";
+	public static final String ES_PLANTILLA_ESPECIFICA = "ES_PLANTILLA_ESPECIFICA";
 	   public static final String NOMBRE_CUADRO_TREE_VIEW = null;
 	   
 	   public CuadroEntidadTreeView(TreeModel model, String language) {
@@ -21,9 +22,8 @@ public class CuadroEntidadTreeView extends TreeView implements TreeModelListener
 	      TreeNode nuevoNodo = super.insertNode(parent,modelItem);
 	      //el tipo de elemento se usa para en el script que pinta los iconos
 	      ElementoCuadro elem = (ElementoCuadro) modelItem; 
-	      nuevoNodo.setNodeAtribute(
-                  NOMBRE_ATRIBUTO_TIPO_ELEMENTO, 
-                  String.valueOf(elem.getType()));
+	      nuevoNodo.setNodeAtribute(NOMBRE_ATRIBUTO_TIPO_ELEMENTO,String.valueOf(elem.getType()));      
+	      nuevoNodo.setNodeAtribute( ES_PLANTILLA_ESPECIFICA, String.valueOf(elem.isEsEspecific()));
 	      
 //	      // Selección del tipo de nodo
 //	      ElementoCuadro elem = (ElementoCuadro) modelItem; 

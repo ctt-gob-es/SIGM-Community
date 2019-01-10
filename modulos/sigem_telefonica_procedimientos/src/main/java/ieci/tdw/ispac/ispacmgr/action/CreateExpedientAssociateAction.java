@@ -16,6 +16,7 @@ import ieci.tdw.ispac.api.item.IStage;
 import ieci.tdw.ispac.api.item.ITask;
 import ieci.tdw.ispac.api.rule.EventManager;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PProcedimientoDAO;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
@@ -38,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,289 +53,276 @@ import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class CreateExpedientAssociateAction extends BaseAction{
-
-	/** Nombre del fichero de recursos. */
-	private static final String BUNDLE_NAME = "ieci.tdw.ispac.ispacmgr.resources.ApplicationResources";
-
-	/** Recursos. */
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-
-	/** Logger de la clase. */
-	private static final Logger logger = Logger.getLogger(CreateExpedientAssociateAction.class);
-
-	private String resp;
-
-	public ActionForward executeAction(ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest request,
-			HttpServletResponse response,
-			SessionAPI session) throws Exception {
-
-		IInvesflowAPI invesflowAPI = session.getAPI();
-		IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
-		ITXTransaction tx = invesflowAPI.getTransactionAPI();
-		ClientContext cct = session.getClientContext();
-
-		//Se obtiene el estado de tramitación(informacion de contexto del usuario)
-		IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(cct);
-		IState currentstate = managerAPI.currentState(getStateticket(request));
-
-		//Nombre del procedimiento origen
-		String strProcPadre = request.getParameter("procPadre");
-		logger.debug("Procedimiento Padre: "+strProcPadre);
-		//Nombre del procedimiento a crear (Decreto o Propuesta)
-		String strProcHijo = request.getParameter("procHijo");
-		logger.debug("Procedimiento Hijo: "+strProcHijo);	
-		//Nombre de la regla a ejecutar
-		String strRuleName = request.getParameter("rule");
-		logger.debug("Regla a ejecutar: "+strRuleName);
-		//Identificador del trámite actual
-		String nIdTask = request.getParameter("taskId");
-		logger.debug("Trámite actual: "+nIdTask);
-		
-		
-		
-		if(strProcPadre != null && strProcHijo!= null){
-
-			ITask task = null;
-			task = invesflowAPI.getTask(Integer.parseInt(nIdTask));
-			int nidstage = task.getInt("ID_FASE_EXP");
-
-			//Obtenemos en stage el registro de la tabla spac_fases
-			IStage stage = null;
-			stage = invesflowAPI.getStage(nidstage);
-
-			String numExp = stage.getString("NUMEXP");
-			
-			//Obtengo a que grupo pertenece de propuestas o de decretos.
-			String procHijoPertenece = obtenerProcedimientoPertenece(numExp, strProcHijo, entitiesAPI, nidstage, nIdTask, cct);
-			
-			//String relacion=getString("procedimiento."+strProcHijo+".asociado.relacion."+strProcPadre);
-			String relacion=getString("procedimiento."+procHijoPertenece+".asociado.relacion."+strProcPadre);
-
-			//IItemCollection col = getProcedure(cct, strProcHijo);
-			IItemCollection col = getProcedure(cct, procHijoPertenece);
-			
-			Iterator it = col.iterator();
-			if(!it.hasNext()){
-				throw new ISPACInfo("No tiene permisos para iniciar el expediente asociado.");
-			}
-			IItem item = null;
-			int idProcedure = 0;
-			while (it.hasNext()){
-				item = ((IItem)it.next());
-				idProcedure = item.getInt("ID");
-			}
-
-			// Obtener el código de procedimiento para el número de expediente
-			IItem ctProcedure = entitiesAPI.getEntity(SpacEntities.SPAC_CT_PROCEDIMIENTOS, idProcedure);
-			Map params = new HashMap();
-			params.put("COD_PCD", ctProcedure.getString("COD_PCD"));
-
-			// Crear el proceso del expediente
-			int nIdProcess2 = tx.createProcess(idProcedure, params);
-			IProcess process = invesflowAPI.getProcess(nIdProcess2);
-			String numExpHijo = process.getString("NUMEXP");
-
-			IItem registro = entitiesAPI.createEntity(SpacEntities.SPAC_EXP_RELACIONADOS);
-
-			registro.set("NUMEXP_PADRE", numExp);
-			registro.set("NUMEXP_HIJO", numExpHijo);
-			registro.set("RELACION", relacion);
-
-			registro.store(cct);
+    
+    /** Logger de la clase. */
+    private static final Logger LOGGER = Logger.getLogger(CreateExpedientAssociateAction.class);
 
 
-			//Ejecutar la regla asociada
-			if (strRuleName != null){
-				logger.debug("Buscando regla '"+strRuleName+"'");
-				
-				IItemCollection reglas = invesflowAPI.getCatalogAPI().getCTRules(strRuleName);
-				it = reglas.iterator();
-				if (it.hasNext())
-				{
-					IItem regla = (IItem)it.next();
-					int ruleId = regla.getInt("ID");
-					logger.debug("Regla número: "+ruleId);
-					logger.warn("task id. "+nIdTask);
-					cct.setSsVariable("taskId", nIdTask);
-					EventManager eventmgr = new EventManager(cct);
-					eventmgr.newContext();
-					eventmgr.getRuleContextBuilder().addContext(process);
-					eventmgr.processRule(ruleId);
-				}
-			}
+    /** Nombre del fichero de recursos. */
+    private static final String BUNDLE_NAME = "ieci.tdw.ispac.ispacmgr.resources.ApplicationResources";
 
-		}else{
-			logger.error("El nombre del procedimiento padre o del procedimiento hijo es nulo");
-		}
-		//return NextActivity.afterStartProcess(request, nIdProcess2, invesflowAPI, mapping);
-		//return  mapping.findForward("success");
-		return NextActivity.refresh(currentstate, mapping);
-	}
-	
-	private String obtenerProcedimientoPertenece(String numExp,
-			String strProcHijo, IEntitiesAPI entitiesAPI, int nidstage, String idTask, ClientContext cct) throws ISPACException {
-		String srProcHijo = "";
-		
-		if(strProcHijo.equals(Constants.SUBVENCIONES.PROCHIJODECRETO)){
-			//Obtengo la persona que ha iniciado el trámite, para ello de la tabla spac_dt_documentos
-			// selecciono el documento que hace referencia al tramite aprobacion
-			// y cojo la columna autor.
-			String STR_queryDocumentos = "ID_FASE="+nidstage+" AND ID_TRAMITE="+idTask+"";
-			IItemCollection documentsCollection = entitiesAPI.getDocuments(numExp, STR_queryDocumentos, "FDOC DESC");
-	        Iterator it = documentsCollection.iterator();
-	        IItem itemDoc = null;
-	        String nombreAutor = "";
-	        int idAutor = 0;
-	        while (it.hasNext()){
-	        	itemDoc = (IItem)it.next();
-	        	if (itemDoc.getString("AUTOR") != null) nombreAutor = itemDoc.getString("AUTOR");	        	
-	        	String [] vNombreAutor = nombreAutor.split("-");
-	        	if(vNombreAutor.length == 2){
-	        		idAutor = Integer.parseInt(vNombreAutor[1]);
-	        	}
-			}
-	        //ahora con el id del usuario me voy a la tabla iusergroupuser
-	        //y obtengo los grupos a los que pertenece ese usuario
-	     // Para cada participante seleccionado --> enviar email y actualizar el campo ACUERDO_TRASLADADO en la BBDD
-			String entidad = EntidadesAdmUtil.obtenerEntidad(cct);
-			AccesoBBDDRegistro accsRegistro = new AccesoBBDDRegistro(entidad);
-			
-			Vector idGroupsUser = accsRegistro.getGruposPerteneceUsuario(idAutor);
-			
-				
-			//Con este id del grupo al que pertenece voy a la tabla IUSERGROUPHDR y obtengo el name
-			Vector nombreGrupo = accsRegistro.getNombreGrupo(idGroupsUser);
-			for(int j = 0; j < nombreGrupo.size(); j++){
-				String grupo = (String) nombreGrupo.get(j);
-				String [] vGrupo = grupo.split("-");
-				if(vGrupo != null){
-					grupo = vGrupo[0];
-				}
-				//Si es igual quiere decir que pertenece a un nombre de grupo
-				if(grupo.equals(Constants.DECRETOS.NOMBRE_GRUPO)){
-					int idGrupo = ((Integer) idGroupsUser.get(j)).intValue();
-					//Obtengo de la tabla spac_p_procedientos cual es el nombre del decreto que
-					//le corresponde 
-					String grupoResponsable = "3-"+idGrupo+"";
-					
-					String sqlQuery = "WHERE ID_RESP="+grupoResponsable+"";
-					
+    /** Recursos. */
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+    
+    private String resp;
 
-					logger.warn("strQuery exp "+sqlQuery);
-			        IItemCollection collection = entitiesAPI.queryEntities("SPAC_P_PROCEDIMIENTOS", sqlQuery);
-			        List list=collection.toList();
-			        Iterator itP = list.iterator();
-			        
-			        while (itP.hasNext())
-			        {
-			        	IItem item = (IItem)itP.next();
-			        	srProcHijo = item.getString("NOMBRE");
-			        }
-					
-				}
-			}
-		}
-		
-		return srProcHijo;
-	}
+    public ActionForward executeAction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response, SessionAPI session) throws ISPACException {
 
+        IInvesflowAPI invesflowAPI = session.getAPI();
+        IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
+        ITXTransaction tx = invesflowAPI.getTransactionAPI();
+        ClientContext cct = session.getClientContext();
 
+        //Se obtiene el estado de tramitación(informacion de contexto del usuario)
+        IManagerAPI managerAPI = ManagerAPIFactory.getInstance().getManagerAPI(cct);
+        IState currentstate = managerAPI.currentState(getStateticket(request));
 
-	public IItemCollection getProcedure(ClientContext context, String strProcHijo) throws ISPACException
-	{
-		// Los que puede crear el usuario y los que pueden crear los que sustituye
-		String resp = getSubstitutesRespString(context);
-		String nombreProcedure=getString("procedimiento."+strProcHijo+".asociado.nombre");
-		DbCnt cnt = null;
-		try
-		{
-			cnt = context.getConnection();
-			CollectionDAO pcdset = new CollectionDAO(PProcedimientoDAO.class);
+        //Nombre del procedimiento origen
+        String strProcPadre = request.getParameter("procPadre");
+        LOGGER.debug("Procedimiento Padre: "+strProcPadre);
+        //Nombre del procedimiento a crear (Decreto o Propuesta)
+        String strProcHijo = request.getParameter("procHijo");
+        LOGGER.debug("Procedimiento Hijo: "+strProcHijo);    
+        //Nombre de la regla a ejecutar
+        String strRuleName = request.getParameter("rule");
+        LOGGER.debug("Regla a ejecutar: "+strRuleName);
+        //Identificador del trámite actual
+        String nIdTask = request.getParameter("taskId");
+        LOGGER.debug("Trámite actual: "+nIdTask);
+        
+        if(strProcPadre != null && strProcHijo!= null){
+            ITask task = null;
+            task = invesflowAPI.getTask(Integer.parseInt(nIdTask));
+            int nidstage = task.getInt("ID_FASE_EXP");
 
-			/* Procedimientos en vigor */
-			String sqlquery = "WHERE ESTADO=" + IProcedure.PCD_STATE_CURRENT
-			+ " AND TIPO=" + IProcedure.PROCEDURE_TYPE
-			+ " AND ID IN" 
-			+ " (SELECT ID_PCD FROM SPAC_SS_PERMISOS WHERE  PERMISO="
-			+ ISecurityAPI.ISPAC_RIGHTS_CREATEEXP + DBUtil.addAndInResponsibleCondition("UID_USR", resp) + ")"
-			+ " AND NOMBRE = '"+nombreProcedure+"' ORDER BY NOMBRE";
-			pcdset.query(cnt,sqlquery);
+            //Obtenemos en stage el registro de la tabla spac_fases
+            IStage stage = null;
+            stage = invesflowAPI.getStage(nidstage);
 
-			IItemCollection col = pcdset.disconnect();
+            String numExp = stage.getString("NUMEXP");
+            
+            //Obtengo a que grupo pertenece de propuestas o de decretos.
+            String procHijoPertenece = obtenerProcedimientoPertenece(numExp, strProcHijo, entitiesAPI, nidstage, nIdTask, cct);
+            
+            //String relacion=getString("procedimiento."+strProcHijo+".asociado.relacion."+strProcPadre);
+            String relacion=getString("procedimiento."+procHijoPertenece+".asociado.relacion."+strProcPadre);
 
+            //IItemCollection col = getProcedure(cct, strProcHijo);
+            IItemCollection col = getProcedure(cct, procHijoPertenece);
+            
+            Iterator<?> it = col.iterator();
+            
+            if(!it.hasNext()){
+                throw new ISPACInfo("No tiene permisos para iniciar el expediente asociado.");
+            }
+            
+            IItem item = null;
+            int idProcedure = 0;
+            
+            while (it.hasNext()){
+                item = (IItem)it.next();
+                idProcedure = item.getInt("ID");
+            }
 
-			return col;
-		}
-		catch (ISPACException ie)
-		{
-			throw new ISPACException("Error en WLWorklist:getProcs()", ie);
-		}
-		finally
-		{
-			context.releaseConnection(cnt);
-		}
-	}
+            // Obtener el código de procedimiento para el número de expediente
+            IItem ctProcedure = entitiesAPI.getEntity(SpacEntities.SPAC_CT_PROCEDIMIENTOS, idProcedure);
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("COD_PCD", ctProcedure.getString("COD_PCD"));
 
+            // Crear el proceso del expediente
+            int nIdProcess2 = tx.createProcess(idProcedure, params);
+            IProcess process = invesflowAPI.getProcess(nIdProcess2);
+            String numExpHijo = process.getString("NUMEXP");
 
-	private String getSubstitutesRespString(ClientContext context) throws ISPACException
-	{
-		if (StringUtils.isEmpty(resp)) {
+            IItem registro = entitiesAPI.createEntity(SpacEntities.SPAC_EXP_RELACIONADOS);
 
-			StringBuffer respList=new StringBuffer();
-			DbCnt cnt = context.getConnection();
+            registro.set("NUMEXP_PADRE", numExp);
+            registro.set("NUMEXP_HIJO", numExpHijo);
+            registro.set("RELACION", relacion);
 
-			try
-			{
-				Responsible user = context.getUser();
-				respList.append(user.getRespString());
+            registro.store(cct);
 
+            //Ejecutar la regla asociada
+            if (strRuleName != null){
+                LOGGER.debug("Buscando regla '"+strRuleName+"'");
+                
+                IItemCollection reglas = invesflowAPI.getCatalogAPI().getCTRules(strRuleName);
+                it = reglas.iterator();
+                
+                if (it.hasNext()) {
+                    IItem regla = (IItem)it.next();
+                    int ruleId = regla.getInt("ID");
+                    LOGGER.debug("Regla número: "+ruleId);
+                    LOGGER.warn("task id. "+nIdTask);
+                    cct.setSsVariable("taskId", nIdTask);
+                    EventManager eventmgr = new EventManager(cct);
+                    eventmgr.newContext();
+                    eventmgr.getRuleContextBuilder().addContext(process);
+                    eventmgr.processRule(ruleId);
+                }
+            }
 
-				SecurityMgr security = new SecurityMgr(cnt);
+        } else {
+            LOGGER.error("El nombre del procedimiento padre o del procedimiento hijo es nulo");
+        }
+        //return NextActivity.afterStartProcess(request, nIdProcess2, invesflowAPI, mapping);
+        //return  mapping.findForward("success");
+        return NextActivity.refresh(currentstate, mapping);
+    }
+    
+    private String obtenerProcedimientoPertenece(String numExp, String strProcHijo, IEntitiesAPI entitiesAPI, int nidstage, String idTask, IClientContext cct) throws ISPACException {
+        String srProcHijo = "";
+        
+        if(strProcHijo.equals(Constants.SUBVENCIONES.PROCHIJODECRETO)){
+            //Obtengo la persona que ha iniciado el trámite, para ello de la tabla spac_dt_documentos
+            // selecciono el documento que hace referencia al tramite aprobacion
+            // y cojo la columna autor.
+            String strQueryDocumentos = "ID_FASE = " + nidstage + " AND ID_TRAMITE = " + idTask + "";
+            IItemCollection documentsCollection = entitiesAPI.getDocuments(numExp, strQueryDocumentos, "FDOC DESC");
+            Iterator<?> it = documentsCollection.iterator();
+            IItem itemDoc = null;
+            String nombreAutor = "";
+            int idAutor = 0;
+            
+            while (it.hasNext()){
+                itemDoc = (IItem)it.next();
+                if (itemDoc.getString("AUTOR") != null){
+                    nombreAutor = itemDoc.getString("AUTOR");                
+                }
+                
+                String [] vNombreAutor = nombreAutor.split("-");
+                
+                if(vNombreAutor.length == 2){
+                    idAutor = Integer.parseInt(vNombreAutor[1]);
+                }
+            }
+            //ahora con el id del usuario me voy a la tabla iusergroupuser
+            //y obtengo los grupos a los que pertenece ese usuario
+         // Para cada participante seleccionado --> enviar email y actualizar el campo ACUERDO_TRASLADADO en la BBDD
+            String entidad = EntidadesAdmUtil.obtenerEntidad(cct);
+            AccesoBBDDRegistro accsRegistro = new AccesoBBDDRegistro(entidad);
+            
+            List<?> idGroupsUser = accsRegistro.getGruposPerteneceUsuario(idAutor);
+                
+            //Con este id del grupo al que pertenece voy a la tabla IUSERGROUPHDR y obtengo el name
+            List<?> nombreGrupo = accsRegistro.getNombreGrupo(accsRegistro.getGruposPerteneceUsuario(idAutor));
 
-				// Sustituir (sustituidos por el usuario y por los grupos a los que pertenece el usuario)
-				IItemCollection collection = security.getAllSubstitutes(user);
-				while (collection.next()) {
+            for(int j = 0; j < nombreGrupo.size(); j++){
+                String grupo = (String) nombreGrupo.get(j);
+                String [] vGrupo = grupo.split("-");
+            
+                if(vGrupo != null){
+                    grupo = vGrupo[0];
+                }
+                //Si es igual quiere decir que pertenece a un nombre de grupo
+                
+                if(grupo.equals(Constants.DECRETOS.NOMBRE_GRUPO)){
+                    int idGrupo = ((Integer) idGroupsUser.get(j)).intValue();
+                    //Obtengo de la tabla spac_p_procedientos cual es el nombre del decreto que
+                    //le corresponde 
+                    String grupoResponsable = "3-"+idGrupo+"";
+                    
+                    String sqlQuery = "WHERE ID_RESP="+grupoResponsable+"";
 
-					IItem substitute = (IItem) collection.value();
-					respList.append("," + getRespStringFromEntryUID(substitute.getString("UID_SUSTITUIDO")));
-				}
+                    LOGGER.warn("strQuery exp "+sqlQuery);
 
-			}
-			finally
-			{
-				context.releaseConnection( cnt);
-			}
+                    IItemCollection collection = entitiesAPI.queryEntities("SPAC_P_PROCEDIMIENTOS", sqlQuery);
+                    List<?> list=collection.toList();
+                    Iterator<?> itP = list.iterator();
 
-			resp = respList.toString();
-		}
+                    while (itP.hasNext()) {
+                        IItem item = (IItem)itP.next();
+                        srProcHijo = item.getString("NOMBRE");
+                    }
+                }
+            }
+        }
+        
+        return srProcHijo;
+    }
 
-		return resp;
-	}
+    public IItemCollection getProcedure(ClientContext context, String strProcHijo) throws ISPACException {
+        // Los que puede crear el usuario y los que pueden crear los que sustituye
+        String responsable = getSubstitutesRespString(context);
+        String nombreProcedure=getString("procedimiento."+strProcHijo+".asociado.nombre");
+        DbCnt cnt = null;
+        
+        try {
+            cnt = context.getConnection();
+            CollectionDAO pcdset = new CollectionDAO(PProcedimientoDAO.class);
 
-	private String getRespStringFromEntryUID(String entryUID) throws ISPACException {
+            /* Procedimientos en vigor */
+            String sqlquery = "WHERE ESTADO=" + IProcedure.PCD_STATE_CURRENT
+                + " AND TIPO=" + IProcedure.PROCEDURE_TYPE
+                + " AND ID IN" 
+                + " (SELECT ID_PCD FROM SPAC_SS_PERMISOS WHERE  PERMISO="
+                + ISecurityAPI.ISPAC_RIGHTS_CREATEEXP + DBUtil.addAndInResponsibleCondition("UID_USR", responsable) + ")"
+                + " AND NOMBRE = '"+nombreProcedure+"' ORDER BY NOMBRE";
+            pcdset.query(cnt,sqlquery);
 
-		IDirectoryConnector directory = DirectoryConnectorFactory.getConnector();
+            return pcdset.disconnect();
+            
+        } catch (ISPACException ie) {
+            throw new ISPACException("Error en WLWorklist:getProcs()", ie);
+        
+        } finally {
+            context.releaseConnection(cnt);
+        }
+    }
 
-		IDirectoryEntry entry = directory.getEntryFromUID(entryUID);
-		Responsible resp= RespFactory.createResponsible(entry);
+    private String getSubstitutesRespString(ClientContext context) throws ISPACException {
+        
+        if (StringUtils.isEmpty(resp)) {
 
-		return resp.getRespString();
-	}
+            StringBuilder respList=new StringBuilder();
+            DbCnt cnt = context.getConnection();
 
-	/**
-	 * Obtiene el texto del recurso especificado.
-	 * @param key Clave del texto.
-	 * @return Texto.
-	 */
-	private static String getString(String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (MissingResourceException e) {
-			return key;
-		}
-	}
+            try {
+                Responsible user = context.getUser();
+                respList.append(user.getRespString());
 
+                SecurityMgr security = new SecurityMgr(cnt);
 
+                // Sustituir (sustituidos por el usuario y por los grupos a los que pertenece el usuario)
+                IItemCollection collection = security.getAllSubstitutes(user);
+                
+                while (collection.next()) {
+                    IItem substitute = (IItem) collection.value();
+                    respList.append(",").append(getRespStringFromEntryUID(substitute.getString("UID_SUSTITUIDO")));
+                }
+                
+            } finally {
+                context.releaseConnection(cnt);
+            }
+
+            resp = respList.toString();
+        }
+
+        return resp;
+    }
+
+    private String getRespStringFromEntryUID(String entryUID) throws ISPACException {
+
+        IDirectoryConnector directory = DirectoryConnectorFactory.getConnector();
+
+        IDirectoryEntry entry = directory.getEntryFromUID(entryUID);
+        Responsible responsable = RespFactory.createResponsible(entry);
+
+        return responsable.getRespString();
+    }
+
+    /**
+     * Obtiene el texto del recurso especificado.
+     * @param key Clave del texto.
+     * @return Texto.
+     */
+    private static String getString(String key) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+
+        } catch (MissingResourceException e) {
+            LOGGER.info("No mostraba nada, el error es: " + e.getMessage(), e);
+            return key;
+        }
+    }
 }

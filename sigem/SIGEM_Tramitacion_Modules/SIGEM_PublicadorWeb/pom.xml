@@ -102,6 +102,12 @@
 			<artifactId>SIGEM_MensajesCortos</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>DipucrRules</artifactId>
+			<version>3.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>es.ieci.tecdoc.sigem</groupId>

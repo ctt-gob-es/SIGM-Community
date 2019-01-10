@@ -2,6 +2,8 @@ package com.ieci.tecdoc.idoc.flushfdr;
 
 import java.io.Serializable;
 
+import es.dipucr.metadatos.beans.MetadatosDocumentoBean;
+
 /*
  * @author LMVICENTE
  * @creationDate 07-sep-2004 16:44:15
@@ -17,6 +19,8 @@ public class FlushFdrPage implements Serializable {
     private String fatherId = null;
     private String fatherClassName = null;
     private FlushFdrFile file = null;
+    
+    private MetadatosDocumentoBean metadatosDocumento = null;
   
     public FlushFdrPage() {
     }
@@ -106,7 +110,16 @@ public class FlushFdrPage implements Serializable {
     public void setTreeId(String treeId) {
         this.treeId = treeId;
     }
-    /**
+    
+    public MetadatosDocumentoBean getMetadatosDocumento() {
+		return metadatosDocumento;
+	}
+
+	public void setMetadatosDocumento(MetadatosDocumentoBean metadatosDocumento) {
+		this.metadatosDocumento = metadatosDocumento;
+	}
+
+	/**
      * toString methode: creates a String representation of the object
      * @return the String representation
      * @author info.vancauwenberge.tostring plugin

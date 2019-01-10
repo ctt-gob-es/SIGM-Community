@@ -48,6 +48,8 @@ import java.util.StringTokenizer;
 
 import javax.security.auth.x500.X500Principal;
 
+import org.apache.log4j.Logger;
+
 import net.java.xades.util.Base64;
 import net.java.xades.util.ComparableBean;
 import net.java.xades.util.SystemUtils;
@@ -86,6 +88,8 @@ public class CertificateHelper
 /*
 	 openssl req -config /usr/lib/ssl/openssl.cnf -new -x509 -keyout test-cert-1.p12 -out test-cert-1.p12 -days 3650
 */
+	
+	private static final Logger LOGGER = Logger.getLogger(CertificateHelper.class);
 
     private static final String EMAIL_ADDRESS_NAME = "EMAILADDRESS";
 
@@ -134,7 +138,7 @@ public class CertificateHelper
             }
             catch(Exception ex)
             {
-                ex.printStackTrace();
+            	LOGGER.error("ERROR. " + ex.getMessage(), ex);
             }
         }
         
@@ -404,7 +408,7 @@ public class CertificateHelper
                 }
                 catch(GeneralSecurityException ex)
                 {
-                    ex.printStackTrace();
+                	LOGGER.error("ERROR. " + ex.getMessage(), ex);
                 }
             }
         }

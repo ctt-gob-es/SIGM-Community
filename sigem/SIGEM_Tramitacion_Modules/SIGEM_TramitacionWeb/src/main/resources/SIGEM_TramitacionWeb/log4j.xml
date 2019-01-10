@@ -20,7 +20,7 @@
 			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
 		</layout>
 	</appender>
-
+	
 	<appender name="loggerSecretariaAppender" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
 		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}Secretaria.log"/>
 		<param name="MaxFileSize" value="5000KB"/>
@@ -56,6 +56,15 @@
 			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
 		</layout>
 	</appender>
+	
+	<appender name="loggerNotificaAppender" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
+		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}NotificaSchedulerTask.log"/>
+		<param name="MaxFileSize" value="5000KB"/>
+		<param name="MaxBackupIndex" value="10"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ISO8601} [%p] %C %M %m %n"/>
+		</layout>
+	</appender>	
 	
 	<appender name="templatesAppender" class="es.dipucr.sigem.api.rule.common.log.DipucrAppender">
 		<param name="File" value="${sigem.log.path}${sigem.path.separator}SIGEM_TramitacionWeb${sigem.path.separator}AuditoriaPlantillas.log"/>
@@ -105,6 +114,36 @@
 		<level value="WARN"/>
 		<appender-ref ref="loggerFirmaAppender" />  
 	</category>
+	
+	<category name="ieci.tdw.ispac.ispacmgr.scheduler.NotifyStateNotificaSchedulerTask" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerNotificaAppender" />  
+	</category>
+	
+	<category name="ieci.tdw.ispac.ispacmgr.action.BatchSignAction" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerFirmaAppender" />  
+	</category>
+	
+	<category name="es.dipucr.sigem.sgm.tram.sign.action.SignAllDocumentAction" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerFirmaAppender" />  
+	</category>	
+	
+	<category name="ieci.tdw.ispac.ispacmgr.action.SignDocumentsAction" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerFirmaAppender" />  
+	</category>	
+	
+	<category name="es.dipucr.sigem.rechazoFirma.BatchSignRechazoAction" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerFirmaAppender" />  
+	</category>
+	
+	<category name="es.dipucr.sigem.firmaReparo.action.BatchSignReparoAction" additivity="false">  
+		<level value="WARN"/>
+		<appender-ref ref="loggerFirmaAppender" />  
+	</category>					
 
 	<category name="ieci.tdw.ispac.ispaclib.sign" additivity="false">  
 		<level value="WARN"/>
@@ -139,7 +178,7 @@
 	<category name="es.dipucr.sigem.api.rule.common.utils" additivity="false">  
 		<level value="DEBUG"/>
 		<appender-ref ref="loggerCommonUtilsAppender" />  
-	</category>
+	</category>	
 	
 	<category name="es.dipucr.sigem.actions.ayuda.templates" additivity="false">  
 		<level value="INFO"/>

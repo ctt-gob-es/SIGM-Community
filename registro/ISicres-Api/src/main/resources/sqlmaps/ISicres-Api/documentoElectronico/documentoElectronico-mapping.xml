@@ -50,6 +50,7 @@
 		<result property="idLibro" column="bookid" />
 		<result property="idRegistro" column="folderid" />
 		<result property="idPagina" column="pageid" />
+		<result property="idFile" column="fileid" />
 	</resultMap>
 	
 	

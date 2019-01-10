@@ -59,6 +59,7 @@ public class GroupsTable
       "," + UasDaoGroupTbl.CD_MGRID.getName() +
       "," + UasDaoGroupTbl.CD_TYPE.getName() +
       "," + UasDaoGroupTbl.CD_REMARKS.getName() +
+      "," + UasDaoGroupTbl.CD_EMAIL.getName() + //[dipucr-Felipe #541]
       "," + UasDaoGroupTbl.CD_CRTRID.getName() +
       "," + UasDaoGroupTbl.CD_CRTNDATE.getName();       
       return val;
@@ -88,6 +89,7 @@ public class GroupsTable
  	  val = UasDaoGroupTbl.CD_NAME.getName() +
  			"," + UasDaoGroupTbl.CD_MGRID.getName() +
  			"," + UasDaoGroupTbl.CD_REMARKS.getName() +
+ 			"," + UasDaoGroupTbl.CD_EMAIL.getName() + //[dipucr-Felipe #541]
  			"," + UasDaoGroupTbl.CD_UPDRID.getName() +
  			"," + UasDaoGroupTbl.CD_UPDATE.getName();
    	return val;
@@ -108,6 +110,7 @@ public class GroupsTable
             "," + getBaseTableName() + "." +  UasDaoGroupTbl.CD_NAME.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoGroupTbl.CD_MGRID.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoGroupTbl.CD_REMARKS.getName() +
+		      "," + getBaseTableName() + "." +  UasDaoGroupTbl.CD_EMAIL.getName() + //[dipucr-Felipe #541]
 		      "," + getBaseTableName() + "." +  UasDaoGroupTbl.CD_CRTRID.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoGroupTbl.CD_CRTNDATE.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoGroupTbl.CD_UPDRID.getName() +

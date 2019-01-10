@@ -47,6 +47,9 @@
 			          	    	<c:set var="reasonKey" value="message.readonlyReason.${requestScope[appConstants.actions.READONLYSTATE]}"/>
 			          	    	<bean:define id="reasonKey" name="reasonKey" type="java.lang.String"/>
 						<bean:message key='<%=reasonKey%>' />
+						<c:if test="${!empty requestScope[appConstants.actions.LOCKUSERNAME]}">
+							<c:out value="${requestScope[appConstants.actions.LOCKUSERNAME]}" />
+						</c:if>
 			  		</p> 
 		 		</c:when>
 		  		<c:otherwise>

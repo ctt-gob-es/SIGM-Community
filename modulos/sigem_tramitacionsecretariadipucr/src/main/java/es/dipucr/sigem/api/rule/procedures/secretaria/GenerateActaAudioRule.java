@@ -35,13 +35,15 @@ import es.dipucr.ownCloud.RemoteFile;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 import es.dipucr.sigem.api.rule.common.utils.OwnCloudUtils;
+import es.dipucr.sigem.api.rule.common.utils.PdfUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class GenerateActaAudioRule implements IRule{
 	
-	private static final Logger logger = Logger.getLogger(GenerateActaAudioRule.class);
+	private static final Logger LOGGER = Logger.getLogger(GenerateActaAudioRule.class);
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
+		// Empty method
 	}
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
@@ -53,24 +55,24 @@ public class GenerateActaAudioRule implements IRule{
 			/*********************************************************/
 			numexp = rulectx.getNumExp(); 
 			
-			int id_tram_pcd = 0;
+			int idTramPcd = 0;
 			String rutaFileName = "";
 			FileInputStream fisFileAnexo = null;
 			PdfWriter writer = null;
 			
 			// Obtengo el id del tramite
-			StringBuffer query = new StringBuffer("WHERE NOMBRE LIKE 'Carga audio%' AND NUMEXP='" + numexp + "'");
+			StringBuilder query = new StringBuilder("WHERE NOMBRE LIKE 'Carga audio%' AND NUMEXP='" + numexp + "'");
 
 			IItemCollection itemcol = entitiesAPI.queryEntities(SpacEntities.SPAC_DT_TRAMITES, query.toString());
 			Iterator<?> itTramites = itemcol.iterator();
 			
 			while (itTramites.hasNext()) {
 				IItem itemTramites = (IItem) itTramites.next();
-				id_tram_pcd = itemTramites.getInt("ID_TRAM_PCD");
+				idTramPcd = itemTramites.getInt("ID_TRAM_PCD");
 			}
 			
 			String sqlQuery = "NUMEXP='" + numexp
-					+ "' AND (EXTENSION='odt' OR EXTENSION='doc') AND NOMBRE LIKE '%Acta de Pleno%' and ID_TRAMITE_PCD=" + id_tram_pcd
+					+ "' AND (EXTENSION='odt' OR EXTENSION='doc') AND NOMBRE LIKE '%Acta de Pleno%' and ID_TRAMITE_PCD=" + idTramPcd
 					+ "";
 			IItemCollection documentos = entitiesAPI.getDocuments(numexp, sqlQuery, "FDOC ASC");
 			Iterator<?> iDoc = documentos.iterator();
@@ -139,13 +141,12 @@ public class GenerateActaAudioRule implements IRule{
 						
 						String sfileAnexar = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + nombreDoc;
 						File fileAnexarContenido = new File(sfileAnexar);
-						logger.warn("fileAnexarContenido "+fileAnexarContenido);
+						LOGGER.warn("fileAnexarContenido "+fileAnexarContenido);
 						if(!fileAnexarContenido.exists()){
 							try{
 								fileAnexarContenido.createNewFile();
-							}
-							catch(IOException e){
-								logger.warn("No se puede crear el documento especificado "+fileAnexarContenido);
+							} catch(IOException e) {
+								LOGGER.warn("No se puede crear el documento especificado "+fileAnexarContenido, e);
 								if(!anexadoAudio){
 									existeUsuarioOwncloud = false;
 								}									
@@ -153,21 +154,22 @@ public class GenerateActaAudioRule implements IRule{
 						}						
 						OwnCloudUtils.descargarDoc(username, password, fileAnexar.getRemotePath(), fileAnexarContenido);
 						
-						DocumentosUtil.anadeDocumentoPdf(writer, fileAnexarContenido.getAbsolutePath(), fileAnexarContenido.getName(), normalizar(fileAnexarContenido.getName()));
+						PdfUtil.anadeDocumentoPdf(writer, fileAnexarContenido.getAbsolutePath(), fileAnexarContenido.getName(), normalizar(fileAnexarContenido.getName()));
 						anexadoAudio = true;
 						existeUsuarioOwncloud = true;
 						if(!anexadoAudio){
 							existeUsuarioOwncloud = false;
 						}
 					
-						if(fileAnexarContenido!= null && fileAnexarContenido.exists()) fileAnexarContenido.delete();
+						if(fileAnexarContenido!= null && fileAnexarContenido.exists()) {
+							fileAnexarContenido.delete();
+						}
 					}
 					
 					document.close();
 					resultadoFO.close();
 					reader.close();
-				}
-				else{
+				} else {
 					//No existe usuario de Owncloud
 					existeUsuarioOwncloud = false;					
 				}
@@ -197,7 +199,6 @@ public class GenerateActaAudioRule implements IRule{
 					fisFileAnexo = null;
 					writer.close();
 					writer = null;
-					System.gc();
 				}				
 				
 				// Borra los documentos intermedios del gestor documental
@@ -210,19 +211,19 @@ public class GenerateActaAudioRule implements IRule{
 				}	
 			}
 		} catch (ISPACException e) {
-			logger.error("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
 		} catch (FileNotFoundException e) {
-			logger.error("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
 		} catch (IOException e) {
-			logger.error("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
 		} catch (DocumentException e) {
-			logger.error("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar los documentos del expediente: " + numexp + ". " + e.getMessage(), e);
 		}
-		return new Boolean (true);
+		return true;
 	}
 
 	private static String normalizar(String name) {

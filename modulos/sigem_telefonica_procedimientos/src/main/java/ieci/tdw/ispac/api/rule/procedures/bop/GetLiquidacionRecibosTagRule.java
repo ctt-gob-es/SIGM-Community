@@ -8,12 +8,12 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
+
+import org.apache.log4j.Logger;
 
 /**
  * Regla para ser utilizada desde una plantilla. Recibe el parámetro CLASIFICACION que puede tomar los siguientes valores:
@@ -29,198 +29,191 @@ import java.util.Iterator;
  *
  */
 public class GetLiquidacionRecibosTagRule implements IRule {
+    
+    private static final Logger LOGGER = Logger.getLogger(GetLiquidacionRecibosTagRule.class);
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		return true;
-	}
-	public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
-		return true;
-	}
-	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        return true;
+    }
+    public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
+        return true;
+    }
+    public Object execute(IRuleContext rulectx) throws ISPACRuleException {
 
-		ClientContext cct = null;
+        IClientContext cct = null;
 
-		System.out.println("INICIO.");
-		
-		try{
-			//----------------------------------------------------------------------------------------------
-			cct = (ClientContext) rulectx.getClientContext();
-			IInvesflowAPI invesFlowAPI = cct.getAPI();
-			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
-			//----------------------------------------------------------------------------------------------
+        LOGGER.debug("INICIO.");
+        
+        try{
+            //----------------------------------------------------------------------------------------------
+            cct =  rulectx.getClientContext();
+            IInvesflowAPI invesFlowAPI = cct.getAPI();
+            IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+            //----------------------------------------------------------------------------------------------
 
-			// Abrir transacción
-			cct.beginTX();
+            // Abrir transacción
+            cct.beginTX();
 
-			//Obtenemos el parámetro CLASIFICACION de la plantilla
-			String clasificacion = rulectx.get("clasificacion");
+            //Obtenemos el parámetro CLASIFICACION de la plantilla
+            String clasificacion = rulectx.get("clasificacion");
 
-			System.out.println("- CLASIFICACION: "+clasificacion);
+            LOGGER.debug("- CLASIFICACION: " + clasificacion);
 
-			String listado = null;
+            String listado = null;
 
-			String strQuery = null;
-			IItemCollection collection = null;
-			Iterator it = null;
-			IItem item = null;
-
-
-			//FECHA_PUBLICACION != NULL
-
-			strQuery = "WHERE CLASIFICACION = '"+ clasificacion +"' AND TIPO_FACTURACION = 'Pago sin crédito' ORDER BY ENTIDAD";
-			collection = entitiesAPI.queryEntities("BOP_SOLICITUD", strQuery);	
-			it = collection.iterator();
-			String entidad = "-1";
-			String numexp = null;
-			String sumario = null;
-			String texto = null;
-			String observaciones = null;
-			double coste = -1;
-			double costeEntidad = 0;
-			int anunciosEntidad = 0;
-			Date fechaPublicacion = null;
-			boolean finIterator = false;
-			int numEntidades = 0;
-
-			while (it.hasNext()){
-
-				item = (IItem)it.next();
-
-				while (!finIterator && item.getString("ENTIDAD")!=null && entidad.equalsIgnoreCase(item.getString("ENTIDAD"))){
-
-					listado += "*";
-
-					numexp = item.getString("NUMEXP");
-					if (numexp != null){
-						listado += numexp + "\n";
-					}
-
-					sumario = item.getString("SUMARIO");
-					if (sumario != null){
-						listado += sumario + "\n";
-					}
-
-					texto = item.getString("TEXTO");
-					if (texto != null){
-						listado += texto + "\n";
-					}
-
-					observaciones = item.getString("OBSERVACIONES");
-					if (observaciones != null){
-						listado += observaciones + "\n";
-					}
-
-					coste = item.getDouble("COSTE");
-					if (coste >= 0){
-						listado += coste + "\n";
-					}
-
-					fechaPublicacion = item.getDate("FECHA_PUBLICACION");
-					if (fechaPublicacion != null){
-						listado += fechaPublicacion + "\n";
-					}
-
-					anunciosEntidad++;
-					costeEntidad = costeEntidad + coste;
-
-					if (it.hasNext()){
-						item = (IItem)it.next();
-					}else{
-						finIterator = true;
-					}
-
-				}
-
-				if (anunciosEntidad > 0){
-					if (!finIterator){
-						listado += "anunciosEntidad: "+anunciosEntidad+", costeEntidad: "+costeEntidad;
-						System.out.println("1----- anunciosEntidad: "+anunciosEntidad + "costeEntidad: "+costeEntidad);
-					}
-					anunciosEntidad = 0;
-					costeEntidad = 0;
-				}
+            String strQuery = null;
+            IItemCollection collection = null;
+            Iterator<?> it = null;
+            IItem item = null;
 
 
-				if (!finIterator){
-					//Obtener los campos a mostrar en el listado del documento
-					entidad = item.getString("ENTIDAD");
-					if (entidad != null){
+            //FECHA_PUBLICACION != NULL
 
-						numEntidades++;
-						
-						listado = "\n\n- " + entidad + ":\n\n";
+            strQuery = "WHERE CLASIFICACION = '"+ clasificacion +"' AND TIPO_FACTURACION = 'Pago sin crédito' ORDER BY ENTIDAD";
+            collection = entitiesAPI.queryEntities("BOP_SOLICITUD", strQuery);    
+            it = collection.iterator();
+            String entidad = "-1";
+            String numexp = null;
+            String sumario = null;
+            String texto = null;
+            String observaciones = null;
+            double coste = -1;
+            double costeEntidad = 0;
+            int anunciosEntidad = 0;
+            Date fechaPublicacion = null;
+            boolean finIterator = false;
+            int numEntidades = 0;
 
-						listado += "*";
+            while (it.hasNext()){
 
-						numexp = item.getString("NUMEXP");
-						if (numexp != null){
-							listado += numexp + "\n";
-						}
+                item = (IItem)it.next();
 
-						sumario = item.getString("SUMARIO");
-						if (sumario != null){
-							listado += sumario + "\n";
-						}
+                while (!finIterator && item.getString("ENTIDAD")!=null && entidad.equalsIgnoreCase(item.getString("ENTIDAD"))){
 
-						texto = item.getString("TEXTO");
-						if (texto != null){
-							listado += texto + "\n";
-						}
+                    listado += "*";
 
-						observaciones = item.getString("OBSERVACIONES");
-						if (observaciones != null){
-							listado += observaciones + "\n";
-						}
+                    numexp = item.getString("NUMEXP");
+                    if (numexp != null){
+                        listado += numexp + "\n";
+                    }
 
-						coste = item.getDouble("COSTE");
-						if (coste >= 0){
-							listado += coste + "\n";
-						}
+                    sumario = item.getString("SUMARIO");
+                    if (sumario != null){
+                        listado += sumario + "\n";
+                    }
 
-						fechaPublicacion = item.getDate("FECHA_PUBLICACION");
-						if (fechaPublicacion != null){
-							listado += fechaPublicacion + "\n";
-						}
+                    texto = item.getString("TEXTO");
+                    if (texto != null){
+                        listado += texto + "\n";
+                    }
 
-						anunciosEntidad++;
-						costeEntidad = costeEntidad + coste;
-						System.out.println("2----- anunciosEntidad: "+anunciosEntidad + "costeEntidad: "+costeEntidad);
-						//listado += "anunciosEntidad: "+anunciosEntidad+", costeEntidad: "+costeEntidad;
+                    observaciones = item.getString("OBSERVACIONES");
+                    if (observaciones != null){
+                        listado += observaciones + "\n";
+                    }
 
-					}
+                    coste = item.getDouble("COSTE");
+                    if (coste >= 0){
+                        listado += coste + "\n";
+                    }
 
-				}
-			}
-			if (numEntidades>0 && !finIterator){
-				listado += "anunciosEntidad: "+anunciosEntidad+", costeEntidad: "+costeEntidad;
-				System.out.println("3----- anunciosEntidad: "+anunciosEntidad + "costeEntidad: "+costeEntidad);
-			}
+                    fechaPublicacion = item.getDate("FECHA_PUBLICACION");
+                    if (fechaPublicacion != null){
+                        listado += fechaPublicacion + "\n";
+                    }
+
+                    anunciosEntidad++;
+                    costeEntidad = costeEntidad + coste;
+
+                    if (it.hasNext()){
+                        item = (IItem)it.next();
+                    }else{
+                        finIterator = true;
+                    }
+
+                }
+
+                if (anunciosEntidad > 0){
+                    if (!finIterator){
+                        listado += "anunciosEntidad: "+anunciosEntidad+", costeEntidad: "+costeEntidad;
+                        LOGGER.debug("1----- anunciosEntidad: " + anunciosEntidad + ", costeEntidad: " + costeEntidad);
+                    }
+                    anunciosEntidad = 0;
+                    costeEntidad = 0;
+                }
 
 
+                if (!finIterator){
+                    //Obtener los campos a mostrar en el listado del documento
+                    entidad = item.getString("ENTIDAD");
+                    if (entidad != null){
 
+                        numEntidades++;
+                        
+                        listado = "\n\n- " + entidad + ":\n\n";
 
+                        listado += "*";
 
+                        numexp = item.getString("NUMEXP");
+                        if (numexp != null){
+                            listado += numexp + "\n";
+                        }
 
+                        sumario = item.getString("SUMARIO");
+                        if (sumario != null){
+                            listado += sumario + "\n";
+                        }
 
+                        texto = item.getString("TEXTO");
+                        if (texto != null){
+                            listado += texto + "\n";
+                        }
 
+                        observaciones = item.getString("OBSERVACIONES");
+                        if (observaciones != null){
+                            listado += observaciones + "\n";
+                        }
 
+                        coste = item.getDouble("COSTE");
+                        if (coste >= 0){
+                            listado += coste + "\n";
+                        }
 
+                        fechaPublicacion = item.getDate("FECHA_PUBLICACION");
+                        if (fechaPublicacion != null){
+                            listado += fechaPublicacion + "\n";
+                        }
 
-			return listado;
+                        anunciosEntidad++;
+                        costeEntidad = costeEntidad + coste;
+                        LOGGER.debug("2----- anunciosEntidad: " + anunciosEntidad + ", costeEntidad: " + costeEntidad);
+                        //listado += "anunciosEntidad: "+anunciosEntidad+", costeEntidad: "+costeEntidad;
 
-		} catch (Exception e) {
+                    }
 
-			// Si se produce algún error se hace rollback de la transacción
-			try {
-				cct.endTX(false);
-			} catch (ISPACException e1) {
-				e1.printStackTrace();
-			}
+                }
+            }
+            if (numEntidades>0 && !finIterator){
+                listado += "anunciosEntidad: " + anunciosEntidad + ", costeEntidad: " + costeEntidad;
+                LOGGER.debug("3----- anunciosEntidad: " + anunciosEntidad + ", costeEntidad: " + costeEntidad);
+            }
 
-			throw new ISPACRuleException("Error al obtener la liquidación mensual de cobros de recibos.", e);
-		}     
-	}
+            return listado;
 
-	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-	}
+        } catch (Exception e) {
+
+            // Si se produce algún error se hace rollback de la transacción
+            try {
+                cct.endTX(false);
+            } catch (ISPACException e1) {
+                LOGGER.error("ERROR. " + e1.getMessage(), e1);
+            }
+
+            throw new ISPACRuleException("Error al obtener la liquidación mensual de cobros de recibos.", e);
+        }     
+    }
+
+    public void cancel(IRuleContext rulectx) throws ISPACRuleException {
+        // No se da nunca este caso
+    }
 }

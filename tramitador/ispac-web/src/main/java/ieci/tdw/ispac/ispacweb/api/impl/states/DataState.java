@@ -5,6 +5,7 @@ import ieci.tdw.ispac.api.item.IProcess;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.context.StateContext;
 import ieci.tdw.ispac.ispacweb.api.ManagerState;
+import ieci.tdw.ispac.lock.LockManager;
 
 import java.util.Map;
 
@@ -98,4 +99,16 @@ public class DataState extends BaseState {
 
 		return "?" + ManagerState.PARAM_NUMEXP + "=" + getNumexp() + params;
 	}
+	
+	/**
+	 * [dipucr-Felipe #427] Devuelve el usuario que tiene bloqueado una pestaña (entidad)
+	 * @param ctx
+	 * @return
+	 * @throws ISPACException
+	 */
+    public String getLockedDataUser(IClientContext ctx) throws ISPACException {
+    	
+    	return getLockedEntityUser(ctx, mStateContext.getEntity(), LockManager.LOCKTYPE_ENTITY);
+    }
+	
 }

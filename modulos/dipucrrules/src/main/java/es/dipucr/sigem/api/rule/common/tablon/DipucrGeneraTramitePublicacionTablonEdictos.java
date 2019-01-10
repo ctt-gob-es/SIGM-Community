@@ -239,7 +239,7 @@ public class DipucrGeneraTramitePublicacionTablonEdictos implements IRule{
 		    		if(doc != null){
 		    			String infoPag = doc.getString("INFOPAG");
 			        	File fileBases = DocumentosUtil.getFile(cct, infoPag, null, null);
-			        	DipucrCommonFunctions.Concatena(xComponent, "file://" + fileBases.getPath(), ooHelper);
+			        	DipucrCommonFunctions.concatena(xComponent, "file://" + fileBases.getPath());
 			        	fileBases.delete();
 					}
 		    		
@@ -261,8 +261,10 @@ public class DipucrGeneraTramitePublicacionTablonEdictos implements IRule{
 					entityDocumentT.delete(cct);
 					
 					DocumentosUtil.deleteFile(sFileTemplate);  
-					ooHelper.dispose();
-	        	}
+					if(null != ooHelper){
+			        	ooHelper.dispose();
+					}
+				}
     		}	
 			cct.endTX(true);
 		} catch(Exception e) {

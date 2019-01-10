@@ -145,6 +145,9 @@ public final class TransformersFacade {
 	    
 	    xmlTemplateFolder = afirmaConfigFilePathResolver.getConfigFilePath(afirmaConfigFilePathResolver.ISPAC_BASE_CONFIG_SUBDIR_KEY_AFIRMA + File.separator + transformersProperties.getProperty(TransformersConstants.TRANSFORMERS_TEMPLATES_PATH_PROPERTIES)+ "/xmlTemplates/" + fileName);	    
 
+	    if(xmlTemplateFolder==null)
+	    	xmlTemplateFolder="/config/SIGEM/conf/SIGEM_Tramitacion/integra_afirma/transformersTemplates/xmlTemplates/"+fileName;
+	    
 	    LOGGER.debug(Language.getFormatResIntegra(ILogConstantKeys.TF_LOG007, new Object[ ] { xmlTemplateFolder }));
 	    LOGGER.debug(Language.getResIntegra(ILogConstantKeys.TF_LOG008));
 	    
@@ -184,6 +187,9 @@ public final class TransformersFacade {
 //	    URL url = TransformersFacade.class.getClassLoader().getResource(transformersProperties.getProperty(TransformersConstants.TRANSFORMERS_TEMPLATES_PATH_PROPERTIES)+ "/parserTemplates/"+fileName);
 	    xmlTemplateFolder = afirmaConfigFilePathResolver.getConfigFilePath(afirmaConfigFilePathResolver.ISPAC_BASE_CONFIG_SUBDIR_KEY_AFIRMA + File.separator + transformersProperties.getProperty(TransformersConstants.TRANSFORMERS_TEMPLATES_PATH_PROPERTIES)+ "/parserTemplates/" + fileName);	    
 
+	    if(xmlTemplateFolder==null)
+	    	xmlTemplateFolder = "/config/SIGEM/conf/SIGEM_Tramitacion/integra_afirma/transformersTemplates/parserTemplates/"+fileName;
+	    
 	    //xmlTemplateFolder = ConfigurationHelper.getConfigFilePath(afirmaConfigFilePathResolver.ISPAC_BASE_CONFIG_SUBDIR_KEY_AFIRMA + File.separator + transformersProperties.getProperty(TransformersConstants.TRANSFORMERS_TEMPLATES_PATH_PROPERTIES)+ "/parserTemplates",fileName);
 	    
 	    LOGGER.debug(Language.getFormatResIntegra(ILogConstantKeys.TF_LOG010, new Object[ ] { xmlTemplateFolder }));

@@ -26,7 +26,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>es.dipucr</groupId>
-			<artifactId>DipucrFuncionesComunes</artifactId>
+			<artifactId>DipucrRules</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>es.dipucr.subvenciones</groupId>
+			<artifactId>Subvenciones</artifactId>
 			<version>3.0</version>
 		</dependency>
 	</dependencies>

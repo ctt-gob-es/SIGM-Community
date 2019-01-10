@@ -155,6 +155,55 @@
 						                		<html:text property="<%=Defs.PARAMETRO_NOMBRE_LARGO%>" styleId="<%=Defs.PARAMETRO_NOMBRE_LARGO%>" maxlength="500" tabindex="3" style="width: 330px"></html:text>
 						                	</td>
 										</tr>
+										<tr>
+											<td>
+												<label for="<%=Defs.PARAMETRO_CODIGO_INE%>" class="gr_ext"><bean:message key="entidad.nueva.codigoINE" /></label>
+											</td>
+											<td>
+						                		<html:text property="<%=Defs.PARAMETRO_CODIGO_INE%>" styleId="<%=Defs.PARAMETRO_CODIGO_INE%>" maxlength="500" tabindex="3" style="width: 330px"></html:text>
+						                	</td>
+										</tr>
+										<tr>
+											<td>
+												<label for="<%=Defs.PARAMETRO_PASSWORD_ENTIDAD%>" class="gr_ext"><bean:message key="entidad.nueva.password_entidad" /></label>
+											</td>
+											<td>
+						                		<html:text property="<%=Defs.PARAMETRO_PASSWORD_ENTIDAD%>" styleId="<%=Defs.PARAMETRO_PASSWORD_ENTIDAD%>" maxlength="500" tabindex="3" style="width: 330px"></html:text>
+						                	</td>
+										</tr>
+										<tr>
+											<td>
+												<label for="<%=Defs.PARAMETRO_CIF%>" class="gr_ext"><bean:message key="entidad.nueva.cif" /></label>
+											</td>
+											<td>
+						                		<html:text property="<%=Defs.PARAMETRO_CIF%>" styleId="<%=Defs.PARAMETRO_CIF%>" maxlength="500" tabindex="3" style="width: 330px"></html:text>
+						                	</td>
+										</tr>
+										<tr>
+											<td>
+												<label for="<%=Defs.PARAMETRO_DIR3%>" class="gr_ext"><bean:message key="entidad.nueva.dir3" /></label>
+											</td>
+											<td>
+						                		<html:text property="<%=Defs.PARAMETRO_DIR3%>" styleId="<%=Defs.PARAMETRO_DIR3%>" maxlength="500" tabindex="3" style="width: 330px"></html:text>
+						                	</td>
+										</tr>
+										<tr>
+											<td>
+												<label for="<%=Defs.PARAMETRO_SIA%>" class="gr_ext"><bean:message key="entidad.nueva.sia" /></label>
+											</td>
+											<td>
+						                		<html:text property="<%=Defs.PARAMETRO_SIA%>" styleId="<%=Defs.PARAMETRO_SIA%>" maxlength="500" tabindex="3" style="width: 330px"></html:text>
+						                	</td>
+										</tr>
+										<tr>
+											<td>
+												<label for="<%=Defs.PARAMETRO_DEH%>" class="gr_ext"><bean:message key="entidad.nueva.deh" /></label>
+											</td>
+											<td>
+						                		<html:text property="<%=Defs.PARAMETRO_DEH%>" styleId="<%=Defs.PARAMETRO_DEH%>" maxlength="500" tabindex="3" style="width: 330px"></html:text>
+						                	</td>
+										</tr>
+										
 										<%--
 										<tr>
 											<td>
@@ -170,6 +219,7 @@
 						                	</td>
 										</tr>
 										--%>
+										
 										<tr><td colspan=2><br/></td></tr>
 										<tr align=center>
 											<td colspan=2>

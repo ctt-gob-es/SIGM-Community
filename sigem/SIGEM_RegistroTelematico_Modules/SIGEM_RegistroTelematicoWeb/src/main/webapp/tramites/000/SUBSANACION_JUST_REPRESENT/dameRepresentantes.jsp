@@ -16,15 +16,22 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Recuperando los Representados</title>
 </head>
 
 <body>
-Recuperando los representantes
+Recuperando los Representados...
 </body>
 <script type="text/javascript">
 	var ayuntamiento = opener.document.getElementById('ayuntamiento');
+	var asociaciones_div = opener.document.getElementById('asociaciones_div');
+	var ayuntamiento_div = opener.document.getElementById('ayuntamiento_div');
+	var remitente_div = opener.document.getElementById('remitente_div');
+	var mensajeRepresente_div = opener.document.getElementById('mensajeRepresente_div');
+	
 	ayuntamiento.options.length=1;
+	asociaciones_div.style.display = 'none';
+	
 <%
 
 	String valor = "";
@@ -55,6 +62,11 @@ Recuperando los representantes
 		NodeList nodeList = rootElement.getElementsByTagName("dato");
 
 		if(nodeList != null && nodeList.getLength() > 0){
+			%>
+				ayuntamiento_div.style.display = '';
+				remitente_div.style.display = '';			
+			<%
+
 			for(int i = 0; i < nodeList.getLength(); i++){
 				Node exp = nodeList.item(i);
 				if( exp.getNodeType() == Node.ELEMENT_NODE){
@@ -67,8 +79,7 @@ Recuperando los representantes
 					lista = elemento.getElementsByTagName("sustituto").item(0).getChildNodes(); 
 					datoValor = (Node) lista.item(0); 
 					String asunto =  datoValor.getNodeValue();
-					%>	
-
+					%>
 						op = opener.document.createElement('option');  
 						op.value = '<%=asunto%>'; 
 						op.text = '<%=numexp%>'; 
@@ -76,7 +87,10 @@ Recuperando los representantes
 					<%
 				}
 			}
-
+		} else {
+			%>				
+				mensajeRepresente_div.style.display='';
+			<%
 		}
 	}
 	catch(Exception ex) {}%>

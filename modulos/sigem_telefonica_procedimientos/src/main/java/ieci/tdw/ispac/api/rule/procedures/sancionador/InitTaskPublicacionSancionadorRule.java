@@ -11,14 +11,14 @@ import ieci.tdw.ispac.api.item.ITask;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.api.rule.procedures.CommonFunctions;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
 public class InitTaskPublicacionSancionadorRule implements IRule {
 
-	protected String STR_entidad = "";
-	protected String STR_template = "";
+    protected String strEntidad = "";
+    protected String strTemplate = "";
 
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException{
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException{
         return true;
     }
 
@@ -26,53 +26,50 @@ public class InitTaskPublicacionSancionadorRule implements IRule {
         return true;
     }
 
-    public Object execute(IRuleContext rulectx) throws ISPACRuleException
-    {
-    	try
-    	{
-			//----------------------------------------------------------------------------------------------
-	        ClientContext cct = (ClientContext) rulectx.getClientContext();
-	        IInvesflowAPI invesFlowAPI = cct.getAPI();
-	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
-	        //----------------------------------------------------------------------------------------------
-	    	
-	        //Actualiza el campo estado de la entidad
-	        //de modo que permita mostrar el enlace para crear la Solicitud de Anuncio en el BOP
-	        String numexp = rulectx.getNumExp();
-	        IItemCollection col = entitiesAPI.getEntities(STR_entidad, numexp);
-	        Iterator it = col.iterator();
-	        if (it.hasNext())
-	        {
-		        IItem entidad = (IItem)it.next();
-		        entidad.set("ESTADO", "Inicio");
-		        entidad.store(cct);
-	        }
-	        
-			//Creación de variables de sesión para las plantillas
-			int taskId = rulectx.getTaskId();
-			ITask iTask = invesFlowAPI.getTask(taskId);
-			String strTaskName = iTask.getString("NOMBRE");
-			cct.setSsVariable("NOMBRE_TRAMITE", strTaskName);
+    public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+        try {
+            //----------------------------------------------------------------------------------------------
+            IClientContext cct =  rulectx.getClientContext();
+            IInvesflowAPI invesFlowAPI = cct.getAPI();
+            IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+            //----------------------------------------------------------------------------------------------
+            
+            //Actualiza el campo estado de la entidad
+            //de modo que permita mostrar el enlace para crear la Solicitud de Anuncio en el BOP
+            String numexp = rulectx.getNumExp();
+            IItemCollection col = entitiesAPI.getEntities(strEntidad, numexp);
+            Iterator<?> it = col.iterator();
+            
+            if (it.hasNext()) {
+                IItem entidad = (IItem)it.next();
+                entidad.set("ESTADO", "Inicio");
+                entidad.store(cct);
+            }
+            
+            //Creación de variables de sesión para las plantillas
+            int taskId = rulectx.getTaskId();
+            ITask iTask = invesFlowAPI.getTask(taskId);
+            String strTaskName = iTask.getString("NOMBRE");
+            cct.setSsVariable("NOMBRE_TRAMITE", strTaskName);
 
-	        //Generación del anuncio a partir de la plantilla
-			String strTpDocName = "Anuncio";
-			String strTemplateName = STR_template;
-	        CommonFunctions.generarDocumento(rulectx, strTpDocName, strTemplateName, null);
-	        
-	        //Borra las variables de sesion utilizadas
-			cct.deleteSsVariable("NOMBRE_TRAMITE");
-	    }
-		catch(Exception e) 
-	    {
-	    	if (e instanceof ISPACRuleException)
-	    	{
-			    throw new ISPACRuleException(e);
-	    	}
-	    	throw new ISPACRuleException("No se ha podido iniciar la tarea de publicación en BOP.",e);
-	    }
-		return new Boolean(true);
+            //Generación del anuncio a partir de la plantilla
+            String strTpDocName = "Anuncio";
+            String strTemplateName = strTemplate;
+            CommonFunctions.generarDocumento(rulectx, strTpDocName, strTemplateName, null);
+            
+            //Borra las variables de sesion utilizadas
+            cct.deleteSsVariable("NOMBRE_TRAMITE");
+            
+        } catch(ISPACRuleException e) {
+            throw new ISPACRuleException(e);
+        
+        } catch(Exception e) {
+            throw new ISPACRuleException("No se ha podido iniciar la tarea de publicación en BOP.",e);
+        }
+        return Boolean.TRUE;
     }
 
-	public void cancel(IRuleContext rulectx) throws ISPACRuleException{
+    public void cancel(IRuleContext rulectx) throws ISPACRuleException{
+        //No se da nunca este caso
     }
 }

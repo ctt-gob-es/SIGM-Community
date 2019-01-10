@@ -72,6 +72,7 @@
 			</activation>
 			<properties>
 				<filter.generic.system>${project.basedir}/../${pom.artifactId}/src/main/filters/system/unix.properties</filter.generic.system>
+				<filter.generic.system>${project.basedir}/../SIGEM_Config/src/main/filters/system/unix.properties</filter.generic.system>
 			</properties>
 		</profile>
 		<profile>

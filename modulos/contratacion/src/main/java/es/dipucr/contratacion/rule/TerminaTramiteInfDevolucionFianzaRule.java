@@ -50,7 +50,7 @@ public class TerminaTramiteInfDevolucionFianzaRule implements IRule{
 	        while (exp_relacionadosIterator.hasNext()){
 	        	numexpPadreContratacion = ((IItem)exp_relacionadosIterator.next()).getString("NUMEXP_HIJO");
 	        	
-	        	sQuery = "WHERE NUMEXP_PADRE='"+numexpPadreContratacion+"' AND RELACION='Devolucion Fianza' ORDER BY ID ASC";
+	        	sQuery = "WHERE NUMEXP_PADRE='"+numexpPadreContratacion+"' AND RELACION LIKE 'Devolucion Fianza%' ORDER BY ID ASC";
 	    		exp_relacionadosCollection = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, sQuery);
 		        exp_relacionadosIterator = exp_relacionadosCollection.iterator();
 		        while (exp_relacionadosIterator.hasNext()){
@@ -82,7 +82,7 @@ public class TerminaTramiteInfDevolucionFianzaRule implements IRule{
 			 }
 			
 			//Calculo el tramite que le corresponde
-			 sQuery = "WHERE ID_FASE = "+idFaseProp+" AND NOMBRE='Informe Técnico'";
+			 sQuery = "WHERE ID_FASE = "+idFaseProp+" AND NOMBRE like 'Informe Técnico%'";
 			 IItemCollection iTramiteProp = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_P_TRAMITES, sQuery);
 			 Iterator<IItem> ITramiteProp = iTramiteProp.iterator();
 			 int idTramite=0;
@@ -142,17 +142,11 @@ public class TerminaTramiteInfDevolucionFianzaRule implements IRule{
 			String query = "DELETE FROM SPAC_DT_DOCUMENTOS WHERE ID_TRAMITE="+idTramiteInfTecnico+" AND NUMEXP='"+numexpPadreContratacion+"' AND INFOPAG_RDE IS null";
 		 	cnt.execute(query);	
 				
-			//cnt.closeTX(true);
+			cct.releaseConnection(cnt);
 			
-			
-    	 }
-    	catch(Exception e) 
-        {
-        	if (e instanceof ISPACRuleException)
-        	{
-			    throw new ISPACRuleException(e);
-        	}
-        	throw new ISPACRuleException("No se ha podido inicializar la propuesta.",e);
+    	 } catch(Exception e) { 
+    		logger.error("No se ha podido inicializar la propuesta - numexp"+rulectx.getNumExp()+" - "+e.getMessage(),e);
+        	throw new ISPACRuleException("No se ha podido inicializar la propuesta - numexp"+rulectx.getNumExp()+" - "+e.getMessage(),e);        	
         }
 		
 		return new Boolean(true);

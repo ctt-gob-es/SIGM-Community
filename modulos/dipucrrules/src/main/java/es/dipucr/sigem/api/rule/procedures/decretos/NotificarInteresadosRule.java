@@ -190,20 +190,26 @@ public class NotificarInteresadosRule implements IRule {
 									}//try
 									catch(SendFailedException e)
 									{
+										logger.error("Error en el envío. "+rulectx.getNumExp()+" nombreNotif "+nombreNotif+ "descripcion error "+descripError+" - "+e.getMessage(), e);
 										descripError = "Error en el envío a D./Dª. "+nombreNotif+". ";
 										enviadoEmail = false;
 										DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvio, nombreDoc,descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx );
+										throw new ISPACRuleException("Error en el envío. "+rulectx.getNumExp()+" nombreNotif "+nombreNotif+ "descripcion error "+descripError+" - "+e.getMessage(), e);
 									}
 									catch(AddressException e)
-									{					
+									{	
+										logger.error("Error en el envío. "+rulectx.getNumExp()+" nombreNotif "+nombreNotif+ "descripcion error "+descripError+" - "+e.getMessage(), e);
 										descripError = "Error en la dirección de correo '" + emailNotif + "' de D./Dª. "+nombreNotif+". ";
 										enviadoEmail = false;
 										DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvio, nombreDoc,descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
+										throw new ISPACRuleException("Error en el envío. "+rulectx.getNumExp()+" nombreNotif "+nombreNotif+ "descripcion error "+descripError+" - "+e.getMessage(), e);
 									}
-									catch(Exception e){						
+									catch(Exception e){	
+										logger.error("Error en el envío. "+rulectx.getNumExp()+" nombreNotif "+nombreNotif+ "descripcion error "+descripError+" - "+e.getMessage(), e);
 										descripError = "Error en el envío a D./Dª. "+nombreNotif+". ";
 										enviadoEmail = false;	
 										DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,fechaEnvio, nombreDoc,descripcionDoc, enviadoEmail, emailNotif, descripError, rulectx);
+										throw new ISPACRuleException("Error en el envío. "+rulectx.getNumExp()+" nombreNotif "+nombreNotif+ "descripcion error "+descripError+" - "+e.getMessage(), e);
 									}
 							}//else if	
 						}//if sqlQueryDoc
@@ -221,12 +227,11 @@ public class NotificarInteresadosRule implements IRule {
 				}//for
 			}//if participantes
 		}//Try		
-		catch(Exception e) {			
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException(descripError ,e);
+		catch(Exception e) {
+			logger.error("Error en el envío. "+rulectx.getNumExp()+" nombreNotif "+nombreNotif+ "descripcion error "+descripError+" - "+e.getMessage(), e);
+        	throw new ISPACRuleException("Error en el envío. "+rulectx.getNumExp()+" nombreNotif "+nombreNotif+ "descripcion error "+descripError+" - "+e.getMessage(), e);
         }
-		return null;
+		return new Boolean(true);
 	}
 	
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
@@ -283,11 +288,13 @@ public class NotificarInteresadosRule implements IRule {
 			document.close();
 		
 		} catch (ISPACException e) {
-			logger.error("Error al añadir la banda lateral al PDF", e);
-			throw e;
-		} catch (Exception exc) {
-			logger.error("Error al añadir la banda lateral al PDF", exc);
-			throw new ISPACException(exc);
+			logger.error("Error al añadir la banda lateral al PDF - "+e.getMessage(), e);
+        	throw new ISPACRuleException("Error al añadir la banda lateral al PDF - "+e.getMessage(), e);
+        
+		} catch (Exception e) {
+			logger.error("Error al añadir la banda lateral al PDF - "+e.getMessage(), e);
+        	throw new ISPACRuleException("Error al añadir la banda lateral al PDF - "+e.getMessage(), e);
+        
 		}
 	}
 	
@@ -313,8 +320,8 @@ public class NotificarInteresadosRule implements IRule {
 			return image;
 			
 		} catch (Exception e) {
-			logger.error("Error al leer la imagen de fondo del PDF firmado: " + imagePath, e);
-			throw new ISPACException(e);
+			logger.error("Error al leer la imagen de fondo del PDF firmado: " + imagePath+ " - "+e.getMessage(), e);
+			throw new ISPACException("Error al leer la imagen de fondo del PDF firmado: " + imagePath+ " - "+e.getMessage(), e);
 		}
 	}
 	
@@ -359,8 +366,8 @@ public class NotificarInteresadosRule implements IRule {
 			pdfContentByte.endText();
 			
 		} catch (Exception e) {
-			logger.error("Error al componer la imagen de la banda lateral", e);
-			throw new ISPACException(e);
+			logger.error("Error al componer la imagen de la banda lateral - "+e.getMessage(), e);
+			throw new ISPACException("Error al componer la imagen de la banda lateral - "+e.getMessage(), e);
 		}
 	}
 	

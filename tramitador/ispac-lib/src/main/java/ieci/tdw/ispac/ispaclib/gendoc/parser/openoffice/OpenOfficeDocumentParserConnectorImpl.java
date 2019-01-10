@@ -9,10 +9,6 @@ import ieci.tdw.ispac.ispaclib.gendoc.parser.DocumentParserPool;
 import ieci.tdw.ispac.ispaclib.gendoc.parser.IDocumentParserConnector;
 import ieci.tdw.ispac.ispaclib.tageval.TagTranslator;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -22,14 +18,12 @@ import org.apache.log4j.Logger;
  * @version $Revision$
  * 
  */
-public class OpenOfficeDocumentParserConnectorImpl implements
-		IDocumentParserConnector {
+public class OpenOfficeDocumentParserConnectorImpl implements IDocumentParserConnector {
 
 	/**
 	 * Logger de la clase.
 	 */
-	private static final Logger logger = Logger
-			.getLogger(OpenOfficeDocumentParserConnectorImpl.class);
+	private static final Logger logger = Logger.getLogger(OpenOfficeDocumentParserConnectorImpl.class);
 
 	/**
 	 * Contexto de cliente.
@@ -91,5 +85,4 @@ public class OpenOfficeDocumentParserConnectorImpl implements
 			factory.release(document);
 		}
 	}
-
 }

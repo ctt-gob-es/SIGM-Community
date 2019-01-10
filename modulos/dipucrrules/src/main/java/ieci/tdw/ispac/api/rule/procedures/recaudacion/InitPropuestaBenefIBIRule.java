@@ -7,8 +7,8 @@ public class InitPropuestaBenefIBIRule extends InitPropuestaRule {
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException
 	{
-		STR_entidad = "REC_RESOLUCION";
-		STR_extracto = "Propuesta expediente de Beneficios IBI";
+		entidad = "REC_RESOLUCION";
+		extracto = "Propuesta expediente de Beneficios IBI";
         return true;
     }
 }

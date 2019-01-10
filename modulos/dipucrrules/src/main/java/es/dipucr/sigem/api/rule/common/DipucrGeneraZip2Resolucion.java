@@ -10,6 +10,7 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.utils.FileUtils;
 
 import java.io.File;
@@ -26,16 +27,16 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class DipucrGeneraZip2Resolucion implements IRule {
 	
-	private static final Logger logger = Logger.getLogger(DipucrGeneraZip2Resolucion.class);
+	private static final Logger LOGGER = Logger.getLogger(DipucrGeneraZip2Resolucion.class);
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException{
+		// Nada que hacer al cancelar
     }
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
 		String numexp = "";
-		try
-    	{
-			logger.info("INICIO - " + this.getClass().getName());
+		try {
+			LOGGER.info("INICIO - " + this.getClass().getName());
 			//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
@@ -50,10 +51,10 @@ public class DipucrGeneraZip2Resolucion implements IRule {
 	
 	        //Obtenemos los documentos a partir de su nombre
 			List<IItem> filesConcatenate = new ArrayList<IItem>();
-			String STR_queryDocumentos = "ESTADOFIRMA = '02'";
-			logger.debug("STR_queryDocumentos "+STR_queryDocumentos);
-			IItemCollection documentsCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), STR_queryDocumentos, "FDOC DESC");
-			logger.debug("documentsCollection "+documentsCollection.toList().size());
+			String queryDocumentos = "ESTADOFIRMA = '02'";
+			LOGGER.debug("STR_queryDocumentos "+queryDocumentos);
+			IItemCollection documentsCollection = entitiesAPI.getDocuments(rulectx.getNumExp(), queryDocumentos, "FDOC DESC");
+			LOGGER.debug("documentsCollection "+documentsCollection.toList().size());
 			
 			Iterator<?> it  = documentsCollection.iterator();
 	        IItem itemDoc = null;
@@ -70,7 +71,7 @@ public class DipucrGeneraZip2Resolucion implements IRule {
 			
 			// Crear el zip con los documentos
 			//    http://www.manual-java.com/codigos-java/compresion-decompresion-archivos-zip-java.html
-			File zipFile = DocumentosUtil.createDocumentsZipFile(genDocAPI, filesConcatenate);
+			File zipFile = DocumentosUtil.createDocumentsZipFileInfoPagRDE(genDocAPI, filesConcatenate);
 			
 	        //Generamos el documento zip
 			String sName = "Documentos & Numexp = "+numexp;//Campo descripción del documento
@@ -85,11 +86,9 @@ public class DipucrGeneraZip2Resolucion implements IRule {
 				DocumentosUtil.generaYAnexaDocumento(rulectx, idTypeDocument, sName, zipFile, "pdf");
 
 				bCommit = true;
-			}
-			catch (Exception e) {
-				throw new ISPACInfo("Error al generar el documento.");
-			}
-			finally {
+			} catch (Exception e) {
+				throw new ISPACInfo("Error al generar el documento.", e);
+			} finally {
 				cct.endTX(bCommit);
 			}
 		        
@@ -119,18 +118,32 @@ public class DipucrGeneraZip2Resolucion implements IRule {
 		        	int idCircuito = circuito.getInt("ID_CIRCUITO");
 	        	
 			        strQuery="SELECT DESCRIPCION FROM SPAC_CTOS_FIRMA_CABECERA WHERE ID_CIRCUITO = "+idCircuito+"";
-			        ResultSet circuitoFirmaDetalle = cct.getConnection().executeQuery(strQuery).getResultSet();
-			        if(circuitoFirmaDetalle==null)
-		          	{
+			        DbCnt cnt = cct.getConnection();			        
+			        ResultSet circuitoFirmaDetalle = cnt.executeQuery(strQuery).getResultSet();
+			        if(circuitoFirmaDetalle==null) {
+			        	cct.releaseConnection(cnt);
 		          		throw new ISPACInfo("No hay ningun procediento asociado");
 		          	}
-		          	if(circuitoFirmaDetalle.next()) if (circuitoFirmaDetalle.getString("DESCRIPCION")!=null) cargo = circuitoFirmaDetalle.getString("DESCRIPCION"); else cargo="";
+		          	if(circuitoFirmaDetalle.next()) {
+		          		if (circuitoFirmaDetalle.getString("DESCRIPCION")!=null) {
+		          			cargo = circuitoFirmaDetalle.getString("DESCRIPCION");
+		          		} else {
+		          			cargo="";
+		          		}
+		          	}
+		          	if(cargo.length()>20) {
+		          		cargo = cargo.substring(0,19);
+		          	}
+		          	circuitoFirmaDetalle.close();
+		          	cct.releaseConnection(cnt);
 		        }
 	        }
 	        
 	         IItem expediente = ExpedientesUtil.getExpediente(cct, numexp);
 	         String titulo = "";
-	         if(expediente != null) titulo = expediente.getString("ASUNTO");
+	         if(expediente != null) {
+	        	 titulo = expediente.getString("ASUNTO");
+	         }
 	        
 	        if (itConv.hasNext()){	        	
 		        IItem entidad = (IItem)itConv.next();
@@ -138,8 +151,7 @@ public class DipucrGeneraZip2Resolucion implements IRule {
 		        entidad.set("NUM_VICEP", cargo);
 		        entidad.set("TITULO", titulo);
 		        entidad.store(cct);
-	        }
-	        else{
+	        } else {
 	        	IItem item = entitiesAPI.createEntity("DPCR_RESOLUCION2",numexp);
 				item.set("NUMEXP", rulectx.getNumExp()); 
 				item.set("ESTADO", "Inicio");
@@ -148,17 +160,11 @@ public class DipucrGeneraZip2Resolucion implements IRule {
 		        item.store(rulectx.getClientContext());
 	        }
 			
-    	}
-    	catch(Exception e) 
-        {
-        	if (e instanceof ISPACRuleException)
-        	{
-			    throw new ISPACRuleException(e);
-        	}
+    	} catch(Exception e) {
         	throw new ISPACRuleException("No se ha podido generar la propuesta.",e);
         }
-    	logger.info("FIN - " + this.getClass().getName());
-    	return new Boolean(true);
+    	LOGGER.info("FIN - " + this.getClass().getName());
+    	return true;
 	}
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException{

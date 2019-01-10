@@ -5,11 +5,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import javax.activation.DataSource;
+
+import org.apache.log4j.Logger;
 
 
 
 public class WebDAVFile {
+	
+	public static final Logger LOGGER =  Logger.getLogger(WebDAVFile.class);
 
 	/* 
 	 * The predefined buffer size when retrieving repository items
@@ -75,7 +80,7 @@ public class WebDAVFile {
         	//is.close();
 
         } catch (IOException e) {
-        	e.printStackTrace();
+        	LOGGER.error(e.getMessage(), e);
         }
         
         return baos.toByteArray();

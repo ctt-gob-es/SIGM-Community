@@ -22,7 +22,7 @@ public class MensajeSMSServiceLocator extends org.apache.axis.client.Service imp
     }
 
     // Use to get a proxy class for MensajeSMS
-    private java.lang.String MensajeSMS_address = "http://10.12.200.35:8090/ServidorSmsWS/services/MensajeSMS";
+    private java.lang.String MensajeSMS_address = "http://172.20.16.35:8090/ServidorSmsWS/services/MensajeSMS";
 
     public java.lang.String getMensajeSMSAddress() {
         return MensajeSMS_address;

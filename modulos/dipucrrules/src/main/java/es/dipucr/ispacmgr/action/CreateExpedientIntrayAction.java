@@ -369,7 +369,7 @@ public class CreateExpedientIntrayAction extends BaseAction {
 			iProceFinal = new ListCollection(lProceFinal);
 			
 		} catch (ISPACException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 		
 		return CollectionBean.getBeanList(iProceFinal);
@@ -507,7 +507,7 @@ public class CreateExpedientIntrayAction extends BaseAction {
 		        		            	cct.endTX(true);
 		        		            }
 		        		            catch(Exception e){
-		        		            	logger.error("Error al guardar el participante con id: " + thirdParty.getIdExt() + ". Expediente: " + process.getString("NUMEXP") + ". " + e.getMessage(), e);
+		        		            	LOGGER.error("Error al guardar el participante con id: " + thirdParty.getIdExt() + ". Expediente: " + process.getString("NUMEXP") + ". " + e.getMessage(), e);
 		        		            	cct.endTX(false);
 		        		            }
 		        				}//fin si !existe
@@ -562,17 +562,17 @@ public class CreateExpedientIntrayAction extends BaseAction {
 	    	
 	    	expedient.store(cct);
 	    	
-	    	logger.info("Inicio Evento");
+	    	LOGGER.info("Inicio Evento");
 			// Ejecutar el evento
 			ITXTransaction transaction = invesflowAPI.getTransactionAPI();
 			transaction.executeEvents(EventsDefines.EVENT_OBJ_PROCEDURE, ctx
 					.getProcedure(), EventsDefines.EVENT_INBOX_CREATE, ctx);
 			
-			logger.info("Inicio AddDocument");
+			LOGGER.info("Inicio AddDocument");
 			// Adjuntar los documentos del registro distribuido al expediente
 			RegistrosDistribuidosUtil.addDocuments(cct, process.getString("NUMEXP"), intray);
 			
-			logger.info("FIN AddDocument");
+			LOGGER.info("FIN AddDocument");
 
 			// Si todo ha sido correcto se hace commit de la transacción
 			bCommit = true;	

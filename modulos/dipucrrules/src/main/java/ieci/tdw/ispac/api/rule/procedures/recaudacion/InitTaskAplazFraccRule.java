@@ -7,8 +7,8 @@ public class InitTaskAplazFraccRule extends InitTaskResolucionRule {
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException
 	{
-		STR_entidad = "REC_RESOLUCION";
-		STR_queryDocumentos = "";
+		strEntidad = "REC_RESOLUCION";
+		strQueryDocumentos = "";
         return true;
     }
 }

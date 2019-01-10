@@ -15,17 +15,16 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrSERSOComp2SolLibrosComedor implements IRule {
 
     public static final Logger LOGGER = Logger.getLogger(DipucrSERSOComp2SolLibrosComedor.class);
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
-
     
     public Object execute(IRuleContext rulectx) throws ISPACRuleException {
         LOGGER.info(ConstantesString.INICIO + this.getClass().getName());
@@ -40,28 +39,22 @@ public class DipucrSERSOComp2SolLibrosComedor implements IRule {
             int numSolicitudes = 0;
             
             IItemCollection solicitudCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, numexp);
-            Iterator<?> solicitudIterator = solicitudCollection.iterator();                
+            Iterator<?> solicitudIterator = solicitudCollection.iterator();   
+            
             if (solicitudIterator.hasNext()) {
                 IItem solicitud = (IItem)solicitudIterator.next();
-                String nif = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
-                String tipoAyuda = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
-                String convocatoria = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CONVOCATORIA);
+                
+                String nif = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
+                String tipoAyuda = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
+                String convocatoria = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CONVOCATORIA);
                 
                 if( StringUtils.isNotEmpty(tipoAyuda) && ( ConstantesPlanEmergencia.LIBROS.equals(tipoAyuda) || ConstantesPlanEmergencia.COMEDOR.equals(tipoAyuda))){
-                    IItemCollection otrasSolicitudesCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA,  "WHERE NUMEXP !='" + numexp + "' AND NIF = '" + nif + "' AND CONVOCATORIA = '" + convocatoria + "'"
+                    IItemCollection otrasSolicitudesCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA,  ConstantesString.WHERE + " NUMEXP != '" + numexp + "' AND NIF = '" + nif + "' AND CONVOCATORIA = '" + convocatoria + "'"
                             + " AND NUMEXP NOT IN (SELECT NUMEXP FROM SPAC_EXPEDIENTES WHERE ESTADOADM='RC') AND NUMEXP NOT IN (SELECT NUMEXP FROM SPAC_EXPEDIENTES_H WHERE ESTADOADM='RC')");
                     numSolicitudes = otrasSolicitudesCollection.toList().size();
+                    
                     if(numSolicitudes > 0){
-                        IItem expediente = ExpedientesUtil.getExpediente(cct, numexp);
-                        if(expediente != null){
-                            String asunto = expediente.getString("ASUNTO");
-                            if(asunto.toUpperCase().indexOf("UNA SOL") < 0){
-                                asunto += " - AVISO EL BENEFICIARIO YA TIENE UNA SOLICITUD.";
-                                expediente.set("ASUNTO", asunto);
-                                                                
-                                expediente.store(cct);
-                            }
-                        }
+                        SubvencionesUtils.concatenaTextoAAsunto(cct, numexp, ConstantesPlanEmergencia.DpcrSERSOAvisos.INDEXOF_1_SOL, ConstantesPlanEmergencia.DpcrSERSOAvisos.TEXTOASUNTO_1_SOL);
                     }
                 }
             }            

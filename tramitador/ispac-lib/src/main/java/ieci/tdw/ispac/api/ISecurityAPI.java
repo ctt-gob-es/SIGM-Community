@@ -71,7 +71,10 @@ public interface ISecurityAPI
 	// Funciones relacionadas con la gestión de permisos
 	public static final int FUNC_PERM_READ = 48;
 	public static final int FUNC_PERM_EDIT = 49;
-	
+
+	//[Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+	public static final int FUNC_INV_REPOSITORIO_COMUN_EDIT = 50;
+
 	public static final int ISPAC_RIGHTS_CREATEEXP		= 1;
 	public static final int ISPAC_RIGHTS_ADMINPROCEDURE	= 2;
 	public static final int ISPAC_RIGHTS_EDITPROCEDURE	= 3;
@@ -95,6 +98,7 @@ public interface ISecurityAPI
 	public static final int PERMISSION_TPOBJ_TASK_PCD			= 8;*/
 
 
+	// [Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
 	public static final int[] CATALOG_ACCESS_FUNCTIONS = new int[] {
 		FUNC_ENTERCATALOG,
 		FUNC_INV_PROCEDURES_READ,
@@ -140,7 +144,8 @@ public interface ISecurityAPI
 		FUNC_PUB_MILESTONES_READ,
 		FUNC_PUB_MILESTONES_EDIT,
 		FUNC_PERM_READ,
-		FUNC_PERM_EDIT
+		FUNC_PERM_EDIT,
+		FUNC_INV_REPOSITORIO_COMUN_EDIT
 	};
 	
 	public IItemCollection getFunctions(String uid) 

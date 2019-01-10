@@ -46,7 +46,89 @@ public class GenerarHojaValoracionAllRule implements IRule {
 	}
 
 	public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
-		return true;
+		boolean inicarTramite = true;
+		try {
+			IClientContext cct = rulectx.getClientContext();
+			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+			
+			String strQueryF = "WHERE NUMEXP_PADRE = '" + rulectx.getNumExp() + "' AND RELACION = 'Finca/Expropiacion'";
+			IItemCollection collectionF = entitiesAPI.queryEntities("SPAC_EXP_RELACIONADOS", strQueryF);
+			
+			Iterator itF = collectionF.iterator();
+			IItem itemF = null;
+			
+			StringBuffer error = new StringBuffer("");
+			
+			
+			while (itF.hasNext()) {
+				itemF = (IItem)itF.next();
+				String numExp = itemF.getString("NUMEXP_HIJO");
+				String sqlQueryPart = "WHERE NUMEXP = '" + numExp + "'";
+				IItemCollection fincas = entitiesAPI.queryEntities("EXPR_FINCAS",sqlQueryPart);
+				Iterator itFinca = fincas.iterator();
+				
+				if(!itFinca.hasNext()) 
+					logger.error("No se encontraron Fincas");
+				else{			
+					// Extraemos los campos necesarios para calcular la valoracion.
+					IItem itemFinca = (IItem)itFinca.next();
+					
+					
+					String sqlPago = "WHERE NUMEXP = '" + numExp + "'";
+					IItemCollection expropiadosFinca = entitiesAPI.queryEntities("EXPR_FINCA_EXPROPIADO_PAGO", sqlPago);					
+					
+	
+					String strQuery = "WHERE NUMEXP_PADRE = '" + numExp + "' AND RELACION = 'Expropiado/Finca'";
+					IItemCollection collection = entitiesAPI.queryEntities("SPAC_EXP_RELACIONADOS", strQuery);
+					Iterator itProp = collection.iterator();
+					IItem item = null;	
+					List expExpropiados = new ArrayList();		
+					
+					while (itProp.hasNext()) {
+					   item = (IItem)itProp.next();
+					   expExpropiados.add(item.getString("NUMEXP_HIJO"));
+					   //logger.warn("Expediente de Expropiado: " + item.getString("NUMEXP_HIJO"));			
+					}
+					
+					//Obtiene los datos de los expropiados
+					Iterator itExpExpropiados = expExpropiados.iterator();
+					strQuery="WHERE NUMEXP = '" + itExpExpropiados.next() + "'";
+					while (itExpExpropiados.hasNext()) {
+						strQuery+=" OR NUMEXP = '" + itExpExpropiados.next() + "'";				 		
+					}			
+					
+					//logger.warn("Expropiados a buscar: " + strQuery);	
+					
+					IItemCollection collectionExpropiados = entitiesAPI.queryEntities("SPAC_DT_INTERVINIENTES", strQuery);						
+					Iterator itExpropiados = collectionExpropiados.iterator();
+					
+					while (itExpropiados.hasNext()) {			 
+						item = (IItem)itExpropiados.next();
+						
+						String numExpTit = item.getString("NUMEXP");							
+						String metros = "";
+						try{	
+							metros = ""+PropietariosUtil.getMetrosPorPropietario(entitiesAPI, numExp, numExpTit);
+						}
+						catch (Exception e){
+							if(error.equals("")){
+								error.append("ERRORES AL SACAR LOS METROS:");
+							}
+							inicarTramite = false;
+							error.append("Finca: "+numExp+" Expropiado: "+numExpTit+" metro "+metros);
+						}
+						
+					}
+				}
+			}
+			if(!inicarTramite){
+				rulectx.setInfoMessage(error.toString());
+			}			
+		} catch (Exception e) {
+			logger.error("Error. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Error. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+		}
+		return inicarTramite;
 	}
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
@@ -156,7 +238,7 @@ public class GenerarHojaValoracionAllRule implements IRule {
 						connectorSession = gendocAPI.createConnectorSession();				
 						
 						//Buscar los expedientes de los Expropiados
-						//logger.warn("Expediente de Finca: " + numExp);
+						logger.warn("Expediente de Finca: " + numExp);
 						String strQuery = "WHERE NUMEXP_PADRE = '" + numExp + "' AND RELACION = 'Expropiado/Finca'";
 						IItemCollection collection = entitiesAPI.queryEntities("SPAC_EXP_RELACIONADOS", strQuery);
 						Iterator itProp = collection.iterator();
@@ -207,7 +289,7 @@ public class GenerarHojaValoracionAllRule implements IRule {
 							while (itPago.hasNext()){
 								itemPago = (IItem)itPago.next();
 								String exp = itemPago.getString("NUMEXP_EXPROPIADO");
-								//logger.warn("Expediente: " + exp);	
+								logger.warn("Expediente expropiado: " + exp);	
 								
 								if (exp.equals(numExpTit)){
 									valoracion = itemPago.getString("CANTIDADPAGO");
@@ -268,9 +350,16 @@ public class GenerarHojaValoracionAllRule implements IRule {
 								
 								cct.setSsVariable("CANTIDAD", valoracion);
 								
-								//logger.warn("numexp "+numExp+" numExpTit "+numExpTit);
-								String metros = ""+PropietariosUtil.getMetrosPorPropietario(entitiesAPI, numExp, numExpTit);
-								//logger.warn("metros. "+metros);
+								logger.warn("numexp "+numExp+" numExpTit "+numExpTit);
+								String metros = "";
+								try{	
+									metros = ""+PropietariosUtil.getMetrosPorPropietario(entitiesAPI, numExp, numExpTit);
+									logger.warn("metros. "+metros);
+								}
+								catch (Exception e){
+									logger.error("Error. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+									throw new ISPACRuleException("FALTA INTRODUCIR LA RELACI�N FINCA EXPROPIADO, YA QUE LOS METROS SON ERRONEOS. FINCA "+numExp+" EXPROPIADO "+numExpTit + " METROS:  "+metros+" - " +e.getMessage(), e);
+								}
 								
 								cct.setSsVariable("METROS", ""+metros);
 								
@@ -286,9 +375,7 @@ public class GenerarHojaValoracionAllRule implements IRule {
 								// seleccionada
 								//logger.warn("generar documento a partir de plantilla " + numExpTit);
 								IItem entityTemplate = null;
-								entityTemplate = gendocAPI.attachTaskTemplate(
-										connectorSession, currentId, documentId,
-										templateId);
+								entityTemplate = gendocAPI.attachTaskTemplate(connectorSession, currentId, documentId,templateId);
 								
 								// Referencia al fichero del documento en el gestor
 								// documental
@@ -327,7 +414,7 @@ public class GenerarHojaValoracionAllRule implements IRule {
 								cct.deleteSsVariable("SUP_EXPROPIADA");
 								cct.deleteSsVariable("IMPORTE");
 	
-							} catch (Throwable e) {
+							} catch (Exception e) {
 	
 								String message = "exception.documents.generate";
 								String extraInfo = null;
@@ -347,6 +434,7 @@ public class GenerarHojaValoracionAllRule implements IRule {
 									extraInfo = e.getMessage();
 								}
 								logger.error(message + " >>" + extraInfo);
+								logger.error("Error. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
 								throw new ISPACInfo(message, extraInfo, false);
 	
 							} finally {
@@ -368,8 +456,8 @@ public class GenerarHojaValoracionAllRule implements IRule {
 			
 				//logger.warn("Fin de ejecución regla GenerarHojaValoracionPorPropietarioRule");
 		} catch (Exception e) {
-			logger.error("Se produjo una excepción", e);
-			throw new ISPACRuleException(e);
+			logger.error("Error. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
+			throw new ISPACRuleException("Error. "+rulectx.getNumExp()+" - "+e.getMessage(), e);
 		}
 		return null;
 	}

@@ -19,6 +19,7 @@ public class SicresTipoAsuntoTabla {
 	private static final String CN_DISABLE_DATE 	= "disable_date";
 	private static final String CN_ENABLED      	= "enabled";
 	private static final String CN_ID_ORG       	= "id_org";
+	private static final String CN_FOR_DISTRT     	= "for_distrt";
 	
 	private static final String ALL_COLUMN_NAMES = 	CN_ID + SEPARATOR +
 													CN_CODE + SEPARATOR +
@@ -30,7 +31,8 @@ public class SicresTipoAsuntoTabla {
 													CN_CREATION_DATE + SEPARATOR +
 													CN_DISABLE_DATE + SEPARATOR +
 													CN_ENABLED + SEPARATOR +
-													CN_ID_ORG; 
+													CN_ID_ORG + SEPARATOR +
+													CN_FOR_DISTRT; 
 		
 	private static final String UPDATE_COLUMN_NAMES =   CN_CODE + SEPARATOR +
 														CN_MATTER + SEPARATOR +
@@ -41,7 +43,8 @@ public class SicresTipoAsuntoTabla {
 														CN_CREATION_DATE + SEPARATOR +
 														CN_DISABLE_DATE + SEPARATOR +
 														CN_ENABLED + SEPARATOR +
-														CN_ID_ORG;
+														CN_ID_ORG + SEPARATOR +
+														CN_FOR_DISTRT;
 	
 	public SicresTipoAsuntoTabla() {}
 

@@ -17,7 +17,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.avisos.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.FechasUtil;
 import es.dipucr.sigem.api.rule.common.utils.PdfUtil;

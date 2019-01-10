@@ -98,9 +98,14 @@ public class ActionScan{
 			while(numImages==-1){
 				numImages = scanner.acquireToFile(code, true, pathFile,showUI);
 			}
-
+			/**
+			 * [Ticket#351] INICIO ALSIGM3 Error al escanear con el Windows 8/10
+			 * **/
 			// Se cierra la conexion
-			scanner.closeDS();
+			//scanner.closeDS();
+			/**
+			 * [Ticket#351] FIN ALSIGM3 Error al escanear con el Windows 8/10
+			 * **/
 			return numImages;
 		} catch (ScannerIOException e) {
 			try {
@@ -144,8 +149,14 @@ public class ActionScan{
 				showUI = false;
 			}
 			int i = scanner.acquireToFile(code, true, pathFile,showUI);
-
-			scanner.closeDS();
+			
+			/**
+			 * [Ticket#351] INICIO ALSIGM3 Error al escanear con el Windows 8/10
+			 * **/
+			//scanner.closeDS();
+			/**
+			 * [Ticket#351] FIN ALSIGM3 Error al escanear con el Windows 8/10
+			 * **/
 			return i;
 		} catch (ScannerIOException e) {
 			try {

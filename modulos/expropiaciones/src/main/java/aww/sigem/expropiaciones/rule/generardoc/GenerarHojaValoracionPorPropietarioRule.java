@@ -268,7 +268,7 @@ public class GenerarHojaValoracionPorPropietarioRule implements IRule {
 						cct.deleteSsVariable("CANTIDAD");
 						cct.deleteSsVariable("METROS");
 
-					} catch (Throwable e) {
+					} catch (Exception e) {
 
 						String message = "exception.documents.generate";
 						String extraInfo = null;

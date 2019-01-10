@@ -29,7 +29,8 @@
 		<!-- applet de escaneo-->
 		<APPLET MAYSCRIPT="true" id="appletScanConfigure" width="0" height="0" CODE="es.ieci.tecdoc.fwktd.applets.scan.applet.IdocAppletLauncher" 
 			ALT="If you could run this applet, you'd see some animation"
-			ARCHIVE="applets/fwktd-scan-applet-0.7.jar;jsessionid=<%=session.getId()%>">
+			ARCHIVE="applets/fwktd-scan-applet-0.7.jar">
+			<!--ARCHIVE="applets/fwktd-scan-applet-0.7.jar;jsessionid=<%=session.getId()%>">-->
 			<param name="java_arguments" value="-Xmx512m"/>
 		</APPLET>
 		

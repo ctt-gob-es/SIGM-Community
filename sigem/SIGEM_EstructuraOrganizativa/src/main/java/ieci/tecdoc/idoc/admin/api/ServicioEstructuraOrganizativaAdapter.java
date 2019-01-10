@@ -67,12 +67,11 @@ public class ServicioEstructuraOrganizativaAdapter implements
 		EstructuraOrganizativaUsuarioManager manager = new EstructuraOrganizativaUsuarioManager();
 		Usuario usuario = null;
 		try {
-			logger.warn("AJM getUsuario, idUser-entidad:"+ idUser + "-" + entidad);
+			logger.error("AJM getUsuario, idUser-entidad:"+ idUser + "-" + entidad);
 			User user = manager.getUsuario(idUser, entidad);
 			usuario = getUsuarioServicio(user);
 		} catch (Exception e) {
 			logger.error("Error al obtener un usuario a partir de su id, getMessage"+ e.getMessage());
-			logger.error("Error al obtener un usuario a partir de su id, getCause"+ e.getCause());
 			throw new EstructuraOrganizativaException(
 					EstructuraOrganizativaException.EXC_GENERIC_EXCEPCION);
 		}
@@ -88,7 +87,6 @@ public class ServicioEstructuraOrganizativaAdapter implements
 			usuario = getUsuarioServicio(user);
 		} catch (Exception e) {
 			logger.error("Error al obtener un usuario a partir de su nombre, getMessage"+ e.getMessage());
-			logger.error("Error al obtener un usuario a partir de su nombre, getCause"+ e.getCause());
 			throw new EstructuraOrganizativaException(
 					EstructuraOrganizativaException.EXC_GENERIC_EXCEPCION);
 		}

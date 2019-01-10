@@ -13,6 +13,7 @@ import ieci.tdw.ispac.ispaclib.db.DbResultSet;
 import ieci.tdw.ispac.ispaclib.utils.ArrayUtils;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.MapUtils;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispaclib.utils.XmlTag;
 
 import java.io.Serializable;
@@ -621,14 +622,25 @@ public class CollectionDAO implements Serializable
 	}
 	
 	// MQE #1023 Tablas de Histórico
-	public DbResultSet querySinToList(DbCnt cnt, String sqlWhere)
-			throws ISPACException {
+	public DbResultSet querySinToList(DbCnt cnt, String sqlWhere) throws ISPACException {
+		return querySinToList(cnt, sqlWhere, null, 0);
+	}
+	
+	public DbResultSet querySinToList(DbCnt cnt, String sqlWhere, String order, int limit) throws ISPACException {
+		
 		ObjectDAO objdao = getObjDAO(cnt);
-		String sql = "SELECT " + objdao.getColsSQL() + " FROM "
-				+ objdao.getTableName();
+		String sql = "SELECT " + objdao.getColsSQL() + " FROM " + objdao.getTableName();
 		if (sqlWhere != null) {
 			sql += " " + sqlWhere;
 		}
+		//INICIO [dipucr-Felipe #847]
+		if (!StringUtils.isEmpty(order)) {
+			sql += " ORDER BY " + order;
+		}
+		if (limit > 0 && cnt.isPostgreSQLDbEngine()){
+			sql += " LIMIT " + limit;
+		}
+		//FIN [dipucr-Felipe #847]
 
 		return cnt.executeQuery(sql);
 	}

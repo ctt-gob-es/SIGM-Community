@@ -209,6 +209,7 @@ public class ConsignaTransferenciaUtil {
 		String ccc = "";		
 		if (it.hasNext()) {
 			IItem item = (IItem) it.next();
+			if (item.getString("CCC")==null || item.getString("ENTIDAD")==null) return "";
 			ccc += item.getString("ENTIDAD");
 			ccc += " ";
 			if (codificar == false)

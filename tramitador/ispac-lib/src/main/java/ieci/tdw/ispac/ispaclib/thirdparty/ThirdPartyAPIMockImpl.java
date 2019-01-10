@@ -445,7 +445,7 @@ public class ThirdPartyAPIMockImpl extends BasicThirdPartyAPI {
 
 		return true;
 	}
-
+	
 	/**
 	 * [eCenpri-Felipe #477] Devuelve la sentencia SQL de la inserción en la
 	 * dirección telemática
@@ -465,5 +465,145 @@ public class ThirdPartyAPIMockImpl extends BasicThirdPartyAPI {
 				.append(tipo).append(",").append(preferencia).append(")")
 				.toString();
 		return strQuery;
+	}
+	
+	/**
+	 * [dipucr-Felipe #583]
+	 * @param idPerson
+	 * @param email
+	 * @return
+	 * @throws ISPACException 
+	 */
+	public boolean insertDefaultEmail(int idPerson, String email) throws ISPACException{
+		
+		DbCnt cnt = new DbCnt(dsName);
+		try{
+			cnt.getConnection();
+			return insertDireccionTelematica(cnt, idPerson, email, TYPE_DT_MAIL, 1);
+		}
+		catch(ISPACException ex){
+			logger.error("Error al insertar mail por defecto " + email + " para el tercero " + idPerson);
+			throw ex;
+		}
+		finally{
+			if (null != cnt){
+				cnt.closeConnection();
+			}
+		}
+	}
+	
+	/**
+	 * [eCenpri-Felipe #592] Actualiza los datos del terceros en la base de datos
+	 * @param idPerson
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @return
+	 * @throws ISPACException
+	 */
+	public boolean updateThirdParty(int idPerson, String nombre, String ape1, String ape2, 
+			String provincia, String municipio, String cpostal, String direccion) throws ISPACException {
+
+		String strQuery = null;
+
+		DbCnt cnt = new DbCnt(dsName);
+		DbQuery dbQuery = null;
+
+		try {
+
+			cnt.getConnection();
+
+			nombre = StringUtils.escapeSql(nombre);
+			ape1 = StringUtils.escapeSql(ape1);
+			ape2 = StringUtils.escapeSql(ape2);
+			provincia = StringUtils.escapeSql(provincia);
+			municipio = StringUtils.escapeSql(municipio);
+			direccion = StringUtils.escapeSql(direccion);
+
+			// Actualizamos nombre y apellidos
+			strQuery = getUpdatePfisSQLQuery(idPerson, nombre, ape1, ape2);
+			cnt.execute(strQuery);
+
+			// Obtenemos el id en scr_address
+			IPostalAddressAdapter postalAddress = lookupDefaultPostalAddress(String.valueOf(idPerson));
+			String idAddress = postalAddress.getId();
+			
+			// Actualizamos la dirección
+			strQuery = getUpdateScrAddressSQLQuery(idAddress, provincia, municipio, cpostal, direccion);
+			cnt.execute(strQuery);
+
+
+
+		} catch (Exception e) {
+			String error = "Error en la actualización del tercero " + idPerson;
+			logger.error(error, e);
+			throw new ISPACException(error, e);
+			
+		} finally {
+			if (dbQuery != null) {
+				dbQuery.close();
+			}
+			cnt.closeConnection();
+		}
+
+		return true;
+	}
+	
+	/**
+	 * [dipucr-Felipe #592]
+	 * @param idPerson
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @return
+	 */
+	private static String getUpdatePfisSQLQuery(int idPerson, String nombre, String ape1, String ape2) {
+
+		StringBuffer sbQuery = new StringBuffer();
+		sbQuery.append("UPDATE SCR_PFIS SET SURNAME = '");
+		sbQuery.append(nombre);
+		sbQuery.append("', FIRST_NAME='");
+		sbQuery.append(ape1);
+		sbQuery.append("'");
+		if (!StringUtils.isEmpty(ape2)){
+			sbQuery.append(", SECOND_NAME='");
+			sbQuery.append(ape2);
+			sbQuery.append("'");
+		}
+		sbQuery.append(" WHERE ID = " + idPerson);
+
+		return sbQuery.toString();
+	}
+	
+	/**
+	 * [dipucr-Felipe #592]
+	 * @param idAddress
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @return
+	 */
+	private static String getUpdateScrAddressSQLQuery
+			(String idAddress, String provincia, String municipio, String cpostal, String direccion){
+		
+		StringBuffer sbQuery = new StringBuffer();
+		sbQuery.append("UPDATE SCR_DOM SET ADDRESS = '");
+		sbQuery.append(direccion);
+		sbQuery.append("', CITY = '");
+		sbQuery.append(municipio);
+		sbQuery.append("', ZIP = '");
+		sbQuery.append(municipio);
+		sbQuery.append("', COUNTRY = '");
+		sbQuery.append(provincia);
+		sbQuery.append("' WHERE ID = ");
+		sbQuery.append(idAddress);
+		
+		return sbQuery.toString();
+		
 	}
 }

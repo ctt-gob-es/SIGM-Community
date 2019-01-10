@@ -13,6 +13,7 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.join.TableJoinFactoryDAO;
+import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.gendoc.converter.DocumentConverter;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
@@ -20,6 +21,7 @@ import ieci.tdw.ispac.ispaclib.utils.DateUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,7 +29,6 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.text.SimpleDateFormat;
 import com.lowagie.text.pdf.PdfWriter;
 import com.sun.star.lang.XComponent;
 import com.sun.star.text.XTextDocument;
@@ -146,8 +147,7 @@ public class LibroDecretos
 	public Object generarLibro(IRuleContext rulectx, boolean bLimitarPermisos,
 			String password, int tipoVisualizacion) throws ISPACRuleException {
 		
-//		return generarLibro(rulectx, bLimitarPermisos, password, tipoVisualizacion, false);
-		return generarLibroFinal(rulectx, bLimitarPermisos, password);
+		return generarLibro(rulectx, bLimitarPermisos, password, tipoVisualizacion, false);
 	}
 	
 	/**
@@ -278,6 +278,7 @@ public class LibroDecretos
 			 ********************************************************************/
 	  		//Generamos el libro de decretos y lo sustituimos la plantilla por este
         	fileLibro = PdfUtil.concatenarPublicacion(cct, listFicheros, filePortada, fileContraPortada, tipoVisualizacion);
+        	
 
         	//Protegemos el documento de Copiar, Pegar, Imprimir, etc
 //        	PdfUtil.limitarPermisosConPassword(fileLibro, "dipucr");
@@ -316,147 +317,6 @@ public class LibroDecretos
 		return null;
 	}
 	
-	/**
-	 * Código general para la generación del libro de decretos
-	 * y de la diligencia juntos o por separado
-	 * @param rulectx
-	 * @param bLimitarPermisos
-	 * @param password
-	 * @param tipoVisualizacion
-	 * @param bPreviaLibroYFirmaDiligencia
-	 * @return
-	 * @throws ISPACRuleException
-	 */
-	private Object generarLibroFinal(IRuleContext rulectx, boolean bLimitarPermisos,
-			String password) throws ISPACRuleException {
-
-		int idDocLibro = Integer.MIN_VALUE;
-		
-        IItem itemDocLibroDecretos = null;
-        IItem itemDocLibroDecretosTram1 = null;
-        IItem itemDocDiligenciaTram1 = null;
-        
-        File fileLibro = null;
-        File fileLibroTram1 = null;
-        File fileDiligencia = null;
-        File filePortada = null;
-        File fileRestoLibro = null;
-        
-        String sInfopag = null;
-        String sInfopagDiligencia = null;
-        
-        ArrayList<File> listFicherosConcatenar = null;
-        
-		try{
-			//*********************************************
-			IClientContext cct = rulectx.getClientContext();
-	  	    invesFlowAPI = cct.getAPI();
-	  	    entitiesAPI = invesFlowAPI.getEntitiesAPI();
-			//*********************************************
-			
-			/*********************************************************************
-			 * OBTENEMOS LOS DOCUMENTOS DEL PRIMER TRÁMITE
-			 ********************************************************************/
-			
-			//Obtenemos el documento de Libro generado en el primer trámite
-			try{
-				itemDocLibroDecretosTram1 = DocumentosUtil.getPrimerDocumentByNombre(rulectx.getNumExp(), rulectx, _DOC_LIBRO_DECRETOS);
-				if (null == itemDocLibroDecretosTram1){
-					throw new ISPACRuleException("No existe el documento de libro de decretos del primer trámite");
-				}
-			}
-			catch(Exception ex){
-    			throw new ISPACRuleException("No existe el documento de libro de decretos del primer trámite");
-    		}
-			
-			try{
-				itemDocDiligenciaTram1 = DocumentosUtil.getPrimerDocumentByNombre(rulectx.getNumExp(), rulectx, _DOC_LIBRO_DECRETOS_DILIGENCIA);
-				if (null == itemDocDiligenciaTram1){
-					throw new ISPACRuleException("No existe el documento de diligencia firmada");
-				}
-			}
-			catch(Exception ex){
-    			throw new ISPACRuleException("No existe el documento de diligencia firmada");
-    		}
-	        
-	        /*********************************************************************
-			 * CONCATENAMOS LAS PARTES PARA GENERAR EL LIBRO DE DECRETOS
-			 * Portada + Diligencia + Resto_del_Libro
-			 ********************************************************************/
-	        //Obtenemos el tipo de documento
-			itemDocLibroDecretos = DocumentosUtil.crearDocumentoTramite(rulectx, _DOC_LIBRO_DECRETOS);
-			idDocLibro = itemDocLibroDecretos.getKeyInt();
-			
-			sInfopag = itemDocLibroDecretosTram1.getString("INFOPAG");
-			fileLibroTram1 = DocumentosUtil.getFile(cct, sInfopag, null, null);
-			
-			sInfopagDiligencia = itemDocDiligenciaTram1.getString("INFOPAG_RDE");
-			if (StringUtils.isEmpty(sInfopagDiligencia)){
-				throw new ISPACRuleException("No existe el documento de diligencia firmada");
-			}
-			fileDiligencia = DocumentosUtil.getFile(cct, sInfopagDiligencia, null, null);
-			
-			//Creamos el archivo del libro
-			listFicherosConcatenar = new ArrayList<File>();
-			
-			//Obtenemos la portada como la primera página del libro del primer trámite
-			filePortada = FileTemporaryManager.getInstance().newFile();
-			PdfUtil.obtenerSeccion(fileLibroTram1, filePortada, 1, 1);
-			listFicherosConcatenar.add(filePortada);
-			
-			//Añadimos la diligencia
-			listFicherosConcatenar.add(fileDiligencia);
-			
-			//Obtenemos el resto el libro (todo menos la portada)
-			fileRestoLibro = FileTemporaryManager.getInstance().newFile();
-			PdfUtil.obtenerSeccion(fileLibroTram1, fileRestoLibro, 2, Integer.MAX_VALUE);
-			listFicherosConcatenar.add(fileRestoLibro);
-			
-			//Concatenamos las partes
-			fileLibro = PdfUtil.concatenarArchivos(listFicherosConcatenar);
-			
-        	
-        	/*********************************************************************
-			 * AÑADIR DILIGENCIA COMO ADJUNTO
-			 * Añadir la diligencia al libro e incluirla también como adjunto
-			 ********************************************************************/
-        	
-        	PdfUtil.anexarDocumento(fileLibro, fileDiligencia, "Diligencia.pdf");
-        	
-	        /*********************************************************************
-			 * GENERACIÓN DEL LIBRO DE DECRETOS
-			 ********************************************************************/
-
-        	//Protegemos el documento de Copiar, Pegar, Imprimir, etc
-//        	PdfUtil.limitarPermisosConPassword(fileLibro, "dipucr");
-        	if (null != password && !password.isEmpty()){
-        		if (bLimitarPermisos){
-                	PdfUtil.limitarPermisosConPassword(fileLibro, password);
-        		}
-        		else{
-        			PdfUtil.protegerConPassword(fileLibro, password);
-        		}
-        	}
-        	else{
-        		if (bLimitarPermisos){
-                	PdfUtil.limitarPermisos(fileLibro);
-        		}
-        	}
-        	
-    		itemDocLibroDecretos = DocumentosUtil.anexaDocumento(rulectx, rulectx.getTaskId(), idDocLibro, fileLibro, Constants._EXTENSION_PDF, _DOC_LIBRO_DECRETOS);
-    		
-    		if(filePortada != null && filePortada.exists()) filePortada.delete();
-    		if(fileLibro != null && fileLibro.exists()) fileLibro.delete();
-    		if(fileLibroTram1 != null && fileLibroTram1.exists()) fileLibroTram1.delete();
-    		if(fileDiligencia != null && fileDiligencia.exists()) fileDiligencia.delete();
-    		if(fileRestoLibro != null && fileRestoLibro.exists()) fileRestoLibro.delete();
-		}
-		catch (Exception e) {
-			
-			throw new ISPACRuleException("Error al generar el libro de decretos. " + e.getMessage(), e);
-		}
-		return null;
-	}
 	
 	/**
 	 * Borrar el libro de decretos del primer trámite
@@ -487,9 +347,11 @@ public class LibroDecretos
 			factory.addTable("SPAC_CT_TRAMITES", "CTTRAM");
 
 			//Realizamos la query
+			DbCnt cnt = cct.getConnection();
 			CollectionDAO collectionJoin =
-				factory.queryTableJoin(cct.getConnection(), sbQuery.toString());
+				factory.queryTableJoin(cnt, sbQuery.toString());
 			collectionJoin.disconnect();
+			cct.releaseConnection(cnt);
 	  	    
 			//Obtenemos el documento y lo eliminamos
 	        if (collectionJoin.next())
@@ -794,11 +656,13 @@ public class LibroDecretos
 	        	IItem doc = (IItem)it.next();
 	        	entitiesAPI.deleteDocument(doc);
 	        }
-	        ooHelper.dispose();
-		}
-		catch(Exception e){
+		} catch(Exception e){
 			logger.error("Error al crear el documento " + nombreCompleto + "." + e.getMessage(), e);
 			throw new Exception("Error al crear el documento " + nombreCompleto + "." + e.getMessage(), e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 		return entityDoc;
 	}

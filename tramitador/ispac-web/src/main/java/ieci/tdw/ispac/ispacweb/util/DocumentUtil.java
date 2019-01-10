@@ -28,6 +28,9 @@ public class DocumentUtil {
 	  private static final Logger LOGGER = Logger.getLogger("xml");
 	  private static final Locale DEFAULT_LOCALE = new Locale("es_ES");
 	  
+	  static boolean useOdtTemplantes = true;
+
+	  
 	/**
 	 * Ver un documento.
 	 *
@@ -59,7 +62,7 @@ public class DocumentUtil {
 
 		String url = generateURL(request, servletName, session.getTicket(), id, mimeType);
 
-		boolean useOdtTemplantes = ConfigurationMgr.getVarGlobalBoolean(session.getClientContext(), ConfigurationMgr.USE_ODT_TEMPLATES, false);
+		useOdtTemplantes = ConfigurationMgr.getVarGlobalBoolean(session.getClientContext(), ConfigurationMgr.USE_ODT_TEMPLATES, false);
 
 	    if ( "application/msword".equalsIgnoreCase(mimeType)
 	    		|| "application/vnd.openxmlformats-officedocument.wordprocessingml.document".equalsIgnoreCase(mimeType)
@@ -78,7 +81,7 @@ public class DocumentUtil {
 				|| "application/vnd.openxmlformats-officedocument.presentationml.presentation".equalsIgnoreCase(mimeType)
 				|| "application/vnd.openxmlformats-officedocument.presentationml.slideshow".equalsIgnoreCase(mimeType)) {
 
-	    	String htmlPage = generateHtmlPage(servletCtx, request, url, mimeType, readonly, reloadTopWindow, useOdtTemplantes);
+	    	String htmlPage = generateHtmlPage(servletCtx, request, url, mimeType, readonly, reloadTopWindow);
 
 	    	ServletOutputStream out = response.getOutputStream();
 	    	response.setHeader("Pragma", "public");
@@ -230,7 +233,7 @@ public class DocumentUtil {
 	@Deprecated
 	public static String generateHtmlPage(
 			ServletContext servletCtx, HttpServletRequest request, String url, String mimeType,
-			String readOnly, boolean reloadTopWindow, boolean useOdtTemplates) throws Exception {
+			String readOnly, boolean reloadTopWindow) throws Exception {
 
 		LOGGER.warn("Método deprecado");
 		return crearPaginaEdicionDocumentosPorProtocolo(url, reloadTopWindow, DEFAULT_LOCALE);
@@ -323,7 +326,7 @@ public class DocumentUtil {
 		return codigoJs.toString();
 	}
 	
-	private static String generateJSCodeReloadTopWindowWithTimeout(int timeout) {
+	public static String generateJSCodeReloadTopWindowWithTimeout(int timeout) {
 		return "waitAndReload(" + timeout + ");"; 
 	}
 	
@@ -341,7 +344,7 @@ public class DocumentUtil {
 	}
 	
 	
-	private static String generateJSCodeLocationHref() {
+	public static String generateJSCodeLocationHref() {
 		// Refrescar el top manteniendo el bloque activo
 		return new StringBuffer().append("var activeBlock = top.window.document.getElementById('block');")
 				  .append("newhref = top.window.location.href;")
@@ -626,6 +629,30 @@ public class DocumentUtil {
     			}
     		}
         }
+	}
+
+	public static boolean esMimeTypeEditable(String mimeType){
+		
+		return ("application/msword".equalsIgnoreCase(mimeType)
+	    		|| "application/vnd.openxmlformats-officedocument.wordprocessingml.document".equalsIgnoreCase(mimeType)
+	    		|| "application/excel".equalsIgnoreCase(mimeType)
+	    		|| "application/x-excel".equalsIgnoreCase(mimeType)
+				|| "application/x-msexcel".equalsIgnoreCase(mimeType)
+				|| "application/vndms-excel".equalsIgnoreCase(mimeType)
+				|| "application/vnd.ms-excel".equalsIgnoreCase(mimeType)
+				|| "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equalsIgnoreCase(mimeType)
+	    		|| "application/mspowerpoint".equalsIgnoreCase(mimeType)
+				|| "application/powerpoint".equalsIgnoreCase(mimeType)
+				|| "application/vndms-powerpoint".equalsIgnoreCase(mimeType)
+				|| "application/vnd.ms-powerpoint".equalsIgnoreCase(mimeType)
+				|| "application/x-mspowerpoint".equalsIgnoreCase(mimeType)
+				|| ("application/vnd.oasis.opendocument.text".equalsIgnoreCase(mimeType) && useOdtTemplantes)
+				|| "application/vnd.openxmlformats-officedocument.presentationml.presentation".equalsIgnoreCase(mimeType)
+				|| "application/vnd.openxmlformats-officedocument.presentationml.slideshow".equalsIgnoreCase(mimeType)
+//			[Manu Ticket #475] Modificaciones para que reconozca los ODS
+				|| "application/vnd.oasis.opendocument.spreadsheet".equalsIgnoreCase(mimeType)
+//			[Manu Ticket #475] Modificaciones para que reconozca los ODS)
+				);
 	}
 
 }

@@ -8,6 +8,7 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.common.constants.SignStatesConstants;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 import es.dipucr.sigem.api.rule.common.utils.CircuitosUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 
@@ -54,7 +55,7 @@ public class AvisoFinFirmaRule implements IRule {
 					|| strEstadoFirma.equals(SignStatesConstants.RECHAZADO))
 			{
 				// Generar un aviso en la bandeja de avisos electrónicos
-				StringBuffer sbMessage = new StringBuffer();
+				StringBuilder sbMessage = new StringBuilder();
 				sbMessage.append("<b>");
 				if (strEstadoFirma.equals(SignStatesConstants.FIRMADO)){
 					sbMessage.append(_MENSAJE_FIRMADO);

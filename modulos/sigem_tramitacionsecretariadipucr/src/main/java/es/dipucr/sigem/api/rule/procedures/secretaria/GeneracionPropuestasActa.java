@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import com.sun.star.connection.NoConnectException;
 import com.sun.star.lang.DisposedException;
 
+import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
@@ -30,7 +31,7 @@ import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
 public class GeneracionPropuestasActa implements IRule {
 
 	private OpenOfficeHelper ooHelper = null;
-	private static final Logger logger = Logger.getLogger(GeneracionPropuestasActa.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneracionPropuestasActa.class);
 	
 	String strNombreDocProp = "";
     String strNombreDocCabProp = "";
@@ -51,7 +52,7 @@ public class GeneracionPropuestasActa implements IRule {
         String acuerdos = "";
         String dictamen = "";
         String cargo = "";
-        String fecha_emision = "";
+        String fechaEmision = "";
         String informes = "";
         String debate = "";
         String votacion = "";
@@ -63,8 +64,7 @@ public class GeneracionPropuestasActa implements IRule {
         boolean urgencia = false;
     	
     	
-    	try
-		{
+    	try {
     		//----------------------------------------------------------------------------------------------
             cct = (ClientContext) rulectx.getClientContext();
             IInvesflowAPI invesFlowAPI = cct.getAPI();
@@ -74,7 +74,7 @@ public class GeneracionPropuestasActa implements IRule {
             //----------------------------------------------------------------------------------------------
             
             String strOrgano = SecretariaUtil.getOrganoSesion(rulectx, null);
-        	boolean esAcuerdo = (strOrgano.compareTo("PLEN")==0 || strOrgano.compareTo("JGOB")==0 );
+        	boolean esAcuerdo = strOrgano.compareTo("PLEN")==0 || strOrgano.compareTo("JGOB")==0;
         	
         	String strCampo = esAcuerdo? "ACUERDOS":"DICTAMEN";
     		
@@ -97,48 +97,52 @@ public class GeneracionPropuestasActa implements IRule {
 	        	if(listPropuestas.toArray().length==1){
 	        		//Quiere decir que únicamente existe una sóla propuesta relaciona
 	        		nOrden = 0;
+	        	} else {
+	        		Iterator<IItem> propAprob = ConsultasGenericasUtil.queryEntities(rulectx, "SECR_PROPUESTA", "ORIGEN='0001' AND NUMEXP='"+rulectx.getNumExp()+"'");
+	        		if(propAprob.hasNext()){
+		        		//Para que no genere el documento borrador y así paso a la siguiente
+			        	it.next();
+	        		} else {
+	        			nOrden = 0;
+	        		}
 	        	}
-	        	else{
-	        		//Para que no genere el documento borrador y así paso a la siguiente
-		        	it.next();
-	        	}
-	        		
-        	
 	        	
 	        	if(!it.hasNext() && !urgencia){
 	        		it = listUrgencias.iterator();
 	        		urgencia = true;
 	        		nOrden = 0;
 		        }
+	        	
 	        	//Documento de propuesta
-		        while (it.hasNext())
-		        {
+		        while (it.hasNext()) {
 		        	nOrden++;
 		        	iProp = (IItem)it.next();
 		        	
-		        	String numexp_origen = iProp.getString("NUMEXP_ORIGEN");
-		        	logger.warn("numexp_origen "+numexp_origen);
+		        	String numexpOrigen = iProp.getString("NUMEXP_ORIGEN");
+		        	LOGGER.warn("numexp_origen "+numexpOrigen);
 	    		
 		        	if (iProp.getString("EXTRACTO")!=null) extracto = (String)iProp.getString("EXTRACTO"); else extracto = "";
 		        	if (iProp.getString("DEBATE")!=null) debate = (String)iProp.getString("DEBATE"); else debate = "";
 		        	if (iProp.getString("INFORMES")!=null) informes = (String)iProp.getString("INFORMES"); else informes = "";
 		        	if (iProp.getString("DICTAMEN")!=null) dictamen = (String)iProp.getString("DICTAMEN"); else dictamen = "";
 		        	if (iProp.getString(strCampo)!=null) acuerdos = (String)iProp.getString(strCampo); else acuerdos = "";
-		        	//debate = debate.replaceAll("\r\n", "\r"); //Evita saltos de línea duplicados
-		        	//acuerdos = acuerdos.replaceAll("\r\n", "\r");
-		        	logger.warn("extracto "+extracto);
+
+		        	LOGGER.warn("extracto "+extracto);
 		
-		        	if (iProp.getString("RESULTADO_VOTACION")!=null) votacion = iProp.getString("RESULTADO_VOTACION"); else votacion="";
+		        	if (iProp.getString("RESULTADO_VOTACION")!=null) {
+		        		votacion = iProp.getString("RESULTADO_VOTACION");
+		        	} else {
+		        		votacion="";
+		        	}
 		
 		        	cct.setSsVariable("EXTRACTO", extracto.toUpperCase());
-		        	//cct.setSsVariable("DEBATE", debate);
-		        	//cct.setSsVariable("ACUERDOS", acuerdos);
-		        	if(!debate.equals("")){
+
+		        	if(!"".equals(debate)){
 		        		debate = "\t"+debate+"\n\n";
 		        	}
 		        	setLongVariable(rulectx, "DEBATE", debate);
 		        	
-		        	if(!acuerdos.equals("")){
+		        	if(!"".equals(acuerdos)){
 		        		acuerdos = "\t"+acuerdos+"\n\n";
 		        	}
 		        	setLongVariable(rulectx, "ACUERDOS", acuerdos);
@@ -146,7 +150,7 @@ public class GeneracionPropuestasActa implements IRule {
 		        	String sOrden = String.valueOf(nOrden);
 		        	if(urgencia){
 		        		String organo = SecretariaUtil.getOrgano(rulectx);
-		        		if(organo.equals("PLEN")){
+		        		if("PLEN".equals(organo)){
 		        			//se pone mas 2 porque hay q añadir un punto mas de presidencia
 		        			sOrden = String.valueOf(numPropuesta+2)+"."+String.valueOf(nOrden);
 		        		}
@@ -156,22 +160,22 @@ public class GeneracionPropuestasActa implements IRule {
 		        	}
 		        	cct.setSsVariable("ORDEN", sOrden);
 		        	
-		        	if(!votacion.equals("")){
+		        	if(!"".equals(votacion)){
 		        		votacion = votacion+"\n";
 		        	}
 		        	cct.setSsVariable("RESULTADO_VOTACION", votacion);
 		        	
-		        	if(!informes.equals("")){
+		        	if(!"".equals(informes)){
 		        		informes = informes+"\n\n";
 		        	}
 		        	cct.setSsVariable("INFORMES", informes);
 		        	
-		        	if(!dictamen.equals("")){
+		        	if(!"".equals(dictamen)){
 		        		dictamen = "\t"+dictamen+"\n\n";
 		        	}
 		        	cct.setSsVariable("DICTAMEN", dictamen+"\n\n");
 		        	
-		        	strQuery = "WHERE NUMEXP = '" + numexp_origen +"'";
+		        	strQuery = "WHERE NUMEXP = '" + numexpOrigen +"'";
 		 	        IItemCollection coll = entitiesAPI.queryEntities("SECR_PROPUESTA", strQuery);
 		 	        
 		 	        Iterator itP = coll.iterator();
@@ -180,17 +184,20 @@ public class GeneracionPropuestasActa implements IRule {
 			        while (itP.hasNext()) {
 			        	
 		                item = ((IItem)itP.next());
-		                fecha_emision = item.getString("FECHA_EMISION");
-		                //logger.warn("fecha_emision. "+fecha_emision);
-		                if(fecha_emision!= null){
-			                fecha_emision = dateformat.format(inputDateformat.parse(fecha_emision));
+		                fechaEmision = item.getString("FECHA_EMISION");
+		                if(fechaEmision!= null){
+			                fechaEmision = dateformat.format(inputDateformat.parse(fechaEmision));
 		                }
 		                else{
-		                	fecha_emision = "";
+		                	fechaEmision = "";
 		                }
 		                //logger.warn("fecha_emision. "+fecha_emision);
-		                cct.setSsVariable("FECHA_EMISION", fecha_emision);
-		                if (item.getString("CARGO")!=null) cargo = (String)item.getString("CARGO"); else cargo = "";
+		                cct.setSsVariable("FECHA_EMISION", fechaEmision);
+		                if (item.getString("CARGO")!=null) {
+		                	cargo = (String)item.getString("CARGO");
+		                } else {
+		                	cargo = "";
+		                }
 		                cct.setSsVariable("CARGO", cargo);
 			        }
 
@@ -209,20 +216,27 @@ public class GeneracionPropuestasActa implements IRule {
 			        	strNombreDoc = strNombreDocProp;
 				        strNombreDocCab = strNombreDocCabProp;
 		        		strNombreDocPie = strNombreDocPieProp;		        		
-		        		
-		        		strDescr = nOrden +" . "+ extracto.substring(0, longPropu/3)+", numexp="+numexp_origen+"";
-			        }
-			        else{
+		        		if(longPropu>=78){
+		        			strDescr = nOrden +" . "+ extracto.substring(0, 78)+", numexp="+numexpOrigen+"";
+		        		} else {
+		        			strDescr = nOrden +" . "+ extracto +", numexp="+numexpOrigen+"";
+		        		}		        		
+			        } else {
 			        	strNombreDoc = strNombreDocUrg;
 				        strNombreDocCab = strNombreDocCabUrg;
 		        		strNombreDocPie = strNombreDocPieUrg;
 		        		
-		        		strDescr = nOrden +" . "+ extracto.substring(0, longPropu/3)+", numexp="+numexp_origen+"";
+		        		if(longPropu>=78){
+		        			strDescr = nOrden +" . "+ extracto.substring(0, 78)+", numexp="+numexpOrigen+"";
+		        		}
+		        		else{
+		        			strDescr = nOrden +" . "+ extracto +", numexp="+numexpOrigen+"";
+		        		}		        		
 			        }
 			       
 			        DocumentosUtil.generarDocumento(rulectx, strNombreDocCab, null);
 		        	DocumentosUtil.generarDocumento(rulectx, strNombreDocPie, null);
-			        DipucrCommonFunctions.concatenaPartes(rulectx, numexp_origen, strNombreDocCab, strNombreDocPie, strNombreDoc, strDescr, ooHelper, extensionEntidad);
+			        DipucrCommonFunctions.concatenaPartes(rulectx, numexpOrigen, strNombreDocCab, strNombreDocPie, strNombreDoc, strDescr, ooHelper, extensionEntidad);
 									
 					
 					//Borramos las variables de sistema
@@ -244,7 +258,7 @@ public class GeneracionPropuestasActa implements IRule {
 		        	}
 		        }
 		       
-	        }catch(Exception e) {
+	        } catch(Exception e) {
 	        	// Si se produce algún error se hace rollback de la transacción
 
 				cct.endTX(false);
@@ -252,32 +266,21 @@ public class GeneracionPropuestasActa implements IRule {
 				String extraInfo = null;
 				Throwable eCause = e.getCause();
 				
-				if (eCause instanceof ISPACException)
-				{
-					if (eCause.getCause() instanceof NoConnectException) 
-					{
+				if (eCause instanceof ISPACException) {
+					if (eCause.getCause() instanceof NoConnectException) {
 						extraInfo = "exception.extrainfo.documents.openoffice.off"; 
-					}
-					else
-					{
+					} else {
 						extraInfo = eCause.getCause().getMessage();
 					}
-				}
-				else if (eCause instanceof DisposedException)
-				{
+				} else if (eCause instanceof DisposedException) {
 					extraInfo = "exception.extrainfo.documents.openoffice.stop";
-				}
-				else
-				{
+				} else {
 					extraInfo = e.getMessage();
 				}
-				logger.error(extraInfo, e);
+				LOGGER.error(extraInfo, e);
 				throw new ISPACRuleException(extraInfo, e);
-	        }
-	        finally
-			{
-				if (connectorSession != null)
-				{
+	        } finally {
+				if (connectorSession != null) {
 					gendocAPI.closeConnectorSession(connectorSession);
 				}
 			}
@@ -285,26 +288,19 @@ public class GeneracionPropuestasActa implements IRule {
 	    	// Si todo ha sido correcto se hace commit de la transacción
 			cct.endTX(true);
 	        
-	        return new Boolean(true);
+	        return true;
     		
-        } catch(Exception e)
-		{
-        	if (e instanceof ISPACRuleException)
-        	{
-			    throw new ISPACRuleException(e);
-        	}
+        } catch(Exception e) {
         	throw new ISPACRuleException(e);
-        }
-    	finally{
-    		if(ooHelper != null) ooHelper.dispose();
-    	}
-    	
+        } finally {
+    		if(ooHelper != null) {
+    			ooHelper.dispose();
+    		}
+    	}    	
     }
         	
-    private void setLongVariable(IRuleContext rulectx, String nombre, String valor) throws ISPACRuleException
-	{
-		try
-		{
+    private void setLongVariable(IRuleContext rulectx, String nombre, String valor) throws ISPACRuleException {
+		try {
 			IClientContext cct = rulectx.getClientContext();
 			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
 			
@@ -312,33 +308,27 @@ public class GeneracionPropuestasActa implements IRule {
 			entity.set("NOMBRE", nombre);
 			entity.set("VALOR", valor);
 			entity.store(cct);
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			throw new ISPACRuleException(e); 	
 		}
 	}
 	
-	private void deleteLongVariable(IRuleContext rulectx, String nombre) throws ISPACRuleException
-	{
-		try
-		{
+	private void deleteLongVariable(IRuleContext rulectx, String nombre) throws ISPACRuleException {
+		try {
 			IClientContext cct = rulectx.getClientContext();
 			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
 			
 			String strQuery = "WHERE NUMEXP='" + rulectx.getNumExp() + "' AND NOMBRE='" + nombre + "'";
 			entitiesAPI.deleteEntities("TSOL_LONG_VARS", strQuery);
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			throw new ISPACRuleException(e); 	
 		}
 	}
-
 	
 	public void cancel(IRuleContext arg0) throws ISPACRuleException {
-	
+		// Nada que hacer al cancelar
 	}
+	
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException{
         return true;
     }

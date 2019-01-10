@@ -1,15 +1,5 @@
 package es.dipucr.contratacion.rule;
 
-import ieci.tdw.ispac.api.IEntitiesAPI;
-import ieci.tdw.ispac.api.IInvesflowAPI;
-import ieci.tdw.ispac.api.errors.ISPACException;
-import ieci.tdw.ispac.api.errors.ISPACRuleException;
-import ieci.tdw.ispac.api.item.IItem;
-import ieci.tdw.ispac.api.item.IItemCollection;
-import ieci.tdw.ispac.api.rule.IRule;
-import ieci.tdw.ispac.api.rule.IRuleContext;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
-
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -20,6 +10,15 @@ import es.dipucr.sigem.api.rule.common.utils.ProcedimientosUtil;
 import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
 import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
+import ieci.tdw.ispac.api.IEntitiesAPI;
+import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.api.errors.ISPACRuleException;
+import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
+import ieci.tdw.ispac.api.rule.IRule;
+import ieci.tdw.ispac.api.rule.IRuleContext;
+import ieci.tdw.ispac.ispaclib.context.ClientContext;
 
 public class IniciaExpedienteHijoCertificacionObra implements IRule{
 	
@@ -28,7 +27,6 @@ public class IniciaExpedienteHijoCertificacionObra implements IRule{
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
 		try{
 			/************************************************************************/
@@ -91,7 +89,7 @@ public class IniciaExpedienteHijoCertificacionObra implements IRule{
 			numexpHijo.store(cct);
 			/**Fin del expediente de 'Certificación de obra'**/
 			
-
+			TramitesUtil.cargarObservacionesTramite(cct, true,rulectx.getNumExp(), rulectx.getTaskId(), " Exp.Relacionado: "+numexpHijo.getString("NUMEXP"));
 			/**FIN incidencia del contrato**/
 			
 		}catch(ISPACRuleException e){

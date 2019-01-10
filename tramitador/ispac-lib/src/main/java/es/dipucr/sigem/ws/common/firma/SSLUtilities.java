@@ -26,7 +26,7 @@ public class SSLUtilities {
             _call.setSOAPService(soapService);
         } catch (Exception e) {
 
-        	LOGGER.error("Error al firmar la petición", e);
+        	LOGGER.error("Error al firmar la petición - "+e.getMessage(), e);
         }
 	}
 
@@ -41,5 +41,32 @@ public class SSLUtilities {
 		LOGGER.error(requestXML);
 		LOGGER.error("RESPONSE");
 		LOGGER.error(responseXML);
+	}
+	
+	
+	/**
+	 * @param _operationClient
+	 * @throws AxisFault
+	 */
+	public static void imprimirErrorEnvioAxis2(org.apache.axis2.client.OperationClient _operationClient) throws AxisFault {
+		
+		try {
+			String requestXML = "";
+			if(_operationClient!=null && _operationClient.getMessageContext("Out")!=null && _operationClient.getMessageContext("Out").getEnvelope()!=null){
+				requestXML = _operationClient.getMessageContext("Out").getEnvelope().toString();
+			}
+			String responseXML = "";
+			if(_operationClient!=null && _operationClient.getMessageContext("In")!=null && _operationClient.getMessageContext("In").getEnvelope()!=null){
+				responseXML = _operationClient.getMessageContext("In").getEnvelope().toString(); 
+			}
+			
+			LOGGER.error("REQUEST");
+			LOGGER.error(requestXML);
+			LOGGER.error("RESPONSE");
+			LOGGER.error(responseXML);
+		} catch (org.apache.axis2.AxisFault e) {
+			LOGGER.error("Error al firmar la petición - "+e.getMessage(), e);
+		} 
+		
 	}
 }

@@ -148,6 +148,11 @@ public final class Afirma5ServiceInvokerProperties {
     	//String path = ConfigurationHelper.getConfigFilePath(afirmaConfigFilePathResolver.ISPAC_BASE_CONFIG_SUBDIR_KEY_AFIRMA,Afirma5ServiceInvokerConstants.AFIRMA_SRV_INVOKER_PROP);
     	
     	String path = afirmaConfigFilePathResolver.getConfigFilePath(afirmaConfigFilePathResolver.ISPAC_BASE_CONFIG_SUBDIR_KEY_AFIRMA + File.separator + Afirma5ServiceInvokerConstants.AFIRMA_SRV_INVOKER_PROP);
+    	
+    	if(path==null){
+    		path = "/config/SIGEM/conf/SIGEM_Tramitacion/integra_afirma/afirma5ServiceInvoker.properties";
+    	}
+    	
     	res = new File(path);
 
 	return res;

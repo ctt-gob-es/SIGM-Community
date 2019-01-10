@@ -13,7 +13,7 @@
 					</bean>
 				</entry>
 
-				<entry key="java:comp/env/jdbc/tramitadorDS_000">
+				<!--<entry key="java:comp/env/jdbc/tramitadorDS_000">
 					<bean class="org.springframework.jdbc.datasource.DriverManagerDataSource"
 						destroy-method="close" singleton="false">
 						<property name="driverClassName" value="org.postgresql.Driver" />
@@ -21,7 +21,7 @@
 						<property name="username" value="postgres" />
 						<property name="password" value="postgres" />
 					</bean>
-				</entry>
+				</entry-->
 
 			</map>
 		</property>

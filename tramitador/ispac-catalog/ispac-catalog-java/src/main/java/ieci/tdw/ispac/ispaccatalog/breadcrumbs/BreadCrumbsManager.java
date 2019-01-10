@@ -33,14 +33,20 @@ public class BreadCrumbsManager {
 		int keyId = -1;
 		request.getServletPath();
 
+		//[Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
 		if(	("/showTemplatesList.do".equals(request.getServletPath()))
+				|| ("/showTemplatesRepositorioComunList.do".equals(request.getServletPath()))
 				|| ("/showTemplate.do".equals(request.getServletPath()))
+				|| ("/showTemplateRepositorioComun.do".equals(request.getServletPath()))
+				|| ("/newTemplateRepositorioComun.do".equals(request.getServletPath()))
 		){
 			setDocTypeBC(breadCrumbs, request);
 			return breadCrumbs;
 		}
 		if(	("/showPermissions.do".equals(request.getServletPath()))
 				|| ("/showTemplate.do".equals(request.getServletPath()))
+				|| ("/showTemplateRepositorioComun.do".equals(request.getServletPath()))
+				|| ("/newTemplateRepositorioComun.do".equals(request.getServletPath()))
 		){
 			setProcPermissionsBC(breadCrumbs, request);
 			return breadCrumbs;

@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 
 import es.dipucr.notificador.model.EnvioWS;
 import es.dipucr.notificador.model.TerceroWS;
+import es.dipucr.sigem.api.rule.common.DipucrDatosParticipante;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 import es.jccm.notificador.ws.AplicacionesServiceProxy;
 
@@ -31,13 +32,13 @@ public class CompareceUtil {
 	private static Logger logger = Logger.getLogger(CompareceUtil.class);
 
 	public static boolean envioDocComparece(IClientContext ctx, String numexp, int idDoc, Vector<String> dnisRepresentantesComparece, String destinatario, IItem documentoItem, byte[] documentContent, String extension)
-			throws ISPACRuleException {
+			throws ISPACException {
 		
 		String nombreProc = "";
 		String nombreDoc = "";
 		String codigoCotejo = "";
 		String descripcionDocumento = "";
-		int taskId = 0;	
+		int taskId = 0;
 		
 		// Acceso al servicio web de comparece
 		AplicacionesServiceProxy asp = new AplicacionesServiceProxy();
@@ -81,7 +82,7 @@ public class CompareceUtil {
 			
 			for (int i = 0; i < dnisRepresentantesComparece.size(); i++) {
 
-				if (!comprobarEnvioComparece(entitiesAPI, numexp, idDoc, dnisRepresentantesComparece.get(i), taskId)) {
+				if (!comprobarEnvioComparece(ctx, documentoItem, entitiesAPI, numexp, idDoc, dnisRepresentantesComparece.get(i), taskId)) {
 					String[] dniEnvio = new String[1];
 					dniEnvio[0] = dnisRepresentantesComparece.get(i);
 					String entidad = EntidadesAdmUtil.obtenerEntidad(ctx);
@@ -91,21 +92,23 @@ public class CompareceUtil {
 					String hashDocument = generateHashCode(documentContent);
 					logger.debug("HASHDOCUMENTO " + hashDocument);
 
-					EnvioWS[] envio = asp.notificar(entidad, dniEnvio, nombreProc, numexp, descripcionDocumento, diaCaducidad, 
-							mesCaducidad, anyoCaducidad, notificacion, nombreDoc, extension, hashDocument, codigoCotejo);
+					EnvioWS[] envio = asp.notificar(entidad, dniEnvio, nombreProc, numexp, descripcionDocumento, diaCaducidad, mesCaducidad, anyoCaducidad, notificacion, nombreDoc, extension, hashDocument, codigoCotejo);
 					logger.debug("Envio a " + dnisRepresentantesComparece.get(i) + ": " + envio);
 					
+					
+					//Agustin #414 Con la integracion de notifica no le veo sentido a esto, aun asi lo dejo comentado
 					//[Manu Ticket #110] - INICIO - ALSIGM3 Cambiar registro de salida para que actualice el campo ESTADONOTIFICACION
-					String consulta = "WHERE NUMEXP = '" + numexp + "' AND IDENT_DOC = '" + idDoc + "' AND TRAMITE=" + taskId + "";
-					logger.debug("Si ya se ha enviado alguno no actualizamos es ESTADONOTIFICACION. Consulta: " + consulta);
-					IItemCollection collection = entitiesAPI.queryEntities(Constants.TABLASBBDD.DPCR_ACUSES_COMPARECE, consulta);
-					Iterator<?> it = collection.iterator();
-					if (!it.hasNext()) {
-						documentoItem.set("ESTADONOTIFICACION", "PR");
-						documentoItem.store(ctx);
-					}
+					//					String consulta = "WHERE NUMEXP = '" + numexp + "' AND IDENT_DOC = '" + idDoc + "' AND TRAMITE=" + taskId + "";
+					//					logger.debug("Si ya se ha enviado alguno no actualizamos es ESTADONOTIFICACION. Consulta: " + consulta);
+					//					IItemCollection collection = entitiesAPI.queryEntities(Constants.TABLASBBDD.DPCR_ACUSES_COMPARECE, consulta);
+					//					Iterator<?> it = collection.iterator();
+					//					if (!it.hasNext()) {
+					//						documentoItem.set("ESTADONOTIFICACION", "CO");
+					//						documentoItem.store(ctx);
+					//					}
 		      		//[Manu Ticket #110] - FIN - ALSIGM3 Cambiar registro de salida para que actualice el campo ESTADONOTIFICACION
 					
+					// Crear entrada en el registro de envios a Comparece				
 					for (int j = 0; j < envio.length; j++) {
 						logger.debug("Notificación enviada.");
 						logger.debug("Id de la notificación: " + envio[j].getIdNotificacion());
@@ -115,31 +118,42 @@ public class CompareceUtil {
 							// Enviar a dipcr_aviso_comparece
 							String destino = DocumentosUtil.getAutorUID(entitiesAPI, idDoc);						
 							insertarAcuseCompare(ctx, numexp, envio[j].getIdNotificacion(), destino, fecha, idDoc, dnisRepresentantesComparece.get(i), taskId);
+							//Si todo ha ido bien actualizo estado del documento como enviado a Comparece
+							documentoItem.set("ESTADONOTIFICACION", Constants.NOTIFICACIONES_VALOR.VALOR_ESTADO_COMPARECE);
+							documentoItem.set("ID_NOTIFICACION", envio[j].getIdNotificacion());
+							documentoItem.store(ctx);
 						} else {
 							logger.warn("envio[i].isEmail() " + envio[j].isEmail());
 							logger.warn("envio[i].isNotificacion() " + envio[j].isNotificacion());
 							logger.warn("envio[i].isSms() " + envio[j].isSms());
-
 							logger.warn("Error a la hora de enviar la notificacion por COMPARECE.");
 							logger.warn("numexp " + numexp + ", al destinatario: " + dniEnvio + ", documento: " + descripcionDocumento);
+							//Si el id de notificacion es erroneo marco la notificación como erronea para que se entere el ususario
+							documentoItem.set("ESTADONOTIFICACION", Constants.NOTIFICACIONES_VALOR.VALOR_ESTADO_ERROR);
+							documentoItem.store(ctx);
 						}
-					}
+					}		
+					
 				}
 			}
 		} catch (RemoteException e) {
 			logger.error("Error al enviar la notificación. Error en el sistema COMPARECE. " + e.getMessage(), e);
+			documentoItem.set("ESTADONOTIFICACION", Constants.NOTIFICACIONES_VALOR.VALOR_ESTADO_ERROR);
+			documentoItem.store(ctx);
 			throw new ISPACRuleException("Error al enviar la notificación. Error en el sistema COMPARECE. " + e.getMessage(), e);
 		} catch (ISPACException e) {
 			logger.error("Error al enviar la notificación al COMPARECE. Error interno." + e.getMessage(), e);
+			documentoItem.set("ESTADONOTIFICACION", Constants.NOTIFICACIONES_VALOR.VALOR_ESTADO_ERROR);
+			documentoItem.store(ctx);
 			throw new ISPACRuleException("Error al enviar la notificación al COMPARECE. Error interno." + e.getMessage(), e);
 		}
 		
 		return true;
 	}
 	
-	public static boolean esUsuarioComparece(IClientContext ctx, String numexp, String destinatario, String destinatarioId, Vector<String> dnisRepresentantesComparece, String descripcion)	throws RemoteException, ISPACRuleException{
+	public static DipucrDatosParticipante esUsuarioComparece(IClientContext ctx, String numexp, String destinatario, String destinatarioId, Vector<String> dnisRepresentantesComparece, String descripcion)	throws RemoteException, ISPACRuleException{
 		
-		boolean esUsuarioComp = false;
+		DipucrDatosParticipante esUsuarioComp = new DipucrDatosParticipante();
 
 		try {
 			
@@ -147,10 +161,11 @@ public class CompareceUtil {
 			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 			
 			String sqlQuery = "";
-			if (StringUtils.isEmpty(destinatarioId) || destinatarioId.equals("0")) {
-				sqlQuery = "NOMBRE='" + destinatario + "'";
+			if (StringUtils.isEmpty(destinatarioId) || destinatarioId.equals("0")) {				
+				destinatario = StringUtils.replace(destinatario, "'", "\\'");
+				sqlQuery = ParticipantesUtil.NOMBRE + " = E'" + destinatario + "'";
 			} else {
-				sqlQuery = "ID_EXT='" + destinatarioId + "'";
+				sqlQuery = ParticipantesUtil.ID_EXT + " = '" + destinatarioId + "'";
 			}
 
 			logger.debug("sqlQueryPart " + sqlQuery);
@@ -161,12 +176,13 @@ public class CompareceUtil {
 			if (participantes.toList().size() == 0) {
 
 				if (StringUtils.isEmpty(destinatarioId) || destinatarioId.equals("0")) {
-					sqlQuery = "NOMBRE='" + destinatario + "'";
+					destinatario = StringUtils.replace(destinatario, "'", "\\'");
+					sqlQuery = ParticipantesUtil.NOMBRE + " = E'" + destinatario + "'";
 				} else {
-					sqlQuery = "ID_EXT='" + destinatarioId + "'";
+					sqlQuery = ParticipantesUtil.ID_EXT + " = '" + destinatarioId + "'";
 				}
 
-				participantes = ParticipantesUtil.getParticipantes(ctx, "", sqlQuery, "ID DESC");
+				participantes = ParticipantesUtil.getParticipantes(ctx, "", sqlQuery, ParticipantesUtil.ID + " DESC");
 			}
 
 			if (participantes.toList().size() != 0) {
@@ -177,8 +193,9 @@ public class CompareceUtil {
 				
 				while (itParticipantes.hasNext() && StringUtils.isEmpty(dniDestinatario)) {
 					partic = (IItem) itParticipantes.next();
-					if (partic.getString("NDOC") != null) {
-						dniDestinatario = partic.getString("NDOC");
+
+					if (partic.getString(ParticipantesUtil.NDOC) != null) {
+						dniDestinatario = partic.getString(ParticipantesUtil.NDOC);
 						logger.debug("Se encuntra NDOC, se sale con valor: " + dniDestinatario);
 					}
 				}
@@ -191,12 +208,13 @@ public class CompareceUtil {
 				
 				logger.debug("¿El destinatario con DNI " + dniDestinatario + " tiene representantes? " + tieneRepresentantes);
 				String entidad = EntidadesAdmUtil.obtenerEntidad(ctx);
+				esUsuarioComp.setEntidad(entidad);
 				
 				if (tieneRepresentantes) {
 					for (int i = 0; i < dnisRepresentantes.size(); i++) {
 						TerceroWS tercero = asp.consultarDNI(entidad,(String) dnisRepresentantes.get(i));
 						if (tercero != null) {
-							esUsuarioComp = true;
+							esUsuarioComp.setUsuario_en_comparece(true);
 							dnisRepresentantesComparece.add((String) dnisRepresentantes.get(i));
 						} 
 						logger.debug("¿La persona con DNI " + (String) dnisRepresentantes.get(i) + " y que es representante del destinatario " + dniDestinatario + " está dada de alta en COMPARECE?" + esUsuarioComp);
@@ -207,23 +225,32 @@ public class CompareceUtil {
 					try{
 						tercero = asp.consultarDNI(entidad, dniDestinatario);
 					} catch (NullPointerException e) {
-						esUsuarioComp = false;
+						esUsuarioComp.setUsuario_en_comparece(false);
 						logger.error("Error en la aplicación del comparece debe estar caido." + e.getMessage(), e);						
 					}
 					if (tercero != null) {
-						esUsuarioComp = true;
+						esUsuarioComp.setUsuario_en_comparece(true);
 						dnisRepresentantesComparece.add(dniDestinatario);
 					}
 					logger.debug("¿La persona con DNI " + dniDestinatario + " es usuario de COMPARECE?" + esUsuarioComp);
 				}
+				
+				//Si no es usuario comparece recojo mas datos del participante
+				//if(!esUsuarioComp.isUsuario_en_comparece()){
+				esUsuarioComp.setNombreDestinatario( partic.getString("NOMBRE"));
+				esUsuarioComp.setEmailDestinatario(partic.getString("DIRECCIONTELEMATICA"));
+				esUsuarioComp.setTelefonoDestinatario(partic.getString("TFNO_MOVIL"));
+				esUsuarioComp.setNif(partic.getString("NDOC"));
+				
+				
 			}
 			/*else{
 				logger.error("Error. No se ha podido encontrar al participante por ningún sitio.");
 				throw new ISPACRuleException("Error. No se ha podido encontrar al participante por ningún sitio.");
 			}*/
 		} catch (ISPACException e) {
-			logger.error("Error al comprobar si es usuario comparece." + e.getMessage(), e);
-			throw new ISPACRuleException("Error al comprobar si es usuario comparece." + e.getMessage(), e);
+			logger.error("Error al comprobar si es usuario comparece, si el participante no esta en comparece es posible que no tenga indicada la DIRECCION TELEMATICA o el TFNO_MOVIL" + e.getMessage(), e);
+			throw new ISPACRuleException("Error al comprobar si es usuario comparece, si el participante no esta en comparece es posible que no tenga indicada la DIRECCION TELEMATICA o el TFNO_MOVIL" + e.getMessage(), e);
 		}
 		return esUsuarioComp;
 	}
@@ -277,7 +304,7 @@ public class CompareceUtil {
 	 * @author Teresa
 	 * @throws ISPACRuleException
 	 */
-	public static boolean comprobarEnvioComparece(IEntitiesAPI entitiesAPI, String numexp, int idDoc, String dniRepresentanteComparece, int taskId) throws ISPACRuleException {
+	public static boolean comprobarEnvioComparece(IClientContext ctx, IItem documentoItem, IEntitiesAPI entitiesAPI, String numexp, int idDoc, String dniRepresentanteComparece, int taskId) throws ISPACRuleException {
 
 		boolean mandado = false;
 
@@ -288,6 +315,8 @@ public class CompareceUtil {
 			Iterator<?> it = collection.iterator();
 			if (it.hasNext()) {
 				mandado = true;
+				documentoItem.set("ESTADONOTIFICACION", Constants.NOTIFICACIONES_VALOR.VALOR_ESTADO_COMPARECE);
+				documentoItem.store(ctx);
 			}
 		} catch (ISPACException e) {
 			logger.error("Error al comprobar si se ya se ha enviado la notificación del expediente " + numexp + " al destinatario " + dniRepresentanteComparece + ". " + e.getMessage(), e);

@@ -155,6 +155,8 @@ public class DistributionInfo {
 	 * registro de salida
 	 */
 	protected PersonInfo[] sendersOrReceivers = null;
+	
+	protected String comentarios = null;
 
 	/**
 	 * @return
@@ -519,6 +521,14 @@ public class DistributionInfo {
 	public void setSendersOrReceivers(PersonInfo[] sendersOrReceivers) {
 		this.sendersOrReceivers = sendersOrReceivers;
 	}
+	
+	public String getComentarios() {
+		return comentarios;
+	}
+
+	public void setComentarios(String comentarios) {
+		this.comentarios = comentarios;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -590,8 +600,10 @@ public class DistributionInfo {
 			}
 		}
 
+		buffer.append("] comentarios [");
+		buffer.append(comentarios);
+		
 		buffer.append("]");
 		return buffer.toString();
 	}
-
 }

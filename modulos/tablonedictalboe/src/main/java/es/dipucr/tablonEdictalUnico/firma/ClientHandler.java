@@ -24,8 +24,6 @@ import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.WSSecSignature;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import es.boe.www.ServicioNotificaciones.ServicioNotificacionesSOAPStub;
  
 /**
  * Clase encargada de securizar los mensajes SOAP de petición realizados desde
@@ -80,7 +78,7 @@ public class ClientHandler extends BasicHandler {
             keystoreCertPassword = config.getProperty("security.keystore.cert.password");
  
         } catch (Exception e) {
-        	logger.error("Error leyendo el fichero de configuración de securización");
+        	logger.error("Error leyendo el fichero de configuración de securización.", e);
             System.exit(-1);
         }
     }
@@ -93,7 +91,7 @@ public class ClientHandler extends BasicHandler {
                     SOAPPart.FORM_SOAPENVELOPE);
  
         } catch (Exception e) {
-        	logger.error(e.getMessage());
+        	logger.error(e.getMessage(), e);
             System.exit(-1);
         }
     }
@@ -151,7 +149,7 @@ public class ClientHandler extends BasicHandler {
             return axisMessage.getSOAPEnvelope();
  
         } catch (Exception e) {
-        	logger.error(e.getMessage());
+        	logger.error(e.getMessage(), e);
             System.exit(-1);
             return null;
  

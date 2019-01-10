@@ -104,7 +104,7 @@ import org.apache.log4j.Logger;
 
 public class EasySSLSocketFactory implements ProtocolSocketFactory {
 	
-	private static final Logger logger = Logger.getLogger(EasySSLSocketFactory.class);
+	private static final Logger LOGGER = Logger.getLogger(EasySSLSocketFactory.class);
 
     private static final String TAG = "EasySSLSocketFactory";
     private SSLContext sslcontext = null;
@@ -117,20 +117,20 @@ public class EasySSLSocketFactory implements ProtocolSocketFactory {
     }
 
     private static SSLContext createEasySSLContext() {
-        logger.debug(TAG + " Creating Easy SSL Context");
+        LOGGER.debug(TAG + " Creating Easy SSL Context");
         try {
             SSLContext context = SSLContext.getInstance("TLS");
             context.init(null, new TrustManager[] { new EasyX509TrustManager(
                     null) }, null);
             return context;
         } catch (Exception er) {
-            logger.error(TAG + " " + er.getMessage() + "");
+            LOGGER.error(TAG + " " + er.getMessage() + "", er);
             throw new HttpClientError(er.toString());
         }
     }
 
     private SSLContext getSSLContext() {
-        logger.debug(TAG + " Getting Easy SSL Context");
+        LOGGER.debug(TAG + " Getting Easy SSL Context");
         if (this.sslcontext == null) {
             this.sslcontext = createEasySSLContext();
         }
@@ -142,7 +142,7 @@ public class EasySSLSocketFactory implements ProtocolSocketFactory {
      */
     public Socket createSocket(String host, int port, InetAddress clientHost,
             int clientPort) throws IOException, UnknownHostException {
-        logger.debug(TAG + " Creating SSL Socket with remote " + host + ":" + port + ", client " + clientHost + ":" + clientPort);
+        LOGGER.debug(TAG + " Creating SSL Socket with remote " + host + ":" + port + ", client " + clientHost + ":" + clientPort);
 
         return getSSLContext().getSocketFactory().createSocket(host, port,
                 clientHost, clientPort);
@@ -175,7 +175,7 @@ public class EasySSLSocketFactory implements ProtocolSocketFactory {
             final InetAddress localAddress, final int localPort,
             final HttpConnectionParams params) throws IOException,
             UnknownHostException, ConnectTimeoutException {
-        logger.debug(TAG + " Creating SSL Socket with remote " + host + ":" + port + ", local " + localAddress + ":" + localPort + ", params: " + params);
+        LOGGER.debug(TAG + " Creating SSL Socket with remote " + host + ":" + port + ", local " + localAddress + ":" + localPort + ", params: " + params);
         if (params == null) {
             throw new IllegalArgumentException("Parameters may not be null");
         }
@@ -188,7 +188,7 @@ public class EasySSLSocketFactory implements ProtocolSocketFactory {
             socket.setSoTimeout(params.getSoTimeout());
             return socket;
         } else {*/
-        logger.debug(TAG + " ... with connection timeout " + timeout + " and socket timeout " + params.getSoTimeout());
+        LOGGER.debug(TAG + " ... with connection timeout " + timeout + " and socket timeout " + params.getSoTimeout());
         Socket socket = socketfactory.createSocket();
         SocketAddress localaddr = new InetSocketAddress(localAddress,
                 localPort);
@@ -205,7 +205,7 @@ public class EasySSLSocketFactory implements ProtocolSocketFactory {
      */
     public Socket createSocket(String host, int port) throws IOException,
             UnknownHostException {
-        logger.debug(TAG + " Creating SSL Socket with remote " + host + ":" + port);
+        LOGGER.debug(TAG + " Creating SSL Socket with remote " + host + ":" + port);
         return getSSLContext().getSocketFactory().createSocket(host, port);
     }
 
@@ -214,7 +214,7 @@ public class EasySSLSocketFactory implements ProtocolSocketFactory {
      */
     public Socket createSocket(Socket socket, String host, int port,
             boolean autoClose) throws IOException, UnknownHostException {
-        logger.debug(TAG + " Creating SSL Socket from other shocket " + socket + " to remote " + host + ":" + port);
+        LOGGER.debug(TAG + " Creating SSL Socket from other shocket " + socket + " to remote " + host + ":" + port);
         return getSSLContext().getSocketFactory().createSocket(socket, host,
                 port, autoClose);
     }

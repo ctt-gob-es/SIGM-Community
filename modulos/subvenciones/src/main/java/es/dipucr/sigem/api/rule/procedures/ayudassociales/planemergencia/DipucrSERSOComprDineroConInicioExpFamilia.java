@@ -13,8 +13,8 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrSERSOComprDineroConInicioExpFamilia implements IRule{
     private static final Logger LOGGER = Logger.getLogger(DipucrSERSOComprDineroConInicioExpFamilia.class);
@@ -53,67 +53,34 @@ public class DipucrSERSOComprDineroConInicioExpFamilia implements IRule{
             boolean pidenCero = false;
         
             IItemCollection solicitudCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, numexp);
-            Iterator<?> solicitudIterator = solicitudCollection.iterator();                
+            Iterator<?> solicitudIterator = solicitudCollection.iterator();  
+            
             if (solicitudIterator.hasNext()){
                 IItem solicitud = (IItem)solicitudIterator.next();
-                String tipoAyuda = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
+                
+                String tipoAyuda = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.TIPOAYUDA);
                 
                 if (ConstantesPlanEmergencia.ALIMENTACION.equals(tipoAyuda)){
-                    trimestre = solicitud.getString(ConstantesPlanEmergencia.TRIMESTRE);
+                    trimestre = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.TRIMESTRE);
     
                     //Recuperamos las cantidades del ayuntamiento en cuestión        
                     IItemCollection cantidadesCol = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSONVales.NOMBRE_TABLA, numexp);
                     Iterator<?> cantidadesIt = cantidadesCol.iterator();
+                    
                     while(cantidadesIt.hasNext()){                        
                         IItem cantidades = (IItem)cantidadesIt.next();
-                        try{
-                            primerTrim = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE1IMPRESOS).trim());
-                        } catch(Exception e){
-                            LOGGER.debug("El campo ConstantesPlanEmergencia.SEMESTRE1IMPRESOS es nulo, vacío o no es numérico. " + e.getMessage(), e);
-                            primerTrim = 0;
-                        }
-                        try{
-                            primerTrimMax = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE1).trim());
-                        } catch(Exception e){
-                            LOGGER.debug("El campo MAXSEMESTRE1 es nulo, vacío o no es numérico. " + e.getMessage(), e);
-                            primerTrimMax = 0;
-                        }
-                        try{                        
-                            segundoTrim = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE2IMPRESOS).trim());
-                        } catch(Exception e){
-                            LOGGER.debug("El campo SEMESTRE2IMPRESOS es nulo, vacío o no es numérico. " + e.getMessage(), e);
-                            segundoTrim = 0;
-                        }
-                        try{                        
-                            segundoTrimMax = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE2).trim());
-                        } catch(Exception e){
-                            LOGGER.debug("El campo MAXSEMESTRE2 es nulo, vacío o no es numérico. " + e.getMessage(), e);
-                            segundoTrimMax = 0;
-                        }
-                        try{
-                            tercerTrimMax = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE3).trim());
-                        } catch(Exception e){
-                            LOGGER.debug("El campo MAXSEMESTRE3 es nulo, vacío o no es numérico. " + e.getMessage(), e);
-                            tercerTrimMax = 0;
-                        }
-                        try{
-                            tercerTrim = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE3IMPRESOS).trim());
-                        } catch(Exception e){
-                            LOGGER.debug("El campo SEMESTRE3IMPRESOS es nulo, vacío o no es numérico. " + e.getMessage(), e);
-                            tercerTrim = 0;
-                        }
-                        try{
-                            cuartoTrimMax = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE4).trim());
-                        } catch(Exception e){
-                            LOGGER.debug("El campo MAXSEMESTRE4 es nulo, vacío o no es numérico. " + e.getMessage(), e);
-                            cuartoTrimMax = 0;                            
-                        }
-                        try{
-                            cuartoTrim = Double.parseDouble(cantidades.getString(ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE4IMPRESOS).trim());
-                        } catch(Exception e){
-                            LOGGER.debug("El campo SEMESTRE4IMPRESOS es nulo, vacío o no es numérico. " + e.getMessage(), e);
-                            cuartoTrim = 0;
-                        }
+                        
+                        primerTrim = SubvencionesUtils.getDouble(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE1IMPRESOS);
+                        primerTrimMax = SubvencionesUtils.getDouble(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE1);
+
+                        segundoTrim = SubvencionesUtils.getDouble(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE2IMPRESOS);
+                        segundoTrimMax = SubvencionesUtils.getDouble(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE2);
+
+                        tercerTrimMax = SubvencionesUtils.getDouble(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE3);
+                        tercerTrim = SubvencionesUtils.getDouble(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE3IMPRESOS);
+
+                        cuartoTrimMax = SubvencionesUtils.getDouble(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.MAXSEMESTRE4);
+                        cuartoTrim = SubvencionesUtils.getDouble(cantidades, ConstantesPlanEmergencia.DpcrSERSONVales.SEMESTRE4IMPRESOS);
                         
                         excedeMax = false;
                         pidenCero = false;
@@ -147,23 +114,10 @@ public class DipucrSERSOComprDineroConInicioExpFamilia implements IRule{
                                 }
                             }
                         }                    
-                        if(excedeMax){
-                            IItem expediente = ExpedientesUtil.getExpediente(cct, numexp);
-                            if (expediente != null){
-                                String asunto = expediente.getString("ASUNTO");
-                                if(pidenCero){
-                                    if(asunto.indexOf(" - AVISO. Se han solicitado 0 euros.")<0){
-                                        asunto += " - AVISO. Se han solicitado 0 euros.";
-                                    }
-                                } else{
-                                    if(asunto.indexOf(" - AVISO. Se ha sobrepasado el límite familiar.")<0){
-                                        asunto += " - AVISO. Se ha sobrepasado el límite familiar.";
-                                    }
-                                }
-                                expediente.set("ASUNTO", asunto);
-                                                        
-                                expediente.store(cct);                            
-                            }
+                        if(excedeMax && pidenCero){
+                                SubvencionesUtils.concatenaTextoAAsunto(cct, numexp, ConstantesPlanEmergencia.DpcrSERSOAvisos.TEXTOASUNTO_PIDEN_0_EUROS);
+                        } else if (excedeMax){
+                            SubvencionesUtils.concatenaTextoAAsunto(cct, numexp, ConstantesPlanEmergencia.DpcrSERSOAvisos.TEXTOASUNTO_LIMITE_FAMILIAR);
                         }
                     }    
                 }
@@ -181,7 +135,6 @@ public class DipucrSERSOComprDineroConInicioExpFamilia implements IRule{
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
-
 }

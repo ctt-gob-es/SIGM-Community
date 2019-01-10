@@ -44,6 +44,12 @@ public class FacturaWSProxy implements es.dipucr.factura.services.factura.Factur
     return facturaWS;
   }
   
+  public es.dipucr.factura.domain.bean.OperacionGastosFuturosBean crearRetencionCredito(java.lang.String idEntidad, java.lang.String ejercicio, java.lang.String nifTercero, java.util.Calendar fechaContable, java.lang.String texto, java.lang.String economica, java.lang.String organica, java.lang.String funcional, double importe) throws java.rmi.RemoteException{
+    if (facturaWS == null)
+      _initFacturaWSProxy();
+    return facturaWS.crearRetencionCredito(idEntidad, ejercicio, nifTercero, fechaContable, texto, economica, organica, funcional, importe);
+  }
+  
   public void cambiarEstadoFactura(java.lang.String idEntidad, java.lang.String nreg, java.lang.String codEstado, int subtipo, java.lang.String motivo) throws java.rmi.RemoteException{
     if (facturaWS == null)
       _initFacturaWSProxy();
@@ -66,6 +72,18 @@ public class FacturaWSProxy implements es.dipucr.factura.services.factura.Factur
     if (facturaWS == null)
       _initFacturaWSProxy();
     return facturaWS.recuperarContratosMenores(idEntidad, ejercicio, dFechaInicio, dFechaFin, sImporteDesde, sImporteHasta, arrPartidasExluidas);
+  }
+  
+  public es.dipucr.factura.domain.bean.IngresosBean[] recuperarIngresos(java.lang.String idEntidad, java.lang.String ejercicio, java.lang.String cifTercero, java.lang.String refContable, java.lang.String tipoMovimiento) throws java.rmi.RemoteException{
+    if (facturaWS == null)
+      _initFacturaWSProxy();
+    return facturaWS.recuperarIngresos(idEntidad, ejercicio, cifTercero, refContable, tipoMovimiento);
+  }
+  
+  public es.dipucr.factura.domain.bean.OperacionGastosBean[] recuperarOperacionesGastoDefinitivas(java.lang.String idEntidad, java.lang.String ejercicio, java.lang.String cifTercero, java.lang.String refContable, java.lang.String tipoMovimiento) throws java.rmi.RemoteException{
+    if (facturaWS == null)
+      _initFacturaWSProxy();
+    return facturaWS.recuperarOperacionesGastoDefinitivas(idEntidad, ejercicio, cifTercero, refContable, tipoMovimiento);
   }
   
   

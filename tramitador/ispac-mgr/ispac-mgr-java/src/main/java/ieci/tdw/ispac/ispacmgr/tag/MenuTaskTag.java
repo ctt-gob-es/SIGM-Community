@@ -38,7 +38,7 @@ public class MenuTaskTag extends BodyTagSupport {
      * identificadores de barras de menú existentes */
     public static final String ID_MAP = "ieci.tdw.ispac.ispacweb.menu.ID_MAP";
 
-    private static final Logger logger = Logger.getLogger(MenuTaskTag.class);
+    private static final Logger LOGGER = Logger.getLogger(MenuTaskTag.class);
 
     /** Nombre del atributo que contiene el esquema */
     private String name;
@@ -94,7 +94,10 @@ public class MenuTaskTag extends BodyTagSupport {
  	  
 
  	 ClientContext cct =((SessionAPI)getSession()).getClientContext();
- 	 List schemeList = (List)pageContext.findAttribute(getName());
+ 	
+ 	 String stageId = request.getSession().getAttribute("stageId").toString();
+ 	
+ 	 List<?> schemeList = (List<?>)pageContext.findAttribute(getName());
  	 actuales.append("<ul class=\"menu_grupo\">");
  	 anteriores.append("<ul class=\"menu_grupo\">");
  	 ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME,cct.getLocale() );
@@ -112,71 +115,58 @@ public class MenuTaskTag extends BodyTagSupport {
 
  	  	 actuales.append("<ul>");
  	  	 anteriores.append("<ul>");
+ 	  	 
 	     if(schemeList!=null && schemeList.size()>0){
+	    	 
 	    	for(int i=0; i<schemeList.size(); i++){
 	    		SchemeEntityBean item=(SchemeEntityBean) schemeList.get(i);
 	    		String entityId=item.getItem().getString("ID");
+	    		
 	    		if(StringUtils.equals(entityId, ""+ISPACEntities.DT_ID_TRAMITES)){
 	    			//Recorremos cada uno de sus registros
-	    			List registros=item.getRegs();
-	    			ArrayList registrosAct = new ArrayList();
+	    			List<?> registros=item.getRegs();
+	    			
 	    			if(registros!=null){
 	    				
-						// [Manu Ticket #56] Ordenamos los trámites por fechas
+						// [Manu Ticket #56] Ordenamos los trámites por fechas pero los de la fase actual
 						try {
-							RegEntityBean[] registrosOrdenados = new RegEntityBean[registros.size()];
+							List<RegEntityBean> registrosFase = new ArrayList<RegEntityBean>();
 
 							for (int cont = 0; cont < registros.size(); cont++) {
-								registrosOrdenados[cont] = (RegEntityBean) registros.get(cont);
-
+								RegEntityBean reg = (RegEntityBean) registros.get(cont);
+								
+								int id_fase_exp=((Integer) reg.getProperty("ID_FASE_EXP")).intValue();
+								
+								if(Integer.parseInt(stageId) == id_fase_exp ){
+									registrosFase.add(reg);
+								}
 							}
-							quicksort(registrosOrdenados, 0, registrosOrdenados.length - 1);
-
-							registros = new ArrayList();
-
-							for (int cont = 0; cont < registrosOrdenados.length; cont++) {
-
-								int taskIdReg = ((Integer) registrosOrdenados[registrosOrdenados.length - 1 - cont].getParams().get("taskId")).intValue();
-								if (taskIdParam != null && taskIdReg == Integer.parseInt(taskIdParam.toString())) {
-									registros.add(registrosOrdenados[registrosOrdenados.length - 1 - cont]);
-								} else if (cont < 5) {
-									registros.add(registrosOrdenados[registrosOrdenados.length - 1 - cont]);
-								} else {
-									String estado = "" + registrosOrdenados[registrosOrdenados.length - cont - 1].getProperty("ESTADO");
-									if (estado.equals("1")) {
-										registros.add(registrosOrdenados[registrosOrdenados.length - 1 - cont]);
+							
+							if(!registrosFase.isEmpty()){
+								RegEntityBean[] registrosOrdenados = new RegEntityBean[registrosFase.size()];
+								registrosOrdenados = registrosFase.toArray(registrosOrdenados);
+								
+								for (int cont = registrosOrdenados.length-1; cont >= 0; cont--) {
+									RegEntityBean reg = (RegEntityBean)registrosOrdenados[cont];
+	
+									int taskIdReg = ((Integer) registrosOrdenados[cont].getParams().get("taskId")).intValue();
+									
+									if (taskIdParam != null && taskIdReg == Integer.parseInt(taskIdParam.toString())) {
+										actuales = new StringBuffer(generateHtmlTask(actuales.toString(), reg, true));
+									} else if (cont < 5) {
+										actuales = new StringBuffer(generateHtmlTask(actuales.toString(), reg, true));
+									} else {
+										String estado = "" + registrosOrdenados[cont].getProperty("ESTADO");
+										if ("1".equals(estado)) {
+											actuales = new StringBuffer(generateHtmlTask(actuales.toString(), reg, true));
+										}
 									}
 								}
 							}
-
-							// Ordenamos nuevamente
-							for (int mqe = 0; mqe < registros.size(); mqe++) {
-								registrosAct.add((RegEntityBean) registros.get(registros.size() - 1 - mqe));
-							}
 						} catch (Exception e) {
-
+							LOGGER.error("Error al montar la lista de trámites abiertos en la fase actual " + e.getMessage() + ". ", e);
 						}
 						// [Manu Ticket #56] Fin modificaciones
-	    				
-	    				
-	    				for(int j=0; j<registrosAct.size(); j++){
-	    					RegEntityBean reg=(RegEntityBean) registrosAct.get(j);
-	    					//int key=((Integer) reg.getProperty("SCHEME_ID")).intValue();
-	    					
-	    					int id_fase_exp=((Integer) reg.getProperty("ID_FASE_EXP")).intValue();
-	    					String stageId=request.getSession().getAttribute("stageId").toString();
-	    					
-	    					//Compruebo que estamo tratando un tramite de la fase actual
-	    					if(Integer.parseInt(stageId)==id_fase_exp ){
-	    						actuales = new StringBuffer(generateHtmlTask(actuales.toString(),reg,true));
-	    					}
-	    					//Fases anteriores
-	    					//[Manu Ticket #56] no mostramos actuales, pueden ser muchos y sobrecargan
-//	    					else if(Integer.parseInt(stageId)!=id_fase_exp ){
-	    						
-//	    						anteriores=generateHtmlTask(anteriores,reg,false);	
-//	    					}
-	    				}
 	    			}
 	    		}
 	    	} 
@@ -285,8 +275,8 @@ public class MenuTaskTag extends BodyTagSupport {
  * @return
  */
    
-   private String makeUrl(String url, Map params){
-		Iterator itr=params.keySet().iterator();
+   private String makeUrl(String url, Map<?, ?> params){
+		Iterator<?> itr=params.keySet().iterator();
 		boolean primero=true;
 		while(itr.hasNext()){
 			String param=(String) itr.next();
@@ -330,54 +320,9 @@ public class MenuTaskTag extends BodyTagSupport {
 	  		HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 	  		sessionAPI = SessionAPIFactory.getSessionAPI(request, response);
 	    } catch( ISPACException e) {
-	    	logger.warn("Error al obtener el SessionAPI", e);
+	    	LOGGER.warn("Error al obtener el SessionAPI", e);
 	    }
 
 	    return sessionAPI;
   }
-
-	// [Manu Ticket #56] Ordenamos los trámites por fechas usando quicksort
-	public void quicksort(RegEntityBean[] a, int izq, int der) {
-		int i = izq;
-		int j = der;
-		// int pivote = a[ (izq + der) / 2];
-		RegEntityBean pivote = a[(izq + der) / 2];
-
-		do {
-			try {
-				int valorA = ((Integer) ((RegEntityBean) a[i]).getProperty("SCHEME_ID")).intValue();
-				int valorPivote = ((Integer) pivote.getProperty("SCHEME_ID")).intValue();
-
-				// while (a[i] < pivote) {
-				while (valorA < valorPivote) {
-					i++;
-					valorA = ((Integer) ((RegEntityBean) a[i]).getProperty("SCHEME_ID")).intValue();
-				}
-
-				// while (a[j] > pivote) {
-				int valorJ = ((Integer) ((RegEntityBean) a[j]).getProperty("SCHEME_ID")).intValue();
-				while (valorJ > valorPivote) {
-					j--;
-					valorJ = ((Integer) ((RegEntityBean) a[j]).getProperty("SCHEME_ID")).intValue();
-				}
-			} catch (Exception e) {
-				logger.error("ERROR - quickshort error: " + e.getMessage(), e);
-			}
-			if (i <= j) {
-				RegEntityBean aux = a[i];
-				a[i] = a[j];
-				a[j] = aux;
-				i++;
-				j--;
-			}
-		} while (i <= j);
-		if (izq < j) {
-			quicksort(a, izq, j);
-		}
-		if (i < der) {
-			quicksort(a, i, der);
-		}
-	}
-	// [Manu Ticket #56] Fin modificaciones
-
 }

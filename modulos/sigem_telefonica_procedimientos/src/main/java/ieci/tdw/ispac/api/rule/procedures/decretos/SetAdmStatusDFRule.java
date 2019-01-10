@@ -17,33 +17,34 @@ import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
  * @propósito Modificar el campo Estado Administrativo con el valor "DECRETO FIRMADO"
  */
 public class SetAdmStatusDFRule implements IRule {
-	private static final Logger logger = Logger.getLogger(SetAdmStatusDFRule.class);
-	
-	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		return true;
-	}
+    private static final Logger LOGGER = Logger.getLogger(SetAdmStatusDFRule.class);
+    
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        return true;
+    }
 
-	public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
-		return true;
-	}
+    public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
+        return true;
+    }
 
-	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
-		
-		try{
-			IItem item = ExpedientesUtil.getExpediente(rulectx.getClientContext(), rulectx.getNumExp());
-			logger.warn("item.getString(ESTADOADM) "+item.getString("ESTADOADM"));
-			if(!item.getString("ESTADOADM").equals("RC")){
-				item.set("ESTADOADM", "DF");
-				item.store(rulectx.getClientContext());
-			}
-		}catch(ISPACException e){
-			throw new ISPACRuleException(e);
-		}
-		return null;
-	}
+    public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+        
+        try{
+            IItem item = ExpedientesUtil.getExpediente(rulectx.getClientContext(), rulectx.getNumExp());
+            LOGGER.warn("item.getString(ESTADOADM) "+item.getString("ESTADOADM"));
+            
+            if(!ExpedientesUtil.EstadoADM.RC.equals(item.getString(ExpedientesUtil.ESTADOADM))){
+                item.set(ExpedientesUtil.ESTADOADM, ExpedientesUtil.EstadoADM.DF);
+                item.store(rulectx.getClientContext());
+            }
+        } catch(ISPACException e){
+            throw new ISPACRuleException(e);
+        }
+        return null;
+    }
 
-	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-
-	}
+    public void cancel(IRuleContext rulectx) throws ISPACRuleException {
+        // No se da nunca este caso
+    }
 
 }

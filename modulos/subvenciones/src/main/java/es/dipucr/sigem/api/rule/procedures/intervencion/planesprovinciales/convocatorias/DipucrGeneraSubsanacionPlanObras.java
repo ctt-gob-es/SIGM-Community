@@ -7,66 +7,57 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
+import java.util.Calendar;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.util.Calendar;
-
 import es.dipucr.sigem.api.rule.common.documento.DipucrAutoGeneraDocIniTramiteRule;
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.ConstantesSubvenciones;
 
-    public class DipucrGeneraSubsanacionPlanObras  extends
-            DipucrAutoGeneraDocIniTramiteRule {
+public class DipucrGeneraSubsanacionPlanObras extends DipucrAutoGeneraDocIniTramiteRule {
+    
+    private static final Logger LOGGER = Logger.getLogger(DipucrGeneraSubsanacionPlanObras .class);
+    
+    public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+        LOGGER.info(ConstantesString.INICIO +this.getClass().getName());
 
-        private static final Logger LOGGER = Logger
-                .getLogger(DipucrGeneraSubsanacionPlanObras .class);
-
-        public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-            LOGGER.info(ConstantesString.INICIO +this.getClass().getName());
-
-            tipoDocumento = "Comunicación de subsanación";
-            plantilla = "Requerimiento de Subsanación Convocatoria de Subvenciones Plan de Obras Municipales";
-
-            LOGGER.info(ConstantesString.FIN +this.getClass().getName());
-            return true;
-        }
-
-        public void setSsVariables(IClientContext cct, IRuleContext rulectx) {
-            String numexp = "";
-            try {
-                cct.setSsVariable("ANIO", "" +Calendar.getInstance().get(Calendar.YEAR));
-                
-                numexp = rulectx.getNumExp();
-                
-                IItemCollection partCol = ParticipantesUtil.getParticipantes( cct, numexp, "", "");
-                Iterator<?> partIt = partCol.iterator();
-                
-                if(partIt.hasNext()){
-                    IItem part = (IItem)partIt.next();
-                
-                    cct.setSsVariable("NOMBRE", part.getString("NOMBRE"));
-                    cct.setSsVariable("DIRNOT", part.getString("DIRNOT"));
-                    cct.setSsVariable("C_POSTAL", part.getString("C_POSTAL"));
-                    cct.setSsVariable("LOCALIDAD", part.getString("LOCALIDAD"));
-                    cct.setSsVariable("CAUT", part.getString("CAUT"));
-                }
-            } catch (ISPACException e) {
-                LOGGER.error(ConstantesString.LOGGER_ERROR + " en el expediente: " + numexp + ". " + e.getMessage(), e);
+        tipoDocumento = "Comunicación de subsanación";
+        plantilla = "Requerimiento de Subsanación Convocatoria de Subvenciones Plan de Obras Municipales";
+        
+        LOGGER.info(ConstantesString.FIN +this.getClass().getName());
+        return true;
+    }
+    
+    public void setSsVariables(IClientContext cct, IRuleContext rulectx) {
+        String numexp = "";
+        try {
+            cct.setSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO, "" +Calendar.getInstance().get(Calendar.YEAR));
+            
+            numexp = rulectx.getNumExp();
+            
+            IItemCollection partCol = ParticipantesUtil.getParticipantes( cct, numexp, "", "");
+            Iterator<?> partIt = partCol.iterator();
+            
+            if(partIt.hasNext()){
+                IItem part = (IItem)partIt.next();
+                DocumentosUtil.setParticipanteAsSsVariable(cct, part);
             }
-        }
-
-        public void deleteSsVariables(IClientContext cct) {
-            try {
-                cct.deleteSsVariable("ANIO");
-                cct.deleteSsVariable("NOMBRE");
-                cct.deleteSsVariable("DIRNOT");
-                cct.deleteSsVariable("C_POSTAL");
-                cct.deleteSsVariable("LOCALIDAD");
-                cct.deleteSsVariable("CAUT");
-            } catch (ISPACException e) {
-                LOGGER.error( e.getMessage(), e);
-            }
+        } catch (ISPACException e) {
+            LOGGER.error(ConstantesString.LOGGER_ERROR + " en el expediente: " + numexp + ". " + e.getMessage(), e);
         }
     }
+    
+    public void deleteSsVariables(IClientContext cct) {
+        try {
+            cct.deleteSsVariable(ConstantesSubvenciones.VariablesSesion.ANIO);
+            DocumentosUtil.borraParticipanteSsVariable(cct);
+
+        } catch (ISPACException e) {
+            LOGGER.error( e.getMessage(), e);
+        }
+    }
+}

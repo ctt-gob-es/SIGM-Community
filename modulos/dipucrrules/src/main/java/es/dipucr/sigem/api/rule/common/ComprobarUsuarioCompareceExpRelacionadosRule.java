@@ -36,7 +36,7 @@ public class ComprobarUsuarioCompareceExpRelacionadosRule extends VerificarUsuar
 	        //	Obtengo los participantes del expediente.			
     		IItemCollection collection = DocumentosUtil.getDocumentsByNombre(rulectx.getNumExp(), rulectx, "Propuesta", "DESCRIPCION");
     		
-    		Vector <IItem> vPropuesta = SecretariaUtil.orderPropuestas(collection);
+    		Vector <IItem> vPropuesta = SecretariaUtil.orderPropuestas(rulectx);
     		
     		if(vPropuesta != null){
 	 	        for( int i = 0; i < vPropuesta.size(); i++) {

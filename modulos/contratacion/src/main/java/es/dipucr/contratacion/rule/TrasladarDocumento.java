@@ -8,13 +8,14 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
 import java.io.File;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.contratacion.common.DipucrFuncionesComunes;
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.MailUtil;
 
 
@@ -48,9 +49,18 @@ public class TrasladarDocumento  implements IRule {
 				rulectx.setInfoMessage("No existe ningún documento a trasladar");
 				return false;
 			}
-			else{
-				return true;
+
+			//[dipucr-Felipe #707]
+			//Obtener Participantes de la propuesta actual, con relación "Trasladado"
+	 		String sqlQueryPart = "WHERE ROL= '"+rol+"' AND NUMEXP = '"+rulectx.getNumExp()+"' ORDER BY ID";
+			IItemCollection participantes = entitiesAPI.queryEntities("SPAC_DT_INTERVINIENTES", sqlQueryPart);
+
+			if (null == participantes || participantes.toList().size() == 0){
+				rulectx.setInfoMessage("Debe rellenar al menos un participante con relación 'TRASLADO' para trasladar el documento");
+				return false;
 			}
+			
+			return true;
 				
 		}catch(Exception e) 
 			{
@@ -74,7 +84,7 @@ public class TrasladarDocumento  implements IRule {
 			 * */
 
 			//----------------------------------------------------------------------------------------------
-	        ClientContext cct = (ClientContext) rulectx.getClientContext();
+	        IClientContext cct = rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 	        //---------------------------------------------------------------------------------------------- 
@@ -108,7 +118,7 @@ public class TrasladarDocumento  implements IRule {
 				String infoPag = doc.getString("INFOPAG_RDE");
 				logger.warn("infoPag."+infoPag);
 				
-				File file = DipucrFuncionesComunes.getFile(rulectx, infoPag, nombreDoc);
+				File file = DocumentosUtil.getFile(cct, infoPag, nombreDoc, doc.getString("EXTENSION_RDE"));
 				// Para cada participante seleccionado --> enviar email y actualizar el campo ACUERDO_TRASLADADO en la BBDD
 				if(participantes != null && participantes.toList()!= null && participantes.toList().size() != 0){
 					for (int i=0; i<participantes.toList().size(); i++)

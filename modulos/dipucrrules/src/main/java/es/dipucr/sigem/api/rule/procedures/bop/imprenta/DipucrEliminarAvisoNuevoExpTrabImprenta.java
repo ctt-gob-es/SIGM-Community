@@ -6,7 +6,7 @@ import ieci.tdw.ispac.api.rule.IRuleContext;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.sigem.api.rule.common.avisos.AvisosUtil;
+import es.dipucr.sigem.api.rule.common.utils.AvisosUtil;
 
 
 public class DipucrEliminarAvisoNuevoExpTrabImprenta implements IRule {

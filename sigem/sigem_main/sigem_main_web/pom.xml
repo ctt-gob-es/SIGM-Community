@@ -73,31 +73,33 @@
 				<filtering>true</filtering>
 				<directory>${unpackConfigurableResourcesPath}</directory>
 			</resource>			
-		</resources>		
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>unpack-dependencies</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>unpack-dependencies</goal>
-						</goals>
-						<configuration>
-							<includeClassifiers>configurableSigem</includeClassifiers>
-							<includeTypes>zip</includeTypes> 
-							<excludeTypes>jar</excludeTypes>
-							<type>zip</type>
-							<outputDirectory>${unpackConfigurableResourcesPath}</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
-					</execution>					
-				</executions>
-			</plugin>		
-		</plugins>
+		</resources>
+		<pluginManagement>	
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>unpack-dependencies</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>unpack-dependencies</goal>
+							</goals>
+							<configuration>
+								<includeClassifiers>configurableSigem</includeClassifiers>
+								<includeTypes>zip</includeTypes> 
+								<excludeTypes>jar</excludeTypes>
+								<type>zip</type>
+								<outputDirectory>${unpackConfigurableResourcesPath}</outputDirectory>
+								<overWriteReleases>false</overWriteReleases>
+								<overWriteSnapshots>true</overWriteSnapshots>
+							</configuration>
+						</execution>					
+					</executions>
+				</plugin>		
+			</plugins>
+		</pluginManagement>
 	</build>
 	
 </project>

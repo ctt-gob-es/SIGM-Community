@@ -7,7 +7,7 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
 import java.util.Iterator;
 
@@ -22,35 +22,38 @@ public class ListadoAsistentesRule implements IRule{
     }
 
     public Object execute(IRuleContext rulectx) throws ISPACRuleException{
-    	try{
-			//----------------------------------------------------------------------------------------------
-	        ClientContext cct = (ClientContext) rulectx.getClientContext();
-	        IInvesflowAPI invesFlowAPI = cct.getAPI();
-	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
-	        //----------------------------------------------------------------------------------------------
-	
-	        String listado = "";  //Listado de asistentes 
+        try{
+            //----------------------------------------------------------------------------------------------
+            IClientContext cct =  rulectx.getClientContext();
+            IInvesflowAPI invesFlowAPI = cct.getAPI();
+            IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+            //----------------------------------------------------------------------------------------------
+    
+            String listado = "";  //Listado de asistentes 
 
-	        String strQuery = "WHERE NUMEXP = '" + rulectx.getNumExp() + "' AND ASISTE='SI' ORDER BY NOMBRE ASC";
-	        IItemCollection collection = entitiesAPI.queryEntities("SPAC_DT_INTERVINIENTES", strQuery);
-	        Iterator it = collection.iterator();
-	        IItem item = null;
-	        int orden = 1;
-	        while (it.hasNext()) {
-                item = ((IItem)it.next());
+            String strQuery = "WHERE NUMEXP = '" + rulectx.getNumExp() + "' AND ASISTE='SI' ORDER BY NOMBRE ASC";
+            IItemCollection collection = entitiesAPI.queryEntities("SPAC_DT_INTERVINIENTES", strQuery);
+            Iterator<?> it = collection.iterator();
+            
+            IItem item = null;
+            
+            while (it.hasNext()) {
+                item = (IItem)it.next();
                 listado += item.getString("NDOC") + "\t" + item.getString("NOMBRE") + "\r";
-                orden++;
-	        }
-    		return listado;
-    		
+            }
+            
+            return listado;
+            
+        } catch(ISPACRuleException e) {
+            throw new ISPACRuleException(e);
+
         } catch(Exception e) {
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException("No se ha podido obtener la lista de asistentes",e);
+            throw new ISPACRuleException("No se ha podido obtener la lista de asistentes",e);
         }
     }
 
-	public void cancel(IRuleContext rulectx) throws ISPACRuleException{
+    public void cancel(IRuleContext rulectx) throws ISPACRuleException{
+        //No se da nunca este caso
     }
-	
+    
 }

@@ -13,9 +13,7 @@ public class AvisoDAO extends GenericoDAO{
 	private static Logger logger = Logger.getLogger(AvisoDAO.class);
 	
 	public AvisoDAO(){
-		
 		super();
-		
 	}
 	
 	public int nextIdAviso(String entidad){
@@ -23,8 +21,6 @@ public class AvisoDAO extends GenericoDAO{
 		int result=0;
 		
 		try {
-			
-			
 		    Connection con;
 			con = this.getConexion(entidad, Constantes.BBDD_TRAMITADOR);
 		
@@ -35,7 +31,6 @@ public class AvisoDAO extends GenericoDAO{
 			ResultSet r = sentencia.executeQuery(query);
 			
 			while(r.next()){				
-				
 				result = r.getInt(Constantes.AVISO_ID_AVISO);				
 			}
 			
@@ -47,8 +42,7 @@ public class AvisoDAO extends GenericoDAO{
 			con=null;
 			
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 		}
 		
 		return result;
@@ -58,7 +52,6 @@ public class AvisoDAO extends GenericoDAO{
     public void insertarAviso(String entidad, Aviso aviso){
     	
     	try {
-			
 			Connection con;
 			con = this.getConexion(entidad, Constantes.BBDD_TRAMITADOR);
 			
@@ -75,8 +68,6 @@ public class AvisoDAO extends GenericoDAO{
 																//" ID_MPROC" +
 																//" UID_RESP" +
 																" UID_DESTINATARIO)" +
-																
-																
 	                        " VALUES (" +
 	                        									aviso.getId_aviso() +
 	                        									"," + aviso.getId_proc() +
@@ -96,11 +87,9 @@ public class AvisoDAO extends GenericoDAO{
 			con.close();
 			con=null;
 			
-			System.out.println("INSERTADO AVISO PARA EL EXPEDIENTE "+aviso.getId_expediente());
-			
-			
+			logger.info("INSERTADO AVISO PARA EL EXPEDIENTE " + aviso.getId_expediente());
 		} catch (Exception e) {			
-			logger.error("Error en la entidad. "+entidad+"."+e.getMessage(),e);
+			logger.error("Error en la entidad. " + entidad + "." + e.getMessage(),e);
 		}
 		
 	}

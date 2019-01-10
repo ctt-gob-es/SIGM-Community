@@ -17,17 +17,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Map;
 
-import org.apache.axis.message.MessageElement;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.datacontract.schemas._2004._07.ATMPMH_WS_DOCUMENTOS.ClsDocumentoResponse;
+import org.tempuri.IPadronProxy;
 
-import es.atm2.ObtenerCertificadoConvivenciaResponseObtenerCertificadoConvivenciaResult;
-import es.atm2.ObtenerCertificadoEmpadronamientoResponseObtenerCertificadoEmpadronamientoResult;
-import es.atm2.ObtenerVolanteConvivenciaResponseObtenerVolanteConvivenciaResult;
-import es.atm2.ObtenerVolanteEmpadronamientoResponseObtenerVolanteEmpadronamientoResult;
-import es.atm2.PadronSoapProxy;
 import es.dipucr.sigem.api.rule.common.AccesoBBDDTramitador;
 import es.dipucr.sigem.api.rule.common.utils.CircuitosUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
@@ -78,11 +71,12 @@ public class GenerarCertificadosPadronRule implements IRule
 			IItemCollection collection = null;
 	        String entidad = EntidadesAdmUtil.obtenerEntidad((ClientContext)cct);
 			String numexp = rulectx.getNumExp();
-			boolean bTipoCertificado = false;
 			
 			//Desbloqueamos el trámite para más tarde cerrarlo
 			int idTask = rulectx.getTaskId();
-			cct.setTicket(""); //para evitar nullpointer
+
+//			[Dipucr-Felipe-Manu Ticket #596] * ALSIGM3 Error al registrar WS y Web con creación de documentos - Hitos de creación y borrado de documentos - LockManager.lock
+//			cct.setTicket(""); //para evitar nullpointer
 			
 			//Recuperamos los datos del solicitante
 			IItem itemExpediente = ExpedientesUtil.getExpediente(cct, numexp);
@@ -96,6 +90,11 @@ public class GenerarCertificadosPadronRule implements IRule
 			int tipoCert = itemSolicitudCertificado.getInt("ID_CERTIFICADO");
 			String nombreCert = itemSolicitudCertificado.getString("DESC_CERTIFICADO");
 			String codInstitucion = itemSolicitudCertificado.getString("CODIGO_INE"); //Código INE
+			String observacionesDoc = itemSolicitudCertificado.getString("OBSERV_DOCUMENTO");
+			String efectoDoc = itemSolicitudCertificado.getString("EFECTO_DOCUMENTO");
+			String individual = itemSolicitudCertificado.getString("INDIVIDUAL");
+			boolean bFamiliar = (null != individual && individual.equals("No"));
+			boolean bTipoCertificado = PadronUtils.esTipoCertificado(tipoCert);
 			
 			//Para el caso en el que solicite Personal en nombre de un usuario
 			String numDocInteresado = itemSolicitudCertificado.getString("NIF_INTERESADO");
@@ -106,12 +105,7 @@ public class GenerarCertificadosPadronRule implements IRule
 				nombre = nombreInteresado;
 				itemExpediente.set("IDENTIDADTITULAR", nombreInteresado);
 			}
-			
-			int tipoDocumento = PadronUtils.getTipoDocumento(numDocumento);
-			if (tipoDocumento == Constants.CERTPADRON._TIPO_DOC_NIE){
-				numDocumento = PadronUtils.retocarNIE(numDocumento);
-			}
-			
+						
 			//Ponemos nombre al asunto del expediente
 			StringBuffer sbAsunto = new StringBuffer();
 			sbAsunto.append("Solicitud por parte de ");
@@ -123,76 +117,50 @@ public class GenerarCertificadosPadronRule implements IRule
 			itemExpediente.store(cct);
 			
 			//Recuperamos el certificado del servicio web de ATM
-			PadronSoapProxy wsPadron = new PadronSoapProxy();
-			MessageElement[] arrResponse = null;
-			MessageElement msgElement = null;
+			//INICIO [dipucr-Felipe #515]
+			IPadronProxy wsPadron = new IPadronProxy();
 			
-			if (tipoCert == Constants.CERTPADRON._TIPO_VOLANTE){
-				ObtenerVolanteEmpadronamientoResponseObtenerVolanteEmpadronamientoResult volante = 
-						wsPadron.obtenerVolanteEmpadronamiento(codInstitucion, String.valueOf(tipoDocumento), numDocumento);
-				arrResponse = volante.get_any();
-			}
-			else if (tipoCert == Constants.CERTPADRON._TIPO_CERTIFICADO){
-				bTipoCertificado = true;
-				ObtenerCertificadoEmpadronamientoResponseObtenerCertificadoEmpadronamientoResult cert = 
-						wsPadron.obtenerCertificadoEmpadronamiento(codInstitucion, String.valueOf(tipoDocumento), numDocumento);
-				arrResponse = cert.get_any();
-			}
-			//INICIO [eCenpri-Felipe #1035] Volantes de convivencia
-			else if (tipoCert == Constants.CERTPADRON._TIPO_VOL_FAMILIAR){
-				ObtenerVolanteConvivenciaResponseObtenerVolanteConvivenciaResult volanteFamiliar = 
-						wsPadron.obtenerVolanteConvivencia(codInstitucion, String.valueOf(tipoDocumento), numDocumento);
-				arrResponse = volanteFamiliar.get_any();
-			}
-			else if (tipoCert == Constants.CERTPADRON._TIPO_CERT_FAMILIAR){
-				bTipoCertificado = true;
-				ObtenerCertificadoConvivenciaResponseObtenerCertificadoConvivenciaResult certFamiliar = 
-						wsPadron.obtenerCertificadoConvivencia(codInstitucion, String.valueOf(tipoDocumento), numDocumento);
-				arrResponse = certFamiliar.get_any();
-			}//FIN [eCenpri-Felipe #1035]
-			else{
-				throw new ISPACRuleException("Tipo de certificado no soportado");
-			}
-			msgElement = arrResponse[0];
+//			int tipoDocumento = PadronUtils.getTipoDocumento(numDocumento);
+//			if (tipoDocumento == Constants.CERTPADRON._TIPO_DOC_NIE){
+//				numDocumento = PadronUtils.retocarNIE(numDocumento);
+//			}
 			
-			//Obtenemos el nodo documento
-			Node nodoDocumento = null;
-			NodeList listNodosDoc = msgElement.getElementsByTagName("Documento");
-			if (listNodosDoc.getLength() == 0){
+			// [dipucr-Alberto #798]
+			// Recuperamos la persona
+			PersonaPadron personaPadron = PadronUtils.getPersona(codInstitucion, numDocumento);
+			numDocumento = personaPadron.getDocumento();
+						
+			codInstitucion = PadronUtils.retocarCodInstitucion(codInstitucion);
+			ClsDocumentoResponse response = wsPadron.getDocumento(codInstitucion, numDocumento, 
+					PadronUtils.getEnumTipoCert(tipoCert), observacionesDoc, efectoDoc, bFamiliar);
+			
+			//Controlamos el posible error
+			if (!response.getCORRECTO()){
+				
 				//Se ha producido un error
-				Node nodoError = msgElement.getElementsByTagName("MensajeError").item(0);
-				String textoError = nodoError.getFirstChild().getFirstChild().getNodeValue();
-				String codigoError = nodoError.getLastChild().getFirstChild().getNodeValue();
-				String errorCompleto = "[" + codigoError + "] " + textoError;
+				String errorCompleto = PadronExceptions.getDescripcion(response.getCODIGO_RESULTADO());
 				
 				Map<String, String> variables = PadronUtils.getVariablesPadron
 						(itemSolicitudCertificado, itemExpediente, errorCompleto);
-				MailUtil.enviarCorreoConAcusesYVariables(rulectx, mailInteresado, EMAIL_SUBJECT_VAR_NAME,
-						EMAIL_CONTENT_VAR_NAME_ERROR, variables, null, null, nombre, false);
+				//INICIO [dipucr-Felipe 3#703]
+//				MailUtil.enviarCorreoConAcusesYVariables(rulectx, mailInteresado, EMAIL_SUBJECT_VAR_NAME,
+//						EMAIL_CONTENT_VAR_NAME_ERROR, variables, null, null, nombre, false);
+				MailUtil.enviarCorreoConVariablesUsoExterno(rulectx, mailInteresado, EMAIL_SUBJECT_VAR_NAME,
+						EMAIL_CONTENT_VAR_NAME_ERROR, null, variables, false);
+				//FIN [dipucr-Felipe 3#703]
 				
-				//Quitamos el bloqueo porque el closeTask vuelve a bloquear
-				//No usamos el siguiente código porque requiere de una sesión que no tenemos
-//				LockManager lockMgr = new LockManager(cct);
-//				lockMgr.unlockObj(LockManager.LOCKTYPE_PROCESS, rulectx.getProcessId());
 				AccesoBBDDTramitador accesoTram = new AccesoBBDDTramitador(entidad);
 				accesoTram.borrarBloqueo(LockManager.LOCKTYPE_PROCESS, rulectx.getProcessId());
 				TramitesUtil.cerrarTramite(idTask, rulectx);
 				return new Boolean(true);
 			}
 			
-			nodoDocumento = listNodosDoc.item(0);
-			String strB64File = nodoDocumento.getFirstChild().getNodeValue();
-			logger.warn(strB64File);
-			
-//			BASE64Decoder b64Decoder = new BASE64Decoder();
-//			byte[] arrBytes = b64Decoder.decodeBuffer(strB64File);
-			byte[] arrBytes = Base64.decodeBase64(strB64File);
-			
 			//Obtenemos un archivo temporal y escribimos los bytes
 			File fileCert = FileTemporaryManager.getInstance().newFile();
 			FileOutputStream fos = new FileOutputStream(fileCert.getAbsolutePath()); 
-		    fos.write(arrBytes);
+		    fos.write(response.getDOCUMENTO());
 		    fos.close();
+			//FIN [dipucr-Felipe #515]
         	
     		String tpDoc = DocumentosUtil.getTipoDocumentoByPlantilla(cct, _DOC_CERTIFICADO);
 			int documentTypeId = DocumentosUtil.getTipoDoc(cct, tpDoc, DocumentosUtil.BUSQUEDA_EXACTA, false);

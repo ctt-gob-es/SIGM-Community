@@ -4,7 +4,6 @@ import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.IProcedureAPI;
-import ieci.tdw.ispac.api.ITXTransaction;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
@@ -37,8 +36,7 @@ import es.dipucr.sigem.api.rule.common.utils.DipucrTablasUtil;
 public class DipucrListaFincasTagRule implements IRule {
 	
 	/** Logger de la clase. */
-	private static final Logger logger = 
-		Logger.getLogger(ListaFincasExpropiadoTagRule.class);
+	private static final Logger LOGGER = Logger.getLogger(ListaFincasExpropiadoTagRule.class);
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		return true;
@@ -49,21 +47,21 @@ public class DipucrListaFincasTagRule implements IRule {
 	}
 
 	public Object execute(IRuleContext 	rulectx) throws ISPACRuleException {
+	    OpenOfficeHelper ooHelper = null;
+
 		try {
-			logger.warn("Ejecutando regla DipucrListaFincasTagRule");
+			LOGGER.warn("Ejecutando regla DipucrListaFincasTagRule");
 			
 			
 			//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
-	        ITXTransaction transaction = invesFlowAPI.getTransactionAPI();
 	        IGenDocAPI genDocAPI = invesFlowAPI.getGenDocAPI();
 			IProcedureAPI procedureAPI = invesFlowAPI.getProcedureAPI();
 	        //----------------------------------------------------------------------------------------------
 			
 			Object connectorSession = null;
-		    OpenOfficeHelper ooHelper = null;
 			
 			//Documentos a visualizar
 			String tipoDocumentoInforme = "EXPR-001 - Informe Iniciación";
@@ -73,7 +71,6 @@ public class DipucrListaFincasTagRule implements IRule {
 			String plantillaPropuesta = "EXPR-002 - Propuesta aprobación provisional";
 			
 			//Obtiene el expediente
-	        String numexp = rulectx.getNumExp();
 	        IItem entityDocument = null;
 	        IItem entityDocumentPropuesta = null;
 			int documentTypeId = 0;
@@ -88,7 +85,7 @@ public class DipucrListaFincasTagRule implements IRule {
 			int idTramCtl = processTask.getInt("ID_TRAM_CTL");
 			
 			IItemCollection taskTpDocCollection = (IItemCollection)procedureAPI.getTaskTpDoc(idTramCtl);     		
-    		Iterator it = taskTpDocCollection.iterator();
+    		Iterator<?> it = taskTpDocCollection.iterator();
 			while (it.hasNext()){
     			IItem taskTpDoc = (IItem)it.next();
     			if ((((String)taskTpDoc.get("CT_TPDOC:NOMBRE")).trim().toUpperCase()).equals((tipoDocumentoInforme).trim().toUpperCase())){    				
@@ -107,7 +104,7 @@ public class DipucrListaFincasTagRule implements IRule {
 			cct.setSsVariable("NOMBRE_TRAMITE", processTask.getString("NOMBRE"));
 			
 			IItemCollection tpDocsTemplatesCollection = (IItemCollection)procedureAPI.getTpDocsTemplates(documentTypeId);
-			Iterator docs = tpDocsTemplatesCollection.iterator();
+			Iterator<?> docs = tpDocsTemplatesCollection.iterator();
 			while (docs.hasNext()){
 				IItem tpDocsTemplate = (IItem)docs.next();
 				if(((String)tpDocsTemplate.get("NOMBRE")).trim().toUpperCase().equals(plantillaInforme.trim().toUpperCase())){
@@ -116,7 +113,7 @@ public class DipucrListaFincasTagRule implements IRule {
 			}
 			
 			IItemCollection tpDocsTemplatesCollectionPropuesta = (IItemCollection)procedureAPI.getTpDocsTemplates(documentTypeIdPropuesta);
-			Iterator docsPropuesta = tpDocsTemplatesCollectionPropuesta.iterator();
+			Iterator<?> docsPropuesta = tpDocsTemplatesCollectionPropuesta.iterator();
 			while (docsPropuesta.hasNext()){
 				IItem tpDocsTemplate = (IItem)docsPropuesta.next();
 				if(((String)tpDocsTemplate.get("NOMBRE")).trim().toUpperCase().equals(plantillaPropuesta.trim().toUpperCase())){
@@ -172,13 +169,12 @@ public class DipucrListaFincasTagRule implements IRule {
     		genDocAPI.getDocument(connectorSession, docrefPropuesta, outPropuesta);
     		XComponent xComponentPropuesta = ooHelper.loadDocument("file://" + fileNamePropuesta);
     		
-    		
 			
-			List contenido = generaListFincas(rulectx);
+			List<List<String>> contenido = generaListFincas(rulectx);
 			int numColumnas = 0;
 			//Saco el número de columnas
-			if(contenido != null){
-				numColumnas = ((List)contenido.get(0)).size();
+			if(contenido != null && contenido.size() > 0){
+				numColumnas = contenido.get(0).size();
 			}
 			DipucrTablasUtil.insertaTabla1(xComponent, contenido, numColumnas-1, false);
 			
@@ -202,25 +198,30 @@ public class DipucrListaFincasTagRule implements IRule {
     		genDocAPI.setDocument(connectorSession, documentIdPropuesta, docrefPropuesta, inPropuesta, (int)(fileOutPropuesta.length()), mime);
 			
 			
-			logger.warn("FIN DipucrListaFincasTagRule");	
+			LOGGER.warn("FIN DipucrListaFincasTagRule");	
 			
 		} catch (Exception e) {
-			logger.error("Se produjo una excepción", e);
+			LOGGER.error("Se produjo una excepción", e);
 			throw new ISPACRuleException(e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
+		
 		return new Boolean (true);
 	}
 	
-	public List generaListFincas(IRuleContext rulectx){
+	public List<List<String>> generaListFincas(IRuleContext rulectx){
 		
 		//Genera los datos de las filas de datos			
 		//Lista de listas de filas
-		List contenido = new ArrayList();
+		List<List<String>> contenido = new ArrayList<List<String>>();
 		
 		try{
 			
 			//Genera los encabezados de la tabla
-			List titulos = new ArrayList();
+			List<String> titulos = new ArrayList<String>();
 			
 			titulos.add("Finca Num.");
 			titulos.add("Propietario");
@@ -233,24 +234,21 @@ public class DipucrListaFincasTagRule implements IRule {
 			
 			
 			//Obtener las fincas relacionadas con la Expropiacion
-			ClientContext cct = (ClientContext)rulectx.getClientContext();
-			IInvesflowAPI invesFlowAPI = cct.getAPI();
 			IEntitiesAPI entitiesAPI = rulectx.getClientContext().getAPI().getEntitiesAPI();
 			
 			//Obtiene los números de expediente de las fincas
-			String listado = "";
 			String strQuery = "WHERE NUMEXP_PADRE = '" + rulectx.getNumExp() + "' AND RELACION = 'Finca/Expropiacion'";
 			IItemCollection collection = entitiesAPI.queryEntities("SPAC_EXP_RELACIONADOS", strQuery);
-			Iterator it = collection.iterator();
+			Iterator<?> it = collection.iterator();
 			IItem item = null;
-			List expFincas = new ArrayList();
+			List<String> expFincas = new ArrayList<String>();
 			
-			logger.warn("Expediente de Expropiacion: " + rulectx.getNumExp());
+			LOGGER.warn("Expediente de Expropiacion: " + rulectx.getNumExp());
 			
 			while (it.hasNext()) {
 			   item = (IItem)it.next();
 			   expFincas.add(item.getString("NUMEXP_HIJO"));
-			   logger.warn("Expediente de Finca: " + item.getString("NUMEXP_HIJO"));			
+			   LOGGER.warn("Expediente de Finca: " + item.getString("NUMEXP_HIJO"));			
 			}
 			
 			//Si la lista de fincas está vacía no dibujar la tabla
@@ -259,14 +257,14 @@ public class DipucrListaFincasTagRule implements IRule {
 			}
 			
 			//Obtiene los datos de las fincas
-			Iterator itExpFincas = expFincas.iterator();
+			Iterator<String> itExpFincas = expFincas.iterator();
 			strQuery="WHERE NUMEXP = '" + itExpFincas.next() + "'";
 			while (itExpFincas.hasNext()) {
 				strQuery+=" OR NUMEXP = '" + itExpFincas.next() + "'";				 		
 			}
 				
 			
-			logger.warn("Fincas a buscar: " + strQuery);
+			LOGGER.warn("Fincas a buscar: " + strQuery);
 			
 			/**
 			 * #[Teresa - Ticket 200] INICIO SIGEM expropiaciones Modificar los listados para que aparezcan los metros a ocupar por propietario 
@@ -289,15 +287,15 @@ public class DipucrListaFincasTagRule implements IRule {
 				return contenido;
 			}
 			
-			Iterator itFincas = collectionFincas.iterator();
+			Iterator<?> itFincas = collectionFincas.iterator();
 
 			//Cada fila individual
-			List fila = null;
+			List<String> fila = null;
 			//Añado la cabecera
 			contenido.add(titulos);
 			
 			while (itFincas.hasNext()) {
-				fila = new ArrayList();
+				fila = new ArrayList<String>();
 				item = (IItem)itFincas.next();
 				fila.add(item.getString("NUMEXP"));
 				//Código que extrae una lista de propietarios
@@ -318,17 +316,14 @@ public class DipucrListaFincasTagRule implements IRule {
 				}			
 				
 				contenido.add(fila);				
-				logger.warn("Detalle de Expediente de Finca: " + item.getString("NUMEXP") + " Num Finca: " + item.getString("NUM_FINCA"));
+				LOGGER.warn("Detalle de Expediente de Finca: " + item.getString("NUMEXP") + " Num Finca: " + item.getString("NUM_FINCA"));
 			}
 		}catch (ISPACRuleException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 		} catch (ISPACException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR. " + e.getMessage(), e);
 		}
 		
 		return contenido;

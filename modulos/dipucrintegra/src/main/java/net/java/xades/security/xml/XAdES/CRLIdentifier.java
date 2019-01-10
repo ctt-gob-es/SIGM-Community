@@ -85,7 +85,7 @@ public class CRLIdentifier extends XAdESStructure
     // }
     // catch(IOException ex)
     // {
-    // ex.printStackTrace();
+    // LOGGER.error("ERROR. " + ex.getMessage(), ex);
     // }
     // }
 

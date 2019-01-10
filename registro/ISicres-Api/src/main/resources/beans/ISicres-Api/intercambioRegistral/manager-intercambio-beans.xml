@@ -26,6 +26,7 @@
 				<property name="intercambioRegistralSalidaEstadoIncrementer" ref="intercambioRegistralSalidaEstadoIncrementer"></property>
 				<property name="intercambioRegistralSIRManager"><ref bean="intercambioRegistralSIRManager"/></property>
 				<property name="registroManager"><ref bean="registroManager"/></property>
+				<property name="documentoElectronicoAnexoManager"><ref bean="documentoElectronicoAnexoManager"/></property>
 		    </bean>
 		</property>
 	</bean>
@@ -35,7 +36,7 @@
 			<bean  class="es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.impl.IntercambioRegistralEntradaManagerImpl">
 				<property name="intercambioRegistralSIRManager"><ref bean="intercambioRegistralSIRManager"/></property>
 				<property name="configuracionIntercambioRegistralManager"><ref bean="configuracionIntercambioRegistralManager"/></property>
-
+				<property name="documentoElectronicoAnexoManager"><ref bean="documentoElectronicoAnexoManager"/></property>
 				<property name="bandejaEntradaIntercambioRegistralDAO"><ref bean="bandejaEntradaIntercambioRegistralDAO"/></property>
 				<property name="intercambioRegistralEntradaIncrementer" ref="intercambioRegistralEntradaIncrementer"></property>
 		    </bean>

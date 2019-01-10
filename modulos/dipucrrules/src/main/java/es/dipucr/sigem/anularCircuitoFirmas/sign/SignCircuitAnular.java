@@ -17,8 +17,9 @@ public class SignCircuitAnular extends SignCircuitMgr {
 
 	public boolean anularCircuito(int circuitoId) {
 		boolean correcto = false;
+		DbCnt cnt = null;
 		try {
-			DbCnt cnt = mcontext.getConnection();
+			cnt = mcontext.getConnection();
 
 			String sql = "WHERE ID_INSTANCIA_CIRCUITO = " + circuitoId;
 			CollectionDAO objlist = new CollectionDAO(SignCircuitInstanceDAO.class);
@@ -26,7 +27,10 @@ public class SignCircuitAnular extends SignCircuitMgr {
 			correcto = true;
 		} catch (Exception e) {
 			correcto = false;
+		} finally {
+			mcontext.releaseConnection(cnt);
 		}
+		
 		return correcto;
 	}
 }

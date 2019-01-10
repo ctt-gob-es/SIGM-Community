@@ -426,6 +426,13 @@ public class SigemThirdPartyAPI extends BasicThirdPartyAPI {
 			direccion.setComunidadAutonoma(dir.getComunidadAutonoma());
 			direccion.setPais(dir.getPais());
 			direccion.setTelefono(dir.getTelefono());
+			
+			//INICIO [dipucr-Felipe 3#333]
+			direccion.setCodMunicipio(dir.getCodMunicipio());
+			direccion.setCodMunicipioDir3(dir.getCodMunicipioDir3());
+			direccion.setCodProvincia(dir.getCodProvincia());
+			direccion.setCodProvinciaDir3(dir.getCodProvinciaDir3());
+			//FIN [dipucr-Felipe 3#333]
 		}
 		
 		return direccion;
@@ -474,6 +481,71 @@ public class SigemThirdPartyAPI extends BasicThirdPartyAPI {
 		
 		return bResult;
 		
+	}
+	
+	/**
+	 * [dipucr-Felipe #583]
+	 * @param idPerson
+	 * @param email
+	 * @return
+	 * @throws ISPACException 
+	 */
+	public boolean insertDefaultEmail(int idPerson, String email) throws ISPACException{
+		
+		boolean bResult = false;
+		
+		try {
+			String entityId = null;
+			OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+			if (info != null)
+				entityId = info.getOrganizationId();
+
+			bResult = servicioTerceros.insertDefaultEmail(entityId, idPerson, email);
+			
+		} catch (TercerosException e) {
+			String message = "Error en la inserción del mail por defecto para el tercero [" 
+					+ idPerson + ", " + email + "]. " + e.getMessage();
+			logger.error(message, e);
+			throw new ISPACException(message, e);
+		}
+		
+		return bResult;
+	}
+	
+	/**
+	 * [dipucr-Felipe #592]
+	 * @param idPerson
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @return
+	 * @throws ISPACException
+	 */
+	public boolean updateThirdParty(int idPerson, String nombre, String ape1, String ape2, 
+			String provincia, String municipio, String cpostal, String direccion) throws ISPACException{
+		
+		boolean bResult = false;
+		
+		try {
+			String entityId = null;
+			OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+			if (info != null)
+				entityId = info.getOrganizationId();
+
+			bResult = servicioTerceros.updateThirdParty
+					(entityId, idPerson, nombre, ape1, ape2, provincia, municipio, cpostal, direccion);
+			
+		} catch (TercerosException e) {
+			String message = "Error en la actualización del tercero [" + idPerson + "]. " + e.getMessage();
+			logger.error(message, e);
+			throw new ISPACException(message, e);
+		}
+		
+		return bResult;
 	}
 	
 }

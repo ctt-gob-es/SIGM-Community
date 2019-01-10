@@ -81,6 +81,11 @@ public class DocumentsZipMgr {
 	
 				// Obtener el GUID del documento
 				String guid = doc.getString("INFOPAG");
+				//INICIO [dipucr-Felipe #490]
+				if (!StringUtils.isEmpty(doc.getString("INFOPAG_RDE"))){
+					guid = doc.getString("INFOPAG_RDE");
+				}
+				//FIN [dipucr-Felipe #490]
 	
 				if (StringUtils.isNotBlank(guid)) {
 	
@@ -126,6 +131,12 @@ public class DocumentsZipMgr {
 
 		// Extensión del documento
 		String ext = doc.getString("EXTENSION");
+		//INICIO [dipucr-Felipe #490]
+		if (!StringUtils.isEmpty(doc.getString("EXTENSION_RDE"))){
+			ext = doc.getString("EXTENSION_RDE");
+		}
+		//FIN [dipucr-Felipe #490]
+		
 		if (StringUtils.isNotBlank(ext)) {
 			fullName.append(".").append(ext);
 		}

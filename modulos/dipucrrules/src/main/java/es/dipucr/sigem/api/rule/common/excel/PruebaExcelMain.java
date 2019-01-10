@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
+import org.apache.log4j.Logger;
+
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -30,6 +32,8 @@ import com.sun.star.text.XText;
 import com.sun.star.uno.UnoRuntime;
 
 public class PruebaExcelMain {
+	
+	private static final Logger LOGGER = Logger.getLogger(PruebaExcelMain.class);
 
 	public void init(String filePath) {
 		FileInputStream fs = null;
@@ -37,14 +41,14 @@ public class PruebaExcelMain {
 			fs = new FileInputStream(new File(filePath));
 			contentReading(fs);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR en PruebaExcelMain. " + e.getMessage(), e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR en PruebaExcelMain. " + e.getMessage(), e);
 		}finally {
 			try {
 				fs.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("ERROR en PruebaExcelMain. " + e.getMessage(), e);
 			}
 		}
 	}
@@ -114,9 +118,9 @@ public class PruebaExcelMain {
 			}
 			workbook.close();			
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR en PruebaExcelMain. " + e.getMessage(), e);
 		} catch (BiffException e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR en PruebaExcelMain. " + e.getMessage(), e);
 		}
 	}
 	
@@ -184,27 +188,25 @@ public class PruebaExcelMain {
 		    System.out.println(text.toString());
 		}
 		catch (NoSuchElementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR en PruebaExcelMain. " + e.getMessage(), e);
 		} catch (WrappedTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR en PruebaExcelMain. " + e.getMessage(), e);
 		} catch (IndexOutOfBoundsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("ERROR en PruebaExcelMain. " + e.getMessage(), e);
 		}
 
 		return text;
 	}
  
-		public static void main(String[] args) {
+	public static void main(String[] args) {
+		OpenOfficeHelper ooHelper = null;	
 		try {
 //			PruebaExcelMain xlReader = new PruebaExcelMain();
 //			//xlReader.init("C:\\Users\\Teresa\\Desktop\\borrar\\InformeservicioTERE.xls");
 //			xlReader.init("C:\\Users\\Teresa\\Desktop\\borrar\\prueba.ods");
 			File file = new File ("C:\\Users\\Teresa\\Desktop\\borrar\\InformeservicioTERE.xls");
 			
-			OpenOfficeHelper ooHelper = OpenOfficeHelper.getInstance();
+			ooHelper = OpenOfficeHelper.getInstance();
 		    XComponent xComp = ooHelper.loadDocument("file://" + file.getPath());
 		    
 		    textoExtraido(xComp);
@@ -212,7 +214,11 @@ public class PruebaExcelMain {
 		    // Consultar los siguientes tres apartados para ver el codigo que habria que introducir aqui
 		    //StringBuilder sbTextExt = textoExtraido(xComp);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("ERROR en PruebaExcelMain. " + e.getMessage(), e);
+		} finally {
+			if(null != ooHelper){
+	        	ooHelper.dispose();
+	        }
 		}
 	}
 

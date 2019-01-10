@@ -17,7 +17,8 @@
 			NAME,
 			CODE_NAME,
 			VALIDITY_TYPE,
-			DOCUMENT_TYPE
+			DOCUMENT_TYPE,
+			FILEID
 	    ) 
 		VALUES (
 			#id.id:INT#,
@@ -29,7 +30,8 @@
 			#name:VARCHAR#,
 			#codeName:VARCHAR#,
 			#tipoValidez#,
-			#tipoDocumentoAnexo#
+			#tipoDocumentoAnexo#,
+			#id.idFile:INT#
 			
 		)
 	</insert>
@@ -70,7 +72,8 @@
 		WHERE ATTACH.ID=SIGNINFO.ID_ATTACHMENT AND
 			  ATTACH.BOOKID=#idLibro# AND
 			  ATTACH.FOLDERID=#idRegistro# AND
-			  ATTACH.PAGEID=#idPagina#
+			  ATTACH.PAGEID=#idPagina# AND
+			  ATTACH.FILEID=#idFile#
 	</select>
 	
 	
@@ -98,11 +101,25 @@
 		SELECT ATTACH.ID,
 			   ATTACH.BOOKID,
 			   ATTACH.FOLDERID,
-			   ATTACH.PAGEID 
+			   ATTACH.PAGEID,
+			   ATTACH.FILEID
 		FROM SCR_ATTACHMENT ATTACH, SCR_ATTACHMENT_SIGN_INFO SIGNINFO
 		WHERE ATTACH.ID=SIGNINFO.ID_ATTACHMENT AND
 			  ATTACH.BOOKID=#idLibro# AND
 			  ATTACH.FOLDERID=#idRegistro#
+	</select>
+	
+	<select id="getIdDocumentoElectronicoAnexoByIdLibroIdRegistroIdFile" parameterClass="java.util.Map"  resultMap="identificadorDocumentoElectronicoAnexoVO">
+		SELECT ATTACH.ID,
+			   ATTACH.BOOKID,
+			   ATTACH.FOLDERID,
+			   ATTACH.PAGEID, 
+			   ATTACH.FILEID 
+		FROM SCR_ATTACHMENT ATTACH, SCR_ATTACHMENT_SIGN_INFO SIGNINFO
+		WHERE ATTACH.ID=SIGNINFO.ID_ATTACHMENT AND
+			  ATTACH.BOOKID=#idLibro# AND
+			  ATTACH.FOLDERID=#idRegistro# AND
+			  ATTACH.FILEID=#idFile#			  
 	</select>
 	
 	
@@ -235,7 +252,8 @@
 		SELECT ATTACH.ID,
 			   ATTACH.BOOKID,
 			   ATTACH.FOLDERID,
-			   ATTACH.PAGEID
+			   ATTACH.PAGEID,
+			   ATTACH.FILEID			   
 		FROM SCR_ATTACHMENT ATTACH, SCR_ATTACHMENT_SIGN_INFO SIGNINFO
 		WHERE ATTACH.ID=SIGNINFO.ID_ATTACHMENT AND
 			  SIGNINFO.ID_ATTACHMENT_SIGNED=#id:INT# AND

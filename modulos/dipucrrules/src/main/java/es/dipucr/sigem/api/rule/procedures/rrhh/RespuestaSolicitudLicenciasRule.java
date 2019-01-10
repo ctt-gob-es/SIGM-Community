@@ -15,7 +15,8 @@ import org.apache.log4j.Logger;
 import es.dipucr.sigem.api.rule.common.utils.CircuitosUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
-import es.dipucr.webempleado.services.licencias.LicenciasWSProxy;
+import es.dipucr.webempleado.services.avisos.InsertarAvisoProxy;
+import es.dipucr.webempleado.services.comisionServicio.ComisionServicioWSProxy;
 
 
 /**
@@ -29,10 +30,6 @@ public class RespuestaSolicitudLicenciasRule implements IRule
 {
 	/** Logger de la clase. */
 	private static final Logger logger = Logger.getLogger(RespuestaSolicitudLicenciasRule.class);
-	
-	protected static String _TRAMITE_FIRMAS = "Firmar licencias"; //TODO Constants
-	protected static String _DOC_JUSTIFICANTE = "Justificante";
-	protected static String _DOC_SOLICITUD = "RRHH - Solicitud de Licencias";
 	
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		return true;
@@ -78,26 +75,54 @@ public class RespuestaSolicitudLicenciasRule implements IRule
 				bFirmado = false;
 				strMotivo = itemDocumento.getString("MOTIVO_RECHAZO");
 			}
+			//[eCenpri-Felipe #601] Datos del circuito de firma
+			String firmantes = CircuitosUtil.getFirmantesCircuito(rulectx);
 			
 			//Desglosamos el id de solicitud en NIF, año y NºLicencia
 			String numexp = DocumentosUtil.getNumExp(entitiesAPI, idDoc);
 			IItemCollection collection = entitiesAPI.getEntities("RRHH_LICENCIAS", numexp);
-			IItem itemSolicitudLicencias = (IItem)collection.iterator().next();
-			String strIdSolicitud = itemSolicitudLicencias.getString("ID_SOLICITUD");
-			String [] arrIdSolicitud = strIdSolicitud.split("-");
-			String strNif = arrIdSolicitud[0];
-			int iAno = Integer.valueOf(arrIdSolicitud[1]);
-			String strNlic = arrIdSolicitud[2];
 			
-			//[eCenpri-Felipe #601] Datos del circuito de firma
-			String firmantes = CircuitosUtil.getFirmantesCircuito(rulectx);
-			
-			//Hacemos la petición al servicio web
-			LicenciasWSProxy wsLicencias = new LicenciasWSProxy();
-			//[eCenpri-Felipe #601] Firmantes de la licencia
-//			wsLicencias.ponerLicenciaValidada(strNif, iAno, strNlic, bFirmado, strMotivo);
-			wsLicencias.ponerLicenciaValidada(strNif, iAno, strNlic, bFirmado, 
-					strMotivo, firmantes);
+			if (collection.toList().size() > 0){
+				IItem itemSolicitudLicencias = (IItem)collection.iterator().next();
+				String strIdSolicitud = itemSolicitudLicencias.getString("ID_SOLICITUD");
+				
+				//Hacemos la petición al servicio web
+				LicenciasWSDispatcher.ponerLicenciaValidada
+					(cct, strIdSolicitud, bFirmado,	strMotivo, firmantes);
+			}
+			else{//INICIO [dipucr-Felipe #693]
+				collection = entitiesAPI.getEntities("COMISION_SERVICIO", numexp);
+				
+				StringBuffer sbCuerpo = new StringBuffer();
+				String asunto = null;
+				
+				if (collection.toList().size() > 0){
+					
+					IItem itemComision = collection.value();
+					Integer idComision = Integer.valueOf(itemComision.getString("ID_COMISION"));
+					
+					ComisionServicioWSProxy wsComisiones = new ComisionServicioWSProxy();
+					wsComisiones.cambiarEstadoComision(idComision, bFirmado, strMotivo, firmantes);
+				}
+				else{
+					String nombreDoc = itemDocumento.getString("NOMBRE");
+					if (bFirmado){
+						asunto = "Autorizado: " + nombreDoc;
+					}
+					else{
+						asunto = "Rechazado: " + nombreDoc;
+					}
+					sbCuerpo.append(asunto);
+					sbCuerpo.append("\nFirmante(s): " + firmantes);
+					
+					IItem itemExpediente = entitiesAPI.getExpedient(numexp);
+					String nif = itemExpediente.getString("NIFCIFTITULAR");
+					
+					InsertarAvisoProxy wsAvisos = new InsertarAvisoProxy();
+					wsAvisos.nuevoAvisoUsuario(asunto, sbCuerpo.toString(), nif);
+				}
+				
+			}//FIN [dipucr-Felipe #693]
 			
 			//Cerramos el trámite y el expediente
 			ExpedientesUtil.cerrarExpediente(cct, numexp);

@@ -22,13 +22,18 @@ import ieci.tdw.ispac.ispaclib.db.InternalDataType;
 import ieci.tdw.ispac.ispaclib.entity.def.EntityDef;
 import ieci.tdw.ispac.ispaclib.entity.def.EntityField;
 import ieci.tdw.ispac.ispaclib.templates.TemplateDocumentInfo;
+import ieci.tdw.ispac.ispaclib.templates.TemplateGraphicInfo;
 import ieci.tdw.ispac.ispaclib.util.FileTemplateManager;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispaclib.utils.TypeConverter;
 import ieci.tdw.ispac.ispaclib.utils.XPathUtil;
 import ieci.tdw.ispac.ispaclib.utils.XmlTag;
+import ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigFilePathResolver;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLException;
@@ -42,10 +47,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import es.ieci.tecdoc.fwktd.core.spring.configuration.jdbc.datasource.MultiEntityContextHolder;
 
 
 
@@ -166,6 +175,11 @@ public class TagTranslator implements ITagTranslator
 		 if (template!=null)
 		 	return getTemplate(template,nodetag);
 
+		 // [Dipucr-Manu Ticket #478] + ALSIGM3 Nueva opción Repositorio Común
+		 String imagen=XPathUtil.get(nodetag,"@imagen");
+		 if (imagen!=null)
+		 	return getImagen(imagen,nodetag);
+
 //TODO [recursos]	
 //		 String resource=XPathUtil.get(nodetag,"@resource");
 //		 if (resource!=null)
@@ -173,6 +187,57 @@ public class TagTranslator implements ITagTranslator
 
 		 return "";
 	}
+	
+	// [Dipucr-Manu Ticket #478] - INICIO - ALSIGM3 Nueva opción Repositorio Común
+	private TemplateGraphicInfo getImagen(String imagen,Node nodetag)throws ISPACException{
+		String sHeight = XPathUtil.get(nodetag,"@alto");
+		String centrado = XPathUtil.get(nodetag,"@centrado");
+		boolean bCentrado = (!StringUtils.isEmpty(centrado) && "true".equals(centrado));
+		
+		int iWidth = 0;
+		int iHeight = 0;
+		int imageHeight = 0;
+		int imageWidth = 0;
+		
+		if(StringUtils.isNotEmpty(sHeight) && StringUtils.isNumeric(sHeight)){
+			iHeight = Integer.parseInt(sHeight);
+		}
+		else{
+			// Altura por defecto - 2'9 cms
+			iHeight = 2900;
+		}
+		
+		String ruta = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + MultiEntityContextHolder.getEntity(), "/SIGEM_TramitacionWeb") + imagen;
+	
+		// Cargamos la imagen para ver su altura y anchura
+		try {
+			File file = new File(ruta);
+			BufferedImage bi = ImageIO.read(file);			
+			imageHeight = bi.getHeight();
+			imageWidth = bi.getWidth();
+		} catch (IOException e) {
+			logger.error("Error al cargar la imagen " + ruta , e);
+		}
+		
+		// Calculamos la relación de la altura
+		double relacionAltura = ((double) imageHeight)/ ((double) iHeight);
+		
+		// Aplicamos esta misma relación al ancho de la imagen
+		iWidth = (int) ((double) imageWidth / relacionAltura);
+		
+		// Si el ancho de imagen resultante es mayor a 5cm lo dejamos a 5cms y recalculamos la altura
+		if (iWidth > 5000) {
+			double relacionAnchura = (double) iWidth / 5000;
+			iHeight =  (int) (iHeight/ relacionAnchura);
+			iWidth = 5000;
+		}
+		
+		TemplateGraphicInfo graphic = new TemplateGraphicInfo(ruta, false, iWidth, iHeight);		
+		graphic.setCentered(bCentrado);
+	
+		return graphic;
+	}
+	// [Dipucr-Manu Ticket #478] - FIN - ALSIGM3 Nueva opción Repositorio Común
 
 	private Object executeRuleName(String rulename,Node nodetag)throws ISPACException{
 		DbCnt cnt = null;
@@ -267,7 +332,7 @@ public class TagTranslator implements ITagTranslator
 			}
 			return processEntityTag(cnt,ctentity,property.toUpperCase(),sqlquery,order,sort,dateformat,multivalueFieldSeparator, documentScope);
 		}catch (Exception e){
-			logger.error("Error al obtener la entidad", e);
+			logger.error("Error al obtener la entidad - Entidad. "+entity+" - "+e.getMessage(), e);
 			if (e instanceof ISPACException &&  e.getMessage().equals("exception.documents.templates.tags.entityNotFound")){
 				throw (ISPACException)e;
 			}
@@ -448,8 +513,8 @@ public class TagTranslator implements ITagTranslator
 						}
 					}
 			} catch (SQLException e) {
-				logger.error("Error al obtener los valores del campo [" + property + "]", e);
-				throw new ISPACException(e);
+				logger.error("Error al obtener los valores del campo [" + property + "] - "+e.getMessage(), e);
+				throw new ISPACException("Error al obtener los valores del campo [" + property + "] - "+e.getMessage(), e);
 			}
 	        finally
 	        {

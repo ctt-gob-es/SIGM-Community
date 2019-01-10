@@ -20,9 +20,18 @@ public class ISicresSpringContextServiceFactory {
 
 		case NON_SPRING_INTEGRATION:
 			//result = new ISicresServiceNonSpringImpl();
-			new  ISicresServiceNonSpringImpl();
+
+			//[Dipucr-Manu Ticket#381] - INICIO - ALSIGM3 Registro Presencial va súper lento.
+			new  ISicresServiceNonSpringImpl(false);
 
 			result = (ApplicationContext) ISicresSpringAppContext.getApplicationContext();
+			
+			if(null == result){
+				new  ISicresServiceNonSpringImpl();
+				
+				result = (ApplicationContext) ISicresSpringAppContext.getApplicationContext();
+			}
+			//[Dipucr-Manu Ticket#381] - FIN - ALSIGM3 Registro Presencial va súper lento.
 
 			break;
 

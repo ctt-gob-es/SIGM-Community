@@ -5,7 +5,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-
 public class Propiedades {	
 	
 	private static final Logger logger = Logger.getLogger(Propiedades.class);
@@ -18,7 +17,6 @@ public class Propiedades {
 		propertiesFilePath = "configuration.properties";
 		misPropiedades = new Properties();
 		init();
-		
 	}	
 	
 	public void init(){
@@ -31,16 +29,11 @@ public class Propiedades {
 			in = loader.getResourceAsStream (propertiesFilePath);
 			misPropiedades.load(in);
 		} catch (Exception e){ 
-			
-			logger.info("Ha ocurrido una excepcion al abrir el fichero, no se encuentra o está protegido");
-		
+			logger.info("Ha ocurrido una excepcion al abrir el fichero, no se encuentra o está protegido." , e);
 		} 
-	
 	}
 	
 	public String getProperty(String id){
-		
 		return misPropiedades.getProperty(id);		
-		
 	}
 }

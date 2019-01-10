@@ -34,8 +34,6 @@ public class RecibirAnuncioTablonEdictalBOERule implements IRule{
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
 		try{
-			OpenOfficeHelper ooHelper = OpenOfficeHelper.getInstance();
-			
 			String tablonEdictal_address = ServiciosWebTEUFunciones.getDireccionSW();
 			ServicioNotificacionesProxy notificacion = new ServicioNotificacionesProxy(tablonEdictal_address);
 			Iterator <IItem> itTEUBOE = ConsultasGenericasUtil.queryEntities(rulectx, "TABLON_EDICTAL_BOE_DATOS", "NUMEXP='"+rulectx.getNumExp()+"'");
@@ -43,7 +41,7 @@ public class RecibirAnuncioTablonEdictalBOERule implements IRule{
 				IItem iTEUBOE = itTEUBOE.next();
 				if(iTEUBOE.getString("IDENTIFICADORANUNCIOBOE")!=null){
 					Respuesta respuesta = notificacion.consultaAnuncio(iTEUBOE.getString("IDENTIFICADORANUNCIOBOE"));
-					FuncionesComunes.crearDocInformacionEnvioTEU(ooHelper, rulectx, respuesta);
+					FuncionesComunes.crearDocInformacionEnvioTEU(rulectx, respuesta);
 					iTEUBOE.set("TRAIDOANUNCIOTEU", "SI");
 					iTEUBOE.store(rulectx.getClientContext());
 				}

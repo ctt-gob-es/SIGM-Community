@@ -1,235 +1,209 @@
-<?xml version="1.0" encoding="UTF-8"  ?>
-<!-- Created with iReport - A designer for JasperReports -->
-<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
-<jasperReport
-		 name="Datos Tipo Vivienda - Varias Situaciones"
-		 columnCount="1"
-		 printOrder="Vertical"
-		 orientation="Portrait"
-		 pageWidth="595"
-		 pageHeight="842"
-		 columnWidth="535"
-		 columnSpacing="0"
-		 leftMargin="30"
-		 rightMargin="30"
-		 topMargin="20"
-		 bottomMargin="20"
-		 whenNoDataType="NoPages"
-		 isTitleNewPage="false"
-		 isSummaryNewPage="false">
-	<property name="ireport.scriptlethandling" value="0" />
-	<property name="ireport.encoding" value="UTF-8" />
-	<import value="java.util.*" />
-	<import value="net.sf.jasperreports.engine.*" />
-	<import value="net.sf.jasperreports.engine.data.*" />
-
-	<parameter name="SUBREPORT_DIR" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["/sigem/app/SIGEM/temp/reports/"]]></defaultValueExpression>
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Datos Tipo Vivienda - Varias Situaciones" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/sigem/app/SIGEM/temp/reports/"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["M:\\Documentos\\Imágenes"]]></defaultValueExpression>
+	<parameter name="IMAGES_REPOSITORY_PATH" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["M:\\Documentos\\Imágenes"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["DPCR2012/13000"]]></defaultValueExpression>
+	<parameter name="NUM_EXP" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DPCR2012/13000"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="FECHA_INI" isForPrompting="false" class="java.sql.Timestamp"/>
-	<parameter name="FECHA_FIN" isForPrompting="false" class="java.sql.Timestamp"/>
-	<parameter name="NUMEXPCONVOCATORIA" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="CONVOCATORIAEXCEP" isForPrompting="false" class="java.lang.String"/>
-	<queryString><![CDATA[select
+	<parameter name="FECHA_INI" class="java.sql.Timestamp" isForPrompting="false"/>
+	<parameter name="FECHA_FIN" class="java.sql.Timestamp" isForPrompting="false"/>
+	<parameter name="NUMEXPCONVOCATORIA" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DPCR2015/55329"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CONVOCATORIAEXCEP" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DPCR2016/40"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
 datos, count(datos) as valor
-from 
-(select  
+from
+(select
 	case when (upper(vivienda1)<>'SI' and upper(vivienda2)<>'SI' and upper(vivienda3)<>'SI' and upper(vivienda31)<>'SI') then 'OTRO' else (
-		case when upper(vivienda1)='SI' then 'PROPIA PAGADA - ' else '' end ||  
-		case when upper(vivienda2)='SI' then 'PROPIA CON HIPOTECA - ' else '' end ||  
-		case when upper(vivienda3)='SI' then 'ALQUILADA - ' else '' end || 
+		case when upper(vivienda1)='SI' then 'PROPIA PAGADA - ' else '' end ||
+		case when upper(vivienda2)='SI' then 'PROPIA CON HIPOTECA - ' else '' end ||
+		case when upper(vivienda3)='SI' then 'ALQUILADA - ' else '' end ||
 		case when upper(vivienda31)='SI' then 'DESAHUCIADO O EN PROCESO - ' else '' end
 		) end
 	from dpcr_serso_plan_emer datos_solicitud
-	join spac_expedientes exp_solicitud on 'DPCR2015/55329' = datos_solicitud.convocatoria and datos_solicitud.numexp = exp_solicitud.numexp
+	join spac_expedientes exp_solicitud on $P{NUMEXPCONVOCATORIA} = datos_solicitud.convocatoria and datos_solicitud.numexp = exp_solicitud.numexp
 		where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
 		 and exp_solicitud.freg >= $P{FECHA_INI} and exp_solicitud.freg < $P{FECHA_FIN}
 	UNION ALL
 	select
 	case when (upper(vivienda1)<>'SI' and upper(vivienda2)<>'SI' and upper(vivienda3)<>'SI' and upper(vivienda31)<>'SI') then 'OTRO' else (
-		case when upper(VIViENDA1)='SI' then 'PROPIA PAGADA - ' else '' end || 
-		case when upper(VIViENDA2)='SI' then 'PROPIA CON HIPOTECA - ' else '' end || 
-		case when upper(VIViENDA3)='SI' then 'ALQUILADA - ' else '' end || 
-		case when upper(vivienda31)='SI' then 'DESAHUCIADO O EN PROCESO - ' else '' end  
+		case when upper(VIViENDA1)='SI' then 'PROPIA PAGADA - ' else '' end ||
+		case when upper(VIViENDA2)='SI' then 'PROPIA CON HIPOTECA - ' else '' end ||
+		case when upper(VIViENDA3)='SI' then 'ALQUILADA - ' else '' end ||
+		case when upper(vivienda31)='SI' then 'DESAHUCIADO O EN PROCESO - ' else '' end
 		)end
-	from dpcr_serso_plan_emer datos_solicitud 
-	join spac_expedientes exp_solicitud on 'DPCR2016/40' = datos_solicitud.convocatoria and datos_solicitud.numexp = exp_solicitud.numexp 
+	from dpcr_serso_plan_emer datos_solicitud
+	join spac_expedientes exp_solicitud on $P{CONVOCATORIAEXCEP} = datos_solicitud.convocatoria and datos_solicitud.numexp = exp_solicitud.numexp
 	where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
 		and exp_solicitud.freg >= $P{FECHA_INI} and exp_solicitud.freg < $P{FECHA_FIN}
 
 	UNION ALL
-	select  
+	select
 	case when (upper(vivienda1)<>'SI' and upper(vivienda2)<>'SI' and upper(vivienda3)<>'SI' and upper(vivienda31)<>'SI') then 'OTRO' else (
-		case when upper(vivienda1)='SI' then 'PROPIA PAGADA - ' else '' end || 
-		case when upper(vivienda2)='SI' then 'PROPIA CON HIPOTECA - ' else '' end || 
-		case when upper(vivienda3)='SI' then 'ALQUILADA - ' else '' end || 
-		case when upper(vivienda31)='SI' then 'DESAHUCIADO O EN PROCESO - ' else '' end 
-		)end
-	from dpcr_serso_plan_emer datos_solicitud
-	join spac_expedientes_h exp_solicitud on 'DPCR2015/55329' = datos_solicitud.convocatoria and datos_solicitud.numexp = exp_solicitud.numexp
-		where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
-		 and exp_solicitud.freg >= $P{FECHA_INI} and exp_solicitud.freg < $P{FECHA_FIN}
-	UNION ALL
-	select  
-	case when (upper(vivienda1)<>'SI' and upper(vivienda2)<>'SI' and upper(vivienda3)<>'SI' and upper(vivienda31)<>'SI') then 'OTRO' else (
-		case when upper(VIViENDA1)='SI' then 'PROPIA PAGADA - ' else '' end ||  
-		case when upper(VIViENDA2)='SI' then 'PROPIA CON HIPOTECA - ' else '' end || 
-		case when upper(VIViENDA3)='SI' then 'ALQUILADA - ' else '' end || 
+		case when upper(vivienda1)='SI' then 'PROPIA PAGADA - ' else '' end ||
+		case when upper(vivienda2)='SI' then 'PROPIA CON HIPOTECA - ' else '' end ||
+		case when upper(vivienda3)='SI' then 'ALQUILADA - ' else '' end ||
 		case when upper(vivienda31)='SI' then 'DESAHUCIADO O EN PROCESO - ' else '' end
 		)end
 	from dpcr_serso_plan_emer datos_solicitud
-	join spac_expedientes_h exp_solicitud on 'DPCR2016/40' = datos_solicitud.convocatoria and datos_solicitud.numexp = exp_solicitud.numexp 
+	join spac_expedientes_h exp_solicitud on $P{NUMEXPCONVOCATORIA} = datos_solicitud.convocatoria and datos_solicitud.numexp = exp_solicitud.numexp
+		where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
+		 and exp_solicitud.freg >= $P{FECHA_INI} and exp_solicitud.freg < $P{FECHA_FIN}
+	UNION ALL
+	select
+	case when (upper(vivienda1)<>'SI' and upper(vivienda2)<>'SI' and upper(vivienda3)<>'SI' and upper(vivienda31)<>'SI') then 'OTRO' else (
+		case when upper(VIViENDA1)='SI' then 'PROPIA PAGADA - ' else '' end ||
+		case when upper(VIViENDA2)='SI' then 'PROPIA CON HIPOTECA - ' else '' end ||
+		case when upper(VIViENDA3)='SI' then 'ALQUILADA - ' else '' end ||
+		case when upper(vivienda31)='SI' then 'DESAHUCIADO O EN PROCESO - ' else '' end
+		)end
+	from dpcr_serso_plan_emer datos_solicitud
+	join spac_expedientes_h exp_solicitud on $P{CONVOCATORIAEXCEP} = datos_solicitud.convocatoria and datos_solicitud.numexp = exp_solicitud.numexp
 		where ( exp_solicitud.estadoadm = 'NT' or exp_solicitud.estadoadm = 'NE' or exp_solicitud.estadoadm = 'AP' or exp_solicitud.estadoadm = 'RS')
 		 and exp_solicitud.freg >= $P{FECHA_INI} and exp_solicitud.freg < $P{FECHA_FIN}
 )as datosXTipoFamilia (datos)
 group by datos
-order by datos]]></queryString>
-
+order by datos]]>
+	</queryString>
 	<field name="datos" class="java.lang.String"/>
 	<field name="valor" class="java.lang.Long"/>
-
-	<variable name="TOTAL_VALOR" class="java.lang.Long" resetType="Report" calculation="Sum">
+	<variable name="TOTAL_VALOR" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
 		<initialValueExpression><![CDATA[new Long(0)]]></initialValueExpression>
 	</variable>
-		<background>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</background>
-		<title>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</title>
-		<pageHeader>
-			<band height="30"  isSplitAllowed="true" >
-				<staticText>
-					<reportElement
-						x="71"
-						y="0"
-						width="362"
-						height="30"
-						key="staticText-1"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="20" isBold="true"/>
-					</textElement>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-1" x="71" y="0" width="362" height="30"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
 				<text><![CDATA[Tipo de Vivienda - Varias Situaciones]]></text>
-				</staticText>
-			</band>
-		</pageHeader>
-		<columnHeader>
-			<band height="25"  isSplitAllowed="true" >
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="0"
-						y="7"
-						width="346"
-						height="18"
-						forecolor="#FFFFFF"
-						backcolor="#3300FF"
-						key="staticText-2"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
-					</textElement>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-2" mode="Opaque" x="0" y="7" width="346" height="18" forecolor="#FFFFFF" backcolor="#3300FF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
 				<text><![CDATA[COLECTIVO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="346"
-						y="7"
-						width="109"
-						height="18"
-						forecolor="#FFFFFF"
-						backcolor="#3300FF"
-						key="staticText-3"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-3" mode="Opaque" x="346" y="7" width="109" height="18" forecolor="#FFFFFF" backcolor="#3300FF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
 				<text><![CDATA[SOLICITUDES]]></text>
-				</staticText>
-			</band>
-		</columnHeader>
-		<detail>
-			<band height="20"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="12"
-						y="0"
-						width="334"
-						height="20"
-						key="textField"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement verticalAlignment="Middle">
-						<font size="10"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{datos}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="358"
-						y="0"
-						width="60"
-						height="20"
-						key="textField"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="12"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{valor}]]></textFieldExpression>
-				</textField>
-			</band>
-		</detail>
-		<columnFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnFooter>
-		<pageFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageFooter>
-		<summary>
-			<band height="26"  isSplitAllowed="true" >
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="15"
-						y="6"
-						width="331"
-						height="18"
-						forecolor="#FFFFFF"
-						backcolor="#3300FF"
-						key="staticText-7"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
-					</textElement>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="textField" x="12" y="0" width="334" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{datos}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="textField" x="358" y="0" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-7" positionType="Float" mode="Opaque" x="15" y="6" width="331" height="18" forecolor="#FFFFFF" backcolor="#3300FF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
 				<text><![CDATA[TOTAL:   ]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="358"
-						y="6"
-						width="60"
-						height="20"
-						key="textField-5"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="12"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{TOTAL_VALOR}]]></textFieldExpression>
-				</textField>
-			</band>
-		</summary>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-5" positionType="Float" x="358" y="6" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$V{TOTAL_VALOR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
 </jasperReport>

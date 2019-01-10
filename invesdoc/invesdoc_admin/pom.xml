@@ -11,6 +11,10 @@
 	<packaging>jar</packaging>
 	<description>Invesdoc Admin</description>
 	
+	<build>
+		<finalName>invesdoc-admin-${pom.version}</finalName>
+	</build>
+
 	<repositories>
 		<repository>
 			<id>repo_arch</id>
@@ -18,10 +22,6 @@
 			<url>file:${project.basedir}/lib</url>
 		</repository>
 	</repositories>
-
-	<build>
-		<finalName>invesdoc-admin-${pom.version}</finalName>
-	</build>
 	
 	<dependencies>
 		<dependency>
@@ -34,12 +34,5 @@
 			<artifactId>invesdoc-stdbizobj</artifactId>
 			<version>${pom.version}</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>fplibrary</groupId>
-			<artifactId>fplibrary</artifactId>
-			<version>1.0</version>
-		</dependency>
-
 	</dependencies>
 </project>

@@ -269,27 +269,16 @@ public class ExpedientState extends BaseState {
 		 */
 	}
 	
-	//Devuelve el usuario que tiene bloqueado un expediente
-    public String getLockedStageUser(IClientContext ctx,int nIdStage)
-    throws ISPACException
-    {
-        DbCnt cnt = ctx.getConnection();
-		try
-		{
-		    String sqlquery=" WHERE ID = (SELECT ID FROM SPAC_S_BLOQUEOS WHERE TP_OBJ=" + LockManager.LOCKTYPE_STAGE + " AND ID_OBJ=" + nIdStage + ")";
-		    SessionDAO sessionDAO = new SessionDAO(cnt);
-			sessionDAO.load(cnt,sqlquery);
-
-			return sessionDAO.getString("USUARIO");
-		}
-		catch (ISPACException ie)
-		{
-			return "";
-		}
-		finally
-		{
-		    ctx.releaseConnection(cnt);
-		}
+	/**
+	 * Devuelve el usuario que tiene bloqueado un expediente
+	 * [dipucr-Felipe #427] Modifico la función que utilizar una heredada creada en BaseState
+	 * @param ctx
+	 * @return
+	 * @throws ISPACException
+	 */
+    public String getLockedStageUser(IClientContext ctx) throws ISPACException {
+    	
+    	return getLockedEntityUser(ctx, mStateContext.getStageId(), LockManager.LOCKTYPE_STAGE);
     }
 
 	public Map getParameters()

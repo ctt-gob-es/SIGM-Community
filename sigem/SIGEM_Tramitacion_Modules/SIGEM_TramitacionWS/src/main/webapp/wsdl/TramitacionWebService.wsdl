@@ -1,246 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:intf="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns1="http://dto.services.core.sgm.tecdoc.ieci" xmlns:tns2="http://server.ws.services.ispac.tdw.ieci" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:intf="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns1="http://dto.server.ws.tram.sgm.tecdoc.ieci" xmlns:tns2="http://dto.services.core.sgm.tecdoc.ieci" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <!--WSDL created by Apache Axis version: 1.4
 Built on Apr 22, 2006 (06:55:48 PDT)-->
  <wsdl:types>
   <schema elementFormDefault="qualified" targetNamespace="http://server.ws.tram.sgm.tecdoc.ieci" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://dto.server.ws.tram.sgm.tecdoc.ieci"/>
    <import namespace="http://dto.services.core.sgm.tecdoc.ieci"/>
-   <import namespace="http://server.ws.services.ispac.tdw.ieci"/>
-   <element name="getProcedimientosPorTipo">
+   <element name="iniciarExpediente">
     <complexType>
      <sequence>
       <element name="idEntidad" type="xsd:string"/>
-      <element name="tipoProc" type="xsd:int"/>
-      <element name="nombre" type="xsd:string"/>
+      <element name="commonData" type="tns1:DatosComunesExpediente"/>
+      <element name="specificDataXML" type="xsd:string"/>
+      <element maxOccurs="unbounded" name="documents" type="tns1:DocumentoExpediente"/>
      </sequence>
     </complexType>
    </element>
-   <element name="getProcedimientosPorTipoResponse">
+   <complexType name="ArrayOf_tns1_InteresadoExpediente">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:InteresadoExpediente"/>
+    </sequence>
+   </complexType>
+   <element name="iniciarExpedienteResponse">
     <complexType>
      <sequence>
-      <element name="getProcedimientosPorTipoReturn" type="impl:ListaInfoBProcedimientos"/>
+      <element name="iniciarExpedienteReturn" type="tns1:Booleano"/>
      </sequence>
     </complexType>
    </element>
-   <complexType name="InfoBProcedimiento">
-    <sequence>
-     <element name="codSistProductor" nillable="true" type="xsd:string"/>
-     <element name="codigo" nillable="true" type="xsd:string"/>
-     <element name="id" nillable="true" type="xsd:string"/>
-     <element name="nombre" nillable="true" type="xsd:string"/>
-     <element name="nombreSistProductor" nillable="true" type="xsd:string"/>
-    </sequence>
-   </complexType>
-   <complexType name="ArrayOfInfoBProcedimiento">
-    <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="impl:InfoBProcedimiento"/>
-    </sequence>
-   </complexType>
-   <complexType name="ListaInfoBProcedimientos">
-    <complexContent>
-     <extension base="tns1:RetornoServicio">
-      <sequence>
-       <element name="procedimientos" nillable="true" type="impl:ArrayOfInfoBProcedimiento"/>
-      </sequence>
-     </extension>
-    </complexContent>
-   </complexType>
-   <element name="getProcedimientos">
+   <element name="archivarExpedientes">
     <complexType>
      <sequence>
       <element name="idEntidad" type="xsd:string"/>
-      <element maxOccurs="unbounded" name="idProcs" type="xsd:string"/>
+      <element maxOccurs="unbounded" name="idExps" type="xsd:string"/>
      </sequence>
     </complexType>
    </element>
-   <element name="getProcedimientosResponse">
+   <element name="archivarExpedientesResponse">
     <complexType>
      <sequence>
-      <element name="getProcedimientosReturn" type="impl:ListaInfoBProcedimientos"/>
+      <element name="archivarExpedientesReturn" type="tns2:RetornoServicio"/>
      </sequence>
     </complexType>
    </element>
-   <element name="getProcedimiento">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="idProc" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="getProcedimientoResponse">
-    <complexType>
-     <sequence>
-      <element name="getProcedimientoReturn" type="impl:Procedimiento"/>
-     </sequence>
-    </complexType>
-   </element>
-   <complexType name="OrganoProductor">
-    <sequence>
-     <element name="id" nillable="true" type="xsd:string"/>
-     <element name="inicioProduccion" nillable="true" type="xsd:dateTime"/>
-    </sequence>
-   </complexType>
-   <complexType name="ArrayOfOrganoProductor">
-    <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="impl:OrganoProductor"/>
-    </sequence>
-   </complexType>
-   <complexType name="Procedimiento">
-    <complexContent>
-     <extension base="tns1:RetornoServicio">
-      <sequence>
-       <element name="documentosBasicos" nillable="true" type="xsd:string"/>
-       <element name="informacionBasica" nillable="true" type="impl:InfoBProcedimiento"/>
-       <element name="normativa" nillable="true" type="xsd:string"/>
-       <element name="objeto" nillable="true" type="xsd:string"/>
-       <element name="organosProductores" nillable="true" type="impl:ArrayOfOrganoProductor"/>
-       <element name="tramites" nillable="true" type="xsd:string"/>
-      </sequence>
-     </extension>
-    </complexContent>
-   </complexType>
-   <element name="getFichero">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="guid" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="getFicheroResponse">
-    <complexType>
-     <sequence>
-      <element name="getFicheroReturn" type="impl:Binario"/>
-     </sequence>
-    </complexType>
-   </element>
-   
-   <element name="getFicheroTemp">
-<complexType>
-<sequence>
-<element name="idEntidad" type="xsd:string"/>
-<element name="guid" type="xsd:string"/>
-</sequence>
-</complexType>
-</element>
-<element name="getFicheroTempResponse">
-<complexType>
-<sequence>
-<element name="getFicheroTempReturn" type="impl:Binario"/>
-</sequence>
-</complexType>
-</element>
-
-<element name="setFicheroTemp">
-<complexType>
-<sequence>
-<element name="idEntidad" type="xsd:string"/>
-<element name="guid" type="xsd:string"/>
-<element name="data" type="xsd:base64Binary"/>
-</sequence>
-</complexType>
-</element>
-<element name="setFicheroTempResponse">
-<complexType>
-<sequence>
-<element name="setFicheroTempReturn" type="xsd:boolean"/>
-</sequence>
-</complexType>
-</element>
-
-   <complexType name="Binario">
-    <complexContent>
-     <extension base="tns1:RetornoServicio">
-      <sequence>
-       <element name="contenido" nillable="true" type="xsd:base64Binary"/>
-      </sequence>
-     </extension>
-    </complexContent>
-   </complexType>
-   <element name="getInfoFichero">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="guid" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="getInfoFicheroResponse">
-    <complexType>
-     <sequence>
-      <element name="getInfoFicheroReturn" type="impl:InfoFichero"/>
-     </sequence>
-    </complexType>
-   </element>
-   <complexType name="Firma">
-    <sequence>
-     <element name="autenticada" type="xsd:boolean"/>
-     <element name="autor" nillable="true" type="xsd:string"/>
-    </sequence>
-   </complexType>
-   <complexType name="ArrayOfFirma">
-    <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="impl:Firma"/>
-    </sequence>
-   </complexType>
-   <complexType name="InfoFichero">
-    <complexContent>
-     <extension base="tns1:RetornoServicio">
-      <sequence>
-       <element name="fechaAlta" nillable="true" type="xsd:dateTime"/>
-       <element name="firmas" nillable="true" type="impl:ArrayOfFirma"/>
-       <element name="nombre" nillable="true" type="xsd:string"/>
-      </sequence>
-     </extension>
-    </complexContent>
-   </complexType>
-   <element name="getInfoOcupacion">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="getInfoOcupacionResponse">
-    <complexType>
-     <sequence>
-      <element name="getInfoOcupacionReturn" type="impl:InfoOcupacion"/>
-     </sequence>
-    </complexType>
-   </element>
-   <complexType name="InfoOcupacion">
-    <complexContent>
-     <extension base="tns1:RetornoServicio">
-      <sequence>
-       <element name="espacioOcupado" type="xsd:long"/>
-       <element name="espacioTotal" type="xsd:long"/>
-       <element name="numeroFicheros" type="xsd:long"/>
-      </sequence>
-     </extension>
-    </complexContent>
-   </complexType>
-   <element name="eliminaFicheros">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element maxOccurs="unbounded" name="guids" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="eliminaFicherosResponse">
-    <complexType>
-     <sequence>
-      <element name="eliminaFicherosReturn" type="impl:RetornoServicio"/>
-     </sequence>
-    </complexType>
-   </element>
-   <complexType name="RetornoServicio">
-    <sequence>
-     <element name="errorCode" nillable="true" type="xsd:string"/>
-     <element name="returnCode" nillable="true" type="xsd:string"/>
-    </sequence>
-   </complexType>
    <element name="getIdsExpedientes">
     <complexType>
      <sequence>
@@ -255,7 +57,7 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
    <element name="getIdsExpedientesResponse">
     <complexType>
      <sequence>
-      <element name="getIdsExpedientesReturn" type="impl:ListaIdentificadores"/>
+      <element name="getIdsExpedientesReturn" type="tns1:ListaIdentificadores"/>
      </sequence>
     </complexType>
    </element>
@@ -264,15 +66,303 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element maxOccurs="unbounded" minOccurs="0" name="item" type="xsd:string"/>
     </sequence>
    </complexType>
-   <complexType name="ListaIdentificadores">
-    <complexContent>
-     <extension base="tns1:RetornoServicio">
-      <sequence>
-       <element name="identificadores" nillable="true" type="impl:ArrayOf_xsd_string"/>
-      </sequence>
-     </extension>
-    </complexContent>
+   <element name="anularLicenciaRRHH">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="numexp" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="anularLicenciaRRHHResponse">
+    <complexType>
+     <sequence>
+      <element name="anularLicenciaRRHHReturn" type="tns1:Booleano"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getProcedimientos">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element maxOccurs="unbounded" name="idProcs" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getProcedimientosResponse">
+    <complexType>
+     <sequence>
+      <element name="getProcedimientosReturn" type="tns1:ListaInfoBProcedimientos"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="ArrayOf_tns1_InfoBProcedimiento">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:InfoBProcedimiento"/>
+    </sequence>
    </complexType>
+   <element name="getProcedimientosPorTipo">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="tipoProc" type="xsd:int"/>
+      <element name="nombre" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getProcedimientosPorTipoResponse">
+    <complexType>
+     <sequence>
+      <element name="getProcedimientosPorTipoReturn" type="tns1:ListaInfoBProcedimientos"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="cambiarEstadoAdministrativo">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="numExp" type="xsd:string"/>
+      <element name="estadoAdm" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="cambiarEstadoAdministrativoResponse">
+    <complexType>
+     <sequence>
+      <element name="cambiarEstadoAdministrativoReturn" type="tns1:Booleano"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="moverExpedienteAFase">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="numExp" type="xsd:string"/>
+      <element name="idFaseCatalogo" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="moverExpedienteAFaseResponse">
+    <complexType>
+     <sequence>
+      <element name="moverExpedienteAFaseReturn" type="tns1:Booleano"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="anexarDocsExpediente">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="numExp" type="xsd:string"/>
+      <element name="regNum" type="xsd:string"/>
+      <element name="regDate" type="xsd:dateTime"/>
+      <element maxOccurs="unbounded" name="documents" type="tns1:DocumentoExpediente"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="anexarDocsExpedienteResponse">
+    <complexType>
+     <sequence>
+      <element name="anexarDocsExpedienteReturn" type="tns1:Booleano"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="anexarDocsTramite">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="numExp" type="xsd:string"/>
+      <element name="idTramite" type="xsd:int"/>
+      <element name="regNum" type="xsd:string"/>
+      <element name="regDate" type="xsd:dateTime"/>
+      <element maxOccurs="unbounded" name="documents" type="tns1:DocumentoExpediente"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="anexarDocsTramiteResponse">
+    <complexType>
+     <sequence>
+      <element name="anexarDocsTramiteReturn" type="tns1:Booleano"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="establecerDatosRegistroEntidad">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="nombreEntidad" type="xsd:string"/>
+      <element name="numExp" type="xsd:string"/>
+      <element name="xmlDatosEspecificos" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="establecerDatosRegistroEntidadResponse">
+    <complexType>
+     <sequence>
+      <element name="establecerDatosRegistroEntidadReturn" type="tns1:Entero"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="obtenerRegistroEntidad">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="nombreEntidad" type="xsd:string"/>
+      <element name="numExp" type="xsd:string"/>
+      <element name="idRegistro" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="obtenerRegistroEntidadResponse">
+    <complexType>
+     <sequence>
+      <element name="obtenerRegistroEntidadReturn" type="tns1:Cadena"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="obtenerRegistrosEntidad">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="nombreEntidad" type="xsd:string"/>
+      <element name="numExp" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="obtenerRegistrosEntidadResponse">
+    <complexType>
+     <sequence>
+      <element name="obtenerRegistrosEntidadReturn" type="tns1:Cadena"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="recibirDocumentoFirmado">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="numExp" type="xsd:string"/>
+      <element name="idDocumento" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="recibirDocumentoFirmadoResponse">
+    <complexType>
+     <sequence>
+      <element name="recibirDocumentoFirmadoReturn" type="tns1:Cadena"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getFicheroTemp">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="guid" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getFicheroTempResponse">
+    <complexType>
+     <sequence>
+      <element name="getFicheroTempReturn" type="tns1:Binario"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getFichero">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="guid" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getFicheroResponse">
+    <complexType>
+     <sequence>
+      <element name="getFicheroReturn" type="tns1:Binario"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setFicheroTemp">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="guid" type="xsd:string"/>
+      <element name="data" type="xsd:base64Binary"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="setFicheroTempResponse">
+    <complexType>
+     <sequence>
+      <element name="setFicheroTempReturn" type="xsd:boolean"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="queryEntities">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="entidad" type="xsd:string"/>
+      <element name="query" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="queryEntitiesResponse">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="queryEntitiesReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getInfoFichero">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="guid" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getInfoFicheroResponse">
+    <complexType>
+     <sequence>
+      <element name="getInfoFicheroReturn" type="tns1:InfoFichero"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="ArrayOf_tns1_Firma">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:Firma"/>
+    </sequence>
+   </complexType>
+   <element name="getInfoOcupacion">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getInfoOcupacionResponse">
+    <complexType>
+     <sequence>
+      <element name="getInfoOcupacionReturn" type="tns1:InfoOcupacion"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="eliminaFicheros">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element maxOccurs="unbounded" name="guids" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="eliminaFicherosResponse">
+    <complexType>
+     <sequence>
+      <element name="eliminaFicherosReturn" type="tns2:RetornoServicio"/>
+     </sequence>
+    </complexType>
+   </element>
    <element name="getExpedientes">
     <complexType>
      <sequence>
@@ -284,30 +374,14 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
    <element name="getExpedientesResponse">
     <complexType>
      <sequence>
-      <element name="getExpedientesReturn" type="impl:ListaInfoBExpedientes"/>
+      <element name="getExpedientesReturn" type="tns1:ListaInfoBExpedientes"/>
      </sequence>
     </complexType>
    </element>
-   <complexType name="InfoBExpediente">
+   <complexType name="ArrayOf_tns1_InfoBExpediente">
     <sequence>
-     <element name="datosIdentificativos" nillable="true" type="xsd:string"/>
-     <element name="id" nillable="true" type="xsd:string"/>
-     <element name="numExp" nillable="true" type="xsd:string"/>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:InfoBExpediente"/>
     </sequence>
-   </complexType>
-   <complexType name="ArrayOfInfoBExpediente">
-    <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="impl:InfoBExpediente"/>
-    </sequence>
-   </complexType>
-   <complexType name="ListaInfoBExpedientes">
-    <complexContent>
-     <extension base="tns1:RetornoServicio">
-      <sequence>
-       <element name="expedientes" nillable="true" type="impl:ArrayOfInfoBExpediente"/>
-      </sequence>
-     </extension>
-    </complexContent>
    </complexType>
    <element name="getExpediente">
     <complexType>
@@ -320,113 +394,90 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
    <element name="getExpedienteResponse">
     <complexType>
      <sequence>
-      <element name="getExpedienteReturn" type="impl:Expediente"/>
+      <element name="getExpedienteReturn" type="tns1:Expediente"/>
      </sequence>
     </complexType>
    </element>
-   <complexType name="DocFisico">
+   <complexType name="ArrayOf_tns1_DocElectronico">
     <sequence>
-     <element name="asunto" nillable="true" type="xsd:string"/>
-     <element name="tipoDocumento" nillable="true" type="xsd:string"/>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:DocElectronico"/>
     </sequence>
    </complexType>
-   <complexType name="DocElectronico">
-    <complexContent>
-     <extension base="impl:DocFisico">
-      <sequence>
-       <element name="extension" nillable="true" type="xsd:string"/>
-       <element name="localizador" nillable="true" type="xsd:string"/>
-       <element name="repositorio" nillable="true" type="xsd:string"/>
-      </sequence>
-     </extension>
-    </complexContent>
-   </complexType>
-   <complexType name="ArrayOfDocElectronico">
+   <complexType name="ArrayOf_tns1_DocFisico">
     <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="impl:DocElectronico"/>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:DocFisico"/>
     </sequence>
    </complexType>
-   <complexType name="ArrayOfDocFisico">
+   <complexType name="ArrayOf_tns1_Emplazamiento">
     <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="impl:DocFisico"/>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:Emplazamiento"/>
     </sequence>
    </complexType>
-   <complexType name="Emplazamiento">
+   <complexType name="ArrayOf_tns1_Interesado">
     <sequence>
-     <element name="comunidad" nillable="true" type="xsd:string"/>
-     <element name="concejo" nillable="true" type="xsd:string"/>
-     <element name="localizacion" nillable="true" type="xsd:string"/>
-     <element name="pais" nillable="true" type="xsd:string"/>
-     <element name="poblacion" nillable="true" type="xsd:string"/>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:Interesado"/>
     </sequence>
    </complexType>
-   <complexType name="ArrayOfEmplazamiento">
-    <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="impl:Emplazamiento"/>
-    </sequence>
-   </complexType>
-   <complexType name="Interesado">
-    <sequence>
-     <element name="idEnTerceros" nillable="true" type="xsd:string"/>
-     <element name="interesadoPrincipal" type="xsd:boolean"/>
-     <element name="nombre" nillable="true" type="xsd:string"/>
-     <element name="numIdentidad" nillable="true" type="xsd:string"/>
-     <element name="rol" nillable="true" type="xsd:string"/>
-    </sequence>
-   </complexType>
-   <complexType name="ArrayOfInteresado">
-    <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="impl:Interesado"/>
-    </sequence>
-   </complexType>
-   <complexType name="Expediente">
-    <complexContent>
-     <extension base="tns1:RetornoServicio">
-      <sequence>
-       <element name="asunto" nillable="true" type="xsd:string"/>
-       <element name="documentosElectronicos" nillable="true" type="impl:ArrayOfDocElectronico"/>
-       <element name="documentosFisicos" nillable="true" type="impl:ArrayOfDocFisico"/>
-       <element name="emplazamientos" nillable="true" type="impl:ArrayOfEmplazamiento"/>
-       <element name="fechaFinalizacion" nillable="true" type="xsd:dateTime"/>
-       <element name="fechaInicio" nillable="true" type="xsd:dateTime"/>
-       <element name="idOrgProductor" nillable="true" type="xsd:string"/>
-       <element name="informacionBasica" nillable="true" type="impl:InfoBExpediente"/>
-       <element name="interesados" nillable="true" type="impl:ArrayOfInteresado"/>
-       <element name="nombreOrgProductor" nillable="true" type="xsd:string"/>
-      </sequence>
-     </extension>
-    </complexContent>
-   </complexType>
-   <element name="archivarExpedientes">
+   <element name="crearExpediente">
     <complexType>
      <sequence>
       <element name="idEntidad" type="xsd:string"/>
-      <element maxOccurs="unbounded" name="idExps" type="xsd:string"/>
+      <element name="commonData" type="tns1:DatosComunesExpediente"/>
+      <element name="specificDataXML" type="xsd:string"/>
+      <element maxOccurs="unbounded" name="documents" type="tns1:DocumentoExpediente"/>
+      <element name="initSystem" type="xsd:string"/>
      </sequence>
     </complexType>
    </element>
-   <element name="archivarExpedientesResponse">
+   <element name="crearExpedienteResponse">
     <complexType>
      <sequence>
-      <element name="archivarExpedientesReturn" type="impl:RetornoServicio"/>
+      <element name="crearExpedienteReturn" type="tns1:Cadena"/>
      </sequence>
     </complexType>
    </element>
-   <element name="iniciarExpediente">
+   <element name="busquedaAvanzada">
     <complexType>
      <sequence>
       <element name="idEntidad" type="xsd:string"/>
-      <element name="datosComunes" type="impl:DatosComunesExpediente"/>
-      <element name="datosEspecificos" type="xsd:string"/>
-      <element name="documentos" type="impl:ArrayOfDocumentoExpedientes"/>
+      <element name="nombreGrupo" type="xsd:string"/>
+      <element name="nombreFrmBusqueda" type="xsd:string"/>
+      <element name="xmlBusqueda" type="xsd:string"/>
+      <element name="dominio" type="xsd:int"/>
      </sequence>
     </complexType>
    </element>
-   <complexType name="ArrayOfDocumentoExpedientes">
+   <element name="busquedaAvanzadaResponse">
+    <complexType>
+     <sequence>
+      <element name="busquedaAvanzadaReturn" type="tns1:Cadena"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getProcedimiento">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="idProc" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getProcedimientoResponse">
+    <complexType>
+     <sequence>
+      <element name="getProcedimientoReturn" type="tns1:Procedimiento"/>
+     </sequence>
+    </complexType>
+   </element>
+   <complexType name="ArrayOf_tns1_OrganoProductor">
     <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="documento" type="impl:DocumentoExpediente"/>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:OrganoProductor"/>
     </sequence>
    </complexType>
+  </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://dto.server.ws.tram.sgm.tecdoc.ieci" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://dto.services.core.sgm.tecdoc.ieci"/>
+   <import namespace="http://server.ws.tram.sgm.tecdoc.ieci"/>
    <complexType name="InteresadoExpediente">
     <sequence>
      <element name="indPrincipal" nillable="true" type="xsd:string"/>
@@ -443,16 +494,11 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element name="thirdPartyId" nillable="true" type="xsd:string"/>
     </sequence>
    </complexType>
-   <complexType name="ArrayOfInteresadoExpediente">
-    <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="impl:InteresadoExpediente"/>
-    </sequence>
-   </complexType>
    <complexType name="DatosComunesExpediente">
     <sequence>
      <element name="fechaRegistro" nillable="true" type="xsd:dateTime"/>
      <element name="idOrganismo" nillable="true" type="xsd:string"/>
-     <element name="interesados" nillable="true" type="impl:ArrayOfInteresadoExpediente"/>
+     <element name="interesados" nillable="true" type="impl:ArrayOf_tns1_InteresadoExpediente"/>
      <element name="numeroRegistro" nillable="true" type="xsd:string"/>
      <element name="tipoAsunto" nillable="true" type="xsd:string"/>
     </sequence>
@@ -467,103 +513,190 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element name="name" nillable="true" type="xsd:string"/>
     </sequence>
    </complexType>
-   <element name="iniciarExpedienteResponse">
-    <complexType>
-     <sequence>
-      <element name="iniciarExpedienteReturn" type="impl:Booleano"/>
-     </sequence>
-    </complexType>
-   </element>
    <complexType name="Booleano">
     <complexContent>
-     <extension base="tns1:RetornoServicio">
+     <extension base="tns2:RetornoServicio">
       <sequence>
        <element name="valor" type="xsd:boolean"/>
       </sequence>
      </extension>
     </complexContent>
    </complexType>
-   <element name="anexarDocsExpediente">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="numExp" type="xsd:string"/>
-      <element name="numReg" type="xsd:string"/>
-      <element name="fechaReg" type="xsd:dateTime"/>
-      <element name="documentos" type="impl:ArrayOfDocumentoExpedientes"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="anexarDocsExpedienteResponse">
-    <complexType>
-     <sequence>
-      <element name="anexarDocsExpedienteReturn" type="impl:Booleano"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="crearExpediente">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="datosComunes" type="impl:DatosComunesExpediente"/>
-      <element name="datosEspecificos" type="xsd:string"/>
-      <element name="documentos" type="impl:ArrayOfDocumentoExpedientes"/>
-      <element name="initSystem" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="crearExpedienteResponse">
-    <complexType>
-     <sequence>
-      <element name="crearExpedienteReturn" type="impl:Cadena"/>
-     </sequence>
-    </complexType>
-   </element>
+   <complexType name="ListaIdentificadores">
+    <complexContent>
+     <extension base="tns2:RetornoServicio">
+      <sequence>
+       <element name="identificadores" nillable="true" type="impl:ArrayOf_xsd_string"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="InfoBProcedimiento">
+    <sequence>
+     <element name="codSistProductor" nillable="true" type="xsd:string"/>
+     <element name="codigo" nillable="true" type="xsd:string"/>
+     <element name="id" nillable="true" type="xsd:string"/>
+     <element name="nombre" nillable="true" type="xsd:string"/>
+     <element name="nombreSistProductor" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="ListaInfoBProcedimientos">
+    <complexContent>
+     <extension base="tns2:RetornoServicio">
+      <sequence>
+       <element name="procedimientos" nillable="true" type="impl:ArrayOf_tns1_InfoBProcedimiento"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="Entero">
+    <complexContent>
+     <extension base="tns2:RetornoServicio">
+      <sequence>
+       <element name="valor" type="xsd:int"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
    <complexType name="Cadena">
     <complexContent>
-     <extension base="tns1:RetornoServicio">
+     <extension base="tns2:RetornoServicio">
       <sequence>
        <element name="valor" nillable="true" type="xsd:string"/>
       </sequence>
      </extension>
     </complexContent>
    </complexType>
-   <element name="cambiarEstadoAdministrativo">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="numExp" type="xsd:string"/>
-      <element name="estadoAdm" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="cambiarEstadoAdministrativoResponse">
-    <complexType>
-     <sequence>
-      <element name="cambiarEstadoAdministrativo" type="impl:Booleano"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="moverExpedienteAFase">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="numExp" type="xsd:string"/>
-      <element name="idFaseCatalogo" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="moverExpedienteAFaseResponse">
-    <complexType>
-     <sequence>
-      <element name="moverExpedienteAFase" type="impl:Booleano"/>
-     </sequence>
-    </complexType>
-   </element>
+   <complexType name="Binario">
+    <complexContent>
+     <extension base="tns2:RetornoServicio">
+      <sequence>
+       <element name="contenido" nillable="true" type="xsd:base64Binary"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="Firma">
+    <sequence>
+     <element name="autenticada" type="xsd:boolean"/>
+     <element name="autor" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="InfoFichero">
+    <complexContent>
+     <extension base="tns2:RetornoServicio">
+      <sequence>
+       <element name="fechaAlta" nillable="true" type="xsd:dateTime"/>
+       <element name="firmas" nillable="true" type="impl:ArrayOf_tns1_Firma"/>
+       <element name="nombre" nillable="true" type="xsd:string"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="InfoOcupacion">
+    <complexContent>
+     <extension base="tns2:RetornoServicio">
+      <sequence>
+       <element name="espacioOcupado" type="xsd:long"/>
+       <element name="espacioTotal" type="xsd:long"/>
+       <element name="numeroFicheros" type="xsd:long"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="InfoBExpediente">
+    <sequence>
+     <element name="datosIdentificativos" nillable="true" type="xsd:string"/>
+     <element name="id" nillable="true" type="xsd:string"/>
+     <element name="numExp" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="ListaInfoBExpedientes">
+    <complexContent>
+     <extension base="tns2:RetornoServicio">
+      <sequence>
+       <element name="expedientes" nillable="true" type="impl:ArrayOf_tns1_InfoBExpediente"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="DocFisico">
+    <sequence>
+     <element name="asunto" nillable="true" type="xsd:string"/>
+     <element name="tipoDocumento" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="DocElectronico">
+    <complexContent>
+     <extension base="tns1:DocFisico">
+      <sequence>
+       <element name="extension" nillable="true" type="xsd:string"/>
+       <element name="localizador" nillable="true" type="xsd:string"/>
+       <element name="repositorio" nillable="true" type="xsd:string"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="Emplazamiento">
+    <sequence>
+     <element name="comunidad" nillable="true" type="xsd:string"/>
+     <element name="concejo" nillable="true" type="xsd:string"/>
+     <element name="localizacion" nillable="true" type="xsd:string"/>
+     <element name="pais" nillable="true" type="xsd:string"/>
+     <element name="poblacion" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="Interesado">
+    <sequence>
+     <element name="idEnTerceros" nillable="true" type="xsd:string"/>
+     <element name="interesadoPrincipal" type="xsd:boolean"/>
+     <element name="nombre" nillable="true" type="xsd:string"/>
+     <element name="numIdentidad" nillable="true" type="xsd:string"/>
+     <element name="rol" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="Expediente">
+    <complexContent>
+     <extension base="tns2:RetornoServicio">
+      <sequence>
+       <element name="asunto" nillable="true" type="xsd:string"/>
+       <element name="documentosElectronicos" nillable="true" type="impl:ArrayOf_tns1_DocElectronico"/>
+       <element name="documentosFisicos" nillable="true" type="impl:ArrayOf_tns1_DocFisico"/>
+       <element name="emplazamientos" nillable="true" type="impl:ArrayOf_tns1_Emplazamiento"/>
+       <element name="fechaFinalizacion" nillable="true" type="xsd:dateTime"/>
+       <element name="fechaInicio" nillable="true" type="xsd:dateTime"/>
+       <element name="idOrgProductor" nillable="true" type="xsd:string"/>
+       <element name="informacionBasica" nillable="true" type="tns1:InfoBExpediente"/>
+       <element name="interesados" nillable="true" type="impl:ArrayOf_tns1_Interesado"/>
+       <element name="nombreOrgProductor" nillable="true" type="xsd:string"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
+   <complexType name="OrganoProductor">
+    <sequence>
+     <element name="id" nillable="true" type="xsd:string"/>
+     <element name="inicioProduccion" nillable="true" type="xsd:dateTime"/>
+    </sequence>
+   </complexType>
+   <complexType name="Procedimiento">
+    <complexContent>
+     <extension base="tns2:RetornoServicio">
+      <sequence>
+       <element name="documentosBasicos" nillable="true" type="xsd:string"/>
+       <element name="informacionBasica" nillable="true" type="tns1:InfoBProcedimiento"/>
+       <element name="normativa" nillable="true" type="xsd:string"/>
+       <element name="objeto" nillable="true" type="xsd:string"/>
+       <element name="organosProductores" nillable="true" type="impl:ArrayOf_tns1_OrganoProductor"/>
+       <element name="tramites" nillable="true" type="xsd:string"/>
+      </sequence>
+     </extension>
+    </complexContent>
+   </complexType>
   </schema>
   <schema elementFormDefault="qualified" targetNamespace="http://dto.services.core.sgm.tecdoc.ieci" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://dto.server.ws.tram.sgm.tecdoc.ieci"/>
    <import namespace="http://server.ws.tram.sgm.tecdoc.ieci"/>
-   <import namespace="http://server.ws.services.ispac.tdw.ieci"/>
    <complexType name="RetornoServicio">
     <sequence>
      <element name="errorCode" nillable="true" type="xsd:string"/>
@@ -571,559 +704,735 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
     </sequence>
    </complexType>
   </schema>
-  <schema elementFormDefault="qualified" targetNamespace="http://server.ws.services.ispac.tdw.ieci" xmlns="http://www.w3.org/2001/XMLSchema">
-   <import namespace="http://server.ws.tram.sgm.tecdoc.ieci"/>
-   <import namespace="http://dto.services.core.sgm.tecdoc.ieci"/>
-   <element name="busquedaAvanzada">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="groupName" type="xsd:string"/>
-      <element name="searchFormName" type="xsd:string"/>
-      <element name="searchXML" type="xsd:string"/>
-      <element name="domain" type="xsd:int"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="busquedaAvanzadaResponse">
-    <complexType>
-     <sequence>
-      <element name="busquedaAvanzada" type="tns2:Cadena"/>
-     </sequence>
-    </complexType>
-   </element>
-   <complexType name="Cadena">
-    <complexContent>
-     <extension base="tns1:RetornoServicio">
-      <sequence>
-       <element name="valor" nillable="true" type="xsd:string"/>
-      </sequence>
-     </extension>
-    </complexContent>
-   </complexType>
-   <element name="establecerDatosRegistroEntidad">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="nombreEntidad" type="xsd:string"/>
-      <element name="numExp" type="xsd:string"/>
-      <element name="xmlDatosEspecificos" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="establecerDatosRegistroEntidadResponse">
-    <complexType>
-     <sequence>
-      <element name="establecerDatosRegistroEntidad" type="tns2:Entero"/>
-     </sequence>
-    </complexType>
-   </element>
-   <complexType name="Entero">
-    <complexContent>
-     <extension base="tns1:RetornoServicio">
-      <sequence>
-       <element name="valor" type="xsd:int"/>
-      </sequence>
-     </extension>
-    </complexContent>
-   </complexType>
-   <element name="obtenerRegistroEntidad">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="nombreEntidad" type="xsd:string"/>
-      <element name="numExp" type="xsd:string"/>
-      <element name="idRegistro" type="xsd:int"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="obtenerRegistroEntidadResponse">
-    <complexType>
-     <sequence>
-      <element name="obtenerRegistroEntidad" type="tns2:Cadena"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="obtenerRegistrosEntidad">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="nombreEntidad" type="xsd:string"/>
-      <element name="numExp" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="obtenerRegistrosEntidadResponse">
-    <complexType>
-     <sequence>
-      <element name="obtenerRegistrosEntidad" type="tns2:Cadena"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="recibirDocumentoFirmado">
-    <complexType>
-     <sequence>
-      <element name="idEntidad" type="xsd:string"/>
-      <element name="numExp" type="xsd:string"/>
-      <element name="idDocumento" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="recibirDocumentoFirmadoResponse">
-    <complexType>
-     <sequence>
-      <element name="obtenerRegistrosEntidad" type="tns2:Cadena"/>
-     </sequence>
-    </complexType>
-   </element>
-  </schema>
  </wsdl:types>
-
-   <wsdl:message name="iniciarExpedienteRequest">
-
-      <wsdl:part element="impl:iniciarExpediente" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="crearExpedienteRequest">
-
-      <wsdl:part element="impl:crearExpediente" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getProcedimientoResponse">
-
-      <wsdl:part element="impl:getProcedimientoResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getExpedienteResponse">
-
-      <wsdl:part element="impl:getExpedienteResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="cambiarEstadoAdministrativoResponse">
-
-      <wsdl:part element="impl:cambiarEstadoAdministrativoResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getExpedientesResponse">
-
-      <wsdl:part element="impl:getExpedientesResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getProcedimientosPorTipoResponse">
-
-      <wsdl:part element="impl:getProcedimientosPorTipoResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getExpedienteRequest">
-
-      <wsdl:part element="impl:getExpediente" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="eliminaFicherosResponse">
-
-      <wsdl:part element="impl:eliminaFicherosResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="busquedaAvanzadaResponse">
-
-      <wsdl:part element="tns2:busquedaAvanzadaResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="moverExpedienteAFaseResponse">
-
-      <wsdl:part element="impl:moverExpedienteAFaseResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="obtenerRegistroEntidadResponse">
-
-      <wsdl:part element="tns2:obtenerRegistroEntidadResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="moverExpedienteAFaseRequest">
-
-      <wsdl:part element="impl:moverExpedienteAFase" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="anexarDocsExpedienteRequest">
-
-      <wsdl:part element="impl:anexarDocsExpediente" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="establecerDatosRegistroEntidadRequest">
-
-      <wsdl:part element="tns2:establecerDatosRegistroEntidad" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getInfoOcupacionRequest">
-
-      <wsdl:part element="impl:getInfoOcupacion" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getIdsExpedientesResponse">
-
-      <wsdl:part element="impl:getIdsExpedientesResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="obtenerRegistroEntidadRequest">
-
-      <wsdl:part element="tns2:obtenerRegistroEntidad" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="eliminaFicherosRequest">
-
-      <wsdl:part element="impl:eliminaFicheros" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="crearExpedienteResponse">
-
-      <wsdl:part element="impl:crearExpedienteResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getProcedimientoRequest">
-
-      <wsdl:part element="impl:getProcedimiento" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getIdsExpedientesRequest">
-
-      <wsdl:part element="impl:getIdsExpedientes" name="parameters"/>
-
-   </wsdl:message>
 
    <wsdl:message name="anexarDocsExpedienteResponse">
 
-      <wsdl:part element="impl:anexarDocsExpedienteResponse" name="parameters"/>
+      <wsdl:part element="impl:anexarDocsExpedienteResponse" name="parameters">
 
-   </wsdl:message>
-
-   <wsdl:message name="cambiarEstadoAdministrativoRequest">
-
-      <wsdl:part element="impl:cambiarEstadoAdministrativo" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="establecerDatosRegistroEntidadResponse">
-
-      <wsdl:part element="tns2:establecerDatosRegistroEntidadResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getInfoOcupacionResponse">
-
-      <wsdl:part element="impl:getInfoOcupacionResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getFicheroResponse">
-
-      <wsdl:part element="impl:getFicheroResponse" name="parameters"/>
-
-   </wsdl:message>
-   
-   
-   <wsdl:message name="getFicheroTempResponse">
-<wsdl:part element="impl:getFicheroTempResponse" name="parameters"/>
-</wsdl:message>
-
-<wsdl:message name="setFicheroTempResponse">
-<wsdl:part element="impl:setFicheroTempResponse" name="parameters"/>
-</wsdl:message>
-   
-
-   <wsdl:message name="archivarExpedientesRequest">
-
-      <wsdl:part element="impl:archivarExpedientes" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getProcedimientosPorTipoRequest">
-
-      <wsdl:part element="impl:getProcedimientosPorTipo" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getProcedimientosResponse">
-
-      <wsdl:part element="impl:getProcedimientosResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getInfoFicheroResponse">
-
-      <wsdl:part element="impl:getInfoFicheroResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getFicheroRequest">
-
-      <wsdl:part element="impl:getFichero" name="parameters"/>
-
-   </wsdl:message>
-   
-   <wsdl:message name="getFicheroTempRequest">
-<wsdl:part element="impl:getFicheroTemp" name="parameters"/>
-</wsdl:message>
-<wsdl:message name="setFicheroTempRequest">
-<wsdl:part element="impl:setFicheroTemp" name="parameters"/>
-</wsdl:message>
-
-   <wsdl:message name="busquedaAvanzadaRequest">
-
-      <wsdl:part element="tns2:busquedaAvanzada" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getProcedimientosRequest">
-
-      <wsdl:part element="impl:getProcedimientos" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="obtenerRegistrosEntidadRequest">
-
-      <wsdl:part element="tns2:obtenerRegistrosEntidad" name="parameters"/>
+      </wsdl:part>
 
    </wsdl:message>
 
    <wsdl:message name="recibirDocumentoFirmadoRequest">
 
-      <wsdl:part element="tns2:recibirDocumentoFirmado" name="parameters"/>
+      <wsdl:part element="impl:recibirDocumentoFirmado" name="parameters">
+
+      </wsdl:part>
 
    </wsdl:message>
 
-   <wsdl:message name="getInfoFicheroRequest">
+   <wsdl:message name="eliminaFicherosRequest">
 
-      <wsdl:part element="impl:getInfoFichero" name="parameters"/>
+      <wsdl:part element="impl:eliminaFicheros" name="parameters">
+
+      </wsdl:part>
 
    </wsdl:message>
 
-   <wsdl:message name="getExpedientesRequest">
+   <wsdl:message name="obtenerRegistroEntidadResponse">
 
-      <wsdl:part element="impl:getExpedientes" name="parameters"/>
+      <wsdl:part element="impl:obtenerRegistroEntidadResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="anularLicenciaRRHHResponse">
+
+      <wsdl:part element="impl:anularLicenciaRRHHResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="establecerDatosRegistroEntidadRequest">
+
+      <wsdl:part element="impl:establecerDatosRegistroEntidad" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getInfoOcupacionResponse">
+
+      <wsdl:part element="impl:getInfoOcupacionResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="setFicheroTempResponse">
+
+      <wsdl:part element="impl:setFicheroTempResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getExpedienteResponse">
+
+      <wsdl:part element="impl:getExpedienteResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="crearExpedienteRequest">
+
+      <wsdl:part element="impl:crearExpediente" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getProcedimientoRequest">
+
+      <wsdl:part element="impl:getProcedimiento" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="queryEntitiesRequest">
+
+      <wsdl:part element="impl:queryEntities" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="obtenerRegistroEntidadRequest">
+
+      <wsdl:part element="impl:obtenerRegistroEntidad" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getIdsExpedientesRequest">
+
+      <wsdl:part element="impl:getIdsExpedientes" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="anexarDocsExpedienteRequest">
+
+      <wsdl:part element="impl:anexarDocsExpediente" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="eliminaFicherosResponse">
+
+      <wsdl:part element="impl:eliminaFicherosResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="cambiarEstadoAdministrativoResponse">
+
+      <wsdl:part element="impl:cambiarEstadoAdministrativoResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="crearExpedienteResponse">
+
+      <wsdl:part element="impl:crearExpedienteResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="establecerDatosRegistroEntidadResponse">
+
+      <wsdl:part element="impl:establecerDatosRegistroEntidadResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="iniciarExpedienteRequest">
+
+      <wsdl:part element="impl:iniciarExpediente" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getProcedimientosPorTipoResponse">
+
+      <wsdl:part element="impl:getProcedimientosPorTipoResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getInfoFicheroResponse">
+
+      <wsdl:part element="impl:getInfoFicheroResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getInfoOcupacionRequest">
+
+      <wsdl:part element="impl:getInfoOcupacion" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="setFicheroTempRequest">
+
+      <wsdl:part element="impl:setFicheroTemp" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="anexarDocsTramiteRequest">
+
+      <wsdl:part element="impl:anexarDocsTramite" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="anularLicenciaRRHHRequest">
+
+      <wsdl:part element="impl:anularLicenciaRRHH" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getProcedimientosPorTipoRequest">
+
+      <wsdl:part element="impl:getProcedimientosPorTipo" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getProcedimientoResponse">
+
+      <wsdl:part element="impl:getProcedimientoResponse" name="parameters">
+
+      </wsdl:part>
 
    </wsdl:message>
 
    <wsdl:message name="archivarExpedientesResponse">
 
-      <wsdl:part element="impl:archivarExpedientesResponse" name="parameters"/>
+      <wsdl:part element="impl:archivarExpedientesResponse" name="parameters">
+
+      </wsdl:part>
 
    </wsdl:message>
 
-   <wsdl:message name="iniciarExpedienteResponse">
+   <wsdl:message name="getExpedientesRequest">
 
-      <wsdl:part element="impl:iniciarExpedienteResponse" name="parameters"/>
+      <wsdl:part element="impl:getExpedientes" name="parameters">
+
+      </wsdl:part>
 
    </wsdl:message>
 
-   <wsdl:message name="obtenerRegistrosEntidadResponse">
+   <wsdl:message name="getFicheroRequest">
 
-      <wsdl:part element="tns2:obtenerRegistrosEntidadResponse" name="parameters"/>
+      <wsdl:part element="impl:getFichero" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="archivarExpedientesRequest">
+
+      <wsdl:part element="impl:archivarExpedientes" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getProcedimientosResponse">
+
+      <wsdl:part element="impl:getProcedimientosResponse" name="parameters">
+
+      </wsdl:part>
 
    </wsdl:message>
 
    <wsdl:message name="recibirDocumentoFirmadoResponse">
 
-      <wsdl:part element="tns2:recibirDocumentoFirmadoResponse" name="parameters"/>
+      <wsdl:part element="impl:recibirDocumentoFirmadoResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getExpedienteRequest">
+
+      <wsdl:part element="impl:getExpediente" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="moverExpedienteAFaseResponse">
+
+      <wsdl:part element="impl:moverExpedienteAFaseResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="moverExpedienteAFaseRequest">
+
+      <wsdl:part element="impl:moverExpedienteAFase" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="obtenerRegistrosEntidadResponse">
+
+      <wsdl:part element="impl:obtenerRegistrosEntidadResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getFicheroTempResponse">
+
+      <wsdl:part element="impl:getFicheroTempResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="queryEntitiesResponse">
+
+      <wsdl:part element="impl:queryEntitiesResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="busquedaAvanzadaRequest">
+
+      <wsdl:part element="impl:busquedaAvanzada" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getFicheroResponse">
+
+      <wsdl:part element="impl:getFicheroResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getIdsExpedientesResponse">
+
+      <wsdl:part element="impl:getIdsExpedientesResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="anexarDocsTramiteResponse">
+
+      <wsdl:part element="impl:anexarDocsTramiteResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getProcedimientosRequest">
+
+      <wsdl:part element="impl:getProcedimientos" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="obtenerRegistrosEntidadRequest">
+
+      <wsdl:part element="impl:obtenerRegistrosEntidad" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="iniciarExpedienteResponse">
+
+      <wsdl:part element="impl:iniciarExpedienteResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="busquedaAvanzadaResponse">
+
+      <wsdl:part element="impl:busquedaAvanzadaResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="cambiarEstadoAdministrativoRequest">
+
+      <wsdl:part element="impl:cambiarEstadoAdministrativo" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getFicheroTempRequest">
+
+      <wsdl:part element="impl:getFicheroTemp" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getExpedientesResponse">
+
+      <wsdl:part element="impl:getExpedientesResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="getInfoFicheroRequest">
+
+      <wsdl:part element="impl:getInfoFichero" name="parameters">
+
+      </wsdl:part>
 
    </wsdl:message>
 
    <wsdl:portType name="TramitacionWebService">
 
-      <wsdl:operation name="getProcedimientosPorTipo">
+      <wsdl:operation name="iniciarExpediente">
 
-         <wsdl:input message="impl:getProcedimientosPorTipoRequest" name="getProcedimientosPorTipoRequest"/>
+         <wsdl:input message="impl:iniciarExpedienteRequest" name="iniciarExpedienteRequest">
 
-         <wsdl:output message="impl:getProcedimientosPorTipoResponse" name="getProcedimientosPorTipoResponse"/>
+       </wsdl:input>
 
-      </wsdl:operation>
+         <wsdl:output message="impl:iniciarExpedienteResponse" name="iniciarExpedienteResponse">
 
-      <wsdl:operation name="getProcedimientos">
-
-         <wsdl:input message="impl:getProcedimientosRequest" name="getProcedimientosRequest"/>
-
-         <wsdl:output message="impl:getProcedimientosResponse" name="getProcedimientosResponse"/>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getProcedimiento">
-
-         <wsdl:input message="impl:getProcedimientoRequest" name="getProcedimientoRequest"/>
-
-         <wsdl:output message="impl:getProcedimientoResponse" name="getProcedimientoResponse"/>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getFichero">
-
-         <wsdl:input message="impl:getFicheroRequest" name="getFicheroRequest"/>
-
-         <wsdl:output message="impl:getFicheroResponse" name="getFicheroResponse"/>
-
-      </wsdl:operation>
-      
-      <wsdl:operation name="getFicheroTemp">
-<wsdl:input message="impl:getFicheroTempRequest" name="getFicheroTempRequest"/>
-<wsdl:output message="impl:getFicheroTempResponse" name="getFicheroTempResponse"/>
-</wsdl:operation>
-<wsdl:operation name="setFicheroTemp">
-<wsdl:input message="impl:setFicheroTempRequest" name="setFicheroTempRequest"/>
-<wsdl:output message="impl:setFicheroTempResponse" name="setFicheroTempResponse"/>
-</wsdl:operation>
-
-      <wsdl:operation name="getInfoFichero">
-
-         <wsdl:input message="impl:getInfoFicheroRequest" name="getInfoFicheroRequest"/>
-
-         <wsdl:output message="impl:getInfoFicheroResponse" name="getInfoFicheroResponse"/>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getInfoOcupacion">
-
-         <wsdl:input message="impl:getInfoOcupacionRequest" name="getInfoOcupacionRequest"/>
-
-         <wsdl:output message="impl:getInfoOcupacionResponse" name="getInfoOcupacionResponse"/>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="eliminaFicheros">
-
-         <wsdl:input message="impl:eliminaFicherosRequest" name="eliminaFicherosRequest"/>
-
-         <wsdl:output message="impl:eliminaFicherosResponse" name="eliminaFicherosResponse"/>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getIdsExpedientes">
-
-         <wsdl:input message="impl:getIdsExpedientesRequest" name="getIdsExpedientesRequest"/>
-
-         <wsdl:output message="impl:getIdsExpedientesResponse" name="getIdsExpedientesResponse"/>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getExpedientes">
-
-         <wsdl:input message="impl:getExpedientesRequest" name="getExpedientesRequest"/>
-
-         <wsdl:output message="impl:getExpedientesResponse" name="getExpedientesResponse"/>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getExpediente">
-
-         <wsdl:input message="impl:getExpedienteRequest" name="getExpedienteRequest"/>
-
-         <wsdl:output message="impl:getExpedienteResponse" name="getExpedienteResponse"/>
+       </wsdl:output>
 
       </wsdl:operation>
 
       <wsdl:operation name="archivarExpedientes">
 
-         <wsdl:input message="impl:archivarExpedientesRequest" name="archivarExpedientesRequest"/>
+         <wsdl:input message="impl:archivarExpedientesRequest" name="archivarExpedientesRequest">
 
-         <wsdl:output message="impl:archivarExpedientesResponse" name="archivarExpedientesResponse"/>
+       </wsdl:input>
 
-      </wsdl:operation>
+         <wsdl:output message="impl:archivarExpedientesResponse" name="archivarExpedientesResponse">
 
-      <wsdl:operation name="iniciarExpediente">
-
-         <wsdl:input message="impl:iniciarExpedienteRequest" name="iniciarExpedienteRequest"/>
-
-         <wsdl:output message="impl:iniciarExpedienteResponse" name="iniciarExpedienteResponse"/>
+       </wsdl:output>
 
       </wsdl:operation>
 
-      <wsdl:operation name="anexarDocsExpediente">
+      <wsdl:operation name="getIdsExpedientes">
 
-         <wsdl:input message="impl:anexarDocsExpedienteRequest" name="anexarDocsExpedienteRequest"/>
+         <wsdl:input message="impl:getIdsExpedientesRequest" name="getIdsExpedientesRequest">
 
-         <wsdl:output message="impl:anexarDocsExpedienteResponse" name="anexarDocsExpedienteResponse"/>
+       </wsdl:input>
+
+         <wsdl:output message="impl:getIdsExpedientesResponse" name="getIdsExpedientesResponse">
+
+       </wsdl:output>
 
       </wsdl:operation>
 
-      <wsdl:operation name="crearExpediente">
+      <wsdl:operation name="anularLicenciaRRHH">
 
-         <wsdl:input message="impl:crearExpedienteRequest" name="crearExpedienteRequest"/>
+         <wsdl:input message="impl:anularLicenciaRRHHRequest" name="anularLicenciaRRHHRequest">
 
-         <wsdl:output message="impl:crearExpedienteResponse" name="crearExpedienteResponse"/>
+       </wsdl:input>
+
+         <wsdl:output message="impl:anularLicenciaRRHHResponse" name="anularLicenciaRRHHResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getProcedimientos">
+
+         <wsdl:input message="impl:getProcedimientosRequest" name="getProcedimientosRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getProcedimientosResponse" name="getProcedimientosResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getProcedimientosPorTipo">
+
+         <wsdl:input message="impl:getProcedimientosPorTipoRequest" name="getProcedimientosPorTipoRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getProcedimientosPorTipoResponse" name="getProcedimientosPorTipoResponse">
+
+       </wsdl:output>
 
       </wsdl:operation>
 
       <wsdl:operation name="cambiarEstadoAdministrativo">
 
-         <wsdl:input message="impl:cambiarEstadoAdministrativoRequest" name="cambiarEstadoAdministrativoRequest"/>
+         <wsdl:input message="impl:cambiarEstadoAdministrativoRequest" name="cambiarEstadoAdministrativoRequest">
 
-         <wsdl:output message="impl:cambiarEstadoAdministrativoResponse" name="cambiarEstadoAdministrativoResponse"/>
+       </wsdl:input>
+
+         <wsdl:output message="impl:cambiarEstadoAdministrativoResponse" name="cambiarEstadoAdministrativoResponse">
+
+       </wsdl:output>
 
       </wsdl:operation>
 
       <wsdl:operation name="moverExpedienteAFase">
 
-         <wsdl:input message="impl:moverExpedienteAFaseRequest" name="moverExpedienteAFaseRequest"/>
+         <wsdl:input message="impl:moverExpedienteAFaseRequest" name="moverExpedienteAFaseRequest">
 
-         <wsdl:output message="impl:moverExpedienteAFaseResponse" name="moverExpedienteAFaseResponse"/>
+       </wsdl:input>
+
+         <wsdl:output message="impl:moverExpedienteAFaseResponse" name="moverExpedienteAFaseResponse">
+
+       </wsdl:output>
 
       </wsdl:operation>
 
-      <wsdl:operation name="busquedaAvanzada">
+      <wsdl:operation name="anexarDocsExpediente">
 
-         <wsdl:input message="impl:busquedaAvanzadaRequest" name="busquedaAvanzadaRequest"/>
+         <wsdl:input message="impl:anexarDocsExpedienteRequest" name="anexarDocsExpedienteRequest">
 
-         <wsdl:output message="impl:busquedaAvanzadaResponse" name="busquedaAvanzadaResponse"/>
+       </wsdl:input>
+
+         <wsdl:output message="impl:anexarDocsExpedienteResponse" name="anexarDocsExpedienteResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="anexarDocsTramite">
+
+         <wsdl:input message="impl:anexarDocsTramiteRequest" name="anexarDocsTramiteRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:anexarDocsTramiteResponse" name="anexarDocsTramiteResponse">
+
+       </wsdl:output>
 
       </wsdl:operation>
 
       <wsdl:operation name="establecerDatosRegistroEntidad">
 
-         <wsdl:input message="impl:establecerDatosRegistroEntidadRequest" name="establecerDatosRegistroEntidadRequest"/>
+         <wsdl:input message="impl:establecerDatosRegistroEntidadRequest" name="establecerDatosRegistroEntidadRequest">
 
-         <wsdl:output message="impl:establecerDatosRegistroEntidadResponse" name="establecerDatosRegistroEntidadResponse"/>
+       </wsdl:input>
+
+         <wsdl:output message="impl:establecerDatosRegistroEntidadResponse" name="establecerDatosRegistroEntidadResponse">
+
+       </wsdl:output>
 
       </wsdl:operation>
 
       <wsdl:operation name="obtenerRegistroEntidad">
 
-         <wsdl:input message="impl:obtenerRegistroEntidadRequest" name="obtenerRegistroEntidadRequest"/>
+         <wsdl:input message="impl:obtenerRegistroEntidadRequest" name="obtenerRegistroEntidadRequest">
 
-         <wsdl:output message="impl:obtenerRegistroEntidadResponse" name="obtenerRegistroEntidadResponse"/>
+       </wsdl:input>
+
+         <wsdl:output message="impl:obtenerRegistroEntidadResponse" name="obtenerRegistroEntidadResponse">
+
+       </wsdl:output>
 
       </wsdl:operation>
 
       <wsdl:operation name="obtenerRegistrosEntidad">
 
-         <wsdl:input message="impl:obtenerRegistrosEntidadRequest" name="obtenerRegistrosEntidadRequest"/>
+         <wsdl:input message="impl:obtenerRegistrosEntidadRequest" name="obtenerRegistrosEntidadRequest">
 
-         <wsdl:output message="impl:obtenerRegistrosEntidadResponse" name="obtenerRegistrosEntidadResponse"/>
+       </wsdl:input>
+
+         <wsdl:output message="impl:obtenerRegistrosEntidadResponse" name="obtenerRegistrosEntidadResponse">
+
+       </wsdl:output>
 
       </wsdl:operation>
 
       <wsdl:operation name="recibirDocumentoFirmado">
 
-         <wsdl:input message="impl:recibirDocumentoFirmadoRequest" name="recibirDocumentoFirmadoRequest"/>
+         <wsdl:input message="impl:recibirDocumentoFirmadoRequest" name="recibirDocumentoFirmadoRequest">
 
-         <wsdl:output message="impl:recibirDocumentoFirmadoResponse" name="recibirDocumentoFirmadoResponse"/>
+       </wsdl:input>
+
+         <wsdl:output message="impl:recibirDocumentoFirmadoResponse" name="recibirDocumentoFirmadoResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getFicheroTemp">
+
+         <wsdl:input message="impl:getFicheroTempRequest" name="getFicheroTempRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getFicheroTempResponse" name="getFicheroTempResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getFichero">
+
+         <wsdl:input message="impl:getFicheroRequest" name="getFicheroRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getFicheroResponse" name="getFicheroResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setFicheroTemp">
+
+         <wsdl:input message="impl:setFicheroTempRequest" name="setFicheroTempRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:setFicheroTempResponse" name="setFicheroTempResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="queryEntities">
+
+         <wsdl:input message="impl:queryEntitiesRequest" name="queryEntitiesRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:queryEntitiesResponse" name="queryEntitiesResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getInfoFichero">
+
+         <wsdl:input message="impl:getInfoFicheroRequest" name="getInfoFicheroRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getInfoFicheroResponse" name="getInfoFicheroResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getInfoOcupacion">
+
+         <wsdl:input message="impl:getInfoOcupacionRequest" name="getInfoOcupacionRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getInfoOcupacionResponse" name="getInfoOcupacionResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="eliminaFicheros">
+
+         <wsdl:input message="impl:eliminaFicherosRequest" name="eliminaFicherosRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:eliminaFicherosResponse" name="eliminaFicherosResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getExpedientes">
+
+         <wsdl:input message="impl:getExpedientesRequest" name="getExpedientesRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getExpedientesResponse" name="getExpedientesResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getExpediente">
+
+         <wsdl:input message="impl:getExpedienteRequest" name="getExpedienteRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getExpedienteResponse" name="getExpedienteResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="crearExpediente">
+
+         <wsdl:input message="impl:crearExpedienteRequest" name="crearExpedienteRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:crearExpedienteResponse" name="crearExpedienteResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="busquedaAvanzada">
+
+         <wsdl:input message="impl:busquedaAvanzadaRequest" name="busquedaAvanzadaRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:busquedaAvanzadaResponse" name="busquedaAvanzadaResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getProcedimiento">
+
+         <wsdl:input message="impl:getProcedimientoRequest" name="getProcedimientoRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getProcedimientoResponse" name="getProcedimientoResponse">
+
+       </wsdl:output>
 
       </wsdl:operation>
 
@@ -1133,200 +1442,17 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 
-      <wsdl:operation name="getProcedimientosPorTipo">
+      <wsdl:operation name="iniciarExpediente">
 
          <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="getProcedimientosPorTipoRequest">
+         <wsdl:input name="iniciarExpedienteRequest">
 
             <wsdlsoap:body use="literal"/>
 
          </wsdl:input>
 
-         <wsdl:output name="getProcedimientosPorTipoResponse">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:output>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getProcedimientos">
-
-         <wsdlsoap:operation soapAction=""/>
-
-         <wsdl:input name="getProcedimientosRequest">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:input>
-
-         <wsdl:output name="getProcedimientosResponse">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:output>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getProcedimiento">
-
-         <wsdlsoap:operation soapAction=""/>
-
-         <wsdl:input name="getProcedimientoRequest">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:input>
-
-         <wsdl:output name="getProcedimientoResponse">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:output>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getFichero">
-
-         <wsdlsoap:operation soapAction=""/>
-
-         <wsdl:input name="getFicheroRequest">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:input>
-
-         <wsdl:output name="getFicheroResponse">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:output>
-
-      </wsdl:operation>
-      
-      
-      <wsdl:operation name="getFicheroTemp">
-<wsdlsoap:operation soapAction=""/>
-<wsdl:input name="getFicheroTempRequest">
-<wsdlsoap:body use="literal"/>
-</wsdl:input>
-<wsdl:output name="getFicheroTempResponse">
-<wsdlsoap:body use="literal"/>
-</wsdl:output>
-</wsdl:operation>
-<wsdl:operation name="setFicheroTemp">
-<wsdlsoap:operation soapAction=""/>
-<wsdl:input name="setFicheroTempRequest">
-<wsdlsoap:body use="literal"/>
-</wsdl:input>
-<wsdl:output name="setFicheroTempResponse">
-<wsdlsoap:body use="literal"/>
-</wsdl:output>
-</wsdl:operation>
-      
-
-      <wsdl:operation name="getInfoFichero">
-
-         <wsdlsoap:operation soapAction=""/>
-
-         <wsdl:input name="getInfoFicheroRequest">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:input>
-
-         <wsdl:output name="getInfoFicheroResponse">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:output>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getInfoOcupacion">
-
-         <wsdlsoap:operation soapAction=""/>
-
-         <wsdl:input name="getInfoOcupacionRequest">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:input>
-
-         <wsdl:output name="getInfoOcupacionResponse">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:output>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="eliminaFicheros">
-
-         <wsdlsoap:operation soapAction=""/>
-
-         <wsdl:input name="eliminaFicherosRequest">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:input>
-
-         <wsdl:output name="eliminaFicherosResponse">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:output>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getIdsExpedientes">
-
-         <wsdlsoap:operation soapAction=""/>
-
-         <wsdl:input name="getIdsExpedientesRequest">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:input>
-
-         <wsdl:output name="getIdsExpedientesResponse">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:output>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getExpedientes">
-
-         <wsdlsoap:operation soapAction=""/>
-
-         <wsdl:input name="getExpedientesRequest">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:input>
-
-         <wsdl:output name="getExpedientesResponse">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:output>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="getExpediente">
-
-         <wsdlsoap:operation soapAction=""/>
-
-         <wsdl:input name="getExpedienteRequest">
-
-            <wsdlsoap:body use="literal"/>
-
-         </wsdl:input>
-
-         <wsdl:output name="getExpedienteResponse">
+         <wsdl:output name="iniciarExpedienteResponse">
 
             <wsdlsoap:body use="literal"/>
 
@@ -1352,17 +1478,17 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       </wsdl:operation>
 
-      <wsdl:operation name="iniciarExpediente">
+      <wsdl:operation name="getIdsExpedientes">
 
          <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="iniciarExpedienteRequest">
+         <wsdl:input name="getIdsExpedientesRequest">
 
             <wsdlsoap:body use="literal"/>
 
          </wsdl:input>
 
-         <wsdl:output name="iniciarExpedienteResponse">
+         <wsdl:output name="getIdsExpedientesResponse">
 
             <wsdlsoap:body use="literal"/>
 
@@ -1370,17 +1496,17 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       </wsdl:operation>
 
-      <wsdl:operation name="anexarDocsExpediente">
+      <wsdl:operation name="anularLicenciaRRHH">
 
          <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="anexarDocsExpedienteRequest">
+         <wsdl:input name="anularLicenciaRRHHRequest">
 
             <wsdlsoap:body use="literal"/>
 
          </wsdl:input>
 
-         <wsdl:output name="anexarDocsExpedienteResponse">
+         <wsdl:output name="anularLicenciaRRHHResponse">
 
             <wsdlsoap:body use="literal"/>
 
@@ -1388,17 +1514,35 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       </wsdl:operation>
 
-      <wsdl:operation name="crearExpediente">
+      <wsdl:operation name="getProcedimientos">
 
          <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="crearExpedienteRequest">
+         <wsdl:input name="getProcedimientosRequest">
 
             <wsdlsoap:body use="literal"/>
 
          </wsdl:input>
 
-         <wsdl:output name="crearExpedienteResponse">
+         <wsdl:output name="getProcedimientosResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getProcedimientosPorTipo">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getProcedimientosPorTipoRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getProcedimientosPorTipoResponse">
 
             <wsdlsoap:body use="literal"/>
 
@@ -1442,17 +1586,35 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       </wsdl:operation>
 
-      <wsdl:operation name="busquedaAvanzada">
+      <wsdl:operation name="anexarDocsExpediente">
 
          <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="busquedaAvanzadaRequest">
+         <wsdl:input name="anexarDocsExpedienteRequest">
 
             <wsdlsoap:body use="literal"/>
 
          </wsdl:input>
 
-         <wsdl:output name="busquedaAvanzadaResponse">
+         <wsdl:output name="anexarDocsExpedienteResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="anexarDocsTramite">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="anexarDocsTramiteRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="anexarDocsTramiteResponse">
 
             <wsdlsoap:body use="literal"/>
 
@@ -1532,13 +1694,229 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       </wsdl:operation>
 
+      <wsdl:operation name="getFicheroTemp">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getFicheroTempRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getFicheroTempResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getFichero">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getFicheroRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getFicheroResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="setFicheroTemp">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="setFicheroTempRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="setFicheroTempResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="queryEntities">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="queryEntitiesRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="queryEntitiesResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getInfoFichero">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getInfoFicheroRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getInfoFicheroResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getInfoOcupacion">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getInfoOcupacionRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getInfoOcupacionResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="eliminaFicheros">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="eliminaFicherosRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="eliminaFicherosResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getExpedientes">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getExpedientesRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getExpedientesResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getExpediente">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getExpedienteRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getExpedienteResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="crearExpediente">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="crearExpedienteRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="crearExpedienteResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="busquedaAvanzada">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="busquedaAvanzadaRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="busquedaAvanzadaResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getProcedimiento">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getProcedimientoRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getProcedimientoResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
    </wsdl:binding>
 
    <wsdl:service name="TramitacionWebServiceService">
 
       <wsdl:port binding="impl:TramitacionWebServiceSoapBinding" name="TramitacionWebService">
 
-         <wsdlsoap:address location="http://localhost:8080/SIGEM_TramitacionWS/services/TramitacionWebService"/>
+         <wsdlsoap:address location="http://tempuri.org/SIGEM_TramitacionWS/services/TramitacionWebService"/>
 
       </wsdl:port>
 

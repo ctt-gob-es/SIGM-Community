@@ -11,10 +11,8 @@ import es.dipucr.sigem.api.rule.common.utils.SecretariaUtil;
 
 
 public class GenerateCertificadoAsistenciaRule implements IRule {
-	//private static final Logger logger = Logger.getLogger(GenerateCertificadoAsistenciaRule.class);
-
-	protected String STR_NombreDocCertificado = "Certificado de Asistencia";
-
+	
+	protected String nombreDocCertificado = "Certificado de Asistencia";
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 		return true;
@@ -30,7 +28,7 @@ public class GenerateCertificadoAsistenciaRule implements IRule {
 
 			cct.setSsVariable("DESCR_ORGANO", getDescripcionOrgano(rulectx));
 
-			IItem entityTemplate = DocumentosUtil.generarDocumento(rulectx, STR_NombreDocCertificado, STR_NombreDocCertificado);
+			IItem entityTemplate = DocumentosUtil.generarDocumento(rulectx, nombreDocCertificado, nombreDocCertificado);
 
 			// Referencia al fichero del documento en el gestor documental
 			entityTemplate.set("EXTENSION", DocumentosUtil.obtenerExtensionDocPorEntidad());
@@ -39,15 +37,13 @@ public class GenerateCertificadoAsistenciaRule implements IRule {
 			cct.deleteSsVariable("DESCR_ORGANO");
 
 		} catch (Exception e) {
-			if (e instanceof ISPACRuleException)
-				throw new ISPACRuleException(e);
 			throw new ISPACRuleException(e);
 		}
-		return new Boolean(true);
+		return true;
 	}
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-
+		// Nada que hacer al cancelar
 	}
 
 	private String getDescripcionOrgano(IRuleContext rulectx) throws ISPACException {

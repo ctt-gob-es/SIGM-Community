@@ -9,8 +9,8 @@
 
 
 	<!-- Configuramos el tiempo de respuesta de los WS para los Test (algunos
-		tardan mas del tiempo por defecto que son 60s) -->
+		tardan mas del tiempo por defecto que son 60s) 
 	<http-conf:conduit name="*.http-conduit">
 		<http-conf:client ReceiveTimeout="0" />
-	</http-conf:conduit>
+	</http-conf:conduit>-->
 </beans>

@@ -2,24 +2,28 @@ package com.ieci.tecdoc.common.utils;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import net.sf.hibernate.Hibernate;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.type.Type;
 
+import org.apache.log4j.Logger;
+
 import com.ieci.tecdoc.common.invesdoc.Idocfmt;
+import com.ieci.tecdoc.common.invesdoc.Iuserdata;
 import com.ieci.tecdoc.common.invesdoc.Iuserdepthdr;
+import com.ieci.tecdoc.common.invesdoc.Iusergrouphdr;
 import com.ieci.tecdoc.common.invesdoc.Iusergroupuser;
 import com.ieci.tecdoc.common.invesdoc.Iuserldapgrphdr;
 import com.ieci.tecdoc.common.invesdoc.Iuserldapuserhdr;
 import com.ieci.tecdoc.common.invesdoc.Iuserobjperm;
+import com.ieci.tecdoc.common.invesdoc.Iuseruserhdr;
 import com.ieci.tecdoc.common.invesdoc.Iuserusersys;
 import com.ieci.tecdoc.common.invesicres.ScrBookadmin;
 import com.ieci.tecdoc.common.invesicres.ScrBookasoc;
 import com.ieci.tecdoc.common.invesicres.ScrCaaux;
 import com.ieci.tecdoc.common.invesicres.ScrDistreg;
+import com.ieci.tecdoc.common.invesicres.ScrDocumentMetadatos;
 import com.ieci.tecdoc.common.invesicres.ScrOfic;
 import com.ieci.tecdoc.common.invesicres.ScrRegstate;
 import com.ieci.tecdoc.common.invesicres.ScrTt;
@@ -195,8 +199,7 @@ public class ISicresQueries implements HibernateKeys {
 		StringBuffer query = new StringBuffer();
 		query.append("FROM ");
 		query.append(HIBERNATE_ScrReport);
-		query
-				.append(" scr WHERE scr.typeReport=? AND scr.typeArch=? ORDER BY scr.id");
+		query.append(" scr WHERE scr.typeReport=? AND scr.typeArch=? ORDER BY scr.id");
 		return session.find(query.toString(), new Object[] {
 				new Integer(reportType), new Integer(bookType) }, new Type[] {
 				Hibernate.INTEGER, Hibernate.INTEGER });
@@ -261,8 +264,7 @@ public class ISicresQueries implements HibernateKeys {
 
 		query.append("FROM ");
 		query.append(HIBERNATE_Iuserobjperm);
-		query
-				.append(" iuser WHERE iuser.dstid=? AND iuser.objid=? AND iuser.dsttype=?");
+		query.append(" iuser WHERE iuser.dstid=? AND iuser.objid=? AND iuser.dsttype=?");
 
 		list = session.find(query.toString(), new Object[] { deptId, bookId,
 				DstType }, new Type[] { Hibernate.INTEGER, Hibernate.INTEGER,
@@ -294,8 +296,7 @@ public class ISicresQueries implements HibernateKeys {
 
 		query.append("FROM ");
 		query.append(HIBERNATE_Iuserobjperm);
-		query
-				.append(" iuser WHERE iuser.dstid=? AND iuser.objid=? AND iuser.dsttype=?");
+		query.append(" iuser WHERE iuser.dstid=? AND iuser.objid=? AND iuser.dsttype=?");
 
 		list = session.find(query.toString(), new Object[] { deptId, bookId,
 				DstType }, new Type[] { Hibernate.INTEGER, Hibernate.INTEGER,
@@ -325,8 +326,7 @@ public class ISicresQueries implements HibernateKeys {
 
 		query.append("FROM ");
 		query.append(HIBERNATE_Iuserobjperm);
-		query
-				.append(" iuser WHERE iuser.dstid=? AND iuser.objid=? AND iuser.dsttype=?");
+		query.append(" iuser WHERE iuser.dstid=? AND iuser.objid=? AND iuser.dsttype=?");
 
 		list = session.find(query.toString(), new Object[] { userId, bookId,
 				DstType }, new Type[] { Hibernate.INTEGER, Hibernate.INTEGER,
@@ -358,8 +358,7 @@ public class ISicresQueries implements HibernateKeys {
 
 		query.append("FROM ");
 		query.append(HIBERNATE_Iuserobjperm);
-		query
-				.append(" iuser WHERE iuser.dstid=? AND iuser.objid=? AND iuser.dsttype=?");
+		query.append(" iuser WHERE iuser.dstid=? AND iuser.objid=? AND iuser.dsttype=?");
 
 		list = session.find(query.toString(), new Object[] { userId, bookId,
 				DstType }, new Type[] { Hibernate.INTEGER, Hibernate.INTEGER,
@@ -389,8 +388,7 @@ public class ISicresQueries implements HibernateKeys {
 
 		query.append("FROM ");
 		query.append(HIBERNATE_Iuserobjperm);
-		query
-				.append(" iuser WHERE iuser.dstid=? AND iuser.objid=? AND iuser.dsttype=?");
+		query.append(" iuser WHERE iuser.dstid=? AND iuser.objid=? AND iuser.dsttype=?");
 
 		list = session.find(query.toString(), new Object[] { userId, bookId,
 				DstType }, new Type[] { Hibernate.INTEGER, Hibernate.INTEGER,
@@ -419,8 +417,7 @@ public class ISicresQueries implements HibernateKeys {
 
 		query.append("FROM ");
 		query.append(HIBERNATE_Iuserobjhdr);
-		query
-				.append(" iuser WHERE iuser.extid1=? AND iuser.extid2=? AND iuser.type=7 AND iuser.prodid=3");
+		query.append(" iuser WHERE iuser.extid1=? AND iuser.extid2=? AND iuser.type=7 AND iuser.prodid=3");
 
 		list = session.find(query.toString(), new Object[] { bookId, fmtId },
 				new Type[] { Hibernate.INTEGER, Hibernate.INTEGER });
@@ -443,8 +440,7 @@ public class ISicresQueries implements HibernateKeys {
 		StringBuffer query = new StringBuffer();
 		query.append("FROM ");
 		query.append(HIBERNATE_Idocprefwfmt);
-		query
-				.append(" idoc WHERE idoc.archid=? AND idoc.userid=? AND idoc.fmttype=?");
+		query.append(" idoc WHERE idoc.archid=? AND idoc.userid=? AND idoc.fmttype=?");
 		return session.find(query.toString(), new Object[] { bookId, userId,
 				fmttype }, new Type[] { Hibernate.INTEGER, Hibernate.INTEGER,
 				Hibernate.INTEGER });
@@ -475,9 +471,8 @@ public class ISicresQueries implements HibernateKeys {
 		StringBuffer query = new StringBuffer();
 		query.append("FROM ");
 		query.append(HIBERNATE_Idocfmt);
-		query
-				.append(" idoc WHERE idoc.archid=? AND idoc.type =? AND idoc.accesstype = "
-						+ accesstype);
+		query.append(" idoc WHERE idoc.archid=? AND idoc.type =? AND idoc.accesstype = "
+				+ accesstype);
 		return session.find(query.toString(), new Object[] { bookId, fmtType },
 				new Type[] { Hibernate.INTEGER, Hibernate.INTEGER });
 	}
@@ -622,8 +617,7 @@ public class ISicresQueries implements HibernateKeys {
 		StringBuffer query = new StringBuffer();
 		query.append("FROM ");
 		query.append(HIBERNATE_ScrDistreg);
-		query
-				.append(" scr WHERE scr.idArch=? AND scr.idFdr=? AND scr.typeDest=? AND scr.idDest=?");
+		query.append(" scr WHERE scr.idArch=? AND scr.idFdr=? AND scr.typeDest=? AND scr.idDest=?");
 		return session.find(query.toString(),
 				new Object[] { bookID, new Integer(fdrid),
 						new Integer(typeDest), new Integer(idDest) },
@@ -637,11 +631,11 @@ public class ISicresQueries implements HibernateKeys {
 		query.append("FROM ");
 		query.append(HIBERNATE_ScrDistreg);
 		query.append(" scr WHERE scr.id=?");
-		List list =  session.find(query.toString(), new Object[] { distID },
+		List list = session.find(query.toString(), new Object[] { distID },
 				new Type[] { Hibernate.INTEGER });
 
-		if (list != null && list.size() == 1){
-			return (ScrDistreg)list.get(0);
+		if (list != null && list.size() == 1) {
+			return (ScrDistreg) list.get(0);
 		} else {
 			throw new HibernateException("There is no ScrDistreg.");
 		}
@@ -676,6 +670,14 @@ public class ISicresQueries implements HibernateKeys {
 		return session.find(query.toString(), new Object[] { bookID,
 				new Integer(fdrid) }, new Type[] { Hibernate.INTEGER,
 				Hibernate.INTEGER });
+	}
+
+	public static List getScrCCAA(Session session) throws HibernateException {
+		StringBuffer query = new StringBuffer();
+		query.append("FROM ");
+		query.append(HIBERNATE_ScrCCAA);
+		query.append(" scr ORDER BY scr.name");
+		return session.find(query.toString());
 	}
 
 	public static List getScrCities(Session session, Integer provID)
@@ -738,8 +740,8 @@ public class ISicresQueries implements HibernateKeys {
 		query.append("FROM ");
 		query.append(HIBERNATE_ScrCaaux);
 		query.append(" scr WHERE scr.idMatter=?");
-		List list = session.find(query.toString(), new Object[] { fldValueInt },
-				new Type[] { Hibernate.INTEGER });
+		List list = session.find(query.toString(),
+				new Object[] { fldValueInt }, new Type[] { Hibernate.INTEGER });
 
 		ScrCaaux result = null;
 
@@ -749,7 +751,6 @@ public class ISicresQueries implements HibernateKeys {
 
 		return result;
 	}
-
 
 	/**
 	 * @deprecated
@@ -764,8 +765,7 @@ public class ISicresQueries implements HibernateKeys {
 		StringBuffer query = new StringBuffer();
 		query.append("FROM ");
 		query.append(HIBERNATE_ScrRegint);
-		query
-				.append(" scr WHERE scr.idArch=? and scr.idFdr=? ORDER BY scr.ord");
+		query.append(" scr WHERE scr.idArch=? and scr.idFdr=? ORDER BY scr.ord");
 		return session.find(query.toString(), new Object[] { bookID,
 				new Integer(fldId) }, new Type[] { Hibernate.INTEGER,
 				Hibernate.INTEGER });
@@ -863,8 +863,8 @@ public class ISicresQueries implements HibernateKeys {
 				new Type[] { Hibernate.STRING });
 	}
 
-	public static Iuserldapuserhdr getUserLdapUser(Session session, Integer userId)
-			throws HibernateException {
+	public static Iuserldapuserhdr getUserLdapUser(Session session,
+			Integer userId) throws HibernateException {
 		Iuserldapuserhdr user = null;
 		StringBuffer query = new StringBuffer();
 		query.append("FROM  ");
@@ -874,7 +874,7 @@ public class ISicresQueries implements HibernateKeys {
 				new Type[] { Hibernate.INTEGER });
 
 		if (users != null && users.size() > 0)
-			user = (Iuserldapuserhdr)users.get(0);
+			user = (Iuserldapuserhdr) users.get(0);
 
 		return user;
 	}
@@ -888,6 +888,23 @@ public class ISicresQueries implements HibernateKeys {
 		List list = session.find(query.toString(), login, Hibernate.STRING);
 
 		return list;
+	}
+	
+	public static Iuseruserhdr getUserUserHdrById(Session session, Integer userId) throws HibernateException {
+		
+		Iuseruserhdr usr = null;
+		
+		StringBuffer query = new StringBuffer();
+		query.append("FROM  ");
+		query.append(HIBERNATE_Iuseruserhdr);
+		query.append(" scr WHERE scr.id=? ORDER BY scr.name");
+		List<?> list = session.find(query.toString(), new Object[] { userId }, new Type[] { Hibernate.INTEGER });		
+
+		if (list != null && list.size() > 0){
+			usr = (Iuseruserhdr) list.get(0);
+		}
+		
+		return usr;		
 	}
 
 	public static List getUserUserType(Session session, int userId, int prodid)
@@ -912,20 +929,19 @@ public class ISicresQueries implements HibernateKeys {
 				new Type[] { Hibernate.INTEGER });
 	}
 
-	public static Iuserdepthdr getUserDeptHdrByDeptId(Session session, Integer deptId)
-		throws HibernateException {
+	public static Iuserdepthdr getUserDeptHdrByDeptId(Session session,
+			Integer deptId) throws HibernateException {
 
 		Iuserdepthdr dept = null;
 		StringBuffer query = new StringBuffer();
 		query.append("FROM  ");
 		query.append(HIBERNATE_Iuserdepthdr);
 		query.append(" iuser WHERE iuser.id=?");
-		List list = session.find(query.toString(),
-				new Object[] { deptId },
+		List list = session.find(query.toString(), new Object[] { deptId },
 				new Type[] { Hibernate.INTEGER });
 
-		if (list != null && list.size()>0)
-			dept = (Iuserdepthdr)list.get(0);
+		if (list != null && list.size() > 0)
+			dept = (Iuserdepthdr) list.get(0);
 
 		return dept;
 	}
@@ -943,18 +959,17 @@ public class ISicresQueries implements HibernateKeys {
 
 	}
 
-	public static Iuserldapgrphdr getUserLdapPgrp(Session session, Integer groupId)
-		throws HibernateException {
+	public static Iuserldapgrphdr getUserLdapPgrp(Session session,
+			Integer groupId) throws HibernateException {
 
 		Iuserldapgrphdr ldapGroup = null;
 		StringBuffer query = new StringBuffer();
-			query.append("FROM  ");
-			query.append(HIBERNATE_Iuserldapgrphdr);
-			query.append(" iuser WHERE iuser.id=?");
+		query.append("FROM  ");
+		query.append(HIBERNATE_Iuserldapgrphdr);
+		query.append(" iuser WHERE iuser.id=?");
 
-		List resultList = session.find(query.toString(), new Object[] { groupId },
-			new Type[] { Hibernate.INTEGER });
-
+		List resultList = session.find(query.toString(),
+				new Object[] { groupId }, new Type[] { Hibernate.INTEGER });
 
 		if (resultList != null && resultList.size() > 0) {
 			ldapGroup = (Iuserldapgrphdr) resultList.get(0);
@@ -1024,8 +1039,8 @@ public class ISicresQueries implements HibernateKeys {
 			query.append(" WHERE ");
 			Integer idGroup = null;
 			for (int i1 = 0; i1 < groups.size(); i1++) {
-				idGroup = new Integer(((Iusergroupuser) groups.get(i1))
-						.getGroupid());
+				idGroup = new Integer(
+						((Iusergroupuser) groups.get(i1)).getGroupid());
 				query.append(" scr.id! = ");
 				query.append(idGroup);
 				if (i1 < groups.size() - 1) {
@@ -1047,7 +1062,7 @@ public class ISicresQueries implements HibernateKeys {
 			query.append(" WHERE ");
 			Integer idGroup = null;
 			for (int i1 = 0; i1 < groups.size(); i1++) {
-				idGroup = (Integer)groups.get(i1);
+				idGroup = (Integer) groups.get(i1);
 				query.append(" scr.id! = ");
 				query.append(idGroup);
 				if (i1 < groups.size() - 1) {
@@ -1070,12 +1085,13 @@ public class ISicresQueries implements HibernateKeys {
 	}
 
 	public static List getLdapUsers(Session session, Integer userId)
-		throws HibernateException {
+			throws HibernateException {
 		StringBuffer query = new StringBuffer();
 		query.append("FROM  ");
 		query.append(HIBERNATE_Iuserldapuserhdr);
 		query.append(" scr WHERE scr.id!=? ORDER By scr.ldapfullname");
-		return session.find(query.toString(), new Object[] { userId }, new Type[] { Hibernate.INTEGER });
+		return session.find(query.toString(), new Object[] { userId },
+				new Type[] { Hibernate.INTEGER });
 	}
 
 	public static List getTypeDocs(Session session) throws HibernateException {
@@ -1093,13 +1109,13 @@ public class ISicresQueries implements HibernateKeys {
 		StringBuffer query = new StringBuffer();
 		query.append("FROM  ");
 		query.append(HIBERNATE_ScrTypedoc);
-		query
-				.append(" scr WHERE scr.typePerson = ? or scr.typePerson = 0 ORDER BY scr.id");
+		query.append(" scr WHERE scr.typePerson = ? or scr.typePerson = 0 ORDER BY scr.id");
 		return session.find(query.toString(), new Object[] { typePerson },
 				new Type[] { Hibernate.INTEGER });
 	}
 
-	public static List getTypeAddresses(Session session) throws HibernateException {
+	public static List getTypeAddresses(Session session)
+			throws HibernateException {
 
 		StringBuffer query = new StringBuffer();
 		query.append("FROM  ");
@@ -1108,14 +1124,17 @@ public class ISicresQueries implements HibernateKeys {
 		return session.find(query.toString());
 	}
 
-
 	/**
-	 * Metodo que obtiene la informacion de la tabla IUSERUSERSYS: Información del sistema
-	 * @param session - Sesion de hibernate
+	 * Metodo que obtiene la informacion de la tabla IUSERUSERSYS: Información
+	 * del sistema
+	 * 
+	 * @param session
+	 *            - Sesion de hibernate
 	 * @return {@linkplain Iuserusersys}
 	 * @throws HibernateException
 	 */
-	public static Iuserusersys getIuserusersys(Session session) throws HibernateException {
+	public static Iuserusersys getIuserusersys(Session session)
+			throws HibernateException {
 		Iuserusersys result = null;
 		StringBuffer query = new StringBuffer();
 		query.append("FROM  ");
@@ -1130,6 +1149,81 @@ public class ISicresQueries implements HibernateKeys {
 		return result;
 	}
 
+	public static List getScrDistregPen(Session session, Integer bookID,
+			int fdrid) throws HibernateException {
+		StringBuffer query = new StringBuffer();
+		query.append("FROM ");
+		query.append(HIBERNATE_ScrDistreg);
+		query.append(" scr WHERE scr.state in (1) and scr.idArch=? AND scr.idFdr=? ");
+		return session.find(query.toString(), new Object[] { bookID,
+				new Integer(fdrid) }, new Type[] { Hibernate.INTEGER,
+				Hibernate.INTEGER });
+	}
+	
+	public static Iusergrouphdr getUserGroupHdrByDeptId(Session session, Integer groupId) throws HibernateException {
+
+		Iusergrouphdr grupo = null;
+		StringBuffer query = new StringBuffer();
+		
+		query.append("FROM  ");
+		query.append(HIBERNATE_Iusergrouphdr);
+		query.append(" grupo WHERE grupo.id=?");
+		List<?> list = session.find(query.toString(), new Object[] { groupId }, new Type[] { Hibernate.INTEGER });
+
+		if (list != null && list.size() > 0)
+			grupo = (Iusergrouphdr) list.get(0);
+
+		return grupo;
+	}
+	
+	public static Iuserdata getIUserDataByUserId(Session session, Integer userId) throws HibernateException {
+		
+		Iuserdata datosUsuaruio = null;
+
+		StringBuffer query = new StringBuffer();
+
+		query.append("FROM ");
+		query.append(HIBERNATE_Iuserdata);
+		query.append(" usr WHERE usr.id=?");
+
+		List<?> list = session.find(query.toString(), new Object[] { userId }, new Type[] { Hibernate.INTEGER });
+		
+		if (list != null && list.size() > 0)
+			datosUsuaruio = (Iuserdata) list.get(0);
+
+		return datosUsuaruio;
+	}
+	
+	public static List getUpdHistDoc(Session session, Integer bookID, String num_reg) throws HibernateException {
+		StringBuffer query = new StringBuffer();
+
+		query.append("FROM ");
+		query.append(HIBERNATE_ScrModifDoc);
+		query.append(" scr WHERE scr.idArch=? AND scr.numReg=? ORDER BY scr.id");
+
+		return session.find(query.toString(), new Object[] { bookID, num_reg }, new Type[] { Hibernate.INTEGER, Hibernate.STRING });
+	}
+
+	public static List<?> getScrDocumentMetadatos(Session session, Integer bookID, Integer idFdr, Integer idPage, Integer idFile) throws HibernateException {
+		StringBuffer query = new StringBuffer();
+
+		query.append("FROM ");
+		query.append(HIBERNATE_ScrDocumentMetadatos);
+		query.append(" scr WHERE scr.idBook=? AND scr.idFld=? AND scr.idPage=? AND scr.idFile=? ORDER BY scr.id");
+
+		return session.find(query.toString(), new Object[] { bookID, idFdr, idPage, idFile }, new Type[] { Hibernate.INTEGER, Hibernate.INTEGER, Hibernate.INTEGER, Hibernate.INTEGER });
+	}
+	
+	public static List<?> getScrDocumentMetadatosByNombre(Session session, Integer bookID, Integer idFdr, Integer idPage, Integer idFile, String nombreMetadato) throws HibernateException {
+		StringBuffer query = new StringBuffer();
+
+		query.append("FROM ");
+		query.append(HIBERNATE_ScrDocumentMetadatos);
+		query.append(" scr WHERE scr.idBook=? AND scr.idFld=? AND scr.idPage=? AND scr.idFile=? AND scr.nombreMetadato=? ORDER BY scr.id");
+
+		return session.find(query.toString(), new Object[] { bookID, idFdr, idPage, idFile, nombreMetadato }, new Type[] { Hibernate.INTEGER, Hibernate.INTEGER, Hibernate.INTEGER, Hibernate.INTEGER, Hibernate.STRING});
+	}
+	
 	/***************************************************************************
 	 * Protected methods
 	 **************************************************************************/

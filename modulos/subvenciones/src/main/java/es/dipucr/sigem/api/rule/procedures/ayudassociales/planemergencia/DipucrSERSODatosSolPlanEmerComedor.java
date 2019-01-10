@@ -8,22 +8,26 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.icu.text.DecimalFormat;
-
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
-import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
-import es.dipucr.sigem.api.rule.procedures.Constants;
+import es.dipucr.sigem.api.rule.procedures.ConstantesSubvenciones;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
 public class DipucrSERSODatosSolPlanEmerComedor implements IRule{
-    private static final Logger LOGGER = Logger.getLogger(DipucrSERSODatosSolPlanEmerComedor.class);
+    
+    public static final Logger LOGGER = Logger.getLogger(DipucrSERSODatosSolPlanEmerComedor.class);
+    
+    public static final double PORCENTAJE_RESOLUCION = 1;
 
     public boolean init(IRuleContext rulectx) throws ISPACRuleException {
         return true;
@@ -32,19 +36,18 @@ public class DipucrSERSODatosSolPlanEmerComedor implements IRule{
     public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
         return true;
     }
-
     
     public Object execute(IRuleContext rulectx) throws ISPACRuleException{
         try{
             //----------------------------------------------------------------------------------------------
-            ClientContext cct = (ClientContext) rulectx.getClientContext();
+            IClientContext cct = (ClientContext) rulectx.getClientContext();
             IInvesflowAPI invesFlowAPI = cct.getAPI();
             IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
             //----------------------------------------------------------------------------------------------
             LOGGER.info(ConstantesString.INICIO + this.getClass().getName());
-            StringBuilder listado = new StringBuilder();  //Listado de liquidaciones 
+            StringBuilder listado = new StringBuilder(); 
             String numexp = rulectx.getNumExp();
-            ArrayList<String> expedientesResolucion = new ArrayList<String>();
+            List<String> expedientesResolucion = new ArrayList<String>();
             
             //Tenemos que devolver la siguiente cadena:
             /**    
@@ -77,50 +80,21 @@ public class DipucrSERSODatosSolPlanEmerComedor implements IRule{
             String nombreMenor2 = "";
             double importe = 0;
             String mesInicio = "";
-            String mesHasta = "";
             
             double total = 0;
             
-            //Recuperamos los expedientes relacionados
-            String strQuery = "WHERE NUMEXP_PADRE='" + numexp + "'";
-            IItemCollection expRelCol = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, strQuery);
-            Iterator<?> expRelIt = expRelCol.iterator();                  
-            if(expRelIt.hasNext()){
-                while (expRelIt.hasNext()){
-                    IItem expRel = (IItem)expRelIt.next();
-                    //Solo trabajamos con aquellos expedientes en estado RESOLUCION - RS
-                    String numexpHijo = expRel.getString("NUMEXP_HIJO");
-                    
-                    IItem expHijo = ExpedientesUtil.getExpediente(cct,  numexpHijo); 
-                    if(expHijo != null && "RS".equals(expHijo.get("ESTADOADM"))){
-                        expedientesResolucion.add(numexpHijo);
-                    }                    
-                }
-            }    
+            expedientesResolucion = ExpedientesRelacionadosUtil.getExpedientesRelacionadosHijosByEstadoAdm(rulectx, ExpedientesUtil.EstadoADM.NT25);
+               
             //Ya tenemos los expedientes que vamos a decretar en esta iteración
             if(!expedientesResolucion.isEmpty()){
-                strQuery = "WHERE NUMEXP IN (";
-                Iterator<?> expedientesResolucionIt = expedientesResolucion.listIterator();
-                while(expedientesResolucionIt.hasNext()){
-                    strQuery += "'" +expedientesResolucionIt.next()+"',";
-                }
-                strQuery = strQuery.substring(0,strQuery.length()-1);
-                strQuery += ")";
-                 
-                //Recuperamos las solicitudes
-                
+
+                String strQuery = ConstantesString.WHERE + ExpedientesUtil.NUMEXP + " IN " + SubvencionesUtils.getWhereInFormat(expedientesResolucion);               
                 IItemCollection expSolicitudesCiudadCol = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, strQuery);
-                Iterator<?> expSolicitudesCiudadIt = expSolicitudesCiudadCol.iterator();
-                String strQuery2 = "";
-                strQuery2 = "WHERE VALOR IN (";
-                while(expSolicitudesCiudadIt.hasNext()){
-                    strQuery2 +="'" +((IItem) expSolicitudesCiudadIt.next()).getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD)+"',";                                                        
-                }
-                strQuery2 = strQuery2.substring(0,strQuery2.length()-1);
-                strQuery2 += ") ORDER BY SUSTITUTO";
                 
-                IItemCollection ciudadOrdenCol = entitiesAPI.queryEntities("REC_VLDTBL_MUNICIPIOS", strQuery2);
+                String strQuery2 = ConstantesString.WHERE + ConstantesSubvenciones.MunicipiosValidationTable.VALOR + " IN " + SubvencionesUtils.getWhereInFormat(expSolicitudesCiudadCol, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD) + ConstantesString.ORDER_BY + ConstantesSubvenciones.MunicipiosValidationTable.SUSTITUTO;                
+                IItemCollection ciudadOrdenCol = entitiesAPI.queryEntities(ConstantesSubvenciones.MunicipiosValidationTable.NOMBRE_TABLA, strQuery2);
                 Iterator<?> ciudadOrdenIt = ciudadOrdenCol.iterator();
+                
                 while(ciudadOrdenIt.hasNext()){
                     
                     IItemCollection expSolicitudesCol = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, strQuery+" AND TIPOAYUDA = 'COMEDOR' AND CIUDAD = '" +((IItem)ciudadOrdenIt.next()).getString("VALOR")+"' ORDER BY TIPOAYUDA, NOMBRESOLICITANTE, NOMBRE");
@@ -137,105 +111,83 @@ public class DipucrSERSODatosSolPlanEmerComedor implements IRule{
                         nombreMenor2 = "";
                         importe = 0;
                         mesInicio = "";
-                        mesHasta = "";
 
                         IItem expSolicitud = (IItem) expSolicitudesIt.next();
                         
                         //Recuperamos el municipio si es distinto
-                        if(!ciudad.equals(expSolicitud.get(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD))){
-                            ciudad = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD);
+                        if(!ciudad.equals(SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD))){
+                            ciudad = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD);
                             
                             trabajadorSocial = "";
-                            IItemCollection ciudadCol = entitiesAPI.queryEntities("REC_VLDTBL_MUNICIPIOS", "WHERE VALOR='" +expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD)+"'");
-                            Iterator<?> ciudadIt = ciudadCol.iterator();
-                            if(ciudadIt.hasNext()){
+
+                            descripcionCiudad = SubvencionesUtils.getMunicipioByValor(cct, SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CIUDAD));
+                            if(StringUtils.isNotEmpty(descripcionCiudad)){
                                 countCiudad++;
-                                descripcionCiudad = ((IItem)ciudadIt.next()).getString("SUSTITUTO");
                             }
+                            
                             listado.append("\n");
                             listado.append(countCiudad+". " +descripcionCiudad+"\n");
                         }
                         
-                        if(!trabajadorSocial.equals(expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRESOLICITANTE))){
-                            trabajadorSocial = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRESOLICITANTE);
-                            nifTrabajadorSocial = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.DOCUMENTOIDENTIDAD);
+                        if(!trabajadorSocial.equals(SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRESOLICITANTE))){
+                            trabajadorSocial = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRESOLICITANTE);
+                            nifTrabajadorSocial = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.DOCUMENTOIDENTIDAD);
 
                             listado.append("\tTrabajador/a Social: " +trabajadorSocial+"\n");
                         }
                         listado.append("\n");
     
-                        beneficiario = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE);
-                        nifBeneficiario = expSolicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
+                        beneficiario = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE);
+                        nifBeneficiario = SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
                         
                         listado.append("\t" + contadorBeneficiario + " - Beneficiario/a: " +beneficiario+"\t\tNIF: " +nifBeneficiario+"\n");                    
                         contadorBeneficiario++;
                         
-                        IItemCollection concesionItemCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE_TABLA, expSolicitud.getString("NUMEXP"));
+                        IItemCollection concesionItemCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE_TABLA, SubvencionesUtils.getString(expSolicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NUMEXP));
                         Iterator<?> concesionIterator = concesionItemCollection.iterator();
                         
                         if(concesionIterator.hasNext()){
                             IItem concesion = (IItem) concesionIterator.next();
-                            try{
-                                empresa1 = concesion.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.EMPRESACOMEDOR1);
-                                nombreMenor1 = concesion.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE1);
-                                empresa2 = concesion.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.EMPRESACOMEDOR2);
-                                nombreMenor2 = concesion.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE2);                            
-                                mesInicio = concesion.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.MESINICIO);
-                                mesHasta = concesion.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.MESESSOLCOMEDOR);
 
-                                importe = Double.parseDouble(concesion.getString(ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.IMPORTETOTALCOMEDOR));
-                            } catch(Exception e){
-                                LOGGER.error(ConstantesString.LOGGER_ERROR + " al recuperar el importe de la ayuda de libros del el expediente: " + expSolicitud.getString("NUMEXP") +". " + e.getMessage(), e);
-                                throw new ISPACRuleException(ConstantesString.LOGGER_ERROR + " al recuperar el importe de la ayuda de libros del el expediente: " + expSolicitud.getString("NUMEXP") +". " + e.getMessage(), e);
-                            }
+                            empresa1 = SubvencionesUtils.getString(concesion, ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.EMPRESACOMEDOR1);
+                            nombreMenor1 = SubvencionesUtils.getString(concesion, ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE1);
+                            empresa2 = SubvencionesUtils.getString(concesion, ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.EMPRESACOMEDOR2);
+                            nombreMenor2 = SubvencionesUtils.getString(concesion, ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.NOMBRE2);
+                            mesInicio = SubvencionesUtils.getString(concesion, ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.MESINICIO);
+                            
+                            importe = SubvencionesUtils.getDouble(concesion, ConstantesPlanEmergencia.DpcrSERSOLibrosComedor.IMPORTETOTALCOMEDOR) * PORCENTAJE_RESOLUCION;
                         }                        
 
                         if(StringUtils.isNotBlank(nombreMenor2)){
                             numMenores = "2";
-                        } else {
+                        } else{
                             numMenores = "1";
                         }
                         
                         listado.append("\tNúmero de menores becados: " + numMenores + "\n");                        
-                        listado.append("\tConcepto de la factura: " +concepto+"\n");                            
-                        listado.append("\tEmpresa de comedor: " +empresa1+"\n");
-                        listado.append("\tNombre del menor: " +nombreMenor1+"\n");
+                        listado.append("\tConcepto de la factura: " + concepto + "\n");                            
+                        listado.append("\tEmpresa de comedor: " + empresa1 + "\n");
+                        listado.append("\tNombre del menor: " + nombreMenor1 + "\n");
+                        
                         if(StringUtils.isNotEmpty(empresa2)){
-                            listado.append("\tEmpresa de comedor: " +empresa2+"\n");
+                            listado.append("\tEmpresa de comedor: " + empresa2 + "\n");
                         }
                         if(StringUtils.isNotEmpty(nombreMenor2)){
-                            listado.append("\tNombre del menor: " +nombreMenor2+"\n");
+                            listado.append("\tNombre del menor: " + nombreMenor2 + "\n");
                         }
-                        listado.append("\tAyuda por importe de: " +new DecimalFormat("#,##0.00").format(Math.rint(importe*100)/100)+" €\n");
-                        listado.append("\tDesde: " + mesInicio + " hasta: " + mesHasta + "\n");
-
-                        total += importe;
                         
-                        //Para cada expediente insertamos al trabajador/a como interesado
-                        //Comprobamos que no esté                
-                        IItemCollection nuevoParticipanteCol = ParticipantesUtil.getParticipantes( cct, numexp, "NDOC='" +nifTrabajadorSocial+"'", "");
-                        Iterator<?> nuevoParticipanteIt = nuevoParticipanteCol.iterator();
-                        if(!nuevoParticipanteIt.hasNext()){
+                        listado.append("\tAyuda por importe de: " + SubvencionesUtils.formateaDouble(ConstantesString.FORMATO_IMPORTE, Math.rint(importe*100)/100) + " €\n");
+                        listado.append("\tMes de inicio: " + mesInicio + "\n");
 
-                            IItem nuevoParticipante = entitiesAPI.createEntity(Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES, numexp);
-                            
-                            nuevoParticipante.set("ROL", "INT");
-                            nuevoParticipante.set("TIPO_PERSONA", "F");
-                            nuevoParticipante.set("NDOC", nifTrabajadorSocial);
-                            nuevoParticipante.set("NOMBRE", trabajadorSocial);                
-                            nuevoParticipante.set("TIPO_DIRECCION", "T");                
-                            try{
-                                nuevoParticipante.store(cct);
-                            } catch(Exception e){
-                                LOGGER.error(e.getMessage(), e);
-                            }
-                        }
+                        total += (Math.rint(importe*100)/100);
+
+                        SubvencionesUtils.insertaTabajadorSocialComoParticipante(cct, numexp, nifTrabajadorSocial, trabajadorSocial);                        
                     }
                 }            
             }
             //Probelmas con el redondeo en la máquina de java
             
-            listado.append("\n\tEl importe total de la presente propuesta es: " +new DecimalFormat("#,##0.00").format(Math.rint(total*100)/100)+" €\n");
+            listado.append("\n\tEl importe total de la presente propuesta es: " + SubvencionesUtils.formateaDouble(ConstantesString.FORMATO_IMPORTE, Math.rint(total*100)/100)+" €\n");
             LOGGER.info(ConstantesString.FIN + this.getClass().getName());
             return listado.toString();
             
@@ -246,7 +198,7 @@ public class DipucrSERSODatosSolPlanEmerComedor implements IRule{
     }
 
     public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-        
+        //No se da nunca este caso
     }
 
 }

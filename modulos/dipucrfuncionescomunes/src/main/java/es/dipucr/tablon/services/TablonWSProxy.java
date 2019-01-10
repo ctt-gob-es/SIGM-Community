@@ -44,22 +44,16 @@ public class TablonWSProxy implements es.dipucr.tablon.services.TablonWS {
     return tablonWS;
   }
   
-  public es.dipucr.tablon.services.ItemLista[] getServicios(java.lang.String codEntidad) throws java.rmi.RemoteException{
-    if (tablonWS == null)
-      _initTablonWSProxy();
-    return tablonWS.getServicios(codEntidad);
-  }
-  
-  public es.dipucr.tablon.services.ItemLista[] getCategorias(java.lang.String codEntidad) throws java.rmi.RemoteException{
-    if (tablonWS == null)
-      _initTablonWSProxy();
-    return tablonWS.getCategorias(codEntidad);
-  }
-  
-  public boolean insertarPublicacion(java.lang.String codEntidad, java.lang.String titulo, java.lang.String descripcion, java.util.Calendar fechaFirma, java.lang.String codServicio, java.lang.String codCategoria, java.util.Calendar fechaIniVigencia, java.util.Calendar fechaFinVigencia, java.lang.String cve, java.lang.String hash, java.lang.String idTransaccion, java.lang.String numexp, java.lang.String servicioOtros, java.lang.String categoriaOtros, javax.activation.DataHandler dhPublicacion) throws java.rmi.RemoteException{
+  public int insertarPublicacion(java.lang.String codEntidad, java.lang.String titulo, java.lang.String descripcion, java.util.Calendar fechaFirma, java.lang.String codServicio, java.lang.String codCategoria, java.util.Calendar fechaIniVigencia, java.util.Calendar fechaFinVigencia, java.lang.String cve, java.lang.String hash, java.lang.String idTransaccion, java.lang.String numexp, java.lang.String servicioOtros, java.lang.String categoriaOtros, javax.activation.DataHandler dhPublicacion) throws java.rmi.RemoteException{
     if (tablonWS == null)
       _initTablonWSProxy();
     return tablonWS.insertarPublicacion(codEntidad, titulo, descripcion, fechaFirma, codServicio, codCategoria, fechaIniVigencia, fechaFinVigencia, cve, hash, idTransaccion, numexp, servicioOtros, categoriaOtros, dhPublicacion);
+  }
+  
+  public boolean eliminarPublicacion(int idPublicacion) throws java.rmi.RemoteException{
+    if (tablonWS == null)
+      _initTablonWSProxy();
+    return tablonWS.eliminarPublicacion(idPublicacion);
   }
   
   public es.dipucr.tablon.services.ItemLista getServicioByCodigo(java.lang.String codEntidad, java.lang.String codServicio) throws java.rmi.RemoteException{
@@ -72,6 +66,24 @@ public class TablonWSProxy implements es.dipucr.tablon.services.TablonWS {
     if (tablonWS == null)
       _initTablonWSProxy();
     return tablonWS.getCategoriaByCodigo(codEntidad, codCategoria);
+  }
+  
+  public boolean eliminarPublicaciones(java.lang.String codEntidad, java.lang.String numexp) throws java.rmi.RemoteException{
+    if (tablonWS == null)
+      _initTablonWSProxy();
+    return tablonWS.eliminarPublicaciones(codEntidad, numexp);
+  }
+  
+  public es.dipucr.tablon.services.ItemLista[] getServicios(java.lang.String codEntidad) throws java.rmi.RemoteException{
+    if (tablonWS == null)
+      _initTablonWSProxy();
+    return tablonWS.getServicios(codEntidad);
+  }
+  
+  public es.dipucr.tablon.services.ItemLista[] getCategorias(java.lang.String codEntidad) throws java.rmi.RemoteException{
+    if (tablonWS == null)
+      _initTablonWSProxy();
+    return tablonWS.getCategorias(codEntidad);
   }
   
   

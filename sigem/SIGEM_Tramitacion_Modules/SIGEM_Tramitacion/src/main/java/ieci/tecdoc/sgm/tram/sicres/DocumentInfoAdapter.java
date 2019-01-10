@@ -11,7 +11,10 @@ public class DocumentInfoAdapter extends DocumentInfo {
 		setFileName(docInfo.getName());
 		setPageName(docInfo.getName());
 		setExtension(StringUtils.substring(docInfo.getName(), StringUtils.lastIndexOf(docInfo.getName(), '.')+1));
-		setDocumentName(docInfo.getId());		
+		setDocumentName(docInfo.getId());
+		setTipoDocumental(docInfo.getTipoDocumental());
+		setTipoFirma(docInfo.getTipoFirma());
+		setCsv(docInfo.getCsv());
 	}
 	
 }

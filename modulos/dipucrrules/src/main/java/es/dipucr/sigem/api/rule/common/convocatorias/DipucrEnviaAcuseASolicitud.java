@@ -57,7 +57,7 @@ public class DipucrEnviaAcuseASolicitud implements IRule{
 	        String numexp = rulectx.getNumExp();
 	        int tramiteId = rulectx.getTaskId();
 	        
-	        IItemCollection docsCol = entitiesAPI.getDocuments(numexp, "ID_TRAMITE = '"+tramiteId+"' AND UPPER(NOMBRE) = 'ACUSE COMPARECE'", "");
+	        IItemCollection docsCol = entitiesAPI.getDocuments(numexp, "ID_TRAMITE = '"+tramiteId+"' AND (UPPER(NOMBRE) = 'ACUSE COMPARECE' OR UPPER(NOMBRE) = 'ACUSE NOTIFICA')", "");
 	        Iterator docsIt = docsCol.iterator();	  	        
 	        if(docsIt.hasNext()){
 	        	while (docsIt.hasNext()){
@@ -69,8 +69,12 @@ public class DipucrEnviaAcuseASolicitud implements IRule{
 	        		String[] descripcionSplit = descripcion.split("DPCR");
 	        		
 	        		if(descripcionSplit.length>1){
-		        		numexpSolicitud = descripcionSplit[1].trim();
-		        		numexpSolicitud = "DPCR"+numexpSolicitud;
+	        			//Como ha cambiado la descripción de los acuses, quitamos el trozo de detrás.
+	        			String segundaParte = descripcionSplit[1].trim();
+	        			String[] descripcionSplit2 = segundaParte.split("-");
+	        					
+		        		numexpSolicitud = descripcionSplit2[0].trim();
+		        		numexpSolicitud = "DPCR" + numexpSolicitud;
 	        		}
 	        		else{
 	        			descripcionSplit = descripcion.split("-");
@@ -92,15 +96,15 @@ public class DipucrEnviaAcuseASolicitud implements IRule{
 	        			}
 	        		}
 	        		if(StringUtils.isNotEmpty(numexpSolicitud)){	
-	        			IItemCollection existeDocCollection = entitiesAPI.getDocuments(numexpSolicitud, "UPPER(NOMBRE) LIKE 'ACUSE COMPARECE'", "");
+	        			IItemCollection existeDocCollection = entitiesAPI.getDocuments(numexpSolicitud, "(UPPER(NOMBRE) = 'ACUSE COMPARECE' OR UPPER(NOMBRE) = 'ACUSE NOTIFICA')", "");
 	        			Iterator existeDocIterator = existeDocCollection.iterator();
 	        			while(existeDocIterator.hasNext() && !existe){
 	        				IItem existeDoc = (IItem) existeDocIterator.next();
 	        				
-	        				if(doc.getString("NOMBRE").equals(existeDoc.getString("NOMBRE")) ||
-	        					doc.getString("DESCRIPCION").equals(existeDoc.getString("DESCRIPCION")) ||
-	    	        			doc.getString("FDOC").equals(existeDoc.getString("FDOC")) ||
-	    	    	        	doc.getString("COD_VERIFICACION").equals(existeDoc.getString("COD_VERIFICACION"))){
+	        				if(StringUtils.equals(doc.getString("NOMBRE"), existeDoc.getString("NOMBRE")) ||
+	        					StringUtils.equals(doc.getString("DESCRIPCION"), existeDoc.getString("DESCRIPCION")) ||
+	        					StringUtils.equals(doc.getString("FDOC"), existeDoc.getString("FDOC")) ||
+	    	    	        	StringUtils.equals(doc.getString("COD_VERIFICACION"), existeDoc.getString("COD_VERIFICACION"))){
 	        					existe = true;
 	        				}
 	        			}

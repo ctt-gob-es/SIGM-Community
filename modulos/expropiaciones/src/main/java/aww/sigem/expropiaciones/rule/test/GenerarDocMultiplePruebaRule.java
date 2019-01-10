@@ -191,7 +191,7 @@ public class GenerarDocMultiplePruebaRule implements IRule {
 						cct.deleteSsVariable("VUELTA");
 						
 						
-					} catch (Throwable e) {
+					} catch (Exception e) {
 
 						String message = "exception.documents.generate";
 						String extraInfo = null;

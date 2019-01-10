@@ -61,8 +61,8 @@ public class SelectParticipantesNDOCValueAction  extends SelectSubstituteAction
 				QueryServiceStub consulta = new QueryServiceStub(direccionPortaFirmaExternoConsulta);
 
 				QueryEnhancedUserJobAssociatedToUser queryEnhancedUserJobAssociatedToUser = new QueryEnhancedUserJobAssociatedToUser();
-				queryEnhancedUserJobAssociatedToUser.setAuthentication(Configuracion.getAuthenticationConsultaPADES());
-				queryEnhancedUserJobAssociatedToUser.setUserIdentifier(itemServContrat.getString("NDOC"));
+				queryEnhancedUserJobAssociatedToUser.setAuthentication(Configuracion.getAuthenticationConsultaPADES(cct));
+				queryEnhancedUserJobAssociatedToUser.setUserIdentifier(itemServContrat.getString("NDOC").trim());
 				QueryEnhancedUserJobAssociatedToUserResponse respuesta = consulta.queryEnhancedUserJobAssociatedToUser(queryEnhancedUserJobAssociatedToUser);
 				EnhancedUserJobAssociated [] enhancedUserJobAssociated = respuesta.getEnhancedUserJobAssociatedList().getEnhancedUserJobAssociated();
 				if(enhancedUserJobAssociated!=null && enhancedUserJobAssociated.length>0){

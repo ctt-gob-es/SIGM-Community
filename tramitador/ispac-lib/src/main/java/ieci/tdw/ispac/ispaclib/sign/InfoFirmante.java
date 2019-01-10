@@ -2,29 +2,41 @@ package ieci.tdw.ispac.ispaclib.sign;
 
 public class InfoFirmante {
 	
-	//dni
-	private String idDocumentoDeIdentidadEnCertificado;
+	private String docIdentidadCertificado;
 	private String nombreFirmante;	
-	private String certificado;	
+	private String numeroSerie;
+	private String cargo;
+	
+	public String getDocIdentidadCertificado() {
+		return docIdentidadCertificado;
+	}
+
+	public void setDocIdentidadCertificado(String docIdentidadCertificado) {
+		this.docIdentidadCertificado = docIdentidadCertificado;
+	}
 	
 	public String getNombreFirmante() {
 		return nombreFirmante;
 	}
+
 	public void setNombreFirmante(String nombreFirmante) {
 		this.nombreFirmante = nombreFirmante;
 	}
-	public String getIdDocumentoDeIdentidadEnCertificado() {
-		return idDocumentoDeIdentidadEnCertificado;
-	}
-	public void setIdDocumentoDeIdentidadEnCertificado(
-			String idDocumentoDeIdentidadEnCertificado) {
-		this.idDocumentoDeIdentidadEnCertificado = idDocumentoDeIdentidadEnCertificado;
-	}
-	public String getCertificado() {
-		return certificado;
-	}
-	public void setCertificado(String certificado) {
-		this.certificado = certificado;
+
+	public String getNumeroSerie() {
+		return numeroSerie;
 	}
 
+	public void setNumeroSerie(String numeroSerie) {
+		this.numeroSerie = numeroSerie;
+	}
+
+	public String getCargo() {
+		return cargo;
+	}
+
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
+	}
+	
 }

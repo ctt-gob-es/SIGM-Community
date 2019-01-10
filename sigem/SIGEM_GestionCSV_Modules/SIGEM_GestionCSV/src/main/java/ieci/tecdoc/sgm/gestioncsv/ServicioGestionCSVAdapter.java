@@ -106,6 +106,41 @@ public class ServicioGestionCSVAdapter implements ServicioGestionCSV {
 		}
 		return infoDocCSV;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws CSVException
+	 *
+	 * @see ieci.tecdoc.sgm.core.services.gestioncsv.ServicioGestionCSV#getInfoDocumentoByCSV(ieci.tecdoc.sgm.core.services.entidades.Entidad,
+	 *      java.lang.String)
+	 */
+	public InfoDocumentoCSV getInfoDocumentoByNombre(Entidad entidad, String nombreDoc) throws CSVException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("getInfoDocumentoByNombre(Entidad, String) - start");
+		}
+
+		MultiEntityContextHolder.setEntity(entidad.getIdentificador());
+
+		es.ieci.tecdoc.fwktd.csv.core.vo.InfoDocumentoCSV infoDocFWKTDCSV;
+		try {
+			infoDocFWKTDCSV = servicioDocumentos.getInfoDocumentoByNombre(nombreDoc);
+		} catch (Exception e) {
+			logger.error("Error al obtener la información del documento por el csv: " + nombreDoc + " Entidad: " + entidad.getIdentificador(), e);
+			throw new CSVException("", e);
+		}
+
+		InfoDocumentoCSV infoDocCSV = null;
+		
+		if(null != infoDocFWKTDCSV){
+			infoDocCSV = getInfoDocFWKTDCSV(infoDocFWKTDCSV);
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("getInfoDocumentoByCSV(Entidad, String) - end");
+		}
+		return infoDocCSV;
+	}
 
 	/**
 	 * {@inheritDoc}

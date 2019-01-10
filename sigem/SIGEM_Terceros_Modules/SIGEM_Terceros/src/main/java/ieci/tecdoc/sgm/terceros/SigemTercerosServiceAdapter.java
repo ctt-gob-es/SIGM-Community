@@ -1,5 +1,6 @@
 package ieci.tecdoc.sgm.terceros;
 
+import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.ispaclib.invesicres.thirdparty.SicresThirdPartyAPI;
 import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
 import ieci.tdw.ispac.ispaclib.session.OrganizationUserInfo;
@@ -425,6 +426,13 @@ public class SigemTercerosServiceAdapter implements ServicioTerceros {
 			dir.setComunidadAutonoma(adapter.getComunidadAutonoma());
 			dir.setPais(adapter.getPais());
 			dir.setTelefono(adapter.getTelefono());
+			
+			//INICIO [dipucr-Felipe 3#333]
+			dir.setCodMunicipio(adapter.getCodMunicipio());
+			dir.setCodMunicipioDir3(adapter.getCodMunicipioDir3());
+			dir.setCodProvincia(adapter.getCodProvincia());
+			dir.setCodProvinciaDir3(adapter.getCodProvinciaDir3());
+			//FIN [dipucr-Felipe 3#333]
 		}
 
 		return dir;
@@ -493,6 +501,63 @@ public class SigemTercerosServiceAdapter implements ServicioTerceros {
 
 		} catch (Throwable e){
 			logger.error("Error inesperado al crear el tercero [" + nif + "]", e);
+			throw new TercerosException(TercerosException.EXC_GENERIC_EXCEPCION, e);
+		}
+	}
+	
+	
+	/**
+	 * [dipucr-Felipe #583]
+	 * @param idPerson
+	 * @param email
+	 * @return
+	 * @throws ISPACException 
+	 */
+	public boolean insertDefaultEmail(String entityId, int idPerson, String email) throws TercerosException{
+		
+		try {
+			setOrganizationUserInfo(entityId);
+			String poolName = OrganizationUser.getOrganizationUserInfo().getThirdPartyPoolName(dsName);
+
+			SicresThirdPartyAPI sicresThirdPartyAPI = new SicresThirdPartyAPI(poolName);
+
+			return sicresThirdPartyAPI.insertDefaultEmail(idPerson, email);
+
+		} catch (Throwable e){
+			logger.error("Error inesperado al crear el email por defecto para el tercero [" 
+					+ idPerson + ", " + email + "]", e);
+			throw new TercerosException(TercerosException.EXC_GENERIC_EXCEPCION, e);
+		}
+	}
+	
+	
+	/**
+	 * [dipucr-Felipe #592]
+	 * @param entityId
+	 * @param idPerson
+	 * @param nombre
+	 * @param ape1
+	 * @param ape2
+	 * @param provincia
+	 * @param municipio
+	 * @param cpostal
+	 * @param direccion
+	 * @return
+	 * @throws TercerosException
+	 */
+	public boolean updateThirdParty(String entityId, int idPerson, String nombre, String ape1, String ape2, 
+			String provincia, String municipio, String cpostal, String direccion) throws TercerosException{
+		
+		try {
+			setOrganizationUserInfo(entityId);
+			String poolName = OrganizationUser.getOrganizationUserInfo().getThirdPartyPoolName(dsName);
+
+			SicresThirdPartyAPI sicresThirdPartyAPI = new SicresThirdPartyAPI(poolName);
+
+			return sicresThirdPartyAPI.updateThirdParty(idPerson, nombre, ape1, ape2, provincia, municipio, cpostal, direccion);
+
+		} catch (Throwable e){
+			logger.error("Error inesperado al actualizar los datos del tercero [" + idPerson + "]", e);
 			throw new TercerosException(TercerosException.EXC_GENERIC_EXCEPCION, e);
 		}
 	}

@@ -2,7 +2,6 @@ package es.dipucr.sigem.api.rule.procedures.ayudassociales.planemergencia;
 
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
-import ieci.tdw.ispac.api.entities.SpacEntities;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
@@ -14,14 +13,16 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
 import es.dipucr.sigem.api.rule.procedures.ConstantesString;
+import es.dipucr.sigem.api.rule.procedures.SubvencionesUtils;
 
     public class DipucrRelacionaSolicitudesPlanEmergencia implements IRule{
         
         public static final Logger LOGGER = Logger.getLogger(DipucrRelacionaSolicitudesPlanEmergencia.class);
         
         public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-            
+            //No se da nunca este caso
         }
 
         //Relacionamos la solicitud con todas las solicitudes que ya tiene el beneficiario
@@ -40,31 +41,26 @@ import es.dipucr.sigem.api.rule.procedures.ConstantesString;
                 String nifBenef = "";
                 String numexpConvocatoria = "";
                 
-                IItemCollection solicitudCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, "WHERE NUMEXP='" +numexp+"'");
+                IItemCollection solicitudCollection = entitiesAPI.getEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, numexp);
                 Iterator<?> solicitudIterator = solicitudCollection.iterator();
                 
                 if(solicitudIterator.hasNext()){
-                        IItem solicitud = (IItem) solicitudIterator.next();
-                        nifBenef = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
-                        numexpConvocatoria = solicitud.getString(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CONVOCATORIA);
+                    IItem solicitud = (IItem) solicitudIterator.next();
+                    
+                    nifBenef = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NIF);
+                    numexpConvocatoria = SubvencionesUtils.getString(solicitud, ConstantesPlanEmergencia.DpcrSERSOPlanEmer.CONVOCATORIA);
+                    
+                    //Buscamos todas las solicitudes que tiene este beneficiario en esta convocatoria
+                    IItemCollection solicitudesBenefCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, ConstantesString.WHERE + " UPPER(NIF) = UPPER('" +nifBenef+"') AND CONVOCATORIA = '" +numexpConvocatoria+"' AND NUMEXP!='" +numexp+"' ORDER BY NUMEXP");
+                    Iterator<?> solicitudesBenefIterator = solicitudesBenefCollection.iterator();
+                    
+                    while(solicitudesBenefIterator.hasNext()){
+                        IItem solicitudBenf = (IItem) solicitudesBenefIterator.next();
+                        String numexpSolicitudesBenef = SubvencionesUtils.getString(solicitudBenf, "NUMEXP");
                         
-                        //Buscamos todas las solicitudes que tiene este beneficiario en esta convocatoria
-                        IItemCollection solicitudesBenefCollection = entitiesAPI.queryEntities(ConstantesPlanEmergencia.DpcrSERSOPlanEmer.NOMBRE_TABLA, "WHERE UPPER(NIF) = UPPER('" +nifBenef+"') AND CONVOCATORIA = '" +numexpConvocatoria+"' AND NUMEXP!='" +numexp+"' ORDER BY NUMEXP");
-                        Iterator<?> solicitudesBenefIterator = solicitudesBenefCollection.iterator();
-                        
-                        while(solicitudesBenefIterator.hasNext()){
-                            IItem solicitudBenf = (IItem) solicitudesBenefIterator.next();
-                            String numexpSolicitudesBenef = solicitudBenf.getString("NUMEXP");
-                                
-                            IItem registro = entitiesAPI.createEntity(SpacEntities.SPAC_EXP_RELACIONADOS);
-            
-                            registro.set("NUMEXP_PADRE", numexpSolicitudesBenef);
-                            registro.set("NUMEXP_HIJO", numexp);
-                            registro.set("RELACION", ConstantesPlanEmergencia.RELACION_SOLICITUDES);
-            
-                            registro.store(cct);                
-                        }//FIN solicitudesBenefIterator.hasNext()
-                }//Fin solicitudesIteratro.hasHext()
+                        ExpedientesRelacionadosUtil.relacionaExpedientes(cct, numexpSolicitudesBenef, numexp, ConstantesPlanEmergencia.RELACION_SOLICITUDES);
+                    }
+                }
                 LOGGER.info(ConstantesString.FIN + this.getClass().getName());
                 return Boolean.TRUE;
             } catch(Exception e){

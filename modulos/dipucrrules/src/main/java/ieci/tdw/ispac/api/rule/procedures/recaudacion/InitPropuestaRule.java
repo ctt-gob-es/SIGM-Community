@@ -14,10 +14,14 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
+
 public class InitPropuestaRule implements IRule {
 
-	protected String STR_entidad = "";
-	protected String STR_extracto = "";
+	protected String entidad = "";
+	protected String extracto = "";
+	
+	private static final Logger LOGGER = Logger.getLogger(InitPropuestaRule.class);
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException{
         return true;
@@ -28,10 +32,8 @@ public class InitPropuestaRule implements IRule {
     }
 
     @SuppressWarnings("rawtypes")
-	public Object execute(IRuleContext rulectx) throws ISPACRuleException
-    {
-    	try
-    	{
+	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+    	try {
 			//----------------------------------------------------------------------------------------------
 	        ClientContext cct = (ClientContext) rulectx.getClientContext();
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
@@ -40,31 +42,26 @@ public class InitPropuestaRule implements IRule {
 	        //----------------------------------------------------------------------------------------------
 
 	        //Obtiene el expediente de la entidad
-	        String numexp_prop = rulectx.getNumExp();	
-	        String strQuery = "WHERE NUMEXP_HIJO='"+numexp_prop+"'";
+	        String numexpProp = rulectx.getNumExp();	
+	        String strQuery = "WHERE NUMEXP_HIJO='"+numexpProp+"'";
 	        IItemCollection col = entitiesAPI.queryEntities("SPAC_EXP_RELACIONADOS", strQuery);
 	        Iterator it = col.iterator();
-	        if (!it.hasNext())
-	        {
-	        	return new Boolean(false);
+	        if (!it.hasNext()) {
+	        	return false;
 	        }
         	IItem relacion = (IItem)it.next();
-        	String numexp_ent = relacion.getString("NUMEXP_PADRE");
-        	col = entitiesAPI.getEntities(STR_entidad, numexp_ent);
+        	String numexpEnt = relacion.getString("NUMEXP_PADRE");
+        	col = entitiesAPI.getEntities(entidad, numexpEnt);
 	        it = col.iterator();
-	        if (!it.hasNext())
-	        {
-	        	return new Boolean(false);
+	        if (!it.hasNext()) {
+	        	return false;
 	        }
 	        IItem entidad = (IItem)it.next();
-	        //String strArea = entidad.getString("AREA");
-        	
+	                	
 	        //Inicializa los datos de la propuesta
-			IItem propuesta = entitiesAPI.createEntity("SECR_PROPUESTA", numexp_prop);
-			if (propuesta != null)
-			{
-				//propuesta.set("ORIGEN", strArea);
-				propuesta.set("EXTRACTO", STR_extracto);
+			IItem propuesta = entitiesAPI.createEntity("SECR_PROPUESTA", numexpProp);
+			if (propuesta != null) {
+				propuesta.set("EXTRACTO", extracto);
 				propuesta.store(cct);
 			}
 			
@@ -77,7 +74,7 @@ public class InitPropuestaRule implements IRule {
 	        //---------------------------------------------
 
 	        // Obtener el documento zip "Contenido de la propuesta" del expediente de la entidad
-			IItemCollection documentsCollection = entitiesAPI.getDocuments(numexp_ent, "NOMBRE='Contenido de la propuesta'", "FDOC DESC");
+			IItemCollection documentsCollection = entitiesAPI.getDocuments(numexpEnt, "NOMBRE='Contenido de la propuesta'", "FDOC DESC");
 			IItem contenidoPropuesta = null;
 			if (documentsCollection!=null && documentsCollection.next()){
 				contenidoPropuesta = (IItem)documentsCollection.iterator().next();
@@ -86,13 +83,13 @@ public class InitPropuestaRule implements IRule {
 			}
 			
 			//Obtiene el número de fase de la propuesta
-			String strQueryAux = "WHERE NUMEXP='" + numexp_prop + "'";
+			String strQueryAux = "WHERE NUMEXP='" + numexpProp + "'";
 			IItemCollection collExpsAux = entitiesAPI.queryEntities("SPAC_FASES", strQueryAux);
 			Iterator itExpsAux = collExpsAux.iterator();
 			if (! itExpsAux.hasNext()) {
-				return new Boolean(false);
+				return false;
 			}
-			IItem iExpedienteAux = ((IItem)itExpsAux.next());
+			IItem iExpedienteAux = (IItem)itExpsAux.next();
 			int idFase = iExpedienteAux.getInt("ID");
 			
 
@@ -116,33 +113,25 @@ public class InitPropuestaRule implements IRule {
 				if (String.valueOf(idPlantilla)!=null && String.valueOf(idPlantilla).trim().length()!=0){
 					nuevoDocumento.set("ID_PLANTILLA", idPlantilla);
 				}
-				try
-				{
+				try {
 					String codVerificacion = contenidoPropuesta.getString("COD_COTEJO");
 					nuevoDocumento.set("COD_COTEJO", codVerificacion);
-				}
-				catch(ISPACException e)
-				{
-					//No existe el campo
+				} catch(ISPACException e) {
+					LOGGER.info("No existe el campo código de verificación", e);
 				}
 
 				nuevoDocumento.store(cct);
 			}
-
 	        
-        	return new Boolean(true);
+        	return true;
         }
-    	catch(Exception e) 
-        {
-        	if (e instanceof ISPACRuleException)
-        	{
-			    throw new ISPACRuleException(e);
-        	}
+    	catch(Exception e) {
         	throw new ISPACRuleException("No se ha podido inicializar la propuesta.",e);
         }
     }
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException{
+		// Empty method
     }
 
 }
