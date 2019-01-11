@@ -1,8 +1,8 @@
-#SIGM-REGISTRO del Ministerio de Sanidad Servicios Sociales e Igualdad
+#SIGM-REGISTRO del Ministerio de Sanidad, Consumo y Bienestar Social
 
-Esta rama del repositorio contiene el código del módulo de Registro de SIGM desarrollado por el Ministerio de Sanidad, Servicios Sociales e Igualdad (en adelante MSSSI). Las principales particularidades frente al módulo de Registro de la rama *master* son:
+Esta rama del repositorio contiene el código del módulo de Registro de SIGM desarrollado por el Ministerio de Sanidad, Consumo y Bienestar Social (en adelante MSCBS). Las principales particularidades frente al módulo de Registro de la rama *master* son:
 
-- Este es el código de la aplicación que, instalada y operativa en el MSSSI, ha superado el proceso de certificación para conectarse al Servicio de Intercambio Registral (SIR).
+- Este es el código de la aplicación que, instalada y operativa en el MSCBS, ha superado el proceso de certificación para conectarse al Servicio de Intercambio Registral (SIR).
 - Se ha construido una nueva interfaz gráfica que refuerza tanto la usabilidad como la seguridad de la aplicación (se utiliza tecnología más reciente que incluye validaciones de entrada y salida robustas).
 - Se han utilizado librerías de manejo de datos, de informes, de tareas programadas, etc., en versiones recientes lo que simplifica el mantenimiento y los futuros desarrollos de la aplicación. 
 - Se han reescrito los servicios web utilizando nuevas librerías (sin modificar el API).
@@ -11,12 +11,12 @@ Esta rama del repositorio contiene el código del módulo de Registro de SIGM de
 
 El objetivo de esta liberación es ofrecer a los organismos interesados el código fuente de la aplicación para facilitar su reutilización.
 
-Las modificaciones realizadas a la rama principal de SIGM no han conservado la multi-entidad. Además, la aplicación como un todo no es completamente funcional dado que se conecta con elementos comunes de la infraestructura del MSSSI de los que el usuario no dispondrá:
+Las modificaciones realizadas a la rama principal de SIGM no han conservado la multi-entidad. Además, la aplicación como un todo no es completamente funcional dado que se conecta con elementos comunes de la infraestructura del MSCBS de los que el usuario no dispondrá:
 
-- Plataforma de firma del MSSSI
-- Servicio de verificación de certificados del MSSSI
-- Servicio horizontal de antivirus vía WS del MSSSI
-- Framework de autenticación para administración electrónica del MSSSI
+- Plataforma de firma del MSCBS
+- Servicio de verificación de certificados del MSCBS
+- Servicio horizontal de antivirus vía WS del MSCBS
+- Framework de autenticación para administración electrónica del MSCBS
 
 Para generar a partir de este código una versión plenamente funcional en otro organismo habría que adaptarlo para utilizar los módulos del SIGM estándar o bien los del organismo en cuestión.
 
