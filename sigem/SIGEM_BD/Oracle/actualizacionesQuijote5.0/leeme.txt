@@ -1,0 +1,9 @@
+Estos son los scripts que actualizan la base de datos de sigem de la versión 4.0-QUIJOTE a la versión 5.0-QUIJOTE.
+
+Hay que ejecutar los scripts que hay en las siguientes carpetas:
+
+eTramitación: Ejecutar el script.
+fwktd_dir3: Ejecutar el script.
+registro: Ejecutar los scripts del 00 al 04 en orden.
+El archivo ScriptsEjecuciónManual.sql hay que editarlo y seguir los pasos que se indican en el archivo para cada bloque de scripts.
+tramitador: Hay que ejecutar los 9 scripts desde 00 hasta 02.
