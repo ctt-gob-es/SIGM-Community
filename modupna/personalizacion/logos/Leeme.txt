@@ -1,0 +1,45 @@
+Se incluye aquí los logos personales de nuestra administración y los scripts para actualizarlos,
+El contenido se distribuye en 3 carpetas:
+
+- completo: contiene los logos y scripts de todos los módulos de SIGM.
+- externo: contiene los logos y scripts que afectan a los módulos frontales de SIGM.
+- interno: contiene los logos y scripts que afectan a los módulos de backend de SIGM.
+
+En caso de tener separado en 2 servidores, frontend y backend SIGM y sus modulos 
+se usarían los scripts de las carpetas externo e interno respectivamente.
+
+En caso de tener SIGM completo en 1 servidor se usarían los scripts de completo.
+
+Cada carpeta contiene lo siguiente:
+- logos_originales: subcarpeta con los logos originales en caso de ejecutar la restauración de logos.
+- logo_pruebas.gif: logo de pruebas de nuestra entidad, en el entorno de producción se usaría el real.
+- minetur_upna.jpg: logo del ministerio de 1 pixel para quitarlo manteniendo los .jsp
+- lslogos_minetur.sh: script que lista los ficheros del logo del ministerio para comprobar que existen.
+- actualiza_logos_minetur.sh: script que actualiza los logos del ministerio por el de 1 pixel.
+- restaura_logos_minetur.sh: script que restaura los logos del ministerio a los originales.
+- lslogos.sh: script que lista los ficheros del logo de SIGM para comprobar que existen todos.
+- actualiza_logos.sh: script que actualiza los logos de SIGM por el del organismo, logo de pruebas en este caso.
+
+Los scripts de actualización se pueden ejecutar manualmente o también 
+se puede incluir su ejecución al final de los scripts de reinicio de los servidores de SIGM:
+
+Ejemplo de script de arranque del tomcat de SIGM:
+
+function ctrl_c() {
+	echo "Actualizando logos..."
+
+}
+
+#Se captura el ctrl_c para poder ejecutar posteriormente al tail los scripts de actualización
+trap ctrl_c INT
+
+
+/.../tomcat7/bin/startup.sh
+
+tail -f /.../tomcat7/logs/catalina.out
+
+
+
+. /.../actualiza_logos.sh
+
+. /.../actualiza_logos_minetur.sh
