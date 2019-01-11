@@ -37,6 +37,9 @@ public class UserForm extends ActionForm{
 
     String gruposAsignados[];
 
+    // sustituye al permiso de ldapWS
+    boolean tramUser;
+
     Collection listaAplicaciones;
 
     String idCert;
@@ -87,7 +90,7 @@ public class UserForm extends ActionForm{
         apellidos=
         "";
 
-
+        tramUser=
         pwdmbc =
         pwdvpcheck =
         systemSuperuser =
@@ -147,6 +150,18 @@ public class UserForm extends ActionForm{
      */
     public void setPwdvpcheck(boolean pwdvpcheck) {
         this.pwdvpcheck = pwdvpcheck;
+    }
+    /**
+     * @return Returns the tramUser.
+     */
+    public boolean isTramUser() {
+        return tramUser;
+    }
+    /**
+     * @param tramUser The tramUser to set.
+     */
+    public void setTramUser(boolean tramUser) {
+        this.tramUser = tramUser;
     }
     /**
      * @return Returns the descripcion.

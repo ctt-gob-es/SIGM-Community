@@ -77,6 +77,10 @@ public class DeptProperties extends BaseAction{
         Date creationDate = dep.getCreationDate();
         String fechaCreacion = formatter.format(creationDate );
         
+        String email = "";
+        if ( dep.getEmail() != null )
+            email  = dep.getEmail();
+        
         
         int creatorId = dep.getCreatorId();
         String creatorName = "SYSSUPERUSER";
@@ -105,6 +109,7 @@ public class DeptProperties extends BaseAction{
         deptForm.setCreatorName(creatorName);
         deptForm.setUpdateDate(fechaModificacion);
         deptForm.setUpdaterName(updaterName);
+        deptForm.setEmail(email);
 
     }
 }

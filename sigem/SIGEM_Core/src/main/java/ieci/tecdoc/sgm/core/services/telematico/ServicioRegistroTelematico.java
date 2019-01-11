@@ -154,6 +154,13 @@ public interface ServicioRegistroTelematico {
 		public Registros obtenerRegistrosParaMostrar(RegistroConsulta query, Entidad entidad)throws RegistroTelematicoException;
 
 		/**
+		 * M�todo que obtiene los registros a mostrar a un usuario
+		 * @return Registro a mostrar
+		 * @throws RegistroTelematicoException
+		 */
+		public Registros obtenerRegistrosValidacionDuplicados(RegistroConsulta query, Entidad entidad)throws RegistroTelematicoException;
+
+		/**
 		 * M�todo que comprueba si existen documentos anexos a un registro
 		 * @param registryNumber
 		 * @return true si existen documentos anexos a un registro, false si no

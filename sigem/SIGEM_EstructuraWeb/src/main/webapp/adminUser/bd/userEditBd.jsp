@@ -235,7 +235,7 @@ UserDTO: <bean:write name="userDTO" property="profiles"/>
 <body onload="choosebox(1,9);" style="background-color: #ffffff">
 	<div id="contenedora">
     	<html:form action="/user/bd/userEdit" method="post" onsubmit="return validateForm();">
-			<div class="cuerpo" style="width:530px; height:180px;">
+			<div class="cuerpo">
 	   			<div class="cuerporight">
 	    			<div class="cuerpomid">
 						<h1><bean:message key="message.usuario.editar.titulo"/></h1>
@@ -335,6 +335,10 @@ UserDTO: <bean:write name="userDTO" property="profiles"/>
 							</div>	
 							
 							<div id="box3" style="overflow:auto; height:150px; width:100%">
+                <label class="gr" style="width:180px;" for="user.tramUser">
+                  Acceso a tramitador:
+                </label>                
+                <html:checkbox property="tramUser" styleId="user.tramUser" style="width:20px" />                  
 								<table border class="tableBase" width="100%">
 									<tr>
 										<th width="30%"><bean:message key="message.usuario.etiqueta.aplicacion"/></th>

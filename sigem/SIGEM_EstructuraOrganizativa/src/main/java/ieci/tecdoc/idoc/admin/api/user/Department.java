@@ -215,7 +215,36 @@ public interface Department
 	
 	public void set_users(Users _users);   
    
-   
+	   
+	   /**
+	    * Obtiene la Email del departamento.
+	    * 
+	    * @return El Email mencionado.
+	    */
+	   public String getEmail();
+	   
+	   /**
+	    * Establece la descripción del Email.
+	    * 
+	    * @param email La descripción del grupo.
+	    */
+	   public void setEmail(String email);
+	   
+
+	   /**
+	    * Obtiene la emailcheck del departamento.
+	    * 
+	    * @return El emailcheck mencionado.
+	    */
+	public boolean getEmailcheck();
+
+	/**
+	    * Establece la emailcheck.
+	    * 
+	    * @param emailcheck La descripción del grupo.
+	    */
+	public void setEmailcheck(boolean emailcheck);
+		
    /**
     * Devuelve la lista de usuarios del departamento.
     * 

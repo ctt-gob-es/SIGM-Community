@@ -415,7 +415,26 @@ public class UserImpl implements User {
 		_deptId = deptId;
 	}
 
-	/**
+  /**
+   * Obtiene los flags del usuario.
+   *
+   * @return El dato mencionado.
+   */
+  public int getFlags() {
+    return _flags;
+  }
+
+  /**
+   * Establece los flags del usuario.
+   *
+   * @param flags
+   *            El dato mencionado.
+   */
+  public void setFlags(int flags) {
+    _flags = flags;
+  }
+
+  /**
 	 * Obtiene el estado del usuario.
 	 *
 	 * @return El dato mencionado.
@@ -688,7 +707,8 @@ public class UserImpl implements User {
 		statement
 				.setShortText(index++, UasMisc.encryptPassword(_password, _id));
 		statement.setLongInteger(index++, _deptId);
-		statement.setLongInteger(index++, Defs.USER_FLAG_NULL);
+//		statement.setLongInteger(index++, Defs.USER_FLAG_NULL);
+		statement.setLongInteger(index++, _flags);
 		statement.setLongInteger(index++, _state);
 		statement.setLongInteger(index++, Defs.USER_NUMBADCNTS);
 		statement.setShortText(index++, _description);
@@ -724,6 +744,7 @@ public class UserImpl implements User {
 		_password = UasMisc.decryptPassword(statement.getShortText(index++),
 				_id);
 		_deptId = statement.getLongInteger(index++);
+    _flags = statement.getLongInteger(index++);
 		_state = statement.getLongInteger(index++);
 		_description = statement.getShortText(index++);
 		_creatorId = statement.getLongInteger(index++);
@@ -756,6 +777,7 @@ public class UserImpl implements User {
 		statement
 				.setShortText(index++, UasMisc.encryptPassword(_password, _id));
 		statement.setLongInteger(index++, _deptId);
+    statement.setLongInteger(index++, _flags);
 		statement.setLongInteger(index++, _state);
 		statement.setShortText(index++, _description);
 		_updaterId = _userConnected;
@@ -1642,6 +1664,7 @@ public class UserImpl implements User {
 		_pwdvpcheck = "N";
 		_description = null;
 		_deptId = deptId;
+		_flags = 0;
 		_state = UserDefs.USER_STAT_DEF;
 		_profilesImpl = new GenericProfilesImpl();
 		_permsImpl = new GenericPermsImpl();
@@ -1667,6 +1690,7 @@ public class UserImpl implements User {
 	private String _pwdvpcheck;
 	private String _description;
 	private int _deptId;
+  private int _flags;
 	private int _state;
 	private GenericProfilesImpl _profilesImpl;
 	private GenericPermsImpl _permsImpl;

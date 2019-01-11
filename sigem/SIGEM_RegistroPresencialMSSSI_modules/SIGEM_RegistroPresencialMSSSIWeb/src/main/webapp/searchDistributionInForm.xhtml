@@ -1,0 +1,810 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	  xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+</h:head>
+
+<h:body>
+
+	<ui:composition template="/template/layout.xhtml">
+		<ui:define name="head">
+
+			<script type="text/javascript"
+					src="#{webParam.entryParameters['URLRoot']}/js/jquery.ui.accordion.js"></script>
+			<script type="text/javascript"
+					src="#{webParam.entryParameters['URLRoot']}/js/calendar.js"></script>
+			<script type="text/javascript"
+					src="#{webParam.entryParameters['URLRoot']}/js/accordion.js"></script>
+			<script type="text/javascript"
+					src="#{webParam.entryParameters['URLRoot']}/js/dialog.js"></script>
+			<script type="text/javascript"
+					src="#{webParam.entryParameters['URLRoot']}/js/report.js"></script>
+			<script type="text/javascript"
+					src="#{webParam.entryParameters['URLRoot']}/js/utilsDatatable.js"></script>
+			<script type="text/javascript"
+					src="#{webParam.entryParameters['URLRoot']}/js/distribution.js"></script>
+			<script  type="text/javascript">
+				$(document).keypress(function(e) {
+				    if(e.which == 13) {
+				    	document.getElementById( "form:btnbuscar" ).click();
+				        return false;
+				    }
+				});
+			</script>
+		</ui:define>
+
+		<ui:define name="breadcrumb">
+			<ol>
+				<li><h:link value="#{msgs.labelInicio}" outcome="goInicioForm" /></li>
+				<li><h:outputText value="#{msgs.labelDistribucion}" /></li>
+				<li>
+					<h:outputText value="#{msgs.labelRecibidosDIS}" rendered="${searchDistributionInAction.searchDistributionBo.searchDistributionRegister.type == '1'}"/>
+				</li>
+			</ol>
+		</ui:define>
+		<ui:define name="content">
+			<h2>
+				<h:outputText value="#{msgs.labelDistribucion} - #{msgs.labelRecibidosDIS}" />
+			</h2>
+			<div class="sombra"></div>
+
+			<h:form id="form">
+				<div class="enlaces">
+					<ul>
+						<li>
+							<p:commandLink value="#{msgs.labelInformes}"
+										   action="goDistributionInRelationsReportForm" immediate="true" ></p:commandLink>
+						</li>
+					</ul>
+				</div>
+
+				<!--DIV PARA EL LIBRO DE DISTRIBUCION-->
+				<div id="distribucion">
+					<div id="accordion">
+						<h3>
+							<h:outputText value="#{msgs.labelCriteriosBusqueda}" />
+						</h3>
+						<fieldset>
+							<p:messages id="messages" showDetail="false" autoUpdate="false"
+										closable="true" severity="error" />
+							<h:panelGroup id="panel" layout="block">
+								<label for="form:state" class="general"> <span
+										class="label"><h:outputText id="statelabel"
+																	value="#{msgs.statelabel}" /></span> <p:selectOneMenu id="state"
+																														  value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state}">
+									<f:selectItem itemLabel="" itemValue="0" />
+									<f:selectItems value="#{validationListAction.listStateDist}"
+												   var="c" itemLabel="#{c.valor}" itemValue="#{c.clave}" />
+								</p:selectOneMenu>
+								</label>
+								<label for="form:distDateDesde" class="general"> <span
+										class="label"><h:outputText id="distDatelabel"
+																	value="#{msgs.distDatelabel}" /></span> <p:calendar locale="es"
+																														id="distDateDesde" navigator="true" pattern="dd/MM/yyyy HH:mm"
+																														value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.distDateDesde}"
+																														showOn="button" label="#{msgs.distDatelabel}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" locale="es_ES"
+													   timeZone="Europe/Paris" />
+								</p:calendar> <p:calendar locale="es" id="distDateHasta" navigator="true"
+														  pattern="dd/MM/yyyy HH:mm"
+														  value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.distDateHasta}"
+														  showOn="button" label="#{msgs.distDatelabel}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" locale="es_ES"
+													   timeZone="Europe/Paris" />
+								</p:calendar>
+								</label>
+								<label for="form:stateDateDesde" class="general"> <span
+										class="label"><h:outputText id="fechaEstadoDistLabel"
+																	value="#{msgs.fechaEstadoDistLabel}" /></span> <p:calendar
+										locale="es" id="stateDateDesde" navigator="true"
+										pattern="dd/MM/yyyy HH:mm"
+										value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.stateDateDesde}"
+										showOn="button" label="#{msgs.fechaEstadoDistLabel}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" locale="es_ES"
+													   timeZone="Europe/Paris" />
+								</p:calendar> <p:calendar locale="es" id="stateDateHasta" navigator="true"
+														  pattern="dd/MM/yyyy HH:mm"
+														  value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.stateDateHasta}"
+														  showOn="button" label="#{msgs.fechaEstadoDistLabel}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" locale="es_ES"
+													   timeZone="Europe/Paris" />
+								</p:calendar>
+								</label>
+								<label for="form:fld1" class="general"> <span
+										class="label"><h:outputText id="fld1Label"
+																	value="#{msgs.fld1label}" /></span> <p:inputText id="fld1"
+																													 label="#{msgs.fld1label}"
+																													 value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.fld1}">
+									<f:validateLength maximum="20" />
+								</p:inputText>
+								</label>
+								<label for="form:fld2Desde" class="general"> <span
+										class="label"><h:outputText id="fld2Label"
+																	value="#{msgs.fld2label}" /></span> <p:calendar locale="es"
+																													id="fld2Desde" navigator="true" pattern="dd/MM/yyyy HH:mm:ss"
+																													value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.fld2Desde}"
+																													showOn="button" label="#{msgs.fld2label}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" locale="es_ES"
+													   timeZone="Europe/Paris" />
+								</p:calendar> <p:calendar locale="es" id="fld2Hasta" navigator="true"
+														  showButtonPanel="false" pattern="dd/MM/yyyy HH:mm:ss"
+														  value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.fld2Hasta}"
+														  showOn="button" label="#{msgs.fld2label}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" locale="es_ES"
+													   timeZone="Europe/Paris" />
+								</p:calendar>
+									<p:watermark for="fld2Desde" value="#{msgs.fld2labelDesde}" />
+									<p:watermark for="fld2Hasta" value="#{msgs.fld2labelHasta}" />
+								</label>
+								<label for="form:fld7" class="general"> <span
+										class="label"><h:outputText id="fld7Label"
+																	value="#{msgs.fld7label}" /></span> <c:set var="orgPadre"
+																											   value=" (#{org.nameOrgFather})" /> <c:set var="organismo"
+																																						 value="#{org.code} #{org.name}" /> <p:autoComplete
+										style="width:400px"
+										value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.fld7}"
+										id="fld7" label="#{msgs.fld7label}"
+										completeMethod="#{validationListAction.completeOrgOrigen}"
+										escape="false" minQueryLength="3" var="org" queryDelay="400"
+										itemLabel="#{(empty org) ? '' : fn:trim(organismo)}"
+										itemValue="#{org}" converter="orgConverterOrigin"
+										forceSelection="true" scrollHeight="200">
+									<p:ajax event="itemSelect" listener="#{searchDistributionInAction.onItemSelectOriginOrg}" update="toolTipOriginOrg"/>
+									<p:ajax event="change" listener="#{searchDistributionInAction.onChangeOriginOrg}" update="toolTipOriginOrg"/>
+									<p:column>
+										<h:outputText styleClass="organismo"
+													  value="#{org.code} #{org.name}" />
+										<br />
+										<h:outputText styleClass="organismopadre" value="#{orgPadre}" />
+										<div class="ut">
+											<ui:fragment rendered="${org.scrTypeadm.id == 1}">
+												<img
+														src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png"
+														title="#{msgs.isownOrg}" />
+											</ui:fragment>
+											<ui:fragment rendered="${org.isTramUnit}">
+												<img
+														src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png"
+														title="#{msgs.isTramUnit}" />
+											</ui:fragment>
+
+										</div>
+									</p:column>
+								</p:autoComplete>
+									<p:commandButton id="OriginInfoButton"
+													 styleClass="organismoinfo" icon="ui-icon-search"
+													 inmediate="true" process="@this" >
+									</p:commandButton>
+									<p:tooltip id="toolTipOriginOrg" for="OriginInfoButton" position="bottom" styleClass="orgdivtooltip">
+										<ui:fragment rendered="#{not empty searchDistributionInAction.selectedOriginOrg.nameOrgGrandFather}">
+											<div class="orgabuelotooltip"><h:outputText value="#{searchDistributionInAction.selectedOriginOrg.nameOrgGrandFather}" />
+											</div>
+										</ui:fragment>
+										<ui:fragment rendered="#{not empty searchDistributionInAction.selectedOriginOrg.nameOrgFather}">
+											<div class="orgpadretooltip">
+												<ui:fragment rendered="#{not empty searchDistributionInAction.selectedOriginOrg.nameOrgGrandFather}">
+													<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 6px;" />
+												</ui:fragment>
+												<h:outputText value="#{searchDistributionInAction.selectedOriginOrg.nameOrgFather}" />
+											</div>
+										</ui:fragment>
+										<ui:fragment rendered="#{not empty searchDistributionInAction.selectedOriginOrg.code}">
+											<div class="orgtooltip">
+												<ui:fragment rendered="#{not empty searchDistributionInAction.selectedOriginOrg.nameOrgFather
+														and not empty searchDistributionInAction.selectedOriginOrg.nameOrgGrandFather}">
+													<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 20px;"  />
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty searchDistributionInAction.selectedOriginOrg.nameOrgFather
+														and empty searchDistributionInAction.selectedOriginOrg.nameOrgGrandFather}">
+													<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 6px;"  />
+												</ui:fragment>
+												<h:outputText  value="#{searchDistributionInAction.selectedOriginOrg.code} #{searchDistributionInAction.selectedOriginOrg.name}"/>
+											</div>
+										</ui:fragment>
+										<ui:fragment rendered="#{empty searchDistributionInAction.selectedOriginOrg.code}">
+											<div class="orgtooltiptext"><h:outputText  value="No hay ningún organismo origen seleccionado"/>
+											</div>
+										</ui:fragment>
+									</p:tooltip>
+									<p:commandButton id="OriginButton" styleClass="organismobusq"
+													 icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"
+													 inmediate="true" process="@this"
+													 actionListener="#{searchUnitsAction.chooseUnits}">
+										<p:ajax event="dialogReturn"
+												listener="#{searchDistributionInAction.updateOrigin}"
+												update="fld7 toolTipOriginOrg"
+												oncomplete="document.getElementById('form:fld7_input').focus()" />
+									</p:commandButton>
+									<p:commandButton id="OriginTreeButton"
+													 styleClass="organismobusqtree"
+													 icon="ui-icon-search" title="#{msgs.busquedaOrgTreelabel}"
+													 inmediate="true" process="@this" actionListener="#{searchUnitsTreeAction.chooseUnits}">
+										<p:ajax event="dialogReturn"
+												listener="#{searchDistributionInAction.updateOrigin}"
+												update="fld7 toolTipOriginOrg"
+												oncomplete="document.getElementById('form:fld7_input').focus()" />
+									</p:commandButton>
+								</label>
+								<label for="form:fld8" class="general"> <span
+										class="label"><h:outputText id="fld8Label"
+																	value="#{msgs.fld8label}" /></span> <p:autoComplete
+										style="width:400"
+										value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.fld8}"
+										id="fld8" label="#{msgs.fld8label}" escape="false"
+										completeMethod="#{validationListAction.completeOrgDestino}"
+										minQueryLength="3" var="org" queryDelay="400"
+										itemLabel="#{(empty org) ? '' : fn:trim(organismo)}"
+										itemValue="#{org}" converter="orgConverterDestination"
+										forceSelection="true" scrollHeight="200">
+									<p:ajax event="itemSelect" listener="#{searchDistributionInAction.onItemSelectDestinationOrg}" update="toolTipDestOrg"/>
+									<p:ajax event="change" listener="#{searchDistributionInAction.onChangeDestinationOrg}" update="toolTipDestOrg"/>
+									<p:column>
+										<h:outputText styleClass="organismo"
+													  value="#{org.code} #{org.name}" />
+										<br />labelDistribucion
+										<h:outputText styleClass="organismopadre" value="#{orgPadre}" />
+										<div class="ut">
+											<ui:fragment rendered="${org.scrTypeadm.id == 1}">
+												<img
+														src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png"
+														title="#{msgs.isownOrg}" />
+											</ui:fragment>
+											<ui:fragment rendered="${org.isTramUnit}">
+												<img
+														src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png"
+														title="#{msgs.isTramUnit}" />
+											</ui:fragment>
+
+										</div>
+									</p:column>
+								</p:autoComplete>
+									<p:commandButton id="DestinationInfoButton"
+													 styleClass="organismoinfo" icon="ui-icon-search"
+													 inmediate="true" process="@this" >
+									</p:commandButton>
+									<p:tooltip id="toolTipDestOrg" for="DestinationInfoButton" position="bottom" styleClass="orgdivtooltip">
+										<ui:fragment rendered="#{not empty searchDistributionInAction.selectedDestOrg.nameOrgGrandFather}">
+											<div class="orgabuelotooltip"><h:outputText value="#{searchDistributionInAction.selectedDestOrg.nameOrgGrandFather}" />
+											</div>
+										</ui:fragment>
+										<ui:fragment rendered="#{not empty searchDistributionInAction.selectedDestOrg.nameOrgFather}">
+											<div class="orgpadretooltip">
+												<ui:fragment rendered="#{not empty searchDistributionInAction.selectedDestOrg.nameOrgGrandFather}">
+													<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 6px;" />
+												</ui:fragment>
+												<h:outputText value="#{searchDistributionInAction.selectedDestOrg.nameOrgFather}" />
+											</div>
+										</ui:fragment>
+										<ui:fragment rendered="#{not empty searchDistributionInAction.selectedDestOrg.code}">
+											<div class="orgtooltip">
+												<ui:fragment rendered="#{not empty searchDistributionInAction.selectedDestOrg.nameOrgFather
+														and not empty searchDistributionInAction.selectedDestOrg.nameOrgGrandFather}">
+													<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 20px;"  />
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty searchDistributionInAction.selectedDestOrg.nameOrgFather
+														and empty searchDistributionInAction.selectedDestOrg.nameOrgGrandFather}">
+													<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 6px;"  />
+												</ui:fragment>
+												<h:outputText  value="#{searchDistributionInAction.selectedDestOrg.code} #{searchDistributionInAction.selectedDestOrg.name}"/>
+											</div>
+										</ui:fragment>
+										<ui:fragment rendered="#{empty searchDistributionInAction.selectedDestOrg.code}">
+											<div class="orgtooltiptext"><h:outputText  value="No hay ningún organismo destino seleccionado"/>
+											</div>
+										</ui:fragment>
+									</p:tooltip>
+									<p:commandButton id="DestinationButton"
+													 styleClass="organismobusq" icon="ui-icon-search"
+													 title="#{msgs.busquedaOrglabel}" inmediate="true"
+													 process="@this"
+													 actionListener="#{searchUnitsAction.chooseUnits}">
+										<p:ajax event="dialogReturn"
+												listener="#{searchDistributionInAction.updateDestination}"
+												update="fld8 toolTipDestOrg" oncomplete="document.getElementById('form:fld8_input').focus()"  />
+									</p:commandButton>
+									<p:commandButton id="DestinationTreeButton"
+													 styleClass="organismobusqtree"
+													 icon="ui-icon-search" title="#{msgs.busquedaOrgTreelabel}"
+													 inmediate="true" process="@this" actionListener="#{searchUnitsTreeAction.chooseUnits}">
+										<p:ajax event="dialogReturn"
+												listener="#{searchDistributionInAction.updateDestination}"
+												update="fld8 toolTipDestOrg" oncomplete="document.getElementById('form:fld8_input').focus()"  />
+									</p:commandButton>
+								</label>
+								<label for="form:fld9" class="general"> <span
+										class="label"><h:outputText id="fld9Label"
+																	value="#{msgs.fld9label}" /></span> <p:inputText id="fld9"
+																													 value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.fld9}"
+																													 label="#{msgs.fld9label}">
+									<f:validateLength maximum="80" />
+								</p:inputText>
+								</label>
+								<label for="form:fld16" class="general"> <span
+										class="label"><h:outputText id="fld16Label"
+																	value="#{msgs.fld16label}" /></span> <c:set var="asunto"
+																												value="#{asun.code} #{asun.matter}" /> <p:selectOneMenu
+										value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.fld16}"
+										id="fld16" label="#{msgs.fld16label}"
+										converter="asuntConverter" panelStyle="width:150px"
+										effect="fade" filter="true" filterMatchMode="contains">
+									<f:selectItem itemLabel="" itemValue="" />
+									<f:selectItems value="#{validationListAction.listAsuntos}"
+												   var="asuntos" itemLabel="#{asuntos.code} #{asuntos.matter}"
+												   itemValue="#{asuntos}" />
+								</p:selectOneMenu>
+								</label>
+								<label for="form:fld17" class="general"> <span
+										class="label"><h:outputText id="fld17Label"
+																	value="#{msgs.fld17label}" /></span> <p:inputText id="fld17"
+																													  value="#{searchDistributionInAction.searchDistributionBo.searchDistributionRegister.fld17}"
+																													  label="#{msgs.fld17label}">
+									<f:validateLength maximum="240" />
+								</p:inputText>
+								</label>
+								<div class="botones">
+									<p:commandButton styleClass="boton-buscar" id="btnbuscar"
+													 oncomplete="showResults(xhr, status, args)"
+													 value="#{msgs.labelBotonBuscar}"
+													 onclick="PF('tableBooks').getPaginator().setPage(0)"
+													 update="messages,panel,books,panel1,panelOpciones"
+													 process="@form"
+													 actionListener="#{searchDistributionInAction.initDistribution}" />
+									<p:commandButton styleClass="boton-limpiar"
+													 value="#{msgs.labelBotonLimpiar}" process="@this"
+													 update="messages,panel,books,panelOpciones"
+													 actionListener="#{searchDistributionInAction.limpiar}"
+													 immediate="true" />
+								</div>
+							</h:panelGroup>
+						</fieldset>
+
+						<h3>
+							<h:outputText value="#{msgs.labelResultadosBusqueda}" />
+						</h3>
+						<fieldset>
+							<h:panelGroup id="panel1" layout="block">
+								<div class="opciones">
+									<h:panelGroup id="panelOpciones" layout="block">
+										<ui:fragment
+												rendered="#{searchDistributionInAction.countResult > 0}">
+											<ul>
+												<ui:fragment
+														rendered="${J_PARAMBOOK.canAcceptRegistersDist and ( searchDistributionInAction.searchDistributionBo.searchDistributionRegister.type == 1 and ((empty searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state) or searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state == 0 or searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state == 1)) }">
+													<li><p:commandLink id="aceptarDist"
+																	   value="#{msgs.labelAceptarDist}"
+																	   update="dialogMessage,books,:dialogAceptarForm:panelDigAcep" process="@form"
+																	   styleClass="aceptar"
+																	   actionListener="#{searchDistributionInAction.isSelectAccept}"
+																	   oncomplete="decideOpenningAccept (xhr, status, args)"></p:commandLink></li>
+												</ui:fragment>
+												<ui:fragment
+														rendered="${J_PARAMBOOK.canRejectRegistersDist and (searchDistributionInAction.searchDistributionBo.searchDistributionRegister.type == 1 and ( (empty searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state) or searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state == 2 or searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state == 0 or searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state == 1))}">
+													<li><p:commandLink id="rechazarDist"
+																	   value="#{msgs.labelRechazarDist}" process="@form"
+																	   update=":dialogRechazoForm,dialogMessage"
+																	   styleClass="rechazar"
+																	   actionListener="#{searchDistributionInAction.isSelect}"
+																	   oncomplete="decideOpenningRech (xhr, status, args)"></p:commandLink></li>
+												</ui:fragment>
+												<ui:fragment
+														rendered="${J_PARAMBOOK.canChangeDestRejectRegistersDist and
+										((empty searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state) or searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state == 0
+										or ((searchDistributionInAction.searchDistributionBo.searchDistributionRegister.type == 1 and (searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state == 1 or searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state == 2))))}">
+													<li><p:commandLink id="redistribuirDistr"
+																	   value="#{msgs.labelRedistribuirDist}" process="@form"
+																	   update=":distribuirform,dialogMessage"
+																	   styleClass="redistribuir"
+																	   actionListener="#{searchDistributionInAction.reinitDis}"
+																	   oncomplete="decideOpenningRedir (xhr, status, args)"></p:commandLink></li>
+												</ui:fragment>
+												<ui:fragment
+														rendered="${J_PARAMBOOK.canArchiveRegistersDist and (searchDistributionInAction.searchDistributionBo.searchDistributionRegister.type == 1 and ( (empty searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state) or searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state == 2 or searchDistributionInAction.searchDistributionBo.searchDistributionRegister.state == 0))}">
+													<li><p:commandLink id="archivarDist"
+																	   value="#{msgs.labelArchivarDist}" process="@form"
+																	   update="dialogMessage,books" styleClass="archivar"
+																	   actionListener="#{searchDistributionInAction.archivarDist}"
+																	   oncomplete="showMessage(xhr, status, args)" /></li>
+												</ui:fragment>
+												<li><p:commandLink styleClass="abrir" id="abrirButton"
+																   title="#{msgs.labelBotonVer}" inmedite="true"
+																   update="dialogMessage" value="#{msgs.labelBotonAbrir}"
+																   actionListener="#{searchDistributionInAction.onRowSelectNavigateBottomOpen}"
+																   oncomplete="showMessage(xhr, status, args)" /></li>
+
+											</ul>
+										</ui:fragment>
+									</h:panelGroup>
+								</div>
+							</h:panelGroup>
+							<p>
+								<p:dataTable widgetVar="tableBooks"
+											 summary="Tabla de Resultados" var="reg"
+											 value="#{searchDistributionInAction.searchDistributionBo}"
+											 paginator="true" rows="10"
+											 emptyMessage="No se encuentran registros"
+											 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+											 paginatorPosition="bottom"
+											 selection="#{searchDistributionInAction.selectedResults}"
+											 rowStyleClass="#{(reg.axsf.attributesValues.fld506 != null ? 'sirNoDoc' : ( reg.axsf.attributesValues.fld505 != null ? 'sirCom':( reg.axsf.attributesValues.fld504 != null ? 'sirReque':'')))}"
+											 dblClickSelect="true" id="books" lazy="true">
+									<p:ajax event="rowDblselect"
+											listener="#{searchDistributionInAction.onRowSelectNavigateOpen}" />
+									<p:ajax event="page"
+											listener="#{searchDistributionInAction.pageButton}" />
+									<p:ajax event="sort"
+											listener="#{searchDistributionInAction.sortButton}" />
+									<f:facet name="header">
+									</f:facet>
+									<p:column selectionMode="multiple" style="width:1%"
+											  exportable="false" />
+									<p:column   sortBy="#{TYPE_ORIG}">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.labelTipoReg}" />
+										</f:facet>
+										<ui:fragment
+												rendered="${reg.axsf.class.simpleName eq 'AxSfOut'}">
+											<h:outputText value="#{msgs.labelSalida}" />
+										</ui:fragment>
+										<ui:fragment
+												rendered="${reg.axsf.class.simpleName eq 'AxSfIn'}">
+											<h:outputText value="#{msgs.labelEntrada}" />
+										</ui:fragment>
+									</p:column>
+									<p:column >
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld1labelShort}" />
+										</f:facet>
+										<h:outputText value="#{reg.axsf.attributesValues.fld1}" />
+									</p:column>
+									<p:column sortBy="#{DIST_DATE}">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld2labelShort}" />
+										</f:facet>
+										<h:outputText value="#{reg.axsf.attributesValues.fld2}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+															   locale="es_ES" timeZone="Europe/Paris" />
+										</h:outputText>
+									</p:column>
+									<p:column  sortBy="#{message}" style="width:12%">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld16labelShort}/#{msgs.fld17label}" />
+										</f:facet>
+										<ui:fragment
+												rendered="${reg.axsf.class.simpleName eq 'AxSfIn'}">
+											<c:set var="asunto" value="#{reg.axsf.fld16.matter}" />
+											<h:outputText value="#{(empty asunto) ? '' : asunto}" /><br/>
+											<h:outputText value="#{reg.axsf.attributesValues.fld17}" />
+										</ui:fragment>
+										<ui:fragment
+												rendered="${reg.axsf.class.simpleName eq 'AxSfOut'}">
+											<c:set var="asunto" value="#{reg.axsf.fld12.matter}" />
+											<h:outputText value="#{(empty asunto) ? '' : asunto}" /><br/>
+											<h:outputText value="#{reg.axsf.attributesValues.fld13}" />
+										</ui:fragment>
+									</p:column>
+									<p:column sortBy="#{ID_ORIG}" >
+										<f:facet name="header">
+											<h:outputText value="#{msgs.origenDistlabel}" />
+										</f:facet>
+										<h:outputText value="#{reg.origenDist}" />
+									</p:column>
+									<p:column sortBy="#{ID_DEST}">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.destinoDistlabel}" />
+										</f:facet>
+										<h:outputText value="#{reg.destinoDist}" />
+									</p:column>
+									<p:column sortBy="#{state}">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.stateDistlabel}" />
+										</f:facet>
+
+										<div style="display: inline-table;">
+											<ui:fragment rendered="${not empty reg.state}">
+												<div style="display: table-cell;">
+													<c:set var="messageDistri" value="#{'labelDistrib.'}#{reg.state}" />
+													<img style="margin: 2px;"
+														 src="#{webParam.entryParameters['URLRoot']}/img/icon-dis#{reg.state}.png"
+														 title="#{msgs[messageDistri]}" />
+												</div>
+											</ui:fragment>
+											<div style="display: table-cell;vertical-align: middle;">
+												<c:set var="messagefld6"
+													   value="#{'distributionhistory.minuta.dist.state.'}#{reg.state}" />
+												<h:outputText value="#{msgs[messagefld6]}" />
+											</div>
+										</div>
+									</p:column>
+									<p:column sortBy="#{state_date}">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fchEstadoDistlabel}" />
+										</f:facet>
+										<h:outputText value="#{reg.stateDate}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+															   locale="es_ES" timeZone="Europe/Paris" />
+										</h:outputText>
+									</p:column>
+									<p:column style="width:1%">
+										<f:facet name="header">
+										</f:facet>
+										<p:commandButton id="historicoButton"
+														 update=":form:display,:form:historicoDlg"
+														 styleClass="historico"
+														 oncomplete="PF('historicoDialog').show()"
+														 icon="ui-icon-search" title="#{msgs.historicolabel}"
+														 inmediate="true" process="@this">
+											<f:setPropertyActionListener value="#{reg}"
+																		 target="#{searchDistributionInAction.selectedResult}" />
+										</p:commandButton>
+									</p:column>
+									<f:facet name="footer">
+										#{msgs.labelTotalResultados}: #{searchDistributionInAction.searchDistributionBo.rowCount}
+									</f:facet>
+								</p:dataTable>
+								<p:dialog
+										header="#{msgs.historicoDistlabel} #{searchDistributionInAction.selectedResult.axsf.attributesValues.fld1}"
+										widgetVar="historicoDialog" resizable="false" id="historicoDlg"
+										showEffect="fade" hideEffect="fade" modal="true">
+									<fieldset>
+										<p:dataTable summary="Tabla de Distribución" var="dist"
+													 id="display"
+													 value="#{searchDistributionInAction.selectedResult.histDistribution}"
+													 emptyMessage="No hay movimientos de distribución"
+													 scrollable="true" scrollHeight="250">
+											<p:column style="width:4%">
+												<p:rowToggler ajax="false" />
+											</p:column>
+											<p:column headerText="#{msgs.labelFchDistribucion}">
+												<h:outputText value="#{dist.scrDistReg.distDate}">
+													<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+																	   type="date" locale="es_ES" timeZone="Europe/Paris" />
+												</h:outputText>
+											</p:column>
+											<p:column headerText="#{msgs.labelOrigenDistribucion}">
+												<h:outputText value="#{dist.sourceDescription}" />
+											</p:column>
+											<p:column headerText="#{msgs.labelDestinoDistribucion}">
+												<h:outputText value="#{dist.targetDescription}" />
+											</p:column>
+											<p:column headerText="#{msgs.fld6label}">
+												<c:set var="messagefld6"
+													   value="#{'distributionhistory.minuta.dist.state.'}#{dist.scrDistReg.state}" />
+												<h:outputText value="#{msgs[messagefld6]}" />
+											</p:column>
+											<p:column headerText="#{msgs.labelFchEstado}">
+												<h:outputText value="#{dist.scrDistReg.stateDate}">
+													<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+																	   type="date" locale="es_ES" timeZone="Europe/Paris" />
+												</h:outputText>
+											</p:column>
+											<p:column headerText="#{msgs.labelComentario}">
+												<h:outputText value="#{dist.scrDistReg.message}">
+												</h:outputText>
+											</p:column>
+											<p:rowExpansion>
+												<p:dataTable summary="Tabla de Distribución"
+															 style="font-size:1.0em" var="movDist"
+															 value="#{dist.scrDistRegState}"
+															 emptyMessage="No hay movimientos de distribución"
+															 scrollable="true" scrollHeight="250">
+													<p:column headerText="#{msgs.fld6label}">
+														<c:set var="messagefld6exp"
+															   value="#{'distributionhistory.minuta.dist.state.'}#{movDist.state}" />
+														<h:outputText value="#{msgs[messagefld6exp]}" />
+													</p:column>
+													<p:column headerText="#{msgs.labelFchEstado}">
+														<h:outputText value="#{movDist.stateDate}">
+															<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+																			   type="date" locale="es_ES" timeZone="Europe/Paris" />
+														</h:outputText>
+													</p:column>
+													<p:column headerText="#{msgs.labelUsuario}">
+														<h:outputText value="#{movDist.username}" />
+													</p:column>
+												</p:dataTable>
+
+											</p:rowExpansion>
+
+										</p:dataTable>
+									</fieldset>
+								</p:dialog>
+							</p>
+
+							<p:dialog id="dialog" widgetVar="dialog" draggable="false"
+									  header="Validación" resizable="false" modal="true">
+								<p:messages id="dialogMessage" showDetail="true" />
+							</p:dialog>
+						</fieldset>
+					</div>
+				</div>
+			</h:form>
+			<h:form id="dialogAceptarForm">
+				<p:dialog header="Aceptar Registros" widgetVar="dlgAceptar"
+						  id="dlgAceptar" resizable="false" modal="true">
+					<p:messages id="messagesAcep" closable="true" autoUpdate="false"
+								redisplay="false" />
+					<p:panel id="panelDigAcep" >
+						<h:outputText id="labelMessAceptar" value="#{msgs.labelMensajeAceptar}" styleClass="divAceptarFont"/>
+						<br />
+						<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5"  styleClass="divAceptarFont">
+							<p:selectOneRadio layout="grid" columns="1" required="true" id="tipoAceptacion"
+											  value="#{searchDistributionInAction.tipoAceptacion}">
+								<f:selectItem itemLabel="#{msgs.labelMensajeAceptar1}" itemValue="1" />
+								<f:selectItem itemLabel="#{msgs.labelMensajeAceptar2}" itemValue="2" />
+								<p:ajax update="panelDigBook" event="valueChange" />
+							</p:selectOneRadio>
+						</h:panelGrid>
+						<p:panel id="panelDigBook" style="margin-left: 40px;width: 80%;font-size: 1.3em;">
+							<ui:fragment rendered="${searchDistributionInAction.tipoAceptacion eq '2'}">
+								<h:outputText id="labelSelectbookIn"
+											  value="#{msgs.labelSelectbookIn}" />
+								<br /><br />
+								<p:selectOneMenu id="booksIn"  style="width: 80%;"
+												 value="#{searchDistributionInAction.libroSelecAceptar}">
+									<f:selectItems value="#{booksAction.listBook.inList}"
+												   var="bookin" itemValue="#{bookin.idocarchhdrId}"
+												   itemLabel="#{bookin.idocarchhdrName}" />
+								</p:selectOneMenu>
+							</ui:fragment>
+						</p:panel>
+						<br />
+						<p class="botonera">
+							<p:commandButton styleClass="boton-buscar"
+											 value="#{msgs.labelBotonAceptar}"
+											 onclick="PrimeFaces.monitorDownload(startAccept, stopAccept);"
+											 update="messagesAcep,panelDigAcep,panelDigBook,:form:books" process="dlgAceptar"
+											 actionListener="#{searchDistributionInAction.aceptarDist}"
+											 oncomplete="handleAcceptRequest(xhr, status, args)" />
+							<p:commandButton styleClass="boton-buscar"
+											 value="#{msgs.labelBotonCancelar}" immediate="true"
+											 onclick="PF('dlgAceptar').hide();" />
+						</p>
+					</p:panel>
+				</p:dialog>
+			</h:form>
+			<h:form id="dialogRechazoForm">
+				<p:dialog header="Rechazar Registros" widgetVar="dlgRechazar"
+						  id="dlgRechazar" resizable="false" modal="true">
+					<p:messages id="messagesRec" closable="true" autoUpdate="false"
+								redisplay="false" />
+					<p:panel id="panelDig" styleClass="ventanaDist">
+						<h:outputText id="labelMotivoRec" value="#{msgs.labelMotivoRec}" />
+						<br />
+						<p:inputTextarea rows="5" id="motivoRechazo" required="true"
+										 value="#{searchDistributionInAction.motivoRechazo}" cols="30"
+										 label="#{msgs.labelMotivoRec}" maxlength="250" autoResize="false">
+							<f:validateLength maximum="250" />
+						</p:inputTextarea>
+						<br />
+						<p class="botonera">
+							<p:commandButton styleClass="boton-buscar"
+											 value="#{msgs.labelBotonAceptar}"
+											 update="messagesRec,panelDig,:form:books" process="dlgRechazar"
+											 actionListener="#{searchDistributionInAction.rechazarDist}"
+											 oncomplete="handleRechazarRequest(xhr, status, args)" />
+							<p:commandButton styleClass="boton-buscar"
+											 value="#{msgs.labelBotonCancelar}" immediate="true"
+											 onclick="PF('dlgRechazar').hide();" />
+						</p>
+					</p:panel>
+				</p:dialog>
+			</h:form>
+			<h:form id="distribuirform">
+				<p:dialog header="Redistribuir" widgetVar="dlgRedistribuir"
+						  id="dlgRedistribuir" resizable="false" modal="true">
+					<p:messages id="messagesRed" closable="true" autoUpdate="false"
+								redisplay="false" />
+					<p:panel id="panelDigdlgRedistribuir" styleClass="ventanaDist">
+						<h:outputText id="labelDestRedistribuir"
+									  value="#{msgs.labelDestRedistribuir}" /><br></br>
+						<c:set var="departPadre" value=" (#{varDep.nameDepFather})" />
+						<c:set var="departamentoPadre" value=" (#{dep.nameDepFather})" />
+						<c:set var="depart"
+							   value="#{dep.name}#{(dep.parentid == 0) ? '' : departamentoPadre }" />
+						<p:selectOneMenu
+								value="#{searchDistributionInAction.selectdestinoRedisDepartamentos}"
+								id="selectdestinoRedisDepartamentos" var="varDep"
+								label="#{msgs.labelSelectDepartamento}"
+								filterMatchMode="contains"
+								styleClass="selectdestinoRedisDepartamentos"
+								converter="departConverter" effect="fade" filter="true">
+							<f:selectItems value="#{searchDistributionInAction.listDepartament}"
+										   var="dep" itemLabel="#{depart}" itemValue="#{dep }" />
+							<p:column>
+								<h:outputText styleClass="departamentos" value="#{varDep.name}" />
+								<br />
+								<h:outputText styleClass="departamentospadre"
+											  value="#{departPadre}" />
+							</p:column>
+						</p:selectOneMenu>
+						<br />
+						<br />
+						<h:outputText id="labelMotivoRedirect"
+									  value="#{msgs.labelMotivoRedirect}" />
+						<br />
+						<p:inputTextarea rows="5" id="motivoRedireccion"
+										 value="#{searchDistributionInAction.motivoRedireccion}" cols="30"
+										 label="#{msgs.labelMotivoRedirect}" maxlength="250"
+										 autoResize="false">
+							<f:validateLength maximum="250" />
+						</p:inputTextarea>
+						<p class="botonera">
+							<p:commandButton styleClass="boton-buscar"
+											 value="#{msgs.labelBotonAceptar}"
+											 update="messagesRed,panelDigdlgRedistribuir,:form:books"
+											 process="dlgRedistribuir"
+											 actionListener="#{searchDistributionInAction.redistribuirDist}"
+											 oncomplete="handleReDisRequest(xhr, status, args)" />
+							<p:commandButton styleClass="boton-buscar"
+											 value="#{msgs.labelBotonCancelar}" immediate="true"
+											 onclick="PF('dlgRedistribuir').hide();" />
+						</p>
+					</p:panel>
+				</p:dialog>
+			</h:form>
+			<h:form id="dialogCambioDestinoForm">
+				<p:dialog header="Cambiar destino" widgetVar="dlgCambiar"
+						  id="dlgCambiar" resizable="false" modal="true">
+					<p:messages id="messagesCambDes" closable="true" autoUpdate="false"
+								redisplay="false" />
+					<p:panel id="panelDigCambio" styleClass="ventanaDist"
+							 style="width:570px !important">
+
+						<h:outputText id="labelCambiar" value="#{msgs.labelCambiar}" />
+						<br />
+						<p:autoComplete styleClass="destinoCambio_input"
+										value="#{searchDistributionInAction.destinoCambio}"
+										id="destinoCambio" label="#{msgs.labelCambiar}" required="true"
+										completeMethod="#{validationListAction.completeOrgDestino}"
+										minQueryLength="3" var="org" escape="false" queryDelay="400"
+										itemLabel="#{(empty org) ? '' : fn:trim(organismo)}"
+										itemValue="#{org}" converter="orgConverterDestination"
+										forceSelection="true" scrollHeight="200" style="width:400px">
+							<p:column>
+								<h:outputText styleClass="organismo"
+											  value="#{org.code} #{org.name}" />
+								<br />
+								<h:outputText styleClass="organismopadre" value="#{orgPadre}" />
+							</p:column>
+						</p:autoComplete>
+						<p:commandButton id="DestinationButton" styleClass="organismobusq"
+										 icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"
+										 inmediate="true" process="@this"
+										 actionListener="#{searchUnitsAction.chooseUnits}">
+							<p:ajax event="dialogReturn"
+									listener="#{searchDistributionInAction.updateDestinationCambio}"
+									update="destinoCambio" />
+						</p:commandButton>
+						<br />
+						<p class="botonera">
+							<p:commandButton styleClass="boton-buscar"
+											 value="#{msgs.labelBotonAceptar}"
+											 update="messagesCambDes,panelDigCambio,:form:books"
+											 process="dlgCambiar"
+											 actionListener="#{searchDistributionInAction.cambiarDestDist}"
+											 oncomplete="handleCamDesRequest(xhr, status, args)" />
+							<p:commandButton styleClass="boton-buscar"
+											 value="#{msgs.labelBotonCancelar}" immediate="true"
+											 onclick="PF('dlgCambiar').hide();" />
+						</p>
+					</p:panel>
+				</p:dialog>
+				<p:dialog modal="true" widgetVar="statusDialogAccept" id="statusDialogAccept"
+						  header="Aceptando las distribuciones, espere por favor" draggable="false"
+						  closable="false" resizable="false" >
+					<img
+							src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

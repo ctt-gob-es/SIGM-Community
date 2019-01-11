@@ -118,6 +118,13 @@ public class IntercambioRegistralManagerImpl implements IntercambioRegistralMana
 				.getBandejaSalidaIntercambioRegistral(estado, idOficina, idLibro);
 		return result;
 	}
+	
+	public List<BandejaSalidaItemVO> getBandejaSalidaIntercambioRegistralEnviadosConError(
+			Integer idOficina, Integer idLibro) {
+		List<BandejaSalidaItemVO> result = getIntercambioRegistralSalidaManager()
+				.getBandejaSalidaIntercambioRegistralEnviadosConError(idOficina, idLibro);
+		return result;
+	}
 
 	public List<BandejaEntradaItemVO> getBandejaEntradaIntercambioRegistral(Integer estado,
 			Integer idOficina) {
@@ -178,10 +185,12 @@ public class IntercambioRegistralManagerImpl implements IntercambioRegistralMana
 	public void aceptarIntercambioRegistralEntradaById(String idIntercambioRegistralEntrada,
 		String idLibro, UsuarioVO user, Integer idOficina, String codOficina,
 		boolean llegoDocFisica) {
-	getIntercambioRegistralEntradaManager()
+	    synchronized(this) {
+		getIntercambioRegistralEntradaManager()
 			.aceptarIntercambioRegistralEntradaById(idIntercambioRegistralEntrada, idLibro,
 					user, idOficina, codOficina, llegoDocFisica);
-}
+	    }
+	}
 
 	
 	public UnidadAdministrativaIntercambioRegistralVO getUnidadAdministrativaByCodigosComunes(

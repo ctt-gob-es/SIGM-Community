@@ -62,9 +62,13 @@ public class UasDaoDeptTbl
 	("UPDDATE", DbDataType.DATE_TIME,true);									 
 	public static final DbColumnDef    CD_IDORG         = new DbColumnDef
 	("IDORG",DbDataType.NULL_LONG_INTEGER, true);
+	public static final DbColumnDef    CD_EMAIL       = new DbColumnDef
+	("EMAIL",DbDataType.SHORT_TEXT,256, true);
+	public static final DbColumnDef    CD_EMAILCHECK       = new DbColumnDef
+	("EMAILCHECK",DbDataType.SHORT_INTEGER,1, true);
 	
 	private static final DbColumnDef [] ACD  = 
-	{ CD_ID, CD_NAME, CD_PARENTID, CD_MGRID, CD_TYPE, CD_REMARKS, CD_CRTRID,CD_CRTNDATE, CD_UPDRID, CD_UPDATE,CD_IDORG};
+	{ CD_ID, CD_NAME, CD_PARENTID, CD_MGRID, CD_TYPE, CD_REMARKS, CD_CRTRID,CD_CRTNDATE, CD_UPDRID, CD_UPDATE,CD_IDORG,CD_EMAIL, CD_EMAILCHECK};
 	
 	private static final String   ACN = DbUtil.getColumnNames(ACD);
 	

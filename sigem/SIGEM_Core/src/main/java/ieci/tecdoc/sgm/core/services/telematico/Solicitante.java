@@ -8,113 +8,121 @@ package ieci.tecdoc.sgm.core.services.telematico;
  */
 public class Solicitante
 {
-   private String tipoIdentificacion;
-   private String tipoPresentacion;
-   private String tipoSolicitante;
-   
-  
-   private String documentoIdentidadRepresentante;
-   private String nombreApellidosRepresentante;
-   private String nombreRepresentante;
-   private String apellido1Representante;
-   private String apellido2Representante;
-   private String cifRepresentante;
-   private String razonSocialRepresentante;
-   private String documentoIdentidadRepresentanteLegalRepresentante;
-   private String nombreApellidosRepresentanteLegalRepresentante;
-   private String domicilioRepresentante;
-   private String localidadRepresentante;
-   private String provinciaRepresentante;
-   private String descripcionProvinciaRepresentante;
-   private String codigoPostalRepresentante;
-   private String telefonoRepresentante;
-   private String telefonoFijoRepresentante;
-   private String correoElectronicoRepresentante;
-   
-   private String documentoIdentidadSolicitante;
-   private String nombreApellidosSolicitante;
-   private String nombreSolicitante;
-   private String apellido1Solicitante;
-   private String apellido2Solicitante;
-   private String cifSolicitante;
-   private String razonSocialSolicitante;
-   private String documentoIdentidadRepresentanteLegalSolicitante;
-   private String nombreApellidosRepresentanteLegalSolicitante;
-   private String domicilioSolicitante;
-   private String localidadSolicitante;
-   private String provinciaSolicitante;
-   private String descripcionProvinciaSolicitante;
-   private String codigoPostalSolicitante;
-   private String telefonoSolicitante;
-   private String telefonoFijoSolicitante;
-   private String correoElectronicoSolicitante;
-   
-   private String tipoComunicacionNotificacion;
-   private String paisNotificacion;
-   private String provinciaNotificacion;
-   private String descripcionProvinciaNotificacion;
-   private String localidadNotificacion;
-   private String domicilioNotificacion;
-   private String codigoPostalNotificacion;
-   private String telefonoNotificacion;
-   private String telefonoFijoNotificacion;
-   private String faxNotificacion;
-   private String correoElectronicoNotificacion;
+	private String tipoIdentificacion;
+	private String tipoPresentacion;
+	private String tipoSolicitante;
 
-   public Solicitante()
-   {
-	   tipoIdentificacion=null;
-	   tipoPresentacion=null;
-	   tipoSolicitante=null;
-	   
-	   documentoIdentidadRepresentante=null;
-	   nombreApellidosRepresentante=null;
-	   nombreRepresentante=null;
-	   apellido1Representante=null;
-	   apellido2Representante=null;
-	   cifRepresentante=null;
-	   razonSocialRepresentante=null;
-	   documentoIdentidadRepresentanteLegalRepresentante=null;
-	   nombreApellidosRepresentanteLegalRepresentante=null;
-	   domicilioRepresentante=null;
-	   localidadRepresentante=null;
-	   provinciaRepresentante=null;
-	   descripcionProvinciaRepresentante=null;
-	   codigoPostalRepresentante=null;
-	   telefonoRepresentante=null;
-	   telefonoFijoRepresentante=null;
-	   correoElectronicoRepresentante=null;
-	   
-	   documentoIdentidadSolicitante=null;
-	   nombreApellidosSolicitante=null;
-	   nombreSolicitante=null;
-	   apellido1Solicitante=null;
-	   apellido2Solicitante=null;
-	   cifSolicitante=null;
-	   razonSocialSolicitante=null;
-	   documentoIdentidadRepresentanteLegalSolicitante=null;
-	   nombreApellidosRepresentanteLegalSolicitante=null;
-	   domicilioSolicitante=null;
-	   localidadSolicitante=null;
-	   provinciaSolicitante=null;
-	   descripcionProvinciaSolicitante=null;
-	   codigoPostalSolicitante=null;
-	   telefonoSolicitante=null;
-	   telefonoFijoSolicitante=null;
-	   correoElectronicoSolicitante=null;
-	   
-	   tipoComunicacionNotificacion=null;
-	   paisNotificacion=null;
-	   provinciaNotificacion=null;
-	   descripcionProvinciaNotificacion=null;
-	   localidadNotificacion=null;
-	   domicilioNotificacion=null;
-	   codigoPostalNotificacion=null;
-	   telefonoNotificacion=null;
-	   telefonoFijoNotificacion=null;
-	   faxNotificacion=null;
-	   correoElectronicoNotificacion=null;
-   }
+
+	private String documentoIdentidadRepresentante;
+	private String nombreApellidosRepresentante;
+	private String nombreRepresentante;
+	private String apellido1Representante;
+	private String apellido2Representante;
+	private String cifRepresentante;
+	private String razonSocialRepresentante;
+	private String documentoIdentidadRepresentanteLegalRepresentante;
+	private String nombreApellidosRepresentanteLegalRepresentante;
+	private String domicilioRepresentante;
+	private String localidadRepresentante;
+	private String provinciaRepresentante;
+	private String descripcionProvinciaRepresentante;
+	private String codigoPostalRepresentante;
+	private String telefonoRepresentante;
+	private String telefonoFijoRepresentante;
+	private String correoElectronicoRepresentante;
+
+	private String documentoIdentidadSolicitante;
+	private String nombreApellidosSolicitante;
+	private String nombreSolicitante;
+	private String apellido1Solicitante;
+	private String apellido2Solicitante;
+	private String cifSolicitante;
+	private String razonSocialSolicitante;
+	private String documentoIdentidadRepresentanteLegalSolicitante;
+	private String nombreApellidosRepresentanteLegalSolicitante;
+	private String domicilioSolicitante;
+	private String localidadSolicitante;
+	private String provinciaSolicitante;
+	private String descripcionProvinciaSolicitante;
+	private String codigoPostalSolicitante;
+	private String telefonoSolicitante;
+	private String telefonoFijoSolicitante;
+	private String correoElectronicoSolicitante;
+
+	private String tipoComunicacionNotificacion;
+	private String paisNotificacion;
+	private String provinciaNotificacion;
+	private String descripcionProvinciaNotificacion;
+	private String localidadNotificacion;
+	private String domicilioNotificacion;
+	private String codigoPostalNotificacion;
+	private String telefonoNotificacion;
+	private String telefonoFijoNotificacion;
+	private String faxNotificacion;
+	private String correoElectronicoNotificacion;
+	private String institucion;
+	private String cargo;
+	private String faxSolicitante;
+	private String faxRepresentante;
+
+	public Solicitante()
+	{
+		tipoIdentificacion=null;
+		tipoPresentacion=null;
+		tipoSolicitante=null;
+
+		documentoIdentidadRepresentante=null;
+		nombreApellidosRepresentante=null;
+		nombreRepresentante=null;
+		apellido1Representante=null;
+		apellido2Representante=null;
+		cifRepresentante=null;
+		razonSocialRepresentante=null;
+		documentoIdentidadRepresentanteLegalRepresentante=null;
+		nombreApellidosRepresentanteLegalRepresentante=null;
+		domicilioRepresentante=null;
+		localidadRepresentante=null;
+		provinciaRepresentante=null;
+		descripcionProvinciaRepresentante=null;
+		codigoPostalRepresentante=null;
+		telefonoRepresentante=null;
+		telefonoFijoRepresentante=null;
+		correoElectronicoRepresentante=null;
+
+		documentoIdentidadSolicitante=null;
+		nombreApellidosSolicitante=null;
+		nombreSolicitante=null;
+		apellido1Solicitante=null;
+		apellido2Solicitante=null;
+		cifSolicitante=null;
+		razonSocialSolicitante=null;
+		documentoIdentidadRepresentanteLegalSolicitante=null;
+		nombreApellidosRepresentanteLegalSolicitante=null;
+		domicilioSolicitante=null;
+		localidadSolicitante=null;
+		provinciaSolicitante=null;
+		descripcionProvinciaSolicitante=null;
+		codigoPostalSolicitante=null;
+		telefonoSolicitante=null;
+		telefonoFijoSolicitante=null;
+		correoElectronicoSolicitante=null;
+
+		tipoComunicacionNotificacion=null;
+		paisNotificacion=null;
+		provinciaNotificacion=null;
+		descripcionProvinciaNotificacion=null;
+		localidadNotificacion=null;
+		domicilioNotificacion=null;
+		codigoPostalNotificacion=null;
+		telefonoNotificacion=null;
+		telefonoFijoNotificacion=null;
+		faxNotificacion=null;
+		correoElectronicoNotificacion=null;
+		institucion=null;
+		cargo=null;
+		faxSolicitante=null;
+		faxRepresentante=null;
+	}
 
 	public String getTipoSolicitante() {
 		return tipoSolicitante;
@@ -511,5 +519,36 @@ public class Solicitante
 			String correoElectronicoNotificacion) {
 		this.correoElectronicoNotificacion = correoElectronicoNotificacion;
 	}
+
+	public String getInstitucion() {
+		return institucion;
+	}
+
+	public void setInstitucion(String institucion) {
+		this.institucion = institucion;
+	}
+
+	public String getCargo() {
+		return cargo;
+	}
+
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
+	}
+
+	public String getFaxSolicitante() {
+		return faxSolicitante;
+	}
+
+	public void setFaxSolicitante(String faxSolicitante) {
+		this.faxSolicitante = faxSolicitante;
+	}
 	
+	public String getFaxRepresentante() {
+		return faxRepresentante;
+	}
+
+	public void setFaxRepresentante(String faxRepresentante) {
+		this.faxRepresentante = faxRepresentante;
+	}
 }

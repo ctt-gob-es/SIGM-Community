@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea- versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="distributionMail">
+	
+	<select id="getMailsDepartament"  parameterClass="java.lang.Integer"
+		resultClass="es.msssi.sgm.registropresencial.beans.DistributionMail">
+		SELECT UPPER(NAME) as name, EMAIL
+	    	FROM IUSERDEPTHDR
+	    	WHERE ID = #value# AND EMAILCHECK = 1 AND EMAIL IS NOT NULL
+		UNION
+		SELECT UPPER(TRIM (NOMBRE || ' ' ||APELLIDOS)) as name, EMAIL
+		    FROM IUSERUSERHDR UU
+		        INNER JOIN IUSERUSERHDR_CF ON UU.ID = IDUSER AND EMAILCHECKDIST = 1
+		        INNER JOIN IUSERDATA UD ON UU.ID = UD.ID
+	    	WHERE DEPTID = #value# AND EMAIL IS NOT NULL
+
+	</select>
+	
+	<select id="getMailsRejectedDepartament"  parameterClass="java.lang.Integer"
+		resultClass="es.msssi.sgm.registropresencial.beans.DistributionMail">
+		SELECT UPPER(NAME) as name, EMAIL
+	    	FROM IUSERDEPTHDR
+	    	WHERE ID = #value# AND EMAILCHECK = 1 AND EMAIL IS NOT NULL
+		UNION
+		SELECT UPPER(TRIM (NOMBRE || ' ' ||APELLIDOS)) as name, EMAIL
+		    FROM IUSERUSERHDR UU
+		        INNER JOIN IUSERUSERHDR_CF ON UU.ID = IDUSER AND EMAILCHECKDIST_REJECTED = 1
+		        INNER JOIN IUSERDATA UD ON UU.ID = UD.ID
+	    	WHERE DEPTID = #value# AND EMAIL IS NOT NULL
+
+	</select>
+
+	<select id="getMailsIntercambioRegByOrg"  parameterClass="java.lang.String"
+		resultClass="es.msssi.sgm.registropresencial.beans.DistributionMail">
+		SELECT UPPER(NAME) as name, EMAIL
+	    	FROM IUSERDEPTHDR
+	    	WHERE ID IN (select ID from iuserdepthdr where idorg IN (SELECT ID FROM SCR_ORGS WHERE CODE = #value#)) AND EMAILCHECK = 1 AND EMAIL IS NOT NULL
+		UNION
+		SELECT UPPER(TRIM (NOMBRE || ' ' ||APELLIDOS)) as name, EMAIL
+		    FROM IUSERUSERHDR UU
+		        INNER JOIN IUSERUSERHDR_CF ON UU.ID = IDUSER AND EMAILCHECK_INTERCAMBIOREG = 1
+		        INNER JOIN IUSERDATA UD ON UU.ID = UD.ID
+	    	WHERE DEPTID IN (select ID from iuserdepthdr where idorg IN (SELECT ID FROM SCR_ORGS WHERE CODE = #value#)) AND EMAIL IS NOT NULL
+
+	</select>
+
+</sqlMap>

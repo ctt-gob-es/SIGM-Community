@@ -200,6 +200,21 @@ public interface User {
 	 */
 	public void setDeptId(int deptId);
 
+  /**
+   * Obtiene los flags del usuario.
+   * 
+   * @return El dato mencionado.
+   */
+  public int getFlags();
+
+  /**
+   * Establece los flags del usuario.
+   * 
+   * @param flags
+   *            El dato mencionado.
+   */
+  public void setFlags(int flags);
+
 	/**
 	 * Obtiene el estado del usuario.
 	 * 

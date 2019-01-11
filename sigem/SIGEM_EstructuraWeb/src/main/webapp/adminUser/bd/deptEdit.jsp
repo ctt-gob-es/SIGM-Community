@@ -70,6 +70,12 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 			correcto=false;
 		}
 		
+		var email = form.email.value;
+		if ( !isValidEmail(email) ){
+			msg+= "<bean:message key="message.departamento.nuevo.error.emailerronea"/>" ;
+			correcto=false;
+		}
+		
 		if (correcto == false ) {
 			alert(msg);
 		}
@@ -140,7 +146,7 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 							
 						<div class="cuadro" style="height: 170px;">
 						
-							<div id="box1">
+							<div id="box1" style="OVERFLOW-y: auto;">
 	
 								<div class="col" style="width: 490px;">
 									<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.nombre"/></label>
@@ -166,6 +172,14 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 									<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.padre"/></label>
 									<label class="gr" style="width:190px;"><html:textarea property="idPadre" cols="65" rows="6" styleId="dept.idPadre"/></label>
 							    </div>
+							     <div class="col" style="width: 490px;">
+									<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.email"/></label>
+									<label class="gr" style="width:190px;"><html:text property="email" cols="65" rows="6" styleId="dept.email"/></label>
+							    </div>
+							    <div class="col" style="width: 490px;">
+									<label class="gr" style="width:255px;"><bean:message key="message.comun.etiqueta.emailcheck"/></label>
+									<label class="gr" style="width:65px;"><html:checkbox property="emailcheck" styleId="dept.emailcheck" style="width:20px" /></label>
+							    </div> 	
 							</div>
 							
 		       			</div>

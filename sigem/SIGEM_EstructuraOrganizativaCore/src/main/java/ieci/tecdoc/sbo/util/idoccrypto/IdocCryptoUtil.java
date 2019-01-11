@@ -5,7 +5,6 @@ import ieci.tecdoc.core.base64.Base64Util;
 import java.security.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
-import org.bouncycastle.jce.provider.*;
 
 public final class IdocCryptoUtil
 {
@@ -22,8 +21,7 @@ public final class IdocCryptoUtil
 	      
 	   //Obtener el texto que va a dar el hash inicial
 	   byte buf[] = passwordToGenKey.getBytes("UTF-8");
-	
-	   Security.addProvider(new BouncyCastleProvider());
+
 	   
 	   //Obtener el hash
 	   MessageDigest md = MessageDigest.getInstance("MD5", "BC");
@@ -66,8 +64,7 @@ public final class IdocCryptoUtil
 	  	      
 	   //Obtener el texto que va a dar el hash inicial
 	   byte buf[] = passwordToGenKey.getBytes("UTF-8");
-	
-	   Security.addProvider(new BouncyCastleProvider());
+
 	   
 	   //Obtener el hash
 	   MessageDigest md = MessageDigest.getInstance("MD5", "BC");

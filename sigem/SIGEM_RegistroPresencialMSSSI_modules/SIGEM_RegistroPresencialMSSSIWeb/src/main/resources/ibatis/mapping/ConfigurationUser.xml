@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea- versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="configurationUser">
+	
+	<select id="getConfigurationUser"  parameterClass="java.lang.Integer"
+		resultClass="es.msssi.sgm.registropresencial.beans.Configuration">
+            SELECT US.ID AS idUser, DP.NAME AS nameDepartament, EMAILCHECKDIST as emailcheckInt, 
+            	EMAILCHECKDIST_REJECTED as emailcheckrechazadasInt, 
+            	EMAILCHECK_INTERCAMBIOREG as emailcheckintercambioregInt, 
+            	COPYFIELD as copyField
+                FROM IUSERUSERHDR US INNER JOIN IUSERDEPTHDR DP ON US.DEPTID = DP.ID
+                    LEFT JOIN IUSERUSERHDR_CF  CF ON US.ID = CF.IDUSER
+                WHERE US.ID = #value#
+	</select>
+
+	<select id="existUser"  parameterClass="java.lang.Integer"
+		resultClass="java.lang.Integer">
+           SELECT COUNT(*) FROM  IUSERUSERHDR_CF WHERE IDUSER = #value#
+	</select>
+
+	
+	<update id="updateConfigurationUser" parameterClass="es.msssi.sgm.registropresencial.beans.Configuration" >
+	 	UPDATE IUSERUSERHDR_CF SET 
+    		EMAILCHECKDIST=#emailcheckInt#,COPYFIELD=#copyField#,EMAILCHECKDIST_REJECTED=#emailcheckrechazadasInt#,EMAILCHECK_INTERCAMBIOREG=#emailcheckintercambioregInt#
+		WHERE IDUSER=#idUser#
+	</update>
+	
+	<insert id="insertConfigurationUser" parameterClass="es.msssi.sgm.registropresencial.beans.Configuration">
+		INSERT INTO IUSERUSERHDR_CF (IDUSER, EMAILCHECKDIST, COPYFIELD, EMAILCHECKDIST_REJECTED, EMAILCHECK_INTERCAMBIOREG) 
+		VALUES (#idUser#, #emailcheckInt#, #copyField#, #emailcheckrechazadasInt#, #emailcheckintercambioregInt#)
+	</insert>
+
+</sqlMap>

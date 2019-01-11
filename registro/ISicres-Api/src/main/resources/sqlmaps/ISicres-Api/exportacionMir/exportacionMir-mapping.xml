@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+    PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ExportacionMirVO">
+
+
+<typeAlias alias="bandejaEntradaItemVO"
+		type="es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.BandejaEntradaItemVO" />
+
+	<resultMap
+		class="es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.BandejaEntradaItemVO"
+		id="bandejaEntradaItemResultmap">
+		<result property="id" column="fdrid"  />
+		<result property="idRegistro" column="fld1"   />
+		<result property="fechaRegistro" column="fld2" />
+		<result property="fechaModificacion" column="timestamp" />
+		<result property="numeroRegistroOrigen" column="fld10" />
+	</resultMap>
+	
+	
+		
+	<resultMap
+		class="es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.InfoRegistroPageRepositoryVO"
+		id="documentoRegistromap">
+		<result property="idPageh" column="idpage" />
+		<result property="nombre" column="nombre" />
+	</resultMap>
+	
+	<resultMap
+		class="es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.BandejaEntradaItemVO"
+		id="bandejaEntradaItemRegistroResultmap">
+		<result property="numeroRegistro" column="fld1"/>
+
+		<result property="fechaRegistro" column="fld2"/>
+
+	</resultMap>
+</sqlMap>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea- versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="LoginCertUser">
+	
+  <select id="getUsersByDni"
+          parameterClass="java.lang.String"
+          resultClass="es.msssi.sigm.dao.dataaccess.domain.IUserUserHdr">
+      SELECT usr.ID AS id, usr.NAME AS name, usr.PASSWORD AS password, usr.DEPTID as deptip, usr.STAT as stat, usr.FLAGS as flags,
+        dat.APELLIDOS as iuseruserdata_surname
+      FROM IUSERUSERHDR usr
+      JOIN IUSERDATA dat ON usr.ID = dat.ID
+      WHERE LPAD(UPPER(dat.ID_CERTIFICADO), 9, '0') = #value#
+  </select>
+  
+  <select id="getOBByIdApp"
+          parameterClass="java.util.HashMap"
+          resultClass="es.msssi.sigm.dao.dataaccess.domain.IUserUserHdrOB">
+      SELECT ID AS id, FLAG AS flag, OBLIGATION_DATE as obligation_date, APP as app 
+      FROM IUSERUSERHDR_OB
+      WHERE ID=#id# AND APP=#app#
+  </select>   
+  
+</sqlMap>

@@ -38,6 +38,15 @@ public class BandejaSalidaItemVO extends BaseIntercambioRegistralVO {
 	protected EstadoRegistroEnumVO estadoRegistro;
 
 	protected String comentarios;
+	protected String color;
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
 
 	public String getNumeroRegistro() {
 		return numeroRegistro;
@@ -45,7 +54,6 @@ public class BandejaSalidaItemVO extends BaseIntercambioRegistralVO {
 	public void setNumeroRegistro(String numeroRegistro) {
 		this.numeroRegistro = numeroRegistro;
 	}
-
 
 	public Date getFechaRegistro() {
 		return fechaRegistro;
@@ -153,5 +161,4 @@ public class BandejaSalidaItemVO extends BaseIntercambioRegistralVO {
 	public void setComentarios(String comentarios) {
 		this.comentarios = comentarios;
 	}
-
 }

@@ -85,4 +85,16 @@ public interface ServicioGestionUsuariosBackOffice {
 	 * @throws GestionUsuariosBackOfficeException En caso de producirse algún error
 	 */
 	public String obtenerDireccionDeslogado()  throws GestionUsuariosBackOfficeException;
+	/**
+	 * Método que obtiene la URL de login para una aplicacion de back office de registro
+	 * @throws GestionUsuariosBackOfficeException En caso de producirse algún error
+	 */
+	public String obtenerDireccionRegLogado()  throws GestionUsuariosBackOfficeException;
+		
+	/**
+	 * Método que obtiene la URL de desconexión para una aplicacion de back office de registro
+	 * @throws GestionUsuariosBackOfficeException En caso de producirse algún error
+	 */
+	public String obtenerDireccionRegDeslogado()  throws GestionUsuariosBackOfficeException;
+
 }

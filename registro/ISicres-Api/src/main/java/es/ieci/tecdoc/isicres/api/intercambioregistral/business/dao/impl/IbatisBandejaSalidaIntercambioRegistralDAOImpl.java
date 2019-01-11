@@ -29,6 +29,7 @@ public class IbatisBandejaSalidaIntercambioRegistralDAOImpl implements
 	private static final String GET_INTERCAMBIO_REGISTRAL_SALIDA_BY_ID = "IntercambioRegistralSalidaVO.getIntercambioRegistralSalidaById";
 	private static final String GET_BANDEJA_SALIDA_BY_ESTADO_OFICINA = "IntercambioRegistralSalidaVO.getBandejaSalidaByEstadoOficina";
 	private static final String GET_BANDEJA_SALIDA_BY_ESTADO_OFICINA_Y_LIBRO = "IntercambioRegistralSalidaVO.getBandejaSalidaByEstadoOficinaYLibro";
+	private static final String GET_BANDEJA_SALIDA_BY_ESTADO_OFICINA_Y_LIBRO_ENVIADOS_CON_ERROR = "IntercambioRegistralSalidaVO.getBandejaSalidaByEstadoOficinaYLibroEnviadosConError";
 	private static final String UPDATE_INTERCAMBIO_REGISTRAL_SALIDA = "IntercambioRegistralSalidaVO.updateIntercambioRegistralSalidaVO";
 	private static final String UPDATE_STATE_INTERCAMBIO_REGISTRAL_SALIDA = "IntercambioRegistralSalidaVO.updateStateIntercambioRegistralSalidaVO";
 
@@ -127,6 +128,24 @@ public class IbatisBandejaSalidaIntercambioRegistralDAOImpl implements
 			params.put("idOficina",idOficina);
 			params.put("idLibro", idLibro);
 			List<BandejaSalidaItemVO> bandejaSalida = (List<BandejaSalidaItemVO>)getSqlMapClientTemplate().queryForList(GET_BANDEJA_SALIDA_BY_ESTADO_OFICINA_Y_LIBRO,params);
+			return bandejaSalida;
+		}
+		catch (DataAccessException e) {
+			logger.error("Error en la busqueda de bandeja de salida por estado y oficina", e);
+
+			throw new RuntimeException(e);
+		}
+
+	}
+	
+	public List<BandejaSalidaItemVO> getBandejaSalidaByEstadoOficinaYLibroEnviadosConError(
+			Integer idOficina, Integer idLibro) {
+		try{
+			HashMap<String, Integer> params = new HashMap<String, Integer>();
+			params.put("estado", 3);
+			params.put("idOficina",idOficina);
+			params.put("idLibro", idLibro);
+			List<BandejaSalidaItemVO> bandejaSalida = (List<BandejaSalidaItemVO>)getSqlMapClientTemplate().queryForList(GET_BANDEJA_SALIDA_BY_ESTADO_OFICINA_Y_LIBRO_ENVIADOS_CON_ERROR,params);
 			return bandejaSalida;
 		}
 		catch (DataAccessException e) {

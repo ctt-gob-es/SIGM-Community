@@ -13,6 +13,8 @@ public class GestionURLsBackOffice {
 	private static final String KEY_URL = "Url";
 	private static final String KEY_LOGIN = "login";
 	private static final String KEY_LOGOUT = "logout";
+	private static final String KEY_REGLOGIN = "loginrp";
+	private static final String KEY_REGLOGOUT = "logoutrp";
 	private static final String SEPARADOR = ".";
 
 	private static ResourceBundle propiedades;
@@ -44,6 +46,10 @@ public class GestionURLsBackOffice {
 			config.put(KEY_LOGIN, aux);
 			aux = propiedades.getString(KEY_LOGOUT);
 			config.put(KEY_LOGOUT, aux);
+			aux = propiedades.getString(KEY_REGLOGIN);
+			config.put(KEY_REGLOGIN, aux);
+			aux = propiedades.getString(KEY_REGLOGOUT);
+			config.put(KEY_REGLOGOUT, aux);
 		}
 	}
 
@@ -63,4 +69,11 @@ public class GestionURLsBackOffice {
     	return (String)config.get(KEY_LOGOUT);
 	}
 
+    public static String getUrlRegLogin() {
+    	return (String)config.get(KEY_REGLOGIN);
+	}
+
+    public static String getUrlRegLogout() {
+    	return (String)config.get(KEY_REGLOGOUT);
+	}
 }

@@ -59,8 +59,9 @@ public class DepartmentsTable
       "," +  UasDaoDeptTbl.CD_REMARKS.getName() +
       "," +  UasDaoDeptTbl.CD_CRTRID.getName() +
       "," +  UasDaoDeptTbl.CD_CRTNDATE.getName() +
-      "," +  UasDaoDeptTbl.CD_IDORG.getName();
-             
+      "," +  UasDaoDeptTbl.CD_IDORG.getName() +
+      "," +  UasDaoDeptTbl.CD_EMAIL.getName() +
+      "," +  UasDaoDeptTbl.CD_EMAILCHECK.getName();
       return val;
    }
    
@@ -85,7 +86,9 @@ public class DepartmentsTable
           UasDaoDeptTbl.CD_UPDRID.getName() + "," +
           UasDaoDeptTbl.CD_UPDATE.getName() + "," +
           UasDaoDeptTbl.CD_TYPE.getName()+ "," +
-          UasDaoDeptTbl.CD_IDORG.getName();;
+          UasDaoDeptTbl.CD_IDORG.getName()+ "," +
+          UasDaoDeptTbl.CD_EMAIL.getName()+ "," +
+          UasDaoDeptTbl.CD_EMAILCHECK.getName();
     
     /*
    	val = getBaseTableName() + "." +  UasDaoDeptTbl.CD_NAME.getName() +
@@ -144,7 +147,9 @@ public class DepartmentsTable
 		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_CRTNDATE.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_UPDRID.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_UPDATE.getName()+
-		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_IDORG.getName();
+		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_IDORG.getName()+
+		      "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_EMAIL.getName()+
+		       "," + getBaseTableName() + "." +  UasDaoDeptTbl.CD_EMAILCHECK.getName();
              
       return val;
    }

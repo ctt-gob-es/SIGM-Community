@@ -147,7 +147,10 @@ public class UserEdit extends BaseAction {
 		user.getUserDataImpl().setApellidos(userForm.getApellidos());
 		user.getUserDataImpl().setNombre(userForm.getNombrePersonal());
 
-		// Perfiles del usuario
+    // Flags (de momento comprueban acceso a tram)
+    user.setFlags(userForm.isTramUser() ? 1 : 0);
+		
+    // Perfiles del usuario
 		// user.resetProfiles();
 		Map profilesMap = new HashMap();
 		UserProfiles profiles = user.getProfiles();
@@ -284,7 +287,10 @@ public class UserEdit extends BaseAction {
 
 		}
 
-		UserProfiles userProfiles = user.getProfiles();
+    // Flags (de momento comprueban acceso a tram)
+    userForm.setTramUser(user.getFlags() == 1);
+
+    UserProfiles userProfiles = user.getProfiles();
 		Collection listaAplicacionesModificada = new ArrayList();
 		Collection listaAplicacionesDefecto = userForm.getListaAplicaciones();
 		for (Iterator iter = listaAplicacionesDefecto.iterator(); iter

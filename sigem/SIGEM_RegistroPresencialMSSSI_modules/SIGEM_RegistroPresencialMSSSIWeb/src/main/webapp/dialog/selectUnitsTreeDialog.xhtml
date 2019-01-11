@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+	<title><h:outputText
+			value="#{msgs.busquedaOrgTreelabel}" /></title>
+	<link rel="stylesheet" type="text/css"
+		href="#{webParam.entryParameters['URLRoot']}/css/intranet-sigm.css"
+		media="screen,projection" />
+	<link rel="stylesheet" type="text/css"
+		href="#{webParam.entryParameters['URLRoot']}/css/intranet-sigm-imprimir.css"
+		media="print" />
+	<link rel="stylesheet" type="text/css"
+		href="#{webParam.entryParameters['URLRoot']}/css/primefaces.css" />
+	<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/unitDialog.js"></script>
+</h:head>
+
+<h:body styleClass="bodyUnit">
+	
+	<h:form  id="formUnit">
+		<h:inputHidden id="tabActiveHidden" value="#{searchUnitsTreeAction.tabActive}" />
+		<p:tabMenu id="tabUnitLevel" widgetVar="tabUnitLevelVar" activeIndex="#{searchUnitsTreeAction.tabActive}" >
+		    <p:menuitem value="MSSSI" actionListener="#{searchUnitsTreeAction.initMSSSI}" update="formUnit">
+		    </p:menuitem>
+		     <p:menuitem value="Estatal" actionListener="#{searchUnitsTreeAction.initState}" update="formUnit">
+		    </p:menuitem>
+		    <p:menuitem value="Autonómico"  actionListener="#{searchUnitsTreeAction.initAutonomic}" update="formUnit">
+		    </p:menuitem>
+		    <p:menuitem value="Local" actionListener="#{searchUnitsTreeAction.initLocal}" update="formUnit">
+		    </p:menuitem>
+		    <p:menuitem value="Laboratorios" actionListener="#{searchUnitsTreeAction.initLab}"  update="formUnit">
+		    </p:menuitem>
+		     <p:menuitem value="Otros" actionListener="#{searchUnitsTreeAction.initOther}"  update="formUnit">
+		    </p:menuitem>
+		</p:tabMenu>
+			<p:panel id="tab1" rendered="#{searchUnitsTreeAction.tabActive == 0}">
+				<label  class="general">
+					<div class="center">
+						<p:tree dynamic="true" id="unitsMSSSI" styleClass="treeUnit" widgetVar="tableUnitMSSSI" value="#{searchUnitsTreeAction.treeOrgs}"
+						  var="unit" selectionMode="single" selection="#{searchUnitsTreeAction.selectedUnit}">
+					        <p:ajax event="expand" update="unitsMSSSI" listener="#{searchUnitsTreeAction.onNodeExpand}" />
+					         <p:ajax event="select"  listener="#{searchUnitsTreeAction.onNodeSelect}" />
+					        <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+					            <h:outputText value="#{unit.codeOrg}  -  #{unit.nameOrg}"/>
+					        </p:treeNode>
+					    </p:tree>
+					</div>
+				</label>
+				<div class="botones">
+					<p:commandButton process="@this,unitsMSSSI"
+						value="#{msgs.labelBotonCancelar}"
+						actionListener="#{searchUnitsTreeAction.hiddenDialog}" />
+				</div>
+			</p:panel>
+			
+			<p:panel id="tab2" rendered="#{searchUnitsTreeAction.tabActive == 1}">
+				<label  class="general">
+					<div class="center">
+						<p:tree  id="unitsState" dynamic="true" styleClass="treeUnit" widgetVar="tableUnitState" value="#{searchUnitsTreeAction.treeOrgs}"
+						  var="unit" selectionMode="single" selection="#{searchUnitsTreeAction.selectedUnit}">
+					        <p:ajax event="expand" update="unitsState" listener="#{searchUnitsTreeAction.onNodeExpand}" />
+					        <p:ajax event="select"  listener="#{searchUnitsTreeAction.onNodeSelect}" />
+					        <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+					            <h:outputText value="#{unit.codeOrg}  -  #{unit.nameOrg}"/>
+					        </p:treeNode>
+					    </p:tree>
+					</div>
+				</label>
+				<div class="botones">
+					<p:commandButton process="@this,unitsState"
+						value="#{msgs.labelBotonCancelar}"
+						actionListener="#{searchUnitsTreeAction.hiddenDialog}" />
+				</div>
+			</p:panel>
+			
+			<p:panel id="tab3" rendered="#{searchUnitsTreeAction.tabActive == 2}">
+				<label  class="general">
+					<div class="center">
+						<p:tree  id="unitsAutonomic" dynamic="true" styleClass="treeUnit" widgetVar="tableUnitAutonomic" value="#{searchUnitsTreeAction.treeOrgs}"
+						  var="unit" selectionMode="single" selection="#{searchUnitsTreeAction.selectedUnit}">
+					        <p:ajax event="expand" update="unitsAutonomic" listener="#{searchUnitsTreeAction.onNodeExpand}" />
+					        <p:ajax event="select"  listener="#{searchUnitsTreeAction.onNodeSelect}" />
+					        <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+					            <h:outputText value="#{unit.codeOrg}  -  #{unit.nameOrg}"/>
+					        </p:treeNode>
+					    </p:tree>
+					</div>
+				</label>
+				<div class="botones">
+					<p:commandButton process="@this,unitsAutonomic"
+						value="#{msgs.labelBotonCancelar}"
+						actionListener="#{searchUnitsTreeAction.hiddenDialog}" />
+				</div>
+			</p:panel>
+			<p:panel id="tab4" rendered="#{searchUnitsTreeAction.tabActive == 3}">
+				<label  class="general">
+					<div class="center">
+						<p:tree  id="unitsLocal" dynamic="true" styleClass="treeUnit" widgetVar="tableUnitLocal" value="#{searchUnitsTreeAction.treeOrgs}"
+						  var="unit" selectionMode="single" selection="#{searchUnitsTreeAction.selectedUnit}">
+					        <p:ajax event="expand" update="unitsLocal" listener="#{searchUnitsTreeAction.onNodeExpand}" />
+					        <p:ajax event="select"  listener="#{searchUnitsTreeAction.onNodeSelect}" />
+					        <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+					            <h:outputText value="#{unit.codeOrg}  -  #{unit.nameOrg}"/>
+					        </p:treeNode>
+					    </p:tree>
+					</div>
+				</label>
+				<div class="botones">
+					<p:commandButton process="@this,unitsLocal"
+						value="#{msgs.labelBotonCancelar}"
+						actionListener="#{searchUnitsTreeAction.hiddenDialog}" />
+				</div>
+			</p:panel>	
+			
+			<p:panel id="tab9" rendered="#{searchUnitsTreeAction.tabActive == 4}">
+				<label  class="general">
+					<div class="center">
+						<p:tree  id="unitsLab" dynamic="true" styleClass="treeUnit" widgetVar="tableUnitLab" value="#{searchUnitsTreeAction.treeOrgs}"
+						  var="unit" selectionMode="single" selection="#{searchUnitsTreeAction.selectedUnit}">
+					        <p:ajax event="expand" update="unitsLab" listener="#{searchUnitsTreeAction.onNodeExpand}" />
+					        <p:ajax event="select"  listener="#{searchUnitsTreeAction.onNodeSelect}" />
+					        <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+					            <h:outputText value="#{unit.codeOrg}  -  #{unit.nameOrg}"/>
+					        </p:treeNode>
+					    </p:tree>
+					</div>
+				</label>
+				<div class="botones">
+					<p:commandButton process="@this,unitsLab"
+						value="#{msgs.labelBotonCancelar}"
+						actionListener="#{searchUnitsTreeAction.hiddenDialog}" />
+				</div>
+			</p:panel>	
+
+			<p:panel id="tab5" rendered="#{searchUnitsTreeAction.tabActive == 5}">
+				<label  class="general">
+					<div class="center">
+						<p:tree  id="unitsOther" dynamic="true" styleClass="treeUnit" widgetVar="tableUnitOther" value="#{searchUnitsTreeAction.treeOrgs}"
+						  var="unit" selectionMode="single" selection="#{searchUnitsTreeAction.selectedUnit}">
+					        <p:ajax event="expand" update="unitsOther" listener="#{searchUnitsTreeAction.onNodeExpand}" />
+					        <p:ajax event="select"  listener="#{searchUnitsTreeAction.onNodeSelect}" />
+					        <p:treeNode  expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+					            <h:outputText value="#{unit.codeOrg}  -  #{unit.nameOrg}"/>
+					        </p:treeNode>
+					    </p:tree>
+					</div>
+				</label>
+				<div class="botones">
+					<p:commandButton process="@this,unitsOther"
+						value="#{msgs.labelBotonCancelar}"
+						actionListener="#{searchUnitsTreeAction.hiddenDialog}" />
+				</div>
+			</p:panel>	
+								
+		<p:dialog modal="true" widgetVar="statusDialog"
+			header="Cargando, espere por favor" draggable="false"
+			closable="false" resizable="false">
+			<img
+				src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+		</p:dialog>
+		<script type="text/javascript">
+			function start() {
+				PF('statusDialog').show();
+			}
+			function stop() {
+				PF('statusDialog').hide();
+			}
+		</script>
+	</h:form>
+
+</h:body>
+
+</html>

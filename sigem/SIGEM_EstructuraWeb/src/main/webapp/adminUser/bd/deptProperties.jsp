@@ -53,7 +53,7 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 						</ul>
 					</div>					
 					<div class="cuadro" style="height: 170px;">
-						<div id="box1">
+						<div id="box1" style="OVERFLOW-y: auto;">
 							<div class="col" style="width: 490px;">
 								<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.nombre"/></label>
 								<label class="gr" style="width:190px;"><bean:write name="basicForm" property="nombre" /></label>
@@ -82,6 +82,14 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 								<label class="gr" style="width:30px;"><bean:message key="message.comun.etiqueta.por"/></label>
 								<label class="gr" style="width:120px;"><bean:write name="basicForm" property="updaterName" /></label>							
 						    </div>
+						     <div class="col" style="width: 490px;">
+								<label class="gr" style="width:120px;"><bean:message key="message.comun.etiqueta.email"/></label>
+								<label class="gr" style="width:190px;"><html:textarea property="email" readonly="true" name="basicForm" rows="2" cols="65"/></label>
+							</div>
+							<div class="col" style="width: 490px;">
+									<label class="gr" style="width:255px;"><bean:message key="message.comun.etiqueta.emailcheck"/></label>
+									<label class="gr" style="width:65px;"><html:checkbox property="emailcheck" readonly="true" name="basicForm" style="width:20px" /></label>
+							  </div> 	
 					    </div>
 	       			</div>     				
      			</div>

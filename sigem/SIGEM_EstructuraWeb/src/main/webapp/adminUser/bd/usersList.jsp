@@ -89,7 +89,7 @@ function changeStatus(idUser)
 
 
 </script>
-
+<meta charset="utf-8">
 </head>
 <body bgcolor="#FFFFFF">
 <%! int sdfs=0; %>

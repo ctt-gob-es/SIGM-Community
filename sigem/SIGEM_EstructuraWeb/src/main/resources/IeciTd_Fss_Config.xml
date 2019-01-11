@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config>
+	<Repository>
+		<Id>5</Id>
+		<Path>${adm.sigem.path}ficheros/000_REPOSITORIO_REGISTRO</Path>
+		<OS>${sigem.OS}</OS>
+	</Repository>
+	<Repository>
+		<Id>6</Id>
+		<Path>${adm.sigem.path}ficheros/000_REPOSITORIO_TRAMITACION</Path>
+		<OS>${sigem.OS}</OS>
+	</Repository>
+</Config>

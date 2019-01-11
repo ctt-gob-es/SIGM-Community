@@ -111,6 +111,7 @@
 		 where exreg.id_fdr=#idRegistro:INT#
 		   AND exreg.id_arch=#idLibro:INT#
 		   AND exreg.id_ofic = ofic.id
+		order by exreg.exchange_date desc
 	</select>
 
 	<select id="getHistorialEstadoByIntercambioRegistralSalida"
@@ -118,17 +119,75 @@
 		select *
 		  from SCR_EXREGSTATE
 		 where id_exreg=#idExReg:INT#
+		 order by state_date desc
 	</select>
 
 	<select id="getBandejaSalidaByEstadoOficinaYLibro" parameterClass="java.util.HashMap"  resultMap="bandejaSalidaItemResultmap">
 		select exreg.id as id, exreg.exchange_date, exreg.id_arch as id_arch, exreg.id_fdr as id_fdr, exreg.type_orig as type_orig, exreg.id_exchange as id_exchange,
 		exreg.id_exchange_sir as id_exchange_sir, exreg.code_entity as code_entity, exreg.name_entity as name_entity, exreg.code_tramunit as code_tramunit, exreg.name_tramunit as name_tramunit,
 		exreg.state_date as state_date, exreg.state as state, exreg.id_ofic as id_ofic, exreg.comments as comments,
-		 libro.fld1 as fld1, libro.fld2 as fld2, libro.fld6 as fld6, libro.fld8 as fld8
+		 libro.fld1 as fld1, libro.fld2 as fld2, libro.fld6 as fld6, libro.fld8 as fld8,  case
+		when libro.fld506 is not null then 'VERDE'
+		when libro.fld504 is not null then 'ROJO'
+		when libro.fld505 is not null then 'AMARILLO'
+		END color
 		 from a$idLibro$sf libro, scr_exreg exreg
 		where libro.fdrid=exreg.id_fdr and exreg.id_arch=#idLibro:INT# and exreg.id_ofic=#idOficina:INT# AND exreg.state=#estado:INT#
+		order by exreg.exchange_date desc
 	</select>
+	
+	<select id="getBandejaSalidaByEstadoOficinaYLibroEnviadosConError" parameterClass="java.util.HashMap"  resultMap="bandejaSalidaItemResultmap">
 
+		select id,exchange_date,
+			id_arch,id_fdr,type_orig,id_exchange,
+			id_exchange_sir,code_entity,name_entity,
+			code_tramunit,name_tramunit,
+			state_date,id_ofic,comments,ultimo_estado as state,
+			fld1,fld2,fld6,fld8,color from (
+				select exreg.id as id, 
+				exreg.exchange_date, 
+				exreg.id_arch as id_arch, 
+				exreg.id_fdr as id_fdr, 
+				exreg.type_orig as type_orig, 
+				exreg.id_exchange as id_exchange,
+				exreg.id_exchange_sir as id_exchange_sir, 
+				exreg.code_entity as code_entity, 
+				exreg.name_entity as name_entity, 
+				exreg.code_tramunit as code_tramunit, 
+				exreg.name_tramunit as name_tramunit,
+				exreg.state_date as state_date, 
+				exreg.id_ofic as id_ofic, 
+				exreg.comments as comments,
+				(SELECT STATE 
+				           FROM SCR_EXREGSTATE C
+				          WHERE C.id_EXREG = exreg.ID
+				            AND ID = (SELECT MAX(ID) FROM SCR_EXREGSTATE D WHERE D.ID_EXREG = C.ID_EXREG
+				        )) as ultimo_estado,
+				libro.fld1 as fld1, 
+				libro.fld2 as fld2, 
+				libro.fld6 as fld6, 
+				libro.fld8 as fld8,  
+				    case
+				      when libro.fld506 is not null then 'VERDE'
+				      when libro.fld504 is not null then 'ROJO'
+				      when libro.fld505 is not null then 'AMARILLO'
+					end color
+				from 
+				  a$idLibro$sf libro, 
+				  scr_exreg exreg
+				where 
+				libro.fdrid=exreg.id_fdr and 
+				exreg.id_arch=#idLibro:INT# and 
+				exreg.id_ofic=#idOficina:INT# and 
+				exreg.id in (select max(id) from scr_exreg where id_fdr = libro.fdrid) 
+				order by 
+				  exreg.exchange_date 
+				desc
+		) where ultimo_estado = #estado:INT#
+		order by 
+		  exchange_date desc
+	</select>
+	
 	<select id="getIntercambioRegistralSalidaById" parameterClass="java.lang.Long"  resultMap="intercambioRegistralSalidaResultMap">
 	select *, 'NULL' as nameOfic from SCR_EXREG where id=#value#
 	</select>

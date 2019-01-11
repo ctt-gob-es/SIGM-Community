@@ -44,10 +44,8 @@ import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.Intercam
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.IntercambioRegistralSIRManager;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.IntercambioRegistralSalidaManager;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.BandejaSalidaItemVO;
-import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralEntradaEnumVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralSalidaEnumVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.EstadoIntercambioRegistralSalidaVO;
-import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.IntercambioRegistralEntradaVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.IntercambioRegistralSalidaVO;
 import es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralVO;
 
@@ -355,6 +353,10 @@ public class IntercambioRegistralSalidaManagerImpl implements
 			Integer estado, Integer idOficina, Integer idLibro) {
 		return getBandejaSalidaIntercambioRegistralDAO().getBandejaSalidaByEstadoOficinaYLibro(estado,idOficina, idLibro);
 	}
+	
+	public List<BandejaSalidaItemVO> getBandejaSalidaIntercambioRegistralEnviadosConError(Integer idOficina, Integer idLibro) {
+		return getBandejaSalidaIntercambioRegistralDAO().getBandejaSalidaByEstadoOficinaYLibroEnviadosConError(idOficina, idLibro);
+	}
 
 	public IntercambioRegistralSalidaVO getIntercambioRegistralSalidaById(
 			String id) {
@@ -427,16 +429,23 @@ public class IntercambioRegistralSalidaManagerImpl implements
 		List<IntercambioRegistralSalidaVO> intercambiosRegistralSalidaVO = getBandejaSalidaIntercambioRegistralDAO()
 				.getIntercambiosRegistralesSalida(Integer.parseInt(idRegistro), Integer.parseInt(idLibro), Integer.parseInt(idOficina));
 
-		for(Iterator<IntercambioRegistralSalidaVO> it=intercambiosRegistralSalidaVO.iterator();it.hasNext();){
-			IntercambioRegistralSalidaVO intercambioReg = it.next();
-
+		for(int i=0; i < intercambiosRegistralSalidaVO.size(); i++){
 			//obtenemos la informacion de los cambio de estado para el intercambio registral
-			List<EstadoIntercambioRegistralSalidaVO> cambiosEstadoIntercambioRegistral = getBandejaSalidaIntercambioRegistralDAO()
+			intercambiosRegistralSalidaVO.get(i).setEstadosIntercambioRegistralSalida(getBandejaSalidaIntercambioRegistralDAO()
 					.getDetalleEstadosIntercambioRegistralSalida(
-							intercambioReg.getId());
-
-			intercambioReg.setEstadosIntercambioRegistralSalida(cambiosEstadoIntercambioRegistral);
+							intercambiosRegistralSalidaVO.get(i).getId()));
 		}
+
+//		for(Iterator<IntercambioRegistralSalidaVO> it=intercambiosRegistralSalidaVO.iterator();it.hasNext();){
+//			IntercambioRegistralSalidaVO intercambioReg = it.next();
+//
+//
+//			List<EstadoIntercambioRegistralSalidaVO> cambiosEstadoIntercambioRegistral = getBandejaSalidaIntercambioRegistralDAO()
+//					.getDetalleEstadosIntercambioRegistralSalida(
+//							intercambioReg.getId());
+//
+//			intercambioReg.setEstadosIntercambioRegistralSalida(cambiosEstadoIntercambioRegistral);
+//		}
 
 		return intercambiosRegistralSalidaVO;
 

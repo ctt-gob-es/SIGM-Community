@@ -87,8 +87,14 @@ public class DeptEdit extends BaseAction{
         
         dep.setName(form.getNombre());
         dep.setDescription(form.getDescripcion());
-        dep.setIdorg(form.getIdorg());
+        if (form.getIdorg() == null || new Integer(0).equals(form.getIdorg())){
+            dep.setIdorg(-2147483648);
+        }else  {
+            dep.setIdorg(form.getIdorg());
+        }
+        dep.setEmailcheck(form.isEmailcheck());
         dep.setParentId(form.getIdPadre());
+        dep.setEmail(form.getEmail());
         dep.store(entidad);
     }
     
@@ -103,11 +109,16 @@ public class DeptEdit extends BaseAction{
         deptForm.setNombre(dep.getName());
         deptForm.setIdorg(dep.getIdorg());
         deptForm.setIdPadre(dep.getParentId());
+        deptForm.setEmailcheck(dep.getEmailcheck());
+        
         String description = dep.getDescription();
         if (description != null)
             deptForm.setDescripcion(description);
         int idManager = dep.getManagerId();
         deptForm.setManagerId(String.valueOf(idManager));
+        if (dep.getEmail() != null){
+            deptForm.setEmail(dep.getEmail());
+        }
     }    
 
 }

@@ -6,6 +6,8 @@ public class ConstantesGestionUsuariosBackOffice {
 	public static final String PARAMETRO_ID_APLICACION = "idAplicacion";
 	public static final String PARAMETRO_ID_SESION = "idSesion";
 	public static final String PARAMETRO_USUARIO = "username";
+	public static final String PARAMETRO_DNI = "dni";
+	public static final String PARAMETRO_FUNCIONARIO_HABILITADO = "RFN";
 	public static final String PARAMETRO_PASSWORD = "password";
 	public static final String PARAMETRO_KEY_SESION_USUARIO = "keySesionUsuario";
 	public static final String PARAMETRO_DATOS_SESION = "datosSesion";
@@ -20,4 +22,7 @@ public class ConstantesGestionUsuariosBackOffice {
 	public static final String APLICACION_BUSCADOR_DOCUMENTOS = "DOC";
 	public static final String APLICACION_CONSULTA_EXPEDIENTES = "CE";
 	public static final String APLICACION_CONSULTA_REGISTROS_TELEMATICOS = "CRT";
+	
+	public static final String PARAMETRO_ID_USUARIO = "idUser";
+	public static final String PARAMETRO_DOMINIO = "dominio";
 }

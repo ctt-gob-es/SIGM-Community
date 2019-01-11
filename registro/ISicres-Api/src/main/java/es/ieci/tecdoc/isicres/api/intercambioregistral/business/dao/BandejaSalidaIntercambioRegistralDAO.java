@@ -63,6 +63,15 @@ public interface BandejaSalidaIntercambioRegistralDAO {
 	public List<BandejaSalidaItemVO> getBandejaSalidaByEstadoOficinaYLibro(Integer estado,Integer idOficina, Integer idLibro);
 
 	/**
+	 * Metodo que obtiene la Bandeja de Salida mediante el estado enviado con error, el id de oficina y el id del libro
+	 * @param idOficina
+	 * @param idLibro
+	 * @return Listado de objetos {@link BandejaSalidaItemVO}
+	 */
+	public List<BandejaSalidaItemVO> getBandejaSalidaByEstadoOficinaYLibroEnviadosConError(Integer idOficina, Integer idLibro);
+	
+	
+	/**
 	 * Metodo que obtiene un listado con los intercambios registrales mediante su estado
 	 * @param estado
 	 * @return Listado de objetos {@link IntercambioRegistralSalidaVO}

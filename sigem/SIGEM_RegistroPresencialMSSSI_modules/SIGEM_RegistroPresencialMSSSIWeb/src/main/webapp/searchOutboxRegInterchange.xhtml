@@ -24,10 +24,11 @@
 			 
     		<ui:define name="breadcrumb">
     			<ol><li><h:link value="#{msgs.labelInicio}" outcome="goInicioForm"/></li>
-    			<li><h:outputText  value="#{msgs.labelIntRegistral}" /></li></ol>
+    			<li><h:outputText  value="#{msgs.labelIntRegistral}" /></li>
+    			<li><h:outputText  value="#{msgs.labelEnviadosSIR}" /></li></ol>
     		</ui:define>
     		<ui:define name="content">
-				<h2><h:outputText  value="#{msgs.labelIntRegistral}" /></h2>
+				<h2><h:outputText  value="#{msgs.labelIntRegistral} - #{msgs.labelEnviadosSIR}" /></h2>
 				<div class="sombra"></div>
 				
 				<h:form  id="form">
@@ -40,14 +41,6 @@
 							<h3 class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top" role="tab" aria-expanded="true" aria-selected="true" tabindex="0"><h:outputText  value="#{msgs.labelCriteriosBusqueda}" /></h3>
 							<fieldset class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active" role="tabpanel" style="height: 725px;">
 								<h:panelGroup id="panel" layout="block">
-									<label for="form:type" class="general">
-										<span class="label"><h:outputText id="typelabel" value="#{msgs.typelabel}" /></span>
-										<p:selectOneMenu id="type"  value="#{searchOutboxRegInterchangeAction.searchbean.type}">  
-								           <f:selectItem itemLabel="Asientos Enviados a otros Organismos" itemValue="0" />  
-								           <f:selectItem itemLabel="Asientos Recibidos de otros Organismos" itemValue="1" />
-								           <p:ajax update="panel,tableResults" listener="#{searchOutboxRegInterchangeAction.goInBoxRegInterchange}" />  
-								        </p:selectOneMenu>  
-									</label>
 									<label for="form:state" class="general">
 										<span class="label"><h:outputText id="statelabel" value="#{msgs.statelabel}" /></span>
 										<p:selectOneMenu id="outState"  value="#{searchOutboxRegInterchangeAction.searchbean.outState}">  
@@ -55,6 +48,7 @@
 								           <f:selectItem itemLabel="#{msgs.IRaceptados}" itemValue="5" />  
 										   <f:selectItem itemLabel="#{msgs.IRdevueltos}" itemValue="4" />  
 										   <f:selectItem itemLabel="#{msgs.IRrectificado}" itemValue="999" />  
+										   <f:selectItem itemLabel="#{msgs.IRenviadosconerror}" itemValue="3" />
 								        </p:selectOneMenu>  
 									</label>
 									<label for="form:state" class="general">
@@ -96,8 +90,9 @@
 							          paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"    paginator="true" rows="10"  
 							         rowKey="#{reg.idRegistro}"  selection="#{searchOutboxRegInterchangeAction.selectedRegisters}" dblClickSelect="true" 
 							           paginatorPosition="bottom" 
-							           id="tableResults">  
-							          <p:ajax event="rowDblselect" listener="#{searchOutboxRegInterchangeAction.onInputRegister}"  />  
+							           id="tableResults"
+											 rowStyleClass="#{(reg.color eq 'VERDE' ? 'sirNoDoc' : ( reg.color eq 'ROJO' ? 'sirReque': ( reg.color eq 'AMARILLO' ? 'sirCom': '')))}">
+							          <!--<p:ajax event="rowDblselect" listener="#{searchOutboxRegInterchangeAction.onInputRegister}"  />  -->
 								  		<f:facet name="header">  
 								        </f:facet>   
 								        <p:column selectionMode="multiple" style="width:2%"   />

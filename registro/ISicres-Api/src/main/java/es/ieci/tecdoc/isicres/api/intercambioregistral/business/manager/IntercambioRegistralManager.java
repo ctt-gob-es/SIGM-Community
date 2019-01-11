@@ -137,6 +137,19 @@ public interface IntercambioRegistralManager {
 	public List<BandejaSalidaItemVO> getBandejaSalidaIntercambioRegistral(
 			Integer estado, Integer idOficina, Integer idLibro);
 
+	
+	/**
+	 * metodo que obtiene la bandeja de salida de intercambio registral para un
+	 * estado enviado con error, una oficina y un libro
+	 * 
+	 * @param idOficina
+	 * @param idLibro
+	 * @return
+	 */
+	public List<BandejaSalidaItemVO> getBandejaSalidaIntercambioRegistralEnviadosConError(
+			Integer idOficina, Integer idLibro);
+	
+	
 	/**
 	 * metodo que obtiene los intercambios registrales completos (listos para
 	 * envio) de una bandeja de salida

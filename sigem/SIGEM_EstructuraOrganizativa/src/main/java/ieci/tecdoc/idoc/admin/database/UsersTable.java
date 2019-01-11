@@ -243,6 +243,7 @@ public class UsersTable
  	  val = UasDaoUserTbl.CD_NAME.getName() +
 	   		"," + UasDaoUserTbl.CD_PASSWORD.getName() +
 		    "," + UasDaoUserTbl.CD_DEPTID.getName() +
+        "," + UasDaoUserTbl.CD_FLAGS.getName() +
 		    "," + UasDaoUserTbl.CD_STAT.getName() +
 		    "," + UasDaoUserTbl.CD_REMARKS.getName() +
 		    "," + UasDaoUserTbl.CD_UPDRID.getName() +
@@ -269,6 +270,7 @@ public class UsersTable
             "," + getBaseTableName() + "." +  UasDaoUserTbl.CD_NAME.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoUserTbl.CD_PASSWORD.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoUserTbl.CD_DEPTID.getName() +
+          "," + getBaseTableName() + "." +  UasDaoUserTbl.CD_FLAGS.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoUserTbl.CD_STAT.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoUserTbl.CD_REMARKS.getName() +
 		      "," + getBaseTableName() + "." +  UasDaoUserTbl.CD_CRTRID.getName() +

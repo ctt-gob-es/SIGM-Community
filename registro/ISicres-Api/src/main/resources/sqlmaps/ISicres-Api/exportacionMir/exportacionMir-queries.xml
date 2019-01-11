@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+	"http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ExportacionMirVO">
+	<select id="getAsientos" resultMap="bandejaEntradaItemResultmap" parameterClass="java.lang.Integer"  >
+	select * from a$value$sf libro where TIMESTAMP &lt; sysdate  - 2/24 and NOT EXISTS (SELECT X.FDRID FROM a$value$xf X WHERE X.FLDID=1001 AND TO_CHAR(X.TEXT) = 'S' and X.FDRID=libro.FDRID )
+	</select>
+	<select id="getDocumentos"  resultMap="documentoRegistromap"  parameterClass="java.util.HashMap"  >	
+		select id as idpage,name as nombre from A$idLibro$PAGEH where name not like '%.csig' and name not like '%.xsig' and FDRID = #idRegistro#
+	</select>
+		
+		
+</sqlMap>

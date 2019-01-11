@@ -310,6 +310,27 @@ public void setIdorg(Integer idorg) {
    	_description = description;
    }
    
+   
+   /**
+    * Obtiene la email del departamento.
+    * 
+    * @return El email mencionado.
+    */
+   public String getEmail()
+	{
+   	return _email;
+   }
+   
+   /**
+    * Establece la email del departamento.
+    * 
+    * @param email La descripción del grupo.
+    */
+   public void setEmail(String email)
+	{
+   	_email = email;
+   }
+   
    /**
 	 * Obtiene el identificador del usuario que ha creado el departamento. 
 	 * 
@@ -391,7 +412,22 @@ public void setIdorg(Integer idorg) {
    }
    
    
-   
+
+	public boolean getEmailcheck() {
+		if (new Short((short) 1).equals(_emailcheck))
+			return true;
+		else
+			return false;
+	}
+
+
+	public void setEmailcheck(boolean emailcheck) {
+		if (emailcheck)
+			_emailcheck = 1;
+		else
+			_emailcheck = 0;
+	}
+
 	
    public GenericPermsImpl get_permsImpl() {
 		return _permsImpl;
@@ -479,6 +515,8 @@ public void setIdorg(Integer idorg) {
       bdr.addSimpleElement("Description", _description);
       bdr.addSimpleElement("Idorg", Integer.toString(_idorg));
       bdr.addSimpleElement("CreatorId", Integer.toString(_creatorId));
+      bdr.addSimpleElement("Email", _email);
+      bdr.addSimpleElement("Emailcheck", Short.toString(_emailcheck));
       bdr.addSimpleElement("CreationDate", DateTimeUtil.getDateTime(
                      _creationDate, DatePattern.XML_TIMESTAMP_PATTERN));
       if (DbDataType.isNullLongInteger(_updaterId))
@@ -583,6 +621,8 @@ public void setIdorg(Integer idorg) {
       _updaterId = statement.getLongInteger(index++);
       _updateDate = statement.getDateTime(index++);
       _idorg = statement.getLongInteger(index++);
+      _email = statement.getShortText(index++);
+      _emailcheck = statement.getShortInteger(index++);
 
       return new Integer(index);
    }
@@ -612,8 +652,10 @@ public void setIdorg(Integer idorg) {
       statement.setShortText(index++, _description);
       statement.setLongInteger(index++, _creatorId);
 		_creationDate = DbUtil.getCurrentDateTime();
-		statement.setDateTime(index++, _creationDate);
-		statement.setLongInteger(index++, _idorg);
+	statement.setDateTime(index++, _creationDate);
+	statement.setLongInteger(index++, _idorg);
+	statement.setShortText(index++, _email);
+	statement.setShortInteger(index++, _emailcheck);
       return new Integer(index);
    }
    
@@ -640,9 +682,12 @@ public void setIdorg(Integer idorg) {
       _updaterId = _userConnected;
       statement.setLongInteger(index++, _updaterId);
 		_updateDate = DbUtil.getCurrentDateTime();
-		statement.setDateTime(index++, _updateDate);
-		statement.setLongInteger(index++, _type);
-		statement.setLongInteger(index++, _idorg);
+	statement.setDateTime(index++, _updateDate);
+	statement.setLongInteger(index++, _type);
+	statement.setLongInteger(index++, _idorg);
+	statement.setShortText(index++, _email);
+	statement.setShortInteger(index++, _emailcheck);
+	
       return new Integer(index);
    }
    
@@ -1164,6 +1209,8 @@ public void setIdorg(Integer idorg) {
       _users = new Users();
       _adminUsers = new BasicUsersImpl();
       _idorg = null;
+      _email = null;
+      _emailcheck = 0;
    }
  
    
@@ -1183,6 +1230,8 @@ public void setIdorg(Integer idorg) {
    private Users _users;
    private BasicUsersImpl _adminUsers;
    private Integer _idorg;
-	private static final Logger _logger = Logger.getLogger(DepartmentImpl.class);
+   private String _email;
+   private short _emailcheck;
+   private static final Logger _logger = Logger.getLogger(DepartmentImpl.class);
 
 }

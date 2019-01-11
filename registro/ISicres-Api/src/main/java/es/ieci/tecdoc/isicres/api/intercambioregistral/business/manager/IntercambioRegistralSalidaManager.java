@@ -120,6 +120,16 @@ public interface IntercambioRegistralSalidaManager {
 
 
 	/**
+	 * metodo que obtiene la bandeja de salida de intercambio registral para un estado enviado con error, una oficina y un libro
+	 * @param estado
+	 * @param idOficina
+	 * @param idLibro
+	 * @return
+	 */
+	public List<BandejaSalidaItemVO> getBandejaSalidaIntercambioRegistralEnviadosConError(Integer idOficina, Integer idLibro);
+	
+	
+	/**
 	 * Metodo que a partir de un elemento de la bandeja de salida con los datos de SCR_EXREG, completa los datos
 	 * necesarios de otras tablas (AXSF) como numero de registro o unidad de destino.
 	 * @param bandejaSalidaItemVO

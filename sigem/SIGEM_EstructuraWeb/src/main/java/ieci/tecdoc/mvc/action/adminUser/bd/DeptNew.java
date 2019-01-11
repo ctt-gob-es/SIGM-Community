@@ -90,7 +90,13 @@ public class DeptNew extends BaseAction {
         
         dept.setName(form.getNombre());
         dept.setDescription(form.getDescripcion());
-        dept.setIdorg(form.getIdorg());
+        dept.setEmail(form.getEmail());
+        if (form.getIdorg() == null || new Integer(0).equals(form.getIdorg())){
+            dept.setIdorg(-2147483648);
+        }else  {
+            dept.setIdorg(form.getIdorg());
+        }
+        dept.setEmailcheck(form.isEmailcheck());
         String managerId = form.getManagerId();
         dept.setManagerId(Integer.parseInt(managerId));
 

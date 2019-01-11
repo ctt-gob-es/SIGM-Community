@@ -76,12 +76,15 @@ public class ConfiguratorUser {
 	public Document createFromStringText(String text) throws Exception {
 		Document document = null;
 
-		if (text != null) {
-			String xmlText = text.substring(text.indexOf("Configuration") - 1,
-					text.length());
-			document = DocumentHelper.parseText(xmlText);
+		try {
+			if (text != null) {
+				String xmlText = text.substring(text.indexOf("Configuration") - 1,
+						text.length());
+				document = DocumentHelper.parseText(xmlText);
+			}
+		} catch (Exception e) {
+			log.error("Impossible to load values for user configuration. " + e.getMessage());
 		}
-
 		return document;
 	}
 

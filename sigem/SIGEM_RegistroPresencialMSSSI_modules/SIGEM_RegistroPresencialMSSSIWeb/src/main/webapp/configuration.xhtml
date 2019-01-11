@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+
+</h:head>
+
+<h:body>
+	<ui:composition template="/template/layoutWithOutMenu.xhtml">
+		<ui:define name="head">
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/dialog.js"></script>
+		</ui:define>
+		<ui:define name="breadcrumb">
+			<ol>
+				<li><h:outputText value="#{msgs.labelConfiguracion}" /></li>
+			</ol>
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="form">
+				<h2>
+					<h:outputText value="#{msgs.textConfiguracion}" />
+				</h2>
+				<div class="sombra"></div>
+				<p></p>
+				<div align="center">
+					<h:panelGrid columns="2" rows="3" border="0" style="width:500px">
+						<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="emailcheck"
+									value="#{configurationAction.configuration.emailcheck}"
+									label="#{msgs.emailchecklabel}" styleClass="configuracion_email"/>
+						</h:panelGroup>
+						<h:panelGroup>
+								<h:outputText id="emailchecklabel"
+										value="#{msgs.emailchecklabel}" styleClass="configuracion_email"/>
+						</h:panelGroup>
+						<h:panelGroup>
+								<p:selectBooleanCheckbox
+								id="emailcheckrechazadas"
+								value="#{configurationAction.configuration.emailcheckrechazadas}"
+								label="#{msgs.emailcheckrechazadaslabel}" styleClass="configuracion_email"/>
+						</h:panelGroup>
+						<h:panelGroup>
+								<h:outputText id="emailcheckrechazadaslabel"
+									value="#{msgs.emailcheckrechazadaslabel}" styleClass="configuracion_email"/>
+						</h:panelGroup>
+						<h:panelGroup>
+								<p:selectBooleanCheckbox
+								id="emailcheckintercambioreg"
+								value="#{configurationAction.configuration.emailcheckintercambioreg}"
+								label="#{msgs.emailcheckintercambioreglabel}" styleClass="configuracion_email"/>
+						</h:panelGroup>
+						<h:panelGroup>
+								<h:outputText id="emailcheckintercambioreglabel"
+								value="#{msgs.emailcheckintercambioreglabel}" styleClass="configuracion_email"/>
+						</h:panelGroup>
+					</h:panelGrid>				
+					<div class="configuracion"><p:separator /></div>
+					<div  class="configuracion"> 
+						<span class="label"><h:outputText id="fieldInputReglabel"
+									value="#{msgs.fieldInputReglabel}" /> </span> 
+								<p:selectManyCheckbox
+								id="fieldInputSelected" layout="responsive" columns="4"
+								value="#{configurationAction.configuration.fieldInputSelected}"
+								label="#{msgs.fieldInputReglabel}">
+								<f:selectItems value="#{configurationAction.fieldInputReg}"
+									var="fieldIReg" itemLabel="#{fieldIReg}"
+									itemValue="#{fieldIReg}" />
+							</p:selectManyCheckbox>
+					</div>
+					<div  class="configuracion"> 
+						<span class="label"><h:outputText id="fieldOutputReglabel"
+									value="#{msgs.fieldOutputReglabel}" /> </span> 
+								<p:selectManyCheckbox
+								id="fieldOutputSelected" layout="responsive" columns="4"
+								value="#{configurationAction.configuration.fieldOutputSelected}"
+								label="#{msgs.fieldOutputReglabel}">
+								<f:selectItems value="#{configurationAction.fieldOutputReg}"
+									var="fieldOReg" itemLabel="#{fieldOReg}"
+									itemValue="#{fieldOReg}" />
+							</p:selectManyCheckbox>
+					</div>
+					<div class="botones">
+						<p:commandButton styleClass="boton-cancelar"
+							value="#{msgs.labelBotonGuardar}" process="@form"
+							actionListener="#{configurationAction.update}" />
+						<p:commandButton styleClass="boton-cancelar"
+							value="#{msgs.labelBotonCancelar}" process="@this"
+							action="goInicioForm" />
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+
+	</ui:composition>
+
+
+</h:body>
+
+</html>

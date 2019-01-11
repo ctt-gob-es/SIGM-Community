@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head></h:head>
+<h:body>
+	<ui:composition template="/template/layout.xhtml">
+		<ui:define name="head">
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/jquery.ui.accordion.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/calendar.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/accordion.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/dialog.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/distribution.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/report.js"></script>
+		</ui:define>
+		<ui:define name="breadcrumb">
+			<ol>
+				<li><h:link value="#{msgs.labelInicio}" outcome="goInicioForm" /></li>
+				<li><h:outputText value="#{msgs.labelDistribucion}" /></li>
+				<li>
+				<h:link value="#{msgs.labelEnviadosDIS}" outcome="goOutDistribucionForm" />
+				</li>
+				<li><h:outputText value="#{msgs.labelInformes}" /></li>
+			</ol>
+		</ui:define>
+		<ui:define name="content">
+			<h2>
+				<h:outputText value="#{msgs.labelInformes}"/>
+			</h2>
+			<div class="sombra"></div>
+			<h:form id="form">
+				<div class="enlaces"></div>
+				<!--DIV PARA EL LIBRO DE DISTRIBUCION-->
+				<div id="distribucion">
+					<div id="accordion">
+						<h3>
+							<h:outputText value="#{msgs.labelCriteriosBusqueda}" />
+						</h3>
+						<fieldset>
+							<p:messages id="messages" showDetail="true" autoUpdate="false"
+								closable="true" />
+							<h:panelGroup id="panel" layout="block">
+								<label for="form:reportTypeValue" class="general"> <span
+									class="label"><h:outputText id="reportTypelabel"
+											value="#{msgs.reportTypelabel}" /></span>
+									<div id="form:reportTypeValue" class="select-radio">
+										<div>
+											<p:selectOneRadio id="reportTypeValue"
+												value="#{reportsDistributionOutAction.searchDistributionBean.reportTypeValue}"
+												label="#{msgs.reportTypelabel}">
+												<f:selectItem
+													itemLabel="#{msgs.labeloriginrelationsreportType}"
+													itemValue="5" selected="true" style="border:0 0 0 0" />
+												<f:selectItem
+													itemLabel="#{msgs.labeldestinationrelationsreportType}"
+													itemValue="4" />
+											</p:selectOneRadio>
+										</div>
+									</div>
+								</label>
+								<label for="form:state" class="general"> <span
+									class="label"><h:outputText id="statelabel"
+											value="#{msgs.statelabel}" /></span> <p:selectOneMenu id="state"
+										value="#{reportsDistributionOutAction.searchDistributionBean.state}">
+										<f:selectItem itemLabel="" itemValue="0" />
+										<f:selectItems value="#{validationListAction.listStateDist}"
+											var="c" itemLabel="#{c.valor}" itemValue="#{c.clave}" />
+									</p:selectOneMenu>
+								</label>
+								<label for="form:distDateDesde" class="general"> <span
+									class="label"><h:outputText id="distDatelabel"
+											value="#{msgs.distDatelabel}" /></span> <p:calendar locale="es"
+										id="distDateDesde" navigator="true" pattern="dd/MM/yyyy HH:mm"
+										value="#{reportsDistributionOutAction.searchDistributionBean.distDateDesde}"
+										showOn="button" label="#{msgs.distDatelabel}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm" locale="es_ES"
+											timeZone="Europe/Paris" />
+									</p:calendar> <p:calendar locale="es" id="distDateHasta" navigator="true"
+										pattern="dd/MM/yyyy HH:mm"
+										value="#{reportsDistributionOutAction.searchDistributionBean.distDateHasta}"
+										showOn="button" label="#{msgs.distDatelabel}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm" locale="es_ES"
+											timeZone="Europe/Paris" />
+									</p:calendar>
+								</label>
+								<label for="form:stateDateDesde" class="general"> <span
+									class="label"><h:outputText id="fechaEstadoDistLabel"
+											value="#{msgs.fechaEstadoDistLabel}" /></span> <p:calendar
+										locale="es" id="stateDateDesde" navigator="true"
+										pattern="dd/MM/yyyy HH:mm"
+										value="#{reportsDistributionOutAction.searchDistributionBean.stateDateDesde}"
+										showOn="button" label="#{msgs.fechaEstadoDistLabel}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm" locale="es_ES"
+											timeZone="Europe/Paris" />
+									</p:calendar> <p:calendar locale="es" id="stateDateHasta" navigator="true"
+										pattern="dd/MM/yyyy HH:mm"
+										value="#{reportsDistributionOutAction.searchDistributionBean.stateDateHasta}"
+										showOn="button" label="#{msgs.fechaEstadoDistLabel}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm" locale="es_ES"
+											timeZone="Europe/Paris" />
+									</p:calendar>
+								</label>
+								<label for="form:fld1" class="general"> <span
+									class="label"><h:outputText id="fld1Label"
+											value="#{msgs.fld1label}" /></span> <p:inputText id="fld1"
+										value="#{reportsDistributionOutAction.searchDistributionBean.fld1}">
+										<f:validateLength maximum="20" />
+									</p:inputText>
+								</label>
+								<label for="form:fld2Desde" class="general"> <span
+									class="label"><h:outputText id="fld2Label"
+											value="#{msgs.fld2label}" /></span> <p:calendar locale="es"
+										id="fld2Desde" navigator="true" pattern="dd/MM/yyyy HH:mm:ss"
+										value="#{reportsDistributionOutAction.searchDistributionBean.fld2Desde}"
+										showOn="button" label="#{msgs.fld2label}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" locale="es_ES"
+											timeZone="Europe/Paris" />
+									</p:calendar> <p:calendar locale="es" id="fld2Hasta" navigator="true"
+										showButtonPanel="false" pattern="dd/MM/yyyy HH:mm:ss"
+										value="#{reportsDistributionOutAction.searchDistributionBean.fld2Hasta}"
+										showOn="button" label="#{msgs.fld2label}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" locale="es_ES"
+											timeZone="Europe/Paris" />
+									</p:calendar>
+									<p:watermark for="fld2Desde" value="#{msgs.fld2labelDesde}" /> 
+									<p:watermark for="fld2Hasta" value="#{msgs.fld2labelHasta}" /> 
+								</label>
+								<label for="form:fld7" class="general"> <span
+									class="label"><h:outputText id="fld7Label"
+											value="#{msgs.fld7label}" /></span>
+											<c:set var="orgPadre"
+										value=" (#{org.nameOrgFather})" />
+										 <c:set var="organismo"
+										value="#{org.code} #{org.name}" />
+										
+										 <p:autoComplete
+										style="width:400px"
+										value="#{reportsDistributionOutAction.searchDistributionBean.fld7}"
+										id="fld7" label="#{msgs.fld7label}"
+										completeMethod="#{validationListAction.completeOrgOrigen}"  escape="false"
+										minQueryLength="3" var="org" queryDelay="400"
+										itemLabel="#{(empty org) ? '' : fn:trim(organismo)}" itemValue="#{org}" 
+										converter="orgConverterOrigin" forceSelection="true"
+										scrollHeight="200" >
+											<p:ajax event="itemSelect" listener="#{reportsDistributionOutAction.onItemSelectOriginOrg}" update="toolTipOriginOrg"/>
+											<p:ajax event="change" listener="#{reportsDistributionOutAction.onChangeOriginOrg}" update="toolTipOriginOrg"/>
+											<p:column>
+								                <h:outputText styleClass="organismo" value="#{org.code} #{org.name}"/>
+								                <br/>
+								                <h:outputText styleClass="organismopadre" value="#{orgPadre}" />
+								               <div class="ut">
+								               <ui:fragment rendered="${org.scrTypeadm.id == 1}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png" 
+																			title="#{msgs.isownOrg}" />														
+														</ui:fragment>
+										            	<ui:fragment rendered="${org.isTramUnit}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png" 
+																			title="#{msgs.isTramUnit}" />														
+														</ui:fragment>
+														
+													</div>
+								            </p:column>
+										</p:autoComplete>
+										<p:commandButton id="OriginInfoButton" 
+											styleClass="organismoinfo" icon="ui-icon-search"
+											inmediate="true" process="@this" >
+										</p:commandButton>
+										 <p:tooltip id="toolTipOriginOrg" for="OriginInfoButton" position="bottom" styleClass="orgdivtooltip">
+										 	<ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedOriginOrg.nameOrgGrandFather}">
+										         <div class="orgabuelotooltip"><h:outputText value="#{reportsDistributionOutAction.selectedOriginOrg.nameOrgGrandFather}" />
+									             </div>
+								             </ui:fragment>
+								             <ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedOriginOrg.nameOrgFather}">
+									              <div class="orgpadretooltip">
+									              <ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedOriginOrg.nameOrgGrandFather}">
+									              	<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 6px;" />
+									              </ui:fragment>
+									              <h:outputText value="#{reportsDistributionOutAction.selectedOriginOrg.nameOrgFather}" />
+									             </div>
+								             </ui:fragment>
+								             <ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedOriginOrg.code}">
+								             	<div class="orgtooltip">
+													<ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedOriginOrg.nameOrgFather 
+														and not empty reportsDistributionOutAction.selectedOriginOrg.nameOrgGrandFather}">
+									              		<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 20px;"  />
+									               </ui:fragment>
+									              <ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedOriginOrg.nameOrgFather 
+														and empty reportsDistributionOutAction.selectedOriginOrg.nameOrgGrandFather}">
+									              		<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 6px;"  />
+									               </ui:fragment>
+									             <h:outputText  value="#{reportsDistributionOutAction.selectedOriginOrg.code} #{reportsDistributionOutAction.selectedOriginOrg.name}"/>
+								             	</div>
+								             </ui:fragment>
+								             <ui:fragment rendered="#{empty reportsDistributionOutAction.selectedOriginOrg.code}">
+								             	<div class="orgtooltiptext"><h:outputText  value="No hay ningún organismo origen seleccionado"/>
+								            	</div>
+								             </ui:fragment>
+									    </p:tooltip>
+										<p:commandButton id="OriginButton"
+											styleClass="organismobusq"
+											icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"
+											inmediate="true" process="@this" actionListener="#{searchUnitsAction.chooseUnits}">
+											<p:ajax event="dialogReturn" listener="#{reportsDistributionOutAction.updateOrigin}" update="fld7 toolTipOriginOrg"
+											 oncomplete="document.getElementById('form:fld7_input').focus()"  />
+										</p:commandButton>
+										<p:commandButton id="OriginTreeButton"
+											styleClass="organismobusqtree"
+											icon="ui-icon-search" title="#{msgs.busquedaOrgTreelabel}"
+											inmediate="true" process="@this" actionListener="#{searchUnitsTreeAction.chooseUnits}">
+											<p:ajax event="dialogReturn" listener="#{reportsDistributionOutAction.updateOrigin}" update="fld7 toolTipOriginOrg"
+											 oncomplete="document.getElementById('form:fld7_input').focus()"  />
+										</p:commandButton>
+								</label>
+								<label for="form:fld8" class="general"> <span
+									class="label"><h:outputText id="fld8Label"
+											value="#{msgs.fld8label}" /></span> 
+											<p:autoComplete
+										style="width:400"
+										value="#{reportsDistributionOutAction.searchDistributionBean.fld8}"
+										id="fld8" label="#{msgs.fld8label}" escape="false"
+										completeMethod="#{validationListAction.completeOrgDestino}"
+										minQueryLength="3" var="org" queryDelay="400"
+										itemLabel="#{(empty org) ? '' : fn:trim(organismo)}" itemValue="#{org}"
+										converter="orgConverterDestination" forceSelection="true"
+										scrollHeight="200">
+											<p:ajax event="itemSelect" listener="#{reportsDistributionOutAction.onItemSelectDestinationOrg}" update="toolTipDestOrg"/>
+											<p:ajax event="change" listener="#{reportsDistributionOutAction.onChangeDestinationOrg}" update="toolTipDestOrg"/>
+											<p:column>
+								                <h:outputText styleClass="organismo" value="#{org.code} #{org.name}"/>
+								                <br/>
+								                <h:outputText styleClass="organismopadre" value="#{orgPadre}" />
+								                <div class="ut">
+								               	 <ui:fragment rendered="${org.scrTypeadm.id == 1}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png" 
+																			title="#{msgs.isownOrg}" />														
+														</ui:fragment>
+										            	<ui:fragment rendered="${org.isTramUnit}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png" 
+																			title="#{msgs.isTramUnit}" />														
+														</ui:fragment>
+														
+													</div>
+								            </p:column>
+										</p:autoComplete>
+										<p:commandButton id="DestinationInfoButton" 
+											styleClass="organismoinfo" icon="ui-icon-search"
+											inmediate="true" process="@this" >
+										</p:commandButton>
+										 <p:tooltip id="toolTipDestOrg" for="DestinationInfoButton" position="bottom" styleClass="orgdivtooltip">
+										 	<ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedDestOrg.nameOrgGrandFather}">
+										         <div class="orgabuelotooltip"><h:outputText value="#{reportsDistributionOutAction.selectedDestOrg.nameOrgGrandFather}" />
+									             </div>
+								             </ui:fragment>
+								             <ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedDestOrg.nameOrgFather}">
+									              <div class="orgpadretooltip">
+									              <ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedDestOrg.nameOrgGrandFather}">
+									              	<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 6px;" />
+									              </ui:fragment>
+									              <h:outputText value="#{reportsDistributionOutAction.selectedDestOrg.nameOrgFather}" />
+									             </div>
+								             </ui:fragment>
+								             <ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedDestOrg.code}">
+								             	<div class="orgtooltip">
+													<ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedDestOrg.nameOrgFather 
+														and not empty reportsDistributionOutAction.selectedDestOrg.nameOrgGrandFather}">
+									              		<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 20px;"  />
+									               </ui:fragment>
+									              <ui:fragment rendered="#{not empty reportsDistributionOutAction.selectedDestOrg.nameOrgFather 
+														and empty reportsDistributionOutAction.selectedDestOrg.nameOrgGrandFather}">
+									              		<img src="#{webParam.entryParameters['URLRoot']}/img/icon-tree.gif" style="padding-left: 6px;"  />
+									               </ui:fragment>
+									             <h:outputText  value="#{reportsDistributionOutAction.selectedDestOrg.code} #{reportsDistributionOutAction.selectedDestOrg.name}"/>
+								             	</div>
+								             </ui:fragment>
+								             <ui:fragment rendered="#{empty reportsDistributionOutAction.selectedDestOrg.code}">
+								             	<div class="orgtooltiptext"><h:outputText  value="No hay ningún organismo destino seleccionado"/>
+								            	</div>
+								             </ui:fragment>
+									    </p:tooltip>
+										<p:commandButton id="DestinationButton"
+											styleClass="organismobusq" 
+											icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"
+											inmediate="true" process="@this" actionListener="#{searchUnitsAction.chooseUnits}">
+											<p:ajax event="dialogReturn" listener="#{reportsDistributionOutAction.updateDestination}" update="fld8 toolTipDestOrg" 
+											oncomplete="document.getElementById('form:fld8_input').focus()" />
+										</p:commandButton>
+										<p:commandButton id="DestinationTreeButton"
+											styleClass="organismobusqtree"
+											icon="ui-icon-search" title="#{msgs.busquedaOrgTreelabel}"
+											inmediate="true" process="@this" actionListener="#{searchUnitsTreeAction.chooseUnits}">
+											<p:ajax event="dialogReturn" listener="#{reportsDistributionOutAction.updateDestination}" update="fld8 toolTipDestOrg" 
+											oncomplete="document.getElementById('form:fld8_input').focus()" />
+										</p:commandButton>
+								</label>
+								<label for="form:fld9" class="general"> <span
+									class="label"><h:outputText id="fld9Label"
+											value="#{msgs.fld9label}" /></span> <p:inputText id="fld9"
+										value="#{reportsDistributionOutAction.searchDistributionBean.fld9}"
+										label="#{msgs.fld9label}">
+										<f:validateLength maximum="80" />
+									</p:inputText>
+								</label>
+								<label for="form:fld16" class="general"> <span
+									class="label"><h:outputText id="fld16Label"
+											value="#{msgs.fld16label}" /></span> <c:set var="asunto"
+										value="#{asun.code} #{asun.matter}" /> <p:selectOneMenu
+										value="#{reportsDistributionOutAction.searchDistributionBean.fld16}"
+										id="fld16" label="#{msgs.fld16label}"
+										converter="asuntConverter" panelStyle="width:150px"
+										effect="fade" filter="true" filterMatchMode="contains">
+										<f:selectItem itemLabel="" itemValue="" />
+										<f:selectItems value="#{validationListAction.listAsuntos}"
+											var="asuntos" itemLabel="#{asuntos.code} #{asuntos.matter}"
+											itemValue="#{asuntos}" />
+									</p:selectOneMenu>
+								</label>
+								<label for="form:fld17" class="general"> <span
+									class="label"><h:outputText id="fld17Label"
+											value="#{msgs.fld17label}" /></span> <p:inputText id="fld17"
+										value="#{reportsDistributionOutAction.searchDistributionBean.fld17}"
+										label="#{msgs.fld17label}">
+										<f:validateLength maximum="240" />
+									</p:inputText>
+								</label>
+								<label for="form:includeProceedingValue" class="general">
+									<span class="label"><h:outputText
+											id="includeproceedinglabel"
+											value="#{msgs.includeproceedinglabel}" /></span> <p:selectBooleanCheckbox
+										id="includeProceedingValue"
+										value="#{reportsDistributionOutAction.searchDistributionBean.includeProceedingValue}"
+										label="#{msgs.includeproceedinglabel}" />
+								</label>
+								<div class="botones">
+								<p:commandButton value="#{msgs.labelGenerarInformes}" id="btnbuscar" styleClass="boton-buscar" ajax="false"
+										onclick="PrimeFaces.monitorDownload(start, stop);" actionListener="#{reportsDistributionOutAction.buildRelationsReport}">
+										<p:fileDownload value="#{reportsDistributionOutAction.file}"  />
+									</p:commandButton>
+										<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											action="goOutDistribucionForm" />
+
+									<p:commandButton id="btnReset" style="display:none" actionListener="#{reportsDistributionOutAction.reset}" process="@this"/>
+								</div>
+							</h:panelGroup>
+						</fieldset>
+					</div>
+				</div>
+					<p:dialog modal="true" widgetVar="statusDialog" id="statusDialog"
+					header="Generando informe, espere por favor" draggable="false"
+					closable="false" resizable="false" >
+					<img
+						src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

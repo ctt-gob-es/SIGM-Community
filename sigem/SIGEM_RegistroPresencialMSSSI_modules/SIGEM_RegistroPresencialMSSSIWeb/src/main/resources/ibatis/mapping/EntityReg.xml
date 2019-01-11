@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="EntityReg">
+	<select id="getEntityidOfi" parameterClass="java.lang.Integer"
+		resultClass="es.msssi.sgm.registropresencial.beans.ibatis.ScrEntityReg">
+		<isNotEmpty property="value">
+			SELECT * FROM SCR_ENTITYREG WHERE ID_OFIC= #value#
+		</isNotEmpty>
+	</select>
+	
+	<select id="listOrgBasic" parameterClass="java.util.HashMap"
+		resultClass="es.msssi.sgm.registropresencial.beans.OrgBasicBean">
+		SELECT ORG.ID as idOrg, ORG.CODE as codeOrg, ORG.NAME as nameOrg, ORG.ID_FATHER as idFather, COUNT (CHIL.ID) AS children
+		    FROM SCR_ORGS ORG 
+		        LEFT JOIN SCR_ORGS CHIL ON ORG.ID = CHIL.ID_FATHER AND CHIL.ENABLED = 1
+		    WHERE ORG.ENABLED = 1 AND ORG.TYPE = #type# 
+			<isNull property="parent" >
+				 AND ORG.ID_FATHER IS NULL 
+			</isNull>
+			<isNotNull property="parent" >
+				 AND ORG.ID_FATHER = #parent# 
+			</isNotNull>
+			 GROUP BY ORG.ID, ORG.CODE, ORG.NAME, ORG.ID_FATHER 
+			 ORDER BY ORG.NAME
+	</select>
+</sqlMap>

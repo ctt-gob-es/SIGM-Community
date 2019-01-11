@@ -48,6 +48,9 @@ public class BasicForm extends ActionForm{
     boolean idocBorrado; 
     boolean idocImpresion;
     
+    boolean emailcheck;
+    String email;
+    
 
     public void reset(ActionMapping mapping, HttpServletRequest request)
     {
@@ -66,13 +69,14 @@ public class BasicForm extends ActionForm{
         managerName = 
         creatorName =
         managerId = "";
-        
+        emailcheck = false;
         idocConsulta= 
         idocModificacion= 
         idocCreacion =
         idocBorrado= 
         idocImpresion =
         bloqueado = false;
+        email = "";
         
     }
 
@@ -316,5 +320,28 @@ public class BasicForm extends ActionForm{
     public void setIdPadre(Integer idPadre) {
         this.idPadre = idPadre;
     }
-    
+    /**
+     * @return Returns the email.
+     */
+    public String getEmail() {
+        return email;
+    }
+    /**
+     * @param email The email to set.
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    /**
+     * @return Returns the emailcheck.
+     */
+    public boolean isEmailcheck() {
+        return emailcheck;
+    }
+    /**
+     * @param emailcheck The emailcheck to set.
+     */
+    public void setEmailcheck(boolean emailcheck) {
+        this.emailcheck = emailcheck;
+    }
 }

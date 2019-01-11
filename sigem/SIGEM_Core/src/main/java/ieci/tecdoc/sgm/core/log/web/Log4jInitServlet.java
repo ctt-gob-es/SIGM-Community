@@ -91,6 +91,10 @@ public class Log4jInitServlet extends HttpServlet {
 
 				Logger.getLogger(Log4jInitServlet.class).info(
 						"Log4j cargado [" + file + "]");
+				
+				Logger.getLogger(Log4jInitServlet.class).error(
+						"::::::: SE HA ARRANCADO LA APLICACION DE REGISTRO DE FORMA SATISFACTORIA :::::::::");
+				
 			} else {
 				Logger.getLogger(Log4jInitServlet.class).info(
 						"Log4j no encontrado [" + file + "]");

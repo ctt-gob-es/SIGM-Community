@@ -1,5 +1,7 @@
 package ieci.tecdoc.sgm.core.services.catalogo;
 
+import java.util.Date;
+
 /**
  * Clase que implementa la interfaz Tramite
  *
@@ -20,6 +22,9 @@ public class Tramite
       this.firma = true;
       this.documents = new Documentos();
       this.idProcedimiento = null;
+      this.activo = true;
+      this.fechaInicioPublicacion = null;
+      this.fechaFinPublicacion = null;
    }
 	
    /**
@@ -104,6 +109,32 @@ public class Tramite
    }
    
    /**
+    * Establece si el procedimiento esta activo o inactivo
+    * @param activo activo
+    */   
+   public void setActivo(boolean activo)
+   {
+      this.activo = activo;
+   }
+   
+   /**
+    * Establece la fecha inicio publicación
+    * @param Date fechaInicioPublicacion 
+    */
+   public void setFechaInicioPublicacion(Date fechaInicioPublicacion) {
+		this.fechaInicioPublicacion = fechaInicioPublicacion;
+   }
+   
+   /**
+    * Establece la fecha fin publicación
+    * @param Date fechaFinPublicacion 
+    */
+   public void setFechaFinPublicacion(Date fechaFinPublicacion) {
+		this.fechaFinPublicacion = fechaFinPublicacion;
+   }
+   
+   
+   /**
     * Recupera el identificador de procedimiento.
     * @return String identificador.
     */   
@@ -176,11 +207,36 @@ public class Tramite
    }
    
    /**
+    * Indica si para el procedimiento esta activo o inactivo 
+    * @return boolean true si el procedimiento esta activo.
+    */   
+   public boolean getActivo()
+   {
+      return activo;
+   }
+   
+   /**
     * Recupera la colección de documentos del procedimento.
     */   
    public Documentos getDocuments()
    {
       return documents;
+   }
+   
+   /**
+    * Fecha inicio publicación
+    * @return date en formato dd/mm/yyyy
+    */
+   public Date getFechaInicioPublicacion() {
+		return fechaInicioPublicacion;
+   }
+   
+   /**
+    * Fecha fin publicación
+    * @return date en formato dd/mm/yyyy
+    */
+   public Date getFechaFinPublicacion() {
+		return fechaFinPublicacion;
    }
 
    protected String id;
@@ -192,4 +248,7 @@ public class Tramite
    protected Documentos documents;
    protected String oficina;
    protected String idProcedimiento;
+   protected boolean activo;
+   protected Date fechaInicioPublicacion;
+   protected Date fechaFinPublicacion;
 }

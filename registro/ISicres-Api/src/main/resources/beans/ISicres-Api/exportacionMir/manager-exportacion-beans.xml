@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       					   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="exportacionManager" parent="isicresTransactionTemplate">
+		<property name="target">
+			<bean  class="es.ieci.tecdoc.isicres.api.intercambioregistral.business.manager.impl.ExportacionMirManagerImpl">
+				<property name="exportacionMirDao"><ref bean="exportacionMirDao"/></property>
+		    </bean>
+		</property>
+	</bean>
+
+	
+	<!-- Mock Servicio Intercambio -->
+	<bean id="fwktd_sir_servicioIntercambioRegistralMock" class="es.ieci.tecdoc.isicres.api.intercambioregistral.proxy.business.manager.impl.mock.ServicioIntercambioRegistralMockImpl">
+	
+	</bean>
+
+</beans>
