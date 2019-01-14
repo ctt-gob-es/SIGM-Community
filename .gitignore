@@ -14,7 +14,6 @@ bin
 *.bat
 *.zip
 *.pdf
-*.sql
 .settings
 *database*
 /modulos/dipucrintegra/target

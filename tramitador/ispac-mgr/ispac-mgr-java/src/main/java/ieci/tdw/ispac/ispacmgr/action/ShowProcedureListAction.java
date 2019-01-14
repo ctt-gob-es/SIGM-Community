@@ -158,17 +158,21 @@ public class ShowProcedureListAction extends BaseAction {
 					values.put("USER_DEPT_UID_PARAM", "'" + user.getOrgUnit().getUID() + "'");
 							
 					Collection<?> groups = user.getUserGroups();
+					String userGroups = "";
 					if ((groups != null) && !groups.isEmpty()) {
-						String userGroups = "";
 						for (Iterator<?> it = groups.iterator(); it.hasNext();) {
 							Responsible group = (Responsible) it.next();
 							if (StringUtils.isNotBlank(userGroups)) {
 								userGroups += ",";
 							}
 							userGroups += "'" + DBUtil.replaceQuotes(group.getUID()) + "'";
-						}						
-						values.put("USER_GROUPS_UID_PARAM", userGroups);
+						}
 					}
+					
+					if(StringUtils.isEmpty(userGroups)){
+						userGroups = "''";
+					}
+					values.put("USER_GROUPS_UID_PARAM", userGroups);
 					
 					frm = searchAPI.buildHTMLSearchForm(Integer.parseInt(formSelect), xslurl, ResourceBundle.getBundle(BUNDLE_NAME, cct.getLocale()), cct.getLocale(), params,values,operators);
 				}
