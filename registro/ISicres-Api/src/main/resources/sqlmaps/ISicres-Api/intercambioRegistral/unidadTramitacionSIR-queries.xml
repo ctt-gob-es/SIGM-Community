@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+	"http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="UnidadTramitacionIntercambioRegistralSIRVO">
+
+	<select id="listUnidadTramitacionSIR" resultMap="unidadTramitacionIntercambioRegistralSIRResultMap"
+		parameterClass="java.util.HashMap">
+		SELECT tramunit.id, tramunit.id_orgs, tramunit.code_entity,
+		tramunit.name_entity,
+		tramunit.code_tramunit, tramunit.name_tramunit,
+		orgFather.code as code_OrgsFather,
+		orgFather.name as name_OrgsFather
+		FROM scr_tramunit tramunit
+		INNER JOIN
+		scr_orgs orgs
+		ON
+		tramunit.id_orgs = orgs.id
+		LEFT OUTER JOIN
+		scr_orgs orgFather
+		ON orgs.id_father = orgFather.id
+		WHERE 1=1
+		<isNotNull prepend="AND" property="CODE">
+			<isNotNull property="NAME">
+				(tramunit.code_tramunit LIKE '%#CODE#%' OR tramunit.name_tramunit LIKE '%#NAME#%')
+			</isNotNull>
+			<isNull property="NAME">
+				tramunit.code_tramunit LIKE '%#CODE#%'
+			</isNull>
+		</isNotNull>
+		<isNull property="CODE">
+			<isNotNull prepend="AND" property="NAME">
+				tramunit.name_tramunit LIKE '%#NAME#%'
+			</isNotNull>
+		</isNull>
+	</select>
+
+</sqlMap>

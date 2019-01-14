@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Certificates" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.2100000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="xPath">
+		<![CDATA[/INFORME_RP/REGISTRO]]>
+	</queryString>
+	<field name="FLD1" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD1]]></fieldDescription>
+	</field>
+	<field name="FLD9" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD9]]></fieldDescription>
+	</field>
+	<field name="FLD5_TEXT" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD5_TEXT]]></fieldDescription>
+	</field>
+	<field name="FLD8_TEXT" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD8_TEXT]]></fieldDescription>
+	</field>
+	<field name="FLD16_TEXT" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD16_TEXT]]></fieldDescription>
+	</field>
+	<field name="FLD17" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD17]]></fieldDescription>
+	</field>
+	<field name="PROCEEDING" class="java.lang.String">
+		<fieldDescription><![CDATA[PROCEEDING]]></fieldDescription>
+	</field>
+	<field name="FLD2" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD2]]></fieldDescription>
+	</field>
+	<field name="FLD5_ADDRESS" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD5_ADDRESS]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="154" splitType="Stretch">
+			<staticText>
+				<reportElement x="275" y="0" width="110" height="16"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº. de Registro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="275" y="29" width="110" height="16"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de Registro:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="385" y="0" width="150" height="29"/>
+				<textElement verticalAlignment="Top">
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="385" y="29" width="150" height="29"/>
+				<textElement verticalAlignment="Top">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="69" width="535" height="35"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD5_TEXT}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="187" height="69"/>
+				<imageExpression class="java.lang.String"><![CDATA["images/logoMinisterio.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="0" y="103" width="535" height="35"/>
+				<textElement>
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD5_ADDRESS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="590" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="39" width="535" height="17"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1. Datos del/de la interesado/a]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="111" width="535" height="21"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2. Datos del órgano destinatario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="183" width="535" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[3. Diligencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="398" width="535" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[4. Extracto del contenido del documento]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="22" y="55" width="513" height="56"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD9}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="22" y="132" width="513" height="51"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD8_TEXT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="22" y="203" width="513" height="195"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PROCEEDING}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="22" y="417" width="513" height="72"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD16_TEXT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="22" y="489" width="513" height="101"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD17}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="290" height="16"/>
+				<textElement>
+					<font size="11" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[RECIBO DE PRESENTACIÓN DE DOCUMENTOS]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="58" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

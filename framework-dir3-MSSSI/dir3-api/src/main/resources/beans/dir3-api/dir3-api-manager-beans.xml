@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="officeManagerImpl" name="officeManager"
+		class="es.msssi.dir3.api.manager.impl.OfficeManagerImpl">
+		<property name="officeDao"  ref="officeDao" />
+		<property name="addressDao"  ref="addressDao" />
+		<property name="contactDao"  ref="contactOFIDao" />
+		<property name="serviceDao"  ref="serviceDao" />
+		<property name="historyOFDao"  ref="historyOFDao" />
+	</bean>
+
+	<bean id="unitManagerImpl" name="unitManager"
+		class="es.msssi.dir3.api.manager.impl.UnitManagerImpl">
+		<property name="unitDao"  ref="unitDao" />
+		<property name="addressDao"  ref="addressDao" />
+		<property name="contactDao"  ref="contactUODao" />
+		<property name="historyUODao"  ref="historyUODao" />
+	</bean>
+
+	<bean id="updateStatusManagerImpl" name="updateStatusManager"
+		class="es.msssi.dir3.api.manager.impl.UpdateStatusManagerImpl">
+		<property name="updateStatusDAO" ref="updateStatusDao" />
+	</bean>
+	<bean id="relationshipManagerSIRImpl" name="relationshipSIRManager"
+		class="es.msssi.dir3.api.manager.impl.RelationshipManagerImpl">
+		<property name="relationshipDao" ref="relationshipOFIUOSIRDao" />
+	</bean>
+	<bean id="relationshipManagerORGImpl" name="relationshipORGManager"
+		class="es.msssi.dir3.api.manager.impl.RelationshipManagerImpl">
+		<property name="relationshipDao" ref="relationshipOFIUOORGDao" />
+	</bean>
+	<bean id="relationshipRegistroManagerImpl" name="relationshipRegistroManager"
+		class="es.msssi.dir3.api.manager.impl.RelationshipRegistroManagerImpl">
+		<property name="relationshipDao" ref="relationshipRegisterDao" />
+		<property name="relationshipSIRDao" ref="relationshipOFIUOSIRDao" />
+	</bean>
+	<bean id="unitRegistroManagerImpl" name="unitRegistroManager"
+		class="es.msssi.dir3.api.manager.impl.UnitRegistroManagerImpl">
+		<property name="unitDao"  ref="unitRegistroDao" />
+		<property name="addressRegistroDao"  ref="addressRegistroDao" />
+		<property name="addressDao"  ref="addressDao" />
+		<property name="unidadAdministrativaDAO"  ref="unidadAdministrativaDAO" />
+	</bean>
+</beans>

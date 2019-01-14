@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+<!--   -->
+</h:head>
+
+<h:body>
+	<ui:composition>
+
+		<h:panelGrid id="displayDetIR" styleClass="ampliar" style="width: 600px !important">
+
+			<ui:fragment
+				rendered="${searchInboxRegInterchangeAction.asientoRegistralVO != null}">
+				<p:accordionPanel multiple="true" activeIndex="0,1,2">
+					<p:tab
+						title="#{msgs.labelInformacionIR}  #{searchInboxRegInterchangeAction.asientoRegistralVO.identificadorIntercambio}">
+						<h:panelGrid  style="width: 100%">
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.identificadorIntercambio != null}">
+								<label for="form:identificadorIntercambio" class="general">
+									<span  class="label"><h:outputText
+											id="headercodigoIntercambio"
+											value="#{msgs.headercodigoIntercambio}" />:<h:outputText class="beforeAmplia"
+										id="identificadorIntercambio"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.identificadorIntercambio}" /></span> 
+								</label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.numeroRegistroInicial != null}">
+								<label for="form:numeroRegistroInicial" class="general">
+									<span class="label"><h:outputText id="labelNumInicial"
+											value="#{msgs.labelNumInicial}" />:<h:outputText class="beforeAmplia"
+										id="numeroRegistroInicial"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.numeroRegistroInicial}" /></span> 
+								</label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.numeroRegistro != null}">
+								<label for="form:numeroRegistro" class="general"> <span
+									class="label"><h:outputText id="fld1labelShort"
+											value="#{msgs.fld1labelShort}" />:<h:outputText class="beforeAmplia"
+										id="numeroRegistro"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.numeroRegistro}" /></span> 
+								</label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.codigoAsunto != null}">
+								<label for="form:codigoAsunto" class="general"> <span
+									class="label"><h:outputText id="fld16labelShort"
+											value="#{msgs.fld16labelShort}" />:<h:outputText
+										id="codigoAsunto" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.codigoAsunto}" /></span> 
+								</label>
+							</ui:fragment>
+
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.resumen != null and searchInboxRegInterchangeAction.asientoRegistralVO.resumen != ''}">
+								<label for="form:resumen" class="general"> <span
+									class="label"><h:outputText id="fld17label"
+											value="#{msgs.fld17label}" />:<h:outputText id="resumen" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.resumen}" /></span> 
+								</label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.solicita != null and searchInboxRegInterchangeAction.asientoRegistralVO.solicita != ''}">
+								<label for="form:solicita" class="general"> <span
+									class="label"><h:outputText id="labelSolicita"
+											value="#{msgs.labelSolicita}" />:<h:outputText id="solicita" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.solicita}" /></span> 
+								</label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.expone != null and searchInboxRegInterchangeAction.asientoRegistralVO.expone != ''}">
+								<label for="form:expone" class="general"> <span
+									class="label"><h:outputText id="labelExpone"
+											value="#{msgs.labelExpone}" />:<h:outputText id="expone" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.expone}" /></span> 
+								</label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.tipoRegistro != null}">
+								<label for="form:tipoRegistro" class="general"> <span
+									class="label"><h:outputText id="labelTipoRegistro"
+											value="#{msgs.labelTipoRegistro}" />:<h:outputText class="beforeAmplia"
+										id="tipoRegistro"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.tipoRegistro.name}" /></span> 
+								</label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.fechaRecepcion != null}">
+								<label for="form:fechaRecepcion" class="general"> <span
+									class="label"><h:outputText id="labelFechaRecepcion"
+											value="#{msgs.labelFechaRecepcion}" />:<h:outputText
+										id="fechaRecepcion" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.fechaRecepcion}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+											locale="es_ES" timeZone="Europe/Paris" />
+									</h:outputText></span> 
+								</label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.fechaEnvio != null}">
+								<label for="form:fechaEnvio" class="general"> <span
+									class="label"><h:outputText id="labelFechaEnvio"
+											value="#{msgs.labelFechaEnvio}" />:<h:outputText
+										id="fechaEnvio" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.fechaEnvio}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+											locale="es_ES" timeZone="Europe/Paris" />
+									</h:outputText></span> 
+								</label>
+							</ui:fragment>
+							<!-- Entidad Registral Origen -->
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.codigoEntidadRegistralOrigen != null}">
+								<label for="codigoEntidadRegistralOrigen" class="general">
+									<span class="label"><h:outputText
+											id="labelCodigoEntidadRegistralOrigen"
+											value="#{msgs.labelCodigoEntidadRegistralOrigen}" />:<h:outputText
+										id="codigoEntidadRegistralOrigen" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.codigoEntidadRegistralOrigen} #{searchInboxRegInterchangeAction.asientoRegistralVO.descripcionEntidadRegistralOrigen}" />
+								</span></label>
+							</ui:fragment>
+							<!-- Entidad Registral Inicio -->
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.codigoEntidadRegistralInicio != null}">
+								<label for="form:codigoEntidadRegistralInicio" class="general">
+									<span class="label"><h:outputText
+											id="labelCodigoEntidadRegistralInicio"
+											value="#{msgs.labelCodigoEntidadRegistralInicio}" />:<h:outputText
+										id="codigoEntidadRegistralInicio" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.codigoEntidadRegistralInicio} #{searchInboxRegInterchangeAction.asientoRegistralVO.descripcionEntidadRegistralInicio}" />
+								</span> </label>
+							</ui:fragment>
+
+							<!-- Unidad Tramitación Origen -->
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.codigoUnidadTramitacionOrigen != null}">
+								<label for="form:codigoUnidadTramitacionOrigen" class="general">
+									<span class="label"><h:outputText
+											id="labelUnidadTramitacionOrigen"
+											value="#{msgs.labelUnidadTramitacionOrigen}" />:<h:outputText
+										id="codigoUnidadTramitacionOrigen" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.codigoUnidadTramitacionOrigen} #{searchInboxRegInterchangeAction.asientoRegistralVO.descripcionUnidadTramitacionOrigen}" />
+								</span> </label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.fechaRegistro != null}">
+								<label for="form:fechaRegistro" class="general"> <span
+									class="label"><h:outputText id="fld2label"
+											value="#{msgs.fld2label}" />: <h:outputText
+										id="fechaRegistro" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.fechaRegistro}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+											locale="es_ES" timeZone="Europe/Paris" />
+									</h:outputText></span>
+								</label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.fechaRegistroInicial != null}">
+								<label for="form:fechaRegistroInicial" class="general">
+									<span class="label"><h:outputText
+											id="labelFechaRegistroInicial"
+											value="#{msgs.labelFechaRegistroInicial}" />:<h:outputText
+										id="fechaRegistroInicial" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.fechaRegistroInicial}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+											locale="es_ES" timeZone="Europe/Paris" />
+									</h:outputText></span> 
+								</label>
+							</ui:fragment>
+							<!-- Entidad Registral Destino -->
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.codigoEntidadRegistralDestino != null}">
+								<label for="form:codigoEntidadRegistralDestino" class="general">
+									<span class="label"><h:outputText
+											id="labelEntidadRegistralDestino"
+											value="#{msgs.labelEntidadRegistralDestino}" />:<h:outputText
+										id="codigoEntidadRegistralDestino" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.codigoEntidadRegistralDestino} #{searchInboxRegInterchangeAction.asientoRegistralVO.descripcionEntidadRegistralDestino}" />
+								</span></label>
+							</ui:fragment>
+							<!-- Unidad Tramitación Destino -->
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.codigoUnidadTramitacionDestino != null}">
+								<label for="form:codigoUnidadTramitacionDestino" class="general">
+									<span class="label"><h:outputText
+											id="labelUnidadTramitacionDestino"
+											value="#{msgs.labelUnidadTramitacionDestino}" />:<h:outputText
+										id="codigoUnidadTramitacionDestino" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.codigoUnidadTramitacionDestino} #{searchInboxRegInterchangeAction.asientoRegistralVO.descripcionUnidadTramitacionDestino}" />
+								</span> </label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.referenciaExterna != null}">
+								<label for="form:referenciaExterna" class="general"> <span
+									class="label"><h:outputText id="labelReferenciaExterna"
+											value="#{msgs.labelReferenciaExterna}" />:<h:outputText class="beforeAmplia"
+										id="referenciaExterna"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.referenciaExterna}" />
+								</span> </label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.numeroExpediente != null}">
+								<label for="form:numeroExpediente" class="general"> <span
+									class="label"><h:outputText id="labelNumeroExpediente"
+											value="#{msgs.labelNumeroExpediente}" />:<h:outputText
+										id="numeroExpediente" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.numeroExpediente}" />
+								</span> </label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.tipoTransporte != null}">
+								<label for="form:tipoTransporte" class="general"> <span
+									class="label"><h:outputText id="labelTipoTransporte"
+											value="#{msgs.labelTipoTransporte}" />:<h:outputText
+										id="tipoTransporte" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.tipoTransporte.name}" />
+								</span></label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.numeroTransporte != null}">
+								<label for="form:numeroTransporte" class="general"> <span
+									class="label"><h:outputText id="labelNumeroTransporte"
+											value="#{msgs.labelNumeroTransporte}" />:<h:outputText
+										id="numeroTransporte" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.numeroTransporte}" />
+								</span> </label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.nombreUsuario != null}">
+								<label for="form:nombreUsuario" class="general"> <span
+									class="label"><h:outputText id="labelNombreUsuario"
+											value="#{msgs.labelNombreUsuario}" />:<h:outputText
+										id="nombreUsuario" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.nombreUsuario}" />
+								</span></label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.contactoUsuario != null}">
+								<label for="form:contactoUsuario" class="general"> <span
+									class="label"><h:outputText id="labelContactoUsuario"
+											value="#{msgs.labelContactoUsuario}" />:<h:outputText
+										id="contactoUsuario" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.contactoUsuario}" />
+								</span> </label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.aplicacion != null}">
+								<label for="form:aplicacion" class="general"> <span
+									class="label"><h:outputText id="labelAplicacion"
+											value="#{msgs.labelAplicacion}" />:<h:outputText
+										id="aplicacion" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.aplicacion}" />
+								</span> </label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.descripcionTipoAnotacion != null}">
+								<label for="form:descripcionTipoAnotacion" class="general">
+									<span class="label"><h:outputText
+											id="labelDescripcionTipoAnotacion"
+											value="#{msgs.labelDescripcionTipoAnotacion}" />:<h:outputText
+										id="descripcionTipoAnotacion" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.descripcionTipoAnotacion}" />
+								</span> </label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.documentacionFisica != null}">
+								<label for="form:documentacionFisica" class="general"> <span
+									class="label"><h:outputText id="labelDocFisica"
+											value="#{msgs.labelDocFisica}" />:<h:outputText
+										id="documentacionFisica" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.documentacionFisica.name}" />
+								</span></label>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${searchInboxRegInterchangeAction.asientoRegistralVO.observacionesApunte != null}">
+								<label for="form:observacionesApunte" class="general"> <span
+									class="label"><h:outputText
+											id="labelObservacionesApunte"
+											value="#{msgs.labelObservacionesApunte}" />:<h:outputText
+										id="observacionesApunte" class="beforeAmplia"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.observacionesApunte}" />
+								</span></label>
+							</ui:fragment>
+							<br/>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="#{msgs.labelAnexos}">
+						<ui:fragment
+							rendered="${not empty searchInboxRegInterchangeAction.asientoRegistralVO.anexos}">
+							<h:panelGrid style="width:100%">
+								<label for="form:anexos" class="general inter"> <p:dataTable
+										var="anexo"
+										value="#{searchInboxRegInterchangeAction.asientoRegistralVO.anexos}"
+										styleClass="tableAttached">
+										<p:column headerText="#{msgs.labelNombreFichero}">
+											<p:commandLink ajax="false"
+												onclick="PrimeFaces.monitorDownload(start, stop)"
+												value="#{anexo.nombreFichero}">
+												<f:setPropertyActionListener value="#{anexo}"
+													target="#{regInterchangeDownloadController.anexo}" />
+												<p:fileDownload
+													value="#{regInterchangeDownloadController.fileDownload}" />
+											</p:commandLink>
+
+										</p:column>
+										<p:column headerText="#{msgs.labelTipoDocumento}">
+											<h:outputText value="#{anexo.tipoDocumento.name}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelTipoValidez}">
+											<h:outputText value="#{anexo.validezDocumento.name}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelTipoMime}">
+											<h:outputText value="#{anexo.tipoMIME}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelObservacionesDoc}">
+											<h:outputText value="#{anexo.observaciones}" />
+										</p:column>
+									</p:dataTable>
+								</label>
+							</h:panelGrid>
+						</ui:fragment>
+					</p:tab>
+					<!-- INTERESADOS -->
+					<p:tab title="#{msgs.labelINTERESADOS}">
+						<ui:fragment
+							rendered="${not empty searchInboxRegInterchangeAction.asientoRegistralVO.interesados}">
+							<h:panelGrid style="width:100%" styleClass="interPanelTitle">
+								<c:forEach var="interesado"
+									items="${searchInboxRegInterchangeAction.asientoRegistralVO.interesados}">
+									<h:outputText styleClass="spaninter"
+										value="#{msgs.labelInformacionInteresado}" />
+									<ui:fragment
+										rendered="${interesado.tipoDocumentoIdentificacionInteresado != null}">
+										<label class="general datosInter"> 
+											<span class="label"><span><h:outputText
+														value="#{msgs.labelTipoDocumento}" /></span>
+												:<h:outputText class="beforeAmplia"
+												value="#{interesado.tipoDocumentoIdentificacionInteresado.name}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.documentoIdentificacionInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelNumeroDocumento}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.documentoIdentificacionInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.razonSocialInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelRazonSocial}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.razonSocialInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment rendered="${interesado.nombreInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelNombre}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.nombreInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.primerApellidoInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelPrimerApellido}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.primerApellidoInteresado}" /></span>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.segundoApellidoInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelSegundoApellido}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.segundoApellidoInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.codigoPaisInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCodigoPais}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.codigoPaisInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.codigoProvinciaInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCodigoProvincia}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.codigoProvinciaInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.codigoMunicipioInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCodigoMunicipio}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.codigoMunicipioInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.direccionInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelDireccion}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.direccionInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.codigoPostalInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCodigoPostal}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.codigoPostalInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.correoElectronicoInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCorreoElectronico}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.correoElectronicoInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.telefonoInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelTelefono}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.telefonoInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.direccionElectronicaHabilitadaInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelDireccionElectronica}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.direccionElectronicaHabilitadaInteresado}" /></span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.canalPreferenteComunicacionInteresado != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCanal}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.canalPreferenteComunicacionInteresado.name}" /></span>
+										</label>
+									</ui:fragment>
+									<ui:fragment rendered="${interesado.observaciones != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelobservForward}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.observaciones}" /></span> 
+										</label>
+									</ui:fragment>
+									<!--  Datos Representante -->
+									<ui:fragment
+										rendered="${interesado.tipoDocumentoIdentificacionRepresentante != null or interesado.razonSocialRepresentante != null}">
+										<h:outputText styleClass="spanrepre"
+											value="#{msgs.labelInformacionRepresentante}" />
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.tipoDocumentoIdentificacionRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelTipoDocumento}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.tipoDocumentoIdentificacionRepresentante.name}" /> </span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.documentoIdentificacionRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelNumeroDocumento}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.documentoIdentificacionRepresentante}" /> </span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.razonSocialRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelRazonSocial}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.razonSocialRepresentante}" /> </span>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.nombreRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelNombre}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.nombreRepresentante}" /></span>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.primerApellidoRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelPrimerApellido}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.primerApellidoRepresentante}" /> </span>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.segundoApellidoRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelSegundoApellido}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.segundoApellidoRepresentante}" /> </span>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.codigoPaisRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCodigoPais}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.codigoPaisRepresentante}" /></span>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.codigoProvinciaRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCodigoProvincia}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.codigoProvinciaRepresentante}" /></span>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.codigoMunicipioRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCodigoMunicipio}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.codigoMunicipioRepresentante}" /></span>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.direccionRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelDireccion}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.direccionRepresentante}" /></span>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.codigoPostalRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCodigoPostal}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.codigoPostalRepresentante}" /></span>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.correoElectronicoRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCorreoElectronico}" /></span>: <h:outputText class="beforeAmplia"
+												value="#{interesado.correoElectronicoRepresentante}" /></span>
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.telefonoRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelTelefono}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.telefonoRepresentante}" /> </span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.direccionElectronicaHabilitadaRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelDireccionElectronica}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.direccionElectronicaHabilitadaRepresentante}" /> </span> 
+										</label>
+									</ui:fragment>
+									<ui:fragment
+										rendered="${interesado.canalPreferenteComunicacionRepresentante != null}">
+										<label class="general datosInter"> <span class="label"><span><h:outputText
+														value="#{msgs.labelCanal}" /></span>:<h:outputText class="beforeAmplia"
+												value="#{interesado.canalPreferenteComunicacionRepresentante.name}" /></span>
+										</label>
+									</ui:fragment>
+									<br />
+								</c:forEach>
+							</h:panelGrid>
+						</ui:fragment>
+					</p:tab>
+				</p:accordionPanel>
+			</ui:fragment>
+		</h:panelGrid>
+		<div class="botoneraDiv">
+			<p:commandButton styleClass="boton-buscar"
+				value="#{msgs.labelBotonCancelar}"
+				onclick="PF('DetIRDialog').hide();" />
+		</div>
+	</ui:composition>
+
+
+</h:body>
+
+</html>

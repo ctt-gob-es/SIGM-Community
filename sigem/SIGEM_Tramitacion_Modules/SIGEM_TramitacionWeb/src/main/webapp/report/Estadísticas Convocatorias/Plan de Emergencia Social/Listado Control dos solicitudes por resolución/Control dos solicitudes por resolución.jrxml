@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Control dos solicitudes por resolución"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="595"
+		 pageHeight="842"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<subDataset name="MediasGastosViviendas" >
+
+		<queryString><![CDATA[select 'Media gasto en hipotecas' as titulo, sum(cantidad)/count(cantidad) as media, sum(cantidad) as suma, count(cantidad) as solicitudes
+from (select 
+case when viviendaeuros2 is null then 0 when viviendaeuros2 = '' then 0 when upper(viviendaeuros2) LIKE '%NO%' then 0 else replace(viviendaeuros2,',','.')::float end
+from dpcr_serso_plan_emer datos_solicitud 
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+where exp_solicitud.estadoadm in ('NT','NE','AP','PR','RS')
+and upper(vivienda2) = 'SI') as hipoteca (cantidad)
+union
+select 'Media gasto en alquileres' as titulo, sum(cantidad)/count(cantidad) as media, sum(cantidad) as suma, count(cantidad) as solicitudes
+from (select 
+case when viviendaeuros3 is null then 0 when viviendaeuros3 = '' then 0 when upper(viviendaeuros3) LIKE '%NO%' then 0 else replace(viviendaeuros3,',','.')::float end
+from dpcr_serso_plan_emer datos_solicitud 
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+where exp_solicitud.estadoadm in ('NT','NE','AP','RS')
+and upper(vivienda3) = 'SI') as alquiler (cantidad)
+order by titulo desc]]></queryString>
+
+		<field name="titulo" class="java.lang.String"/>
+		<field name="media" class="java.lang.Double"/>
+		<field name="suma" class="java.lang.Double"/>
+		<field name="solicitudes" class="java.lang.Long"/>
+
+	</subDataset>
+
+	<subDataset name="Ingresos Familiares" >
+
+		<queryString><![CDATA[select nfamiliar::int, 
+sum(case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end) as ingresos ,
+count(nfamiliar::int),
+sum(case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end)/
+count(nfamiliar::int) as media
+from dpcr_serso_plan_emer datos_solicitud 
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+where exp_solicitud.estadoadm in ('NT','NE','AP','RS')
+group by nfamiliar::int
+order by nfamiliar::int]]></queryString>
+
+		<field name="nfamiliar" class="java.lang.Integer"/>
+		<field name="ingresos" class="java.lang.Double"/>
+		<field name="count" class="java.lang.Long"/>
+		<field name="media" class="java.lang.Double"/>
+
+	</subDataset>
+
+	<subDataset name="IngresosMenoresDe" >
+
+		<queryString><![CDATA[select 'Nº de Familias con Ingresos de 0 €' as titulo, count(ingresos) as familias from 
+(select nfamiliar::int, 
+case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end as ingresos 
+from dpcr_serso_plan_emer datos_solicitud 
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+where exp_solicitud.estadoadm in ('NT','NE','AP','PR','RS')) as ingresosCero
+where ingresosCero.ingresos = 0
+union
+select 'Nº de Familias con Ingresos menores de 500 €' as titulo, count(ingresos) as familias from 
+(select nfamiliar::int, 
+case when ((total like '%0%' and total != '0') or total='' or total is null or upper(total)='NAN' OR TOTAL LIKE '%-%') then 0 else trim(replace(TOTAL,',','.'))::float end as ingresos 
+from dpcr_serso_plan_emer datos_solicitud 
+join spac_expedientes exp_solicitud on datos_solicitud.numexp = exp_solicitud.numexp 
+where exp_solicitud.estadoadm in ('NT','NE','AP','RS')) as ingresosCero
+where ingresosCero.ingresos < 500]]></queryString>
+
+		<field name="titulo" class="java.lang.String"/>
+		<field name="familias" class="java.lang.Long"/>
+
+	</subDataset>
+
+	<parameter name="SUBREPORT_DIR" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["/home/sigem/SIGEM/temp/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IMAGES_REPOSITORY_PATH" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["C:\\Users\\Ordenador viejo\\Manu\\Documentos\\Imágenes"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NUM_EXP" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["DPCR2012/38317"]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select tabla1.numexp, tabla1.dni from 
+(select sol1.numexp, sol1.nif from 
+dpcr_serso_plan_emer sol1 left join spac_expedientes exp1 on sol1.numexp = exp1.numexp 
+where sol1.convocatoria = $P{NUM_EXP} and exp1.estadoadm='RS') as tabla1 (numexp, dni)
+join 
+(select sol1.numexp, sol1.nif from 
+dpcr_serso_plan_emer sol1 left join spac_expedientes exp1 on sol1.numexp = exp1.numexp 
+where sol1.convocatoria = $P{NUM_EXP} and exp1.estadoadm='RS') as tabla2 (numexp, dni)
+on trim(upper(tabla1.dni)) = trim(upper(tabla2.dni)) and tabla1.numexp != tabla2.numexp
+order by  tabla1.dni, tabla1.numexp]]></queryString>
+
+	<field name="numexp" class="java.lang.String"/>
+	<field name="dni" class="java.lang.String"/>
+
+
+		<group  name="CamiboDNI" isReprintHeaderOnEachPage="true" >
+			<groupExpression><![CDATA[$F{dni}]]></groupExpression>
+			<groupHeader>
+			<band height="25"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="87"
+						y="3"
+						width="136"
+						height="20"
+						key="staticText-5"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font/>
+					</textElement>
+				<text><![CDATA[NIF del beneficiario]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="225"
+						y="3"
+						width="235"
+						height="20"
+						key="staticText-6"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font/>
+					</textElement>
+				<text><![CDATA[Expedientes en estado de RESOLUCIÓN]]></text>
+				</staticText>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="6"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						x="77"
+						y="5"
+						width="383"
+						height="0"
+						key="line-1"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+			</band>
+			</groupFooter>
+		</group>
+		<background>
+			<band height="802"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="71"
+						y="39"
+						width="464"
+						height="763"
+						key="image-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logodipuFondo.jpg"]]></imageExpression>
+				</image>
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="125"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="6"
+						width="173"
+						height="93"
+						key="image-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoCabecera - Servicios Sociales.png"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement
+						x="173"
+						y="5"
+						width="362"
+						height="93"
+						key="staticText-4"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="24" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Control de dos solicitudes aprobadas por beneficiario en una misma resolución]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="431"
+						y="104"
+						width="100"
+						height="18"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{NUM_EXP}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="200"
+						y="104"
+						width="227"
+						height="18"
+						key="staticText-7"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right">
+						<font/>
+					</textElement>
+				<text><![CDATA[Número de expediente de la convocatoria:]]></text>
+				</staticText>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="13"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="18"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="253"
+						y="0"
+						width="207"
+						height="18"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{numexp}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="87"
+						y="0"
+						width="136"
+						height="18"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{dni}]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="33"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="2"
+						width="535"
+						height="31"
+						key="image-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoPie.jpg"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="482"
+						y="8"
+						width="28"
+						height="15"
+						forecolor="#FFFFFF"
+						key="textField-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Calibri" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageFooter>
+		<lastPageFooter>
+			<band height="32"  isSplitAllowed="true" >
+				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="1"
+						width="535"
+						height="31"
+						key="image-4"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{IMAGES_REPOSITORY_PATH}+"/logoPie.jpg"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="482"
+						y="7"
+						width="28"
+						height="15"
+						forecolor="#FFFFFF"
+						key="textField-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Calibri" pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</band>
+		</lastPageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea- versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="unidadTramitadora">
+	<select id="getUnidadTramitadora"
+		resultClass="es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralSIRVO"
+		parameterClass="java.lang.Integer">
+		SELECT tramunit.id, tramunit.id_orgs as idOrgs, tramunit.code_entity as codeEntity,
+		tramunit.name_entity as nameEntity,
+		tramunit.code_tramunit as codeTramunit, tramunit.name_tramunit as nameTramunit,
+		orgFather.code as codeOrgsFather,
+		orgFather.name as nameOrgsFather
+		FROM scr_tramunit tramunit
+		INNER JOIN
+		scr_orgs orgs
+		ON
+		tramunit.id_orgs = orgs.id
+		LEFT OUTER JOIN
+		scr_orgs orgFather
+		ON orgs.id_father = orgFather.id
+		WHERE tramunit.id = #value#
+	</select>
+	
+	<select id="listUnidadTramitadoraQuery" parameterClass="java.util.HashMap"
+		resultClass="es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralSIRVO">
+		SELECT tramunit.id, tramunit.id_orgs as idOrgs, tramunit.code_entity as codeEntity,
+		tramunit.name_entity as nameEntity,
+		tramunit.code_tramunit as codeTramunit, tramunit.name_tramunit as nameTramunit,
+		orgFather.code as codeOrgsFather,
+		orgFather.name as nameOrgsFather
+		FROM scr_tramunit tramunit
+		INNER JOIN
+		scr_orgs orgs ON
+		tramunit.id_orgs = orgs.id
+		AND orgs.disable_date is null 
+		LEFT OUTER JOIN
+		scr_orgs orgFather
+		ON orgs.id_father = orgFather.id
+		WHERE $where$
+		<isNotEmpty prepend="AND" property="text">
+		   (UNACCENT(UPPER( CODE_TRAMUNIT	|| ' '|| NAME_TRAMUNIT)) LIKE '%$text$%' )
+		</isNotEmpty>
+		<isNotEmpty prepend="ORDER BY" property="orderby">
+		 	$orderby$
+		 </isNotEmpty>
+	</select>
+	
+	<sql id="findUnitsTram_fragment">
+		FROM scr_tramunit tramunit
+		INNER JOIN
+		scr_orgs orgs ON
+		tramunit.id_orgs = orgs.id
+		AND orgs.disable_date is null 
+		LEFT OUTER JOIN
+		scr_orgs orgFather
+		ON orgs.id_father = orgFather.id
+		WHERE (1=1) 
+		<isNotEmpty  property="searchType">
+			<isEqual  property="searchType" compareValue="1">
+				AND orgs.TYPE = #searchType#
+			</isEqual>
+			<isEqual  property="searchType" compareValue="2">
+				AND orgs.TYPE in (1, 2) 
+			</isEqual>
+			<isEqual  property="searchType" compareValue="3">
+				AND orgs.TYPE = #searchType#
+			</isEqual>
+			<isEqual  property="searchType" compareValue="4">
+				AND orgs.TYPE = #searchType#
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty  property="searchText">
+			AND (unaccent(UPPER( CODE_TRAMUNIT	|| ' '|| NAME_TRAMUNIT)) 
+			LIKE unaccent(UPPER('%$searchText$%')) )
+		</isNotEmpty>
+		<isEqual  property="searchType" compareValue="3">
+			<isNotEmpty  property="ccaaId">
+				AND orgs.ID_CCAA = #ccaaId#
+			</isNotEmpty>
+		</isEqual>
+		<isEqual  property="searchType" compareValue="4">
+			<isNotEmpty  property="provId">
+				AND orgs.ID_PROV = #provId#
+			</isNotEmpty>
+		</isEqual>
+	</sql>
+	
+	<select id="countUnidadesTramitacion" parameterClass="es.msssi.sgm.registropresencial.beans.SearchUnitsBean"
+		resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="findUnitsTram_fragment" />
+	</select>
+	
+	<select id="buscarUnidadesTramitacionPag" parameterClass="es.msssi.sgm.registropresencial.beans.SearchUnitsBean"
+	 resultClass="es.ieci.tecdoc.isicres.api.intercambioregistral.business.vo.UnidadTramitacionIntercambioRegistralSIRVO">
+		SELECT tramunit.id, tramunit.id_orgs as idOrgs, tramunit.code_entity as codeEntity,
+		tramunit.name_entity as nameEntity,
+		tramunit.code_tramunit as codeTramunit, tramunit.name_tramunit as nameTramunit,
+		orgFather.code as codeOrgsFather,
+		orgFather.name as nameOrgsFather
+		<include refid="findUnitsTram_fragment" />
+		ORDER BY tramunit.name_tramunit
+	</select>
+	
+	<select id="esUnidadTramitacion" parameterClass="java.lang.Integer"
+		resultClass="java.lang.Integer">
+		select scrtram.id from SCR_TRAMUNIT scrtram where scrtram.id_orgs = #value#
+	</select>
+</sqlMap>

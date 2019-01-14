@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sigm.dao.dataaccess.persistence.OutputRegisterReportsCertMapper">
+ 
+    <select id="getByParams"
+            parameterType="java.util.HashMap"
+            resultType="sigm.dao.dataaccess.domain.OutputRegisterReportsCert">
+		
+		SELECT ${idBook} AS IDBOOK,
+          ASF.FDRID,
+          ASF.TIMESTAMP,
+          ASF.FLD1,
+          ASF.FLD2,
+         ASF.FLD3,
+          ASF.FLD4,
+          ASF.FLD5,
+          OFIC.NAME AS FLD5_TEXT,
+          DIROFIC.ADDRESS AS FLD5_ADDRESS,
+          DIROFIC.CITY AS FLD5_CITY,
+          DIROFIC.ZIP AS FLD5_ZIP,
+          DIROFIC.COUNTRY AS FLD5_COUNTRY,
+          DIROFIC.TELEPHONE AS FLD5_TELEPHONE,
+          DIROFIC.FAX AS FLD5_FAX,
+          DIROFIC.EMAIL AS FLD5_EMAIL,
+          ASF.FLD6,
+          ASF.FLD7,
+          coalesce (ORG.NAME, CONCAT (CONCAT (ORG.CODE, '-'), ORG.NAME), '')
+             AS FLD7_TEXT,
+          ASF.FLD8,
+          coalesce (ORG2.NAME, CONCAT (CONCAT (ORG2.CODE, '-'), ORG2.NAME), '')
+             AS FLD8_TEXT,
+          ASF.FLD9,
+          ASF.FLD10,
+          ASF.FLD11,
+          ASF.FLD12,
+          coalesce (CA.MATTER, CONCAT (CONCAT (CA.CODE, '-'), CA.MATTER), '')
+             AS FLD12_TEXT,
+          ASF.FLD13,
+          ASF.FLD15,
+          (SELECT EX14.TEXT FROM A${idBook}XF EX14 WHERE EX14.FDRID = ASF.FDRID AND  EX14.FLDID=14 ) AS FLD14,
+          (SELECT EX501.TEXT FROM A${idBook}XF EX501 WHERE EX501.FDRID = ASF.FDRID AND  EX501.FLDID=501 ) AS FLD501,
+          (SELECT EX502.TEXT FROM A${idBook}XF EX502 WHERE EX502.FDRID = ASF.FDRID AND  EX502.FLDID=501 ) AS FLD502,
+          ASF.FLD504,
+          ASF.FLD505,
+          ASF.FLD506
+     FROM A${idBook}SF ASF
+          LEFT JOIN SCR_OFIC OFIC
+             ON OFIC.ID = ASF.FLD5
+          LEFT JOIN SCR_DIROFIC DIROFIC
+             ON DIROFIC.ID_OFIC = ASF.FLD5
+          LEFT JOIN SCR_ORGS ORG
+             ON ORG.ID = ASF.FLD7
+          LEFT JOIN SCR_ORGS ORG2
+             ON ORG2.ID = ASF.FLD8
+          LEFT JOIN SCR_CA CA
+             ON CA.ID = ASF.FLD12
+        WHERE ROWNUM <![CDATA[<=]]> #{maxReportRegisters} AND FDRID = #{fdrid}
+		                     
+    </select>   
+      
+</mapper>

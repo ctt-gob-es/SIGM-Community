@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+
+	<!-- Ponemos 2 veces la propiedad Nombre, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CIF_BENEFICIARIO' 
+				 titleKey='BDNS_IGAE_PAGO:CIF_BENEFICIARIO' 
+				 fieldType='LINK'
+				 columnClass='width20percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='REFERENCIA_PAGO' 
+				 titleKey='BDNS_IGAE_PAGO:REFERENCIA_PAGO' 
+				 fieldType='LINK'
+				 columnClass='width30percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='IMPORTE' 
+				 titleKey='BDNS_IGAE_PAGO:IMPORTE' 
+				 fieldType='LIST' 
+				 columnClass='width20percent'
+				 headerClass='headerDisplay'
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='FECHA_PAGO' 
+				 titleKey='BDNS_IGAE_PAGO:FECHA_PAGO' 
+				 fieldType='LIST' 
+				 columnClass='width20percent'
+				 headerClass='headerDisplay'
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='RETENCION' 
+				 titleKey='BDNS_IGAE_PAGO:RETENCION' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='headerDisplay'
+				 sortable='true'/>
+				
+				 
+</beanformatter>

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+
+</h:head>
+
+<h:body>
+	<ui:composition>
+		<h:form id="formIModificarTercero">
+			<h:panelGrid id="gridIModificar" styleClass="modificarTerceros">
+				<p:growl id="growl" sticky="true" showDetail="true"/>
+					<p:tab id="personal" title="#{msgs.labelDatosPersonales}">
+						<p:panel id="panelDatosPersonales" header="#{msgs.labelDatosPersonales}" >
+							<h:panelGrid columns="2" columnClasses="label, value" styleClass="modificarTerceros">
+
+								<h:outputLabel value="#{msgs.labelTipoDocumento}"></h:outputLabel>
+								<p:selectOneMenu id="tipoDocIntModificar" value="#{tercerosAction.tercerosBean.interesadoDeTrabajo.tipodoc}" binding="#{tipoDocIntModificar}">
+									<f:selectItems value="#{tercerosAction.listaTiposDocumentosIdentificativos}" var="item" itemLabel="#{item.descripcion}" itemValue="#{item.id}"/>						
+								</p:selectOneMenu>
+
+								<h:outputLabel value="#{msgs.labelNumeroDocumento}"></h:outputLabel>
+								<p:inputText 
+									id="docIdentidadIntModificar" 
+									label="#{msgs.labelNumeroDocumento}" 
+									value="#{tercerosAction.tercerosBean.interesadoDeTrabajo.docIdentidad}" 
+									style="width: 20% !important">									
+									
+									<f:validateLength maximum="17" />
+									<f:validator validatorId="nifValidator" />
+									<f:validator validatorId="nifDuplicadoValidator" disabled="#{not empty param.deshabilitarValidacion}"/>
+				
+									<p:ajax event="blur" process="tipoDocIntModificar" ></p:ajax>
+
+									<f:attribute name="tipoDOC" value="#{tipoDocIntModificar}"/>
+
+									<f:ajax event="blur" render="messageDocIdentidadIntModificar" />
+									
+									<p:message for="docIdentidadIntModificar" id="messageDocIdentidadIntModificar" autoUpdate="true"/>									
+								</p:inputText>				
+
+								<h:outputLabel value="#{msgs.labelNombre}" rendered="${tercerosAction.tercerosBean.interesadoDeTrabajo.tipo =='P'}"></h:outputLabel>
+								<p:inputText id="nombreIntModificar" label="#{msgs.labelNombre}" value="#{tercerosAction.tercerosBean.interesadoDeTrabajo.nombre}" rendered="${tercerosAction.tercerosBean.interesadoDeTrabajo.tipo =='P'}">
+									<f:validateLength maximum="30" />
+								</p:inputText>
+								<h:outputLabel value=""/><p:message for="nombreIntModificar" style="font-size:1.5em;"/>
+
+								<h:outputLabel value="#{msgs.labelPrimerApellido}" rendered="${tercerosAction.tercerosBean.interesadoDeTrabajo.tipo =='P'}"></h:outputLabel>
+								<p:inputText id="papellidoIntModificar" label="#{msgs.labelPrimerApellido}" value="#{tercerosAction.tercerosBean.interesadoDeTrabajo.papellido}" rendered="${tercerosAction.tercerosBean.interesadoDeTrabajo.tipo =='P'}">
+									<f:validateLength maximum="30" />
+								</p:inputText>
+								<h:outputLabel value=""/><p:message for="papellidoIntModificar" style="font-size:1.5em;"/>
+
+								<h:outputLabel value="#{msgs.labelSegundoApellido}" rendered="${tercerosAction.tercerosBean.interesadoDeTrabajo.tipo =='P'}"></h:outputLabel>
+								<p:inputText id="sapellidoIntModificar" label="#{msgs.labelSegundoApellido}" value="#{tercerosAction.tercerosBean.interesadoDeTrabajo.sapellido}" rendered="${tercerosAction.tercerosBean.interesadoDeTrabajo.tipo =='P'}">
+									<f:validateLength maximum="30" />
+								</p:inputText>
+								<h:outputLabel value=""/><p:message for="sapellidoIntModificar" style="font-size:1.5em;"/>
+
+								<h:outputLabel value="#{msgs.labelRazonSocial}" rendered="${tercerosAction.tercerosBean.interesadoDeTrabajo.tipo =='J'}"></h:outputLabel>
+								<p:inputText id="razonSocialIntModificar" label="#{msgs.labelRazonSocial}" value="#{tercerosAction.tercerosBean.interesadoDeTrabajo.razonSocial}" rendered="${tercerosAction.tercerosBean.interesadoDeTrabajo.tipo =='J'}">
+									<f:validateLength maximum="80" />
+								</p:inputText>
+								<h:outputLabel value=""/><p:message for="razonSocialIntModificar" style="font-size:1.5em;"/>
+							</h:panelGrid>							
+						</p:panel>
+					</p:tab>		
+
+				<p:tabView id="tabViewModificarTercero" cache="false">					
+					<p:tab id="direccion">
+						<f:facet name="title">
+							<p:graphicImage value="/resources/img/terceros/dir_postal.png" style="no-repeat 0 0 ; border:0px !important; background-position-x:3px; margin: 0 4px 0 2px;"/>
+							<h:outputText value="#{msgs.labelDireccionesPostales}"/>
+						</f:facet>
+
+						<p:panel header="#{msgs.labelDireccionesPostales}">
+							<p:commandButton styleClass="int_aniadir_dir_postal" title="#{msgs.labelAnadir}" alt="#{msgs.labelAnadir}" value="#{msgs.labelAnadir}"
+								update=":interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesFisicasTbl,:interesadosform:formAnadirDirPostal:gridAnadirDirPostalDatos"
+								process="@this" immediate="true"
+								oncomplete="PF('int_aniadir_dir_postal').show();"
+								action="#{tercerosAction.nuevaDirFisica}" >
+							</p:commandButton >
+
+							<h:panelGrid columns="2" columnClasses="label, table">
+								<script>
+									function radiobuttonPostalesClick(thisObj, thisEvent) {
+										var datos = document.getElementById("interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesFisicasTbl_data");
+
+										var rowId = -1;
+										var rowActual = -1;
+										for(i=0; i&lt;datos.rows.length; i++){
+											rowId = rowId+1;
+
+											tablaRadioButtonID = "interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesFisicasTbl:"+rowId+":radio1";
+											radioButtonId = "interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesFisicasTbl:"+rowId+":radio1:0";
+
+											imagenId = "interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesFisicasTbl:"+rowId+":imagenPrincipalPostal"
+											var imagen = document.getElementById(imagenId);
+											if (imagen === null){
+											} else {
+												imagen.style = "display:none;";
+											}
+
+											document.getElementById(radioButtonId).checked = false;
+											document.getElementById(radioButtonId).style= "";
+											document.getElementById(tablaRadioButtonID).style= "border:0px !important;";																					
+
+											if(thisObj.id == radioButtonId){
+												rowActual = rowId;
+											}
+										}
+
+										thisObj.checked = true;
+										thisObj.style = "visibility:hidden;";
+										tablaRadioButtonID = "interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesFisicasTbl:"+rowActual+":radio1";
+										document.getElementById(tablaRadioButtonID ).style= "background: url('resources/img/terceros/asterisco_principal.png') no-repeat 0 0 ; border:0px !important; background-position-x:3px;";
+									}
+								</script>
+
+								<p:dataTable id="modificarTerceroDireccionesFisicasTbl"
+									value="#{tercerosAction.tercerosBean.interesadoDeTrabajo.direccionesFisicas}" var="dir" 
+									scrollable="true" scrollHeight="100" editable="true" editMode="cell"
+									paginator="true" rows="15" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+									currentPageReportTemplate="{totalRecords} #{msgs.paginacionResultadosEncontrados}. #{msgs.paginacionPagina} {currentPage} #{msgs.paginacionDe} {totalPages}"
+	                						dblClickSelect="true"  styleClass="modificarTerceros" emptyMessage="#{msgs.mensajeTablaSinDatos}">
+									<p:column sortBy="#{dir.direccion}" headerText="#{msgs.labelDireccion}" width="40%">
+										<p:cellEditor>
+											<f:facet name="output">
+												<ui:fragment>
+													<h:outputText value="#{dir.direccion}" />
+												</ui:fragment>
+											 </f:facet>
+											 <f:facet name="input">
+												<p:inputText id="direccionInput" value="#{dir.direccion}"/>
+											 </f:facet>
+										</p:cellEditor>
+									</p:column>
+									<p:column headerText="#{msgs.labelProvincia}">
+										<p:cellEditor>
+											<f:facet name="output">
+												<ui:fragment>
+													<h:outputText value="#{dir.provincia.nombre}" />
+												</ui:fragment>
+											</f:facet>
+											<f:facet name="input">
+												<p:selectOneMenu id="provinciaInput" value="#{dir.provincia.nombre}" style="width: 100% !important;"
+												valueChangeListener="#{tercerosAction.actualizaCiudades}" filter="true">
+													<f:attribute name="direccion" value="#{dir}" />
+													<f:selectItems value="#{tercerosAction.provincias}" />
+													<p:ajax event="change" update="modificarTerceroDireccionesFisicasTbl"/>
+												</p:selectOneMenu>
+											</f:facet>
+										</p:cellEditor>
+									</p:column>
+									<p:column sortBy="#{dir.ciudad.nombre}" headerText="#{msgs.labelLocalidad}" width="20%">
+										<p:cellEditor>
+											<f:facet name="output">
+												<ui:fragment>
+													<h:outputText value="#{dir.ciudad.nombre}" />
+												</ui:fragment>
+											</f:facet>
+											<f:facet name="input">
+												<p:selectOneMenu id="localidadInput" value="#{dir.ciudad.nombre}" style="width: 100% !important;" filter="true">
+													<f:selectItem itemLabel="#{msgs.labelSeleccioneValor}" itemValue=""/>
+													<f:selectItems value="#{dir.provincia.ciudades}" />						
+												</p:selectOneMenu>
+											</f:facet>
+										</p:cellEditor>
+									</p:column>
+									<p:column headerText="#{msgs.labelPais}">
+										<p:cellEditor>
+											<f:facet name="output">
+												<ui:fragment>
+													<h:outputText value="#{dir.pais.nombre}" />
+												</ui:fragment>
+											</f:facet>
+											<f:facet name="input">
+												<p:selectOneMenu id="paisInput" value="#{dir.pais.nombre}" style="width: 100% !important;" filter="true">
+													<f:selectItems value="#{tercerosAction.paises}" />						
+												</p:selectOneMenu>
+											</f:facet>
+										</p:cellEditor>						
+									</p:column>
+									<p:column headerText="#{msgs.labelCodigoPostal}">
+										<p:cellEditor>
+											<f:facet name="output">
+												<ui:fragment>
+													<h:outputText value="#{dir.codigoPostal}" />
+												</ui:fragment>
+											</f:facet>
+											<f:facet name="input">
+												<p:inputText id="codigoPostalInput" value="#{dir.codigoPostal}"/>
+											 </f:facet>
+										</p:cellEditor>
+									</p:column>
+									<p:column headerText="">
+										<ui:fragment>
+											<ui:fragment rendered="${dir.principal == 'true'}">
+												<p:graphicImage id="imagenPrincipalPostal" value="/resources/img/terceros/asterisco_principal.png" style="no-repeat 0 0 ; border:0px !important; background-position-x:3px; padding: 0 0 4px 0; margin: 0 4px 0 2px;"/>
+											</ui:fragment >
+											<h:selectOneRadio id="radio1" 
+												styleClass="tercerosPrincipalCheckbox" 
+												style="#{dir.principal ? 'display:none !important;' : ''}" 
+												value="#{dir.principal}" 
+												onclick="return radiobuttonPostalesClick(this, event);" 
+												update="@parent">
+												<f:selectItem itemValue="true" />
+											</h:selectOneRadio>
+											<p:commandButton styleClass="intBotonEliminar" 
+												title="#{msgs.labelEliminar}" 
+												alt="#{msgs.labelEliminar}" 
+												value=""
+												update=":interesadosform:formIModificarTercero:tabViewModificarTercero"
+												process=":interesadosform:formIModificarTercero:tabViewModificarTercero"
+												action="#{tercerosAction.deleteDireccionFisica}">
+												<f:setPropertyActionListener target="#{tercerosAction.direccionFisicaBorrar}" value="#{dir}" />
+											</p:commandButton>
+										</ui:fragment>					
+									</p:column>
+								</p:dataTable>
+							</h:panelGrid>
+						</p:panel>
+					</p:tab>
+					<p:tab id="direccionTelematica">
+						<f:facet name="title">
+							<p:graphicImage value="/resources/img/terceros/dir_telematica.png" style="no-repeat 0 0 ; border:0px !important; background-position-x:3px; margin: 0 4px 0 2px;"/>
+							<h:outputText value="#{msgs.labelDireccionesTelematicas}"/>
+						</f:facet>
+						<p:panel header="#{msgs.labelDireccionesTelematicas}">
+							<p:messages />
+							<p:commandButton styleClass="int_aniadir_dir_telematica" title="#{msgs.labelAnadir}" alt="#{msgs.labelAnadir}" value="#{msgs.labelAnadir}"
+								update=":interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesTelematicasTbl,:interesadosform:formAnadirDirTelematica:gridAnadirDirTelematicaDatos"
+								process="@this" immediate="true"
+								oncomplete="PF('int_aniadir_dir_telematica').show();"
+								action="#{tercerosAction.nuevaDirTelematica}" >
+							</p:commandButton >
+							<h:panelGrid columns="2" columnClasses="label, table">
+								<script>
+									function radiobuttonTelematicasClick(thisObj, thisEvent) {
+										var datos = document.getElementById("interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesTelematicasTbl_data");
+
+										var rowId = -1;
+										var rowActual = -1;
+										for(i=0; i&lt;datos.rows.length; i++){
+											rowId = rowId+1;
+
+											tablaRadioButtonID = "interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesTelematicasTbl:"+rowId+":radio1";
+											radioButtonId = "interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesTelematicasTbl:"+rowId+":radio1:0";
+
+											imagenId = "interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesTelematicasTbl:"+rowId+":imagenPrincipalTelematica"
+											var imagen = document.getElementById(imagenId);
+											if (imagen === null){
+											} else {
+												imagen.style = "display:none;";
+											}
+
+											document.getElementById(radioButtonId).checked = false;
+											document.getElementById(radioButtonId).style= "";
+											document.getElementById(tablaRadioButtonID).style= "border:0px !important;";																					
+
+											if(thisObj.id == radioButtonId){
+												rowActual = rowId;
+											}
+										}
+
+										thisObj.checked = true;
+										thisObj.style = "visibility:hidden;";
+										tablaRadioButtonID = "interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesTelematicasTbl:"+rowActual+":radio1";
+										document.getElementById(tablaRadioButtonID ).style= "background: url('resources/img/terceros/asterisco_principal.png') no-repeat 0 0 ; border:0px !important; background-position-x:3px;";
+									}
+								</script>
+
+								<p:dataTable id="modificarTerceroDireccionesTelematicasTbl"
+									value="#{tercerosAction.tercerosBean.interesadoDeTrabajo.direccionesTelematicas}" var="dirTel" 
+									scrollable="true" scrollHeight="100" editable="true" editMode="cell"
+									paginator="true" rows="15" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+									currentPageReportTemplate="{totalRecords} #{msgs.paginacionResultadosEncontrados}. #{msgs.paginacionPagina} {currentPage} #{msgs.paginacionDe} {totalPages}"
+	                						dblClickSelect="true"  styleClass="modificarTerceros"
+									emptyMessage="#{msgs.mensajeTablaSinDatos}">
+
+									<p:column sortBy="#{dirTel.direccion}" headerText="#{msgs.labelDireccion}">
+										<p:cellEditor>
+											<f:facet name="output">
+												<ui:fragment>
+													<h:outputText value="#{dirTel.direccion}" />
+												</ui:fragment>
+											</f:facet>
+											 <f:facet name="input">
+												<p:inputText id="direccionTelematicaInput" value="#{dirTel.direccion}"/>
+											 </f:facet>
+										</p:cellEditor>
+									</p:column>
+									<p:column sortBy="#{dirTel.tipoDireccionTelematica.descripcion}" headerText="#{msgs.labelTipoDireccionTelematica}">
+										<p:cellEditor>
+											<f:facet name="output">
+												<ui:fragment>
+													<h:outputText value="#{dirTel.tipoDireccionTelematica.descripcion}" />
+												</ui:fragment>
+											</f:facet>
+											<f:facet name="input">
+												<p:selectOneMenu
+													id="tipoDireccionTelematicaInput"
+													value="#{dirTel.tipoDireccionTelematica.descripcion}"
+													style="width: 100% !important;" 
+													valueChangeListener="#{tercerosAction.actualizaTipoDireccionTelematica}" filter="true">
+													
+													<f:attribute name="direccion" value="#{dirTel}" />
+													<f:selectItems value="#{tercerosAction.tiposDireccionTelematica}" />
+												</p:selectOneMenu>
+											</f:facet>
+										</p:cellEditor>						
+									</p:column>									
+									<p:column>
+										<ui:fragment>
+											<ui:fragment rendered="${dirTel.principal == 'true'}">
+												<p:graphicImage id="imagenPrincipalTelematica" value="/resources/img/terceros/asterisco_principal.png" style="no-repeat 0 0 ; border:0px !important; background-position-x:3px; padding: 0 0 4px 0; margin: 0 4px 0 2px;"/>
+											</ui:fragment >
+											<h:selectOneRadio id="radio1" 
+												styleClass="tercerosPrincipalCheckbox" 
+												style="#{dirTel.principal ? 'display:none !important;' : ''}" 
+												value="#{dirTel.principal}" 
+												onclick="return radiobuttonTelematicasClick(this, event);" 
+												update="@parent">
+												<f:selectItem itemValue="true" />
+											</h:selectOneRadio>
+											<p:commandButton styleClass="intBotonEliminar" 
+												title="#{msgs.labelEliminar}" 
+												alt="#{msgs.labelEliminar}" 
+												value=""
+												update=":interesadosform:formIModificarTercero:tabViewModificarTercero"
+												process=":interesadosform:formIModificarTercero:tabViewModificarTercero"
+												action="#{tercerosAction.deleteDireccionTelematica}">
+												<f:setPropertyActionListener target="#{tercerosAction.direccionTelematicaBorrar}" value="#{dirTel}" />
+											</p:commandButton>
+										</ui:fragment>					
+									</p:column>
+								</p:dataTable>
+							</h:panelGrid>
+						</p:panel>
+					</p:tab>					
+				</p:tabView>
+			</h:panelGrid>
+			<h:panelGroup id="botonesIntResultadoModificar">
+				<p style="text-align: center; margin: 0em;">
+					<p:commandButton id="boton_guardar_modificar_tercero" styleClass="intBotonGuardarTercero" title="#{msgs.labelBotonGuardar}" alt="#{msgs.labelBotonGuardar}" value="#{msgs.labelBotonGuardar}"
+						update="panelDatosPersonales,:interesadosform:gridIResultados,:interesadosform:TInteresadosResultadoBusquedaRepresentante,:interesadosform:formIModificarTercero:messageDocIdentidadIntModificar,:interesadosform:TInteresadosAniadidos,:interesadosform:gridIAniadidosExp"
+						oncomplete="handleTercerosModificarRequest(xhr, status, args)"
+						process="@form"
+						actionListener="#{tercerosAction.saveTercero}">
+						
+						<f:param name="deshabilitarValidacion" value="true" />
+					</p:commandButton>
+
+					<p:commandButton styleClass="cerrar" id="btn_hide_resultado_Modificar_int" value="#{msgs.labelBotonCerrar}" immediate="true" 
+						oncomplete="PF('intDialogBuscar').show();PF('int_modificar_tercero').hide();"							    
+						update=":interesadosform:gridIResultados,:interesadosform:general"/>
+				</p>
+			</h:panelGroup>
+		</h:form>
+	</ui:composition>
+
+</h:body>
+
+</html>

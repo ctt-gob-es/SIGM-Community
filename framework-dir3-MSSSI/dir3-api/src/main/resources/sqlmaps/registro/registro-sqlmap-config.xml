@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+							  "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+
+	<settings lazyLoadingEnabled="true" useStatementNamespaces="true"
+		enhancementEnabled="false" />
+
+<!-- [Dipucr-Manu] Se comenta para que sí arranque y ya se verá cómo se hace multi entidad en lugar de poner aquí una entidad concreta (supongo que tomando la conexión directamente en el bean) -->
+<!-- 	<transactionManager type="JDBC"  commitRequired="true"> -->
+<!-- 		<dataSource type="JNDI"> -->
+<!--         	<property name="DataSource" -->
+<!--             	value="${jndi.name.registroDS}" />  -->
+<!--     	</dataSource> -->
+<!-- 	</transactionManager> -->
+
+	<sqlMap resource="sqlmaps/registro/registro-unit.xml" />
+	<sqlMap resource="sqlmaps/registro/registro-relationship.xml" />
+<sqlMap resource="sqlmaps/registro/registro-address.xml" />
+
+</sqlMapConfig>

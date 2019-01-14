@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+
+</h:head>
+
+<h:body>
+	<ui:composition>
+		<p:panel id="panelDigdlgDocsTree" styleClass="ventanaDist" style="font-size: 1.1em;width: 800px !important;"  >
+			<h:outputText value="Numero de Registro: "/><h:outputText value="#{searchOutputRegisterAction.selectedResult.fld1}" />
+
+			<p:treeTable value="#{searchOutputRegisterAction.documentoBean.arbolDocumentos}" var="anexo" id="anexos"
+				style="font-size: 0.95em" summary="Tabla de Documentos Anexos" scrollable="true" scrollHeight="350">
+
+				<p:column headerText="Nombre" style="width: 290px;font-size: 0.95em;font-weight: normal;">								
+					<p:commandLink ajax="false" value="#{anexo.nombre}" rendered="#{anexo.esDocumento}"
+						action="#{searchOutputRegisterAction.consultaDocumento}" >
+
+						<f:setPropertyActionListener value="#{anexo.documento}" target="#{documentDownloadController.page}" />
+						<f:setPropertyActionListener value="#{anexo.nombre}" target="#{searchOutputRegisterAction.documentoBean.carpetaAnexarDoc}" />
+
+					        <p:fileDownload value="#{documentDownloadController.fileDownload}" />
+					</p:commandLink>
+					  	
+					<h:outputText value="#{anexo.nombre}" rendered="#{!anexo.esDocumento}"/>					
+				  </p:column>
+				  <p:column headerText="Tamaño (KB)" style="width: 50px;font-size: 0.95em;font-weight: normal;">
+				  	<h:outputText value="#{anexo.fileSizeKB}" />
+				  </p:column>
+				  <p:column headerText="Validez" style="width: 60px;font-size: 0.95em;font-weight: normal;">
+					<ui:fragment rendered="${not empty anexo.tipoValidez}">
+						<c:set var="messagevalidate"
+							value="validateDocument.#{anexo.tipoValidez}" />
+						<h:outputText value="#{msgs[messagevalidate]}" />
+					</ui:fragment>
+					<ui:fragment rendered="${empty anexo.tipoValidez}">
+				  		<c:set var="messagevalidate"
+							value="validateDocument.1" />
+						<h:outputText value="#{msgs[messagevalidate]}" />
+					</ui:fragment>
+				  </p:column>				  
+				  <p:column headerText="Fecha alta" style="width: 80px;font-size: 0.95em;font-weight: normal;">
+			  		<h:outputText value="#{anexo.crtndate}">
+				  		<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+							locale="es_ES" timeZone="Europe/Paris" />
+					</h:outputText>
+				  </p:column>
+		 		  <p:column headerText="Fecha firma" style="width: 80px;font-size: 0.95em;font-weight: normal;">
+					<h:outputText value="#{anexo.fechaFirma}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" locale="es_ES" timeZone="Europe/Paris" />
+			  		</h:outputText>
+				  </p:column>
+			</p:treeTable>
+		</p:panel>
+	</ui:composition>
+</h:body>
+
+</html>

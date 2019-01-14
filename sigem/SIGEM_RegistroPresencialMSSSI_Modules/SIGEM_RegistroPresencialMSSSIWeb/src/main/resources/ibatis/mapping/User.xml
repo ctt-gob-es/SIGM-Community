@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea- versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="User">
+	
+	<insert id="insertUser"  parameterClass="es.msssi.sgm.registropresencial.beans.ibatis.User">
+		<selectKey  keyProperty="userId" resultClass="int" >
+				SELECT ID				
+				FROM IUSERNEXTID WHERE TYPE = 1
+		</selectKey>
+		INSERT INTO IUSERUSERHDR	
+		(ID, NAME, PASSWORD, DEPTID, FLAGS, STAT, 
+		NUMBADCNTS, REMARKS, CRTRID, CRTNDATE, PWDLASTUPDTS, PWDMBC,PWDVPCHECK)
+		VALUES
+		(#userId#, #userUser#,
+		#userPassword#,#userDepartament.departamentId#, 0, 0, 0,
+		#userDescription#, 0, CURRENT_TIMESTAMP, #userPwdLastUpdts#, 'N', 'N')
+	</insert>
+	
+	<update id="updateUserNextId" parameterClass="java.lang.Integer">
+		UPDATE IUSERNEXTID
+		SET ID = #value# 
+		WHERE TYPE = 1
+	</update>
+	
+	<insert id="insertPermissions" parameterClass="es.msssi.sgm.registropresencial.beans.ibatis.User">
+		INSERT ALL
+		<iterate property="permissions"  >
+			INTO IUSERGENPERMS
+			(DSTTYPE,DSTID,PRODID,PERMS)
+			VALUES(
+			#permissions[].idPermission#,
+			#userId#,
+			#permissions[].idProduct#,
+			#permissions[].permission# )
+		</iterate>
+		SELECT * FROM dual
+	</insert>
+	
+	<insert id="insertProfiles" parameterClass="es.msssi.sgm.registropresencial.beans.ibatis.User">
+		INSERT ALL
+		<iterate property="profiles"  >
+			INTO IUSERUSERTYPE
+			(USERID, PRODID, TYPE)
+			VALUES(
+			#userId#,
+			#profiles[].idProduct#,
+			#profiles[].idProfileType# )
+		</iterate>
+		SELECT * FROM dual
+	</insert>
+	
+	<update id="updatePassword" parameterClass="es.msssi.sgm.registropresencial.beans.ibatis.User">
+		UPDATE IUSERUSERHDR
+		SET
+		PASSWORD = #userPassword#,
+		PWDLASTUPDTS = #userPwdLastUpdts#
+		WHERE ID = #userId#
+	</update>
+	
+	
+	<insert id="insertUserData" parameterClass="es.msssi.sgm.registropresencial.beans.ibatis.User">
+		INSERT ALL
+		INTO
+		IUSERDATA
+		(ID, CARGO, EMAIL, TFNO_MOVIL, NOMBRE, APELLIDOS)
+		VALUES
+		(#userId#,
+		#userAppointment#,
+		#userEmail#,
+		#userTelephone#,
+		#userName#,
+		#userSurname# )
+		INTO SCR_USRIDENT
+		(USERID, TMSTAMP,
+		FIRST_NAME, SECOND_NAME, SURNAME)
+		VALUES
+		(#userId#,
+		CURRENT_TIMESTAMP,
+		#userSurname1#,
+		#userSurname2#,
+		#userName#)
+		INTO SCR_USRLOC
+		(USERID,
+		TMSTAMP, ADDRESS, CITY, ZIP, COUNTRY, TELEPHONE, FAX, EMAIL)
+		VALUES
+		(#userId#,
+		CURRENT_TIMESTAMP,
+		#userAddress#,
+		#userCity#,
+		#userZip#,
+		#userCountry#,
+		#userTelephone#,
+		#userFax#,
+		#userEmail#)
+		SELECT * FROM dual
+	</insert>
+	
+	<insert id="insertUserConf" parameterClass="es.msssi.sgm.registropresencial.beans.ibatis.User">
+		INSERT INTO
+		SCR_USERCONFIG (USERID, DATA, IDOFICPREF)
+		VALUES
+		(#userId#,#userConfig#,(SELECT ID
+		FROM SCR_OFIC
+		WHERE DEPTID =
+		#userDepartament.departamentId# AND ROWNUM =1))
+	</insert>
+	
+	<insert id="insertUserPerm" parameterClass="es.msssi.sgm.registropresencial.beans.ibatis.User">
+		INSERT INTO
+		SCR_USRPERMS (ID_USR, PERMS, TMSTAMP)
+		VALUES
+		(#userId#,#userGenericPermissions#,CURRENT_TIMESTAMP)
+	</insert>
+	<select id="existUser" parameterClass="es.msssi.sgm.registropresencial.beans.ibatis.User"
+		resultClass="java.lang.Integer">
+		SELECT count(*)
+		FROM
+		IUSERUSERHDR
+		WHERE UNACCENT(UPPER(NAME)) =
+		UNACCENT(UPPER(''||#userUser#||''))
+	</select>
+		
+</sqlMap>

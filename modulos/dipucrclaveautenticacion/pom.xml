@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>es.dipucr</groupId>
+	<artifactId>dipucrclaveautenticacion</artifactId>
+	<packaging>pom</packaging>
+	<name>dipucrclaveautenticacion</name>
+	<version>1.0</version>
+	<inceptionYear>2018</inceptionYear>
+
+	<prerequisites>
+		<maven>2.0.9</maven>
+	</prerequisites>
+	
+	<profiles>
+		<!-- Este es el perfil por defecto. En el que se generan los Jars -->
+		<!-- Los modulos que tengan como resultado un jar deben incluirse en este perfil -->
+		<profile>
+			<id>generate-jars</id>
+			<activation>
+				<property>
+					<name>jars</name>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>Commons</module>
+				<module>SAMLEngine</module>
+				<module>SPProxy</module>				
+			</modules>			
+		</profile>
+		<profile>
+			<id>generate-distri</id>
+			<activation>
+				<property>
+					<name>distri</name>
+				</property>
+			</activation>
+			<modules>
+			</modules>
+		</profile>
+
+		<profile>
+			<id>ears</id>
+			<activation>
+				<property>
+					<name>ears</name>
+				</property>
+			</activation>
+			<modules>
+			</modules>
+		</profile>
+	</profiles>
+</project>

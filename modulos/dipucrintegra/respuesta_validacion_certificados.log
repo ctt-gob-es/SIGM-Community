@@ -1,0 +1,26 @@
+{dss:OptionalOutputs/afxp:
+ReadableCertificateInfo={ApellidosResponsable=JIMENEZ MORENO,
+ OrganizacionEmisora=FNMT, 
+ segundoApellidoResponsable=MORENO, 
+ versionPolitica=20, 
+ usoCertificado=digitalSignature | keyEncipherment, 
+ pais=es, subject=CN=NOMBRE JIMENEZ MORENO AGUSTIN - NIF 47062508T,
+ OU=500070015,OU=FNMT Clase 2 CA,
+ O=FNMT,
+ C=es, 
+ primerApellidoResponsable=JIMENEZ, 
+ numeroSerie=1025914483,
+  NombreApellidosResponsable=AGUSTIN JIMENEZ MORENO,
+   validoHasta=2018-01-20 sáb 18:38:44 +0100,
+    idPolitica=MITyC,
+     validoDesde=2015-01-20 mar 18:38:44 +0100, 
+     tipoCertificado=FNMT PF, 
+     email=null, 
+     clasificacion=0, 
+     NIFResponsable=47062508T, 
+     idEmisor=OU=FNMT Clase 2 CA,O=FNMT,C=ES, nombreResponsable=AGUSTIN, politica=1.3.6.1.4.1.5734.3.5}, 
+ dss:Result/dss:ResultMajor=urn:oasis:names:tc:dss:1.0:resultmajor:Success,
+  dss:Result/dss:ResultMessage=El certificado es válido, dss:OptionalOutputs/vr:CertificatePathValidity/vr:PathValidityDetail/vr:TrustOrigin@Type=urn:oasis:names:tc:dss:1.0:trustorigin:certDataBase, dss:OptionalOutputs/vr:CertificatePathValidity/vr:PathValidityDetail/vr:CertificateValidity=[Ljava.util.HashMap;@1ef3229, dss:OptionalOutputs/vr:CertificatePathValidity/vr:PathValiditySummary@Type=urn:afirma:dss:1.0:profile:XSS:detail:Certificate, dss:Result/dss:ResultMinor=urn:oasis:names:tc:dss:1.0:profiles:XSS:resultminor:valid:certificate:Definitive, dss:OptionalOutputs/vr:CertificatePathValidity/vr:CertificateIdentifier/ds:X509IssuerName=OU=FNMT Clase 2 CA,O=FNMT,C=ES, dss:OptionalOutputs/vr:CertificatePathValidity/vr:PathValiditySummary/dss:Code=urn:afirma:dss:1.0:profile:XSS:detail:Certificate:code:Valid, dss:OptionalOutputs/vr:CertificatePathValidity/vr:CertificateIdentifier/ds:X509SerialNumber=1025914483}
+  
+  
+{dss:OptionalOutputs/afxp:ReadableCertificateInfo={ApellidosResponsable=JIMENEZ MORENO, OrganizacionEmisora=FNMT, segundoApellidoResponsable=MORENO, versionPolitica=20, usoCertificado=digitalSignature | keyEncipherment, pais=es, subject=CN=NOMBRE JIMENEZ MORENO AGUSTIN - NIF 47062508T,OU=500070015,OU=FNMT Clase 2 CA,O=FNMT,C=es, primerApellidoResponsable=JIMENEZ, numeroSerie=1019894928, NombreApellidosResponsable=AGUSTIN JIMENEZ MORENO, validoHasta=2014-03-11 mar 09:21:26 +0100, idPolitica=MITyC, validoDesde=2011-03-11 vie 09:21:26 +0100, tipoCertificado=FNMT PF, email=null, clasificacion=0, NIFResponsable=47062508T, idEmisor=OU=FNMT Clase 2 CA,O=FNMT,C=ES, nombreResponsable=AGUSTIN, politica=1.3.6.1.4.1.5734.3.5}, dss:Result/dss:ResultMajor=urn:oasis:names:tc:dss:1.0:resultmajor:Success, dss:Result/dss:ResultMessage=El certificado está caducado, dss:OptionalOutputs/vr:CertificatePathValidity/vr:PathValidityDetail/vr:TrustOrigin@Type=urn:oasis:names:tc:dss:1.0:trustorigin:certDataBase, dss:OptionalOutputs/vr:CertificatePathValidity/vr:PathValidityDetail/vr:CertificateValidity=[Ljava.util.HashMap;@1f8d56c, dss:OptionalOutputs/vr:CertificatePathValidity/vr:PathValiditySummary@Type=urn:afirma:dss:1.0:profile:XSS:detail:Certificate, dss:Result/dss:ResultMinor=urn:oasis:names:tc:dss:1.0:profiles:XSS:resultminor:invalid:certificate:Expired, dss:OptionalOutputs/vr:CertificatePathValidity/vr:CertificateIdentifier/ds:X509IssuerName=OU=FNMT Clase 2 CA,O=FNMT,C=ES, dss:OptionalOutputs/vr:CertificatePathValidity/vr:PathValiditySummary/dss:Code=urn:afirma:dss:1.0:profile:XSS:detail:Certificate:code:Expired, dss:OptionalOutputs/vr:CertificatePathValidity/vr:CertificateIdentifier/ds:X509SerialNumber=1019894928}

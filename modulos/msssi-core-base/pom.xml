@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>es.mspsi.ovfrw</groupId>
+	<artifactId>core.base</artifactId>
+	<version>2.1.0-snts</version>
+	<packaging>jar</packaging>
+
+	<properties>
+		<sigem.version>3.0.1-M2</sigem.version>
+		<ispac.version>6.4.1</ispac.version>
+		<spring.version>3.0.2.RELEASE</spring.version>
+		<jdk.version>5</jdk.version>
+		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/../../lib</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>sigem_core</artifactId>
+			<version>${sigem.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+  			<artifactId>log4j</artifactId>
+		 	<version>1.2.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.iflow</groupId>
+			<artifactId>ispac-lib</artifactId>
+			<version>${ispac.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>sigem_autenticacion</artifactId>
+			<version>${sigem.version}</version>
+		</dependency>
+	</dependencies>
+
+	<!-- Se pone el build para qeu funcione sigem 2.0, en la migración mirar 
+		si se puede quitar -->
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.0.2</version>
+					<configuration>
+						<source>${jdk.version}</source>
+						<target>${jdk.version}</target>
+						<encoding>CP1252</encoding>
+						<fork>true</fork>
+						<executable>${JAVA_1_5_HOME}/bin/javac</executable>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>2.5.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.1</version>
+					<configuration>
+						<archive>
+							<addMavenDescriptor>
+								true
+							</addMavenDescriptor>
+						</archive>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>tomcat-maven-plugin</artifactId>
+					<version>1.0-beta-1</version>
+					<configuration>
+						<path>/${project.build.finalName}</path>
+						<contextFile>${basedir}/src/main/tomcat-context/context.xml</contextFile>
+						<mode>both</mode>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>mygrid-repository</id>
+			<repositories>
+				<repository>
+					<id>mygrid-repository</id>
+					<name>myGrid Repository</name>
+					<url>http://www.mygrid.org.uk/maven/repository</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>mygrid-repository</id>
+					<name>myGrid Repository</name>
+					<url>http://build.mygrid.org.uk/maven/repository</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>	
+	</profiles>
+</project>

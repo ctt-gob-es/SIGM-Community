@@ -1,0 +1,27 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="configuracionDto">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="dispositivoDto" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="nombre"/>
+              <xs:element name="scanProfileDto" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="nombre"/>
+                    <xs:element type="xs:string" name="formatoFichero"/>
+                    <xs:element type="xs:string" name="formatoColor"/>
+                    <xs:element type="xs:string" name="resolucion"/>
+                    <xs:element type="xs:boolean" name="duplex"/>
+                    <xs:element type="xs:boolean" name="cargaAutomatica"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

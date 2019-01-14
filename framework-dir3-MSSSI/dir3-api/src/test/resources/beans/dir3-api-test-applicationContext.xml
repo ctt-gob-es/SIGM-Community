@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+    default-lazy-init="false">
+
+	<!-- Carga de las propiedades de configuracion -->
+
+	
+	<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller" >
+		<property name="mappingLocation" value="classpath:mapping/mapping.xml" />
+	</bean>
+	
+	<bean id="XmlDcoToObject" class="es.msssi.dir3.api.helper.XmlDcoToObject">
+		<property name="marshaller" ref="castorMarshaller" />
+		<property name="unmarshaller" ref="castorMarshaller" />
+	</bean>
+
+	<!--  el core de los servicios del modulo dir3 contiene alias a usar en las integraciones -->	
+	<import resource="classpath*:beans/dir3-core-applicationContext.xml" />
+	<import resource="classpath*:beans/dir3-dco-wsclient-applicationContext.xml" />
+	<!-- todos estos contextos son necesarios en la implementación del api -->
+	<import resource="classpath*:beans/dir3-dco-wsclient-applicationContext.xml" />
+	<import resource="classpath*:beans/dir3-api/dir3-api-datasource-beans.xml"/>
+	<import resource="classpath*:beans/dir3-api/dir3-api-dao-beans.xml"/>
+	<import resource="classpath*:beans/dir3-api/dir3-api-manager-beans.xml"/>
+	<import resource="classpath*:beans/dir3-api/dir3-api-beans.xml"/>
+
+</beans>

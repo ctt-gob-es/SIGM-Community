@@ -1,0 +1,69 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+    <!-- Scan the JavaConfig -->
+	<context:component-scan base-package="es.sigem.dipcoruna.framework, es.sigem.dipcoruna.desktop.editlauncher" />
+
+
+                  
+    <!-- Propiedades de fonciguración -->
+    <context:property-placeholder  properties-ref="properties" order="1" />
+    <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <array>          
+                <value>classpath:conf.properties</value>                
+            </array>
+        </property>
+        <property name="properties" ref="propertiesParams"/>        
+    </bean>
+    
+    <util:properties id="propertiesParams">
+        <prop key="param.urlCheckForUpdates">${param.urlCheckForUpdates}</prop>
+        <prop key="param.urlDoc">${param.urlDoc}</prop>
+        <prop key="param.paramLang">${param.paramLang}</prop>                   
+    </util:properties>
+           
+           
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="basenames">
+			<array>
+				<value>bundles/mensajes</value>
+				<value>classpath:bundles/frameworkMensajes</value>				
+			</array>
+		</property>
+	</bean>
+	
+	
+	
+	
+	<!-- Beans de la aplicación -->	
+	<bean id="preferencias" class="es.sigem.dipcoruna.framework.service.util.PreferenciasHolder">
+		<constructor-arg name="claveAplicacion" value="${app.code}"/>
+	</bean>
+			
+	 
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+    	<constructor-arg name="requestFactory" ref="clientHttpRequestFactory"/>
+    </bean>
+    
+    <bean id="clientHttpRequestFactory" class="es.sigem.dipcoruna.framework.service.rest.TrustStoreClientHttpRequestFactory">
+    	<constructor-arg name="trustStoreFile" value="${descargas.truststore.file}"/>
+    	<constructor-arg name="trustSTorePass" value="${descargas.trustostre.pass}"/>
+    </bean>    
+
+
+
+	<task:scheduler id="taskScheduler" pool-size="10"/>
+    <task:executor  id="taskExecutor"  pool-size="10"/>
+    <task:annotation-driven executor="taskExecutor" scheduler="taskScheduler"/>
+</beans>

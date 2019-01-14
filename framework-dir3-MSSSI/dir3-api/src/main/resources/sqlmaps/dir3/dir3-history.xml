@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+						"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="HistoryVO">
+
+	<typeAlias alias="historyUO" type="es.msssi.dir3.api.vo.HistoryVO" />
+	<typeAlias alias="historyOF" type="es.msssi.dir3.api.vo.HistoryVO" />
+	
+	<resultMap id="historyUO" class="es.msssi.dir3.api.vo.HistoryVO">
+		<result property="previousId" column="C_ID_UD_ORGANICA_ANTERIOR" />
+		<result property="lastId" column="C_ID_UD_ORGANICA_ULTIMA" />
+		<result property="causeId" column="N_ID_MOTIVO" />
+		<result property="observations" column="C_OBSER_BAJA" />
+		<result property="previousStatus" column="C_ID_ESTADO_ANTERIOR" />
+		<result property="lastStatus" column="C_ID_ESTADO_ULTIMA" />
+		<result property="status" column="C_ID_ESTADO" />
+		<result property="extinctionDate" column="D_FECHA_EXTINCION" />
+	</resultMap>
+
+	<resultMap id="historyOF" class="es.msssi.dir3.api.vo.HistoryVO">
+		<result property="previousId" column="C_ID_OFICINA_ANTERIOR" />
+		<result property="lastId" column="C_ID_OFICINA_ULTIMA" />
+		<result property="causeId" column="N_ID_MOTIVO" />
+		<result property="observations" column="C_OBSER_BAJA" />
+		<result property="previousStatus" column="C_ID_ESTADO_ANTERIOR" />
+		<result property="lastStatus" column="C_ID_ESTADO_ULTIMA" />
+		<result property="status" column="C_ID_ESTADO" />
+		<result property="extinctionDate" column="D_FECHA_EXTINCION" />
+	</resultMap>
+
+
+	<sql id="tableUO">REL_UO_UO </sql>
+	<sql id="tableOF">REL_OFI_OFI </sql>
+
+	<sql id="columns_insertUO">
+		C_ID_UD_ORGANICA_ANTERIOR,
+		C_ID_UD_ORGANICA_ULTIMA,
+		N_ID_MOTIVO,
+		C_OBSER_BAJA,
+		C_ID_ESTADO_ANTERIOR,
+		C_ID_ESTADO_ULTIMA,
+		C_ID_ESTADO,
+		D_FECHA_ALTA,
+		D_FECHA_EXTINCION,
+		D_FECHA_MODIF
+	</sql>
+	<sql id="columns_insertOF">
+		C_ID_OFICINA_ANTERIOR,
+		C_ID_OFICINA_ULTIMA,
+		N_ID_MOTIVO,
+		C_OBSER_BAJA,
+		C_ID_ESTADO_ANTERIOR,
+		C_ID_ESTADO_ULTIMA,
+		C_ID_ESTADO,
+		D_FECHA_ALTA,
+		D_FECHA_EXTINCION,
+		D_FECHA_MODIF
+	</sql>
+	<sql id="insert">
+		#previousId#,
+		#lastId#,
+		#causeId#,
+		#observations#,
+		#previousStatus#,
+		#lastStatus#,
+		#status#,
+		CURRENT_TIMESTAMP,
+		#extinctionDate#,
+		CURRENT_TIMESTAMP
+	</sql>
+
+	<sql id="update">
+		D_FECHA_MODIF = CURRENT_TIMESTAMP
+	</sql>
+
+
+	<insert id="addHistoryUOVO" parameterClass="historyUO">
+		INSERT INTO
+		<include refid="tableUO" />
+		(
+		<include refid="columns_insertUO" />
+		)
+		VALUES (
+		<include refid="insert" />
+		)
+	</insert>
+
+	<update id="updateHistoryUOVO" parameterClass="historyUO">
+		UPDATE
+		<include refid="tableUO" />
+		SET
+		<include refid="update" />
+		WHERE C_ID_UD_ORGANICA_ANTERIOR = #previousId# AND
+		C_ID_UD_ORGANICA_ULTIMA = #lastId#
+	</update>
+	
+	<insert id="addHistoryOFVO" parameterClass="historyOF">
+		INSERT INTO
+		<include refid="tableOF" />
+		(
+		<include refid="columns_insertOF" />
+		)
+		VALUES (
+		<include refid="insert" />
+		)
+	</insert>
+
+	<update id="updateHistoryOFVO" parameterClass="historyOF">
+		UPDATE
+		<include refid="tableOF" />
+		SET
+		<include refid="update" />
+		WHERE C_ID_OFICINA_ANTERIOR = #previousId# AND
+		C_ID_OFICINA_ULTIMA = #lastId#
+	</update>
+	
+	<select id="getCauseVO" parameterClass="java.lang.String"
+		resultClass="java.lang.String">
+		SELECT DISTINCT N_ID_MOTIVO
+			FROM CAT_MOTIVO_EXTINCION
+			WHERE C_ID_ESTADO='V' AND C_DENOM_MOTIVO =#value#
+	</select>
+	
+	<select id="getExistsOFVO"  parameterClass="java.util.HashMap"
+		resultClass="java.lang.String">
+		SELECT 'S'
+		FROM 
+		<include refid="tableOF" />
+		WHERE C_ID_OFICINA_ANTERIOR = #previousId# AND
+		C_ID_OFICINA_ULTIMA	 = #lastId#
+	</select>
+	<select id="getExistsUOVO"  parameterClass="java.util.HashMap"
+		resultClass="java.lang.String">
+		SELECT 'S'
+		FROM 
+		<include refid="tableUO" />
+		WHERE C_ID_UD_ORGANICA_ANTERIOR = #previousId# AND
+		C_ID_UD_ORGANICA_ULTIMA = #lastId#
+	</select>
+</sqlMap>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+
+	<propertyfmt type="BeanPropertySimpleFmt"
+				 property='ID'
+				 readOnly='false'
+				 titleKey='empty'
+				 fieldType='CHECKBOX'
+				 headerClass='headerDisplay'
+				 sortable='false'
+				 media='html'
+				 />
+
+	<propertyfmt type="BeanPropertySimpleFmt"
+				 property='ID'
+				 readOnly='false'
+				 titleKey='form.mantenimientoMensajes.propertyLabel.id'
+				 fieldType='DATA'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 columnClass='width5percent'
+				 comparator='ieci.tdw.ispac.ispacweb.comparators.NumberComparator'				 
+				 />
+
+	<propertyfmt type="BeanPropertySimpleFmt"
+				property='ID_SESION'
+				readOnly='false'
+				titleKey='form.mantenimientoMensajes.propertyLabel.sesion'
+				fieldType='LINK'
+				fieldLink='ID'
+				styleClass='displayLink'
+				headerClass='sortable'
+				sortable='true'
+				media='html'
+				decorator=''
+				url='showMensaje.do?entityId=67'
+				id='regId'
+				columnClass='width20percent'				
+				/>
+				
+	<propertyfmt type="BeanPropertySimpleFmt"
+				property='TEXTO'
+				readOnly='false'
+				titleKey='form.mantenimientoMensajes.propertyLabel.mensaje'
+				fieldType='LINK'
+				fieldLink='ID'
+				styleClass='displayLink'
+				headerClass='sortable'
+				sortable='true'
+				media='html'
+				decorator=''
+				url='showMensaje.do?entityId=67'
+				id='regId'
+				columnClass='width40percent'				
+				/>		
+						
+	<propertyfmt type="BeanPropertySimpleFmt"
+				 property='USUARIO'
+				 readOnly='false'
+				 titleKey='form.mantenimientoMensajes.propertyLabel.usuario'
+				 fieldType='DATA'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 columnClass='width20percent'
+				 />
+				 
+	<propertyfmt type="BeanPropertySimpleFmt"
+				 property='TIPO'
+				 readOnly='false'
+				 titleKey='form.mantenimientoMensajes.propertyLabel.tipo'
+				 fieldType='MSG_RESOURCES_DATA'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 columnClass='width10percent'
+				 />
+				 
+	<propertyfmt type="BeanPropertySimpleFmt"
+				 property='FECHA_MENSAJE'
+				 readOnly='false'
+				 titleKey='form.mantenimientoMensajes.propertyLabel.fechaMensaje'
+				 fieldType='DATA'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 columnClass='width40percent'
+				 />
+
+</beanformatter>

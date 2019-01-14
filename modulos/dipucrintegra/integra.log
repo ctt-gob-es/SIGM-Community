@@ -1,0 +1,1185 @@
+2016-09-14 18:25:29,316 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-14 18:25:29,337 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken Identificador de aplicación cliente para llevar a cabo la conexión con TS@: dipucr.sigem_quijote. 
+2016-09-14 18:25:29,337 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken OID de la política de sello de tiempo a indicar en la petición: 1.3.4.6.1.3.4.6. 
+2016-09-14 18:25:29,338 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken OID para la aplicación a indicar en la petición: 1.3.4.6.1.3.4.6. 
+2016-09-14 18:25:29,386 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken Algoritmo de resumen indicado para aplicar sobre los datos a sellar: SHA-512. 
+2016-09-14 18:25:29,387 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken Host indicado para la conexión con el servicio de TS@: des-tsafirma.redsara.es. 
+2016-09-14 18:25:29,409 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken Tiempo de espera indicado para las conexiones con TS@: 10.000. 
+2016-09-14 18:25:29,409 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken Protocolo indicado para llevar a cabo la conexión con TS@: HTTPS. 
+2016-09-14 18:25:29,410 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker callRFC3161HTTPSService Se va a realizar una petición de sello de tiempo al servicio RFC 3161 - HTTPS de TS@. 
+2016-09-14 18:25:29,410 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker callRFC3161HTTPSService Ruta indicada para el almacén de confianza: C:/sigem3/alsigm/modulos/dipucrintegra/src/test/resources/client-truststore.jks. 
+2016-09-14 18:25:29,636 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker callRFC3161HTTPSService Se ha definido no llevar a cabo autenticación de cliente mediante certificado. 
+2016-09-14 18:25:29,809 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampRequest Se va a construir la petición de sello de tiempo. 
+2016-09-14 18:25:29,848 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampRequest Petición de sello de tiempo construída. 
+2016-09-14 18:25:29,868 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker getTSAURL Puerto indicado para la conexión con el servicio RFC 3161 - HTTPS: 8.443. 
+2016-09-14 18:25:29,869 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker getTSAURL Contexto del servicio RFC 3161 - HTTPS: /tsamap/TspHttpServer. 
+2016-09-14 18:25:29,869 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker getTSAURL URL del servicio RFC 3161 - HTTPS: https://des-tsafirma.redsara.es:8443/tsamap/TspHttpServer. 
+2016-09-14 18:25:29,871 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker callRFC3161HTTPSService Se inicia la comunicación con TS@. 
+2016-09-14 18:25:30,479 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker callRFC3161HTTPSService Se procesa la respuesta obtenida de TS@. 
+2016-09-14 18:36:06,406 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-14 18:36:06,436 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken Identificador de aplicación cliente para llevar a cabo la conexión con TS@: dipucr.sigem_quijote. 
+2016-09-14 18:36:06,436 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken OID de la política de sello de tiempo a indicar en la petición: 1.3.4.6.1.3.4.6. 
+2016-09-14 18:36:06,437 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken OID para la aplicación a indicar en la petición: 1.3.4.6.1.3.4.6. 
+2016-09-14 18:36:06,503 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken Algoritmo de resumen indicado para aplicar sobre los datos a sellar: SHA-512. 
+2016-09-14 18:36:06,504 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken Host indicado para la conexión con el servicio de TS@: des-tsafirma.redsara.es. 
+2016-09-14 18:36:06,538 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken Tiempo de espera indicado para las conexiones con TS@: 10.000. 
+2016-09-14 18:36:06,538 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampToken Protocolo indicado para llevar a cabo la conexión con TS@: HTTPS. 
+2016-09-14 18:36:06,538 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker callRFC3161HTTPSService Se va a realizar una petición de sello de tiempo al servicio RFC 3161 - HTTPS de TS@. 
+2016-09-14 18:36:09,578 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker callRFC3161HTTPSService Ruta indicada para el almacén de confianza: C:/sigem3/alsigm/modulos/dipucrintegra/src/test/resources/client-truststore.jks. 
+2016-09-14 18:36:11,110 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker callRFC3161HTTPSService Se ha definido no llevar a cabo autenticación de cliente mediante certificado. 
+2016-09-14 18:36:11,261 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampRequest Se va a construir la petición de sello de tiempo. 
+2016-09-14 18:36:11,310 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker generateTimeStampRequest Petición de sello de tiempo construída. 
+2016-09-14 18:36:11,334 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker getTSAURL Puerto indicado para la conexión con el servicio RFC 3161 - HTTPS: 8.443. 
+2016-09-14 18:36:11,334 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker getTSAURL Contexto del servicio RFC 3161 - HTTPS: /tsamap/TspHttpServer. 
+2016-09-14 18:36:11,335 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker getTSAURL URL del servicio RFC 3161 - HTTPS: https://des-tsafirma.redsara.es:8443/tsamap/TspHttpServer. 
+2016-09-14 18:36:11,337 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker callRFC3161HTTPSService Se inicia la comunicación con TS@. 
+2016-09-14 18:36:11,958 [INFO] es.gob.afirma.rfc3161TSAServiceInvoker.RFC3161TSAServiceInvoker callRFC3161HTTPSService Se procesa la respuesta obtenida de TS@. 
+2016-09-21 13:23:33,130 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:23:33,141 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:23:33,219 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.<clinit>(ParserParameterProperties.java:84)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:332)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1136)
+2016-09-21 13:23:33,225 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:332)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1136)
+2016-09-21 13:24:10,668 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:332)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1136)
+2016-09-21 13:24:10,677 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:332)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1136)
+2016-09-21 13:24:30,984 [ERROR] es.gob.afirma.transformers.TransformersFacade invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:332)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1136)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:154)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	... 9 more
+2016-09-21 13:24:41,807 [ERROR] es.gob.afirma.transformers.TransformersFacade generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-09-21 13:25:16,099 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:25:16,107 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:25:16,159 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.<clinit>(ParserParameterProperties.java:84)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:332)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1136)
+2016-09-21 13:25:16,161 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:332)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1136)
+2016-09-21 13:26:18,952 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:332)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1136)
+2016-09-21 13:26:18,971 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:332)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1136)
+2016-09-21 13:26:39,711 [ERROR] es.gob.afirma.transformers.TransformersFacade invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:332)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1136)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:154)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	... 9 more
+2016-09-21 13:26:39,713 [ERROR] es.gob.afirma.transformers.TransformersFacade generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-09-21 13:29:06,975 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:29:06,987 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:29:07,013 [ERROR] es.gob.afirma.utils.UtilsFileSystem getFilePath Recurso [evisor/NOMBRE_JIMENEZ_MORENO_AGUSTIN_NIF_47062508T_s_FNMT_ID_old.cer] no localizado en el contexto del cargador de clases del sistema. 
+2016-09-21 13:29:44,385 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:29:44,402 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:29:44,426 [ERROR] es.gob.afirma.utils.UtilsFileSystem getFilePath Recurso [evisor/NOMBRE_JIMENEZ_MORENO_AGUSTIN_NIF_47062508T_s_FNMT_ID_old.cer] no localizado en el contexto del cargador de clases del sistema. 
+2016-09-21 13:34:08,587 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:34:08,597 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:34:08,665 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.<clinit>(ParserParameterProperties.java:84)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:34:08,671 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:34:29,157 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:34:29,164 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:34:35,135 [ERROR] es.gob.afirma.transformers.TransformersFacade invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:154)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	... 9 more
+2016-09-21 13:34:35,138 [ERROR] es.gob.afirma.transformers.TransformersFacade generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-09-21 13:36:37,638 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:36:37,645 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:36:37,687 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.<clinit>(ParserParameterProperties.java:84)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:36:37,689 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:37:51,917 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:37:51,927 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:38:18,640 [ERROR] es.gob.afirma.transformers.TransformersFacade invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:154)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	... 9 more
+2016-09-21 13:38:18,642 [ERROR] es.gob.afirma.transformers.TransformersFacade generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-09-21 13:38:26,530 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:38:26,540 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:38:26,588 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.<clinit>(ParserParameterProperties.java:84)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:38:26,590 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:39:09,681 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:47:19,288 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:47:19,294 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:47:19,333 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.<clinit>(ParserParameterProperties.java:84)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:47:19,335 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:47:35,450 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:48:42,212 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:48:42,219 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:48:42,262 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.<clinit>(ParserParameterProperties.java:84)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:48:42,264 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:48:47,081 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:50:19,838 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:50:19,846 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:50:19,903 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.<clinit>(ParserParameterProperties.java:84)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:50:19,905 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:50:36,834 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:51:42,906 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:51:42,912 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:51:42,953 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.<clinit>(ParserParameterProperties.java:84)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:51:42,954 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:52:02,218 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:52:09,697 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:52:09,698 [ERROR] es.gob.afirma.transformers.TransformersFacade invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:154)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	... 9 more
+2016-09-21 13:52:09,699 [ERROR] es.gob.afirma.transformers.TransformersFacade generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-09-21 13:52:17,159 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:52:17,165 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:52:17,208 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.<clinit>(ParserParameterProperties.java:84)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:52:17,210 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:52:17,222 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:53:15,530 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:53:15,531 [ERROR] es.gob.afirma.transformers.TransformersFacade invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:154)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	... 9 more
+2016-09-21 13:53:15,534 [ERROR] es.gob.afirma.transformers.TransformersFacade generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-09-21 13:53:53,309 [ERROR] es.gob.afirma.i18n.Language reloadMessagesConfiguration No property was obtained correctly determining the Locale for log messages. Will take the default locale. 
+2016-09-21 13:53:53,316 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 13:53:53,359 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.<clinit>(ParserParameterProperties.java:84)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:53:53,361 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 13:53:53,371 [ERROR] es.gob.afirma.transformers.ParserParameterProperties init Error al obtener las propiedades de /parserParameters.properties. 
+java.net.URISyntaxException: No fue posible obtener el recurso /parserParameters.properties.: Error
+	at es.gob.afirma.transformers.ParserParameterProperties.getPropertiesResource(ParserParameterProperties.java:134)
+	at es.gob.afirma.transformers.ParserParameterProperties.init(ParserParameterProperties.java:102)
+	at es.gob.afirma.transformers.ParserParameterProperties.getParserParametersProperties(ParserParameterProperties.java:91)
+	at es.gob.afirma.transformers.TransformersFacade.<init>(TransformersFacade.java:104)
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:95)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:345)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1149)
+2016-09-21 14:14:36,753 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 14:16:01,054 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:333)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1137)
+2016-09-21 14:16:01,058 [ERROR] es.gob.afirma.transformers.TransformersFacade invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:377)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:273)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerifyCertificate(DSSServicesManager.java:333)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1137)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:154)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	... 9 more
+2016-09-21 14:16:01,059 [ERROR] es.gob.afirma.transformers.TransformersFacade generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-09-21 14:16:10,045 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 14:17:13,074 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 14:19:11,634 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 14:19:45,680 [INFO] es.gob.afirma.afirma5ServiceInvoker.CertificatesCache getInstance No existe la instancia de la caché de respuestas de validación de certificados. Se inicializa. 
+2016-09-21 14:19:46,763 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade invoke java.lang.NullPointerException 
+2016-09-21 14:20:37,119 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 14:23:00,476 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 14:23:24,448 [INFO] es.gob.afirma.afirma5ServiceInvoker.CertificatesCache getInstance No existe la instancia de la caché de respuestas de validación de certificados. Se inicializa. 
+2016-09-21 14:23:24,461 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade invoke es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerException: El servicio invocador no está configurado. Configure el parámetro [endPoint] de la aplicación [sigem_quijote]. 
+2016-09-21 14:24:20,894 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 14:24:23,177 [INFO] es.gob.afirma.afirma5ServiceInvoker.CertificatesCache getInstance No existe la instancia de la caché de respuestas de validación de certificados. Se inicializa. 
+2016-09-21 14:24:24,104 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade invoke java.lang.NullPointerException 
+2016-09-21 14:26:36,611 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 14:26:55,217 [INFO] es.gob.afirma.afirma5ServiceInvoker.CertificatesCache getInstance No existe la instancia de la caché de respuestas de validación de certificados. Se inicializa. 
+2016-09-21 14:26:58,474 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade invoke java.lang.NullPointerException 
+2016-09-21 14:27:14,386 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-21 14:27:28,342 [INFO] es.gob.afirma.afirma5ServiceInvoker.CertificatesCache getInstance No existe la instancia de la caché de respuestas de validación de certificados. Se inicializa. 
+2016-09-22 09:05:14,476 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-22 09:05:14,707 [INFO] es.gob.afirma.afirma5ServiceInvoker.CertificatesCache getInstance No existe la instancia de la caché de respuestas de validación de certificados. Se inicializa. 
+2016-09-22 09:05:15,741 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade invoke java.lang.NullPointerException 
+2016-09-22 13:21:51,038 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-22 13:21:52,433 [INFO] es.gob.afirma.afirma5ServiceInvoker.CertificatesCache getInstance No existe la instancia de la caché de respuestas de validación de certificados. Se inicializa. 
+2016-09-22 13:21:55,631 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade invoke java.lang.NullPointerException 
+2016-09-22 13:22:55,593 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-22 13:22:55,780 [INFO] es.gob.afirma.afirma5ServiceInvoker.CertificatesCache getInstance No existe la instancia de la caché de respuestas de validación de certificados. Se inicializa. 
+2016-09-22 13:22:56,677 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade invoke java.lang.NullPointerException 
+2016-09-23 12:53:38,600 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-23 13:45:20,007 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-26 10:22:14,558 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-26 10:22:27,011 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+es.gob.afirma.transformers.TransformersException: java.net.MalformedURLException
+	at es.gob.afirma.utils.UtilsXML.parsearDocumento(UtilsXML.java:121)
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:160)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:398)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:294)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerify(DSSServicesManager.java:214)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1137)
+Caused by: java.net.MalformedURLException
+	at java.net.URL.<init>(URL.java:619)
+	at java.net.URL.<init>(URL.java:482)
+	at java.net.URL.<init>(URL.java:431)
+	at org.apache.xerces.impl.XMLEntityManager.setupCurrentEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLVersionDetector.determineDocVersion(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
+	at es.gob.afirma.utils.UtilsXML.parsearDocumento(UtilsXML.java:117)
+	... 10 more
+Caused by: java.lang.NullPointerException
+	at java.net.URL.<init>(URL.java:524)
+	... 19 more
+2016-09-26 10:22:27,014 [ERROR] es.gob.afirma.transformers.TransformersFacade invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:398)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:294)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerify(DSSServicesManager.java:214)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1137)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:166)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: es.gob.afirma.transformers.TransformersException: java.net.MalformedURLException
+	at es.gob.afirma.utils.UtilsXML.parsearDocumento(UtilsXML.java:121)
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:160)
+	... 9 more
+Caused by: java.net.MalformedURLException
+	at java.net.URL.<init>(URL.java:619)
+	at java.net.URL.<init>(URL.java:482)
+	at java.net.URL.<init>(URL.java:431)
+	at org.apache.xerces.impl.XMLEntityManager.setupCurrentEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLVersionDetector.determineDocVersion(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
+	at es.gob.afirma.utils.UtilsXML.parsearDocumento(UtilsXML.java:117)
+	... 10 more
+Caused by: java.lang.NullPointerException
+	at java.net.URL.<init>(URL.java:524)
+	... 19 more
+2016-09-26 10:22:27,016 [ERROR] es.gob.afirma.transformers.TransformersFacade generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-09-26 10:22:53,025 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-27 12:41:27,442 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+es.gob.afirma.transformers.TransformersException: java.net.MalformedURLException
+	at es.gob.afirma.utils.UtilsXML.parsearDocumento(UtilsXML.java:121)
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:160)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:398)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:294)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerify(DSSServicesManager.java:214)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1137)
+Caused by: java.net.MalformedURLException
+	at java.net.URL.<init>(URL.java:619)
+	at java.net.URL.<init>(URL.java:482)
+	at java.net.URL.<init>(URL.java:431)
+	at org.apache.xerces.impl.XMLEntityManager.setupCurrentEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLVersionDetector.determineDocVersion(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
+	at es.gob.afirma.utils.UtilsXML.parsearDocumento(UtilsXML.java:117)
+	... 10 more
+Caused by: java.lang.NullPointerException
+	at java.net.URL.<init>(URL.java:524)
+	... 19 more
+2016-09-27 12:41:27,448 [ERROR] es.gob.afirma.transformers.TransformersFacade invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:398)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:294)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerify(DSSServicesManager.java:214)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1137)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:166)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: es.gob.afirma.transformers.TransformersException: java.net.MalformedURLException
+	at es.gob.afirma.utils.UtilsXML.parsearDocumento(UtilsXML.java:121)
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:160)
+	... 9 more
+Caused by: java.net.MalformedURLException
+	at java.net.URL.<init>(URL.java:619)
+	at java.net.URL.<init>(URL.java:482)
+	at java.net.URL.<init>(URL.java:431)
+	at org.apache.xerces.impl.XMLEntityManager.setupCurrentEntity(Unknown Source)
+	at org.apache.xerces.impl.XMLVersionDetector.determineDocVersion(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XML11Configuration.parse(Unknown Source)
+	at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+	at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
+	at es.gob.afirma.utils.UtilsXML.parsearDocumento(UtilsXML.java:117)
+	... 10 more
+Caused by: java.lang.NullPointerException
+	at java.net.URL.<init>(URL.java:524)
+	... 19 more
+2016-09-27 12:41:27,450 [ERROR] es.gob.afirma.transformers.TransformersFacade generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-09-27 12:41:32,776 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-28 18:10:15,008 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-09-28 18:10:15,427 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@1a451d4d: startup date [Wed Sep 28 18:10:15 CEST 2016]; root of context hierarchy 
+2016-09-28 18:10:15,738 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [scheduler-config-beans.xml] 
+2016-10-04 14:47:34,138 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-04 14:47:36,209 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@7219ec67: startup date [Tue Oct 04 14:47:36 CEST 2016]; root of context hierarchy 
+2016-10-04 14:47:36,576 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-04 14:47:36,944 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@2b71e916: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-04 14:47:42,766 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@3232a28a: startup date [Tue Oct 04 14:47:42 CEST 2016]; root of context hierarchy 
+2016-10-04 14:47:42,776 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-04 14:47:42,868 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@20ccf40b: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-04 14:47:46,055 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@169e6180: startup date [Tue Oct 04 14:47:46 CEST 2016]; root of context hierarchy 
+2016-10-04 14:47:46,075 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-04 14:47:46,147 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@48f278eb: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-04 14:47:46,193 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\/conf/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml 
+2016-10-04 14:47:46,196 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\/conf/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml => null 
+2016-10-04 14:48:01,528 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+java.lang.NullPointerException
+	at java.io.File.<init>(File.java:277)
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:151)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:385)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:281)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerify(DSSServicesManager.java:214)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1137)
+2016-10-04 14:48:01,542 [ERROR] es.gob.afirma.transformers.TransformersFacade invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at es.gob.afirma.transformers.TransformersFacade.invokeCommonXmlTransf(TransformersFacade.java:385)
+	at es.gob.afirma.transformers.TransformersFacade.generateXml(TransformersFacade.java:281)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.doDSSAfirmaVerify(DSSServicesManager.java:214)
+	at es.gob.afirma.tsaServiceInvoker.ws.DSSServicesManager.main(DSSServicesManager.java:1137)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:159)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: java.lang.NullPointerException
+	at java.io.File.<init>(File.java:277)
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:151)
+	... 9 more
+2016-10-04 14:48:01,546 [ERROR] es.gob.afirma.transformers.TransformersFacade generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-10-05 09:06:50,014 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:08:36,522 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:09:38,039 [ERROR] es.gob.afirma.transformers.TransformersFacadeLocal invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at es.gob.afirma.transformers.TransformersFacadeLocal.invokeCommonXmlTransf(TransformersFacadeLocal.java:377)
+	at es.gob.afirma.transformers.TransformersFacadeLocal.generateXml(TransformersFacadeLocal.java:273)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:235)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+Caused by: java.lang.Error: Unresolved compilation problems: 
+	AfirmaConfigFilePathResolverImpl cannot be resolved to a type
+	AfirmaConfigFilePathResolverImpl cannot be resolved to a type
+
+	at es.gob.afirma.transformers.TransformersFacade.getInstance(TransformersFacade.java:102)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+2016-10-05 09:09:38,042 [ERROR] es.gob.afirma.transformers.TransformersFacadeLocal generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-10-05 09:10:18,639 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:11:19,899 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:12:17,373 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:15:45,276 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:15:55,815 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at es.gob.afirma.transformers.TransformersFacadeLocal.invokeCommonXmlTransf(TransformersFacadeLocal.java:377)
+	at es.gob.afirma.transformers.TransformersFacadeLocal.generateXml(TransformersFacadeLocal.java:273)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:235)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+2016-10-05 09:15:55,817 [ERROR] es.gob.afirma.transformers.TransformersFacadeLocal invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at es.gob.afirma.transformers.TransformersFacadeLocal.invokeCommonXmlTransf(TransformersFacadeLocal.java:377)
+	at es.gob.afirma.transformers.TransformersFacadeLocal.generateXml(TransformersFacadeLocal.java:273)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:235)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:154)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: java.lang.NullPointerException
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:138)
+	... 9 more
+2016-10-05 09:15:55,819 [ERROR] es.gob.afirma.transformers.TransformersFacadeLocal generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-10-05 09:16:04,339 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:17:38,448 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:20:55,974 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:23:35,379 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:24:11,138 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:27:14,500 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:27:17,531 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties init Error al obtener las propiedades de afirma5ServiceInvoker.properties. 
+java.lang.NullPointerException
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.init(Afirma5ServiceInvokerProperties.java:105)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.<clinit>(Afirma5ServiceInvokerProperties.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.initializeProperties(AbstractAfirma5ServiceInvoker.java:86)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.<init>(AbstractAfirma5ServiceInvoker.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.ws.Afirma5WebServiceInvoker.<init>(Afirma5WebServiceInvoker.java:53)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFactory.getAfirma5ServiceInvoker(Afirma5ServiceInvokerFactory.java:93)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.getAfirma5InvokerInstance(Afirma5ServiceInvokerFacade.java:254)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invoke(Afirma5ServiceInvokerFacade.java:232)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invokeService(Afirma5ServiceInvokerFacade.java:115)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:236)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+2016-10-05 09:27:18,117 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties init Error al obtener las propiedades de afirma5ServiceInvoker.properties. 
+java.lang.NullPointerException
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.init(Afirma5ServiceInvokerProperties.java:105)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.getAfirma5ServiceProperties(Afirma5ServiceInvokerProperties.java:85)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.initializeProperties(AbstractAfirma5ServiceInvoker.java:86)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.<init>(AbstractAfirma5ServiceInvoker.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.ws.Afirma5WebServiceInvoker.<init>(Afirma5WebServiceInvoker.java:53)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFactory.getAfirma5ServiceInvoker(Afirma5ServiceInvokerFactory.java:93)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.getAfirma5InvokerInstance(Afirma5ServiceInvokerFacade.java:254)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invoke(Afirma5ServiceInvokerFacade.java:232)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invokeService(Afirma5ServiceInvokerFacade.java:115)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:236)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+2016-10-05 09:27:18,133 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade invoke es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerException: El servicio invocador no está configurado. Configure el parámetro [endPoint] de la aplicación [dipucr.sigem_quijote]. 
+2016-10-05 09:28:02,963 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:28:42,722 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties init Error al obtener las propiedades de afirma5ServiceInvoker.properties. 
+java.lang.NullPointerException
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.init(Afirma5ServiceInvokerProperties.java:105)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.<clinit>(Afirma5ServiceInvokerProperties.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.initializeProperties(AbstractAfirma5ServiceInvoker.java:86)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.<init>(AbstractAfirma5ServiceInvoker.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.ws.Afirma5WebServiceInvoker.<init>(Afirma5WebServiceInvoker.java:53)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFactory.getAfirma5ServiceInvoker(Afirma5ServiceInvokerFactory.java:93)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.getAfirma5InvokerInstance(Afirma5ServiceInvokerFacade.java:254)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invoke(Afirma5ServiceInvokerFacade.java:232)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invokeService(Afirma5ServiceInvokerFacade.java:115)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:236)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+2016-10-05 09:29:01,557 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties init Error al obtener las propiedades de afirma5ServiceInvoker.properties. 
+java.lang.NullPointerException
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.init(Afirma5ServiceInvokerProperties.java:105)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.getAfirma5ServiceProperties(Afirma5ServiceInvokerProperties.java:85)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.initializeProperties(AbstractAfirma5ServiceInvoker.java:86)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.<init>(AbstractAfirma5ServiceInvoker.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.ws.Afirma5WebServiceInvoker.<init>(Afirma5WebServiceInvoker.java:53)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFactory.getAfirma5ServiceInvoker(Afirma5ServiceInvokerFactory.java:93)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.getAfirma5InvokerInstance(Afirma5ServiceInvokerFacade.java:254)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invoke(Afirma5ServiceInvokerFacade.java:232)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invokeService(Afirma5ServiceInvokerFacade.java:115)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:236)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+2016-10-05 09:29:01,573 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade invoke es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerException: El servicio invocador no está configurado. Configure el parámetro [endPoint] de la aplicación [dipucr.sigem_quijote]. 
+2016-10-05 09:29:42,044 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:30:21,302 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties init Error al obtener las propiedades de afirma5ServiceInvoker.properties. 
+java.lang.NullPointerException
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.init(Afirma5ServiceInvokerProperties.java:105)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.<clinit>(Afirma5ServiceInvokerProperties.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.initializeProperties(AbstractAfirma5ServiceInvoker.java:86)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.<init>(AbstractAfirma5ServiceInvoker.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.ws.Afirma5WebServiceInvoker.<init>(Afirma5WebServiceInvoker.java:53)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFactory.getAfirma5ServiceInvoker(Afirma5ServiceInvokerFactory.java:93)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.getAfirma5InvokerInstance(Afirma5ServiceInvokerFacade.java:254)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invoke(Afirma5ServiceInvokerFacade.java:232)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invokeService(Afirma5ServiceInvokerFacade.java:115)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:236)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+2016-10-05 09:32:04,195 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:33:54,200 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:34:00,746 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@95159b: startup date [Wed Oct 05 09:34:00 CEST 2016]; root of context hierarchy 
+2016-10-05 09:34:01,279 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:34:01,785 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@92b2e9: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:34:02,187 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@1308ce5: startup date [Wed Oct 05 09:34:02 CEST 2016]; root of context hierarchy 
+2016-10-05 09:34:02,197 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:34:02,298 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@452209: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:34:02,343 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\afirma5ServiceInvoker.properties 
+2016-10-05 09:34:02,346 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\afirma5ServiceInvoker.properties => null 
+2016-10-05 09:34:14,611 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties init Error al obtener las propiedades de afirma5ServiceInvoker.properties. 
+java.lang.NullPointerException
+	at java.io.File.<init>(File.java:251)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.getPropertiesResource(Afirma5ServiceInvokerProperties.java:151)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.init(Afirma5ServiceInvokerProperties.java:102)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.<clinit>(Afirma5ServiceInvokerProperties.java:76)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.initializeProperties(AbstractAfirma5ServiceInvoker.java:86)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.<init>(AbstractAfirma5ServiceInvoker.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.ws.Afirma5WebServiceInvoker.<init>(Afirma5WebServiceInvoker.java:53)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFactory.getAfirma5ServiceInvoker(Afirma5ServiceInvokerFactory.java:93)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.getAfirma5InvokerInstance(Afirma5ServiceInvokerFacade.java:254)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invoke(Afirma5ServiceInvokerFacade.java:232)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invokeService(Afirma5ServiceInvokerFacade.java:115)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:236)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+2016-10-05 09:34:14,614 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@317c72: startup date [Wed Oct 05 09:34:14 CEST 2016]; root of context hierarchy 
+2016-10-05 09:34:14,617 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:34:14,638 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@10968f1: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:34:14,648 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\afirma5ServiceInvoker.properties 
+2016-10-05 09:34:14,649 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\afirma5ServiceInvoker.properties => null 
+2016-10-05 09:34:18,644 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties init Error al obtener las propiedades de afirma5ServiceInvoker.properties. 
+java.lang.NullPointerException
+	at java.io.File.<init>(File.java:251)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.getPropertiesResource(Afirma5ServiceInvokerProperties.java:151)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.init(Afirma5ServiceInvokerProperties.java:102)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.getAfirma5ServiceProperties(Afirma5ServiceInvokerProperties.java:84)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.initializeProperties(AbstractAfirma5ServiceInvoker.java:86)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.<init>(AbstractAfirma5ServiceInvoker.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.ws.Afirma5WebServiceInvoker.<init>(Afirma5WebServiceInvoker.java:53)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFactory.getAfirma5ServiceInvoker(Afirma5ServiceInvokerFactory.java:93)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.getAfirma5InvokerInstance(Afirma5ServiceInvokerFacade.java:254)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invoke(Afirma5ServiceInvokerFacade.java:232)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invokeService(Afirma5ServiceInvokerFacade.java:115)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:236)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+2016-10-05 09:34:32,234 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade invoke es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerException: El servicio invocador no está configurado. Configure el parámetro [endPoint] de la aplicación [dipucr.sigem_quijote]. 
+2016-10-05 09:34:58,752 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:35:35,591 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@5d6a3: startup date [Wed Oct 05 09:35:35 CEST 2016]; root of context hierarchy 
+2016-10-05 09:35:36,160 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:35:36,743 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@17c8a9c: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:35:37,228 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@4bb836: startup date [Wed Oct 05 09:35:37 CEST 2016]; root of context hierarchy 
+2016-10-05 09:35:37,255 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:35:37,425 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@19a5d3d: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:35:37,483 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\afirma5ServiceInvoker.properties 
+2016-10-05 09:35:37,487 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\afirma5ServiceInvoker.properties => null 
+2016-10-05 09:35:58,109 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:36:23,425 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@1ee9771: startup date [Wed Oct 05 09:36:23 CEST 2016]; root of context hierarchy 
+2016-10-05 09:36:26,968 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:36:30,328 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@179a09c: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:36:32,940 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@1596160: startup date [Wed Oct 05 09:36:32 CEST 2016]; root of context hierarchy 
+2016-10-05 09:36:32,996 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:36:33,756 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@23bf89: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:36:34,042 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\afirma5ServiceInvoker.properties 
+2016-10-05 09:36:34,068 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\afirma5ServiceInvoker.properties => null 
+2016-10-05 09:37:03,824 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:37:09,441 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@ac3205: startup date [Wed Oct 05 09:37:09 CEST 2016]; root of context hierarchy 
+2016-10-05 09:37:09,563 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:37:09,681 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@177cd4a: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:37:09,781 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@b1c2fe: startup date [Wed Oct 05 09:37:09 CEST 2016]; root of context hierarchy 
+2016-10-05 09:37:09,782 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:37:09,796 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@19a2df9: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:37:09,805 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\afirma5ServiceInvoker.properties 
+2016-10-05 09:37:09,805 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\afirma5ServiceInvoker.properties => null 
+2016-10-05 09:37:11,911 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties init Error al obtener las propiedades de afirma5ServiceInvoker.properties. 
+java.lang.NullPointerException
+	at java.io.File.<init>(File.java:251)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.getPropertiesResource(Afirma5ServiceInvokerProperties.java:151)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.init(Afirma5ServiceInvokerProperties.java:102)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.<clinit>(Afirma5ServiceInvokerProperties.java:76)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.initializeProperties(AbstractAfirma5ServiceInvoker.java:86)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.<init>(AbstractAfirma5ServiceInvoker.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.ws.Afirma5WebServiceInvoker.<init>(Afirma5WebServiceInvoker.java:53)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFactory.getAfirma5ServiceInvoker(Afirma5ServiceInvokerFactory.java:93)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.getAfirma5InvokerInstance(Afirma5ServiceInvokerFacade.java:254)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invoke(Afirma5ServiceInvokerFacade.java:232)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invokeService(Afirma5ServiceInvokerFacade.java:115)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:236)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+2016-10-05 09:37:11,914 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@15f80d4: startup date [Wed Oct 05 09:37:11 CEST 2016]; root of context hierarchy 
+2016-10-05 09:37:11,916 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:37:11,930 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@1eb8c6a: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:37:11,937 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\afirma5ServiceInvoker.properties 
+2016-10-05 09:37:11,937 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\afirma5ServiceInvoker.properties => null 
+2016-10-05 09:37:12,541 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties init Error al obtener las propiedades de afirma5ServiceInvoker.properties. 
+java.lang.NullPointerException
+	at java.io.File.<init>(File.java:251)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.getPropertiesResource(Afirma5ServiceInvokerProperties.java:151)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.init(Afirma5ServiceInvokerProperties.java:102)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties.getAfirma5ServiceProperties(Afirma5ServiceInvokerProperties.java:84)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.initializeProperties(AbstractAfirma5ServiceInvoker.java:86)
+	at es.gob.afirma.afirma5ServiceInvoker.AbstractAfirma5ServiceInvoker.<init>(AbstractAfirma5ServiceInvoker.java:77)
+	at es.gob.afirma.afirma5ServiceInvoker.ws.Afirma5WebServiceInvoker.<init>(Afirma5WebServiceInvoker.java:53)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFactory.getAfirma5ServiceInvoker(Afirma5ServiceInvokerFactory.java:93)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.getAfirma5InvokerInstance(Afirma5ServiceInvokerFacade.java:254)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invoke(Afirma5ServiceInvokerFacade.java:232)
+	at es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade.invokeService(Afirma5ServiceInvokerFacade.java:115)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:236)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+2016-10-05 09:37:12,566 [ERROR] es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade invoke es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerException: El servicio invocador no está configurado. Configure el parámetro [endPoint] de la aplicación [dipucr.sigem_quijote]. 
+2016-10-05 09:37:20,187 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:37:33,846 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@19c2906: startup date [Wed Oct 05 09:37:33 CEST 2016]; root of context hierarchy 
+2016-10-05 09:37:36,821 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:37:39,633 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@80726: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:37:41,809 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@48164: startup date [Wed Oct 05 09:37:41 CEST 2016]; root of context hierarchy 
+2016-10-05 09:37:41,849 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:37:42,381 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@1011b29: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:37:42,597 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\afirma5ServiceInvoker.properties 
+2016-10-05 09:37:42,613 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\afirma5ServiceInvoker.properties => null 
+2016-10-05 09:38:10,071 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:38:16,233 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@1596e13: startup date [Wed Oct 05 09:38:16 CEST 2016]; root of context hierarchy 
+2016-10-05 09:38:16,350 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:38:16,471 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@74f356: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:38:16,577 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@1b4776a: startup date [Wed Oct 05 09:38:16 CEST 2016]; root of context hierarchy 
+2016-10-05 09:38:16,578 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:38:16,593 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@8e2b14: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:38:16,602 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\afirma5ServiceInvoker.properties 
+2016-10-05 09:38:16,603 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\afirma5ServiceInvoker.properties => null 
+2016-10-05 09:38:33,375 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:42:15,850 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:42:16,273 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@a83695: startup date [Wed Oct 05 09:42:16 CEST 2016]; root of context hierarchy 
+2016-10-05 09:42:16,651 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:42:17,015 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@11c55b: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:42:17,330 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@7f59c7: startup date [Wed Oct 05 09:42:17 CEST 2016]; root of context hierarchy 
+2016-10-05 09:42:17,338 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:42:17,410 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@1c9024e: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:42:17,450 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\G:/herramientas_afirma/Integra1_2_2_002/src/main/resources/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml 
+2016-10-05 09:42:17,456 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\G:/herramientas_afirma/Integra1_2_2_002/src/main/resources/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml => null 
+2016-10-05 09:42:35,620 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:42:44,634 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@188f286: startup date [Wed Oct 05 09:42:44 CEST 2016]; root of context hierarchy 
+2016-10-05 09:42:45,023 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:42:45,390 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@129c051: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:42:45,693 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@a668fd: startup date [Wed Oct 05 09:42:45 CEST 2016]; root of context hierarchy 
+2016-10-05 09:42:45,703 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:42:45,772 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@12c6051: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:42:45,810 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\G:/herramientas_afirma/Integra1_2_2_002/src/main/resources/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml 
+2016-10-05 09:42:45,816 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\G:/herramientas_afirma/Integra1_2_2_002/src/main/resources/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml => null 
+2016-10-05 09:42:57,104 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:42:57,272 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@1d62ac4: startup date [Wed Oct 05 09:42:57 CEST 2016]; root of context hierarchy 
+2016-10-05 09:42:57,383 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:42:57,498 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@e19358: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:42:57,600 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@68b764: startup date [Wed Oct 05 09:42:57 CEST 2016]; root of context hierarchy 
+2016-10-05 09:42:57,601 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:42:57,614 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@1d7b37: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:42:57,622 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\G:/herramientas_afirma/Integra1_2_2_002/src/main/resources/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml 
+2016-10-05 09:42:57,625 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\G:/herramientas_afirma/Integra1_2_2_002/src/main/resources/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml => null 
+2016-10-05 09:43:16,848 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:43:45,133 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@297e0d: startup date [Wed Oct 05 09:43:45 CEST 2016]; root of context hierarchy 
+2016-10-05 09:43:45,510 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:43:45,888 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@12d100: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:43:46,194 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@7b7e0e: startup date [Wed Oct 05 09:43:46 CEST 2016]; root of context hierarchy 
+2016-10-05 09:43:46,203 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:43:46,272 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@440cbe: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:43:46,311 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\G:/herramientas_afirma/Integra1_2_2_002/src/main/resources/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml 
+2016-10-05 09:43:46,317 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\G:/herramientas_afirma/Integra1_2_2_002/src/main/resources/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml => null 
+2016-10-05 09:44:04,855 [ERROR] es.gob.afirma.transformers.TransformersFacade getXmlRequestFileByRequestType Error al parsear la plantilla XML para formar una petición. 
+java.lang.NullPointerException
+	at java.io.File.<init>(File.java:251)
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:151)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at es.gob.afirma.transformers.TransformersFacadeLocal.invokeCommonXmlTransf(TransformersFacadeLocal.java:377)
+	at es.gob.afirma.transformers.TransformersFacadeLocal.generateXml(TransformersFacadeLocal.java:273)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:235)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+2016-10-05 09:44:04,857 [ERROR] es.gob.afirma.transformers.TransformersFacadeLocal invokeCommonXmlTransf Error al invocar el metodo de transformación. 
+java.lang.reflect.InvocationTargetException
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:601)
+	at es.gob.afirma.transformers.TransformersFacadeLocal.invokeCommonXmlTransf(TransformersFacadeLocal.java:377)
+	at es.gob.afirma.transformers.TransformersFacadeLocal.generateXml(TransformersFacadeLocal.java:273)
+	at es.gob.afirma.testwebservices.DSSServicesTest.testDSSAfirmaVerify(DSSServicesTest.java:235)
+	at es.gob.afirma.testwebservices.DSSServicesTest.main(DSSServicesTest.java:1152)
+Caused by: es.gob.afirma.transformers.TransformersException: Error al parsear la plantilla XML para formar una petición.
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:159)
+	at es.gob.afirma.transformers.xmlTransformers.DSSXmlTransformer.transform(DSSXmlTransformer.java:129)
+	... 8 more
+Caused by: java.lang.NullPointerException
+	at java.io.File.<init>(File.java:251)
+	at es.gob.afirma.transformers.TransformersFacade.getXmlRequestFileByRequestType(TransformersFacade.java:151)
+	... 9 more
+2016-10-05 09:44:04,859 [ERROR] es.gob.afirma.transformers.TransformersFacadeLocal generateXml es.gob.afirma.transformers.TransformersException: Error al invocar el metodo de transformación. 
+2016-10-05 09:44:55,400 [INFO] es.gob.afirma.i18n.Language reloadMessagesConfiguration Take the next locale for messages logs: es_ES 
+2016-10-05 09:44:55,570 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@213e13: startup date [Wed Oct 05 09:44:55 CEST 2016]; root of context hierarchy 
+2016-10-05 09:44:55,684 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:44:55,789 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@1764cb8: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:44:55,895 [INFO] org.springframework.context.support.AbstractApplicationContext prepareRefresh Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@1d78db8: startup date [Wed Oct 05 09:44:55 CEST 2016]; root of context hierarchy 
+2016-10-05 09:44:55,897 [INFO] org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions Loading XML bean definitions from class path resource [integra-config-beans.xml] 
+2016-10-05 09:44:55,909 [INFO] org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@1ee7a6c: defining beans [integraConfigurationResourceLoader,integraConfigurationBean]; root of factory hierarchy 
+2016-10-05 09:44:55,917 [WARN] es.ieci.tecdoc.fwktd.core.spring.configuration.IeciSystemConfigurationResourceLoaderImpl loadResource loadResource(String, Map) - No se ha podido cargar el recurso:SIGEM_Tramitacion\integra_afirma\G:/herramientas_afirma/Integra1_2_2_002/src/main/resources/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml 
+2016-10-05 09:44:55,921 [INFO] es.dipucr.afirma.AfirmaConfigFilePathResolverImpl getConfigFilePath Fichero de configuración: integra_afirma\G:/herramientas_afirma/Integra1_2_2_002/src/main/resources/transformersTemplates/xmlTemplates/DSSVerifyRequest_V1.xml => null 

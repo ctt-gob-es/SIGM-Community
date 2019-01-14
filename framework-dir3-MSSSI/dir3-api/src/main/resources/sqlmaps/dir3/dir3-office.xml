@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea- versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="OfficeVO">
+
+	<typeAlias alias="office" type="es.msssi.dir3.api.vo.OfficeVO" />
+	<typeAlias alias="basicDataOffice" type="es.msssi.dir3.api.vo.BasicDataOfficeVO" />
+	
+	<resultMap id="basicDataOffice" class="es.msssi.dir3.api.vo.BasicDataOfficeVO">
+		<result property="id" column="C_ID_OFICINA" />
+		<result property="name" column="C_DNM_OFICINA" />
+		<result property="status" column="C_ID_ESTADO" />
+		<result property="officeType" column="C_ID_TIPO_OFICINA" />
+		<result property="officeTypeName" column="C_DESC_JERARQUIA" />
+		<result property="responsibleUnitId" column="C_ID_UNIDAD_RESPONSABLE" />
+		<result property="responsibleUnitName" column="C_DNM_UD_ORGANICA" />
+	</resultMap>
+	<resultMap id="basicDataOfficeRel" class="es.msssi.dir3.api.vo.BasicDataOfficeVO">
+		<result property="id" column="C_ID_OFICINA" />
+		<result property="name" column="C_DNM_OFICINA" />
+		<result property="status" column="ID_ESTADOOFI" />
+		<result property="officeType" column="C_ID_TIPO_OFICINA" />
+		<result property="officeTypeName" column="C_DESC_JERARQUIA" />
+		<result property="responsibleUnitId" column="C_ID_DEP_UD_SUPERIOROFI" />
+		<result property="responsibleUnitName" column="C_DNM_UD_ORGANICAOFI" />
+	</resultMap>
+	
+	<resultMap id="office" class="es.msssi.dir3.api.vo.OfficeVO">
+
+		<result property="id" column="C_ID_OFICINA" />
+		<result property="name" column="C_DNM_OFICINA" />
+		<result property="registerOfficeIndicator" column="B_OFICINA_REGISTRO" />
+		<result property="informationOfficeIndicator" column="B_OFICINA_INFORMACION" />
+		<result property="processingOfficeIndicator" column="B_OFICINA_TRAMITACION" />
+		<result property="sirOfficeIndicator" column="B_SIR" />
+		<result property="electronicRegisterIndicator" column="B_REG_ELECTRONICO" />
+		<result property="interchangeLocalStateIndicator" column="B_INT_LOC_EST" />
+		<result property="interchangeWithRestrictionLocalAutonomousIndicator"
+			column="B_INT_LOC_AUT_RES" />
+		<result property="interchangeLocalGeneralAutonomousIndicator"
+			column="B_INT_LOC_AUT_GEN" />
+		<result property="interchangeWithRestrictionLocalLocalIndicator"
+			column="B_INT_LOC_LOC_RES" />
+		<result property="interchangeLocalGeneralLocalIndicator"
+			column="B_INT_LOC_LOC_GEN" />
+		<result property="interchangeWithRestrictionCityHallCityHallIndicator"
+			column="B_INT_AY_AY_RES" />
+		<result property="interchangeWithoutRestrictionIndicator"
+			column="B_INT_SIN_RESTRICCION" />
+		<result property="genericIndicator" column="B_GENERICO" />
+		<result property="genericIndicatorUse" column="C_DESC_IND_GENERICO" />
+		<result property="businessHours" column="C_HORARIO_ATENCION" />
+		<result property="inhabiliesDays" column="C_DIAS_INHABILES" />
+		<result property="bSameAddress" column="B_MISMA_DIREC" />
+		<result property="creationDate" column="D_VIG_CREACION" />
+		<result property="extinctionDate" column="D_VIG_EXTINCION" />
+		<result property="annulationDate" column="D_VIG_ANULACION" />
+		<result property="externalId" column="C_ID_EXTERNO_FUENTE" />
+		<result property="officeType" column="C_ID_TIPO_OFICINA" />
+		<result property="officeTypeName" column="C_DESC_JERARQUIA" />
+		<result property="status" column="C_ID_ESTADO" />
+		<result property="administrationLevelId" column="C_ID_NIVEL_ADMINISTRACION" />
+		<result property="administrationLevelName" column="C_DESC_NIVEL" />
+		<result property="dependentOfficeId" column="C_ID_DEP_OFICINA" />
+		<result property="responsibleUnitId" column="C_ID_UNIDAD_RESPONSABLE" />
+		<result property="responsibleUnitName" column="C_DNM_UD_ORGANICA" />
+		<result property="generalObservations" column="C_OBSERVACION_GENERAL" />
+		<result property="contactObservations" column="C_OBSERVACION_CONTACTO" />
+		<result property="deleteObservations" column="C_OBSERVACION_BAJA" />
+		<result property="services" column="C_ID_OFICINA" select="ServiceVO.getServicesVO" />
+		<result property="address" resultMap="AddressVO.address" />
+		<result property="contacts" column="C_ID_OFICINA"
+			select="ContactOFIVO.getActiveContactOFIVOs" />
+		<result property="relationshipsSIROFI" column="C_ID_OFICINA"
+			select="UnitVO.getRelationshipsSIROFI" />
+		<result property="organizationalRelationshipsOFI" column="C_ID_OFICINA"
+			select="UnitVO.getOrganizationalRelationshipsOFI" />
+	</resultMap>
+
+	<sql id="table">DIR_OFICINA_COMPLETO</sql>
+	<sql id="tableView">VW_OFICINAS</sql>
+	
+	<sql id="columnsBasicRel">
+		OFI.C_ID_OFICINA,
+        OFI.C_DNM_OFICINA,
+        OFI.C_ID_ESTADO AS ID_ESTADOOFI,
+        OFI.C_ID_TIPO_OFICINA,
+        CATJ.C_DESC_JERARQUIA,
+        OFI.C_ID_UNIDAD_RESPONSABLE AS C_ID_DEP_UD_SUPERIOROFI,
+        UO.C_DNM_UD_ORGANICA AS C_DNM_UD_ORGANICAOFI
+	</sql>
+	
+	<sql id="columnsBasic">
+		OFI.C_ID_OFICINA,
+        OFI.C_DNM_OFICINA,
+        OFI.C_ID_ESTADO,
+        OFI.C_ID_TIPO_OFICINA,
+        OFI.C_DESC_JERARQUIA,
+        OFI.C_ID_UNIDAD_RESPONSABLE,
+        OFI.C_DNM_UD_ORGANICA
+	</sql>
+	
+	<sql id="columns">
+		OFI.C_ID_OFICINA,
+		OFI.C_DNM_OFICINA,
+		OFI.B_OFICINA_REGISTRO,
+		OFI.B_OFICINA_INFORMACION,
+		OFI.B_OFICINA_TRAMITACION,
+		OFI.B_SIR,
+		OFI.B_REG_ELECTRONICO,
+		OFI.B_INT_LOC_EST,
+		OFI.B_INT_LOC_AUT_RES,
+		OFI.B_INT_LOC_AUT_GEN,
+		OFI.B_INT_LOC_LOC_RES,
+		OFI.B_INT_LOC_LOC_GEN,
+		OFI.B_INT_AY_AY_RES,
+		OFI.B_INT_SIN_RESTRICCION,
+		OFI.B_GENERICO,
+		OFI.C_DESC_IND_GENERICO,
+		OFI.C_ID_TIPO_OFICINA,
+		OFI.C_DESC_JERARQUIA,
+		OFI.C_ID_DEP_OFICINA,
+		OFI.C_ID_UNIDAD_RESPONSABLE,
+		OFI.C_DNM_UD_ORGANICA,
+		OFI.C_HORARIO_ATENCION,
+		OFI.C_DIAS_INHABILES,
+		OFI.B_MISMA_DIREC,
+		OFI.N_ID_LOC_DIRECCION,
+		OFI.C_ID_ESTADO,
+		OFI.D_VIG_CREACION,
+		OFI.D_VIG_EXTINCION,
+		OFI.D_VIG_ANULACION,
+		OFI.C_ID_EXTERNO_FUENTE,
+		OFI.C_ID_NIVEL_ADMINISTRACION,
+		OFI.C_DESC_NIVEL,
+		OFI.C_OBSERVACION_GENERAL,
+		OFI.C_OBSERVACION_CONTACTO,
+		OFI.C_OBSERVACION_BAJA,
+		OFI.N_ID_DIRECCION,
+		OFI.C_ID_TIPO_VIA,
+		OFI.C_DESC_TIPO_VIA,
+		OFI.C_NOMBRE_VIA,
+		OFI.C_NUM_VIA,
+		OFI.C_COMPLEMENTO_DIRECCION,
+		OFI.C_CODIGO_POSTAL,
+		OFI.C_ID_PAIS,
+		OFI.C_DESC_PAIS,
+		OFI.C_ID_COMUNIDAD,
+		OFI.C_DESC_COMUNIDAD,
+		OFI.C_ID_ENTIDAD_GEOGRAFICA,
+		OFI.C_DESC_ENT_GEOGRAFICA,
+		OFI.C_ID_PROVINCIA,
+		OFI.C_DESC_PROV,
+		OFI.C_ID_LOCALIDAD,
+		OFI.C_DESC_LOCALIDAD,
+		OFI.C_LOC_EXTRANJERA,
+		OFI.C_DIR_EXTRANJERA,
+		OFI.C_OBSERVACION_LOCAL
+	</sql>
+
+	<sql id="from">
+		<include refid="tableView" />
+		OFI
+	</sql>
+
+	<sql id="columns_insert">
+		C_ID_OFICINA,
+		C_DNM_OFICINA,
+		B_OFICINA_REGISTRO,
+		B_OFICINA_INFORMACION,
+		B_OFICINA_TRAMITACION,
+		B_SIR,
+		B_REG_ELECTRONICO,
+		B_INT_LOC_EST,
+		B_INT_LOC_AUT_RES,
+		B_INT_LOC_AUT_GEN,
+		B_INT_LOC_LOC_RES,
+		B_INT_LOC_LOC_GEN,
+		B_INT_AY_AY_RES,
+		B_INT_SIN_RESTRICCION,
+		B_GENERICO,
+		C_DESC_IND_GENERICO,
+		C_ID_TIPO_OFICINA,
+		C_ID_DEP_OFICINA,
+		C_ID_UNIDAD_RESPONSABLE,
+		C_HORARIO_ATENCION,
+		C_DIAS_INHABILES,
+		B_MISMA_DIREC,
+		N_ID_LOC_DIRECCION,
+		C_ID_ESTADO,
+		D_VIG_CREACION,
+		D_VIG_EXTINCION,
+		D_VIG_ANULACION,
+		C_ID_EXTERNO_FUENTE,
+		C_ID_NIVEL_ADMINISTRACION,
+		C_OBSERVACION_GENERAL,
+		C_OBSERVACION_CONTACTO,
+		C_OBSERVACION_BAJA,
+		D_ALTA_SISTEMA,
+		D_ULT_ACTUALIZ
+	</sql>
+
+	<sql id="insert">
+		#id#,
+		#name#,
+		#registerOfficeIndicator#,
+		#informationOfficeIndicator#,
+		#processingOfficeIndicator#,
+		#sirOfficeIndicator#,
+		#electronicRegisterIndicator#,
+		#interchangeLocalStateIndicator#,
+		#interchangeWithRestrictionLocalAutonomousIndicator#,
+		#interchangeLocalGeneralAutonomousIndicator#,
+		#interchangeWithRestrictionLocalLocalIndicator#,
+		#interchangeLocalGeneralLocalIndicator#,
+		#interchangeWithRestrictionCityHallCityHallIndicator#,
+		#interchangeWithoutRestrictionIndicator#,
+		#genericIndicator#,
+		#genericIndicatorUse#,
+		#officeType#,
+		#dependentOfficeId#,
+		#responsibleUnitId#,
+		#businessHours#,
+		#inhabiliesDays#,
+		#bSameAddress#,
+		#address.id#,
+		#status#,
+		#creationDate#,
+		#extinctionDate#,
+		#annulationDate#,
+		#externalId#,
+		#administrationLevelId#,
+		#generalObservations#,
+		#contactObservations#,
+		#deleteObservations#,
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP
+	</sql>
+
+	<sql id="update">
+		C_DNM_OFICINA = #name#,
+		C_ID_TIPO_OFICINA = #officeType#,
+		C_ID_DEP_OFICINA = #dependentOfficeId#,
+		C_ID_UNIDAD_RESPONSABLE =
+		#responsibleUnitId#,
+		C_HORARIO_ATENCION = #businessHours#,
+		C_DIAS_INHABILES = #inhabiliesDays#,
+		C_ID_ESTADO = #status#,
+		D_VIG_CREACION = #creationDate#,
+		D_VIG_EXTINCION = #extinctionDate#,
+		D_VIG_ANULACION = #annulationDate#,
+		C_ID_NIVEL_ADMINISTRACION =
+		#administrationLevelId#,
+		C_OBSERVACION_GENERAL = #generalObservations#
+		<isEmpty property="address">
+			, N_ID_LOC_DIRECCION=NULL
+		</isEmpty>
+		<isNotEmpty property="address">
+			, N_ID_LOC_DIRECCION=#address.id#
+		</isNotEmpty>
+		,D_ULT_ACTUALIZ = CURRENT_TIMESTAMP
+	</sql>
+
+	<sql id="findOffice_fragment">
+		FROM
+		<include refid="from" />
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="criteria">
+				<iterate prepend="AND" property="criteria" conjunction="AND">
+					<isEqual property="criteria[].operator.value" compareValue="like">
+						UNACCENT(UPPER($criteria[].name.table$.$criteria[].name.value$)) LIKE
+						UNACCENT(UPPER('%$criteria[].value$%'))
+					</isEqual>
+					<isNotEqual property="criteria[].operator.value"
+						compareValue="like">
+						<isEqual property="criteria[].operator.value"
+							compareValue="in">
+							UPPER($criteria[].name.table$.$criteria[].name.value$)
+							<iterate prepend="IN" property="criteria[].value" open="("
+								close=")" conjunction=",">
+								UPPER(#criteria[].value[]#)
+							</iterate>
+						</isEqual>
+						<isNotEqual property="criteria[].operator.value"
+							compareValue="in">
+							UPPER($criteria[].name.table$.$criteria[].name.value$)
+							$criteria[].operator.value$
+							<isNotEqual property="criteria[].operator.value"
+								compareValue="IS NULL">
+								<isNotEqual property="criteria[].operator.value"
+									compareValue="IS NOT NULL">
+									UPPER(#criteria[].value#)
+								</isNotEqual>
+							</isNotEqual>
+						</isNotEqual>
+					</isNotEqual>
+				</iterate>
+			</isNotEmpty>
+		</dynamic>
+	</sql>
+
+	<select id="countFindOffice" parameterClass="java.util.Map"
+		resultClass="java.lang.Integer">
+		SELECT COUNT(*)
+		<include refid="findOffice_fragment" />
+	</select>
+
+	<select id="findOffice" resultMap="office">
+		SELECT
+		<include refid="columns" />
+		<include refid="findOffice_fragment" />
+		<isPropertyAvailable property="orden">
+			<iterate prepend="ORDER BY" property="orden" conjunction=",">
+				$orden[].table$.$orden[].value$
+			</iterate>
+		</isPropertyAvailable>
+	</select>
+	
+	<select id="findBasicDataOffice" resultMap="basicDataOffice">
+		SELECT
+		<include refid="columns" />
+		<include refid="findOffice_fragment" />
+		<isPropertyAvailable property="orden">
+			<iterate prepend="ORDER BY" property="orden" conjunction=",">
+				$orden[].table$.$orden[].value$
+			</iterate>
+		</isPropertyAvailable>
+	</select>
+	
+	<select id="getOffice" parameterClass="java.lang.String"
+		resultMap="office">
+		SELECT
+		<include refid="columns" />
+		FROM
+		<include refid="from" />
+		WHERE
+		OFI.C_ID_OFICINA=#value#
+	</select>
+
+	<select id="existsOffice" parameterClass="java.lang.String"
+		resultClass="java.lang.Integer">
+		SELECT count (*)
+		FROM
+		<include refid="table" />
+		WHERE
+		C_ID_OFICINA=#value#
+	</select>
+
+	<select id="getOrganizationalRelationshipsUO" parameterClass="java.lang.String"
+		resultMap="basicDataOfficeRel">
+		SELECT
+		<include refid="columnsBasicRel" />
+		FROM
+		<include refid="table" />
+		OFI
+		INNER JOIN REL_ORGANIZATIVAS_UO_OFI REL
+		ON OFI.C_ID_OFICINA =
+		REL.C_ID_OFICINA
+		AND REL.C_ID_ESTADO = 'V'
+		INNER JOIN CAT_JERARQUIA_OFICINA CATJ ON
+        OFI.C_ID_TIPO_OFICINA =  CATJ.C_ID_JERARQUIA
+        INNER JOIN DIR_UNIDAD_ORGANICA_COMPLETO UO ON
+        UO.C_ID_UD_ORGANICA =  OFI.C_ID_UNIDAD_RESPONSABLE
+		WHERE
+		REL.C_ID_UNIDAD_ORGANICA=#value#
+	</select>
+
+
+	<insert id="addOffice" parameterClass="office">
+		INSERT INTO
+		<include refid="table" />
+		(
+		<include refid="columns_insert" />
+		)
+		VALUES (
+		<include refid="insert" />
+		)
+	</insert>
+
+	<update id="updateOfficeVO" parameterClass="office">
+		UPDATE
+		<include refid="table" />
+		SET
+		<include refid="update" />
+		WHERE C_ID_OFICINA=#id#
+	</update>
+
+
+</sqlMap>

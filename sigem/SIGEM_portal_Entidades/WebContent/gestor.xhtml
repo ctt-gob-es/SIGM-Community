@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="stylesheet" type="text/css" href="css/estilo.css" />
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="Pragma" content="no-cache"/>
+<title>SIGEM Entidades</title>
+</head>
+<body style="align:center;">
+
+<rich:page xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j" >
+     
+    <a4j:form>
+    
+    	<div style="align:center">
+    	
+    		<div class="center margen_inferior15">
+	    		<h:graphicImage value="img/logo.gif" />
+	    		<h:graphicImage value="img/portal_organismo.gif" />
+	    	</div>
+    		
+    		<h:outputText value="Seleccione la entidad" /><br/>
+			<h:selectOneMenu value="#{beanEntidades.idEntidad}" enableManualInput="true" >
+				<f:selectItems value="#{beanEntidades.listComboEntidades}" var="tipo" label="#{tipo.label}" itemValue="#{tipo.value}" />
+				<a4j:support event="onchange" action="#{beanEntidades.cargarDatosEntidad}" reRender="panelDatosEntidad" />		
+			</h:selectOneMenu>
+			<br/><br/>
+			
+			<hr/>
+			<a4j:outputPanel id="panelDatosEntidad">
+				
+				<b>
+				<h:outputText value="#{beanEntidades.entidadActual.id}  #{beanEntidades.entidadActual.nombre} - #{beanEntidades.entidadActual.domain}" />
+				</b>
+				<br/>
+				
+				<ul>
+					<li>
+						<h:outputLink value="#{beanEntidades.entidadActual.rutaPortal}">Portal de Administración</h:outputLink>
+					</li>
+					<li>
+						<h:outputLink value="#{beanEntidades.entidadActual.rutaRegistro}">Registro</h:outputLink>
+					</li>
+<!-- 					<li>
+						<h:outputLink value="#{beanEntidades.entidadActual.rutaRegistroMSSSI}">Registro MSSSI</h:outputLink>
+					</li> -->
+					<li>
+						<h:outputLink value="#{beanEntidades.entidadActual.rutaTramitador}">Tramitador / Firmador</h:outputLink>
+					</li>
+				</ul>
+				
+			</a4j:outputPanel>
+		</div>
+	</a4j:form>
+    
+</rich:page>
+
+</body>
+</html>

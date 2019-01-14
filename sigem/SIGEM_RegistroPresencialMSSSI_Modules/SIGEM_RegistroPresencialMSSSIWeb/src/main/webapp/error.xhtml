@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xml:lang="es" lang="es">
+     
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-15" />
+	<meta http-equiv="Pragma" content="no-cache" /> 
+	<meta http-equiv="Cache-Control" content="no-cache" />		
+	<meta content="Ministerio de Sanidad, Servicios Sociales e Igualdad" name="description"/>
+	<meta content="Ministerio de Sanidad, Servicios Sociales e Igualdad" name="keywords"/>
+	<title>Ministerio de Sanidad, Servicios Sociales e Igualdad</title>
+	
+	<link rel="stylesheet" type="text/css" href="#{webParam.entryParameters['URLRoot']}/css/intranet-sigm.css" media="screen,projection" />
+	<link rel="stylesheet" type="text/css" href="#{webParam.entryParameters['URLRoot']}/css/intranet-sigm-imprimir.css" media="print" />
+      
+    <h:head />
+
+
+<body>
+
+	<div id="contenedor">
+	
+	<!-- Cabecera -->
+	<div id="cabecera">
+		<div id="escudo"><a title="Ministerio de Sanidad, Servicios Sociales e Igualdad - Gobierno de Espa&ntilde;a" href="#"><img alt="Ministerio de Sanidad, Servicios Sociales e Igualdad - Gobierno de Espa&ntilde;a" src="#{webParam.entryParameters['URLRoot']}/img/logo_ministerio.jpg"/></a></div>
+		<div id="titulo"><h1>Aplicación de Registro</h1></div>
+	</div>
+
+	<!-- Fin migas -->
+	
+	<!--Inicio bloque con menu y contenido -->
+	<div id="bloquecontenido">
+
+	
+	<div class="contenido contenidogrande">
+	<h2>Error</h2>
+	<div class="sombra"></div>
+		
+	<!-- INICIO CONTENIDO FORMULARIOS -->	
+	
+	<div class="mensaje">
+	<p>Se ha producido el siguiente error:</p>
+		<ul>
+		<li><h:outputText escape="false"  value="#{flash.errorBean.errorCode}: #{flash.errorBean.errorMessage}"/>
+		</li>
+	</ul>
+	<ui:fragment rendered="${flash.errorBean.errorCode != 'RPG002'}" >
+		<h:outputLink id="slide" value="inicio.xhtml">
+			<h:outputText value="Volver a pantalla de inicio" />
+		</h:outputLink>
+	</ui:fragment>
+	<ui:fragment rendered="${flash.errorBean.errorCode == 'RPG002'}" >
+	<h:form>
+		<h:commandLink value="#{msgs.labelSalir}" immediate="true" class="salir" actionListener="#{logoutAction.logOut }"  />	   	
+	</h:form>
+	</ui:fragment>
+	</div>
+	
+	<!-- FIN CONTENIDO FORMULARIOS -->
+		
+	</div>
+	
+	</div><!--  Fin bloquecontenido -->
+	
+	</div><!-- Fin contenedor -->
+	
+	<div id="pie">
+	<p>&copy; Ministerio de Sanidad, Servicios Sociales e Igualdad</p>
+	</div>
+
+</body>
+</html>

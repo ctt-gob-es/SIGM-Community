@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14706545292310" configfile="/SIGEM_RegistroPresencialMSSSIWeb/src/main/webapp/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="inicio.xhtml" comment="Inicio" x="108" y="924" id="pf14706593507651" referenceLink="//@navigationRule.12/@navigationCase.1/@toViewId|" outlinks="pf14706593507652 pf14706593507653 pf14706593507654 pf14706593507655 pf14706593507656 pf14706593507657 pf14706593507658 pf14706593507659 pf147065935076510 pf147065935076511 pf147065935076512 pf147065935076513 pf147065935076514" inlinks="pf147065935076615 pf147065935076616 pf147065935076617 pf147065935076618 pf147065935076619 pf147065935076620 pf147065935076621 pf147065935076622 pf147065935076623 pf147065935076624 pf147065935076625 pf147065935076626 pf147065935076627 pf147065935076628 pf147065935076629 pf147065935076630" path="/inicio.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="searchInputRegisterForm.xhtml" x="1850" y="1423" id="pf147065935076631" referenceLink="//@navigationRule.14/@navigationCase.7/@toViewId|" outlinks="pf147065935076632 pf147065935076615 pf147065935076633 pf147065935076634 pf147065935076635 pf147065935076636 pf147065935076637 pf147065935076638 pf147065935076639 pf147065935076640" inlinks="pf14706593507652 pf14706593507656 pf14706593507657 pf14706593507658 pf14706593507659 pf147065935076641 pf147065935076642 pf147065935076643 pf147065935076644 pf147065935076645 pf147065935076646 pf147065935076647 pf147065935076648 pf147065935076649 pf147065935076650 pf147065935076651 pf147065935076652 pf147065935076653 pf147065935076654 pf147065935076655 pf147065935076656 pf147065935076657 pf147065935076658 pf147065935076659 pf147065935076660 pf147065935076661 pf147065935076662 pf147065935076663" path="/searchInputRegisterForm.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="changeOffice.xhtml" x="2282" y="1379" id="pf147065935076664" referenceLink="//@navigationRule.14/@navigationCase.1/@toViewId|" outlinks="pf147065935076620 pf147065935076665 pf147065935076666 pf147065935076667 pf147065935076668" inlinks="pf14706593507653 pf147065935076632 pf147065935076669 pf147065935076670 pf147065935076671 pf147065935076672 pf147065935076673 pf147065935076674 pf147065935076675 pf147065935076676 pf147065935076677 pf147065935076678 pf147065935076679 pf147065935076680" path="/changeOffice.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="searchOutputRegisterForm.xhtml" x="1634" y="724" id="pf147065935076681" referenceLink="//@navigationRule.14/@navigationCase.2/@toViewId|" outlinks="pf147065935076673 pf147065935076623 pf147065935076682 pf147065935076683 pf147065935076647 pf147065935076684 pf147065935076685 pf147065935076686 pf147065935076687 pf147065935076688" inlinks="pf14706593507654 pf147065935076636 pf147065935076689 pf147065935076690 pf147065935076691 pf147065935076692 pf147065935076693 pf147065935076694 pf147065935076695 pf147065935076696 pf147065935076697 pf147065935076698 pf147065935076699 pf1470659350766100" path="/searchOutputRegisterForm.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="searchDistributionForm.xhtml" x="2066" y="1176" id="pf1470659350766101" referenceLink="//@navigationRule.14/@navigationCase.3/@toViewId|" outlinks="pf147065935076671 pf147065935076621 pf147065935076645 pf147065935076691 pf1470659350766102 pf1470659350766103 pf1470659350766104 pf1470659350766105 pf1470659350766106" inlinks="pf14706593507655 pf147065935076634 pf1470659350766107 pf1470659350766108 pf1470659350766109 pf1470659350766110 pf147065935076665 pf1470659350766111 pf147065935076683 pf1470659350766112 pf1470659350766113 pf1470659350766114 pf1470659350766115 pf1470659350766116 pf1470659350766117 pf1470659350766118 pf1470659350766119 pf1470659350766120" path="/searchDistributionForm.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="error.xhtml" x="1418" y="1780" id="pf1470659350767121" referenceLink="//@navigationRule.14/@navigationCase.8/@toViewId|" inlinks="pf147065935076510 pf1470659350767122 pf1470659350767123" path="/error.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="searchInboxRegInterchange.xhtml" x="1418" y="787" id="pf1470659350767124" referenceLink="//@navigationRule.14/@navigationCase.9/@toViewId|" outlinks="pf147065935076677 pf147065935076629 pf147065935076652 pf147065935076697 pf1470659350766117 pf1470659350767125 pf1470659350767126 pf1470659350767127 pf1470659350767128" inlinks="pf147065935076511 pf147065935076637 pf1470659350767129 pf1470659350767130 pf1470659350767131 pf1470659350766102 pf1470659350767132 pf147065935076685 pf1470659350767133 pf1470659350767134 pf1470659350767135 pf1470659350767136 pf1470659350767137 pf1470659350767138 pf1470659350767139" path="/searchInboxRegInterchange.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="ticket.xhtml" x="2498" y="1379" id="pf1470659350767140" referenceLink="//@navigationRule.14/@navigationCase.11/@toViewId|" inlinks="pf147065935076512 pf147065935076638 pf1470659350767141 pf1470659350767142 pf147065935076666 pf1470659350766104 pf1470659350767143 pf147065935076686 pf1470659350767144 pf1470659350767145 pf1470659350767146 pf1470659350767126 pf1470659350767147 pf1470659350767148 pf1470659350767149" path="/ticket.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="updateDCO.xhtml" x="1202" y="1465" id="pf1470659350767150" referenceLink="//@navigationRule.14/@navigationCase.10/@toViewId|" outlinks="pf147065935076654 pf147065935076679 pf147065935076699 pf1470659350766119 pf147065935076655 pf147065935076656 pf147065935076657 pf147065935076658 pf1470659350767122 pf1470659350767138 pf1470659350767151 pf1470659350767148" inlinks="pf147065935076513 pf147065935076639 pf1470659350767152 pf1470659350767153 pf147065935076667 pf1470659350766105 pf1470659350767154 pf147065935076687 pf1470659350767155 pf1470659350767156 pf1470659350767157 pf1470659350767127 pf1470659350767158 pf1470659350767159" path="/updateDCO.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="loadUsers.xhtml" x="986" y="1688" id="pf1470659350767160" referenceLink="//@navigationRule.14/@fromViewId|" outlinks="pf147065935076659 pf147065935076680 pf1470659350766100 pf1470659350766120 pf147065935076660 pf147065935076661 pf147065935076662 pf147065935076663 pf1470659350767123 pf1470659350767139 pf1470659350767159 pf1470659350767149" inlinks="pf147065935076514 pf147065935076640 pf1470659350767161 pf1470659350767162 pf147065935076668 pf1470659350766106 pf1470659350767163 pf147065935076688 pf1470659350767164 pf1470659350767165 pf1470659350767166 pf1470659350767128 pf1470659350767167 pf1470659350767151" path="/loadUsers.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="inputRegister.xhtml" x="338" y="1570" id="pf1470659350767168" referenceLink="//@navigationRule.10/@navigationCase.5/@toViewId|" outlinks="pf147065935076670 pf147065935076618 pf147065935076643 pf147065935076690 pf1470659350766109 pf147065935076644 pf1470659350766110 pf1470659350767169 pf1470659350767130 pf147065935076619 pf1470659350767170 pf1470659350767131 pf1470659350767171 pf1470659350767142 pf1470659350767153 pf1470659350767162" inlinks="pf147065935076633 pf1470659350767172 pf1470659350767173 pf1470659350767174" path="/inputRegister.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="inputRegisterRelationsReportForm.xhtml" x="554" y="2038" id="pf1470659350767175" referenceLink="//@navigationRule.2/@fromViewId|" outlinks="pf147065935076669 pf147065935076616 pf1470659350767172 pf147065935076641 pf1470659350766107 pf147065935076642 pf1470659350766108 pf147065935076617 pf147065935076689 pf1470659350767129 pf1470659350767141 pf1470659350767152 pf1470659350767161" inlinks="pf147065935076635" path="/inputRegisterRelationsReportForm.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="searchOutboxRegInterchange.xhtml" x="554" y="835" id="pf1470659350767176" referenceLink="//@navigationRule.12/@fromViewId|" outlinks="pf147065935076678 pf147065935076630 pf147065935076653 pf147065935076698 pf1470659350766118 pf1470659350767137 pf1470659350767147 pf1470659350767158 pf1470659350767167" inlinks="pf1470659350767169 pf1470659350767171 pf1470659350767177 pf1470659350767178 pf1470659350767125" path="/searchOutboxRegInterchange.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="searchDestinationRegInterchange.xhtml" x="554" y="1633" id="pf1470659350767179" referenceLink="//@navigationRule.10/@fromViewId|" outlinks="pf147065935076676 pf147065935076628 pf147065935076651 pf147065935076696 pf1470659350766116 pf1470659350767174 pf1470659350767136 pf1470659350767146 pf1470659350767157 pf1470659350767166" inlinks="pf1470659350767170" path="/searchDestinationRegInterchange.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="distributionRelationsReportForm.xhtml" x="554" y="388" id="pf1470659350768180" referenceLink="//@navigationRule.6/@fromViewId|" outlinks="pf147065935076672 pf147065935076622 pf147065935076646 pf147065935076692 pf1470659350767132 pf1470659350768181 pf1470659350766111 pf1470659350767143 pf1470659350767154 pf1470659350767163" inlinks="pf1470659350766103 pf1470659350768181" path="/distributionRelationsReportForm.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="outputRegister.xhtml" x="338" y="304" id="pf1470659350768182" referenceLink="//@navigationRule.9/@fromViewId|" outlinks="pf147065935076675 pf147065935076626 pf147065935076650 pf147065935076694 pf1470659350766114 pf147065935076695 pf1470659350766115 pf1470659350767177 pf1470659350767134 pf147065935076627 pf1470659350767135 pf1470659350767178 pf1470659350767145 pf1470659350767156 pf1470659350767165" inlinks="pf147065935076682" path="/outputRegister.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="outputRegisterRelationsReportForm.xhtml" x="122" y="1835" id="pf1470659350768183" referenceLink="//@navigationRule.8/@fromViewId|" outlinks="pf147065935076674 pf147065935076624 pf1470659350767173 pf147065935076648 pf1470659350766112 pf147065935076649 pf1470659350766113 pf147065935076625 pf147065935076693 pf1470659350767133 pf1470659350767144 pf1470659350767155 pf1470659350767164" inlinks="pf147065935076684" path="/outputRegisterRelationsReportForm.xhtml"/>
+  <links id="pf14706593507652" target="pf147065935076631" source="pf14706593507651" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf14706593507653" target="pf147065935076664" source="pf14706593507651" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf14706593507654" target="pf147065935076681" source="pf14706593507651" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf14706593507655" target="pf1470659350766101" source="pf14706593507651" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf14706593507656" target="pf147065935076631" source="pf14706593507651" outcome="goIntRegistralForm"/>
+  <links id="pf14706593507657" target="pf147065935076631" source="pf14706593507651" outcome="goCambioOficinaForm"/>
+  <links id="pf14706593507658" target="pf147065935076631" source="pf14706593507651" outcome="goRelacionesForm"/>
+  <links id="pf14706593507659" target="pf147065935076631" source="pf14706593507651" outcome="goInformesForm"/>
+  <links id="pf147065935076510" target="pf1470659350767121" source="pf14706593507651" outcome="goError"/>
+  <links id="pf147065935076511" target="pf1470659350767124" source="pf14706593507651" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf147065935076512" target="pf1470659350767140" source="pf14706593507651" outcome="TICKET_PAGE"/>
+  <links id="pf147065935076513" target="pf1470659350767150" source="pf14706593507651" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf147065935076514" target="pf1470659350767160" source="pf14706593507651" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076632" target="pf147065935076664" source="pf147065935076631" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076615" target="pf14706593507651" source="pf147065935076631" outcome="goInicioForm" redirect="true"/>
+  <links id="pf147065935076633" target="pf1470659350767168" source="pf147065935076631" outcome="goNewInputRegisterForm" redirect="true"/>
+  <links id="pf147065935076634" target="pf1470659350766101" source="pf147065935076631" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf147065935076635" target="pf1470659350767175" source="pf147065935076631" outcome="goInputRegisterRelationsReportForm" redirect="true"/>
+  <links id="pf147065935076636" target="pf147065935076681" source="pf147065935076631" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf147065935076637" target="pf1470659350767124" source="pf147065935076631" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf147065935076638" target="pf1470659350767140" source="pf147065935076631" outcome="TICKET_PAGE"/>
+  <links id="pf147065935076639" target="pf1470659350767150" source="pf147065935076631" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf147065935076640" target="pf1470659350767160" source="pf147065935076631" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076669" target="pf147065935076664" source="pf1470659350767175" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076616" target="pf14706593507651" source="pf1470659350767175" outcome="goInicioForm" redirect="true"/>
+  <links id="pf1470659350767172" target="pf1470659350767168" source="pf1470659350767175" outcome="goNewInputRegisterForm" redirect="true"/>
+  <links id="pf147065935076641" target="pf147065935076631" source="pf1470659350767175" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf1470659350766107" target="pf1470659350766101" source="pf1470659350767175" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf147065935076642" target="pf147065935076631" source="pf1470659350767175" outcome="goBack" redirect="true"/>
+  <links id="pf1470659350766108" target="pf1470659350766101" source="pf1470659350767175" outcome="goBack" redirect="true"/>
+  <links id="pf147065935076617" target="pf14706593507651" source="pf1470659350767175" outcome="goBack" redirect="true"/>
+  <links id="pf147065935076689" target="pf147065935076681" source="pf1470659350767175" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf1470659350767129" target="pf1470659350767124" source="pf1470659350767175" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767141" target="pf1470659350767140" source="pf1470659350767175" outcome="TICKET_PAGE"/>
+  <links id="pf1470659350767152" target="pf1470659350767150" source="pf1470659350767175" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf1470659350767161" target="pf1470659350767160" source="pf1470659350767175" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076670" target="pf147065935076664" source="pf1470659350767168" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076618" target="pf14706593507651" source="pf1470659350767168" outcome="goInicioForm" redirect="true"/>
+  <links id="pf147065935076643" target="pf147065935076631" source="pf1470659350767168" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf147065935076690" target="pf147065935076681" source="pf1470659350767168" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf1470659350766109" target="pf1470659350766101" source="pf1470659350767168" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf147065935076644" target="pf147065935076631" source="pf1470659350767168" outcome="goBack" redirect="true"/>
+  <links id="pf1470659350766110" target="pf1470659350766101" source="pf1470659350767168" outcome="goBack" redirect="true"/>
+  <links id="pf1470659350767169" target="pf1470659350767176" source="pf1470659350767168" outcome="goBack" redirect="true"/>
+  <links id="pf1470659350767130" target="pf1470659350767124" source="pf1470659350767168" outcome="goBack" redirect="true"/>
+  <links id="pf147065935076619" target="pf14706593507651" source="pf1470659350767168" outcome="goBack" redirect="true"/>
+  <links id="pf1470659350767170" target="pf1470659350767179" source="pf1470659350767168" outcome="goSearchDestinationRegInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767131" target="pf1470659350767124" source="pf1470659350767168" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767171" target="pf1470659350767176" source="pf1470659350767168" outcome="goSearchOutInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767142" target="pf1470659350767140" source="pf1470659350767168" outcome="TICKET_PAGE"/>
+  <links id="pf1470659350767153" target="pf1470659350767150" source="pf1470659350767168" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf1470659350767162" target="pf1470659350767160" source="pf1470659350767168" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076620" target="pf14706593507651" source="pf147065935076664" outcome="goInicioForm" redirect="true"/>
+  <links id="pf147065935076665" target="pf1470659350766101" source="pf147065935076664" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf147065935076666" target="pf1470659350767140" source="pf147065935076664" outcome="TICKET_PAGE"/>
+  <links id="pf147065935076667" target="pf1470659350767150" source="pf147065935076664" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf147065935076668" target="pf1470659350767160" source="pf147065935076664" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076671" target="pf147065935076664" source="pf1470659350766101" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076621" target="pf14706593507651" source="pf1470659350766101" outcome="goInicioForm" redirect="true"/>
+  <links id="pf147065935076645" target="pf147065935076631" source="pf1470659350766101" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf147065935076691" target="pf147065935076681" source="pf1470659350766101" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf1470659350766102" target="pf1470659350767124" source="pf1470659350766101" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf1470659350766103" target="pf1470659350768180" source="pf1470659350766101" outcome="goDistributionRelationsReportForm" redirect="true"/>
+  <links id="pf1470659350766104" target="pf1470659350767140" source="pf1470659350766101" outcome="TICKET_PAGE"/>
+  <links id="pf1470659350766105" target="pf1470659350767150" source="pf1470659350766101" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf1470659350766106" target="pf1470659350767160" source="pf1470659350766101" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076672" target="pf147065935076664" source="pf1470659350768180" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076622" target="pf14706593507651" source="pf1470659350768180" outcome="goInicioForm" redirect="true"/>
+  <links id="pf147065935076646" target="pf147065935076631" source="pf1470659350768180" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf147065935076692" target="pf147065935076681" source="pf1470659350768180" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf1470659350767132" target="pf1470659350767124" source="pf1470659350768180" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf1470659350766111" target="pf1470659350766101" source="pf1470659350768180" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf1470659350767143" target="pf1470659350767140" source="pf1470659350768180" outcome="TICKET_PAGE"/>
+  <links id="pf1470659350767154" target="pf1470659350767150" source="pf1470659350768180" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf1470659350767163" target="pf1470659350767160" source="pf1470659350768180" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076673" target="pf147065935076664" source="pf147065935076681" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076623" target="pf14706593507651" source="pf147065935076681" outcome="goInicioForm" redirect="true"/>
+  <links id="pf147065935076682" target="pf1470659350768182" source="pf147065935076681" outcome="goNewOutputRegisterForm" redirect="true"/>
+  <links id="pf147065935076683" target="pf1470659350766101" source="pf147065935076681" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf147065935076647" target="pf147065935076631" source="pf147065935076681" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf147065935076684" target="pf1470659350768183" source="pf147065935076681" outcome="goOutputRegisterRelationsReportForm" redirect="true"/>
+  <links id="pf147065935076685" target="pf1470659350767124" source="pf147065935076681" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf147065935076686" target="pf1470659350767140" source="pf147065935076681" outcome="TICKET_PAGE"/>
+  <links id="pf147065935076687" target="pf1470659350767150" source="pf147065935076681" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf147065935076688" target="pf1470659350767160" source="pf147065935076681" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076674" target="pf147065935076664" source="pf1470659350768183" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076624" target="pf14706593507651" source="pf1470659350768183" outcome="goInicioForm" redirect="true"/>
+  <links id="pf1470659350767173" target="pf1470659350767168" source="pf1470659350768183" outcome="goNewInputRegisterForm" redirect="true"/>
+  <links id="pf147065935076648" target="pf147065935076631" source="pf1470659350768183" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf1470659350766112" target="pf1470659350766101" source="pf1470659350768183" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf147065935076649" target="pf147065935076631" source="pf1470659350768183" outcome="goBack" redirect="true"/>
+  <links id="pf1470659350766113" target="pf1470659350766101" source="pf1470659350768183" outcome="goBack" redirect="true"/>
+  <links id="pf147065935076625" target="pf14706593507651" source="pf1470659350768183" outcome="goBack" redirect="true"/>
+  <links id="pf147065935076693" target="pf147065935076681" source="pf1470659350768183" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf1470659350767133" target="pf1470659350767124" source="pf1470659350768183" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767144" target="pf1470659350767140" source="pf1470659350768183" outcome="TICKET_PAGE"/>
+  <links id="pf1470659350767155" target="pf1470659350767150" source="pf1470659350768183" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf1470659350767164" target="pf1470659350767160" source="pf1470659350768183" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076675" target="pf147065935076664" source="pf1470659350768182" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076626" target="pf14706593507651" source="pf1470659350768182" outcome="goInicioForm" redirect="true"/>
+  <links id="pf147065935076650" target="pf147065935076631" source="pf1470659350768182" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf147065935076694" target="pf147065935076681" source="pf1470659350768182" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf1470659350766114" target="pf1470659350766101" source="pf1470659350768182" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf147065935076695" target="pf147065935076681" source="pf1470659350768182" outcome="goBack" redirect="true"/>
+  <links id="pf1470659350766115" target="pf1470659350766101" source="pf1470659350768182" outcome="goBack" redirect="true"/>
+  <links id="pf1470659350767177" target="pf1470659350767176" source="pf1470659350768182" outcome="goBack" redirect="true"/>
+  <links id="pf1470659350767134" target="pf1470659350767124" source="pf1470659350768182" outcome="goBack" redirect="true"/>
+  <links id="pf147065935076627" target="pf14706593507651" source="pf1470659350768182" outcome="goBack" redirect="true"/>
+  <links id="pf1470659350767135" target="pf1470659350767124" source="pf1470659350768182" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767178" target="pf1470659350767176" source="pf1470659350768182" outcome="goSearchOutInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767145" target="pf1470659350767140" source="pf1470659350768182" outcome="TICKET_PAGE"/>
+  <links id="pf1470659350767156" target="pf1470659350767150" source="pf1470659350768182" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf1470659350767165" target="pf1470659350767160" source="pf1470659350768182" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076676" target="pf147065935076664" source="pf1470659350767179" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076628" target="pf14706593507651" source="pf1470659350767179" outcome="goInicioForm" redirect="true"/>
+  <links id="pf147065935076651" target="pf147065935076631" source="pf1470659350767179" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf147065935076696" target="pf147065935076681" source="pf1470659350767179" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf1470659350766116" target="pf1470659350766101" source="pf1470659350767179" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf1470659350767174" target="pf1470659350767168" source="pf1470659350767179" outcome="goNewInputRegisterForm" redirect="true"/>
+  <links id="pf1470659350767136" target="pf1470659350767124" source="pf1470659350767179" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767146" target="pf1470659350767140" source="pf1470659350767179" outcome="TICKET_PAGE"/>
+  <links id="pf1470659350767157" target="pf1470659350767150" source="pf1470659350767179" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf1470659350767166" target="pf1470659350767160" source="pf1470659350767179" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076677" target="pf147065935076664" source="pf1470659350767124" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076629" target="pf14706593507651" source="pf1470659350767124" outcome="goInicioForm" redirect="true"/>
+  <links id="pf147065935076652" target="pf147065935076631" source="pf1470659350767124" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf147065935076697" target="pf147065935076681" source="pf1470659350767124" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf1470659350766117" target="pf1470659350766101" source="pf1470659350767124" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf1470659350767125" target="pf1470659350767176" source="pf1470659350767124" outcome="goSearchOutInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767126" target="pf1470659350767140" source="pf1470659350767124" outcome="TICKET_PAGE"/>
+  <links id="pf1470659350767127" target="pf1470659350767150" source="pf1470659350767124" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf1470659350767128" target="pf1470659350767160" source="pf1470659350767124" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076678" target="pf147065935076664" source="pf1470659350767176" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076630" target="pf14706593507651" source="pf1470659350767176" outcome="goInicioForm" redirect="true"/>
+  <links id="pf147065935076653" target="pf147065935076631" source="pf1470659350767176" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf147065935076698" target="pf147065935076681" source="pf1470659350767176" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf1470659350766118" target="pf1470659350766101" source="pf1470659350767176" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf1470659350767137" target="pf1470659350767124" source="pf1470659350767176" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767147" target="pf1470659350767140" source="pf1470659350767176" outcome="TICKET_PAGE"/>
+  <links id="pf1470659350767158" target="pf1470659350767150" source="pf1470659350767176" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf1470659350767167" target="pf1470659350767160" source="pf1470659350767176" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf147065935076654" target="pf147065935076631" source="pf1470659350767150" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf147065935076679" target="pf147065935076664" source="pf1470659350767150" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf147065935076699" target="pf147065935076681" source="pf1470659350767150" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf1470659350766119" target="pf1470659350766101" source="pf1470659350767150" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf147065935076655" target="pf147065935076631" source="pf1470659350767150" outcome="goIntRegistralForm"/>
+  <links id="pf147065935076656" target="pf147065935076631" source="pf1470659350767150" outcome="goCambioOficinaForm"/>
+  <links id="pf147065935076657" target="pf147065935076631" source="pf1470659350767150" outcome="goRelacionesForm"/>
+  <links id="pf147065935076658" target="pf147065935076631" source="pf1470659350767150" outcome="goInformesForm"/>
+  <links id="pf1470659350767122" target="pf1470659350767121" source="pf1470659350767150" outcome="goError"/>
+  <links id="pf1470659350767138" target="pf1470659350767124" source="pf1470659350767150" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767151" target="pf1470659350767160" source="pf1470659350767150" outcome="goLoadUsersForm" redirect="true"/>
+  <links id="pf1470659350767148" target="pf1470659350767140" source="pf1470659350767150" outcome="TICKET_PAGE"/>
+  <links id="pf147065935076659" target="pf147065935076631" source="pf1470659350767160" outcome="goSearchInForm" redirect="true"/>
+  <links id="pf147065935076680" target="pf147065935076664" source="pf1470659350767160" outcome="goChangeOfficeForm" redirect="true"/>
+  <links id="pf1470659350766100" target="pf147065935076681" source="pf1470659350767160" outcome="goSearchOutForm" redirect="true"/>
+  <links id="pf1470659350766120" target="pf1470659350766101" source="pf1470659350767160" outcome="goDistribucionForm" redirect="true"/>
+  <links id="pf147065935076660" target="pf147065935076631" source="pf1470659350767160" outcome="goIntRegistralForm"/>
+  <links id="pf147065935076661" target="pf147065935076631" source="pf1470659350767160" outcome="goCambioOficinaForm"/>
+  <links id="pf147065935076662" target="pf147065935076631" source="pf1470659350767160" outcome="goRelacionesForm"/>
+  <links id="pf147065935076663" target="pf147065935076631" source="pf1470659350767160" outcome="goInformesForm"/>
+  <links id="pf1470659350767123" target="pf1470659350767121" source="pf1470659350767160" outcome="goError"/>
+  <links id="pf1470659350767139" target="pf1470659350767124" source="pf1470659350767160" outcome="goSearchInterchangeForm" redirect="true"/>
+  <links id="pf1470659350767159" target="pf1470659350767150" source="pf1470659350767160" outcome="goUpdateDCOForm" redirect="true"/>
+  <links id="pf1470659350767149" target="pf1470659350767140" source="pf1470659350767160" outcome="TICKET_PAGE"/>
+  <links id="pf1470659350768181" target="pf1470659350768180" source="pf1470659350768180" outcome="goDistributionRelationsReportForm" redirect="true">
+    <bendPoints d1Height="-36" d2Height="-36"/>
+    <bendPoints d1Width="-64" d1Height="-36" d2Width="-64" d2Height="-36"/>
+    <bendPoints d1Width="-64" d2Width="-64"/>
+  </links>
+</pageflow:Pageflow>

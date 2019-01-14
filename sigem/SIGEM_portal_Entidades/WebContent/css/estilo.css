@@ -1,0 +1,42 @@
+@CHARSET "ISO-8859-1";
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body { 
+	font-family: "Roboto", "Trebuchet MS", Arial, sans-serif;
+	margin:0;
+	font-size: 15px;
+}
+
+.rich-page {
+    margin: 15px auto !important;
+    width: 770px !important;
+}
+
+a, a:visited{
+	color: #0965a9;
+	font-size: 15px;
+	text-decoration: none;
+	margin-bottom: 10px;
+}
+
+a:hover{
+	color: #666666;
+}
+
+.center {
+	margin: 0 auto;
+	width: 100%;
+}
+
+.margen_inferior15 {
+	margin-bottom: 15px;
+}
+
+select{
+	font-size: 14px;
+}
+
+ul li{
+	margin-bottom: 6px;
+}

@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+    
+<hibernate-mapping>
+<!-- 
+    Created by the Middlegen Hibernate plugin
+
+    http://boss.bekk.no/boss/middlegen/
+    http://hibernate.sourceforge.net/
+-->
+
+<class 
+    name="com.ieci.tecdoc.common.invesicres.ScrDocumentMetadatos" 
+    table="SCR_DOCUMENT_METADATOS"
+>
+    <meta attribute="class-description" inherit="false">
+       @hibernate.class
+        table="SCR_DOCUMENT_METADATOS"
+    </meta>
+
+    <id
+        name="id"
+        type="java.lang.Integer"
+        column="ID"
+    >
+        <meta attribute="field-description">
+           @hibernate.id
+            generator-class="assigned"
+            type="java.lang.Integer"
+            column="ID"
+
+        </meta>
+        <generator class="assigned" />
+    </id>
+
+    <property
+        name="idBook"
+        type="int"
+        column="BOOKID"
+        not-null="true"
+        length="10"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="BOOKID"
+            length="10"
+            not-null="true"
+        </meta>    
+    </property>    
+    <property
+        name="idFld"
+        type="int"
+        column="FOLDERID"
+        not-null="true"
+        length="10"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="FOLDERID"
+            length="10"
+            not-null="true"
+        </meta>    
+    </property>
+    <property
+        name="idPage"
+        type="int"
+        column="PAGEID"
+        not-null="true"
+        length="10"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="PAGEID"
+            length="10"
+            not-null="true"
+        </meta>    
+    </property>
+    <property
+        name="idFile"
+        type="int"
+        column="FILEID"
+        not-null="true"
+        length="10"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="FILEID"
+            length="10"
+            not-null="true"
+        </meta>    
+    </property>    
+    <property
+        name="nombreMetadato"
+        type="java.lang.String"
+        column="NOMBREMETADATO"
+        not-null="true"
+        length="255"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="NOMBREMETADATO"
+            length="255"
+            not-null="true"
+        </meta>    
+    </property>
+    <property
+        name="valorMetadato"
+        type="java.lang.String"
+        column="VALORMETADATO"
+        not-null="false"
+        length="255"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="VALORMETADATO"
+            length="255"
+            not-null="false"
+        </meta>    
+    </property>
+    
+
+    <!-- associations -->
+
+</class>
+</hibernate-mapping>

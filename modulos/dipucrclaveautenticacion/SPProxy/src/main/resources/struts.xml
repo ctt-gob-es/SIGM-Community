@@ -1,0 +1,43 @@
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<constant name="struts.devMode" value="false" />
+
+	<package name="eu.stork.sp" extends="struts-default">
+		<global-exception-mappings>
+			<exception-mapping result="error"
+				exception="java.lang.RuntimeException" />
+		</global-exception-mappings>
+
+		<action name="*IndexPage" method="{1}" class="eu.stork.sp.IndexAction">
+			<result name="redirect">/countrySelector.jsp</result>
+			<result name="populate">/selectAttributes.jsp</result>
+			<result name="input">/selectAttributes.jsp</result>
+			<result name="success">/samlRequest.jsp</result>
+			<result name="error">/errorPage.jsp</result>
+			<result name="default">/defaultRedirect.jsp</result>
+		</action>
+
+		<action name="*ReturnPage" method="{1}" class="eu.stork.sp.ReturnAction">
+			<result name="populate">/returnSigemPage.jsp</result>
+			<result name="input">/samlResponse.jsp</result>
+			<result name="success">/samlResponse.jsp</result>
+			<result name="error">/errorPage.jsp</result>
+		</action>
+		
+		<action name="lanzarPeticion" method="loadProxyUrls" class="eu.stork.sp.IndexAction">
+			<result name="success">/lanzarPeticion.jsp</result>
+		</action>
+		
+		<action name="logout*" method="{1}" class="eu.stork.sp.LogoutAction">
+			<result name="success">/logout.jsp</result>
+			<result name="loggedout">/loggedout.jsp</result>
+			<result name="error">/errorPage.jsp</result>
+		</action>
+
+	</package>
+</struts>

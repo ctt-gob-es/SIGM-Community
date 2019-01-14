@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea- versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+						"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="UnitRegistroVO">
+
+	<typeAlias alias="unitRegistro" type="es.msssi.dir3.core.vo.UnitRegistro" />
+
+	<resultMap id="unitRegistro" class="es.msssi.dir3.core.vo.UnitRegistro">
+
+		<result property="idOrg" column="ID" />
+		<result property="code" column="CODE" />
+		<result property="idFather" column="ID_FATHER" />
+		<result property="acron" column="ACRON" />
+		<result property="name" column="NAME" />
+		<result property="creationDate" column="CREATION_DATE" />
+		<result property="disableDate" column="DISABLE_DATE" />
+		<result property="type" column="TYPE" />
+		<result property="enabled" column="ENABLED" />
+		<result property="cif" column="CIF" />
+		<result property="hierarchicalLevel" column="HIERARCHICAL_LEVEL" />
+		<result property="adminLevel" column="ADMIN_LEVEL" />
+		<result property="entityType" column="ENTITY_TYPE" />
+		<result property="uoType" column="UO_TYPE" />
+		<result property="idRoot" column="ID_ROOT" />
+		<result property="idCCAA" column="ID_CCAA" />
+		<result property="idProv" column="ID_PROV" />
+	</resultMap>
+
+
+	<select id="getUnitRegistroVO" parameterClass="java.lang.String"
+		resultMap="unitRegistro">
+		SELECT
+		CODE, ACRON, NAME, DISABLE_DATE, TYPE, ENABLED, CIF, HIERARCHICAL_LEVEL, ADMIN_LEVEL,
+		ENTITY_TYPE, UO_TYPE, ID_ROOT, ID_CCAA, ID_PROV
+		FROM
+		SCR_ORGS
+		WHERE
+			CODE=#value#
+	</select>
+
+	<select id="existsUnitRegistro" parameterClass="java.lang.String"
+		resultClass="java.lang.Integer">
+		SELECT count (*)
+		FROM
+		SCR_ORGS
+		WHERE
+		CODE=#value#
+	</select>
+
+
+	<update id="updateNextIdOrg">
+	    	UPDATE SCR_CONTADOR
+				SET CONTADOR = CONTADOR +1
+			WHERE TABLAID = 'SCR_ORGS'
+	</update>
+
+	<insert id="addUnitRegistroVO" parameterClass="unitRegistro">
+		<selectKey   keyProperty="idOrg" 
+             resultClass="int">
+	    	SELECT CONTADOR 
+			FROM SCR_CONTADOR WHERE TABLAID = 'SCR_ORGS'
+	  </selectKey>
+		INSERT INTO	SCR_ORGS
+		( ID, CODE, ACRON, NAME, CREATION_DATE, TYPE, ENABLED, CIF, HIERARCHICAL_LEVEL, ADMIN_LEVEL,
+		ENTITY_TYPE, UO_TYPE, ID_CCAA, ID_PROV, ID_ROOT, ID_FATHER )
+		VALUES (#idOrg#,
+		 #code#, #acron#, #name#, CURRENT_TIMESTAMP, #type#, #enabled#,#cif#, #hierarchicalLevel#,
+		#adminLevel#, #entityType#, #uoType#,  #idCCAA#, #idProv#, #idRoot# ,  #idFather#)
+	</insert>
+	
+	<select id="idOrgCode" parameterClass="java.lang.String"
+		resultClass="java.lang.Integer">
+		SELECT id
+		FROM
+		SCR_ORGS
+		WHERE
+		CODE=#value#
+	</select>
+	
+	<update id="updateUnitRegistroVO" parameterClass="unitRegistro">
+		UPDATE
+			SCR_ORGS
+		SET
+			ACRON = #acron#,
+			NAME = #name#,
+			DISABLE_DATE = #disableDate#,
+			ENABLED = #enabled#,
+			CIF = #cif#,
+			HIERARCHICAL_LEVEL = #hierarchicalLevel#,
+			ADMIN_LEVEL = #adminLevel#,
+			ENTITY_TYPE = #entityType#,
+			UO_TYPE = #uoType#,
+			ID_ROOT = #idRoot#,
+			ID_FATHER = #idFather#,
+			ID_CCAA = #idCCAA#,
+			ID_PROV = #idProv#,
+			TYPE = #type#
+		WHERE CODE=#code#
+	</update>
+	
+	<update id="deleteUnitRegistroVO" parameterClass="java.lang.String">
+		UPDATE
+		SCR_ORGS
+		SET
+			DISABLE_DATE =CURRENT_TIMESTAMP,
+			ENABLED = 0
+		WHERE CODE=#value#
+	</update>
+</sqlMap>

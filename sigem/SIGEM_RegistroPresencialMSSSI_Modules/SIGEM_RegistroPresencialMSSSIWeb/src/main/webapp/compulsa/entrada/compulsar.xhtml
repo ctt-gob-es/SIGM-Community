@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+
+	<h:head>
+
+	</h:head>
+
+	<h:body>
+		<ui:composition>
+			<p:messages id="messagesCompulsar" showDetail="false" closable="true" autoUpdate="false" redisplay="false" />
+	
+			<h:panelGrid id="gridCompulsar" styleClass="ampliar">
+				<input type="hidden" id="listaDocs" styleId="listaDocs" value='#{inputRegisterAction.compulsaBean.listaDocsFirmar}'/>
+				<input type="hidden" id="codEntidad" styleId="codEntidad" value='#{inputRegisterAction.compulsaBean.useCaseConf.entidadId}'/>
+				<input type="hidden" id="serialNumber" styleId="serialNumber" value='#{inputRegisterAction.compulsaBean.numeroSerieCertificado}'/>
+
+				<script>
+					function firmar(){
+						PF('statusDialog').show();
+						setTimeout('firmar3f()', 100);
+					}
+
+					function firmaCorrectaCallback(signatureB64, nada){
+						var ventanaNueva = window.open('#{inputRegisterAction.compulsaBean.urlCompulsa}');
+					}
+				</script>
+			</h:panelGrid>
+	
+			<h:panelGroup id="botonesCompulsar">
+				<p style="text-align: center">
+					<p:commandButton styleClass="boton-buscar" id="btn_firmar_input" value="#{msgs.labelBotonFirmarDocumentos}" 
+						widgetVar="buttonFirmar" onclick="cargarMiniApplet3f('#{inputRegisterAction.compulsaBean.dirFirma}'); firmar(); this.style='display:none;'"/>
+
+					<p:commandButton styleClass="cerrar" id="btn_hide_compulsar_" value="#{msgs.labelBotonCerrar}" immediate="true"
+						oncomplete="PF('statusDialog').show();PF('dialogCompulsar').hide();document.getElementById('accordion:inputRegisterAttachedDocumentsForm:btn_firmar_input').style='display:;'"/>
+				</p>
+
+			</h:panelGroup>
+		</ui:composition>
+	</h:body>
+</html>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+	<display-name>dir3MSSSI-ws</display-name>
+    <servlet>
+		<display-name>log4j-init</display-name>
+		<servlet-name>log4j-init</servlet-name>
+		<servlet-class>es.msssi.dir3.servlet.LogInitServlet</servlet-class>
+		<init-param>
+			<param-name>SUBDIRCONFIG</param-name>
+			<param-value>
+				config/dir3-ws
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>SUBDIRLOGS</param-name>
+			<param-value>
+				logs/dir3-ws
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>FILECONFIG</param-name>
+			<param-value>log4j.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+    <servlet>
+		<servlet-name>WebService</servlet-name>
+		<servlet-class>
+			com.sun.xml.ws.transport.http.servlet.WSServlet
+		</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>WebService</servlet-name>
+		<url-pattern>/consultService</url-pattern>
+	</servlet-mapping>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath*:beans/dir3-ws-applicationContext.xml
+		</param-value>
+	</context-param>
+	<listener>
+		<listener-class>
+			com.sun.xml.ws.transport.http.servlet.WSServletContextListener
+		</listener-class>
+	</listener>
+  <listener>
+  	<listener-class>
+  		org.springframework.web.context.ContextLoaderListener
+  	</listener-class>
+  </listener>
+  <listener>
+  	<listener-class>
+  		org.springframework.web.context.request.RequestContextListener
+  	</listener-class>
+  </listener>
+	<mime-mapping>
+		<extension>inc</extension>
+		<mime-type>text/plain</mime-type>
+	</mime-mapping>
+	<env-entry> 
+		<description>Path del directorio general de logs</description>
+	    <env-entry-name>PATH_REPO</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${PATH_REPO}</env-entry-value>  
+	</env-entry>
+	<resource-ref>
+		<res-ref-name>jdbc/fwktd-dir3DS</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+
+</web-app>

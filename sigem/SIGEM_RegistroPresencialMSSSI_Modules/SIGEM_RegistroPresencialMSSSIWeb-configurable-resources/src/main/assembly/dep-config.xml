@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<assembly>
+	<id>configurableSigem</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.basedir}/target/generated-resources/SIGEM_RegistroPresencialMSSSIWeb</directory>
+			<filtered>true</filtered>
+			<outputDirectory>/SIGEM_RegistroPresencialMSSSIWeb/</outputDirectory>
+			<excludes>
+				<exclude>**/Isicres/**</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/target/generated-resources/SIGEM_RegistroPresencialMSSSIWeb/Isicres</directory>
+			<filtered>true</filtered>
+			<outputDirectory>/SIGEM_RegistroPresencialMSSSIWeb/</outputDirectory>
+			<includes>
+				<include>**/log4j.xml</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/target/generated-resources/SIGEM_RegistroPresencialMSSSIWeb</directory>
+			<filtered>false</filtered>
+			<outputDirectory>/SIGEM_RegistroPresencialMSSSI/</outputDirectory>
+			<includes>
+				<include>**/ISicres-resources*</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/../SIGEM_RegistroPresencialMSSSIWeb/src/main/resources/SIGEM_RegistroPresencialMSSSIWeb</directory>
+			<filtered>false</filtered>
+			<includes>
+				<include>**/*.jpg</include>
+				<include>**/*.gif</include>
+				<include>**/*.css</include>
+			</includes>
+			<outputDirectory>/SIGEM_RegistroPresencialMSSSIWeb/</outputDirectory>
+		</fileSet>
+		<!--[Dipucr-Manu Ticket #357] - ALSIGM3 Hacer que todos los módulos de sigem usen las imágenes del tramitador-->
+		<fileSet>
+			<directory>../../SIGEM_Tramitacion_Modules/SIGEM_TramitacionWeb/src/main/resources/SIGEM_TramitacionWeb</directory>
+			<filtered>false</filtered>
+			<includes>
+				<include>**/*.jpg</include>
+				<include>**/*.gif</include>
+				<include>**/*.css</include>
+			</includes>
+			<outputDirectory>/SIGEM_RegistroPresencialMSSSIWeb/</outputDirectory>
+		</fileSet>
+	</fileSets>
+
+</assembly>

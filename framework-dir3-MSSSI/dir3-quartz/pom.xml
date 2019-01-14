@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>dir3</artifactId>
+		<groupId>es.msssi.dir3</groupId>
+		<version>3.0.0-msssi2.0.0</version>
+	</parent>
+
+	<groupId>es.msssi.dir3</groupId>
+	<artifactId>dir3-quartz</artifactId>
+	<packaging>war</packaging>
+
+	<properties>
+		<proxy.enabled>false</proxy.enabled>
+		<PATH_REPO>D:/Repositorio/SIGEM/</PATH_REPO>
+		<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+		<!--<weblogic.dataSource.jndi.name.registroDS_000>jdbc/registroDS_000</weblogic.dataSource.jndi.name.registroDS_000-->
+		<isCluster>false</isCluster>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-weblogic</artifactId>
+			<version>1.8.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>3.0.2.RELEASE</version>
+		</dependency>
+				<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>3.0.2.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>3.0.2.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>3.0.2.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>es.msssi.dir3</groupId>
+			<artifactId>dir3-api</artifactId>
+			<version>${dir3MSSSI.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>es.msssi.dir3</groupId>
+			<artifactId>dir3-core</artifactId>
+			<version>${dir3MSSSI.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<skipTests>true</skipTests>
+					<warName>DIR3QZ-${project.version}</warName>
+					<archive>
+						<manifestEntries>
+							<Weblogic-Application-Version>${project.version}</Weblogic-Application-Version>
+						</manifestEntries>
+					</archive>
+					<webResources>
+						<resource>
+							<filtering>true</filtering>
+							<directory>src/main/webapp</directory>
+							<includes>
+								<include>**/*.xml</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+	<profiles>
+		<profile>
+			<id>msssi_local</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>msssi_local</name>
+				</property>
+			</activation>
+			<properties>
+				<PATH_REPO>D:/Repositorio/SIGEM/</PATH_REPO>
+				<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+				<!--<weblogic.dataSource.jndi.name.registroDS_000>jdbc/registroDS_000</weblogic.dataSource.jndi.name.registroDS_000-->
+				<isCluster>false</isCluster>
+			</properties>
+		</profile>
+		<profile>
+			<id>msssi_desarrollo</id>
+			<activation>
+				<property>
+					<name>msssi_desarrollo</name>
+				</property>
+			</activation>
+			<properties>
+				<PATH_REPO>/repositorio/SIGM/</PATH_REPO>
+				<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+				<isCluster>true</isCluster>
+			</properties>
+		</profile>
+		<profile>
+			<id>msssi_preproduccion</id>
+			<activation>
+				<property>
+					<name>msssi_preproduccion</name>
+				</property>
+			</activation>
+			<properties>
+				<PATH_REPO>/repositorio/SIGM/</PATH_REPO>
+				<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+				<isCluster>true</isCluster>
+			</properties>
+		</profile>
+		<profile>
+			<id>msssi_produccion</id>
+			<activation>
+				<property>
+					<name>msssi_produccion</name>
+				</property>
+			</activation>
+			<properties>
+				<PATH_REPO>/repositorio/SIGM/</PATH_REPO>
+				<weblogic.dataSource.jndi.name.fwktddir3DS>jdbc/fwktd-dir3DS</weblogic.dataSource.jndi.name.fwktddir3DS>
+				<isCluster>true</isCluster>
+			</properties>
+		</profile>
+	</profiles>
+</project>

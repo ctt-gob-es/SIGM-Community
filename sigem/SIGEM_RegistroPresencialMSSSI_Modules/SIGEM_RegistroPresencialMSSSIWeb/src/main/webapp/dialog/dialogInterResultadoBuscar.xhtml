@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+
+</h:head>
+
+<h:body>
+	<ui:composition>
+		<h:panelGrid id="gridIResultados" styleClass="ampliarBuscarInt">			
+			<p:commandButton 
+				id="btn_alta_tercero_fisico"
+				styleClass="botonAltaTerceroFisico"
+				title="#{msgs.labelNuevaPersonaFisica}" 
+				alt="#{msgs.labelNuevaPersonaFisica}" 
+				value="#{msgs.labelNuevaPersonaFisica}"
+				rendered="${tercerosAction.busquedaInteresado.tipo =='P'}"
+				update=":interesadosform:TInteresadosResultadoBusqueda,:interesadosform:formIModificarTercero:gridIModificar"
+				process="@this" immediate="true"
+				oncomplete="PF('int_modificar_tercero').show();"
+				action="#{tercerosAction.nuevoInteresado}" >
+			</p:commandButton >
+			<p:commandButton 
+				id="btn_alta_tercero_juridico"
+				styleClass="botonAltaTerceroJuridico"
+				title="#{msgs.labelNuevaPersonaJuridica}" 
+				alt="#{msgs.labelNuevaPersonaJuridica}" 
+				value="#{msgs.labelNuevaPersonaJuridica}"
+				rendered="${tercerosAction.busquedaInteresado.tipo =='J'}"
+				update=":interesadosform:TInteresadosResultadoBusqueda,:interesadosform:formIModificarTercero:gridIModificar"
+				process="@this" 
+				oncomplete="PF('int_modificar_tercero').show();"
+				action="#{tercerosAction.nuevoInteresado}" >
+			</p:commandButton >
+			<p:dataTable id="TInteresadosResultadoBusqueda"
+				value="#{tercerosAction.interesadosBusqueda}" var="int" 
+				scrollable="true" scrollHeight="250" 
+				paginator="true" rows="15" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				currentPageReportTemplate="{totalRecords} #{msgs.paginacionResultadosEncontrados}. #{msgs.paginacionPagina} {currentPage} #{msgs.paginacionDe} {totalPages}"
+		                dblClickSelect="true" styleClass="busquedaInt" emptyMessage="#{msgs.mensajeTablaSinDatos}">
+				<p:column sortBy="#{int.docIdentidad}" width="10%">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.labelNumeroDocumento}" />
+					</f:facet>
+					<ui:fragment>
+						<h:outputText value="#{int.docIdentidad}" />
+					</ui:fragment>
+				</p:column>
+				<p:column sortBy="#{int.nombre}" width="10%" rendered="${tercerosAction.busquedaInteresado.tipo =='P'}">
+					<f:facet name="header">					
+						<h:outputText value="#{msgs.labelNombre}" />
+					</f:facet>
+					<ui:fragment >
+						<h:outputText value="#{int.nombre}" />
+					</ui:fragment>
+				</p:column>
+				<p:column sortBy="#{int.papellido}" width="15%" rendered="${tercerosAction.busquedaInteresado.tipo =='P'}">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.labelPrimerApellido}" />
+					</f:facet>
+					<ui:fragment >
+						<h:outputText value="#{int.papellido}" />
+					</ui:fragment>
+				</p:column>
+				<p:column sortBy="#{int.sapellido}" width="15%" rendered="${tercerosAction.busquedaInteresado.tipo =='P'}">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.labelSegundoApellido}" />
+					</f:facet>
+					<ui:fragment >
+						<h:outputText value="#{int.sapellido}" />
+					</ui:fragment>
+				</p:column>
+				<p:column sortBy="#{repre.razonSocial}" width="40%" rendered="${tercerosAction.busquedaInteresado.tipo =='J'}">					
+					<f:facet name="header">
+						<h:outputText value="#{msgs.labelRazonSocial}" />
+					</f:facet>
+					<ui:fragment>
+						<h:outputText value="#{int.razonSocial}" />
+					</ui:fragment>
+				</p:column>
+				<p:column>
+					<f:facet name="header" width="20%">
+						<h:outputText value="#{msgs.labelDireccion}" />
+					</f:facet>
+					<ui:fragment>
+						<h:outputText value="#{int.direccionFisicaPrincipal}" />
+					</ui:fragment>
+				</p:column>
+				<p:column>
+					<f:facet name="header" width="25%">
+						<h:outputText value="#{msgs.labelDireccionElectronica}" />
+					</f:facet>
+					<ui:fragment>
+						<h:outputText value="#{int.direccionTelematicaPrincipal}" />
+					</ui:fragment>
+				</p:column>
+				<p:column width="5%">
+					<f:facet name="header"></f:facet>
+					<p:outputPanel id="panel">
+						<p:commandButton id="btn_anniadir_int"
+							styleClass="intBotonResultBusquedaAnadir" title="#{msgs.labelAnadir}" alt="#{msgs.labelAnadir}"
+							process="@this" immediate="true"
+							update=":interesadosform:TInteresadosAniadidos" 
+							action="#{tercerosAction.saveInterestedTypeDefault}" oncomplete="PF('intDlgResultBuscar').hide()">
+
+							<f:setPropertyActionListener value="#{int}" target="#{tercerosAction.tercerosBean.interesadoDeTrabajo}"/>
+
+						</p:commandButton >
+						<p:commandButton id="btn_modificar_int" styleClass="intBotonResultBusquedaModificar" title="#{msgs.labelBotonModificar}" alt="#{msgs.labelBotonModificar}"
+							update=":interesadosform:gridIResultados, :interesadosform:formIModificarTercero:gridIModificar"
+							process="@this" immediate="true"
+							oncomplete="PF('int_modificar_tercero').show();">
+							<f:setPropertyActionListener value="#{int}" target="#{tercerosAction.tercerosBean.interesadoDeTrabajo}"/>
+						</p:commandButton >	
+					</p:outputPanel >
+				</p:column>							
+			</p:dataTable>
+		</h:panelGrid>
+		<h:panelGroup id="botonesIntResultadoBuscar">
+			<p style="text-align: center; margin: 0em;">				
+				<p:commandButton styleClass="cerrar" id="btn_hide_resultado_buscar_intP" value="#{msgs.labelBotonCerrar}" immediate="true" oncomplete="PF('intDialogBuscar').show();PF('intDlgResultBuscar').hide();" update="interesadosform:TInteresadosAniadidos"/>
+			</p>
+		</h:panelGroup>
+	</ui:composition>
+
+</h:body>
+
+</html>

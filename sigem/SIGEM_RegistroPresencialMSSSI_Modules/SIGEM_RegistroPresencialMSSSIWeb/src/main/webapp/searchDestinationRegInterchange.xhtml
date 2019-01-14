@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+
+</h:head>
+
+<h:body>
+	<ui:composition template="/template/layout.xhtml">
+		<ui:define name="head">
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/dialog.js"></script>
+			<script  type="text/javascript">
+				$(document).keypress(function(e) {
+				    if(e.which == 13) {
+				    	document.getElementById( "form:IRButton" ).click();
+				        return false;
+				    }
+				});
+			</script>	
+		</ui:define>
+
+		<ui:define name="breadcrumb">
+			<h:panelGroup id="panel" layout="block">
+				<ol>
+					<li><h:link value="#{msgs.labelInicio}" outcome="goInicioForm" /></li>
+					<ui:fragment rendered="${J_BOOK.idocarchhdr.type == 1}">
+						<li><h:link value="#{J_BOOK.idocarchhdr.name}"
+								outcome="goSearchInForm" /></li>
+						<li><p:commandLink
+								value="#{msgs.labelModificarRegistroEntrada}" process="@this"
+								actionListener="#{regInterchangeAction.goInputRegisterForm}"
+								inmediate="true" /></li>
+					</ui:fragment>
+					<ui:fragment rendered="${J_BOOK.idocarchhdr.type == 2}">
+						<li><h:link value="#{J_BOOK.idocarchhdr.name}"
+								outcome="goSearchOutForm" /></li>
+						<li><p:commandLink
+								value="#{msgs.labelModificarRegistroSalida}" process="@this"
+								actionListener="#{regInterchangeAction.goOutputRegisterForm}"
+								inmediate="true" /></li>
+					</ui:fragment>
+					<li><h:outputText value="#{msgs.labelIntRegistral}" /></li>
+				</ol>
+			</h:panelGroup>
+		</ui:define>
+		<ui:define name="content">
+			<h:form id="form">
+
+				<h:panelGroup id="panel1" layout="block">
+					<h2>
+						<h:outputText value="#{msgs.labelEnviarRI}" />
+					</h2>
+					<div class="sombra"></div>
+
+					<div class="enlaces">
+						<ul>
+
+						</ul>
+					</div>
+					<!--DIV PARA EL LIBRO DE SALIDA-->
+					<div id="intercambio">
+						<h3>
+							<h:outputText value="#{msgs.labelUnidadDestinatariaRI}" />
+						</h3>
+						<h:panelGroup id="panelAll">
+							<fieldset>
+
+								<h:panelGrid id="panel2">
+									<p:messages id="messages" showDetail="false" autoUpdate="true" />
+								</h:panelGrid>
+
+								<h:inputHidden id="registerId"
+									value="#{regInterchangeAction.registerId}" />
+								<ui:fragment
+									rendered="${not empty regInterchangeAction.registerId}">
+									<label for="form:fld1" class="general"> <span
+										class="label"><h:outputText id="fld1label"
+												value="#{msgs.fld1label}" /></span> <h:outputText id="fld1"
+											styleClass="resultado"
+											value="#{regInterchangeAction.searchDestinationRegInterchangeBean.axsf.attributesValues.fld1}" />
+									</label>
+									
+									<label for="form:docFisica" class="general"> 
+									<span
+										class="label"><h:outputText id="docfisicalabel"
+												value="" /></span>
+										<ui:fragment
+											rendered="${not empty regInterchangeAction.docFisica and regInterchangeAction.docFisica==1}">
+												<span >
+											  <img src="#{webParam.entryParameters['URLRoot']}/img/docfld504.png" style="padding-right: 5px;"  />
+											  <h:outputText class="resultadoDocFisica"
+												id="fld504label" value="#{msgs.fld504Text}" /></span>
+										</ui:fragment>
+										<ui:fragment
+											rendered="${not empty regInterchangeAction.docFisica and regInterchangeAction.docFisica==2}">
+												<span >
+											  <img src="#{webParam.entryParameters['URLRoot']}/img/docfld505.png" style="padding-right: 5px;"  />
+											  <h:outputText class="resultadoDocFisica"
+												id="fld505label" value="#{msgs.fld505Text}" /></span>
+										</ui:fragment>
+										<ui:fragment
+											rendered="${not empty regInterchangeAction.docFisica and regInterchangeAction.docFisica==3}">
+												<span  >
+											  <img src="#{webParam.entryParameters['URLRoot']}/img/docfld506.png" style="padding-right: 5px;"  />
+											  <h:outputText class="resultadoDocFisica"
+												id="fld506label" value="#{msgs.fld506Text}" /></span>
+										</ui:fragment>
+									</label>
+										
+									<label for="form:codeTramunit" class="general"> <span
+										class="label"><h:outputText id="labelUnidadTramitadora"
+												value="#{msgs.labelUnidadTramitadora}" /></span> <c:set
+											var="uRegistralPadre" value=" (#{uRegistral.nameOrgsFather})" />
+										<c:set var="unidadReg"
+											value="#{uRegistral.codeTramunit} #{uRegistral.nameTramunit}" />
+										<p:autoComplete required="true" style="width:100px"
+											value="#{regInterchangeAction.searchDestinationRegInterchangeBean.unidadTramitadoraDestino}"
+											id="unidadTramitadoraDestino"
+											completeMethod="#{validationListDCOAction.completeUnidTramitadora}"
+											minQueryLength="4" var="uRegistral" queryDelay="400"
+											itemLabel="#{(empty uRegistral) ? '' : unidadReg}"
+											itemValue="#{uRegistral}"
+											title="#{(empty uRegistral) ? '' : unidadReg}"
+											label="#{msgs.labelUnidadTramitadora}"
+											converter="unidadTramitadoraConverter" forceSelection="true"
+											scrollHeight="200" escape="false">
+											<p:ajax event="itemSelect"
+												listener="#{regInterchangeAction.changeEntity}"
+												update="entidadRegistralDestino" />
+											<p:column>
+												<h:outputText styleClass="organismo"
+													value="#{uRegistral.codeTramunit} #{uRegistral.nameTramunit}" />
+												<br />
+												<h:outputText styleClass="organismopadre"
+													value="#{uRegistralPadre}" />
+											</p:column>
+										</p:autoComplete> <p:commandButton id="DestinationButton"
+											styleClass="organismobusq" icon="ui-icon-search"
+											title="#{msgs.busquedaOrglabel}" inmediate="true"
+											process="@this"
+											actionListener="#{searchUnitsTramAction.chooseUnits}">
+											<p:ajax event="dialogReturn"
+												listener="#{regInterchangeAction.updateDestination}"
+												update="unidadTramitadoraDestino,entidadRegistralDestino" 
+												 oncomplete="document.getElementById('form:unidadTramitadoraDestino_input').focus()" />
+										</p:commandButton>
+									</label>
+									<label for="form:codeEntity" class="general"> <span
+										class="label"><h:outputText id="labelEntidadRegistral"
+												value="#{msgs.labelEntidadRegistral}" /></span> <c:set
+											var="eRegistral"
+											value="#{regInterchangeAction.searchDestinationRegInterchangeBean.unidadTramitadoraDestino.codeEntity} #{regInterchangeAction.searchDestinationRegInterchangeBean.unidadTramitadoraDestino.nameEntity}" />
+										<h:outputText id="entidadRegistralDestino"
+											styleClass="resultado"
+											value="#{(empty regInterchangeAction.searchDestinationRegInterchangeBean.unidadTramitadoraDestino.codeEntity) ? '' : eRegistral}" />
+									</label>
+									<label class="general center">
+									<h:outputText styleClass="nota" value="(Si no conoce el organismo, seleccione 'REG. ADMINISTRACIÓN GENERAL DEL ESTADO',
+donde se le atenderá en cualquier caso.)" />
+									</label>
+								</ui:fragment>
+								<div class="botones">
+									<ui:fragment
+										rendered="${not empty regInterchangeAction.registerId}">
+										<p:commandButton id="IRButton" styleClass="boton-enviar"
+											update="form:panel2 @this" validateClient="true"
+											value="#{msgs.labelBotonEnviar}"
+											onstart="PF('statusDialog').show()"
+											onsuccess="PF('statusDialog').hide()"
+											 disabled="#{regInterchangeAction.disabled}"
+											actionListener="#{regInterchangeAction.sendRegInterchange}" />
+									</ui:fragment>
+									<ui:fragment rendered="${J_BOOK.idocarchhdr.type == 1}">
+										<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											actionListener="#{regInterchangeAction.goInputRegisterForm}"
+											inmediate="true" />
+
+									</ui:fragment>
+									<ui:fragment rendered="${J_BOOK.idocarchhdr.type == 2}">
+										<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											actionListener="#{regInterchangeAction.goOutputRegisterForm}"
+											inmediate="true" />
+									</ui:fragment>
+								</div>
+
+							</fieldset>
+						</h:panelGroup>
+
+					</div>
+				</h:panelGroup>
+				<p:dialog modal="true" widgetVar="statusDialog"
+					header="Enviando, espere por favor" draggable="false"
+					closable="false" resizable="false">
+					<img
+						src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

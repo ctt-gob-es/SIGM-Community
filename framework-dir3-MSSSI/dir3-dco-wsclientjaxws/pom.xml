@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>es.msssi.dir3</groupId>
+		<artifactId>dir3</artifactId>
+        <version>3.0.0-msssi2.0.0</version>
+	</parent>
+
+	<artifactId>dir3-dco-wsclientjaxws</artifactId>
+	<packaging>jar</packaging>
+		
+	<dependencies>
+		<dependency>
+			<groupId>javax.xml.ws</groupId>
+			<artifactId>jaxws-api</artifactId>
+			<version>2.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.jws</groupId>
+					<artifactId>jsr181</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-ws-metadata_2.0_spec</artifactId>
+			<version>1.1.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.6</version>
+		</dependency>
+
+		<!-- Test dependencies -->
+
+		<dependency>
+			<groupId>log4j</groupId>
+  			<artifactId>log4j</artifactId>
+		 	<version>1.2.14</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.0.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.0.2.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>3.0.2.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+				
+		<dependency>
+		    <groupId>org.apache.ws.xmlschema</groupId>
+		    <artifactId>xmlschema-core</artifactId>
+		    <version>2.1.0</version>
+		</dependency>
+		
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<filters>
+			<filter>${filter.generic.system}</filter>
+		</filters>
+		
+	    <plugins>
+		    <plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+		        <configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+  </build>
+
+	
+	<profiles>
+		<!-- Perfiles de construccion en funcion del S.O. -->
+		<profile>
+			<id>unix</id>
+			<activation>
+				<property>
+					<name>unix</name>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<filter.generic.system>${project.basedir}/../../sigem/SIGEM_Config/src/main/filters/system/unix.properties</filter.generic.system>
+			</properties>
+		</profile>
+		<profile>
+			<id>win</id>
+			<activation>
+				<property>
+					<name>win</name>
+				</property>
+			</activation>
+			<properties>
+				<filter.generic.system>${project.basedir}/../../sigem/SIGEM_Config/src/main/filters/system/windows.properties</filter.generic.system>
+			</properties>
+		</profile>
+		<profile>
+			<id>msssi_local</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>msssi_local</name>
+				</property>
+			</activation>
+			<properties>
+				<dir3-dco.tempFilesDir>D:/Repositorio/SIGEM/ficheros/dir3</dir3-dco.tempFilesDir>
+			</properties>
+		</profile>
+		<profile>
+			<id>msssi_desarrollo</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>msssi_desarrollo</name>
+				</property>
+			</activation>
+			<properties>
+				<dir3-dco.tempFilesDir>/repositorio/SIGM/ficheros/dir3</dir3-dco.tempFilesDir>
+			</properties>
+		</profile>
+		<profile>
+			<id>msssi_preproduccion</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>msssi_preproduccion</name>
+				</property>
+			</activation>
+			<properties>
+				<dir3-dco.tempFilesDir>/repositorio/SIGM/ficheros/dir3</dir3-dco.tempFilesDir>
+			</properties>
+		</profile>
+		<profile>
+			<id>msssi_produccion</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>msssi_produccion</name>
+				</property>
+			</activation>
+			<properties>
+				<dir3-dco.tempFilesDir>/repositorio/SIGM/ficheros/dir3</dir3-dco.tempFilesDir>
+			</properties>
+		</profile>
+	</profiles>
+</project>

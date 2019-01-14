@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+<!--  -->
+</h:head>
+
+<h:body>
+	<ui:composition>
+		<p:messages  id="messagesDis" closable="true" autoUpdate="false" redisplay="false" />
+		<p:panel id="panelDigdlgRedistribuir" styleClass="ventanaDist">
+		
+			<h:outputText id="labelSelectTiposDestinos" value="#{msgs.labelSelectTiposDestinos}" />&nbsp;&nbsp;<br/>			
+			<p:selectOneMenu 
+			    id="tiposDestinos" 
+			    styleClass="selectdestinoRedisDepartamentos"
+			    value="#{outputRegisterAction.typeDestinoRedis}" 
+			    binding="#{tiposDestinos}"
+			    valueChangeListener="#{outputRegisterAction.reLoadUserDeptsGroupDistribucion}">
+				<f:selectItem itemLabel="#{msgs.labelSelectTipoDestinoUsuarios}" itemValue="1"/>
+				<f:selectItem itemLabel="#{msgs.labelSelectTipoDestinoDepartamentos}" itemValue="2"/>
+				<f:selectItem itemLabel="#{msgs.labelSelectTipoDestinoGrupos}" itemValue="3"/>
+
+				<p:ajax event="change" update=":distribuirform:panelDigdlgRedistribuir"/>
+			</p:selectOneMenu>
+
+			<br/><br/>												
+
+			<ui:fragment rendered="${outputRegisterAction.typeDestinoRedis=='1'}" id="fragmentUsuario">
+
+				<h:outputText id="labelDestRedistribuirUsuario" value="#{msgs.labelSelectUsuario}" />&nbsp;&nbsp;<br/>
+
+				<p:selectOneMenu
+					value="#{outputRegisterAction.selectdestinoRedisUsuarios}"
+					styleClass="selectdestinoRedisDepartamentos"
+					id="selectdestinoRedisUsuarios" var="varUsr"
+					label="#{msgs.labelSelectUsuario}" filterMatchMode="contains"
+					converter="userConverter" effect="fade" filter="true" escape="false">
+
+				    <f:selectItems value="#{outputRegisterAction.listUsuarios}" var="usr" itemLabel="#{usr.name}" itemValue="#{usr }" />
+					
+				    <p:column>
+			               	<h:outputText styleClass="departamentos" value="#{varUsr.name}"/><h:outputText styleClass="departamentospadre" value=" - #{varUsr.iuserdata.nombre} #{varUsr.iuserdata.apellidos}"/>
+					<br/>
+					<h:outputText styleClass="departamentospadre" value="#{varUsr.remarks}"/>
+			            </p:column>
+				</p:selectOneMenu>
+			</ui:fragment>
+
+			<ui:fragment rendered="${outputRegisterAction.typeDestinoRedis=='2'}" id="fragmentDepartamento">
+
+				<h:outputText id="labelDestRedistribuirDepartamento" value="#{msgs.labelSelectDepartamento}" />&nbsp;&nbsp;<br/>
+
+				<c:set var="departPadre" value=" (#{varDep.nameDepFather})" />
+				<c:set var="departamentoPadre" value=" (#{dep.nameDepFather})" />			
+
+				<p:selectOneMenu
+					value="#{outputRegisterAction.selectdestinoRedisDepartamentos}"
+					styleClass="selectdestinoRedisDepartamentos"
+					id="selectdestinoRedisDepartamentos" var="varDep"
+					label="#{msgs.labelSelectDepartamento}" filterMatchMode="contains"
+					converter="departConverter" effect="fade" filter="true" escape="false">
+
+				    <f:selectItems value="#{outputRegisterAction.listDepartament}" var="dep" itemLabel="#{dep.name}" itemValue="#{dep }" />
+				
+				    <p:column>
+			               	<h:outputText styleClass="departamentos" value="#{varDep.name}"/>
+				        <br/>
+			                <h:outputText styleClass="departamentospadre" value="#{departPadre}" />
+		        	    </p:column>
+				</p:selectOneMenu>
+			</ui:fragment>
+
+			<ui:fragment rendered="${outputRegisterAction.typeDestinoRedis=='3'}" id="fragmentGrupo">
+
+				<h:outputText id="labelDestRedistribuirGrupo" value="#{msgs.labelSelectGrupo}" />&nbsp;&nbsp;<br/>
+
+				<p:selectOneMenu
+					value="#{outputRegisterAction.selectdestinoRedisGrupos}"
+					styleClass="selectdestinoRedisDepartamentos"
+					id="selectdestinoRedisGrupos" var="varGrupo"
+					label="#{msgs.labelSelectGrupos}" filterMatchMode="contains"
+					converter="groupConverter" effect="fade" filter="true" escape="false">
+
+				    <f:selectItems value="#{outputRegisterAction.listGrupos}" var="grupo" itemLabel="#{grupo.name}" itemValue="#{grupo }" />
+				
+				    <p:column>
+		        	       	<h:outputText styleClass="departamentos" value="#{varGrupo.name}"/>
+					<br/>
+			                <h:outputText styleClass="departamentospadre" value="#{varGrupo.remarks}" />
+			            </p:column>
+				</p:selectOneMenu>
+			</ui:fragment>
+				
+			<br/><br/>
+			
+			<h:outputText id="labelMotivoDistribucion" value="#{msgs.labelMotivoDistribucion}" />
+			<br />
+			
+			<p:inputTextarea rows="5" id="motivoDistribucion" 
+				value="#{outputRegisterAction.motivoDistribucion}" cols="40"
+				label="#{msgs.labelMotivoDistribucion}" maxlength="250" autoResize="false">
+				<f:validateLength maximum="250" />
+			</p:inputTextarea>
+			
+			<p class="botonera">
+				<p:commandButton styleClass="boton-buscar"
+					value="#{msgs.labelBotonAceptar}" ajax="true"
+					process="dlgDistribuir"
+					update="messagesDis,panelDigdlgRedistribuir,:accordion:outputRegisterDistributionHistoricalForm:tableHistDist"
+					action="#{outputRegisterAction.distribuir}"
+					oncomplete="handleDisRequest(xhr, status, args)" />
+					
+				<p:commandButton styleClass="boton-buscar"
+					value="#{msgs.labelBotonCancelar}" immediate="true"
+					onclick="PF('dlgDistribuir').hide();" />
+			</p>
+		</p:panel>
+	</ui:composition>
+
+
+</h:body>
+
+</html>

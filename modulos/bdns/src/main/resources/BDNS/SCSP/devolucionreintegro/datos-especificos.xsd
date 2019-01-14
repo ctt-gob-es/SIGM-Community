@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://intermediacion.redsara.es/scsp/esquemas/V3/datosEspecificos" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://intermediacion.redsara.es/scsp/esquemas/V3/datosEspecificos" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="DatosEspecificos" type="DatosEspecificos"/>
+	<xs:complexType name="DatosEspecificos">
+		<xs:choice>
+			<xs:element name="DatosEspecificosPeticion" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DatosGenerales">
+							<xs:complexType>
+								<xs:all>
+									<xs:element ref="OrganoGestor"/>
+									<xs:element ref="TipoMovimiento"/>
+								</xs:all>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Envio">
+							<xs:complexType>
+								<xs:choice>
+									<xs:element name="Devolucion">
+										<xs:complexType>
+											<xs:all>
+												<xs:element ref="IdDevolucion"/>
+												<xs:element name="FechaDev" type="xs:date" minOccurs="0"/>
+												<xs:element name="ImportePrincipalDev" type="xs:decimal" minOccurs="0"/>
+												<xs:element name="ImporteInteresesDev" type="xs:decimal" minOccurs="0"/>
+											</xs:all>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="Reintegro">
+										<xs:complexType>
+											<xs:all>
+												<xs:element ref="IdReintegro"/>
+												<xs:element name="FechaReint" type="xs:date" minOccurs="0"/>
+												<xs:element name="ImportePrincipalReint" type="xs:decimal" minOccurs="0"/>
+												<xs:element name="ImporteInteresesReint" type="xs:decimal" minOccurs="0"/>
+												<xs:element name="CausasReint" minOccurs="0">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="Causas" maxOccurs="unbounded">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:maxLength value="3"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:all>
+										</xs:complexType>
+									</xs:element>
+								</xs:choice>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="DatosEspecificosRespuesta" minOccurs="0">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="DatosIdentificacion">
+							<xs:complexType>
+								<xs:choice>
+									<xs:element ref="IdDevolucion"/>
+									<xs:element ref="IdReintegro"/>
+								</xs:choice>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="CodigoEstadoSo">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="4"/>
+									<xs:minLength value="4"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="CodigoEstadoSecundarioSo" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="16"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="LiteralErrorSo">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="255"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="IdConvocatoria">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="18"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="OrganoGestor">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="9"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="TipoMovimiento">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="A"/>
+				<xs:enumeration value="M"/>
+				<xs:enumeration value="B"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="PaisBen" default="ES">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="2"/>
+				<xs:minLength value="2"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="IdPersonaBen">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="25"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="IdConcesion">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="IdConvocatoria"/>
+				<xs:element name="IdBeneficiario">
+					<xs:complexType>
+						<xs:all>
+							<xs:element ref="PaisBen"/>
+							<xs:element ref="IdPersonaBen"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="DiscriminadorConcesion">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="50"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="IdReintegro">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="IdConcesion"/>
+				<xs:element name="DiscriminadorReint">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="50"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="IdDevolucion">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="IdConcesion"/>
+				<xs:element name="DiscriminadorDev">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="50"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

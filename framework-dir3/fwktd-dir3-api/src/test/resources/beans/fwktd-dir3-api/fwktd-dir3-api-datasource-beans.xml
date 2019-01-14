@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="fwktd_dir3_dataSourceImpl" name="fwktd_dir3_dataSource"
+		class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="entries">
+            <map>
+                <entry key="java:comp/env/jdbc/fwktd-dir3DS">
+                    <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+						<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+						<property name="url" value="jdbc:oracle:thin:@ora-dbdesa10.msc.es:2008:dbdesa10" />
+						<property name="username" value="SIGM_FWKTD_DIR" />
+						<property name="password" value="dessigm09" />
+                    </bean>
+                </entry>                
+            </map>
+        </property>
+	</bean>
+
+</beans>

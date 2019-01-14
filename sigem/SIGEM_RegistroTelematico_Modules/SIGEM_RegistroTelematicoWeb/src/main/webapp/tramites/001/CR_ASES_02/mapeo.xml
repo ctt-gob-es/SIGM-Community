@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<procedure>
+	<table name="ASES_REPRES">
+		<mappings>
+			<!-- Mapeos de los datos específicos del solicitante -->
+			<field name="AYUNTAMIENTO" value="${xpath:/datos_especificos/ayuntamiento}"/>
+			<field name="RECURRENTE" value="${xpath:/datos_especificos/recurrente}"/>
+			<field name="JUZGADO" value="${xpath:/datos_especificos/juzgado}"/>
+			<field name="PROCEDIMIENTO" value="${xpath:/datos_especificos/procedimiento}"/>
+			<field name="ACUERDOIMPUGNADO" value="${xpath:/datos_especificos/impugnado}"/>
+			<field name="FECHAACUERDOIMPUG" value="${xpath:/datos_especificos/fechaImpugnado}"/>
+			<field name="ASUNTO" value="${xpath:/datos_especificos/asunto}"/>
+			<field name="EXPONE" value="${xpath:/datos_especificos/expone}"/>
+			<field name="SOLICITA" value="${xpath:/datos_especificos/solicita}"/>
+		</mappings>
+	</table>
+	
+	<table name="SPAC_EXPEDIENTES">
+		<mappings>
+			<field name="ASUNTO" value="Solicitud de Defensa Judicial ${xpath:/datos_especificos/Descripcion_asuntoOpcion}"/>		
+			<field name="NIFCIFTITULAR" value="${xpath:/datos_especificos/cif}"/>
+			<field name="DOMICILIO" value="${xpath:/datos_especificos/domicilioNotificacion}"/>
+			<field name="CIUDAD" value="${xpath:/datos_especificos/localidad}"/>
+			<field name="REGIONPAIS" value="${xpath:/datos_especificos/provincia} / España"/>
+			<field name="IDENTIDADTITULAR" value="AYUNTAMIENTO DE ${xpath:/datos_especificos/Descripcion_ayuntamiento}"/>
+		</mappings>
+	</table>
+	<table name="SPAC_DT_INTERVINIENTES">
+		<mappings>
+			<field name="ROL" value="INT"/>
+			<field name="TIPO_PERSONA" value="F"/>
+			<field name="NDOC" value="${xpath:/datos_especificos/cif}"/>
+			<field name="NOMBRE" value="AYUNTAMIENTO DE ${xpath:/datos_especificos/Descripcion_ayuntamiento}"/>
+			<field name="TFNO_MOVIL" value="${xpath:/datos_especificos/telefono}"/>
+			<field name="TIPO_DIRECCION" value="T"/>
+			<field name="DIRECCIONTELEMATICA" value="${xpath:/datos_especificos/emailSolicitante}"/>
+			<field name="C_POSTAL" value="${xpath:/datos_especificos/codigoPostal}"/>
+			<field name="DIRNOT" value="${xpath:/datos_especificos/domicilioNotificacion}"/>
+			<field name="EMAIL" value="${xpath:/datos_especificos/emailSolicitante}"/>
+			<field name="LOCALIDAD" value="${xpath:/datos_especificos/localidad}"/>
+			<field name="CAUT" value="${xpath:/datos_especificos/provincia}"/>
+		</mappings>
+	</table>
+</procedure>

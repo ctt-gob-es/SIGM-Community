@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+						"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="AddressRegistroVO">
+
+	<typeAlias alias="addressRegistro"
+		type="es.msssi.dir3.core.vo.AddressRegistroVO" />
+
+	<resultMap id="addressRegistro" class="es.msssi.dir3.core.vo.AddressRegistroVO">
+		<result property="id_orgs" column="ID_ORGS" />
+		<result property="address" column="ADDRESS" />
+		<result property="city" column="CITY" />
+		<result property="zip" column="ZIP" />
+		<result property="country" column="COUNTRY" />
+		<result property="telephone" column="TELEPHONE" />
+		<result property="fax" column="FAX" />
+		<result property="email" column="EMAIL"  />
+		
+	</resultMap>
+
+
+	<select id="getAddressRegistroVO" parameterClass="java.lang.String" resultMap="addressRegistro">
+		SELECT
+			ID_ORGS, ADDRESS, CITY, ZIP, COUNTRY, TELEPHONE, FAX, EMAIL
+		FROM
+			SCR_DIRORGS
+		WHERE
+			ID_ORGS=#value#
+	</select>
+	
+	<select id="existsAddress" parameterClass="java.lang.Integer" resultClass="java.lang.Integer">
+		SELECT
+			count (*)
+		FROM
+			SCR_DIRORGS
+		WHERE
+			ID_ORGS=#value#
+	</select>  
+
+	<insert id="addAddressRegistroVO" parameterClass="addressRegistro">
+		INSERT INTO
+      SCR_DIRORGS
+        (ID_ORGS, ADDRESS, CITY, ZIP, COUNTRY, TELEPHONE, FAX, EMAIL)
+        VALUES (#idOrganismo#, #address#,#city#, #zip# , #country#, #telephone#, #fax#, #email#)
+	</insert>
+	
+	<select id="IdOrgDirec" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+		SELECT ID
+		  FROM SCR_ORGS
+        WHERE CODE = #value#
+	</select>
+	
+	<update id="updateAddressRegistroVO" parameterClass="addressRegistro">
+		UPDATE
+			SCR_DIRORGS
+		SET
+			ADDRESS = #address#,
+			CITY = #city#,
+			ZIP = #zip#,
+			COUNTRY = #country#,
+			TELEPHONE = #telephone#,
+			FAX = #fax#,
+			EMAIL = #email#
+		WHERE ID_ORGS = #idOrganismo#
+	</update>
+	
+	<delete id="deleteAddressRegistroVO" parameterClass="java.lang.String">
+		DELETE FROM
+            SCR_DIRORGS
+        WHERE ID_ORGS IN (SELECT ORG.ID FROM SCR_ORGS ORG WHERE ORG.CODE = #value#)
+	</delete>
+
+</sqlMap>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+	<id>estaticos</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<!-- ADMINISTRACION -->
+		<fileSet>
+			<directory>../SIGEM_AutenticacionAdministracionWeb/src/main/webapp/resources</directory>
+			<outputDirectory>StaticAutenticacionAdministracionWeb/resources</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../SIGEM_EstructuraWeb/src/main/webapp/resources</directory>
+			<outputDirectory>StaticEstructuraWeb/resources</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>../SIGEM_RegistroPresencial_modules/SIGEM_RegistroPresencialAdminWeb/src/main/webapp/resources</directory>
+			<outputDirectory>StaticRegistroPresencialAdminWeb/resources</outputDirectory>
+			<excludes><exclude>index.html</exclude></excludes>
+		</fileSet>
+		<fileSet>
+			<directory>../SIGEM_RegistroPresencial_modules/SIGEM_RegistroPresencialAdminWeb/target/resourcesStatic</directory>
+			<outputDirectory>StaticRegistroPresencialAdminWeb/resources</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>

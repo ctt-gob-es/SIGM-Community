@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<procedure>
+	<table name="SPAC_EXPEDIENTES">
+		<mappings>
+			<!-- Mapeos de los datos específicos del solicitante -->
+			<field name="NIFCIFTITULAR" value="${xpath:/datos_especificos/nif}"/>
+			<field name="IDENTIDADTITULAR" value="${xpath:/datos_especificos/nombre}"/>
+			<field name="DOMICILIO" value="${xpath:/datos_especificos/calle}"/>
+			<field name="CPOSTAL" value="${xpath:/datos_especificos/c_postal}"/>
+			<field name="TFNOMOVIL" value="${xpath:/datos_especificos/movil}"/>
+			<field name="DIRECCIONTELEMATICA" value="${xpath:/datos_especificos/d_email}"/>
+			<field name="CIUDAD" value="${xpath:/datos_especificos/ciudad}"/>
+			<field name="ROLTITULAR" value="INT"/>	
+			<field name="REGIONPAIS" value="${xpath:/datos_especificos/region}"/>
+			<field name="ASUNTO" value="Aplazamiento/Fraccionamiento: ${xpath:/datos_especificos/nif}-${xpath:/datos_especificos/nombre}"/>
+		</mappings>
+	</table>
+	<table name="SPAC_DT_INTERVINIENTES">
+		<mappings>
+			<field name="ROL" value="INT"/>
+			<field name="TIPO_PERSONA" value="F"/>
+			<field name="NDOC" value="${xpath:/datos_especificos/nif}"/>
+			<field name="NOMBRE" value="${xpath:/datos_especificos/nombre}"/>
+			<field name="TFNO_MOVIL" value="${xpath:/datos_especificos/movil}"/>
+			<field name="TIPO_DIRECCION" value="T"/>
+			<field name="DIRECCIONTELEMATICA" value="${xpath:/datos_especificos/d_email}"/>
+			<field name="C_POSTAL" value="${xpath:/datos_especificos/c_postal}"/>
+			<field name="DIRNOT" value="${xpath:/datos_especificos/calle}"/>
+			<field name="EMAIL" value="${xpath:/datos_especificos/d_email}"/>
+			<field name="LOCALIDAD" value="${xpath:/datos_especificos/ciudad}"/>
+			<field name="CAUT" value="${xpath:/datos_especificos/region}"/>
+		</mappings>
+<!--		<mappings>
+			<field name="ROL" value="REPR"/>
+			<field name="TIPO_PERSONA" value="F"/>
+			<field name="NDOC" value="${xpath:/datos_especificos/repres_nif}"/>
+			<field name="NOMBRE" value="${xpath:/datos_especificos/repres_nombre}"/>
+			<field name="TFNO_MOVIL" value="${xpath:/datos_especificos/repres_movil}"/>
+			<field name="TIPO_DIRECCION" value="T"/>
+			<field name="DIRECCIONTELEMATICA" value="${xpath:/datos_especificos/repres_d_email}"/>
+			<field name="EMAIL" value="${xpath:/datos_especificos/repres_d_email}"/>
+		</mappings>
+		<mappings>
+			<field name="ROL" value="SOLI"/>
+			<field name="TIPO_PERSONA" value="F"/>
+			<field name="NDOC" value="${xpath:/datos_especificos/nifsolihidden}"/>
+			<field name="NOMBRE" value="${xpath:/datos_especificos/nombresolihidden}"/>
+			<field name="TFNO_MOVIL" value="${xpath:/datos_especificos/movilsol}"/>
+			<field name="TIPO_DIRECCION" value="T"/>
+			<field name="DIRECCIONTELEMATICA" value="${xpath:/datos_especificos/emailsol}"/>
+			<field name="EMAIL" value="${xpath:/datos_especificos/emailsol}"/>
+		</mappings>-->
+	</table>
+        <table name="REC_OBLIGADO">
+		<mappings>
+			<!-- Mapeos de los datos específicos del solicitante -->
+			<field name="NIF" value="${xpath:/datos_especificos/nifsolihidden}"/>
+			<field name="NOMBRE" value="${xpath:/datos_especificos/nombresolihidden}"/>
+			<!--<field name="CALLE" value="${xpath:/datos_especificos/calle}"/>-->
+			<!--<field name="NUMERO" value="${xpath:/datos_especificos/numero}"/>-->
+			<!--<field name="ESCALERA" value="${xpath:/datos_especificos/escalera}"/>-->
+			<!--<field name="PLANTA_PUERTA" value="${xpath:/datos_especificos/planta_puerta}"/>-->
+			<!--<field name="C_POSTAL" value="${xpath:/datos_especificos/c_postal}"/>-->
+			<field name="MOVIL" value="${xpath:/datos_especificos/movilsol}"/>
+			<field name="D_EMAIL" value="${xpath:/datos_especificos/emailsol}"/>
+			<field name="REPRES_NIF" value="${xpath:/datos_especificos/repres_nif}"/>
+			<field name="REPRES_NOMBRE" value="${xpath:/datos_especificos/repres_nombre}"/>
+			<field name="REPRES_MOVIL" value="${xpath:/datos_especificos/repres_movil}"/>
+			<field name="REPRES_D_EMAIL" value="${xpath:/datos_especificos/repres_d_email}"/>
+		</mappings>
+	</table>
+        <table name="REC_APLAZ_FRACC">
+		<mappings>
+			<!-- Mapeos de los datos específicos de la solicitud -->
+			<field name="MUNICIPIO" value="${xpath:/datos_especificos/municipio_liq}"/>
+			<field name="N_LIQ_1" value="${xpath:/datos_especificos/n_liq_1}"/>
+			<field name="N_LIQ_2" value="${xpath:/datos_especificos/n_liq_2}"/>
+			<field name="N_LIQ_3" value="${xpath:/datos_especificos/n_liq_3}"/>
+			<field name="N_LIQ_4" value="${xpath:/datos_especificos/n_liq_4}"/>
+			<field name="N_LIQ_5" value="${xpath:/datos_especificos/n_liq_5}"/>
+			<field name="N_LIQ_6" value="${xpath:/datos_especificos/n_liq_6}"/>
+			<field name="N_LIQ_7" value="${xpath:/datos_especificos/n_liq_7}"/>
+			<field name="N_LIQ_8" value="${xpath:/datos_especificos/n_liq_8}"/>
+			<field name="N_LIQ_9" value="${xpath:/datos_especificos/n_liq_9}"/>
+			<field name="N_LIQ_10" value="${xpath:/datos_especificos/n_liq_10}"/>
+			<field name="N_LIQ_11" value="${xpath:/datos_especificos/n_liq_11}"/>
+			<field name="N_LIQ_12" value="${xpath:/datos_especificos/n_liq_12}"/>
+			<field name="N_LIQ_13" value="${xpath:/datos_especificos/n_liq_13}"/>
+			<field name="N_LIQ_14" value="${xpath:/datos_especificos/n_liq_14}"/>
+			<field name="N_LIQ_15" value="${xpath:/datos_especificos/n_liq_15}"/>
+			<field name="N_LIQ_16" value="${xpath:/datos_especificos/n_liq_16}"/>
+			<field name="N_LIQ_17" value="${xpath:/datos_especificos/n_liq_17}"/>
+			<field name="N_LIQ_18" value="${xpath:/datos_especificos/n_liq_18}"/>
+			<field name="N_LIQ_19" value="${xpath:/datos_especificos/n_liq_19}"/>
+			<field name="N_LIQ_20" value="${xpath:/datos_especificos/n_liq_20}"/>
+			<field name="N_LIQ_21" value="${xpath:/datos_especificos/n_liq_21}"/>
+			<field name="N_LIQ_22" value="${xpath:/datos_especificos/n_liq_22}"/>
+			<field name="N_LIQ_23" value="${xpath:/datos_especificos/n_liq_23}"/>
+			<field name="N_LIQ_24" value="${xpath:/datos_especificos/n_liq_24}"/>
+			<field name="APLAZAMIENTO" value="${xpath:/datos_especificos/aplazamiento}"/>
+			<field name="FRACCIONAMIENTO" value="${xpath:/datos_especificos/fraccionamiento}"/>
+			<field name="OPCION_A11" value="${xpath:/datos_especificos/opcion-a11}"/>
+			<field name="OPCION_A21" value="${xpath:/datos_especificos/opcion-a21}"/>
+			<field name="OPCION_A22" value="${xpath:/datos_especificos/opcion-a22}"/>
+			<field name="OPCION_B11" value="${xpath:/datos_especificos/opcion-b11}"/>
+			<field name="OPCION_B21" value="${xpath:/datos_especificos/opcion-b21}"/>
+			<field name="OPCION_B22" value="${xpath:/datos_especificos/opcion-b22}"/>
+			<field name="OPCION_B23" value="${xpath:/datos_especificos/opcion-b23}"/>
+		</mappings>
+	</table>
+</procedure>

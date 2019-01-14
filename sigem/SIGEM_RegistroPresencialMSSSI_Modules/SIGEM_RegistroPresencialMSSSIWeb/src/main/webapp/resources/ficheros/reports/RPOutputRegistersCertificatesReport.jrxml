@@ -1,0 +1,811 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Certificates" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="288"/>
+	<property name="net.sf.jasperreports.image.dpi" value="300"/>
+	<style name="table 1_CH" mode="Opaque" backcolor="#CCCCCC">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dataset_documentos">
+		<queryString language="xPath">
+			<![CDATA[/INFORME_RP/REGISTRO/DOCUMENTOS/DOCUMENTO]]>
+		</queryString>
+		<field name="NOMBRE" class="java.lang.String">
+			<fieldDescription><![CDATA[NOMBRE]]></fieldDescription>
+		</field>
+		<field name="TAMANIO" class="java.lang.String">
+			<fieldDescription><![CDATA[TAMANIO]]></fieldDescription>
+		</field>
+		<field name="HASH" class="java.lang.String">
+			<fieldDescription><![CDATA[HASH]]></fieldDescription>
+		</field>
+		<field name="ESTADO_ELABORACION" class="java.lang.String">
+			<fieldDescription><![CDATA[ESTADO_ELABORACION]]></fieldDescription>
+		</field>
+		<field name="COMENTARIOS" class="java.lang.String">
+			<fieldDescription><![CDATA[COMENTARIOS]]></fieldDescription>
+		</field>
+		<field name="CSV" class="java.lang.String">
+			<fieldDescription><![CDATA[CSV]]></fieldDescription>
+		</field>
+		<field name="FECHA_ALTA" class="java.lang.String">
+			<fieldDescription><![CDATA[FECHA_ALTA]]></fieldDescription>
+		</field>
+		<field name="FECHA_FIRMA" class="java.lang.String">
+			<fieldDescription><![CDATA[FECHA_FIRMA]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="REPORT_IMG_PATH" class="java.lang.String"/>
+	<queryString language="xPath">
+		<![CDATA[/INFORME_RP/REGISTRO]]>
+	</queryString>
+	<field name="FLD1" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD1]]></fieldDescription>
+	</field>
+	<field name="FLD9" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD9]]></fieldDescription>
+	</field>
+	<field name="FLD5_TEXT" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD5_TEXT]]></fieldDescription>
+	</field>
+	<field name="FLD8_TEXT" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD8_TEXT]]></fieldDescription>
+	</field>
+	<field name="FLD12_TEXT" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD12_TEXT]]></fieldDescription>
+	</field>
+	<field name="FLD13" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD13]]></fieldDescription>
+	</field>
+	<field name="PROCEEDING" class="java.lang.String">
+		<fieldDescription><![CDATA[PROCEEDING]]></fieldDescription>
+	</field>
+	<field name="FLD2" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD2]]></fieldDescription>
+	</field>
+	<field name="FLD5_ADDRESS" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD5_ADDRESS]]></fieldDescription>
+	</field>
+	<field name="FLD10_TEXT" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD10_TEXT]]></fieldDescription>
+	</field>
+	<field name="FLD11" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD11]]></fieldDescription>
+	</field>
+	<field name="DOCUMENTOS" class="java.lang.String">
+		<fieldDescription><![CDATA[DOCUMENTOS]]></fieldDescription>
+	</field>
+	<field name="FLD7_TEXT" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD7_TEXT]]></fieldDescription>
+	</field>
+	<field name="FLD14" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD14]]></fieldDescription>
+	</field>
+	<field name="FLD501" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD501]]></fieldDescription>
+	</field>
+	<field name="FLD502" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD502]]></fieldDescription>
+	</field>
+	<field name="FLD504" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD504]]></fieldDescription>
+	</field>
+	<field name="FLD505" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD505]]></fieldDescription>
+	</field>
+	<field name="FLD506" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD506]]></fieldDescription>
+	</field>
+	<field name="FLD503" class="java.lang.String">
+		<fieldDescription><![CDATA[FLD503]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="70" splitType="Prevent">
+			<staticText>
+				<reportElement x="285" y="6" width="110" height="16"/>
+				<textElement>
+					<font fontName="Verdana" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº. de Registro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="285" y="26" width="110" height="16"/>
+				<textElement>
+					<font fontName="Verdana" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Registro:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="395" y="6" width="140" height="16"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Verdana" size="10" isBold="true" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="395" y="26" width="140" height="16"/>
+				<textElement verticalAlignment="Top" markup="none">
+					<font fontName="Verdana" size="10"/>
+				</textElement>
+				<text><![CDATA[SALIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="285" y="46" width="110" height="16"/>
+				<textElement>
+					<font fontName="Verdana" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de Registro:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="395" y="46" width="140" height="16"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Verdana" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD2}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RealSize" isUsingCache="true">
+				<reportElement mode="Transparent" x="182" y="13" width="91" height="36">
+					<printWhenExpression><![CDATA[new Boolean(null != $F{FLD503} && $F{FLD503}.equals("1"))]]></printWhenExpression>
+				</reportElement>
+				<imageExpression class="java.lang.String"><![CDATA[$P{REPORT_IMG_PATH}+"logos/SIR.jpg"]]></imageExpression>
+			</image>
+			<image scaleImage="RetainShape" isUsingCache="false">
+				<reportElement mode="Transparent" x="0" y="0" width="167" height="46"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{REPORT_IMG_PATH}+"logos/logo.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="57" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="41" width="535" height="16"/>
+				<box bottomPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="11" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[JUSTIFICANTE DE SALIDA]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="535" height="18" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<textElement>
+					<font fontName="Verdana" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD5_TEXT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="8" y="18" width="525" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+					<printWhenExpression><![CDATA[$F{FLD5_ADDRESS} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Verdana" size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD5_ADDRESS}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="48" splitType="Stretch">
+			<printWhenExpression><![CDATA[$F{FLD9} != null && $F{FLD9}  != ""]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="12" width="535" height="17"/>
+				<textElement>
+					<font fontName="Verdana" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INTERESADOS]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="29" width="535" height="19" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="6">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="Verdana" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD9}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="211" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="12" width="535" height="17"/>
+				<textElement>
+					<font fontName="Verdana" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INFORMACIÓN DEL REGISTRO]]></text>
+			</staticText>
+			<frame>
+				<reportElement positionType="Float" x="0" y="29" width="535" height="21" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD13} != null && $F{FLD13} != ""]]></printWhenExpression>
+				</reportElement>
+				<box bottomPadding="0"/>
+				<staticText>
+					<reportElement stretchType="RelativeToBandHeight" x="10" y="6" width="142" height="14"/>
+					<textElement>
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Resumen:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="152" y="6" width="380" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<box leftPadding="0" bottomPadding="0">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="Verdana" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD13}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement positionType="Float" x="0" y="50" width="535" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD12_TEXT} != null && $F{FLD12_TEXT} != ""]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="0"/>
+				<staticText>
+					<reportElement stretchType="RelativeToBandHeight" x="10" y="6" width="142" height="14"/>
+					<textElement>
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Asunto:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="152" y="6" width="380" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<box leftPadding="0" bottomPadding="0">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="Verdana" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD12_TEXT}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement positionType="Float" x="0" y="110" width="535" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD10_TEXT} != null && $F{FLD10_TEXT} != ""]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="0"/>
+				<staticText>
+					<reportElement stretchType="RelativeToBandHeight" x="10" y="6" width="142" height="14"/>
+					<textElement>
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Tipo Transporte entrada:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="152" y="6" width="380" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<box leftPadding="0" bottomPadding="0">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="Verdana" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD10_TEXT}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement positionType="Float" x="0" y="130" width="535" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD11} != null && $F{FLD11} != ""]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="0"/>
+				<staticText>
+					<reportElement stretchType="RelativeToBandHeight" x="10" y="6" width="142" height="14"/>
+					<textElement>
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Número Transporte entrada:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="152" y="6" width="380" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<box leftPadding="0" bottomPadding="0">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="Verdana" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD11}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement positionType="Float" x="0" y="90" width="535" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD8_TEXT} != null && $F{FLD8_TEXT} != ""]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="0"/>
+				<staticText>
+					<reportElement stretchType="RelativeToBandHeight" x="10" y="6" width="142" height="14"/>
+					<textElement>
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Organismo Destino:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="152" y="6" width="380" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<box leftPadding="0" bottomPadding="0">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="Verdana" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD8_TEXT}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement positionType="Float" x="0" y="70" width="535" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD7_TEXT} != null && $F{FLD7_TEXT} != ""]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="0"/>
+				<staticText>
+					<reportElement stretchType="RelativeToBandHeight" x="10" y="6" width="142" height="14"/>
+					<textElement>
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Organismo Origen:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" x="152" y="6" width="380" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<box leftPadding="0" bottomPadding="0">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="Verdana" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD7_TEXT}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement positionType="Float" x="0" y="150" width="535" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD14} != null && $F{FLD14} != ""]]></printWhenExpression>
+				</reportElement>
+				<box bottomPadding="0"/>
+				<staticText>
+					<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="10" y="6" width="142" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<textElement>
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Observaciones:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="152" y="6" width="380" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<box leftPadding="0" bottomPadding="0">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="Verdana" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD14}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement positionType="Float" x="0" y="170" width="535" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD501} != null && $F{FLD501} != ""]]></printWhenExpression>
+				</reportElement>
+				<box bottomPadding="0"/>
+				<staticText>
+					<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="10" y="6" width="142" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<textElement>
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Expone:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="152" y="6" width="380" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<box leftPadding="0" bottomPadding="0">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="Verdana" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD501}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement positionType="Float" x="0" y="190" width="535" height="20" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD502} != null && $F{FLD502} != ""]]></printWhenExpression>
+				</reportElement>
+				<box bottomPadding="0"/>
+				<staticText>
+					<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="10" y="6" width="142" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<textElement>
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Solicita:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="152" y="6" width="380" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<box leftPadding="0" bottomPadding="0">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement>
+						<font fontName="Verdana" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{FLD502}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+		<band height="87" splitType="Prevent">
+			<printWhenExpression><![CDATA[$F{DOCUMENTOS} != null]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="6" width="535" height="17"/>
+				<textElement>
+					<font fontName="Verdana" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DOCUMENTOS]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 3" mode="Opaque" x="0" y="25" width="535" height="58" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#FFFFFF"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dataset_documentos">
+						<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JRXmlDataSource)$P{REPORT_DATA_SOURCE}).dataSource("/INFORME_RP/REGISTRO/DOCUMENTOS/DOCUMENTO")]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="123">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<box>
+								<pen lineWidth="0.5" lineColor="#666666"/>
+								<topPen lineWidth="0.5" lineColor="#666666"/>
+								<leftPen lineWidth="0.5" lineColor="#666666"/>
+								<bottomPen lineWidth="0.5" lineColor="#666666"/>
+								<rightPen lineWidth="0.5" lineColor="#666666"/>
+							</box>
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="123" height="30" forecolor="#000000" backcolor="#CCCCCC"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<text><![CDATA[Nombre]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="30" rowSpan="1">
+							<box>
+								<pen lineWidth="0.5" lineColor="#666666"/>
+								<topPen lineWidth="0.5" lineColor="#666666"/>
+								<leftPen lineWidth="0.5" lineColor="#666666"/>
+								<bottomPen lineWidth="0.5" lineColor="#666666"/>
+								<rightPen lineWidth="0.5" lineColor="#666666"/>
+							</box>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="123" height="30" isPrintWhenDetailOverflows="true"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Verdana" size="7"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="46">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="46" height="30" forecolor="#000000" backcolor="#CCCCCC"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<text><![CDATA[Tamaño (KB)]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="30" rowSpan="1">
+							<box>
+								<pen lineWidth="0.5" lineColor="#666666"/>
+								<topPen lineWidth="0.5" lineColor="#666666"/>
+								<leftPen lineWidth="0.5" lineColor="#666666"/>
+								<bottomPen lineWidth="0.5" lineColor="#666666"/>
+								<rightPen lineWidth="0.5" lineColor="#666666"/>
+							</box>
+							<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="0" width="46" height="30" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#FFFFFF"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{TAMANIO}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="102">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="102" height="30" forecolor="#000000" backcolor="#CCCCCC"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<text><![CDATA[Estado de elaboración]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="30" rowSpan="1">
+							<box>
+								<pen lineWidth="0.5" lineColor="#666666"/>
+								<topPen lineWidth="0.5" lineColor="#666666"/>
+								<leftPen lineWidth="0.5" lineColor="#666666"/>
+								<bottomPen lineWidth="0.5" lineColor="#666666"/>
+								<rightPen lineWidth="0.5" lineColor="#666666"/>
+							</box>
+							<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="0" width="102" height="30" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#FFFFFF"/>
+								<box leftPadding="2" rightPadding="2">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{ESTADO_ELABORACION}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="56">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="56" height="30" forecolor="#000000" backcolor="#CCCCCC"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<text><![CDATA[Fecha alta]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="30" rowSpan="1">
+							<box>
+								<pen lineWidth="0.5" lineColor="#666666"/>
+								<topPen lineWidth="0.5" lineColor="#666666"/>
+								<leftPen lineWidth="0.5" lineColor="#666666"/>
+								<bottomPen lineWidth="0.5" lineColor="#666666"/>
+								<rightPen lineWidth="0.5" lineColor="#666666"/>
+							</box>
+							<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="0" width="56" height="30" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#FFFFFF"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{FECHA_ALTA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="58">
+						<jr:tableHeader height="0" rowSpan="1"/>
+						<jr:tableFooter height="0" rowSpan="1"/>
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="58" height="30" forecolor="#000000" backcolor="#CCCCCC"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<text><![CDATA[Fecha firma]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="30" rowSpan="1">
+							<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="0" width="58" height="30" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#FFFFFF"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{FECHA_FIRMA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="150">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="150" height="15" forecolor="#000000" backcolor="#CCCCCC"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<text><![CDATA[Hash]]></text>
+							</staticText>
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="15" width="150" height="15" forecolor="#000000" backcolor="#CCCCCC"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<text><![CDATA[CSV]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="30" rowSpan="1">
+							<box>
+								<pen lineWidth="0.5" lineColor="#666666"/>
+								<topPen lineWidth="0.5" lineColor="#666666"/>
+								<leftPen lineWidth="0.5" lineColor="#666666"/>
+								<bottomPen lineWidth="0.5" lineColor="#666666"/>
+								<rightPen lineWidth="0.5" lineColor="#666666"/>
+							</box>
+							<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="0" width="150" height="15" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#FFFFFF"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{HASH}]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="15" width="150" height="15" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#FFFFFF"/>
+								<box leftPadding="0">
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+									<font fontName="Verdana" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{CSV}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="23" splitType="Prevent">
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="6" y="7" width="522" height="12" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD506} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="none">
+					<font fontName="Verdana" size="9" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["No acompaña documentación física ni otros soportes"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="6" y="7" width="522" height="12" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD505} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="none">
+					<font fontName="Verdana" size="9" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Acompaña documentación física (u otros soportes) complementaria"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="6" y="7" width="523" height="12" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$F{FLD504} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="none">
+					<font fontName="Verdana" size="9" isItalic="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Acompaña documentación física (u otros soportes) requerida"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="34" splitType="Stretch">
+			<printWhenExpression><![CDATA[$F{PROCEEDING} != null && $F{PROCEEDING} != ""]]></printWhenExpression>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="16">
+			<textField>
+				<reportElement x="415" y="0" width="80" height="16"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="495" y="0" width="40" height="16"/>
+				<textElement>
+					<font fontName="Verdana" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="99" height="16"/>
+				<textElement textAlignment="Left" markup="none">
+					<font fontName="Verdana" size="7"/>
+				</textElement>
+				<text><![CDATA[Carácter Restringido]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

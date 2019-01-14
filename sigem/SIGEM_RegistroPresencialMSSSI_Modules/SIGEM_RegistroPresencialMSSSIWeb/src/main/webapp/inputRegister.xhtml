@@ -1,0 +1,1632 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head >
+</h:head>
+<h:body>
+	<ui:composition template="/template/layout.xhtml">
+		<ui:define name="head">
+			<script type="text/javascript" src="#{webParam.entryParameters['URLRoot']}/js/calendar.js"></script>
+			<script type="text/javascript" src="#{webParam.entryParameters['URLRoot']}/js/dialog.js"></script>
+			<script type="text/javascript" src="#{webParam.entryParameters['URLRoot']}/js/distribution.js"></script>
+			<script type="text/javascript" src="#{webParam.entryParameters['URLRoot']}/js/registerInput.js"></script>
+
+			<script type="text/javascript" language="javascript" src="#{webParam.entryParameters['URLRoot']}/js/afirma/common-js/miniapplet.js"></script>
+			<script type="text/javascript" language="javascript" src="#{webParam.entryParameters['URLRoot']}/js/afirma/common-js/firma3f.js"></script>
+	
+		</ui:define>
+
+		<ui:define name="breadcrumb">
+		<h:form id="bread" >
+			<h:panelGroup id="panel" layout="block">
+				<ol>
+					<li><h:commandLink  value="#{msgs.labelInicio}" action="goInicioForm" actionListener="#{booksAction.clean}" /></li>
+					<ui:fragment rendered="${inputRegisterAction.origen == 'B'}">
+						<li><h:commandLink  value="#{J_BOOK.idocarchhdr.name}"
+								action="goSearchInForm" actionListener="#{booksAction.clean}" /></li>
+					</ui:fragment>
+					<ui:fragment rendered="${inputRegisterAction.origen == 'D'}">
+						<li><h:commandLink value="#{msgs.labelDistribucion}"
+								action="goDistribucionForm" actionListener="#{booksAction.clean}" /></li>
+					</ui:fragment>
+					<ui:fragment rendered="${inputRegisterAction.origen == 'IR'}">
+						<li><h:commandLink value="#{msgs.labelIntRegistral}"
+								action="goSearchOutInterchangeForm" actionListener="#{booksAction.clean}" /></li>
+					</ui:fragment>
+					<ui:fragment rendered="${inputRegisterAction.origen == 'I'}">
+						<li><h:commandLink value="#{msgs.labelIntRegistral}"
+								action="goSearchOutInterchangeForm" actionListener="#{booksAction.clean}" /></li>
+					</ui:fragment>
+					<ui:fragment
+						rendered="${empty inputRegisterAction.inputRegisterBean.fld1}">
+						<li><h:outputText value="#{msgs.labelNuevoRegistroEntrada}" /></li>
+					</ui:fragment>
+					<ui:fragment
+						rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and (not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR)}">
+						<li><h:outputText
+								value="#{msgs.labelModificarRegistroEntrada}" /></li>
+					</ui:fragment>
+					<ui:fragment
+						rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and (inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR)}">
+						<li><h:outputText
+								value="#{msgs.labelConsultarRegistroEntrada}" /></li>
+					</ui:fragment>
+				</ol>
+			</h:panelGroup>
+			</h:form>
+		</ui:define>
+		<ui:define name="content">
+			<h:panelGroup id="panel1" layout="block">
+				<ui:fragment
+					rendered="${empty inputRegisterAction.inputRegisterBean.fld1}">
+					<h2>
+						<h:outputText value="#{msgs.labelNuevoRegistroEntrada}" />
+						<ui:fragment rendered="${inputRegisterAction.origen == 'B'}">
+							<div class="bookStyle">
+								<img
+									src="#{webParam.entryParameters['URLRoot']}/img/books.png" />	
+								<div style="display: table-cell; padding: 0px; vertical-align: top;">
+									<h:outputText value="#{J_BOOK.idocarchhdr.name}" />
+								</div>
+							</div>
+						</ui:fragment>
+					</h2>
+				</ui:fragment>
+				<ui:fragment
+					rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and (not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR)}">
+					<h2>
+						<h:outputText id="label"
+							value="#{msgs.labelModificarRegistroEntrada}" />
+						<ui:fragment rendered="${inputRegisterAction.origen == 'B'}">
+							<div class="bookStyle">
+								<img
+									src="#{webParam.entryParameters['URLRoot']}/img/books.png" />	
+								<div style="display: table-cell; padding: 0px; vertical-align: top;">
+									<h:outputText value="#{J_BOOK.idocarchhdr.name}" />
+								</div>
+							</div>
+						</ui:fragment>
+					</h2>
+				</ui:fragment>
+				<ui:fragment
+					rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and (inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR)}">
+					<h2>
+						<h:outputText id="labelC"
+							value="#{msgs.labelConsultarRegistroEntrada}" />
+						<ui:fragment rendered="${inputRegisterAction.origen == 'B'}">
+							<div class="bookStyle">
+								<img
+									src="#{webParam.entryParameters['URLRoot']}/img/books.png" />	
+								<div style="display: table-cell; padding: 0px; vertical-align: top;">
+									<h:outputText value="#{J_BOOK.idocarchhdr.name}" />
+								</div>
+							</div>
+						</ui:fragment>
+					</h2>
+				</ui:fragment>
+				<div class="sombra"></div>
+				<div class="enlaces">
+					<h:form id="formLink">
+					<p:remoteCommand update="formLink" name="linkRefresh"/>
+					<p:remoteCommand update=":accordion:inputRegisterAttachedDocumentsForm:anexos, :accordion:inputRegisterAttachedDocumentsForm:botoneraDocumentos, :accordion:documentHistoricalForm" name="docRefresh"/>
+					<p:remoteCommand update=":accordion:historicalForm" name="histRefresh"/>
+					<p:remoteCommand update=":accordion:documentHistoricalForm" name="histDocRefresh"/>
+					<div style="text-align: center;">
+						<p:media id="pdfViewer" rendered="#{not empty reportsLabelAction.file}" value="#{reportsLabelAction.file}" width="1px" height="1px" />
+					</div>
+						<ul>
+							<ui:fragment
+								rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 
+									and J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly 
+									 and inputRegisterAction.origen == 'B' and J_SESSIONINF.officeEnabled=='true'}">
+								<li><p:commandLink value="#{msgs.labelNuevoRegistroEntrada}"
+										immediate="true"
+										actionListener="#{inputRegisterAction.onRowSelectNavigateBottomNuevo}" />
+								</li>
+							</ui:fragment>
+							<ui:fragment rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 
+									and J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly 
+							 and inputRegisterAction.origen == 'B' and J_SESSIONINF.officeEnabled=='true'}">
+									<li><p:commandLink styleClass="copiar" id="copyButton"
+											title="copiar" 
+											value="#{msgs.labelBotonCopiarDetail}"
+											actionListener="#{inputRegisterAction.onRowSelectNavigateBottomCopy}">
+										</p:commandLink></li>
+								</ui:fragment>
+							<ui:fragment
+								rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly 
+									 and inputRegisterAction.origen == 'B' and J_SESSIONINF.officeEnabled=='true'}">
+								<li><p:commandLink value="#{msgs.labelRecibo}" ajax="false" 
+										onclick="PrimeFaces.monitorDownload(startRec, stopRec);"
+										actionListener="#{reportsInputRegisterAction.buildCertificateReport}"
+										immediate="true">
+										<p:fileDownload value="#{reportsInputRegisterAction.file}" />
+									</p:commandLink>
+									
+									</li>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and not empty inputRegisterAction.inputRegisterBean.fld1004
+								and J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly 
+									 and inputRegisterAction.origen == 'B' and J_SESSIONINF.officeEnabled=='true'}">
+								<li><p:commandLink value="#{msgs.labelActualizarRecibo}" ajax="false"
+										onclick="PrimeFaces.monitorDownload(startRec, stopRec);" 
+										actionListener="#{reportsInputRegisterAction.reBuildCertificateReport}"
+										immediate="true">
+											<p:confirm header="Confirmation"  message="" icon="ui-icon-alert" />
+										<p:fileDownload value="#{reportsInputRegisterAction.file}" />
+									</p:commandLink></li>
+									    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" id="confirmDialogReport">
+									        <f:facet name="message">
+												<h:outputText value="Se generará un nuevo Acuse de Recibo" />
+												<br />
+												<h:outputText value="con un CSV distino, desea continuar?" />
+												</f:facet>
+									        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									    </p:confirmDialog>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and J_PARAMBOOK.canModify and not J_PARAMBOOK.readOnly 
+									 and inputRegisterAction.origen == 'B' and J_SESSIONINF.officeEnabled=='true'}">
+								<li><p:commandLink value="#{msgs.labelEtiqueta}" ajax="false"
+										onclick="PrimeFaces.monitorDownload(startLabel, stopLabel);" 
+										actionListener="#{reportsLabelAction.buildLabelReport}"
+										immediate="true">
+										<p:fileDownload value="#{reportsLabelAction.file}"/>
+									</p:commandLink></li>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR and inputRegisterAction.origen == 'B'
+								 and J_PARAMBOOK.canDistRegistersDist and J_SESSIONINF.officeEnabled=='true' and inputRegisterAction.inputRegisterBean.fld6 != 1 and inputRegisterAction.canDistr}">
+								<li><p:commandLink value="#{msgs.labelDistribuir}"
+										action="#{inputRegisterAction.reinitDis}" process="@form"
+										update=":distribuirform:panelDigdlgRedistribuir,:distribuirform:messagesDis"
+										oncomplete="PF('dlgDistribuir').show()" immediate="true" /></li>
+							</ui:fragment>
+							<ui:fragment
+								rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR and (inputRegisterAction.origen == 'B' or inputRegisterAction.origen == 'I' or inputRegisterAction.origen == 'IR') and J_PARAMBOOK.canOperationIR}">
+								<li><p:commandLink value="#{msgs.labelIntRegistral}" ajax="false"
+										actionListener="#{inputRegisterAction.goRegInterchangeForm}" />
+								</li>
+							</ui:fragment>
+						</ul>
+						
+					</h:form>
+					<h:form id="distribuirform">
+						<p:dialog header="Distribuir" widgetVar="dlgDistribuir"
+							id="dlgDistribuir" resizable="false" modal="true">
+							<ui:include src="dialog/dialogDistr.xhtml" />
+						</p:dialog>
+					</h:form>
+					<h:form id="interesadosform">
+
+						<!-- VENTANA PARA AÑADIR INTERESADO -->
+						<p:dialog header="#{msgs.fld9label}" widgetVar="intDialog"
+							resizable="false" id="intDlg" showEffect="fade" modal="true">
+							<ui:include src="dialog/dialogInterInput.xhtml" />
+						</p:dialog>
+
+						<!-- [Dipucr-Manu] + Nuevo módulo interesados con terceros. VENTANA PARA AÑADIR INTERESADO -->
+						<p:dialog header="#{msgs.fld9label}" widgetVar="intDialogBuscar"
+							resizable="false" id="intDlgBuscar" showEffect="fade" modal="true">
+							<ui:include src="dialog/dialogInterInputBuscar.xhtml" />
+						</p:dialog>										
+					</h:form>
+				</div>
+				<c:set var="origen"
+					value="#{(inputRegisterAction.origen == 'D')? 'distribucion': 'salida'}" />
+				<div id="${origen}">
+					<h:form id="messagesform">
+						<p:messages id="messages" showDetail="false" closable="true"
+							escape="false" />
+					</h:form>
+					<p:accordionPanel id="accordion" dynamic="true"
+						activeIndex="#{inputRegisterAction.myCurrentTab}">
+						<p:ajax event="tabChange" onstart="PF('statusDialog').show();"
+							oncomplete="PF('statusDialog').hide();"
+							listener="#{inputRegisterAction.changeListener}" />
+						<c:set var="regDataNotEmptyTitle"
+							value="${msgs.labelFichaRegistroEntrada} [ ${inputRegisterAction.inputRegisterBean.fld1} ]" />
+						<p:tab
+							title="#{(not empty inputRegisterAction.inputRegisterBean.fld1) ? regDataNotEmptyTitle : msgs.labelFichaRegistroEntrada}"
+							id="inputRegisterData">
+							<fieldset>
+								<h:form id="inputRegisterDataForm">
+								<script type="text/javascript">
+									$(function(){
+										  $('form').on('keypress', function(event){
+										    if(event.which === 13 ){
+										        event.preventDefault();
+										        if ($(event.target).is('textarea')){
+										        	event.target.value = event.target.value +"\n";
+										        }
+										      return false;
+										    }
+										  });
+									});
+								</script>
+									<h:inputHidden id="fdrid"
+										value="#{inputRegisterAction.inputRegisterBean.fdrid}" />
+									<h:inputHidden id="origen"
+										value="#{inputRegisterAction.origen}" />
+									<!--  Manu -->
+									<ui:fragment
+										rendered="${not empty inputRegisterAction.inputRegisterBean.fld1}">
+										<label for="inputRegisterDataForm:fld1" class="general">
+											<span class="label">
+												<h:outputText id="fld1Label" value="#{msgs.fld1label}" />
+											</span>
+											<p:inputText id="fld1" value="#{inputRegisterAction.inputRegisterBean.fld1}" readonly="true" label="#{msgs.fld1label}" style="width: 15%;"/>
+											<span class="label" style="width: 10%;">
+												<h:outputText id="fld2Label" value="#{msgs.fld2label}" />
+											</span> 
+											<p:inputText id="fld2_1" value="#{inputRegisterAction.inputRegisterBean.fld2}" readonly="true" label="#{msgs.fld2label}" style="width: 15%;">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" locale="es_ES" timeZone="Europe/Paris"/>
+											</p:inputText>
+											<span class="label" style="width: 5%;">
+												<h:outputText id="fld3Label" value="#{msgs.fld3label}" />
+											</span>
+											<p:inputText id="fld3" value="#{inputRegisterAction.inputRegisterBean.fld3}" readonly="true" label="#{msgs.fld4label}" style="width: 15%;"/>
+											<span class="label" style="width: 5%;">
+												<h:outputText id="fld6Label" value="#{msgs.fld6label}"/>
+											</span>
+											<p:inputText id="fld6" value="#{inputRegisterAction.inputRegisterBean.fld6Name}" readonly="true" label="#{msgs.fld6label}" style="width: 7%;"/>
+										</label>
+									</ui:fragment>
+									<!--  Manu -->
+									<ui:fragment
+										rendered="${not empty inputRegisterAction.inputRegisterBean.fld1}">
+										<label for="inputRegisterDataForm:fld5" class="general">
+											<span class="label"><h:outputText id="fld5Label"
+													value="#{msgs.fld5label}" /></span> <c:set var="ofic"
+												value="#{inputRegisterAction.inputRegisterBean.fld5.acron} #{inputRegisterAction.inputRegisterBean.fld5.name}" />
+											<p:inputText id="fld5"
+												value="#{(empty inputRegisterAction.inputRegisterBean.fld5) ? '' : ofic}"
+												readonly="true" label="#{msgs.fld5label}">
+											</p:inputText>
+										</label>
+									</ui:fragment>
+									<!-- Manu -->
+									<label for="inputRegisterDataForm:fld503" class="general">
+										<span class="label"><h:outputText id="fld503Label" value="#{msgs.fld503Label}" /></span> 
+										<p:selectOneMenu id="fld503" binding="#{fld503}" value="#{inputRegisterAction.inputRegisterBean.fld503}">
+											<f:selectItem itemLabel="No es para intercambio registral" itemValue="0" />
+											<f:selectItem itemLabel="Es para intercambio registral" itemValue="1" />
+											<p:ajax event="change" process="@this" update="panelDatosIR" />												
+										</p:selectOneMenu>									
+									</label>
+									<!-- Manu -->						
+									
+									<label for="form:fld7" class="general"> <span
+										class="label"><h:outputText id="fld7Label"
+												value="#{msgs.fld7label}" /></span> <c:set var="orgPadre"
+											value=" (#{org.nameOrgFather})" /> <c:set var="organismo"
+											value="#{org.code} #{org.name}" /> 
+											
+											<p:autoComplete
+											style="width:400"
+											value="#{inputRegisterAction.inputRegisterBean.fld7}"
+											id="fld7"
+											completeMethod="#{validationListAction.completeOrgOrigen}"
+											readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}" minQueryLength="3"
+											var="org" queryDelay="400" 
+											itemLabel="#{(empty org) ? '' : fn:trim(organismo)}"
+											itemValue="#{org}" escape="false" label="#{msgs.fld7label}"
+											converter="orgConverterOrigin" forceSelection="true"
+											scrollHeight="200" >
+											<f:validator validatorId="registerUnitInterestedValidator" />
+											<f:attribute name="interested" value="#{interested}" />
+											<f:attribute name="fld503" value="#{fld503}" />
+											<f:attribute name="type" value="E" />
+											<p:column>
+												<h:outputText styleClass="organismo"
+													value="#{org.code} #{org.name}" />
+												<br />
+												<h:outputText styleClass="organismopadre"
+													value="#{orgPadre}" />
+												<div class="ut">
+													<ui:fragment rendered="${org.scrTypeadm.id == 1}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png" 
+																			title="#{msgs.isownOrg}" />														
+														</ui:fragment>
+										            	<ui:fragment rendered="${org.isTramUnit}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png" 
+																			title="#{msgs.isTramUnit}" />														
+														</ui:fragment>
+														
+													</div>
+											</p:column>
+											
+										</p:autoComplete>
+										 <p:commandButton id="OriginButton" styleClass="organismobusq"
+											rendered="#{not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}"
+											icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"
+											inmediate="true" process="@this"
+											actionListener="#{searchUnitsAction.chooseUnits}">
+											<p:ajax event="dialogReturn"   process="@this fld7" inmediate="true" 
+												listener="#{inputRegisterAction.updateOrigin}" update="fld7"  oncomplete="document.getElementById('accordion:inputRegisterDataForm:fld7_input').focus()" />
+										</p:commandButton>
+									</label>
+									<label for="form:fld8" class="general"> 
+										<span class="label">
+											<h:outputText id="fld8Label" value="#{msgs.fld8label}" /> *
+										</span> 
+										<p:autoComplete 
+											style="width:400"
+											value="#{inputRegisterAction.inputRegisterBean.fld8}"
+											label="#{msgs.fld8label}" id="fld8"
+											completeMethod="#{validationListAction.completeOrgDestino}"
+											escape="false" readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}"
+											minQueryLength="3" var="org" queryDelay="400" required="true"
+											itemLabel="#{(empty org) ? '' : fn:trim(organismo)}" 
+											itemValue="#{org}" converter="orgConverterDestination" 
+											forceSelection="true" scrollHeight="200">
+											
+											<p:column>
+												<h:outputText styleClass="organismo" value="#{org.code} #{org.name}" />
+												<br />
+												<h:outputText styleClass="organismopadre" value="#{orgPadre}" />
+												<div class="ut">
+													<ui:fragment rendered="${org.scrTypeadm.id == 1}">
+														<img src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png" title="#{msgs.isownOrg}" />														
+													</ui:fragment>
+											            	<ui:fragment rendered="${org.isTramUnit}">
+														<img src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png" title="#{msgs.isTramUnit}" />														
+													</ui:fragment>														
+												</div>
+											</p:column>
+										</p:autoComplete> 
+										<p:commandButton id="DestinationButton"
+											styleClass="organismobusq"
+											rendered="#{not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}"
+											icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"
+											inmediate="true" process="@this" 
+											actionListener="#{searchUnitsAction.chooseUnits}">
+											<p:ajax event="dialogReturn"  process="@this fld8" inmediate="true" 
+												listener="#{inputRegisterAction.updateDestination}" update="fld8"  oncomplete="document.getElementById('accordion:inputRegisterDataForm:fld8_input').focus()" />
+										</p:commandButton>
+										
+									</label>
+									<label for="inputRegisterDataForm:fld9" class="general">
+										<span class="label"> 
+											<h:outputText id="fld9Label" value="#{msgs.fld9label}" />
+										</span>
+							<!-- Manu -->
+										<ui:fragment rendered="${not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}">
+											<p:autoComplete id="autoCompleteInteresado"
+												minQueryLength="4"
+												maxResults="10"
+												value="#{inputRegisterAction.inputRegisterBean.interesado}" 
+												completeMethod="#{validationListAction.completeInteresado}"
+												effect="fade"
+												var="interesado"
+												itemLabel="#{(empty interesado) ? '' : interesado.docIdentidad}#{(empty interesado.docIdentidad) ? '' : ' - '}#{(empty interesado) ? '' : interesado.razonSocial}#{(empty interesado.nombre) ? '' : interesado.nombre}#{(empty interesado.nombre) ? '' : ' '}#{(empty interesado.papellido) ? '' : interesado.papellido}#{(empty interesado.papellido) ? '' : ' '}#{(empty interesado.sapellido) ? '' : interesado.sapellido}"
+												converter="interesadoConverter"
+												itemValue="#{interesado}">
+												<p:column>
+													<h:outputText value="#{interesado.docIdentidad} - #{interesado.razonSocial} #{interesado.nombre} #{interesado.papellido} #{interesado.sapellido}" />
+												</p:column>											
+												<p:ajax event="itemSelect" listener="#{inputRegisterAction.addInteresado}" global="false" update="@this,:accordion:inputRegisterDataForm:TInteresados"/>
+											</p:autoComplete>
+										</ui:fragment>
+										<ui:fragment rendered="${not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}">
+											<p>
+											*<p:commandLink styleClass="nuevo" id="btn_busqueda_avanzada_terceros"
+												value="#{msgs.labelBotonAvanzadaTerceros}" immediate="true"
+												alt="#{msgs.labelBotonAvanzadaTerceros}"
+												title="#{msgs.labelBotonAvanzadaTerceros}"
+												process="@this" action="#{inputRegisterAction.tercerosAction.reinitBusqueda}"
+												update=":interesadosform:gridIBuscar,:interesadosform:messagesIntBuscar,:interesadosform:botonesIntBuscar,:accordion:inputRegisterDataForm:TInteresados,:interesadosform:TInteresadosAniadidos"
+												oncomplete="PF('intDialogBuscar').show()"
+												style="font-size:0.9em;width:70px;" />
+											</p>
+										</ui:fragment>
+							<!-- Manu -->
+									 <!-- TABLA PARA MOSTRAR REPRESENTANTES --> 
+										<p:dataTable
+											id="TInteresados" binding="#{interested}"
+											value="#{inputRegisterAction.inputRegisterBean.interesados}"
+											var="int">
+											<p:column width="25%">
+												<f:facet name="header">
+													<h:outputText value="#{msgs.labelInteresados}" />
+												</f:facet>
+												<ui:fragment rendered="${int.tipo =='P'}">
+													<h:outputText
+														value="#{int.docIdentidad} #{int.nombre} #{int.papellido} #{int.sapellido}" />
+												</ui:fragment>
+												<ui:fragment rendered="${int.tipo =='J'}">
+													<h:outputText
+														value="#{int.docIdentidad} #{int.razonSocial}" />
+												</ui:fragment>
+											</p:column>
+											<p:column width="23%">
+												<f:facet name="header">
+													<h:outputText value="#{msgs.labelDireccion}" />
+												</f:facet>
+												<ui:fragment>
+													<h:outputText value="#{int.direccionFisicaPrincipal}" />
+												</ui:fragment>
+											</p:column>
+											<p:column width="25%">
+												<f:facet name="header">
+													<h:outputText value="#{msgs.labelRepresentante}" />
+												</f:facet>
+												<ui:fragment rendered="${int.representante.tipo =='P'}">
+													<h:outputText
+														value="#{int.representante.docIdentidad} #{int.representante.nombre} #{int.representante.papellido} #{int.representante.sapellido}" />
+												</ui:fragment>
+												<ui:fragment rendered="${int.representante.tipo =='J'}">
+													<h:outputText
+														value="#{int.representante.docIdentidad} #{int.representante.razonSocial}" />
+												</ui:fragment>
+											</p:column>
+											<p:column width="23%">
+												<f:facet name="header">
+													<h:outputText value="#{msgs.labelDireccion}" />
+												</f:facet>
+												<ui:fragment>
+													<h:outputText value="#{int.representante.direccionFisicaPrincipal}" />
+												</ui:fragment>
+											</p:column>
+											<p:column style="width:7px">
+												<f:facet name="header">
+												</f:facet>												
+												<p:commandLink value="#{msgs.labelBotonBorrar}"
+													rendered="${not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}"
+													update="@form:TInteresados" process="@form:TInteresados"
+													style="font-size:1.0em;">
+													<p:collector value="#{int}"
+														removeFrom="#{inputRegisterAction.inputRegisterBean.interesados}" />
+												</p:commandLink>
+											</p:column>
+										</p:dataTable>
+										<p>&nbsp;&nbsp;</p>
+									</label>
+									<h:inputHidden id="fld9"
+										value="#{inputRegisterAction.inputRegisterBean.fld9}" />
+										
+									<label for="inputRegisterDataForm:fld16" class="general">
+										<span class="label">
+											<h:outputText id="fld16Label" value="#{msgs.fld16label}" />
+										</span>
+										<c:set var="asunto" value="#{asun.code} #{asun.matter}" /> 
+										<ui:fragment rendered="${not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}">
+											<p:selectOneMenu
+												value="#{inputRegisterAction.inputRegisterBean.fld16}"
+												id="fld16" 
+												label="#{msgs.fld16label}" 
+												binding="#{fld16}"
+												converter="asuntConverter" 
+												panelStyle="width:150px"
+												effect="fade" 
+												filter="true" 
+												filterMatchMode="contains"
+												valueChangeListener="#{inputRegisterAction.actualizaDestino}">
+												<f:selectItem itemLabel="" itemValue="" />
+												<f:selectItems value="#{validationListAction.listAsuntos}" 
+													var="asuntos" 
+													itemLabel="#{asuntos.code} #{asuntos.matter}" 
+													itemValue="#{asuntos}" />
+												<p:ajax event="change" update="inputRegisterDataForm:fld8"/>
+											</p:selectOneMenu>
+										</ui:fragment> 
+										<ui:fragment rendered="${inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}">
+											<p:inputText id="fld16_1" 
+												value="#{inputRegisterAction.inputRegisterBean.fld16.code} #{inputRegisterAction.inputRegisterBean.fld16.matter}"
+												readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}" />
+										</ui:fragment>
+									</label>
+
+									<label for="inputRegisterDataForm:fld17" class="general">
+										<span class="label"><h:outputText id="fld17Label" value="#{msgs.fld17label}" /> *</span> 
+										<p:inputTextarea id="fld17" label="#{msgs.fld17label}" 
+											required="true"
+											value="#{inputRegisterAction.inputRegisterBean.fld17}"
+											autoResize="false" rows="5" 
+											readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}"
+											onblur="this.value=this.value.replace(/€/g,'EUR').split('\n').join(' ');">
+											<f:validateLength maximum="240" />
+										</p:inputTextarea>
+									</label>
+									<label for="inputRegisterDataForm:fld19" class="general">
+										<span class="label"><h:outputText id="fld19Label"
+												value="#{msgs.fld19label}" /></span> <p:inputText id="fld19"
+											label="#{msgs.fld19label}"  
+											value="#{inputRegisterAction.inputRegisterBean.fld19}"
+											readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}">
+											<f:validateLength maximum="80" />
+										</p:inputText>
+									</label>
+									
+								<!-- Manu -->									
+									<h:panelGroup id="panelDatosIR">
+										<label for="inputRegisterDataForm:fld10" class="general">
+											<span class="label"><h:outputText id="fld10Label"
+													value="#{msgs.fld10label}" /> <h:outputText id="obligatorioRegOriginalLabel"
+													value=" #{msgs.obligatorioLabellabel} " rendered="${inputRegisterAction.inputRegisterBean.fld503 == 1}"/> </span> <p:inputText id="fld10"
+												label="#{msgs.fld10label}"  style="width: 575px;"
+												value="#{inputRegisterAction.inputRegisterBean.fld10}"
+												readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}">
+												<f:validateLength maximum="20" />
+												<f:attribute name="fld1003" value="#{fld1003}" />
+												<f:attribute name="fld503" value="#{fld503}" />
+												<f:validator validatorId="registerRequiredNumRegisterValidator" />
+												<f:validator validatorId="registerOriginalNumberValidator" />
+											</p:inputText>
+											<p:selectOneMenu id="fld1003" label="#{msgs.fld1003label}" style="width: 125px !important;min-width:7em !important;"
+													value="#{inputRegisterAction.inputRegisterBean.fld1003}" binding="#{fld1003}"
+													readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}"
+													rendered="${inputRegisterAction.inputRegisterBean.fld503 == 1}">													
+													<f:selectItem itemLabel="Obligatorio" itemValue="1" />
+													<f:selectItem itemLabel="No obligatorio" itemValue="0" />										
+											</p:selectOneMenu>
+<!-- 											<h:inputHidden id="fld503"  binding="#{fld503}" value="#{inputRegisterAction.inputRegisterBean.fld503}" /> -->
+										</label>
+										<label for="inputRegisterDataForm:fld11" class="general">
+											<span class="label"><h:outputText id="fld11Label"
+													value="#{msgs.fld11label}" /></span> <ui:fragment
+												rendered="${not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}">
+												<p:selectOneMenu id="fld11" label="#{msgs.fld11label}"
+													value="#{inputRegisterAction.inputRegisterBean.fld11}"
+													readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}">
+													<f:selectItem itemLabel="" itemValue="" />
+													<f:selectItem itemLabel="Entrada" itemValue="1" />
+													<f:selectItem itemLabel="Salida" itemValue="2" />
+												</p:selectOneMenu>
+											</ui:fragment> <ui:fragment rendered="${inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}">
+												<p:inputText id="fld11_1"
+													value="#{(inputRegisterAction.inputRegisterBean.fld11 == 1) ? 'Entrada' : ((inputRegisterAction.inputRegisterBean.fld11 == 0)?'Salida':'' )}"
+													readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}" />
+											</ui:fragment>
+										</label>
+										<label for="inputRegisterDataForm:fld12" class="general">
+											<span class="label"><h:outputText id="fld12Label"
+													value="#{msgs.fld12label}" /></span> <ui:fragment
+												rendered="${not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}">
+												<p:calendar locale="es" id="fld12" label="#{msgs.fld12label}"
+													navigator="true" showButtonPanel="false"
+													pattern="dd/MM/yyyy"
+													value="#{inputRegisterAction.inputRegisterBean.fld12}"
+													showOn="button" readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}">
+													<f:convertDateTime pattern="dd/MM/yyyy" type="date"
+														locale="es_ES" timeZone="Europe/Paris" />
+												</p:calendar>
+											</ui:fragment> <ui:fragment rendered="${inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}">
+												<p:inputText id="fld12_1" label="#{msgs.fld12label}"
+													value="#{inputRegisterAction.inputRegisterBean.fld12}"
+													readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}">
+													<f:convertDateTime pattern="dd/MM/yyyy" type="date"
+														locale="es_ES" timeZone="Europe/Paris" />
+												</p:inputText>
+											</ui:fragment>
+	
+										</label>
+										<label for="inputRegisterDataForm:fld14" class="general">
+											<span class="label">
+												<h:outputText id="fld14Label" value="#{msgs.fld14label}" /> 
+												<h:outputText id="obligatorioTransporteLabel"
+													value=" #{msgs.obligatorioLabellabel} " 
+													rendered="${inputRegisterAction.inputRegisterBean.fld503 == 1}"/> 
+											</span> 
+											<ui:fragment
+												rendered="${not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}">
+												<p:selectOneMenu id="fld14" label="#{msgs.fld14label}"
+													style="width: 126px;"  required="#{inputRegisterAction.inputRegisterBean.fld503 == 1 }"
+													value="#{inputRegisterAction.inputRegisterBean.fld14}">
+													<f:selectItem itemValue="" itemLabel="" />
+													<f:selectItems
+														value="#{validationListAction.listTransportes}" var="trans"
+														itemValue="0#{trans.id}" itemLabel="#{trans.transport}" />
+												</p:selectOneMenu>
+											</ui:fragment>
+											 <ui:fragment rendered="${inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}">
+												<p:inputText id="fld14_1" label="#{msgs.fld14label}"
+													value="#{inputRegisterAction.inputRegisterBean.fld14Name}"
+													readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}" />
+											</ui:fragment>
+										</label>								
+									</h:panelGroup>
+									<!--  Manu -->
+
+
+									<label for="inputRegisterDataForm:fld15" class="general">
+										<span class="label"><h:outputText id="fld15Label"
+												value="#{msgs.fld15label}" /></span> <p:inputText id="fld15"
+											label="#{msgs.fld15label}" 
+											value="#{inputRegisterAction.inputRegisterBean.fld15}"
+											readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}">
+											<f:validateLength maximum="20" />
+										</p:inputText>
+									</label>
+									<label for="inputRegisterDataForm:selectedDocSIR" class="general">
+										<span class="label"><h:outputText id="selectedDocSIRLabel"
+												value="#{msgs.selectedDocSIRLabel}" /> *</span> 
+											<p:outputPanel id="selectedDocSIRPanel"  style="margin-bottom: 12px;font-size: 0.85em;display: inline-block;">
+											<p:selectOneRadio 
+												value="#{inputRegisterAction.selectedDocSIR}"
+												id="selectedDocSIR" label="#{msgs.selectedDocSIRLabel}"
+												  disabled="${inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}" layout="custom" columns="1" required="true">
+												<f:selectItem itemLabel="#{msgs.fld506Text}" itemValue="fld506" />
+												<f:selectItem itemLabel="#{msgs.fld505Text}" itemValue="fld505" />
+												<f:selectItem itemLabel="#{msgs.fld504Text}" itemValue="fld504" />										
+											</p:selectOneRadio>
+											 <h:panelGrid columns="3" cellpadding="5">
+										            <p:radioButton id="opt506" for="selectedDocSIR" itemIndex="0" />
+										            <img
+														src="#{webParam.entryParameters['URLRoot']}/img/docfld506.png" />
+										            <h:outputLabel for="opt506" value="#{msgs.fld506Text}" />
+										            <p:radioButton id="opt505" for="selectedDocSIR" itemIndex="1" />
+										            <img
+														src="#{webParam.entryParameters['URLRoot']}/img/docfld505.png" />
+										            <h:outputLabel for="opt505" value="#{msgs.fld505Text}" />
+										            <p:radioButton id="opt504" for="selectedDocSIR" itemIndex="2" />
+										            <img
+														src="#{webParam.entryParameters['URLRoot']}/img/docfld504.png" />
+										            <h:outputLabel for="opt504" value="#{msgs.fld504Text}" />
+										      </h:panelGrid>
+										      </p:outputPanel>
+									</label>	
+									<label for="inputRegisterDataForm:fld18" class="general">
+											<span class="label">
+												<h:outputText id="fld18Label" value="#{msgs.fld18label}" />
+											</span>
+											<p:inputTextarea id="fld18"
+												label="#{msgs.fld18label}"
+												value="#{inputRegisterAction.inputRegisterBean.fld18}"
+												autoResize="false" rows="5" 
+												readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}" onblur="this.value=this.value.replace(/€/g,'EUR').split('\n').join(' ');">
+												<f:validateLength maximum="5000" />
+											</p:inputTextarea>
+										</label>
+										<label for="inputRegisterDataForm:fld501" class="general">
+											<span class="label">
+												<h:outputText id="fld501Label" value="#{msgs.fld501label}" />
+											</span>
+											<p:inputTextarea id="fld501"
+												label="#{msgs.fld501label}"
+												value="#{inputRegisterAction.inputRegisterBean.fld501}"
+												autoResize="false" rows="5" 
+												readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}" onblur="this.value=this.value.replace(/€/g,'EUR').split('\n').join(' ');">
+												<f:validateLength maximum="5000" />
+												<f:validator validatorId="registerExposesRequestsValidator" />
+												<f:attribute name="fld502" value="#{fld502}" />
+											</p:inputTextarea>
+										</label>
+										<label for="inputRegisterDataForm:fld502" class="general">
+											<span class="label">
+												<h:outputText id="fld502Label" value="#{msgs.fld502label}" />
+											</span>
+											<p:inputTextarea id="fld502"
+												label="#{msgs.fld502label}"   binding="#{fld502}"
+												value="#{inputRegisterAction.inputRegisterBean.fld502}"
+												autoResize="false" rows="5"
+												readonly="#{inputRegisterAction.readOnly or inputRegisterAction.readOnlyIR}" onblur="this.value=this.value.replace(/€/g,'EUR').split('\n').join(' ');">
+												<f:validateLength maximum="5000" />
+											</p:inputTextarea>
+										</label>
+										<ui:fragment
+											rendered="${not empty inputRegisterAction.inputRegisterBean.fld507}">
+											<label for="inputRegisterDataForm:fld507" class="general">
+												<span class="label"><h:outputText id="fld507Label"
+														value="#{msgs.fld507labelForm}" /></span> <p:inputTextarea id="fld507"
+													label="#{msgs.fld507label}"
+													value="#{inputRegisterAction.inputRegisterBean.fld507}"
+													autoResize="false" rows="5"
+													readonly="true">
+												</p:inputTextarea>
+											</label>
+										</ui:fragment>
+									<div class="botones">
+										<ui:fragment
+											rendered="${empty inputRegisterAction.inputRegisterBean.fld1 and (not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR)}">
+											<p:commandButton styleClass="boton-nuevo" id="btnEnviarN"
+												value="#{msgs.labelBotonNuevo}" ajax="false" onclick="PrimeFaces.monitorDownload(startNew, stopNew);"
+												actionListener="#{inputRegisterAction.saveInputRegister}" />
+										</ui:fragment>
+										<ui:fragment
+											rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and (not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR) and inputRegisterAction.inputRegisterBean.fld6 != 5}">
+											<p:commandButton styleClass="boton-nuevo" id="btnEnviarM"
+												value="#{msgs.labelBotonModificar}" ajax="false"
+												actionListener="#{inputRegisterAction.saveInputRegister}" />
+
+										</ui:fragment>
+										<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											action="goBack" />
+									</div>
+								</h:form>
+							</fieldset>
+						</p:tab>
+						<p:tab title="#{msgs.labelAnexosRegister}"
+							rendered="${not empty inputRegisterAction.inputRegisterBean.fld1}"
+							id="inputRegisterAttachedDocuments">
+							<fieldset>
+								<h:form id="inputRegisterAttachedDocumentsForm" enctype="multipart/form-data;charset=ISO-8859-15">
+									<script type="text/javascript">
+										$(function(){
+											$('form').on('keypress', function(event){
+												if(event.which === 13 ){
+												        event.preventDefault();
+												        if ($(event.target).is('textarea')){
+												        	event.target.value = event.target.value +"\n";
+												        }
+												      return false;
+												}
+											  });
+										});
+									</script>
+
+									<h:inputHidden id="listNameDocument"
+										value="#{inputRegisterAction.listNameDocument}" />
+									<p:dialog header="Adjuntar documentos"
+										widgetVar="dlgAttachDocuments" id="dlgAttachDocuments"
+										resizable="false" modal="true" styleClass="asociar">
+									</p:dialog>
+										<ui:fragment
+											rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and (not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR) and J_PARAMBOOK.canModify}">
+
+											<h:panelGrid id="botoneraDocumentosSuper" columns="2" style="width:100%">
+												<h:panelGrid id="botoneraDocumentos" columns="4">
+													<p:commandButton id="botonCrearCarpeta" styleClass="boton-buscar"  value="#{msgs.labelBotonCrearCarpeta}" 
+														widgetVar="buttonCrearCarpeta" onclick="PF('dialogCrearCarpeta').show();"/>
+	
+													<p:commandButton id="botonAdjuntar" styleClass="boton-buscar"  value="#{msgs.labelBotonAdjuntarDocumento}" 
+														widgetVar="buttonAdjuntarDocumento" onclick="PF('dialogAdjuntarDocumento').show();">
+
+														<f:setPropertyActionListener value="" target="#{inputRegisterAction.documentoBean.carpetaAnexarDoc}" />
+													</p:commandButton>
+												
+													<p:commandButton id="botonEscanear" styleClass="boton-buscar" process="@this" value="#{msgs.labelBotonEscanearDocumento}" 
+														widgetVar="botonEscanear" oncomplete="PF('dialogEscanear').show();"
+														update=":accordion:inputRegisterAttachedDocumentsForm:dialogEscanear">
+
+														<f:setPropertyActionListener value="" target="#{inputRegisterAction.escanerBean.carpetaDestino}" />
+													</p:commandButton>
+
+													<p:commandButton id="botonFirmarTodo" styleClass="boton-buscar" value="#{msgs.labelBotonFirmarDocumentos}" 
+														widgetVar="buttonFirmarDocumentos" 
+														oncomplete="PF('dialogConfigCompulsar').show();" 
+														actionListener="#{inputRegisterAction.compulsarTodos}"
+														update=":accordion:inputRegisterAttachedDocumentsForm:dialogConfigCompulsar"
+														rendered="${inputRegisterAction.hayDocumentosParaCompulsar}"/>
+												</h:panelGrid>
+													
+												<p:commandButton ajax="false" styleClass="botonConfigurarEscaner" style="float:right"
+										  			process="@this" title="#{msgs.labelBotonConfigurarEscaner}" icon="fa fa-code">
+										                
+											       		<p:fileDownload value="#{inputRegisterAction.escanerBean.instaladorEscaner}" />
+											 	</p:commandButton>
+											</h:panelGrid>
+										</ui:fragment>
+
+									<!--  Manu documentos -->
+									<p:treeTable value="#{inputRegisterAction.documentoBean.arbolDocumentos}" var="anexo" id="anexos"
+										summary="Tabla de Documentos Anexos" scrollable="true" scrollHeight="350">
+
+										 <p:column headerText="Nombre" style="width: 290px;font-size: 0.95em;font-weight: normal;">
+											<p:remoteCommand name="atualizaHistoDocs" update=":accordion:documentHistoricalForm"/>
+											
+											<p:commandLink ajax="false" value="#{anexo.nombre}" rendered="#{anexo.esDocumento}"
+												action="#{inputRegisterAction.consultaDocumento}" 
+												onclick="PrimeFaces.monitorDownload(null, atualizaHistoDocs)">
+
+												<f:setPropertyActionListener value="#{anexo.documento}" target="#{documentDownloadController.page}" />
+												<f:setPropertyActionListener value="#{anexo.nombre}" target="#{inputRegisterAction.documentoBean.carpetaAnexarDoc}" />
+
+											        <p:fileDownload value="#{documentDownloadController.fileDownload}" />
+											</p:commandLink>
+									        	<h:outputText value="#{anexo.nombre}" rendered="#{!anexo.esDocumento}"/>
+
+											<p:commandButton onclick="PF('dialogModificarDocumento').show();" styleClass="botonCambiarNombre"
+											  	process="@this" title="#{msgs.labelTitleCambiarNombre}" icon="fa fa-code">
+										                
+												<f:setPropertyActionListener value="#{anexo}" target="#{inputRegisterAction.documentoBean.selectAnexo}" />
+											</p:commandButton>
+										  </p:column>
+										  <p:column headerText="Tamaño (KB)" style="width: 50px;font-size: 0.95em;font-weight: normal;">
+										  	<h:outputText value="#{anexo.fileSizeKB}" />
+										  </p:column>
+										  <p:column headerText="Estado de elaboracón" style="width: 60px;font-size: 0.95em;font-weight: normal;">
+											<h:outputText value="#{anexo.metadatos.estadoElaboracion}"/>
+										  </p:column>
+								  
+										  <p:column headerText="Fecha alta" style="width: 80px;font-size: 0.95em;font-weight: normal;">
+									  		<h:outputText value="#{anexo.crtndate}">
+									  		<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+												locale="es_ES" timeZone="Europe/Paris" />
+									  		</h:outputText>
+										  </p:column>
+										  <p:column headerText="Fecha firma" style="width: 80px;font-size: 0.95em;font-weight: normal;">
+									  		<h:outputText value="#{anexo.fechaFirma}">
+										  		<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" locale="es_ES" timeZone="Europe/Paris" />
+									  		</h:outputText>
+										  </p:column>
+										  <p:column headerText="Hash/CSV" style="width: 180px;font-size: 0.95em;font-weight: normal;">									  		
+											<h:outputText value="#{anexo.hash}" />
+											<br/>
+											<h:outputText value="#{anexo.metadatos.csv}" style="font-weight: bold;"/>
+										  </p:column>
+
+										  <p:column style="width:100px;text-align: center">
+											<ui:fragment rendered="${not anexo.esDocumento}">
+												<p:commandButton onclick="PF('dialogAdjuntarDocumento').show();" styleClass="botonAdjuntarDocumento"
+												  	process="@this" title="#{msgs.labelTitleAdjuntarDocumento}" icon="fa fa-code">
+
+													<f:setPropertyActionListener value="#{anexo.nombre}" target="#{inputRegisterAction.documentoBean.carpetaAnexarDoc}" />
+
+												</p:commandButton>
+
+												<p:commandButton styleClass="botonEscanearDocumento"
+												  	process="@this" title="#{msgs.labelTitleEscanearDocumento}" icon="fa fa-code"
+													oncomplete="PF('dialogEscanear').show();"
+													update=":accordion:inputRegisterAttachedDocumentsForm:dialogEscanear">
+										                
+													<f:setPropertyActionListener value="#{anexo.nombre}" target="#{inputRegisterAction.escanerBean.carpetaDestino}" />
+												 </p:commandButton>
+
+												<ui:fragment rendered="${anexo.doch.numPages==0}">
+													<p:commandButton styleClass="botonEliminar"
+													  	process="@this" title="#{msgs.labelTitleBorrarCarpeta}" icon="fa fa-code"
+														onclick="PF('statusDialog').show();"
+														oncomplete="PF('statusDialog').hide();"
+														action="#{inputRegisterAction.borrarDocumento}"
+														update=":accordion:inputRegisterAttachedDocumentsForm:anexos, :accordion:inputRegisterAttachedDocumentsForm:botoneraDocumentos, :accordion:documentHistoricalForm">
+											                
+														<f:setPropertyActionListener value="#{anexo}" target="#{inputRegisterAction.documentoBean.selectAnexo}" />
+														<p:confirm header="#{msgs.labelTitleBorrarCarpeta}" message="#{msgs.labelMensajeBorrarCarpeta}" icon="ui-icon-alert" />
+													  </p:commandButton>
+												</ui:fragment>
+											</ui:fragment>
+
+											<ui:fragment rendered="${anexo.esDocumento}">
+												<p:commandButton styleClass="botonFirmarDocumento"
+												  	process="@this" title="#{msgs.labelTitleFirmarDocumento}" icon="fa fa-code"
+													oncomplete="PF('dialogConfigCompulsar').show();"
+													update=":accordion:inputRegisterAttachedDocumentsForm:dialogConfigCompulsar"
+													action="#{inputRegisterAction.compulsaDocumento}" 
+													rendered="#{not anexo.esFirmado and not empty anexo.extension and (anexo.extension == 'pdf' or anexo.extension == 'PDF') and empty anexo.metadatos.tipoFirma}">
+											                
+													<f:setPropertyActionListener value="#{anexo}" target="#{inputRegisterAction.documentoBean.selectAnexo}" />
+												  </p:commandButton>
+
+										
+												<p:commandButton styleClass="botonEliminar"
+												  	process="@this" title="#{msgs.labelTitleBorrarDocumento}" icon="fa fa-code"
+													onclick="PF('statusDialog').show();"
+													oncomplete="PF('statusDialog').hide();"
+													update=":accordion:inputRegisterAttachedDocumentsForm:anexos, :accordion:inputRegisterAttachedDocumentsForm:botoneraDocumentos, :accordion:documentHistoricalForm"
+													action="#{inputRegisterAction.borrarDocumento}" 
+													rendered="#{(not anexo.esFirmado and empty anexo.metadatos.tipoFirma) and (anexo.extension != 'csig' and anexo.extension != 'CSIG')}">
+											                
+													<f:setPropertyActionListener value="#{anexo}" target="#{inputRegisterAction.documentoBean.selectAnexo}" />
+											            	<p:confirm header="#{msgs.labelTitleBorrarDocumento}" message="#{msgs.labelMensajeBorrarDocumento}" icon="ui-icon-alert" />
+												  </p:commandButton>
+										        
+											      <p:commandButton process="@this" immediate="true" update=":accordion:inputRegisterAttachedDocumentsForm:formMetadatosDoc" 
+														oncomplete="PF('dialogMetadatos').show('#{anexo.tipoValidez}')" 
+														icon="fa fa-code" title="#{msgs.labelTitleMetadatos}" styleClass="botonMetadatos">
+											         
+														<f:setPropertyActionListener value="#{anexo.metadatos}" target="#{metadatosAction.metadatosDocumentoBean}" />
+													</p:commandButton>
+												</ui:fragment>
+        									  </p:column>
+								    </p:treeTable>
+
+								    <p:dialog header="#{msgs.labelDialogCrearCarpeta}" widgetVar="dialogCrearCarpeta" resizable="false" id="dialogCrearCarpeta" modal="true">
+										<label for="nombreNuevoDocumento" class="general">
+							    			<h:outputLabel for="nombreNuevoDocumento" value="#{msgs.labelDialogNuevaCarpetaNombre}:  "/>
+										
+											<p:inputText id="nombreNuevoDocumento" label="#{msgs.labelDialogCrearCarpeta}" value="#{inputRegisterAction.documentoBean.nombreNuevoDocumento}" maxlength="32" style="width: 50% !important"/>
+										</label>
+									<p style="text-align: center">
+										<p:commandButton styleClass="cerrar" value="#{msgs.labelDialogCrearCarpetaBotonCrear}" actionListener="#{inputRegisterAction.crearCarpeta}"
+											onclick="PF('statusDialog').show();"
+											oncomplete="PF('statusDialog').hide();PF('dialogCrearCarpeta').hide();" 
+											update=":accordion:inputRegisterAttachedDocumentsForm:anexos, :accordion:inputRegisterAttachedDocumentsForm:botoneraDocumentos, :accordion:documentHistoricalForm, :accordion:inputRegisterAttachedDocumentsForm:dialogCrearCarpeta"/>
+										<p:commandButton styleClass="cerrar" value="#{msgs.labelDialogCrearCarpetaBotonCerrar}" oncomplete="PF('dialogCrearCarpeta').hide();"/>
+									</p>
+								    </p:dialog>								    
+
+								    <p:dialog header="#{msgs.labelDialogModificarCarpeta}" widgetVar="dialogModificarDocumento" resizable="false" id="dialogModificarDocumento" modal="true">
+										<label for="nombreModificarDocumento" class="general">
+							    			<h:outputLabel for="nombreModificarDocumento" value="#{msgs.labelDialogModificarCarpetaNombre}:  "/>
+											<p:inputText id="nombreModificarDocumento" label="#{msgs.labelDialogCrearCarpeta}" value="#{inputRegisterAction.documentoBean.nombreModificarDocumento}" maxlength="32" style="width: 50% !important"/>
+										</label>
+										<p style="text-align: center">
+											<p:commandButton styleClass="cerrar" value="#{msgs.labelDialogModificarCarpetaBotonCrear}" actionListener="#{inputRegisterAction.modificarNombreDocumento}"
+												onclick="PF('statusDialog').show();"
+												oncomplete="PF('statusDialog').hide(); PF('dialogModificarDocumento').hide();"
+												update=":accordion:inputRegisterAttachedDocumentsForm:anexos, :accordion:inputRegisterAttachedDocumentsForm:botoneraDocumentos, :accordion:documentHistoricalForm, :accordion:inputRegisterAttachedDocumentsForm:dialogModificarDocumento"/>
+											<p:commandButton styleClass="cerrar" value="#{msgs.labelDialogModificarCarpetaBotonCerrar}" oncomplete="PF('dialogModificarDocumento').hide();"/>
+										</p>
+								    </p:dialog>								    
+
+								    <p:dialog header="#{msgs.labelDialogAdjuntarDocumento}" widgetVar="dialogAdjuntarDocumento" resizable="false" id="dialogAdjuntarDocumento" modal="true">
+										<p:ajax event="close" listener="#{inputRegisterAction.actualizaArbol}" 
+											update=":accordion:inputRegisterAttachedDocumentsForm:anexos, :accordion:inputRegisterAttachedDocumentsForm:botoneraDocumentos, :accordion:documentHistoricalForm" 
+											oncomplete="PF('statusDialog').hide();"/>
+
+										<h:form id="formAdjuntarDocumentoCarpeta" enctype="multipart/form-data">
+											<p:fileUpload mode="advanced" 
+												fileUploadListener="#{inputRegisterAction.subirDocumento}" uploadLabel="Cargar" cancelLabel="Cancelar" label="Buscar archivo"
+												update=":accordion:inputRegisterAttachedDocumentsForm:anexos, :accordion:inputRegisterAttachedDocumentsForm:botoneraDocumentos, :accordion:documentHistoricalForm"/>
+									
+											<p:commandButton styleClass="cerrar" value="#{msgs.labelDialogCrearCarpetaBotonCerrar}"
+												oncomplete="PF('statusDialog').show();PF('dialogAdjuntarDocumento').hide();"/>
+										</h:form>
+								    </p:dialog>
+
+								    <p:dialog header="#{msgs.labelDialogLanzarEscaner}" widgetVar="dialogEscanear" resizable="false" id="dialogEscanear" modal="true">
+										<p:ajax event="close" listener="#{inputRegisterAction.actualizaArbol}" 
+											update=":accordion:inputRegisterAttachedDocumentsForm:anexos, :accordion:inputRegisterAttachedDocumentsForm:botoneraDocumentos, :accordion:documentHistoricalForm" 
+											oncomplete="PF('statusDialog').hide();"/>
+
+										<p style="text-align: center">
+											<p:commandButton id="botonLanzarEscaner" styleClass="boton-buscar"  value="#{msgs.labelBotonLanzarEscaner}"
+												widgetVar="buttonEscanearDocumento" 
+												onclick="PF('statusDialog').show();lanzarEscaner();"
+												oncomplete="PF('statusDialog').hide();"/>
+
+											<p:commandButton styleClass="cerrar" value="#{msgs.labelDialogCrearCarpetaBotonCerrar}"
+												oncomplete="PF('statusDialog').show();PF('dialogEscanear').hide();"/>
+										</p>
+										<script>
+											function lanzarEscaner(){
+												window.location.href='#{inputRegisterAction.escanerBean.urlEscaner}';
+											}
+										</script>
+								    </p:dialog>
+
+
+								    <p:dialog header="#{msgs.labelDialogConfigCompulsar}" widgetVar="dialogConfigCompulsar"
+   										resizable="false" id="dialogConfigCompulsar" showEffect="fade" modal="true">
+		     						        <ui:include src="compulsa/entrada/configCompulsar.xhtml" />
+								    </p:dialog>					    
+
+							        <p:dialog header="#{msgs.labelDialogFirmarDocumentos}" widgetVar="dialogCompulsar"
+								        resizable="false" id="dialogCompulsar" showEffect="fade" modal="true">
+								        
+										<p:ajax event="close" listener="#{inputRegisterAction.actualizaArbol}" 
+											update=":accordion:inputRegisterAttachedDocumentsForm:anexos, :accordion:inputRegisterAttachedDocumentsForm:botoneraDocumentos, :accordion:documentHistoricalForm" 
+											oncomplete="PF('statusDialog').hide();"/>
+
+								        <ui:include src="compulsa/entrada/compulsar.xhtml" />
+							        </p:dialog>
+
+								    <p:dialog header="#{msgs.labelDialogMetadatos}" widgetVar="dialogMetadatos"
+								    	resizable="false" id="dialogMetadatos" showEffect="fade" modal="true" onHide="PF('statusDialog').show();">
+								    	
+							    		<p:ajax event="close" listener="#{inputRegisterAction.getRegisterHistDocumentsUpdates}"
+	 									update=":accordion:inputRegisterAttachedDocumentsForm:anexos, :accordion:inputRegisterAttachedDocumentsForm:botoneraDocumentos, :accordion:documentHistoricalForm"
+										oncomplete="PF('statusDialog').hide();"/>
+											
+		     						    <ui:include src="metadatos/metadatosDocumento.xhtml" />
+								    </p:dialog>
+
+								    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								    </p:confirmDialog>
+									
+								</h:form>
+								<div class="botones">
+									<p:commandButton styleClass="boton-cancelar" value="#{msgs.labelBotonCancelar}" process="@this" action="goBack" />
+								</div>
+							</fieldset>
+						</p:tab>
+
+						<p:tab title="#{msgs.labelHistoricoMovimientos}"
+							rendered="${not empty inputRegisterAction.inputRegisterBean.fld1}"
+							id="inputRegisterHistorical">
+							<fieldset>
+								<h:form id="historicalForm">
+									<p:dataTable summary="Tabla de Históricos" var="update"
+										value="#{inputRegisterAction.listUpdates}"
+										emptyMessage="No hay registro de modificaciones"
+										scrollable="true" scrollHeight="250">
+										<p:column headerText="#{msgs.labelUsuario}">
+											<h:outputText value="#{update.scrModifReg.usr}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelFecha}">
+											<h:outputText value="#{update.scrModifReg.modifDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{msgs.labelCampo}">
+											<h:outputText value="#{update.nameFld}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelValorAnti}">
+											<h:outputText value="#{update.oldvalue}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelValorNuevo}">
+											<h:outputText value="#{update.value}" />
+										</p:column>
+									</p:dataTable>
+								</h:form>
+								<div class="botones">
+									<p:commandButton styleClass="boton-cancelar"
+										value="#{msgs.labelBotonCancelar}" process="@this"
+										action="goBack" />
+								</div>
+							</fieldset>
+						</p:tab>
+						<p:tab title="#{msgs.labelHistoricoDocumentos}"
+							rendered="${not empty inputRegisterAction.inputRegisterBean.fld1}"
+							id="inputDocumentHistorical">
+							<fieldset>
+								<h:form id="documentHistoricalForm">
+									<p:dataTable summary="Tabla de Históricos" var="update"
+										value="#{inputRegisterAction.listDocumentUpdates}"
+										emptyMessage="No hay registro de modificaciones"
+										scrollable="true" scrollHeight="250">
+										<p:column headerText="#{msgs.labelUsuario}">
+											<h:outputText value="#{update.scrModifDoc.usr}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelFecha}">
+											<h:outputText value="#{update.scrModifDoc.modifDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{msgs.labelTipoDocumentoHistorico}">
+											<c:set var="messageTipoDoc"
+												value="tipoDoc.#{update.tipoDoc}" />
+											<h:outputText value="#{msgs[messageTipoDoc]}" />
+										</p:column>
+											<p:column headerText="#{msgs.labelNombreDocumentoHistorico}">
+											<h:outputText value="#{update.nombreDoc}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelAccionDocumentoHistorico}">
+											<c:set var="messageAccion"
+												value="accion.#{update.accion}" />
+											<h:outputText value="#{msgs[messageAccion]}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelNombreNuevoDocumentoHistorico}">
+											<h:outputText value="#{update.nombreDocNuevo}" />
+										</p:column>
+									</p:dataTable>
+									</h:form>
+								<div class="botones">
+									<p:commandButton styleClass="boton-cancelar"
+										value="#{msgs.labelBotonCancelar}" process="@this"
+										action="goBack" />
+								</div>
+							</fieldset>
+						</p:tab>
+						<p:tab title="#{msgs.labelHistoricoDistribucion}"
+							rendered="${not empty inputRegisterAction.inputRegisterBean.fld1}"
+							id="inputRegisterDistributionHistorical">
+							<fieldset>
+								<h:form id="inputRegisterDistributionHistoricalForm">
+									<p:dataTable summary="Tabla de Distribución" id="tableHistDist"
+										var="dist" value="#{inputRegisterAction.listHistDistribution}"
+										emptyMessage="No hay movimientos de distribución"
+										scrollable="true" scrollHeight="250">
+										<p:column style="width:4%">
+											<p:rowToggler ajax="false" />
+										</p:column>
+										<p:column headerText="#{msgs.labelFchDistribucion}">
+											<h:outputText value="#{dist.scrDistReg.distDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{msgs.labelOrigenDistribucion}">
+											<h:outputText value="#{dist.sourceDescription}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelDestinoDistribucion}">
+											<h:outputText value="#{dist.targetDescription}" />
+										</p:column>
+										<p:column headerText="#{msgs.fld6label}">
+											<c:set var="messagefld6"
+												value="#{'distributionhistory.minuta.dist.state.'}#{dist.scrDistReg.state}" />
+											<h:outputText value="#{msgs[messagefld6]}" />
+										</p:column>
+										<p:column headerText="#{msgs.labelFchEstado}">
+											<h:outputText value="#{dist.scrDistReg.stateDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+													locale="es_ES" timeZone="Europe/Paris" />
+											</h:outputText>
+										</p:column>
+										<p:column headerText="#{msgs.labelComentario}">
+											<h:outputText value="#{dist.scrDistReg.message}">
+											</h:outputText>
+										</p:column>
+										<p:rowExpansion>
+											<p:dataTable summary="Tabla de Distribución"
+												style="font-size:1.0em" var="movDist"
+												value="#{dist.scrDistRegState}"
+												emptyMessage="No hay movimientos de distribución"
+												scrollable="true" scrollHeight="250">
+												<p:column headerText="#{msgs.fld6label}">
+													<c:set var="messagefld6exp"
+														value="#{'distributionhistory.minuta.dist.state.'}#{movDist.state}" />
+													<h:outputText value="#{msgs[messagefld6exp]}" />
+												</p:column>
+												<p:column headerText="#{msgs.labelFchEstado}">
+													<h:outputText value="#{movDist.stateDate}">
+														<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+															type="date" locale="es_ES" timeZone="Europe/Paris" />
+													</h:outputText>
+												</p:column>
+												<p:column headerText="#{msgs.labelUsuario}">
+													<h:outputText value="#{movDist.username}" />
+												</p:column>
+											</p:dataTable>
+										</p:rowExpansion>
+									</p:dataTable>
+									<div class="botones">
+										<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											action="goBack" />
+									</div>
+								</h:form>
+							</fieldset>
+						</p:tab>
+						<p:tab title="#{msgs.labelHistoricoIntercambio}"
+							rendered="${not empty inputRegisterAction.inputRegisterBean.fld1}"
+							id="inputRegisterInterchangeHistorical">
+							<fieldset>
+								<h:form id="inputRegisterInterchangeHistoricalForm">
+									<ui:fragment>
+										<h:outputText styleClass="labelHistoricoIR"
+											value="#{msgs.labelHistoricoIntercambioEntrada}" />
+										<p:dataTable id="tableIntercambioEntrada"
+											summary="Tabla de Intercambio Registral Entrada" var="tire"
+											value="#{inputRegisterAction.listHistInputInterchange}"
+											emptyMessage="No hay movimientos de intercambio registral de entrada"
+											scrollable="true" scrollHeight="250">
+											<p:column style="width:4%">
+												<p:rowToggler ajax="false" />
+											</p:column>
+											<p:column headerText="#{msgs.labelFchIntercambio}">
+												<h:outputText value="#{tire.fechaIntercambio}">
+													<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+														type="date" locale="es_ES" timeZone="Europe/Paris" />
+												</h:outputText>
+											</p:column>
+											<p:column headerText="#{msgs.fld6label}">
+												<h:outputText value="#{tire.estado.name}" />
+											</p:column>
+											<p:column headerText="#{msgs.labelFchEstado}">
+												<h:outputText value="#{tire.fechaEstado}">
+													<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+														type="date" locale="es_ES" timeZone="Europe/Paris" />
+												</h:outputText>
+											</p:column>
+											<p:column headerText="#{msgs.fld3label}">
+												<h:outputText value="#{tire.username}" />
+											</p:column>
+											<p:rowExpansion>
+												<p:dataTable summary="Tabla de Intercambio Registral entrada"
+													style="font-size:1.0em" var="movTire"
+													value="#{tire.trazas}"
+													emptyMessage="No hay movimientos de intercambio"
+													scrollable="true" scrollHeight="75px">
+													<p:column headerText="#{msgs.headercodigo}">
+														<h:outputText value="#{movTire.codigo}" />
+													</p:column>
+													<p:column headerText="#{msgs.headerdescripcion}">
+														<h:outputText value="#{movTire.descripcion}" />
+													</p:column>
+													<p:column headerText="#{msgs.headercodigoError}">
+														<h:outputText value="#{movTire.codigoError}" />
+													</p:column>
+													<p:column headerText="#{msgs.headercodigoErrorServicio}">
+														<h:outputText value="#{movTire.codigoErrorServicio}" />
+													</p:column>
+													<p:column headerText="#{msgs.headercodigoIntercambio}"  style="width: 130px;">
+														<h:outputText value="#{movTire.codigoIntercambio}" />
+													</p:column>
+													<p:column headerText="#{msgs.headercodigoEntRegorigen}">
+														<a title="${movTirs.descripcionEntidadRegistralOrigen}">
+															<h:outputText
+																value="#{movTire.codigoEntidadRegistralOrigen}" />
+														</a>
+													</p:column>
+													<p:column headerText="#{msgs.headercodigoEntRegdestino}">
+														<a title="${movTirs.descripcionEntidadRegistralDestino}">
+															<h:outputText
+																value="#{movTire.codigoEntidadRegistralDestino}" />
+														</a>
+													</p:column>
+													<p:column headerText="#{msgs.headerestado}">
+														<c:set var="messageestadoTraza"
+															value="asientoRegitral.tipoEstado.#{movTire.codigoEstado}" />
+														<h:outputText value="#{msgs[messageestadoTraza]}" />
+													</p:column>
+													<p:column headerText="#{msgs.headernodo}">
+														<h:outputText value="#{movTire.codigoNodo}" />
+													</p:column>
+													<p:column headerText="#{msgs.headermotivoRechazo}">
+														<h:outputText value="#{movTire.motivoRechazo}" />
+													</p:column>
+													<p:column headerText="#{msgs.headerfechaAlta}">
+														<h:outputText value="#{movTire.fechaAlta}">
+															<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+																type="date" locale="es_ES" timeZone="Europe/Paris" />
+														</h:outputText>
+													</p:column>
+													<p:column headerText="#{msgs.headerfechaModificacion}">
+														<h:outputText value="#{movtire.fechaModificacion}">
+															<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+																type="date" locale="es_ES" timeZone="Europe/Paris" />
+														</h:outputText>
+													</p:column>
+												</p:dataTable>
+											</p:rowExpansion>
+										</p:dataTable>
+									</ui:fragment>
+									<ui:fragment>
+										<h:outputText styleClass="labelHistoricoIR"
+											value="#{msgs.labelHistoricoIntercambioSalida}" />
+										<p:dataTable summary="Tabla de Intercambio Registral Salida"
+											var="tirs"
+											value="#{inputRegisterAction.listHistOutputInterchange}"
+											emptyMessage="No hay movimientos de intercambio registral de salida"
+											scrollable="true" scrollHeight="250">
+											<p:column style="width:4%">
+												<p:rowToggler ajax="false" />
+											</p:column>
+											<p:column headerText="#{msgs.labelFchIntercambio}">
+												<h:outputText value="#{tirs.fechaIntercambio}">
+													<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+														type="date" locale="es_ES" timeZone="Europe/Paris" />
+												</h:outputText>
+											</p:column>
+											<p:column headerText="#{msgs.labeloffice}">
+												<h:outputText value="#{tirs.nombreOfic}" />
+											</p:column>
+											<p:column headerText="#{msgs.labelTipoOrigen}">
+												<c:set var="messageorigen"
+													value="intercambioRegistral.type.origen.#{tirs.tipoOrigen}" />
+												<h:outputText value="#{msgs[messageorigen]}" />
+											</p:column>
+											<p:column headerText="#{msgs.labelEntidadDestino}">
+												<h:outputText
+													value="#{tirs.codeTramunit} #{tirs.nameTramunit}" />
+											</p:column>
+											<p:column headerText="#{msgs.labelUnidadDestino}">
+												<h:outputText value="#{tirs.codeEntity} #{tirs.nameEntity}" />
+											</p:column>
+											<p:column headerText="#{msgs.fld6label}">
+												<h:outputText value="#{tirs.estado.name}" />
+											</p:column>
+											<p:column headerText="#{msgs.labelFchEstado}">
+												<h:outputText value="#{tirs.fechaEstado}">
+													<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+														type="date" locale="es_ES" timeZone="Europe/Paris" />
+												</h:outputText>
+											</p:column>
+											<p:rowExpansion>
+												<p:dataTable summary="Tabla de Intercambio Registral Salida"
+													style="font-size:1.0em" var="movTirs"
+													value="#{tirs.trazas}"
+													emptyMessage="No hay movimientos de intercambio"
+													scrollable="true" scrollHeight="250">
+													<p:column headerText="#{msgs.headercodigo}">
+														<h:outputText value="#{movTirs.codigo}" />
+													</p:column>
+													<p:column headerText="#{msgs.headerdescripcion}">
+														<h:outputText value="#{movTirs.descripcion}" />
+													</p:column>
+													<p:column headerText="#{msgs.headercodigoError}">
+														<h:outputText value="#{movTirs.codigoError}" />
+													</p:column>
+													<p:column headerText="#{msgs.headercodigoErrorServicio}">
+														<h:outputText value="#{movTirs.codigoErrorServicio}" />
+													</p:column>
+													<p:column headerText="#{msgs.headercodigoIntercambio}" style="width: 130px;">
+														<h:outputText value="#{movTirs.codigoIntercambio}" />
+													</p:column>
+													<p:column headerText="#{msgs.headercodigoEntRegorigen}">
+														<a title="${movTirs.descripcionEntidadRegistralOrigen}">
+															<h:outputText
+																value="#{movTirs.codigoEntidadRegistralOrigen}" />
+														</a>
+													</p:column>
+													<p:column headerText="#{msgs.headercodigoEntRegdestino}">
+														<a title="${movTirs.descripcionEntidadRegistralDestino}">
+															<h:outputText
+																value="#{movTirs.codigoEntidadRegistralDestino}" />
+														</a>
+													</p:column>
+													<p:column headerText="#{msgs.headerestado}">
+														<c:set var="messageestadoTraza"
+															value="asientoRegitral.tipoEstado.#{movTirs.codigoEstado}" />
+														<h:outputText value="#{msgs[messageestadoTraza]}" />
+													</p:column>
+													<p:column headerText="#{msgs.headernodo}">
+														<h:outputText value="#{movTirs.codigoNodo}" />
+													</p:column>
+													<p:column headerText="#{msgs.headermotivoRechazo}">
+														<h:outputText value="#{movTirs.motivoRechazo}" />
+													</p:column>
+													<p:column headerText="#{msgs.headerfechaAlta}">
+														<h:outputText value="#{movTirs.fechaAlta}">
+															<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+																type="date" locale="es_ES" timeZone="Europe/Paris" />
+														</h:outputText>
+													</p:column>
+													<p:column headerText="#{msgs.headerfechaModificacion}">
+														<h:outputText value="#{movTirs.fechaModificacion}">
+															<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+																type="date" locale="es_ES" timeZone="Europe/Paris" />
+														</h:outputText>
+													</p:column>
+												</p:dataTable>
+											</p:rowExpansion>
+										</p:dataTable>
+									</ui:fragment>
+									<div class="botones">
+										<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											action="goBack" />
+									</div>
+								</h:form>
+							</fieldset>
+						</p:tab>
+						<p:tab title="#{msgs.labelRegistrosAsociados}"
+							rendered="${not empty inputRegisterAction.inputRegisterBean.fld1}"
+							id="inputRegisterAssociatedRegisters">
+							<fieldset>
+								<h:form id="inputRegisterAssociatedRegistersForm">
+									<p:dialog id="dialog" widgetVar="dialog" draggable="false"
+										header="Validación" resizable="false" modal="true">
+										<p:messages id="dialogMessage" showDetail="true" />
+									</p:dialog>
+									<p:dialog header="Asociar Registros" widgetVar="dlgAsociar"
+										id="dlgAsociar" resizable="false" modal="true"
+										styleClass="asociar">
+										<p:panel widgetVar="panelAsocReg" id="panelAsocReg">
+											<label
+												for="inputRegisterAssociatedRegistersFormAsocReg:fld1Asoc"
+												class="general"> <span class="label"> <h:outputText
+														id="fld1LabelAsoc" value="#{msgs.fld1label}" />
+											</span> <p:inputText id="fld1Asoc"
+													value="#{inputRegisterAction.asocRegisterBean.fld1}"
+													label="#{msgs.fld1Asoclabel}" />
+											</label>
+											<label
+												for="inputRegisterAssociatedRegistersFormAsocReg:libro"
+												class="general"> <span class="label"> <h:outputText
+														id="libroLabel" value="#{msgs.librolabel}" />
+											</span> <p:selectOneMenu id="idLibro"
+													value="#{inputRegisterAction.asocRegisterBean.idLibro}"
+													label="#{msgs.librolabel}">
+													<f:selectItems value="#{booksAction.listBook.inList}"
+														var="lib" itemValue="#{lib.idocarchhdrId}"
+														itemLabel="#{lib.idocarchhdrName}" />
+													<f:selectItems value="#{booksAction.listBook.outList}"
+														var="lib" itemValue="#{lib.idocarchhdrId}"
+														itemLabel="#{lib.idocarchhdrName}" />
+												</p:selectOneMenu>
+											</label>
+											<div class="botonera">
+												<p:commandButton styleClass="boton-cancelar"
+													value="#{msgs.labelBotonAsociar}"
+													update="panelAsociados,:messagesform:messages"
+													process="panelAsocReg"
+													actionListener="#{inputRegisterAction.saveAsocRegister}"
+													oncomplete="PF('dlgAsociar').hide();" />
+												<p:commandButton styleClass="boton-cancelar"
+													value="#{msgs.labelBotonCancelar}" process="@this"
+													onclick="PF('dlgAsociar').hide();" />
+											</div>
+										</p:panel>
+									</p:dialog>
+									<ui:fragment
+										rendered="${not empty inputRegisterAction.inputRegisterBean.fld1 and (not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR) and J_PARAMBOOK.canModify}">
+										<p:commandButton value="#{msgs.labelNuevaAsociacion}"
+											onclick="PF('dlgAsociar').show();" />
+									</ui:fragment>
+									<p:outputPanel widgetVar="panelAsociados" id="panelAsociados">
+										<ui:fragment
+											rendered="${inputRegisterAction.asocRegPrim != null and inputRegisterAction.asocRegPrim.attributesValues.fld1 != null}">
+											<div class="registroAsociado">
+												<p:panel
+													header="#{msgs.labelRegistroPrincipal} #{inputRegisterAction.asocRegPrim.attributesValues.fld1}">
+													<ul>
+														<li><span> <h:outputText
+																	value="#{msgs.labelNombreLibro}" />
+														</span> <h:outputText
+																value="#{inputRegisterAction.asocRegPrim.attributesValues.libro}" />
+														</li>
+														<li><span> <h:outputText
+																	value="#{msgs.fld1label}">
+																</h:outputText>
+														</span> <h:outputText
+																value="#{inputRegisterAction.asocRegPrim.attributesValues.fld1}" />
+														</li>
+														<li><span> <h:outputText
+																	value="#{msgs.fld2label}">
+																</h:outputText>
+														</span> <h:outputText
+																value="#{inputRegisterAction.asocRegPrim.attributesValues.fld2}">
+																<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+																	type="date" locale="es_ES" timeZone="Europe/Paris" />
+															</h:outputText></li>
+														<li><span> <h:outputText
+																	value="#{msgs.fld6label}">
+																</h:outputText>
+														</span> <h:outputText
+																value="#{(inputRegisterAction.asocRegPrim.attributesValues.fld6==1) ? 'Incompleto' : ((inputRegisterAction.asocRegPrim.attributesValues.fld6==0)?'Completo':'Cerrado')}" />
+														</li>
+														<li><span> <h:outputText
+																	value="#{msgs.fld5label}">
+																</h:outputText>
+														</span> <h:outputText
+																value="#{inputRegisterAction.asocRegPrim.fld5Name}" /></li>
+														<ui:fragment
+															rendered="${inputRegisterAction.asocRegPrim != null and inputRegisterAction.asocRegPrim.attributesValues.fld7 != null}">
+															<li><span> <h:outputText
+																		value="#{msgs.fld7label}">
+																	</h:outputText>
+															</span> <c:set var="organismo"
+																	value="#{inputRegisterAction.asocRegPrim.fld7.code} #{inputRegisterAction.asocRegPrim.fld7.name}" />
+																<h:outputText
+																	value="#{(empty inputRegisterAction.asocRegPrim.fld7) ? '' : organismo}" />
+															</li>
+														</ui:fragment>
+														<ui:fragment
+															rendered="${inputRegisterAction.asocRegPrim != null and inputRegisterAction.asocRegPrim.attributesValues.fld8 != null}">
+															<li><span> <h:outputText
+																		value="#{msgs.fld8label}">
+																	</h:outputText>
+															</span> <c:set var="organismo"
+																	value="#{inputRegisterAction.asocRegPrim.fld8.code} #{inputRegisterAction.asocRegPrim.fld8.name}" />
+																<h:outputText
+																	value="#{(empty inputRegisterAction.asocRegPrim.fld8) ? '' : organismo}" />
+															</li>
+														</ui:fragment>
+														<ui:fragment
+															rendered="${inputRegisterAction.asocRegPrim != null  and ( (inputRegisterAction.asocRegPrim['class'].simpleName == 'AxSfIn' and inputRegisterAction.asocRegPrim.attributesValues.fld17 != null)  or (inputRegisterAction.asocRegPrim['class'].simpleName == 'AxSfOut' and inputRegisterAction.asocRegPrim.attributesValues.fld13 != null))}">
+															<li><span> <h:outputText
+																		value="#{msgs.fld17label}">
+																	</h:outputText>
+															</span> <h:outputText
+																	value="#{inputRegisterAction.asocRegPrim.attributesValues.fld17}"
+																	renderer="inputRegisterAction.asocRegPrim['class'].simpleName == 'AxSfIn'" />
+																<h:outputText
+																	value="#{inputRegisterAction.asocRegPrim.attributesValues.fld13}"
+																	renderer="inputRegisterAction.asocRegPrim['class'].simpleName == 'AxSfOut'" />
+															</li>
+														</ui:fragment>
+													</ul>
+												</p:panel>
+											</div>
+											</ui:fragment>
+											<ui:fragment
+											rendered="${inputRegisterAction.asocReg != null }">
+											<ui:repeat var="item" value="#{inputRegisterAction.asocReg}">
+												<div class="registroAsociado">
+													<p:panel
+														header="#{msgs.labelRegistroAsociado} #{item.attributesValues.fld1}">
+														<ul>
+															<li><span> <h:outputText
+																		value="#{msgs.labelNombreLibro}">
+																	</h:outputText>
+															</span> <h:outputText value="#{item.attributesValues.libro}" />
+															</li>
+															<li><span> <h:outputText
+																		value="#{msgs.fld1label}">
+																	</h:outputText>
+															</span> <h:outputText value="#{item.attributesValues.fld1}" /></li>
+															<li><span> <h:outputText
+																		value="#{msgs.fld2label}">
+																	</h:outputText>
+															</span> <h:outputText value="#{item.attributesValues.fld2}">
+																	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+																		type="date" locale="es_ES" timeZone="Europe/Paris" />
+																</h:outputText></li>
+															<li><span> <h:outputText
+																		value="#{msgs.fld6label}">
+																	</h:outputText>
+															</span> <h:outputText
+																	value="#{(item.attributesValues.fld6==1) ? 'Incompleto' : ((item.attributesValues.fld6==0)?'Completo':'Cerrado')}" />
+															</li>
+															<li><span> <h:outputText
+																		value="#{msgs.fld5label}">
+																	</h:outputText>
+															</span> <h:outputText value="#{item.fld5Name}" /></li>
+															<ui:fragment
+																rendered="${item != null and item.attributesValues.fld7 != null}">
+																<li><span> <h:outputText
+																			value="#{msgs.fld7label}">
+																		</h:outputText>
+																</span> <c:set var="organismo"
+																		value="#{item.fld7.code} #{item.fld7.name}" /> <h:outputText
+																		value="#{(empty item.fld7) ? '' : organismo}" /></li>
+															</ui:fragment>
+															<ui:fragment
+																rendered="${item != null and item.attributesValues.fld8 != null}">
+																<li><span> <h:outputText
+																			value="#{msgs.fld8label}">
+																		</h:outputText>
+																</span> <c:set var="organismo"
+																		value="#{item.fld8.code} #{item.fld8.name}" /> <h:outputText
+																		value="#{(empty item.fld8) ? '' : organismo}" /></li>
+															</ui:fragment>
+															<ui:fragment
+																rendered="${item != null  and ( (item['class'].simpleName == 'AxSfIn' and item.attributesValues.fld17 != null)  or (inputRegisterAction.asocRegPrim['class'].simpleName == 'AxSfOut' and inputRegisterAction.asocRegPrim.attributesValues.fld13 != null))}">
+																<li><span> <h:outputText
+																			value="#{msgs.fld17label}">
+																		</h:outputText>
+																</span> <h:outputText value="#{item.attributesValues.fld17}"
+																		renderer="item['class'].simpleName == 'AxSfIn'" /> <h:outputText
+																		value="#{item.attributesValues.fld13}"
+																		renderer="item['class'].simpleName == 'AxSfOut'" /></li>
+															</ui:fragment>
+														</ul>
+														<f:facet name="actions">
+															<ui:fragment
+																rendered="${(not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR) and J_PARAMBOOK.canModify}">
+																<p:commandLink
+																	styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+																	update="@form, :messagesform:messages"
+																	title="Eliminar Asociación"
+																	actionListener="#{inputRegisterAction.deleteAssociation}">
+																	<f:param name="idReg"
+																		value="#{item.attributesValues.fdrid}" />
+																	<f:param name="idLibro"
+																		value="#{item.attributesValues.idLibro}" />
+																	<h:outputText styleClass="ui-icon ui-icon-close" />
+																</p:commandLink>
+															</ui:fragment>
+														</f:facet>
+													</p:panel>
+												</div>
+											</ui:repeat>
+										</ui:fragment>
+									</p:outputPanel>
+									<div class="botones">
+										<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											action="goBack" />
+									</div>
+								</h:form>
+							</fieldset>
+						</p:tab>
+					</p:accordionPanel>
+				</div>
+			</h:panelGroup>
+			<p:dialog modal="true" widgetVar="statusDialog"
+				header="Cargando, espere por favor" draggable="false"
+				closable="false" resizable="false">
+				<img
+					src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+			</p:dialog>
+			<p:dialog modal="true" widgetVar="statusDialogRec"
+				header="Generando Recibo, espere por favor" draggable="false"
+				closable="false" resizable="false">
+				<img
+					src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+			</p:dialog>
+			<p:dialog modal="true" widgetVar="statusDialogLabel"
+				header="Generando Etiqueta, espere por favor" draggable="false"
+				closable="false" resizable="false">
+				<img
+					src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+			</p:dialog>
+			<p:dialog modal="true" widgetVar="statusDialogNew"
+				header="Generando el registro, espere por favor" draggable="false"
+				closable="false" resizable="false">
+				<img
+					src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

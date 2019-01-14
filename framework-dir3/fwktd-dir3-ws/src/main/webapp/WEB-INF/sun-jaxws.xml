@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime" version="2.0">
+
+    <endpoint name="consultService"
+        implementation="es.msssi.tecdoc.fwktd.dir.ws.ConsultService"
+        url-pattern="/consultService" /> 
+</endpoints>

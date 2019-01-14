@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+	<appenders>
+		<Console name="CONSOLE" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+
+		<File name="FILE" fileName="logs/app.log">
+			<PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
+		</File>
+	</appenders>
+
+
+	<Loggers>
+		<Logger name="es.sigem.dipcoruna" level="DEBUG" additivity="false">
+			<AppenderRef ref="CONSOLE" />
+			<AppenderRef ref="FILE" />
+		</Logger>
+
+		<Root level="INFO">
+			<AppenderRef ref="CONSOLE" />
+			<AppenderRef ref="FILE" />
+		</Root>
+	</Loggers>
+</configuration>

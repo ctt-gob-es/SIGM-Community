@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<structures>
+    <structure>
+        <openProcesses>3</openProcesses>
+        <aditamento>3</aditamento>
+        <renovacao>2</renovacao>
+        <vencidos>2</vencidos>
+        <aVencer>1</aVencer>
+    </structure>
+</structures>

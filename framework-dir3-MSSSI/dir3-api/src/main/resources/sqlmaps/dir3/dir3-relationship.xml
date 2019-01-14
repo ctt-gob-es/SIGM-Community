@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+						"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="RelationshipOFIUOVO">
+
+	<typeAlias alias="relationshipOFIUOVO" type="es.msssi.dir3.api.vo.RelationshipOFIUOVO" />
+	
+	<resultMap id="relationshipOFIUOVO" class="es.msssi.dir3.api.vo.RelationshipOFIUOVO">
+		<result property="unitId" column="C_ID_UNIDAD_ORGANICA" />
+		<result property="unitName" column="C_DNM_UD_ORGANICA" />
+		<result property="officeId" column="C_ID_OFICINA" />
+		<result property="officeName" column="C_DNM_OFICINA" />
+		<result property="status" column="C_ID_ESTADO" />
+
+	</resultMap>
+
+
+	<sql id="tableORG">REL_ORGANIZATIVAS_UO_OFI </sql>
+	<sql id="tableSIR">REL_UNIDAD_ORGANICA_OFICINA </sql>
+
+	<sql id="columns_insert">
+		C_ID_UNIDAD_ORGANICA,
+		C_ID_OFICINA,
+		C_ID_ESTADO,
+		D_FECHA_ALTA,
+		D_FECHA_MODIF
+	</sql>
+	<sql id="insert">
+		#unitId#,
+		#officeId#,
+		#status#,
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP
+	</sql>
+
+	<sql id="update">
+		C_ID_ESTADO =#status#, D_FECHA_MODIF = CURRENT_TIMESTAMP
+	</sql>
+
+	<insert id="addRelationshipORGVO" parameterClass="relationshipOFIUOVO">
+		INSERT INTO
+		<include refid="tableORG" />
+		(
+		<include refid="columns_insert" />
+		)
+		VALUES (
+		<include refid="insert" />
+		)
+	</insert>
+	
+	<insert id="addRelationshipSIRVO" parameterClass="relationshipOFIUOVO">
+		INSERT INTO
+		<include refid="tableSIR" />
+		(
+		<include refid="columns_insert" />
+		)
+		VALUES (
+		<include refid="insert" />
+		)
+	</insert>
+	<update id="updateRelationshipORGVO" parameterClass="relationshipOFIUOVO">
+		UPDATE
+		<include refid="tableORG" />
+		SET
+		<include refid="update" />
+		WHERE C_ID_UNIDAD_ORGANICA = #unitId# AND
+		C_ID_OFICINA = #officeId#
+	</update>
+	<update id="updateRelationshipSIRVO" parameterClass="relationshipOFIUOVO">
+		UPDATE
+		<include refid="tableSIR" />
+		SET
+		<include refid="update" />
+		WHERE C_ID_UNIDAD_ORGANICA = #unitId# AND
+		C_ID_OFICINA = #officeId#
+	</update>
+	
+	<select id="getExistsRelationshipORGVO" parameterClass="java.util.HashMap"
+		resultClass="java.lang.String">
+		SELECT 'S'
+		FROM 
+		<include refid="tableORG" />
+		WHERE C_ID_UNIDAD_ORGANICA = #unitId# AND
+		C_ID_OFICINA = #officeId#
+	</select>
+
+	<select id="getExistsRelationshipSIRVO" parameterClass="java.util.HashMap"
+		resultClass="java.lang.String">
+		SELECT 'S'
+		FROM 
+		<include refid="tableSIR" />
+		WHERE C_ID_UNIDAD_ORGANICA = #unitId# AND
+		C_ID_OFICINA = #officeId#
+	</select>
+	
+	<select id="getIsSIRVO" parameterClass="relationshipOFIUOVO"
+		resultClass="java.lang.Integer">
+		SELECT count (*)
+		FROM 
+		REL_UNIDAD_ORGANICA_OFICINA
+		WHERE C_ID_OFICINA = #officeId#
+		and C_ID_ESTADO = 'V'
+		AND C_ID_OFICINA IN (SELECT DISTINCT C_ID_OFICINA  FROM DIR_SERVICIOS_OFICINA
+			WHERE C_ID_SERVICIO	= '5')
+				AND C_ID_OFICINA IN (SELECT DISTINCT C_ID_OFICINA  FROM DIR_SERVICIOS_OFICINA
+			WHERE C_ID_SERVICIO	= '7')
+	</select>
+
+	<select id="getUnitDir" parameterClass="java.lang.String"
+		resultMap="relationshipOFIUOVO">
+		SELECT REL.C_ID_UNIDAD_ORGANICA, ORG.C_DNM_UD_ORGANICA,  REL.C_ID_OFICINA, OFI.C_DNM_OFICINA, REL.C_ID_ESTADO
+        FROM 
+        REL_UNIDAD_ORGANICA_OFICINA REL
+        INNER JOIN DIR_OFICINA_COMPLETO OFI ON REL.C_ID_OFICINA = OFI.C_ID_OFICINA
+        INNER JOIN DIR_UNIDAD_ORGANICA_COMPLETO ORG ON REL.C_ID_UNIDAD_ORGANICA = ORG.C_ID_UD_ORGANICA
+        WHERE REL.C_ID_OFICINA = #value#
+        and REL.C_ID_ESTADO = 'V'
+	</select>
+</sqlMap>

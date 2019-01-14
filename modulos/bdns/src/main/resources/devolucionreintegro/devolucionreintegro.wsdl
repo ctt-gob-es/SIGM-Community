@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- editado con XMLSpy v2014 rel. 3 (x64)  por INTERVENCION GENERAL ADMINISTRACION DEL ESTADO (INTERVENCION GENERAL ADMINISTRACION DEL ESTADO) -->
+<wsdl:definitions xmlns:ns="http://devolucionreintegro.ws.igae.minhap.es" 
+				  xmlns:especificos="http://intermediacion.redsara.es/scsp/esquemas/V3/datosEspecificos" 
+				  xmlns:peticion="http://intermediacion.redsara.es/scsp/esquemas/V3/peticion" 
+				  xmlns:respuesta="http://intermediacion.redsara.es/scsp/esquemas/V3/respuesta" 
+				  xmlns:solicitud="http://intermediacion.redsara.es/scsp/esquemas/V3/solicitudRespuesta" 
+				  xmlns:confirmacion="http://intermediacion.redsara.es/scsp/esquemas/V3/confirmacionPeticion" 
+				  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+				  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+				  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+				  name="BDNSDEVOLREINT" 
+				  targetNamespace="http://devolucionreintegro.ws.igae.minhap.es">
+	<wsdl:types>
+		<xs:schema>		
+			<xs:import namespace="http://intermediacion.redsara.es/scsp/esquemas/V3/datosEspecificos" schemaLocation="../BDNS/SCSP/devolucionreintegro/datos-especificos.xsd"/>		
+			<xs:import namespace="http://intermediacion.redsara.es/scsp/esquemas/V3/peticion" schemaLocation="../BDNS/SCSP/devolucionreintegro/peticion.xsd"/>
+			<xs:import namespace="http://intermediacion.redsara.es/scsp/esquemas/V3/respuesta" schemaLocation="../BDNS/SCSP/devolucionreintegro/respuesta.xsd"/>
+			<xs:import namespace="http://intermediacion.redsara.es/scsp/esquemas/V3/solicitudRespuesta" schemaLocation="../BDNS/SCSP/devolucionreintegro/solicitud-respuesta.xsd"/>
+			<xs:import namespace="http://intermediacion.redsara.es/scsp/esquemas/V3/confirmacionPeticion" schemaLocation="../BDNS/SCSP/devolucionreintegro/confirmacion-peticion.xsd"/>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="peticionMessage">
+		<wsdl:part name="peticion" element="peticion:Peticion"/>
+	</wsdl:message>
+	<wsdl:message name="peticionAsincronaMessage">
+		<wsdl:part name="peticion" element="peticion:PeticionAsincrona"/>
+	</wsdl:message>
+	<wsdl:message name="respuestaMessage">
+		<wsdl:part name="respuesta" element="respuesta:Respuesta"/>
+	</wsdl:message>
+	<wsdl:message name="solicitudRespuestaMessage">
+		<wsdl:part name="solicitudRespuesta" element="solicitud:SolicitudRespuesta"/>
+	</wsdl:message>
+	<wsdl:message name="confirmacionPeticionMessage">
+		<wsdl:part name="confirmacionPeticion" element="confirmacion:ConfirmacionPeticion"/>
+	</wsdl:message>
+	<wsdl:portType name="DevolucionReintegro">
+		<wsdl:operation name="peticion">
+			<wsdl:input message="ns:peticionMessage"/>
+			<wsdl:output message="ns:respuestaMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="peticionAsincrona">
+			<wsdl:input message="ns:peticionAsincronaMessage"/>
+			<wsdl:output message="ns:confirmacionPeticionMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="solicitudRespuesta">
+			<wsdl:input message="ns:solicitudRespuestaMessage"/>
+			<wsdl:output message="ns:respuestaMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="DevolucionReintegroSoap11" type="ns:DevolucionReintegro">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="peticion">
+			<soap:operation soapAction="peticion" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="peticionAsincrona">
+			<soap:operation soapAction="peticionAsincrona" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="solicitudRespuesta">
+			<soap:operation soapAction="solicitudRespuesta" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="DevolucionReintegroService">
+		<wsdl:port name="DevolucionReintegroSoap11" binding="ns:DevolucionReintegroSoap11">
+			<soap:address location="http://cerezo:7110/teseonet/services/BDNSDEVOLREINT"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter pageSize='100'>
+		 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE_EMPLEADO' 
+				 titleKey='AYUDASSS:NOMBRE_EMPLEADO' 
+				 fieldType='LINK'
+				 columnClass='width25percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='PARENTESCO' 
+				 titleKey='AYUDASSS:PARENTESCO' 
+				 fieldType='LIST'
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='BENEFICIARIO' 
+				 titleKey='AYUDASSS:BENEFICIARIO' 
+				 fieldType='LIST'
+				 columnClass='width25percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CONCEPTO' 
+				 titleKey='AYUDASSS:CONCEPTO' 
+				 fieldType='LIST'
+				 columnClass='width25percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/> 
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='PUNTOS_ESTUDIOS' 
+				 titleKey='AYUDASSS:PUNTOS_ESTUDIOS' 
+				 fieldType='LIST'
+				 columnClass='width5percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='IMPORTE_CONCEDIDO' 
+				 titleKey='AYUDASSS:IMPORTE_CONCEDIDO' 
+				 fieldType='LIST'
+				 columnClass='width10percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				
+	 
+</beanformatter>

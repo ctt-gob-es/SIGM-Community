@@ -1,0 +1,654 @@
+/*
+* Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+* Licencia con arreglo a la EUPL, Versión 1.1 o –en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+* Solo podrá usarse esta obra si se respeta la Licencia. 
+* Puede obtenerse una copia de la Licencia en: 
+* http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+* Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+* Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+*/
+
+/* ESTILOS GENERALES */
+body {margin: 0; padding: 0; background:#d7e1e0 url("../img/fondo.jpg") top left repeat-x; color: #000; font-family: Arial, Helvetica, sans-serif}
+img {border: 0}
+.clear {clear: both; margin: 0}
+hr {border:1px dotted #CCC; margin:1em 0.2em 1em 0.2em; width:auto; padding:0}
+.separador {border-bottom:1px dotted #D7D7D7; margin:1em 1.2em 1em 0.2em; width:auto; padding:0}
+.menuOculto {display: none}
+.center {margin: 0 auto; text-align: center}
+
+#contenedor {display: block; position: relative; width: 96%; min-width: 60em; max-width: 85em; min-height: 28em; height: auto !important; height: 28em; background: #fff url("../img/fondo-contenedor.jpg") left top no-repeat; border: 2px solid #fff; margin: 0.8em auto 0em auto; padding: 0; box-shadow: 0px 5px 10px #638D9B}
+
+#contenedor #cabecera {min-height: 4.8em; height: auto !important; height: 4.8em; margin: 0 0 1em 0; padding: 0;}
+#contenedor #cabecera #escudo {z-index: 1; position: absolute; top: 0.5em; left: 0.8em; margin: 0; padding: 0;}
+#contenedor #cabecera #escudo img {/*width:14.688em; height: 3.688em;*/}
+#contenedor #cabecera #titulo h1 {z-index: 2; position: absolute; top: 1em; left: 13em; margin: 0; padding: 0; color: #123152; font-size: 1.7em; font-weight: normal}
+#contenedor #cabecera #titulo h1 a {color:#1C5393; text-decoration: none}
+#contenedor #cabecera #titulo h1 a:hover {color:#1C5393; text-decoration: none}
+
+/* MENU SUPERIOR HORIZONTAL*/
+#contenedor #menuhorizontal {display: block; position: relative; width: auto; min-height:2.2em; background: #F4F4F4 url("../img/menuhorizontal.jpg") left bottom repeat-x; margin: 0.2em 0.8em 0.2em 0.8em; padding: 0.4em 0.3em 0.2em 0.3em; border-top: 1px dotted #9F9F9F;}
+#contenedor #menuhorizontal .izquierdo {float: left;}
+*+html #contenedor #menuhorizontal .izquierdo {width: 35em; float: left; padding-top: 0.2em}
+#contenedor #menuhorizontal .derecho {float: right; text-align: right; padding-top: 0.2em}
+#contenedor #menuhorizontal .derecho ul li {border-right: 0px;}
+#contenedor #menuhorizontal .derecho ul li a.salir { background: url("../img/ico-salir.gif") right no-repeat; padding-right: 1.7em; }
+#contenedor #menuhorizontal .derecho ul li a.ayuda { background: url("../img/ico-ayuda.gif") right no-repeat; padding-right: 1.7em; padding-top: 0.1em}
+#contenedor #menuhorizontal ul {padding: 0; margin:0;}
+#contenedor #menuhorizontal ul li {display: inline; padding: 0.6em 0.4em 0.56em 0.4em; margin: 0; border-right: 1px solid #B9B9B9; border-left: 0px solid #ccc;}
+#contenedor #menuhorizontal ul li a {color: #345372; font-size: 1em; padding: 0em 0.4em 0em 0.4em; font-weight: bold; text-decoration: none; font-family: Arial, Helvetica, sans-serif}
+#contenedor #menuhorizontal h2 {font-size: 0.85em; margin: 0 0 0 0.4em; padding: 0 0 0 0.4em}
+
+/* MIGAS */
+#contenedor #migas {width: auto; padding: 0.1em 0 0em 0.5em; margin: 0 0.8em; }
+#contenedor #migas span {font-weight:normal; margin: 0.2em 0.7em 0 0; padding: 0; float: left; font-size: 0.75em; color: #000}
+#contenedor #migas ol {margin: 0em 0 0 0em; padding: 0em 0 0 0em; font-size: 0.75em;}
+#contenedor #migas ol li {font-size: 100%; display: inline-block; float: left; white-space:nowrap; margin-right: 0.7em; padding-left: 0.7em; list-style:none; background:url("../img/ico-migas.gif") left no-repeat; line-height: 1.6em;}
+#contenedor #migas a {color: #000; text-decoration: none; font-weight: normal;}
+#contenedor #migas a:hover {text-decoration: underline;}
+#contenedor #migas li strong {color: #123152; font-weight: bold; float: none}
+
+/* PANTALLA DE LOGIN*/
+#contenedor #login {background: #E1EBF0 url("../img/login-bg.jpg") top repeat-x; width: 40em; min-height: 10em; height: auto !important; height: 10em; padding: 1.4em 2em 0.4em 2em; margin: 1.8em auto 4.6em auto;}
+#contenedor #login .usuario {background: #fff; border: 1px solid #A4C4D1; min-height: 12.9em; height: auto !important; height: 12.9em; padding: 1em; margin: 0.6em 0 0em 0;}
+
+#contenedor #login .sombra {margin: 0em 0em 0.7em 2em; height: 1em; background: transparent url("../img/sombra-azul.jpg") top right no-repeat;}
+#contenedor #login form fieldset {min-height: 2em; height: auto !important; height: 2em; background:transparent; border: 0px; margin: 0; padding: 0; position: relative}
+#contenedor #login form fieldset legend {text-align: center; margin: 0.2em 1em 0.5em 1em; padding: 0.6em; font-size: 1em; display: block; position: relative; background: none}
+#contenedor #login form input {text-align: left; background: #fff; border: 1px #839FC7 solid; padding-left: 0.2em; width: 18em}
+#contenedor #login form label {display: block; margin: 0.6em 0; font-size: 0.75em}
+#contenedor #login form label span {text-align: right; width: 18em; display: inline-block; margin: 0 0.2em 0 0}
+#contenedor #login form .botones {text-align: center; margin: 0 auto; padding: 0; display: block;}
+#contenedor #login form .botones input[type=submit] {cursor: pointer; width: auto; font-weight: bold; font-size: 0.75em; color: #fff; background: #0F445F url("../img/boton.jpg") top repeat-x; border: 1px solid #256C92; text-align: center; padding: 0.2em 1.2em 0.2em 1.2em; margin: 1em auto 0 auto}
+#contenedor #login form .botones input[type=button] {cursor: pointer; width: auto; font-weight: bold; font-size: 0.75em; color: #fff; background: #0F445F url("../img/boton.jpg") top repeat-x; border: 1px solid #256C92; text-align: center; padding: 0.2em 1.2em 0.2em 1.2em; margin: 1em auto 0 auto}
+#contenedor #login ul {margin: 1em 0 0.2em 0em; padding: 1em 0 0.2em 0em; display: block;}
+#contenedor #login ul li {display: inline; background: url("../img/ul-2.gif") left no-repeat; padding-left: 0.8em; margin: 0 0.4em 0 1.2em;}
+#contenedor #login ul li a {font-weight: normal}
+
+/* CONTENEDOR BLOQUE CONTENIDO */
+#contenedor #bloquecontenido {width: 100%; min-height: 28em; height: auto !important; height: 28em; padding: 0.3em 0em 1em 0em; margin: 0.2em 0.5em 0.1em 0.9em; display: inline-block;}
+
+/* MENU */
+#contenedor #bloquecontenido .menuOculto {width: 1em; float: left;}
+
+#contenedor #bloquecontenido .menu {width: 18%; min-height: 28em; height: auto !important; height: 28em; float: left; }
+#contenedor #bloquecontenido .menu .apartado {min-height: 1.5em; font-weight: bold; padding: 0.8em 0.4em 0.4em 0.4em; color: #123152; font-size: 0.75em;  background: #9EBFD0 url("../img/fondo-titular.jpg") bottom left repeat-x; border-bottom: 1px solid #8AC3E7}
+#contenedor #bloquecontenido .menu ul {margin: 0 0.3em 0 0.7em; padding: 0 0 0 0.5em;}
+#contenedor #bloquecontenido .menu ul li {list-style-image: url("../img/ul.gif"); margin: 0.4em 0; text-align: left; line-height: 1.5em}
+#contenedor #bloquecontenido .menu ul ul {margin: 0 0 0.2em 0.7em; padding: 0 0 0.2em 0.5em}
+#contenedor #bloquecontenido .menu ul li li {list-style-image: url("../img/ul-2.gif"); margin: 0.4em 0;}
+#contenedor #bloquecontenido .menu a{font-weight: normal}
+
+/* CONTENIDO */
+#contenedor #bloquecontenido .contenidogrande {width: 96.5%; background: #fff !important}
+*+html #contenedor #bloquecontenido .contenidogrande {width: 95%; background: #fff !important}
+
+#contenedor #bloquecontenido .contenidopequenio {width: 78.5%;}
+
+#contenedor #bloquecontenido .contenido {min-height: 28em; height: auto !important; height: 28em; float: left; background: #fff; background: #fff url("../img/sombra-menu.gif") -0.6em top no-repeat; padding-left:1em}
+
+#contenedor #bloquecontenido .contenido h2 {min-height: 1.5em; vertical-align:middle; font-size: 0.75em; font-weight: bold; margin: 0em 0em 0em -1.2em; padding:  0.8em 0.4em 0.4em 1em;  color: #123152; background: #9EBFD0 url("../img/fondo-titular.jpg") bottom left repeat-x; border-bottom: 1px solid #8AC3E7}
+#contenedor #bloquecontenido .contenido .sombra {margin: 0em 0em 0.7em 2em; height: 1em; background: #fff url("../img/sombra.jpg") top right no-repeat;}
+
+#contenedor #bloquecontenido .contenido .enlaces {text-align: right}
+#contenedor #bloquecontenido .contenido .enlaces ul {margin: 0; padding: 0}
+#contenedor #bloquecontenido .contenido .enlaces ul li {display: inline; margin: 0 0.8em; background: url("../img/ul-2.gif") left no-repeat; padding-left: 0.8em}
+
+/* GENERICOS */
+h2 {font-size: 1.2em; font-weight: normal; margin: 0.5em 0.1em 0.7em 0em; padding-bottom: 0em; color: #123152;}
+h3 {font-size: 1.1em; font-weight: normal; margin: 0.3em 0.5em 0.6em 0.3em; color: #123152}
+h4 {font-size: 0.9em; font-weight: bold; margin: 0.6em 0.5em 0.6em 0.65em; color: #123152}
+h5 {font-size: 0.85em; font-weight: bold; margin: 1em 0.5em 0.6em 0.65em; color: #000}
+h6 {font-size: 0.75em; font-weight: bold; margin: 1em 0.5em 0.6em 0.85em; color: #000}
+p {font-size: 0.75em; font-weight: normal; margin: 1em 0.5em 1em 1.5em; text-align:justify; line-height: 1.4em}
+
+ul {margin: 0.2em 0.4em 0.2em 1.7em; padding: 0.2em 0 0.2em 1.1em;}
+ul li {list-style-image: url("../img/ul.gif"); text-align: justify; font-size: 0.75em; margin: 0.5em 0}
+
+ul ul {margin: 0 0 0.2em 1em; padding: 0 0 0.2em 1em}
+ul ul li {list-style-image: url("../img/ul-2.gif"); text-align: justify; font-size: 100%; margin: 0.4em 0}
+
+ul ul ul {margin: 0 0 0.2em 1em; padding: 0 0 0.2em 1em}
+ul ul ul li {list-style-image: url("../img/ul-3.gif"); text-align: justify; font-size: 100%; margin: 0.4em 0}
+
+a {color: #123152; text-decoration: none; font-weight: bold}
+a:hover {color: #123152; text-decoration: underline;}
+p a.nuevo {color: #cc0000 !important; padding: 0 1.6em 0.2em 0.3em; background: url("../img/nuevo.gif") right no-repeat}
+
+/* FORMULARIOS */
+form {margin: 0; padding: 0}
+fieldset {min-height: 10em; height: auto !important; height: 20em; background:#E8EFF3; border: 1px solid #98B0CC; margin: 0.5em 0; padding: 1em 0.2em 0.6em 0.2em; position: relative}
+*+html fieldset {background:#E8EFF3; border: 0px solid #98B0CC; margin: 0; padding: 0em; position: relative;}
+fieldset legend {display: block; color: #123152; font-size: 0.75em; font-weight: bold; padding: 0.6em 0 1em 1.5em; background: none; position: absolute; top: 0; left: 0.5em; background: transparent url("../img/ul.gif") 0.2em 0.8em no-repeat;}
+label.general {margin: 0.3em 0.2em 0 0em; float: left; clear: left; width: 100%;}
+label.general span.label {min-height: 1.8em; display: inline-block; color: #000; width: 16em; text-align: right; font-size: 0.75em; font-family: Arial, helvetica, sans-serif; font-weight: normal; padding: 0.6em 0.4em 0 0.3em}
+label.general input {text-align: left; font-size: 0.75em; background: #fff; border: 1px #839FC7 solid; padding-left: 0.2em; margin: 0.2em 0 0em 0.4em; font-family: Arial, helvetica, sans-serif;}
+label.general textarea {text-align: left; font-size: 0.75em; background: #fff; border: 1px #839FC7 solid; padding-left: 0.2em; margin: 0.2em 0 0em 0.4em; font-family: Arial, helvetica, sans-serif;}
+label.general input[type="radio"]{border: 0; background: none} 
+textarea {font-size: 100%}
+
+.contenidogrande label.general span.label {vertical-align: top;min-height: 1.8em; display: inline-block; color: #000; width: 18em; text-align: right; font-size: 0.75em; font-family: Arial, helvetica, sans-serif; font-weight: normal; padding: 0.6em 0.4em 0 0.3em;}
+
+label.float {margin: 0.3em 0.2em 0 0.4em; float: left}
+label.float input {text-align: left; font-size: 0.75em; background-color: #fff; border: 1px #839FC7 solid; padding-left: 0.2em; margin: 0.1em 0 0 0.4em; font-family: Arial, helvetica, sans-serif; float:left;}
+label.float input[type="image"] {float:left; cursor: pointer; border: 0; background: transparent; padding: 0em 0.2em 0em 0.2em; margin: 0em 0 0 0.2em}
+label.float span {display: none}
+
+*+html fieldset {width: auto;}
+*+html label {display: block; width: 40em}
+*+html label span {display: inline; width: 14em}
+*+html label span input {display: inline}
+
+.botones {clear: both; text-align: center; padding-top: 0.9em; margin: 0.9em 4em 0.8em 0em;}
+*+html .botones {clear: both; text-align: center; padding-top: 0.2em; margin: 0.2em 4em 0.8em 0em;}
+.botones input[type="submit"] {cursor: pointer; width: auto; font-weight: normal; font-size: 0.7em; font-family: Arial, helvetica, sans-serif; color: #fff; background: #0F445F url("../img/boton.jpg") top repeat-x; border: 1px solid #256C92; text-align: center; padding: 0.2em 1em 0.3em 1.8em; margin: 0.25em 0 0 0.2em}
+.botones a {cursor: pointer; width: auto; font-weight: bold; font-size: 0.7em; font-family: Arial, helvetica, sans-serif; color: #fff; background: #0F445F url("../img/boton.jpg") top repeat-x; border: 1px solid #256C92; text-align: center; padding: 0.2em 1.2em 0.2em 1.2em; margin: 0.25em 0 0 0.2em}
+.botones a:hover {color: #fff; text-decoration: none}
+.botones input.boton-buscar {background: transparent url("../img/boton-buscar.jpg") top left no-repeat;}
+.botones input.boton-limpiar {background: transparent url("../img/boton-limpiar.jpg") top left no-repeat;}
+.botones input.boton-buscarultimo {background: transparent url("../img/boton-buscarultimo.jpg") top left no-repeat;}
+.botones input.boton-ordenar {background: transparent url("../img/boton-ordenar.jpg") top left no-repeat;}
+.botones input.boton-avanzada {background: transparent url("../img/boton-avanzada.jpg") top left no-repeat;}
+
+/* PESTAÑAS */
+.opciones{text-align: right; margin: 0.5em 0.4em -0.65em 0; }
+*+html .opciones{text-align: right; margin: 1.5em 0 -0.6em 0;}
+.opciones ul {margin: 0; padding: 0}
+.opciones ul li {display: inline; margin: 0 0.1em 0 0; padding: 0.4em 0.2em 0.25em 0.2em; background: #D1DEE7; border-top: 1px solid #ADC5D3; border-left: 1px solid #ADC5D3; border-right: 1px solid #ADC5D3; font-size: 0.75em;}
+.opciones ul li a {padding: 0.2em 0.5em 0.1em 1.6em;}
+.opciones ul li a.excel {background: transparent url("../img/ico-excel.gif") left no-repeat;}
+.opciones ul li a.editar {background: transparent url("../img/ico-editar.gif") left no-repeat; font-size: 100%}
+.opciones ul li a.copiar {background: transparent url("../img/ico-copiar.gif") left no-repeat; font-size: 100%}
+.opciones ul li a.imprimir {background: transparent url("../img/ico-imprimir.gif") left no-repeat; padding-left: 1.8em}
+.opciones ul li a.distribuir {background: transparent url("../img/ico-distribuir.gif") left no-repeat; padding-left: 2.2em; font-size: 100%}
+.opciones ul li a.abrir {background: transparent url("../img/ico-abrir.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.cerrar {background: transparent url("../img/ico-cerrar.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.informes {background: transparent url("../img/ico-informes.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.pdf {background: transparent url("../img/ico-pdf.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.aceptar {background: transparent url("../img/ico-aceptar.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.rechazar {background: transparent url("../img/ico-rechazar.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.cambiardestino {background: transparent url("../img/ico-cambiardestino.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.redistribuir {background: transparent url("../img/ico-redistribuir.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.archivar {background: transparent url("../img/ico-archivar.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.impreso {background: transparent url("../img/icon-impreso.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.noimpreso {background: transparent url("../img/icon-noimpreso.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.borrar {background: transparent url("../img/icon-borrar.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.noborrar {background: transparent url("../img/icon-noborrar.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+.opciones ul li a.mover {background: transparent url("../img/icon-mover.gif") left no-repeat; padding-left: 1.8em; font-size: 100%}
+
+
+.opciones input{cursor: pointer; display: inline; margin: 0 0.1em; padding: 0.4em 0.4em 0.5em 2em; background: #D1DEE7; border-top: 1px solid #ADC5D3; border-left: 1px solid #ADC5D3; border-right: 1px solid #ADC5D3; border-bottom: 0; font-size: 0.7em}
+.opciones input.excel {background: #D1DEE7 url("../img/ico-excel.gif") 0.3em 0.6em no-repeat;}
+.opciones input.editar {background: #D1DEE7 url("../img/ico-editar.gif") 0.3em 0.3em no-repeat;}
+.opciones input.copiar {background: #D1DEE7 url("../img/ico-copiar.gif") 0.3em 0.4em no-repeat;}
+.opciones input.imprimir {background: #D1DEE7 url("../img/ico-imprimir.gif") 0.3em 0.4em no-repeat;}
+.opciones input.distribuir {background: #D1DEE7 url("../img/ico-distribuir.gif") 0.3em 0.4em no-repeat;}
+.opciones input.abrir {background: #D1DEE7 url("../img/ico-abrir.gif") 0.3em 0.5em no-repeat;}
+
+/* REGISTROS */
+.registros {float: left; margin: 0 0 0 0.3em}
+.registros fieldset {border: 0; margin: 0; padding: 0}
+.registros form {border: 0; margin: 0; padding: 0}
+.registros label {font-size: 0.75em; margin: 0; padding: 0}
+.registros input[type="text"] {font-size: 100%}
+
+.registros input[type="submit"] {cursor: pointer; width: auto; font-weight: bold; font-family: Arial, helvetica, sans-serif; color: #000; background: transparent; border: 0px; text-align: center; padding: 0.1em 0.2em 0em 0.2em; margin: 0.25em 0 0 0.2em; }
+.registros .numero-registros {border-left: 1px solid #123152; font-size: 0.75em; border-right: 1px solid #123152; display: inline; padding: 0.2em 0.6em }
+.registros .navegacion-registros {display: inline; margin: 0em 0.6em 0em 0.6em;}
+.registros .navegacion-registros input {margin: 0em 0.3em 0em 0.3em;}
+.registros .navegacion-registros label span {display: none}
+
+.seleccion {float: right; margin: 0 0.5em 0 0}
+.seleccion fieldset {border: 0; margin: 0; padding: 0}
+.seleccion form {border: 0; margin: 0; padding: 0}
+.seleccion label {font-size: 0.75em; margin: 0; padding: 0}
+
+.mensaje {margin: 1em 0em 0.8em 0em; padding: 0.8em 0.8em 0.4em 0.8em; background: #F7F7F7; border-top: 1px solid #E0E0E0; border-bottom: 1px solid #E0E0E0}
+.mensaje p {color:#9D0000; font-weight: bold; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif;}
+.mensaje ul {margin: 0.6em 0 0.6em 1em; padding: 0 0 0 1em}
+.mensaje ul li {list-style-image: url("../img/ul.gif"); font-family: Arial, Helvetica, sans-serif; margin-top: 0.6em; font-size: 0.75em}
+
+.volver {text-align: right; margin: 0 0.2em 0 0}
+.volver  a {font-size: 0.75em; background: url("../img/volver.gif") left no-repeat; padding-left: 0.8em}
+
+/* TABLAS */
+/*div.ui-datatable-tablewrapper {width: 51.6em; margin: 0; padding: 0; overflow: auto;}*/
+
+.ui-datatable-tablewrapper {width: 100%; margin: 0; padding: 0; overflow: auto;} 
+div.ui-datatable-tablewrapper table {margin: 0; padding: 0}
+#contenedor #bloquecontenido .contenidogrande div.ui-datatable-tablewrapper {width: 100%; overflow: auto; padding-bottom: 0.6em}
+.tablascroll {width: 43em; overflow: auto}
+table td {font-size: 98%; color: #000}
+
+/*PIE*/
+#pie {width: 94%; min-width: 60em; max-width: 85em; min-height: 1.5em; height: auto !important; height: 3em; margin: -0.8em auto 0em auto; background: transparent url("../img/sombra-contenedor.png") top no-repeat;}
+*+html #pie {width: 60em; min-height: 3em; height: auto !important; height: 3em; margin: 0em auto 0em auto; background: transparent url("../img/sombra-contenedor.png") top no-repeat;}
+*+html #pie p {text-align: right; font-size: 0.75em; color: #000; padding-top: 0em}
+
+#pie p {text-align: right; font-size: 0.75em; color: #000; padding-top: 0.6em}
+#pie .izquierda {width: 30em; padding: 0.5em 0 0 0.1em; font-size: 100%; float: left;}
+#pie .izquierda p {margin: 0; padding: 0}
+#pie .derecha {width: auto; padding: 0.5em 0 0 0.4em; text-align: right; float: right; font-size: 100%;}
+#pie .derecha ul {margin-top:0; padding-top: 0}
+#pie .derecha ul li {display: inline; border-left: 1px solid #000}
+#pie .derecha ul li.primero {display: inline; border-left: 0px}
+#pie a {color: #1A3C5D; text-decoration: none; margin: 0 0.5em; font-weight: normal}
+#pie a:hover {text-decoration: underline;}
+#pie .derecha ul.iconos {margin-top:0; padding-top: 0}
+#pie .derecha ul.iconos li {display: inline; margin: 0em; padding: 0em; border: 0;}
+#pie .derecha ul.iconos li img {max-width: 100px; max-height:35px;}
+
+
+/* AÑADIDO PARA EL FORMULARIO DE SALIDA */
+#salida #accordion h3 {padding: 0.4em 1.6em 0.4em 1.9em}
+#salida #accordion h3.ui-corner-all {}
+#salida #accordion h3.ui-corner-top {background: #FEEFBC url("../img/formulario-salida-bg.gif") right repeat-y; border-bottom: 1px solid #FFCC80; border-top: 0; border-right: 0; border-left: 0; margin-bottom: 0; color: #7C0F0C !important}
+#salida #accordion h3.ui-corner-top > a {color: #7C0F0C !important;padding:0}
+#salida #accordion div.ui-accordion-content {padding:0px 0px 0px 0px;margin-top:0.7px;margin-bottom:0px}
+#salida #accordion fieldset {background: #F3F3E9; margin: 0; overflow: hidden;border:0;padding:16px}
+#salida #accordion .opciones ul li {background: #FEEFBC; border-top: 1px solid #FFCC80; border-right: 1px solid #FFCC80; border-left: 1px solid #FFCC80; border-bottom: 0px; margin-right: 0.1em; padding-bottom: 0.2em}
+#salida #accordion .ui-state-highlight, #salida #accordion .ui-widget-content #salida #accordion .ui-state-highlight, #salida #accordion .ui-widget-header #salida #accordion .ui-state-highlight{border-bottom:0px solid #666666; border-top:1px solid #666666;background:#FEEFBC;}
+#salida #accordion .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {}
+#salida #accordion .ui-datepicker-trigger.ui-state-focus, .ui-widget-content .ui-datepicker-trigger.ui-state-focus {cursor: pointer; width:2em; height: 1.9em; background: transparent url("../img/calendario.gif") 0.2em 0.3em no-repeat; border: 0; margin: 0 0 0 0.3em; padding: 0; vertical-align: top}
+#salida #accordion .ui-widget-content a {color: #7C0F0C}
+#salida .ui-datatable .ui-sortable-column-icon {display:block; margin:2px auto -3px auto; text-align: center}
+
+
+/* AÑADIDO PARA LOS FORMULARIOS DE DISTRIBUCION */
+#distribucion #accordion h3 {padding: 0.4em 1.6em 0.4em 1.9em}
+#distribucion #accordion h3.ui-corner-all {}
+#distribucion #accordion h3.ui-corner-top {background: url("../img/formulario-distribucion-bg.gif") bottom repeat-x; border-bottom: 1px solid #4D8464; border-top: 0; border-right: 0; border-left: 0;margin-bottom: 0; color: #30523F !important; font-weight: bold}
+#distribucion #accordion h3.ui-corner-top > a {color: #30523F !important;padding:0}
+#distribucion #accordion div.ui-accordion-content {padding:0px 0px 0px 0px;margin-top:0.7px;margin-bottom:0px}
+#distribucion #accordion fieldset {background: #F3F3E9; margin: 0; overflow: hidden;border:0;padding:16px}
+#distribucion #accordion .opciones ul li {background: #CEE1D8; border-top: 1px solid #A6C2B2; border-right: 1px solid #A6C2B2; border-left: 1px solid #A6C2B2; border-bottom: 0px; color: #30523F !important; margin-right: 0.1em; padding-bottom: 0.2em}
+#distribucion #accordion .opciones ul li a {color: #30523F !important}
+#distribucion #accordion .ui-state-highlight, #salida #accordion .ui-widget-content #salida #accordion .ui-state-highlight, #salida #accordion .ui-widget-header #salida #accordion .ui-state-highlight{border-bottom:0px solid #666666; border-top:1px solid #666666;background:#CEE1D8}
+#distribucion #accordion .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {}
+#distribucion #accordion .ui-datepicker-trigger.ui-state-focus, .ui-widget-content .ui-datepicker-trigger.ui-state-focus {cursor: pointer; width:2em; height: 1.9em; background: transparent url("../img/calendario.gif") 0.2em 0.3em no-repeat; border: 0; margin: 0 0 0 0.3em; padding: 0; vertical-align: top}
+#distribucion #accordion .ui-widget-content a {color: #7C0F0C}
+#distribucion .ui-datatable .ui-sortable-column-icon {display:block; margin:2px auto -3px auto; text-align: center}
+
+/* AÑADIDO PARA LOS LIBROS DE SALIDA */
+#libros-salida #accordion h3 {padding: 0.4em 1.6em 0.4em 1.9em}
+
+#libros-salida #accordion h3.ui-corner-all {}
+#libros-salida #accordion h3.ui-corner-top {background: url("../img/libros-salida-bg.gif") bottom repeat-x; border-bottom: 1px solid #D4989A; margin-bottom: 0; border-top: 0; border-right: 0; border-left: 0; color: #353931 !important}
+#libros-salida #accordion h3.ui-corner-top > a {color: #353931 !important;padding:0}
+#libros-salida #accordion div.ui-accordion-content {padding:0px 0px 0px 0px;margin-top:0.7px;margin-bottom:0px}
+#libros-salida #accordion fieldset {background: #F3F3E9; margin: 0; overflow: hidden;border:0;padding:16px}
+#libros-salida #accordion .opciones ul li {background: #F5E7E8; border-top: 1px solid #D4989A; border-right: 1px solid #D4989A; border-left: 1px solid #D4989A; border-bottom: 0px; color: #3E2831 !important; margin-right: 0.1em; padding-bottom: 0.2em}
+#libros-salida #accordion .opciones ul li a {color: #3E2831 !important}
+#libros-salida #accordion .ui-state-highlight, #salida #accordion .ui-widget-content #salida #accordion .ui-state-highlight, #salida #accordion .ui-widget-header #salida #accordion .ui-state-highlight{border-bottom:0px solid #666666; border-top:1px solid #666666;background:#F2DCDD}
+#libros-salida #accordion .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {}
+#libros-salida #accordion .ui-datepicker-trigger.ui-state-focus, .ui-widget-content .ui-datepicker-trigger.ui-state-focus {cursor: pointer; width:2em; height: 1.9em; background: transparent url("../img/calendario.gif") 0.2em 0.3em no-repeat; border: 0; margin: 0 0 0 0.3em; padding: 0; vertical-align: top}
+#libros-salida #accordion .ui-widget-content a {color: #7C0F0C}
+#libros-salida .ui-datatable .ui-sortable-column-icon {display:block; margin:2px auto -3px auto; text-align: center}
+
+/*BOTON OCULTAR MENÚ*/
+#buttonhide img {float: right; }
+*+html #buttonhide img {float: right; margin: -1.2em 0 0 0}
+*+html #buttonshow {margin: 0.5em 0.6em 0 0.6em; position: absolute; left: 1em; margin-top: 2.7em;}
+#buttonshow {margin: 0.5em 0.6em 0 0.6em; position: absolute; left: 1em; margin-top: 3.3em;}
+a#buttonshow {color: #123152; font-size: 0.75em; padding: 0.2em 0.4em 0 2.1em; background: #fff url("../img/ico-mostrar.gif") left no-repeat;}
+
+#accordion fieldset {overflow: hidden}
+#accordion .opciones ul div.ui-dialog {background: #FFFFFF; border: 0}
+#accordion .opciones ul div.ui-dialog .ui-dialog-title {color: #000; font-weight: bold;}
+div.ui-dialog .ui-widget {font-size: 100%;}
+div.ui-dialog .ui-widget ul li {font-weight: bold; color: #000; background: #fff;}
+#accordion .opciones ul div.ui-dialog .ui-widget ul li {background: none !important; border: none !important}
+#accordion .opciones ul div.ui-dialog .ui-widget .ui-message-warn {background: none !important}
+#accordion .opciones ul div.ui-dialog .ui-dialog-titlebar {background: #4F5259 !important; width: 99%; color: #fff}
+#accordion .opciones ul div.ui-dialog .ui-dialog-titlebar .ui-dialog-title {color: #fff}
+h3.ui-state-default {border: 0}
+
+
+/* AÑADIDOS PARA NUEVAS FUNCIONALIDADES */
+div.ui-dialog .ui-dialog-titlebar {background: #4F5259 !important; width: 99%; color: #fff}
+div.ui-dialog .ui-dialog-titlebar .ui-dialog-title {color: #fff; font-size: 0.9em}
+div.ui-dialog .ui-widget .ui-widget-content {background: #fff; /*font-size: 0.75em;*/ width: 100%; border: 0; color: #000}
+
+.ui-dialog fieldset {background: #fff !important; border: 0}
+.ui-datatable table table {font-size: 100% !important}
+
+.ui-dialog fieldset .ui-datatable table td {font-size: 100% !important}
+.ui-dialog fieldset .ui-datatable table table td {font-size: 100% !important}
+.ui-dialog fieldset .ui-datatable table table table td {font-size: 100% !important}
+
+.ui-datatable-scrollable-header-box table {margin-top: 0.8em}
+.ui-datatable-scrollable-header-box table thead th.ui-state-default {/*background: #D7E1E0;*/ text-align: left; font-weight: normal; border-bottom: 0}
+
+.ui-treetable-scrollable-header-box table {margin-top: 0.8em}
+.ui-treetable-scrollable-header-box table thead th.ui-state-default {/*background: #D7E1E0;*/ text-align: left; font-weight: normal; border-bottom: 0}
+
+.ui-panel .ui-panel-content label.general input {font-size: 100%}
+.ui-panel .ui-panel-content .ui-selectonemenu .ui-selectonemenu-label {font-size: 100% !important}
+
+table td label.general span.label label {font-size: 110%}
+table.ui-selectoneradio label {/*font-size: 90%;*/ padding-left: 0.4em}
+
+.registroAsociado {width: 95%; display: inline-block; margin: 0.4em; border: 0px solid #000;}
+.registroAsociado .ui-panel-title {font-size: 0.75em; font-weight: bold; color: #123152}
+.registroAsociado ul li {list-style-image: url("../img/ul-2.gif"); font-weight: normal;font-size: 1.0em;}
+.registroAsociado ul li span {font-weight: bold; margin-right: 0.2em}
+.registroAsociado ul li span:after {content: ":"}
+
+.ui-widget button.annadir {border: 1px solid rgb(168, 168, 168) !important; background: #c4c4c4 url("/SIGEM_RegistroPresencialMSSSIWeb/javax.faces.resource/images/ui-bg_highlight-hard_80_c4c4c4_1x100.png.xhtml?ln=primefaces-msssitheme") 50% 50% repeat-x !important; border-radius: 3px; color: #123152; font-size: 1.0em !important; font-weight: bold; margin: 0.8em 0.4em 0.4em 0.4em; padding: 0.2em 0.4em; cursor: pointer}
+.ui-widget button.cerrar {border: 1px solid rgb(168, 168, 168) !important; background: #c4c4c4 url("/SIGEM_RegistroPresencialMSSSIWeb/javax.faces.resource/images/ui-bg_highlight-hard_80_c4c4c4_1x100.png.xhtml?ln=primefaces-msssitheme") 50% 50% repeat-x !important; border-radius: 3px; color: #123152; font-size: 1.0em !important; font-weight: bold; margin: 0.8em 0.4em 0.4em 0.4em; padding: 0.2em 0.4em; cursor: pointer}
+.ui-widget button.annadir > span.ui-button-text {padding:3px !important}
+.ui-widget button.cerrar > span.ui-button-text {padding:3px !important}
+.ui-widget .ui-widget button {font-size: 100%; margin: 0.8em 0.4em}
+div.ui-dialog .ui-widget label.general span.label {font-size: 100% !important;}
+div.ui-dialog .ui-selectonemenu-label {font-size: 100% !important;}
+.ampliar { width: 500px}
+.ampliar td label label input { font-size: 80% !important;}
+.ampliar td label input { width: 55% !important;}
+.ampliar td label { font-size: 80% !important}
+.ampliar td label div label { margin: 0.0em}
+.ampliar td label label { font-size: 130% !important; }
+.ampliar td label span.label {}
+.ampliar td label span.label span { font-size: 103% !important; font-weight: bold}
+.ampliar td label span.label{min-height: 0em;}
+.ampliar td table.ui-selectoneradio{margin-left:100px;}
+.ampliar td label.inter span.label {text-align: left}
+.ampliar td label.inter{margin-left: 1.2em !important}
+.ampliar td label.infoInter span.label{width:initial;margin-left:2.0em !important;}
+.ampliar td label.datosInter span.label span {font-weight: bold}
+.ampliar td div.ui-accordion { width: 98% !important;}
+.ampliar td div.ui-accordion div.ui-accordion-content { width: 98% !important;}
+.ampliar td span.interPanelTitle {font-weight: bold}
+.ampliar td label div.ui-selectonemenu { width: 23.5em !important; }
+div.botoneraDiv {width: 98%;text-align:center}
+div.botoneraDiv button { font-size: 0.8em !important;}
+.ui-panel .ui-panel-content .ui-messages-info ul li {font-size: 100%}
+
+.select-radio {display: inline-block}
+.select-radio label {font-size: 0.75em !important; margin: 0 0.5em}
+.select-radio .ui-radiobutton-box span.ui-radiobutton-icon {margin: -0.15em 0em 0.8em -0.1em; padding: 0 }
+.select-radio .ui-state-active .ui-icon {border: 2px solid #ccc; }
+
+.historico {background: url("../img/ico-historico.gif") left no-repeat !important; width: 26px; height: 20px; border: 0 !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important}
+.historico span {display: none;}
+
+.organismobusq {background: url("../img/ico_lupa.gif") left no-repeat !important; width: 26px; height: 20px; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important}
+.organismobusq span {display: none;}
+
+*+html .ui-dialog {max-width: 45em !important; font-size: 100%}
+*+html .opciones ul div.ui-dialog .ui-widget ul li { font-size: 120% !important;}
+
+/* Pantalla de intercambio registral*/
+#intercambio {margin: 1.4em 0.4em 0 0.4em}
+#intercambio h3 {background: #ccc; padding: 0.6em 0em 0.6em 2.2em; margin: 0em 0.6em 0em 0.5em; font-size: 0.8em; background:#E2EBF0 url("../img/ul.gif") 0.8em 0.8em no-repeat; font-weight: bold}
+#intercambio fieldset {min-height: 10em; height: auto !important; height: 20em; background:#F3F3E9; border-top: 1px solid #CACACA; border-bottom: 2px solid #CACACA; border-left: 0; border-right: 0; margin: 0em 0.5em; padding: 1em 0.2em 0.6em 0.2em; position: relative}
+#intercambio span.resultado {width: auto; min-height: 1.8em; display: inline-block; text-align: left; font-size: 0.75em; font-family: Arial, helvetica, sans-serif; font-weight: bold; padding: 0.5em 0.8em 0em 0.2em !important; margin-left: 0.4em; vertical-align: top; }
+.nota {width: auto; min-height: 1.8em; display: inline-block; text-align: center; font-size: 0.70em; font-family: Arial, helvetica, sans-serif; font-weight: normal; padding: 0.5em 0.8em 0em 0.2em !important; margin-left: 0.4em; vertical-align: top; }
+
+#contenedor #bloquecontenido .contenidopequenio #intercambio .ui-inputfield {width: 70%;}
+#contenedor #bloquecontenido .contenidogrande #intercambio .ui-inputfield {width: 70%;}
+
+#contenedor #bloquecontenido .contenidopequenio .ui-inputfield { width: 70%}
+#contenedor #bloquecontenido .contenidogrande .ui-inputfield {width: 70%;}
+#contenedor #bloquecontenido .contenidogrande .ui-autocomplete>.ui-inputfield {width: 68%;}
+
+#intercambio label.general span.label {min-height: 1.8em; display: inline-block; color: #000; width: 12.5em !important; text-align: right; font-size: 0.75em; font-family: Arial, helvetica, sans-serif; font-weight: normal; padding: 0.4em 0.2em 0 0.3em; vertical-align: top}
+
+#form\:DetIRDialog .beforeAmplia {font-weight: normal !important; margin-left: 6px; text-align: left !important; vertical-align: top; width: 26em !important;}
+#form\:DetIRDialog .ui-dialog-content {padding: .5em 1.2em !important;}
+#form\:DetIRDialog .ui-dialog-content table {overflow-x: hidden}
+#form\:DetIRDialog h3 {font-size: 1em !important; padding: 0.3em 0.3em 0.3em 0.8em !important; border-radius: 6px; border-bottom: 0 !important}
+#form\:DetIRDialog .ui-accordion .ui-accordion-header .ui-icon {display: none}
+#form\:DetIRDialog .ampliar td label span.label span {font-size: 1.1em !important; font-weight: bold; width: 15em; display: inline-block; text-align: right; color: #333}
+#form\:DetIRDialog .tableAttached {width: 98% !important; margin: 0.4em auto; font-size: 1.2em !important; border-collapse: collapse; border-spacing: 0;}
+#form\:DetIRDialog .tableAttached tbody tr {}
+#form\:DetIRDialog .tableAttached tbody tr td {padding: 0.5em 0.4em; line-height: 1.42857143; vertical-align: top; border-top: 1px solid #d7d7d7 !important; border-bottom: 0px; border-left: 0 !important; border-right: 0 !important}
+#form\:DetIRDialog .tableAttached thead tr th  {background: #e8e8e8; color: #333; border: 0; padding: 0.7em 0.4em; text-align: left}
+#form\:DetIRDialog .tableAttached thead tr {border-top: 1px solid #c9c9c9; border-bottom: 1px solid #b1b1b1}
+#form\:DetIRDialog .tableAttached table > tbody > tr:hover {background: #f4f4f4}
+#form\:DetIRDialog table.interPanelTitle:first-child tr:first-child td:first-child {padding: 15px 0px 0px 6px; font-size: 0.9em; font-weight: bold;}
+#form\:DetIRDialog .spaninter {padding: 6px 15px 6px 15px; display: block; border-radius: 4px; border: 1px solid #ccc; background: #f0f0f0; }
+#form\:DetIRDialog .spanrepre {padding: 6px 15px 6px 15px; display: block; border-radius: 4px; border: 1px solid #ccc; background: #f0f0f0;margin:5px 0px 0px 20px;font-size:0.85em;font-weight:bold }
+
+/* Fin pantalla de intercambio registral*/
+
+div.ui-message-dialog {width:550px !important;left:350px !important}
+
+.ventanaDist {width:500px !important;}
+.tableAttached {font-size: 1.0em !important;width:95%}
+.labelHistoricoIR {font-size:0.80em;font-weight:bold}
+div.ventanaDist .destinoCambio_input input.ui-autocomplete-input {width:95% !important}
+.sirReque {background-color: #FFBABA !important; background-image: none !important}
+.sirNoDoc {background-color: #B2ECB2 !important; background-image: none !important}
+.sirCom {background-color: #FFF49C !important; background-image: none !important}
+.botonera{font-size:1.0em;text-align:center}
+.ui-timepicker-div {font-size:0.80em !important}
+div.ui-dialog div.ui-panel-content textarea {width:94% !important}
+.organismo{font-weight:bold;}
+.organismopadre{font-style:italic;color:#5E5E5C;}
+.departamentos{font-weight:bold;font-size:0.8em}
+.departamentospadre{font-style:italic;color:#5E5E5C;font-size:0.8em}
+.destinoRegistralDialog input {width:94% !important}
+#distribuirform\:selectdestinoRedisDepartamentos_panel {width:480px !important;font-size:0.9em}
+#distribuirform\:selectdestinoRedisDepartamentos_filter{width:90% !important;font-size:0.9em}
+#distribuirform\:panelDigdlgRedistribuir div.ui-selectonemenu-filter-container input.ui-selectonemenu-filter{width:90% !important;font-size:0.9em}
+#distribuirform\:selectdestinoRedisDepartamentos{width:470px !important}
+.asociar{width:500px !important;}
+.asociar span.label{width:10em !important;}
+.asociar .ui-selectonemenu-label {width:100% !important;}
+.infoAdjuntarDoc{font-size:0.80em;font-style:italic}
+span.textnormal {min-height: 1.8em; display: inline-block; color: #000;  text-align: right; font-size: 0.75em; font-family: Arial, helvetica, sans-serif; font-weight: normal; padding: 0.6em 0.4em 0 0.3em}
+#formUnit\:tabUnitLevel > ul {width:100%}
+#formUnit\:tabUnitLevel {width:98%}
+#formUnit\:tabUnitLevel > .ui-tabs-panels a {font-size:0.80em;margin-left:0.5em}
+#formUnit\:panelDigdlgDirOrg {font-size: 1.2em; background: #fff url("../img/ico-ubicacion.png") 0em 0.5em no-repeat; margin: 0; min-height: 40px !important;}
+.adressorgclass {margin: 0.5em 0 0.3em 0; padding-left: 1.6em; font-weight: bold}
+.telorgclass {margin: 0.3em 0 0.3em 0em; padding-left: 1.6em}
+#formUnit\:panelDigdlgDirOrg_content {background: transparent !important}
+.bodyUnit {background-image:none !important;background-color: #ffffff !important}
+.heightTextSearch {height:35px;text-align:center}
+.heightTextSearch input {width: 60%}
+.tableUnit {font-size:1em !important;}
+.tableUnit table{width:97% !important;height:auto !important;}
+.tableUnit .unit{font-weight: bold; color: #333; padding-right: 1.8em}
+.tableUnit .unitfather{font-size:0.94em;font-style:oblique}
+.tableUnit div.ut {float: right; margin-top: -0.6em}
+.tableUnit div.ut img {margin-top:0}
+.tableUnit tr td {vertical-align: top; line-height: 1.4em}
+
+body.bodyUnit .ui-widget-overlay {background-image: none !important;background-color: transparent !important;}
+body.bodyUnit .botones{margin:0 0 0 0}
+body.bodyUnit .ui-message-dialog{width:245px !important;font-size:0.8em;left:207.5px !important}
+#dialogCambioDestinoForm\:destinoCambio input{width:80% !important}
+#reenviForm\:unidadTramitadoraDestino input {width:500px !important}
+#form\:displayDetIR td label span.label  {text-align:left; min-height:0em; width:95%}
+.beforeAmplia {font-weight: normal !important; margin-left:6px}
+.bookStyle {DISPLAY: table; float: right; font-size: 1.30em;color: rgb(20, 86, 128);vertical-align:top}
+.bookStyle > img {margin-top: -6px; margin-right: 5px;}
+
+div.incidencia {
+	float: right;
+	height: 15px;
+	width: 100%;
+}
+
+div.incidencia p {
+	text-align: center;
+	font-size: 0.80em;
+}
+
+div.reportTicket {
+	width: 98%;
+	clear: both;
+	margin: 0 !important;
+	display: inline-block;
+}
+
+ul.instructions {
+	margin: 0.5em 1em !important;
+}
+select.ui-paginator-jtp-select {
+    padding: 2px 6px 0px 6px !important;
+    margin-left: 15px !important;
+    margin-right: 1px !important;
+    color: #3f6b81 !important;
+}
+
+td.repeted1 {
+    background-color: #D9D9D9;
+    color: #474747;
+}
+
+td.repeted {
+    background-color: #fffff;
+    color: #000000;
+}
+
+td.repeted2 {
+    background-color: #F2D4FC;
+    color: #474747;
+}
+#contenedor #bloquecontenido .contenidogrande input.ui-inputfield {
+    width: 63%;
+}
+
+.headerPage > div {
+	padding: 0 1px 0 0;
+}
+span.sirSoporte {
+	text-align: left  !important;
+	padding: 0 7px 15px 7px  !important;
+}
+
+span.resultadoDocFisica {
+	width: auto;
+	min-height: 1.8em;
+	display: inline-block;
+	text-align: left;
+	font-size: 0.75em;
+	font-family: Arial,helvetica,sans-serif;
+	padding: 0.5em 0.8em 0em 0.2em !important;
+	margin-left: 0.4em;
+	vertical-align: middle;
+}
+table.tablapaneldocSupport input[type="text"] {
+	width: 415px !important;
+}
+
+#formUnit\:tabUnitLevel div.ui-tabs-panel {
+	padding: 0px !important;
+}
+
+#formUnit\:tabUnitLevel div.ui-datatable-tablewrapper {
+	max-height:325px;
+}
+
+.ui-dialog .ui-dialog-content {
+	padding-top: 0px !important;
+	padding-bottom: 0px;
+}
+
+
+#formLink\:confirmDialogReport div.ui-dialog-buttonpane {
+	width: 95%;
+	text-align: center;
+}
+
+div#form\:OriginButton_dlg iframe{
+	width: 660px !important;
+}
+
+.buttonUbicacion {background: url("../img/ico-ubicacion-p.png") center no-repeat !important; width: 26px; height: 20px; border: 0 !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important;margin-left: 0px !important;}
+.buttonUbicacion span {display: none;}
+
+div.ut {float: right; margin-top: -0.6em}
+div.ut img {margin-top:0}
+
+.divAceptarFont{
+	font-size: 1.1em;
+}
+div#accordion\:outputRegisterAttachedDocumentsForm\:dialogFileUpload button.ui-fileupload-upload{
+	visibility: hidden;
+}
+div#accordion\:outputRegisterAttachedDocumentsForm\:dialogFileUpload button.ui-button-text-icon-left.ui-fileupload-cancel{
+	visibility: hidden;
+}
+
+
+
+.ampliarBuscarInt { width: 750px; }
+.ampliarBuscarInt td label label input { font-size: 80% !important;}
+.ampliarBuscarInt td label input { width: 55% !important;}
+.ampliarBuscarInt td label { font-size: 80% !important}
+.ampliarBuscarInt td label div label { margin: 0.0em}
+.ampliarBuscarInt td label label { font-size: 130% !important; }
+.ampliarBuscarInt td label span.label {}
+.ampliarBuscarInt td label span.label span { font-size: 103% !important; font-weight: bold}
+.ampliarBuscarInt td label span.label{min-height: 0em;}
+.ampliarBuscarInt td table.ui-selectoneradio{margin-left:100px;}
+.ampliarBuscarInt td label.inter span.label {text-align: left}
+.ampliarBuscarInt td label.inter{margin-left: 1.2em !important}
+.ampliarBuscarInt td label.infoInter span.label{width:initial;margin-left:2.0em !important;}
+.ampliarBuscarInt td label.datosInter span.label span {font-weight: bold}
+.ampliarBuscarInt td div.ui-accordion { width: 50% !important;}
+.ampliarBuscarInt td div.ui-accordion div.ui-accordion-content { width: 50% !important;}
+.ampliarBuscarInt td span.interPanelTitle {font-weight: bold}
+.ampliarBuscarInt td label div.ui-selectonemenu { width: auto !important; min-width: 10em !important}
+.ampliarBuscarInt td label input#interesadosform:docIdentidadIntPBuscar {size: 20 !important}
+.ampliarBuscarInt #interesadosform:gridIResultados {width: 80%;}
+.ampliarBuscarInt .ui-state-default {font-weight:bold !important;}
+.ampliarBuscarInt .ui-datatable-scrollable-header-box table thead th.ui-state-default {font-weight:bold !important; text-align:center !important;}
+
+
+.intBotonResultBusquedaAnadir {background: url("../img/add.png") left no-repeat !important; height: 10px; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important; margin: 0em 0em !important;}
+.intBotonResultBusquedaAnadir span {display: none;}
+.intBotonResultBusquedaModificar {background: url("../img/editar.png") left no-repeat !important; height: 10px; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 0em !important;}
+.intBotonResultBusquedaModificar span {display: none;}
+
+.ui-datatable-odd {background: none repeat scroll 0 0 #F2F5F9 !important;}
+
+.ui-paginator {margin: 0em !important;}
+.ui-datatable.busquedaInt th {text-align: center !important; font-weight: bold !important;}
+.ui-datatable.busquedaInt.ui-paginator-pages span{font-size: 1em;}
+
+.intBotonGuardarTercero {background: url("../img/editar.png") left no-repeat !important; height: 10px; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 0em !important;}
+.intBotonResultBusquedaModificar span {display: none;}
+
+.modificarTerceros { width: 750px;}
+.modificarTerceros label { font-size: 1em;}
+.modificarTerceros table { width: 100%;}
+.modificarTerceros .value { width: 80%;}
+.modificarTerceros .ui-paginator { font-size:1.3em; }
+.modificarTerceros .ui-inputtext { width:80% !important}
+
+.ui-datatable.modificarTerceros th {text-align: center !important; font-weight: bold !important; font-size: 1.4em !important;}
+.ui-datatable.modificarTerceros td {font-size: 1.3em;}
+
+.tercerosPrincipalCheckbox { width:auto !important; display: inline-table !important;}
+.tercerosPrincipalCheckbox table { border:0px !important; display: inline-table !important;}
+.tercerosPrincipalCheckbox td { border:0px !important;}
+.tercerosPrincipalCheckbox input { margin:0px;}
+
+.intBotonModificar {background: url("../img/editar.png") left no-repeat !important; height: 15px !important; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 0em !important;}
+.intBotonModificar span {display: none;}
+.intBotonEliminar {background: url("../img/delete.png") left no-repeat !important; height: 15px !important; width:15px; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 0em !important;}
+.intBotonEliminar span {display: none;}
+
+.botonAltaTerceroFisico {background: url("../img/terceros/man.png") left no-repeat !important; height: 25px; width:25%; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 5em !important;}
+.botonAltaTerceroJuridico {background: url("../img/terceros/factory-icon.png") left no-repeat !important; height: 25px; width:25%; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 5em !important;}
+.botonAnadirTerceroFisico {background: url("../img/terceros/man.png") left no-repeat !important; height: 25px; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; }
+.botonAnadirTerceroJuridico {background: url("../img/terceros/factory-icon.png") left no-repeat !important; height: 25px; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; }
+
+.ui-tabs .ui-tabs-nav {background-color: #FFFFFF;}
+.ui-tabs.ui-tabs-top .ui-tabs-nav li.ui-tabs-selected {background-color: #c0baf5 !important}
+
+.botonCambiarNombre {background: url("../img/editar.png") left no-repeat !important; font-size:0.75em !important; height: 25px; width:25%; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 0em !important;}
+.botonAdjuntarDocumento {background: url("../img/add_document.png") left no-repeat !important; font-size:0.75em !important; height: 25px; width:25%; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 0em !important;}
+.botonEscanearDocumento {background: url("../img/scanner.gif") left no-repeat !important; font-size:0.75em !important; height: 25px; width:25%; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 0em !important;}
+.botonFirmarDocumento {background: url("../img/compulsa.png") left no-repeat !important; font-size:0.75em !important; width:15px; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 0em !important;}
+.botonEliminar {background: url("../img/delete.png") left no-repeat !important; font-size:0.75em !important; width:15px; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 0em !important;}
+.botonMetadatos {background: url("../img/legend.gif") left no-repeat !important; font-size:0.75em !important; height: 25px; width:25%; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 0em !important;}
+.botonConfigurarEscaner {background: url("../img/confscanner.png") left no-repeat !important; font-size:0.75em !important; height: 25px; width:25%; border: 0px !important; cursor: pointer;box-shadow: inset 0px 0px 0px !important ; margin: 0em 0em !important;}
+
+.ui-fileupload-buttonbar .ui-fileupload-choose input{
+	transform: translate(180px, 0) scaleX(0.3) !important; 
+} 

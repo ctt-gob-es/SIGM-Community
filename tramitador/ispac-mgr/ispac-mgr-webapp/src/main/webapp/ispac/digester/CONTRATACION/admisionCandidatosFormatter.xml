@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter pageSize='100'>
+
+	<!-- Ponemos 2 veces la propiedad Asunto, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+		 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CAPAC_CONTRAT' 
+				 titleKey='CONTRATACION_PCAP_CONDADM:CAPAC_CONTRAT' 
+				 fieldType='LINK'
+				 columnClass='width55percent'
+				 headerClass='sortable'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CAPAC_CONTRAT' 
+				 titleKey='CONTRATACION_PCAP_CONDADM:CAPAC_CONTRAT' 
+				 fieldType='LIST'
+				 columnClass='width55percent'
+				 headerClass='headerDisplay'
+				 media='csv excel xml pdf'/>
+				 
+				 
+
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CAP_CONT_VAL_TEXT' 
+				 titleKey='CONTRATACION_PCAP_CONDADM:CAP_CONT_VAL_TEXT' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CAP_CONT_AUTORIZA' 
+				 titleKey='CONTRATACION_PCAP_CONDADM:CAP_CONT_AUTORIZA' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CAP_CONT_DOC' 
+				 titleKey='CONTRATACION_PCAP_CONDADM:CAP_CONT_DOC' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 headerClass='sortable'
+				 sortable='true'/>
+				 
+				 
+				 
+</beanformatter>

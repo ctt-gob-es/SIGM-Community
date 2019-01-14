@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.sigem.dipcoruna.addons</groupId>
+	<artifactId>addons</artifactId>
+	<version>1.0.0-RC2</version>
+    <packaging>pom</packaging>    
+    
+     <modules>
+     	<module>addons-framework</module>
+        <module>addon-editor-launcher</module>
+        <module>jtwain</module>
+        <module>addon-scan</module>
+        <!--<module>addons-async-updater</module>-->
+        <module>addon-async-uploader</module>
+    </modules>
+    
+</project>

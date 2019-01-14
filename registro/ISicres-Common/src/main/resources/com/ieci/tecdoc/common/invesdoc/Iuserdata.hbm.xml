@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+    
+<hibernate-mapping>
+<!-- 
+    Created by the Middlegen Hibernate plugin
+
+    http://boss.bekk.no/boss/middlegen/
+    http://hibernate.sourceforge.net/
+-->
+
+<class 
+    name="com.ieci.tecdoc.common.invesdoc.Iuserdata" 
+    table="IUSERDATA"
+>
+    <meta attribute="class-description" inherit="false">
+       @hibernate.class
+        table="IUSERDATA"
+    </meta>
+
+    <id
+        name="id"
+        type="java.lang.Integer"
+        column="ID"
+    >
+        <meta attribute="field-description">
+           @hibernate.id
+            generator-class="assigned"
+            type="java.lang.Integer"
+            column="ID"
+
+        </meta>
+        <generator class="assigned" />
+    </id>
+    
+    <one-to-one name="iuseruserhdr" class="com.ieci.tecdoc.common.invesdoc.Iuseruserhdr" constrained="true"></one-to-one>
+
+    <property
+        name="cargo"
+        type="java.lang.String"
+        column="cargo"
+        not-null="false"
+        length="256"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="CARGO"
+            length="256"
+            not-null="false"
+        </meta>    
+    </property>
+    <property
+        name="tfno_movil"
+        type="java.lang.String"
+        column="tfno_movil"
+        not-null="false"
+        length="16"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="TFNO_MOFIL"
+            length="16"
+            not-null="false"
+        </meta>    
+    </property>
+    <property
+        name="id_certificado"
+        type="java.lang.String"
+        column="id_certificado"
+        not-null="false"
+        length="256"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="ID_CERTIFICADO"
+            length="256"
+            not-null="false"
+        </meta>    
+    </property>
+    <property
+        name="email"
+        type="java.lang.String"
+        column="email"
+        not-null="false"
+        length="256"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="EMAIL"
+            length="256"
+            not-null="false"
+        </meta>    
+    </property>
+    <property
+        name="nombre"
+        type="java.lang.String"
+        column="nombre"
+        not-null="false"
+        length="256"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="NOMBRE"
+            length="256"
+            not-null="false"
+        </meta>    
+    </property>
+    <property
+        name="apellidos"
+        type="java.lang.String"
+        column="apellidos"
+        not-null="false"
+        length="256"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="APELLIDOS"
+            length="256"
+            not-null="false"
+        </meta>    
+    </property>
+    <property
+        name="dni"
+        type="java.lang.String"
+        column="DNI"
+        not-null="false"
+        length="20"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="DNI"
+            length="20"
+            not-null="false"
+        </meta>    
+    </property>
+    
+    <!-- associations -->
+</class>
+</hibernate-mapping>

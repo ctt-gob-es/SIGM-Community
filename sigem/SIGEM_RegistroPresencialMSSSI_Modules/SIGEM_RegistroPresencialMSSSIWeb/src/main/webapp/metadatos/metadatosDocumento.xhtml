@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+	
+	<h:head>
+	</h:head>
+	
+	<h:body>
+		<ui:composition>
+			<h:form id="formMetadatosDoc" enctype="multipart/form-data">
+				<p:panelGrid columns="2" rendered="#{not empty metadatosAction.metadatosDocumentoBean}" columnClasses="label,value">
+
+					<h:outputText value="#{msgs.labelVersionNTI}:"/>
+                	<h:outputText value="#{metadatosAction.metadatosDocumentoBean.versionNTI}"/>
+
+					<h:outputText value="#{msgs.labelIdentificador}:"/>
+	        	       <h:outputText value="#{metadatosAction.metadatosDocumentoBean.identificador}"/>
+
+					<h:outputText value="#{msgs.labelOrgano}:"/>
+					<h:outputText value="#{metadatosAction.metadatosDocumentoBean.organo}"/>
+
+					<h:outputText value="#{msgs.labelFechaCaptura}:"/>
+        		    <h:outputText value="#{metadatosAction.metadatosDocumentoBean.sFechaCaptura}"/>
+        		    
+        		    <h:outputText value="#{msgs.labelOrigenCiudadanoAdministracion}:"/>
+					<p:selectOneMenu
+						value="#{metadatosAction.metadatosDocumentoBean.origen}"
+						id="origenCiudadanoAdministracion" 
+						label="#{msgs.labelOrigenCiudadanoAdministracion}" 
+						panelStyle="width:150px"
+						effect="fade" 
+						filter="true" 
+						filterMatchMode="contains">
+						
+						<f:selectItems value="#{metadatosAction.metadatosDocumentoBean.listaOrigenCiudadanoAdministracion}" 
+							var="origenCiudadanoAdministracion" 
+							itemLabel="#{origenCiudadanoAdministracion.sustituto}"
+							itemValue="#{origenCiudadanoAdministracion.valor}" />														
+							
+						<p:ajax event="change" listener="#{metadatosAction.actualizaMetadatoOrigenCiudadanoAdministracion}" update="formMetadatosDoc"/>													
+					</p:selectOneMenu>
+
+
+					<h:outputText value="#{msgs.labelValorEstadoElaboracion}:"/>
+	        	    <p:selectOneMenu
+						value="#{metadatosAction.metadatosDocumentoBean.estadoElaboracion}"
+						id="estadoElaboracion" 
+						label="#{msgs.labelValorEstadoElaboracion}" 
+						panelStyle="width:150px"
+						effect="fade" 
+						filter="true" 
+						filterMatchMode="contains">
+						
+						<f:selectItems value="#{metadatosAction.metadatosDocumentoBean.listaEstadosElaboracion}" 
+							var="estadoElaboracion" 
+							itemLabel="#{estadoElaboracion}"
+							itemValue="#{estadoElaboracion}" />
+						<p:ajax event="change" listener="#{metadatosAction.actualizaMetadatoEstadoElaboracion}" update="formMetadatosDoc"/>													
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs.labelNombreFormato}:"/>
+		        	<h:outputText value="#{metadatosAction.metadatosDocumentoBean.nombreFormato}"/>										
+
+					<h:outputText value="#{msgs.labelTipoDocumental}:"/>
+					<p:selectOneMenu
+						value="#{metadatosAction.metadatosDocumentoBean.tipoDocumental}"
+						id="tipoDocumental" 
+						label="#{msgs.labelTipoDocumental}" 
+						panelStyle="width:150px"
+						effect="fade" 
+						filter="true" 
+						filterMatchMode="contains">
+						
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItems value="#{metadatosAction.metadatosDocumentoBean.listaTiposDocumentales}" 
+							var="tipoDocumental" 
+							itemLabel="#{tipoDocumental}"
+							itemValue="#{tipoDocumental}" />
+						<p:ajax event="change" listener="#{metadatosAction.actualizaMetadatoTipoDocumental}" update="formMetadatosDoc"/>													
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs.labelTipoFirma}:"/>
+			        <p:selectOneMenu
+						value="#{metadatosAction.metadatosDocumentoBean.tipoFirma}"
+						id="tipoFirma" 
+						label="#{msgs.labelTipoFirma}" 
+						panelStyle="width:150px"
+						effect="fade" 
+						filter="true" 
+						filterMatchMode="contains">
+						
+						<f:selectItem itemLabel="" itemValue="" />
+						<f:selectItems value="#{metadatosAction.metadatosDocumentoBean.listaTiposFirma}" 
+							var="tiposFirma" 
+							itemLabel="#{tiposFirma}"
+							itemValue="#{tiposFirma}" />
+						<p:ajax event="change" listener="#{metadatosAction.actualizaMetadatoTipoFirma}" update="formMetadatosDoc"/>													
+					</p:selectOneMenu>
+
+					<h:outputText value="#{msgs.labelCSV}:"/>
+					<h:outputText value="#{metadatosAction.metadatosDocumentoBean.csv}"/>
+
+				</p:panelGrid>
+			</h:form>
+		</ui:composition>
+	</h:body>
+</html>

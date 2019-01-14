@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+
+</h:head>
+
+<h:body>
+
+	<ui:composition template="/template/layout.xhtml">
+		<ui:define name="head">
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/jquery.ui.accordion.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/dialog.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/interchange.js"></script>
+			<script type="text/javascript">
+				$(function() {
+					$("#accordion1").accordion({
+						collapsible : false
+					});
+				});
+			</script>
+		</ui:define>
+
+		<ui:define name="breadcrumb">
+			<ol>
+				<li><h:link value="#{msgs.labelInicio}" outcome="goInicioForm" /></li>
+				<li><h:outputText value="#{msgs.labelIntRegistral}" /></li>
+			</ol>
+		</ui:define>
+		<ui:define name="content">
+			<h2>
+				<h:outputText value="#{msgs.labelIntRegistral}" />
+			</h2>
+			<div class="sombra"></div>
+
+			<h:form id="form">
+				<div class="enlaces"></div>
+
+				<!--DIV PARA EL LIBRO DE SALIDA-->
+				<div id="salida">
+					<div id="accordion">
+						<h3
+							class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top"
+							role="tab" aria-expanded="true" aria-selected="true" tabindex="0">
+							<h:outputText value="#{msgs.labelCriteriosBusqueda}" />
+						</h3>
+						<fieldset
+							class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active"
+							role="tabpanel" style="height: 725px;">
+							<h:panelGroup id="panel" layout="block">
+								<label for="form:type" class="general"> <span
+									class="label"><h:outputText id="typelabel"
+											value="#{msgs.typelabel}" /></span> <p:selectOneMenu id="type"
+										value="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.type}">
+										<f:selectItem itemLabel="Asientos Enviados a otros Organismos" itemValue="0" />
+										<f:selectItem itemLabel="Asientos Recibidos de otros Organismos" itemValue="1" />
+										<p:ajax update="panel,tableResults"
+											listener="#{searchInboxRegInterchangeAction.goOutBoxRegInterchange}" />
+									</p:selectOneMenu>
+								</label>
+								<label for="form:state" class="general"> <span
+									class="label"><h:outputText id="statelabel"
+											value="#{msgs.statelabel}" /></span> <p:selectOneMenu id="inState"
+										value="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState}">
+										<p:ajax event="change" process="@this" update="paneldocSupport" />
+										<f:selectItem itemLabel="#{msgs.IRpendientes}" itemValue="0" />
+										<f:selectItem itemLabel="#{msgs.IRaceptados}" itemValue="1" />
+										<f:selectItem itemLabel="#{msgs.IRrechazados}" itemValue="2" />
+										<f:selectItem itemLabel="#{msgs.IRreenviados}" itemValue="3" />
+									</p:selectOneMenu>
+								</label>
+								<h:panelGrid id="paneldocSupport" style="margin: 0.3em 0.2em 0px 0em;float: left;clear: left;width: 100%;" styleClass="tablapaneldocSupport">
+								<ui:fragment
+										rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 0}">
+									<label for="form:docSupport" class="general"> <span
+										class="label"><h:outputText id="docSoplabel"
+												value="Documentación física soportes" /></span> <p:selectOneMenu id="docSupport" 
+											value="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.docSupport}">
+											<f:selectItem itemLabel="" itemValue="0" />
+											<f:selectItem itemLabel="Acompaña documentación física requerida" itemValue="1" />
+											<f:selectItem itemLabel="Acompaña documentación física complementaria" itemValue="2" />
+											<f:selectItem itemLabel="No acompaña documentación física" itemValue="3" />
+										</p:selectOneMenu>
+									</label>
+									<label for="form:nreg" class="general"> <span
+										class="label"><h:outputText id="nreglabel"
+											value="#{msgs.fld10label}" /></span> <p:inputText id="inNreg"
+										value="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.nregistroOrg}">
+										</p:inputText>
+									</label>
+									<label for="form:codIntercambio" class="general"> <span
+										class="label"><h:outputText id="codIntercambiolabel"
+											value="#{msgs.headercodigoIntercambio}" /></span><p:inputText id="inCodIntercambio"
+										value="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.codIntercambio}">
+										</p:inputText>
+										</label>
+									<label for="form:docInteresado" class="general"> <span
+										class="label"><h:outputText id="docInteresadolabel"
+											value="#{msgs.labelTipoDocumentoIR}" /></span> <p:inputText id="docInteresado"
+										value="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.docInteresado}">
+										</p:inputText>
+									</label>
+									<label for="form:nombreInteresado" class="general"> <span
+										class="label"><h:outputText id="nombreInteresadolabel"
+											value="#{msgs.labelNombreInteresadoIR}" /></span> <p:inputText id="nombreInteresado"
+										value="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.nombreInteresado}">
+										</p:inputText>
+									</label>
+									<label for="form:primerApellidoInteresado" class="general"> <span
+										class="label"><h:outputText id="primerApellidoInteresadolabel"
+											value="#{msgs.labelPrimerApellidoInteresadoIR}" /></span> <p:inputText id="primerApellidoInteresado"
+										value="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.primerApellidoInteresado}">
+										</p:inputText>
+									</label>
+									<label for="form:resumen" class="general"> <span
+										class="label"><h:outputText id="resumenlabel"
+											value="#{msgs.fld17label}" /></span> <p:inputText id="resumen"
+										value="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.resumen}">
+										</p:inputText>
+									</label>
+									</ui:fragment>
+									
+								</h:panelGrid>
+								<div class="botones">
+									<p:commandButton styleClass="boton-buscar"
+										value="#{msgs.labelBotonBuscar}" 
+										update="panel,panelGroupopciones,tableResults,paneltable,inState"
+										process="@form" 
+										onclick="tableResultswidgetVar.getPaginator().setPage(0)"
+										 />
+								</div>
+							</h:panelGroup>
+						</fieldset>
+						<h3
+							class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top"
+							role="tab" style="margin-top: 0.8em" aria-expanded="true"
+							aria-selected="true" tabindex="0">
+							<h:outputText value="#{msgs.labelResultadosBusqueda}" />
+						</h3>
+						<fieldset
+							class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active"
+							role="tabpanel"
+							style="height: 725px; padding-top: 16px; padding-bottom: 16px; padding-left: 16px; padding-right: 16px;">
+							<div class="opciones">
+								<h:panelGroup id="panelGroupopciones">
+									<ui:fragment
+										rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 0}">
+										<ul>
+											<ui:fragment
+												rendered="${J_PERMSUSER.canAccessRegInterchange}">
+												<li><p:commandLink id="aceptar"
+														value="#{msgs.labelAceptarDist}" process="@form"
+														styleClass="aceptar" update="dialogMessage"
+														actionListener="#{searchInboxRegInterchangeAction.isSelect}"
+														oncomplete="decideOpenningAceptar (xhr, status, args)"></p:commandLink></li>
+											</ui:fragment>
+											<ui:fragment
+												rendered="${J_PERMSUSER.canAccessRegInterchange}">
+												<li><p:commandLink id="rechazar"
+														value="#{msgs.labelRechazarDist}" process="@form"
+														styleClass="rechazar" update="dialogMessage"
+														actionListener="#{searchInboxRegInterchangeAction.isSelect}"
+														oncomplete="decideOpenningRechazar (xhr, status, args)"></p:commandLink></li>
+											</ui:fragment>
+											<ui:fragment
+												rendered="${J_PERMSUSER.canAccessRegInterchange}">
+												<li><p:commandLink id="reenviar"
+														value="#{msgs.labelReenviar}" process="@form"
+														styleClass="cambiardestino" update="dialogMessage"
+														actionListener="#{searchInboxRegInterchangeAction.isSelect}"
+														oncomplete="decideOpenningReenviar (xhr, status, args)"></p:commandLink></li>
+											</ui:fragment>
+											
+										</ul>
+									</ui:fragment>
+								</h:panelGroup>
+							</div>
+							<p></p>
+							<h:panelGroup id="paneltable">
+								
+								<p:dataTable  paginator="true" rows="10"
+									summary="Tabla de Resultados" var="reg" lazy="true" 
+									value="#{searchInboxRegInterchangeAction.searchInputSIRBo}"
+									emptyMessage="No se encuentran asientos registrales"
+									paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}  {JumpToPageDropdown}"
+									selection="#{searchInboxRegInterchangeAction.selectedRegisters}"
+									id="tableResults" paginatorPosition="bottom" widgetVar="tableResultswidgetVar"
+									rowStyleClass="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 0? (reg.documentacionFisicaIntercambioRegistral.value eq 3 ? 'sirNoDoc' : ( reg.documentacionFisicaIntercambioRegistral.value eq 2 ? 'sirCom':'sirReque')):''}">
+									<p:ajax event="rowDblselect" process="@form"
+										listener="#{searchInboxRegInterchangeAction.onInputRegister}"
+										rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 1 }" />
+									<f:facet name="header">
+									</f:facet>
+									<p:column selectionMode="multiple" style="width:2%" exportable="false" />
+									<p:column sortBy="numeroRegistroOriginal"
+										rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 0 }">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld10label}" />
+										</f:facet>
+										<h:outputText value="#{reg.numeroRegistroOriginal}" />
+									</p:column>
+									<p:column 
+										rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 1 }">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld1label}" />
+										</f:facet>
+										<h:outputText value="#{reg.numeroRegistro}" />
+									</p:column>
+									<p:column sortBy="fechaRegistro"
+										rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 0 || searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 1 }">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld2labelShort}" />
+										</f:facet>
+										<h:outputText value="#{reg.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+												locale="es_ES" timeZone="Europe/Paris" />
+										</h:outputText>
+									</p:column>
+									<p:column sortBy="idIntercambioRegistral">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.headercodigoIntercambio}" />
+										</f:facet>
+										<h:outputText value="#{reg.idIntercambioRegistral}" />
+									</p:column>
+									<p:column sortBy="fechaIntercambioRegistral"
+										rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState >= 0 }">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fechaIntercambio}" />
+										</f:facet>
+										<h:outputText value="#{reg.fechaIntercambioRegistral}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+												locale="es_ES" timeZone="Europe/Paris" />
+										</h:outputText>
+									</p:column>
+									<p:column sortBy="origen"  exportable="false">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.origen}" />
+										</f:facet>
+										<div style="width: 230px;word-wrap: break-word;">
+											<ui:fragment rendered="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 0}">
+												<h:outputText value="#{reg.origen} #{reg.origenName}" /><br/>
+											</ui:fragment>
+											<ui:fragment rendered="#{searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState >  0}">
+												<h:outputText value="#{reg.codigoEntidadTramitacion}" /><br/>
+											</ui:fragment>
+											<ui:fragment rendered="#{not empty reg.codigoUnidadTramitacion}">
+												<h:outputText value="#{reg.codigoUnidadTramitacion} #{reg.nombreUnidadTramitacion}" style="font-size:0.9em;font-style: italic" />
+											</ui:fragment>
+										</div>
+									</p:column>
+									<p:column  exportable="true" style="display:none">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.labelEntidadorigen}" />
+										</f:facet>
+												<h:outputText value="#{reg.origen} #{reg.origenName}" />
+									</p:column>
+									<p:column  exportable="true" style="display:none">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.labelUnidadorigen}" />
+										</f:facet>
+											<h:outputText value="#{reg.codigoUnidadTramitacion} #{reg.nombreUnidadTramitacion}"/>
+									</p:column>
+									<!--  p:column sortBy="estado">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.statelabel}" />
+										</f:facet>
+										<h:outputText value="#{reg.estado.name}" />
+									</p:column-->
+									<p:column  rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState != 0 }">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.labelFchEstado}" />
+										</f:facet>
+										<h:outputText value="#{reg.fechaEstado}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+												locale="es_ES" timeZone="Europe/Paris" />
+										</h:outputText>
+									</p:column>
+									<p:column sortBy="username"
+										rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState != 0 }">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.labelUsuario}" />
+										</f:facet>
+										<h:outputText value="#{reg.username}" />
+									</p:column>
+									<p:column
+										rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 2 || searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 3}">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.labelComentario}" />
+										</f:facet>
+										<h:outputText value="#{reg.comentarios}" />
+									</p:column>
+									<p:column  sortBy="resumen" exportable="false"
+										rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 0}">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld16andReslabelShort}" />
+										</f:facet>
+										<div style="width: 230px;word-wrap: break-word;">
+											<ui:fragment rendered="#{not empty reg.codigoAsunto}">
+												<h:outputText value="#{reg.codigoAsunto}" /><br/>
+											</ui:fragment>
+											<h:outputText value="#{reg.resumen}" />
+										</div>
+									</p:column>
+									<p:column  exportable="true" style="display:none">
+										<f:facet name="header">
+											<h:outputText value="#{msgs.fld16andReslabelShort}" />
+										</f:facet>
+											<h:outputText value="#{reg.resumen}" />
+									</p:column>
+									<p:column  exportable="false"
+										rendered="${searchInboxRegInterchangeAction.searchInputSIRBo.searchbean.inState == 0}">
+										<f:facet name="header">
+										</f:facet>
+										<p:commandButton id="selectButton" styleClass="historico"
+											update=":form:displayDetIR" process="@form"
+											action="#{searchInboxRegInterchangeAction.moreInfo}"
+											oncomplete="PF('DetIRDialog').show()" icon="ui-icon-search"
+											title="Mas Información">
+											<f:setPropertyActionListener value="#{reg}"
+												target="#{searchInboxRegInterchangeAction.selectedRegister}" />
+
+										</p:commandButton>
+									</p:column>
+									<f:facet name="footer">  
+							            #{msgs.labelTotalResultados}: #{ searchInboxRegInterchangeAction.searchInputSIRBo.rowCount} 
+							        </f:facet>
+								</p:dataTable>
+							</h:panelGroup>
+						</fieldset>
+						<p:dialog id="dialog" widgetVar="dialog" draggable="false"
+							header="Validación" resizable="false" modal="true">
+							<p:messages id="dialogMessage" showDetail="true" />
+						</p:dialog>
+
+						<p:dialog header="#{msgs.labelheaderSelectBook}"
+							widgetVar="dlgAceptar" id="dlgAceptar" resizable="false"
+							modal="true">
+
+							<p:panel id="panelDig" style="text-align:center">
+								<h:outputText id="labelSelectbook"
+									value="#{msgs.labelSelectbook}" />
+								<br /><br />
+								<p:selectOneMenu id="books"
+									value="#{searchInboxRegInterchangeAction.selectbookByAccept}">
+									<f:selectItems value="#{booksAction.listBook.inList}"
+										var="bookin" itemValue="#{bookin.idocarchhdrId}"
+										itemLabel="#{bookin.idocarchhdrName}" />
+								</p:selectOneMenu>
+								<br /><br />
+								<p:commandButton styleClass="boton-buscar" id="aceptarIR"
+									value="#{msgs.labelBotonAceptar}" update="tableResults"
+									process="@form" onstart="start()"
+									actionListener="#{searchInboxRegInterchangeAction.accept}"
+									oncomplete="stop();PF('dlgAceptar').hide();" />
+								<p:commandButton styleClass="boton-buscar"
+									value="#{msgs.labelBotonCancelar}"
+									onclick="PF('dlgAceptar').hide();" />
+								<br />
+								<br />
+
+							</p:panel>
+
+						</p:dialog>
+
+
+						<p:dialog header="#{msgs.labelheaderDetIR}"
+							widgetVar="DetIRDialog" resizable="false" id="DetIRDialog"
+							modal="true" style="max-height:650px;overflow-y:auto">
+							<ui:include src="dialog/dialogDetIR.xhtml" />
+						</p:dialog>
+					</div>
+				</div>
+				<p:dialog modal="true" widgetVar="statusDialog" header="Cargando, espere por favor..."
+					draggable="false" closable="false" resizable="false">
+					<img src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+				</p:dialog>
+				<script type="text/javascript">
+					function start() {
+						PF('statusDialog').show();
+					}
+					function stop() {
+						PF('statusDialog').hide();
+					}
+				</script>
+			</h:form>
+			<h:form id="reenviForm">
+				
+				<p:dialog header="#{msgs.labelheaderReenviar}"
+					widgetVar="dlgReenviar" id="dlgReenviar" resizable="false"
+					modal="true">
+					<p:messages id="messagesRee" closable="true" autoUpdate="false"
+						redisplay="false" />
+					<p:panel id="panelDigRe" style="width:550px">
+						<strong><h:outputText id="labelUnidadDestinatariaRI"
+								value="#{msgs.labelUnidadDestinatariaRI}" /></strong>
+						<br />
+						<br />
+						<h:outputText id="labelUnidadTramitadora"
+							value="#{msgs.labelUnidadTramitadora}" />
+						<br />
+						<c:set var="uRegistralPadre"
+							value=" (#{uRegistral.nameOrgsFather})" />
+						<c:set var="unidadReg"
+							value="#{uRegistral.codeTramunit} #{uRegistral.nameTramunit}" />
+						<p:autoComplete
+							value="#{searchInboxRegInterchangeAction.unidadTramitadoraDestino}"
+							id="unidadTramitadoraDestino"
+							completeMethod="#{validationListDCOAction.completeUnidTramitadora}"
+							minQueryLength="4" var="uRegistral" required="true"
+							itemLabel="#{(empty uRegistral) ? '' : unidadReg}"
+							itemValue="#{uRegistral}"
+							title="#{(empty uRegistral) ? '' : unidadReg}"
+							label="#{msgs.labelUnidadTramitadora}"
+							converter="unidadTramitadoraConverter" forceSelection="true"
+							scrollHeight="200" escape="false"
+							styleClass="destinoRegistralDialog">
+							<p:ajax event="itemSelect"
+								listener="#{searchInboxRegInterchangeAction.changeEntity}"
+								update="entidadRegistralDestinoDig" />
+
+							<p:column>
+								<h:outputText styleClass="organismo"
+									value="#{uRegistral.codeTramunit} #{uRegistral.nameTramunit}" />
+								<br />
+								<h:outputText styleClass="organismopadre"
+									value="#{uRegistralPadre}" />
+							</p:column>
+						</p:autoComplete>
+						<p:commandButton id="DestinationButton"
+											styleClass="organismobusq" icon="ui-icon-search"
+											title="#{msgs.busquedaOrglabel}" inmediate="true"
+											process="@this"
+											actionListener="#{searchUnitsTramAction.chooseUnits}">
+											<p:ajax event="dialogReturn"
+												listener="#{searchInboxRegInterchangeAction.updateDestinationDig}"
+												update="unidadTramitadoraDestino,entidadRegistralDestinoDig" 
+												 oncomplete="document.getElementById('reenviForm:unidadTramitadoraDestino_input').focus()" />
+										</p:commandButton>
+						<br />
+						<br />
+						<h:outputText id="labelEntidadRegistral"
+							value="#{msgs.labelEntidadRegistral}" />
+						<br />
+						<c:set var="eRegistral"
+							value="#{searchInboxRegInterchangeAction.unidadTramitadoraDestino.codeEntity} #{searchInboxRegInterchangeAction.unidadTramitadoraDestino.nameEntity}" />
+						<h:outputText id="entidadRegistralDestinoDig"
+							styleClass="resultado"
+							value="#{(empty searchInboxRegInterchangeAction.unidadTramitadoraDestino.codeEntity) ? '' : eRegistral}" />
+						<br />
+						<br />
+						<h:outputText value="#{msgs.labelobservForward}" />
+						<br />
+						<p:inputTextarea id="observForward" required="true"
+							label="#{msgs.labelobservForward}" maxlength="80"
+							value="#{searchInboxRegInterchangeAction.observForward}"
+							autoResize="false" rows="5">
+							<f:validateLength maximum="80" />
+						</p:inputTextarea>
+						<br />
+						<div style="text-align: center;">
+						<p:commandButton styleClass="boton-buscar" id="reenviarIR"
+							value="#{msgs.labelBotonAceptar}" onstart="start()"
+							update="messagesRee,panelDigRe,:form:tableResults"
+							process="dlgReenviar"
+							actionListener="#{searchInboxRegInterchangeAction.reenviar}"
+							oncomplete="stop();handleReenIRRequest(xhr, status, args)" />
+						<p:commandButton styleClass="boton-buscar"
+							value="#{msgs.labelBotonCancelar}"
+							onclick="PF('dlgReenviar').hide();" />
+						</div>
+						<br />
+					</p:panel>
+				</p:dialog>
+			</h:form>
+		
+			<h:form id="recIRForm">
+					
+				<p:dialog header="#{msgs.labelheaderRechazar}"
+					widgetVar="dlgRechazar" id="dlgRechazar" resizable="false"
+					modal="true">
+				<p:messages id="messagesRecha" closable="true" autoUpdate="false"
+						redisplay="false" />
+					<p:panel id="panelDigR" style="width:350px">
+						<h:outputText id="labelheaderRechazar"
+							value="#{msgs.labelRechazarIR}" />
+						<br />
+						<p:inputTextarea id="motReject" label="#{msgs.labelmotReject}"  required="true"
+							value="#{searchInboxRegInterchangeAction.motReject}" maxlength="80"
+							autoResize="false" rows="5">
+							<f:validateLength maximum="80" />
+						</p:inputTextarea>
+						<br />
+						<div style="text-align: center;">
+						<p:commandButton styleClass="boton-buscar" id="rechazarIR"
+							value="#{msgs.labelBotonAceptar}"
+							 update="messagesRecha,panelDigR,:form:tableResults"
+							process="dlgRechazar"  onstart="start()"
+							action="#{searchInboxRegInterchangeAction.rechazar}"
+							oncomplete="stop();handleRechaIRRequest(xhr, status, args)" />
+						<p:commandButton styleClass="boton-buscar"
+							value="#{msgs.labelBotonCancelar}"
+							onclick="PF('dlgRechazar').hide();" />
+						</div>
+						<br />
+					</p:panel>
+				</p:dialog>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

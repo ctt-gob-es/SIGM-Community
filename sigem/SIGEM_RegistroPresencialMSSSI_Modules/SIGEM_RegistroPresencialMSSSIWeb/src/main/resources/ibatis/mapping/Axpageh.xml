@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Axpageh">
+	<select id="selectAxpageh" parameterClass="java.util.HashMap"
+		resultClass="es.msssi.sgm.registropresencial.beans.ibatis.Axpageh">
+		<isNotEmpty property="tableName">
+		SELECT PA.ID AS id, PA.FDRID AS fdrid, PA.NAME as name, DOCID, CRTNDATE as crtndate, PA.LOC as loc, PA.FILEID as fileId,
+     		FILESIZE as fileSize, PR.PAGEID as pageId, SA.COMMENTS as comments, SA.MIME_TYPE as mimeType, 
+                SA.VALIDITY_TYPE as validityType, SA.DOCUMENT_TYPE as documentType, SA2.PAGEID AS pageSignedId, PR.FLAG as flag,
+                 SAS.HASH AS hash, SAS.HASH_ALG AS hashAlg, SAS.TIME_SIGNATURE AS fechaFirma
+			     FROM $tableName$ PA INNER JOIN IVOLFILEHDR IV   ON PA.FILEID = IV.ID
+			     AND IV.EXTID1 = $idBook$ AND IV.EXTID2= PA.FDRID AND IV.EXTID3= PA.DOCID
+			    INNER JOIN SCR_PAGEREPOSITORY PR ON IV.ID = PR.DOCUID::INTEGER  AND PR.DELETEDATE IS NULL 
+			    <isNotEmpty property="flag">
+			    	AND PR.FLAG IS NULL 
+			    </isNotEmpty>
+			    LEFT JOIN SCR_PAGEINFO PI ON PR.BOOKID = PI.BOOKID AND PR.FDRID = PI.REGID
+			        AND PR.PAGEID = PI.PAGEID
+			    LEFT JOIN SCR_ATTACHMENT SA ON SA.BOOKID = PR.BOOKID 
+			        AND SA.FOLDERID = PR.FDRID AND SA.PAGEID = PR.PAGEID
+			    LEFT JOIN SCR_ATTACHMENT_SIGN_INFO SAS ON SAS.ID_ATTACHMENT = SA.ID
+			    LEFT JOIN SCR_ATTACHMENT SA2 ON SA2.ID = SAS.ID_ATTACHMENT_SIGNED
+			    WHERE PA.ID = #id# AND PA.FDRID= #fdrid# 
+			    ORDER BY CRTNDATE
+		</isNotEmpty>
+	</select>
+	
+	<select id="listAxpageh" parameterClass="java.util.HashMap"
+		resultClass="es.msssi.sgm.registropresencial.beans.ibatis.Axpageh">
+		<isNotEmpty property="tableName">
+		SELECT PA.ID AS id, PA.FDRID AS fdrid, PA.NAME as name, DOCID, CRTNDATE as crtndate, PA.LOC as loc, PA.FILEID as fileId,
+     		FILESIZE as fileSize, PR.PAGEID as pageId, SA.COMMENTS as comments, SA.MIME_TYPE as mimeType, 
+                SA.VALIDITY_TYPE as validityType, SA.DOCUMENT_TYPE as documentType, SA2.PAGEID AS pageSignedId, PR.FLAG as flag,
+                 SAS.HASH AS hash, SAS.HASH_ALG AS hashAlg, SAS.TIME_SIGNATURE AS fechaFirma
+			     FROM  $tableName$  PA INNER JOIN IVOLFILEHDR IV   ON PA.FILEID = IV.ID
+			     AND IV.EXTID1 = $idBook$ AND IV.EXTID2= PA.FDRID AND IV.EXTID3= PA.DOCID
+			    INNER JOIN SCR_PAGEREPOSITORY PR ON IV.ID::VARCHAR = PR.DOCUID::VARCHAR  AND PR.DELETEDATE IS NULL 
+			    <isNotEmpty property="flag">
+			    	AND PR.FLAG  IS NULL 
+			    </isNotEmpty>
+			    LEFT JOIN SCR_PAGEINFO PI ON PR.BOOKID = PI.BOOKID AND PR.FDRID = PI.REGID
+			        AND PR.PAGEID = PI.PAGEID
+			    LEFT JOIN SCR_ATTACHMENT SA ON SA.BOOKID = PR.BOOKID 
+			        AND SA.FOLDERID = PR.FDRID AND SA.FILEID = PR.DOCUID::INT
+			    LEFT JOIN SCR_ATTACHMENT_SIGN_INFO SAS ON SAS.ID_ATTACHMENT = SA.ID
+			    LEFT JOIN SCR_ATTACHMENT SA2 ON SA2.ID = SAS.ID_ATTACHMENT_SIGNED
+			    WHERE PA.DOCID = #docid# AND PA.FDRID= #fdrid# 
+		</isNotEmpty>
+	</select>
+	
+	<delete id="deleteAxpageh" parameterClass="java.util.HashMap">
+		<isNotEmpty property="tableNamePag">
+			DELETE FROM $tableNamePag$ WHERE DOCID = #docid# AND FDRID= #fdrid# 
+		</isNotEmpty>
+	</delete>
+	
+	<select id="countAxpagehReport" parameterClass="java.util.HashMap"
+		resultClass="java.lang.Integer">
+		SELECT coalesce(MAX(FLAG), 0)::integer
+        FROM SCR_PAGEREPOSITORY 
+        WHERE FDRID=  #fdrid# AND BOOKID=#idBook#::integer AND FLAG IS NOT NULL
+	</select>
+	
+	<delete id="deleteUnAxpageh" parameterClass="java.util.HashMap">
+		<isNotEmpty property="tableNamePag">
+			DELETE FROM $tableNamePag$ WHERE DOCID = #docid# AND FDRID= #fdrid# AND FILEID = #fileid#
+		</isNotEmpty>
+	</delete>
+	
+</sqlMap>

@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/layout.xhtml">
+		<!-- Cabecera -->
+		<ui:define name="head">
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/jquery.ui.accordion.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/calendar.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/accordion.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/dialog.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/distribution.js"></script>
+			<script type="text/javascript"
+				src="#{webParam.entryParameters['URLRoot']}/js/report.js"></script>
+		</ui:define>
+		<!-- Migas de pan -->
+		<ui:define name="breadcrumb">
+			<ol>
+				<li><h:link value="#{msgs.labelInicio}" outcome="goInicioForm" /></li>
+				<li><h:link value="#{J_BOOK.idocarchhdr.name}"
+						outcome="goSearchOutForm" /></li>
+				<li><h:outputText value="#{msgs.labelBusquedaRegistrosSalida}" /></li>
+			</ol>
+		</ui:define>
+		<!-- Contenido -->
+		<ui:define name="content">
+			<h2>
+				<h:outputText value="#{msgs.labelInformes}" />
+				<div class="bookStyle">
+					<img
+						src="#{webParam.entryParameters['URLRoot']}/img/books.png" />	
+					<div style="display: table-cell; padding: 0px; vertical-align: top;">
+						<h:outputText value="#{J_BOOK.idocarchhdr.name}" />
+					</div>
+				</div>
+			</h2>
+			<div class="sombra"></div>
+			<h:form id="form">
+				<div id="libros-salida">
+					<div id="accordion">
+						<h3>
+							<h:outputText value="#{msgs.labelCriteriosBusqueda}" />
+						</h3>
+						<fieldset>
+							<p:messages id="messages" showDetail="true" autoUpdate="true"
+									closable="true" />
+							<h:panelGroup id="panel" layout="block">
+								<label for="form:reportTypeValue" class="general"> <span
+									class="label"><h:outputText id="reportTypelabel"
+											value="#{msgs.reportTypelabel}" /></span>
+									<div id="form:reportTypeValue" class="select-radio">
+										<div>
+											<p:selectOneRadio id="reportTypeValue"
+												value="#{reportsOutputRegisterAction.searchOutputRegister.reportTypeValue}"
+												label="#{msgs.reportTypelabel}">
+												<f:selectItem
+													itemLabel="#{msgs.labeloriginrelationsreportType}"
+													itemValue="5" selected="true" />
+												<f:selectItem
+													itemLabel="#{msgs.labeldestinationrelationsreportType}"
+													itemValue="4" />
+											</p:selectOneRadio>
+										</div>
+									</div>
+								</label>
+								<label for="form:fld1Value" class="general"> <span
+									class="label"><h:outputText id="fld1Label"
+											value="#{msgs.fld1label}" /></span><p:selectOneMenu id="fld1Select" onchange="mostrarfld1();" 
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld1Select}" 
+										label="#{msgs.fld1label}" style="width: 145px !important;min-width: 8em !important;margin-right: 7px;">
+										<f:validator validatorId="reportFld1BetweenValidator" />
+										<f:attribute name="fld1Value" value="#{fld1Value}" />
+										<f:attribute name="fld1ValueHasta" value="#{fld1ValueHasta}" />
+										<f:selectItem itemValue="&#37;" itemLabel="Contiene"  />
+										<f:selectItem itemValue="&#61;" itemLabel="Igual" />
+										<f:selectItem itemValue="&#62;&#61;" itemLabel="Mayor o igual que" />
+										<f:selectItem itemValue="&#60;&#61;" itemLabel="Menor o igual que" />
+										<f:selectItem itemValue="&#46;&#46;" itemLabel="Entre" />
+									</p:selectOneMenu>
+										<p:inputText id="fld1Value"  binding="#{fld1Value}"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld1Value}"
+										label="#{msgs.fld1label}" style="width: 21%;margin-right: 7px;">
+										<f:validateLength maximum="20" />
+									</p:inputText>
+									<p:inputText id="fld1ValueHasta"  binding="#{fld1ValueHasta}"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld1ValueHasta}"
+										label="#{msgs.fld1label}" style="width: 21%;display:none">
+										<f:validateLength maximum="20" />
+									</p:inputText>
+									<script>
+										if ($("#form\\:fld1Select_input option:selected").val() == '..'){
+											$("#form\\:fld1ValueHasta").show();
+										}
+									</script>
+								</label>
+								<label for="form:fld2ValueDesde" class="general"> <span
+									class="label"><h:outputText id="fld2Label"
+											value="#{msgs.fld2label}" /></span> <p:calendar locale="es"
+										id="fld2ValueDesde" navigator="true" pattern="dd/MM/yyyy HH:mm:ss"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld2ValueDesde}"
+										showOn="button" label="#{msgs.fld2label}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" locale="es_ES"
+											timeZone="Europe/Paris" />
+									</p:calendar> <p:calendar locale="es" id="fld2ValueHasta" navigator="true"
+										pattern="dd/MM/yyyy HH:mm:ss"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld2ValueHasta}"
+										showOn="button" label="#{msgs.fld2label}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" locale="es_ES"
+											timeZone="Europe/Paris" />
+									</p:calendar>
+									<p:watermark for="fld2ValueDesde" value="#{msgs.fld2labelDesde}" /> 
+									<p:watermark for="fld2ValueHasta" value="#{msgs.fld2labelHasta}" /> 
+								</label>
+								<label for="form:fld3Value" class="general"> <span
+									class="label"><h:outputText id="fld3Label"
+											value="#{msgs.fld3label}" /></span> <p:inputText id="fld3Value"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld3Value}"
+										label="#{msgs.fld3label}">
+										<f:validateLength maximum="32" />
+									</p:inputText>
+								</label>
+	
+								<label for="form:fld5Value" class="general"> <span
+									class="label"><h:outputText id="fld5Label"
+											value="#{msgs.fld5label}" /></span> <p:selectOneMenu id="fld5Value"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld5Value}"
+										label="#{msgs.fld5label}">
+										<f:selectItem itemValue="" itemLabel="" />
+										<f:selectItems value="#{validationListAction.listOficinas}"
+											var="of" itemValue="#{of.id}"
+											itemLabel="#{of.code} - #{of.name}" />
+									</p:selectOneMenu>
+								</label>
+								<label for="form:fld6Value" class="general"> <span
+									class="label"><h:outputText id="fld6Label"
+											value="#{msgs.fld6label}" /></span> <p:selectOneMenu id="fld6Value"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld6Value}"
+										label="#{msgs.fld6label}">
+										<f:selectItem itemLabel="" itemValue="" />
+										<f:selectItem itemLabel="Completo" itemValue="0" />
+										<f:selectItem itemLabel="Incompleto" itemValue="1" />
+										<f:selectItem itemLabel="Cerrado" itemValue="5" />
+									</p:selectOneMenu>
+								</label>
+								<label for="form:fld7Value" class="general"> <span
+									class="label"><h:outputText id="fld7Label" 
+											value="#{msgs.fld7label}" /></span>
+											<c:set var="orgPadre"
+										value=" (#{org.nameOrgFather})" />
+										 <c:set var="organismo"
+										value="#{org.code} #{org.name}" />
+										
+										 <p:autoComplete
+										style="width:400px"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld7Value}"
+										id="fld7Value" label="#{msgs.fld7label}"
+										completeMethod="#{validationListAction.completeOrgOrigen}"  escape="false"
+										minQueryLength="3" var="org" queryDelay="400"
+										itemLabel="#{(empty org) ? '' : fn:trim(organismo)}" itemValue="#{org}" 
+										converter="orgConverterOrigin" forceSelection="true"
+										scrollHeight="200" >
+											<p:column>
+								                <h:outputText styleClass="organismo" value="#{org.code} #{org.name}"/>
+								                <br/>
+								                <h:outputText styleClass="organismopadre" value="#{orgPadre}" />
+								                <div class="ut">
+								               	 <ui:fragment rendered="${org.scrTypeadm.id == 1}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png" 
+																			title="#{msgs.isownOrg}" />														
+														</ui:fragment>
+										            	<ui:fragment rendered="${org.isTramUnit}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png" 
+																			title="#{msgs.isTramUnit}" />														
+														</ui:fragment>
+														
+													</div>
+								            </p:column>
+										</p:autoComplete>
+										<p:commandButton id="OriginButton"
+											styleClass="organismobusq"
+											icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"
+											inmediate="true" process="@this" actionListener="#{searchUnitsAction.chooseUnits}">
+											<p:ajax event="dialogReturn" listener="#{reportsOutputRegisterAction.updateOrigin}" update="fld7Value"
+											 oncomplete="document.getElementById('form:fld7Value_input').focus()" />
+										</p:commandButton>
+								</label>
+								<label for="form:fld8Value" class="general"> <span
+									class="label"><h:outputText id="fld8Label"
+											value="#{msgs.fld8label}" /></span> <p:autoComplete
+										style="width:400"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld8Value}"
+										id="fld8Value" label="#{msgs.fld8label}" escape="false"
+										completeMethod="#{validationListAction.completeOrgDestino}"
+										minQueryLength="3" var="org" queryDelay="400"
+										itemLabel="#{(empty org) ? '' : fn:trim(organismo)}" itemValue="#{org}"
+										converter="orgConverterDestination" forceSelection="true"
+										scrollHeight="200">
+											<p:column>
+								                <h:outputText styleClass="organismo" value="#{org.code} #{org.name}"/>
+								                <br/>
+								                <h:outputText styleClass="organismopadre" value="#{orgPadre}" />
+								               <div class="ut">
+								               		<ui:fragment rendered="${org.scrTypeadm.id == 1}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-house.png" 
+																			title="#{msgs.isownOrg}" />														
+														</ui:fragment>
+										            	<ui:fragment rendered="${org.isTramUnit}">
+															<img 
+																			src="#{webParam.entryParameters['URLRoot']}/img/ico-ut.png" 
+																			title="#{msgs.isTramUnit}" />														
+														</ui:fragment>
+														
+													</div>
+								            </p:column>
+										</p:autoComplete>
+										<p:commandButton id="DestinationButton"
+											styleClass="organismobusq"
+											icon="ui-icon-search" title="#{msgs.busquedaOrglabel}"
+											inmediate="true" process="@this" actionListener="#{searchUnitsAction.chooseUnits}">
+											<p:ajax event="dialogReturn" listener="#{reportsOutputRegisterAction.updateDestination}" update="fld8Value"
+											  oncomplete="document.getElementById('form:fld8Value_input').focus()" />
+										</p:commandButton>
+								</label>
+								<label for="form:fld9Value" class="general"> <span
+									class="label"><h:outputText id="fld9LabelD"
+											value="#{msgs.fld9labelD}" /></span> <p:inputText id="fld9Value"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld9Value}"
+										label="#{msgs.fld9labelD}">
+										<f:validateLength maximum="80" />
+									</p:inputText>
+								</label>
+								<label for="form:fld12Value" class="general"> <span
+									class="label"><h:outputText id="fld16Label"
+											value="#{msgs.fld16label}" /></span> <c:set var="asunto"
+										value="#{asun.code} #{asun.matter}" /> <p:selectOneMenu
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld12Value}"
+										id="fld12Value" label="#{msgs.fld16label}"
+										converter="asuntConverter" panelStyle="width:150px"
+										effect="fade" filter="true" filterMatchMode="contains">
+										<f:selectItem itemLabel="" itemValue="" />
+										<f:selectItems value="#{validationListAction.listAsuntos}"
+											var="asuntos" itemLabel="#{asuntos.code} #{asuntos.matter}"
+											itemValue="#{asuntos}" />
+									</p:selectOneMenu>
+								</label>
+								<label for="form:fld13Value" class="general"> <span
+									class="label"><h:outputText id="fld17Label"
+											value="#{msgs.fld17label}" /></span> <p:inputText id="fld13Value"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld13Value}"
+										label="#{msgs.fld17label}">
+										<f:validateLength maximum="240" />
+									</p:inputText>
+								</label>
+								<label for="form:fld10Value" class="general"> <span
+									class="label"><h:outputText id="fld14Label"
+											value="#{msgs.fld14label}" /></span> <p:selectOneMenu
+										id="fld10Value"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld10Value}"
+										label="#{msgs.fld14label}">
+										<f:selectItem itemValue="" itemLabel="" />
+										<f:selectItems value="#{validationListAction.listTransportes}"
+											var="trans" itemValue="0#{trans.id}"
+											itemLabel="#{trans.transport}" />
+									</p:selectOneMenu>
+								</label>
+								<label for="form:fld11Value" class="general"> <span
+									class="label"><h:outputText id="fld15Label"
+											value="#{msgs.fld15label}" /></span> <p:inputText id="fld11Value"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.fld11Value}"
+										label="#{msgs.fld15label}">
+										<f:validateLength maximum="30" />
+										</p:inputText>
+								</label>
+								<label for="form:includeProceedingValue" class="general">
+									<span class="label"><h:outputText
+											id="includeproceedinglabel"
+											value="#{msgs.includeproceedinglabel}" /></span> <p:selectBooleanCheckbox
+										id="includeProceedingValue"
+										value="#{reportsOutputRegisterAction.searchOutputRegister.includeProceedingValue}"
+										label="#{msgs.includeproceedinglabel}" />
+								</label>
+								<div class="botones">
+									<p:commandButton value="#{msgs.labelGenerarInformes}" id="btnbuscar" styleClass="boton-buscar" ajax="false"
+										onclick="PrimeFaces.monitorDownload(start, stop);" actionListener="#{reportsOutputRegisterAction.buildRelationsReport}">
+										<p:fileDownload value="#{reportsOutputRegisterAction.file}"  />
+									</p:commandButton>
+									<p:commandButton styleClass="boton-cancelar"
+											value="#{msgs.labelBotonCancelar}" process="@this"
+											action="goSearchOutForm" />
+									<p:commandButton id="btnReset" style="display:none" actionListener="#{reportsOutputRegisterAction.reset}" process="@this"/>
+								</div>
+							</h:panelGroup>
+						</fieldset>
+					</div>
+				</div>
+					<p:dialog modal="true" widgetVar="statusDialog" id="statusDialog"
+					header="Generando informe, espere por favor" draggable="false"
+					closable="false" resizable="false" >
+					<img
+						src="#{webParam.entryParameters['URLRoot']}/img/ajaxloadingbar.gif" />
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

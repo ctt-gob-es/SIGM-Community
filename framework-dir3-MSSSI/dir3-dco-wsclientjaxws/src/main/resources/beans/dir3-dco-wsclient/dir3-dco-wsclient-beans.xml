@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+<!-- Servicio de obtener ficheros de descarga -->
+<bean id="dcoDownloadServiceDCO"
+		class="es.msssi.dir3.services.impl.DownloadServiceDCOWSClientImpl">
+		<property name="downloadServiceUnitsURL" value="${dir3-dco.download.units.ws.url}" />
+		<property name="downloadServiceOfficesURL" value="${dir3-dco.download.offices.ws.url}" />
+		<property name="downloadServiceNotOrgUnitsURL" value="${dir3-dco.download.notorgunit.ws.url}" />
+		<property name="tempFilesDir" value="${dir3-dco.tempFilesDir}" />
+		<!-- Login y pass para acceder al DCO -->
+		<property name="login" value="${dir3-dco.ws.login}" />
+		<property name="pass" value="${dir3-dco.ws.pass}" />
+		<property name="fileFormat" value="XML" />
+		<property name="oficinasQueryType" value="OFICINAS" />
+		<property name="unidadesQueryType" value="COMPLETO" />
+	</bean>
+</beans>

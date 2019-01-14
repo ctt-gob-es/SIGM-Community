@@ -1,0 +1,4 @@
+#Fri Aug 07 16:06:06 CEST 2015
+es.ieci.tecdoc.fwktd.sir.api.schema.types.Indicador_PruebaType=es.ieci.tecdoc.fwktd.sir.api.schema.types.descriptors.Indicador_PruebaTypeDescriptor
+es.ieci.tecdoc.fwktd.sir.api.schema.types.Tipo_RegistroType=es.ieci.tecdoc.fwktd.sir.api.schema.types.descriptors.Tipo_RegistroTypeDescriptor
+es.ieci.tecdoc.fwktd.sir.api.schema.types.Documentacion_FisicaType=es.ieci.tecdoc.fwktd.sir.api.schema.types.descriptors.Documentacion_FisicaTypeDescriptor

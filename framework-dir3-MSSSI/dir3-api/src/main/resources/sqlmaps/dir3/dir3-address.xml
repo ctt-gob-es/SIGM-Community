@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+						"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="AddressVO">
+
+	<typeAlias alias="address"
+		type="es.msssi.dir3.api.vo.AddressVO" />
+
+	<resultMap id="address" class="es.msssi.dir3.api.vo.AddressVO">
+		<result property="id" column="N_ID_DIRECCION" />
+		<result property="streetTypeId" column="C_ID_TIPO_VIA" />
+		<result property="streetTypeName" column="C_DESC_TIPO_VIA" />
+		<result property="streetName" column="C_NOMBRE_VIA" />
+		<result property="addressNum" column="C_NUM_VIA" />
+		<result property="addessInformation" column="C_COMPLEMENTO_DIRECCION" />
+		<result property="postalCode" column="C_CODIGO_POSTAL" />
+		<result property="countryId" column="C_ID_PAIS"  />
+		<result property="countryName" column="C_DESC_PAIS" />
+		<result property="autonomousCommunityId" column="C_ID_COMUNIDAD" />
+		<result property="autonomousCommunityName" column="C_DESC_COMUNIDAD" />
+		<result property="geographicalEntityId" column="C_ID_ENTIDAD_GEOGRAFICA" />
+		<result property="geographicalEntityName" column="C_DESC_ENT_GEOGRAFICA" />
+		<result property="provinceId" column="C_ID_PROVINCIA" />
+		<result property="provinceName" column="C_DESC_PROV" />
+		<result property="cityId" column="C_ID_LOCALIDAD" />
+		<result property="cityName" column="C_DESC_LOCALIDAD" />
+		<result property="foreignLocation" column="C_LOC_EXTRANJERA" />
+		<result property="foreignAddress" column="C_DIR_EXTRANJERA" />
+		<result property="observations" column="C_OBSERVACION_LOCAL" />
+	</resultMap>
+
+	<sql id="table">DIR_DIRECCION</sql>
+	<sql id="view">VW_DIRECCIONES</sql>
+	
+	<sql id="columns">
+		DIR.N_ID_DIRECCION,
+		DIR.C_ID_TIPO_VIA,
+		DIR.C_DESC_TIPO_VIA,
+		DIR.C_NOMBRE_VIA,
+		DIR.C_NUM_VIA,
+		DIR.C_COMPLEMENTO_DIRECCION,
+		DIR.C_CODIGO_POSTAL,
+		DIR.C_ID_PAIS, 
+		DIR.C_DESC_PAIS, 
+		DIR.C_ID_COMUNIDAD, 
+		DIR.C_DESC_COMUNIDAD,
+		DIR.C_ID_ENTIDAD_GEOGRAFICA,
+		DIR.C_DESC_ENT_GEOGRAFICA, 
+		DIR.C_ID_PROVINCIA,
+		DIR.C_DESC_PROV,
+		DIR.C_ID_LOCALIDAD,
+		DIR.C_DESC_LOCALIDAD,
+		DIR.C_LOC_EXTRANJERA,
+		DIR.C_DIR_EXTRANJERA,
+		DIR.C_OBSERVACION_LOCAL
+	</sql>
+	<sql id="columns_insert">
+		N_ID_DIRECCION,
+		C_ID_TIPO_VIA,
+		C_DESC_TIPO_VIA,
+		C_NOMBRE_VIA,
+		C_NUM_VIA,
+		C_COMPLEMENTO_DIRECCION,
+		C_CODIGO_POSTAL,
+		C_ID_PAIS,
+		C_DESC_PAIS,
+		C_ID_COMUNIDAD, 
+		C_DESC_COMUNIDAD, 
+		C_ID_ENTIDAD_GEOGRAFICA,
+		C_ID_PROVINCIA,
+		C_DESC_PROV, 
+		C_ID_LOCALIDAD,
+		C_DESC_LOCALIDAD,
+		C_LOC_EXTRANJERA,
+		C_DIR_EXTRANJERA,
+		C_OBSERVACION_LOCAL,
+		D_FECHA_MODIF,
+		D_FECHA_ALTA
+	</sql>
+	<sql id="insert">
+		#id#,
+		#streetTypeId#,
+		#streetTypeName#,
+		#streetName#,
+		#addressNum#,
+		#addessInformation#,
+		#postalCode#,
+		#countryId#,
+		#countryName#,
+		#autonomousCommunityId#,
+		#autonomousCommunityName#,
+		#geographicalEntityId#,
+		#provinceId#,
+		#provinceName#,
+		#cityId#,
+		#cityName#,
+		#foreignLocation#,
+		#foreignAddress#,
+		#observations#,
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP
+	</sql>
+	<sql id="update">
+		C_ID_TIPO_VIA = #streetTypeId#,
+		C_DESC_TIPO_VIA = #streetTypeName#,
+		C_NOMBRE_VIA = #streetName#,
+		C_NUM_VIA = #addressNum#,
+		C_COMPLEMENTO_DIRECCION = #addessInformation#,
+		C_CODIGO_POSTAL = #postalCode#,
+		C_ID_PAIS = #countryId#,
+		C_DESC_PAIS = #countryName#,
+		C_ID_COMUNIDAD = #autonomousCommunityId#,
+		C_DESC_COMUNIDAD = #autonomousCommunityName#,
+		C_ID_ENTIDAD_GEOGRAFICA = #geographicalEntityId#,
+		C_ID_PROVINCIA = #provinceId#,
+		C_DESC_PROV = #provinceName#,
+		C_ID_LOCALIDAD = #cityId#,
+		C_DESC_LOCALIDAD = #cityName#,
+		C_LOC_EXTRANJERA = #foreignLocation#,
+		C_DIR_EXTRANJERA = #foreignAddress#,
+		C_OBSERVACION_LOCAL = #observations#,
+		D_FECHA_MODIF = CURRENT_TIMESTAMP
+	</sql>
+
+	<select id="getAddressVO" parameterClass="java.lang.String" resultMap="address">
+		SELECT
+			<include refid="columns" />
+		FROM
+			<include refid="table" />
+			DIR
+		WHERE
+			DIR.N_ID_DIRECCION=#value#
+	</select>
+	<select id="existsAddress" parameterClass="java.lang.String" resultMap="address">
+		SELECT
+			count (*)
+		FROM
+			<include refid="table" />
+			DIR
+		WHERE
+			DIR.N_ID_DIRECCION=#value#
+	</select>
+
+	<insert id="addAddressVO" parameterClass="address">
+		<selectKey keyProperty="id"
+             resultClass="java.lang.String">
+		    ${select.sequence}SEQDIR_DIRECCIONES${from.sequence}
+		  </selectKey>
+		INSERT INTO
+			<include refid="table" />
+		(<include refid="columns_insert" />)
+		VALUES (<include refid="insert" />)
+	</insert>
+	
+	<update id="updateAddressVO" parameterClass="address">
+		UPDATE
+			<include refid="table" />
+		SET
+			<include refid="update" />
+		WHERE N_ID_DIRECCION = #id#
+	</update>
+	
+	<delete id="deleteAddressVO" parameterClass="java.lang.String">
+		DELETE FROM
+			<include refid="table" />
+		WHERE N_ID_DIRECCION = #value#
+	</delete>
+	
+	<select id="getAddressOffice" parameterClass="java.lang.String"
+		resultClass="java.lang.Integer">
+		SELECT N_ID_LOC_DIRECCION
+		FROM
+		DIR_OFICINA_COMPLETO
+		WHERE
+		C_ID_OFICINA=#value#
+	</select>
+	
+		<select id="getAddressUnit" parameterClass="java.lang.String"
+		resultClass="java.lang.Integer">
+		SELECT N_ID_LOC_DIRECCION
+		FROM
+		DIR_UNIDAD_ORGANICA_COMPLETO
+		WHERE
+		C_ID_UD_ORGANICA=#value#
+	</select>
+</sqlMap>

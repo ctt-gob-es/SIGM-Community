@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="apiConsultServiceDCOImpl"
+		class="es.msssi.dir3.api.service.impl.ConsultServiceDCOImpl">
+		<property name="officeManager" ref="officeManager" />
+		<property name="unitManager" ref="unitManager" />
+	</bean>
+
+	<bean id="apiUpdateServiceDCOImpl"
+		class="es.msssi.dir3.api.service.impl.UpdateServiceDCOImpl">
+		<property name="officeManager" ref="officeManager" />
+		<property name="unitManager" ref="unitManager" />
+		<property name="updateStatusManager" ref="updateStatusManager" />
+		<property name="updateServiceDCO" ref="dcoDownloadServiceDCO" />
+		<property name="tempFilesDir" value="${sigem.temp.path}${sigem.path.separator}temporary" />
+		<property name="organizationalRelationshipsManager" ref="relationshipORGManager" />
+		<property name="sirRelationshipManager" ref="relationshipSIRManager" />
+		<property name="relationshipRegistroManager" ref="relationshipRegistroManager" />
+		<property name="unitRegisterManager" ref="unitRegistroManager" />
+	</bean>
+
+
+</beans>

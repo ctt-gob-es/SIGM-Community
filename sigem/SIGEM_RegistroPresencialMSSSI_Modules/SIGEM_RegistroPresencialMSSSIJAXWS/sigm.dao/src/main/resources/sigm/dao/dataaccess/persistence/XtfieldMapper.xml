@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sigm.dao.dataaccess.persistence.XtfieldMapper">
+
+    <insert id="insert"
+            parameterType="sigm.dao.dataaccess.domain.XtField">
+        <selectKey keyProperty="fldid" resultType="int" order="BEFORE">
+			${select.sequence}SEQ_XT_FIELD${from.sequence}
+        </selectKey>
+        INSERT INTO XT_FIELD
+        (FLDID, NAME, DESCRIPCION, SECCION)
+        VALUES
+        (#{fldid}, #{name}, #{descripcion}, #{seccion})
+    </insert>
+    <!--  si el campo seccion es vacio o no hay se inserta null -->
+    
+    <select id="getByName"
+            parameterType="java.lang.String"
+            resultType="sigm.dao.dataaccess.domain.XtField">
+        SELECT FLDID AS fldid, NAME AS name, DESCRIPCION AS descripcion, SECCION AS seccion
+        FROM XT_FIELD
+        <where>
+            NAME like #{name}
+        </where>
+    </select>   
+    
+    <select id="getById"
+            parameterType="java.lang.Integer"
+            resultType="sigm.dao.dataaccess.domain.XtField">
+        SELECT FLDID AS fldid, NAME AS name, DESCRIPCION AS descripcion, SECCION AS seccion
+        FROM XT_FIELD
+        <where>
+            FLDID like #{id}
+        </where>
+    </select>   
+    
+	<select id="getByXtfield" parameterType="sigm.dao.dataaccess.domain.XtField"
+            resultType="sigm.dao.dataaccess.domain.XtField">
+        SELECT FLDID AS fldid, NAME AS name, DESCRIPCION AS descripcion, SECCION AS seccion
+        FROM XT_FIELD
+        <where>
+            NAME like #{name}
+			AND UNACCENT(UPPER(DESCRIPCION)) = UNACCENT(UPPER(''||#{descripcion}||''))				
+			<if test="seccion != null and seccion != ''">
+				AND UNACCENT(UPPER(SECCION)) = UNACCENT(UPPER(''||#{seccion}||''))				
+			</if>	
+			<if test="seccion == null or seccion == ''"> 
+				AND SECCION is null	
+			</if>		             
+        </where>
+	</select>
+      
+</mapper>

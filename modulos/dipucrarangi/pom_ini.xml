@@ -1,0 +1,134 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>es.dipucr.arangi</groupId>
+  <artifactId>es.dipucr.arangi</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <repositories>	    
+		<repository>
+			<id>DipucrRepDeploy</id>
+			<name>Repositorio de la Diputación de Ciudad Real</name>
+			<url>http://10.12.200.113:8081/nexus/content/repositories/DipucrRepo/</url>
+		</repository>			
+	</repositories>
+	<dependencies>
+	    <!-- 
+	    <dependency>
+    		<groupId>accv</groupId>
+    		<artifactId>arangi_base</artifactId>
+    		<version>1.4.7</version>
+  		</dependency>
+  		 -->
+  		 <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
+		<dependency>
+		    <groupId>javax.activation</groupId>
+		    <artifactId>activation</artifactId>
+		    <version>1.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+		<dependency>
+		    <groupId>commons-codec</groupId>
+		    <artifactId>commons-codec</artifactId>
+		    <version>1.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-httpclient/commons-httpclient -->
+		<dependency>
+		    <groupId>commons-httpclient</groupId>
+		    <artifactId>commons-httpclient</artifactId>
+		    <version>3.0.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-lang/commons-lang -->
+		<dependency>
+		    <groupId>commons-lang</groupId>
+		    <artifactId>commons-lang</artifactId>
+		    <version>2.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
+		<dependency>
+		    <groupId>log4j</groupId>
+		    <artifactId>log4j</artifactId>
+		    <version>1.2.13</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/xalan/xalan -->
+		<dependency>
+		    <groupId>xalan</groupId>
+		    <artifactId>xalan</artifactId>
+		    <version>2.7.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/xml-apis/xml-apis -->
+		<dependency>
+		    <groupId>xml-apis</groupId>
+		    <artifactId>xml-apis</artifactId>
+		    <version>1.3.04</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.novell.ldap/jldap -->
+		<dependency>
+		    <groupId>com.novell.ldap</groupId>
+		    <artifactId>jldap</artifactId>
+		    <version>4.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
+		<dependency>
+		    <groupId>log4j</groupId>
+		    <artifactId>log4j</artifactId>
+		    <version>1.2.13</version>
+		</dependency>
+		
+		<!-- http://10.12.200.113:8081/nexus/content/repositories/DipucrRepo/ -->
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcmail-jdk15on-150b16</artifactId>
+		    <version>1.50</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcpkix-jdk15on-150b16</artifactId>
+		    <version>1.50</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcprov-jdk15on-150b16</artifactId>
+		    <version>1.50</version>
+		</dependency>
+		<dependency>
+		    <groupId>iaik</groupId>
+		    <artifactId>iaikPkcs11Wrapper-arangi</artifactId>
+		    <version>1.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>itextpdf-arangi</artifactId>
+		    <version>5.1.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>es.mityc.jumbo.adsi</groupId>
+		    <artifactId>MITyCLibAPI-arangi</artifactId>
+		    <version>1.0.4_1</version>
+		</dependency>		
+		<dependency>
+		    <groupId>es.mityc.jumbo.adsi</groupId>
+		    <artifactId>MITyCLibTSA-arangi</artifactId>
+		    <version>1.0.4_2</version>
+		</dependency>		
+		<dependency>
+		    <groupId>es.mityc.jumbo.adsi</groupId>
+		    <artifactId>MITyCLibXADES-time-arangi</artifactId>
+		    <version>1.0.4_5</version>
+		</dependency>
+		<dependency>
+		    <groupId>es.mityc.jumbo.adsi</groupId>
+		    <artifactId>xmlsec-1.4.2-ADSI-arangi</artifactId>
+		    <version>1.0</version>
+		</dependency>
+			<dependency>
+		    <groupId>com.steria.tsa.cliente</groupId>
+		    <artifactId>tsa_cliente</artifactId>
+		    <version>1.0</version>
+		</dependency> 	 		 
+	</dependencies>
+</project>

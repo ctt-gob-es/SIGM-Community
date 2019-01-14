@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="urn:eu:stork:names:tc:STORK:1.0:assertion" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:storkp="urn:eu:stork:names:tc:STORK:1.0:protocol" xmlns:stork="urn:eu:stork:names:tc:STORK:1.0:assertion" xmlns:dps="urn:crue:academic:xsd:language:diplomasupplement" xmlns:gdp="urn:eu:stork:names:tc:STORK:2.0:academic:generaldiploma">
+<xs:import namespace="urn:crue:academic:xsd:language:diplomasupplement" schemaLocation="crue-academic-language-diplomasupplement-schema-1_1.xsd"/>
+<xs:import namespace="urn:eu:stork:names:tc:STORK:2.0:academic:generaldiploma" schemaLocation="diploma.xsd"/>
+<!--QAA -->
+<xs:element name="QualityAuthenticationAssuranceLevel" type="stork:QualityAuthenticationAssuranceLevelType"/>
+<xs:element name="spSector" type="stork:SPSectorType"/>
+<xs:element name="spApplication" type="stork:SPApplicationType"/>
+<xs:element name="spCountry" type="stork:CountryCodeType"/>
+<xs:element name="CitizenCountryCode" type="stork:CountryCodeType"/>
+<xs:element name="RequestedAttribute" type="stork:RequestedAttributeType"/>
+<xs:element name="AttributeValue" type="xs:anyType"/>
+<xs:element name="canonicalResidenceAddress" type="stork:canonicalAddressType"/>
+<xs:element name="countryCodeAddress" type="stork:CountryCodeType"/>
+<xs:element name="diplomaSupplement" type="stork:diplomaSupplementType"/>
+<xs:element name="currentStudiesSupplement" type="stork:currentStudiesType"/>
+<!-- We'll leave these new attributes for release 4 -->
+<!-- <xs:element name="languageQualification" type="stork:languageQualificationType" /> -->
+<!-- <xs:element name="academicRecommendation" type="stork:academicRecommendationType" /> -->
+<xs:element name="hasDegree" type="stork:hasDegreeType"/>
+<xs:element name="isStudent" type="stork:isStudentType"/>
+<xs:element name="isAcademicStaff" type="stork:isAcademicStaffType"/>
+<xs:element name="isTeacherOf" type="stork:isTeacherOfType"/>
+<xs:element name="isCourseCoordinator" type="stork:isCourseCoordinatorType"/>
+<xs:element name="isAdminStaff" type="stork:isAdminStaffType"/>
+<xs:element name="habilitation" type="stork:habilitationType"/>
+<xs:element name="acTitle" type="stork:acTitleType"/>
+<xs:element name="hasAccountInBank" type="stork:hasAccountInBankType"/>
+<xs:element name="isHealthCareProfessional" type="stork:isHealthCareProfessionalType"/>
+<xs:element name="canonicalRegisteredAddress" type="stork:canonicalAddressType"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+<xs:element name="mandate" type="stork:mandateType"/>
+<xs:element name="representationPerson" type="stork:representationPersonType"/>
+<xs:element name="mandateContent" type="stork:mandateContentType"/>
+<xs:element name="study" type="stork:studyType"/>
+<xs:element name="HCPType" type="stork:HCPType"/>
+<xs:attribute name="AttributeStatus" type="stork:AttributeStatusType"/>
+<xs:simpleType name="SPSectorType">
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="20"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="SPApplicationType">
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="100"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="AttributeStatusType">
+<xs:restriction base="xs:string">
+<xs:enumeration value="Available"/>
+<xs:enumeration value="NotAvailable"/>
+<xs:enumeration value="Withheld"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="studyType">
+<xs:restriction base="xs:string"/>
+</xs:simpleType>
+<xs:simpleType name="LevelType">
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="1"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="currencyType">
+<xs:restriction base="xs:string">
+<xs:minLength value="3"/>
+<xs:maxLength value="3"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="occupationType">
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="1"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="teacherRoleType">
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="1"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="titleNormalisedType">
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="1"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="HCPType">
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="1"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="specialisationType">
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="1"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="QualityAuthenticationAssuranceLevelType">
+<xs:restriction base="xs:integer">
+<xs:minInclusive value="1"/>
+<xs:maxInclusive value="4"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:complexType name="canonicalAddressType">
+<xs:sequence>
+<xs:element name="countryCodeAddress" type="stork:CountryCodeType"/>
+<xs:element name="state" type="xs:string" minOccurs="0"/>
+<xs:element name="municipalityCode" type="xs:string" minOccurs="0"/>
+<xs:element name="town" type="xs:string"/>
+<xs:element name="postalCode" type="xs:string"/>
+<xs:element name="streetName" type="xs:string"/>
+<xs:element name="streetNumber" type="xs:string" minOccurs="0"/>
+<xs:element name="apartmentNumber" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="hasDegreeType">
+<xs:sequence>
+<xs:element name="study" type="stork:studyType"/>
+<xs:element name="level" type="stork:LevelType"/>
+<xs:element name="yearObtained" type="xs:integer"/>
+<xs:element name="nameOfInstitution" type="xs:string"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="isAcademicStaffType">
+<xs:sequence>
+<xs:element name="nameOfInstitution" type="xs:string"/>
+<xs:element name="occupation" type="stork:occupationType"/>
+<xs:element name="knowledgeArea" type="xs:string" minOccurs="0"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="isTeacherOfType">
+<xs:sequence>
+<xs:element name="nameOfInstitution" type="xs:string"/>
+<xs:element name="course" type="xs:string"/>
+<xs:element name="role" type="stork:teacherRoleType"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="isCourseCoordinatorType">
+<xs:sequence>
+<xs:element name="courseCoodinator" type="xs:string"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="isAdminStaffType">
+<xs:sequence>
+<xs:element name="adminStaff" type="xs:string"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="habilitation">
+<xs:sequence>
+<xs:element name="ability" type="xs:string"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="acTitleType">
+<xs:sequence>
+<xs:element name="titleNormalised" type="stork:titleNormalisedType"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="hasAccountInBankType">
+<xs:sequence>
+<xs:element name="bankName" type="xs:string"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="isHCPType">
+<xs:sequence>
+<xs:element name="nameOfOrganisation" type="xs:string"/>
+<xs:element name="HCPType" type="stork:HCPType"/>
+<xs:element name="specialisation" type="stork:specialisationType"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="representationPersonType">
+<xs:choice>
+<xs:sequence>
+<xs:element name="eIdentifier" type="xs:string"/>
+<xs:element name="givenName" type="xs:string"/>
+<xs:element name="surname" type="xs:string"/>
+<xs:element name="dateOfBirth" type="xs:string"/>
+</xs:sequence>
+<xs:sequence>
+<xs:element name="eLPIdentifier" type="xs:string"/>
+<xs:element name="legalName" type="xs:string"/>
+<xs:element name="textRegisteredAddress" type="xs:string"/>
+<xs:element name="canonicalRegisteredAddress" type="stork:canonicalAddressType"/>
+<xs:element name="legalForm" type="xs:string"/>
+</xs:sequence>
+</xs:choice>
+</xs:complexType>
+<xs:complexType name="TransactionLimitRestrictionType">
+<xs:sequence>
+<xs:element name="amount" type="xs:decimal"/>
+<xs:element name="currency" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="TimeRestrictionType">
+<xs:sequence>
+<xs:element name="validFrom" type="xs:date"/>
+<xs:element name="validTo" type="xs:date"/>
+</xs:sequence>
+</xs:complexType>
+<!--     <xs:complexType name="originalMandateType"> -->
+<!--         <xs:simpleContent> -->
+<!--             <xs:extension base="xs:base64Binary"> -->
+<!--                 <xs:attribute -->
+<!--                     name="type" -->
+<!--                     type="xs:string"> -->
+<!--                 </xs:attribute> -->
+<!--             </xs:extension> -->
+<!--         </xs:simpleContent> -->
+<!--     </xs:complexType> -->
+<xs:complexType name="mandateContentType">
+<xs:sequence>
+<xs:element name="typePower" type="xs:string"/>
+<!-- Misspelled attribute typeOfPower-->
+<xs:element name="typeOfPower" type="xs:string"/>
+<xs:element name="timeRestriction" type="stork:TimeRestrictionType"/>
+
+<xs:element name="isJoined" type="xs:string"/>
+<!-- Misspelled attribute isJoint-->
+<xs:element name="isJoint" type="xs:string"/>
+<xs:element name="isChained" type="xs:boolean"/>
+<xs:element name="originalMandate" type="xs:base64Binary"/>
+<xs:element name="originalMandateType" type="xs:string"/>
+<xs:element name="transactionLimit" type="stork:TransactionLimitRestrictionType"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="mandateType">
+<xs:sequence>
+<xs:element name="represented" type="stork:representationPersonType"/>
+<xs:element name="representing" type="stork:representationPersonType"/>
+<!-- Misspelled attribute representative-->
+<xs:element name="representative" type="stork:representationPersonType"/>
+<xs:element name="mandateContent" type="stork:mandateContentType" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+<xs:simpleType name="CountryCodeType">
+<xs:restriction base="xs:token">
+<xs:pattern value="[A-Z]{2}"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:complexType name="RequestedAttributeType">
+<xs:sequence>
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="stork:AttributeValue"/>
+</xs:sequence>
+<xs:attribute name="Name" use="required" type="xs:string"/>
+<xs:attribute name="NameFormat" use="required" type="xs:anyURI"/>
+<xs:attribute name="FriendlyName" use="optional" type="xs:string"/>
+<xs:attribute name="isRequired" use="optional" type="xs:boolean"/>
+<xs:anyAttribute namespace="##other" processContents="lax"/>
+</xs:complexType>
+<xs:complexType name="isStudentType">
+<xs:sequence>
+<xs:element ref="stork:study" minOccurs="0"/>
+<xs:element name="nameOfInstitution" type="xs:string"/>
+<xs:element name="course" type="xs:string" minOccurs="0"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="habilitationType">
+<xs:sequence>
+<xs:element name="ability" type="xs:string"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+<!--
+<xs:complexType name="isHealthCareProfessionalType">
+<xs:sequence>
+<xs:element name="nameOfOrganisation" type="xs:string"/>
+<xs:element ref="stork:HCPType"/>
+<xs:element ref="stork:specialisation"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+</xs:sequence>
+</xs:complexType>
+-->
+<xs:complexType name="isHealthCareProfessionalType">
+    <xs:sequence>
+        <xs:element name="typeOfHCP">
+            <xs:simpleType>
+                <xs:restriction base="xs:anyURI">
+                    <xs:enumeration value="dentist" />
+                    <xs:enumeration value="nurse" />
+                    <xs:enumeration value="pharmacist" />
+                    <xs:enumeration value="physician" />
+                    <xs:enumeration value="nurse midwife" />
+                    <xs:enumeration value="admission clerk" />
+                    <xs:enumeration value="ancillary services" />
+                    <xs:enumeration value="clinical services" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:element>
+        <xs:element name="nameOfOrganisation" type="xs:string" />
+        <xs:element name="typeOfOrganisation">
+            <xs:simpleType>
+                <xs:restriction base="xs:anyURI">
+                    <xs:enumeration value="Hospital" />
+                    <xs:enumeration value="Resident Physician" />
+                    <xs:enumeration value="Pharmacy" />
+                    <xs:enumeration value="Other" />
+                    <xs:enumeration value="Unknown" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:element>
+        <xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType" />
+    </xs:sequence>
+</xs:complexType>
+
+
+<xs:complexType name="diplomaSupplementType">
+<xs:sequence>
+<xs:choice>
+<xs:element ref="dps:MultilingualDiplomaSupplement"/>
+<xs:element ref="dps:DiplomaSupplement"/>
+<xs:element ref="gdp:MultilingualGeneralDiploma"/>
+<xs:element ref="gdp:GeneralDiploma"/>
+</xs:choice>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+<xs:any minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="currentStudiesType">
+<xs:sequence>
+<xs:choice>
+<xs:element ref="gdp:MultilingualGeneralDiploma"/>
+<xs:element ref="gdp:GeneralDiploma"/>
+</xs:choice>
+<xs:element name="yearOfStudy" type="xs:integer"/>
+<xs:element name="isEligibleForInternship" type="xs:boolean"/>
+<xs:element name="AQAA" type="stork:QualityAuthenticationAssuranceLevelType"/>
+<xs:any minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+<!-- We'll leave these new attributes for release 4 -->
+<!-- 
+	<xs:complexType name="languageQualificationType">
+   <xs:sequence>
+     <xs:element name="language" type="stork:languageType" />
+     <xs:element name="name" type="xs:string" />
+     <xs:element name="acronym" type="xs:string" minOccurs="0"/>
+     <xs:element name="cefrLevel" type="stork:cefrLevelType" minOccurs="0"/>
+     <xs:element name="international" type="xs:boolean" minOccurs="0"/>
+     <xs:element name="AQAA"
+                 type="stork:QualityAuthenticationAssuranceLevelType" />
+   </xs:sequence>
+	</xs:complexType>
+ 
+	<xs:complexType name="academicRecommendationType">
+   <xs:sequence>
+     <xs:element name="fullNameOfRecommender" type="xs:string" />
+     <xs:element name="institution" type="xs:string" />
+     <xs:element name="affiliation" type="xs:string" />
+     <xs:element name="knowledgeArea" type="xs:string" minOccurs="0" />
+     <xs:element name="contactEmail" type="xs:string" />
+     <xs:element name="contactPhone" type="xs:string" minOccurs="0" />
+     <xs:element name="comment" type="xs:string" minOccurs="0" />
+     <xs:element name="AQAA"
+                 type="stork:QualityAuthenticationAssuranceLevelType" />
+   </xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="languageType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2" />
+			<xs:maxLength value="3" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="cefrLevelType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="A1" />
+			<xs:enumeration value="A2" />
+			<xs:enumeration value="B1" />
+			<xs:enumeration value="B2" />
+			<xs:enumeration value="C1" />
+			<xs:enumeration value="C2" />
+		</xs:restriction>
+	</xs:simpleType>
+ 
+    -->
+    <xs:element name="specialisation" type="stork:specialisationType"/>
+    <xs:simpleType name="medical">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="2"/>
+            <xs:minLength value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

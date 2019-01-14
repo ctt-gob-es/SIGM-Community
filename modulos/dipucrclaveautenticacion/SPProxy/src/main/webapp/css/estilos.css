@@ -1,0 +1,619 @@
+/***************************************** CSS *****************************************************/
+html,body {
+	margin: 0px;
+	font: 82% Verdana, Geneva, Arial, Helvetica, sans-serif;
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	background: #fff url(../img/fondo.gif) repeat-x;
+}
+
+/*******************cabecera*************************/
+#cabecera {
+	background: url(../img/cabecera.gif) no-repeat;
+	height: 125px;
+}
+
+.logo_min {
+	background: url(../img/logo_min.gif) left no-repeat;
+	width: 90px;
+	height: 35px;
+	float: left;
+	margin-top: 30px;
+	margin-left: 15px;
+}
+
+.logo_ue {
+	background: url(../img/logo_ue.gif) right no-repeat;
+	width: 90px;
+	height: 76px;
+	float: right;
+	position: relative;
+	right: -170px;
+	margin-top: 30px;
+}
+
+.logo {
+	background: url(../img/logo.gif) right no-repeat;
+	width: 180px;
+	height: 100px;
+	float: right;
+	position: relative;
+	top: 18px;
+	right: 100px;
+}
+
+.tituloCabecera {
+	float: left;
+	font-size: 1.9em;
+	font-weight: normal;
+	color: #bd0022;
+	width: 536px;
+	text-align: center;
+	margin-top: 70px;
+}
+
+/**************************estructura******************************/
+#contenedor {
+	text-align: left;
+	width: 820px;
+	margin: auto;
+	padding-top: 0px;
+}
+
+#borde {
+	height: 330px;
+}
+
+#margen {
+	padding: 0px 10px 10px 20px;
+	text-align: left;
+	border: 1px dotted #666;
+	width: 790px;
+}
+
+#principal_home {
+	width: 100%;
+	height: 94.8%;
+	text-align: center;
+	float: left;
+	z-index: 2;
+	padding: 20px;
+}
+
+#principal {
+	width: 80%;
+	height: 94.8%;
+	text-align: center;
+	float: left;
+	z-index: 2;
+}
+
+#barra_menu {
+	background: #bd0022;
+	height: 20px;
+	color: #fff;
+	padding: 8px 2px 2px 15px;
+	font-weight: bold;
+	text-align: left;
+}
+
+#barra {
+	background: #bd0022;
+	height: 20px;
+	color: #fff;
+	padding: 8px 2px 2px 220px;
+	font-weight: bold;
+	text-align: left;
+}
+
+/*************************menu******************************/
+img {
+	border: 0px;
+}
+
+#menu {
+	z-index: 3;
+	width: 200px;
+	height: 100%;
+	background: #fff;
+	float: left;
+	border-right: 1px dotted #999; /*#bd0022;*/
+}
+
+#menu ul {
+	margin: 0 0 0 0px;
+	padding: 0px 0px 0px 0px;
+	list-style: none;
+}
+
+#menu li {
+	height: 33px;
+	text-decoration: none;
+	background: #fff;
+	color: #bd0022;
+	border-bottom: 1px dotted #bd0022;
+}
+
+#menu a {
+	background: url(../img/point.gif) 5% 52% no-repeat;
+	color: #bd0022;
+	text-decoration: none;
+	font-weight: bold;
+	display: block;
+	padding: 10px 10px 10px 25px;
+	text-decoration: none;
+	border-right: 1px solid #ffffff;
+	outline: 0;
+}
+
+#menu a:hover {
+	background: #cccaca url(../img/point.gif) 5% 52% no-repeat;
+	color: #fff;
+}
+
+.activado {
+	color: #fff;
+	background: #ddd;
+}
+
+.desactivado {
+	background: #fff;
+	color: #bd0022;
+}
+/*****cuerpo************/
+h1 {
+	font-size: 2em;
+	color: #000;
+}
+
+h3 {
+	font-size: 2em;
+	color: #000;
+	margin-top: -20px;
+}
+
+h2 {
+	color: #bd0022;
+	font-size: 1.1em;
+	font-weight: bold;
+	padding: 0;
+	margin: 0;
+}
+
+/*links*/
+a:link,a:visited {
+	color: #bd0022;
+}
+
+a:hover {
+	color: #717171;
+}
+
+/************pie****************/
+#pie {
+	background: #717171;
+	color: #bd0022;
+	text-align: top;
+	height: 20px;
+	border-bottom: 5px solid #bd0022;
+}
+
+#textopie {
+	text-align: center;
+	padding: 2px;
+	color: #fff;
+}
+
+/******botones formularios*******/
+#botones {
+	padding: 5px 0px 5px 0px;
+	position: relative;
+	top: 10px;
+	height: 30px;
+	margin: 0;
+	text-align: right;
+}
+
+#boton_center {
+	text-align: center;
+}
+
+input[type="button"],input[type="submit"] {
+	border: 1px solid #000;
+	background: url(../img/boton_off.gif) repeat-x;
+	color: #fff;
+	font-family: verdana;
+	font-size: 1em;
+	font-weight: bold;
+	width: auto;
+	cursor: pointer;
+	padding: 5px;
+	outline: 0;
+}
+
+input[type="button"]:hover,input[type="submit"]:hover {
+	border: 1px solid #000;
+	background: url(../img/boton_on.gif) repeat-x;
+}
+
+.input,#input {
+	width: 99%;
+	border: 1px solid #999;
+}
+
+/*******************espacios****************/
+#space {
+	height: 25px;
+	display: block;
+}
+
+#space5 {
+	height: 5px;
+}
+
+#space10 {
+	padding: 10px 5px 0px 0px;
+}
+
+#space50 {
+	height: 50px;
+	background: yellow;
+	display: block;
+}
+
+/*********tablas***************/
+.borde {
+	border: 1px solid #bd0022;
+	width: 100%;
+}
+
+#titFila {
+	background: #e8e8e8 url(../img/check.gif) 1% 50% no-repeat;
+	color: #000;
+	font-weight: bold;
+	text-align: right;
+	margin: 0;
+}
+
+#titResul {
+	background: #f9f9f9;
+	color: #000;
+	text-align: left;
+	padding: 10px;
+}
+
+/******************************globales*************************************/
+p {
+	padding: 10px 0px 10px 0px;
+}
+
+#nota {
+	color: #bd0022;
+	font-weight: bold;
+}
+
+/******************select option con banderas***********************/
+.banderas {
+	border: 1px solid red;
+	position: relative;
+	left: 5px;
+}
+
+.msDropDown div {
+	display: inline-block;
+	color: #000000;
+	text-align: left;
+}
+
+.msDropDown {
+	background: #fff;
+	border: 1px solid #c3c3c3;
+	padding: 2px 28px 0px 2px;
+	width: auto;
+}
+
+/*options*/
+.msDropDown .msDropDown_Child {
+	border: 1px solid #c3c3c3;
+	display: none;
+	width: auto;
+	margin: 0;
+	padding: 0px 25px 0px 0px;
+	cursor: pointer;
+	background-color: #FFFFFF;
+	height: auto;
+	overflow-y: auto;
+	overflow-x: hidden
+}
+
+/*cursor*/
+.msDropDown .cursorpointer {
+	cursor: pointer
+}
+
+.msDropDown .msArrow {
+	width: 16px;
+	height: 16px;
+	padding: 1px 0px 3px 0px;
+	position: relative;
+	left: 24px;
+	float: right;
+}
+
+.msDropDown .msDropdownTitle {
+	width: auto;
+	display: inline-block;
+	float: left;
+	padding-top: 2px;
+	overflow: hidden;
+}
+
+.msDropDown img {
+	border: 0
+}
+
+.msDropDown a img.icon {
+	padding-right: 5px;
+}
+
+/*colocacion banderas*/
+.msDropDown .msDropDown_Child a {
+	padding: 3px 0 3px 2px;
+	text-decoration: none;
+	display: block;
+	height: auto;
+	clear: both;
+	margin: 0;
+	width: 130%;
+}
+
+.msDropDown .msDropDown_Child a,.msDropDown .msDropDown_Child a:visited
+	{
+	color: #000000;
+}
+
+.msDropDown .msDropDown_Child a:hover {
+	color: #000000;
+	background-color: #66CCFF;
+}
+
+.msDropDown .msDropDown_Child a.selected {
+	color: #000000;
+	background-color: #66CCFF;
+}
+
+#altura {
+	height: 28px;
+}
+
+.tdLabel {
+	background: #ddd;
+	color: #000;
+	text-align: right;
+	padding: 10px;
+	font-size: 0.9em;
+	font-weight: bold;
+	width: 30%;
+}
+
+.tabla {
+	border: 1px solid #999;
+}
+
+.filatit {
+	background: #ddd;
+	color: #000;
+	padding: 20px;
+	font-size: 0.9em;
+	font-weight: bold;
+	text-align: center;
+}
+
+.filaresul {
+	color: #000;
+	text-align: left;
+	font-size: 0.8em;
+	font-family: verdana, arial;
+}
+
+.msDropDown div {
+	display: inline-block;
+	color: #000000;
+	text-align: left;
+}
+
+.coloredScroll {
+	/*
+	* Works only in IE.
+	*/
+	/*
+	scrollbar-face-color: 3dface !important;
+	scrollbar-shadow-color: ThreeDDarkShadow !important;
+	scrollbar-highlight-color: ThreeDHighlight !important;
+	scrollbar-3dlight-color: ThreeDLightShadow !important;
+	scrollbar-darkshadow-color: ThreeDDarkShadow !important;
+	scrollbar-track-color: Scrollbar !important;
+	scrollbar-arrow-color: ButtonText !important;
+	*/
+	
+}
+
+.msDropDown {
+	/*background:#f2f2f2 url(icons/dd_arrow.gif) right no-repeat;*/
+	border: 1px solid #c3c3c3;
+	padding: 2px 0 0 2px;
+	width: auto;
+	display: inline-block;
+	position: absolute;
+}
+
+.msDropDown .msDropDown_Child {
+	border: 1px solid #c3c3c3;
+	display: none;
+	width: auto;
+	margin: 0;
+	padding: 0;
+	cursor: pointer;
+	background-color: #FFFFFF;
+	height: auto;
+	overflow-y: auto;
+	overflow-x: hidden
+}
+
+.msDropDown .msEnabled {
+	cursor: pointer
+}
+
+.msDropDown .msDisabled {
+	cursor: default;
+}
+
+.msDropDown .msArrow {
+	width: 16px;
+	padding: 1px 1px 3px 0;
+	position: relative;
+	float: right;
+}
+
+.msDropDown .msDropdownTitle {
+	width: auto;
+	display: inline-block;
+	float: left;
+	padding-top: 2px;
+	overflow: hidden;
+}
+
+.msDropDown img {
+	border: 0
+}
+
+.msDropDown a img.icon {
+	padding-right: 2px;
+}
+
+.msDropDown .msDropDown_Child a {
+	padding: 3px 0 3px 2px;
+	text-decoration: none;;
+	display: block;
+	height: auto;
+	clear: both;
+	margin: 0;
+	width: 130%;
+}
+
+.msDropDown .msDropDown_Child a,.msDropDown .msDropDown_Child a:visited
+	{
+	color: #000000;
+}
+
+.msDropDown .msDropDown_Child a:hover {
+	color: #000000;
+	background-color: #66CCFF;
+}
+
+.msDropDown .msDropDown_Child a.selected {
+	color: #000000;
+	background-color: #66CCFF;
+}
+
+UL.tabNavigation {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	margin-top: 20px;
+}
+
+UL.tabNavigation LI {
+	display: inline;
+}
+
+UL.tabNavigation LI A {
+	padding: 3px 5px;
+	background-color: #999;
+	color: #fff;
+	text-decoration: none;
+	padding: 10px;
+}
+
+UL.tabNavigation LI A.selected,UL.tabNavigation LI A:hover {
+	background-color: #333;
+	color: #fff;
+	padding: 10px;
+}
+
+UL.tabNavigation LI A:focus {
+	outline: 0;
+}
+
+div.tabs>div {
+	padding-top: 0px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+div.tabs>div h2 {
+	margin-top: 0;
+}
+
+#tab1,#tab2,#tab3 {
+	margin-top: 10px;
+	border: 1px solid #bd0022;
+}
+
+.waste {
+	min-height: 1000px;
+}
+
+table.tabs {
+	border-collapse: separate;
+	border-spacing: 0;
+	background-color: transparent;
+}
+
+table.tabs th.tabck {
+	border: gray solid 1px;
+	border-bottom: 0;
+	background-color: gray;
+	padding-left: 0.2em;
+	padding-right: 0.2em;
+	text-align: center;
+	cursor: pointer;
+}
+
+table.tabs th.tabcks {
+	border: 0;
+	border-bottom: gray solid 1px;
+}
+
+table.tabs td {
+	border: gray solid 1px;
+	border-top: 0;
+}
+
+table.tabs tr.filadiv {
+	background-color: rgb(235, 235, 225);
+}
+
+table.tabs div.tabdiv {
+	background-color: rgb(235, 235, 225);
+	border: 0;
+	padding: 0.5em;
+	overflow: auto;
+	display: none;
+	width: 68em;
+	/* height: 80em;*/
+}
+
+table.attributes {
+	border-bottom: 0;
+	cellpadding: 3;
+	cellspacing: 3;
+	width: 100%;
+}
+
+table.attributes td {
+	border: 0px;
+}

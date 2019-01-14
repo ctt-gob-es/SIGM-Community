@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+    
+<hibernate-mapping>
+<!-- 
+    Created by the Middlegen Hibernate plugin
+
+    http://boss.bekk.no/boss/middlegen/
+    http://hibernate.sourceforge.net/
+-->
+
+<class 
+    name="com.ieci.tecdoc.common.invesicres.ScrTramunit" 
+    table="SCR_TRAMUNIT"
+>
+    <meta attribute="class-description" inherit="false">
+       @hibernate.class
+        table="SCR_TRAMUNIT"
+    </meta>
+
+    <id
+        name="id"
+        type="java.lang.Integer"
+        column="ID"
+    >
+        <meta attribute="field-description">
+           @hibernate.id
+            generator-class="assigned"
+            type="java.lang.Integer"
+            column="ID"
+
+        </meta>
+        <generator class="assigned" />
+    </id>
+
+    <property
+        name="code_tramunit"
+        type="java.lang.String"
+        column="CODE_TRAMUNIT"
+        not-null="true"
+        length="21"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="CODE_TRAMUNIT"
+            length="21"
+            not-null="true"
+        </meta>    
+    </property>
+
+ 	<property
+        name="name_tramunit"
+        type="java.lang.String"
+        column="NAME_TRAMUNIT"
+        not-null="true"
+        length="80"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="NAME_TRAMUNIT"
+            length="80"
+            not-null="true"
+        </meta>    
+    </property>
+    
+    <property
+        name="code_entity"
+        type="java.lang.String"
+        column="CODE_ENTITY"
+        not-null="true"
+        length="21"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="CODE_ENTITY"
+            length="21"
+            not-null="true"
+        </meta>    
+    </property>
+    
+    <property
+        name="name_entity"
+        type="java.lang.String"
+        column="NAME_ENTITY"
+        not-null="true"
+        length="80"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="NAME_ENTITY"
+            length="80"
+            not-null="true"
+        </meta>    
+    </property>
+    
+    <property
+        name="id_orgs"
+        type="int"
+        column="ID_ORGS"
+        not-null="true"
+        length="10"
+    >
+        <meta attribute="field-description">
+           @hibernate.property
+            column="ID_ORGS"
+            length="10"
+            not-null="true"
+        </meta>    
+    </property>
+    <!-- associations -->
+
+</class>
+</hibernate-mapping>

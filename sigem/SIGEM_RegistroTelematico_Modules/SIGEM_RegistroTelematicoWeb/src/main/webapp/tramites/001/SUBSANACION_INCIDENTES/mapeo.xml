@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<procedure>
+	<table name="DPCR_SUBV_NOMINATIVA">
+		<mappings>
+			<!-- Mapeos de los datos específicos del solicitante -->
+			<field name="AYUNTAMIENTO" value="AYUNTAMIENTO DE ${xpath:/datos_especificos/Descripcion_ayuntamiento}"/>
+			<field name="ASUNTO" value="${xpath:/datos_especificos/asunto}"/>
+			<field name="FINALIDAD" value="${xpath:/datos_especificos/finalidad}"/>
+			<field name="PRESUPUESTO" value="${xpath:/datos_especificos/presupuesto}"/>
+			<field name="SUBVENCION" value="${xpath:/datos_especificos/subvencion}"/>
+			<field name="FECHA" value="${xpath:/datos_especificos/fecha}"/>
+			<field name="EXPONE" value="${xpath:/datos_especificos/expone}"/>
+			<field name="SOLICITA" value="${xpath:/datos_especificos/solicita}"/>
+			<field name="DECLARO1" value="${xpath:/datos_especificos/declaro1}"/>
+			<field name="DECLARO2" value="${xpath:/datos_especificos/declaro2}"/>
+			<field name="DECLARO3" value="${xpath:/datos_especificos/declaro3}"/>
+		</mappings>
+	</table>
+	
+	<table name="SPAC_EXPEDIENTES">
+		<mappings>
+			<field name="ASUNTO" value="${xpath:/datos_especificos/asunto} DEL AYUNTAMIENTO DE ${xpath:/datos_especificos/Descripcion_ayuntamiento}"/>		
+			<field name="NIFCIFTITULAR" value="${xpath:/datos_especificos/cif}"/>
+			<field name="IDENTIDADTITULAR" value="${xpath:/datos_especificos/Descripcion_ayuntamiento}"/>
+			<field name="DOMICILIO" value="${xpath:/datos_especificos/domicilioNotificacion}"/>
+			<field name="CPOSTAL" value="${xpath:/datos_especificos/codigoPostal}"/>
+			<field name="TFNOMOVIL" value="${xpath:/datos_especificos/telefono}"/>
+			<field name="DIRECCIONTELEMATICA" value="${xpath:/datos_especificos/emailSolicitante}"/>
+			<field name="CIUDAD" value="${xpath:/datos_especificos/localidad}"/>
+			<field name="ROLTITULAR" value="INT"/>	
+			<field name="REGIONPAIS" value="${xpath:/datos_especificos/provincia}"/>
+		</mappings>
+	</table>
+	<table name="SPAC_DT_INTERVINIENTES">
+		<mappings>
+			<field name="ROL" value="INT"/>
+			<field name="TIPO_PERSONA" value="F"/>
+			<field name="NDOC" value="${xpath:/datos_especificos/cif}"/>
+			<field name="NOMBRE" value="AYUNTAMIENTO DE ${xpath:/datos_especificos/Descripcion_ayuntamiento}"/>
+			<field name="TFNO_MOVIL" value="${xpath:/datos_especificos/telefono}"/>
+			<field name="TIPO_DIRECCION" value="T"/>
+			<field name="DIRECCIONTELEMATICA" value="${xpath:/datos_especificos/emailSolicitante}"/>
+			<field name="C_POSTAL" value="${xpath:/datos_especificos/codigoPostal}"/>
+			<field name="DIRNOT" value="${xpath:/datos_especificos/domicilioNotificacion}"/>
+			<field name="EMAIL" value="${xpath:/datos_especificos/emailSolicitante}"/>
+			<field name="LOCALIDAD" value="${xpath:/datos_especificos/localidad}"/>
+			<field name="CAUT" value="${xpath:/datos_especificos/provincia}"/>
+		</mappings>
+	</table>
+	<table name="REC_OBLIGADO">
+		<mappings>
+			<!-- Mapeos de los datos específicos del solicitante -->
+			<field name="REPRES_NIF" value="${xpath:/datos_especificos/nif_repre}"/>
+			<field name="REPRES_NOMBRE" value="${xpath:/datos_especificos/nombre_repre}"/>
+			<field name="RCALLE" value="${xpath:/datos_especificos/domicilio_repre}"/>
+			<field name="RC_POSTAL" value="${xpath:/datos_especificos/c_postal_repre}"/>
+			<field name="RCIUDAD" value="${xpath:/datos_especificos/ciudad_repre}"/>
+			<field name="RREGION" value="${xpath:/datos_especificos/region_repre}"/>			
+			<field name="REPRES_MOVIL" value="${xpath:/datos_especificos/movil_repre}"/>
+			<field name="REPRES_D_EMAIL" value="${xpath:/datos_especificos/d_email_repre}"/>
+			<field name="NOMBRESOLI" value="${xpath:/datos_especificos/nombreSolicitante}"/>
+			<field name="NIFSOLI" value="${xpath:/datos_especificos/documentoIdentidad}"/>
+		</mappings>
+	</table>
+</procedure>

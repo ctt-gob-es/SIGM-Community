@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<appender name="MainLogger" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/logs/SP/stork-sp.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="Append" value="true"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{HH:mm:ss:SSS} - %p - %C{1} - %m%n"/>
+		</layout>
+	</appender>
+	
+	<logger name="org.opensaml">
+        <level value="info" />
+    </logger>
+	
+
+	<root>
+		<appender-ref ref="MainLogger" />
+		<level value="info" />
+	</root>
+
+</configuration>

@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+						"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ServiceVO">
+
+	<typeAlias alias="service"
+		type="es.msssi.dir3.api.vo.ServiceVO" />
+
+	<resultMap id="service" class="es.msssi.dir3.api.vo.ServiceVO">
+		<result property="id" column="C_ID_SERVICIO" />
+		<result property="description" column="DESCRIPCION" />
+		<result property="officeId" column="C_ID_OFICINA" />
+	</resultMap>
+
+	<sql id="table">DIR_SERVICIOS_OFICINA </sql>
+	<sql id="columnsAll">
+		SEROFI.C_ID_OFICINA,
+		SEROFI.C_ID_SERVICIO,
+		SER.DESCRIPCION
+	</sql>
+	
+	<sql id="columns">
+		SEROFI.C_ID_SERVICIO,
+		SER.DESCRIPCION
+	</sql>
+	
+	<sql id="columns_insert">
+		C_ID_SERVICIO,
+		C_ID_OFICINA,
+		D_FECHA_ALTA,
+		D_ULT_ACTUALIZACION
+	</sql>
+	<sql id="insert">
+		#id#,
+		#officeId#,
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP
+	</sql>
+	<sql id="update">
+		D_ULT_ACTUALIZACION = CURRENT_TIMESTAMP
+	</sql>
+	
+	<select id="getServiceVO" parameterClass="java.lang.String" resultMap="service">
+		SELECT
+			<include refid="columns" />
+		FROM
+			<include refid="table" /> SEROFI
+			 LEFT OUTER JOIN CAT_SERVICIOS SER ON SEROFI.C_ID_SERVICIO = SER.ID
+		WHERE SEROFI.C_ID_OFICINA= #value# 
+		ORDER BY SEROFI.C_ID_SERVICIO
+	</select>
+	
+	<select id="getServicesVO" parameterClass="java.lang.String" resultMap="service">
+		SELECT
+			<include refid="columnsAll" />
+		FROM
+			<include refid="table" /> SEROFI
+			 LEFT OUTER JOIN CAT_SERVICIOS SER ON SEROFI.C_ID_SERVICIO = SER.ID
+		WHERE SEROFI.C_ID_OFICINA= #value#
+		ORDER BY SEROFI.C_ID_SERVICIO
+	</select>
+	
+	<insert id="addServiceVO" parameterClass="service">
+		INSERT INTO <include refid="table" />
+		(<include refid="columns_insert" />)
+		VALUES (<include refid="insert" />)
+	</insert>
+	
+	<update id="updateServiceVO" parameterClass="service">
+		UPDATE
+			<include refid="table" />
+		SET
+			<include refid="update" />
+		WHERE C_ID_SERVICIO = #id# AND C_ID_OFICINA = #officeId#
+	</update>
+	
+	<delete id="deleteServicesVO" parameterClass="java.lang.String">
+		DELETE FROM 
+			<include refid="table" />
+		WHERE C_ID_OFICINA = #value#
+	</delete>
+</sqlMap>

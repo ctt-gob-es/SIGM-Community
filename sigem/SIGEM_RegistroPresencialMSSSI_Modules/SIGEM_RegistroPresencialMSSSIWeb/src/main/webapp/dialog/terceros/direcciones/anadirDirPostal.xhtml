@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+
+</h:head>
+
+<h:body>
+	<ui:composition>
+		<h:form id="formAnadirDirPostal">
+			<h:panelGrid id="gridAnadirDirPostal" styleClass="modificarTerceros">
+				<h:panelGrid id="gridAnadirDirPostalDatos" columns="2" columnClasses="label, value" styleClass="modificarTerceros">
+					<h:outputLabel value="#{msgs.labelDireccion}"></h:outputLabel>
+					<p:inputText id="direccionFisicaNombre" label="#{msgs.labelDireccion}" value="#{tercerosAction.nuevaDireccionFisica.direccion}" ></p:inputText>
+
+					<h:outputLabel value="#{msgs.labelProvincia}"></h:outputLabel>
+					<p:selectOneMenu id="direccionFisicaProvincia" value="#{tercerosAction.nuevaDireccionFisica.provincia.nombre}"
+					 valueChangeListener="#{tercerosAction.actualizaCiudades}" filter="true">
+						<f:attribute name="direccion" value="#{tercerosAction.nuevaDireccionFisica}" />
+						<f:selectItems value="#{tercerosAction.provincias}" />
+						<p:ajax event="change" update=":interesadosform:formAnadirDirPostal:direccionFisicaLocalidad"/>						
+					</p:selectOneMenu>
+
+					<h:outputLabel value="#{msgs.labelLocalidad}"></h:outputLabel>
+					<p:selectOneMenu id="direccionFisicaLocalidad" value="#{tercerosAction.nuevaDireccionFisica.ciudad.nombre}" filter="true">
+						<f:selectItems value="#{tercerosAction.nuevaDireccionFisica.provincia.ciudades}" />						
+					</p:selectOneMenu>				
+
+					<h:outputLabel value="#{msgs.labelCodigoPostal}"></h:outputLabel>
+					<p:inputText id="direccionFisicaCP" label="#{msgs.labelCodigoPostal}" value="#{tercerosAction.nuevaDireccionFisica.codigoPostal}" ></p:inputText>
+
+					<h:outputLabel value="#{msgs.labelPais}"></h:outputLabel>
+					<p:selectOneMenu id="direccionFisicaPais" value="#{tercerosAction.nuevaDireccionFisica.pais.nombre}" filter="true">
+						<f:selectItems value="#{tercerosAction.paises}" />						
+					</p:selectOneMenu>
+				</h:panelGrid>
+
+				<h:panelGroup id="botonesAnadirDireccionFisica">
+					<p style="text-align: center; margin: 0em;">
+						<p:commandButton id="intBotonDireccionFisicaAnadirAnadir"
+							styleClass="intBotonResultBusquedaAnadir" title="#{msgs.labelAnadir}" alt="#{msgs.labelAnadir}" value="#{msgs.labelAnadir}"
+							process="@form,gridAnadirDirPostal" immediate="false"
+							update=":interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesFisicasTbl" 
+							oncomplete="PF('int_aniadir_dir_postal').hide();"
+							action="#{tercerosAction.guardaNuevaDireccionPostal}">
+						</p:commandButton >
+						<p:commandButton styleClass="cerrar" id="intBotonDireccionFisicaAnadirCerrar" value="#{msgs.labelBotonCerrar}" immediate="true" 
+							oncomplete="PF('int_aniadir_dir_postal').hide();" 
+							update=":interesadosform:formIModificarTercero:tabViewModificarTercero:modificarTerceroDireccionesFisicasTbl" />
+					</p>
+				</h:panelGroup>
+			</h:panelGrid>
+		</h:form>
+	</ui:composition>
+
+</h:body>
+
+</html>

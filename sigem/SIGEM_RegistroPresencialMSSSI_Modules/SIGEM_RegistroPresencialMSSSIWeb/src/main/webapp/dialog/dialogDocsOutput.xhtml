@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+
+</h:head>
+
+<h:body>
+	<ui:composition>
+		<p:panel id="panelDigdlgDocs" styleClass="ventanaDist" style="font-size: 1.1em;width: 800px !important;"  >
+			<h:outputText value="Numero de Registro: "/><h:outputText value="#{searchOutputRegisterAction.selectedResult.fld1}" />
+			<p:dataTable value="#{searchOutputRegisterAction.listDocuments}" var="anexo" 
+			style="font-size: 1.3em" summary="Tabla de Documentos Anexos" scrollable="true"
+				scrollHeight="350">
+					  <p:column headerText="Nombre" style="width: 180px;font-size: 0.95em;font-weight: normal;">
+					   	 	<div style="word-wrap: break-word;">
+						        <p:commandLink ajax="false"
+									value="#{anexo.pages[0].name}">
+									<f:setPropertyActionListener value="#{anexo.pages[0]}"
+										target="#{documentDownloadController.page}" />
+									<p:fileDownload value="#{documentDownloadController.fileDownload}" />
+								</p:commandLink>
+							</div>
+					    </p:column>
+					  <p:column headerText="Tamaño (KB)" style="width: 62px;font-size: 0.95em;font-weight: normal;">
+					  		<h:outputText value="#{anexo.pages[0].fileSizeKB}" />
+					  </p:column>
+					  <p:column headerText="Validez" style="width: 60px;font-size: 0.95em;font-weight: normal;">
+						  <ui:fragment rendered="${not empty anexo.pages[0].validityType}">
+						  		<c:set var="messagevalidate"
+									value="validateDocument.#{anexo.pages[0].validityType}" />
+								<h:outputText value="#{msgs[messagevalidate]}" />
+							</ui:fragment>
+					  </p:column>
+					  <p:column headerText="Tipo" style="width: 90px;font-size: 0.95em;font-weight: normal;">
+					  	<ui:fragment rendered="${not empty anexo.pages[0].documentType}">
+					  		<c:set var="messageType"
+								value="typeDocument.#{anexo.pages[0].documentType}" />
+							<h:outputText value="#{msgs[messageType]}" />
+						</ui:fragment>
+					  </p:column>
+					   <p:column headerText="Fecha alta" style="width: 60px;font-size: 0.95em;font-weight: normal;">
+						  	<div style="word-wrap: break-word;">
+						  		<h:outputText value="#{anexo.pages[0].crtndate}">
+						  		<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date"
+							locale="es_ES" timeZone="Europe/Paris" />
+						  		</h:outputText>
+						  	</div>
+						  </p:column>
+					  <p:column headerText="Comentario" style="width: 90px;font-size: 0.95em;font-weight: normal;">
+					  	<div style="word-wrap: break-word;">
+					  		<h:outputText value="#{anexo.pages[0].comments}" />
+					  	</div>
+					  </p:column>
+					   <p:column headerText="Firma" style="width: 170px;font-size: 0.95em;font-weight: normal;">
+					  	<ui:fragment rendered="${not empty anexo.pages[0].pageSigned}">
+						  	<div style="word-wrap: break-word;">
+						  		<p:commandLink ajax="false"
+									value="#{anexo.pages[0].pageSigned.name}">
+									<f:setPropertyActionListener value="#{anexo.pages[0].pageSigned}"
+										target="#{documentDownloadController.page}" />
+									<p:fileDownload value="#{documentDownloadController.fileDownload}" />
+								</p:commandLink>
+						  	</div>
+						  </ui:fragment>
+					  </p:column>
+		    </p:dataTable>
+		</p:panel>
+	</ui:composition>
+</h:body>
+
+</html>

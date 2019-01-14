@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="ficherosir" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${sigem.log.path}/fwktd-sir-ws/fwkt-sir-ws.log"/>
+		<param name="MaxFileSize" value="5000KB"/>
+		<param name="MaxBackupIndex" value="10"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p %-40c{3} - %m%n"/>
+		</layout>
+	</appender>
+
+
+	<root>
+		<priority value="INFO"/>
+		<appender-ref ref="ficherosir"/>
+	</root>
+
+</log4j:configuration>

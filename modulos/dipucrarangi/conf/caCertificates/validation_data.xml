@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<validation-data>	
+	<!-- ACCV - Test -->
+	<ca common-name="CATEST">
+		<ocsps>
+			<ocsp>
+				<url>http://ocsptest.accv.es:8086</url>
+			</ocsp>
+		</ocsps>
+	</ca>
+	<ca common-name="SUB_CA_WINDOWS3">
+		<ocsps>
+			<ocsp>
+				<url>http://ocsptest.accv.es:8086</url>
+			</ocsp>
+		</ocsps>
+	</ca>
+	<ca common-name="Root TEST EJBCA">
+		<ocsps>
+			<ocsp>
+				<url>http://ocsptest.accv.es:8086</url>
+			</ocsp>
+		</ocsps>
+	</ca>
+	
+	<!-- DNIe -->
+	<ca common-name="AC DNIE 001">
+		<ocsps>
+			<ocsp>
+				<url>http://ocsp.dnie.es</url>
+			</ocsp>			
+		</ocsps>
+	</ca>
+	<ca common-name="AC DNIE 002">
+		<ocsps>
+			<ocsp>
+				<url>http://ocsp.dnie.es</url>
+			</ocsp>
+		</ocsps>
+	</ca>
+	<ca common-name="AC DNIE 003">
+		<ocsps>
+			<ocsp>
+				<url>http://ocsp.dnie.es</url>
+			</ocsp>	
+		</ocsps>
+	</ca>
+	<ca common-name="AC RAIZ DNIE">
+		<ocsps>
+			<ocsp>
+				<url>http://ocsp.dnie.es</url>
+			</ocsp>	
+		</ocsps>
+	</ca>
+	<!-- FNMT -->
+	<ca common-name="C=ES,O=FNMT,OU=FNMT Clase 2 CA">
+		<ocsps>			    
+			<ocsp>
+				<url>http://des-afirma.redsara.es/servidorOcsp/servidorOCSP</url>
+				<requestor_name>sigem_quijote_pero_no_lo_procesa</requestor_name>
+				<signature>
+						<keystore_file>client-keystore.jks</keystore_file>
+						<keystore_type>jks</keystore_type>
+						<keystore_password>changeit</keystore_password>
+						<alias>sellodipucrfirma</alias>
+						<alias_password>dipucr01</alias_password>								
+				</signature>
+			</ocsp>				
+		</ocsps>
+	</ca>
+	<ca common-name="AC FNMT Usuarios">
+		<ocsps>			    
+			<ocsp>
+				<url>http://des-afirma.redsara.es/servidorOcsp/servidorOCSP</url>
+				<requestor_name>sigem_quijote_pero_no_lo_procesa</requestor_name>
+				<signature>
+						<keystore_file>client-keystore.jks</keystore_file>
+						<keystore_type>jks</keystore_type>
+						<keystore_password>changeit</keystore_password>
+						<alias>sellodipucrfirma</alias>
+						<alias_password>dipucr01</alias_password>								
+				</signature>
+			</ocsp>				
+		</ocsps>
+	</ca>
+</validation-data>

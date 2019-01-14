@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+	<display-name>fwktd-dir3-ws</display-name>
+	<servlet>
+		<description>Servlet que introduce en las variables de sistema las rutas provenientes de los env-entry</description>
+	    <servlet-name>InitServlet</servlet-name>
+	    <servlet-class>es.msssi.tecdoc.sgm.registropresencial.servlet.InitPathServlet</servlet-class>
+	    <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+		<servlet-name>WebService</servlet-name>
+		<servlet-class>
+			com.sun.xml.ws.transport.http.servlet.WSServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>WebService</servlet-name>
+		<url-pattern>/consultService</url-pattern>
+	</servlet-mapping>
+
+    <servlet>
+		<display-name>log4j-init</display-name>
+		<servlet-name>log4j-init</servlet-name>
+		<servlet-class>ieci.tecdoc.sgm.core.log.web.Log4jInitServlet</servlet-class>
+		<init-param>
+			<param-name>subdir</param-name>
+			<param-value>
+				/fwktd-dir3-ws
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>fileName</param-name>
+			<param-value>log4j.xml</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath*:beans/fwktd-dir3-api-applicationContext.xml
+		</param-value>
+	</context-param>
+	<listener>
+		<listener-class>
+			com.sun.xml.ws.transport.http.servlet.WSServletContextListener
+		</listener-class>
+	</listener>
+  <listener>
+  	<listener-class>
+  		org.springframework.web.context.ContextLoaderListener
+  	</listener-class>
+  </listener>
+
+  <listener>
+  	<listener-class>
+  		org.springframework.web.context.request.RequestContextListener
+  	</listener-class>
+  </listener>
+
+	<mime-mapping>
+		<extension>inc</extension>
+		<mime-type>text/plain</mime-type>
+	</mime-mapping>
+	<env-entry> 
+		<description>Path del directorio general de logs</description>
+	    <env-entry-name>MSSSI_sigem.log.path</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${PATH_REPO}/logs</env-entry-value>  
+	</env-entry>
+	<env-entry>
+		<description>Path del directorio general de configuracion</description>
+	    <env-entry-name>MSSSI_fwktd-dir3-dco.scriptsFilesDir</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${PATH_REPO}/ficheros/dir3/</env-entry-value> 
+	</env-entry>
+	<env-entry>
+		<description>Path del directorio general de configuracion</description>
+	    <env-entry-name>MSSSI_fwktd-dir3-dco.tempFilesDir</env-entry-name> 
+	    <env-entry-type>java.lang.String</env-entry-type> 
+	    <env-entry-value>${PATH_REPO}/ficheros/dir3/</env-entry-value> 
+	</env-entry>
+	<resource-ref>
+		<res-ref-name>jdbc/fwktd-dir3DS</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+<!--	<resource-ref>
+		<res-ref-name>jdbc/fwktd-auditDS_000</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>-->
+</web-app>

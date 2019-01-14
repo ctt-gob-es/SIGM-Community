@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://intermediacion.redsara.es/scsp/esquemas/V3/datosEspecificos" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://intermediacion.redsara.es/scsp/esquemas/V3/datosEspecificos" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="DatosEspecificos" type="DatosEspecificos"/>
+	<xs:complexType name="DatosEspecificos">
+		<xs:choice>
+			<xs:element name="DatosEspecificosPeticion" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="DatosGenerales">
+							<xs:complexType>
+								<xs:all>
+									<xs:element ref="OrganoGestor"/>
+									<xs:element ref="TipoMovimiento"/>
+								</xs:all>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="DatosPersonales">
+							<xs:complexType>
+								<xs:all>
+									<xs:element ref="DatosIdentificacion"/>
+									<xs:element name="DatosDenominacion" minOccurs="0">
+										<xs:complexType>
+											<xs:choice>
+												<xs:element ref="PersonaFisica" minOccurs="0"/>
+												<xs:element ref="PersonaJuridica" minOccurs="0"/>
+											</xs:choice>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="DatosDomicilio" minOccurs="0">
+										<xs:complexType>
+											<xs:all>
+												<xs:element name="PaisDom">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="2"/>
+															<xs:minLength value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element ref="Domicilio" minOccurs="0"/>
+												<xs:element ref="CodigoPostal" minOccurs="0"/>
+												<xs:element name="CodProvincia" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="2"/>
+															<xs:maxLength value="2"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="CodMunicipio" minOccurs="0">
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="4"/>
+															<xs:minLength value="4"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element ref="Municipio" minOccurs="0"/>
+											</xs:all>
+										</xs:complexType>
+									</xs:element>
+									<xs:element ref="ActividadEconomica" minOccurs="0"/>
+								</xs:all>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="DatosEspecificosRespuesta" minOccurs="0">
+				<xs:complexType>
+					<xs:all>
+						<xs:element ref="DatosIdentificacion"/>
+						<xs:element name="CodigoEstadoSo">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="4"/>
+									<xs:minLength value="4"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="CodigoEstadoSecundarioSo" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="16"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="LiteralErrorSo">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="255"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="Identificador">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="25"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="RazonSocial">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:minLength value="1"/>			
+				<xs:maxLength value="128"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Nombre">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:minLength value="1"/>
+				<xs:maxLength value="40"/>
+				<xs:pattern value="[A-Za-zÁáÉéÍíÓóÚúüÑñÀàÈèÌìÒòÙùÄäËëÏïÖöÜüÂâÊêÎîÔôÛûÇç·'\-\s,.()/\\]+"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="PrimerApellido">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:minLength value="1"/>
+				<xs:maxLength value="40"/>
+				<xs:pattern value="[A-Za-zÁáÉéÍíÓóÚúüÑñÀàÈèÌìÒòÙùÄäËëÏïÖöÜüÂâÊêÎîÔôÛûÇç·'\-\s,.()/\\]+"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="SegundoApellido">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:minLength value="1"/>
+				<xs:maxLength value="40"/>
+				<xs:pattern value="[A-Za-zÁáÉéÍíÓóÚúüÑñÀàÈèÌìÒòÙùÄäËëÏïÖöÜüÂâÊêÎîÔôÛûÇç·'\-\s,.()/\\]+"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Pais" default="ES">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="2"/>
+				<xs:minLength value="2"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Domicilio">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="100"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="Municipio">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="100"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="ActividadEconomica">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Region">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="5"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="TipoBeneficiario"/>
+				<xs:element ref="SectorEconomico" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CodigoPostal">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="5"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="OrganoGestor">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="9"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="TipoMovimiento">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="A"/>
+				<xs:enumeration value="M"/>
+				<xs:enumeration value="B"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="DatosIdentificacion">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="Pais"/>
+				<xs:element ref="Identificador"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PersonaFisica">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="Nombre"/>
+				<xs:element ref="PrimerApellido"/>
+				<xs:element ref="SegundoApellido" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PersonaJuridica">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="RazonSocial"/>
+				<xs:element ref="NombreGrupo" minOccurs="0"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="NombreGrupo">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="128"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="TipoBeneficiario">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:length value="3"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="SectorEconomico">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="5"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+</xs:schema>

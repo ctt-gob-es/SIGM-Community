@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:tsa="http://www.map.es/TSA/V1/TSA.wsdl"
+	xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema"
+	targetNamespace="http://www.map.es/TSA/V1/TSA.wsdl">
+	<types>
+		<xs:schema
+			targetNamespace="http://www.map.es/TSA/V1/TSA.wsdl">
+			<xs:import
+				namespace="urn:oasis:names:tc:dss:1.0:core:schema"
+				schemaLocation="http://docs.oasis-open.org/dss/v1.0/oasis-dss-core-schema-v1.0-os.xsd" />
+		</xs:schema>
+	</types>
+		
+	<!--  Mensajes operación createTimeStamp -->
+
+	<message name="TimeStampRequest">
+		<part name="TimeStampRequest" element="dss:SignRequest" />
+	</message>
+
+	<message name="TimeStampResponse">
+		<part name="TimeStampResponse" element="dss:SignResponse" />
+	</message>
+
+	<!--  Mensajes operación verifyTimeStamp -->
+
+	<message name="VerifyTimeStampRequest">
+		<part name="VerifyTimeStampRequest" element="dss:VerifyRequest" />
+	</message>
+
+	<message name="VerifyTimeStampResponse">
+		<part name="VerifyTimeStampResponse" element="dss:VerifyResponse" />
+	</message>
+	
+	<!--  Mensajes operación renewTimeStamp -->	
+
+	<message name="RenewTimeStampRequest">
+		<part name="RenewTimeStampRequest" element="dss:SignRequest" />
+	</message>
+
+	<message name="RenewTimeStampResponse">
+		<part name="RenewTimeStampResponse" element="dss:SignResponse" />
+	</message>
+		
+	
+	<!-- PortTypes -->
+	
+	<portType name="CreateTimeStampPort">
+		<operation name="createTimeStamp">
+			<input message="tsa:TimeStampRequest" />
+			<output message="tsa:TimeStampResponse" />
+		</operation>
+	</portType>
+
+	<portType name="VerifyTimeStampPort">
+		<operation name="verifyTimeStamp">
+			<input message="tsa:VerifyTimeStampRequest" />
+			<output message="tsa:VerifyTimeStampResponse" />
+		</operation>
+	</portType>
+
+	<portType name="RenewTimeStampPort">
+		<operation name="renewTimeStamp">
+			<input message="tsa:RenewTimeStampRequest" />
+			<output message="tsa:RenewTimeStampRequest" />
+		</operation>		
+	</portType>
+
+	<!--  Bindings -->
+	<binding name="CreateTimeStampBinding" type="tsa:CreateTimeStampPort">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="createTimeStamp">
+			<soap:operation style="document" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>	
+	
+	<binding name="VerifyTimeStampBinding" type="tsa:VerifyTimeStampPort">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+
+		<operation name="verifyTimeStamp">
+			<soap:operation style="document" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+		
+	<binding name="RenewTimeStampBinding" type="tsa:RenewTimeStampPort">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="renewTimeStamp">
+			<soap:operation style="document" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+
+	<!--  Definición del servicio -->
+
+	<service name="CreateTimeStampWS">
+		<port name="CreateTimeStampWSPort" binding="tsa:CreateTimeStampBinding">
+			<soap:address
+				location="http://localhost:8080/tsamap/CreateTimeStampWS" />
+		</port>
+	</service>
+	
+	<service name="VerifyTimeStampWS">
+		<port name="VerifyTimeStampWSPort" binding="tsa:VerifyTimeStampBinding">
+			<soap:address
+				location="http://localhost:8080/tsamap/VerifyTimeStampWS" />
+		</port>
+	</service>
+	
+
+	<service name="RenewTimeStampWS">
+		<port name="RenewTimeStampWSPort" binding="tsa:RenewTimeStampBinding">
+			<soap:address
+				location="http://localhost:8080/tsamap/RenewTimeStampWS" />
+		</port>
+	</service>	
+	
+	
+</definitions>

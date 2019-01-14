@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <name>sigm.webservices</name>
+  <parent>
+    <artifactId>SIGEM_RegistroPresencialMSSSIJAXWS</artifactId>
+    <groupId>es.msssi.tecdoc.sigem</groupId>
+    <version>3.0.0-msssi2.0.0</version>
+  </parent>
+  
+  <artifactId>sigm.webservices</artifactId>
+  <packaging>war</packaging>  
+	<properties>
+	 	<sigem.version>3.0.1-M2</sigem.version>	 	
+	 	<sigemMSSSI.version>3.0.0-msssi2.0.0</sigemMSSSI.version>
+		<isicres.version>8.0.1</isicres.version>
+		<isicresMSSSI.version>3.0.0-msssi2.0.0</isicresMSSSI.version>
+		<fwktd.version>1.0.1</fwktd.version>
+<!-- 		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory> -->
+<!-- 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
+		<!--<weblogic.dataSource.jndi.name.sigemaudit_000>jdbc/fwktd-auditDS_001</weblogic.dataSource.jndi.name.sigemaudit_000>
+		<weblogic.dataSource.jndi.name.registroDS_000>jdbc/registroDS_001</weblogic.dataSource.jndi.name.registroDS_000>
+		<weblogic.dataSource.jndi.name.fwktdsirDS_000>jdbc/fwktd-sirDS_001</weblogic.dataSource.jndi.name.fwktdsirDS_000-->
+
+		<PATH_REPO>D:/Repositorio/SIGEM/</PATH_REPO>
+		<url.ws.signServices>/META-INF/wsdls/SignServiceServicePP.wsdl</url.ws.signServices>
+		<sigem.OS>1</sigem.OS>
+		
+		<!-- PFE Firma -->
+		<ALIAS_SIGN_CERT>alias_sign_cert</ALIAS_SIGN_CERT>
+		
+		<!-- WSSEC UserPass SOAP -->
+		
+		<env.entry.SYSTEM_PFE>PFE</env.entry.SYSTEM_PFE>
+		<env.entry.MODE_PFE>CLIENT</env.entry.MODE_PFE>
+		<env.entry.TYPE_PFE>2</env.entry.TYPE_PFE>
+		<env.entry.WSUSERNAME_PFE>wsusername_pfe</env.entry.WSUSERNAME_PFE>
+		<env.entry.WSUSERPASS_PFE>wsuserpass_pfe</env.entry.WSUSERPASS_PFE>
+		<env.entry.WSUSERPASSTYPE_PFE>HASH</env.entry.WSUSERPASSTYPE_PFE>		
+		<!-- FIN WSSEC UserPass SOAP -->
+		
+		<!-- CODIGO EXCLUIDO -->
+<!-- 		<source.exclude /> -->
+	</properties>
+
+	<!-- PERFILES -->
+	<profiles> 
+		<profile>
+			<id>msssi_local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>msssi_local</name>
+				</property>
+			</activation>
+			<properties>
+				<!--<weblogic.dataSource.jndi.name.sigemaudit_000>jdbc/fwktd-auditDS_001</weblogic.dataSource.jndi.name.sigemaudit_000>
+				<weblogic.dataSource.jndi.name.registroDS_000>jdbc/registroDS_001</weblogic.dataSource.jndi.name.registroDS_000>
+				<weblogic.dataSource.jndi.name.fwktdsirDS_000>jdbc/fwktd-sirDS_001</weblogic.dataSource.jndi.name.fwktdsirDS_000-->
+				<PATH_REPO>D:/Repositorio/SIGEM/</PATH_REPO>
+				<url.ws.signServices>/META-INF/wsdls/SignServiceServicePP.wsdl</url.ws.signServices>
+				<sigem.OS>1</sigem.OS>				
+			</properties>
+		</profile>
+	</profiles>
+	<!-- DEPENDENCIAS -->
+	<dependencies>
+		<!-- APP -->
+		<dependency>
+			<groupId>es.msssi.tecdoc.sigem</groupId>
+			<artifactId>sigm.dao</artifactId>
+			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-context-support</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>core.base</artifactId>
+					<groupId>es.mspsi.ovfrw</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- SIGEM -->		
+		<dependency>
+			<groupId>es.msssi.tecdoc.sigem</groupId>
+			<artifactId>SIGEM_RegistroPresencialMSSSI</artifactId>
+			<version>${sigemMSSSI.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bctsp-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcmail-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.xml.ws</groupId>
+					<artifactId>jaxws-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>axis</groupId>
+					<artifactId>axis-wsdl4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-rt-frontend-jaxws</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>core.base</artifactId>
+					<groupId>es.mspsi.ovfrw</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>alfresco-repository</artifactId>
+					<groupId>org.alfresco</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>alfresco-web-service-client</artifactId>
+					<groupId>org.alfresco</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>cxf-rt-transports-http</artifactId>
+					<groupId>org.apache.cxf</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>quartz</artifactId>
+					<groupId>org.opensymphony.quartz</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bsh</artifactId>
+					<groupId>bsh</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>castor</artifactId>
+					<groupId>castor</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>cometd</artifactId>
+					<groupId>org.mortbay.jetty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>dwr</artifactId>
+					<groupId>org.directwebremoting</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jdom</artifactId>
+					<groupId>jdom</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-collections</artifactId>
+					<groupId>commons-collections</groupId>
+				</exclusion>
+
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>axis</groupId>
+			<artifactId>axis-ant</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml</groupId>
+			<artifactId>jaxrpc</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.soap</groupId>
+			<artifactId>saaj-api</artifactId>
+			<version>1.3.5</version>
+		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+		</dependency>
+		<!-- WEB -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>		
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>sigem_core</artifactId>
+			<version>${sigem.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.thoughtworks.xstream</groupId>
+					<artifactId>xstream</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>wss4j</groupId>
+					<artifactId>wss4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>aopalliance</artifactId>
+					<groupId>aopalliance</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>sigem_registroPresencial</artifactId>
+			<version>${sigem.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>cglib</groupId>
+					<artifactId>cglib-full</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>wss4j</groupId>
+					<artifactId>wss4j</artifactId>
+				</exclusion>
+				<!-- para uso de la version necesaria para el cliente cxf de intercambio -->
+				<exclusion>
+					<groupId>wsdl4j</groupId>
+					<artifactId>wsdl4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>quartz</artifactId>
+					<groupId>org.opensymphony.quartz</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>xmlsec</artifactId>
+					<groupId>xml-security</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>
+				sigem_registroPresencial-configurable-resources
+			</artifactId>
+			<version>${sigem.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.ws.security</groupId>
+					<artifactId>wss4j</artifactId>
+				</exclusion>
+			</exclusions>
+			<classifier>configurableSigem</classifier>
+			<type>zip</type>
+		</dependency>
+		<dependency>
+			<groupId>es.msssi.tecdoc.sigem</groupId>
+			<artifactId>sigem_init</artifactId>
+			<version>${sigemMSSSI.version}</version>
+<!-- 			<exclusions> -->
+<!-- 				<exclusion> -->
+<!-- 					<groupId>log4j</groupId> -->
+<!-- 					<artifactId>log4j</artifactId> -->
+<!-- 				</exclusion> -->
+<!-- 			</exclusions> -->
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Api</artifactId>
+			<version>${isicres.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xml-security</groupId>
+					<artifactId>xmlsec</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>es.ieci.tecdoc.isicres</groupId>
+					<artifactId>ISicres-resources-configurable</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>quartz</artifactId>
+					<groupId>org.opensymphony.quartz</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>cxf-rt-transports-http</artifactId>
+					<groupId>org.apache.cxf</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>cxf-rt-frontend-jaxws</artifactId>
+					<groupId>org.apache.cxf</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Server</artifactId>
+			<version>${isicres.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-collections</artifactId>
+					<groupId>commons-collections</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcprov-jdk14</artifactId>
+					<groupId>bouncycastle</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
+			<artifactId>fwktd-sir-api</artifactId>
+			<version>${fwktd.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>fwktd-dm-alfresco</artifactId>
+					<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-dm</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>axis-wsdl4j</artifactId>
+					<groupId>axis</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>invesdoc-business</artifactId>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>invesdoc-core</artifactId>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-PersonManager</artifactId>
+			<version>${isicres.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>bcprov-jdk14</artifactId>
+					<groupId>bouncycastle</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>invesdoc-core</artifactId>
+					<groupId>es.ieci.tecdoc.invesdoc</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>		
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Terceros</artifactId>
+			<version>${isicres.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-beanutils</artifactId>
+					<groupId>commons-beanutils</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>			 		
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+
+		<!-- PFE -->
+		<!-- dependency>
+			<groupId>es.mspsi.pfe</groupId>
+			<artifactId>jsignclientjaxws</artifactId> 
+ 			<version>2.0.5</version> 
+			<exclusions>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15on</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spring</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>core.wssec</artifactId>
+					<groupId>es.mspsi.ovfrw</groupId>
+				</exclusion>				
+			</exclusions>
+		</dependency-->
+		<!--dependency>
+			<groupId>es.mspsi.ovfrw</groupId>
+			<artifactId>core.security</artifactId>
+			<version>2.2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>es.mspsi.ovfrw</groupId>
+			<artifactId>core.wssec</artifactId>
+			<version>2.2.5</version>
+		</dependency-->
+		<dependency>
+			<groupId>es.mspsi.ovfrw</groupId>
+			<artifactId>core.base</artifactId>
+			<version>2.1.0-snts</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+
+		<!-- JASPER -->
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>1.7.5</version>
+		</dependency>
+
+		<!-- TEST -->
+		<dependency>
+			<groupId>com.jcabi</groupId>
+			<artifactId>jcabi-xml</artifactId>
+			<version>0.16.2</version>
+		</dependency>
+		</dependencies>	
+
+	<!-- BUILD -->
+	<build>
+		<!-- EXTENSIONES -->
+		<extensions>
+			<!-- FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
+		<!-- PLUGINS -->
+		<plugins>
+			<!-- CREACION DE WAR -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<!-- CONFIGURACION -->
+				<configuration>
+					<encoding>iso-8859-15</encoding>
+					<warName>${project.name}-${project.version}</warName>
+					<warSourceExcludes>${source.exclude}</warSourceExcludes>
+					<!-- MANIFEST -->
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Weblogic-Application-Version>${project.version}</Weblogic-Application-Version>
+						</manifestEntries>
+					</archive>
+					<!-- CONTENIDO -->
+					<webResources>
+						<resource>
+							<filtering>true</filtering>
+							<directory>src/main/webapp</directory>
+							<includes>
+								<include>**/*.xml</include>
+								<include>**/*.wsdl</include>
+								<include>**/*.jsp</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<checkModificationExcludes>
+						<checkModificationExclude>sigm.webservices.iml</checkModificationExclude>
+					</checkModificationExcludes>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<showWarnings>false</showWarnings>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>iso-8859-15</encoding>
+				</configuration>
+			</plugin>
+		 
+			
+ 		</plugins>
+		<!-- RESOURCES INCLUIDOS EN FILTER -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+	
+</project>

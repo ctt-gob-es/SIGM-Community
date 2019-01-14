@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+
+	<h:head>
+	</h:head>
+
+	<h:body>
+		<ui:composition>
+			<p:messages id="messagesConfigCompulsar" showDetail="false" closable="true" autoUpdate="false" redisplay="false" />
+			<h:form id="formConfigCompulsar">
+				<h:panelGrid id="gridConfigCompulsar" styleClass="ampliar">
+					<h:panelGrid id="gridPosicionSello" styleClass="ampliar">
+						<label class="general">
+							<h:outputLabel value="#{msgs.labelPosicionSello}: "/>
+							<p:selectOneRadio id="posicionSelloRD" value="#{outputRegisterAction.compulsaBean.posicionSello}">
+								<f:selectItem itemLabel="#{msgs.labelPosicionSelloMargenSuperior}" itemValue="ARRIBA" />
+								<f:selectItem itemLabel="#{msgs.labelPosicionSelloMargenInferior}" itemValue="ABAJO" />
+								<f:selectItem itemLabel="#{msgs.labelPosicionSelloMargenIzquierdo}" itemValue="IZQUIERDA" />
+								<f:selectItem itemLabel="#{msgs.labelPosicionSelloMargenDerecho}" itemValue="DERECHA" />
+								
+								<p:ajax update="imgSello gridAlineacionSello" />
+							</p:selectOneRadio>
+						</label>
+					</h:panelGrid>
+					<h:panelGrid id="gridAlineacionSello" styleClass="ampliar">
+						<label class="general">
+							<h:outputLabel value="#{msgs.labelAlineacionSello}: "/>
+							<p:selectOneRadio id="alineacionSelloAB" value="#{outputRegisterAction.compulsaBean.alineacionSello}" rendered="${outputRegisterAction.compulsaBean.posicionSello=='ARRIBA' or outputRegisterAction.compulsaBean.posicionSello=='ABAJO'}">
+								<f:selectItem itemLabel="#{msgs.labelPosicionSelloIzquierda}" itemValue="0" />
+								<f:selectItem itemLabel="#{msgs.labelPosicionSelloDerecha}" itemValue="2"/>
+
+								<p:ajax update="imgSello " />
+							</p:selectOneRadio>
+	
+							<p:selectOneRadio id="alineacionSelloID" value="#{outputRegisterAction.compulsaBean.alineacionSello}" rendered="${outputRegisterAction.compulsaBean.posicionSello=='IZQUIERDA' or outputRegisterAction.compulsaBean.posicionSello=='DERECHA'}">
+								<f:selectItem itemLabel="#{msgs.labelPosicionSelloArriba}" itemValue="2" />
+								<f:selectItem itemLabel="#{msgs.labelPosicionSelloAbajo}" itemValue="0" />
+	
+								<p:ajax update="imgSello " />
+							</p:selectOneRadio>
+						</label>
+					</h:panelGrid>
+				</h:panelGrid>
+				<h:panelGrid id="imgSello" style="width: 100%; text-align: center;" >
+					<p:graphicImage id="imagenSelloAI" value="/compulsa/img/imagenSelloAI.png" rendered="${outputRegisterAction.compulsaBean.posicionSello=='ARRIBA' and outputRegisterAction.compulsaBean.alineacionSello=='0'}"/>
+					<p:graphicImage id="imagenSelloAD" value="/compulsa/img/imagenSelloAD.png" rendered="${outputRegisterAction.compulsaBean.posicionSello=='ARRIBA' and outputRegisterAction.compulsaBean.alineacionSello=='2'}"/>
+					<p:graphicImage id="imagenSelloBI" value="/compulsa/img/imagenSelloBI.png" rendered="${outputRegisterAction.compulsaBean.posicionSello=='ABAJO' and outputRegisterAction.compulsaBean.alineacionSello=='0'}"/>
+					<p:graphicImage id="imagenSelloBD" value="/compulsa/img/imagenSelloBD.png" rendered="${outputRegisterAction.compulsaBean.posicionSello=='ABAJO' and outputRegisterAction.compulsaBean.alineacionSello=='2'}"/>
+					<p:graphicImage id="imagenSelloIB" value="/compulsa/img/imagenSelloIB.png" rendered="${outputRegisterAction.compulsaBean.posicionSello=='IZQUIERDA' and outputRegisterAction.compulsaBean.alineacionSello=='0'}"/>
+					<p:graphicImage id="imagenSelloIA" value="/compulsa/img/imagenSelloIA.png" rendered="${outputRegisterAction.compulsaBean.posicionSello=='IZQUIERDA' and outputRegisterAction.compulsaBean.alineacionSello=='2'}"/>
+					<p:graphicImage id="imagenSelloDB" value="/compulsa/img/imagenSelloDB.png" rendered="${outputRegisterAction.compulsaBean.posicionSello=='DERECHA' and outputRegisterAction.compulsaBean.alineacionSello=='0'}"/>
+					<p:graphicImage id="imagenSelloDA" value="/compulsa/img/imagenSelloDA.png" rendered="${outputRegisterAction.compulsaBean.posicionSello=='DERECHA' and outputRegisterAction.compulsaBean.alineacionSello=='2'}"/>
+				</h:panelGrid>
+				
+				<h:panelGroup id="botonesConfigCompulsar">
+					<p style="text-align: center">
+						<p:commandButton styleClass="boton-buscar" value="#{msgs.labelBotonFirmarDocumentos}" rendered="${outputRegisterAction.compulsaBean.esFirmaTodos}"
+							widgetVar="buttonConfigCompulsarTodos" oncomplete="PF('statusDialog').hide();PF('dialogConfigCompulsar').hide();PF('dialogCompulsar').show();"
+							onclick="PF('statusDialog').show();" process="@this, gridConfigCompulsar" 
+							actionListener="#{outputRegisterAction.cargarListaDocsCompulsarTodos}" update=":accordion:outputRegisterAttachedDocumentsForm:gridCompulsar"/>
+
+						<p:commandButton styleClass="boton-buscar" value="#{msgs.labelBotonFirmarDocumentos}" rendered="${!outputRegisterAction.compulsaBean.esFirmaTodos}" 
+							widgetVar="buttonConfigCompulsarDocumentos" oncomplete="PF('statusDialog').hide();PF('dialogConfigCompulsar').hide();PF('dialogCompulsar').show();"
+							onclick="PF('statusDialog').show();" process="@this, gridConfigCompulsar"
+							actionListener="#{outputRegisterAction.cargarListaDocsCompulsar}" update=":accordion:outputRegisterAttachedDocumentsForm:gridCompulsar"/>
+
+						<p:commandButton styleClass="cerrar" id="btn_hide_config_compulsar_todos" value="#{msgs.labelBotonCerrar}" immediate="true" oncomplete="PF('dialogConfigCompulsar').hide();" />
+					</p>
+				</h:panelGroup>
+			</h:form>
+		</ui:composition>
+	</h:body>
+</html>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMapConfig
+PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings lazyLoadingEnabled="true" useStatementNamespaces="true"
+		enhancementEnabled="false" />
+	<!--<transactionManager type="JDBC" commitRequired="true">
+		<dataSource type="JNDI">
+			<property name="DataSource"
+				value="java:comp/env/jdbc/registroDS_001" />
+		</dataSource>
+	</transactionManager-->
+	<sqlMap resource="ibatis/mapping/InputRegisterReportsCert.xml" />
+	<sqlMap resource="ibatis/mapping/OutputRegisterReportsCert.xml" />
+	<sqlMap resource="ibatis/mapping/DirOrgs.xml" />
+	<sqlMap resource="ibatis/mapping/OrgFatherName.xml" />
+	<sqlMap resource="ibatis/mapping/Axdoch.xml" />
+	<sqlMap resource="ibatis/mapping/Axpageh.xml" />	
+	<sqlMap resource="ibatis/mapping/UnidadTramitadora.xml" />
+	<sqlMap resource="ibatis/mapping/MoveRegister.xml" />
+	<sqlMap resource="ibatis/mapping/ScrDirofic.xml" />
+	<sqlMap resource="ibatis/mapping/SrcPageRepository.xml" />
+	<sqlMap resource="ibatis/mapping/UnlockRegister.xml" />
+	<sqlMap resource="ibatis/mapping/User.xml" />	
+	<sqlMap resource="ibatis/mapping/Iuserdepthdr.xml" />	
+</sqlMapConfig>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="WSExportacion" targetNamespace="https://ssweb.seap.minhap.es/orve/" xmlns:tns="https://ssweb.seap.minhap.es/orve/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+  <wsdl:types xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="https://ssweb.seap.minhap.es/orve/">
+      <xsd:complexType name="Security">
+        <xsd:sequence>
+          <xsd:element name="username" type="xsd:string"/>
+          <xsd:element name="password" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SecurityElement" type="tns:Security"/>
+      <xsd:complexType name="FiltrosIdentificadores">
+        <xsd:sequence>
+          <xsd:element name="estado" type="xsd:string"/>
+          <xsd:element name="oficina" type="xsd:string"/>
+          <xsd:element name="unidad" type="xsd:string"/>
+          <xsd:element name="numeroRegistro" type="xsd:string"/>
+          <xsd:element name="fechaInicio" type="xsd:string"/>
+          <xsd:element name="fechaFin" type="xsd:string"/>
+          <xsd:element name="historico" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="FiltrosIdentificadoresElement" type="tns:FiltrosIdentificadores"/>
+      <xsd:complexType name="obtenerIdentificaoresRespuestaWS">
+        <xsd:sequence>
+          <xsd:element name="codigo" type="xsd:string"/>
+          <xsd:element name="descripcion" type="xsd:string"/>
+          <xsd:element name="identificadores" type="tns:AnyTypeArray"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="obtenerIdentificaoresRespuestaWSElement" type="tns:obtenerIdentificaoresRespuestaWS"/>
+      <xsd:complexType name="AnyTypeArray">
+        <xsd:sequence>
+          <xsd:element name="item" type="xsd:int" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="AnyTypeArrayElement" type="tns:AnyTypeArray"/>
+      <xsd:complexType name="obtenerRegistroRespuestaWS">
+        <xsd:sequence>
+          <xsd:element name="codigo" type="xsd:string"/>
+          <xsd:element name="descripcion" type="xsd:string"/>
+          <xsd:element name="registro" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="obtenerRegistroRespuestaWSElement" type="tns:obtenerRegistroRespuestaWS"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:portType name="WSExportacionPortType">
+    <wsdl:operation name="obtenerIdentificadores" parameterOrder="Security filtros">
+      <wsdl:input message="tns:obtenerIdentificadoresRequest"/>
+      <wsdl:output message="tns:obtenerIdentificadoresResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerRegistro" parameterOrder="Security identificador">
+      <wsdl:input message="tns:obtenerRegistroRequest"/>
+      <wsdl:output message="tns:obtenerRegistroResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="WSExportacionBinding" type="tns:WSExportacionPortType">
+    <soap:binding xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="obtenerIdentificadores">
+      <soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="https://ssweb.seap.minhap.es/orve/obtenerIdentificadores" style="rpc"/>
+      <wsdl:input xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" parts="filtros" use="literal" namespace="https://ssweb.seap.minhap.es/orve/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" message="tns:obtenerIdentificadoresRequest" part="Security" use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </wsdl:input>
+      <wsdl:output xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" parts="resultado" use="literal" namespace="https://ssweb.seap.minhap.es/orve/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" message="tns:obtenerIdentificadoresResponse" part="Security" use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="obtenerRegistro">
+      <soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="https://ssweb.seap.minhap.es/orve/obtenerRegistro" style="rpc"/>
+      <wsdl:input xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" parts="identificador" use="literal" namespace="https://ssweb.seap.minhap.es/orve/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" message="tns:obtenerRegistroRequest" part="Security" use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </wsdl:input>
+      <wsdl:output xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+        <soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" parts="resultado" use="literal" namespace="https://ssweb.seap.minhap.es/orve/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" message="tns:obtenerRegistroResponse" part="Security" use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:message name="obtenerIdentificadoresRequest">
+    <wsdl:part name="Security" element="tns:SecurityElement"/>
+    <wsdl:part name="filtros" type="tns:FiltrosIdentificadores"/>
+  </wsdl:message>
+  <wsdl:message name="obtenerIdentificadoresResponse">
+    <wsdl:part name="Security" element="tns:SecurityElement"/>
+    <wsdl:part name="resultado" type="tns:obtenerIdentificaoresRespuestaWS"/>
+  </wsdl:message>
+  <wsdl:message name="obtenerRegistroRequest">
+    <wsdl:part name="Security" element="tns:SecurityElement"/>
+    <wsdl:part name="identificador" type="xsd:int"/>
+  </wsdl:message>
+  <wsdl:message name="obtenerRegistroResponse">
+    <wsdl:part name="Security" element="tns:SecurityElement"/>
+    <wsdl:part name="resultado" type="tns:obtenerRegistroRespuestaWS"/>
+  </wsdl:message>
+  <wsdl:service xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="WSExportacionService">
+    <wsdl:port xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="WSExportacionPort" binding="tns:WSExportacionBinding">
+      <soap:address xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" location="https://ssweb.seap.minhap.es/orve/WSExportacion.php"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

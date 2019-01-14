@@ -1,0 +1,1687 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" 
+           xmlns:gd="urn:eu:stork:names:tc:STORK:2.0:academic:generaldiploma" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="urn:eu:stork:names:tc:STORK:2.0:academic:generaldiploma" 
+           elementFormDefault="qualified" 
+           attributeFormDefault="unqualified" version="1.1">
+		
+    <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+	
+    <xs:simpleType name="AcademicYearType">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+	
+    <xs:simpleType name="CountryType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="AD">
+            </xs:enumeration>
+            <xs:enumeration value="AE">
+            </xs:enumeration>
+            <xs:enumeration value="AF">
+            </xs:enumeration>
+            <xs:enumeration value="AG">
+            </xs:enumeration>
+            <xs:enumeration value="AL">
+            </xs:enumeration>
+            <xs:enumeration value="AM">
+            </xs:enumeration>
+            <xs:enumeration value="AO">
+            </xs:enumeration>
+            <xs:enumeration value="AR">
+            </xs:enumeration>
+            <xs:enumeration value="AT">
+            </xs:enumeration>
+            <xs:enumeration value="AU">
+            </xs:enumeration>
+            <xs:enumeration value="AZ">
+            </xs:enumeration>
+            <xs:enumeration value="BA">
+            </xs:enumeration>
+            <xs:enumeration value="BB">
+            </xs:enumeration>
+            <xs:enumeration value="BD">
+            </xs:enumeration>
+            <xs:enumeration value="BE">
+            </xs:enumeration>
+            <xs:enumeration value="BF">
+            </xs:enumeration>
+            <xs:enumeration value="BG">
+            </xs:enumeration>
+            <xs:enumeration value="BH">
+            </xs:enumeration>
+            <xs:enumeration value="BI">
+            </xs:enumeration>
+            <xs:enumeration value="BJ">
+            </xs:enumeration>
+            <xs:enumeration value="BN">
+            </xs:enumeration>
+            <xs:enumeration value="BO">
+            </xs:enumeration>
+            <xs:enumeration value="BR">
+            </xs:enumeration>
+            <xs:enumeration value="BS">
+            </xs:enumeration>
+            <xs:enumeration value="BT">
+            </xs:enumeration>
+            <xs:enumeration value="BW">
+            </xs:enumeration>
+            <xs:enumeration value="BY">
+            </xs:enumeration>
+            <xs:enumeration value="BZ">
+            </xs:enumeration>
+            <xs:enumeration value="CA">
+            </xs:enumeration>
+            <xs:enumeration value="CD">
+            </xs:enumeration>
+            <xs:enumeration value="CF">
+            </xs:enumeration>
+            <xs:enumeration value="CG">
+            </xs:enumeration>
+            <xs:enumeration value="CH">
+            </xs:enumeration>
+            <xs:enumeration value="CI">
+            </xs:enumeration>
+            <xs:enumeration value="CL">
+            </xs:enumeration>
+            <xs:enumeration value="CM">
+            </xs:enumeration>
+            <xs:enumeration value="CN">
+            </xs:enumeration>
+            <xs:enumeration value="CO">
+            </xs:enumeration>
+            <xs:enumeration value="CR">
+            </xs:enumeration>
+            <xs:enumeration value="CU">
+            </xs:enumeration>
+            <xs:enumeration value="CV">
+            </xs:enumeration>
+            <xs:enumeration value="CY">
+            </xs:enumeration>
+            <xs:enumeration value="CZ">
+            </xs:enumeration>
+            <xs:enumeration value="DE">
+            </xs:enumeration>
+            <xs:enumeration value="DJ">
+            </xs:enumeration>
+            <xs:enumeration value="DK">
+            </xs:enumeration>
+            <xs:enumeration value="DM">
+            </xs:enumeration>
+            <xs:enumeration value="DO">
+            </xs:enumeration>
+            <xs:enumeration value="DZ">
+            </xs:enumeration>
+            <xs:enumeration value="EC">
+            </xs:enumeration>
+            <xs:enumeration value="EE">
+            </xs:enumeration>
+            <xs:enumeration value="EG">
+            </xs:enumeration>
+            <xs:enumeration value="ER">
+            </xs:enumeration>
+            <xs:enumeration value="ES">
+            </xs:enumeration>
+            <xs:enumeration value="ET">
+            </xs:enumeration>
+            <xs:enumeration value="FI">
+            </xs:enumeration>
+            <xs:enumeration value="FJ">
+            </xs:enumeration>
+            <xs:enumeration value="FM">
+            </xs:enumeration>
+            <xs:enumeration value="FR">
+            </xs:enumeration>
+            <xs:enumeration value="GA">
+            </xs:enumeration>
+            <xs:enumeration value="GB">
+            </xs:enumeration>
+            <xs:enumeration value="GD">
+            </xs:enumeration>
+            <xs:enumeration value="GE">
+            </xs:enumeration>
+            <xs:enumeration value="GH">
+            </xs:enumeration>
+            <xs:enumeration value="GL">
+            </xs:enumeration>
+            <xs:enumeration value="GM">
+            </xs:enumeration>
+            <xs:enumeration value="GN">
+            </xs:enumeration>
+            <xs:enumeration value="GQ">
+            </xs:enumeration>
+            <xs:enumeration value="GR">
+            </xs:enumeration>
+            <xs:enumeration value="GT">
+            </xs:enumeration>
+            <xs:enumeration value="GW">
+            </xs:enumeration>
+            <xs:enumeration value="GY">
+            </xs:enumeration>
+            <xs:enumeration value="HN">
+            </xs:enumeration>
+            <xs:enumeration value="HR">
+            </xs:enumeration>
+            <xs:enumeration value="HT">
+            </xs:enumeration>
+            <xs:enumeration value="HU">
+            </xs:enumeration>
+            <xs:enumeration value="ID">
+            </xs:enumeration>
+            <xs:enumeration value="IE">
+            </xs:enumeration>
+            <xs:enumeration value="IL">
+            </xs:enumeration>
+            <xs:enumeration value="IN">
+            </xs:enumeration>
+            <xs:enumeration value="IQ">
+            </xs:enumeration>
+            <xs:enumeration value="IR">
+            </xs:enumeration>
+            <xs:enumeration value="IS">
+            </xs:enumeration>
+            <xs:enumeration value="IT">
+            </xs:enumeration>
+            <xs:enumeration value="JM">
+            </xs:enumeration>
+            <xs:enumeration value="JO">
+            </xs:enumeration>
+            <xs:enumeration value="JP">
+            </xs:enumeration>
+            <xs:enumeration value="KE">
+            </xs:enumeration>
+            <xs:enumeration value="KG">
+            </xs:enumeration>
+            <xs:enumeration value="KH">
+            </xs:enumeration>
+            <xs:enumeration value="KI">
+            </xs:enumeration>
+            <xs:enumeration value="KM">
+            </xs:enumeration>
+            <xs:enumeration value="KN">
+            </xs:enumeration>
+            <xs:enumeration value="KP">
+            </xs:enumeration>
+            <xs:enumeration value="KR">
+            </xs:enumeration>
+            <xs:enumeration value="KW">
+            </xs:enumeration>
+            <xs:enumeration value="KZ">
+            </xs:enumeration>
+            <xs:enumeration value="LA">
+            </xs:enumeration>
+            <xs:enumeration value="LB">
+            </xs:enumeration>
+            <xs:enumeration value="LC">
+            </xs:enumeration>
+            <xs:enumeration value="LI">
+            </xs:enumeration>
+            <xs:enumeration value="LK">
+            </xs:enumeration>
+            <xs:enumeration value="LR">
+            </xs:enumeration>
+            <xs:enumeration value="LS">
+            </xs:enumeration>
+            <xs:enumeration value="LT">
+            </xs:enumeration>
+            <xs:enumeration value="LU">
+            </xs:enumeration>
+            <xs:enumeration value="LV">
+            </xs:enumeration>
+            <xs:enumeration value="LY">
+            </xs:enumeration>
+            <xs:enumeration value="MA">
+            </xs:enumeration>
+            <xs:enumeration value="MC">
+            </xs:enumeration>
+            <xs:enumeration value="MD">
+            </xs:enumeration>
+            <xs:enumeration value="ME">
+            </xs:enumeration>
+            <xs:enumeration value="MG">
+            </xs:enumeration>
+            <xs:enumeration value="MH">
+            </xs:enumeration>
+            <xs:enumeration value="MK">
+            </xs:enumeration>
+            <xs:enumeration value="ML">
+            </xs:enumeration>
+            <xs:enumeration value="MM">
+            </xs:enumeration>
+            <xs:enumeration value="MN">
+            </xs:enumeration>
+            <xs:enumeration value="MR">
+            </xs:enumeration>
+            <xs:enumeration value="MT">
+            </xs:enumeration>
+            <xs:enumeration value="MU">
+            </xs:enumeration>
+            <xs:enumeration value="MV">
+            </xs:enumeration>
+            <xs:enumeration value="MW">
+            </xs:enumeration>
+            <xs:enumeration value="MX">
+            </xs:enumeration>
+            <xs:enumeration value="MY">
+            </xs:enumeration>
+            <xs:enumeration value="MZ">
+            </xs:enumeration>
+            <xs:enumeration value="NA">
+            </xs:enumeration>
+            <xs:enumeration value="NE">
+            </xs:enumeration>
+            <xs:enumeration value="NG">
+            </xs:enumeration>
+            <xs:enumeration value="NI">
+            </xs:enumeration>
+            <xs:enumeration value="NL">
+            </xs:enumeration>
+            <xs:enumeration value="NO">
+            </xs:enumeration>
+            <xs:enumeration value="NP">
+            </xs:enumeration>
+            <xs:enumeration value="NR">
+            </xs:enumeration>
+            <xs:enumeration value="NU">
+            </xs:enumeration>
+            <xs:enumeration value="NZ">
+            </xs:enumeration>
+            <xs:enumeration value="OM">
+            </xs:enumeration>
+            <xs:enumeration value="PA">
+            </xs:enumeration>
+            <xs:enumeration value="PE">
+            </xs:enumeration>
+            <xs:enumeration value="PG">
+            </xs:enumeration>
+            <xs:enumeration value="PH">
+            </xs:enumeration>
+            <xs:enumeration value="PK">
+            </xs:enumeration>
+            <xs:enumeration value="PL">
+            </xs:enumeration>
+            <xs:enumeration value="PR">
+            </xs:enumeration>
+            <xs:enumeration value="PS">
+            </xs:enumeration>
+            <xs:enumeration value="PT">
+            </xs:enumeration>
+            <xs:enumeration value="PW">
+            </xs:enumeration>
+            <xs:enumeration value="PY">
+            </xs:enumeration>
+            <xs:enumeration value="QA">
+            </xs:enumeration>
+            <xs:enumeration value="RO">
+            </xs:enumeration>
+            <xs:enumeration value="RS">
+            </xs:enumeration>
+            <xs:enumeration value="RU">
+            </xs:enumeration>
+            <xs:enumeration value="RW">
+            </xs:enumeration>
+            <xs:enumeration value="SA">
+            </xs:enumeration>
+            <xs:enumeration value="SB">
+            </xs:enumeration>
+            <xs:enumeration value="SC">
+            </xs:enumeration>
+            <xs:enumeration value="SD">
+            </xs:enumeration>
+            <xs:enumeration value="SE">
+            </xs:enumeration>
+            <xs:enumeration value="SG">
+            </xs:enumeration>
+            <xs:enumeration value="SI">
+            </xs:enumeration>
+            <xs:enumeration value="SK">
+            </xs:enumeration>
+            <xs:enumeration value="SL">
+            </xs:enumeration>
+            <xs:enumeration value="SM">
+            </xs:enumeration>
+            <xs:enumeration value="SN">
+            </xs:enumeration>
+            <xs:enumeration value="SO">
+            </xs:enumeration>
+            <xs:enumeration value="SR">
+            </xs:enumeration>
+            <xs:enumeration value="ST">
+            </xs:enumeration>
+            <xs:enumeration value="SV">
+            </xs:enumeration>
+            <xs:enumeration value="SY">
+            </xs:enumeration>
+            <xs:enumeration value="SZ">
+            </xs:enumeration>
+            <xs:enumeration value="TD">
+            </xs:enumeration>
+            <xs:enumeration value="TG">
+            </xs:enumeration>
+            <xs:enumeration value="TH">
+            </xs:enumeration>
+            <xs:enumeration value="TJ">
+            </xs:enumeration>
+            <xs:enumeration value="TL">
+            </xs:enumeration>
+            <xs:enumeration value="TM">
+            </xs:enumeration>
+            <xs:enumeration value="TN">
+            </xs:enumeration>
+            <xs:enumeration value="TO">
+            </xs:enumeration>
+            <xs:enumeration value="TR">
+            </xs:enumeration>
+            <xs:enumeration value="TT">
+            </xs:enumeration>
+            <xs:enumeration value="TV">
+            </xs:enumeration>
+            <xs:enumeration value="TZ">
+            </xs:enumeration>
+            <xs:enumeration value="UA">
+            </xs:enumeration>
+            <xs:enumeration value="UG">
+            </xs:enumeration>
+            <xs:enumeration value="US">
+            </xs:enumeration>
+            <xs:enumeration value="UY">
+            </xs:enumeration>
+            <xs:enumeration value="UZ">
+            </xs:enumeration>
+            <xs:enumeration value="VA">
+            </xs:enumeration>
+            <xs:enumeration value="VC">
+            </xs:enumeration>
+            <xs:enumeration value="VE">
+            </xs:enumeration>
+            <xs:enumeration value="VN">
+            </xs:enumeration>
+            <xs:enumeration value="VU">
+            </xs:enumeration>
+            <xs:enumeration value="WS">
+            </xs:enumeration>
+            <xs:enumeration value="YE">
+            </xs:enumeration>
+            <xs:enumeration value="ZA">
+            </xs:enumeration>
+            <xs:enumeration value="ZM">
+            </xs:enumeration>
+            <xs:enumeration value="ZW">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CourseUnitTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Compulsory">
+            </xs:enumeration>
+            <xs:enumeration value="Optional">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DateType">
+        <xs:restriction base="xs:date"/>
+    </xs:simpleType>
+    <xs:simpleType name="ECTSGradingScaleType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="A">
+            </xs:enumeration>
+            <xs:enumeration value="B">
+            </xs:enumeration>
+            <xs:enumeration value="C">
+            </xs:enumeration>
+            <xs:enumeration value="D">
+            </xs:enumeration>
+            <xs:enumeration value="E">
+            </xs:enumeration>
+            <xs:enumeration value="FX">
+            </xs:enumeration>
+            <xs:enumeration value="F">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="EmailAddressType">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <xs:simpleType name="EHEAFrameworkType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FirstCycle">
+            </xs:enumeration>
+            <xs:enumeration value="SecondCycle">
+            </xs:enumeration>
+            <xs:enumeration value="ThirdCycle">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="EmptyType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenderType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Female">
+            </xs:enumeration>
+            <xs:enumeration value="Male">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ImageMimeType">
+        <xs:restriction base="gd:MimeType">
+            <xs:enumeration value="image/gif">
+            </xs:enumeration>
+            <xs:enumeration value="image/jpeg">
+            </xs:enumeration>
+            <xs:enumeration value="image/pjpeg">
+            </xs:enumeration>
+            <xs:enumeration value="image/png">
+            </xs:enumeration>
+            <xs:enumeration value="image/tiff">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ISCED1997Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="0">
+            </xs:enumeration>
+            <xs:enumeration value="1">
+            </xs:enumeration>
+            <xs:enumeration value="2">
+            </xs:enumeration>
+            <xs:enumeration value="3">
+            </xs:enumeration>
+            <xs:enumeration value="4">
+            </xs:enumeration>
+            <xs:enumeration value="5A">
+            </xs:enumeration>
+            <xs:enumeration value="5B">
+            </xs:enumeration>
+            <xs:enumeration value="6">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ISCED2011Type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="0">
+            </xs:enumeration>
+            <xs:enumeration value="1">
+            </xs:enumeration>
+            <xs:enumeration value="2">
+            </xs:enumeration>
+            <xs:enumeration value="3">
+            </xs:enumeration>
+            <xs:enumeration value="4">
+            </xs:enumeration>
+            <xs:enumeration value="5">
+            </xs:enumeration>
+            <xs:enumeration value="6">
+            </xs:enumeration>
+            <xs:enumeration value="7">
+            </xs:enumeration>
+            <xs:enumeration value="8">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="LanguageType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ab">
+            </xs:enumeration>
+            <xs:enumeration value="af">
+            </xs:enumeration>
+            <xs:enumeration value="an">
+            </xs:enumeration>
+            <xs:enumeration value="ar">
+            </xs:enumeration>
+            <xs:enumeration value="as">
+            </xs:enumeration>
+            <xs:enumeration value="az">
+            </xs:enumeration>
+            <xs:enumeration value="be">
+            </xs:enumeration>
+            <xs:enumeration value="bg">
+            </xs:enumeration>
+            <xs:enumeration value="bn">
+            </xs:enumeration>
+            <xs:enumeration value="bo">
+            </xs:enumeration>
+            <xs:enumeration value="br">
+            </xs:enumeration>
+            <xs:enumeration value="bs">
+            </xs:enumeration>
+            <xs:enumeration value="ca">
+            </xs:enumeration>
+            <xs:enumeration value="ce">
+            </xs:enumeration>
+            <xs:enumeration value="co">
+            </xs:enumeration>
+            <xs:enumeration value="cs">
+            </xs:enumeration>
+            <xs:enumeration value="cy">
+            </xs:enumeration>
+            <xs:enumeration value="da">
+            </xs:enumeration>
+            <xs:enumeration value="de">
+            </xs:enumeration>
+            <xs:enumeration value="el">
+            </xs:enumeration>
+            <xs:enumeration value="en">
+            </xs:enumeration>
+            <xs:enumeration value="es">
+            </xs:enumeration>
+            <xs:enumeration value="et">
+            </xs:enumeration>
+            <xs:enumeration value="eu">
+            </xs:enumeration>
+            <xs:enumeration value="fa">
+            </xs:enumeration>
+            <xs:enumeration value="fi">
+            </xs:enumeration>
+            <xs:enumeration value="fj">
+            </xs:enumeration>
+            <xs:enumeration value="fo">
+            </xs:enumeration>
+            <xs:enumeration value="fr">
+            </xs:enumeration>
+            <xs:enumeration value="fy">
+            </xs:enumeration>
+            <xs:enumeration value="ga">
+            </xs:enumeration>
+            <xs:enumeration value="gd">
+            </xs:enumeration>
+            <xs:enumeration value="gl">
+            </xs:enumeration>
+            <xs:enumeration value="gv">
+            </xs:enumeration>
+            <xs:enumeration value="grc">
+            </xs:enumeration>
+            <xs:enumeration value="gsw">
+            </xs:enumeration>
+            <xs:enumeration value="he">
+            </xs:enumeration>
+            <xs:enumeration value="hi">
+            </xs:enumeration>
+            <xs:enumeration value="hr">
+            </xs:enumeration>
+            <xs:enumeration value="ht">
+            </xs:enumeration>
+            <xs:enumeration value="hu">
+            </xs:enumeration>
+            <xs:enumeration value="hy">
+            </xs:enumeration>
+            <xs:enumeration value="id">
+            </xs:enumeration>
+            <xs:enumeration value="is">
+            </xs:enumeration>
+            <xs:enumeration value="it">
+            </xs:enumeration>
+            <xs:enumeration value="ja">
+            </xs:enumeration>
+            <xs:enumeration value="jv">
+            </xs:enumeration>
+            <xs:enumeration value="ka">
+            </xs:enumeration>
+            <xs:enumeration value="kg">
+            </xs:enumeration>
+            <xs:enumeration value="ko">
+            </xs:enumeration>
+            <xs:enumeration value="ku">
+            </xs:enumeration>
+            <xs:enumeration value="kw">
+            </xs:enumeration>
+            <xs:enumeration value="ky">
+            </xs:enumeration>
+            <xs:enumeration value="lb">
+            </xs:enumeration>
+            <xs:enumeration value="li">
+            </xs:enumeration>
+            <xs:enumeration value="ln">
+            </xs:enumeration>
+            <xs:enumeration value="lt">
+            </xs:enumeration>
+            <xs:enumeration value="lv">
+            </xs:enumeration>
+            <xs:enumeration value="mg">
+            </xs:enumeration>
+            <xs:enumeration value="mk">
+            </xs:enumeration>
+            <xs:enumeration value="mn">
+            </xs:enumeration>
+            <xs:enumeration value="mo">
+            </xs:enumeration>
+            <xs:enumeration value="ms">
+            </xs:enumeration>
+            <xs:enumeration value="mt">
+            </xs:enumeration>
+            <xs:enumeration value="my">
+            </xs:enumeration>
+            <xs:enumeration value="nb">
+            </xs:enumeration>
+            <xs:enumeration value="ne">
+            </xs:enumeration>
+            <xs:enumeration value="nl">
+            </xs:enumeration>
+            <xs:enumeration value="nn">
+            </xs:enumeration>
+            <xs:enumeration value="no">
+            </xs:enumeration>
+            <xs:enumeration value="pl">
+            </xs:enumeration>
+            <xs:enumeration value="pt">
+            </xs:enumeration>
+            <xs:enumeration value="rm">
+            </xs:enumeration>
+            <xs:enumeration value="ro">
+            </xs:enumeration>
+            <xs:enumeration value="ru">
+            </xs:enumeration>
+            <xs:enumeration value="sc">
+            </xs:enumeration>
+            <xs:enumeration value="se">
+            </xs:enumeration>
+            <xs:enumeration value="sk">
+            </xs:enumeration>
+            <xs:enumeration value="sl">
+            </xs:enumeration>
+            <xs:enumeration value="so">
+            </xs:enumeration>
+            <xs:enumeration value="sq">
+            </xs:enumeration>
+            <xs:enumeration value="sr">
+            </xs:enumeration>
+            <xs:enumeration value="sv">
+            </xs:enumeration>
+            <xs:enumeration value="sw">
+            </xs:enumeration>
+            <xs:enumeration value="tk">
+            </xs:enumeration>
+            <xs:enumeration value="tr">
+            </xs:enumeration>
+            <xs:enumeration value="ty">
+            </xs:enumeration>
+            <xs:enumeration value="uk">
+            </xs:enumeration>
+            <xs:enumeration value="ur">
+            </xs:enumeration>
+            <xs:enumeration value="uz">
+            </xs:enumeration>
+            <xs:enumeration value="vi">
+            </xs:enumeration>
+            <xs:enumeration value="yi">
+            </xs:enumeration>
+            <xs:enumeration value="zh">
+            </xs:enumeration>
+            <xs:enumeration value="cu">
+            </xs:enumeration>
+            <xs:enumeration value="eo">
+            </xs:enumeration>
+            <xs:enumeration value="la">
+            </xs:enumeration>
+            <xs:enumeration value="oc">
+            </xs:enumeration>
+            <xs:enumeration value="vo">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="MimeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="image/gif">
+            </xs:enumeration>
+            <xs:enumeration value="image/jpeg">
+            </xs:enumeration>
+            <xs:enumeration value="image/pjpeg">
+            </xs:enumeration>
+            <xs:enumeration value="image/png">
+            </xs:enumeration>
+            <xs:enumeration value="image/tiff">
+            </xs:enumeration>
+            <xs:enumeration value="text/html">
+            </xs:enumeration>
+            <xs:enumeration value="application/pdf">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ModeOfStudyType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FullTime">
+            </xs:enumeration>
+            <xs:enumeration value="ParTime">
+            </xs:enumeration>
+            <xs:enumeration value="Distance">
+            </xs:enumeration>
+            <xs:enumeration value="eLearning">
+            </xs:enumeration>
+            <xs:enumeration value="Another">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ModeOfDeliveryType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FaceToFace">
+            </xs:enumeration>
+            <xs:enumeration value="DistanceLearning">
+            </xs:enumeration>
+            <xs:enumeration value="Other">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NFQType">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <xs:simpleType name="PlainTextType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PercentType">
+        <xs:restriction base="xs:decimal">
+            <xs:maxInclusive value="100"/>
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PositiveDecimalType">
+        <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PositiveIntegerType">
+        <xs:restriction base="xs:int">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SourceGradeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Recognized">
+            </xs:enumeration>
+            <xs:enumeration value="MobilityProgramme">
+            </xs:enumeration>
+            <xs:enumeration value="Another">
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="URLType">
+        <xs:restriction base="xs:anyURI"/>
+    </xs:simpleType>
+ 
+ 
+ 
+ 
+    <!-- Complex types -->
+  
+    <xs:complexType name="CountryTextCodeType">
+        <xs:simpleContent>
+            <xs:extension base="gd:PlainTextType">
+                <xs:attribute name="country" type="gd:CountryType" use="optional">
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+ 
+ 
+    <xs:complexType name="AdditionalInformationType"> 
+        <xs:sequence>
+            <xs:element name="SpecificInformation" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="OtherSources" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+ 
+    <xs:complexType name="AddressType">
+        <xs:sequence>
+            <xs:element name="Line" type="gd:PlainTextType" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="City" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="StateOrRegion" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="PostalCode" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="Country" type="gd:CountryTextCodeType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+
+    <xs:complexType name="AttachedFileDataType">
+        <xs:sequence>
+            <xs:element name="Description" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="Mime" type="gd:MimeType">
+            </xs:element>
+            <xs:element name="Data" type="xs:base64Binary">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+ 
+    <xs:complexType name="AttachedFileURLType">
+        <xs:sequence>
+            <xs:element name="Description" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="Mime" type="gd:MimeType">
+            </xs:element>
+            <xs:element name="URL" type="gd:URLType">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+ 
+    <xs:complexType name="AttachedImageDataType">
+        <xs:sequence>
+            <xs:element name="Description" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="Mime" type="gd:ImageMimeType">
+            </xs:element>
+            <xs:element name="Data" type="xs:base64Binary">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+ 
+    <xs:complexType name="AttachedImageURLType">
+        <xs:sequence>
+            <xs:element name="Description" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="Mime" type="gd:ImageMimeType">
+            </xs:element>
+            <xs:element name="URL" type="gd:URLType">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+ 
+    <xs:complexType name="AttachedType">
+        <xs:choice>
+            <xs:element name="FileData" type="gd:AttachedFileDataType">
+            </xs:element>
+            <xs:element name="FileURI" type="gd:AttachedFileURLType">
+            </xs:element>
+            <xs:element name="ImageData" type="gd:AttachedImageDataType">
+            </xs:element>
+            <xs:element name="ImageURI" type="gd:AttachedImageURLType">
+            </xs:element>
+        </xs:choice>
+        <xs:attribute name="attachedID" type="xs:ID" use="required">
+        </xs:attribute>
+    </xs:complexType>
+ 
+ 
+    <xs:complexType name="AttachmentsType">
+        <xs:sequence>
+            <xs:element name="Attached" type="gd:AttachedType" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+ 
+    <xs:complexType name="CertificationOfTheSupplementType">
+        <xs:sequence>
+            <xs:element name="CertificationDate" type="gd:DateType" minOccurs="0">
+            </xs:element>
+            <xs:element name="OfficialsCertifying" type="gd:OfficialsCertifyingType" minOccurs="0">
+            </xs:element>
+            <xs:element name="OfficialStamp" type="gd:OfficialStampType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="ContactInformationType">
+        <xs:sequence>
+            <xs:element name="Address" type="gd:AddressType" minOccurs="0">
+            </xs:element>
+            <xs:element name="PhoneNumber" type="gd:PlainTextType" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="Email" type="gd:EmailAddressType" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="WebSite" type="gd:URLType" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="CoursesAttendedInOtherInstitutionInMobilityProgramsType">
+        <xs:sequence>
+            <xs:element name="MobilityProgramme" type="gd:MobilityProgrammeType" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="CourseStructureDiagramType">
+        <xs:sequence>
+            <xs:element name="CoursesGroups" type="gd:CoursesGroupsType" minOccurs="0">
+            </xs:element>
+            <xs:element name="CoursesUnits" type="gd:CoursesUnitsType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="CoursesUnitsType">
+        <xs:sequence>
+            <xs:element name="CourseUnit" type="gd:CourseUnitType" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="CourseUnitLanguagesOfInstructionType">
+        <xs:sequence>
+            <xs:element name="Language" type="gd:CourseUnitLanguageOfInstructionType" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="CourseUnitStudentPerformanceType">
+        <xs:sequence>
+            <xs:element name="LocalGrade" type="gd:LocalGradeType">
+            </xs:element>
+            <xs:element name="ECTSGrade" type="gd:ECTSGradingScaleType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+ 
+ 
+
+ 
+    <xs:complexType name="CourseUnitType">
+        <xs:sequence>
+            <!--I've marked the course code as optional. Therefore, I had to remove the key that was defined for this field-->
+            <xs:element name="Code" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="ScientificArea" type="gd:PlainTextType" minOccurs="0"/>
+            <xs:element name="Title" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="Theme" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="Type" minOccurs="0">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="gd:PlainTextType">
+                            <xs:attribute name="type" type="gd:CourseUnitTypeType" use="optional">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="YearOfStudy" minOccurs="0">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="gd:PlainTextType">
+                            <xs:attribute name="year" type="gd:PositiveDecimalType" use="optional">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Level" minOccurs="0">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="gd:PlainTextType">
+                            <xs:attribute name="eheaFramework" type="gd:EHEAFrameworkType" use="optional">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ECTSCredits" type="gd:PositiveDecimalType" minOccurs="0">
+            </xs:element>
+            <xs:element name="LocalCredits" type="gd:PositiveDecimalType" minOccurs="0">
+            </xs:element>
+            <xs:element name="Hours" type="gd:PositiveDecimalType" minOccurs="0">
+            </xs:element>
+            <xs:element name="LanguagesOfInstruction" type="gd:CourseUnitLanguagesOfInstructionType" minOccurs="0">
+                <xs:unique name="LanguagesOfInstructionUQ">
+                    <xs:selector xpath="gd:Language"/>
+                    <xs:field xpath="@language"/>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="ModeOfDelivery" minOccurs="0">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="gd:PlainTextType">
+                            <xs:attribute name="modeOfDelivery" type="gd:ModeOfDeliveryType" use="optional">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="WorkPlacements" type="gd:CourseUnitWorkPlacementsType" minOccurs="0">
+            </xs:element>
+            <xs:element name="StudentPerformance" type="gd:CourseUnitStudentPerformanceType" minOccurs="0">
+            </xs:element>
+            <xs:element name="NameOfLecturers" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="LearningOutcomes" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="PrerequisitesAndCorequisites" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="PrerequisitesScholarshipLevel" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="PrerequisitesOtherTitles" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="RecomendedOptionalProgrammeComponents" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="CourseContents" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="RecomendedOrRequiredReading" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="PlanedLearningActivitiesAndTeachingMethod" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="AssesmentMethodsAndCriteria" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="Observations" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="groupID" type="xs:string" use="optional">
+        </xs:attribute>
+        <xs:attribute name="institutionAdministeringStudiesID" type="xs:string" use="optional" default="DEF-IAS">
+        </xs:attribute>
+        <xs:attribute name="isRequiredByTheProgramme" type="xs:boolean" default="true">
+        </xs:attribute>
+    </xs:complexType>
+ 
+ 
+ 
+ 
+ 
+    <xs:complexType name="CourseUnitWorkPlacementsType">
+        <xs:sequence>
+            <xs:element name="WorkPlacement" type="gd:CourseUnitWorkPlacementType" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+    <xs:complexType name="CourseUnitWorkPlacementType">
+        <xs:sequence>
+            <xs:element name="CollaboratingInstitution" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="DateFrom" type="gd:DateType" minOccurs="0">
+            </xs:element>
+            <xs:element name="DateTo" type="gd:DateType" minOccurs="0">
+            </xs:element>
+            <xs:element name="TrainingHours" type="gd:PositiveDecimalType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+ 
+ 
+    <xs:complexType name="CourseUnitLanguageOfInstructionType">
+        <xs:simpleContent>
+            <xs:extension base="gd:PlainTextType">
+                <xs:attribute name="language" type="gd:LanguageType" use="required">
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+
+    <!-- Root element type: GeneralDiploma -->
+
+    <xs:complexType name="GeneralDiplomaType">
+        <xs:sequence>
+            <xs:element name="InformationIdentifyingTheHolderOfTheQualification" type="gd:InformationIdentifyingTheHolderOfTheQualificationType">
+            </xs:element>
+            <xs:element name="InformationIdentifyingTheQualification" type="gd:InformationIdentifyingTheQualificationType">
+            </xs:element>
+            <xs:element name="InformationOnTheLevelOfTheQualification" type="gd:InformationOnTheLevelOfTheQualificationType" minOccurs="0">
+            </xs:element>
+            <!--Course and per-course qualifications information. We set it to optional to allow representing diplomas without course info-->
+            <xs:element name="InformationOnTheContentsAndResultsGained" type="gd:InformationOnTheContentsAndResultsGainedType" minOccurs="0">
+            </xs:element>
+            <xs:element name="InformationOnTheFunctionOfTheQualification" type="gd:InformationOnTheFunctionOfTheQualificationType" minOccurs="0">
+            </xs:element>
+            <xs:element name="AdditionalInformation" type="gd:AdditionalInformationType" minOccurs="0">
+            </xs:element>
+            <xs:element name="CertificationOfTheSupplement" type="gd:CertificationOfTheSupplementType" minOccurs="0">
+            </xs:element>
+            <xs:element name="InformationOnTheNationalHigherEducationSystem" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="Attachments" type="gd:AttachmentsType" minOccurs="0">
+            </xs:element>
+            <xs:element name="ExtensionContent" type="gd:ExtensionContentType" minOccurs="0" maxOccurs="unbounded"> 
+            </xs:element>
+            <xs:element ref="dsig:Signature" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="language" type="gd:LanguageType" use="required">
+        </xs:attribute>
+        <xs:attribute name="isTheOriginalLanguage" type="xs:boolean" use="required">
+        </xs:attribute>
+    </xs:complexType>
+ 
+ 
+    <!-- Can hold anything as extension -->
+    <xs:complexType name="ExtensionContentType" mixed="true">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:any namespace="##any" processContents="lax"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="FamilyNameType">
+        <xs:sequence>
+            <xs:element name="Surname" type="gd:PlainTextType" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="GivenNameType">
+        <xs:sequence>
+            <xs:element name="Name" type="gd:PlainTextType" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="GradingSchemeAndGradeDistributionGuidanceType">
+        <xs:sequence>
+            <xs:element name="GradingScheme" type="gd:RichTextTagType">
+            </xs:element>
+            <xs:element name="GradeDistributionGuidance" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="CoursesGroupsType">
+        <xs:sequence>
+            <xs:element name="Name" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="HeaderInformation" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="CoursesGroup" type="gd:CoursesGroupType" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="FooterInformation" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!--Allows a hierarchy of course groups, but each ID must be unique regardless the level it is defined-->
+    <xs:complexType name="CoursesGroupType">
+        <xs:sequence>
+            <xs:element name="Name" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="HeaderInformation" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="CoursesGroup" type="gd:CoursesGroupType" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element name="FooterInformation" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="groupID" type="xs:string" use="required">
+        </xs:attribute>
+    </xs:complexType>
+
+ 
+
+    <xs:complexType name="InformationIdentifyingTheHolderOfTheQualificationType">
+        <xs:sequence>
+            <xs:element name="FamilyName" type="gd:FamilyNameType">
+            </xs:element>
+            <xs:element name="GivenName" type="gd:GivenNameType">
+            </xs:element>
+            <xs:element name="DateOfBirth" type="gd:DateType" minOccurs="0">
+            </xs:element>
+            <xs:element name="StudentIdentificationNumber" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="CountryOfBirth" type="gd:CountryTextCodeType" minOccurs="0">
+            </xs:element>
+            <xs:element name="PlaceOfBirth" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="Gender" minOccurs="0">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="gd:PlainTextType">
+                            <xs:attribute name="gender" type="gd:GenderType" use="required">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+ 
+    <!--Required at least the name of the awarding institution, institution administering studies and the name of the qualification-->
+    <xs:complexType name="InformationIdentifyingTheQualificationType">
+        <xs:sequence>
+            <xs:element name="Qualification" type="gd:QualificationType">
+            </xs:element>
+            <xs:element name="TitleConferred" type="gd:TitleConferredType" minOccurs="0">
+            </xs:element>
+            <xs:element name="MainFieldsOfStudy" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="NameAndStatusOfAwardingInstitution" type="gd:NameAndStatusOfAwardingInstitutionType">
+            </xs:element>
+            <xs:element name="NameAndStatusOfInstitutionAdministeringStudies" type="gd:NameAndStatusOfInstitutionAdministeringStudiesType">
+            </xs:element>
+            <xs:element name="LanguagesOfInstructionAndExamination" type="gd:LanguagesOfInstructionAndExaminationType" minOccurs="0">
+                <xs:unique name="LanguageOfInstructionAndExaminationUQ">
+                    <xs:selector xpath="gd:Language"/>
+                    <xs:field xpath="@language"/>
+                </xs:unique>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+
+    <xs:complexType name="InformationOnTheContentsAndResultsGainedType">
+        <xs:sequence>
+            <xs:element name="ModeOfStudy" minOccurs="0">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="gd:RichTextTagType">
+                            <xs:attribute name="modeOfStudy" type="gd:ModeOfStudyType" use="optional">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ProgrammeRequirements" type="gd:ProgrammeRequirementsType" minOccurs="0">
+            </xs:element>
+            <xs:element name="ProgrammeDetails" type="gd:ProgrammeDetailsType" minOccurs="0">
+            </xs:element>
+            <xs:element name="GradingSchemeAndGradeDistributionGuidance" type="gd:GradingSchemeAndGradeDistributionGuidanceType" minOccurs="0">
+            </xs:element>
+            <xs:element name="OverallClassificationOfTheQualification" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+
+    <xs:complexType name="InformationOnTheFunctionOfTheQualificationType">
+        <xs:sequence>
+            <xs:element name="AccessToFurtherStudy" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="ProfessionalStatus" minOccurs="0">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="gd:RichTextTagType">
+                            <xs:attribute name="isRegulatedProfession" type="xs:boolean" use="optional">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+
+    <xs:complexType name="InformationOnTheLevelOfTheQualificationType">
+        <xs:sequence>
+            <xs:element name="Level">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="gd:RichTextTagType">
+                            <xs:attribute name="isced1997" type="gd:ISCED1997Type" use="optional">
+                            </xs:attribute>
+                            <xs:attribute name="isced2011" type="gd:ISCED2011Type" use="optional">
+                            </xs:attribute>
+                            <xs:attribute name="eheaFramework" type="gd:EHEAFrameworkType" use="optional">
+                            </xs:attribute>
+                            <xs:attribute name="nfq" type="gd:NFQType" use="optional">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="OfficialLengthOfProgramme">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="gd:RichTextTagType">
+                            <xs:attribute name="ectsCredits" type="gd:PositiveDecimalType" use="optional">
+                            </xs:attribute>
+                            <xs:attribute name="years" type="gd:PositiveDecimalType" use="optional">
+                            </xs:attribute>
+                            <xs:attribute name="semesters" type="gd:PositiveIntegerType" use="optional">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AccessRequirements" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+ 
+ 
+    <xs:complexType name="InstitutionType">
+        <xs:sequence>
+            <xs:element name="Name" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="Status" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="Country" type="gd:CountryTextCodeType" minOccurs="0">
+            </xs:element>
+            <xs:element name="AdditionalInformation" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+            <xs:element name="ContactInformation" type="gd:ContactInformationType" minOccurs="0">
+            </xs:element>
+            <xs:element name="AttachedImageRef" minOccurs="0">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="gd:PlainTextType">
+                            <xs:attribute name="attachedID" type="xs:IDREF" use="required">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="nationalID" type="gd:PlainTextType" use="optional">
+        </xs:attribute>
+        <xs:attribute name="erasmusID" type="gd:PlainTextType" use="optional">
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <!-- Added optional boolean values to differentiate languages used for instruction and evaluation-->
+    <xs:complexType name="LanguagesOfInstructionAndExaminationType">
+        <xs:sequence>
+            <xs:element name="Language" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="gd:RichTextTagType">
+                            <xs:attribute name="language" type="gd:LanguageType" use="required">
+                            </xs:attribute>
+                            <xs:attribute name="percent" type="gd:PercentType" use="optional">
+                            </xs:attribute>
+                            <xs:attribute name="instruction"  type="xs:boolean" default="true">
+                            </xs:attribute>
+                            <xs:attribute name="examination"  type="xs:boolean" use="optional">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+
+    <xs:complexType name="LocalGradeType">
+        <xs:sequence>
+            <xs:element name="AcademicYear" type="gd:AcademicYearType" minOccurs="0">
+            </xs:element>
+            <xs:element name="DateIssued" type="gd:DateType" minOccurs="0">
+            </xs:element>
+            <xs:element name="Grade" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="Source" minOccurs="0">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="gd:PlainTextType">
+                            <xs:attribute name="source" type="gd:SourceGradeType" use="optional">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+
+    <xs:complexType name="MobilityProgrammeCoursesUnitsType">
+        <xs:sequence>
+            <xs:element name="CourseUnit" type="gd:MobilityProgrammeCourseUnitType" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="MobilityProgrammeCourseUnitType">
+        <xs:sequence>
+            <xs:element name="Code" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="Title">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="gd:PlainTextType">
+                            <xs:attribute name="language" type="gd:LanguageType">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ECTSCredits" type="gd:PositiveDecimalType" minOccurs="0">
+            </xs:element>
+            <xs:element name="AdditionalInformation" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="isInTheLearningAgreement" type="xs:boolean" default="true">
+        </xs:attribute>
+    </xs:complexType>
+ 
+ 
+ 
+    <xs:complexType name="MobilityProgrammeType">
+        <xs:sequence>
+            <xs:element name="Type" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="FieldOfStudy" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+            <xs:element name="Country" type="gd:CountryTextCodeType">
+            </xs:element>
+            <xs:element name="ReceivingInstitutionName" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="AcademicYear" type="gd:AcademicYearType" minOccurs="0">
+            </xs:element>
+            <xs:element name="DateFrom" type="gd:DateType" minOccurs="0">
+            </xs:element>
+            <xs:element name="DateTo" type="gd:DateType" minOccurs="0">
+            </xs:element>
+            <xs:element name="CoursesUnits" type="gd:MobilityProgrammeCoursesUnitsType">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+
+    <!-- Root element type: MultilingualGeneralDiploma -->
+
+    <xs:complexType name="MultilingualGeneralDiplomaType">
+        <xs:sequence>
+            <xs:element ref="gd:GeneralDiploma" minOccurs="1" maxOccurs="unbounded">
+            </xs:element>
+            <xs:element ref="dsig:Signature" minOccurs="0" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- awardingInstitutionID has a default value if only one is added.
+    Schema won't validate if two are added without this attr being set-->
+    <xs:complexType name="NameAndStatusOfAwardingInstitutionType">
+        <xs:sequence>
+            <xs:element name="AwardingInstitution" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="gd:InstitutionType">
+                            <xs:attribute name="awardingInstitutionID" type="xs:string" use="optional" default="DEF-IAW">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- institutionAdministeringStudiesID has a default value if only one is added.
+    Schema won't validate if two are added without this attr being set-->
+    <xs:complexType name="NameAndStatusOfInstitutionAdministeringStudiesType">
+        <xs:sequence>
+            <xs:element name="InstitutionAdministeringStudies" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="gd:InstitutionType">
+                            <xs:attribute name="institutionAdministeringStudiesID" type="xs:string" use="optional" default="DEF-IAS">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="OfficialCertifyingType">
+        <xs:sequence>
+            <xs:element name="FamilyName" type="gd:FamilyNameType">
+            </xs:element>
+            <xs:element name="GivenName" type="gd:GivenNameType">
+            </xs:element>
+            <xs:element name="Capacity" type="gd:PlainTextType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="awardingInstitutionID" type="xs:string" use="optional" default="DEF-IAW">
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <xs:complexType name="OfficialsCertifyingType">
+        <xs:sequence>
+            <xs:element name="OfficialCertifying" type="gd:OfficialCertifyingType" maxOccurs="unbounded">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <!--This is intended for printed out diplomas, to set up an area where the document can be physically stamped-->
+    <xs:complexType name="OfficialStampType">
+        <xs:sequence>
+            <xs:element name="Description" type="gd:PlainTextType">
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="awardingInstitutionID" type="xs:string" use="optional" default="DEF-IAW">
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <xs:complexType name="ProgrammeDetailsType">
+        <xs:sequence>
+            <xs:element name="CourseStructureDiagram" type="gd:CourseStructureDiagramType">
+            </xs:element>
+            <xs:element name="CoursesAttendedInOtherInstitutionInMobilityPrograms" type="gd:CoursesAttendedInOtherInstitutionInMobilityProgramsType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="ProgrammeRequirementsType">
+        <xs:sequence>
+            <xs:element name="Requirements" type="gd:RichTextTagType">
+            </xs:element>
+            <xs:element name="KeyLearningOutcomes" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="QualificationType">
+        <xs:sequence>
+            <xs:element name="Name" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="AdditionalInformation" type="gd:RichTextTagType" minOccurs="0">
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="localID" type="gd:PlainTextType" use="optional">
+        </xs:attribute>
+        <xs:attribute name="nationalID" type="gd:PlainTextType" use="optional">
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <xs:complexType name="RichTextTagType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Bold" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="BreakLine" type="gd:EmptyType">
+            </xs:element>
+            <xs:element name="Italic" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="Underline" type="gd:PlainTextType">
+            </xs:element>
+            <xs:element name="AttachedRef">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="gd:PlainTextType">
+                            <xs:attribute name="attachedID" type="xs:IDREF" use="required">
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+
+
+    <xs:complexType name="TitleConferredType">
+        <xs:sequence>
+            <xs:element name="Name" type="gd:PlainTextType">
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+ 
+ 
+ 
+ 
+    <!-- Root element: GeneralDiploma -->
+
+    <xs:element name="GeneralDiploma" type="gd:GeneralDiplomaType">
+        <!--Primary Keys--> <!-- TODO: revisar estas restricciones que tengan sentido y deban seguir existiendo -->
+        <xs:key name="GroupIDPK">
+            <xs:selector xpath=".//gd:CoursesGroup"/>
+            <xs:field xpath="@groupID"/>
+        </xs:key>
+        <xs:key name="AwardingInstitutionIDPK">
+            <xs:selector xpath=".//gd:AwardingInstitution"/>
+            <xs:field xpath="@awardingInstitutionID"/>
+        </xs:key>
+        <xs:key name="InstitutionAdministeringStudiesIDPK">
+            <xs:selector xpath=".//gd:InstitutionAdministeringStudies"/>
+            <xs:field xpath="@institutionAdministeringStudiesID"/>
+        </xs:key>
+        <!--Foreign Keys-->
+        <xs:keyref name="GroupFK" refer="gd:GroupIDPK">
+            <xs:selector xpath=".//gd:CourseStructureDiagram/gd:CoursesUnits/gd:CourseUnit"/>
+            <xs:field xpath="@groupID"/>
+        </xs:keyref>
+        <xs:keyref name="AwardingInstitutionOfficialCertifyingFK" refer="gd:AwardingInstitutionIDPK">
+            <xs:selector xpath=".//gd:OfficialCertifying"/>
+            <xs:field xpath="@awardingInstitutionID"/>
+        </xs:keyref>
+        <xs:keyref name="AwardingInstitutionOfficialStampFK" refer="gd:AwardingInstitutionIDPK">
+            <xs:selector xpath=".//gd:OfficialStamp"/>
+            <xs:field xpath="@awardingInstitutionID"/>
+        </xs:keyref>
+        <xs:keyref name="InstitutionAdministeringStudiesFK" refer="gd:InstitutionAdministeringStudiesIDPK">
+            <xs:selector xpath=".//gd:ProgrammeDetails/gd:CourseStructureDiagram/gd:CoursesUnits/gd:CourseUnit"/>
+            <xs:field xpath="@institutionAdministeringStudiesID"/>
+        </xs:keyref>
+    </xs:element>
+ 
+ 
+    <!-- Root element: MultilingualGeneralDiploma -->
+
+    <xs:element name="MultilingualGeneralDiploma" type="gd:MultilingualGeneralDiplomaType">
+        <!--Unique Keys--> <!-- Language codes of each Diploma must be unique -->
+        <xs:unique name="GeneralDiplomaLanguageUQ">
+            <xs:selector xpath="gd:GeneralDiploma"/>
+            <xs:field xpath="@language"/>
+        </xs:unique>
+    </xs:element>
+</xs:schema>
+
+
+<!-- TODO: añadir cambios CSI, IS-SKRA -->

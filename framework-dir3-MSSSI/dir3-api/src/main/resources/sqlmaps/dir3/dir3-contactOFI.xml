@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+						"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ContactOFIVO">
+
+	<typeAlias alias="contactOFI"
+		type="es.msssi.dir3.api.vo.ContactOFIVO" />
+
+	<resultMap id="contactOFI" class="es.msssi.dir3.api.vo.ContactOFIVO">
+		<result property="id" column="N_ID_CONTACTO" />
+		<result property="contactTypeId" column="N_ID_TIPO_CONTACTO" />
+		<result property="contactInfo" column="C_DATOS_CONTACTO" />
+		<result property="observations" column="C_OBSERV_CONTACTO" />
+		<result property="statusId" column="C_ID_ESTADO" />
+		<result property="officeId" column="C_ID_OFICINA" />
+	</resultMap>
+
+	<sql id="table">DIR_CONTACTO_OFICINA </sql>
+	<sql id="columns">
+		CONTOFI.N_ID_CONTACTO,
+		CONTOFI.N_ID_TIPO_CONTACTO,
+		C_DESC_TIPO_CONTACTO,
+		CONTOFI.C_DATOS_CONTACTO,
+		CONTOFI.C_OBSERV_CONTACTO,
+		CONTOFI.C_ID_ESTADO,
+		CONTOFI.C_ID_OFICINA
+	</sql>
+<sql id="columns_insert">
+		N_ID_CONTACTO,
+		C_ID_OFICINA,
+		N_ID_TIPO_CONTACTO,
+		C_DATOS_CONTACTO,
+		C_OBSERV_CONTACTO,
+		C_ID_ESTADO,
+		D_INICIO_VIGENCIA,
+  		D_FECHA_ALTA,
+  		D_FECHA_MODIF
+	</sql>
+	<sql id="insert">
+		#id#,
+		#officeId#,
+		#contactTypeId#,
+		#contactInfo#,
+		#observations#,
+		#statusId#,
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP,
+		CURRENT_TIMESTAMP
+	</sql>
+	<sql id="update">
+		N_ID_TIPO_CONTACTO = #contactTypeId#,
+		C_ID_OFICINA = #officeId#,
+		C_DATOS_CONTACTO = #contactInfo#,
+		C_OBSERV_CONTACTO = #observations#,
+		C_ID_ESTADO = #statusId#,
+		<isEqual property="statusId"
+						compareValue="V">
+  			D_FIN_VIGENCIA = CURRENT_TIMESTAMP,
+  		</isEqual>
+  		D_FECHA_MODIF = CURRENT_TIMESTAMP
+	</sql>
+	
+	<select id="getActiveContactOFIVOs" resultMap="contactOFI">
+		SELECT
+			<include refid="columns" />
+		FROM
+			<include refid="table" /> CONTOFI
+			 LEFT OUTER JOIN CAT_TIPO_CONTACTO TCONT ON CONTOFI.N_ID_TIPO_CONTACTO = TCONT.N_ID_TIPO_CONTACTO
+			 WHERE
+			CONTOFI.C_ID_OFICINA=#value# AND CONTOFI.C_ID_ESTADO = 'V'
+		ORDER BY CONTOFI.N_ID_CONTACTO
+	</select>
+
+	<select id="getContactOFIVO" parameterClass="java.lang.String" resultMap="contactOFI">
+		SELECT
+			<include refid="columns" />
+		FROM
+			<include refid="table" /> CONTOFI
+			 LEFT OUTER JOIN CAT_TIPO_CONTACTO TCONT ON CONTOFI.N_ID_TIPO_CONTACTO = TCONT.N_ID_TIPO_CONTACTO
+		WHERE
+			N_ID_CONTACTO=#value#
+	</select>
+	<insert id="addContactOFIVO" parameterClass="contactOFI">
+		<selectKey keyProperty="id"
+             resultClass="java.lang.String">
+		    ${select.sequence}SEQDIR_CONTACTO_OFICINA${from.sequence}
+		  </selectKey>
+		INSERT INTO
+			<include refid="table" />
+		(<include refid="columns_insert" />)
+		VALUES (<include refid="insert" />)
+	</insert>
+	
+	<update id="updateContactOFIVO" parameterClass="contactOFI">
+		UPDATE
+			<include refid="table" />
+		SET
+			<include refid="update" />
+		WHERE N_ID_CONTACTO = #id#
+	</update>
+	
+	<delete id="deleteContactOFIVO" parameterClass="java.lang.String">
+		DELETE FROM 
+			<include refid="table" />
+		WHERE C_ID_UD_ORGANICA = #value#
+	</delete>
+</sqlMap>

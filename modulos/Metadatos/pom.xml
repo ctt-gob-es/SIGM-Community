@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>es.ieci.tecdoc.iflow</groupId>
+		<artifactId>ispac-main</artifactId>
+		<version>6.4.1</version>
+	</parent>
+
+	<groupId>es.dipucr</groupId>
+	<artifactId>Metadatos</artifactId>
+	<version>1.0</version>
+
+	<name>Metadatos</name>
+	<packaging>jar</packaging>
+
+	<properties>		
+		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
+		<ispac.version>6.4.1</ispac.version>
+		<isicres.version>8.0.1</isicres.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>sigem_core</artifactId>
+			<version>${sigem.version}</version>			
+		</dependency>
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.isicres</groupId>
+			<artifactId>ISicres-Common</artifactId>
+			<version>${isicres.version}</version>			
+		</dependency>
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.iflow</groupId>
+			<artifactId>ispac-lib</artifactId>
+			<version>${ispac.version}</version>			
+		</dependency>
+		
+	</dependencies>
+
+</project>

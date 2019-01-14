@@ -1,0 +1,2 @@
+mvn -s D:\ALSIGEM\maven\settings.xml -Dnsis -Djre.path="C:\Program Files (x86)\Java\jre7" -Dnsis.path=D:\PortableApps\NSISPortable\App\NSIS\ clean install
+

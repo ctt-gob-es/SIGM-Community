@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Use this file to deploy some handlers/chains and services      --><!-- Two ways to do this:                                           --><!--   java org.apache.axis.client.AdminClient deploy.wsdd          --><!--      after the axis server is running                          --><!-- or                                                             --><!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   --><!--      from the same directory that the Axis engine runs         --><deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from TramitacionWebServiceService WSDL service -->
+
+  <service name="TramitacionWebService" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://server.ws.tram.sgm.tecdoc.ieci"/>
+      <parameter name="wsdlServiceElement" value="TramitacionWebServiceService"/>
+      <parameter name="schemaQualified" value="http://server.ws.tram.sgm.tecdoc.ieci,http://dto.services.core.sgm.tecdoc.ieci,http://dto.server.ws.tram.sgm.tecdoc.ieci"/>
+      <parameter name="wsdlServicePort" value="TramitacionWebService"/>
+      <parameter name="className" value="ieci.tecdoc.sgm.tram.ws.server.TramitacionWebService"/>
+      <parameter name="wsdlPortType" value="TramitacionWebService"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="anexarDocsExpediente" qname="operNS:anexarDocsExpediente" returnQName="retNS:anexarDocsExpedienteReturn" returnType="rtns:Booleano" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:numExp" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:regNum" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:regDate" type="tns:dateTime"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="pns:documents" type="tns:DocumentoExpediente"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.services.core.sgm.tecdoc.ieci" name="archivarExpedientes" qname="operNS:archivarExpedientes" returnQName="retNS:archivarExpedientesReturn" returnType="rtns:RetornoServicio" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idExps" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="getProcedimientosPorTipo" qname="operNS:getProcedimientosPorTipo" returnQName="retNS:getProcedimientosPorTipoReturn" returnType="rtns:ListaInfoBProcedimientos" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:tipoProc" type="tns:int"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:nombre" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="moverExpedienteAFase" qname="operNS:moverExpedienteAFase" returnQName="retNS:moverExpedienteAFaseReturn" returnType="rtns:Booleano" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:numExp" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idFaseCatalogo" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="establecerDatosRegistroEntidad" qname="operNS:establecerDatosRegistroEntidad" returnQName="retNS:establecerDatosRegistroEntidadReturn" returnType="rtns:Entero" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:nombreEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:numExp" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:xmlDatosEspecificos" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="getIdsExpedientes" qname="operNS:getIdsExpedientes" returnQName="retNS:getIdsExpedientesReturn" returnType="rtns:ListaIdentificadores" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idProc" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:fechaIni" type="tns:dateTime"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:fechaFin" type="tns:dateTime"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:tipoOrd" type="tns:int"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="cambiarEstadoAdministrativo" qname="operNS:cambiarEstadoAdministrativo" returnQName="retNS:cambiarEstadoAdministrativoReturn" returnType="rtns:Booleano" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:numExp" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:estadoAdm" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="anexarDocsTramite" qname="operNS:anexarDocsTramite" returnQName="retNS:anexarDocsTramiteReturn" returnType="rtns:Booleano" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:numExp" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idTramite" type="tns:int"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:regNum" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:regDate" type="tns:dateTime"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="pns:documents" type="tns:DocumentoExpediente"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="iniciarExpediente" qname="operNS:iniciarExpediente" returnQName="retNS:iniciarExpedienteReturn" returnType="rtns:Booleano" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="pns:commonData" type="tns:DatosComunesExpediente"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:specificDataXML" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="pns:documents" type="tns:DocumentoExpediente"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="obtenerRegistrosEntidad" qname="operNS:obtenerRegistrosEntidad" returnQName="retNS:obtenerRegistrosEntidadReturn" returnType="rtns:Cadena" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:nombreEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:numExp" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="getProcedimientos" qname="operNS:getProcedimientos" returnQName="retNS:getProcedimientosReturn" returnType="rtns:ListaInfoBProcedimientos" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idProcs" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="anularLicenciaRRHH" qname="operNS:anularLicenciaRRHH" returnQName="retNS:anularLicenciaRRHHReturn" returnType="rtns:boolean" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:numexp" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="obtenerRegistroEntidad" qname="operNS:obtenerRegistroEntidad" returnQName="retNS:obtenerRegistroEntidadReturn" returnType="rtns:Cadena" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:nombreEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:numExp" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idRegistro" type="tns:int"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="recibirDocumentoFirmado" qname="operNS:recibirDocumentoFirmado" returnQName="retNS:recibirDocumentoFirmadoReturn" returnType="rtns:Cadena" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:numExp" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idDocumento" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="getProcedimiento" qname="operNS:getProcedimiento" returnQName="retNS:getProcedimientoReturn" returnType="rtns:Procedimiento" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idProc" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="getFicheroTemp" qname="operNS:getFicheroTemp" returnQName="retNS:getFicheroTempReturn" returnType="rtns:Binario" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:guid" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="getInfoFichero" qname="operNS:getInfoFichero" returnQName="retNS:getInfoFicheroReturn" returnType="rtns:InfoFichero" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:guid" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="getInfoOcupacion" qname="operNS:getInfoOcupacion" returnQName="retNS:getInfoOcupacionReturn" returnType="rtns:InfoOcupacion" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="getExpediente" qname="operNS:getExpediente" returnQName="retNS:getExpedienteReturn" returnType="rtns:Expediente" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idExp" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.services.core.sgm.tecdoc.ieci" name="eliminaFicheros" qname="operNS:eliminaFicheros" returnQName="retNS:eliminaFicherosReturn" returnType="rtns:RetornoServicio" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:guids" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="crearExpediente" qname="operNS:crearExpediente" returnQName="retNS:crearExpedienteReturn" returnType="rtns:Cadena" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="pns:commonData" type="tns:DatosComunesExpediente"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:specificDataXML" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="pns:documents" type="tns:DocumentoExpediente"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:initSystem" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="busquedaAvanzada" qname="operNS:busquedaAvanzada" returnQName="retNS:busquedaAvanzadaReturn" returnType="rtns:Cadena" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:nombreGrupo" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:nombreFrmBusqueda" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:xmlBusqueda" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:dominio" type="tns:int"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="getExpedientes" qname="operNS:getExpedientes" returnQName="retNS:getExpedientesReturn" returnType="rtns:ListaInfoBExpedientes" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idExps" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="queryEntities" qname="operNS:queryEntities" returnQName="retNS:queryEntitiesReturn" returnType="rtns:string" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:entidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:query" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="setFicheroTemp" qname="operNS:setFicheroTemp" returnQName="retNS:setFicheroTempReturn" returnType="rtns:boolean" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:guid" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:data" type="tns:base64Binary"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.tram.sgm.tecdoc.ieci" name="getFichero" qname="operNS:getFichero" returnQName="retNS:getFicheroReturn" returnType="rtns:Binario" soapAction="">
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:idEntidad" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:guid" type="tns:string"/>
+      </operation>
+      <parameter name="allowedMethods" value="anexarDocsTramite recibirDocumentoFirmado anularLicenciaRRHH getProcedimientosPorTipo obtenerRegistroEntidad archivarExpedientes establecerDatosRegistroEntidad busquedaAvanzada moverExpedienteAFase getFichero getFicheroTemp setFicheroTemp crearExpediente getProcedimiento getIdsExpedientes getInfoOcupacion getInfoFichero eliminaFicheros getProcedimientos getExpedientes iniciarExpediente obtenerRegistrosEntidad queryEntities cambiarEstadoAdministrativo anexarDocsExpediente getExpediente"/>
+
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:InfoOcupacion" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoOcupacion" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:Firma" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Firma" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:InteresadoExpediente" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InteresadoExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <arrayMapping xmlns:ns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:cmp-ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ArrayOf_tns1_InfoBProcedimiento" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBProcedimiento[]" innerType="cmp-ns:InfoBProcedimiento" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:InfoBExpediente" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:DocFisico" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocFisico" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:DocumentoExpediente" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocumentoExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:Emplazamiento" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Emplazamiento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <arrayMapping xmlns:ns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:cmp-ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ArrayOf_tns1_OrganoProductor" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.OrganoProductor[]" innerType="cmp-ns:OrganoProductor" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ListaInfoBProcedimientos" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.ListaInfoBProcedimientos" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <arrayMapping xmlns:ns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:cmp-ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ArrayOf_tns1_InteresadoExpediente" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InteresadoExpediente[]" innerType="cmp-ns:InteresadoExpediente" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:Interesado" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Interesado" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <arrayMapping xmlns:ns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:cmp-ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ArrayOf_tns1_Interesado" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Interesado[]" innerType="cmp-ns:Interesado" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:InfoBProcedimiento" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBProcedimiento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <arrayMapping xmlns:ns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:cmp-ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ArrayOf_tns1_Emplazamiento" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Emplazamiento[]" innerType="cmp-ns:Emplazamiento" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:Binario" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Binario" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <arrayMapping xmlns:ns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:cmp-ns="http://www.w3.org/2001/XMLSchema" qname="ns:ArrayOf_xsd_string" type="java:java.lang.String[]" innerType="cmp-ns:string" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:Entero" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Entero" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ListaIdentificadores" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.ListaIdentificadores" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:Cadena" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Cadena" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.services.core.sgm.tecdoc.ieci" qname="ns:RetornoServicio" type="java:ieci.tecdoc.sgm.core.services.dto.RetornoServicio" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <arrayMapping xmlns:ns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:cmp-ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ArrayOf_tns1_DocFisico" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocFisico[]" innerType="cmp-ns:DocFisico" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:OrganoProductor" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.OrganoProductor" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <arrayMapping xmlns:ns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:cmp-ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ArrayOf_tns1_InfoBExpediente" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBExpediente[]" innerType="cmp-ns:InfoBExpediente" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ListaInfoBExpedientes" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.ListaInfoBExpedientes" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:DocElectronico" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocElectronico" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <arrayMapping xmlns:ns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:cmp-ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ArrayOf_tns1_Firma" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Firma[]" innerType="cmp-ns:Firma" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:Procedimiento" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Procedimiento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:Booleano" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Booleano" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:DatosComunesExpediente" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DatosComunesExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:InfoFichero" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoFichero" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:Expediente" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Expediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <arrayMapping xmlns:ns="http://server.ws.tram.sgm.tecdoc.ieci" xmlns:cmp-ns="http://dto.server.ws.tram.sgm.tecdoc.ieci" qname="ns:ArrayOf_tns1_DocElectronico" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocElectronico[]" innerType="cmp-ns:DocElectronico" encodingStyle=""/>
+  </service>
+</deployment>

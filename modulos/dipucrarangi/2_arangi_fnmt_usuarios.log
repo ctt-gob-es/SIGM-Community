@@ -1,0 +1,232 @@
+2016-08-26 09:20:26,726 [DEBUG] es.accv.arangi.base.util.Util setProvider [Util.setProvider] :: Installed BC version 1.495provider 
+2016-08-26 09:20:26,729 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: C:\sigem3\arangi\conf\caCertificates 
+2016-08-26 09:20:26,867 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,868 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,869 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACCV-CA1.cer imported as a CA certificate 
+2016-08-26 09:20:26,881 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,881 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,881 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACCV-CA110.cer imported as a CA certificate 
+2016-08-26 09:20:26,887 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,887 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,888 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACCV-CA120.cer imported as a CA certificate 
+2016-08-26 09:20:26,893 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,893 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,894 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACCV-CA130.cer imported as a CA certificate 
+2016-08-26 09:20:26,899 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,899 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,900 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACCV-CA2.cer imported as a CA certificate 
+2016-08-26 09:20:26,905 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,905 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,905 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACCVCATEST110.cer imported as a CA certificate 
+2016-08-26 09:20:26,910 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,910 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,911 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACCVCATEST120.cer imported as a CA certificate 
+2016-08-26 09:20:26,915 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,915 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,916 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACCVCATEST130.cer imported as a CA certificate 
+2016-08-26 09:20:26,927 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,927 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,928 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACCVRAIZ1.cer imported as a CA certificate 
+2016-08-26 09:20:26,931 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,932 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,932 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACDNIE001-SHA1.cer imported as a CA certificate 
+2016-08-26 09:20:26,936 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,936 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,937 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACDNIE002-SHA1.cer imported as a CA certificate 
+2016-08-26 09:20:26,940 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,941 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,941 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACDNIE003-SHA1.cer imported as a CA certificate 
+2016-08-26 09:20:26,948 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,948 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,949 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ACRAIZ-SHA1.cer imported as a CA certificate 
+2016-08-26 09:20:26,953 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,953 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,953 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\AC_FNMT_Usuarios.cer imported as a CA certificate 
+2016-08-26 09:20:26,956 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,957 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,957 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Para el OID '2.5.4.3' no hay ningún elemento en el subject 
+2016-08-26 09:20:26,957 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\AC_Raiz_FNMT-RCM_SHA256.cer imported as a CA certificate 
+2016-08-26 09:20:26,961 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,961 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,961 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\CAGVA.cer imported as a CA certificate 
+2016-08-26 09:20:26,964 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,965 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,965 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Para el OID '2.5.4.3' no hay ningún elemento en el subject 
+2016-08-26 09:20:26,965 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\FNMTClase2CA.cer imported as a CA certificate 
+2016-08-26 09:20:26,969 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,969 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,969 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ROOTEJB4TEST.cer imported as a CA certificate 
+2016-08-26 09:20:26,978 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,978 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,979 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\ROOT_CA.cer imported as a CA certificate 
+2016-08-26 09:20:26,986 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,986 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,987 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\TEST_CATEST.cer imported as a CA certificate 
+2016-08-26 09:20:26,990 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,990 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,991 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\TEST_ROOT_EJBCA.cer imported as a CA certificate 
+2016-08-26 09:20:26,994 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:26,994 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:26,995 [DEBUG] es.accv.arangi.base.certificate.validation.CAList <init> [CAList(listSource)] :: File C:\sigem3\arangi\conf\caCertificates\TEST_SUBCA_WINDOWS3.cer imported as a CA certificate 
+2016-08-26 09:20:27,231 [DEBUG] es.accv.arangi.base.signature.PDFSignature initialize [PDFSignature.initialize]::Entrada::G:\doc\PADES_Signature.pdf 
+2016-08-26 09:20:27,425 [DEBUG] es.accv.arangi.base.signature.PAdESLTVSignature completeToPAdESLTV [PAdESLTVSignature.completeToPAdESLTV]::Entrada::es.accv.arangi.base.signature.PDFSignature@1771302 
+2016-08-26 09:20:27,427 [DEBUG] es.accv.arangi.base.ArangiObject getArangiTemporalFolder [ArangiObject.getArangiTemporalFolder]::Creada la carpeta temporal de Arangi en: C:\Users\agustin\.ACCV\ArangiTemp 
+2016-08-26 09:20:27,456 [DEBUG] es.accv.arangi.base.signature.BasePDFSignature save [PDFSignature.save]::Entrada::C:\Users\agustin\.ACCV\ArangiTemp\signed810173143762985262pdf 
+2016-08-26 09:20:27,475 [DEBUG] es.accv.arangi.base.signature.PAdESLTVSignature completeToPAdESLTV [PAdESLTVSignature.completeToPAdESLTV]::Entrada 
+2016-08-26 09:20:27,509 [DEBUG] es.accv.arangi.base.certificate.Certificate getExtendedKeyUsage [Certificate.getExtendedKeyUsage]::Entrada 
+2016-08-26 09:20:27,510 [DEBUG] es.accv.arangi.base.certificate.Certificate getExtendedKeyUsage [Certificate.getExtendedKeyUsage]::Entrada 
+2016-08-26 09:20:27,511 [DEBUG] es.accv.arangi.base.certificate.Certificate getExtendedKeyUsage [Certificate.getExtendedKeyUsage]::Entrada 
+2016-08-26 09:20:27,519 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]:: Inicio  
+2016-08-26 09:20:27,523 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]::No es autofirmado 
+2016-08-26 09:20:27,523 [DEBUG] es.accv.arangi.base.certificate.validation.CAList isOwned [CAList.isOwned]::Entrada 
+2016-08-26 09:20:27,524 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,524 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,525 [DEBUG] es.accv.arangi.base.certificate.validation.CAList isOwned [CAList.isOwned]::Certificado: TABOADA CALATAYUD MIGUEL JUAN - 05643862F 
+2016-08-26 09:20:27,527 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Entrada 
+2016-08-26 09:20:27,527 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,528 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,528 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Certificado: TABOADA CALATAYUD MIGUEL JUAN - 05643862F 
+2016-08-26 09:20:27,529 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]:: Inicio  
+2016-08-26 09:20:27,530 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]::No es autofirmado 
+2016-08-26 09:20:27,530 [DEBUG] es.accv.arangi.base.certificate.validation.CAList isOwned [CAList.isOwned]::Entrada 
+2016-08-26 09:20:27,530 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,530 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,531 [DEBUG] es.accv.arangi.base.certificate.validation.CAList isOwned [CAList.isOwned]::Certificado: AC FNMT Usuarios 
+2016-08-26 09:20:27,531 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Entrada 
+2016-08-26 09:20:27,531 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,532 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,532 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Certificado: AC FNMT Usuarios 
+2016-08-26 09:20:27,532 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]:: Inicio  
+2016-08-26 09:20:27,539 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]::Es autofirmado  
+2016-08-26 09:20:27,539 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Entrada 
+2016-08-26 09:20:27,540 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,540 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,540 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Certificado: AC FNMT Usuarios 
+2016-08-26 09:20:27,540 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Entrada 
+2016-08-26 09:20:27,541 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,541 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,541 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Certificado: TABOADA CALATAYUD MIGUEL JUAN - 05643862F 
+2016-08-26 09:20:27,541 [DEBUG] es.accv.arangi.base.certificate.validation.ValidateCertificate getCertificationChainAsList [ValidateCertificate.getCertificationChainAsList] :: Start 
+2016-08-26 09:20:27,541 [DEBUG] es.accv.arangi.base.certificate.validation.ValidateCertificate getIssuerCertificate [ValidateCertificate.getIssuerCertificate] :: Start 
+2016-08-26 09:20:27,542 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]:: Inicio  
+2016-08-26 09:20:27,542 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]::No es autofirmado 
+2016-08-26 09:20:27,542 [DEBUG] es.accv.arangi.base.certificate.validation.CAList isOwned [CAList.isOwned]::Entrada 
+2016-08-26 09:20:27,543 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,543 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,547 [DEBUG] es.accv.arangi.base.certificate.validation.CAList isOwned [CAList.isOwned]::Certificado: AC FNMT Usuarios 
+2016-08-26 09:20:27,547 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Entrada 
+2016-08-26 09:20:27,547 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,547 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,548 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Certificado: AC FNMT Usuarios 
+2016-08-26 09:20:27,548 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]:: Inicio  
+2016-08-26 09:20:27,555 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]::Es autofirmado  
+2016-08-26 09:20:27,556 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Entrada 
+2016-08-26 09:20:27,556 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,557 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,557 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Certificado: AC FNMT Usuarios 
+2016-08-26 09:20:27,557 [DEBUG] es.accv.arangi.base.certificate.Certificate getIssuerAndSerialNumber [Certificate.getIssuerAndSerialNumber]::Entrada 
+2016-08-26 09:20:27,558 [DEBUG] es.accv.arangi.base.certificate.Certificate getIssuerAndSerialNumber [Certificate.getIssuerAndSerialNumber]::Entrada 
+2016-08-26 09:20:27,559 [DEBUG] es.accv.arangi.base.certificate.validation.ValidateCertificate getIssuerCertificate [ValidateCertificate.getIssuerCertificate] :: Start 
+2016-08-26 09:20:27,559 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]:: Inicio  
+2016-08-26 09:20:27,564 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]::Es autofirmado  
+2016-08-26 09:20:27,565 [DEBUG] es.accv.arangi.base.certificate.Certificate getIssuerAndSerialNumber [Certificate.getIssuerAndSerialNumber]::Entrada 
+2016-08-26 09:20:27,565 [DEBUG] es.accv.arangi.base.certificate.Certificate getIssuerAndSerialNumber [Certificate.getIssuerAndSerialNumber]::Entrada 
+2016-08-26 09:20:27,565 [DEBUG] es.accv.arangi.base.certificate.validation.ValidateCertificate getIssuerCertificate [ValidateCertificate.getIssuerCertificate] :: Start 
+2016-08-26 09:20:27,566 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]:: Inicio  
+2016-08-26 09:20:27,571 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]::Es autofirmado  
+2016-08-26 09:20:27,571 [DEBUG] es.accv.arangi.base.certificate.Certificate getIssuerAndSerialNumber [Certificate.getIssuerAndSerialNumber]::Entrada 
+2016-08-26 09:20:27,572 [DEBUG] es.accv.arangi.base.certificate.Certificate getIssuerAndSerialNumber [Certificate.getIssuerAndSerialNumber]::Entrada 
+2016-08-26 09:20:27,572 [DEBUG] es.accv.arangi.base.certificate.Certificate getFingerPrint [Certificate.getFingerPrint]::Entrada 
+2016-08-26 09:20:27,572 [DEBUG] es.accv.arangi.base.certificate.Certificate getDigest [Certificate.getDigest]::Entrada::SHA1 
+2016-08-26 09:20:27,574 [DEBUG] es.accv.arangi.base.certificate.Certificate getFingerPrint [Certificate.getFingerPrint]::Entrada 
+2016-08-26 09:20:27,574 [DEBUG] es.accv.arangi.base.certificate.Certificate getDigest [Certificate.getDigest]::Entrada::SHA1 
+2016-08-26 09:20:27,574 [DEBUG] es.accv.arangi.base.certificate.Certificate getFingerPrint [Certificate.getFingerPrint]::Entrada 
+2016-08-26 09:20:27,575 [DEBUG] es.accv.arangi.base.certificate.Certificate getDigest [Certificate.getDigest]::Entrada::SHA1 
+2016-08-26 09:20:27,575 [DEBUG] es.accv.arangi.base.certificate.Certificate getFingerPrint [Certificate.getFingerPrint]::Entrada 
+2016-08-26 09:20:27,575 [DEBUG] es.accv.arangi.base.certificate.Certificate getDigest [Certificate.getDigest]::Entrada::SHA1 
+2016-08-26 09:20:27,575 [DEBUG] es.accv.arangi.base.certificate.Certificate getFingerPrint [Certificate.getFingerPrint]::Entrada 
+2016-08-26 09:20:27,575 [DEBUG] es.accv.arangi.base.certificate.Certificate getDigest [Certificate.getDigest]::Entrada::SHA1 
+2016-08-26 09:20:27,575 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]:: Inicio  
+2016-08-26 09:20:27,576 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,576 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,576 [DEBUG] es.accv.arangi.base.signature.PAdESLTVSignature cargarDSS Intentando cargar respuesta OCSP en DSS para el certificado TABOADA CALATAYUD MIGUEL JUAN - 05643862F 
+2016-08-26 09:20:27,576 [DEBUG] es.accv.arangi.base.certificate.validation.ValidateCertificate getOCSPClients [ValidateCertificate.getOCSPClients]::Entrada 
+2016-08-26 09:20:27,576 [DEBUG] es.accv.arangi.base.certificate.validation.ValidateCertificate getIssuerCertificate [ValidateCertificate.getIssuerCertificate] :: Start 
+2016-08-26 09:20:27,577 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]:: Inicio  
+2016-08-26 09:20:27,577 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]::No es autofirmado 
+2016-08-26 09:20:27,577 [DEBUG] es.accv.arangi.base.certificate.validation.CAList isOwned [CAList.isOwned]::Entrada 
+2016-08-26 09:20:27,578 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,578 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,578 [DEBUG] es.accv.arangi.base.certificate.validation.CAList isOwned [CAList.isOwned]::Certificado: AC FNMT Usuarios 
+2016-08-26 09:20:27,578 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Entrada 
+2016-08-26 09:20:27,579 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,579 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,579 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Certificado: AC FNMT Usuarios 
+2016-08-26 09:20:27,580 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]:: Inicio  
+2016-08-26 09:20:27,585 [DEBUG] es.accv.arangi.base.certificate.Certificate isSelfSigned [Certificate.isSelfSigned]::Es autofirmado  
+2016-08-26 09:20:27,586 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Entrada 
+2016-08-26 09:20:27,586 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,587 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,587 [DEBUG] es.accv.arangi.base.certificate.validation.CAList getCACertificate [CAList.getCACertificate]::Certificado: AC FNMT Usuarios 
+2016-08-26 09:20:27,587 [DEBUG] es.accv.arangi.base.certificate.validation.OCSPClient getOCSPResponse [OCSPClient.getOCSPResponse] :: Entrada 
+2016-08-26 09:20:27,600 [DEBUG] es.accv.arangi.base.certificate.Certificate getSerialNumberBigInteger [Certificate.getSerialNumberBigInteger]::Entrada 
+2016-08-26 09:20:27,610 [DEBUG] es.accv.arangi.base.certificate.validation.OCSPClient getOCSPResponse [OCSPClient.getOCSPResponse] :: Entrada 
+2016-08-26 09:20:27,685 [INFO] es.accv.arangi.base.certificate.validation.OCSPClient getOCSPResponse [OCSPClient.getOCSPResponse] :: Cannot get the OCSP basic response 
+org.bouncycastle.ocsp.OCSPException: The OCSP response indicates that the request must contain authorization information
+	at es.accv.arangi.base.certificate.validation.OCSPClient.getOCSPResponse(OCSPClient.java:1104)
+	at es.accv.arangi.base.certificate.validation.OCSPClient.getOCSPResponse(OCSPClient.java:740)
+	at es.accv.arangi.base.certificate.validation.OCSPClient.getOCSPResponse(OCSPClient.java:672)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.getOcspBasicResponse(PAdESLTVSignature.java:1079)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.cargarDSS(PAdESLTVSignature.java:1364)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:1187)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:707)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:665)
+	at es.dipucr.arangi.test.PAdESLTVSignatureTest.main(PAdESLTVSignatureTest.java:35)
+2016-08-26 09:20:27,686 [DEBUG] es.accv.arangi.base.signature.PAdESLTVSignature getOcspBasicResponse [PAdESLTVSignature.sign]::Excepción buscando respuesta OCSP en http://des-afirma.redsara.es/servidorOcsp/servidorOCSP 
+es.accv.arangi.base.exception.certificate.validation.OCSPServerConnectionException: Cannot get the the OCSP basic response
+	at es.accv.arangi.base.certificate.validation.OCSPClient.getOCSPResponse(OCSPClient.java:1115)
+	at es.accv.arangi.base.certificate.validation.OCSPClient.getOCSPResponse(OCSPClient.java:740)
+	at es.accv.arangi.base.certificate.validation.OCSPClient.getOCSPResponse(OCSPClient.java:672)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.getOcspBasicResponse(PAdESLTVSignature.java:1079)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.cargarDSS(PAdESLTVSignature.java:1364)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:1187)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:707)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:665)
+	at es.dipucr.arangi.test.PAdESLTVSignatureTest.main(PAdESLTVSignatureTest.java:35)
+Caused by: org.bouncycastle.ocsp.OCSPException: The OCSP response indicates that the request must contain authorization information
+	at es.accv.arangi.base.certificate.validation.OCSPClient.getOCSPResponse(OCSPClient.java:1104)
+	... 8 more
+2016-08-26 09:20:27,687 [INFO] es.accv.arangi.base.signature.PAdESLTVSignature getOcspBasicResponse [PAdESLTVSignature.sign]::No se puede obtener una respuesta de un servidor OCSP para validar el certificado de firma 
+2016-08-26 09:20:27,687 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,687 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,687 [DEBUG] es.accv.arangi.base.signature.PAdESLTVSignature cargarDSS No es posible obtener una respuesta OCSP para el certificado TABOADA CALATAYUD MIGUEL JUAN - 05643862F 
+es.accv.arangi.base.exception.signature.RetrieveOCSPException: No se puede obtener una respuesta de un servidor OCSP para validar el certificado de firma
+	at es.accv.arangi.base.signature.PAdESLTVSignature.getOcspBasicResponse(PAdESLTVSignature.java:1088)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.cargarDSS(PAdESLTVSignature.java:1364)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:1187)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:707)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:665)
+	at es.dipucr.arangi.test.PAdESLTVSignatureTest.main(PAdESLTVSignatureTest.java:35)
+2016-08-26 09:20:27,688 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,688 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,688 [DEBUG] es.accv.arangi.base.signature.PAdESLTVSignature cargarDSS Intentando cargar CRL en DSS para el certificado TABOADA CALATAYUD MIGUEL JUAN - 05643862F 
+2016-08-26 09:20:27,688 [DEBUG] es.accv.arangi.base.certificate.validation.ValidateCertificate getCRL [ValidateCertificate.getCRL]:: Init 
+2016-08-26 09:20:27,688 [DEBUG] es.accv.arangi.base.certificate.Certificate getCrlUrls [Certificate.getCrlUrls]::Entrada 
+2016-08-26 09:20:27,692 [DEBUG] es.accv.arangi.base.certificate.validation.ValidateCertificate getCRL [ValidateCertificate.getCRL]:: Init :: [Ljava.lang.String;@29a4cb 
+2016-08-26 09:20:27,692 [DEBUG] es.accv.arangi.base.certificate.validation.ValidatingTrace add [ValidatingTrace.add] :: Enter 
+2016-08-26 09:20:27,693 [DEBUG] es.accv.arangi.base.certificate.validation.ValidateCertificate getCRL [ValidateCertificate.getCRL]:: Get CRL from ldap://ldapusu.cert.fnmt.es/cn=CRL548,cn=AC%20FNMT%20Usuarios,ou=CERES,o=FNMT-RCM,c=ES?certificateRevocationList;binary?base?objectclass=cRLDistributionPoint 
+2016-08-26 09:20:27,696 [DEBUG] es.accv.arangi.base.certificate.validation.ValidateCertificate getCRL [ValidateCertificate.getCRL]:: Error getting CRL from ldap://ldapusu.cert.fnmt.es/cn=CRL548,cn=AC%20FNMT%20Usuarios,ou=CERES,o=FNMT-RCM,c=ES?certificateRevocationList;binary?base?objectclass=cRLDistributionPoint 
+2016-08-26 09:20:27,696 [DEBUG] es.accv.arangi.base.certificate.validation.ValidatingTrace add [ValidatingTrace.add] :: Enter 
+2016-08-26 09:20:27,697 [DEBUG] es.accv.arangi.base.certificate.validation.ValidateCertificate getCRL [ValidateCertificate.getCRL_URLs] :: Cannot get the CRL from any URL in the certificate 
+2016-08-26 09:20:27,697 [DEBUG] es.accv.arangi.base.certificate.validation.ValidatingTrace add [ValidatingTrace.add] :: Enter 
+2016-08-26 09:20:27,697 [DEBUG] es.accv.arangi.base.certificate.Certificate getCommonName [Certificate.getCommonName]::Entrada 
+2016-08-26 09:20:27,697 [DEBUG] es.accv.arangi.base.certificate.Certificate getElementSubject [Certificate.getElementSubject]::Buscando OID '2.5.4.3' en el subject 
+2016-08-26 09:20:27,697 [DEBUG] es.accv.arangi.base.signature.PAdESLTVSignature cargarDSS No es posible obtener una CRL para el certificado TABOADA CALATAYUD MIGUEL JUAN - 05643862F 
+es.accv.arangi.base.exception.certificate.InvalidCRLException: Cannot get the CRL from any URL in the certificate
+	at es.accv.arangi.base.certificate.validation.ValidateCertificate.getCRL(ValidateCertificate.java:890)
+	at es.accv.arangi.base.certificate.validation.ValidateCertificate.getCRL(ValidateCertificate.java:598)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.cargarDSS(PAdESLTVSignature.java:1373)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:1187)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:707)
+	at es.accv.arangi.base.signature.PAdESLTVSignature.completeToPAdESLTV(PAdESLTVSignature.java:665)
+	at es.dipucr.arangi.test.PAdESLTVSignatureTest.main(PAdESLTVSignatureTest.java:35)

@@ -1,0 +1,8 @@
+<aplicacion>
+	<nombre>sigem_scan</nombre>
+        <version>${project.version}</version>
+        <fecha>2018-07-05</fecha>
+        <observaciones>Nueva version</observaciones>
+        <urlDescarga>http://172.20.1.105:8080/SIGEM_RegistroPresencialMSSSIWeb/resources/software/Setup-addon-scan-${project.version}.exe</urlDescarga>
+        <whatsNew>&lt;br/&gt;Novedades:&lt;br&gt;Incluir posiblidad de renombrar los documentos antes de anexarlos al expediente&lt;br/&gt;</whatsNew>
+</aplicacion>

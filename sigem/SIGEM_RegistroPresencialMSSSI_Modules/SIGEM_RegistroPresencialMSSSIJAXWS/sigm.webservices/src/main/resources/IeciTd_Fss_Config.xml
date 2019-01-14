@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config>
+	<Repository>
+		<Id>5</Id>
+		<Path>${PATH_REPO}ficheros/000_REPOSITORIO_REGISTRO</Path>
+		<OS>${sigem.OS}</OS>
+	</Repository>
+</Config>

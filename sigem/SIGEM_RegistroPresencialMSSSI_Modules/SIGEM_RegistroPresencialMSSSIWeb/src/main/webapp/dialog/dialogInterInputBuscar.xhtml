@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xml:lang="es" lang="es">
+<h:head>
+
+</h:head>
+
+<h:body>	
+	<ui:composition>
+		<h:form>	
+		</h:form>
+
+		<p:dialog header="#{msgs.labelBotonAltaModificarTercero}" widgetVar="int_modificar_tercero" id="int_modificar_tercero" resizable="false" showEffect="fade" appendTo="@(body)">
+			<ui:include src="terceros/modificarTercero.xhtml" />
+		</p:dialog>
+		<p:dialog header="#{msgs.labelAnadirDireccionPostal}" widgetVar="int_aniadir_dir_postal" id="int_aniadir_dir_postal" resizable="false" showEffect="fade" appendTo="@(body)">
+			<ui:include src="terceros/direcciones/anadirDirPostal.xhtml" />
+		</p:dialog>
+		<p:dialog header="#{msgs.labelBuscarRepresentante}" widgetVar="int_buscar_representante" id="int_tercero_representante" resizable="false" showEffect="fade" appendTo="@(body)">
+			<ui:include src="terceros/representante/buscarRepresentante.xhtml" />
+		</p:dialog>
+		<p:dialog header="#{msgs.labelAnadirDireccionTelematica}" widgetVar="int_aniadir_dir_telematica" id="int_aniadir_dir_telematica" resizable="false" showEffect="fade" appendTo="@(body)">
+			<ui:include src="terceros/direcciones/anadirDirTelematica.xhtml" />
+		</p:dialog>
+		<p:dialog header="#{msgs.labelBotonModificar}" widgetVar="intDlgModificarTerceroRepresentante" id="intDlgModificarTerceroRepresentante" resizable="false" showEffect="fade" appendTo="@(body)">
+			<ui:include src="terceros/representante/modificarTerceroRepresentante.xhtml" />
+		</p:dialog>
+		<p:dialog header="#{msgs.labelResultadosBusqueda}" widgetVar="intDlgResultBuscarRepresentante" id="intDlgResultBuscarRepresentante" resizable="false" showEffect="fade" appendTo="@(body)">
+			<ui:include src="terceros/representante/dialogRepreResultadoBuscar.xhtml" />
+		</p:dialog>
+		<p:dialog header="#{msgs.labelAnadirDireccionPostal}" widgetVar="int_aniadir_dir_postal_representante" id="int_aniadir_dir_postal_representante" resizable="false" showEffect="fade" appendTo="@(body)">
+			<ui:include src="terceros/representante/direcciones/anadirDirPostalRepresentante.xhtml" />
+		</p:dialog>
+		<p:dialog header="#{msgs.labelAnadirDireccionTelematica}" widgetVar="int_aniadir_dir_telematica_representante" id="int_aniadir_dir_telematica_representante" resizable="false" showEffect="fade" appendTo="@(body)">
+			<ui:include src="terceros/representante/direcciones/anadirDirTelematicaRepresentante.xhtml" />
+		</p:dialog>
+		<p:messages id="messagesIntBuscar" showDetail="false" closable="true" autoUpdate="false" redisplay="false" />
+		<h:panelGrid id="general" styleClass="ampliarBuscarInt">
+			<h:panelGroup id="botonesIntBuscar">
+				<h:panelGrid id="gridITipoBuscar" styleClass="ampliarBuscarInt">
+					<h:outputLabel value="#{msgs.labelInteresado}" style="font-weight:bold;"></h:outputLabel>
+					<label for="inputRegisterDataForm:tipoIBuscar" class="general"> 
+						<p:selectOneRadio id="tipoIBuscar"
+							value="#{tercerosAction.busquedaInteresado.tipo}">
+							<f:selectItem itemLabel="#{msgs.labelPersonaFisica}" itemValue="P" />
+							<f:selectItem itemLabel="#{msgs.labelPersonaJuridica}" itemValue="J" />
+							<p:ajax update="gridIBuscar" />
+						</p:selectOneRadio>
+					</label>
+				</h:panelGrid>
+				<h:panelGrid id="gridIBuscar" styleClass="ampliarBuscarInt">
+					<ui:fragment>
+						<label for="inputRegisterDataForm:docIdentidadIntPBuscar" class="general" >										
+							<span class="label">
+								<h:outputLabel value="#{msgs.labelNumeroDocumento}"></h:outputLabel>
+							</span>
+							<p:selectOneMenu value="#{tercerosAction.busquedaInteresado.tipoBusqueda1}" id="tipoBusqueda1" >
+								<f:selectItem itemLabel="Contiene" itemValue="3" />
+								<f:selectItem itemLabel="Empieza por" itemValue="1" />
+								<f:selectItem itemLabel="Es Igual a" itemValue="2" />
+							</p:selectOneMenu>
+							<p:inputText id="docIdentidadIntPBuscar" 
+								required="#{
+								( tercerosAction.busquedaInteresado.tipo == 'P'
+									and (empty param['interesadosform:nombreIntBuscar'] or param['interesadosform:nombreIntBuscar'] =='')
+									and (empty param['interesadosform:papellidoIntBuscar'] or param['interesadosform:papellidoIntBuscar'] =='')
+									and (empty param['interesadosform:sapellidoIntBuscar'] or param['interesadosform:sapellidoIntBuscar'] =='')
+								)
+								or
+								( tercerosAction.busquedaInteresado.tipo == 'J'
+									and (empty param['interesadosform:razonSocialIntBuscar'] or param['interesadosform:razonSocialIntBuscar'] =='')
+								)}"
+								label="#{msgs.labelNumeroDocumento}" 
+								value="#{tercerosAction.busquedaInteresado.docIdentidad}" 
+								style="width: 20% !important">
+											
+								<f:validateLength maximum="17" />									
+							</p:inputText>					
+						</label>
+					</ui:fragment>
+					<ui:fragment rendered="${tercerosAction.busquedaInteresado.tipo=='P'}">
+						<label for="inputRegisterDataForm:nombreIntBuscar" class="general" >									
+							<span class="label">
+								<h:outputLabel value="#{msgs.labelNombre}"></h:outputLabel>
+							</span>
+							<p:selectOneMenu value="#{tercerosAction.busquedaInteresado.tipoBusqueda2}" id="tipoBusqueda2" >
+								<f:selectItem itemLabel="Contiene" itemValue="3" />
+								<f:selectItem itemLabel="Empieza por" itemValue="1" />
+								<f:selectItem itemLabel="Es Igual a" itemValue="2" />
+							</p:selectOneMenu>
+							<p:inputText id="nombreIntBuscar" required="false" label="#{msgs.labelNombre}" value="#{tercerosAction.busquedaInteresado.nombre}" >
+								<f:validateLength maximum="30" />
+							</p:inputText>
+						</label>
+					</ui:fragment>
+					<ui:fragment rendered="${tercerosAction.busquedaInteresado.tipo=='J'}">
+						<label for="inputRegisterDataForm:razonSocialIntBuscar" class="general">
+							<span class="label">
+								<h:outputLabel value="#{msgs.labelRazonSocial}"></h:outputLabel>
+							</span>
+							<p:selectOneMenu value="#{tercerosAction.busquedaInteresado.tipoBusqueda2}" id="tipoBusqueda5" >
+								<f:selectItem itemLabel="Contiene" itemValue="3" />
+								<f:selectItem itemLabel="Empieza por" itemValue="1" />
+								<f:selectItem itemLabel="Es Igual a" itemValue="2" />
+							</p:selectOneMenu>
+							<p:inputText id="razonSocialIntBuscar" required="false" label="#{msgs.labelRazonSocial}" value="#{tercerosAction.busquedaInteresado.razonSocial}" >
+								<f:validateLength maximum="80" />
+							</p:inputText>
+						</label>
+					</ui:fragment>
+					<ui:fragment rendered="${tercerosAction.busquedaInteresado.tipo=='P'}">
+						<label for="inputRegisterDataForm:papellidoIntBuscar" class="general">
+							<span class="label">
+								<h:outputLabel value="#{msgs.labelPrimerApellido}"></h:outputLabel>
+							</span>
+							<p:selectOneMenu value="#{tercerosAction.busquedaInteresado.tipoBusqueda3}" id="tipoBusqueda3" >
+								<f:selectItem itemLabel="Contiene" itemValue="3" />
+								<f:selectItem itemLabel="Empieza por" itemValue="1" />
+								<f:selectItem itemLabel="Es Igual a" itemValue="2" />
+							</p:selectOneMenu>
+							<p:inputText id="papellidoIntBuscar" required="false" label="#{msgs.labelPrimerApellido}" value="#{tercerosAction.busquedaInteresado.papellido}" >
+								<f:validateLength maximum="30" />
+							</p:inputText>
+						</label>
+						<label for="inputRegisterDataForm:sapellidoIntBuscar" class="general">
+							<span class="label">
+								<h:outputLabel value="#{msgs.labelSegundoApellido}"></h:outputLabel>
+							</span>
+							<p:selectOneMenu value="#{tercerosAction.busquedaInteresado.tipoBusqueda4}" id="tipoBusqueda4" >
+								<f:selectItem itemLabel="Contiene" itemValue="3" />
+								<f:selectItem itemLabel="Empieza por" itemValue="1" />
+								<f:selectItem itemLabel="Es Igual a" itemValue="2" />
+							</p:selectOneMenu>
+							<p:inputText id="sapellidoIntBuscar" required="false" label="#{msgs.labelSegundoApellido}" value="#{tercerosAction.busquedaInteresado.sapellido}" >
+								<f:validateLength maximum="30" />
+							</p:inputText>
+						</label>
+					</ui:fragment>
+					<p:dialog header="#{msgs.labelResultadosBusqueda}" widgetVar="intDlgResultBuscar" resizable="false" id="intDlgResultBuscar" showEffect="fade" >
+						<ui:include src="dialogInterResultadoBuscar.xhtml" />
+					</p:dialog>
+				</h:panelGrid>
+				<p style="text-align: center">				
+					<p:commandButton styleClass="boton-nuevo" id="btn_buscar"
+						value="#{msgs.labelBotonBuscar}"
+						update="gridIResultados,messagesIntBuscar"
+						process="@this tipoIBuscar,gridIBuscar,docIdentidadIntPBuscar,nombreIntBuscar,razonSocialIntBuscar,papellidoIntBuscar,sapellidoIntBuscar,tipoBusqueda1,tipoBusqueda2,tipoBusqueda3,tipoBusqueda4,tipoBusqueda5"
+						actionListener="#{tercerosAction.buscarInteresados}"
+						oncomplete="if (args &amp;&amp; !args.validationFailed) PF('intDlgResultBuscar').show()" >
+
+						<f:attribute name="registroOriginal" value="#{inputRegisterAction}" />
+					</p:commandButton>					
+				</p>
+				<p:blockUI block="general" trigger="btn_buscar">
+				        #{msgs.buscando}<br />
+		        		<p:graphicImage name="img/ajax-loader.gif"/>
+				</p:blockUI>
+			</h:panelGroup>
+
+
+			<h:panelGrid id="gridIAniadidosExp" styleClass="ampliarBuscarInt">
+				<h:outputLabel value="#{msgs.interesadosAniadidosExp}" style="font-weight:bold;"></h:outputLabel>
+				<p:dataTable id="TInteresadosAniadidos" 
+					value="#{inputRegisterAction.inputRegisterBean.interesados}" var="int" scrollable="true" scrollHeight="100"
+					paginator="true" rows="15" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+					currentPageReportTemplate="{totalRecords} #{msgs.paginacionResultadosEncontrados}. #{msgs.paginacionPagina} {currentPage} #{msgs.paginacionDe} {totalPages}" emptyMessage="#{msgs.mensajeTablaSinDatos}">					
+
+					<p:column sortBy="#{int.docIdentidad}" width="20%">
+						<f:facet name="header">
+							<h:outputText value="#{msgs.labelInteresados}" />
+						</f:facet>
+						<ui:fragment rendered="${int.tipo =='P'}">
+							<h:outputText value="#{int.docIdentidad} - #{int.nombre} #{int.papellido} #{int.sapellido}" />
+						</ui:fragment>
+						<ui:fragment rendered="${int.tipo =='J'}">
+							<h:outputText value="#{int.docIdentidad} - #{int.razonSocial}" />
+						</ui:fragment>
+					</p:column>
+					<p:column width="23%">
+						<f:facet name="header">
+							<h:outputText value="#{msgs.labelDireccion}" />
+						</f:facet>
+						<ui:fragment>
+							<h:outputText value="#{int.direccionFisicaPrincipal}" />
+						</ui:fragment>
+					</p:column>
+					<p:column width="7%">
+						<f:facet name="header"></f:facet>
+						<p:commandButton styleClass="intBotonModificar" title="#{msgs.labelBotonModificar}" alt="#{msgs.labelBotonModificar}"
+							rendered="${not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}"
+							update=":interesadosform:formIModificarTercero:gridIModificar,:interesadosform:formIModificarTercero:botonesIntResultadoModificar"
+							process="@form:TInteresadosAniadidos"
+							oncomplete="PF('int_modificar_tercero').show();" >
+							<f:setPropertyActionListener value="#{int}" target="#{tercerosAction.tercerosBean.interesadoDeTrabajo}"/>
+						</p:commandButton >
+						<p:commandButton
+							styleClass="intBotonEliminar" title="#{msgs.labelBotonBorrar}" alt="#{msgs.labelBotonBorrar}"
+							rendered="${not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}"
+							update="@form:TInteresadosAniadidos" 
+							process="@form:TInteresadosAniadidos">
+							<p:collector value="#{int}" removeFrom="#{inputRegisterAction.inputRegisterBean.interesados}" />
+						</p:commandButton>						
+					</p:column>
+					<p:column sortBy="#{int.representante.docIdentidad}" width="20%">
+						<f:facet name="header">
+							<h:outputText value="#{msgs.labelRepresentante}" />
+						</f:facet>
+						<ui:fragment rendered="${int.representante.docIdentidad == null}">
+							<p:commandButton id="btn_anadir_repreP" value=""
+								styleClass="intBotonResultBusquedaAnadir" title="#{msgs.labelAnadir}" alt="#{msgs.labelAnadir}"
+								process="@this" immediate="true"
+								update="@form:TInteresadosAniadidos,:interesadosform:formBuscarRepresentante:buscarRepresentante" 
+								action="#{tercerosAction.reinitRepresentante}"
+								oncomplete="PF('int_buscar_representante').show()">
+								<f:setPropertyActionListener value="#{int}" target="#{tercerosAction.tercerosBean.interesadoDeTrabajo}" />
+							</p:commandButton >
+						</ui:fragment>
+
+						<ui:fragment rendered="${int.representante.tipo =='P'}">
+							<h:outputText value="#{int.representante.docIdentidad} - #{int.representante.nombre} #{int.representante.papellido} #{int.representante.sapellido}" />
+						</ui:fragment>
+						<ui:fragment rendered="${int.representante.tipo =='J'}">
+							<h:outputText value="#{int.representante.docIdentidad} - #{int.representante.razonSocial}" />
+						</ui:fragment>					
+					</p:column>
+					<p:column width="23%">
+						<f:facet name="header">
+							<h:outputText value="#{msgs.labelDireccion}" />
+						</f:facet>
+						<ui:fragment>
+							<h:outputText value="#{int.representante.direccionFisicaPrincipal}" />
+						</ui:fragment>
+					</p:column>
+					<p:column width="7%">
+						<f:facet name="header"></f:facet>
+						<ui:fragment rendered="${int.representante.docIdentidad != null}">							
+							<p:commandButton styleClass="intBotonResultBusquedaModificar" title="#{msgs.labelBotonModificar}" alt="#{msgs.labelBotonModificar}"
+								rendered="${not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}"
+								update=":interesadosform:formIModificarTerceroRepresentante"
+								process="@this" immediate="true"
+								oncomplete="PF('intDlgModificarTerceroRepresentante').show()"
+								action="#{tercerosAction.setRepresentanteAsInteresado}" >
+								<f:setPropertyActionListener value="#{int}" target="#{tercerosAction.tercerosBean.interesadoDeTrabajo}"/>
+
+								<f:setPropertyActionListener value="#{int.representante}" target="#{tercerosAction.tercerosBean.interesadoDeTrabajo.representante}" />
+
+							</p:commandButton >
+
+							<p:commandButton
+								styleClass="intBotonEliminar" title="#{msgs.labelBotonBorrar}" alt="#{msgs.labelBotonBorrar}"
+								rendered="${not inputRegisterAction.readOnly and not inputRegisterAction.readOnlyIR}"
+								update="@form:TInteresadosAniadidos" 
+								process="@form:TInteresadosAniadidos,:interesadosform:formBuscarRepresentante:buscarRepresentante"
+								action="#{tercerosAction.eliminarRepresentante}" >
+
+								<f:setPropertyActionListener value="#{int}" target="#{tercerosAction.tercerosBean.interesadoDeTrabajo}" />
+							</p:commandButton>
+						</ui:fragment>
+					</p:column>					
+				</p:dataTable>
+			</h:panelGrid>
+
+			<p style="font-size:0.75em;margin-top:15px" class="ampliarBuscarInt">
+				<h:outputLabel  value="#{msgs.textSIRInteresados}"></h:outputLabel>
+			</p>
+			<h:panelGroup id="botonesIntBuscarCerrar">
+				<p style="text-align: center">				
+					<p:commandButton styleClass="cerrar" id="btn_hide_buscar" value="#{msgs.labelBotonCerrar}" immediate="true" oncomplete="PF('intDialogBuscar').hide();" update=":accordion:inputRegisterDataForm:TInteresados"/>
+				</p>
+			</h:panelGroup>
+		</h:panelGrid>
+	</ui:composition>
+
+
+</h:body>
+
+</html>

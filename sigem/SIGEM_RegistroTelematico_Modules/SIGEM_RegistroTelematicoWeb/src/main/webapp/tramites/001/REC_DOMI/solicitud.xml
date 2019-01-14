@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<Solicitud_Registro>
+  <Version>1.1</Version> 
+<Datos_Registro>
+  <Numero_Registro /> 
+  <Fecha_Presentacion /> 
+  <Hora_Presentacion /> 
+  <Fecha_Efectiva /> 
+  <Hora_Efectiva /> 
+  </Datos_Registro>
+<Datos_Firmados>
+<Datos_Genericos>
+  <Organismo>Diputacion Pruebas CR</Organismo> 
+  <Idioma>es</Idioma> 
+<Remitente>
+  <Nombre>MANUEL QUESADA ELVIRA</Nombre> 
+<Documento_Identificacion>
+  <Tipo>1</Tipo> 
+  <Numero>05684076V</Numero> 
+  </Documento_Identificacion>
+  <Correo_Electronico /> 
+  </Remitente>
+<Asunto>
+  <Codigo>REC_DOMI</Codigo> 
+  <Descripcion>Recaudaci�n Domiciliaciones</Descripcion> 
+  </Asunto>
+<Destino>
+  <Codigo>001</Codigo> 
+  </Destino>
+  <Numero_Expediente /> 
+  </Datos_Genericos>
+<Datos_Especificos>
+  <nif>05684076V</nif> 
+  <nombre>QUESADA ELVIRA, MANUEL</nombre> 
+  <calle>C/ POZO DULCE 2, 2�A,</calle> 
+  <numero /> 
+  <escalera /> 
+  <planta_puerta /> 
+  <c_postal>13001</c_postal> 
+  <movil /> 
+  <d_email>manuel_quesada@dipucr.es</d_email> 
+  <repres_nif>05695305E</repres_nif> 
+  <repres_nombre>CARMONA GONZALEZ, MARIA TERESA</repres_nombre> 
+  <repres_movil /> 
+  <repres_d_email /> 
+  <municipio1>125253</municipio1> 
+  <Descripcion_municipio1>ALMADENEJOS</Descripcion_municipio1> 
+  <apellidos_nombre1>Manuel Quesada Elvira</apellidos_nombre1> 
+  <tributo1>002</tributo1> 
+  <Descripcion_tributo1>IBI-R�stico</Descripcion_tributo1> 
+  <objeto1>ss</objeto1> 
+  <municipio2>128956</municipio2> 
+  <Descripcion_municipio2>ALBALADEJO</Descripcion_municipio2> 
+  <apellidos_nombre2>Manuel tambi�n</apellidos_nombre2> 
+  <tributo2>004</tributo2> 
+  <Descripcion_tributo2>Tasas</Descripcion_tributo2> 
+  <objeto2>ss</objeto2> 
+  <municipio3>128924</municipio3> 
+  <Descripcion_municipio3>AGUDO</Descripcion_municipio3> 
+  <apellidos_nombre3>ss</apellidos_nombre3> 
+  <tributo3>002</tributo3> 
+  <Descripcion_tributo3>IBI-R�stico</Descripcion_tributo3> 
+  <objeto3>ss</objeto3> 
+  <municipio4>000</municipio4> 
+  <Descripcion_municipio4>-------------------------</Descripcion_municipio4> 
+  <apellidos_nombre4 /> 
+  <tributo4>000</tributo4> 
+  <Descripcion_tributo4>--------------------</Descripcion_tributo4> 
+  <objeto4 /> 
+  <municipio5>000</municipio5> 
+  <Descripcion_municipio5>-------------------------</Descripcion_municipio5> 
+  <apellidos_nombre5 /> 
+  <tributo5>000</tributo5> 
+  <Descripcion_tributo5>--------------------</Descripcion_tributo5> 
+  <objeto5 /> 
+  <municipio6>000</municipio6> 
+  <Descripcion_municipio6>-------------------------</Descripcion_municipio6> 
+  <apellidos_nombre6 /> 
+  <tributo6>000</tributo6> 
+  <Descripcion_tributo6>--------------------</Descripcion_tributo6> 
+  <objeto6 /> 
+  <municipio7>000</municipio7> 
+  <Descripcion_municipio7>-------------------------</Descripcion_municipio7> 
+  <apellidos_nombre7 /> 
+  <tributo7>000</tributo7> 
+  <Descripcion_tributo7>--------------------</Descripcion_tributo7> 
+  <objeto7 /> 
+  <municipio8>000</municipio8> 
+  <Descripcion_municipio8>-------------------------</Descripcion_municipio8> 
+  <apellidos_nombre8 /> 
+  <tributo8>000</tributo8> 
+  <Descripcion_tributo8>--------------------</Descripcion_tributo8> 
+  <objeto8 /> 
+  <municipio9>000</municipio9> 
+  <Descripcion_municipio9>-------------------------</Descripcion_municipio9> 
+  <apellidos_nombre9 /> 
+  <tributo9>000</tributo9> 
+  <Descripcion_tributo9>--------------------</Descripcion_tributo9> 
+  <objeto9 /> 
+  <municipio10>000</municipio10> 
+  <Descripcion_municipio10>-------------------------</Descripcion_municipio10> 
+  <apellidos_nombre10 /> 
+  <tributo10>000</tributo10> 
+  <Descripcion_tributo10>--------------------</Descripcion_tributo10> 
+  <objeto10 /> 
+  <entidad>0182</entidad> 
+  <sucursal>0050</sucursal> 
+  <dc>21</dc> 
+  <ncc>1521521521</ncc> 
+  <titular>Manu Quesada</titular> 
+  <nifTitular>05684076V</nifTitular> 
+  <telefonoTitular>926200458</telefonoTitular> 
+  <nombresolihidden>MANUEL QUESADA ELVIRA</nombresolihidden> 
+  <nifsolihidden>05684076V</nifsolihidden> 
+  <ciudad>Ciudad Real</ciudad> 
+  <region>Ciudad Real</region> 
+  <rcalle>C/ CABALLEROS N� 17</rcalle> 
+  <rnumero /> 
+  <rescalera /> 
+  <rplanta_puerta /> 
+  <rc_postal>13003</rc_postal> 
+  <rciudad>Ciudad Real</rciudad> 
+  <rregion>Ciudad Real</rregion> 
+  <cod_organo>001</cod_organo> 
+  <descr_organo>Registro telem�tico</descr_organo> 
+  </Datos_Especificos>
+  <Documentos /> 
+  </Datos_Firmados>
+  <Firma /> 
+  </Solicitud_Registro>
+  </xml>

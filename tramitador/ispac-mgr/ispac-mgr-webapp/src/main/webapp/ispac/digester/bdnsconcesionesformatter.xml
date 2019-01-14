@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<beanformatter>
+
+	<!-- Ponemos 2 veces la propiedad Nombre, 
+		 una para mostrarla solo en html (media='html')
+		 y la otra para la exportacion (media= 'xml excel csv pdf') -->
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NOMBRE_BENEFICIARIO' 
+				 titleKey='BDNS_IGAE_CONCESION:NOMBRE_BENEFICIARIO' 
+				 fieldType='LINK'
+				 columnClass='width30percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+		 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='CIF_BENEFICIARIO' 
+				 titleKey='BDNS_IGAE_CONCESION:CIF_BENEFICIARIO' 
+				 fieldType='LINK'
+				 columnClass='width15percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='NUMEXP_SOLICITUD' 
+				 titleKey='BDNS_IGAE_CONCESION:NUMEXP_SOLICITUD' 
+				 fieldType='LIST'
+				 columnClass='width15percent'
+				 headerClass='headerDisplay'
+				 sortable='true'
+				 media='html'/>
+
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='FECHA_CONCESION' 
+				 titleKey='BDNS_IGAE_CONCESION:FECHA_CONCESION' 
+				 fieldType='LIST' 
+				 columnClass='width15percent'
+				 headerClass='headerDisplay'
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='SUBVENCION' 
+				 titleKey='BDNS_IGAE_CONCESION:SUBVENCION' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='headerDisplay'
+				 sortable='true'/>
+	
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='DEVOLUCION' 
+				 titleKey='BDNS_IGAE_CONCESION:DEVOLUCION' 
+				 fieldType='LIST' 
+				 columnClass='width10percent'
+				 headerClass='headerDisplay'
+				 sortable='true'/>
+				 
+	<propertyfmt type="BeanPropertySimpleFmt" 
+				 property='PAGADA' 
+				 titleKey='BDNS_IGAE_CONCESION:PAGADA' 
+				 fieldType='LIST' 
+				 columnClass='width5percent'
+				 headerClass='headerDisplay'
+				 sortable='true'/>
+				
+				 
+</beanformatter>

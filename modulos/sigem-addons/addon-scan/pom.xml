@@ -1,0 +1,396 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.sigem.dipcoruna.addons</groupId>
+	<artifactId>addon-scan</artifactId>
+	
+	<version>1.2.1</version>
+
+	<properties>
+		<addons-framework.version>1.2.0</addons-framework.version>
+		<jtwain.version>1.0.0</jtwain.version>
+		<commons-io.version>2.4</commons-io.version>
+		<commons-lang3.version>3.4</commons-lang3.version>
+		<commons-collections4.version>4.1</commons-collections4.version>
+		<apache-httpcomponents.version>4.5.1</apache-httpcomponents.version>
+		<icepdf.version>5.0.7</icepdf.version>
+		<itextpdf.version>5.5.8</itextpdf.version>
+
+		<junit.version>4.12</junit.version>
+		<java.version>1.7</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
+		<jre.path>C:\Program Files (x86)\Java\jre7</jre.path>
+	</properties>
+
+
+	<repositories>
+		<repository>
+			<id>icepdf-releases</id>
+			<name>icepdf-releases</name>
+			<url>http://anonsvn.icefaces.org/repo/maven2/releases/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+
+	<profiles>
+
+		<profile>
+			<id>nsis</id>
+			<activation>
+				<property>
+					<name>nsis</name>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!-- Esta poperty se puede sobreescribir con un parámetro -D cuando makensis 
+					no forma parte del path del equipo -->
+				<nsis.path></nsis.path>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<version>1.4.1</version>
+						<executions>
+							<execution>
+								<id>enforce-property</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<fail>true</fail>
+									<rules>
+										<requireProperty>
+											<property>jre.path</property>
+											<message>Es obligatorio especificar la propiedad 'jre.path'
+												que apunta al directorio JRE que se va a incrustar en el
+												instalador</message>
+										</requireProperty>
+									</rules>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<id>Crear_NSIS_installer</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target description="Genera el instalador con NSIS">
+										<condition property="nsisOptionPrefix" value="/">
+											<os family="windows" />
+										</condition>
+										<condition property="nsisOptionPrefix" value="-">
+											<os family="unix" />
+										</condition>
+										<echo message="Prepararando estructura de directorios..." />
+										<delete dir="${project.basedir}/target/nsis" />
+										<mkdir dir="${project.basedir}/target/nsis" />
+										<mkdir dir="${project.basedir}/target/nsis/resources" />
+
+										<echo message="Moviendo recursos al target..." />
+										<copy
+											file="${project.basedir}/src/dev/resources/Application-launcher.ico"
+											todir="${project.basedir}/target/nsis/resources/" />
+										<copy file="${project.basedir}/src/dev/LauncherConfig.nsi"
+											todir="${project.basedir}/target/nsis" />
+										<copy
+											todir="${project.basedir}/target/nsis/resources/bin/bundle_jre">
+											<fileset dir="${jre.path}" />
+										</copy>
+										<copy
+											file="${project.basedir}/target/${project.build.finalName}.exe"
+											todir="${project.basedir}/target/nsis/" />
+
+										<echo message="Inicialización completa" />
+
+
+										<echo message="Lanzando NSIS" />
+										<exec dir="${project.basedir}/target/nsis" executable="${nsis.path}makensis"
+											failonerror="true">
+											<arg
+												line="${nsisOptionPrefix}X&quot;!define PRODUCT_VERSION ${project.version}&quot; LauncherConfig.nsi" />
+										</exec>
+										<echo message="Instalador NSIS creado con éxito!!!!!!" />
+										
+										<delete dir="${project.basedir}/../../../sigem/SIGEM_RegistroPresencialMSSSI_Modules/SIGEM_RegistroPresencialMSSSIWeb/src/main/webapp/resources/software" />
+										<mkdir dir="${project.basedir}/../../../sigem/SIGEM_RegistroPresencialMSSSI_Modules/SIGEM_RegistroPresencialMSSSIWeb/src/main/webapp/resources/software" />
+										<copy
+											file="${project.basedir}/target/classes/sigem_scan.xml"
+											todir="${project.basedir}/../../../sigem/SIGEM_RegistroPresencialMSSSI_Modules/SIGEM_RegistroPresencialMSSSIWeb/src/main/webapp/resources/software/" />
+										<copy
+											file="${project.basedir}/target/classes/conf.properties"
+											todir="${project.basedir}/../../../sigem/SIGEM_RegistroPresencialMSSSI_Modules/SIGEM_RegistroPresencialMSSSIWeb/src/main/webapp/resources/software/" />
+										<copy
+											file="${project.basedir}/target/nsis/Setup-addon-scan-${project.version}.exe"
+											todir="${project.basedir}/../../../sigem/SIGEM_RegistroPresencialMSSSI_Modules/SIGEM_RegistroPresencialMSSSIWeb/src/main/webapp/resources/software/" />
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/conf.properties</include>
+					<include>**/sigem_scan.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/conf.properties</exclude>
+				</excludes>
+			</resource>			
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<target>${java.version}</target>
+					<source>${java.version}</source>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>2.2</version>
+				<executions>
+					<execution>
+						<id>Generate-clases-xsd</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<outputDirectory>${basedir}/target/xjc/generated</outputDirectory>
+					<sources>
+						<source>${basedir}/src/main/resources/META-INF/xsd/configuracion/configuracion.xsd</source>
+					</sources>
+					<xjbSources>
+						<xjbSource>${basedir}/src/main/resources/META-INF/xsd/configuracion/bindings.xjb</xjbSource>
+					</xjbSources>
+					<target>2.1</target>
+					<generateEpisode>false</generateEpisode>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<!-- <verbose>true</verbose> -->
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.10</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${basedir}/target/xjc/generated</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.4.2</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
+					<shadedArtifactAttached>true</shadedArtifactAttached>
+					<transformers>
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+							<resource>META-INF/spring.factories</resource>
+						</transformer>
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+							<resource>META-INF/spring.handlers</resource>
+						</transformer>
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+							<resource>META-INF/spring.schemas</resource>
+						</transformer>
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+							<resource>META-INF/spring.tooling</resource>
+						</transformer>
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+							<manifestEntries>
+								<Main-Class>es.sigem.dipcoruna.desktop.scan.Main</Main-Class>
+								<Application-Name>SIGEM Scanner</Application-Name>
+								<Built-By>Diputacion Coruna</Built-By>
+							</manifestEntries>
+						</transformer>
+					</transformers>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<version>1.7.8</version>
+				<executions>
+					<execution>
+						<id>l4j-clui</id>
+						<phase>package</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+						<configuration>
+							<headerType>gui</headerType>
+							<outfile>target/${project.build.finalName}.exe</outfile>
+							<jar>target/${project.build.finalName}-shaded.jar</jar>
+							<chdir>.</chdir>
+							<priority>normal</priority>
+							<downloadUrl>http://java.com/download</downloadUrl>
+							<jre>
+								<path>bin/bundle_jre</path>
+								<bundledJre64Bit>false</bundledJre64Bit>
+								<bundledJreAsFallback>false</bundledJreAsFallback>
+								<minVersion></minVersion>
+								<maxVersion></maxVersion>
+								<jdkPreference>preferJre</jdkPreference>
+								<runtimeBits>64/32</runtimeBits>
+								<opts>
+									<opt>-Xms64m</opt>
+									<opt>-Xmx512m</opt>
+									<opt>-XX:PermSize=32m</opt>
+									<opt>-Dfile.encoding=UTF-8</opt>
+								</opts>
+							</jre>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>es.sigem.dipcoruna.addons</groupId>
+			<artifactId>addons-framework</artifactId>
+			<version>${addons-framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.co.mmscomputing</groupId>
+			<artifactId>jtwain</artifactId>
+			<version>${jtwain.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>${commons-collections4.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${apache-httpcomponents.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>${apache-httpcomponents.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.icepdf</groupId>
+			<artifactId>icepdf-core</artifactId>
+			<version>${icepdf.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.icepdf</groupId>
+			<artifactId>icepdf-viewer</artifactId>
+			<version>${icepdf.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>${itextpdf.version}</version>
+		</dependency>
+
+
+		<!-- <dependency> -->
+		<!-- <groupId>com.levigo.jbig2</groupId> -->
+		<!-- <artifactId>levigo-jbig2-imageio</artifactId> -->
+		<!-- <version>1.6.5</version> -->
+		<!-- </dependency> -->
+
+
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+</project>

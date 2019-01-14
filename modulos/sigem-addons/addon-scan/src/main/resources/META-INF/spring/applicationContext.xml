@@ -1,0 +1,76 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+    <!-- Scan the JavaConfig -->
+    <context:component-scan base-package="es.sigem.dipcoruna.framework, es.sigem.dipcoruna.desktop.scan" />
+
+
+
+    <!-- Propiedades de fonciguración -->
+    <context:property-placeholder  properties-ref="properties" order="1" />
+    <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <array>          
+                <value>classpath:conf.properties</value>                
+            </array>
+        </property>
+        <property name="properties" ref="propertiesParams"/>        
+    </bean>
+    
+    <util:properties id="propertiesParams">
+        <prop key="param.urlCheckForUpdates">${param.urlCheckForUpdates}</prop>
+        <prop key="param.urlUploadAction">${param.urlUploadAction}</prop>
+        <prop key="param.destinoUpload">${param.destinoUpload}</prop>        
+        <prop key="param.cookies">${param.cookies}</prop>
+        <prop key="param.cookiesPath">${param.cookiesPath}</prop>
+        <prop key="param.cookiesDomain">${param.cookiesDomain}</prop>
+        <prop key="param.sessionId">${param.sessionId}</prop>
+        <prop key="param.uploadToken">${param.uploadToken}</prop>
+        <prop key="param.maxUploadFiles">${param.maxUploadFiles}</prop>
+                
+        <prop key="param.tramitador.documentTypeId">${param.tramitador.documentTypeId}</prop>
+        <prop key="param.registro.folderId">${param.registro.folderId}</prop>
+        <prop key="param.registro.sessionPId">${param.registro.sessionPId}</prop>
+        <prop key="param.registro.bookId">${param.registro.bookId}</prop>
+        <prop key="param.registro.entidadId">${param.registro.entidadId}</prop>
+        <prop key="param.registro.nombreCarpeta">${param.registro.nombreCarpeta}</prop>         
+    </util:properties>
+    
+    
+           
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="basenames">
+            <array>
+                <value>bundles/mensajes</value>
+                <value>classpath:bundles/frameworkMensajes</value>              
+            </array>
+        </property>
+    </bean>
+    
+    
+    
+    
+    <!-- Beans de la aplicación --> 
+    <bean id="preferencias" class="es.sigem.dipcoruna.framework.service.util.PreferenciasHolder">
+        <constructor-arg name="claveAplicacion" value="${app.code}"/>
+    </bean>
+            
+     
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg name="requestFactory" ref="clientHttpRequestFactory"/>
+    </bean>
+    
+    <bean id="clientHttpRequestFactory" class="es.sigem.dipcoruna.framework.service.rest.TrustStoreClientHttpRequestFactory">
+        <constructor-arg name="trustStoreFile" value="${descargas.truststore.file}"/>
+        <constructor-arg name="trustSTorePass" value="${descargas.trustostre.pass}"/>
+    </bean>    
+
+</beans>

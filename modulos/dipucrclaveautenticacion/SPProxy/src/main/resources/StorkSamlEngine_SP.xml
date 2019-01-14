@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+	<comment>SAML constants for AuthnRequests and Responses.</comment>
+
+	<!--
+		Types of consent obtained from the user for this authentication and
+		data transfer.
+		Allow values: 'unspecified'.
+	-->
+	<entry key="consentAuthnRequest">unspecified</entry>
+	<!--
+	Allow values: 'obtained', 'prior', 'curent-implicit', 'curent-explicit', 'unspecified'.
+	-->
+	<entry key="consentAuthnResponse">obtained</entry>
+
+	<!--URI representing the classification of the identifier
+		Allow values: 'entity'.
+	-->
+	<entry key="formatEntity">entity</entry>
+	
+	<!--Only HTTP-POST binding is only supported for inter PEPS-->
+	<!--The SOAP binding is only supported for direct communication between SP-MW and VIdP-->
+	<entry key="protocolBinding">HTTP-POST</entry>
+	
+	<entry key="eIDSectorShare">true</entry>
+	<entry key="eIDCrossSectorShare">true</entry>
+	<entry key="eIDCrossBorderShare">true</entry>
+	
+	<!-- Attributes with require option -->
+	<entry key="isRequired">true</entry>
+	
+	<!-- A friendly name for the attribute that can be displayed to a user -->
+	<entry key="friendlyName">false</entry>
+	
+	<!--PEPS in the Service Provider's country-->
+	<entry key="requester">SAMLVersion1.1.1</entry>
+
+	<!--PEPS in the citizen's origin country-->
+	<entry key="responder">http://C-PEPS.gov.xx</entry>
+
+	<!--Subject cannot be confirmed on or after this seconds time (positive number)-->
+	<entry key="timeNotOnOrAfter">300</entry>
+
+	<!--Validation IP of the response-->
+	<entry key="ipAddrValidation">false</entry>
+	
+	<!--One time use-->
+	<entry key="oneTimeUse">true</entry>
+
+	<!--Subject Attribute Definitions-->
+	<entry key="eIdentifier">http://www.stork.gov.eu/1.0/eIdentifier</entry>
+	<entry key="givenName">http://www.stork.gov.eu/1.0/givenName</entry>
+	<entry key="surname">http://www.stork.gov.eu/1.0/surname</entry>
+	<entry key="isdnie">http://www.stork.gov.eu/1.0/isdnie</entry>
+	<entry key="inheritedFamilyName">http://www.stork.gov.eu/1.0/inheritedFamilyName</entry>
+	<entry key="adoptedFamilyName">http://www.stork.gov.eu/1.0/adoptedFamilyName</entry>
+	<entry key="gender">http://www.stork.gov.eu/1.0/gender</entry>
+	<entry key="dateOfBirth">http://www.stork.gov.eu/1.0/dateOfBirth</entry>
+ 	<entry key="countryCodeOfBirth">http://www.stork.gov.eu/1.0/countryCodeOfBirth</entry>
+	<entry key="placeOfBirth">http://www.stork.gov.eu/1.0/placeOfBirth</entry>
+	<entry key="nationalityCode">http://www.stork.gov.eu/1.0/nationalityCode</entry>
+	<entry key="maritalStatus">http://www.stork.gov.eu/1.0/maritalStatus</entry>
+	<entry key="textResidenceAddress">http://www.stork.gov.eu/1.0/textResidenceAddress</entry>
+	<entry key="canonicalResidenceAddress">http://www.stork.gov.eu/1.0/canonicalResidenceAddress</entry>
+	<entry key="eMail">http://www.stork.gov.eu/1.0/eMail</entry>
+	<entry key="title">http://www.stork.gov.eu/1.0/title</entry>
+	<entry key="residencePermit">http://www.stork.gov.eu/1.0/residencePermit</entry>
+	<entry key="pseudonym">http://www.stork.gov.eu/1.0/pseudonym</entry>
+	<entry key="age">http://www.stork.gov.eu/1.0/age</entry>
+	<entry key="isAgeOver">http://www.stork.gov.eu/1.0/isAgeOver</entry>
+	<entry key="signedDoc">http://www.stork.gov.eu/1.0/signedDoc</entry>
+	<entry key="citizenQAALevel">http://www.stork.gov.eu/1.0/citizenQAALevel</entry>
+	<entry key="fiscalNumber">http://www.stork.gov.eu/1.0/fiscalNumber</entry>
+	<entry key="unknown">http://www.stork.gov.eu/1.0/unknown</entry>
+	<entry key="newAttribute1">http://www.stork.gov.eu/1.0/newAttribute1</entry>
+	<entry key="newAttribute2">http://www.stork.gov.eu/1.0/newAttribute2</entry>
+	<entry key="hasDegree">http://www.stork.gov.eu/1.0/hasDegree</entry>
+	<entry key="afirmaResponse">http://www.stork.gov.eu/1.0/afirmaResponse</entry>
+	
+	<entry key="registerType">http://www.stork.gov.eu/1.0/registerType</entry>
+		
+	<entry key="surnameOfHolder">http://www.stork.gov.eu/1.0/surnameOfHolder</entry>
+	<entry key="givenNameOfHolder">http://www.stork.gov.eu/1.0/givenNameOfHolder</entry>
+	<entry key="dateOfBirthOfHolder">http://www.stork.gov.eu/1.0/dateOfBirthOfHolder</entry>
+	<entry key="studentIdentificationCode">http://www.stork.gov.eu/1.0/studentIdentificationCode</entry>
+	<entry key="nameOfQualification">http://www.stork.gov.eu/1.0/nameOfQualification</entry>
+	<entry key="nameOfTitle">http://www.stork.gov.eu/1.0/nameOfTitle</entry>
+	<entry key="mainFieldsOfStudy">http://www.stork.gov.eu/1.0/mainFieldsOfStudy</entry>
+	<entry key="nameOfAwardingInstitution">http://www.stork.gov.eu/1.0/nameOfAwardingInstitution</entry>
+	<entry key="statusOfAwardingInstitution">http://www.stork.gov.eu/1.0/statusOfAwardingInstitution</entry>
+	<entry key="languageOfInstruction">http://www.stork.gov.eu/1.0/languageOfInstruction</entry>
+	<entry key="languageOfAssesment">http://www.stork.gov.eu/1.0/languageOfAssesment</entry>
+	<entry key="levelOfQualification">http://www.stork.gov.eu/1.0/levelOfQualification</entry>
+	<entry key="officialLengthOfProgramme">http://www.stork.gov.eu/1.0/officialLengthOfProgramme</entry>
+	<entry key="accessRequirement">http://www.stork.gov.eu/1.0/accessRequirement</entry>
+	<entry key="modeOfStudy">http://www.stork.gov.eu/1.0/modeOfStudy</entry>
+	<entry key="programmeRequirements">http://www.stork.gov.eu/1.0/programmeRequirements</entry>
+	<entry key="programmeDetails">http://www.stork.gov.eu/1.0/programmeDetails</entry>
+	<entry key="gradingScheme">http://www.stork.gov.eu/1.0/gradingScheme</entry>
+	<entry key="gradingDistributionGuidance">http://www.stork.gov.eu/1.0/gradingDistributionGuidance</entry>
+	<entry key="overallClassification">http://www.stork.gov.eu/1.0/overallClassification</entry>
+	<entry key="accessToFurtherStudy">http://www.stork.gov.eu/1.0/accessToFurtherStudy</entry>
+	<entry key="professionalStatus">http://www.stork.gov.eu/1.0/professionalStatus</entry>
+	<entry key="additionalInformation">http://www.stork.gov.eu/1.0/additionalInformation</entry>
+	<entry key="additionalInformationSources">http://www.stork.gov.eu/1.0/additionalInformationSources</entry>
+	<entry key="certificationDate">http://www.stork.gov.eu/1.0/certificationDate</entry>
+	<entry key="certificationCapacity">http://www.stork.gov.eu/1.0/certificationCapacity</entry>
+	<entry key="higherEducationSystemInformation">http://www.stork.gov.eu/1.0/higherEducationSystemInformation</entry>
+	<entry key="yearOfStudy">http://www.stork.gov.eu/1.0/yearOfStudy</entry>
+	<entry key="averageGradeOfStudy">http://www.stork.gov.eu/1.0/averageGradeOfStudy</entry>
+	<entry key="studyRecommendation">http://www.stork.gov.eu/1.0/studyRecommendation</entry>
+	<entry key="isEligibleForInternship">http://www.stork.gov.eu/1.0/isEligibleForInternship</entry>
+	<entry key="isStudent">http://www.stork.gov.eu/1.0/isStudent</entry>
+	<entry key="isAcademicStaff">http://www.stork.gov.eu/1.0/isAcademicStaff</entry>
+	<entry key="isTeacherOf">http://www.stork.gov.eu/1.0/isTeacherOf</entry>
+	<entry key="isCourseCoordinator">http://www.stork.gov.eu/1.0/isCourseCoordinator</entry>
+	<entry key="isAdminStaff">http://www.stork.gov.eu/1.0/isAdminStaff</entry>
+	<entry key="habilitation">http://www.stork.gov.eu/1.0/habilitation</entry>
+	<entry key="Title">http://www.stork.gov.eu/1.0/Title</entry>
+	<entry key="hasDegree">http://www.stork.gov.eu/1.0/hasDegree</entry>
+	<entry key="hasAccountInBank">http://www.stork.gov.eu/1.0/hasAccountInBank</entry>
+	<entry key="isHealthCareProfessional">http://www.stork.gov.eu/1.0/isHealthCareProfessional</entry>	
+	
+	<entry key="eLPIdentifier">http://www.stork.gov.eu/1.0/eLPIdentifier</entry>
+	<entry key="legalName">http://www.stork.gov.eu/1.0/legalName</entry>
+	<entry key="alternativeName">http://www.stork.gov.eu/1.0/alternativeName</entry>
+	<entry key="type">http://www.stork.gov.eu/1.0/type</entry>
+	<entry key="translatableType">http://www.stork.gov.eu/1.0/translatableType</entry>
+	<entry key="status">http://www.stork.gov.eu/1.0/status</entry>
+	<entry key="activity">http://www.stork.gov.eu/1.0/activity</entry>
+	<entry key="registeredAddress">http://www.stork.gov.eu/1.0/registeredAddress</entry>
+	<entry key="registeredCanonicalAddress">http://www.stork.gov.eu/1.0/registeredCanonicalAddress</entry>
+	<entry key="contactInformation">http://www.stork.gov.eu/1.0/contactInformation</entry>
+	<entry key="fiscalNumber">http://www.stork.gov.eu/1.0/fiscalNumber</entry>
+	<entry key="representative">http://www.stork.gov.eu/1.0/representative</entry>
+	<entry key="represented">http://www.stork.gov.eu/1.0/represented</entry>
+	<entry key="mandateContent">http://www.stork.gov.eu/1.0/mandateContent</entry>
+</properties>
+	

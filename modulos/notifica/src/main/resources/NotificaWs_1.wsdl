@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="NotificaWs" targetNamespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <portType name="NotificaWsPortType">
+    <operation name="altaEnvio">
+      <input message="tns:altaEnvioRequest"/>
+      <output message="tns:altaEnvioResponse"/>
+    </operation>
+    <operation name="consultaDatadoEnvio">
+      <input message="tns:consultaDatadoEnvioRequest"/>
+      <output message="tns:consultaDatadoEnvioResponse"/>
+    </operation>
+    <operation name="consultaCertificacionEnvio">
+      <input message="tns:consultaCertificacionEnvioRequest"/>
+      <output message="tns:consultaCertificacionEnvioResponse"/>
+    </operation>
+    <operation name="consultaEstado">
+      <input message="tns:consultaEstadoRequest"/>
+      <output message="tns:consultaEstadoResponse"/>
+    </operation>
+    <operation name="infoEnvio">
+      <input message="tns:infoEnvioRequest"/>
+      <output message="tns:infoEnvioResponse"/>
+    </operation>
+    <operation name="consultaCies">
+      <input message="tns:consultaCiesRequest"/>
+      <output message="tns:consultaCiesResponse"/>
+    </operation>
+    <operation name="consultaOrganismosActivos">
+      <input message="tns:consultaOrganismosActivosRequest"/>
+      <output message="tns:consultaOrganismosActivosResponse"/>
+    </operation>
+  </portType>
+  <types>
+    <xsd:schema targetNamespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/">
+      <xsd:complexType name="tipoOrganismoEmisor">
+        <xsd:all>
+          <xsd:element name="codigo_dir3" type="xsd:string"/>
+          <xsd:element name="nombre" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="tipoOrganismoPagadorCorreos">
+        <xsd:all>
+          <xsd:element name="codigo_dir3" type="xsd:string"/>
+          <xsd:element name="numero_contrato_correos" type="xsd:string"/>
+          <xsd:element name="codigo_cliente_facturacion_correos" type="xsd:string"/>
+          <xsd:element name="fecha_vigencia" type="xsd:date"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="tipoOrganismoPagadorCIE">
+        <xsd:all>
+          <xsd:element name="codigo_dir3" type="xsd:string"/>
+          <xsd:element name="fecha_vigencia" type="xsd:date"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="documento">
+        <xsd:all>
+          <xsd:element name="contenido" type="xsd:string"/>
+          <xsd:element name="hash_sha1" type="xsd:string"/>
+          <xsd:element name="normalizado" type="xsd:string"/>
+          <xsd:element name="generar_csv" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="tipo_persona_destinatario">
+        <xsd:all>
+          <xsd:element name="telefono" type="xsd:string" nillable="true"/>
+          <xsd:element name="email" type="xsd:string" nillable="true"/>
+          <xsd:element name="nif" type="xsd:string" nillable="true"/>
+          <xsd:element name="nombre" type="xsd:string"/>
+          <xsd:element name="apellidos" type="xsd:string" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="tipo_municipio">
+        <xsd:all>
+          <xsd:element name="codigo_ine" type="xsd:string" nillable="true"/>
+          <xsd:element name="nombre" type="xsd:string" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="tipo_provincia">
+        <xsd:all>
+          <xsd:element name="codigo_provincia" type="xsd:string" nillable="true"/>
+          <xsd:element name="nombre" type="xsd:string" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="tipo_pais">
+        <xsd:all>
+          <xsd:element name="codigo_iso3166" type="xsd:string" nillable="true"/>
+          <xsd:element name="nombre" type="xsd:string" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="tipo_domicilio">
+        <xsd:all>
+          <xsd:element name="tipo_domicilio_concreto" type="xsd:string" nillable="true"/>
+          <xsd:element name="tipo_via" type="xsd:string" nillable="true"/>
+          <xsd:element name="nombre_via" type="xsd:string" nillable="true"/>
+          <xsd:element name="numero_casa" type="xsd:string" nillable="true"/>
+          <xsd:element name="punto_kilometrico" type="xsd:string" nillable="true"/>
+          <xsd:element name="apartado_correos" type="xsd:string" nillable="true"/>
+          <xsd:element name="calificador_numero" type="xsd:string" nillable="true"/>
+          <xsd:element name="bloque" type="xsd:string" nillable="true"/>
+          <xsd:element name="portal" type="xsd:string" nillable="true"/>
+          <xsd:element name="escalera" type="xsd:string" nillable="true"/>
+          <xsd:element name="planta" type="xsd:string" nillable="true"/>
+          <xsd:element name="puerta" type="xsd:string" nillable="true"/>
+          <xsd:element name="complemento" type="xsd:string" nillable="true"/>
+          <xsd:element name="poblacion" type="xsd:string" nillable="true"/>
+          <xsd:element name="municipio" type="tns:tipo_municipio" nillable="true"/>
+          <xsd:element name="codigo_postal" type="xsd:string" nillable="true"/>
+          <xsd:element name="provincia" type="tns:tipo_provincia" nillable="true"/>
+          <xsd:element name="pais" type="tns:tipo_pais" nillable="true"/>
+          <xsd:element name="linea_1" type="xsd:string" nillable="true"/>
+          <xsd:element name="linea_2" type="xsd:string" nillable="true"/>
+          <xsd:element name="cie" type="xsd:int" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="direccion_electronica_habilitada">
+        <xsd:all>
+          <xsd:element name="obligado" type="xsd:boolean"/>
+          <xsd:element name="nif" type="xsd:string"/>
+          <xsd:element name="codigo_procedimiento" type="xsd:string" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="opciones_emision">
+        <xsd:all>
+          <xsd:element name="retardo_postal_deh" type="xsd:int" nillable="true"/>
+          <xsd:element name="caducidad" type="xsd:string" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="tipo_destinatario">
+        <xsd:all>
+          <xsd:element name="referencia_emisor" type="xsd:string"/>
+          <xsd:element name="titular" type="tns:tipo_persona_destinatario"/>
+          <xsd:element name="destinatario" type="tns:tipo_persona_destinatario"/>
+          <xsd:element name="tipo_domicilio" type="xsd:string" nillable="true"/>
+          <xsd:element name="domicilio" type="tns:tipo_domicilio" nillable="true"/>
+          <xsd:element name="servicio" type="xsd:string"/>
+          <xsd:element name="direccion_electronica" type="tns:direccion_electronica_habilitada" nillable="true"/>
+          <xsd:element name="opciones_emision" type="tns:opciones_emision" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfTipo_destinatario">
+        <xsd:sequence>
+          <xsd:element name="item" type="tns:tipo_destinatario" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="tipo_procedimiento">
+        <xsd:all>
+          <xsd:element name="codigo_sia" type="xsd:string" nillable="true"/>
+          <xsd:element name="descripcion_sia" type="xsd:string" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="tipo_envio">
+        <xsd:all>
+          <xsd:element name="organismo_emisor" type="tns:tipoOrganismoEmisor"/>
+          <xsd:element name="organismo_pagador_correos" type="tns:tipoOrganismoPagadorCorreos" nillable="true"/>
+          <xsd:element name="organismo_pagador_cie" type="tns:tipoOrganismoPagadorCIE" nillable="true"/>
+          <xsd:element name="documento" type="tns:documento"/>
+          <xsd:element name="tipo_envio" type="xsd:string"/>
+          <xsd:element name="fecha_envio_programado" type="xsd:dateTime" nillable="true"/>
+          <xsd:element name="concepto" type="xsd:string"/>
+          <xsd:element name="destinatarios" type="tns:ArrayOfTipo_destinatario"/>
+          <xsd:element name="procedimiento" type="tns:tipo_procedimiento" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="identificador_envio">
+        <xsd:all>
+          <xsd:element name="identificador" type="xsd:string"/>
+          <xsd:element name="referencia_emisor" type="xsd:string"/>
+          <xsd:element name="nif_titular" type="xsd:string" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfIdentificador_envio">
+        <xsd:sequence>
+          <xsd:element name="item" type="tns:identificador_envio" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="resultado_alta">
+        <xsd:all>
+          <xsd:element name="identificadores" type="tns:ArrayOfIdentificador_envio"/>
+          <xsd:element name="codigo_csv" type="xsd:string" nillable="true"/>
+          <xsd:element name="codigo_respuesta" type="xsd:string"/>
+          <xsd:element name="descripcion_respuesta" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="tipoIntento">
+        <xsd:all>
+          <xsd:element name="estado" type="xsd:string"/>
+          <xsd:element name="descripcion" type="xsd:string"/>
+          <xsd:element name="fecha" type="xsd:dateTime"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfTipoIntento">
+        <xsd:sequence>
+          <xsd:element name="item" type="tns:tipoIntento" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="datado_envio">
+        <xsd:all>
+          <xsd:element name="identificador_envio" type="tns:identificador_envio"/>
+          <xsd:element name="datado" type="tns:ArrayOfTipoIntento"/>
+          <xsd:element name="estado_actual" type="xsd:string"/>
+          <xsd:element name="descripcion_estado_actual" type="xsd:string"/>
+          <xsd:element name="fecha_actualizacion" type="xsd:dateTime"/>
+          <xsd:element name="ncc_id_externo" type="xsd:string" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="resultado_datado">
+        <xsd:all>
+          <xsd:element name="datado" type="tns:datado_envio"/>
+          <xsd:element name="codigo_respuesta" type="xsd:string"/>
+          <xsd:element name="descripcion_respuesta" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="certificacion_envio_respuesta">
+        <xsd:all>
+          <xsd:element name="identificador_envio" type="tns:identificador_envio"/>
+          <xsd:element name="pdf_certificado" type="xsd:string" nillable="true"/>
+          <xsd:element name="xml_certificado" type="xsd:string" nillable="true"/>
+          <xsd:element name="certificacion" type="xsd:string"/>
+          <xsd:element name="fecha_actualizacion" type="xsd:dateTime"/>
+          <xsd:element name="ncc_id_externo" type="xsd:string" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="resultado_certificacion">
+        <xsd:all>
+          <xsd:element name="certificacion" type="tns:certificacion_envio_respuesta"/>
+          <xsd:element name="codigo_respuesta" type="xsd:string"/>
+          <xsd:element name="descripcion_respuesta" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="estado_respuesta">
+        <xsd:all>
+          <xsd:element name="identificador_envio" type="xsd:string"/>
+          <xsd:element name="estado" type="xsd:string"/>
+          <xsd:element name="ncc_id_externo" type="xsd:string" nillable="true"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="resultado_estado">
+        <xsd:all>
+          <xsd:element name="estado" type="tns:estado_respuesta"/>
+          <xsd:element name="codigo_respuesta" type="xsd:string"/>
+          <xsd:element name="descripcion_respuesta" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="info_envio">
+        <xsd:all>
+          <xsd:element name="envio_destinatario" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="resultadoInfoEnvio">
+        <xsd:all>
+          <xsd:element name="infoEnvio" type="tns:tipo_envio"/>
+          <xsd:element name="certificada" type="xsd:boolean"/>
+          <xsd:element name="codigo_respuesta" type="xsd:string"/>
+          <xsd:element name="descripcion_respuesta" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="consulta_cies">
+        <xsd:all>
+          <xsd:element name="organismo_emisor" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="cie">
+        <xsd:all>
+          <xsd:element name="id" type="xsd:int"/>
+          <xsd:element name="centro_impresion" type="xsd:string"/>
+          <xsd:element name="fecha_vigencia" type="xsd:date"/>
+          <xsd:element name="codigo_unidad_relacionada" type="xsd:string"/>
+          <xsd:element name="nombre_unidad_relacionada" type="xsd:string"/>
+          <xsd:element name="orden" type="xsd:int"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfCie">
+        <xsd:sequence>
+          <xsd:element name="item" type="tns:cie" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="resultadoGetCies">
+        <xsd:all>
+          <xsd:element name="cies" type="tns:ArrayOfCie"/>
+          <xsd:element name="codigo_respuesta" type="xsd:string"/>
+          <xsd:element name="descripcion_respuesta" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="ArrayOfTipoOrganismoEmisor">
+        <xsd:sequence>
+          <xsd:element name="item" type="tns:tipoOrganismoEmisor" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="resultado_organismos_activos">
+        <xsd:all>
+          <xsd:element name="organismos" type="tns:ArrayOfTipoOrganismoEmisor"/>
+          <xsd:element name="codigo_respuesta" type="xsd:string"/>
+          <xsd:element name="descripcion_respuesta" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+    </xsd:schema>
+  </types>
+  <message name="altaEnvioHeader">
+    <part name="api_key" type="xsd:string"/>
+  </message>
+  <message name="altaEnvioRequest">
+    <part name="envio_type" type="tns:tipo_envio"/>
+  </message>
+  <message name="altaEnvioResponse">
+    <part name="return" type="tns:resultado_alta"/>
+  </message>
+  <message name="consultaDatadoEnvioRequest">
+    <part name="identificador_envio" type="xsd:string"/>
+  </message>
+  <message name="consultaDatadoEnvioResponse">
+    <part name="return" type="tns:resultado_datado"/>
+  </message>
+  <message name="consultaCertificacionEnvioRequest">
+    <part name="identificador_envio" type="xsd:string"/>
+  </message>
+  <message name="consultaCertificacionEnvioResponse">
+    <part name="return" type="tns:resultado_certificacion"/>
+  </message>
+  <message name="consultaEstadoRequest">
+    <part name="identificador_envio" type="xsd:string"/>
+  </message>
+  <message name="consultaEstadoResponse">
+    <part name="return" type="tns:resultado_estado"/>
+  </message>
+  <message name="infoEnvioHeader">
+    <part name="api_key" type="xsd:string"/>
+  </message>
+  <message name="infoEnvioRequest">
+    <part name="info_envio" type="tns:info_envio"/>
+  </message>
+  <message name="infoEnvioResponse">
+    <part name="return" type="tns:resultadoInfoEnvio"/>
+  </message>
+  <message name="consultaCiesHeader">
+    <part name="api_key" type="xsd:string"/>
+  </message>
+  <message name="consultaCiesRequest">
+    <part name="consulta_cies" type="tns:consulta_cies"/>
+  </message>
+  <message name="consultaCiesResponse">
+    <part name="return" type="tns:resultadoGetCies"/>
+  </message>
+  <message name="consultaOrganismosActivosRequest"/>
+  <message name="consultaOrganismosActivosResponse">
+    <part name="return" type="tns:resultado_organismos_activos"/>
+  </message>
+  <service name="NotificaWsService">
+    <port name="NotificaWsPort" binding="tns:NotificaWsBinding">
+      <soap:address location="https://notificaws.redsara.es/ws/soap/NotificaWs"/>
+    </port>
+  </service>
+  <binding name="NotificaWsBinding" type="tns:NotificaWsPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc"/>
+    <operation name="altaEnvio">
+      <soap:operation soapAction="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/altaEnvio"/>
+      <input>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header part="api_key" message="tns:altaEnvioHeader" use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="consultaDatadoEnvio">
+      <soap:operation soapAction="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/consultaDatadoEnvio"/>
+      <input>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="consultaCertificacionEnvio">
+      <soap:operation soapAction="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/consultaCertificacionEnvio"/>
+      <input>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="consultaEstado">
+      <soap:operation soapAction="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/consultaEstado"/>
+      <input>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="infoEnvio">
+      <soap:operation soapAction="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/infoEnvio"/>
+      <input>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header part="api_key" message="tns:infoEnvioHeader" use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="consultaCies">
+      <soap:operation soapAction="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/consultaCies"/>
+      <input>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header part="api_key" message="tns:consultaCiesHeader" use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="consultaOrganismosActivos">
+      <soap:operation soapAction="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/consultaOrganismosActivos"/>
+      <input>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body use="literal" namespace="https://administracionelectronica.gob.es/notifica/ws/notifica/1.0/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+  </binding>
+</definitions>

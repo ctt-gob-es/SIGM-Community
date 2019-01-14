@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+						"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="RelationshipRegistroVO">
+
+	<typeAlias alias="relationshipRegistroVO" type="es.msssi.dir3.core.vo.UnidadRegistralVO" />
+	
+	<resultMap id="relationshipRegistroVO" class="es.msssi.dir3.core.vo.UnidadRegistralVO">
+		<result property="id" column="id" />
+		<result property="id_orgs" column="id_orgs" />
+		<result property="code_tramunit" column="code_tramunit" />
+		<result property="name_tramunit" column="name_tramunit" />
+		<result property="code_entity" column="code_entity" />
+		<result property="name_entity" column="name_entity" />
+	</resultMap>
+
+
+	<insert id="addRelationshipSIRRegistroVO" parameterClass="relationshipRegistroVO">
+		 <selectKey   keyProperty="id" 
+             resultClass="int">
+	    ${select.sequence}SCR_TRAMUNIT_ID_SEQ${from.sequence}
+	  </selectKey>
+		INSERT INTO SCR_TRAMUNIT (
+			ID,
+			NAME_TRAMUNIT,
+			CODE_TRAMUNIT,
+			ID_ORGS,
+			CODE_ENTITY,
+			NAME_ENTITY
+	    )
+		VALUES (
+			#id:NUMERIC#,
+		    #name_tramunit:VARCHAR#,
+			#code_tramunit:VARCHAR#,
+			#id_orgs:NUMERIC#,
+			#code_entity:VARCHAR#,
+			#name_entity:VARCHAR#
+		)
+	</insert>
+	<select id="idOrgCodeTram" parameterClass="java.lang.String"
+		resultClass="java.lang.Integer">
+		SELECT id
+		FROM
+		SCR_ORGS
+		WHERE
+		CODE=#value#
+	</select>
+	
+	<update id="updateRelationshipSIRRegistroVO" parameterClass="relationshipRegistroVO">
+		UPDATE SCR_TRAMUNIT
+		SET
+			NAME_TRAMUNIT=#name_tramunit#,
+			CODE_TRAMUNIT=#code_tramunit#,
+			NAME_ENTITY=#name_entity#,
+			CODE_ENTITY=#code_entity#,
+			ID_ORGS=#id_orgs#
+		WHERE
+			 CODE_TRAMUNIT = #code_tramunit:VARCHAR# AND
+		CODE_ENTITY = #code_entity:VARCHAR#
+	</update>
+	
+	
+	<select id="getExistsRelationshipSIRRegistroVO" parameterClass="java.util.HashMap"
+		resultClass="java.lang.String">
+		SELECT DISTINCT 'S'
+		FROM 
+		SCR_TRAMUNIT
+		WHERE CODE_TRAMUNIT = #unitId# AND
+		CODE_ENTITY = #officeId#
+	</select>
+
+	<delete id="deleteRelationshipSIRRegistroVO"
+			parameterClass="relationshipRegistroVO">
+		DELETE FROM SCR_TRAMUNIT WHERE CODE_ENTITY = #code_entity:VARCHAR# 
+		<isNotEmpty property="code_tramunit" prepend="AND"> CODE_TRAMUNIT = #code_tramunit:VARCHAR#</isNotEmpty>
+		
+	</delete>
+</sqlMap>

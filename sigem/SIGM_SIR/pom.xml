@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>SIGEM_RegistroPresencialMSSSI_Modules</artifactId>
+		<groupId>es.msssi.tecdoc.sigem</groupId>
+		<version>3.0.0-msssi2.0.0</version>
+		<relativePath>../SIGEM_RegistroPresencialMSSSI_Modules/pom.xml</relativePath>
+	</parent>
+ 
+	<artifactId>SIGM_SIR</artifactId>
+	<packaging>ear</packaging>
+	<name>SIGM_SIR</name>
+
+	<description>
+		Ear para las aplicaciones de autenticacion.
+	</description>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.version>3.0.0-msssi2.0.0</project.version>
+		<fwktd-sir.version>1.0.1</fwktd-sir.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
+			<artifactId>fwktd-sir-ws</artifactId>
+			<type>war</type>
+			<version>${fwktd-sir.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>SIGM</finalName>
+		<!-- RESOURCES INCLUIDOS EN EL FILTER -->
+		<resources>
+			<resource>
+				<directory>src/main/application</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<!-- CONSTRUCCION DEL ARCHIVO COMPLIMIDO PARA REPOSITORIO -->
+			
+				<!-- CONSTRUCCION DEL EAR -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.10</version>
+				<configuration>
+					<finalName>SIGM_SIGM_SIR-${project.version}</finalName>
+					
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Weblogic-Application-Version>${project.version}</Weblogic-Application-Version>
+						</manifestEntries>
+					</archive>
+					<earSourceDirectory>src/main/application</earSourceDirectory>
+					<filtering>true</filtering>
+					<!-- MODULOS -->
+					<modules>
+						<webModule>
+							<groupId>es.ieci.tecdoc.fwktd.modules.fwktd-sir</groupId>
+							<artifactId>fwktd-sir-ws</artifactId>
+							<contextRoot>/fwktdsirWS</contextRoot>
+							<bundleFileName>fwktdsirWS.war</bundleFileName>
+						</webModule>
+					</modules>
+					<generateApplicationXml>true</generateApplicationXml>
+				</configuration>
+			</plugin>
+		</plugins>
+		
+	</build>
+	<profiles>
+		<!-- PERFIL LOCAL -->
+		<profile>
+			<id>msssi_local</id>
+			<activation>
+				<property>
+					<name>msssi_local</name>
+				</property>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<wls.cookiesecure>false</wls.cookiesecure>
+			</properties>
+		</profile>
+		<!-- PERFIL DESARROLLO -->
+		<profile>
+			<id>msssi_desarrollo</id>
+			<properties>
+				<wls.cookiesecure>false</wls.cookiesecure>
+			</properties>
+		</profile>
+		<!-- PERFIL PREPRODUCCION -->
+		<profile>
+			<id>msssi_preproduccion</id>
+			<properties>
+				<wls.cookiesecure>true</wls.cookiesecure>
+			</properties>
+		</profile>
+		<!-- PERFIL PRODUCCION -->
+		<profile>
+			<id>msssi_produccion</id>
+			<properties>
+				<wls.cookiesecure>true</wls.cookiesecure>
+			</properties>
+		</profile>
+	</profiles>
+
+</project>
