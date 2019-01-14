@@ -880,6 +880,44 @@
 
 				</Context>
 
+				<!-- ARBOL DOCUMENTAL WEB -->
+				<Context docBase="SIGEM_ArbolDocumentalWeb" path="/SIGEM_ArbolDocumentalWeb" reloadable="true">
+					<ResourceLink global="jdbc/sigemAdmin" name="jdbc/sigemAdmin" type="javax.sql.DataSource"/>
+
+					<ResourceLink global="jdbc/fwktd-auditDS_000" name="jdbc/fwktd-auditDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/registroDS_000" name="jdbc/registroDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/tramitadorDS_000" name="jdbc/tramitadorDS_000" type="javax.sql.DataSource"/>
+
+				</Context>
+
+				<!-- CONSULTA WEB MIEMBRO -->
+				<Context docBase="SIGEM_ConsultaWebMiembros" path="/SIGEM_ConsultaWebMiembros" reloadable="true">
+					<ResourceLink global="jdbc/sigemAdmin" name="jdbc/sigemAdmin" type="javax.sql.DataSource"/>
+
+					<ResourceLink global="jdbc/fwktd-auditDS_000" name="jdbc/fwktd-auditDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/archivoDS_000" name="jdbc/archivoDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/eTramitacionDS_000" name="jdbc/eTramitacionDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/registroDS_000" name="jdbc/registroDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/tercerosDS_000" name="jdbc/tercerosDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/tramitadorDS_000" name="jdbc/tramitadorDS_000" type="javax.sql.DataSource"/>
+
+				</Context>
+
+				<!-- ORVE -->
+				<Context docBase="SIGEM_ORVE_Web" path="/SIGEM_ORVE_Web" reloadable="true">
+					<ResourceLink global="jdbc/sigemAdmin" name="jdbc/sigemAdmin" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/fwktd-dir3DS" name="jdbc/fwktd-dir3DS" type="javax.sql.DataSource"/>
+
+					<ResourceLink global="jdbc/fwktd-auditDS_000" name="jdbc/fwktd-auditDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/archivoDS_000" name="jdbc/archivoDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/fwktd-sirDS_000" name="jdbc/fwktd-sirDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/eTramitacionDS_000" name="jdbc/eTramitacionDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/registroDS_000" name="jdbc/registroDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/tercerosDS_000" name="jdbc/tercerosDS_000" type="javax.sql.DataSource"/>
+					<ResourceLink global="jdbc/tramitadorDS_000" name="jdbc/tramitadorDS_000" type="javax.sql.DataSource"/>
+
+				</Context>
+
       </Host>
     </Engine>
   </Service>
