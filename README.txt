@@ -39,12 +39,12 @@ completo de la aplicación para poder ser arrancado en un servidor de aplicacione
 
 
 1.- Pre-requisitos:
-    1.1 Tener instalado el JDK que se indica en la documentación.
-    1.2 Tener instalado Maven 2 como se indica en la documentación.
+    1.1 Tener instalado JDK para Java 6, Java 7 y Java 9.
+    1.2 Tener instalado Maven 3.2.2 como se indica en la documentación.
     1.3 Deben estar configuradas las variables del sistema:
 
         - JAVA_HOME con la ruta del '<<JDK>>'. 
-            (Por ejemplo C:\Program Files (x86)\Java\jdk1.6.0_18)
+            (Por ejemplo C:\Program Files (x86)\Java\jdk1.7.0_25)
         - M2_HOME con la ruta de instalación del apache de maven. 
             (Por ejemplo C:\apaches\apache-maven-3.2.2)
         - PATH con las rutas %M2_HOME%;%M2_HOME%\bin;%JAVA_HOME%;%JAVA_HOME%\bin;
@@ -52,25 +52,26 @@ completo de la aplicación para poder ser arrancado en un servidor de aplicacione
 
     1.4 Modificar el archivo settings.xml de la carpeta .m2 del perfil del usuario 
 (por ejemplo C:\Users\Manu\.m2) o del apache maven y añadir un perfil con las rutas al JDK
-que se utilizará para compilar (Por ejemplo C:\Program Files (x86)\Java\jdk1.6.0_18):
+que se utilizará para compilar (Por ejemplo C:\Program Files (x86)\Java\jdk1.6.0_18 para java4 y java5, C:\ProgramFiles\Java\jdk1.8.0_45 para java 6, 7 y 8 por ejemplo):
 
-     ...
-    <profiles>
-        ...
-        <profile>
-            <id>development</id>
-            <properties>
-                <JAVA_1_4_HOME>'<<JDK>>'</JAVA_1_4_HOME>
-                <JAVA_1_5_HOME>'<<JDK>>'</JAVA_1_5_HOME>
-            </properties>            
-        </profile>
-    </profiles>
-        ...
-    <activeProfiles>
-        ...
-        <activeProfile>development</activeProfile>
-    </activeProfiles>
-    ...
+     <settings>
+	<profiles>
+		<profile>
+			<id>development</id>
+			<properties>
+				<JAVA_1_4_HOME><<JDK>></JAVA_1_4_HOME>
+				<JAVA_1_5_HOME><<JDK>></JAVA_1_5_HOME>
+				<JAVA_1_6_HOME><<JDK>></JAVA_1_6_HOME>
+				<JAVA_1_7_HOME><<JDK>></JAVA_1_7_HOME>
+				<JAVA_1_8_HOME><<JDK>></JAVA_1_8_HOME>
+			</properties>
+		</profile>
+	</profiles>
+
+	<activeProfiles>
+		<activeProfile>development</activeProfile>
+	</activeProfiles>
+</settings>
 
     1.5 Se comprueba que todo esté bien configurado abriendo un terminal nuevo y ejecutando 
 los comandos:

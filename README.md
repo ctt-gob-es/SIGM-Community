@@ -1,6 +1,7 @@
-# SIGM4.0-QUIJOTE
+# SIGM5.0-QUIJOTE
 
-SIGM4.0-QUIJOTE es una rama creada a partir de la última versión de SIGM (Sistema Integrado de Gestión Modular) donde se incluyen el código desarrollado por la Diputación Provincial de Ciudad Real (en adelante Dipucr).
+SIGM5.0-QUIJOTE es una rama creada a partir de la versión SIGM4.0-QUIJOTE donde se incluyen el código desarrollado por la Diputación Provincial de Ciudad Real (en adelante Dipucr) y se ha integrado con la rama .
+REGISTR-v3.0-MSSSSI2.0.0
 
 #### Configuración del entorno de desarrollo (Instalación y compilación)
 
@@ -8,81 +9,28 @@ El documento **README.txt** contiene las instrucciones de configuración del ent
 Dicho fichero se encuentran en el directorio raiz del proyecto.
 
 ## Mejoras incluidas en la rama
-### Mejoras Técnicas
-* Rendimiento en general:
-  * Lista de trabajo.
-  * Datos de trámites.
-  * Expedientes relacionados.
-  * Auditorías.
-* Eliminación de java:
-  * En la edición de documentos.
-  * En la firma de documentos desde el tramitador.
-  * En la firma de solicitudes del registro telemático.
-* Firma 3 fases en servidor externo.
-* Histórico de expedientes, trámites, participantes, documentos e hitos.
-* Registro Telemático, no almacenar los documentos anexos y justificantes de registro en BD, almacenarlos en repositorio.
-* Solucionado el problema al trabajar con varios OpenOffice.
-* Conexiones con aplicaciones externas:
-  * Comparece.
-  * Servicio de Verificación de Datos.
-  * Plataforma de Contratación del Estado.
-  * Factura Electrónica.
-  * Boletín Oficial de la Provincia.
-  * Tablón de anuncios electrónico.
-  * TEU.
-  * OwnCloud.
-  * Web del Empleado.
-  * Web del Diputado.
-  * PortaFirmas - MINHAP.
-  * BDNS
-  * …
-* Compilación del código y despliegue de las aplicaciones mediante maven, tanto para linux como para windows.
-* Indicar en el log la entidad a la que se corresponde la traza.
-* Adaptación para trabajar con ODSs.
-
-### Mejoras Funcionales
-* **Tramitador**:
-  * Lista de trabajo.
-  * Cambios apariencia Avisos electrónicos.
-  * Registros distribuidos, añadir pestaña para consultar los documentos del registro.
-  * Filtro de año de inicio de los expedientes.
-  * Ordenación de los procedimientos alfabéticamente.
-  * Manuales de usuario globales
-* Expediente:
-  * Reabrir expediente.
-  * Manuales de usuario.
-  * Árbol de ayuda.
-  * Legislación y jurisprudencia.
-  * Datos de trámite mostrar únicamente los abiertos y/o los 5 últimos trámites. Añadir opción ver todos.
-  * Datos de trámites anteriores mostrar la fase a la que pertenecían los trámites anteriores.
-  * Expedientes relacionados mostrar opción de ver todos.
-  * Indicar el asunto del expediente en la cabecera de la página.
-  * Edición de plantillas desde el tramitador controlado por permisos al usuario.
-* Trámite:
-  * Reabrir Trámite
-  * Datos de Trámite oculto por defecto.
-  * Cambios en la botonera (Registrar Todo, Firmar Todo, etc.)
-  * Cambios en la apariencia del listado de documentos (Universidad de Cartagena).
-* Datos del Documento:
-  * Mostrar el CVE.
-  * Mostrar el motivo de rechazo de la firma.
-  * Anular circuito de firma.
-* Participantes:
-  * Importar participantes de otros expedientes.
-  * Borrar todos los participantes.
-* Firma:
-  * Rechazo de firma.
-  * Histórico de firmas rechazadas.
-* Módulo de avisos a todos los usuarios o a todos los usuarios conectados.
-* **Catálogo de Procedimientos**:
-* Inventario / Procedimientos:
-  * Asociación de manuales de usuarios específicos por procedimiento.
-  * Circuitos de firma específicos por trámite.
-  * Datos específicos y plantilla por defecto de un trámite.
-  * Nuevo evento al Relacionar expedientes.
-* Componentes:
-  * Mantenimiento de Manuales de Usuario.
-* Consulta de documentos por CVE, mostrar los datos del registro de salida.
+ * Integración con la rama del Registro Presencial del MSSSI.
+ * Modificaciones sobre el registro nuevo para hacerlo multientidad y añadirle las funcionalidades que tenía el registro presencial de AL-SIGM (distribución manual a grupos y usuarios, gestión de terceros, etc.)
+ * Integración de la mejora de la Diputación de A Coruña para el escáneo de documentos en el registro nuevo sin uso de applets.
+ * Integración con AutoFirma en el registro nuevo sin uso de applets.
+ * Metadatado de documentos en el registro nuevo conforme al ENI.
+ * Integración con los servicios web de ORVE.
+ * Se completa la integración con la BDNS.
+ * Inclusión de los firmantes visibles en el pdf.
+ * Se ha externalizado la configuración de libreoffice para poder asignar hilos distintos a cada entidad.
+ * Se han separado las carpetas temporales por entidad.
+ * Integración con la Licitación Electrónica de la Plataforma de Contratación del Sector Público.
+ * Se ha configurado el Portafirmas externo del MINHAP para que sea multientidad.
+ * Integración con la plataforma Notifica / Carpeta Ciudadana.
+ * Inclusión de una nueva opción de Repositorio Común de plantillas de documentos a todas las entidades.
+ * Edición de plantillas de documentos desde el tramitador de expedientes.
+ * Inclusión de una búsqueda rápida de expedientes en la pantalla de inicio.
+ * Conexión con @firma mediante aunteticación con certificado.
+ * Integración con DIR3 para interesados.
+ * Posibilidad de indicación del código DIR3, CIF, SIA, DEH para entidades.
+ * Se ha comenzado la migración de los módulos a java 7.
+ * Correción de errores.
+ * Mejoras generales del rendimiento.
 
 ## Licencia
 

@@ -152,11 +152,16 @@ encuentran en las siguientes carpetas y se distribuyen bajo la misma licencia (E
 posteriores):
 
     - BDNS-3.0.jar
+    - Clienteligero-3.0.jar
     - Contratacion-3.0.jar
     - DipucrFuncionesComunes-3.0.jar
     - DipucrRules-3.0.jar
     - Expropiaciones-3.0.jar
+    - Metadatos-1.0.jar
+    - core.base-2.1.0-snts.jar
+    - Notifica-1.0.jar
     - invesdoc-admin-firma-0.1.jar
+    - orve-1.0.jar
     - PortaFirmasExterno-3.0.jar
     - RendicionCuentas-1.0.jar
     - SIGEM_Telefonica_Procedimientos-2.0.0.6.jar
