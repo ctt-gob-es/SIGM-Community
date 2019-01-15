@@ -6,6 +6,7 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.item.Property;
 import ieci.tdw.ispac.api.item.util.ListCollection;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.ObjectDAO;
 import ieci.tdw.ispac.ispaclib.dao.TableDAO;
@@ -32,16 +33,22 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class GestionTablasHistorico {
 	
-	private static final Logger logger = Logger.getLogger(GestionTablasHistorico.class);
+	private static final Logger LOGGER = Logger.getLogger(GestionTablasHistorico.class);
 
-	private ClientContext cct;
+	private IClientContext cct;
 	private TXProcesoDAO proceso;
 
 	public GestionTablasHistorico() {
 		this.setCct(null);
 		this.setProceso(null);
 	}
-	
+
+	public GestionTablasHistorico(IClientContext cs, TXProcesoDAO process) {
+		this.setCct(cs);
+		this.setProceso(process);
+	}
+
+
 	public GestionTablasHistorico(ClientContext cs, TXProcesoDAO process) {
 		this.setCct(cs);
 		this.setProceso(process);
@@ -50,9 +57,16 @@ public class GestionTablasHistorico {
 	public boolean pasaAHistorico(TXTransactionDataContainer dtc) throws ISPACException{
 		boolean correcto = false;
 		String numexp = "";
+
+		boolean ongoingTX = cct.ongoingTX();
+		
 		try {
 			dtc.persist();
 			numexp = getProceso().getString("NUMEXP");
+			
+			if (!ongoingTX) {
+				cct.beginTX();
+			}
 
 			// SPAC_DT_TRAMITES_H
 			IItemCollection tramitesCollection = TramitesUtil.getTramites(cct, numexp);
@@ -62,7 +76,9 @@ public class GestionTablasHistorico {
 					((IItem)tramite).delete(getCct());
 				}
 				catch(ISPACException e){
-					logger.error("Error al pasar los trámites del expediente: " + numexp + " al histórico. " + e.getMessage(), e);					
+					LOGGER.error("Error al pasar los trámites del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+					//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+					throw new Exception("Error al pasar los trámites del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
 				}
 			}
 
@@ -74,7 +90,9 @@ public class GestionTablasHistorico {
 					((IItem)documento).delete(getCct());
 				}
 				catch(ISPACException e){
-					logger.error("Error al pasar los documentos del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+					LOGGER.error("Error al pasar los documentos del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+					//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+					throw new Exception("Error al pasar los documentos del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
 				}
 			}
 
@@ -86,7 +104,9 @@ public class GestionTablasHistorico {
 					((IItem)interviniente).delete(getCct());
 				}
 				catch(ISPACException e){
-					logger.error("Error al pasar los intervinientes del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+					LOGGER.error("Error al pasar los intervinientes del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+					//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+					throw new Exception("Error al pasar los intervinientes del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
 				}
 			}
 			
@@ -98,7 +118,9 @@ public class GestionTablasHistorico {
 						((IItem)hito).delete(getCct());
 				}
 				catch(Exception e){
-					logger.error("Error al pasar los hitos del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+					LOGGER.error("Error al pasar los hitos del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+					//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+					throw new Exception("Error al pasar los hitos del expediente: " + numexp + " al histórico. " + e.getMessage(), e);
 				}
 			}
 
@@ -109,12 +131,22 @@ public class GestionTablasHistorico {
 				((IItem)expediente).delete(getCct());
 			}
 			catch(ISPACException e){
-				logger.error("Error al pasar el expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+				LOGGER.error("Error al pasar el expediente: " + numexp + " al histórico. " + e.getMessage(), e);
+				//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+				throw new Exception("Error al pasar el expediente: " + numexp + " al histórico. " + e.getMessage(), e);
 			}
+			
+			correcto = true;
+			
 		} catch (Exception e) {
-			logger.error("ERROR al pasar al histórico el expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("ERROR al pasar al histórico el expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACException("ERROR al pasar al histórico el expediente: " + numexp + ". " + e.getMessage(), e);
-		}
+			
+		} finally {
+			if (!ongoingTX) {
+				cct.endTX(correcto);
+			}
+        }
 
 		return correcto;
 	}
@@ -122,8 +154,16 @@ public class GestionTablasHistorico {
 	public boolean recuperaDeHistorico() throws ISPACException{
 		boolean correcto = false;
 		String numexp = "";
+		
+		boolean ongoingTX = cct.ongoingTX();
+		
 		try {
 			numexp = getProceso().getString("NUMEXP");
+			
+			if (!ongoingTX) {
+				cct.beginTX();
+			}
+
 			if(ExpedientesUtil.estaEnHistorico(cct, numexp)){
 				//SPAC_EXPEDIENTES_H
 				IItem expediente_h = ExpedientesUtil.getExpediente(cct, numexp);
@@ -132,7 +172,9 @@ public class GestionTablasHistorico {
 					((IItem)expediente_h).delete(getCct());
 				}
 				catch(ISPACException e){
-					logger.error("Error al recuperar el expediente: " + numexp + " del histórico. " + e.getMessage(), e);
+					LOGGER.error("Error al recuperar el expediente: " + numexp + " del histórico. " + e.getMessage(), e);
+					//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+					throw new Exception("Error al recuperar el expediente: " + numexp + " del histórico. " + e.getMessage(), e);
 				}			
 				
 				//SPAC_HITOS_H			
@@ -143,7 +185,9 @@ public class GestionTablasHistorico {
 							((IItem)hito_h).delete(getCct());
 					}
 					catch(Exception e){
-						logger.error("Error al recuperar los hitos del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
+						LOGGER.error("Error al recuperar los hitos del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
+						//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+						throw new Exception("Error al recuperar los hitos del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
 					}
 				}
 	
@@ -155,7 +199,9 @@ public class GestionTablasHistorico {
 						((IItem)tramite_h).delete(getCct());
 					}
 					catch(ISPACException e){
-						logger.error("Error al recuperar el tramite del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
+						LOGGER.error("Error al recuperar el tramite del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
+						//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+						throw new Exception("Error al recuperar el tramite del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
 					}
 				}
 	
@@ -167,7 +213,9 @@ public class GestionTablasHistorico {
 						((IItem)documento_h).delete(getCct());
 					}
 					catch(ISPACException e){
-						logger.error("Error al recuperar los documentos del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
+						LOGGER.error("Error al recuperar los documentos del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
+						//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+						throw new Exception("Error al recuperar los documentos del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
 					}
 				}
 	
@@ -179,23 +227,33 @@ public class GestionTablasHistorico {
 						((IItem)interviniente_h).delete(getCct());
 					}
 					catch(ISPACException e){
-						logger.error("Error al recuperar los intervinientes del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
+						LOGGER.error("Error al recuperar los intervinientes del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
+						//[Ruben #563146] Lanzo excepcion para parar el paso a Historico en caso de fallo y no quede la BD inconsistente
+						throw new Exception("Error al recuperar los intervinientes del expediente: " + numexp + " del histórico. " + e.getMessage(), e);
 					}
 				}
 			}
+			
+			correcto = true;
+			
 		} catch (Exception e) {
-			logger.error("ERROR al recuperar del histórico el expediente: " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("ERROR al recuperar del histórico el expediente: " + numexp + ". " + e.getMessage(), e);
 			throw new ISPACException("ERROR al recuperar del histórico el expediente: " + numexp + ". " + e.getMessage(), e);
-		}
+			
+		} finally {
+			if (!ongoingTX) {
+				cct.endTX(correcto);
+			}
+        }
 
 		return correcto;
 	}
 
-	public ClientContext getCct() {
+	public IClientContext getCct() {
 		return cct;
 	}
 
-	public void setCct(ClientContext cct) {
+	public void setCct(IClientContext cct) {
 		this.cct = cct;
 	}
 
@@ -290,25 +348,25 @@ public class GestionTablasHistorico {
 					o = (ObjectDAO) newdao.newInstance(marguments);
 					o.loadHistorico(rs.getResultSet());
 				} catch (NoSuchMethodException e) {
-					logger.error("Error al buscar en el histórico. " + e.getMessage(), e);
+					LOGGER.error("Error al buscar en el histórico. " + e.getMessage(), e);
 				} catch (SecurityException e) {
-					logger.error("Error al buscar en el histórico. " + e.getMessage(), e);
+					LOGGER.error("Error al buscar en el histórico. " + e.getMessage(), e);
 				}
 
 				lista.add(o);
 			}
 		} catch (SQLException e) {
-			logger.error("Error al buscar en el histórico. " + e.getMessage(), e);
+			LOGGER.error("Error al buscar en el histórico. " + e.getMessage(), e);
 		} catch (InstantiationException e) {
-			logger.error("Error al buscar en el histórico. " + e.getMessage(), e);
+			LOGGER.error("Error al buscar en el histórico. " + e.getMessage(), e);
 		} catch (IllegalAccessException e) {
-			logger.error("Error al buscar en el histórico. " + e.getMessage(), e);
+			LOGGER.error("Error al buscar en el histórico. " + e.getMessage(), e);
 		} catch (IllegalArgumentException e) {
-			logger.error("Error al buscar en el histórico. " + e.getMessage(), e);
+			LOGGER.error("Error al buscar en el histórico. " + e.getMessage(), e);
 		} catch (InvocationTargetException e) {
-			logger.error("Error al buscar en el histórico. " + e.getMessage(), e);
+			LOGGER.error("Error al buscar en el histórico. " + e.getMessage(), e);
 		} catch (ISPACException e) {
-			logger.error("Error al buscar en el histórico. " + e.getMessage(), e);
+			LOGGER.error("Error al buscar en el histórico. " + e.getMessage(), e);
 		} finally {			
 			if (null != rs){
 				try {
