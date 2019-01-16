@@ -677,20 +677,24 @@ public abstract class AbstractDBEntityDAO extends DBEntityDAOKeys implements
 					statement = connection.prepareStatement(query);
 					statement.setInt(1, id.intValue());
 
+					// [Dipucr-Manu Ticket #883] * ALSIGM3 Error al auditar modificaciones en registro > 250 caracteres 
+					String textoNuevo = UTFHelper.parseUTF8ToISO885916((String) newValue);
+					String textoViejo = UTFHelper.parseUTF8ToISO885916((String) oldValue);
+					
 					// [Dipucr-Manu Ticket #373] - INICIO - ALSIGM3 Error al
 					// auditar modificaciones en registro.
-					if (null != newValue && ((String) newValue).length() > 250) {
-						newValue = ((String) newValue).substring(0, 249);
+					if (null != textoNuevo && ((String) textoNuevo).length() > 250) {
+						textoNuevo = ((String) textoNuevo).substring(0, 249);
 					}
 					
-					if (null != oldValue && ((String) oldValue).length() > 250) {
-						oldValue = ((String) oldValue).substring(0, 249);
+					if (null != textoViejo && ((String) textoViejo).length() > 250) {
+						textoViejo = ((String) textoViejo).substring(0, 249);
 					}
 					// [Dipucr-Manu Ticket #373] - FIN - ALSIGM3 Error al
 					// auditar modificaciones en registro.
-
-					statement.setString(2, UTFHelper.parseUTF8ToISO885916((String) newValue));
-					statement.setString(3, UTFHelper.parseUTF8ToISO885916((String) oldValue));
+					
+					statement.setString(2, textoNuevo);
+					statement.setString(3, textoViejo);
 				}
 				
 				if (valueToInspect instanceof Date) {
