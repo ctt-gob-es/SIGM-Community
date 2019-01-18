@@ -21,7 +21,7 @@ CREATE SEQUENCE spac_sq_id_transaccionfirma
 --  **UPNA** La tabla SPAC_ID_TRANSACCION_FIRMA en principio debe tener el id=10 para que funcione correctamente el circuito de firma. 
 
 -- insert into spac_ct_entidades (id, tipo, nombre, campo_pk, descripcion, sec_pk, fecha)
--- values (SPAC_SQ_ID_CTENTIDADES.nextval,'0','SPAC_ID_TRANSACCION_FIRMA','ID','Almacena el id de transacción de la firma de documentos','SPAC_SQ_ID_TRANSACCIONFIRMA',SYSDATE);
+-- values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'),'0','SPAC_ID_TRANSACCION_FIRMA','ID','Almacena el id de transacción de la firma de documentos','SPAC_SQ_ID_TRANSACCIONFIRMA',SYSDATE);
 
 insert into spac_ct_entidades (id, tipo, nombre, campo_pk, descripcion, sec_pk, fecha)
 values (10,'0','SPAC_ID_TRANSACCION_FIRMA','ID','Almacena el id de transacción de la firma de documentos','SPAC_SQ_ID_TRANSACCIONFIRMA',SYSDATE);

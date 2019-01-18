@@ -17,7 +17,7 @@ CREATE INDEX ind_346066818 ON dpcr_acuse_email (numexp);
 
 
 insert into spac_ct_entidades (id,tipo,nombre,campo_pk,campo_numexp,schema_expr,descripcion,sec_pk,fecha)
-VALUES( SPAC_SQ_ID_CTENTIDADES.NEXTVAL,'1','DPCR_ACUSE_EMAIL','ID','NUMEXP','NUMEXP','','SPAC_SQ_346066818',SYSDATE);
+VALUES( NEXTVAL('SPAC_SQ_ID_CTENTIDADES'),'1','DPCR_ACUSE_EMAIL','ID','NUMEXP','NUMEXP','','SPAC_SQ_346066818',SYSDATE);
 
 
 CREATE SEQUENCE SPAC_SQ_346066818 
@@ -27,7 +27,7 @@ CREATE SEQUENCE SPAC_SQ_346066818
   START with 1; 
 
 insert into spac_ct_informes (id, nombre, descripcion, xml, fecha, tipo, visibilidad) values
-(spac_sq_id_ctinformes.nextval, 'Acuse Email','Informe de los correos electrónicos enviados.','',current_timestamp,1,1);
+(NEXTVAL('spac_sq_id_ctinformes'), 'Acuse Email','Informe de los correos electrónicos enviados.','',current_timestamp,1,1);
 
 DECLARE
 datoXml clob;

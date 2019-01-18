@@ -214,20 +214,20 @@ CREATE SEQUENCE spac_sq_id_hitos_h  increment by  1 MINVALUE 0 MAXVALUE 92233720
 
 ----- Insertamos en SPAC_CT_ENTIDADES las nuevas entidades   ------
 
-insert into spac_ct_entidades values (SPAC_SQ_ID_CTENTIDADES.nextval, 1, 'SPAC_EXPEDIENTES_H', 'ID', 'NUMEXP','NUMEXP', 1,'Histórico de Expedientes','SPAC_SQ_ID_EXPEDIENTES_H', null, null,SYSDATE);
-insert into spac_ct_entidades values (SPAC_SQ_ID_CTENTIDADES.nextval, 1, 'SPAC_DT_INTERVINIENTES_H', 'ID', 'NUMEXP','NOMBRE', 3,'Histórico de Participantes','SPAC_SQ_ID_DTINTERVINIENTES_H', null,null,SYSDATE);
-insert into spac_ct_entidades values (SPAC_SQ_ID_CTENTIDADES.nextval, 1, 'SPAC_DT_TRAMITES_H', 'ID', 'NUMEXP','NOMBRE', 4,'Histórico de Trámites','SPAC_SQ_ID_DTTRAMITES_H', null, null,SYSDATE);
-insert into spac_ct_entidades values (SPAC_SQ_ID_CTENTIDADES.nextval, 1, 'SPAC_DT_DOCUMENTOS_H', 'ID', 'NUMEXP','NOMBRE', 5,'Histórico de Documentos','SPAC_SQ_ID_DTDOCUMENTOS_H', null,null,SYSDATE);
+insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_EXPEDIENTES_H', 'ID', 'NUMEXP','NUMEXP', 1,'Histórico de Expedientes','SPAC_SQ_ID_EXPEDIENTES_H', null, null,SYSDATE);
+insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_DT_INTERVINIENTES_H', 'ID', 'NUMEXP','NOMBRE', 3,'Histórico de Participantes','SPAC_SQ_ID_DTINTERVINIENTES_H', null,null,SYSDATE);
+insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_DT_TRAMITES_H', 'ID', 'NUMEXP','NOMBRE', 4,'Histórico de Trámites','SPAC_SQ_ID_DTTRAMITES_H', null, null,SYSDATE);
+insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_DT_DOCUMENTOS_H', 'ID', 'NUMEXP','NOMBRE', 5,'Histórico de Documentos','SPAC_SQ_ID_DTDOCUMENTOS_H', null,null,SYSDATE);
 
 update spac_ct_entidades set definicion = (select definicion from spac_ct_entidades where nombre = 'SPAC_EXPEDIENTES') where nombre = 'SPAC_EXPEDIENTES_H';
 update spac_ct_entidades set definicion = (select definicion from spac_ct_entidades where nombre = 'SPAC_DT_TRAMITES') where nombre = 'SPAC_DT_TRAMITES_H';
 update spac_ct_entidades set definicion = (select definicion from spac_ct_entidades where nombre = 'SPAC_DT_INTERVINIENTES') where nombre = 'SPAC_DT_INTERVINIENTES_H';
 update spac_ct_entidades set definicion = (select definicion from spac_ct_entidades where nombre = 'SPAC_DT_DOCUMENTOS') where nombre = 'SPAC_DT_DOCUMENTOS_H';
 
-insert into spac_ct_entidades_resources select SPAC_SQ_ID_ENTIDADESRESOURCES.nextval, id, 'es', nombre, 'Histórico de Expedientes' from spac_ct_entidades where nombre = 'SPAC_EXPEDIENTES_H';
-insert into spac_ct_entidades_resources select SPAC_SQ_ID_ENTIDADESRESOURCES.nextval, id, 'es', nombre, 'Histórico de Trámites' from spac_ct_entidades where nombre = 'SPAC_DT_TRAMITES_H';
-insert into spac_ct_entidades_resources select SPAC_SQ_ID_ENTIDADESRESOURCES.nextval, id, 'es', nombre, 'Histórico de Intervinientes' from spac_ct_entidades where nombre = 'SPAC_DT_INTERVINIENTES_H';
-insert into spac_ct_entidades_resources select SPAC_SQ_ID_ENTIDADESRESOURCES.nextval, id, 'es', nombre, 'Histórico de Documentos' from spac_ct_entidades where nombre = 'SPAC_DT_DOCUMENTOS_H';
+insert into spac_ct_entidades_resources select NEXTVAL('SPAC_SQ_ID_ENTIDADESRESOURCES'), id, 'es', nombre, 'Histórico de Expedientes' from spac_ct_entidades where nombre = 'SPAC_EXPEDIENTES_H';
+insert into spac_ct_entidades_resources select NEXTVAL('SPAC_SQ_ID_ENTIDADESRESOURCES'), id, 'es', nombre, 'Histórico de Trámites' from spac_ct_entidades where nombre = 'SPAC_DT_TRAMITES_H';
+insert into spac_ct_entidades_resources select NEXTVAL('SPAC_SQ_ID_ENTIDADESRESOURCES'), id, 'es', nombre, 'Histórico de Intervinientes' from spac_ct_entidades where nombre = 'SPAC_DT_INTERVINIENTES_H';
+insert into spac_ct_entidades_resources select NEXTVAL('SPAC_SQ_ID_ENTIDADESRESOURCES'), id, 'es', nombre, 'Histórico de Documentos' from spac_ct_entidades where nombre = 'SPAC_DT_DOCUMENTOS_H';
 
 
 ----   Realizamos las inserciones    ----
@@ -259,7 +259,7 @@ FUNCION_HASH,NDOC,NUM_ACTO,COD_VERIFICACION,MOTIVO_REPARO,MOTIVO_RECHAZO
 from spac_dt_documentos where numexp in (select numexp from spac_expedientes_h);
 
 delete from spac_dt_documentos where numexp in (select numexp from spac_expedientes_h);  -- 22s
-insert into spac_hitos_h select spac_sq_id_hitos_h.nextval, id_exp, id_fase, id_tramite, hito, fecha, fecha_limite, info, autor, descripcion, id_info from spac_hitos where id_exp in (select idproceso from spac_expedientes_h); -- 63s
+insert into spac_hitos_h select NEXTVAL('spac_sq_id_hitos_h'), id_exp, id_fase, id_tramite, hito, fecha, fecha_limite, info, autor, descripcion, id_info from spac_hitos where id_exp in (select idproceso from spac_expedientes_h); -- 63s
 delete from spac_hitos where id_exp in (select idproceso from spac_expedientes_h); -- 56s
 
 
