@@ -107,7 +107,7 @@ public class DipucrGeneraNotificacionesConvocatoriasSub2AsociGrupos extends Func
 
             String numexp = rulectx.getNumExp();            
             
-            String numexpDecreto = SubvencionesUtils.getUltimoNumexpDecreto(cct, numexp);
+            String numexpDecreto = DecretosUtil.getUltimoNumexpDecreto(cct, numexp);
             extractoDecreto = DecretosUtil.getExtractoDecreto(cct, numexpDecreto);
             
             numeroTramites = TramitesUtil.cuentaTramites(cct, numexp, rulectx.getTaskProcedureId());

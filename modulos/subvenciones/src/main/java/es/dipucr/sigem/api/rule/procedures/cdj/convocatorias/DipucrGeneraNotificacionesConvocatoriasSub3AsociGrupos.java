@@ -142,7 +142,7 @@ public class DipucrGeneraNotificacionesConvocatoriasSub3AsociGrupos extends Dipu
                 }
             }
 
-            String numexpDecreto = SubvencionesUtils.getUltimoNumexpDecreto(cct, numexp);
+            String numexpDecreto = DecretosUtil.getUltimoNumexpDecreto(cct, numexp);
             extractoDecreto = DecretosUtil.getExtractoDecreto(cct, numexpDecreto);
             
             if (!expedientesResolucion.isEmpty()) {

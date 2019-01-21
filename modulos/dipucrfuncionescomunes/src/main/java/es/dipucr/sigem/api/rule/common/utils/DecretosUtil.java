@@ -56,13 +56,15 @@ public class DecretosUtil {
 	protected static final Logger LOGGER = Logger.getLogger(DecretosUtil.class);
 
 	protected static final String _REGLA_INIT_DECRETO = "DipucrInitDecretoRelacionadoRule";
-	
+	public static final String DECRETO = "DECRETO";
 	/**
 	  *	Tabla con los datos del decreto
 	  * Tabla SGD_DECRETO
 	  **/
 	public interface DecretoTabla{
 		public static final String NOMBRE_TABLA = "SGD_DECRETO";
+		
+		
 		
 		public static final String NUMEXP = "NUMEXP";
 		public static final String ANIO = "ANIO";
@@ -93,6 +95,46 @@ public class DecretosUtil {
 		
 		return decreto;
 	}
+	
+	public static String getUltimoNumexpDecreto(IClientContext cct, String numexp) {
+        return getNumexpDecreto(cct, numexp, QueryUtils.EXPRELACIONADOS.ORDER_DESC);
+    }
+    
+    public static String getPrimerNumexpDecreto(IClientContext cct, String numexp) {
+        return getNumexpDecreto(cct, numexp, QueryUtils.EXPRELACIONADOS.ORDER_ASC);
+    }
+        
+    public static String getNumexpDecreto(IClientContext cct, String numexp, String orden) {
+        String numexpDecreto = "";
+        
+        try{
+            //Obtenemos el expediente de decreto
+            IItemCollection expRelacionadosPadreCollection = cct.getAPI().getEntitiesAPI().queryEntities(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, "WHERE " + ExpedientesRelacionadosUtil.NUMEXP_PADRE + " = '" + numexp + "' " + orden);
+            Iterator<?> expRelacionadosPadreIterator = expRelacionadosPadreCollection.iterator();
+            boolean encontrado = false;
+            
+            while (expRelacionadosPadreIterator.hasNext() && !encontrado){
+                
+                IItem expRel = (IItem)expRelacionadosPadreIterator.next();
+                String numexpRel = "";
+                if(StringUtils.isNotEmpty(expRel.getString(ExpedientesRelacionadosUtil.NUMEXP_HIJO)))numexpRel=expRel.getString(ExpedientesRelacionadosUtil.NUMEXP_HIJO);
+                IItem expediente = ExpedientesUtil.getExpediente(cct, numexpRel);
+                
+                if(null != expediente){
+                    String nombreProc = "";
+                    if(StringUtils.isNotEmpty(expediente.getString(ExpedientesUtil.NOMBREPROCEDIMIENTO)))nombreProc=expediente.getString(ExpedientesUtil.NOMBREPROCEDIMIENTO);
+                    
+                    if(nombreProc.trim().toUpperCase().contains(DecretosUtil.DECRETO)){
+                        numexpDecreto = numexpRel;
+                        encontrado = true;
+                    }
+                }
+            }
+        } catch (ISPACException e ){
+            LOGGER.error("ERROR al recuperar el expediente de decreto relacionado con el expediente: " + numexp + ". " + e.getMessage(), e);
+        }
+        return numexpDecreto;
+    }
 
 	/**
 	 * Crea el decreto relacionado para el informe pasado como parámetro

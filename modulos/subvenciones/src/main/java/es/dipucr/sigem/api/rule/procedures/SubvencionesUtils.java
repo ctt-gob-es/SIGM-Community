@@ -210,44 +210,6 @@ public class SubvencionesUtils {
         return resultado;
     }
 
-    public static String getUltimoNumexpDecreto(IClientContext cct, String numexp) {
-        return getNumexpDecreto(cct, numexp, QueryUtils.EXPRELACIONADOS.ORDER_DESC);
-    }
-    
-    public static String getPrimerNumexpDecreto(IClientContext cct, String numexp) {
-        return getNumexpDecreto(cct, numexp, QueryUtils.EXPRELACIONADOS.ORDER_ASC);
-    }
-        
-    public static String getNumexpDecreto(IClientContext cct, String numexp, String orden) {
-        String numexpDecreto = "";
-        
-        try{
-            //Obtenemos el expediente de decreto
-            IItemCollection expRelacionadosPadreCollection = cct.getAPI().getEntitiesAPI().queryEntities(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, ConstantesString.WHERE + ExpedientesRelacionadosUtil.NUMEXP_PADRE + " = '" + numexp + "' " + orden);
-            Iterator<?> expRelacionadosPadreIterator = expRelacionadosPadreCollection.iterator();
-            boolean encontrado = false;
-            
-            while (expRelacionadosPadreIterator.hasNext() && !encontrado){
-                
-                IItem expRel = (IItem)expRelacionadosPadreIterator.next();
-                String numexpRel = SubvencionesUtils.getString(expRel, ExpedientesRelacionadosUtil.NUMEXP_HIJO);
-                IItem expediente = ExpedientesUtil.getExpediente(cct, numexpRel);
-                
-                if(null != expediente){
-                    String nombreProc = SubvencionesUtils.getString(expediente, ExpedientesUtil.NOMBREPROCEDIMIENTO);
-                    
-                    if(nombreProc.trim().toUpperCase().contains(SubvencionesUtils.DECRETO)){
-                        numexpDecreto = numexpRel;
-                        encontrado = true;
-                    }
-                }
-            }
-        } catch (ISPACException e ){
-            LOGGER.error("ERROR al recuperar el expediente de decreto relacionado con el expediente: " + numexp + ". " + e.getMessage(), e);
-        }
-        return numexpDecreto;
-    }
-
     public static String getPrimerNumexpBOP(IClientContext cct, String numexp) {
         return getNumexpBOP(cct, numexp, QueryUtils.EXPRELACIONADOS.ORDER_ASC);
     }

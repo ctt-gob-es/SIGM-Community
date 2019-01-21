@@ -100,7 +100,7 @@ public class DipucrGeneraPRENotificacionesConvocatoriasSub3AsociGrupos extends F
                 
                 List<String> expedientesResolucion = ExpedientesRelacionadosUtil.getExpedientesRelacionadosHijosByVariosEstadosAdm(rulectx, Arrays.asList(estadosAdm));
     
-                String numexpDecreto = SubvencionesUtils.getUltimoNumexpDecreto(cct, numexp);
+                String numexpDecreto = DecretosUtil.getUltimoNumexpDecreto(cct, numexp);
                 extractoDecreto = DecretosUtil.getExtractoDecreto(cct, numexpDecreto);
     
                 if (!expedientesResolucion.isEmpty()) {

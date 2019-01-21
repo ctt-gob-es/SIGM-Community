@@ -42,7 +42,7 @@ public class DipucrGeneraJustificacionConvocatoriasSubEELLDevol extends SuperCla
             String convocatoria = ExpedientesUtil.getAsunto(cct, numexpConvocatoria);
 
             //Obtenemos el expediente de decreto
-            String numexpDecreto = SubvencionesUtils.getUltimoNumexpDecreto(cct, numexpConvocatoria);
+            String numexpDecreto = DecretosUtil.getUltimoNumexpDecreto(cct, numexpConvocatoria);
             String numDecreto = DecretosUtil.getNumeroDecretoCompleto(cct, numexpDecreto);
             Date fechaDecreto = DecretosUtil.getFechaDecreto(cct, numexpDecreto);
             

@@ -99,7 +99,7 @@ public class DipucrGeneraNotificacionesConvocatoriasSubAsociGrupos extends Funci
 
             List<String> expedientesResolucion = ExpedientesRelacionadosUtil.getExpedientesRelacionadosHijosByVariosEstadosAdm(rulectx, Arrays.asList(ESTADOS_ADM));
 
-            String numexpDecreto = SubvencionesUtils.getUltimoNumexpDecreto(cct, numexp);
+            String numexpDecreto = DecretosUtil.getUltimoNumexpDecreto(cct, numexp);
             extractoDecreto = DecretosUtil.getExtractoDecreto(cct, numexpDecreto);
 
             if (!expedientesResolucion.isEmpty()) {

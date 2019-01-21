@@ -113,7 +113,7 @@ public class DipucrNotificacionesConv3AsociGruposOtrosDatos extends FuncionesCom
                 }
             }
 
-            String numexpDecreto = SubvencionesUtils.getUltimoNumexpDecreto(cct, numexp);
+            String numexpDecreto = DecretosUtil.getUltimoNumexpDecreto(cct, numexp);
             extractoDecreto = DecretosUtil.getExtractoDecreto(cct, numexpDecreto);
             numeroTramites = TramitesUtil.cuentaTramites(cct, numexp, rulectx.getTaskProcedureId());
             nombreTramite = TramitesUtil.getNombreTramite(cct, rulectx.getTaskId());

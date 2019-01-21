@@ -109,7 +109,7 @@ public class DipucrDatosResolAprobConvocatoriasAsociacionesPuntos extends Dipucr
             }
                
           //Obtenemos el expediente de decreto
-            String numexpDecreto = SubvencionesUtils.getPrimerNumexpDecreto(cct, numexpConvocatoria);
+            String numexpDecreto = DecretosUtil.getPrimerNumexpDecreto(cct, numexpConvocatoria);
             String numDecreto = DecretosUtil.getNumeroDecretoCompleto(cct, numexpDecreto);
             Date fechaDecreto = DecretosUtil.getFechaDecreto(cct, numexpDecreto);
 

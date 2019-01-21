@@ -39,7 +39,7 @@ public class DipucrGeneraJustificacionConvocatoriasSubUP extends SuperClaseUnaTa
             numexpConvocatoria = rulectx.getNumExp();
             
             //Obtenemos el expediente de decreto
-            String numexpDecretoAprb = SubvencionesUtils.getPrimerNumexpDecreto(cct, numexpConvocatoria);
+            String numexpDecretoAprb = DecretosUtil.getPrimerNumexpDecreto(cct, numexpConvocatoria);
             String numDecretoAprb = DecretosUtil.getNumeroDecretoCompleto(cct, numexpDecretoAprb);
             Date fechaDecretoAprb = DecretosUtil.getFechaDecreto(cct, numexpDecretoAprb);
 
@@ -47,7 +47,7 @@ public class DipucrGeneraJustificacionConvocatoriasSubUP extends SuperClaseUnaTa
             String convocatoria = ExpedientesUtil.getAsunto(cct, numexpConvocatoria);
 
             //Obtenemos el expediente de decreto
-            String numexpDecreto = SubvencionesUtils.getPrimerNumexpDecreto(cct, numexpConvocatoria);            
+            String numexpDecreto = DecretosUtil.getPrimerNumexpDecreto(cct, numexpConvocatoria);            
             String numDecreto = DecretosUtil.getNumeroDecretoCompleto(cct, numexpDecreto);
             Date fechaDecreto = DecretosUtil.getFechaDecreto(cct, numexpDecreto);
             

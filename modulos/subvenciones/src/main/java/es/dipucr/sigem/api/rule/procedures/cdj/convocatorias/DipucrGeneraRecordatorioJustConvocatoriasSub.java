@@ -112,7 +112,7 @@ public class DipucrGeneraRecordatorioJustConvocatoriasSub extends FuncionesComun
                 }
             }
 
-            String numexpDecreto = SubvencionesUtils.getUltimoNumexpDecreto(cct, numexp);
+            String numexpDecreto = DecretosUtil.getUltimoNumexpDecreto(cct, numexp);
             extractoDecreto = DecretosUtil.getExtractoDecreto(cct, numexpDecreto);
            
             setSsVariables(cct, rulectx);
@@ -185,7 +185,7 @@ public class DipucrGeneraRecordatorioJustConvocatoriasSub extends FuncionesComun
             String convocatoria = ExpedientesUtil.getAsunto(cct, numexpConvocatoria);
 
             //Obtenemos el expediente de decreto
-            String numexpDecreto = SubvencionesUtils.getPrimerNumexpDecreto(cct, numexpConvocatoria);
+            String numexpDecreto = DecretosUtil.getPrimerNumexpDecreto(cct, numexpConvocatoria);
             String numDecreto = DecretosUtil.getNumeroDecretoCompleto(cct, numexpDecreto);
             Date fechaDecreto = DecretosUtil.getFechaDecreto(cct, numexpDecreto);
             
