@@ -3,7 +3,7 @@ update spac_ct_frmbusqueda set frm_bsq = replace(frm_bsq,
 'AND TIPO = 1
 	AND (
 		(
-			USER_UID_PARAM in (select uid_usr from SPAC_SS_FUNCIONES where uid_usr = USER_UID_PARAM and funcion in (3, 4))
+			USER_UID_PARAM in (select uid_usr from SPAC_SS_FUNCIONES where uid_usr = USER_UID_PARAM and funcion in (4, 5))
 		)
 		or (
 			id in
