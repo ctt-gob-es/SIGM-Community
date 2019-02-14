@@ -295,4 +295,24 @@ public class FechasUtil {
 	  cal.setTime(date);
 	  return cal;
 	}
+	
+	/**
+	 * [dipucr-Felipe #888]
+	 * Comprueba si la fecha pasada por parámetro tiene la hora vacía
+	 * @param date
+	 * @return
+	 */
+	public static boolean tieneHoraVacia(Date date){
+		
+		Calendar calendarFecha = Calendar.getInstance();
+		calendarFecha.setTime(date);
+		
+		boolean bEsVacia = false;
+		if (calendarFecha.get(Calendar.HOUR) == 0 && calendarFecha.get(Calendar.MINUTE) == 0
+				&& calendarFecha.get(Calendar.SECOND) == 0){
+			bEsVacia = true;
+		}
+		return bEsVacia;
+		
+	}
 }

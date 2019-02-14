@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -47,7 +48,7 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
  */
 public class PdfUtil extends FileUtils {
 	
-	private static final Logger logger = Logger.getLogger(PdfUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(PdfUtil.class);
 
 	public static String _EXTENSION_PDF = Constants._EXTENSION_PDF;
 	
@@ -65,17 +66,17 @@ public class PdfUtil extends FileUtils {
 		try {
 			file = FileTemporaryManager.getInstance().newFile("." + "pdf");
 		} catch (ISPACException e) {
-			logger.warn("Error al generar el .pdf. "+e.getMessage(), e);
+			LOGGER.warn("Error al generar el .pdf. "+e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar el .pdf. "+e.getMessage(), e);
 		}
 		Document documentComparece = new Document();
 		try {
 			PdfCopy.getInstance(documentComparece, new FileOutputStream(file));
 		} catch (FileNotFoundException e) {
-			logger.warn("Error al generar PdfCopy. "+e.getMessage(), e);
+			LOGGER.warn("Error al generar PdfCopy. "+e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar PdfCopy. "+e.getMessage(), e);
 		} catch (DocumentException e) {
-			logger.warn("Error al generar PdfCopy. "+e.getMessage(), e);
+			LOGGER.warn("Error al generar PdfCopy. "+e.getMessage(), e);
 			throw new ISPACRuleException("Error al generar PdfCopy. "+e.getMessage(), e);
 		}
 		if(documentComparece!=null){
@@ -83,7 +84,7 @@ public class PdfUtil extends FileUtils {
 			try {
 				documentComparece.add(new Phrase("\n\n"));
 			} catch (DocumentException e) {
-				logger.warn("Añadiendo nueva frase al documento el blanco. "+e.getMessage(), e);
+				LOGGER.warn("Añadiendo nueva frase al documento el blanco. "+e.getMessage(), e);
 				throw new ISPACRuleException("Añadiendo nueva frase al documento el blanco. "+e.getMessage(), e);
 			}
 			documentComparece.close();
@@ -176,43 +177,50 @@ public class PdfUtil extends FileUtils {
 		return concatenarPublicacion(cct, listFicheros, filePortada, fileContraPortada, PdfWriter.PageModeUseOutlines);
 	}
 	
-	public static File concatenarPublicacion(IClientContext cct, ArrayList<String> listFicheros,
-			File filePortada, File fileContraPortada, int tipoVisualizacion) throws ISPACException {
+	public static File concatenarPublicacion(IClientContext cct, ArrayList<String> listFicheros, File filePortada, File fileContraPortada, int tipoVisualizacion) throws ISPACException {
 		
 		File resultado = null;
 		try{
 		    final int ITERATOR_PORTADA = -1;
 		    final int ITERATOR_CONTRAPORTADA = listFicheros.size();
 		    
-		    ArrayList<File> listArchivos = new ArrayList<File>();
+		    List<File> listArchivos = new ArrayList<File>();
+		    List<String> listKeys = new ArrayList<String>();
 		    
 		    for (int i = ITERATOR_PORTADA; i <= ITERATOR_CONTRAPORTADA; i++){
 		    	
 		    	File file = null;
-		    	if (i == ITERATOR_PORTADA){
+		    	String key = "";
+		    	
+		    	if (i == ITERATOR_PORTADA) {
 		    		file = filePortada;
-		    	}
-		    	else if (i == ITERATOR_CONTRAPORTADA){
+		    		key = "PORTADA";
+		    		
+		    	} else if (i == ITERATOR_CONTRAPORTADA) {
 		    		file = fileContraPortada;
-		    	}
-		    	else{
+		    		key = "CONTRAPORTADA";
+		    	
+		    	} else {
 		    		String sInfoPag = (String) listFicheros.get(i);
+		    		key = sInfoPag;
 		    		//Por si se ha borrado el fichero del repositorio
 		        	try{
 			        	file = DocumentosUtil.getFile(cct, sInfoPag, null, _EXTENSION_PDF);
-		        	}
-		        	catch(ISPACException ex){
+			        	
+		        	} catch(ISPACException ex){
+		        		LOGGER.error("ERROR al recuperar el documento con infopag: " + sInfoPag + ". " + ex.getMessage(), ex);
 		        		continue;
 		        	}
 		    	}
 		    	listArchivos.add(file);
+		    	listKeys.add(key);
 		    }
 		    
-		    resultado = concatenarArchivos(listArchivos);
+//		    resultado = concatenarArchivos(listArchivos);
+		    resultado = concatenarArchivos(listArchivos, listKeys);
 		
-	    }
-	    catch(Exception e) {
-	        logger.error("Error al concatenar los archivos del documento. " + e.getMessage(), e);
+	    } catch(Exception e) {
+	        LOGGER.error("Error al concatenar los archivos del documento. " + e.getMessage(), e);
 	        throw new ISPACException("Error al concatenar los archivos del documento. " + e.getMessage(), e);
 	    }
 	    return resultado;
@@ -279,8 +287,79 @@ public class PdfUtil extends FileUtils {
 			
 		    }
 		    catch(Exception e) {
-		        logger.error("Error al concatenar los archivos del documento. " + e.getMessage(), e);
+		        LOGGER.error("Error al concatenar los archivos del documento. " + e.getMessage(), e);
 		        throw new ISPACException("Error al concatenar los archivos del documento. " + e.getMessage(), e);
+		    }
+		}
+	    return resultado;
+	}
+	
+	
+	/**
+	 * [eCenpri-Felipe #504]
+	 * Concatena varios archivos
+	 * No usar con demasiados archivos pues saturará los punteros
+	 * @param file1
+	 * @param file2
+	 * @return
+	 * @throws ISPACException
+	 */
+	public static File concatenarArchivos(List<File> listFicheros, List<String> listKeys) throws ISPACException {
+		return concatenarArchivos(listFicheros, listKeys, false);
+	}
+	/**
+	 * [dipucr-Felipe #791]
+	 * Concatenamos con iText 5 y renombrando los acroFields para que conserve la información de firma visible
+	 * @param mapFicheros
+	 * @param ambasCaras
+	 * @return
+	 * @throws ISPACException
+	 */
+	public static File concatenarArchivos(List<File> listFicheros, List<String> listKeys, boolean ambasCaras) throws ISPACException {
+	    
+		File resultado = null;
+		String keyError = "";
+
+		if (listFicheros != null && listKeys != null && !listFicheros.isEmpty() && !listKeys.isEmpty() && listFicheros.size() == listKeys.size()) {
+			try{
+				com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+				
+				resultado = FileTemporaryManager.getInstance().newFile("." + "pdf");
+	
+				com.itextpdf.text.pdf.PdfSmartCopy copy = new com.itextpdf.text.pdf.PdfSmartCopy (document, new FileOutputStream(resultado));
+			    document.open();
+			    
+			    int i = 0;			    
+			    for (File fichero : listFicheros){
+			    	if( i <  listKeys.size()){
+			    		keyError = listKeys.get(i);
+			    	}
+			    	
+			    	FileInputStream fis = new FileInputStream(fichero); 
+			    	com.itextpdf.text.pdf.PdfReader reader = new com.itextpdf.text.pdf.PdfReader(renameFields(fis, i));
+			        copy.addDocument(reader);
+			        
+			        int n = reader.getNumberOfPages();
+			        
+			        if(ambasCaras && n%2==1 && i < (listFicheros.size()-1)){
+			        	
+			        	File filePaginaBlanca = getPaginaBlanca();
+			    		InputStream is = new FileInputStream(filePaginaBlanca);
+			    		reader = new com.itextpdf.text.pdf.PdfReader(is);
+	
+						copy.addDocument(reader);
+			        }
+			        
+			        reader.close();
+			        fis.close();
+			        
+			        i++;
+			    }
+			    document.close();
+			
+		    } catch(Exception e) {
+		        LOGGER.error("Error al concatenar el archivo: " + keyError + ". " + e.getMessage(), e);
+		        throw new ISPACException("Error al concatenar el archivo: " + keyError + ". " + e.getMessage(), e);
 		    }
 		}
 	    return resultado;
@@ -360,7 +439,7 @@ public class PdfUtil extends FileUtils {
 	        }
 	    }
 	    catch(Exception e) {
-	    	logger.error("Error al concatenar " + listaInfoPags.size() + " archivos pdf. " + e.getMessage(), e);
+	    	LOGGER.error("Error al concatenar " + listaInfoPags.size() + " archivos pdf. " + e.getMessage(), e);
 	    }
 	    return resultado;
 	}
@@ -433,7 +512,7 @@ public class PdfUtil extends FileUtils {
 			
 		}
 		catch(IOException e){
-	        logger.error("Error al concatenar los archivos del documento", e);
+	        LOGGER.error("Error al concatenar los archivos del documento", e);
 		}
 	}
 	
@@ -480,7 +559,7 @@ public class PdfUtil extends FileUtils {
 			outputStream.close();
 			
 		} catch (Exception e) {
-	        logger.error(e.getMessage(), e);
+	        LOGGER.error(e.getMessage(), e);
 		} finally {
 			if (document.isOpen())
 				document.close();
@@ -488,7 +567,7 @@ public class PdfUtil extends FileUtils {
 				if (outputStream != null)
 					outputStream.close();
 			} catch (IOException ioe) {
-				logger.error(ioe.getMessage(),ioe);
+				LOGGER.error(ioe.getMessage(),ioe);
 			}
 		}
 	}

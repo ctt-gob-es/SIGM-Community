@@ -21,7 +21,10 @@ public class Constants {
 	
 	
 	public interface TESORERIA {
+		public static final String NUM_CERT_RETEN_TRAM = "NUM_CERT_RETEN_TRAM";
+		
 		public static final String CERTIFICADO_RETENCIONES = "Certificado de Retenciones";
+		public static final String CERTIFICADO_ACTIVIDADES_ECONOMICAS = "Certificado de Actividades Económicas";
 	}
 	
 	public interface TABLASBBDD {

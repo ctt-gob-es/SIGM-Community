@@ -1,11 +1,12 @@
 package es.dipucr.sigem.api.rule.common.utils;
 
-import java.io.File;
-
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.gendoc.openoffice.OpenOfficeHelper;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+
+import java.io.File;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -83,6 +84,17 @@ public class LibreOfficeUtil {
 	    return posicionTabla;
 	}
 
+	public static void colocaColumnas(XTextTable xTextTable, List<Integer> distribucionColumnas){
+		
+		double[] distribucionColumnasArray = new double[distribucionColumnas.size()];
+		
+		for (int i = 0; i < distribucionColumnas.size(); i++){
+			distribucionColumnasArray[i] = distribucionColumnas.get(i);
+		}
+		
+		colocaColumnas(xTextTable, distribucionColumnasArray);
+	}
+	
 	/**
 	 * Método que coloca las columnas de una tabla
 	 * @param xTextTable

@@ -287,8 +287,7 @@ public class DipucrCommonFunctions
 	}
 	
 	public static void adjuntarContenido(IRuleContext rulectx, String numexp, XComponent xComponent, OpenOfficeHelper ooHelper) throws ISPACException{
-		try
-		{
+		try {
 	        IClientContext cct = (ClientContext) rulectx.getClientContext();
 			
 			//Obtenemos los docuementos de la propuesta
@@ -296,8 +295,8 @@ public class DipucrCommonFunctions
 	        
 	        Iterator<?> it = collection.iterator();
 	        boolean found = false;
-	        while (it.hasNext() && !found)
-	        {
+	        
+	        while (it.hasNext() && !found) {
 	        	IItem iDoc = (IItem)it.next();
 	        	
 	        	//El contenido de la propuesta tiene que estar en formato Word (.doc)
@@ -307,13 +306,11 @@ public class DipucrCommonFunctions
 	        		//En concreto busco documentos de tipo Anexo a la Solicitud (propuestas desde Registro Telemático)
 	        		//o de tipo Contenido de la propuesta (propuestas iniciadas desde escritorio de tramitación)
 		        	String nombre = iDoc.getString("NOMBRE");
-		        	if ( nombre.compareTo("Anexo a Solicitud" )== 0 ||
-		        		 nombre.compareTo("Contenido de la propuesta") == 0)
-		        	{
+		        	if (nombre.compareTo("Contenido de la propuesta") == 0) {
 		        		found = true;
 			        	String strInfoPag = iDoc.getString("INFOPAG");
-			        	if (strInfoPag != null)
-			        	{
+			        	
+			        	if (strInfoPag != null) {
 			        		File file = DocumentosUtil.getFile(cct, strInfoPag, null, null);
 			        		DipucrCommonFunctions.concatena(xComponent, "file://" + file.getPath());
 			        		file.delete();
