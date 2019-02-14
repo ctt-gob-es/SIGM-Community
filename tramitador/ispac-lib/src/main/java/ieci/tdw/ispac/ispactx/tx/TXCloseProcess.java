@@ -164,6 +164,7 @@ public class TXCloseProcess implements ITXAction {
 				TXHitoDAO hito=dtc.newMilestone(process.getKeyInt(),nIdPCDStage,0, milestoneType);
 		
 				hito.set("FECHA_LIMITE",stagedeadline);
+				hito.store(cs.getConnection());//[dipucr-Felipe Manuel #884]
 				
 				//Ejecutar evento de sistema tras cerrar la fase
 				eventmgr.processSystemEvents(eventObjectType, EventsDefines.EVENT_EXEC_END_AFTER);

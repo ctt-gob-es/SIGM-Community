@@ -11,6 +11,7 @@ import ieci.tdw.ispac.ispaclib.XMLUtil.XMLDocUtil;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PFaseDAO;
 import ieci.tdw.ispac.ispaclib.dao.procedure.PSincNodoDAO;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXFaseDAO;
+import ieci.tdw.ispac.ispaclib.dao.tx.TXHitoDAO;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXProcesoDAO;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXSincNodoDAO;
 import ieci.tdw.ispac.ispaclib.utils.XPathUtil;
@@ -111,7 +112,8 @@ public class TXNodeActivationManager
 				if (process.isSubProcess())
 					milestoneType = TXConstants.MILESTONE_ACTIVITY_START;
 						
-				mdtc.newMilestone(process.getKeyInt(),pstage.getKeyInt(),0,milestoneType);
+				TXHitoDAO hito = mdtc.newMilestone(process.getKeyInt(),pstage.getKeyInt(),0,milestoneType);
+				hito.store();//[dipucr-Felipe Manuel #884]
 				
 				// Iniciar fase / actividad
 				TXFaseDAO newstage=mdtc.newStage();
