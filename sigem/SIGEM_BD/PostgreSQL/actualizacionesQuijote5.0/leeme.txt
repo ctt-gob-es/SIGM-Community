@@ -4,6 +4,7 @@ Hay que ejecutar los scripts que hay en las siguientes carpetas:
 
 eTramitación: Ejecutar el script.
 fwktd_dir3: Ejecutar el script.
-registro: Hay que ejecutar todos los scrips en orden
+registro: Hay que ejecutar todos los scripts en orden
 El archivo ScriptsEjecuciónManual.sql hay que editarlo y seguir los pasos que se indican en el archivo para cada bloque de scripts.
-tramitador: Hay que ejecutar todos los scrips en orden
+sigemAdmin: Hay que ejecutar todos los scripts en orden.
+tramitador: Hay que ejecutar todos los scripts en orden.
