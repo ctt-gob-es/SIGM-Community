@@ -34,15 +34,27 @@
 					</ul>
 					
 					<div align="center" >	
-						<div style="width: 75%;margin-top: 75px" >	
-						<p:panel id="panelDistribucion" header="Alertas de Distribución" rendered="#{not empty facesContext.maximumSeverity}">  
+						<div style="width: 75%;margin-top: 25px" >	
+						<p:panel id="panelIncompletos" header="Alertas de Registros Incompletos" rendered="#{alertAction.hayAlertIncompletos}">  
 							<f:metadata>
-							    <f:event type="preRenderView" listener="#{alertAction.showAlertDistribution}" />
+							    <f:event type="preRenderView" listener="#{alertAction.showAlertIncompletos}" />
 							</f:metadata>
-							<p:messages id="messages" showIcon="false" showDetail="true"  />  
+							<p:messages id="messagesIncompletos" for="messagesIncompletos" showIcon="false" showDetail="true" />  
 						</p:panel>
 						</div>
 					</div>
+
+					<div align="center" >	
+						<div style="width: 75%;" >	
+						<p:panel id="panelDistribucion" header="Alertas de Distribución" rendered="#{alertAction.hayAlertDistribution}">  
+							<f:metadata>
+							    <f:event type="preRenderView" listener="#{alertAction.showAlertDistribution}" />
+							</f:metadata>
+							<p:messages id="messages" for="messages" showIcon="false" showDetail="true"  />  
+						</p:panel>
+						</div>
+					</div>
+
 					 <script type="text/javascript">
 					 runEffectshow();
 					 </script>

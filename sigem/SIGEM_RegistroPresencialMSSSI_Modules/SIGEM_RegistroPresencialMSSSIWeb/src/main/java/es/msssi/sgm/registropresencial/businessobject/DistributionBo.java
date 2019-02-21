@@ -10,8 +10,6 @@
 
 package es.msssi.sgm.registropresencial.businessobject;
 
-import ieci.tdw.ispac.ispaclib.utils.StringUtils;
-import ieci.tecdoc.sgm.core.admin.web.AdministracionHelper;
 import ieci.tecdoc.sgm.core.exception.SigemException;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.entidades.Entidad;
@@ -71,8 +69,6 @@ import com.ieci.tecdoc.utils.cache.CacheBag;
 import com.ieci.tecdoc.utils.cache.CacheFactory;
 
 import es.dipucr.orve.beans.ORVEBean;
-import es.dipucr.orve.sw.constantes.ConstantesWSExportacion;
-import es.dipucr.sigem.api.rule.common.serviciosWeb.ServiciosWebConfiguration;
 import es.dipucr.sigem.api.rule.common.utils.EntidadesUtil;
 import es.ieci.tecdoc.isicres.api.business.manager.IsicresManagerProvider;
 import es.ieci.tecdoc.isicres.api.business.vo.UsuarioVO;
@@ -209,7 +205,6 @@ public class DistributionBo extends DistributionSessionUtil implements IGenericB
      * @throws ValidationException
      *             error validación
      * */
-    @SuppressWarnings("unchecked")
     public List<DtrFdrResults> getHistDistribution( UseCaseConf useCaseConf, Integer bookID, Integer folderID) throws BookException, SessionException, ValidationException {
     	
     	List<DtrFdrResults> result = null; 
