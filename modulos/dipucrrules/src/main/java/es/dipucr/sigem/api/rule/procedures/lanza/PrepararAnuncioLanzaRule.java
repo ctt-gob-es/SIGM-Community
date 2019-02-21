@@ -59,7 +59,7 @@ public class PrepararAnuncioLanzaRule implements IRule
     		
     		File file = null;
     		
-			IItemCollection docs = entitiesAPI.getDocuments(rulectx.getNumExp(), " NOMBRE='Anexo a Solicitud' AND (EXTENSION='DOC' OR EXTENSION='ODT')", "");
+			IItemCollection docs = entitiesAPI.getDocuments(rulectx.getNumExp(), " TP_REG = 'ENTRADA' AND (EXTENSION='DOC' OR EXTENSION='ODT')", "");
 	        Iterator it = docs.iterator();
         	
 	        while (it.hasNext())
@@ -88,7 +88,7 @@ public class PrepararAnuncioLanzaRule implements IRule
     		file.delete();
     		
     		//Borra los documentos intermedios del gestor documental
-	        IItemCollection collection = DocumentosUtil.getDocumentsByDescripcion(rulectx.getNumExp(), rulectx, "borrar");
+	        IItemCollection collection = DocumentosUtil.getDocumentsByDescripcion(rulectx.getNumExp(), cct, "borrar");
 	        it = collection.iterator();
 	        while (it.hasNext())
 	        {

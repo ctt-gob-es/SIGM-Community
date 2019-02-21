@@ -342,7 +342,7 @@ public class ServicioTramitacionRemoteClientTest extends TestCase {
 			// Documentos del expediente
 			List documentos = new ArrayList();
 			DocumentoExpediente doc = new DocumentoExpediente();
-	        doc.setCode("Anexo a Solicitud");
+	        doc.setCode("TD14-ENI");
 	        doc.setName("Solicitud");
 	        doc.setContent(getDefaultFileContent());
 	        doc.setExtension("doc");
@@ -375,7 +375,7 @@ public class ServicioTramitacionRemoteClientTest extends TestCase {
 			List documentos = new ArrayList();
 			DocumentoExpediente doc = new DocumentoExpediente();
 			doc.setId("10-0");
-	        doc.setCode("Anexo a Solicitud");
+	        doc.setCode("TD14-ENI");
 	        doc.setName("Solicitud");
 	        doc.setContent(getDefaultFileContent());
 	        doc.setExtension("doc");
@@ -393,7 +393,7 @@ public class ServicioTramitacionRemoteClientTest extends TestCase {
 			documentos = new ArrayList();
 			doc = new DocumentoExpediente();
 			doc.setId("2-0");
-	        doc.setCode("Anexo a Solicitud");
+	        doc.setCode("TD14-ENI");
 	        doc.setName("Solicitud");
 	        doc.setContent(getDefaultFileContent());
 	        doc.setExtension("doc");
@@ -520,7 +520,7 @@ public class ServicioTramitacionRemoteClientTest extends TestCase {
 			// Documentos del expediente
 			List documentos = new ArrayList();
 	//		DocumentoExpediente doc = new DocumentoExpediente();
-	//        doc.setCode("Anexo a Solicitud");
+	//        doc.setCode("TD14-ENI");
 	//        doc.setName("Solicitud");
 	//        doc.setContent(getDefaultFileContent());
 	//        doc.setExtension("doc");

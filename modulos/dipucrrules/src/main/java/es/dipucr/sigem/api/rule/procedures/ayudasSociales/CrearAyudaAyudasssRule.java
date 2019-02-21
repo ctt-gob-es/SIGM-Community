@@ -67,8 +67,7 @@ public class CrearAyudaAyudasssRule implements IRule
 			
 			ArrayList<DocumentoAyudas> listDocumentos = new ArrayList<DocumentoAyudas>();
 			
-			IItemCollection anexosCollection = entitiesAPI.getDocuments
-					(numexp, "UPPER(NOMBRE) = 'ANEXO A SOLICITUD' AND UPPER(DESCRIPCION) LIKE '%ZIP'", "");
+			IItemCollection anexosCollection = entitiesAPI.getDocuments(numexp, " TP_REG = 'ENTRADA' AND UPPER(DESCRIPCION) LIKE '%ZIP'", "");
 			
 			if (anexosCollection.toList().size() > 0){ //Tiene documentos anexos
 				
@@ -159,7 +158,7 @@ public class CrearAyudaAyudasssRule implements IRule
 		int idFase = Integer.valueOf(itemFase.getString("ID_FASE_BPM"));
 		int idFasePcd = itemFase.getInt("ID_FASE");
 		
-		IItem itemCtTramite = TramitesUtil.getTramiteByCode(rulectx, codTramite);
+		IItem itemCtTramite = TramitesUtil.getTramiteByCode(cct, rulectx.getNumExp(), codTramite);
 		String strQuery = "WHERE ID_FASE = " + idFasePcd + " AND NOMBRE = '" + itemCtTramite.getString("NOMBRE") + "'";
 		IItemCollection collection = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_P_TRAMITES, strQuery);
 		IItem itemPTramite = (IItem)collection.iterator().next();

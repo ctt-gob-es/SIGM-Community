@@ -156,24 +156,19 @@ public class DipucrFaceConcatenarFacturaRule implements IRule {
 			FileTemporaryManager ftMgr = FileTemporaryManager.getInstance();
 			
 			//Recuperamos el justificante
-			String infoPagJustificante = DocumentosUtil.getInfoPagByNombre
-					(numexp, ruleContext, "Justificante");
-			File fileJustificante =  DocumentosUtil.getFile
-					(cct, infoPagJustificante, "justificante", null);
+			String infoPagJustificante = DocumentosUtil.getInfoPagByNombre(numexp, ruleContext, "Justificante");
+			File fileJustificante =  DocumentosUtil.getFile(cct, infoPagJustificante, "justificante", null);
 			
 			//No añadimos la información de la tabla eFactura, sólo el justificante y la factura
 			fileResultado = fileJustificante;
 			
 			//*************
 			//obtenemos el fichero de la factura entre los anexos
-			IItemCollection facturasCollection = entitiesAPI.getDocuments
-					(numexp, "UPPER(NOMBRE) = 'ANEXO A SOLICITUD'"
-							+ " AND UPPER(DESCRIPCION) LIKE '%XSIG'", "");
+			IItemCollection facturasCollection = entitiesAPI.getDocuments(numexp, "TP_REG = 'ENTRADA' AND UPPER(DESCRIPCION) LIKE '%XSIG'", "");
 			
 			IItem itemFactura = (IItem) facturasCollection.iterator().next();
 			
-			File fileFicheroXml = DocumentosUtil.getFile
-					(cct, itemFactura.getString("INFOPAG"), "facturaXml", null);
+			File fileFicheroXml = DocumentosUtil.getFile(cct, itemFactura.getString("INFOPAG"), "facturaXml", null);
 			String facturaXml = fileFicheroXml.getAbsolutePath();
 			String facturaPDF = ftMgr.getFileTemporaryPath() + "/facturaPdf.pdf";
 			
@@ -183,12 +178,7 @@ public class DipucrFaceConcatenarFacturaRule implements IRule {
 			fileResultadoTemp = concatena(fileResultado, fileFactura);
 
 			//[dipucr-Felipe #1148-extra] Añadimos el XML como anexo
-			PdfUtil.anexarDocumento
-		    (
-		    		fileResultadoTemp,
-		    		fileFicheroXml,
-		    		"factura.xsig"
-		    );
+			PdfUtil.anexarDocumento(fileResultadoTemp, fileFicheroXml, "factura.xsig");
 			
 			//[Dipucr-Manu #533] + ALSIGM3 Al firmarse la conformación de la factura la banda gris sobreescribe el contenido
 			PdfUtil.anexarDocumento( fileResultadoTemp, fileFactura, "factura_xsig.pdf");
@@ -201,9 +191,7 @@ public class DipucrFaceConcatenarFacturaRule implements IRule {
 			//*************
 			//INICIO [dipucr-Felipe #1148] Añadir adjuntos de factura
 			//obtenemos los anexos de la factura (fichero zip)
-			IItemCollection anexosCollection = entitiesAPI.getDocuments
-					(numexp, "UPPER(NOMBRE) = 'ANEXO A SOLICITUD'"
-							+ " AND UPPER(DESCRIPCION) LIKE '%ZIP'", "");
+			IItemCollection anexosCollection = entitiesAPI.getDocuments(numexp, "TP_REG = 'ENTRADA' AND UPPER(DESCRIPCION) LIKE '%ZIP'", "");
 			
 			//Si hay anexo
 			if (anexosCollection.toList().size() > 0){	
@@ -218,25 +206,16 @@ public class DipucrFaceConcatenarFacturaRule implements IRule {
 				
 				//Los metemos en el PDF como adjuntos
 				for (FileBean fb : listFicheros){
-				
-                    PdfUtil.anexarDocumento
-				    (
-				    		fileResultado,
-				    		fb.getFile(),
-				    		fb.getName()
-				    );
+                    PdfUtil.anexarDocumento(fileResultado, fb.getFile(), fb.getName());
 				}
 			}
 			//FIN [dipucr-Felipe #1148]
 			
 			
-			String tipoDocumento = DocumentosUtil.getTipoDocumentoByCodPlantilla
-					(cct, DipucrFaceFacturasUtil.COD_DOC_FACTURA);
-			int documentTypeId = DocumentosUtil.getTipoDoc
-					(cct, tipoDocumento, DocumentosUtil.BUSQUEDA_EXACTA, false);
+			String tipoDocumento = DocumentosUtil.getTipoDocumentoByCodPlantilla(cct, DipucrFaceFacturasUtil.COD_DOC_FACTURA);
+			int documentTypeId = DocumentosUtil.getTipoDoc(cct, tipoDocumento, DocumentosUtil.BUSQUEDA_EXACTA, false);
 			
-			IItem document = DocumentosUtil.generaYAnexaDocumento
-					(ruleContext, tramiteId, documentTypeId, DOCUMENT_NAME, fileResultado, Constants._EXTENSION_PDF);
+			IItem document = DocumentosUtil.generaYAnexaDocumento(ruleContext, tramiteId, documentTypeId, DOCUMENT_NAME, fileResultado, Constants._EXTENSION_PDF);
 			
 			fileResultado.delete();
 			return document;
