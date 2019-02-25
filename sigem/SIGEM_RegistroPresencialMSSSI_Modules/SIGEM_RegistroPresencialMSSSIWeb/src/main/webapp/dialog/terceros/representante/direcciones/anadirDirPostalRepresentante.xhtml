@@ -19,25 +19,42 @@
 					<p:inputText id="direccionFisicaNombreRepresentante" label="#{msgs.labelDireccion}" value="#{tercerosAction.nuevaDireccionFisica.direccion}" ></p:inputText>
 
 					<h:outputLabel value="#{msgs.labelProvincia}"></h:outputLabel>
-					<p:selectOneMenu id="direccionFisicaProvinciaRepresentante" value="#{tercerosAction.nuevaDireccionFisica.provincia.nombre}"
-					 valueChangeListener="#{tercerosAction.actualizaCiudades}" filter="true">
-						<f:attribute name="direccion" value="#{tercerosAction.nuevaDireccionFisica}" />
-						<f:selectItems value="#{tercerosAction.provincias}" />
-						<p:ajax event="change" update=":interesadosform:formAnadirDirPostalRepresentante:direccionFisicaLocalidadRepresentante"/>						
-					</p:selectOneMenu>
+					<h:panelGroup id="fragmentoProvincia">
+						<ui:fragment rendered="${tercerosAction.nuevaDireccionFisica.pais.nombre == 'Espa&ntilde;a'}">
+							<p:selectOneMenu id="direccionFisicaProvincia" value="#{tercerosAction.nuevaDireccionFisica.provincia.nombre}"
+							 valueChangeListener="#{tercerosAction.actualizaCiudades}" filter="true">
+								<f:attribute name="direccion" value="#{tercerosAction.nuevaDireccionFisica}" />
+								<f:selectItems value="#{tercerosAction.provincias}" />
+								<p:ajax event="change" update=":interesadosform:formAnadirDirPostalRepresentante:fragmentoLocalidad"/>						
+							</p:selectOneMenu>
+						</ui:fragment>
+					
+						<ui:fragment rendered="${tercerosAction.nuevaDireccionFisica.pais.nombre != 'Espa&ntilde;a'}">
+							<p:inputText id="direccionFisicaProvinciaInput" value="#{tercerosAction.nuevaDireccionFisica.provincia.nombre}"/>
+						</ui:fragment>
+					</h:panelGroup>
 
 					<h:outputLabel value="#{msgs.labelLocalidad}"></h:outputLabel>
-					<p:selectOneMenu id="direccionFisicaLocalidadRepresentante" value="#{tercerosAction.nuevaDireccionFisica.ciudad.nombre}" filter="true">
-						<f:selectItems value="#{tercerosAction.nuevaDireccionFisica.provincia.ciudades}" />						
-					</p:selectOneMenu>				
+					<h:panelGroup id="fragmentoLocalidad">
+						<ui:fragment rendered="${ tercerosAction.nuevaDireccionFisica.pais.nombre == 'Espa&ntilde;a'}">
+							<p:selectOneMenu id="direccionFisicaLocalidad" value="#{tercerosAction.nuevaDireccionFisica.ciudad.nombre}" filter="true">
+								<f:selectItems value="#{tercerosAction.nuevaDireccionFisica.provincia.ciudades}" />						
+							</p:selectOneMenu>
+						</ui:fragment>
+						<ui:fragment rendered="${tercerosAction.nuevaDireccionFisica.pais.nombre != 'Espa&ntilde;a'}">
+							<p:inputText id="direccionFisicaLocalidadInput" value="#{tercerosAction.nuevaDireccionFisica.ciudad.nombre}"/>
+						</ui:fragment>
+					</h:panelGroup>
 
 					<h:outputLabel value="#{msgs.labelCodigoPostal}"></h:outputLabel>
-					<p:inputText id="direccionFisicaCPRepresentante" label="#{msgs.labelCodigoPostal}" value="#{tercerosAction.nuevaDireccionFisica.codigoPostal}" ></p:inputText>
+					<p:inputText id="direccionFisicaCP" label="#{msgs.labelCodigoPostal}" value="#{tercerosAction.nuevaDireccionFisica.codigoPostal}" ></p:inputText>
 
 					<h:outputLabel value="#{msgs.labelPais}"></h:outputLabel>
-					<p:selectOneMenu id="direccionFisicaPaisRepresentante" value="#{tercerosAction.nuevaDireccionFisica.pais.nombre}" filter="true">
-						<f:selectItems value="#{tercerosAction.paises}" />						
+					<p:selectOneMenu id="direccionFisicaPais" value="#{tercerosAction.nuevaDireccionFisica.pais.nombre}" filter="true">
+						<f:selectItems value="#{tercerosAction.paises}" />
+						<p:ajax event="change" update=":interesadosform:formAnadirDirPostalRepresentante:fragmentoProvincia :interesadosform:formAnadirDirPostalRepresentante:fragmentoLocalidad"/>						
 					</p:selectOneMenu>
+
 				</h:panelGrid>
 
 				<h:panelGroup id="botonesAnadirDireccionFisicaRepresentante">
