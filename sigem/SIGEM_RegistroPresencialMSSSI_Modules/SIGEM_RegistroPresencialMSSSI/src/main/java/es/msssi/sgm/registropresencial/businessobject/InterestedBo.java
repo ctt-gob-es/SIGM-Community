@@ -25,6 +25,7 @@ import com.ieci.tecdoc.isicres.usecase.UseCaseConf;
 import es.ieci.tecdoc.fwktd.core.spring.configuration.jdbc.datasource.MultiEntityContextHolder;
 import es.ieci.tecdoc.isicres.terceros.business.manager.InteresadoManager;
 import es.ieci.tecdoc.isicres.terceros.business.manager.TerceroManager;
+import es.ieci.tecdoc.isicres.terceros.business.vo.BaseDireccionVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.BaseTerceroVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.InteresadoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.RepresentanteInteresadoVO;
@@ -312,6 +313,13 @@ public class InterestedBo implements IGenericBo, Serializable {
 		// Tercero que actua como interesado
 		BaseTerceroVO tercero = new BaseTerceroVO();
 		tercero.setId(String.valueOf(inter.getIdTercero()));
+		
+		if(null != inter.getDireccionFisicaPrincipal()){
+			BaseDireccionVO direccionNotificacion = new BaseDireccionVO();
+			direccionNotificacion.setId(String.valueOf(inter.getDireccionFisicaPrincipal().getIdAsInteger()));
+			direccionNotificacion.setDireccion(inter.getDireccionFisicaPrincipal().getDireccion());
+			interesado.setDireccionNotificacion(direccionNotificacion);
+		}
 
 		tercero.setNombre(nombre);
 		interesado.setTercero(tercero);
@@ -355,16 +363,12 @@ public class InterestedBo implements IGenericBo, Serializable {
 			representanteInteresado.setRepresentante(representanteTercero);
 			representanteInteresado.setNombre(nombre);
 			
-			// Direccion de notificacion del representante
-			/*
-			 * BaseDireccionVO direccionNotificacionRepresentante = new
-			 * BaseDireccionVO();
-			 * direccionNotificacionRepresentante.setId(String
-			 * .valueOf(flushFdrInter.getRepresentante().getDomId()));
-			 * direccionNotificacionRepresentante.setDireccion(flushFdrInter
-			 * .getRepresentante().getDirection()); representanteInteresado
-			 * .setDireccionNotificacion(direccionNotificacionRepresentante);
-			 */
+			if(null != inter.getRepresentante().getDireccionFisicaPrincipal()){
+				BaseDireccionVO direccionNotificacionRepresentante = new BaseDireccionVO();
+				direccionNotificacionRepresentante.setId(String.valueOf(inter.getRepresentante().getDireccionFisicaPrincipal().getIdAsInteger()));
+				direccionNotificacionRepresentante.setDireccion(inter.getRepresentante().getDireccionFisicaPrincipal().getDireccion());
+				representanteInteresado.setDireccionNotificacion(direccionNotificacionRepresentante);
+			}
 			
 			interesado.setRepresentante(representanteInteresado);
 		}

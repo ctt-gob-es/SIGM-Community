@@ -2284,7 +2284,12 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 
 				flushFdrInter.setInterId(idTercero);
 				flushFdrInter.setInterName((docIdentidad + " " + nombre + " " + pApellido + " " + sApellido).trim());
-				flushFdrInter.setInterNif(((Interesado) oInteresado).getDocIdentidad());				
+				flushFdrInter.setInterNif(((Interesado) oInteresado).getDocIdentidad());
+				
+				if(null != iInteresado.getDireccionFisicaPrincipal()){
+					flushFdrInter.setDomId(iInteresado.getDireccionFisicaPrincipal().getIdAsInteger());
+					flushFdrInter.setDirection(iInteresado.getDireccionFisicaPrincipal().getDireccion());
+				}
 			}
 			int interId = flushFdrInter.getInterId();
 			String interName = flushFdrInter.getInterName();
