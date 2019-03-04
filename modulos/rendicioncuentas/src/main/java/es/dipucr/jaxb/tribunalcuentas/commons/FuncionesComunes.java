@@ -25,13 +25,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.contratacion.objeto.DatosContrato;
-import es.dipucr.contratacion.objeto.DatosEmpresa;
-import es.dipucr.contratacion.objeto.DatosLicitacion;
-import es.dipucr.contratacion.objeto.DatosTramitacion;
-import es.dipucr.contratacion.objeto.DiariosFechaOficiales;
 import es.dipucr.contratacion.objeto.sw.AplicacionPresupuestaria;
 import es.dipucr.contratacion.objeto.sw.Campo;
+import es.dipucr.contratacion.objeto.sw.DatosContrato;
+import es.dipucr.contratacion.objeto.sw.DatosEmpresa;
+import es.dipucr.contratacion.objeto.sw.DatosLicitacion;
+import es.dipucr.contratacion.objeto.sw.DatosTramitacion;
+import es.dipucr.contratacion.objeto.sw.DiariosOficiales;
 import es.dipucr.contratacion.objeto.sw.LicitadorBean;
 import es.dipucr.jaxb.juntaconsultiva.commons.Constantes.PROC_ADJUDICACION;
 import es.dipucr.jaxb.juntaconsultiva.commons.Constantes.TRAMITE;
@@ -148,7 +148,7 @@ public class FuncionesComunes {
 		return codProc;
 	}
 
-	public static Contrato getContrato(DatosContrato datosContrato, DatosTramitacion datosTramitacion, DiariosFechaOficiales diariosFechaOficiales) {
+	public static Contrato getContrato(DatosContrato datosContrato, DatosTramitacion datosTramitacion, DiariosOficiales diariosFechaOficiales) {
 		Contrato contrato = null;
 		
 		if(null != datosTramitacion && null != datosContrato){	
@@ -349,11 +349,11 @@ public class FuncionesComunes {
 			contrato.setPublicidad(publicidad);
 
 			
-			es.dipucr.contratacion.services.PlataformaContratacionStub.LicitadorBean[] vlicitador = datosTramitacion.getLicitador();
+			LicitadorBean[] vlicitador = datosTramitacion.getLicitador();
 			if(vlicitador.length>0){
 				Contratista contratista = null;
 				for(int i=0; i<vlicitador.length; i++){
-					es.dipucr.contratacion.services.PlataformaContratacionStub.LicitadorBean licitador = vlicitador[i];
+					LicitadorBean licitador = vlicitador[i];
 					contratista = new Contratista();
 					contratista.setAdjudicatario(licitador.getNombre());
 					contratista.setNacionalidad("ES");
@@ -385,7 +385,7 @@ public class FuncionesComunes {
 	    return output;
 	}//remove
 
-	private static Tramitacion obtenerTramitacion(es.dipucr.contratacion.services.PlataformaContratacionStub.Campo campo) {
+	private static Tramitacion obtenerTramitacion(Campo campo) {
 		Tramitacion tramitacion = null;
 		if("Ordinaria".equals(campo.getValor())){
 			tramitacion = Tramitacion.O;
@@ -399,7 +399,7 @@ public class FuncionesComunes {
 		return tramitacion;
 	}
 
-	private static SistemaAdjudicacion obtenerSistemaAdjudicacion(es.dipucr.contratacion.services.PlataformaContratacionStub.Campo campo, boolean criterioMultiples) {
+	private static SistemaAdjudicacion obtenerSistemaAdjudicacion(Campo campo, boolean criterioMultiples) {
 		SistemaAdjudicacion sistemaAdj = null;
 		if("Abierto".equals(campo.getValor())){
 			if(criterioMultiples){
@@ -429,7 +429,7 @@ public class FuncionesComunes {
 				J - Contratos Colaboración Sector Público y Privado
 				Z - Otros
 	 * **/
-	private static TipoContrato obtenerTipoContrato(es.dipucr.contratacion.services.PlataformaContratacionStub.Campo campo) {
+	private static TipoContrato obtenerTipoContrato(Campo campo) {
 		TipoContrato tipoContratoTribunal = null;
 		if("Obras".equals(campo.getValor())){
 			tipoContratoTribunal = TipoContrato.A;
@@ -500,7 +500,7 @@ public class FuncionesComunes {
 	}
 
 	public static es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.EnteContratante.Departamento.OrganoContratante.Contrato getContratoJuntaConsultiva(DatosContrato datosContrato,
-			DatosTramitacion datosTramitacion, DiariosFechaOficiales diariosFechaOficiales, DatosLicitacion datosLicitacion, DatosEmpresa datosEmpresa) throws ISPACRuleException {
+			DatosTramitacion datosTramitacion, DiariosOficiales diariosFechaOficiales, DatosLicitacion datosLicitacion, DatosEmpresa datosEmpresa) throws ISPACRuleException {
 		es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.EnteContratante.Departamento.OrganoContratante.Contrato contrato = new es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.EnteContratante.Departamento.OrganoContratante.Contrato();
 		
 		try {
@@ -534,9 +534,9 @@ public class FuncionesComunes {
 			
 			//S�lo permite meter un CPV
 			if(null != datosContrato.getCpv() && datosContrato.getCpv().length>0){
-				es.dipucr.contratacion.services.PlataformaContratacionStub.Campo[] sCPV = datosContrato.getCpv();
+				Campo[] sCPV = datosContrato.getCpv();
 				for(int i=0; i<datosContrato.getCpv().length; i++){
-					es.dipucr.contratacion.services.PlataformaContratacionStub.Campo cpv = sCPV[i];
+					Campo cpv = sCPV[i];
 					CPV jcCpv = new CPV();
 					jcCpv.setCodigoCPV(cpv.getId());
 					Calendar calendar = Calendar.getInstance(); 
@@ -648,11 +648,11 @@ public class FuncionesComunes {
 			contrato.setRevisionPrecios("No");
 			if(null != datosLicitacion && null != datosLicitacion.getAplicacionPres()){
 				//Aplicacion Presupuestaria
-				es.dipucr.contratacion.services.PlataformaContratacionStub.AplicacionPresupuestaria[] vPresupuestaria = datosLicitacion.getAplicacionPres();
+				AplicacionPresupuestaria[] vPresupuestaria = datosLicitacion.getAplicacionPres();
 				if(null != vPresupuestaria && vPresupuestaria.length>0){
 					contrato.setPlurianual("Si");
 					for(int i=0; i<vPresupuestaria.length; i++){
-						es.dipucr.contratacion.services.PlataformaContratacionStub.AplicacionPresupuestaria aplicacPre = vPresupuestaria[i];
+						AplicacionPresupuestaria aplicacPre = vPresupuestaria[i];
 						Anualidad anualidad = new Anualidad();
 						Calendar calendar = Calendar.getInstance(); 
 						calendar.set(Calendar.YEAR, Integer.parseInt(aplicacPre.getAnualidad()));
@@ -676,10 +676,10 @@ public class FuncionesComunes {
 			}
 
 			if(null != datosEmpresa && null != datosEmpresa.getClasificacion()){
-				es.dipucr.contratacion.services.PlataformaContratacionStub.Campo[] vClasificacion = datosEmpresa.getClasificacion();
+				Campo[] vClasificacion = datosEmpresa.getClasificacion();
 				//clasificacion exigida
 				for(int i = 0; i < vClasificacion.length; i++){
-					es.dipucr.contratacion.services.PlataformaContratacionStub.Campo clasi = vClasificacion[i];
+					Campo clasi = vClasificacion[i];
 					ClasificacionExigida clasificacion = new ClasificacionExigida();
 					clasificacion.setCategoria(clasi.getId().substring(2,3));
 					clasificacion.setGrupo(clasi.getId().substring(0,1));
@@ -690,7 +690,7 @@ public class FuncionesComunes {
 	
 			//Contratista
 			if(null != datosTramitacion.getLicitador() && datosTramitacion.getLicitador().length>0){
-				es.dipucr.contratacion.services.PlataformaContratacionStub.LicitadorBean licitador = datosTramitacion.getLicitador()[0];
+				LicitadorBean licitador = datosTramitacion.getLicitador()[0];
 				boolean bcontratista = false;
 				es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.EnteContratante.Departamento.OrganoContratante.Contrato.Contratista contratista = 
 						new es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.EnteContratante.Departamento.OrganoContratante.Contrato.Contratista();
@@ -746,7 +746,7 @@ public class FuncionesComunes {
 	}
 
 
-	private static String getProcedimientoAdjud(es.dipucr.contratacion.services.PlataformaContratacionStub.Campo campo) {
+	private static String getProcedimientoAdjud(Campo campo) {
 		String procedimiento = "";
 		if(null != campo){
 			if(campo.getValor().contains("Abierto")){
@@ -762,7 +762,7 @@ public class FuncionesComunes {
 		return procedimiento;
 	}
 
-	private static String getTramite(es.dipucr.contratacion.services.PlataformaContratacionStub.Campo campo) {
+	private static String getTramite(Campo campo) {
 		String tramite = "";
 		if(null != campo){
 			if("Ordinaria".equals(campo.getValor())){

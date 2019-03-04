@@ -20,12 +20,12 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.contratacion.common.DipucrFuncionesComunes;
-import es.dipucr.contratacion.objeto.DatosContrato;
-import es.dipucr.contratacion.objeto.DatosEmpresa;
-import es.dipucr.contratacion.objeto.DatosLicitacion;
-import es.dipucr.contratacion.objeto.DatosTramitacion;
-import es.dipucr.contratacion.objeto.DiariosFechaOficiales;
+import es.dipucr.contratacion.objeto.sw.DatosContrato;
+import es.dipucr.contratacion.objeto.sw.DatosEmpresa;
+import es.dipucr.contratacion.objeto.sw.DatosLicitacion;
+import es.dipucr.contratacion.objeto.sw.DatosTramitacion;
+import es.dipucr.contratacion.objeto.sw.DiariosOficiales;
+import es.dipucr.contratacion.objeto.sw.common.DipucrFuncionesComunesSW;
 import es.dipucr.jaxb.juntaconsultiva.commons.Constantes;
 import es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion;
 import es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.Cabecera;
@@ -135,24 +135,24 @@ public class GenerarXMLJuntaConsultivaRule implements IRule {
 			while(itExp.hasNext()){
 				IItem expediente = itExp.next();
 				String numexpExp = expediente.getString("NUMEXP");
-				DatosContrato datosContrato = DipucrFuncionesComunes.getDatosContrato(rulectx, numexpExp);
-				DatosTramitacion datosTramitacion = DipucrFuncionesComunes.getDatosTramitacion(rulectx, numexpExp);
-				DatosLicitacion datosLicitacion = DipucrFuncionesComunes.getDatosLicitacion(rulectx);
-				DiariosFechaOficiales diariosFechaOficiales = DipucrFuncionesComunes.getFechaDiariosOficiales(rulectx, numexpExp);
-				DatosEmpresa datosEmpresa = DipucrFuncionesComunes.getDatosEmpresa(rulectx, numexpExp);
+				DatosContrato datosContrato = DipucrFuncionesComunesSW.getDatosContrato(rulectx.getClientContext(), numexpExp);
+				DatosTramitacion datosTramitacion = DipucrFuncionesComunesSW.getDatosTramitacion(rulectx.getClientContext(), numexpExp, null);
+				DatosLicitacion datosLicitacion = DipucrFuncionesComunesSW.getDatosLicitacion(rulectx.getClientContext(), numexpExp);
+				DiariosOficiales diariosOficiales = DipucrFuncionesComunesSW.getDiariosOficiales(rulectx.getClientContext(), numexpExp);
+				DatosEmpresa datosEmpresa = DipucrFuncionesComunesSW.getDatosEmpresa(rulectx.getClientContext(), numexpExp);
 				if(null == datosContrato){
 					datosContrato = new DatosContrato();
 				}
 				if(null == datosTramitacion){
 					datosTramitacion = new DatosTramitacion();
 				}
-				if(null == diariosFechaOficiales){
-					diariosFechaOficiales = new DiariosFechaOficiales();
+				if(null == diariosOficiales){
+					diariosOficiales = new DiariosOficiales();
 				}
 				if(null == datosEmpresa){
 					datosEmpresa = new DatosEmpresa();
 				}
-				Contrato contrato = FuncionesComunes.getContratoJuntaConsultiva(datosContrato, datosTramitacion, diariosFechaOficiales, datosLicitacion, datosEmpresa);
+				Contrato contrato = FuncionesComunes.getContratoJuntaConsultiva(datosContrato, datosTramitacion, diariosOficiales, datosLicitacion, datosEmpresa);
 				//compruebo que organo de contratación lo aprobo
 				if(datosContrato.getOrganoContratacion().equals(Constantes.ORGANO_CONTRATACION.JUNTAGOBIERNO)){						
 					if(null != contrato){

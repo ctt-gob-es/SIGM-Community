@@ -13,10 +13,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.contratacion.common.DipucrFuncionesComunes;
-import es.dipucr.contratacion.objeto.DatosContrato;
-import es.dipucr.contratacion.objeto.DatosTramitacion;
-import es.dipucr.contratacion.objeto.DiariosFechaOficiales;
+import es.dipucr.contratacion.objeto.sw.DatosContrato;
+import es.dipucr.contratacion.objeto.sw.DatosTramitacion;
+import es.dipucr.contratacion.objeto.sw.DiariosOficiales;
+import es.dipucr.contratacion.objeto.sw.common.DipucrFuncionesComunesSW;
 import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos;
 import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos.Contrato;
 import es.dipucr.jaxb.tribunalcuentas.beans.TipoEntidad;
@@ -81,10 +81,10 @@ public class GenerarXMLTribunalCuentasRule implements IRule {
 			while(itExp.hasNext()){
 				IItem expediente = itExp.next();
 				String numexpExp = expediente.getString("NUMEXP");
-				DatosContrato datosContrato = DipucrFuncionesComunes.getDatosContrato(rulectx, numexpExp);
-				DatosTramitacion datosTramitacion = DipucrFuncionesComunes.getDatosTramitacion(rulectx, numexpExp);
-				DiariosFechaOficiales diariosFechaOficiales = DipucrFuncionesComunes.getFechaDiariosOficiales(rulectx, numexpExp);
-				Contrato contrato = FuncionesComunes.getContrato(datosContrato, datosTramitacion, diariosFechaOficiales);
+				DatosContrato datosContrato = DipucrFuncionesComunesSW.getDatosContrato(rulectx.getClientContext(), numexpExp);
+				DatosTramitacion datosTramitacion = DipucrFuncionesComunesSW.getDatosTramitacion(rulectx.getClientContext(), numexpExp, null);
+				DiariosOficiales diariosOficiales = DipucrFuncionesComunesSW.getDiariosOficiales(rulectx.getClientContext(), numexpExp);
+				Contrato contrato = FuncionesComunes.getContrato(datosContrato, datosTramitacion, diariosOficiales);
 				if(null != contrato){
 					relacionContratos.getContrato().add(contrato);
 				}
