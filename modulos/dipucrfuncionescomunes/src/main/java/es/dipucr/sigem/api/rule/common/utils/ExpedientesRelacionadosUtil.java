@@ -22,6 +22,7 @@ import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.DatosComunesExpediente;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.InteresadoExpediente;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -65,6 +66,10 @@ public class ExpedientesRelacionadosUtil {
 	public static final String NOMBREPROCPADREPORTAFIRMA = "Firma de documentos en Port@firmas";
 	public static final String RELACIONPORTAFIRMA = "Firma Doc. Externos";
 	
+	public static final String RELACIONPROPUESTA = "proc.Propuesta%";
+	
+	public static final String RELACIONDECRETOS = "proc.Decreto%";
+	
 	private ExpedientesRelacionadosUtil(){
 	}
 	
@@ -86,6 +91,20 @@ public class ExpedientesRelacionadosUtil {
 	
 	public static String getOrderBy(String tipoExp, String orden){
 		return String.format(STR_ORDER_BY, tipoExp, orden, tipoExp, orden);
+	}
+	
+	public static IItemCollection getExpedientesByRelacion(IEntitiesAPI entitiesAPI, String numexpPadre, String relacion) throws ISPACException {
+		IItemCollection itRelaciones = null;
+		try{
+			String consultaSQL = "WHERE " + ExpedientesRelacionadosUtil.NUMEXP_PADRE + " = '" + numexpPadre + "' and "+ExpedientesRelacionadosUtil.RELACION+" LIKE '"+relacion+"'";
+			itRelaciones = entitiesAPI.queryEntities(SpacEntities.SPAC_EXP_RELACIONADOS, consultaSQL);
+
+		} catch (ISPACException e) {
+			LOGGER.error("Error al obtener los expedientes relacionado " + numexpPadre + ". " + e.getMessage(), e);
+			throw new ISPACException("Error al obtener los expedientes relacionado " + numexpPadre + ". " + e.getMessage(), e);
+		}
+		
+		return itRelaciones;
 	}
 	
 	public static String iniciaExpedienteHijoFirmaDocExternos(IClientContext cct, String numexpPadre, boolean importaParticipantes, boolean relacionaExpedientes) throws ISPACException{	

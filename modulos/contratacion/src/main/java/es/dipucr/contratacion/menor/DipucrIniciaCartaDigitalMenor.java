@@ -16,9 +16,9 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.contratacion.common.DipucrFuncionesComunes;
-import es.dipucr.contratacion.objeto.DatosContrato;
-import es.dipucr.contratacion.services.PlataformaContratacionStub.Campo;
+import es.dipucr.contratacion.objeto.sw.Campo;
+import es.dipucr.contratacion.objeto.sw.DatosContrato;
+import es.dipucr.contratacion.objeto.sw.common.DipucrFuncionesComunesSW;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
@@ -53,7 +53,7 @@ public class DipucrIniciaCartaDigitalMenor implements IRule{
 		IInvesflowAPI invesflowAPI = cct.getAPI();
 		IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 		try{
-			DatosContrato datosContrato = DipucrFuncionesComunes.getDatosContrato(rulectx, rulectx.getNumExp());
+			DatosContrato datosContrato = DipucrFuncionesComunesSW.getDatosContrato(cct, rulectx.getNumExp());
 			Campo [] vCampo = datosContrato.getCpv();
 			for(int i=0; i < vCampo.length; i++){
 				Campo cpv = vCampo[i];
