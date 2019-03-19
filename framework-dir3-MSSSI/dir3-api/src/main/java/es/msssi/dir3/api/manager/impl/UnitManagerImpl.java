@@ -22,11 +22,11 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.api.helper.UTFHelper;
 import es.msssi.dir3.api.dao.AddressDao;
 import es.msssi.dir3.api.dao.ContactUODao;
 import es.msssi.dir3.api.dao.HistoryDao;
 import es.msssi.dir3.api.dao.UnitDao;
-import es.msssi.dir3.api.helper.UTFHelper;
 import es.msssi.dir3.api.helper.UnitsHelper;
 import es.msssi.dir3.api.manager.UnitManager;
 import es.msssi.dir3.api.type.UOCriterionEnum;

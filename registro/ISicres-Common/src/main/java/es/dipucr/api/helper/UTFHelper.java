@@ -57,13 +57,17 @@ public class UTFHelper {
 
 			cadena = cadena.replaceAll("–", "-");
 
+			cadena = cadena.replaceAll("\u00b4", "'");
 			cadena = cadena.replaceAll("\u2013", "-");
-
+			cadena = cadena.replaceAll("\u2018", "'");
+			cadena = cadena.replaceAll("\u2019", "'");
 			cadena = cadena.replaceAll("\u201a", "'");
-
 			cadena = cadena.replaceAll("\u201c", "\"");
 			cadena = cadena.replaceAll("\u201d", "\"");
-			cadena = cadena.replaceAll("\u201e", "\"");
+			cadena = cadena.replaceAll("\u201e", "\"");	
+			cadena = cadena.replaceAll("\u2022", ".");
+			cadena = cadena.replaceAll("\u2026", "...");
+			cadena = cadena.replaceAll("\u2030", "‰");
 
 			char caracterEuro = (char)(-92 & 0xFF);
 	

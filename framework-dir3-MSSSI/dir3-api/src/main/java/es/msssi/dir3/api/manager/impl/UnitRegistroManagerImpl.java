@@ -555,7 +555,15 @@ public class UnitRegistroManagerImpl implements UnitRegistroManager,
 				@SuppressWarnings("unchecked")
 				List<Entidad> listaEntidades = (List<Entidad>)servicioEntidades.obtenerEntidades();
 				
+				LOGGER.warn("Procesando " + listaEntidades.size() + " entidades.");
+				int contador = 0;
 				for(Entidad entidad : listaEntidades) {
+				
+					if( 0 == contador%10){
+						LOGGER.warn("Llevamos " + contador + " entidades procesadas. Vamos por la " + entidad.getIdentificador());
+					}
+					contador++;
+					
 					entidadTrabajo = entidad.getIdentificador();
 					MultiEntityContextHolder.setEntity(entidadTrabajo);				
 				
@@ -594,7 +602,14 @@ public class UnitRegistroManagerImpl implements UnitRegistroManager,
 				@SuppressWarnings("unchecked")
 				List<Entidad> listaEntidades = (List<Entidad>)servicioEntidades.obtenerEntidades();
 				
+				int contador = 0;
 				for(Entidad entidad : listaEntidades) {
+				
+					if( 0 == contador%10){
+						LOGGER.warn("Llevamos " + contador + " entidades procesadas. Vamos por la " + entidad.getIdentificador());
+					}
+					contador++;
+
 					entidadTrabajo = entidad.getIdentificador();
 					MultiEntityContextHolder.setEntity(entidadTrabajo);				
 				
