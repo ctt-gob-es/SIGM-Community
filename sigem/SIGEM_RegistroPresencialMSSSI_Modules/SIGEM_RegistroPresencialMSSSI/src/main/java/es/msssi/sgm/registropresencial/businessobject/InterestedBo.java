@@ -23,16 +23,20 @@ import com.ieci.tecdoc.isicres.context.ISicresBeansProvider;
 import com.ieci.tecdoc.isicres.usecase.UseCaseConf;
 
 import es.ieci.tecdoc.fwktd.core.spring.configuration.jdbc.datasource.MultiEntityContextHolder;
+import es.ieci.tecdoc.isicres.terceros.business.manager.DireccionManager;
 import es.ieci.tecdoc.isicres.terceros.business.manager.InteresadoManager;
 import es.ieci.tecdoc.isicres.terceros.business.manager.TerceroManager;
+import es.ieci.tecdoc.isicres.terceros.business.manager.impl.TerceroManagerImpl;
 import es.ieci.tecdoc.isicres.terceros.business.vo.BaseDireccionVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.BaseTerceroVO;
+import es.ieci.tecdoc.isicres.terceros.business.vo.DireccionFisicaVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.InteresadoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.RepresentanteInteresadoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoFisicoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoJuridicoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TipoDocumentoIdentificativoTerceroVO;
+import es.ieci.tecdoc.isicres.terceros.business.vo.enums.DireccionType;
 import es.msssi.sgm.registropresencial.beans.Interesado;
 import es.msssi.sgm.registropresencial.beans.Representante;
 import es.msssi.sgm.registropresencial.provider.ISicresBeanTercerosProvider;
@@ -314,10 +318,10 @@ public class InterestedBo implements IGenericBo, Serializable {
 		BaseTerceroVO tercero = new BaseTerceroVO();
 		tercero.setId(String.valueOf(inter.getIdTercero()));
 		
-		if(null != inter.getDireccionFisicaPrincipal()){
+		if(null != inter.getDireccionSeleccionada()){
 			BaseDireccionVO direccionNotificacion = new BaseDireccionVO();
-			direccionNotificacion.setId(String.valueOf(inter.getDireccionFisicaPrincipal().getIdAsInteger()));
-			direccionNotificacion.setDireccion(inter.getDireccionFisicaPrincipal().getDireccion());
+			direccionNotificacion.setId(String.valueOf(inter.getDireccionSeleccionada().getIdAsInteger()));
+			direccionNotificacion.setDireccion(inter.getDireccionSeleccionada().getDireccion());
 			interesado.setDireccionNotificacion(direccionNotificacion);
 		}
 
@@ -363,10 +367,10 @@ public class InterestedBo implements IGenericBo, Serializable {
 			representanteInteresado.setRepresentante(representanteTercero);
 			representanteInteresado.setNombre(nombre);
 			
-			if(null != inter.getRepresentante().getDireccionFisicaPrincipal()){
+			if(null != inter.getRepresentante().getDireccionSeleccionada()){
 				BaseDireccionVO direccionNotificacionRepresentante = new BaseDireccionVO();
-				direccionNotificacionRepresentante.setId(String.valueOf(inter.getRepresentante().getDireccionFisicaPrincipal().getIdAsInteger()));
-				direccionNotificacionRepresentante.setDireccion(inter.getRepresentante().getDireccionFisicaPrincipal().getDireccion());
+				direccionNotificacionRepresentante.setId(String.valueOf(inter.getRepresentante().getDireccionSeleccionada().getIdAsInteger()));
+				direccionNotificacionRepresentante.setDireccion(inter.getRepresentante().getDireccionSeleccionada().getDireccion());
 				representanteInteresado.setDireccionNotificacion(direccionNotificacionRepresentante);
 			}
 			
@@ -460,6 +464,31 @@ public class InterestedBo implements IGenericBo, Serializable {
 			interesado.setDireccionFisicaPrincipal(terceroVO.getDireccionFisicaPrincipal());
 			interesado.setDireccionesTelematicas(terceroVO.getDireccionesTelematicas());
 			interesado.setDireccionTelematicaPrincipal(terceroVO.getDireccionTelematicaPrincipal());
+			
+			if(null != interesadoVO.getDireccionNotificacion() && DireccionType.FISICA.equals(interesadoVO.getDireccionNotificacion().getTipo())){
+				DireccionManager direccionManager = ((TerceroManagerImpl)terceroManager).getDireccionManager();				
+				DireccionFisicaVO direccionSeleccionadaAux = (DireccionFisicaVO) direccionManager.get(interesadoVO.getDireccionNotificacion().getId());
+
+				interesado.setDireccionSeleccionada(direccionSeleccionadaAux );
+				
+			} else {
+				if( null != terceroVO.getDireccionFisicaPrincipal()){
+			    	DireccionFisicaVO direccionSeleccionadaAux = new DireccionFisicaVO();
+			    	
+			    	direccionSeleccionadaAux.setId(terceroVO.getDireccionFisicaPrincipal().getId());
+			    	direccionSeleccionadaAux.setCiudad(terceroVO.getDireccionFisicaPrincipal().getCiudad());
+			    	direccionSeleccionadaAux.setCodigoPostal(terceroVO.getDireccionFisicaPrincipal().getCodigoPostal());
+			    	direccionSeleccionadaAux.setDireccion(terceroVO.getDireccionFisicaPrincipal().getDireccion());
+			    	direccionSeleccionadaAux.setPais(terceroVO.getDireccionFisicaPrincipal().getPais());
+			    	direccionSeleccionadaAux.setPrincipal(terceroVO.getDireccionFisicaPrincipal().isPrincipal());
+			    	direccionSeleccionadaAux.setProvincia(terceroVO.getDireccionFisicaPrincipal().getProvincia());
+			    	direccionSeleccionadaAux.setTercero(terceroVO.getDireccionFisicaPrincipal().getTercero());
+			    	direccionSeleccionadaAux.setTipo(terceroVO.getDireccionFisicaPrincipal().getTipo());
+			    	
+					interesado.setDireccionSeleccionada(direccionSeleccionadaAux );
+			    }
+			}
+			
 		} else {
 			
 			interesado.setNombre(interesadoVO.getNombre());
@@ -508,6 +537,22 @@ public class InterestedBo implements IGenericBo, Serializable {
 						repre.setDireccionFisicaPrincipal(tercero.getDireccionFisicaPrincipal());
 						repre.setDireccionesTelematicas(tercero.getDireccionesTelematicas());
 						repre.setDireccionTelematicaPrincipal(tercero.getDireccionTelematicaPrincipal());
+						
+						if( null != tercero.getDireccionFisicaPrincipal()){
+					    	DireccionFisicaVO direccionSeleccionadaAux = new DireccionFisicaVO();
+					    	
+					    	direccionSeleccionadaAux.setId(tercero.getDireccionFisicaPrincipal().getId());
+					    	direccionSeleccionadaAux.setCiudad(tercero.getDireccionFisicaPrincipal().getCiudad());
+					    	direccionSeleccionadaAux.setCodigoPostal(tercero.getDireccionFisicaPrincipal().getCodigoPostal());
+					    	direccionSeleccionadaAux.setDireccion(tercero.getDireccionFisicaPrincipal().getDireccion());
+					    	direccionSeleccionadaAux.setPais(tercero.getDireccionFisicaPrincipal().getPais());
+					    	direccionSeleccionadaAux.setPrincipal(tercero.getDireccionFisicaPrincipal().isPrincipal());
+					    	direccionSeleccionadaAux.setProvincia(tercero.getDireccionFisicaPrincipal().getProvincia());
+					    	direccionSeleccionadaAux.setTercero(tercero.getDireccionFisicaPrincipal().getTercero());
+					    	direccionSeleccionadaAux.setTipo(tercero.getDireccionFisicaPrincipal().getTipo());
+					    	
+							repre.setDireccionSeleccionada(direccionSeleccionadaAux );
+					    }
 					}
 					
 					repre.setId(interesadoVO.getRepresentante().getIdAsInteger());
@@ -517,6 +562,27 @@ public class InterestedBo implements IGenericBo, Serializable {
 					repre.setDireccionFisicaPrincipal(terceroVO.getDireccionFisicaPrincipal());
 					repre.setDireccionesTelematicas(terceroVO.getDireccionesTelematicas());
 					repre.setDireccionTelematicaPrincipal(terceroVO.getDireccionTelematicaPrincipal());
+					
+					if ( null != interesadoVO.getRepresentante().getDireccionNotificacion()){
+						DireccionManager direccionManager = ((TerceroManagerImpl)terceroManager).getDireccionManager();				
+						DireccionFisicaVO direccionSeleccionadaAux = (DireccionFisicaVO) direccionManager.get(interesadoVO.getRepresentante().getDireccionNotificacion().getId());
+						repre.setDireccionSeleccionada(direccionSeleccionadaAux );
+						
+					} else if( null != terceroVO.getDireccionFisicaPrincipal()){
+				    	DireccionFisicaVO direccionSeleccionadaAux = new DireccionFisicaVO();
+				    	
+				    	direccionSeleccionadaAux.setId(terceroVO.getDireccionFisicaPrincipal().getId());
+				    	direccionSeleccionadaAux.setCiudad(terceroVO.getDireccionFisicaPrincipal().getCiudad());
+				    	direccionSeleccionadaAux.setCodigoPostal(terceroVO.getDireccionFisicaPrincipal().getCodigoPostal());
+				    	direccionSeleccionadaAux.setDireccion(terceroVO.getDireccionFisicaPrincipal().getDireccion());
+				    	direccionSeleccionadaAux.setPais(terceroVO.getDireccionFisicaPrincipal().getPais());
+				    	direccionSeleccionadaAux.setPrincipal(terceroVO.getDireccionFisicaPrincipal().isPrincipal());
+				    	direccionSeleccionadaAux.setProvincia(terceroVO.getDireccionFisicaPrincipal().getProvincia());
+				    	direccionSeleccionadaAux.setTercero(terceroVO.getDireccionFisicaPrincipal().getTercero());
+				    	direccionSeleccionadaAux.setTipo(terceroVO.getDireccionFisicaPrincipal().getTipo());
+				    	
+						repre.setDireccionSeleccionada(direccionSeleccionadaAux );
+				    }
 
 					interesado.setRepresentante(repre);
 				}
@@ -574,7 +640,12 @@ public class InterestedBo implements IGenericBo, Serializable {
 						senderField += interesadoToString.getRazonSocial();
 					}
 				}
-				if(null != interesadoToString.getDireccionFisicaPrincipal()){
+				if(null != interesadoToString.getDireccionSeleccionada()){
+					senderField += "\n(";
+					senderField += interesadoToString.getDireccionSeleccionada().toString();
+					senderField += ")";
+					
+				} else  if(null != interesadoToString.getDireccionFisicaPrincipal()){
 					senderField += "\n(";
 					senderField += interesadoToString.getDireccionFisicaPrincipal().toString();
 					senderField += ")";
@@ -601,7 +672,12 @@ public class InterestedBo implements IGenericBo, Serializable {
 						if (StringUtils.isNotEmpty(senderAgent.getSapellido())) {
 							senderField += " " + senderAgent.getSapellido();
 						}
-						if(null != senderAgent.getDireccionFisicaPrincipal()){
+						if(null != senderAgent.getDireccionSeleccionada()){
+							senderField += "\n(";
+							senderField += senderAgent.getDireccionSeleccionada().toString();
+							senderField += ")";
+							
+						} else if(null != senderAgent.getDireccionFisicaPrincipal()){
 							senderField += "\n(";
 							senderField += senderAgent.getDireccionFisicaPrincipal().toString();
 							senderField += ")";
@@ -619,7 +695,11 @@ public class InterestedBo implements IGenericBo, Serializable {
 								
 								senderField += senderAgent.getRazonSocial();
 							}
-							if(null != senderAgent.getDireccionFisicaPrincipal()){
+							if(null != senderAgent.getDireccionSeleccionada()){
+								senderField += "\n(";
+								senderField += senderAgent.getDireccionSeleccionada().toString();
+								senderField += ")";
+							} else if(null != senderAgent.getDireccionFisicaPrincipal()){
 								senderField += "\n(";
 								senderField += senderAgent.getDireccionFisicaPrincipal().toString();
 								senderField += ")";

@@ -31,6 +31,7 @@ import com.ieci.tecdoc.utils.HibernateUtil;
 
 import es.ieci.tecdoc.fwktd.core.spring.configuration.jdbc.datasource.MultiEntityContextHolder;
 import es.ieci.tecdoc.isicres.terceros.business.manager.TerceroManager;
+import es.ieci.tecdoc.isicres.terceros.business.vo.DireccionFisicaVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoFisicoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoJuridicoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoVO;
@@ -167,6 +168,22 @@ public class InteresadoConverter implements Converter {
 				    inter.setDireccionesTelematicas(tercero.getDireccionesTelematicas());
 				    inter.setDireccionTelematicaPrincipal(tercero.getDireccionTelematicaPrincipal());
 				    
+				    if( null != tercero.getDireccionFisicaPrincipal()){
+				    	DireccionFisicaVO direccionSeleccionadaAux = new DireccionFisicaVO();
+				    	
+				    	direccionSeleccionadaAux.setId(tercero.getDireccionFisicaPrincipal().getId());
+				    	direccionSeleccionadaAux.setCiudad(tercero.getDireccionFisicaPrincipal().getCiudad());
+				    	direccionSeleccionadaAux.setCodigoPostal(tercero.getDireccionFisicaPrincipal().getCodigoPostal());
+				    	direccionSeleccionadaAux.setDireccion(tercero.getDireccionFisicaPrincipal().getDireccion());
+				    	direccionSeleccionadaAux.setPais(tercero.getDireccionFisicaPrincipal().getPais());
+				    	direccionSeleccionadaAux.setPrincipal(tercero.getDireccionFisicaPrincipal().isPrincipal());
+				    	direccionSeleccionadaAux.setProvincia(tercero.getDireccionFisicaPrincipal().getProvincia());
+				    	direccionSeleccionadaAux.setTercero(tercero.getDireccionFisicaPrincipal().getTercero());
+				    	direccionSeleccionadaAux.setTipo(tercero.getDireccionFisicaPrincipal().getTipo());
+				    	
+						inter.setDireccionSeleccionada(direccionSeleccionadaAux );
+				    }
+				    
 				    resultInteresados.add(inter);
 				}
 			} else{
@@ -207,6 +224,22 @@ public class InteresadoConverter implements Converter {
 					    inter.setDireccionFisicaPrincipal(tercero.getDireccionFisicaPrincipal());
 					    inter.setDireccionesTelematicas(tercero.getDireccionesTelematicas());
 					    inter.setDireccionTelematicaPrincipal(tercero.getDireccionTelematicaPrincipal());
+					    
+					    if( null != tercero.getDireccionFisicaPrincipal()){
+					    	DireccionFisicaVO direccionSeleccionadaAux = new DireccionFisicaVO();
+					    	
+					    	direccionSeleccionadaAux.setId(tercero.getDireccionFisicaPrincipal().getId());
+					    	direccionSeleccionadaAux.setCiudad(tercero.getDireccionFisicaPrincipal().getCiudad());
+					    	direccionSeleccionadaAux.setCodigoPostal(tercero.getDireccionFisicaPrincipal().getCodigoPostal());
+					    	direccionSeleccionadaAux.setDireccion(tercero.getDireccionFisicaPrincipal().getDireccion());
+					    	direccionSeleccionadaAux.setPais(tercero.getDireccionFisicaPrincipal().getPais());
+					    	direccionSeleccionadaAux.setPrincipal(tercero.getDireccionFisicaPrincipal().isPrincipal());
+					    	direccionSeleccionadaAux.setProvincia(tercero.getDireccionFisicaPrincipal().getProvincia());
+					    	direccionSeleccionadaAux.setTercero(tercero.getDireccionFisicaPrincipal().getTercero());
+					    	direccionSeleccionadaAux.setTipo(tercero.getDireccionFisicaPrincipal().getTipo());
+					    	
+							inter.setDireccionSeleccionada(direccionSeleccionadaAux );
+					    }
 		
 					    resultInteresados.add(inter);
 					}

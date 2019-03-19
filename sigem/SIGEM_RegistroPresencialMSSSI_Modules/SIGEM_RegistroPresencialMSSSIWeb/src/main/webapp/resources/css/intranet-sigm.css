@@ -652,3 +652,6 @@ div#accordion\:outputRegisterAttachedDocumentsForm\:dialogFileUpload button.ui-b
 .ui-fileupload-buttonbar .ui-fileupload-choose input{
 	transform: translate(180px, 0) scaleX(0.3) !important; 
 } 
+
+.dirFisicasSelectOne.ui-selectonemenu {width: 100% !important;} 
+.dirFisicasSelectOne.ui-selectonemenu .ui-selectonemenu-label {width: 100% !important;}  

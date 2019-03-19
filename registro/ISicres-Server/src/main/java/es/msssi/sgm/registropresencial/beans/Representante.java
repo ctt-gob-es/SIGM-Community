@@ -44,7 +44,7 @@ public class Representante implements Serializable {
 	private List<DireccionTelematicaVO> direccionesTelematicas = new ArrayList<DireccionTelematicaVO>();
 	private DireccionTelematicaVO direccionTelematicaPrincipal;
 
-
+	private DireccionFisicaVO direccionSeleccionada;
 	
 	/**
 	 * Constructor.
@@ -253,6 +253,14 @@ public class Representante implements Serializable {
 		this.direccionTelematicaPrincipal = direccionTelematicaPrincipal;
 	}
 	
+	public DireccionFisicaVO getDireccionSeleccionada() {
+		return direccionSeleccionada;
+	}
+
+	public void setDireccionSeleccionada(DireccionFisicaVO direccionSeleccionada) {
+		this.direccionSeleccionada = direccionSeleccionada;
+	}
+
 	public boolean equals(Object obj) {
 		if(null == obj || !(obj instanceof Representante)){
         	return false;

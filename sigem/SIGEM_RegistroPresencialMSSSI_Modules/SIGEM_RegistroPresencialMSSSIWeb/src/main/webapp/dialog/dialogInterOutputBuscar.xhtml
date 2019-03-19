@@ -61,9 +61,9 @@
 								<h:outputLabel value="#{msgs.labelNumeroDocumento}"></h:outputLabel>
 							</span>
 							<p:selectOneMenu value="#{tercerosAction.busquedaInteresado.tipoBusqueda1}" id="tipoBusqueda1" >
-								<f:selectItem itemLabel="Empieza por" itemValue="1" />
-								<f:selectItem itemLabel="Es Igual a" itemValue="2" />
 								<f:selectItem itemLabel="Contiene" itemValue="3" />
+								<f:selectItem itemLabel="Empieza por" itemValue="1" />
+								<f:selectItem itemLabel="Es Igual a" itemValue="2" />								
 							</p:selectOneMenu>
 							<p:inputText id="docIdentidadIntPBuscar" 
 								required="#{
@@ -90,9 +90,9 @@
 								<h:outputLabel value="#{msgs.labelNombre}"></h:outputLabel>
 							</span>
 							<p:selectOneMenu value="#{tercerosAction.busquedaInteresado.tipoBusqueda2}" id="tipoBusqueda2" >
+								<f:selectItem itemLabel="Contiene" itemValue="3" />
 								<f:selectItem itemLabel="Empieza por" itemValue="1" />
 								<f:selectItem itemLabel="Es Igual a" itemValue="2" />
-								<f:selectItem itemLabel="Contiene" itemValue="3" />
 							</p:selectOneMenu>
 							<p:inputText id="nombreIntBuscar" required="false" label="#{msgs.labelNombre}" value="#{tercerosAction.busquedaInteresado.nombre}" >
 								<f:validateLength maximum="30" />
@@ -105,9 +105,9 @@
 								<h:outputLabel value="#{msgs.labelRazonSocial}"></h:outputLabel>
 							</span>
 							<p:selectOneMenu value="#{tercerosAction.busquedaInteresado.tipoBusqueda2}" id="tipoBusqueda5" >
+								<f:selectItem itemLabel="Contiene" itemValue="3" />
 								<f:selectItem itemLabel="Empieza por" itemValue="1" />
 								<f:selectItem itemLabel="Es Igual a" itemValue="2" />
-								<f:selectItem itemLabel="Contiene" itemValue="3" />
 							</p:selectOneMenu>
 							<p:inputText id="razonSocialIntBuscar" required="false" label="#{msgs.labelRazonSocial}" value="#{tercerosAction.busquedaInteresado.razonSocial}" >
 								<f:validateLength maximum="80" />
@@ -120,9 +120,9 @@
 								<h:outputLabel value="#{msgs.labelPrimerApellido}"></h:outputLabel>
 							</span>
 							<p:selectOneMenu value="#{tercerosAction.busquedaInteresado.tipoBusqueda3}" id="tipoBusqueda3" >
+								<f:selectItem itemLabel="Contiene" itemValue="3" />
 								<f:selectItem itemLabel="Empieza por" itemValue="1" />
 								<f:selectItem itemLabel="Es Igual a" itemValue="2" />
-								<f:selectItem itemLabel="Contiene" itemValue="3" />
 							</p:selectOneMenu>
 							<p:inputText id="papellidoIntBuscar" required="false" label="#{msgs.labelPrimerApellido}" value="#{tercerosAction.busquedaInteresado.papellido}" >
 								<f:validateLength maximum="30" />
@@ -133,9 +133,9 @@
 								<h:outputLabel value="#{msgs.labelSegundoApellido}"></h:outputLabel>
 							</span>
 							<p:selectOneMenu value="#{tercerosAction.busquedaInteresado.tipoBusqueda4}" id="tipoBusqueda4" >
+								<f:selectItem itemLabel="Contiene" itemValue="3" />
 								<f:selectItem itemLabel="Empieza por" itemValue="1" />
 								<f:selectItem itemLabel="Es Igual a" itemValue="2" />
-								<f:selectItem itemLabel="Contiene" itemValue="3" />
 							</p:selectOneMenu>
 							<p:inputText id="sapellidoIntBuscar" required="false" label="#{msgs.labelSegundoApellido}" value="#{tercerosAction.busquedaInteresado.sapellido}" >
 								<f:validateLength maximum="30" />
@@ -186,8 +186,11 @@
 						<f:facet name="header">
 							<h:outputText value="#{msgs.labelDireccion}" />
 						</f:facet>
-						<ui:fragment>
-							<h:outputText value="#{int.direccionFisicaPrincipal}" />
+						<ui:fragment>					
+							<p:selectOneMenu id="dirFisicasSelectOne" styleClass="dirFisicasSelectOne" value="#{int.direccionSeleccionada}" filter="true" converter="direccionFisicaConverter">
+								<f:selectItems value="#{int.direccionesFisicas}" />
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
 						</ui:fragment>
 					</p:column>
 					<p:column width="7%">
@@ -233,8 +236,11 @@
 						<f:facet name="header">
 							<h:outputText value="#{msgs.labelDireccion}" />
 						</f:facet>
-						<ui:fragment>
-							<h:outputText value="#{int.representante.direccionFisicaPrincipal}" />
+						<ui:fragment rendered="${int.representante.docIdentidad != null}">					
+							<p:selectOneMenu id="dirFisicasSelectOneRepre" styleClass="dirFisicasSelectOne" value="#{int.representante.direccionSeleccionada}" filter="true" converter="direccionFisicaConverter">
+								<f:selectItems value="#{int.representante.direccionesFisicas}" var="dirRepre" itemValue="#{dirRepre}"/>
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
 						</ui:fragment>
 					</p:column>
 					<p:column width="7%">
