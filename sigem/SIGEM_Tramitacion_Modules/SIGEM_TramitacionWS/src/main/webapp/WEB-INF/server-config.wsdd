@@ -63,152 +63,159 @@
   <ns1:parameter name="schemaQualified" value="http://sw.objeto.contratacion.dipucr.es,http://ws.licitacionelectronica.dipucr.es"/>
   <ns1:parameter name="wsdlTargetNamespace" value="http://ws.licitacionelectronica.dipucr.es"/>
   <ns1:parameter name="wsdlServiceElement" value="LicitacionElectronicaWSService"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns5:PublicacionesOficialesBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.PublicacionesOficialesBean" xmlns:ns5="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns6:PersonalContacto" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.PersonalContacto" xmlns:ns6="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns7:DuracionContratoBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.DuracionContratoBean" xmlns:ns7="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns8:VariantesOfertas" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.VariantesOfertas" xmlns:ns8="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns9:SolvenciaTecnica" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.SolvenciaTecnica" xmlns:ns9="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns10:PersonaComite" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.PersonaComite" xmlns:ns10="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns11:Campo" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Campo" xmlns:ns11="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns12:CondicionesLicitadores" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.CondicionesLicitadores" xmlns:ns12="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns13:CriteriosAdjudicacion" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.CriteriosAdjudicacion" xmlns:ns13="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns14:SobreElectronico" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.SobreElectronico" xmlns:ns14="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns15:Documento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Documento" xmlns:ns15="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns16:EventoAperturaBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.EventoAperturaBean" xmlns:ns16="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns17:SolvenciaEconomica" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.SolvenciaEconomica" xmlns:ns17="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns18:AplicacionPresupuestaria" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.AplicacionPresupuestaria" xmlns:ns18="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns19:LicitadorBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.LicitadorBean" xmlns:ns19="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns20:FundacionPrograma" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.FundacionPrograma" xmlns:ns20="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns21:CriterioAdjudicacionMultCrit" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.CriterioAdjudicacionMultCrit" xmlns:ns21="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns22:Garantia" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Garantia" xmlns:ns22="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns23:Lote" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Lote" xmlns:ns23="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns24:Clasificacion" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Clasificacion" xmlns:ns24="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns25:Lotes" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Lotes" xmlns:ns25="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns26:OrganoAsistencia" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.OrganoAsistencia" xmlns:ns26="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns27:RequisitfiDeclaraciones" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.RequisitfiDeclaraciones" xmlns:ns27="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns28:EspacioVirtualLicitacionBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.EspacioVirtualLicitacionBean" xmlns:ns28="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns29:Periodo" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Periodo" xmlns:ns29="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="xsd:string" languageSpecificType="java:java.lang.String[]" qname="ns30:ArrayOf_xsd_string" xmlns:ns30="http://ws.licitacionelectronica.dipucr.es" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-  <ns1:arrayMapping innerType="ns32:LicitadorBean" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.LicitadorBean[]" qname="ns31:ArrayOf_tns1_LicitadorBean" xmlns:ns31="http://ws.licitacionelectronica.dipucr.es" xmlns:ns32="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="ns34:PersonaComite" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.PersonaComite[]" qname="ns33:ArrayOf_tns1_PersonaComite" xmlns:ns33="http://ws.licitacionelectronica.dipucr.es" xmlns:ns34="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="ns36:AplicacionPresupuestaria" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.AplicacionPresupuestaria[]" qname="ns35:ArrayOf_tns1_AplicacionPresupuestaria" xmlns:ns35="http://ws.licitacionelectronica.dipucr.es" xmlns:ns36="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="ns38:SolvenciaEconomica" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.SolvenciaEconomica[]" qname="ns37:ArrayOf_tns1_SolvenciaEconomica" xmlns:ns37="http://ws.licitacionelectronica.dipucr.es" xmlns:ns38="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="ns40:CriterioAdjudicacionMultCrit" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.CriterioAdjudicacionMultCrit[]" qname="ns39:ArrayOf_tns1_CriterioAdjudicacionMultCrit" xmlns:ns39="http://ws.licitacionelectronica.dipucr.es" xmlns:ns40="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="ns42:Garantia" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.Garantia[]" qname="ns41:ArrayOf_tns1_Garantia" xmlns:ns41="http://ws.licitacionelectronica.dipucr.es" xmlns:ns42="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="ns44:Lote" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.Lote[]" qname="ns43:ArrayOf_tns1_Lote" xmlns:ns43="http://ws.licitacionelectronica.dipucr.es" xmlns:ns44="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="ns46:SobreElectronico" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.SobreElectronico[]" qname="ns45:ArrayOf_tns1_SobreElectronico" xmlns:ns45="http://ws.licitacionelectronica.dipucr.es" xmlns:ns46="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="ns48:SolvenciaTecnica" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.SolvenciaTecnica[]" qname="ns47:ArrayOf_tns1_SolvenciaTecnica" xmlns:ns47="http://ws.licitacionelectronica.dipucr.es" xmlns:ns48="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="ns50:Campo" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.Campo[]" qname="ns49:ArrayOf_tns1_Campo" xmlns:ns49="http://ws.licitacionelectronica.dipucr.es" xmlns:ns50="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="ns52:RequisitfiDeclaraciones" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.RequisitfiDeclaraciones[]" qname="ns51:ArrayOf_tns1_RequisitfiDeclaraciones" xmlns:ns51="http://ws.licitacionelectronica.dipucr.es" xmlns:ns52="http://sw.objeto.contratacion.dipucr.es"/>
-  <ns1:arrayMapping innerType="ns54:Documento" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.Documento[]" qname="ns53:ArrayOf_tns1_Documento" xmlns:ns53="http://ws.licitacionelectronica.dipucr.es" xmlns:ns54="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns5:DuracionContratoBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.DuracionContratoBean" xmlns:ns5="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns6:VariantesOfertas" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.VariantesOfertas" xmlns:ns6="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns7:SolvenciaTecnica" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.SolvenciaTecnica" xmlns:ns7="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns8:PersonaComite" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.PersonaComite" xmlns:ns8="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns9:DatosEmpresa" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.DatosEmpresa" xmlns:ns9="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns10:Campo" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Campo" xmlns:ns10="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns11:CondicionesLicitadores" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.CondicionesLicitadores" xmlns:ns11="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns12:CriteriosAdjudicacion" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.CriteriosAdjudicacion" xmlns:ns12="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns13:DatosContrato" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.DatosContrato" xmlns:ns13="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns14:FormalizacionBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.FormalizacionBean" xmlns:ns14="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns15:DiariosOficiales" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.DiariosOficiales" xmlns:ns15="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns16:SobreElectronico" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.SobreElectronico" xmlns:ns16="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns17:Documento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Documento" xmlns:ns17="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns18:Solvencia" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Solvencia" xmlns:ns18="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns19:DatosTramitacion" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.DatosTramitacion" xmlns:ns19="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns20:EventoAperturaBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.EventoAperturaBean" xmlns:ns20="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns21:DatosLicitacion" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.DatosLicitacion" xmlns:ns21="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns22:SolvenciaEconomica" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.SolvenciaEconomica" xmlns:ns22="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns23:DepartamentosContacto" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.DepartamentosContacto" xmlns:ns23="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns24:AplicacionPresupuestaria" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.AplicacionPresupuestaria" xmlns:ns24="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns25:LicitadorBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.LicitadorBean" xmlns:ns25="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns26:FundacionPrograma" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.FundacionPrograma" xmlns:ns26="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns27:CriterioAdjudicacionMultCrit" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.CriterioAdjudicacionMultCrit" xmlns:ns27="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns28:Garantia" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Garantia" xmlns:ns28="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns29:Lote" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Lote" xmlns:ns29="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns30:Lotes" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Lotes" xmlns:ns30="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns31:OrganoAsistencia" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.OrganoAsistencia" xmlns:ns31="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns32:RequisitfiDeclaraciones" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.RequisitfiDeclaraciones" xmlns:ns32="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns33:EspacioVirtualLicitacionBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.EspacioVirtualLicitacionBean" xmlns:ns33="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns34:Periodo" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Periodo" xmlns:ns34="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns35:Departamento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.Departamento" xmlns:ns35="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns36:OfertasRecibidas" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:es.dipucr.contratacion.objeto.sw.OfertasRecibidas" xmlns:ns36="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="xsd:string" languageSpecificType="java:java.lang.String[]" qname="ns37:ArrayOf_xsd_string" xmlns:ns37="http://ws.licitacionelectronica.dipucr.es" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+  <ns1:arrayMapping innerType="ns39:LicitadorBean" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.LicitadorBean[]" qname="ns38:ArrayOf_tns1_LicitadorBean" xmlns:ns38="http://ws.licitacionelectronica.dipucr.es" xmlns:ns39="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="ns41:PersonaComite" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.PersonaComite[]" qname="ns40:ArrayOf_tns1_PersonaComite" xmlns:ns40="http://ws.licitacionelectronica.dipucr.es" xmlns:ns41="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="ns43:AplicacionPresupuestaria" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.AplicacionPresupuestaria[]" qname="ns42:ArrayOf_tns1_AplicacionPresupuestaria" xmlns:ns42="http://ws.licitacionelectronica.dipucr.es" xmlns:ns43="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="ns45:SolvenciaEconomica" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.SolvenciaEconomica[]" qname="ns44:ArrayOf_tns1_SolvenciaEconomica" xmlns:ns44="http://ws.licitacionelectronica.dipucr.es" xmlns:ns45="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="ns47:CriterioAdjudicacionMultCrit" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.CriterioAdjudicacionMultCrit[]" qname="ns46:ArrayOf_tns1_CriterioAdjudicacionMultCrit" xmlns:ns46="http://ws.licitacionelectronica.dipucr.es" xmlns:ns47="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="ns49:Garantia" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.Garantia[]" qname="ns48:ArrayOf_tns1_Garantia" xmlns:ns48="http://ws.licitacionelectronica.dipucr.es" xmlns:ns49="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="ns51:Lote" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.Lote[]" qname="ns50:ArrayOf_tns1_Lote" xmlns:ns50="http://ws.licitacionelectronica.dipucr.es" xmlns:ns51="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="ns53:SobreElectronico" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.SobreElectronico[]" qname="ns52:ArrayOf_tns1_SobreElectronico" xmlns:ns52="http://ws.licitacionelectronica.dipucr.es" xmlns:ns53="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="ns55:SolvenciaTecnica" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.SolvenciaTecnica[]" qname="ns54:ArrayOf_tns1_SolvenciaTecnica" xmlns:ns54="http://ws.licitacionelectronica.dipucr.es" xmlns:ns55="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="ns57:Campo" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.Campo[]" qname="ns56:ArrayOf_tns1_Campo" xmlns:ns56="http://ws.licitacionelectronica.dipucr.es" xmlns:ns57="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="ns59:RequisitfiDeclaraciones" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.RequisitfiDeclaraciones[]" qname="ns58:ArrayOf_tns1_RequisitfiDeclaraciones" xmlns:ns58="http://ws.licitacionelectronica.dipucr.es" xmlns:ns59="http://sw.objeto.contratacion.dipucr.es"/>
+  <ns1:arrayMapping innerType="ns61:Documento" languageSpecificType="java:es.dipucr.contratacion.objeto.sw.Documento[]" qname="ns60:ArrayOf_tns1_Documento" xmlns:ns60="http://ws.licitacionelectronica.dipucr.es" xmlns:ns61="http://sw.objeto.contratacion.dipucr.es"/>
  </ns1:service>
  <ns1:service name="TramitacionWebService" provider="java:RPC" style="wrapped" use="literal">
   <ns1:wsdlFile>../../wsdl/TramitacionWebService.wsdl</ns1:wsdlFile>
-  <ns1:operation name="getProcedimientosPorTipo" qname="ns55:getProcedimientosPorTipo" returnQName="ns55:getProcedimientosPorTipoReturn" returnType="ns55:ListaInfoBProcedimientos" soapAction="" xmlns:ns55="http://server.ws.tram.sgm.tecdoc.ieci">
-   <ns1:parameter qname="ns55:idEntidad"/>
-   <ns1:parameter qname="ns55:tipoProc"/>
-   <ns1:parameter qname="ns55:nombre"/>
-  </ns1:operation>
-  <ns1:operation name="getProcedimientos" qname="ns56:getProcedimientos" returnQName="ns56:getProcedimientosReturn" returnType="ns56:ListaInfoBProcedimientos" soapAction="" xmlns:ns56="http://server.ws.tram.sgm.tecdoc.ieci">
-   <ns1:parameter qname="ns56:idEntidad"/>
-   <ns1:parameter qname="ns56:idProcs" type="ns56:ArrayOfString"/>
-  </ns1:operation>
-  <ns1:operation name="getProcedimiento" qname="ns57:getProcedimiento" returnQName="ns57:getProcedimientoReturn" returnType="ns57:Procedimiento" soapAction="" xmlns:ns57="http://server.ws.tram.sgm.tecdoc.ieci">
-   <ns1:parameter qname="ns57:idEntidad"/>
-   <ns1:parameter qname="ns57:idProc"/>
-  </ns1:operation>
-  <ns1:operation name="getFichero" qname="ns58:getFichero" returnQName="ns58:getFicheroReturn" returnType="ns58:Binario" soapAction="" xmlns:ns58="http://server.ws.tram.sgm.tecdoc.ieci">
-   <ns1:parameter qname="ns58:idEntidad"/>
-   <ns1:parameter qname="ns58:guid"/>
-  </ns1:operation>
-  <ns1:operation name="getInfoFichero" qname="ns59:getInfoFichero" returnQName="ns59:getInfoFicheroReturn" returnType="ns59:InfoFichero" soapAction="" xmlns:ns59="http://server.ws.tram.sgm.tecdoc.ieci">
-   <ns1:parameter qname="ns59:idEntidad"/>
-   <ns1:parameter qname="ns59:guid"/>
-  </ns1:operation>
-  <ns1:operation name="getInfoOcupacion" qname="ns60:getInfoOcupacion" returnQName="ns60:getInfoOcupacionReturn" returnType="ns60:InfoOcupacion" soapAction="" xmlns:ns60="http://server.ws.tram.sgm.tecdoc.ieci">
-   <ns1:parameter qname="ns60:idEntidad"/>
-  </ns1:operation>
-  <ns1:operation name="eliminaFicheros" qname="ns61:eliminaFicheros" returnQName="ns61:eliminaFicherosReturn" returnType="ns61:RetornoServicio" soapAction="" xmlns:ns61="http://server.ws.tram.sgm.tecdoc.ieci">
-   <ns1:parameter qname="ns61:idEntidad"/>
-   <ns1:parameter qname="ns61:guids" type="ns61:ArrayOfString"/>
-  </ns1:operation>
-  <ns1:operation name="getIdsExpedientes" qname="ns62:getIdsExpedientes" returnQName="ns62:getIdsExpedientesReturn" returnType="ns62:ListaIdentificadores" soapAction="" xmlns:ns62="http://server.ws.tram.sgm.tecdoc.ieci">
+  <ns1:operation name="getProcedimientosPorTipo" qname="ns62:getProcedimientosPorTipo" returnQName="ns62:getProcedimientosPorTipoReturn" returnType="ns62:ListaInfoBProcedimientos" soapAction="" xmlns:ns62="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns62:idEntidad"/>
-   <ns1:parameter qname="ns62:idProc"/>
-   <ns1:parameter qname="ns62:fechaIni"/>
-   <ns1:parameter qname="ns62:fechaFin"/>
-   <ns1:parameter qname="ns62:tipoOrd"/>
+   <ns1:parameter qname="ns62:tipoProc"/>
+   <ns1:parameter qname="ns62:nombre"/>
   </ns1:operation>
-  <ns1:operation name="getExpedientes" qname="ns63:getExpedientes" returnQName="ns63:getExpedientesReturn" returnType="ns63:ListaInfoBExpedientes" soapAction="" xmlns:ns63="http://server.ws.tram.sgm.tecdoc.ieci">
+  <ns1:operation name="getProcedimientos" qname="ns63:getProcedimientos" returnQName="ns63:getProcedimientosReturn" returnType="ns63:ListaInfoBProcedimientos" soapAction="" xmlns:ns63="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns63:idEntidad"/>
-   <ns1:parameter qname="ns63:idExps" type="ns63:ArrayOfString"/>
+   <ns1:parameter qname="ns63:idProcs" type="ns63:ArrayOfString"/>
   </ns1:operation>
-  <ns1:operation name="getExpediente" qname="ns64:getExpediente" returnQName="ns64:getExpedienteReturn" returnType="ns64:Expediente" soapAction="" xmlns:ns64="http://server.ws.tram.sgm.tecdoc.ieci">
+  <ns1:operation name="getProcedimiento" qname="ns64:getProcedimiento" returnQName="ns64:getProcedimientoReturn" returnType="ns64:Procedimiento" soapAction="" xmlns:ns64="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns64:idEntidad"/>
-   <ns1:parameter qname="ns64:idExp"/>
+   <ns1:parameter qname="ns64:idProc"/>
   </ns1:operation>
-  <ns1:operation name="archivarExpedientes" qname="ns65:archivarExpedientes" returnQName="ns65:archivarExpedientesReturn" returnType="ns65:RetornoServicio" soapAction="" xmlns:ns65="http://server.ws.tram.sgm.tecdoc.ieci">
+  <ns1:operation name="getFichero" qname="ns65:getFichero" returnQName="ns65:getFicheroReturn" returnType="ns65:Binario" soapAction="" xmlns:ns65="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns65:idEntidad"/>
-   <ns1:parameter qname="ns65:idExps" type="ns65:ArrayOfString"/>
+   <ns1:parameter qname="ns65:guid"/>
   </ns1:operation>
-  <ns1:operation name="iniciarExpediente" qname="ns66:iniciarExpediente" returnQName="ns66:iniciarExpedienteReturn" returnType="ns66:Booleano" soapAction="" xmlns:ns66="http://server.ws.tram.sgm.tecdoc.ieci">
+  <ns1:operation name="getInfoFichero" qname="ns66:getInfoFichero" returnQName="ns66:getInfoFicheroReturn" returnType="ns66:InfoFichero" soapAction="" xmlns:ns66="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns66:idEntidad"/>
-   <ns1:parameter qname="ns66:datosComunes" type="ns66:DatosComunesExpediente"/>
-   <ns1:parameter qname="ns66:datosEspecificos"/>
-   <ns1:parameter qname="ns66:documentos" type="ns66:ArrayOfDocumentoExpedientes"/>
+   <ns1:parameter qname="ns66:guid"/>
   </ns1:operation>
-  <ns1:operation name="anexarDocsExpediente" qname="ns67:anexarDocsExpediente" returnQName="ns67:anexarDocsExpedienteReturn" returnType="ns67:Booleano" soapAction="" xmlns:ns67="http://server.ws.tram.sgm.tecdoc.ieci">
+  <ns1:operation name="getInfoOcupacion" qname="ns67:getInfoOcupacion" returnQName="ns67:getInfoOcupacionReturn" returnType="ns67:InfoOcupacion" soapAction="" xmlns:ns67="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns67:idEntidad"/>
-   <ns1:parameter qname="ns67:numExp"/>
-   <ns1:parameter qname="ns67:numReg"/>
-   <ns1:parameter qname="ns67:fechaReg"/>
-   <ns1:parameter qname="ns67:documentos" type="ns67:ArrayOfDocumentoExpedientes"/>
   </ns1:operation>
-  <ns1:operation name="crearExpediente" qname="ns68:crearExpediente" returnQName="ns68:crearExpedienteReturn" returnType="ns68:Cadena" soapAction="" xmlns:ns68="http://server.ws.tram.sgm.tecdoc.ieci">
+  <ns1:operation name="eliminaFicheros" qname="ns68:eliminaFicheros" returnQName="ns68:eliminaFicherosReturn" returnType="ns68:RetornoServicio" soapAction="" xmlns:ns68="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns68:idEntidad"/>
-   <ns1:parameter qname="ns68:datosComunes" type="ns68:DatosComunesExpediente"/>
-   <ns1:parameter qname="ns68:datosEspecificos"/>
-   <ns1:parameter qname="ns68:documentos" type="ns68:ArrayOfDocumentoExpedientes"/>
-   <ns1:parameter qname="ns68:initSystem"/>
+   <ns1:parameter qname="ns68:guids" type="ns68:ArrayOfString"/>
   </ns1:operation>
-  <ns1:operation name="cambiarEstadoAdministrativo" qname="ns69:cambiarEstadoAdministrativo" returnQName="ns69:cambiarEstadoAdministrativo" returnType="ns69:Booleano" soapAction="" xmlns:ns69="http://server.ws.tram.sgm.tecdoc.ieci">
+  <ns1:operation name="getIdsExpedientes" qname="ns69:getIdsExpedientes" returnQName="ns69:getIdsExpedientesReturn" returnType="ns69:ListaIdentificadores" soapAction="" xmlns:ns69="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns69:idEntidad"/>
-   <ns1:parameter qname="ns69:numExp"/>
-   <ns1:parameter qname="ns69:estadoAdm"/>
+   <ns1:parameter qname="ns69:idProc"/>
+   <ns1:parameter qname="ns69:fechaIni"/>
+   <ns1:parameter qname="ns69:fechaFin"/>
+   <ns1:parameter qname="ns69:tipoOrd"/>
   </ns1:operation>
-  <ns1:operation name="moverExpedienteAFase" qname="ns70:moverExpedienteAFase" returnQName="ns70:moverExpedienteAFase" returnType="ns70:Booleano" soapAction="" xmlns:ns70="http://server.ws.tram.sgm.tecdoc.ieci">
+  <ns1:operation name="getExpedientes" qname="ns70:getExpedientes" returnQName="ns70:getExpedientesReturn" returnType="ns70:ListaInfoBExpedientes" soapAction="" xmlns:ns70="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns70:idEntidad"/>
-   <ns1:parameter qname="ns70:numExp"/>
-   <ns1:parameter qname="ns70:idFaseCatalogo"/>
+   <ns1:parameter qname="ns70:idExps" type="ns70:ArrayOfString"/>
   </ns1:operation>
-  <ns1:operation name="busquedaAvanzada" qname="ns71:busquedaAvanzada" returnQName="ns71:busquedaAvanzada" returnType="ns71:Cadena" soapAction="" xmlns:ns71="http://server.ws.services.ispac.tdw.ieci">
+  <ns1:operation name="getExpediente" qname="ns71:getExpediente" returnQName="ns71:getExpedienteReturn" returnType="ns71:Expediente" soapAction="" xmlns:ns71="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns71:idEntidad"/>
-   <ns1:parameter qname="ns71:groupName"/>
-   <ns1:parameter qname="ns71:searchFormName"/>
-   <ns1:parameter qname="ns71:searchXML"/>
-   <ns1:parameter qname="ns71:domain"/>
+   <ns1:parameter qname="ns71:idExp"/>
   </ns1:operation>
-  <ns1:operation name="establecerDatosRegistroEntidad" qname="ns72:establecerDatosRegistroEntidad" returnQName="ns72:establecerDatosRegistroEntidad" returnType="ns72:Entero" soapAction="" xmlns:ns72="http://server.ws.services.ispac.tdw.ieci">
+  <ns1:operation name="archivarExpedientes" qname="ns72:archivarExpedientes" returnQName="ns72:archivarExpedientesReturn" returnType="ns72:RetornoServicio" soapAction="" xmlns:ns72="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns72:idEntidad"/>
-   <ns1:parameter qname="ns72:nombreEntidad"/>
-   <ns1:parameter qname="ns72:numExp"/>
-   <ns1:parameter qname="ns72:xmlDatosEspecificos"/>
+   <ns1:parameter qname="ns72:idExps" type="ns72:ArrayOfString"/>
   </ns1:operation>
-  <ns1:operation name="obtenerRegistroEntidad" qname="ns73:obtenerRegistroEntidad" returnQName="ns73:obtenerRegistroEntidad" returnType="ns73:Cadena" soapAction="" xmlns:ns73="http://server.ws.services.ispac.tdw.ieci">
+  <ns1:operation name="iniciarExpediente" qname="ns73:iniciarExpediente" returnQName="ns73:iniciarExpedienteReturn" returnType="ns73:Booleano" soapAction="" xmlns:ns73="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns73:idEntidad"/>
-   <ns1:parameter qname="ns73:nombreEntidad"/>
-   <ns1:parameter qname="ns73:numExp"/>
-   <ns1:parameter qname="ns73:idRegistro"/>
+   <ns1:parameter qname="ns73:datosComunes" type="ns73:DatosComunesExpediente"/>
+   <ns1:parameter qname="ns73:datosEspecificos"/>
+   <ns1:parameter qname="ns73:documentos" type="ns73:ArrayOfDocumentoExpedientes"/>
   </ns1:operation>
-  <ns1:operation name="obtenerRegistrosEntidad" qname="ns74:obtenerRegistrosEntidad" returnQName="ns74:obtenerRegistrosEntidad" returnType="ns74:Cadena" soapAction="" xmlns:ns74="http://server.ws.services.ispac.tdw.ieci">
+  <ns1:operation name="anexarDocsExpediente" qname="ns74:anexarDocsExpediente" returnQName="ns74:anexarDocsExpedienteReturn" returnType="ns74:Booleano" soapAction="" xmlns:ns74="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns74:idEntidad"/>
-   <ns1:parameter qname="ns74:nombreEntidad"/>
    <ns1:parameter qname="ns74:numExp"/>
+   <ns1:parameter qname="ns74:numReg"/>
+   <ns1:parameter qname="ns74:fechaReg"/>
+   <ns1:parameter qname="ns74:documentos" type="ns74:ArrayOfDocumentoExpedientes"/>
   </ns1:operation>
-  <ns1:operation name="recibirDocumentoFirmado" qname="ns75:recibirDocumentoFirmado" returnQName="ns75:recibirDocumentoFirmado" returnType="ns75:Cadena" soapAction="" xmlns:ns75="http://server.ws.services.ispac.tdw.ieci">
+  <ns1:operation name="crearExpediente" qname="ns75:crearExpediente" returnQName="ns75:crearExpedienteReturn" returnType="ns75:Cadena" soapAction="" xmlns:ns75="http://server.ws.tram.sgm.tecdoc.ieci">
    <ns1:parameter qname="ns75:idEntidad"/>
-   <ns1:parameter qname="ns75:numExp"/>
-   <ns1:parameter qname="ns75:idDocumento"/>
+   <ns1:parameter qname="ns75:datosComunes" type="ns75:DatosComunesExpediente"/>
+   <ns1:parameter qname="ns75:datosEspecificos"/>
+   <ns1:parameter qname="ns75:documentos" type="ns75:ArrayOfDocumentoExpedientes"/>
+   <ns1:parameter qname="ns75:initSystem"/>
+  </ns1:operation>
+  <ns1:operation name="cambiarEstadoAdministrativo" qname="ns76:cambiarEstadoAdministrativo" returnQName="ns76:cambiarEstadoAdministrativo" returnType="ns76:Booleano" soapAction="" xmlns:ns76="http://server.ws.tram.sgm.tecdoc.ieci">
+   <ns1:parameter qname="ns76:idEntidad"/>
+   <ns1:parameter qname="ns76:numExp"/>
+   <ns1:parameter qname="ns76:estadoAdm"/>
+  </ns1:operation>
+  <ns1:operation name="moverExpedienteAFase" qname="ns77:moverExpedienteAFase" returnQName="ns77:moverExpedienteAFase" returnType="ns77:Booleano" soapAction="" xmlns:ns77="http://server.ws.tram.sgm.tecdoc.ieci">
+   <ns1:parameter qname="ns77:idEntidad"/>
+   <ns1:parameter qname="ns77:numExp"/>
+   <ns1:parameter qname="ns77:idFaseCatalogo"/>
+  </ns1:operation>
+  <ns1:operation name="busquedaAvanzada" qname="ns78:busquedaAvanzada" returnQName="ns78:busquedaAvanzada" returnType="ns78:Cadena" soapAction="" xmlns:ns78="http://server.ws.services.ispac.tdw.ieci">
+   <ns1:parameter qname="ns78:idEntidad"/>
+   <ns1:parameter qname="ns78:groupName"/>
+   <ns1:parameter qname="ns78:searchFormName"/>
+   <ns1:parameter qname="ns78:searchXML"/>
+   <ns1:parameter qname="ns78:domain"/>
+  </ns1:operation>
+  <ns1:operation name="establecerDatosRegistroEntidad" qname="ns79:establecerDatosRegistroEntidad" returnQName="ns79:establecerDatosRegistroEntidad" returnType="ns79:Entero" soapAction="" xmlns:ns79="http://server.ws.services.ispac.tdw.ieci">
+   <ns1:parameter qname="ns79:idEntidad"/>
+   <ns1:parameter qname="ns79:nombreEntidad"/>
+   <ns1:parameter qname="ns79:numExp"/>
+   <ns1:parameter qname="ns79:xmlDatosEspecificos"/>
+  </ns1:operation>
+  <ns1:operation name="obtenerRegistroEntidad" qname="ns80:obtenerRegistroEntidad" returnQName="ns80:obtenerRegistroEntidad" returnType="ns80:Cadena" soapAction="" xmlns:ns80="http://server.ws.services.ispac.tdw.ieci">
+   <ns1:parameter qname="ns80:idEntidad"/>
+   <ns1:parameter qname="ns80:nombreEntidad"/>
+   <ns1:parameter qname="ns80:numExp"/>
+   <ns1:parameter qname="ns80:idRegistro"/>
+  </ns1:operation>
+  <ns1:operation name="obtenerRegistrosEntidad" qname="ns81:obtenerRegistrosEntidad" returnQName="ns81:obtenerRegistrosEntidad" returnType="ns81:Cadena" soapAction="" xmlns:ns81="http://server.ws.services.ispac.tdw.ieci">
+   <ns1:parameter qname="ns81:idEntidad"/>
+   <ns1:parameter qname="ns81:nombreEntidad"/>
+   <ns1:parameter qname="ns81:numExp"/>
+  </ns1:operation>
+  <ns1:operation name="recibirDocumentoFirmado" qname="ns82:recibirDocumentoFirmado" returnQName="ns82:recibirDocumentoFirmado" returnType="ns82:Cadena" soapAction="" xmlns:ns82="http://server.ws.services.ispac.tdw.ieci">
+   <ns1:parameter qname="ns82:idEntidad"/>
+   <ns1:parameter qname="ns82:numExp"/>
+   <ns1:parameter qname="ns82:idDocumento"/>
   </ns1:operation>
   <ns1:parameter name="allowedMethods" value="*"/>
   <ns1:parameter name="wsdlPortType" value="TramitacionWebService"/>
@@ -218,42 +225,42 @@
   <ns1:parameter name="className" value="ieci.tecdoc.sgm.tram.ws.server.TramitacionWebService"/>
   <ns1:parameter name="wsdlTargetNamespace" value="http://server.ws.tram.sgm.tecdoc.ieci"/>
   <ns1:parameter name="wsdlServiceElement" value="TramitacionWebServiceService"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns76:RetornoServicio" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.core.services.dto.RetornoServicio" xmlns:ns76="http://dto.services.core.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns77:Binario" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Binario" xmlns:ns77="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns78:Booleano" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Booleano" xmlns:ns78="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns79:DatosComunesExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DatosComunesExpediente" xmlns:ns79="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns80:DocElectronico" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocElectronico" xmlns:ns80="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns81:DocFisico" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocFisico" xmlns:ns81="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns82:Documento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Documento" xmlns:ns82="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns83:DocumentoExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocumentoExpediente" xmlns:ns83="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns84:Emplazamiento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Emplazamiento" xmlns:ns84="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns85:Expediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Expediente" xmlns:ns85="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns86:Firma" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Firma" xmlns:ns86="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns87:InfoBExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBExpediente" xmlns:ns87="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns88:InfoBProcedimiento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBProcedimiento" xmlns:ns88="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns89:InfoFichero" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoFichero" xmlns:ns89="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns90:InfoOcupacion" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoOcupacion" xmlns:ns90="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns91:Interesado" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Interesado" xmlns:ns91="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns92:InteresadoExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InteresadoExpediente" xmlns:ns92="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns93:ListaIdentificadores" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.ListaIdentificadores" xmlns:ns93="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns94:ListaInfoBExpedientes" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.ListaInfoBExpedientes" xmlns:ns94="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns95:ListaInfoBProcedimientos" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.ListaInfoBProcedimientos" xmlns:ns95="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns96:Organo" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Organo" xmlns:ns96="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns97:OrganoProductor" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.OrganoProductor" xmlns:ns97="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns98:Procedimiento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Procedimiento" xmlns:ns98="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns99:Cadena" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Cadena" xmlns:ns99="http://server.ws.services.ispac.tdw.ieci"/>
-  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns100:Entero" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Entero" xmlns:ns100="http://server.ws.services.ispac.tdw.ieci"/>
-  <ns1:arrayMapping innerType="java:java.lang.String" languageSpecificType="java:java.lang.String[]" qname="ns101:ArrayOfString" xmlns:ns101="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:arrayMapping innerType="ns102:InteresadoExpediente" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.InteresadoExpediente[]" qname="ns102:ArrayOfInteresadoExpedientes" xmlns:ns102="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:arrayMapping innerType="ns103:DocumentoExpediente" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocumentoExpediente[]" qname="ns103:ArrayOfDocumentoExpedientes" xmlns:ns103="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:arrayMapping innerType="ns104:DocFisico" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocFisico[]" qname="ns104:ArrayOfDocFisicos" xmlns:ns104="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:arrayMapping innerType="ns105:DocElectronico" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocElectronico[]" qname="ns105:ArrayOfDocElectronicos" xmlns:ns105="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:arrayMapping innerType="ns106:Interesado" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.Interesado[]" qname="ns106:ArrayOfInteresados" xmlns:ns106="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:arrayMapping innerType="ns107:Emplazamiento" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.Emplazamiento[]" qname="ns107:ArrayOfEmplazamientos" xmlns:ns107="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:arrayMapping innerType="ns108:Firma" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.Firma[]" qname="ns108:ArrayOfFirmas" xmlns:ns108="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:arrayMapping innerType="ns109:InfoBExpediente" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBExpediente[]" qname="ns109:ArrayOfInfoBExpedientes" xmlns:ns109="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:arrayMapping innerType="ns110:InfoBProcedimiento" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBProcedimiento[]" qname="ns110:ArrayOfInfoBProcedimientos" xmlns:ns110="http://server.ws.tram.sgm.tecdoc.ieci"/>
-  <ns1:arrayMapping innerType="ns111:OrganoProductor" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.OrganoProductor[]" qname="ns111:ArrayOfOrganosProductores" xmlns:ns111="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns83:RetornoServicio" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.core.services.dto.RetornoServicio" xmlns:ns83="http://dto.services.core.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns84:Binario" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Binario" xmlns:ns84="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns85:Booleano" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Booleano" xmlns:ns85="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns86:DatosComunesExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DatosComunesExpediente" xmlns:ns86="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns87:DocElectronico" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocElectronico" xmlns:ns87="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns88:DocFisico" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocFisico" xmlns:ns88="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns89:Documento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Documento" xmlns:ns89="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns90:DocumentoExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocumentoExpediente" xmlns:ns90="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns91:Emplazamiento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Emplazamiento" xmlns:ns91="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns92:Expediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Expediente" xmlns:ns92="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns93:Firma" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Firma" xmlns:ns93="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns94:InfoBExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBExpediente" xmlns:ns94="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns95:InfoBProcedimiento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBProcedimiento" xmlns:ns95="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns96:InfoFichero" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoFichero" xmlns:ns96="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns97:InfoOcupacion" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoOcupacion" xmlns:ns97="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns98:Interesado" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Interesado" xmlns:ns98="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns99:InteresadoExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.InteresadoExpediente" xmlns:ns99="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns100:ListaIdentificadores" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.ListaIdentificadores" xmlns:ns100="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns101:ListaInfoBExpedientes" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.ListaInfoBExpedientes" xmlns:ns101="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns102:ListaInfoBProcedimientos" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.ListaInfoBProcedimientos" xmlns:ns102="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns103:Organo" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Organo" xmlns:ns103="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns104:OrganoProductor" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.OrganoProductor" xmlns:ns104="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns105:Procedimiento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Procedimiento" xmlns:ns105="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns106:Cadena" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Cadena" xmlns:ns106="http://server.ws.services.ispac.tdw.ieci"/>
+  <ns1:typeMapping deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle="" qname="ns107:Entero" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" type="java:ieci.tecdoc.sgm.tram.ws.server.dto.Entero" xmlns:ns107="http://server.ws.services.ispac.tdw.ieci"/>
+  <ns1:arrayMapping innerType="java:java.lang.String" languageSpecificType="java:java.lang.String[]" qname="ns108:ArrayOfString" xmlns:ns108="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:arrayMapping innerType="ns109:InteresadoExpediente" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.InteresadoExpediente[]" qname="ns109:ArrayOfInteresadoExpedientes" xmlns:ns109="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:arrayMapping innerType="ns110:DocumentoExpediente" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocumentoExpediente[]" qname="ns110:ArrayOfDocumentoExpedientes" xmlns:ns110="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:arrayMapping innerType="ns111:DocFisico" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocFisico[]" qname="ns111:ArrayOfDocFisicos" xmlns:ns111="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:arrayMapping innerType="ns112:DocElectronico" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.DocElectronico[]" qname="ns112:ArrayOfDocElectronicos" xmlns:ns112="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:arrayMapping innerType="ns113:Interesado" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.Interesado[]" qname="ns113:ArrayOfInteresados" xmlns:ns113="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:arrayMapping innerType="ns114:Emplazamiento" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.Emplazamiento[]" qname="ns114:ArrayOfEmplazamientos" xmlns:ns114="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:arrayMapping innerType="ns115:Firma" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.Firma[]" qname="ns115:ArrayOfFirmas" xmlns:ns115="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:arrayMapping innerType="ns116:InfoBExpediente" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBExpediente[]" qname="ns116:ArrayOfInfoBExpedientes" xmlns:ns116="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:arrayMapping innerType="ns117:InfoBProcedimiento" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.InfoBProcedimiento[]" qname="ns117:ArrayOfInfoBProcedimientos" xmlns:ns117="http://server.ws.tram.sgm.tecdoc.ieci"/>
+  <ns1:arrayMapping innerType="ns118:OrganoProductor" languageSpecificType="java:ieci.tecdoc.sgm.tram.ws.server.dto.OrganoProductor[]" qname="ns118:ArrayOfOrganosProductores" xmlns:ns118="http://server.ws.tram.sgm.tecdoc.ieci"/>
  </ns1:service>
  <ns1:transport name="http">
   <ns1:requestFlow>

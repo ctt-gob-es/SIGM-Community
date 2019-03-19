@@ -14,8 +14,8 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.contratacion.common.DipucrFuncionesComunes;
-import es.dipucr.contratacion.objeto.DatosTramitacion;
+import es.dipucr.contratacion.objeto.sw.DatosTramitacion;
+import es.dipucr.contratacion.objeto.sw.common.DipucrFuncionesComunesSW;
 
 public class CopiaDatosTramitacion  implements IRule{
 	
@@ -35,7 +35,7 @@ public class CopiaDatosTramitacion  implements IRule{
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 	        //-----------------------------------------------------------------------------
 	
-			DatosTramitacion datosTramitacion = DipucrFuncionesComunes.getDatosTramitacion(rulectx, rulectx.getNumExp());
+			DatosTramitacion datosTramitacion = DipucrFuncionesComunesSW.getDatosTramitacion(cct, rulectx.getNumExp(), null);
 			
 			/**
 			 * Si es = a null quiere decir que no ha insertado todavía en bbdd dos datos de la entidad del procedimiento de contratacion
@@ -52,7 +52,7 @@ public class CopiaDatosTramitacion  implements IRule{
 					numexpPeticion = expRelacionados.getString("NUMEXP_PADRE");				
 					}
 		        
-		        correcto = DipucrFuncionesComunes.setDatosTramitacion(numexpPeticion, datosTramitacion, cct, rulectx.getNumExp());
+		        correcto = DipucrFuncionesComunesSW.setDatosTramitacion(numexpPeticion, datosTramitacion, cct, rulectx.getNumExp());
 			}
 	        
 	        

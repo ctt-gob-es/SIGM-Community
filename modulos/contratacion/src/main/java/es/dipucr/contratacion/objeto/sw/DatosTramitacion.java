@@ -7,20 +7,17 @@ public class DatosTramitacion {
 	private Calendar fechaAprobacionProyecto = null;
 	private Calendar fechaAprobacionExpedienteContratacion = null;
 	private Calendar fechaBOPExpCont = null;
-	private Calendar fechaBOPFormalizacion = null;
-	
+	private Calendar fechaBOPFormalizacion = null;	
 	private Periodo presentacionOfertas = null;
-
 	/**ADJUDICACION**/
 	private LicitadorBean[] licitador;
-	private String invitacioneLicitar;
-	
+	private String invitacioneLicitar;	
+	private Boolean adjudicatarioPYME = null;
+	private DiariosOficiales diariosOficiales = null;
 	/**FORMALIZACION**/
-	private FormalizacionBean formalizacion;
-	
+	private FormalizacionBean formalizacion;	
 	/**Texto Acuerdo**/
-	private String textoAcuerdo = "";
-	
+	private String textoAcuerdo = "";	
 	private OfertasRecibidas ofertasRecibidas;
 	
 	private DuracionContratoBean duracionContrato;
@@ -29,6 +26,21 @@ public class DatosTramitacion {
 	private int tmpProrroga = 0;
 	
 	private String estadoExpediente = null;
+	
+	/** * codigoAdjudicacion
+	 * RUTA: http://contrataciondelestado.es/codice/cl/2.02/TenderResultCode-2.02.gc
+	 * 1 -> Adjudicado Provisionalmente
+	 * 2 -> Adjudicado Definitivamente
+	 * 3 -> Desierto
+	 * 4 -> Desistimiento
+	 * 5 -> Renuncia
+	 * 6 -> Desierto Provisionalmente
+	 * 7 -> Desierto Definitivamente
+	 * 8 -> Adjudicado
+	 * 9 -> Formalizado
+	 * 10 -> Licitador mejor valorado:Requerimiento de documentacion
+	 * **/
+	private Campo codigoAdjudicacion;
 	
 
 	public LicitadorBean[] getLicitador() {
@@ -150,5 +162,29 @@ public class DatosTramitacion {
 
 	public void setEstadoExpediente(String estadoExpediente) {
 		this.estadoExpediente = estadoExpediente;
+	}
+
+	public Boolean getAdjudicatarioPYME() {
+		return adjudicatarioPYME;
+	}
+
+	public void setAdjudicatarioPYME(Boolean adjudicatarioPYME) {
+		this.adjudicatarioPYME = adjudicatarioPYME;
+	}
+
+	public Campo getCodigoAdjudicacion() {
+		return codigoAdjudicacion;
+	}
+
+	public void setCodigoAdjudicacion(Campo codigoAdjudicacion) {
+		this.codigoAdjudicacion = codigoAdjudicacion;
+	}
+
+	public DiariosOficiales getDiariosOficiales() {
+		return diariosOficiales;
+	}
+
+	public void setDiariosOficiales(DiariosOficiales diariosOficiales) {
+		this.diariosOficiales = diariosOficiales;
 	}
 }

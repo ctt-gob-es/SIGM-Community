@@ -1,42 +1,29 @@
 
 package es.dipucr.contratacion.objeto.sw;
 
+import java.util.Calendar;
+
+
 public class LicitadorBean{
     private Campo NUTS;
 
     private boolean autorizaEnvioComunicacionesElect;
-
-    private java.lang.String calle;
-
-    private java.lang.String cp;
-
-    private java.lang.String email;
-
-    private java.util.Calendar fechaAdjudicacion;
-
-    private java.util.Calendar fechaFinFormalizacion;
-
-    private java.lang.String identificador;
-
-    private java.lang.String importeConImpuestos;
-
-    private java.lang.String importeSinImpuestos;
-
-    private java.lang.String justificacionDescripcion;
-
+    private String calle;
+    private String cp;
+    private String email;
+    private Calendar fechaAdjudicacion;
+    private Calendar fechaFinFormalizacion;
+    private String identificador;
+    private String importeConImpuestos;
+    private String importeSinImpuestos;
+    private String justificacionDescripcion;
     private Campo justificacionProceso;
-
-    private java.lang.String motivacion;
-
-    private java.lang.String nombre;
-
-    private java.lang.String numeroVia;
-
+    private String motivacion;
+    private String nombre;
+    private String numeroVia;
     private Campo pais;
-
-    private java.lang.String poblacion;
-
-    private java.lang.String tipoIdentificador;
+    private String poblacion;
+    private String tipoIdentificador;
 
     public LicitadorBean() {
     }
@@ -44,22 +31,22 @@ public class LicitadorBean{
     public LicitadorBean(
            Campo NUTS,
            boolean autorizaEnvioComunicacionesElect,
-           java.lang.String calle,
-           java.lang.String cp,
-           java.lang.String email,
-           java.util.Calendar fechaAdjudicacion,
-           java.util.Calendar fechaFinFormalizacion,
-           java.lang.String identificador,
-           java.lang.String importeConImpuestos,
-           java.lang.String importeSinImpuestos,
-           java.lang.String justificacionDescripcion,
+           String calle,
+           String cp,
+           String email,
+           Calendar fechaAdjudicacion,
+           Calendar fechaFinFormalizacion,
+           String identificador,
+           String importeConImpuestos,
+           String importeSinImpuestos,
+           String justificacionDescripcion,
            Campo justificacionProceso,
-           java.lang.String motivacion,
-           java.lang.String nombre,
-           java.lang.String numeroVia,
+           String motivacion,
+           String nombre,
+           String numeroVia,
            Campo pais,
-           java.lang.String poblacion,
-           java.lang.String tipoIdentificador) {
+           String poblacion,
+           String tipoIdentificador) {
            this.NUTS = NUTS;
            this.autorizaEnvioComunicacionesElect = autorizaEnvioComunicacionesElect;
            this.calle = calle;
@@ -126,7 +113,7 @@ public class LicitadorBean{
      * 
      * @return calle
      */
-    public java.lang.String getCalle() {
+    public String getCalle() {
         return calle;
     }
 
@@ -136,7 +123,7 @@ public class LicitadorBean{
      * 
      * @param calle
      */
-    public void setCalle(java.lang.String calle) {
+    public void setCalle(String calle) {
         this.calle = calle;
     }
 
@@ -146,7 +133,7 @@ public class LicitadorBean{
      * 
      * @return cp
      */
-    public java.lang.String getCp() {
+    public String getCp() {
         return cp;
     }
 
@@ -156,7 +143,7 @@ public class LicitadorBean{
      * 
      * @param cp
      */
-    public void setCp(java.lang.String cp) {
+    public void setCp(String cp) {
         this.cp = cp;
     }
 
@@ -166,7 +153,7 @@ public class LicitadorBean{
      * 
      * @return email
      */
-    public java.lang.String getEmail() {
+    public String getEmail() {
         return email;
     }
 
@@ -176,7 +163,7 @@ public class LicitadorBean{
      * 
      * @param email
      */
-    public void setEmail(java.lang.String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -186,7 +173,7 @@ public class LicitadorBean{
      * 
      * @return fechaAdjudicacion
      */
-    public java.util.Calendar getFechaAdjudicacion() {
+    public Calendar getFechaAdjudicacion() {
         return fechaAdjudicacion;
     }
 
@@ -196,7 +183,7 @@ public class LicitadorBean{
      * 
      * @param fechaAdjudicacion
      */
-    public void setFechaAdjudicacion(java.util.Calendar fechaAdjudicacion) {
+    public void setFechaAdjudicacion(Calendar fechaAdjudicacion) {
         this.fechaAdjudicacion = fechaAdjudicacion;
     }
 
@@ -206,7 +193,7 @@ public class LicitadorBean{
      * 
      * @return fechaFinFormalizacion
      */
-    public java.util.Calendar getFechaFinFormalizacion() {
+    public Calendar getFechaFinFormalizacion() {
         return fechaFinFormalizacion;
     }
 
@@ -216,7 +203,7 @@ public class LicitadorBean{
      * 
      * @param fechaFinFormalizacion
      */
-    public void setFechaFinFormalizacion(java.util.Calendar fechaFinFormalizacion) {
+    public void setFechaFinFormalizacion(Calendar fechaFinFormalizacion) {
         this.fechaFinFormalizacion = fechaFinFormalizacion;
     }
 
@@ -226,7 +213,7 @@ public class LicitadorBean{
      * 
      * @return identificador
      */
-    public java.lang.String getIdentificador() {
+    public String getIdentificador() {
         return identificador;
     }
 
@@ -236,7 +223,7 @@ public class LicitadorBean{
      * 
      * @param identificador
      */
-    public void setIdentificador(java.lang.String identificador) {
+    public void setIdentificador(String identificador) {
         this.identificador = identificador;
     }
 
@@ -246,7 +233,7 @@ public class LicitadorBean{
      * 
      * @return importeConImpuestos
      */
-    public java.lang.String getImporteConImpuestos() {
+    public String getImporteConImpuestos() {
         return importeConImpuestos;
     }
 
@@ -256,7 +243,7 @@ public class LicitadorBean{
      * 
      * @param importeConImpuestos
      */
-    public void setImporteConImpuestos(java.lang.String importeConImpuestos) {
+    public void setImporteConImpuestos(String importeConImpuestos) {
         this.importeConImpuestos = importeConImpuestos;
     }
 
@@ -266,7 +253,7 @@ public class LicitadorBean{
      * 
      * @return importeSinImpuestos
      */
-    public java.lang.String getImporteSinImpuestos() {
+    public String getImporteSinImpuestos() {
         return importeSinImpuestos;
     }
 
@@ -276,7 +263,7 @@ public class LicitadorBean{
      * 
      * @param importeSinImpuestos
      */
-    public void setImporteSinImpuestos(java.lang.String importeSinImpuestos) {
+    public void setImporteSinImpuestos(String importeSinImpuestos) {
         this.importeSinImpuestos = importeSinImpuestos;
     }
 
@@ -286,7 +273,7 @@ public class LicitadorBean{
      * 
      * @return justificacionDescripcion
      */
-    public java.lang.String getJustificacionDescripcion() {
+    public String getJustificacionDescripcion() {
         return justificacionDescripcion;
     }
 
@@ -296,7 +283,7 @@ public class LicitadorBean{
      * 
      * @param justificacionDescripcion
      */
-    public void setJustificacionDescripcion(java.lang.String justificacionDescripcion) {
+    public void setJustificacionDescripcion(String justificacionDescripcion) {
         this.justificacionDescripcion = justificacionDescripcion;
     }
 
@@ -326,7 +313,7 @@ public class LicitadorBean{
      * 
      * @return motivacion
      */
-    public java.lang.String getMotivacion() {
+    public String getMotivacion() {
         return motivacion;
     }
 
@@ -336,7 +323,7 @@ public class LicitadorBean{
      * 
      * @param motivacion
      */
-    public void setMotivacion(java.lang.String motivacion) {
+    public void setMotivacion(String motivacion) {
         this.motivacion = motivacion;
     }
 
@@ -346,7 +333,7 @@ public class LicitadorBean{
      * 
      * @return nombre
      */
-    public java.lang.String getNombre() {
+    public String getNombre() {
         return nombre;
     }
 
@@ -356,7 +343,7 @@ public class LicitadorBean{
      * 
      * @param nombre
      */
-    public void setNombre(java.lang.String nombre) {
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
@@ -366,7 +353,7 @@ public class LicitadorBean{
      * 
      * @return numeroVia
      */
-    public java.lang.String getNumeroVia() {
+    public String getNumeroVia() {
         return numeroVia;
     }
 
@@ -376,7 +363,7 @@ public class LicitadorBean{
      * 
      * @param numeroVia
      */
-    public void setNumeroVia(java.lang.String numeroVia) {
+    public void setNumeroVia(String numeroVia) {
         this.numeroVia = numeroVia;
     }
 
@@ -406,7 +393,7 @@ public class LicitadorBean{
      * 
      * @return poblacion
      */
-    public java.lang.String getPoblacion() {
+    public String getPoblacion() {
         return poblacion;
     }
 
@@ -416,7 +403,7 @@ public class LicitadorBean{
      * 
      * @param poblacion
      */
-    public void setPoblacion(java.lang.String poblacion) {
+    public void setPoblacion(String poblacion) {
         this.poblacion = poblacion;
     }
 
@@ -426,7 +413,7 @@ public class LicitadorBean{
      * 
      * @return tipoIdentificador
      */
-    public java.lang.String getTipoIdentificador() {
+    public String getTipoIdentificador() {
         return tipoIdentificador;
     }
 
@@ -436,7 +423,7 @@ public class LicitadorBean{
      * 
      * @param tipoIdentificador
      */
-    public void setTipoIdentificador(java.lang.String tipoIdentificador) {
+    public void setTipoIdentificador(String tipoIdentificador) {
         this.tipoIdentificador = tipoIdentificador;
     }
 }

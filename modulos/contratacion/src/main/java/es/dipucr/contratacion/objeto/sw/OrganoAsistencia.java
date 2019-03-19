@@ -1,19 +1,17 @@
 package es.dipucr.contratacion.objeto.sw;
 
 public class OrganoAsistencia{
-    private java.lang.String identificacion;
-
-    private PersonalContacto informacionOC;
-
-    private java.lang.String nombreOrgAsist;
+    private String identificacion = null;
+    private Departamento informacionOC = null;
+    private String nombreOrgAsist = null;
 
     public OrganoAsistencia() {
     }
 
     public OrganoAsistencia(
-           java.lang.String identificacion,
-           PersonalContacto informacionOC,
-           java.lang.String nombreOrgAsist) {
+           String identificacion,
+           Departamento informacionOC,
+           String nombreOrgAsist) {
            this.identificacion = identificacion;
            this.informacionOC = informacionOC;
            this.nombreOrgAsist = nombreOrgAsist;
@@ -25,7 +23,7 @@ public class OrganoAsistencia{
      * 
      * @return identificacion
      */
-    public java.lang.String getIdentificacion() {
+    public String getIdentificacion() {
         return identificacion;
     }
 
@@ -35,7 +33,7 @@ public class OrganoAsistencia{
      * 
      * @param identificacion
      */
-    public void setIdentificacion(java.lang.String identificacion) {
+    public void setIdentificacion(String identificacion) {
         this.identificacion = identificacion;
     }
 
@@ -45,7 +43,7 @@ public class OrganoAsistencia{
      * 
      * @return informacionOC
      */
-    public PersonalContacto getInformacionOC() {
+    public Departamento getInformacionOC() {
         return informacionOC;
     }
 
@@ -55,7 +53,7 @@ public class OrganoAsistencia{
      * 
      * @param informacionOC
      */
-    public void setInformacionOC(PersonalContacto informacionOC) {
+    public void setInformacionOC(Departamento informacionOC) {
         this.informacionOC = informacionOC;
     }
 
@@ -65,7 +63,7 @@ public class OrganoAsistencia{
      * 
      * @return nombreOrgAsist
      */
-    public java.lang.String getNombreOrgAsist() {
+    public String getNombreOrgAsist() {
         return nombreOrgAsist;
     }
 
@@ -75,7 +73,7 @@ public class OrganoAsistencia{
      * 
      * @param nombreOrgAsist
      */
-    public void setNombreOrgAsist(java.lang.String nombreOrgAsist) {
+    public void setNombreOrgAsist(String nombreOrgAsist) {
         this.nombreOrgAsist = nombreOrgAsist;
     }
 }

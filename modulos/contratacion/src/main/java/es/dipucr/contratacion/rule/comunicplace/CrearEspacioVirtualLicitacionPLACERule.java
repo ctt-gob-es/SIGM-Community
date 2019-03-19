@@ -9,7 +9,9 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
+import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -18,21 +20,22 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.contratacion.common.DipucrFuncionesComunes;
 import es.dipucr.contratacion.common.ServiciosWebContratacionFunciones;
-import es.dipucr.contratacion.objeto.DatosContrato;
+import es.dipucr.contratacion.objeto.sw.DatosContrato;
+import es.dipucr.contratacion.objeto.sw.Lotes;
+import es.dipucr.contratacion.objeto.sw.common.DipucrFuncionesComunesSW;
 import es.dipucr.contratacion.services.PlataformaContratacionDatatypeConfigurationExceptionException;
 import es.dipucr.contratacion.services.PlataformaContratacionJAXBExceptionException;
 import es.dipucr.contratacion.services.PlataformaContratacionMalformedURLExceptionException;
 import es.dipucr.contratacion.services.PlataformaContratacionRemoteExceptionException;
 import es.dipucr.contratacion.services.PlataformaContratacionStub;
 import es.dipucr.contratacion.services.PlataformaContratacionStub.ComprobacionParamentrosEVL;
-import es.dipucr.contratacion.services.PlataformaContratacionStub.EspacioVirtualLicitacionBean;
 import es.dipucr.contratacion.services.PlataformaContratacionStub.PeticionesAlsigm;
 import es.dipucr.contratacion.services.PlataformaContratacionUnsupportedEncodingExceptionException;
-import es.dipucr.contratacion.utils.EspacioVirtualLicitacionUtils;
+import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.common.utils.UsuariosUtil;
 
 public class CrearEspacioVirtualLicitacionPLACERule implements IRule{
@@ -70,13 +73,33 @@ public class CrearEspacioVirtualLicitacionPLACERule implements IRule{
 			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 			// --------------------------------------------------------------------
 			
+			//Se comprueba la si tiene Lotes que el sumatorio sea el mismo que 'Datos del Contrato' -> Precio Estimado del Contrato
+			Iterator<?> itGenerico = ConsultasGenericasUtil.queryEntities(cct, "CONTRATACION_DATOS_CONTRATO", "NUMEXP='"+rulectx.getNumExp()+"'");
+			while(itGenerico.hasNext()){
+				IItem datosContrato = (IItem) itGenerico.next();
+				double presupuestosinIVATotal = 0.0;
+				if(StringUtils.isNotEmpty(datosContrato.getString("PRECIO_ESTIMADO_CONTRATO"))) presupuestosinIVATotal = Double.parseDouble(datosContrato.getString("PRECIO_ESTIMADO_CONTRATO"));
+				if(StringUtils.isNotEmpty(datosContrato.getString("LOTES")) && datosContrato.getString("LOTES").equals("SI")){
+					Lotes lotes = DipucrFuncionesComunesSW.getLotes(cct, rulectx.getNumExp());
+					double presTotalSinIVALotes = 0;
+					for(int i = 0; i < lotes.getLotes().length; i++){
+						if(lotes.getLotes()[i]!=null && lotes.getLotes()[i].getPresupuestoSinIva()!=null){
+							presTotalSinIVALotes = presTotalSinIVALotes + lotes.getLotes()[i].getPresupuestoSinIva();
+						}						
+					}
+					if(presTotalSinIVALotes != presupuestosinIVATotal){
+						tienePliego = false;
+						rulectx.setInfoMessage("El precio estimado del contrato."+presupuestosinIVATotal+" es distinto al sumatorio del Importe (sin impuestos) de cada Lote."+presTotalSinIVALotes);
+					}
+				}
+			}
 			//Compruebo que no se haya mandado antes el anuncio.
 			IItemCollection colAdjudicacion = entitiesAPI.getEntities("CONTRATACION_ADJUDICACION", rulectx.getNumExp());
 			Iterator <IItem> iterAdjudicacion = colAdjudicacion.iterator();
 			if(iterAdjudicacion.hasNext()){
 				IItem itemAdjudicacion = iterAdjudicacion.next();				
 				if(itemAdjudicacion.getString("CONTRATACION_ADJUDICACION")!=null && itemAdjudicacion.getString("CONTRATACION_ADJUDICACION").equals("NO")){
-					DatosContrato datContrato = DipucrFuncionesComunes.getDatosContrato(cct, rulectx.getNumExp());
+					DatosContrato datContrato = DipucrFuncionesComunesSW.getDatosContrato(cct, rulectx.getNumExp());
 					
 					if(!datContrato.getTipoContrato().getId().equals("50")){
 						String strQuery = "WHERE (NOMBRE = 'Pliego de Clausulas Económico - Administrativas' OR NOMBRE ='Pliego de Prescripciones Técnicas') " +
@@ -133,6 +156,8 @@ public class CrearEspacioVirtualLicitacionPLACERule implements IRule{
 				dniFuncionario = UsuariosUtil.getDni(cct);
 			}
 			
+			TramitesUtil.cargarObservacionesTramite((ClientContext) cct, true,rulectx.getNumExp(), rulectx.getTaskId(), "Mandado al servidor de Contratación");
+			
 			PlataformaContratacionStub platContratacion = new PlataformaContratacionStub(ServiciosWebContratacionFunciones.getDireccionSW());
 			//int timeout = 5 * 60 * 1000; // 5 minutos
 			//platContratacion._getServiceClient().getOptions().setProperty(HTTPConstants.SO_TIMEOUT, new Integer(timeout));
@@ -152,10 +177,8 @@ public class CrearEspacioVirtualLicitacionPLACERule implements IRule{
 			peticionALSIGM.setIdTramite(rulectx.getTaskId());
 			peticionALSIGM.setLeido("0");
 			peticionALSIGM.setOperacionPlace("EVL");
+			peticionALSIGM.setEmailError("0");
 			comprobacionParamentrosEVL1.setPeticPlace(peticionALSIGM);
-			
-			EspacioVirtualLicitacionBean paramanuncioLicitacion = EspacioVirtualLicitacionUtils.getEspacioVirtualLicitacionBean(cct, rulectx.getNumExp(), rulectx.getItem());
-			comprobacionParamentrosEVL1.setAnuncioLicitacion(paramanuncioLicitacion);
 			
 			platContratacion.comprobacionParamentrosEVL(comprobacionParamentrosEVL1);
 

@@ -1,19 +1,6 @@
 package es.dipucr.contratacion.rule;
 
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
-
-import org.apache.log4j.Logger;
-
-import es.dipucr.contratacion.common.DipucrFuncionesComunes;
-import es.dipucr.contratacion.dao.procedure.ContratacionDatosContratoSDAO;
-import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
-import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.ITXTransaction;
@@ -29,6 +16,20 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.db.DbResultSet;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
+
+import org.apache.log4j.Logger;
+
+import es.dipucr.contratacion.dao.procedure.ContratacionDatosContratoSDAO;
+import es.dipucr.contratacion.objeto.sw.common.DipucrFuncionesComunesSW;
+import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 
 
 public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
@@ -94,12 +95,14 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
         Iterator<IItem> it = collection.iterator();
         String tipo_contrato = "";
         String proc_adjudicacion = "";
+        String precioEstimado = "";
         int cpv = 0;
         String nuevaLey = "";
         while (it.hasNext()){
         	IItem contrato = (IItem)it.next();
         	tipo_contrato = contrato.getString("TIPO_CONTRATO");
         	proc_adjudicacion = contrato.getString("PROC_ADJ");
+        	precioEstimado = contrato.getString("PRECIO_ESTIMADO_CONTRATO");
         	cpv = contrato.getInt("ID");
         	nuevaLey = contrato.getString("NUEVA_LEY");
         	if(nuevaLey.equals("SI")){
@@ -132,6 +135,16 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
             	String [] v_cod_proc_adjudicacion = proc_adjudicacion.split(" - ");
             	if(v_cod_proc_adjudicacion.length > 0){
             		cod_proc_adjudicacion = v_cod_proc_adjudicacion[0];
+            	}
+            	//9 - Abierto simplificado
+            	if(cod_proc_adjudicacion.equals("9")){
+            		double dPrecioEstimado = Double.parseDouble(precioEstimado);
+            		if(dPrecioEstimado < 80000 && tipo_contrato.equals("3")){
+            			cod_proc_adjudicacion = "SS";
+            		}
+            		if(dPrecioEstimado < 35000 && (tipo_contrato.equals("1") || tipo_contrato.equals("2"))){
+            			cod_proc_adjudicacion = "SS";
+            		}
             	}
             }
             collection = null;
@@ -218,7 +231,7 @@ public class GenerarProcedimientoAutomaticoEspecifico implements IRule{
      		//Compruebo si es un contrato menor y miro si el CPV corresponde con algún expediente de Registro Contratistas
      		if(cod_proc_adjudicacion.equals("6")){
      			if(cpv>0){
-     				DipucrFuncionesComunes.obtenerParticipantesCPV(rulectx, cpv, numExpHijo);     				
+     				DipucrFuncionesComunesSW.obtenerParticipantesCPV(cct, cpv, numExpHijo);     				
      			}
      		}
      		else{
