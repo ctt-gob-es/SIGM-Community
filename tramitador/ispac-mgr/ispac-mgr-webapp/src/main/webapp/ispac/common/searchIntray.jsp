@@ -103,7 +103,7 @@
 								class='<%=format.getColumnClass()%>'>
 								<a
 									href='<%="javascript:attach(\"" + format.formatProperty((ieci.tdw.ispac.ispaclib.bean.ItemBean)result) + "\")" %>'
-									class='<%= format.getStyleClass() %>'> <%=format.formatProperty(result)%>
+									class='<%= format.getStyleClass() %>' onclick="javascript:showLayer('waitInProgress');"> <%=format.formatProperty(result)%>
 								</a>
 							</display:column>
 							<display:column titleKey='<%=format.getTitleKey()%>'
