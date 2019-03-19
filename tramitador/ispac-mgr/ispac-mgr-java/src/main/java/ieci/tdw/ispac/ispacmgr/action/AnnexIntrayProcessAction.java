@@ -117,10 +117,12 @@ public class AnnexIntrayProcessAction extends BaseDispatchAction {
 
 	}
 
-	public ActionForward selectTypeDocTask(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response, SessionAPI session) throws Exception{
+	public ActionForward selectTypeDocTask(ActionMapping mapping,
+			   ActionForm form,
+             HttpServletRequest request,
+			   HttpServletResponse response,
+			   SessionAPI session) throws Exception{
 
-		return annex(mapping, form, request, response, session);
-		/**
 		IInvesflowAPI invesFlowAPI = session.getAPI();
 		IGenDocAPI gendocAPI = invesFlowAPI.getGenDocAPI();
 
@@ -158,10 +160,13 @@ public class AnnexIntrayProcessAction extends BaseDispatchAction {
 		request.setAttribute("numexp", request.getParameter("numexp"));
 
 		return mapping.findForward("selectTypeDocTask");
-		**/
 	}
 
-	public ActionForward annex(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response, SessionAPI session) throws Exception{
+	public ActionForward annex(ActionMapping mapping,
+             ActionForm form,
+             HttpServletRequest request,
+             HttpServletResponse response,
+             SessionAPI session) throws Exception{
 
 		String register = request.getParameter("register");
 		String numexp = request.getParameter("numexp");

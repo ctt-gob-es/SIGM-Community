@@ -34,23 +34,6 @@
  	<script type="text/javascript" src='<ispac:rewrite href="../scripts/jquery.alerts.js"/>'></script>
 	<script type="text/javascript" src='<ispac:rewrite href="../scripts/utilities.js"/>'></script>
 	<ispac:javascriptLanguage/>
-	
-	<script>
-
-		//Muestra el mensaje de operacion en progreso al seleccionar un trámite
-		function showMsgInProgress(link){
-			//Bloqueamos los enlaces y mostramos el mensaje
-			document.getElementById('inProgress').style.display='block';
-			document.getElementById('btnClose').disabled=true;
-			document.getElementById('btnReturn').disabled=true;
-			elements = document.getElementsByTagName("A");
-			for (i = 0; i < elements.length; i++){
-				elements[i].disabled=true;
-			}
-			//redirigimos
-			top.window.location.href = link;
-		}
-	</script>
 
 </head>
 
@@ -130,8 +113,7 @@
 													</td>
 													<td>
 														<nobr>
-<%-- 														<a href='<c:out value="${link}"/>' class="displayLink" onclick="javascript:showLayer('inProgress');"> --%>
-														<a href="javascript:showMsgInProgress('<c:out value='${link}'/>');" class="displayLink">
+														<a href='<c:out value="${link}"/>' class="displayLink">
 															<%=format.formatProperty(object)%>
 														</a></nobr>
 													</td>

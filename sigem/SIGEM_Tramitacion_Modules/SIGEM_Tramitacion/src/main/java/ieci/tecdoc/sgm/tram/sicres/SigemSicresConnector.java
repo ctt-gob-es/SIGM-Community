@@ -62,10 +62,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.metadatos.beans.MetadatosDocumentoBean;
-import es.dipucr.metadatos.bussinessobject.MetadatosBo;
-import es.dipucr.metadatos.diccionarios.TiposDocumentales;
-
 /**
  * Implementación del conector con SICRES en SIGEM.
  *
@@ -1282,17 +1278,6 @@ public class SigemSicresConnector implements ISicresConnector {
 									annexe.setFolderId(page.getFolderId());
 									annexe.setDocId(page.getDocID());
 									annexe.setPageId(page.getPageID());
-									
-									MetadatosDocumentoBean metadatosDocumentoOriginal = new MetadatosDocumentoBean(Integer.parseInt(doc.getBookId()), Integer.parseInt(page.getFolderId()), Integer.parseInt(page.getPageID()), Integer.parseInt(page.getFileID()), getEntidad().getIdentificador(), page.getPageName() + "." + page.getLoc());
-								    MetadatosBo.getMetadatos(metadatosDocumentoOriginal);
-								    
-								    String codTipoDoc = "";
-								    if(StringUtils.isNotEmpty(metadatosDocumentoOriginal.getTipoDocumental()) && StringUtils.isNotEmpty(TiposDocumentales.CODS_TIPOS_DOCS.get(metadatosDocumentoOriginal.getTipoDocumental()))){
-								    	codTipoDoc = TiposDocumentales.CODS_TIPOS_DOCS.get(metadatosDocumentoOriginal.getTipoDocumental());
-								    }
-								    
-								    annexe.setTipoDoc(codTipoDoc);
-									
 									annexes.add(annexe);
 								}
 							}

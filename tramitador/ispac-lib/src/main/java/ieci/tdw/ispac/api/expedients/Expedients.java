@@ -1384,13 +1384,7 @@ public class Expedients {
 
 							// Componer información del documento
 							Document doc = new Document();
-							
-							if(StringUtils.isNotEmpty(annex.getTipoDoc())){
-								doc.setCode(annex.getTipoDoc());
-							} else {
-								doc.setCode(ISPACConfiguration.getInstance().get(ISPACConfiguration.SICRES_INTRAY_DEFAULT_DOCUMENT_TYPE));
-							}
-							
+							doc.setCode(ISPACConfiguration.getInstance().get(ISPACConfiguration.SICRES_INTRAY_DEFAULT_DOCUMENT_TYPE));
 							doc.setName(annex.getName());
 							doc.setExtension(annex.getExt());
 							doc.setLength(new Long(file.length()).intValue());

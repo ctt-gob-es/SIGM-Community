@@ -27,8 +27,6 @@ public class Annexe implements Serializable {
 	
 	private String pageId = null;
 	
-	private String tipoDoc = null;
-	
 	
 	/**
 	 * Constructor.
@@ -48,22 +46,6 @@ public class Annexe implements Serializable {
 		setId(id);
 		setName(name);
 		setExt(ext);
-		setTipoDoc("");
-	}
-	
-	/**
-	 * Constructor.
-	 * @param id Identificador del anexo.
-	 * @param name Nombre del anexo.
-	 * @param ext Extensión del anexo.
-	 * @param tipoDoc Tipo del documento
-	 */
-	public Annexe(String id, String name, String ext, String tipoDoc) {
-		this();
-		setId(id);
-		setName(name);
-		setExt(ext);
-		setTipoDoc(tipoDoc);
 	}
 
 	public String getId() {
@@ -126,12 +108,5 @@ public class Annexe implements Serializable {
 	public void setPageId(String pageId) {
 		this.pageId = pageId;
 	}
-
-	public String getTipoDoc() {
-		return tipoDoc;
-	}
-
-	public void setTipoDoc(String tipoDoc) {
-		this.tipoDoc = tipoDoc;
-	}
+	
 }
