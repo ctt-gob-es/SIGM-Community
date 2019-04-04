@@ -58,6 +58,7 @@ public class UTFHelper {
 			cadena = cadena.replaceAll("–", "-");
 
 			cadena = cadena.replaceAll("\u00b4", "'");
+			cadena = cadena.replaceAll("\u00a8", " ");
 			cadena = cadena.replaceAll("\u2013", "-");
 			cadena = cadena.replaceAll("\u2018", "'");
 			cadena = cadena.replaceAll("\u2019", "'");

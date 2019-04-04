@@ -80,6 +80,7 @@ public class SICRES30Utils {
         FicheroIntercambioSICRES3 objRegistroSICRES3 = null;
         
         try{
+        	registro = registro.replaceAll("&", "&amp;").replaceAll("amp;amp;", "amp;");
             JAXBContext jaxbContext = JAXBContext.newInstance(FicheroIntercambioSICRES3.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             StringReader reader = new StringReader(registro);
@@ -87,6 +88,7 @@ public class SICRES30Utils {
             
         } catch (JAXBException e){            
             LOGGER.error("ERROR al unmarshalear el registro. " + e.getMessage(), e);
+            LOGGER.error(registro);
         }
         
         return objRegistroSICRES3;
