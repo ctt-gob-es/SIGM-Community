@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright 2016 Ministerio de Sanidad, Servicios Sociales e Igualdad 
+ Licencia con arreglo a la EUPL, Versión 1.1 o -en cuanto sean aprobadas por laComisión Europea– versiones posteriores de la EUPL (la «Licencia»); 
+ Solo podrá usarse esta obra si se respeta la Licencia. 
+ Puede obtenerse una copia de la Licencia en: 
+ http://joinup.ec.europa.eu/software/page/eupl/licence-eupl 
+ Salvo cuando lo exija la legislación aplicable o se acuerde por escrito, el programa distribuido con arreglo a la Licencia se distribuye «TAL CUAL», SIN GARANTIAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas. 
+ Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia. 
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<name>sigm.ear</name>
+	<artifactId>sigm.ear</artifactId>
+	<url>http://maven.apache.org</url>
+	<parent>
+		<groupId>es.msssi.tecdoc.sigem</groupId>
+		<artifactId>SIGEM_RegistroPresencialMSSSIJAXWS</artifactId>
+		<version>3.0.0-msssi2.0.0</version>
+	</parent>
+	<packaging>ear</packaging>
+
+	<!-- PROPERTIES -->
+	<properties>
+		<sigemMSSSI.version>3.0.0-msssi2.0.0</sigemMSSSI.version>
+		<project.build.sourceEncoding>LATIN9</project.build.sourceEncoding>
+		<!--<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+		<!-- REPLICADO DE COOKIES -->
+		<wls.persistent.store.type>replicated_if_clustered</wls.persistent.store.type>
+		<!-- CONTEXT ROOT -->
+		<enviroment.context.root>/SIGEM_Webservices</enviroment.context.root>
+        <java.version.source>1.6</java.version.source>
+        <java.version.compatibility>1.6</java.version.compatibility>
+		
+		<system.name>SIGM_SIGM_WEBSERVICES</system.name>
+	</properties>
+
+
+
+	<!-- DEPENDENCIAS -->
+	<dependencies>
+		<!-- CAPA WEB -->
+		<dependency>
+			<groupId>es.msssi.tecdoc.sigem</groupId>
+			<artifactId>sigm.webservices</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+			<scope>runtime</scope>
+		</dependency>
+    </dependencies>
+
+
+	<!-- BUILD -->
+	<build>
+		<!-- EXTENSIONES -->
+		<extensions>
+			<!-- FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
+		<!-- PLUGINS -->
+		<plugins>
+			<!-- CREACION DE EAR -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<finalName>${system.name}_${project.version}</finalName>
+					<version>1.3</version>
+					<defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
+					<includeLibInApplicationXml>true</includeLibInApplicationXml>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Weblogic-Application-Version>${project.version}</Weblogic-Application-Version>
+						</manifestEntries>
+					</archive>
+					<filtering>true</filtering>
+					<earSourceDirectory>
+						src/main/application
+					</earSourceDirectory>
+					<generateApplicationXml>true</generateApplicationXml>
+					<modules>
+						<webModule>
+							<groupId>es.msssi.tecdoc.sigem</groupId>
+							<artifactId>sigm.webservices</artifactId>
+							<contextRoot>${enviroment.context.root}</contextRoot>
+							<bundleFileName>sigm.webservices.war</bundleFileName>
+						</webModule>
+					</modules>
+					<earSourceExcludes>
+						src/main/resources/reponfs/**
+					</earSourceExcludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<checkModificationExcludes>
+						<checkModificationExclude>sigm.ear.iml</checkModificationExclude>
+					</checkModificationExcludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<encoding>iso-8859-15</encoding>
+					<source>${java.version.source}</source>
+					<target>${java.version.compatibility}</target>
+					<compilerArguments>
+						<verbose />
+					</compilerArguments>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- PERFILES -->
+	<profiles>
+		<!-- DESARROLLO -->
+		<profile>
+			<id>msssi_local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>msssi_local</name>
+				</property>
+			</activation>
+			<!-- PROPERTIES DE PERFIL -->
+			<properties/>
+			<!-- BUILD -->
+			<build>
+				<plugins> 
+					<!-- ENCAPSULADO -->
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>2.4</version>
+						<configuration>
+							<finalName>${system.name}_rapp-${project.version}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptor>assemblyRepo.xml</descriptor>
+						</configuration>
+					</plugin>									
+				</plugins>
+			</build>
+		</profile>	
+	</profiles>
+</project>

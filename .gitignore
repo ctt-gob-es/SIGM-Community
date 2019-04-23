@@ -9,7 +9,6 @@ bin
 *\.classpath
 *.component
 *.project
-*.ear
 *.war
 *.bat
 *.zip
