@@ -16,9 +16,12 @@ import org.apache.log4j.Logger;
 import es.dipucr.contratacion.objeto.sw.DatosContrato;
 import es.dipucr.contratacion.objeto.sw.DatosTramitacion;
 import es.dipucr.contratacion.objeto.sw.DiariosOficiales;
+import es.dipucr.contratacion.objeto.sw.Lotes;
+import es.dipucr.contratacion.objeto.sw.Peticion;
 import es.dipucr.contratacion.objeto.sw.common.DipucrFuncionesComunesSW;
 import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos;
 import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos.Contrato;
+import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos.ContratoMenor;
 import es.dipucr.jaxb.tribunalcuentas.beans.TipoEntidad;
 import es.dipucr.jaxb.tribunalcuentas.commons.FuncionesComunes;
 import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
@@ -42,6 +45,7 @@ public class GenerarXMLTribunalCuentasRule implements IRule {
 	}
 
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
+		String numexpExp = "";
 		try {
 			//Obtener el ejercicio de la entidad
 			String ejercicio = FuncionesComunes.obtenerEjercicio(rulectx);
@@ -66,9 +70,9 @@ public class GenerarXMLTribunalCuentasRule implements IRule {
 			}
 			
 			//Consulta a la tabla CONTRATACION_DATOS_TRAMIT
-			sQuery.append(") AND F_CONTRATO IS NOT NULL AND F_CONTRATO BETWEEN '"+ejercicio+"-01-01' and '"+ejercicio+"-12-31'");
+			sQuery.append(") AND ((F_CONTRATO BETWEEN '"+ejercicio+"-01-01' and '"+ejercicio+"-12-31') OR ( FECHA_ADJUDICACION BETWEEN '"+ejercicio+"-01-01' and '"+ejercicio+"-12-31' ))");
 			LOGGER.warn("sQuery "+sQuery);
-			Iterator<IItem> itExp = ConsultasGenericasUtil.queryEntities(rulectx, "CONTRATACION_DATOS_TRAMIT", sQuery.toString());
+			Iterator<IItem> itExp = ConsultasGenericasUtil.queryEntities(rulectx.getClientContext(), "CONTRATACION_DATOS_TRAMIT", sQuery.toString());
 			
 			
 			RelacionContratos  relacionContratos = new RelacionContratos();
@@ -78,16 +82,28 @@ public class GenerarXMLTribunalCuentasRule implements IRule {
 			relacionContratos.setTipoEntidad(TipoEntidad.valueOf(DipucrCommonFunctions.getVarGlobal("TIPOENTIDAD")));
 			
 			
+			
 			while(itExp.hasNext()){
 				IItem expediente = itExp.next();
-				String numexpExp = expediente.getString("NUMEXP");
+				numexpExp = expediente.getString("NUMEXP");
 				DatosContrato datosContrato = DipucrFuncionesComunesSW.getDatosContrato(rulectx.getClientContext(), numexpExp);
 				DatosTramitacion datosTramitacion = DipucrFuncionesComunesSW.getDatosTramitacion(rulectx.getClientContext(), numexpExp, null);
+				Peticion peticion = DipucrFuncionesComunesSW.getPeticion(rulectx.getClientContext(), numexpExp);
 				DiariosOficiales diariosOficiales = DipucrFuncionesComunesSW.getDiariosOficiales(rulectx.getClientContext(), numexpExp);
-				Contrato contrato = FuncionesComunes.getContrato(datosContrato, datosTramitacion, diariosOficiales);
-				if(null != contrato){
-					relacionContratos.getContrato().add(contrato);
+				LOGGER.warn("numexpExp. "+numexpExp);
+				if((datosContrato.getProcedimientoContratacion()!=null && datosContrato.getProcedimientoContratacion().getValor()!=null 
+						&& datosContrato.getProcedimientoContratacion().getValor().contains("Contrato Menor")) || datosContrato.getNumContrato().contains("- MENOR -")){
+					ContratoMenor contratoMenor = FuncionesComunes.getContratoMenor(datosContrato, datosTramitacion, peticion, diariosOficiales);
+					relacionContratos.getContratoMenor().add(contratoMenor);
 				}
+				else{
+					Lotes lotes = DipucrFuncionesComunesSW.getLotes(rulectx.getClientContext(), numexpExp);
+					Contrato contrato = FuncionesComunes.getContrato(datosContrato, datosTramitacion, diariosOficiales, lotes);
+					if(null != contrato){
+						relacionContratos.getContrato().add(contrato);
+					}
+				}
+				
 			}
 			
 			File fileXML = FuncionesComunes.obtenerXML(relacionContratos);
@@ -108,9 +124,17 @@ public class GenerarXMLTribunalCuentasRule implements IRule {
 				ffilePathJunta.delete();
 			}
 			
+			File ffilePathJuntaContratoMenor = JasperReportUtil.obtenerPdftoXml(rulectx, docXML,  "/RelacionContratos/ContratoMenor","Estadísticas Rendición Cuentas", "TribunalCuentas.jasper");
+			
+			IItem entityDocumentContratoMenor = DocumentosUtil.generaYAnexaDocumento(rulectx.getClientContext(), rulectx.getTaskId(), tpdocXML, nombreTipoDocXML,ffilePathJuntaContratoMenor, Constants._EXTENSION_PDF);
+			entityDocumentContratoMenor.store(rulectx.getClientContext());
+			if(ffilePathJuntaContratoMenor.exists()){
+				ffilePathJuntaContratoMenor.delete();
+			}
+			
 			fileXML.delete();
 		} catch (ISPACException e) {
-			LOGGER.error(e.getMessage(), e);
+			LOGGER.error("Numexp "+numexpExp+" - "+e.getMessage(), e);
 			throw new ISPACRuleException("Error. "+e.getMessage(),e);
 		}
 		

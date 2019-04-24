@@ -165,6 +165,108 @@ public class ParticipantesUtil {
 			return insertarParticipante(cct, numexp, terceros.get(0), tipoRelacion, tipoPersona, email, recurso);
 		}
 	}
+	
+	public static boolean insertarParticipanteByNIFValidadoNoValidado(IClientContext cct, String numexp,
+			String nif, String tipoRelacion, String tipoPersona, String email, String recurso, Tercero tercero)
+		throws ISPACException{
+	ServicioTerceros servicioTerceros;
+	List<Tercero> terceros;
+	String entityId = null;
+
+	try{
+		servicioTerceros = LocalizadorServicios.getServicioTerceros();
+		
+		OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+		if (info != null)
+			entityId = info.getOrganizationId();
+		
+		terceros = servicioTerceros.lookup(entityId, nif, true);
+	} catch (TercerosException e) {
+		LOGGER.error("Error al recuperar el participante con NIF " + nif + ". " + e.getMessage(), e);
+		throw new ISPACException("Error al recuperar el participante con id " + nif + ". " + e.getMessage(), e);
+	} catch (EntidadesException e) {
+		LOGGER.error("Error al recuperar el participante con NIF " + nif + ". " + e.getMessage(), e);
+		throw new ISPACException("Error al recuperar el participante con id " + nif + ". " + e.getMessage(), e);
+	} catch (SigemException e) {
+		LOGGER.error("Error al recuperar el participante con NIF " + nif + ". " + e.getMessage(), e);
+		throw new ISPACException("Error al recuperar el participante con id " + nif + ". " + e.getMessage(), e);
+	}
+	if (terceros.size() == 0){ 
+		return insertarParticipanteNoValidado(cct, numexp, tercero, tipoRelacion, tipoPersona, email, recurso);
+	}
+	else{
+		return insertarParticipante(cct, numexp, terceros.get(0), tipoRelacion, tipoPersona, email, recurso);
+	}
+}
+	protected static boolean insertarParticipanteNoValidado(IClientContext cct, String numexp,
+			Tercero tercero, String tipoRelacion, String tipoPersona, String email, String recurso)
+		throws ISPACRuleException
+	{
+
+	try {
+		//----------------------------------------------------------------------------------------------
+        IInvesflowAPI invesFlowAPI = cct.getAPI();	        
+        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+        //----------------------------------------------------------------------------------------------
+        		    
+        IItem nuevoParticipante = null;
+
+		//Si no existe el tercero no hacemos nada
+		if(tercero != null){
+			//Comprobamos si existe ya el participante, si existe no hacemos nada
+
+	    	IItemCollection participantes = ParticipantesUtil.getParticipantes( cct, numexp,  ParticipantesUtil.ID_EXT + " = '" + tercero.getIdExt()+"'", "");
+		
+	    	//Si el tercero no está ya insertado
+	    	if(!participantes.iterator().hasNext()){
+	    		cct.beginTX();
+		        nuevoParticipante = entitiesAPI.createEntity(Constants.TABLASBBDD.SPAC_DT_INTERVINIENTES, numexp);
+		        
+		        if(StringUtils.isNotEmpty(tercero.getIdExt()))nuevoParticipante.set(ParticipantesUtil.ID_EXT, tercero.getIdExt());
+		        if(StringUtils.isNotEmpty(tipoRelacion))nuevoParticipante.set(ParticipantesUtil.ROL, tipoRelacion);
+		        if(StringUtils.isNotEmpty(tipoPersona))nuevoParticipante.set(ParticipantesUtil.TIPO_PERSONA, tipoPersona);
+		        if(StringUtils.isNotEmpty(tercero.getIdentificacion()))nuevoParticipante.set(ParticipantesUtil.NDOC, tercero.getIdentificacion());
+		        if(StringUtils.isNotEmpty(tercero.getNombreCompleto()))nuevoParticipante.set(ParticipantesUtil.NOMBRE, tercero.getNombreCompleto());
+		        
+		        if (null != tercero.getDireccionPostalPredeterminada()){ 
+		        	if(StringUtils.isNotEmpty(tercero.getDireccionPostalPredeterminada().getDireccionPostal()))nuevoParticipante.set(ParticipantesUtil.DIRNOT, tercero.getDireccionPostalPredeterminada().getDireccionPostal());		        
+		        	if(StringUtils.isNotEmpty(tercero.getDireccionPostalPredeterminada().getCodigoPostal()))nuevoParticipante.set(ParticipantesUtil.C_POSTAL, tercero.getDireccionPostalPredeterminada().getCodigoPostal());
+		        	if(StringUtils.isNotEmpty(tercero.getDireccionPostalPredeterminada().getMunicipio()))nuevoParticipante.set(ParticipantesUtil.LOCALIDAD, tercero.getDireccionPostalPredeterminada().getMunicipio());
+		        	if(StringUtils.isNotEmpty(tercero.getDireccionPostalPredeterminada().getProvincia()))nuevoParticipante.set(ParticipantesUtil.CAUT, tercero.getDireccionPostalPredeterminada().getProvincia());
+		        	if(StringUtils.isNotEmpty(tercero.getDireccionPostalPredeterminada().getTelefono()))nuevoParticipante.set(ParticipantesUtil.TFNO_FIJO, tercero.getDireccionPostalPredeterminada().getTelefono());
+		        }
+		        
+	            nuevoParticipante.set(ParticipantesUtil.TIPO_DIRECCION, "T");	            
+	            //Debido a que en el registro telemático web no funciona la opción de recuperar el correo electrónico, lo introducimos manualmente
+	            if (StringUtils.isNotEmpty(email)){
+		            nuevoParticipante.set(ParticipantesUtil.EMAIL, email);
+		            nuevoParticipante.set(ParticipantesUtil.DIRECCIONTELEMATICA, email);
+	    		}
+	            if (StringUtils.isNotEmpty(recurso)){
+	            	nuevoParticipante.set(ParticipantesUtil.RECURSO, recurso);
+	            }
+	            
+	            try{
+	            	nuevoParticipante.store(cct);
+	            	cct.endTX(true);
+	            }
+	            catch(Exception e){
+	            	LOGGER.error("Error al guardar el participante con NIF/CIF " + tercero.getIdentificacion() + ", en el expediente: " + numexp + ". " + e.getMessage(), e);
+	            	cct.endTX(false);
+		    		return false;//[eCenpri-Felipe #632]
+	            }
+			}//Fin si !existe ya en el expediente
+		}//Fin si existe el tercero en la BBDD de terceros
+		else{ 
+        	LOGGER.error("El participante es nulo. Expediente: " + numexp + ". ");
+    		return false;
+    	}
+	} catch (ISPACException e) {
+		LOGGER.error("Error al guardar el participante con NIF/CIF " + tercero.getIdentificacion() + ", en el expediente: " + numexp + ". " + e.getMessage(), e);
+		return false;
+	}
+	return true;
+}
 
 	/**
 	 * Inserta un participante por su id. Sin recurso

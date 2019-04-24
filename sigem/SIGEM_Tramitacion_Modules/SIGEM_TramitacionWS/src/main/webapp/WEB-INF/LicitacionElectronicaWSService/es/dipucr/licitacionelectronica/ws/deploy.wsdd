@@ -5,7 +5,7 @@
   <service name="LicitacionElectronicaWS" provider="java:RPC" style="wrapped" use="literal">
       <parameter name="wsdlTargetNamespace" value="http://ws.licitacionelectronica.dipucr.es"/>
       <parameter name="wsdlServiceElement" value="LicitacionElectronicaWSService"/>
-      <parameter name="schemaQualified" value="http://sw.objeto.contratacion.dipucr.es,http://ws.licitacionelectronica.dipucr.es"/>
+      <parameter name="schemaQualified" value="http://sw.objeto.contratacion.dipucr.es,http://dto.tramitacion.services.core.sgm.tecdoc.ieci,http://ws.licitacionelectronica.dipucr.es,http://objeto.contratacion.dipucr.es"/>
       <parameter name="wsdlServicePort" value="LicitacionElectronicaWS"/>
       <parameter name="className" value="es.dipucr.licitacionelectronica.ws.LicitacionElectronicaWS"/>
       <parameter name="wsdlPortType" value="LicitacionElectronicaWS"/>
@@ -14,7 +14,11 @@
         <parameter xmlns:pns="http://ws.licitacionelectronica.dipucr.es" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:entidadId" type="tns:string"/>
         <parameter xmlns:pns="http://ws.licitacionelectronica.dipucr.es" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:numexp" type="tns:string"/>
       </operation>
-      <parameter name="allowedMethods" value="getEspacioVirtualLicitacionBean"/>
+      <operation xmlns:operNS="http://ws.licitacionelectronica.dipucr.es" name="crearAdjucatario" qname="operNS:crearAdjucatario" soapAction="">
+        <parameter xmlns:pns="http://ws.licitacionelectronica.dipucr.es" xmlns:tns="http://objeto.contratacion.dipucr.es" qname="pns:adjudicatario" type="tns:Adjudicatario"/>
+        <parameter xmlns:pns="http://ws.licitacionelectronica.dipucr.es" xmlns:tns="http://objeto.contratacion.dipucr.es" qname="pns:peticPlace" type="tns:Peticion"/>
+      </operation>
+      <parameter name="allowedMethods" value="crearAdjucatario getEspacioVirtualLicitacionBean"/>
 
       <typeMapping xmlns:ns="http://sw.objeto.contratacion.dipucr.es" qname="ns:DuracionContratoBean" type="java:es.dipucr.contratacion.objeto.sw.DuracionContratoBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
       <typeMapping xmlns:ns="http://sw.objeto.contratacion.dipucr.es" qname="ns:VariantesOfertas" type="java:es.dipucr.contratacion.objeto.sw.VariantesOfertas" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
@@ -55,8 +59,11 @@
       <typeMapping xmlns:ns="http://sw.objeto.contratacion.dipucr.es" qname="ns:Lotes" type="java:es.dipucr.contratacion.objeto.sw.Lotes" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
       <typeMapping xmlns:ns="http://sw.objeto.contratacion.dipucr.es" qname="ns:OrganoAsistencia" type="java:es.dipucr.contratacion.objeto.sw.OrganoAsistencia" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
       <arrayMapping xmlns:ns="http://ws.licitacionelectronica.dipucr.es" xmlns:cmp-ns="http://sw.objeto.contratacion.dipucr.es" qname="ns:ArrayOf_tns1_RequisitfiDeclaraciones" type="java:es.dipucr.contratacion.objeto.sw.RequisitfiDeclaraciones[]" innerType="cmp-ns:RequisitfiDeclaraciones" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://dto.tramitacion.services.core.sgm.tecdoc.ieci" qname="ns:DocumentoExpediente" type="java:ieci.tecdoc.sgm.core.services.tramitacion.dto.DocumentoExpediente" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://objeto.contratacion.dipucr.es" qname="ns:Adjudicatario" type="java:es.dipucr.contratacion.objeto.Adjudicatario" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
       <typeMapping xmlns:ns="http://sw.objeto.contratacion.dipucr.es" qname="ns:RequisitfiDeclaraciones" type="java:es.dipucr.contratacion.objeto.sw.RequisitfiDeclaraciones" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
       <typeMapping xmlns:ns="http://sw.objeto.contratacion.dipucr.es" qname="ns:EspacioVirtualLicitacionBean" type="java:es.dipucr.contratacion.objeto.sw.EspacioVirtualLicitacionBean" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://objeto.contratacion.dipucr.es" qname="ns:Peticion" type="java:es.dipucr.contratacion.objeto.Peticion" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
       <typeMapping xmlns:ns="http://sw.objeto.contratacion.dipucr.es" qname="ns:Periodo" type="java:es.dipucr.contratacion.objeto.sw.Periodo" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
       <typeMapping xmlns:ns="http://sw.objeto.contratacion.dipucr.es" qname="ns:Departamento" type="java:es.dipucr.contratacion.objeto.sw.Departamento" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
       <arrayMapping xmlns:ns="http://ws.licitacionelectronica.dipucr.es" xmlns:cmp-ns="http://sw.objeto.contratacion.dipucr.es" qname="ns:ArrayOf_tns1_Documento" type="java:es.dipucr.contratacion.objeto.sw.Documento[]" innerType="cmp-ns:Documento" encodingStyle=""/>

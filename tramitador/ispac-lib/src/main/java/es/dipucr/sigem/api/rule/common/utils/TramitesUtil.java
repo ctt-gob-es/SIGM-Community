@@ -71,6 +71,9 @@ public class TramitesUtil {
 			else{
 				observaciones=observaciones+"\n"+texto;
 			}
+			if(observaciones.length()>250){
+				observaciones = observaciones.substring(0, 250);
+			}
 			itTram.set("OBSERVACIONES", observaciones);
 			itTram.store(cct);
 		

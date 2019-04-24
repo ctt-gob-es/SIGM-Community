@@ -10,7 +10,7 @@ package es.dipucr.contratacion.services;
 
 public class PlataformaContratacionRemoteExceptionException extends java.lang.Exception{
 
-    private static final long serialVersionUID = 1551260858559L;
+    private static final long serialVersionUID = 1552041273787L;
     
     private es.dipucr.contratacion.services.PlataformaContratacionStub.PlataformaContratacionRemoteException faultMessage;
 

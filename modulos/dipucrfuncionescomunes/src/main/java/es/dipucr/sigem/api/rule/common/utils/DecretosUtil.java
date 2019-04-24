@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
@@ -94,6 +95,34 @@ public class DecretosUtil {
 		}
 		
 		return decreto;
+	}
+	public static IItem getDocDecretoByNumExpDecreto(IClientContext cct, String numExpDecreto) throws ISPACRuleException{
+		IItem acuerdo = null;
+		try{
+			Vector<String> colOrgaCol = ExpedientesRelacionadosUtil.getExpRelacionadosPadres(cct.getAPI().getEntitiesAPI(), numExpDecreto);
+			for (int i=0; i<colOrgaCol.size(); i++){
+				String consultaDecretos = "UPPER(NOMBRE) = 'DECRETO'";
+				String orden = "ID DESC LIMIT 1";					
+
+				IItemCollection icDoc = DocumentosUtil.getDocumentos(cct, numExpDecreto, consultaDecretos, orden);
+				Iterator<?> docNotificaciones;
+				
+				if (icDoc.next()) {
+					docNotificaciones = icDoc.iterator();
+					while (docNotificaciones.hasNext()) {
+						acuerdo =(IItem) docNotificaciones.next();
+					}
+				}
+			}
+		} catch (ISPACRuleException e) {
+			LOGGER.error("Error al obtenerDecretoByNumExpDecreto en la decreto."+numExpDecreto+" - "+e.getMessage(),e);
+			throw new ISPACRuleException("Error al obtenerDecretoByNumExpDecreto en la decreto."+numExpDecreto+" - "+e.getMessage(),e);
+		} catch (ISPACException e) {
+			LOGGER.error("Error al obtenerDecretoByNumExpDecreto en la decreto."+numExpDecreto+" - "+e.getMessage(),e);
+			throw new ISPACRuleException("Error al obtenerDecretoByNumExpDecreto en la decreto."+numExpDecreto+" - "+e.getMessage(),e);
+		}
+		
+		return acuerdo;
 	}
 	
 	public static String getUltimoNumexpDecreto(IClientContext cct, String numexp) {

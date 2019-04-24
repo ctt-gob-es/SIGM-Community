@@ -10,7 +10,7 @@ package es.dipucr.contratacion.services;
 
 public class PlataformaContratacionJAXBExceptionException extends java.lang.Exception{
 
-    private static final long serialVersionUID = 1551260858575L;
+    private static final long serialVersionUID = 1552041273813L;
     
     private es.dipucr.contratacion.services.PlataformaContratacionStub.PlataformaContratacionJAXBException faultMessage;
 

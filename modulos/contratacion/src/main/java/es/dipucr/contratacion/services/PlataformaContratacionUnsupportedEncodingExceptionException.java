@@ -10,7 +10,7 @@ package es.dipucr.contratacion.services;
 
 public class PlataformaContratacionUnsupportedEncodingExceptionException extends java.lang.Exception{
 
-    private static final long serialVersionUID = 1551260858567L;
+    private static final long serialVersionUID = 1552041273800L;
     
     private es.dipucr.contratacion.services.PlataformaContratacionStub.PlataformaContratacionUnsupportedEncodingException faultMessage;
 

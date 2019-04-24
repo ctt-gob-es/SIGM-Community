@@ -5,7 +5,7 @@
 
 	<xs:element name="RelacionContratos">
 		<xs:annotation>
-			<xs:documentation>RelaciÃ³n Anual de Contratos de las Entidades
+			<xs:documentation>Relación Anual de Contratos de las Entidades
 				Locales.
 			</xs:documentation>
 		</xs:annotation>
@@ -36,33 +36,40 @@
 					minOccurs="1" maxOccurs="1">
 					<xs:annotation>
 						<xs:documentation>Ejercicio de los contratos perteneciente a la
-							relaciÃ³n anual de contratos.
+							relación anual de contratos.
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="Contrato" minOccurs="1" maxOccurs="unbounded">
+				<xs:element name="Contrato" minOccurs="0" maxOccurs="unbounded">
 					<xs:annotation>
-						<xs:documentation>InformaciÃ³n del contrato</xs:documentation>
+						<xs:documentation>Información del contrato</xs:documentation>
 					</xs:annotation>
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="Referencia" type="TipoReferencia"
 								minOccurs="1" maxOccurs="1">
 								<xs:annotation>
-									<xs:documentation>NÃºmero de referencia del contrato
+									<xs:documentation>Número de referencia del contrato
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Ley" type="TipoLey"
+								minOccurs="1" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>Tipo de ley a la que se acoge el contrato
 									</xs:documentation>
 								</xs:annotation>
 							</xs:element>
 							<xs:element name="Modificacion" minOccurs="0" maxOccurs="1">
 								<xs:annotation>
-									<xs:documentation>Indicador de ModificaciÃ³n del Contrato. Si no es un contrato modificado no debe introducirse.</xs:documentation>
+									<xs:documentation>Indicador de Modificación del Contrato. Si no es un contrato modificado no debe introducirse.</xs:documentation>
 								</xs:annotation>
 								<xs:complexType>
 									<xs:sequence>
 										<xs:element name="ReferenciaOriginal" type="TipoReferencia"
 											minOccurs="1" maxOccurs="1">
 											<xs:annotation>
-												<xs:documentation>NÃºmero de referencia del contrato original.
+												<xs:documentation>Número de referencia del contrato original.
 												</xs:documentation>
 											</xs:annotation>
 										</xs:element>
@@ -83,10 +90,18 @@
 									</xs:documentation>
 								</xs:annotation>
 							</xs:element>
+							<xs:element name="NumLotesLic" type="NumeroLotes"
+								minOccurs="0" maxOccurs="1" >
+								<xs:annotation>
+									<xs:documentation>Número de lotes licitados del contrato, si es un
+										contrato por lotes.
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
 							<xs:element name="NumLotes" type="NumeroLotes"
 								minOccurs="0" maxOccurs="1" >
 								<xs:annotation>
-									<xs:documentation>NÃºmero de lotes del contrato, si es un
+									<xs:documentation>Número de lotes adjudicados del contrato, si es un
 										contrato por lotes.
 									</xs:documentation>
 								</xs:annotation>
@@ -103,7 +118,7 @@
 								minOccurs="1" maxOccurs="1">
 								<xs:annotation>
 									<xs:documentation>Indicador de si es un contrato derivado de
-										sistema dinÃ¡mico.
+										sistema dinámico.
 									</xs:documentation>
 								</xs:annotation>
 							</xs:element>
@@ -111,7 +126,7 @@
 								minOccurs="1" maxOccurs="1">
 								<xs:annotation>
 									<xs:documentation>Indicador de si es un contrato con subasta
-										electrÃ³nica.
+										electrónica.
 									</xs:documentation>
 								</xs:annotation>
 							</xs:element>
@@ -126,8 +141,8 @@
 							<xs:element name="RegArmonizada" type="TipoInformativo"
 								minOccurs="1" maxOccurs="1">
 								<xs:annotation>
-									<xs:documentation>Indicador de si el contrato estÃ¡ sujeto a
-										regulaciÃ³n armonizada.
+									<xs:documentation>Indicador de si el contrato está sujeto a
+										regulación armonizada.
 									</xs:documentation>
 								</xs:annotation>
 							</xs:element>
@@ -146,14 +161,14 @@
 							<xs:element name="SistAdjudicacion" type="SistemaAdjudicacion"
 								minOccurs="1" maxOccurs="1">
 								<xs:annotation>
-									<xs:documentation>Sistema de adjudicaciÃ³n del contrato.
+									<xs:documentation>Sistema de adjudicación del contrato.
 									</xs:documentation>
 								</xs:annotation>
 							</xs:element>
 							<xs:element name="Tramitacion" type="Tramitacion"
 								minOccurs="1" maxOccurs="1">
 								<xs:annotation>
-									<xs:documentation>TramitaciÃ³n del contrato.
+									<xs:documentation>Tramitación del contrato.
 									</xs:documentation>
 								</xs:annotation>
 							</xs:element>
@@ -176,21 +191,42 @@
 							<xs:element name="PrecLicitacion" type="TipoPrecioLicitacion"
 								minOccurs="1" maxOccurs="1">
 								<xs:annotation>
-									<xs:documentation>Precio de LicitaciÃ³n del contrato.
+									<xs:documentation>Precio de Licitación del contrato. (si se trata de Contrato no menor, sujeto al Real Decreto Legislativo 3/2011 (TRLCSP), con I.V.A., en caso contrario sin I.V.A.)
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="IvaLicitacion" type="TipoIVA"
+								minOccurs="0" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>I.V.A. de precio de Licitación del contrato. (solo si se trata de Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
 									</xs:documentation>
 								</xs:annotation>
 							</xs:element>
 							<xs:element name="PrecAdjudicacion" type="TipoPrecioAdjudicacion"
 								minOccurs="1" maxOccurs="1">
 								<xs:annotation>
-									<xs:documentation>Precio de adjudicaciÃ³n del contrato.
+									<xs:documentation>Precio de adjudicación del contrato. (si se trata de Contrato no menor, sujeto al Real Decreto Legislativo 3/2011 (TRLCSP), con I.V.A., en caso contrario sin I.V.A.)
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="IvaAdjudicacion" type="TipoIVA"
+								minOccurs="0" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>I.V.A. de precio de adjudicación del contrato. (solo si se trata de Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Ingreso" type="TipoInformativo"
+								minOccurs="1" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation> Indicador de importe del contrato es un ingreso.
 									</xs:documentation>
 								</xs:annotation>
 							</xs:element>
 							<xs:element name="AdjDef" type="TipoInformativo"
 								minOccurs="1" maxOccurs="1">
 								<xs:annotation>
-									<xs:documentation>Indicador de adjudicaciÃ³n definitiva dele
+									<xs:documentation>Indicador de adjudicación definitiva del
 										contrato.
 									</xs:documentation>
 								</xs:annotation>
@@ -198,7 +234,7 @@
 							<xs:element name="FechaAdjDef" type="TipoFecha"
 								minOccurs="0" maxOccurs="1" >
 								<xs:annotation>
-									<xs:documentation>Fecha de adjudicaciÃ³n definitiva del
+									<xs:documentation>Fecha de adjudicación definitiva del
 										contrato, si aplica.
 									</xs:documentation>
 								</xs:annotation>
@@ -206,21 +242,21 @@
 							<xs:element name="Formalizacion" type="TipoInformativo"
 								minOccurs="1" maxOccurs="1">
 								<xs:annotation>
-									<xs:documentation>Indicador de formalizaciÃ³n del contrato.
+									<xs:documentation>Indicador de formalización del contrato.
 									</xs:documentation>
 								</xs:annotation>
 							</xs:element>
 							<xs:element name="FechaForm" type="TipoFecha"
 								minOccurs="0" maxOccurs="1" >
 								<xs:annotation>
-									<xs:documentation>Fecha de formalizaciÃ³n del contrato.
+									<xs:documentation>Fecha de formalización del contrato.
 									</xs:documentation>
 								</xs:annotation>
 							</xs:element>
 							<xs:element name="PlazoEjecucion" type="TipoTemporal"
 								minOccurs="0" maxOccurs="1" >
 								<xs:annotation>
-									<xs:documentation>Plazo de ejecuciÃ³n del contrato, en meses,
+									<xs:documentation>Plazo de ejecución del contrato, en meses,
 										puede contener valores con decimales.
 									</xs:documentation>
 								</xs:annotation>
@@ -228,7 +264,7 @@
 							<xs:element name="PlazoConcesion" type="TipoTemporal"
 								minOccurs="0" maxOccurs="1" >
 								<xs:annotation>
-									<xs:documentation>Plazo de concesiÃ³n del contrato, en meses,
+									<xs:documentation>Plazo de concesión del contrato, en meses,
 										puede contener valores con decimales.
 									</xs:documentation>
 								</xs:annotation>
@@ -250,7 +286,7 @@
 										<xs:element name="PublicidadLicitacion" minOccurs="0"
 											maxOccurs="1">
 											<xs:annotation>
-												<xs:documentation>Publicidad de LicitaciÃ³n.
+												<xs:documentation>Publicidad de Licitación.
 												</xs:documentation>
 											</xs:annotation>
 											<xs:complexType>
@@ -258,7 +294,7 @@
 													<xs:element name="FechaBOE" type="TipoFecha"
 														minOccurs="0" maxOccurs="1" >
 														<xs:annotation>
-															<xs:documentation>Fecha de Publicidad en el BoletÃ­n
+															<xs:documentation>Fecha de Publicidad en el Boletín
 																Oficial del Estado.
 															</xs:documentation>
 														</xs:annotation>
@@ -266,7 +302,7 @@
 													<xs:element name="FechaBOP" type="TipoFecha"
 														minOccurs="0" maxOccurs="1" >
 														<xs:annotation>
-															<xs:documentation>Fecha de Publicidad en el BoletÃ­n
+															<xs:documentation>Fecha de Publicidad en el Boletín
 																Oficial de la Provincia.
 															</xs:documentation>
 														</xs:annotation>
@@ -274,8 +310,8 @@
 													<xs:element name="FechaBOCA" type="TipoFecha"
 														minOccurs="0" maxOccurs="1" >
 														<xs:annotation>
-															<xs:documentation>Fecha de Publicidad en el BoletÃ­n
-																Oficial de la Comunidad AutÃ³noma.
+															<xs:documentation>Fecha de Publicidad en el Boletín
+																Oficial de la Comunidad Autónoma.
 															</xs:documentation>
 														</xs:annotation>
 													</xs:element>
@@ -298,7 +334,7 @@
 														minOccurs="0" maxOccurs="1" >
 														<xs:annotation>
 															<xs:documentation>Fecha de Publicidad en la Plataforma
-																de ContrataciÃ³n del Estado.
+																de Contratación del Estado.
 															</xs:documentation>
 														</xs:annotation>
 													</xs:element>
@@ -316,7 +352,7 @@
 										<xs:element name="PublicidadAdjudicacion"
 											minOccurs="0" maxOccurs="1">
 											<xs:annotation>
-												<xs:documentation>Publicidad de AdjudicaciÃ³n.
+												<xs:documentation>Publicidad de Adjudicación.
 												</xs:documentation>
 											</xs:annotation>
 											<xs:complexType>
@@ -333,7 +369,7 @@
 														minOccurs="0" maxOccurs="1" >
 														<xs:annotation>
 															<xs:documentation>Fecha de Publicidad en la Plataforma
-																de ContrataciÃ³n del Estado.
+																de Contratación del Estado.
 															</xs:documentation>
 														</xs:annotation>
 													</xs:element>
@@ -351,7 +387,7 @@
 										<xs:element name="PublicidadFormalizacion"
 											minOccurs="0" maxOccurs="1">
 											<xs:annotation>
-												<xs:documentation>Publicidad de FormalizaciÃ³n.
+												<xs:documentation>Publicidad de Formalización.
 												</xs:documentation>
 											</xs:annotation>
 											<xs:complexType>
@@ -359,7 +395,7 @@
 													<xs:element name="FechaBOE" type="TipoFecha"
 														minOccurs="0" maxOccurs="1" >
 														<xs:annotation>
-															<xs:documentation>Fecha de Publicidad en el BoletÃ­n
+															<xs:documentation>Fecha de Publicidad en el Boletín
 																Oficial del Estado.
 															</xs:documentation>
 														</xs:annotation>
@@ -367,7 +403,7 @@
 													<xs:element name="FechaBOP" type="TipoFecha"
 														minOccurs="0" maxOccurs="1" >
 														<xs:annotation>
-															<xs:documentation>Fecha de Publicidad en el BoletÃ­n
+															<xs:documentation>Fecha de Publicidad en el Boletín
 																Oficial de la Provincia.
 															</xs:documentation>
 														</xs:annotation>
@@ -375,8 +411,8 @@
 													<xs:element name="FechaBOCA" type="TipoFecha"
 														minOccurs="0" maxOccurs="1" >
 														<xs:annotation>
-															<xs:documentation>Fecha de Publicidad en el BoletÃ­n
-																Oficial de la Comunidad AutÃ³noma.
+															<xs:documentation>Fecha de Publicidad en el Boletín
+																Oficial de la Comunidad Autónoma.
 															</xs:documentation>
 														</xs:annotation>
 													</xs:element>
@@ -399,7 +435,7 @@
 														minOccurs="0" maxOccurs="1" >
 														<xs:annotation>
 															<xs:documentation>Fecha de Publicidad en la Plataforma
-																de ContrataciÃ³n del Estado.
+																de Contratación del Estado.
 															</xs:documentation>
 														</xs:annotation>
 													</xs:element>
@@ -441,7 +477,7 @@
 											<xs:element name="Nacionalidad" type="TipoNacionalidad"
 												minOccurs="1" maxOccurs="1">
 												<xs:annotation>
-													<xs:documentation>El cÃ³digo de Nacionalidad del
+													<xs:documentation>El código de Nacionalidad del
 														Contratista.
 													</xs:documentation>
 												</xs:annotation>
@@ -459,41 +495,41 @@
 											<xs:element name="NumLote" type="TipoNumLote"
 												minOccurs="1" maxOccurs="1">
 												<xs:annotation>
-													<xs:documentation>NÃºmero de Lote.</xs:documentation>
+													<xs:documentation>Número de Lote.</xs:documentation>
 												</xs:annotation>
 											</xs:element>
                                             <xs:element name="Adj" type="TipoInformativo"
                                                 minOccurs="1" maxOccurs="1">
                                                 <xs:annotation>
-                                                    <xs:documentation>Indicador de adjudicaciÃ³n del lote.
+                                                    <xs:documentation>Indicador de adjudicación del lote.
                                                     </xs:documentation>
                                                 </xs:annotation>
                                             </xs:element>
 											<xs:element name="FechaAdj" type="TipoFecha"
 												minOccurs="0" maxOccurs="1">
 												<xs:annotation>
-													<xs:documentation>Fecha de adjudicaciÃ³n del lote.
+													<xs:documentation>Fecha de adjudicación del lote.
 													</xs:documentation>
 												</xs:annotation>
 											</xs:element>
 											<xs:element name="ImpAdj" type="TipoPrecioAdjudicacion"
 												minOccurs="1" maxOccurs="1">
 												<xs:annotation>
-													<xs:documentation>Importe de AdjudicaciÃ³n del lote.
+													<xs:documentation>Importe de Adjudicación del lote.
 													</xs:documentation>
 												</xs:annotation>
 											</xs:element>
                                             <xs:element name="Frm" type="TipoInformativo"
                                                 minOccurs="1" maxOccurs="1">
                                                 <xs:annotation>
-                                                    <xs:documentation>Indicador de formalizaciÃ³n del lote.
+                                                    <xs:documentation>Indicador de formalización del lote.
                                                     </xs:documentation>
                                                 </xs:annotation>
                                             </xs:element>
                                             <xs:element name="FechaFrm" type="TipoFecha"
                                                 minOccurs="0" maxOccurs="1">
                                                 <xs:annotation>
-                                                    <xs:documentation>Fecha de formalizaciÃ³n del lote.
+                                                    <xs:documentation>Fecha de formalización del lote.
                                                     </xs:documentation>
                                                 </xs:annotation>
                                             </xs:element>
@@ -515,6 +551,180 @@
 									</xs:complexType>
 								</xs:element>
 							</xs:choice>
+							<xs:element name="Observaciones" type="TipoObservaciones"
+								minOccurs="1" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>Observaciones del contrato.
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ContratoMenor" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Información del contrato menor</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Referencia" type="TipoReferencia"
+								minOccurs="1" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>Número de referencia del contrato
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Ley" type="TipoLey"
+								minOccurs="1" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>Tipo de ley a la que se acoge el contrato (tiene que ser menor)
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="TipoContrato" type="TipoContratoMenor"
+								minOccurs="1" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>Tipo de contrato.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Objeto" type="TipoObjeto" maxOccurs="1"
+								minOccurs="1">
+								<xs:annotation>
+									<xs:documentation>Objeto del contrato.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Duracion" type="TipoTemporal"
+								minOccurs="1" maxOccurs="1" >
+								<xs:annotation>
+									<xs:documentation>Duración (en meses).
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="PrecLicitacion" type="TipoPrecioLicitacion"
+								minOccurs="1" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation> Importe del gasto aprobado / importe de licitación (sin I.V.A y otros impuestos indirectos)
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="IvaLicitacion" type="TipoIVA"
+								minOccurs="1" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>I.V.A. de precio de Licitación del contrato. 
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="PrecAdjudicacion" type="TipoPrecioAdjudicacion"
+								minOccurs="1" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>Precio de adjudicación (sin I.V.A y otros impuestos indirectos)
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="IvaAdjudicacion" type="TipoIVA"
+								minOccurs="1" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>I.V.A. de precio de adjudicación del contrato. 
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="FechaAdjDef" type="TipoFecha"
+								minOccurs="1" maxOccurs="1" >
+								<xs:annotation>
+									<xs:documentation>Fecha de aprobación del gasto / fecha de adjudicación
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="PeticionOfertas" type="TipoInformativo"
+								minOccurs="0" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>Indicador de si se pidieron ofertas.
+									</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Publicidad" minOccurs="1" maxOccurs="1">
+								<xs:annotation>
+									<xs:documentation>Datos de la Entidad</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="ExistePublicidad" type="TipoInformativo"
+											minOccurs="1" maxOccurs="1">
+											<xs:annotation>
+												<xs:documentation>Indicador de si existe publicidad para
+													el contrato de alguno de los posibles tipos.
+												</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="PublicidadLicitacion" minOccurs="0"
+											maxOccurs="1">
+											<xs:annotation>
+												<xs:documentation>Publicidad de Licitación.
+												</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="FechaPerfil" type="TipoFecha"
+														minOccurs="0" maxOccurs="1" >
+														<xs:annotation>
+															<xs:documentation>Fecha de Publicidad en el Perfil del
+																Contratante.
+															</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="FechaContEstado" type="TipoFecha"
+														minOccurs="0" maxOccurs="1" >
+														<xs:annotation>
+															<xs:documentation>Fecha de Publicidad en la Plataforma
+																de Contratación del Estado.
+															</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="FechaOtros" type="TipoFecha"
+														minOccurs="0" maxOccurs="1" >
+														<xs:annotation>
+															<xs:documentation>Fecha de Publicidad en los otros
+																medios.
+															</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Contratista" minOccurs="1"
+								maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Contratista.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="NIF" type="TipoNIF" maxOccurs="1"
+											minOccurs="1">
+											<xs:annotation>
+												<xs:documentation>NIF del Contratista.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Adjudicatario" type="TipoAdjudicatario"
+											minOccurs="1" maxOccurs="1">
+											<xs:annotation>
+												<xs:documentation>Adjudicatario del Contratista.
+												</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Nacionalidad" type="TipoNacionalidad"
+											minOccurs="1" maxOccurs="1">
+											<xs:annotation>
+												<xs:documentation>El código de Nacionalidad del
+													Contratista.
+												</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
 							<xs:element name="Observaciones" type="TipoObservaciones"
 								minOccurs="1" maxOccurs="1">
 								<xs:annotation>
@@ -550,18 +760,18 @@
 				A - Ayuntamiento
 				B - Cabildo
 				C - Consorcio
-				D - DiputaciÃ³n Provincial
+				D - Diputación Provincial
 				E - Entidad Local Menor
-				G - AgrupaciÃ³n De Municipios
-				H - FundaciÃ³n
+				G - Agrupación De Municipios
+				H - Fundación
 				I - Epe
 				J - Consejo Insular
 				M - Mancomunidad
-				N - Otras Sin Ãnimo De Lucro
-				O - Organismo AutÃ³nomo
+				N - Otras Sin Ánimo De Lucro
+				O - Organismo Autónomo
 				P - Sociedad Mercantil
 				R - Comarca
-				T - Ãrea Metropolitana
+				T - Área Metropolitana
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -587,7 +797,7 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1" />
 			<xs:pattern
-				value="[0-9a-zA-ZÃ±Ã¡Ã Ã©Ã¨Ã­Ã¬Ã³Ã²ÃºÃ¹ÃÃ‰ÃÃ“ÃšÃ‘Ã¼\s/Ã§Ã‡Â¡!Â¿=\?%â‚¬@#,;:\.\-_'\*\+\(\) Ã€ÃˆÃŒÃ’Ã™Ãœâ€™Â´Â´`Â·Ã¤Ã«Ã¯Ã¶Ã„Ã‹ÃÃ–â€œâ€â€™]+" />
+				value="[0-9a-zA-ZñáàéèíìóòúùÁÉÍÓÚÑü\s/çÇ¡!¿=\?%&#8364;@#,;:\.\-_'\*\+\(\) ÀÈÌÒÙÜ&#8217;´´`·äëïöÄËÏÖ&#8220;&#8221;&#8217;ºª&amp;]+" />
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -603,7 +813,7 @@
 			<xs:documentation>
 				Tipo Informativo.
 				Los valores posibles son:
-				1 - SÃ­.
+				1 - Sí.
 				2 - No.
 			</xs:documentation>
 		</xs:annotation>
@@ -615,14 +825,14 @@
 
 	<xs:simpleType name="TipoNumeroEntero">
 		<xs:annotation>
-			<xs:documentation>Tipo NÃºmero Entero Positivo</xs:documentation>
+			<xs:documentation>Tipo Número Entero Positivo</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:nonNegativeInteger" />
 	</xs:simpleType>
 	
 	<xs:simpleType name="NumeroLotes">
 		<xs:annotation>
-			<xs:documentation>Tipo NÃºmero Lotes</xs:documentation>
+			<xs:documentation>Tipo Número Lotes</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="TipoNumeroEntero" >
 			<xs:minInclusive value="1" />
@@ -639,11 +849,13 @@
 				E - Servicios
 				C - Suministro
 				F - Contratos Administrativos Especiales
-				H - Contratos ConcesiÃ³n Obras PÃºblicas
-				B - Contratos GestiÃ³n Servicios PÃºblicos
+				H - Contratos Concesión Obras Públicas
+				B - Contratos Gestión Servicios Públicos
 				I - Contratos Privados
-				J - Contratos ColaboraciÃ³n Sector PÃºblico y Privado
+				J - Contratos Colaboración Sector Público y Privado
 				Z - Otros
+				K - Concesión de Obras (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				L - Concesión de Servicios (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -658,6 +870,27 @@
 			<xs:enumeration value="D" />
 			<xs:enumeration value="G" />
 			<xs:enumeration value="Z" />
+			<xs:enumeration value="K" />
+			<xs:enumeration value="L" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="TipoContratoMenor">
+		<xs:annotation>
+			<xs:documentation>
+				Tipo de Contrato.
+				Los valores posibles son:
+				A - Obras
+				E - Servicios
+				C - Suministro
+				Z - Otros
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="A" />
+			<xs:enumeration value="E" />
+			<xs:enumeration value="C" />
+			<xs:enumeration value="Z" />
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -671,16 +904,23 @@
 	<xs:simpleType name="SistemaAdjudicacion">
 		<xs:annotation>
 			<xs:documentation>
-				Sistema de AdjudicaciÃ³n.
+				Sistema de Adjudicación.
 				Los valores posibles son:
-				A - Abierto criterio precio
-				M - Abierto criterios mÃºltiples
-				R - Restringido criterio precio
-				C - Restringido criterios mÃºltiples
-				N - Negociado con publicidad
+				A - Abierto criterio precio (solo Contrato no menor, sujeto al Real Decreto Legislativo 3/2011 (TRLCSP))
+				M - Abierto criterios múltiples
+				R - Restringido criterio precio (solo Contrato no menor, sujeto al Real Decreto Legislativo 3/2011 (TRLCSP))
+				C - Restringido criterios múltiples
+				N - Negociado con publicidad (solo Contrato no menor, sujeto al Real Decreto Legislativo 3/2011 (TRLCSP))
 				S - Negociado sin publicidad
-				D - DiÃ¡logo competitivo
+				D - Diálogo competitivo
 				O - Otros
+				B - Abierto único criterio (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				E - Abierto simplificado (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				F - Abierto simplificado sumario (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				G - Concurso de proyectos (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				H - Restringido único criterio (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				I - Licitación con negociación (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				J - Asociación para la innovación (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -692,13 +932,20 @@
 			<xs:enumeration value="S" />
 			<xs:enumeration value="D" />
 			<xs:enumeration value="O" />
+			<xs:enumeration value="B" />
+			<xs:enumeration value="E" />
+			<xs:enumeration value="F" />
+			<xs:enumeration value="G" />
+			<xs:enumeration value="H" />
+			<xs:enumeration value="I" />
+			<xs:enumeration value="J" />
 		</xs:restriction>
 	</xs:simpleType>
 	
 	<xs:simpleType name="Tramitacion">
 		<xs:annotation>
 			<xs:documentation>
-				Tipo de TramitaciÃ³n.
+				Tipo de Tramitación.
 				Los valores posibles son:
 				O - Ordinaria
 				U - Urgente
@@ -732,10 +979,10 @@
 	
 	<xs:simpleType name="TipoPrecioLicitacion">
 		<xs:annotation>
-			<xs:documentation>Tipo de Precio de LicitaciÃ³n</xs:documentation>
+			<xs:documentation>Tipo de Precio de Licitación</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="TipoNumeroDecimal" >
-			<xs:minInclusive value="0" />
+			<xs:minInclusive value="0.01" />
 			<xs:maxExclusive value="10000000000000000.00" />
 			<xs:pattern value="[0-9]{1,18}[.][0-9]{2}"/>
 		</xs:restriction>
@@ -743,15 +990,26 @@
 	
 	<xs:simpleType name="TipoPrecioAdjudicacion">
 		<xs:annotation>
-			<xs:documentation>Tipo de Precio de AdjudicaciÃ³n</xs:documentation>
+			<xs:documentation>Tipo de Precio de Adjudicación</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="TipoNumeroDecimal" >
-			<xs:minInclusive value="0" />
+			<xs:minInclusive value="0.01" />
 			<xs:maxExclusive value="10000000000000000.00" />
 			<xs:pattern value="[0-9]{1,18}[.][0-9]{2}"/>
 		</xs:restriction>
 	</xs:simpleType>
-
+	
+	<xs:simpleType name="TipoIVA">
+		<xs:annotation>
+			<xs:documentation>Tipo de IVA</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="TipoNumeroDecimal" >
+			<xs:minInclusive value="0.00" />
+			<xs:maxExclusive value="10000000000000000.00" />
+			<xs:pattern value="[0-9]{1,18}[.][0-9]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
 	<xs:simpleType name="TipoFecha">
 		<xs:annotation>
 			<xs:documentation>Tipo Fecha (dd/mm/aaaa)</xs:documentation>
@@ -774,7 +1032,7 @@
 
 	<xs:simpleType name="TipoNacionalidad">
 		<xs:annotation>
-			<xs:documentation>CÃ³digo de PaÃ­s segÃºn la tabla ISO 3166 de 2 dÃ­gitos
+			<xs:documentation>Código de País según la tabla ISO 3166 de 2 dígitos
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="TipoTexto">
@@ -795,5 +1053,23 @@
 			<xs:maxLength value="4000" />
 		</xs:restriction>
 	</xs:simpleType>
+	
+	<xs:simpleType name="TipoLey">
+		<xs:annotation>
+			<xs:documentation>
+				Tipo de Ley.
+				Los valores posibles son:
+				1 - Contrato no menor, sujeto al Real Decreto Legislativo 3/2011 (TRLCSP)
+				2 - Contrato Menor
+				4 - Contrato no menor, sujeto a la Ley 9/2017 (LCSP)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1" />
+			<xs:enumeration value="2" />
+			<xs:enumeration value="4" />
+		</xs:restriction>
+	</xs:simpleType>
+	
 
 </xs:schema>

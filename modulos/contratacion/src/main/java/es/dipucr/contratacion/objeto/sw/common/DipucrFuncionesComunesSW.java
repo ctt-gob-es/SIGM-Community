@@ -10,11 +10,18 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import ieci.tecdoc.sgm.core.exception.SigemException;
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.terceros.dto.DireccionPostal;
+import ieci.tecdoc.sgm.core.services.terceros.dto.Tercero;
+import ieci.tecdoc.sgm.core.services.tramitacion.ServicioTramitacion;
+import ieci.tecdoc.sgm.core.services.tramitacion.dto.DocumentoExpediente;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -24,8 +31,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+
 import org.apache.log4j.Logger;
 
+import es.dipucr.contratacion.objeto.Adjudicatario;
 import es.dipucr.contratacion.objeto.sw.AplicacionPresupuestaria;
 import es.dipucr.contratacion.objeto.sw.BOP;
 import es.dipucr.contratacion.objeto.sw.Campo;
@@ -59,6 +69,7 @@ import es.dipucr.contratacion.objeto.sw.Solvencia;
 import es.dipucr.contratacion.objeto.sw.SolvenciaEconomica;
 import es.dipucr.contratacion.objeto.sw.SolvenciaTecnica;
 import es.dipucr.contratacion.objeto.sw.VariantesOfertas;
+import es.dipucr.contratacion.utils.Constantes;
 import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.DecretosUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
@@ -884,7 +895,7 @@ public static Documento getDocumento(IClientContext cct, IItem docPres, String n
 			        	if(sAplicacion.length > 0 && sAplicacion.length==3){
 			        		aplicPre.setAplicPres(sAplicacion[0]);
 							aplicPre.setAnualidad(sAplicacion[1]);
-							aplicPre.setImporte(sAplicacion[2]);
+							aplicPre.setImporte(sAplicacion[2].replace(",", "."));
 			        	}
 			        	else{
 //			        		rulectx.setInfoMessage("No está bien metido el dato de Aplicación Presupuestaria");
@@ -1384,6 +1395,9 @@ public static Documento getDocumento(IClientContext cct, IItem docPres, String n
 				peticion.setPresupuestoConIva(itemPeticion.getString("TOTAL"));
 				peticion.setPresupuestoSinIva(itemPeticion.getString("PRESUPUESTO"));
 				peticion.setObjetoContrato(itemPeticion.getString("MOTIVO_PETICION"));
+				peticion.setServicioResponsable(itemPeticion.getString("SERVICIO_RESPONSABLE"));
+				peticion.setIva(itemPeticion.getString("IVA"));
+				peticion.setPresupuestoIva(itemPeticion.getString("IMPORTEIVA"));
 			}
 			
 		}catch(ISPACRuleException e){
@@ -2286,6 +2300,12 @@ public static Documento getDocumento(IClientContext cct, IItem docPres, String n
 					formalizacion.setFechaContrato(fechaContrato);
 				}
 				/************************************************/
+				//Numero del contrato
+				DatosContrato datosContrato = DipucrFuncionesComunesSW.getDatosContrato(cct, numexp);
+				if(datosContrato!=null){
+					if(StringUtils.isNotEmpty(datosContrato.getNumContrato()))formalizacion.setNumContrato(datosContrato.getNumContrato());	
+				}	
+				/************************************************/
 				Calendar fInicioCont = null;
 				if(datosTram !=null && datosTram.getDate("FECHA_INICIO_CONTRATO")!=null){
 					fInicioCont = Calendar.getInstance();
@@ -2522,6 +2542,15 @@ public static Documento getDocumento(IClientContext cct, IItem docPres, String n
 					insertado = true;
 				}
 				
+				if(StringUtils.isNotEmpty(iDatosContrato.getString("NUEVA_LEY"))){
+					if(iDatosContrato.getString("NUEVA_LEY").equals("SI")){
+						datosContrato.setNuevaLey(true);
+					}
+					else{
+						datosContrato.setNuevaLey(false);
+					}
+				}
+				
 				//Procedimiento contratación
 				String tipoProcBD = "";
 				if(iDatosContrato.getString("PROC_ADJ")!=null)tipoProcBD=iDatosContrato.getString("PROC_ADJ");
@@ -2666,11 +2695,15 @@ public static Documento getDocumento(IClientContext cct, IItem docPres, String n
 							lotes.setSeDebeOfertar(new Campo(vcritSolv[0], vcritSolv[1]));
 						}
 					}
-					if(datosContrato.getString("LOTES_NUM_OFERTAR")!=null){
-						lotes.setNumeroMaximoPresentacion(new Integer(datosContrato.getString("LOTES_NUM_OFERTAR")));
+					if(datosContrato.getString("LOTES_NUMERO")!=null){
+						lotes.setNumLotes(Integer.parseInt(datosContrato.getString("LOTES_NUMERO")));
 					}
+					if(datosContrato.getString("LOTES_NUM_OFERTAR")!=null){
+						lotes.setNumeroMaximoPresentacion(Integer.parseInt(datosContrato.getString("LOTES_NUM_OFERTAR")));
+					}
+					
 					if(datosContrato.getString("LOTES_NUM_MAX")!=null){
-						lotes.setNumeroMaximoAdjudicacion(Integer.getInteger(datosContrato.getString("LOTES_NUM_MAX")));
+						lotes.setNumeroMaximoAdjudicacion(Integer.parseInt(datosContrato.getString("LOTES_NUM_MAX")));
 					}
 					if(datosContrato.getString("LOTES_PODER")!=null){
 						lotes.setDetallePosibilidadAdjudicacion(datosContrato.getString("LOTES_PODER"));
@@ -2754,8 +2787,11 @@ public static Documento getDocumento(IClientContext cct, IItem docPres, String n
 								if(StringUtils.isNotEmpty(itemLote.getString("IMPORTE_CONIVA")))lote.setPresupuestoConIva(Double.parseDouble(itemLote.getString("IMPORTE_CONIVA")));
 								if(StringUtils.isNotEmpty(itemLote.getString("IMPORTE_SINIVA")))lote.setPresupuestoSinIva(Double.parseDouble(itemLote.getString("IMPORTE_SINIVA")));
 								
+								lote.setDatosTramitacion(DipucrFuncionesComunesSW.getDatosTramitacion(cct, numHijoLote, null));
+								
 								vLotes[j] = lote;
 								j++;
+								
 							}
 						}
 						
@@ -3152,35 +3188,152 @@ public static Documento getDocumento(IClientContext cct, IItem docPres, String n
 		return docAdicional;
 		
 	}
-	public static void comprobarDatosEnvioPLACE(IClientContext cct, String numexp) throws ISPACException {
+
+	public static void comprobarDatosEnvioPLACE(IClientContext cct, String numexp) throws ISPACException, DatatypeConfigurationException {
 		comprobarNombreAdjudicatarioIgualNombreParticipante(cct, numexp);				
 	}
 
-	private static void comprobarNombreAdjudicatarioIgualNombreParticipante(IClientContext cct, String numexp) throws ISPACException {
+	private static void comprobarNombreAdjudicatarioIgualNombreParticipante(IClientContext cct, String numexp) throws ISPACException, DatatypeConfigurationException {
 		DatosTramitacion datosTramitacion = DipucrFuncionesComunesSW.getDatosTramitacion(cct, numexp, null);
 		LicitadorBean[] licitadores = DipucrFuncionesComunesSW.getLicitadores(cct, numexp);
+		
 		String empresaAdj = null;
 		String NIFAdjudic = null;
+		boolean participantesAdj = false;
+		String nombreLicitadorParticipante = "";
 		if(licitadores!=null && datosTramitacion!=null){
 			//Compruebo al adjudicatario
 			if(datosTramitacion.getLicitador()!=null && datosTramitacion.getLicitador().length==1){
-				if(StringUtils.isNotEmpty(datosTramitacion.getLicitador()[0].getIdentificador()) && StringUtils.isNotEmpty(datosTramitacion.getLicitador()[0].getNombre())){
-					NIFAdjudic = datosTramitacion.getLicitador()[0].getIdentificador();
-					empresaAdj = datosTramitacion.getLicitador()[0].getNombre();
-					for(int i=0; i<licitadores.length; i++){
-						LicitadorBean licitador = licitadores[i];
-						if(licitador!=null && StringUtils.isNotEmpty(licitador.getIdentificador()) && StringUtils.isNotEmpty(licitador.getNombre())){
-							if(licitador.getIdentificador().equals(NIFAdjudic)){
-								if(!licitador.getNombre().equals(empresaAdj)){
-									throw new ISPACRuleException("El adjudicatario tiene que tener el mismo nombre en los participantes. CIF - "+NIFAdjudic+ " -> "
-											+ " *Pestaña Datos de Tramitación/Empresa Adjudicataria del contrato - "+empresaAdj+ " *Pestaña Participantes/Nombre - "+licitador.getNombre());
-								}
+				if(StringUtils.isEmpty(datosTramitacion.getLicitador()[0].getTipoIdentificador())){
+					throw new ISPACRuleException(" Falta por rellenar -> Pestaña Datos de Tramitación/NIF de la Adjudicataria del contrato hay que especificar si es CIF; NIE; NIF; OTROS");
+				}
+				if(StringUtils.isEmpty(datosTramitacion.getLicitador()[0].getIdentificador())){
+					throw new ISPACRuleException(" Falta por rellenar -> Pestaña Datos de Tramitación/NIF de la Adjudicataria del contrato hay que especificar el identificador");
+				}
+				if(StringUtils.isEmpty(datosTramitacion.getLicitador()[0].getNombre())){
+					throw new ISPACRuleException(" Falta por rellenar -> Pestaña Datos de Tramitación/Empresa Adjudicataria del Contrato");
+				}
+				NIFAdjudic = datosTramitacion.getLicitador()[0].getIdentificador();
+				empresaAdj = datosTramitacion.getLicitador()[0].getNombre();
+				for(int i=0; i<licitadores.length; i++){
+					LicitadorBean licitador = licitadores[i];
+					if(licitador!=null && StringUtils.isNotEmpty(licitador.getIdentificador()) && StringUtils.isNotEmpty(licitador.getNombre())){
+						nombreLicitadorParticipante = licitador.getNombre();
+						if(licitador.getIdentificador().equals(NIFAdjudic)){
+							if(licitador.getNombre().equals(empresaAdj)){
+								participantesAdj = true;									
 							}
 						}
+					}
+					if(datosTramitacion.getLicitador()[0].getFechaAdjudicacion()==null){						
+						LOGGER.error("Error en el calculo de la fecha de adjudicacion es nula.");
+						throw new DatatypeConfigurationException("Falta por introducir -> Pestaña Datos de Tramitación / Fecha Adjudicación es nula.");
+					}
+					if(datosTramitacion.getLicitador()[0].getImporteConImpuestos()!=null){
+						try{
+							new BigDecimal(datosTramitacion.getLicitador()[0].getImporteConImpuestos());
+						} catch (NumberFormatException e) {
+							LOGGER.error("Valor del importe licitadorBean.getImporteConImpuestos(). (Formato del importe para los decimales con punto, ejemplo 61746.69)"+datosTramitacion.getLicitador()[0].getImporteConImpuestos()+" - "+ e.getMessage(), e);
+							throw new NumberFormatException("Pestaña Datos de Tramitación  - Importe de Adjudicación (con IVA). (Formato del importe para los decimales con punto, ejemplo 61746.69)"+datosTramitacion.getLicitador()[0].getImporteConImpuestos()+" - "+ e.getMessage());
+						}
+					}else{
+						LOGGER.error("Pestaña Datos de Tramitación - Adjudicatario - importe con IVA");
+						throw new NullPointerException("Falta el campo Pestaña 'Datos de Tramitación' -> Importe de adjudicación (con IVA)");
+					}
+					if(datosTramitacion.getLicitador()[0].getImporteSinImpuestos()!=null){
+						try{
+							new BigDecimal(datosTramitacion.getLicitador()[0].getImporteSinImpuestos());
+						} catch (NumberFormatException e) {
+							LOGGER.error("Valor del importe licitadorBean.getImporteSinImpuestos(). (Formato del importe para los decimales con punto, ejemplo 61746.69)"+datosTramitacion.getLicitador()[0].getImporteSinImpuestos()+" - "+ e.getMessage(), e);
+							throw new NumberFormatException("Pestaña Datos de Tramitación  - Importe de Adjudicación (sin IVA) (Formato del importe para los decimales con punto, ejemplo 61746.69)."+datosTramitacion.getLicitador()[0].getImporteSinImpuestos()+" - "+ e.getMessage());
+						}
+					}
+					else{
+						LOGGER.error("Pestaña Datos de Tramitación - Adjudicatario - - sin IVA es nulo");
+						throw new NullPointerException("Falta el campo Pestaña 'Datos de Tramitación' -> Importe de adjudicación (sin IVA)");
+					}
+					if(datosTramitacion.getLicitador()[0].getNombre()==null || datosTramitacion.getLicitador()[0].getNombre()==""){
+						throw new NullPointerException("Falta el campo Pestaña 'Datos de Tramitación' -> 'Empresa Adjudicataria del Contrato'");
+					}
+					if(datosTramitacion.getLicitador()[0].getIdentificador()==null || datosTramitacion.getLicitador()[0].getTipoIdentificador()==null || datosTramitacion.getLicitador()[0].getTipoIdentificador()==""){
+						throw new NullPointerException("Falta el campo Pestaña 'Datos de Tramitación' -> 'NIF de la Adjudicataria'");
+					}
+					if(datosTramitacion.getLicitador()[0].getCp()==null){
+						throw new NullPointerException("Falta el campo Pestaña 'Datos de Tramitación' -> 'ADJUDICACIÓN / C.P'");
+					}
+					if(datosTramitacion.getLicitador()[0].getPais()==null){
+						throw new NullPointerException("Falta el campo Pestaña 'Datos de Tramitación' -> 'ADJUDICACIÓN / Pais'");
+					}
+					if(datosTramitacion.getLicitador()[0].getNUTS()==null){
+						throw new NullPointerException("Falta el campo Pestaña 'Datos de Tramitación' -> 'ADJUDICACIÓN / Ciudad'");
 					}
 				}
 			}
 		}
+		if(!participantesAdj){
+			throw new ISPACRuleException("El adjudicatario tiene que tener el mismo nombre en los participantes. CIF - "+NIFAdjudic+ " -> "+ " *Pestaña Datos de Tramitación/Empresa Adjudicataria del contrato - "+empresaAdj+ " *Pestaña Participantes/Nombre - "+nombreLicitadorParticipante);
+		}
+	}
+
+	public static void creacionLicitador(IClientContext cct,int idCtProcedimientoNuevo, String numexp,Adjudicatario adjudicatario, String entidad) throws ISPACRuleException {
+		try{
+			IItem licitador = ExpedientesRelacionadosUtil.iniciaExpedienteRelacionadoHijo(cct, idCtProcedimientoNuevo, numexp, Constantes.RELACION_PLICA, false, null);
+			Tercero tercero = new Tercero();
+			DireccionPostal direccionPostal = new DireccionPostal();
+			if(StringUtils.isNotEmpty(adjudicatario.getNombre())){
+				licitador.set("ASUNTO", adjudicatario.getNombre());
+				licitador.set("IDENTIDADTITULAR", adjudicatario.getNombre());
+				tercero.setNombre(adjudicatario.getNombre());
+			}
+			if(StringUtils.isNotEmpty(adjudicatario.getIdentificador())){
+				licitador.set("NIFCIFTITULAR", adjudicatario.getIdentificador());
+				tercero.setIdentificacion(adjudicatario.getIdentificador());
+			}
+			if(StringUtils.isNotEmpty(adjudicatario.getMail()))licitador.set("DIRECCIONTELEMATICA", adjudicatario.getMail());
+			if(StringUtils.isNotEmpty(adjudicatario.getDireccionPostal())){
+				licitador.set("DOMICILIO", adjudicatario.getDireccionPostal());
+				direccionPostal.setDireccionPostal(adjudicatario.getDireccionPostal());
+			}
+			if(StringUtils.isNotEmpty(adjudicatario.getMunicipio())){
+				licitador.set("CIUDAD", adjudicatario.getMunicipio());
+				direccionPostal.setMunicipio(adjudicatario.getMunicipio());
+			}
+			if(StringUtils.isNotEmpty(adjudicatario.getProvincia())){
+				licitador.set("REGIONPAIS", adjudicatario.getProvincia());
+				direccionPostal.setProvincia(adjudicatario.getProvincia());
+			}
+			if(StringUtils.isNotEmpty(adjudicatario.getCodigoPostal())){
+				licitador.set("CPOSTAL", adjudicatario.getCodigoPostal());
+				direccionPostal.setCodigoPostal(adjudicatario.getCodigoPostal());
+			}
+			if(StringUtils.isNotEmpty(adjudicatario.getTelefono())){
+				licitador.set("TFNOFIJO", adjudicatario.getTelefono());
+				direccionPostal.setTelefono(adjudicatario.getTelefono());
+			}					
+			licitador.store(cct);	
+			tercero.setDireccionPostalPredeterminada(direccionPostal);		
+			
+			ParticipantesUtil.insertarParticipanteByNIFValidadoNoValidado(cct, licitador.getString("NUMEXP"), adjudicatario.getIdentificador(), ParticipantesUtil._TIPO_INTERESADO, 
+					ParticipantesUtil._TIPO_PERSONA_JURIDICA, adjudicatario.getMail(), null, tercero);
+			
+			if(adjudicatario.getDocumento()!=null){
+				int idTramite = TramitesUtil.crearTramite((ClientContext) cct, "Anex-Doc", licitador.getString("NUMEXP"));
+				ServicioTramitacion oServicio = LocalizadorServicios.getServicioTramitacion();
+				DocumentoExpediente[] docsExpediente = new DocumentoExpediente[1];
+				docsExpediente[0] = adjudicatario.getDocumento();
+				boolean anexaTramite = oServicio.anexarDocsTramite(entidad, licitador.getString("NUMEXP"), idTramite, null, new Date(), docsExpediente);
+				if(anexaTramite){
+					TramitesUtil.cerrarTramite(cct, idTramite, numexp);
+				}
+				
+			}
+		} catch (ISPACException e) {
+			LOGGER.error("Error Entidad " +entidad + "; Expediente "+ numexp +" - " + e.getMessage(),e);
+			throw new ISPACRuleException("Error Entidad " + entidad + "; Expediente "+ numexp +" - " + e.getMessage(),e);
+		} catch (SigemException e) {
+			LOGGER.error("Error Entidad " + entidad + "; Expediente "+ numexp +" - " + e.getMessage(),e);
+			throw new ISPACRuleException("Error Entidad " + entidad + "; Expediente "+ numexp +" - " + e.getMessage(),e);
+		} 	
 	}
 	
 }

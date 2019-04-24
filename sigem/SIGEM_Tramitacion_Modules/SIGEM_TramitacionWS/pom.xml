@@ -19,6 +19,12 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>${commons.beanutils.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>SIGEM_Terceros</artifactId>
+			<version>${pom.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>commons-collections</groupId>

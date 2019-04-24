@@ -2,17 +2,11 @@ package es.dipucr.tablonEdictalUnico.objetos;
 
 public class RecaudacionFichero {
 	private String ruta = "";
-	private boolean recaudacionNueva = false;
-	private boolean recaudacionSWALExpedientes = false;
+	private boolean providenciaApremio = false;
+	private boolean diligenciasEmbargo = false;
 	private String nombreTabla ="";
 	private boolean recaudacionFicheroZona = false;
 	private boolean ficheroTexto = false;
-	public boolean isRecaudacionNueva() {
-		return recaudacionNueva;
-	}
-	public void setRecaudacionNueva(boolean recaudacionNueva) {
-		this.recaudacionNueva = recaudacionNueva;
-	}
 	public String getRuta() {
 		return ruta;
 	}
@@ -37,10 +31,16 @@ public class RecaudacionFichero {
 	public void setFicheroTexto(boolean ficheroTexto) {
 		this.ficheroTexto = ficheroTexto;
 	}
-	public boolean isRecaudacionSWALExpedientes() {
-		return recaudacionSWALExpedientes;
+	public boolean isProvidenciaApremio() {
+		return providenciaApremio;
 	}
-	public void setRecaudacionSWALExpedientes(boolean recaudacionSWALExpedientes) {
-		this.recaudacionSWALExpedientes = recaudacionSWALExpedientes;
+	public void setProvidenciaApremio(boolean providenciaApremio) {
+		this.providenciaApremio = providenciaApremio;
+	}
+	public boolean isDiligenciasEmbargo() {
+		return diligenciasEmbargo;
+	}
+	public void setDiligenciasEmbargo(boolean diligenciasEmbargo) {
+		this.diligenciasEmbargo = diligenciasEmbargo;
 	}
 }

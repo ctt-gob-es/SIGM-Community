@@ -2,6 +2,7 @@ package es.dipucr.contratacion.rule.doc;
 
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
@@ -11,7 +12,11 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
+
 public class AdjudicadoRule  implements IRule{
+	
+	public static final Logger LOGGER = Logger.getLogger(AdjudicadoRule.class);
 	
 	
     public boolean init(IRuleContext rulectx) throws ISPACRuleException{
@@ -52,7 +57,7 @@ public class AdjudicadoRule  implements IRule{
 	        	sexpRela.append("OR NUMEXP = '"+numexpLicitador+"' ");
 			}
 	        
-	        if (!sexpRela.equals("")){
+	        if (!sexpRela.toString().equals("")){
 	        	
 	        	consulta= "WHERE ("+sexpRela.toString()+") AND APTO='SI'";
 	        	IItemCollection collectionPlica = entitiesAPI.queryEntities("CONTRATACION_PLICA", consulta);
@@ -91,11 +96,10 @@ public class AdjudicadoRule  implements IRule{
 	        }
 	        
             
-        } catch(Exception e) {
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException("No se ha podido obtener la fecha actual",e);
-        }
+        } catch (ISPACException e) {
+        	LOGGER.error("Error. "+e.getMessage(),e);
+        	throw new ISPACRuleException("Error. "+e.getMessage(),e);
+		}
 		return valor;
     }
 

@@ -11,7 +11,7 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 
-public class CargarResultadoLicitacionAdjudicacionRule implements IRule{
+public class CargarResultadoLicitacionFormalizadoRule implements IRule{
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
 
@@ -42,8 +42,8 @@ public class CargarResultadoLicitacionAdjudicacionRule implements IRule{
 				itempartDep = entitiesAPI.createEntity("CONTRATACION_ADJUDICACION",rulectx.getNumExp());
 			}
 			//https://contrataciondelestado.es/codice/cl/2.02/TenderResultCode-2.02.gc
-			itempartDep.set("RES_LICITACION", "8 - Adjudicado");			
-			itempartDep.store(cct);
+			itempartDep.set("RES_LICITACION", "9 - Formalizado");			
+			itempartDep.store(cct);			
 			cct.endTX(true);
 			
 		} catch(Exception e) {

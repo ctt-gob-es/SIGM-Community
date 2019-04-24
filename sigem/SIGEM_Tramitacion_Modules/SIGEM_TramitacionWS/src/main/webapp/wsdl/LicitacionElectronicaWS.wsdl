@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://ws.licitacionelectronica.dipucr.es" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://ws.licitacionelectronica.dipucr.es" xmlns:intf="http://ws.licitacionelectronica.dipucr.es" xmlns:tns1="http://sw.objeto.contratacion.dipucr.es" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="http://ws.licitacionelectronica.dipucr.es" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://ws.licitacionelectronica.dipucr.es" xmlns:intf="http://ws.licitacionelectronica.dipucr.es" xmlns:tns1="http://sw.objeto.contratacion.dipucr.es" xmlns:tns2="http://objeto.contratacion.dipucr.es" xmlns:tns3="http://dto.tramitacion.services.core.sgm.tecdoc.ieci" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <!--WSDL created by Apache Axis version: 1.4
 Built on Apr 22, 2006 (06:55:48 PDT)-->
  <wsdl:types>
   <schema elementFormDefault="qualified" targetNamespace="http://ws.licitacionelectronica.dipucr.es" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://objeto.contratacion.dipucr.es"/>
+   <import namespace="http://dto.tramitacion.services.core.sgm.tecdoc.ieci"/>
    <import namespace="http://sw.objeto.contratacion.dipucr.es"/>
    <element name="getEspacioVirtualLicitacionBean">
     <complexType>
@@ -85,9 +87,22 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:SolvenciaTecnica"/>
     </sequence>
    </complexType>
+   <element name="crearAdjucatario">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="adjudicatario" type="tns2:Adjudicatario"/>
+      <element name="peticPlace" type="tns2:Peticion"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="crearAdjucatarioResponse">
+    <complexType/>
+   </element>
   </schema>
   <schema elementFormDefault="qualified" targetNamespace="http://sw.objeto.contratacion.dipucr.es" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://objeto.contratacion.dipucr.es"/>
    <import namespace="http://ws.licitacionelectronica.dipucr.es"/>
+   <import namespace="http://dto.tramitacion.services.core.sgm.tecdoc.ieci"/>
    <complexType name="Campo">
     <sequence>
      <element name="id" nillable="true" type="xsd:string"/>
@@ -99,6 +114,7 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element name="caracteristicasBienes" nillable="true" type="xsd:string"/>
      <element name="cpv" nillable="true" type="impl:ArrayOf_tns1_Campo"/>
      <element name="criteriosMultiples" type="xsd:boolean"/>
+     <element name="nuevaLey" type="xsd:boolean"/>
      <element name="numContrato" nillable="true" type="xsd:string"/>
      <element name="objetoContrato" nillable="true" type="xsd:string"/>
      <element name="organoContratacion" nillable="true" type="xsd:string"/>
@@ -373,6 +389,7 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
    <complexType name="Lote">
     <sequence>
      <element name="cpv" nillable="true" type="impl:ArrayOf_tns1_Campo"/>
+     <element name="datosTramitacion" nillable="true" type="tns1:DatosTramitacion"/>
      <element name="descripcion" nillable="true" type="xsd:string"/>
      <element name="idLote" nillable="true" type="xsd:string"/>
      <element name="lugarEjecucionContratoPais" nillable="true" type="tns1:Campo"/>
@@ -386,8 +403,9 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
     <sequence>
      <element name="detallePosibilidadAdjudicacion" nillable="true" type="xsd:string"/>
      <element name="lotes" nillable="true" type="impl:ArrayOf_tns1_Lote"/>
-     <element name="numeroMaximoAdjudicacion" nillable="true" type="xsd:int"/>
-     <element name="numeroMaximoPresentacion" nillable="true" type="xsd:int"/>
+     <element name="numLotes" type="xsd:int"/>
+     <element name="numeroMaximoAdjudicacion" type="xsd:int"/>
+     <element name="numeroMaximoPresentacion" type="xsd:int"/>
      <element name="seDebeOfertar" nillable="true" type="tns1:Campo"/>
      <element name="tieneLotes" type="xsd:boolean"/>
     </sequence>
@@ -450,7 +468,6 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
    </complexType>
    <complexType name="EspacioVirtualLicitacionBean">
     <sequence>
-     <element name="codigoAdjudicacion" nillable="true" type="tns1:Campo"/>
      <element name="datosContrato" nillable="true" type="tns1:DatosContrato"/>
      <element name="datosEmpresa" nillable="true" type="tns1:DatosEmpresa"/>
      <element name="datosLicitacion" nillable="true" type="tns1:DatosLicitacion"/>
@@ -471,7 +488,57 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
     </sequence>
    </complexType>
   </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://dto.tramitacion.services.core.sgm.tecdoc.ieci" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://objeto.contratacion.dipucr.es"/>
+   <import namespace="http://ws.licitacionelectronica.dipucr.es"/>
+   <import namespace="http://sw.objeto.contratacion.dipucr.es"/>
+   <complexType name="DocumentoExpediente">
+    <sequence>
+     <element name="code" nillable="true" type="xsd:string"/>
+     <element name="content" nillable="true" type="xsd:base64Binary"/>
+     <element name="extension" nillable="true" type="xsd:string"/>
+     <element name="id" nillable="true" type="xsd:string"/>
+     <element name="lenght" type="xsd:int"/>
+     <element name="name" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://objeto.contratacion.dipucr.es" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://ws.licitacionelectronica.dipucr.es"/>
+   <import namespace="http://dto.tramitacion.services.core.sgm.tecdoc.ieci"/>
+   <import namespace="http://sw.objeto.contratacion.dipucr.es"/>
+   <complexType name="Adjudicatario">
+    <sequence>
+     <element name="codigoPostal" nillable="true" type="xsd:string"/>
+     <element name="direccionPostal" nillable="true" type="xsd:string"/>
+     <element name="documento" nillable="true" type="tns3:DocumentoExpediente"/>
+     <element name="identificador" nillable="true" type="xsd:string"/>
+     <element name="lote" nillable="true" type="xsd:string"/>
+     <element name="mail" nillable="true" type="xsd:string"/>
+     <element name="municipio" nillable="true" type="xsd:string"/>
+     <element name="nombre" nillable="true" type="xsd:string"/>
+     <element name="provincia" nillable="true" type="xsd:string"/>
+     <element name="telefono" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="Peticion">
+    <sequence>
+     <element name="entidad" nillable="true" type="xsd:string"/>
+     <element name="expediente" nillable="true" type="xsd:string"/>
+     <element name="idFase" type="xsd:int"/>
+     <element name="idTramite" type="xsd:int"/>
+    </sequence>
+   </complexType>
+  </schema>
  </wsdl:types>
+
+   <wsdl:message name="crearAdjucatarioRequest">
+
+      <wsdl:part element="impl:crearAdjucatario" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
 
    <wsdl:message name="getEspacioVirtualLicitacionBeanRequest">
 
@@ -489,6 +556,14 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
    </wsdl:message>
 
+   <wsdl:message name="crearAdjucatarioResponse">
+
+      <wsdl:part element="impl:crearAdjucatarioResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
    <wsdl:portType name="LicitacionElectronicaWS">
 
       <wsdl:operation name="getEspacioVirtualLicitacionBean">
@@ -498,6 +573,18 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
        </wsdl:input>
 
          <wsdl:output message="impl:getEspacioVirtualLicitacionBeanResponse" name="getEspacioVirtualLicitacionBeanResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="crearAdjucatario">
+
+         <wsdl:input message="impl:crearAdjucatarioRequest" name="crearAdjucatarioRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:crearAdjucatarioResponse" name="crearAdjucatarioResponse">
 
        </wsdl:output>
 
@@ -520,6 +607,24 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
          </wsdl:input>
 
          <wsdl:output name="getEspacioVirtualLicitacionBeanResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="crearAdjucatario">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="crearAdjucatarioRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="crearAdjucatarioResponse">
 
             <wsdlsoap:body use="literal"/>
 

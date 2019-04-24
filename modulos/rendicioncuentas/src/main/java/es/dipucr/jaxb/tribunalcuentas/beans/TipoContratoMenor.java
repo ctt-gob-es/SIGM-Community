@@ -13,58 +13,36 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for SistemaAdjudicacion.
+ * <p>Java class for TipoContratoMenor.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="SistemaAdjudicacion">
+ * &lt;simpleType name="TipoContratoMenor">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="A"/>
- *     &lt;enumeration value="M"/>
- *     &lt;enumeration value="R"/>
- *     &lt;enumeration value="C"/>
- *     &lt;enumeration value="N"/>
- *     &lt;enumeration value="S"/>
- *     &lt;enumeration value="D"/>
- *     &lt;enumeration value="O"/>
- *     &lt;enumeration value="B"/>
  *     &lt;enumeration value="E"/>
- *     &lt;enumeration value="F"/>
- *     &lt;enumeration value="G"/>
- *     &lt;enumeration value="H"/>
- *     &lt;enumeration value="I"/>
- *     &lt;enumeration value="J"/>
+ *     &lt;enumeration value="C"/>
+ *     &lt;enumeration value="Z"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
  * 
  */
-@XmlType(name = "SistemaAdjudicacion")
+@XmlType(name = "TipoContratoMenor")
 @XmlEnum
-public enum SistemaAdjudicacion {
+public enum TipoContratoMenor {
 
     A,
-    M,
-    R,
-    C,
-    N,
-    S,
-    D,
-    O,
-    B,
     E,
-    F,
-    G,
-    H,
-    I,
-    J;
+    C,
+    Z;
 
     public String value() {
         return name();
     }
 
-    public static SistemaAdjudicacion fromValue(String v) {
+    public static TipoContratoMenor fromValue(String v) {
         return valueOf(v);
     }
 

@@ -7,59 +7,28 @@ import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
-import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.rmi.RemoteException;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.contratacion.common.ServiciosWebContratacionFunciones;
+import es.dipucr.contratacion.common.MandarPublicacionPLACSPRule;
 import es.dipucr.contratacion.objeto.sw.DatosContrato;
 import es.dipucr.contratacion.objeto.sw.Lotes;
+import es.dipucr.contratacion.objeto.sw.Peticion;
 import es.dipucr.contratacion.objeto.sw.common.DipucrFuncionesComunesSW;
-import es.dipucr.contratacion.services.PlataformaContratacionDatatypeConfigurationExceptionException;
-import es.dipucr.contratacion.services.PlataformaContratacionJAXBExceptionException;
-import es.dipucr.contratacion.services.PlataformaContratacionMalformedURLExceptionException;
-import es.dipucr.contratacion.services.PlataformaContratacionRemoteExceptionException;
-import es.dipucr.contratacion.services.PlataformaContratacionStub;
-import es.dipucr.contratacion.services.PlataformaContratacionStub.ComprobacionParamentrosEVL;
-import es.dipucr.contratacion.services.PlataformaContratacionStub.PeticionesAlsigm;
-import es.dipucr.contratacion.services.PlataformaContratacionUnsupportedEncodingExceptionException;
 import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
-import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
-import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
-import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
-import es.dipucr.sigem.api.rule.common.utils.UsuariosUtil;
 
-public class CrearEspacioVirtualLicitacionPLACERule implements IRule{
+public class CrearEspacioVirtualLicitacionPLACERule extends MandarPublicacionPLACSPRule{
 	
 	public static final Logger logger = Logger.getLogger(CrearEspacioVirtualLicitacionPLACERule.class);
 
-	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
-	}
-
-	public Boolean execute(IRuleContext rulectx) throws ISPACRuleException {
-		try{
-
-			creacionEVLPLACE(rulectx);
-
-		} catch (ISPACException e) {
-			logger.error("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);	
-		} 
-		
-		
-		return new Boolean(true);
-	}
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
+		OPERACIONPLACE = "EVL";
 		return true;
 	}
 
@@ -78,7 +47,10 @@ public class CrearEspacioVirtualLicitacionPLACERule implements IRule{
 			while(itGenerico.hasNext()){
 				IItem datosContrato = (IItem) itGenerico.next();
 				double presupuestosinIVATotal = 0.0;
-				if(StringUtils.isNotEmpty(datosContrato.getString("PRECIO_ESTIMADO_CONTRATO"))) presupuestosinIVATotal = Double.parseDouble(datosContrato.getString("PRECIO_ESTIMADO_CONTRATO"));
+				Peticion peticionDep = DipucrFuncionesComunesSW.getPeticion(cct, rulectx.getNumExp());
+				String presSinIVATotal = peticionDep.getPresupuestoSinIva();
+				//if(StringUtils.isNotEmpty(datosContrato.getString("PRECIO_ESTIMADO_CONTRATO"))) presupuestosinIVATotal = Double.parseDouble(datosContrato.getString("PRECIO_ESTIMADO_CONTRATO"));
+				if(StringUtils.isNotEmpty(datosContrato.getString("PRECIO_ESTIMADO_CONTRATO"))) presupuestosinIVATotal = Double.parseDouble(presSinIVATotal);
 				if(StringUtils.isNotEmpty(datosContrato.getString("LOTES")) && datosContrato.getString("LOTES").equals("SI")){
 					Lotes lotes = DipucrFuncionesComunesSW.getLotes(cct, rulectx.getNumExp());
 					double presTotalSinIVALotes = 0;
@@ -89,7 +61,7 @@ public class CrearEspacioVirtualLicitacionPLACERule implements IRule{
 					}
 					if(presTotalSinIVALotes != presupuestosinIVATotal){
 						tienePliego = false;
-						rulectx.setInfoMessage("El precio estimado del contrato."+presupuestosinIVATotal+" es distinto al sumatorio del Importe (sin impuestos) de cada Lote."+presTotalSinIVALotes);
+						rulectx.setInfoMessage("El precio estimado del contrato (Pestaña Necesidad y Objeto del Contrato)."+presupuestosinIVATotal+" es distinto al sumatorio del Importe (sin impuestos) de cada Lote."+presTotalSinIVALotes);
 					}
 				}
 			}
@@ -143,74 +115,4 @@ public class CrearEspacioVirtualLicitacionPLACERule implements IRule{
 		} 
 		return tienePliego;
 	}
-	
-	private void creacionEVLPLACE(IRuleContext rulectx) throws ISPACRuleException {
-		try{
-			// --------------------------------------------------------------------
-			IClientContext cct = rulectx.getClientContext();
-			// --------------------------------------------------------------------
-			//String publishedByUser = UsuariosUtil.getDni(cct);
-			//String publishedByUser = "99001215S";
-			String dniFuncionario = DipucrCommonFunctions.getVarGlobal("PUBLISHEDBYUSER");
-			if(dniFuncionario==null || dniFuncionario.equals("")){
-				dniFuncionario = UsuariosUtil.getDni(cct);
-			}
-			
-			TramitesUtil.cargarObservacionesTramite((ClientContext) cct, true,rulectx.getNumExp(), rulectx.getTaskId(), "Mandado al servidor de Contratación");
-			
-			PlataformaContratacionStub platContratacion = new PlataformaContratacionStub(ServiciosWebContratacionFunciones.getDireccionSW());
-			//int timeout = 5 * 60 * 1000; // 5 minutos
-			//platContratacion._getServiceClient().getOptions().setProperty(HTTPConstants.SO_TIMEOUT, new Integer(timeout));
-			//platContratacion._getServiceClient().getOptions().setProperty(HTTPConstants.CONNECTION_TIMEOUT, new Integer(timeout));
-						
-			String entidad = EntidadesAdmUtil.obtenerEntidad(cct);
-			
-			ComprobacionParamentrosEVL comprobacionParamentrosEVL1 = new ComprobacionParamentrosEVL();
-			PeticionesAlsigm peticionALSIGM = new PeticionesAlsigm();
-			peticionALSIGM.setDniFuncionPeticion(dniFuncionario);			
-			InetAddress	address = InetAddress.getLocalHost();
-			String dir = address.getHostAddress();
-			peticionALSIGM.setDnsEntidad(dir);
-			peticionALSIGM.setExpediente(rulectx.getNumExp());
-			peticionALSIGM.setIdEntidad(entidad);
-			peticionALSIGM.setIdFase(rulectx.getStageId());
-			peticionALSIGM.setIdTramite(rulectx.getTaskId());
-			peticionALSIGM.setLeido("0");
-			peticionALSIGM.setOperacionPlace("EVL");
-			peticionALSIGM.setEmailError("0");
-			comprobacionParamentrosEVL1.setPeticPlace(peticionALSIGM);
-			
-			platContratacion.comprobacionParamentrosEVL(comprobacionParamentrosEVL1);
-
-		}
-		catch(ISPACRuleException e){
-			logger.error("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-		} catch (ISPACException e) {
-			logger.error("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-		} catch (RemoteException e) {
-			logger.error("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-		} catch (PlataformaContratacionDatatypeConfigurationExceptionException e) {
-			logger.error("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-		} catch (PlataformaContratacionRemoteExceptionException e) {
-			logger.error("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-		} catch (PlataformaContratacionUnsupportedEncodingExceptionException e) {
-			logger.error("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-		} catch (PlataformaContratacionMalformedURLExceptionException e) {
-			logger.error("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-		} catch (PlataformaContratacionJAXBExceptionException e) {
-			logger.error("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-		} catch (UnknownHostException e) {
-			logger.error("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error: " + rulectx.getNumExp() + ". " + e.getMessage(), e);
-		}
-	}
-
 }

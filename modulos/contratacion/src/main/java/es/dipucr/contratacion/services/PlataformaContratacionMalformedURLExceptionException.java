@@ -10,7 +10,7 @@ package es.dipucr.contratacion.services;
 
 public class PlataformaContratacionMalformedURLExceptionException extends java.lang.Exception{
 
-    private static final long serialVersionUID = 1551260858585L;
+    private static final long serialVersionUID = 1552041273824L;
     
     private es.dipucr.contratacion.services.PlataformaContratacionStub.PlataformaContratacionMalformedURLException faultMessage;
 
