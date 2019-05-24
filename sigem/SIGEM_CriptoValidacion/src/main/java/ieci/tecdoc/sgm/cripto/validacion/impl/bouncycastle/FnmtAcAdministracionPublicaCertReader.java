@@ -34,48 +34,53 @@ public class FnmtAcAdministracionPublicaCertReader implements IReaderCert {
 	    
 	    String [] datosDni = asunto.split(SEPARADOR_CAMPOS_SUBJECT_DN);	 
 	    
-	    //Nombre y dni
-	    String nombreDni = datosDni[0];
-		String [] vNombreDni = nombreDni.split(SEPARADOR);
-		nombre = vNombreDni[0].split(CN)[1];
+		/* UPNA-002 Incluimos aquí nueva forma de búsqueda con bucle for e ifs para buscar los campos independiente de posiciones fijas para no tener problemas con
+							cambios en el orden de la información de los certificados al renovarlos (ha pasado con el de Sello de Organo que trae un nuevo campo).
+		*/
+		String [] nombreEntidad={""};
+		String [] ou_nombreEntidad={""};
 		
-		try{
-			nif = vNombreDni[1];
+		for (int i=0;i<datosDni.length;i++){
+			//Nombre y dni
+			if (datosDni[i].indexOf(CN)>-1){
+			    String nombreDni = datosDni[i];
+				String [] vNombreDni = nombreDni.split(SEPARADOR);
+				nombre = vNombreDni[0].split(CN)[1];
+				
+				try{
+					nif = vNombreDni[1];
+				}
+				catch(Exception e){
+					nif ="";
+				}	
+			}
+			//Nombre sin apellidos
+			if (datosDni[i].indexOf(GIVENNAME)>-1){
+				String nombre_sinapellidos_temp = datosDni[i];
+				String [] vNombreSinApellidos = nombre_sinapellidos_temp.split(GIVENNAME);
+				
+				try{
+					nombre_sinapellidos = vNombreSinApellidos[1];
+				}
+				catch(Exception e){
+					nombre_sinapellidos = nombre;
+				}
+			}
+			//En el asunto el serial number viene con el dni, lo asigno como cif
+			if (datosDni[i].indexOf(SERIALNUMBER)>-1){
+			String [] cifSeriarNumber;
+				
+				cifSeriarNumber= datosDni[i].split(SERIALNUMBER);		
+				cif = cifSeriarNumber[1];					
+			}
+			if (datosDni[i].indexOf(O)>-1){
+				nombreEntidad = datosDni[i].split(O);
+			}
+			if (datosDni[i].indexOf(OU)>-1){
+				ou_nombreEntidad  = datosDni[i].split(OU);		
+			}
 		}
-		catch(Exception e){
-			nif ="";
-		}				
-		
-		
-		//Nombre sin apellidos
-		String nombre_sinapellidos_temp = datosDni[1];
-		String [] vNombreSinApellidos = nombre_sinapellidos_temp.split(GIVENNAME);
-		
-		try{
-			nombre_sinapellidos = vNombreSinApellidos[1];
-		}
-		catch(Exception e){
-			nombre_sinapellidos = nombre;
-		}
-		
-		//En el asunto el serial number viene con el dni, lo asigno como cif
-		String [] cifSeriarNumber;
-		String [] nombreEntidad;
-		String [] ou_nombreEntidad;
-		
-		try{
-			
-			cifSeriarNumber= datosDni[3].split(SERIALNUMBER);		
-			cif = cifSeriarNumber[1];		
-					
-		}
-		catch(Exception e){//Para el caso del sello electronico de Diputacion
-			cifSeriarNumber = datosDni[1].split(SERIALNUMBER);
-			cif = cifSeriarNumber[1];
-			nombreEntidad = datosDni[3].split(O);
-			ou_nombreEntidad  = datosDni[2].split(OU);
-			nombre_entidad = nombreEntidad[1].concat(" - ").concat(ou_nombreEntidad[1]);			
-		}
+		nombre_entidad = nombreEntidad[1].concat(" - ").concat(ou_nombreEntidad[1]);
 		
 		if(nif.equals("")){
 			nif = cif;
