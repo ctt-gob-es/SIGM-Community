@@ -49,6 +49,9 @@
 				</property>
 			</activation>
 			<modules>
+				<!-- UPNA-001 Se incluye la carga en el repositorio local de librerías modificadas para evitar trazas de error en el arranque -->
+				<module>lib</module>
+				
 				<module>sigem/sigem_main</module>
 				<module>tramitador/ispac-main</module>
 				<module>archivo/archidoc_main</module>

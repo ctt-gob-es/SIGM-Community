@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>es.upna.repositorio</groupId>
+  <artifactId>libsmodificadas</artifactId>
+  <version>1.0</version>
+  <description>POM was created from install:install-file</description>
+  
+	<!-- # UPNA-001 
+		El objetivo de este artefacto es el de incluir las siguientes librerías modificadas en el 
+		repositorio local de maven para que no aparezcan trazas de error en el arranque del servidor web.
+		Si las librerías ya existían previamente de algún repositorio remoto, hay que borrarlas del 
+		repositorio local o sustituirlas por las modificadas.
+	-->
+  
+    <repositories>
+        <repository>
+            <id>libsmodificadas</id>
+            <name>libsmodificadas</name>
+            <url>file:${project.basedir}/../lib</url>
+        </repository>
+    </repositories>
+
+ <dependencies>
+          <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>2.6.1</version>		
+        </dependency>
+          <dependency>
+            <groupId>com.ibm.db2.jcc</groupId>
+            <artifactId>db2jcc</artifactId>
+            <version>3.50.152</version>		
+        </dependency>
+   </dependencies>
+ 
+
+ 
+</project>
