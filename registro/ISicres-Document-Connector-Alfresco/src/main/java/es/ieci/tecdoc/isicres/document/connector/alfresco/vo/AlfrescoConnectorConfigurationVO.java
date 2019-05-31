@@ -14,6 +14,10 @@ public class AlfrescoConnectorConfigurationVO extends IsicresAbstractConnectorCo
 	private String ip;
 	private String puerto;	
 	
+	// [Ruben CMIS] Parámetros para CMIS
+	private String version;	
+	private String protocolo;	
+		
 	/**
 	 * @return the usuario
 	 */
@@ -73,6 +77,20 @@ public class AlfrescoConnectorConfigurationVO extends IsicresAbstractConnectorCo
 	public String toXml() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	// [Ruben CMIS] Metodos para CMIS
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
+	public String getProtocolo() {
+		return protocolo;
+	}
+	public void setProtocolo(String protocolo) {
+		this.protocolo = protocolo;
 	}
 	
 }

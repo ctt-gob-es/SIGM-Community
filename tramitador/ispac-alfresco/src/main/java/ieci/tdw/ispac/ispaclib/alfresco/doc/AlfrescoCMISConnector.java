@@ -1,64 +1,45 @@
 package ieci.tdw.ispac.ispaclib.alfresco.doc;
-
-import ieci.tdw.ispac.api.connector.IDocConnector;
+ 
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.ispaclib.alfresco.doc.helper.AlfrescoCMISHelper;
-import ieci.tdw.ispac.ispaclib.alfresco.doc.helper.AlfrescoHelper;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
-import ieci.tdw.ispac.ispaclib.gendoc.config.Repositories;
-import ieci.tdw.ispac.ispaclib.gendoc.config.RepositoriesCache;
 import ieci.tdw.ispac.ispaclib.gendoc.config.Repository;
-import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
-import ieci.tdw.ispac.ispaclib.utils.ArrayUtils;
 import ieci.tdw.ispac.ispaclib.utils.FileUtils;
 import ieci.tdw.ispac.ispaclib.utils.MapUtils;
-import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispaclib.utils.XmlTag;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import es.ieci.tecdoc.isicres.document.connector.ISicresDocumentConnector;
-import es.ieci.tecdoc.isicres.document.connector.alfresco.AlfrescoDocumentConnector;
 import es.ieci.tecdoc.isicres.document.connector.alfresco.vo.AlfrescoDatosEspecificosVO;
 import es.ieci.tecdoc.isicres.document.connector.alfresco.vo.AlfrescoDatosEspecificosValueVO;
 import es.ieci.tecdoc.isicres.document.connector.alfresco.vo.AlfrescoDocumentVO;
+import es.ieci.tecdoc.isicres.document.connector.alfrescoCMIS.AlfrescoCMISDocumentConnector;
 import es.ieci.tecdoc.isicres.document.connector.vo.ISicresAbstractDocumentVO;
 
 /**
  * Conector documental con Alfresco.
  *
  */
-public class AlfrescoConnector implements IDocConnector {
+public class AlfrescoCMISConnector extends AlfrescoConnector {
 
 	/**
 	 * Logger de la clase.
 	 */
-	private static final Logger logger = Logger.getLogger(AlfrescoConnector.class);
-	
-	/**
-	 * Información del repositorio documental que se va a utilizar.
-	 */
-	protected Repository repository = null;
-	
-	/**
-	 * Conector documental.
-	 */
-	protected ISicresDocumentConnector connector = new AlfrescoDocumentConnector();;
+	private static final Logger logger = Logger.getLogger(AlfrescoCMISConnector.class);
 
-	
+
 	/**
 	 * Constructor.
 	 * @param ctx Contexto de cliente.
 	 * @param repository Información del repositorio documental.
 	 */
-	protected AlfrescoConnector(Repository repository) {
-		super();
-		this.repository = repository;
+	protected AlfrescoCMISConnector(Repository repository) {
+		super(repository);
+		connector = new AlfrescoCMISDocumentConnector();
 	}
 
 	/**
@@ -66,40 +47,20 @@ public class AlfrescoConnector implements IDocConnector {
 	 * @param ctx Contexto de cliente.
 	 * @throws ISPACException si ocurre algún error.
 	 */
-	protected AlfrescoConnector(ClientContext ctx) throws ISPACException {
-		super();
-		
-		Repositories repositories = RepositoriesCache.getRepositories(ctx, AlfrescoConstants.DEFAULT_CONFIG_FILENAME);
-		this.repository = repositories.getDefaultRepository();
+	protected AlfrescoCMISConnector(ClientContext ctx) throws ISPACException {
+		super(ctx);
+		connector = new AlfrescoCMISDocumentConnector();
 	}
 
 	
-	protected AlfrescoConnector(ClientContext ctx, String repositoryAlias) throws ISPACException {
-		super();
-		
-		Repositories repositories = RepositoriesCache.getRepositories(ctx, AlfrescoConstants.DEFAULT_CONFIG_FILENAME);
-		
-		if (StringUtils.isNotBlank(repositoryAlias)) {
-			this.repository = repositories.getRepositoryByAlias(repositoryAlias);
-		}
-		
-		if (this.repository == null) {
-			this.repository = repositories.getDefaultRepository();
-		}
+	protected AlfrescoCMISConnector(ClientContext ctx, String repositoryAlias) throws ISPACException {
+		super(ctx, repositoryAlias);		
+		connector = new AlfrescoCMISDocumentConnector();
 	}
 
-	protected AlfrescoConnector(ClientContext ctx, Integer repositoryId) throws ISPACException {
-		super();
-		
-		Repositories repositories = RepositoriesCache.getRepositories(ctx, AlfrescoConstants.DEFAULT_CONFIG_FILENAME);
-		
-		if (repositoryId != null) {
-			this.repository = repositories.getRepositoryById(repositoryId.intValue());
-		}
-		
-		if (this.repository == null) {
-			this.repository = repositories.getDefaultRepository();
-		}
+	protected AlfrescoCMISConnector(ClientContext ctx, Integer repositoryId) throws ISPACException {
+		super(ctx, repositoryId);
+		connector = new AlfrescoCMISDocumentConnector();
 	}
 	
 	
@@ -109,8 +70,8 @@ public class AlfrescoConnector implements IDocConnector {
 	 * @return Instancia del conector.
 	 * @throws ISPACException si ocurre algún error.
 	 */
-	public static synchronized AlfrescoConnector getInstance(ClientContext ctx) throws ISPACException {
-		return new AlfrescoConnector(ctx);
+	public static synchronized AlfrescoCMISConnector getInstance(ClientContext ctx) throws ISPACException {
+		return new AlfrescoCMISConnector(ctx);
 	}
 
 	/**
@@ -120,8 +81,8 @@ public class AlfrescoConnector implements IDocConnector {
 	 * @return Instancia del conector.
 	 * @throws ISPACException si ocurre algún error.
 	 */
-	public static synchronized AlfrescoConnector getInstance(ClientContext ctx, String repositoryAlias) throws ISPACException {
-		return new AlfrescoConnector(ctx, repositoryAlias);
+	public static synchronized AlfrescoCMISConnector getInstance(ClientContext ctx, String repositoryAlias) throws ISPACException {
+		return new AlfrescoCMISConnector(ctx, repositoryAlias);
 	}
 
 	/**
@@ -131,89 +92,26 @@ public class AlfrescoConnector implements IDocConnector {
 	 * @return Instancia del conector.
 	 * @throws ISPACException si ocurre algún error.
 	 */
-	public static synchronized AlfrescoConnector getInstance(ClientContext ctx, Integer repositoryId) throws ISPACException {
-		return new AlfrescoConnector(ctx, repositoryId);
+	public static synchronized AlfrescoCMISConnector getInstance(ClientContext ctx, Integer repositoryId) throws ISPACException {
+		return new AlfrescoCMISConnector(ctx, repositoryId);
 	}
 
 	/**
-	 * Crea una sesión de trabajo.
-	 * @return Objeto con la sesión.
-	 * @throws ISPACException si ocurre algún error.
+	 * Crea una sesión de trabajo. NO HACE NADA
 	 */
 	public Object createSession() throws ISPACException {
-
-		try {
-			
-			AlfrescoHelper.createSession();
-
-			if (logger.isInfoEnabled()) {
-				logger.info("Sesión con Alfresco creada");
-			}
-			
-			return null;
-
-		} catch (Exception e) {
-			logger.error("Error al crear la sesión con Alfresco", e);
-			throw new ISPACException("Error al crear la sesión con Alfresco", e);
-		}
+		return null;
 	}
 
 	/**
-	 * Cierra la sesión de trabajo.
+	 * Cierra la sesión de trabajo. NO HACE NADA
 	 * @param session Sesión de trabajo.
 	 * @throws ISPACException si ocurre algún error.
 	 */
 	public void closeSession(Object session) throws ISPACException {
-		
-		try {
-			
-			AlfrescoHelper.closeSession();
-
-			if (logger.isInfoEnabled()) {
-				logger.info("Sesión con Alfresco finalizada");
-			}
-
-		} catch (Exception e) {
-			logger.error("Error al finalizar la sesión con Alfresco", e);
-			throw new ISPACException("Error al finalizar la sesión con Alfresco", e);
-		}
+		return;
 	}
 
-	/**
-	 * Crea el repositorio de documentos.
-	 * @param session Sesión de trabajo.
-	 * @throws ISPACException si ocurre algún error.
-	 */
-	public void createRepository(Object session) throws ISPACException {
-		// No se utiliza
-	}
-
-	/**
-	 * Obtiene la información del repositorio de documentos.
-	 * @param session Sesión de trabajo.
-	 * @param repId Identificador del repositorio.
-	 * @return Información del repositorio.
-	 * @throws ISPACException si ocurre algún error.
-	 */
-	public String getRepositoryInfo(Object session, String repId) throws ISPACException {
-		
-		String xml = null;
-		
-		try {
-
-			xml = AlfrescoHelper.getRepositoryInfo(repository);
-			
-			if (logger.isDebugEnabled()) {
-				logger.debug("Información del repositorio: " + xml);
-			}
-			
-		}  catch (Exception e) {
-			logger.error("Error al obtener la información del repositorio", e);
-			throw new ISPACException("Error al obtener la información del repositorio", e);
-		}
-
-		return xml;
-	}
 
 	/**
 	 * Comprueba si existe un documento.
@@ -228,7 +126,7 @@ public class AlfrescoConnector implements IDocConnector {
 		
 		try {
 			
-			exists = AlfrescoHelper.existsDocument(repository, uid);
+			exists = AlfrescoCMISHelper.existsDocument(repository, uid);
 
 			if (logger.isInfoEnabled()) {
 				logger.info("Documento [" + uid + "] existe? => " + exists);
@@ -242,41 +140,11 @@ public class AlfrescoConnector implements IDocConnector {
 		return exists;
 	}
 
-	/**
-	 * Obtiene el contenido de un documento.
-	 * @param session Sesión de trabajo.
-	 * @param uid UID del documento.
-	 * @param out OutputStream para escribir el documento.
-	 * @throws ISPACException si ocurre algún error.
-	 */
-	public void getDocument(Object session, String uid, OutputStream out) throws ISPACException {
-
-		try {
-			
-			if (StringUtils.isNotBlank(uid)) {
-				
-				// Componer información del documento
-				AlfrescoDocumentVO documentVO = new AlfrescoDocumentVO();
-				documentVO.setConfiguration(AlfrescoHelper.getConfiguration(repository));
-				documentVO.setId(uid);
-				documentVO.setDatosEspecificos(AlfrescoHelper.getDatosEspecificos(repository));
-				
-				ISicresAbstractDocumentVO document = connector.retrieve(documentVO);
-				if ((document != null) && !ArrayUtils.isEmpty(document.getContent())){
-					out.write(document.getContent());
-					
-					if (logger.isInfoEnabled()) {
-						logger.info("Contenido del documento [" + uid + "] leído: " + document.getContent().length + " bytes");
-					}
-				}
-			}
-
-		} catch (Exception e) {
-			logger.error("Error al obtener el contenido del documento", e);
-			throw new ISPACException("Error al obtener el contenido del documento", e);
-		}
+	// UPCT - Añadido para pruebas unitarias
+	public void checkFolderPath(Repository repository, String properties) throws Exception {
+		AlfrescoCMISHelper.checkFolderPath(repository, properties);
 	}
-
+	
 	/**
 	 * Crea un nuevo documento.
 	 * @param session Sesión de trabajo.
@@ -293,21 +161,14 @@ public class AlfrescoConnector implements IDocConnector {
 			String uid = null;
 			
 			// Comprobar si existe el espacio
-			AlfrescoHelper.checkFolderPath(repository, properties);
+			AlfrescoCMISHelper.checkFolderPath(repository, properties);
 			
 			AlfrescoDocumentVO alfrescoDocumentVO = new AlfrescoDocumentVO();
 
-			alfrescoDocumentVO.setName(AlfrescoHelper.getDocName(repository, properties));
+			alfrescoDocumentVO.setName(AlfrescoCMISHelper.getDocName(repository, properties));
 			alfrescoDocumentVO.setContent(FileUtils.retrieveFile(in));
-			alfrescoDocumentVO.setConfiguration(AlfrescoHelper.getConfiguration(repository));
-			
-			// [Ruben CMIS] Integracion CMIS se llama al AlfrescoCMISHelper en vez del anterior AlfrescoHelper
-			String connectorManager = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER);
-			if (connectorManager.equalsIgnoreCase("alfrescoCMIS")) {
-				alfrescoDocumentVO.setDatosEspecificos(AlfrescoCMISHelper.getDatosEspecificos(repository, properties));
-			} else {
-				alfrescoDocumentVO.setDatosEspecificos(AlfrescoHelper.getDatosEspecificos(repository, properties));
-			}
+			alfrescoDocumentVO.setConfiguration(AlfrescoCMISHelper.getConfiguration(repository));
+			alfrescoDocumentVO.setDatosEspecificos(AlfrescoCMISHelper.getDatosEspecificos(repository, properties));
 
 			ISicresAbstractDocumentVO result = connector.create(alfrescoDocumentVO);
 			if (result != null) {
@@ -344,22 +205,22 @@ public class AlfrescoConnector implements IDocConnector {
 			}
 
 			// Actualizar el XML de los metadatos almacenados con la nueva información
-			properties = AlfrescoHelper.updatePropertiesXML(repository, uid, properties);
+			properties = AlfrescoCMISHelper.updatePropertiesXML(repository, uid, properties);
 			
 			if (logger.isDebugEnabled()) {
 				logger.debug("Metadatos completos actualizados [" + uid + "]: " + properties);
 			}
 
 			// Comprobar si existe el espacio
-			AlfrescoHelper.checkFolderPath(repository, properties);
+			AlfrescoCMISHelper.checkFolderPath(repository, properties);
 
 			AlfrescoDocumentVO alfrescoDocumentVO = new AlfrescoDocumentVO();
 
 			alfrescoDocumentVO.setId(uid);
-			alfrescoDocumentVO.setName(AlfrescoHelper.getDocName(repository, properties));
+			alfrescoDocumentVO.setName(AlfrescoCMISHelper.getDocName(repository, properties));
 			alfrescoDocumentVO.setContent(FileUtils.retrieveFile(in));
-			alfrescoDocumentVO.setConfiguration(AlfrescoHelper.getConfiguration(repository));
-			alfrescoDocumentVO.setDatosEspecificos(AlfrescoHelper.getDatosEspecificos(repository, properties));
+			alfrescoDocumentVO.setConfiguration(AlfrescoCMISHelper.getConfiguration(repository));
+			alfrescoDocumentVO.setDatosEspecificos(AlfrescoCMISHelper.getDatosEspecificos(repository, properties));
 
 			ISicresAbstractDocumentVO result = connector.update(alfrescoDocumentVO);
 
@@ -389,7 +250,7 @@ public class AlfrescoConnector implements IDocConnector {
 		try {
 			
 			AlfrescoDocumentVO alfrescoDocumentVO = new AlfrescoDocumentVO();
-			alfrescoDocumentVO.setConfiguration(AlfrescoHelper.getConfiguration(repository));
+			alfrescoDocumentVO.setConfiguration(AlfrescoCMISHelper.getConfiguration(repository));
 			alfrescoDocumentVO.setId(uid);
 
 			connector.delete(alfrescoDocumentVO);
@@ -415,7 +276,7 @@ public class AlfrescoConnector implements IDocConnector {
 		
 		try {
 			
-			int size = AlfrescoHelper.getDocumentSize(repository, uid);
+			int size = AlfrescoCMISHelper.getDocumentSize(repository, uid);
 
 			if (logger.isInfoEnabled()) {
 				logger.info("Tamaño del documento [" + uid + "]: " + size + " bytes");
@@ -440,7 +301,7 @@ public class AlfrescoConnector implements IDocConnector {
 
 		try {
 			
-			String mimeType = AlfrescoHelper.getDocumentMimeType(repository, uid);
+			String mimeType = AlfrescoCMISHelper.getDocumentMimeType(repository, uid);
 
 			if (logger.isInfoEnabled()) {
 				logger.info("Tipo MIME del documento [" + uid + "]: " + mimeType);
@@ -468,7 +329,7 @@ public class AlfrescoConnector implements IDocConnector {
 			
 		    String properties = "";
 
-			AlfrescoDatosEspecificosVO datosEspecificos = AlfrescoHelper.getMetadatos(repository, uid);
+			AlfrescoDatosEspecificosVO datosEspecificos = AlfrescoCMISHelper.getMetadatos(repository, uid);
 			if (datosEspecificos != null) {
 				Map<String, AlfrescoDatosEspecificosValueVO> values = datosEspecificos.getValues();
 				if (MapUtils.isNotEmpty(values)) {
@@ -516,7 +377,7 @@ public class AlfrescoConnector implements IDocConnector {
 
 		try {
 			
-			String value = AlfrescoHelper.getMetadato(repository, uid, property);
+			String value = AlfrescoCMISHelper.getMetadato(repository, uid, property);
 			
 			if (logger.isInfoEnabled()) {
 				logger.info("Metadato [" + uid + "]: [" + property + "] = ["+ value + "]");
@@ -541,8 +402,13 @@ public class AlfrescoConnector implements IDocConnector {
 	public void setProperty(Object session, String uid, String name, String value) throws ISPACException {
 
 		try {
+			//[Ruben CMIS] Para leer el metadato de Firma en tramitación es necesario añadir el prefijo "iflow:"
+			// Si se usará para leer algún metadato de Registro no sería necesario y habría que añadir un IF 
+			//como en AlfrescoCMISDocumentConnector.java en el metodo create (prefix)
+			String prefix= "iflow";
+			name = prefix + ":" + name; // En TRAMITACIÓN se le añade el prefijo "iflow:"
 			
-			AlfrescoHelper.setMetadato(repository, uid, name, value);
+			AlfrescoCMISHelper.setMetadato(repository, uid, name, value);
 			
 			if (logger.isInfoEnabled()) {
 				logger.info("Metadato establecido [" + uid + "]: [" + name + "] = ["+ value + "]");
@@ -552,6 +418,14 @@ public class AlfrescoConnector implements IDocConnector {
 			logger.error("Error al establecer el valor del metadato [" + uid + "]: [" + name + "]", e);
 			throw new ISPACException("Error al establecer el metadato [" + uid + "]: [" + name + "]", e);
 		}
+	}
+
+	public Repository getRepository() {
+		return repository;
+	}
+
+	public void setRepository(Repository repository) {
+		this.repository = repository;
 	}
 
 }

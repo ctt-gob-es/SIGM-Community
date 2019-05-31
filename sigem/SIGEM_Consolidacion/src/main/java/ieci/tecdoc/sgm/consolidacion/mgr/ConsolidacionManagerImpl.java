@@ -1,5 +1,22 @@
 package ieci.tecdoc.sgm.consolidacion.mgr;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.ieci.tecdoc.common.entity.dao.DBEntityDAOFactory;
+import com.ieci.tecdoc.common.repository.helper.ISRepositoryDocumentHelper;
+import com.ieci.tecdoc.common.repository.vo.ISRepositoryRetrieveDocumentVO;
+
 import ieci.tecdoc.sgm.consolidacion.config.ConfigLoader;
 import ieci.tecdoc.sgm.consolidacion.config.ConsolidacionConfig;
 import ieci.tecdoc.sgm.core.exception.SigemException;
@@ -26,19 +43,6 @@ import ieci.tecdoc.sgm.core.services.telematico.RegistroEstado;
 import ieci.tecdoc.sgm.core.services.telematico.Registros;
 import ieci.tecdoc.sgm.core.services.telematico.ServicioRegistroTelematico;
 import ieci.tecdoc.sgm.registropresencial.utils.RBUtil;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 public class ConsolidacionManagerImpl implements ConsolidacionManager {
 
@@ -238,13 +242,25 @@ public class ConsolidacionManagerImpl implements ConsolidacionManager {
 		        	logger.info("Nombre del documento. "+docReg.getDocumentName());
 		        	logger.info("Número registro. "+regInfo.getNumber());
 		        	RegistroDocumento docRegTelema = servicioRegistroTelemático.obtenerDocumentoRegistro("", registro.getRegistryNumber(), docReg.getDocumentName(), entidad);
-		        	logger.info("- Registro Telemático:");
-	        		logger.info("guid: "+docRegTelema.getGuid());
-	        		logger.info("Nombre: "+docRegTelema.getCode());	        	
+		        	
+		        	Integer bookID = Integer.parseInt(docReg.getBookId());
+		        	Integer regId = Integer.parseInt(docReg.getFolderId());
+		        	Integer pageId = Integer.parseInt(page.getPageID());
+					//[Ruben #545416] Obtengo el id de Alfresco para poder incluirlo al borrar los docs de Telematico 
+		        	String docUID = DBEntityDAOFactory.getCurrentDBEntityDAO().getDocUID(bookID, regId,pageId, entidad.getIdentificador());
+		        	
+					// [Josemi #545742] Correccion por error en las trazas del scheduler. No se pasaba bien la entidad.
+					ISRepositoryRetrieveDocumentVO findVO = ISRepositoryDocumentHelper.getRepositoryRetrieveDocumentVO(bookID, regId, pageId, entidad.getIdentificador(), true);
+					logger.warn("- Registro Telemático:");
+
+//	        		logger.warn("guid: "+findVO.getGuid());
+	        		logger.warn("Nombre: "+docRegTelema.getCode());	        	
 		        	//[**2]Almacenar ese identificador en la tabla sgmrdedocumentos. 
+					
 		        	//Hay que crear un servicio web que elimine el contenido y añada el identificador.
-	        		servicioDocumentos.insertarIdFileBorrarContenido(docRegTelema.getGuid(), page.getFileID(), entidad);
-	        		logger.info("MODIFICADO ");
+					//[Ruben #545416] grabo el id de Alfresco al borrar de Telematico para funcionalidades que lo usan como recuperar por CSV
+	        		servicioDocumentos.insertarIdFileBorrarContenido(docRegTelema.getGuid(), docUID, entidad);
+	        		logger.warn("MODIFICADO ");
 	        	}
 			}
 

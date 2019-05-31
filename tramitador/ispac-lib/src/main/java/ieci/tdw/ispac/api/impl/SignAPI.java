@@ -44,6 +44,7 @@ import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorFactory;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.vo.ProcessSignProperties;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
+import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispaclib.utils.XmlFacade;
@@ -66,6 +67,8 @@ import org.apache.log4j.Logger;
 import org.bouncycastle.util.encoders.Base64;
 
 import com.lowagie.text.pdf.PdfReader;
+
+import es.dipucr.sigem.api.rule.common.utils.GestorMetadatos;
 
 public class SignAPI implements ISignAPI {
 
@@ -741,7 +744,8 @@ public class SignAPI implements ISignAPI {
 			}
 
 			//Obtenemos el xml con las firmas adjuntadas antes de aniadir la nueva
-		    signProperty = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, "Firma");
+			String nombreMetadatoFirma = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER_SIGN_METADATA_NAME);
+		    signProperty = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, nombreMetadatoFirma);
 
 	    	XmlFacade xmlFacade = new XmlFacade(signProperty);
 

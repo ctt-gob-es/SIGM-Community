@@ -3,6 +3,7 @@ package ieci.tdw.ispac.services.helpers;
 import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.ISignAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.sign.ISignConnector;
@@ -181,7 +182,8 @@ public class DocumentsHelper {
 		};
 		
 		DocumentoVO docOriginal = (DocumentoVO) sCommand.exec();
-    	String signProperty = genDocAPI.getDocumentProperty(connectorSession, doc.getGuid(), "Firma");
+		String nombreMetadatoFirma = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER_SIGN_METADATA_NAME);
+    	String signProperty = genDocAPI.getDocumentProperty(connectorSession, doc.getGuid(), nombreMetadatoFirma);
 		    
 	    XmlFacade xmlFacade = new XmlFacade(signProperty);
 	    	

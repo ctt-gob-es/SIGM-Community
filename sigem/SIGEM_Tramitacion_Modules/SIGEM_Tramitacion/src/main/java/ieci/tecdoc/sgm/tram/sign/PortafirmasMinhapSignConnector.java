@@ -100,7 +100,8 @@ public class PortafirmasMinhapSignConnector extends Sigm30SignConnector {
 				}
 			}
 
-			genDocAPI.setDocumentProperty(connectorSession, infoPagRDE, "Firma", xmlFacade.toString() );
+			String nombreMetadatoFirma = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER_SIGN_METADATA_NAME);
+			genDocAPI.setDocumentProperty(connectorSession, infoPagRDE, nombreMetadatoFirma, xmlFacade.toString() );
 			logger.debug(xmlFacade.toString());
 		}
 		finally {
