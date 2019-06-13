@@ -262,7 +262,7 @@ public class CreateExpedientIntrayAction extends BaseAction {
 			//Busqueda si tiene permisos para iniciar un expediente
 			+ " AND ID IN" 
 			+ " (SELECT ID_PCD FROM SPAC_SS_PERMISOS WHERE  PERMISO="
-			+ ISecurityAPI.ISPAC_RIGHTS_CREATEEXP + DBUtil.addAndInResponsibleCondition("UID_USR", resp) + "));";
+			+ ISecurityAPI.ISPAC_RIGHTS_CREATEEXP + DBUtil.addAndInResponsibleCondition("UID_USR", resp) + "))";
 			
 			return entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_CT_PROCEDIMIENTOS, sqlquery);
 		}
