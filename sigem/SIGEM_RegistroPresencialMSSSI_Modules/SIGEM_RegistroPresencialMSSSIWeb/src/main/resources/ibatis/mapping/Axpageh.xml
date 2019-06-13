@@ -22,7 +22,7 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
                  SAS.HASH AS hash, SAS.HASH_ALG AS hashAlg, SAS.TIME_SIGNATURE AS fechaFirma
 			     FROM $tableName$ PA INNER JOIN IVOLFILEHDR IV   ON PA.FILEID = IV.ID
 			     AND IV.EXTID1 = $idBook$ AND IV.EXTID2= PA.FDRID AND IV.EXTID3= PA.DOCID
-			    INNER JOIN SCR_PAGEREPOSITORY PR ON IV.ID = PR.DOCUID::INTEGER  AND PR.DELETEDATE IS NULL 
+			    INNER JOIN SCR_PAGEREPOSITORY PR ON IV.ID = PR.DOCUID  AND PR.DELETEDATE IS NULL 
 			    <isNotEmpty property="flag">
 			    	AND PR.FLAG IS NULL 
 			    </isNotEmpty>
@@ -46,14 +46,14 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
                  SAS.HASH AS hash, SAS.HASH_ALG AS hashAlg, SAS.TIME_SIGNATURE AS fechaFirma
 			     FROM  $tableName$  PA INNER JOIN IVOLFILEHDR IV   ON PA.FILEID = IV.ID
 			     AND IV.EXTID1 = $idBook$ AND IV.EXTID2= PA.FDRID AND IV.EXTID3= PA.DOCID
-			    INNER JOIN SCR_PAGEREPOSITORY PR ON IV.ID::VARCHAR = PR.DOCUID::VARCHAR  AND PR.DELETEDATE IS NULL 
+			    INNER JOIN SCR_PAGEREPOSITORY PR ON IV.ID = PR.DOCUID  AND PR.DELETEDATE IS NULL 
 			    <isNotEmpty property="flag">
 			    	AND PR.FLAG  IS NULL 
 			    </isNotEmpty>
 			    LEFT JOIN SCR_PAGEINFO PI ON PR.BOOKID = PI.BOOKID AND PR.FDRID = PI.REGID
 			        AND PR.PAGEID = PI.PAGEID
 			    LEFT JOIN SCR_ATTACHMENT SA ON SA.BOOKID = PR.BOOKID 
-			        AND SA.FOLDERID = PR.FDRID AND SA.FILEID = PR.DOCUID::INT
+			        AND SA.FOLDERID = PR.FDRID AND SA.FILEID = PR.DOCUID
 			    LEFT JOIN SCR_ATTACHMENT_SIGN_INFO SAS ON SAS.ID_ATTACHMENT = SA.ID
 			    LEFT JOIN SCR_ATTACHMENT SA2 ON SA2.ID = SAS.ID_ATTACHMENT_SIGNED
 			    WHERE PA.DOCID = #docid# AND PA.FDRID= #fdrid# 
@@ -68,9 +68,9 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	
 	<select id="countAxpagehReport" parameterClass="java.util.HashMap"
 		resultClass="java.lang.Integer">
-		SELECT coalesce(MAX(FLAG), 0)::integer
+		SELECT coalesce(MAX(FLAG), 0)
         FROM SCR_PAGEREPOSITORY 
-        WHERE FDRID=  #fdrid# AND BOOKID=#idBook#::integer AND FLAG IS NOT NULL
+        WHERE FDRID=  #fdrid# AND BOOKID=#idBook# AND FLAG IS NOT NULL
 	</select>
 	
 	<delete id="deleteUnAxpageh" parameterClass="java.util.HashMap">

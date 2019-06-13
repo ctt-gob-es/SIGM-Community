@@ -16,21 +16,21 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 
 	<update id="deleteSrcDocumentRepository" parameterClass="java.util.HashMap">
 		UPDATE SCR_PAGEREPOSITORY PR SET DELETEDATE = CURRENT_TIMESTAMP
-    	WHERE PR.FDRID = #fdrid#::integer AND PR.BOOKID = #idBook#::integer 
+    	WHERE PR.FDRID = #fdrid# AND PR.BOOKID = #idBook# 
     	AND PR.PAGEID IN
      	(SELECT PA.ID FROM $tableNamePag$ PA WHERE PA.FDRID= #fdrid# AND PA.DOCID= #docid#)
 	</update>
 	
 	<update id="deleteSrcPageRepository" parameterClass="java.util.HashMap">
 		UPDATE SCR_PAGEREPOSITORY PR SET DELETEDATE = CURRENT_TIMESTAMP
-    	WHERE PR.FDRID = #fdrid#::integer AND PR.BOOKID = #idBook#::integer 
+    	WHERE PR.FDRID = #fdrid# AND PR.BOOKID = #idBook# 
     	AND PR.PAGEID IN
      	(SELECT PA.ID FROM $tableNamePag$ PA WHERE PA.FDRID= #fdrid# AND PA.DOCID= #docid# AND PA.FILEID = #fileid#)
 	</update>
 	
 	<update id="updateFlagSrcPageRepository" parameterClass="java.util.HashMap">
 		UPDATE SCR_PAGEREPOSITORY PR SET FLAG = #flag#
-    	WHERE PR.FDRID= #fdrid#::integer AND PR.BOOKID = #idBook#::integer 
-    	AND PR.PAGEID = #idPage#::integer
+    	WHERE PR.FDRID= #fdrid# AND PR.BOOKID = #idBook#
+    	AND PR.PAGEID = #idPage#
 	</update>
 </sqlMap>
