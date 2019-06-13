@@ -1,4 +1,4 @@
-// Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+// Copyright (C) 2012-13 MINHAP, Gobierno de España
 // This program is licensed and may be used, modified and redistributed under the terms
 // of the European Public License (EUPL), either version 1.1 or (at your
 // option) any later version as soon as they are approved by the European Commission.
@@ -39,6 +39,9 @@ import es.gob.afirma.utils.GenericUtils;
  * @version 1.0, 23/03/2011.
  */
 public final class Afirma5ServiceInvokerProperties {
+	
+	// [UPNA-Josemi] Se saca a fichero de propiedades el nombre de la aplicación
+	public static final String APPLICATION_NAME = "APPLICATION_NAME";
 
     /**
      * Constructor method for the class Afirma5ServiceInvokerProperties.java.
@@ -86,54 +89,57 @@ public final class Afirma5ServiceInvokerProperties {
     }
 
     /**
-     * Carga explÃ­citamente las propiedades del API de invocaci&oacute;n de servicios @Firma.<br/>
+     * Carga explícitamente las propiedades del API de invocaci&oacute;n de servicios @Firma.<br/>
      * Si ocurre alg&uacute;n error devuelve un conjunto de propiedades vac&iacute;o.
      *
      */
     private static synchronized void init() {
-	boolean found;
-	File file;
-	Reader reader;
-	InputStream in;
-	Iterator<Object> iterator;
-	String propertyName, propertyValue;
+		boolean found;
+		File file;
+		Reader reader;
+		InputStream in;
+		Iterator<Object> iterator;
+		String propertyName, propertyValue;
 
-	try {
-	    file = getPropertiesResource();
+		try {
+			file = getPropertiesResource();
 
-	    if (propsFileLastUpdate != file.lastModified()) {
-		logger.debug(Language.getResIntegra(ILogConstantKeys.ASIP_LOG001));
-		afirma5ServiceInvokerProperties = new Properties();
-		in = new FileInputStream(file);
-		afirma5ServiceInvokerProperties.load(in);
-		propsFileLastUpdate = file.lastModified();
+			if (propsFileLastUpdate != file.lastModified()) {
+				logger.debug(Language.getResIntegra(ILogConstantKeys.ASIP_LOG001));
+				afirma5ServiceInvokerProperties = new Properties();
+				in = new FileInputStream(file);
+				afirma5ServiceInvokerProperties.load(in);
+				propsFileLastUpdate = file.lastModified();
 		
-		logger.debug(Language.getFormatResIntegra(ILogConstantKeys.ASIP_LOG002, new Object[ ] { afirma5ServiceInvokerProperties }));
-		logger.debug(Language.getFormatResIntegra(ILogConstantKeys.ASIP_LOG003, new Object[ ] { new Date(propsFileLastUpdate) }));
+				logger.debug(Language.getFormatResIntegra(ILogConstantKeys.ASIP_LOG002, new Object[ ] { afirma5ServiceInvokerProperties }));
+				logger.debug(Language.getFormatResIntegra(ILogConstantKeys.ASIP_LOG003, new Object[ ] { new Date(propsFileLastUpdate) }));
 
-		// Establecemos el nuevo valor de la propiedad que indica el
-		// almacen de confianza usado
-		// en conexiones seguras, en el caso de que existan.
-		iterator = afirma5ServiceInvokerProperties.keySet().iterator();
-		found = false;
+				// Establecemos el nuevo valor de la propiedad que indica el
+				// almacen de confianza usado
+				// en conexiones seguras, en el caso de que existan.
+				iterator = afirma5ServiceInvokerProperties.keySet().iterator();
+				found = false;
 
-		while (iterator.hasNext() && !found) {
-		    propertyName = (String) iterator.next();
+				while (iterator.hasNext() && !found) {
+					propertyName = (String) iterator.next();
 
-		    if (propertyName.indexOf(Afirma5ServiceInvokerConstants.SECURE_MODE_PROPERTY) > 0) {
-			propertyValue = afirma5ServiceInvokerProperties.getProperty(propertyName);
+					if (propertyName.indexOf(Afirma5ServiceInvokerConstants.SECURE_MODE_PROPERTY) > 0) {
+						propertyValue = afirma5ServiceInvokerProperties.getProperty(propertyName);
 
-			if (propertyValue != null && propertyValue.trim().equalsIgnoreCase("true")) {
-			    setTruststore(afirma5ServiceInvokerProperties.getProperty(Afirma5ServiceInvokerConstants.COM_PROPERTIE_HEADER + "." + Afirma5ServiceInvokerConstants.WS_TRUSTED_STORE_PROP), afirma5ServiceInvokerProperties.getProperty(Afirma5ServiceInvokerConstants.COM_PROPERTIE_HEADER + "." + Afirma5ServiceInvokerConstants.WS_TRUSTED_STOREPASS_PROP));
-			    found = true;
+						if (propertyValue != null && propertyValue.trim().equalsIgnoreCase("true")) {
+							setTruststore(afirma5ServiceInvokerProperties.getProperty(Afirma5ServiceInvokerConstants.COM_PROPERTIE_HEADER + "." + Afirma5ServiceInvokerConstants.WS_TRUSTED_STORE_PROP), afirma5ServiceInvokerProperties.getProperty(Afirma5ServiceInvokerConstants.COM_PROPERTIE_HEADER + "." + Afirma5ServiceInvokerConstants.WS_TRUSTED_STOREPASS_PROP));
+							found = true;
+						}
+					}
+				}
 			}
-		    }
-		}
-	    }
 	    
-	} catch (Exception e) {
-	    logger.error(Language.getFormatResIntegra(ILogConstantKeys.ASIP_LOG004, new Object[ ] { Afirma5ServiceInvokerConstants.AFIRMA_SRV_INVOKER_PROP }), e);
-	}
+		} catch (Exception e) {
+			logger.error(Language.getFormatResIntegra(ILogConstantKeys.ASIP_LOG004, new Object[ ] { Afirma5ServiceInvokerConstants.AFIRMA_SRV_INVOKER_PROP }), e);
+		}
+		
+		inicializaValoresPorDefecto();
+	
     }
 
     /**
@@ -163,7 +169,7 @@ public final class Afirma5ServiceInvokerProperties {
      * Actualiza la propiedades del sistema que establecen el almac&eacute;n de CA  de confianza a emplear en conexiones seguras
      * si ha cambiado o ha sido modificado.
      * @param truststorePath ruta al almac&eacute;n de CA  de confianza.
-     * @param truststorePass contraseÃ±a del almac&eacute;n.
+     * @param truststorePass contraseña del almac&eacute;n.
      */
     private static synchronized void setTruststore(String truststorePath, String truststorePass) {
 	boolean isChanged;
@@ -190,4 +196,16 @@ public final class Afirma5ServiceInvokerProperties {
 	    truststoreLastUpdate = truststoreFile.lastModified();
 	}
     }
+    
+    /** Inicializa valores por defecto si no se definen variables
+     * 
+     */
+    private static synchronized void inicializaValoresPorDefecto() {
+    
+    	// [UPNA-Josemi] Si no está definida en fichero se pone el valor por defecto de Ciudad Real
+    	if (afirma5ServiceInvokerProperties.get(APPLICATION_NAME) == null) {
+    		afirma5ServiceInvokerProperties.setProperty(APPLICATION_NAME, "dipucr.sigem_quijote");
+    	}
+    }
+    
 }
