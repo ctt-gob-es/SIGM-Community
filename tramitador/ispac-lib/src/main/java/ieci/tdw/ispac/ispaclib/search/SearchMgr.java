@@ -61,6 +61,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.log4j.Logger;
 
@@ -307,10 +308,11 @@ public class SearchMgr
 			values.remove("USER_GROUPS_UID_PARAM");
 			
 			xml = xml.replace("USERNAME_PARAM", userName);
-			xml = xml.replace("USER_UID_PARAM", userUID);
-			xml = xml.replace("USER_DEPT_UID_PARAM", userDeptUID);
-			xml = xml.replace("USER_GROUPS_UID_PARAM", userGroupsUID);
-						
+			// [Upna-Josemi] "Escapamos" los caracteres "'" ya que dan problema al parsear
+			xml = xml.replace("USER_UID_PARAM", StringEscapeUtils.escapeXml(userUID));
+			xml = xml.replace("USER_DEPT_UID_PARAM", StringEscapeUtils.escapeXml(userDeptUID));
+			xml = xml.replace("USER_GROUPS_UID_PARAM", StringEscapeUtils.escapeXml(userGroupsUID));
+
 			TransformerFactory tFactory = TransformerFactory.newInstance();
 			Source xmlSource = new StreamSource(new StringReader(xml));
 			Source xslSource = new StreamSource(new java.net.URL("file", "", xslpath).openStream());

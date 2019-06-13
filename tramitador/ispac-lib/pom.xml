@@ -29,6 +29,15 @@
 
 	<dependencies>
 
+		<!-- UPNA-Josemi Se añade la librería para poder parsear el formulario de búsqueda -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.6</version>
+		</dependency>
+
+
+
 		<!-- IECI dependencies -->
 
 		<dependency>
