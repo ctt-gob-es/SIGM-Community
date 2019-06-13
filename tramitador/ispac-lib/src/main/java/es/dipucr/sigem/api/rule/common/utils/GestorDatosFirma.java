@@ -10,6 +10,7 @@ import ieci.tdw.ispac.ispaclib.sign.ASN1Parser;
 import ieci.tdw.ispac.ispaclib.sign.CamerfirmaCertificateParser;
 import ieci.tdw.ispac.ispaclib.sign.DatosCompletosFirma;
 import ieci.tdw.ispac.ispaclib.sign.FMNTCertificateParser;
+import ieci.tdw.ispac.ispaclib.sign.FMNTEmpleadoPublicoCertificateParser;
 import ieci.tdw.ispac.ispaclib.sign.InfoFirmante;
 import ieci.tdw.ispac.ispaclib.sign.SignDocument;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
@@ -171,8 +172,7 @@ public class GestorDatosFirma {
 			Map aux1=aux.readPropertiesOid(pkcs7.getSigningCertificate());
 			
 			//Caso de certificado FNMT
-			if(null!=aux1.get(FMNTCertificateParser.DNI_OID))
-			{
+			if(null!=aux1.get(FMNTCertificateParser.DNI_OID)) {
 			
 				String dni_oid =(String) aux1.get(FMNTCertificateParser.DNI_OID);
 				nombre = getNombreCompletoCertificadoFNMT(aux1);
@@ -183,11 +183,24 @@ public class GestorDatosFirma {
 					dni = arrNombreCompleto[1].trim();
 				}else{
 				    dni = dni_oid;    	
-				}				
-			}
-			
+				}
+				
+			// Caso de certificado FMNT 2.16.724.1.3.5.7.2.4
+			} else if (null!=aux1.get(FMNTEmpleadoPublicoCertificateParser.DNI_OID)) {
+
+				String dni_oid =(String) aux1.get(FMNTEmpleadoPublicoCertificateParser.DNI_OID);
+				nombre = getNombreCompletoEmpleadoPublicoCertificadoFNMT(aux1);
+				    	
+				String[] arrNombreCompleto = dni_oid.split("-");
+				
+				if(arrNombreCompleto.length>1){    	
+					dni = arrNombreCompleto[1].trim();
+				}else{
+				    dni = dni_oid;    	
+				}
+				
 			//Caso de certificado Camerfirma
-			else if(null!=aux1.get(CamerfirmaCertificateParser.POLITICA_CAMERFIRMA_OID) && aux1.get(CamerfirmaCertificateParser.POLITICA_CAMERFIRMA_OID).toString().trim().equals(CamerfirmaCertificateParser.POLITICA_CAMERFIRMA_URL_OID) )
+			} else if(null!=aux1.get(CamerfirmaCertificateParser.POLITICA_CAMERFIRMA_OID) && aux1.get(CamerfirmaCertificateParser.POLITICA_CAMERFIRMA_OID).toString().trim().equals(CamerfirmaCertificateParser.POLITICA_CAMERFIRMA_URL_OID) )
 			{
 				dni = pkcs7.getSignName().split(" ")[0];	
 				nombre = getNombreCompletoCertificadoCamerfirma(aux1);
@@ -249,6 +262,27 @@ public class GestorDatosFirma {
 		}
 		return sbNombreCompleto.toString().trim();
 	}
+	
+	
+	@SuppressWarnings("rawtypes")
+	private static String getNombreCompletoEmpleadoPublicoCertificadoFNMT(Map certProperties) {
+		
+		StringBuffer sbNombreCompleto = new StringBuffer();
+		
+		if (null != certProperties.get(FMNTEmpleadoPublicoCertificateParser.FIRST_NAME_OID)){
+			sbNombreCompleto.append(certProperties.get(FMNTEmpleadoPublicoCertificateParser.FIRST_NAME_OID));
+		}
+		if (null != certProperties.get(FMNTEmpleadoPublicoCertificateParser.SURNAME_OID)){
+			sbNombreCompleto.append(" ");
+			sbNombreCompleto.append(certProperties.get(FMNTEmpleadoPublicoCertificateParser.SURNAME_OID));
+		}
+		if (null != certProperties.get(FMNTEmpleadoPublicoCertificateParser.SECOND_SURNAME_OID)){
+			sbNombreCompleto.append(" ");
+			sbNombreCompleto.append(certProperties.get(FMNTEmpleadoPublicoCertificateParser.SECOND_SURNAME_OID));
+		}
+		return sbNombreCompleto.toString().trim();
+	}
+	
 	
 	@SuppressWarnings("rawtypes")
 	private static String getNombreCompletoCertificadoCamerfirma(Map certProperties) {
