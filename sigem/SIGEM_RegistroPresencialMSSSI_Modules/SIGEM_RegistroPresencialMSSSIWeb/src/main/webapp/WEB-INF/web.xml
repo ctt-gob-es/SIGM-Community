@@ -133,6 +133,16 @@
 	    <param-value>200000</param-value>
 	</context-param>	
 	
+	<!-- JSF hace un salvado de sesiones intermedio que dependiendo del servidor web puede
+		no funcionar correctamente. 
+		Con Apache + Tomcat no funciona correctamente por lo que se habilita el siguiente parámetro
+	-->
+	<context-param>
+		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+		<param-value>false</param-value>
+	</context-param>
+
+	
 	<!-- FICHEROS CONFIGURACION DE SPRING -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
