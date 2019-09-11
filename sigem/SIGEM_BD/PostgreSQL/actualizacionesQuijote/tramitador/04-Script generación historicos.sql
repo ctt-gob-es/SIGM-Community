@@ -214,10 +214,10 @@ CREATE SEQUENCE spac_sq_id_hitos_h  increment by  1 MINVALUE 0 MAXVALUE 92233720
 
 ----- Insertamos en SPAC_CT_ENTIDADES las nuevas entidades   ------
 
-insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_EXPEDIENTES_H', 'ID', 'NUMEXP','NUMEXP', 1,'Histórico de Expedientes','SPAC_SQ_ID_EXPEDIENTES_H', null, null,SYSDATE);
-insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_DT_INTERVINIENTES_H', 'ID', 'NUMEXP','NOMBRE', 3,'Histórico de Participantes','SPAC_SQ_ID_DTINTERVINIENTES_H', null,null,SYSDATE);
-insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_DT_TRAMITES_H', 'ID', 'NUMEXP','NOMBRE', 4,'Histórico de Trámites','SPAC_SQ_ID_DTTRAMITES_H', null, null,SYSDATE);
-insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_DT_DOCUMENTOS_H', 'ID', 'NUMEXP','NOMBRE', 5,'Histórico de Documentos','SPAC_SQ_ID_DTDOCUMENTOS_H', null,null,SYSDATE);
+insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_EXPEDIENTES_H', 'ID', 'NUMEXP','NUMEXP', 1,'Histórico de Expedientes','SPAC_SQ_ID_EXPEDIENTES_H', null, null, NOW());
+insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_DT_INTERVINIENTES_H', 'ID', 'NUMEXP','NOMBRE', 3,'Histórico de Participantes','SPAC_SQ_ID_DTINTERVINIENTES_H', null,null, NOW());
+insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_DT_TRAMITES_H', 'ID', 'NUMEXP','NOMBRE', 4,'Histórico de Trámites','SPAC_SQ_ID_DTTRAMITES_H', null, null, NOW());
+insert into spac_ct_entidades values (NEXTVAL('SPAC_SQ_ID_CTENTIDADES'), 1, 'SPAC_DT_DOCUMENTOS_H', 'ID', 'NUMEXP','NOMBRE', 5,'Histórico de Documentos','SPAC_SQ_ID_DTDOCUMENTOS_H', null,null, NOW());
 
 update spac_ct_entidades set definicion = (select definicion from spac_ct_entidades where nombre = 'SPAC_EXPEDIENTES') where nombre = 'SPAC_EXPEDIENTES_H';
 update spac_ct_entidades set definicion = (select definicion from spac_ct_entidades where nombre = 'SPAC_DT_TRAMITES') where nombre = 'SPAC_DT_TRAMITES_H';

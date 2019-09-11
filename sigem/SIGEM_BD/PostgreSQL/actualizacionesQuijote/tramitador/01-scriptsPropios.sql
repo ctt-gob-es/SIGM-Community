@@ -18,7 +18,7 @@ CREATE TABLE SPAC_CT_MANUALES_USUARIO
   START with 1; 
 
 insert into spac_ct_entidades (id, tipo, nombre, campo_pk, descripcion, sec_pk, fecha)
-values (nextval('SPAC_SQ_ID_CTENTIDADES'), 0, 'SPAC_CT_MANUALES_USUARIO', 'ID', '', 'SPAC_SQ_ID_CTMANUALESUSUARIO',SYSDATE);
+values (nextval('SPAC_SQ_ID_CTENTIDADES'), 0, 'SPAC_CT_MANUALES_USUARIO', 'ID', '', 'SPAC_SQ_ID_CTMANUALESUSUARIO', NOW());
 
 CREATE TABLE spac_p_blp_manuales_usuario
 (
@@ -46,13 +46,13 @@ CREATE SEQUENCE SPAC_SQ_ID_PMANUALESUSUARIO
   START with 1;
 
 insert into spac_ct_entidades (id, tipo, nombre, campo_pk, campo_numexp, schema_expr, frm_edit, descripcion, sec_pk, definicion, frm_jsp, fecha)
-values(117,'0','SPAC_CTOS_FIRMA','ID','','',null,'Circuitos de firma realizados','SPAC_SQ_ID_CTOSFIRMA','','',SYSDATE);
+values(117,'0','SPAC_CTOS_FIRMA','ID','','',null,'Circuitos de firma realizados','SPAC_SQ_ID_CTOSFIRMA','','', NOW());
 INSERT INTO spac_ct_entidades(id, tipo, nombre, campo_pk, sec_pk)
     VALUES (nextval('SPAC_SQ_ID_CTENTIDADES'), 0, 'SPAC_P_PLANTDOC', 'ID', 'SPAC_SQ_ID_PPLANTILLAS');
 
    
 INSERT INTO spac_ct_entidades(id, tipo, nombre, campo_pk, campo_numexp, schema_expr, frm_edit, descripcion, sec_pk, definicion, frm_jsp, fecha)
-VALUES (nextval('SPAC_SQ_ID_CTENTIDADES'),0,'SPAC_CT_TRAMITES','ID','','',null,'Catálogo de Trámites','SPAC_SQ_ID_CTTRAMITES','','',SYSDATE);
+VALUES (nextval('SPAC_SQ_ID_CTENTIDADES'),0,'SPAC_CT_TRAMITES','ID','','',null,'Catálogo de Trámites','SPAC_SQ_ID_CTTRAMITES','','', NOW());
 
 
 

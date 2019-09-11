@@ -17,7 +17,7 @@ CREATE INDEX ind_346066818 ON dpcr_acuse_email (numexp);
 
 
 insert into spac_ct_entidades (id,tipo,nombre,campo_pk,campo_numexp,schema_expr,descripcion,sec_pk,fecha)
-VALUES( NEXTVAL('SPAC_SQ_ID_CTENTIDADES'),'1','DPCR_ACUSE_EMAIL','ID','NUMEXP','NUMEXP','','SPAC_SQ_346066818',SYSDATE);
+VALUES( NEXTVAL('SPAC_SQ_ID_CTENTIDADES'),'1','DPCR_ACUSE_EMAIL','ID','NUMEXP','NUMEXP','','SPAC_SQ_346066818', NOW());
 
 
 CREATE SEQUENCE SPAC_SQ_346066818 

@@ -12,7 +12,7 @@ CREATE INDEX ind_2081913613 ON spac_s_sesion_mensaje (numexp);
 
 
 insert into spac_ct_entidades (id,tipo,nombre,campo_pk,campo_numexp,schema_expr,descripcion,sec_pk,fecha)
-VALUES( NEXTVAL('SPAC_SQ_ID_CTENTIDADES'),'1','SPAC_S_SESION_MENSAJE','ID','NUMEXP','NUMEXP','','SPAC_SQ_2081913613',SYSDATE);
+VALUES( NEXTVAL('SPAC_SQ_ID_CTENTIDADES'),'1','SPAC_S_SESION_MENSAJE','ID','NUMEXP','NUMEXP','','SPAC_SQ_2081913613', NOW());
 
 
 CREATE SEQUENCE SPAC_SQ_2081913613 
