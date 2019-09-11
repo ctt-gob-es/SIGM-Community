@@ -2,9 +2,9 @@
 CREATE TABLE spac_id_transaccion_firma(
   id integer NOT NULL,
   id_documento integer,
-  id_transaccion varchar2(32),
-  hash varchar2(128),
-  datos_firmante varchar2(256),
+  id_transaccion varchar(32),
+  hash varchar(128),
+  datos_firmante varchar(256),
   fecha timestamp,
   CONSTRAINT pk_id_transaccion_firma PRIMARY KEY (id)
 );

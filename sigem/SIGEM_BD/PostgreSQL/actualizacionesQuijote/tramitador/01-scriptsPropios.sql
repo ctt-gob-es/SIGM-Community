@@ -1,9 +1,9 @@
 CREATE TABLE SPAC_CT_MANUALES_USUARIO
 (
   id integer NOT NULL,
-  nombre varchar2(100),
-  descripcion varchar2(255),
-  url varchar2(255),
+  nombre varchar(100),
+  descripcion varchar(255),
+  url varchar(255),
   fecha timestamp,
   version integer,
   visibilidad smallint DEFAULT 0,
@@ -25,7 +25,7 @@ CREATE TABLE spac_p_blp_manuales_usuario
   id integer NOT NULL,
   nbytes integer,
   bloque blob,
-  mimetype varchar2(60),
+  mimetype varchar(60),
   CONSTRAINT pk_spac_p_blp_manuales_usuario PRIMARY KEY (id)
 );
 
@@ -76,17 +76,17 @@ CREATE OR REPLACE VIEW dpcr_fases_proc AS
 
 
 --SPAC_EXPEDIENTES
-alter table spac_expedientes add version varchar2(16);
+alter table spac_expedientes add version varchar(16);
 
 alter table spac_expedientes add fecha_aprobacion timestamp;
-alter table spac_expedientes add tipoexp varchar2(16);
+alter table spac_expedientes add tipoexp varchar(16);
 
 --SPAC_DT_DOCUMENTOS
 alter table spac_dt_documentos add ndoc integer;
-alter table spac_dt_documentos add num_acto varchar2(16);
-alter table spac_dt_documentos add cod_verificacion varchar2(50);
-alter table spac_dt_documentos add motivo_reparo varchar2(255);
-alter table spac_dt_documentos add motivo_rechazo varchar2(255);
+alter table spac_dt_documentos add num_acto varchar(16);
+alter table spac_dt_documentos add cod_verificacion varchar(50);
+alter table spac_dt_documentos add motivo_reparo varchar(255);
+alter table spac_dt_documentos add motivo_rechazo varchar(255);
 
 
 DECLARE

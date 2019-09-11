@@ -1,14 +1,14 @@
 CREATE TABLE dpcr_acuse_email
 (
   id integer NOT NULL,
-  numexp  varchar2(30) NOT NULL,
-  nombre_notif varchar2(128),
+  numexp  varchar(30) NOT NULL,
+  nombre_notif varchar(128),
   fecha_envio timestamp,
-  nombre_doc varchar2(128),
+  nombre_doc varchar(128),
   enviado numeric(1,0),
-  email varchar2(100),
-  descripcion_error varchar2(255),
-  descripcion_documento varchar2(255),
+  email varchar(100),
+  descripcion_error varchar(255),
+  descripcion_documento varchar(255),
   CONSTRAINT pk_346066818 PRIMARY KEY (id)
 );
 

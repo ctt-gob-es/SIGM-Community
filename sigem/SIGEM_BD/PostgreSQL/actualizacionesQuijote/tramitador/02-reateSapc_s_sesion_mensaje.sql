@@ -1,9 +1,9 @@
 CREATE TABLE spac_s_sesion_mensaje(
   id integer NOT NULL,
-  numexp varchar2(30) NOT NULL,
-  id_sesion varchar2(200),
-  id_mensaje varchar2(200),
-  usuario varchar2(200),
+  numexp varchar(30) NOT NULL,
+  id_sesion varchar(200),
+  id_mensaje varchar(200),
+  usuario varchar(200),
   CONSTRAINT pk_2081913613 PRIMARY KEY (id)
 );
 
