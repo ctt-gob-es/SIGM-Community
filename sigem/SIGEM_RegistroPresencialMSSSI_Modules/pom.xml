@@ -75,7 +75,7 @@
 				</property>
 			</activation>
 			<modules>
-				<module>SIGEM_RegistroPresencialMSSSIWeb-resources-configurable</module>
+				<module>SIGEM_RegistroPresencialMSSSIWeb-configurable-resources</module>
 			</modules>
 		</profile>
 		<profile>
