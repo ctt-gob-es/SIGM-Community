@@ -2040,7 +2040,8 @@ public class RegistroManager {
 	    	  
 	    	  DocumentoInfo di = oServicio.retrieveDocument(null, rdd.getGuid(), getEntidad(entidad));
 	    	  
-	    	  if(di.getContent().length>0){
+			  //[JOSEMI-UPNA] Se chequea si hay contenido para evitar una excepción 
+	    	  if(di.getContent() != null && di.getContent().length>0){
 	    		  receipt = di.getContent();
 		      }else{	    	  
 		    	  ServicioRegistro servicioRegistroPresencial = LocalizadorServicios.getServicioRegistro();
