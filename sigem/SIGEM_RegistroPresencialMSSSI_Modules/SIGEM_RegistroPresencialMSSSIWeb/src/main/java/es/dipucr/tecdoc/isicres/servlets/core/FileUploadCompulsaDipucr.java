@@ -195,6 +195,8 @@ public class FileUploadCompulsaDipucr extends HttpServlet implements Keys {
 				    IdentificadorDocumentoElectronicoAnexoVO identificadorDocumentoElectronicoAnexoVO = new IdentificadorDocumentoElectronicoAnexoVO();
 					identificadorDocumentoElectronicoAnexoVO.setIdLibro(bookId.longValue());
 					identificadorDocumentoElectronicoAnexoVO.setIdRegistro(folderId.longValue());
+					// [Josemi-UPNA] TODO. Se almacena el identificador de la carpeta (axdoch) en el campo reservado para el idPagina.
+					// 						Debería crearse un nuevo campo para el campod docId
 					identificadorDocumentoElectronicoAnexoVO.setIdPagina(new Long(docId));
 
 					String csv = getCSV(useCaseConf, ficheroFirmado);

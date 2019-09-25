@@ -154,7 +154,10 @@ public class DocumentoElectronicoAnexoManagerImpl implements DocumentoElectronic
 		Long idDatosFirma=documentoElectronicoAnexoDatosFirmaIncrementer.nextLongValue();
 
 		documento.getId().setId(idDocumento);
-		documento.getId().setIdPagina(documento.getId().getIdPagina());
+		
+		// [Josemi-UPNA] Bug por el que se graba el id de carpeta en lugar del idPage del documento en base de datos
+		// 				Se asigna el valor correcto en el bloque try-catch siguiente
+		//documento.getId().setIdPagina(documento.getId().getIdPagina());
 		
 		try{
 			Map<?, ?> docs = docGuardado.getDocumentsUpdate();
@@ -163,7 +166,20 @@ public class DocumentoElectronicoAnexoManagerImpl implements DocumentoElectronic
 			FlushFdrDocument document = (FlushFdrDocument) docs.get(key);
 			List<?> pages = document.getPages();
 			
-			documento.getId().setIdFile(Long.decode(((FlushFdrPage)pages.get(0)).getFile().getFileID()));
+			documento.getId().setIdPagina(Long.parseLong(((FlushFdrPage)pages.get(0)).getFile().getPageID()));
+			
+			// Adaptación a Alfresco.
+			try {
+				Integer.parseInt(((FlushFdrPage)pages.get(0)).getFile().getFileID());
+				// Si el fileId es de tipo entero, se mantiene el código original
+				documento.getId().setIdFile(Long.decode(((FlushFdrPage)pages.get(0)).getFile().getFileID()));
+
+			} catch (NumberFormatException e) {
+				// El fileId no es entero. Se calcula el ID para Alfresco
+				String fileIdAlfresco = calculateFileIDAlfresco(documento.getId().getIdRegistro().intValue(), Integer.parseInt(((FlushFdrPage)pages.get(0)).getFile().getPageID()));
+				documento.getId().setIdFile(new Long(fileIdAlfresco));
+			}
+
 		} catch (Exception e){
 			
 		}
@@ -498,6 +514,27 @@ public class DocumentoElectronicoAnexoManagerImpl implements DocumentoElectronic
 		}
 	    }
 	}
+
+	
+	/** Se toma como identificador para Alfresco el fdrId seguido por un id de tres dígitos 
+	 * 
+	 * @param fdrId
+	 * @param id Identificador de página del fichero
+	 * @return identificador con formato para alfresco.
+	 */
+	private static String calculateFileIDAlfresco(int fdrId, int id) {
+	
+		String newFileId =Integer.toString(fdrId);
+		String idAux = Integer.toString(id);
+		for (int i=idAux.length(); i < 3 ;i++) {
+			newFileId = newFileId + "0";
+		}
+		newFileId = newFileId + idAux;
+		return newFileId;
+
+	}
+
+
 
 }
 

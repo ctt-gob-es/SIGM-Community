@@ -20,6 +20,8 @@ import com.ieci.tecdoc.common.isicres.AxPKById;
 import es.msssi.sgm.registropresencial.beans.ibatis.Axdoch;
 import es.msssi.sgm.registropresencial.beans.ibatis.Axpageh;
 import es.msssi.sgm.registropresencial.dao.SqlMapClientBaseDao;
+import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 
 /**
  * Clase que contiene los métodos para recuperar los documentos de los
@@ -129,19 +131,37 @@ public class DocumentDAO extends SqlMapClientBaseDao {
      */
     @SuppressWarnings("unchecked")
     public List<Axpageh> getPagesBasicInfo(AxPKById axPKByIdDoc, Integer flag) {
+    	
 	LOG.trace("Entrando en DocumentDAO.getPagesBasicInfo");
+	
 	typePK = axPKByIdDoc.getType();
 	List<Axpageh> axpagehList = null;
 	HashMap<String, Object> pageSqlParameters = new HashMap<String, Object>();
 	pageSqlParameters.put("tableName", getPageTableName());
 	pageSqlParameters.put("docid", axPKByIdDoc.getId());
 	pageSqlParameters.put("fdrid", axPKByIdDoc.getFdrId());
-	pageSqlParameters.put("idBook", axPKByIdDoc.getType());
-	if (flag != null){
+	
+	// Adaptación a Alfresco. Si el conector no es de alfresco, se mantiene la anterior funcionalidad
+	String listadoAxpageh = "Axpageh.listAxpageh";
+	String connectorManager = null;
+	try {
+		connectorManager = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER);
+	} catch (ISPACException e) {
+		LOG.error(e);
+	}
+	if (connectorManager != null && (connectorManager.equalsIgnoreCase("alfresco") || 
+			connectorManager.equalsIgnoreCase("alfrescoCMIS"))) {
+		listadoAxpageh = "Axpageh.listAxpagehAlfresco";
+	} else {
+		pageSqlParameters.put("idBook", axPKByIdDoc.getType());
+	}
+	
+	 if (flag != null){
 	    pageSqlParameters.put("flag", flag);
 	}
+	
 	axpagehList =
-		(List<Axpageh>) getSqlMapClientTemplate().queryForList("Axpageh.listAxpageh",
+		(List<Axpageh>) getSqlMapClientTemplate().queryForList(listadoAxpageh,
 			pageSqlParameters);
 	
 	LOG.trace("Saliendo de DocumentDAO.getPagesBasicInfo");

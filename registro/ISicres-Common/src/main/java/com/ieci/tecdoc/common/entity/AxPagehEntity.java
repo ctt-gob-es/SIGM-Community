@@ -23,6 +23,9 @@ import com.ieci.tecdoc.common.isicres.AxPageh;
 import com.ieci.tecdoc.common.keys.ServerKeys;
 import com.ieci.tecdoc.common.utils.BBDDUtils;
 
+import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
+
 /**
  * @author 79426599
  *
@@ -158,6 +161,20 @@ public class AxPagehEntity implements ServerKeys {
  public void store(String entidad) throws Exception {
      //loadEntityPrimaryKey();
 
+	 // Adaptación a Alfresco. Si el conector no es de alfresco, se mantiene la anterior funcionalidad
+	 String connectorManager = null;
+	 try {
+		connectorManager = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER);
+	 } catch (ISPACException e) {
+		 log.error(e);
+	 }
+	 if (connectorManager != null && (connectorManager.equalsIgnoreCase("alfresco") || 
+										connectorManager.equalsIgnoreCase("alfrescoCMIS"))) {
+		 this.fileId = calculateFileIDAlfresco(fdrId, id);
+	 } else {
+		 // No se hace nada
+	 }
+	  
      Connection con = null;
      PreparedStatement ps = null;
      try {
@@ -209,7 +226,21 @@ public class AxPagehEntity implements ServerKeys {
      this.name = name;
      this.sortOrder = sortOrder;
      this.docId = docId;
-     this.fileId = fileId;
+	 
+	 // Adaptación a Alfresco. Si el conector no es de alfresco, se mantiene la anterior funcionalidad
+	 String connectorManager = null;
+	 try {
+		connectorManager = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER);
+	 } catch (ISPACException e) {
+		 log.error(e);
+	 }
+	 if (connectorManager != null && (connectorManager.equalsIgnoreCase("alfresco") || 
+										connectorManager.equalsIgnoreCase("alfrescoCMIS"))) {
+		 this.fileId = calculateFileIDAlfresco(fdrId, id);
+	 } else {	
+		 this.fileId = fileId;
+	 }
+
      this.loc = loc;
      this.crtrId = user;
      this.crtnDate = new Date(timestamp.getTime());
@@ -628,4 +659,25 @@ public class AxPagehEntity implements ServerKeys {
 	
 		return result;
 	}
+	
+	
+	/** Se toma como identificador para Alfresco el fdrId seguido por un id de tres dígitos 
+	 * 
+	 * @param fdrId
+	 * @param id Identificador de página del fichero
+	 * @return identificador con formato para alfresco.
+	 */
+	private int calculateFileIDAlfresco(int fdrId, int id) {
+	
+		String newFileId =Integer.toString(fdrId);
+		String idAux = Integer.toString(id);
+		for (int i=idAux.length(); i < 3 ;i++) {
+			newFileId = newFileId + "0";
+		}
+		newFileId = newFileId + idAux;
+		return Integer.parseInt(newFileId);
+
+	}
+
+
 }

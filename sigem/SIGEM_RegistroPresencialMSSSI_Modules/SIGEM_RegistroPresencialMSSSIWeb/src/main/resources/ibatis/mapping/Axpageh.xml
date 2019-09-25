@@ -60,6 +60,32 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		</isNotEmpty>
 	</select>
 	
+	<select id="listAxpagehAlfresco" parameterClass="java.util.HashMap"
+		resultClass="es.msssi.sgm.registropresencial.beans.ibatis.Axpageh">
+		<isNotEmpty property="tableName">
+		SELECT PA.ID AS id, PA.FDRID AS fdrid, PA.NAME as name, DOCID, CRTNDATE as crtndate, PA.LOC as loc, PA.FILEID as fileId,
+				PR.PAGEID as pageId, 
+				SA.COMMENTS as comments, SA.MIME_TYPE as mimeType, SA.VALIDITY_TYPE as validityType, SA.DOCUMENT_TYPE as documentType, 
+				SAS.HASH AS hash, SAS.HASH_ALG AS hashAlg, SAS.TIME_SIGNATURE AS fechaFirma,
+				SA2.PAGEID AS pageSignedId, PR.FLAG as flag
+		FROM  $tableName$  PA 
+			    INNER JOIN SCR_PAGEREPOSITORY PR ON 
+					pa.id = pr.pageid and
+					pa.fdrid = pr.fdrid and
+					PR.DELETEDATE IS NULL 
+			    <isNotEmpty property="flag">
+			    	AND PR.FLAG  IS NULL 
+			    </isNotEmpty>
+			    LEFT JOIN SCR_ATTACHMENT SA ON 
+					SA.BOOKID = PR.BOOKID AND 
+					SA.FOLDERID = PR.FDRID AND 
+					SA.PAGEID = PR.PAGEID
+			    LEFT JOIN SCR_ATTACHMENT_SIGN_INFO SAS ON SAS.ID_ATTACHMENT = SA.ID
+			    LEFT JOIN SCR_ATTACHMENT SA2 ON SA2.ID = SAS.ID_ATTACHMENT_SIGNED
+			    WHERE PA.DOCID = #docid# AND PA.FDRID= #fdrid# 
+		</isNotEmpty>
+	</select>
+	
 	<delete id="deleteAxpageh" parameterClass="java.util.HashMap">
 		<isNotEmpty property="tableNamePag">
 			DELETE FROM $tableNamePag$ WHERE DOCID = #docid# AND FDRID= #fdrid# 

@@ -130,6 +130,12 @@ public class DocumentoBo implements IGenericBo, Serializable{
 		String fileId = page.getFile().getFileID();
 		String extension = page.getFile().getExtension();
 
+		// Adaptación a Alfresco. El identificador de alfresco es alfanumérico y no entero.
+		try {
+			Integer.parseInt(fileId);
+		} catch (NumberFormatException e) {
+			fileId = calculateFileIDAlfresco(folderId, Integer.parseInt(pageId));
+		}
     	MetadatosBo.insertaMetadatosAnexar(documentoBean.getUseCaseConf().getSessionID(), documentoBean.getBookId(), folderId, Integer.parseInt(pageId), Integer.parseInt(fileId), documentoBean.getEntidadId(), folderDataSession.getCurrentDate(), extension);
 	}
 	
@@ -349,5 +355,27 @@ public class DocumentoBo implements IGenericBo, Serializable{
 
 		return raiz;
 	}
+	
+	
+	
+	/** Se toma como identificador para Alfresco el fdrId seguido por un id de tres dígitos 
+	 * 
+	 * @param fdrId
+	 * @param id Identificador de página del fichero
+	 * @return identificador con formato para alfresco.
+	 */
+	private static String calculateFileIDAlfresco(int fdrId, int id) {
+	
+		String newFileId =Integer.toString(fdrId);
+		String idAux = Integer.toString(id);
+		for (int i=idAux.length(); i < 3 ;i++) {
+			newFileId = newFileId + "0";
+		}
+		newFileId = newFileId + idAux;
+		return newFileId;
+
+	}
+
+	
 }
 
