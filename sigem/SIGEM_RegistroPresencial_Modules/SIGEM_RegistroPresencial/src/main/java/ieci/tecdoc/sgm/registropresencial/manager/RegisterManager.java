@@ -83,6 +83,13 @@ public class RegisterManager {
 							String pageId = page.getFile().getPageID();
 							String fileId = page.getFile().getFileID();
 							String extension = page.getFile().getExtension();
+
+							// Adaptación a Alfresco. El identificador de alfresco es alfanumérico y no entero.
+							try {
+								Integer.parseInt(fileId);
+							} catch (NumberFormatException e) {
+								fileId = calculateFileIDAlfresco(folderId, Integer.parseInt(pageId));
+							}
 			
 							if( null == page.getMetadatosDocumento()){
 								MetadatosBo.insertaMetadatosCrearRegistroSW(sessionID, bookId, Integer.parseInt(folderId), Integer.parseInt(pageId), Integer.parseInt(fileId), entidad, longFormatter.parse(fechaCaptura), extension, tipoDocumental, tipoFirma, csv);
@@ -211,6 +218,12 @@ public class RegisterManager {
 					String fileId = page.getFile().getFileID();
 					String extension = page.getFile().getExtension();
 	
+					// Adaptación a Alfresco. El identificador de alfresco es alfanumérico y no entero.
+					try {
+						Integer.parseInt(fileId);
+					} catch (NumberFormatException e) {
+						fileId = calculateFileIDAlfresco(folderId, Integer.parseInt(pageId));
+					}					
 		        	MetadatosBo.insertaMetadatosConsolidacion(sessionID, bookId, Integer.parseInt(folderId), Integer.parseInt(pageId), Integer.parseInt(fileId), entidad, longFormatter.parse(fechaCaptura), extension);
 	        	}
 			} catch (Exception e){
@@ -628,4 +641,24 @@ public class RegisterManager {
 		}
 	}
 
+	
+	/** Se toma como identificador para Alfresco el fdrId seguido por un id de tres dígitos 
+	 * 
+	 * @param fdrId
+	 * @param id Identificador de página del fichero
+	 * @return identificador con formato para alfresco.
+	 */
+	private static String calculateFileIDAlfresco(String fdrId, int id) {
+	
+		String newFileId = fdrId;
+		String idAux = Integer.toString(id);
+		for (int i=idAux.length(); i < 3 ;i++) {
+			newFileId = newFileId + "0";
+		}
+		newFileId = newFileId + idAux;
+		return newFileId;
+
+	}
+	
+	
 }
