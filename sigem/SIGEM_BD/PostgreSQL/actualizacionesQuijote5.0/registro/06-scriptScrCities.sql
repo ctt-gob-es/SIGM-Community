@@ -1,0 +1,1 @@
+alter table scr_cities add column dir3 varchar(9);
