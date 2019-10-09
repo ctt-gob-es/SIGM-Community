@@ -1,1 +1,1 @@
-alter table scr_cities add column dir3 varchar(9);
+alter table scr_cities add (dir3 varchar2(9 char));

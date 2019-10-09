@@ -5,8 +5,8 @@ create table scr_document_metadatos(
   pageid integer NOT NULL,
   fileid integer NOT NULL,
 
-  nombreMetadato varchar(255) NOT NULL,
-  valorMetadato varchar(255)
+  nombreMetadato varchar2(255 CHAR) NOT NULL,
+  valorMetadato varchar2(255 CHAR)
 );
 
-create index on scr_document_metadatos (bookid, folderid, pageid, fileid, nombremetadato);
+create index scr_document_metadatos1 on scr_document_metadatos (bookid, folderid, pageid, fileid, nombremetadato);

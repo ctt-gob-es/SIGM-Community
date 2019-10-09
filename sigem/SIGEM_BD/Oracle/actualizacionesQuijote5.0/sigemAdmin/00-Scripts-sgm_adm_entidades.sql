@@ -1,5 +1,5 @@
-alter table sgm_adm_entidades add column password_entidad varchar(50);
-alter table sgm_adm_entidades add column cif varchar(12);
-alter table sgm_adm_entidades add column dir3 varchar(12);
-alter table sgm_adm_entidades add column sia varchar(12);
-alter table sgm_adm_entidades add column deh varchar(12);
+alter table sgm_adm_entidades add password_entidad varchar2(50 CHAR);
+alter table sgm_adm_entidades add cif varchar2(12 CHAR);
+alter table sgm_adm_entidades add dir3 varchar2(12 CHAR);
+alter table sgm_adm_entidades add sia varchar2(12 CHAR);
+alter table sgm_adm_entidades add deh varchar2(12 CHAR);
