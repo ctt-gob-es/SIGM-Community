@@ -85,13 +85,21 @@ public class FolderSession extends FolderSessionUtil implements ServerKeys, Keys
 
 			// Es necesario tener el libro abierto para consultar su contenido.
 			if (!cacheBag.containsKey(bookID)) {
-				throw new BookException(BookException.ERROR_BOOK_NOT_OPEN);
+				/* Se intenta accceder a un libro que aun no está abierto. 
+				 * Puede ocurrir tras iniciar el servidor o cambiar a una nueva oficina, pero no debería dar error al usuario.
+				 * En lugar de dar un error en pantalla se registra en el log.
+				 */
+				LOGGER.error("Se intentó acceder a un libro [" + bookID + " ] que aún no está abierto para la sesión [" + sessionID + "].", new BookException(BookException.ERROR_BOOK_NOT_OPEN));
 			}
 			THashMap bookInformation = (THashMap) cacheBag.get(bookID);
 			AxSfQueryResults queryResults = (AxSfQueryResults) bookInformation.get(AXSF_QUERY_RESULTS);
 
 			if (queryResults == null) {
-				throw new BookException(BookException.ERROR_QUERY_NOT_OPEN);
+				/* Se intenta cerrar una consulta que no esta abierta. 
+				 * Puede ocurrir tras iniciar el servidor o cambiar a una nueva oficina, pero no debería dar error al usuario.
+				 * En lugar de dar un error en pantalla se registra en el log.
+				 */
+				LOGGER.error("Se intentó cerrar una consulta que no se encuentra abierta en el libro [" + bookID + " ] para la sesión [" + sessionID + "].", new BookException(BookException.ERROR_QUERY_NOT_OPEN));
 			} else {
 				bookInformation.remove(AXSF_QUERY_RESULTS);
 			}

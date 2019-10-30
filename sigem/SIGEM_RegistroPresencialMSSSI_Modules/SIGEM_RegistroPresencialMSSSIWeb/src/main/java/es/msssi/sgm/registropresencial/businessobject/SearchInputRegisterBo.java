@@ -64,7 +64,7 @@ public class SearchInputRegisterBo extends LazyDataModel<RowSearchInputRegisterB
 	/** Variable con la configuración de la aplicación. */
 	private UseCaseConf useCaseConf = null;
 	/** contexto de faces. */
-	private FacesContext facesContext;
+	private FacesContext facesContext = null;
 	/** Bean con los criterios del buscador. */
 	private SearchInputRegisterBean searchInputRegister = new SearchInputRegisterBean();
 	/** página actual. */
@@ -93,12 +93,10 @@ public class SearchInputRegisterBo extends LazyDataModel<RowSearchInputRegisterB
 	private void init() {
 		LOG.trace("Entrando en SearchInputRegisterBo.init()" + " para iniciar el contexto de faces.");
 
-		if (facesContext == null) {
 			facesContext = FacesContext.getCurrentInstance();
 			Map<String, Object> map = facesContext.getExternalContext().getSessionMap();
 			useCaseConf = (UseCaseConf) map.get(Keys.J_USECASECONF);
 			book = (ScrRegstate) facesContext.getExternalContext().getSessionMap().get(KeysRP.J_BOOK);
-		}
 	}
 
 	/**
@@ -323,7 +321,10 @@ public class SearchInputRegisterBo extends LazyDataModel<RowSearchInputRegisterB
 		LOG.trace("Entrando en SearchInputRegisterBo.closeQuery()");
 		
 		try {
-			init();
+			// Si no tenemos libro, lo inicializamos. Si ya tenemos, seguimos trabajando con el actual
+			if (book == null) {
+				init();
+			}
 			FolderSession.closeRegistersQuery(useCaseConf.getSessionID(), book.getIdocarchhdr().getId());
 			
 		} catch (ValidationException validationException) {
