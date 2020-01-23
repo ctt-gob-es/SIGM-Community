@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<import resource="classpath:spEnvironmentContext.xml" />
+	<import resource="classpath:filecertmgmt.xml" />
+	
+	<bean id="securityConfigFile" class="java.lang.String">
+        <constructor-arg value="securityConf.xml" />
+    </bean>
+
+	<bean id="securityConfigFileWithPath" class="java.lang.String">
+		<constructor-arg value="file:#{spConfigRepository}#{securityConfigFile}"/>
+    </bean>
+    
+    <bean id="placeholderConfig" class="es.clave.sp.PropertiesUtil">
+		<property name="ignoreUnresolvablePlaceholders" value="true"/>
+		<property name="order" value="0"/>
+		<property name="locations">
+			<list>
+				<ref bean="securityConfigFileWithPath"/>
+			</list>
+		</property>
+		<property name="fileEncoding" value="UTF-8" />
+	</bean>
+	
+	<bean id="applicationContextProvider" class="es.clave.sp.ApplicationContextProvider"/>
+	    
+    <!-- Resource bundle to log error messages -->
+    <bean id="errorMessageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="errors"/>
+	</bean>
+	
+	<bean id="springManagedSecurityConfig" class="es.clave.sp.security.ConfigurationSecurityBean" scope="prototype">
+         <property name="maxRequests" value="${max.requests:-1}" />
+         <property name="maxTime" value="${max.time:60}" />
+         <property name="trustedDomains" value="${trusted.domains:all}" />
+         <property name="validationMethod" value="${validation.method:spid}" />
+         <property name="messageSource" ref="errorMessageSource"/>
+         <property name="isContentSecurityPolicyActive" value="${security.header.CSP.enabled:true}"/>
+         <property name="includeXXssProtection" value="${security.header.XXssProtection.block:true}"/>
+         <property name="includeXContentTypeOptions" value="${security.header.XContentTypeOptions.noSniff:true}"/>
+         <property name="includeXFrameOptions" value="${security.header.XFrameOptions.sameOrigin:true}"/>
+         <property name="includeHSTS" value="${security.header.HSTS.includeSubDomains:true}"/>
+		 <property name="cspFallbackCheck" value="${security.header.CSP.fallbackCheckMode:false}"/>
+         <property name="includeMozillaDirectives" value="${security.header.CSP.includeMozillaDirectives:true}"/>
+     </bean>
+
+</beans>

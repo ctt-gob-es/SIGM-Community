@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.0">
+  <deployment>
+	<dependencies>
+		<module name="org.bouncycastle" slot="main" export="true"/>
+        <module name="org.apache.xml-apis" slot="main" export="true"/>
+	</dependencies>
+  </deployment>
+</jboss-deployment-structure>

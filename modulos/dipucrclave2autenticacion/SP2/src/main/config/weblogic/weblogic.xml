@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- weblogic.xml -->
+<weblogic-web-app>
+    <container-descriptor>
+        <prefer-web-inf-classes>false</prefer-web-inf-classes>
+        <prefer-application-packages>
+            <package-name>org.bouncycastle.*</package-name>
+            <package-name>org.apache.commons.*</package-name>
+            <package-name>org.apache.log4j.*</package-name>
+            <package-name>org.joda.time.*</package-name>
+            <package-name>org.opensaml.*</package-name>
+            <package-name>org.opensaml.common.*</package-name>
+            <package-name>org.opensaml.saml2.*</package-name>
+            <package-name>org.opensaml.xml.*</package-name>
+            <package-name>eu.eidas.node.*</package-name>
+            <package-name>org.apache.xalan.*</package-name>
+            <package-name>org.apache.xerces.*</package-name>
+            <package-name>org.apache.xml.*</package-name>
+            <package-name>org.apache.xmlcommons.*</package-name>
+            <!-- guava -->
+            <package-name>com.google.common.*</package-name>
+        </prefer-application-packages>
+
+        <prefer-application-resources>
+            <resource-name>org.apache.commons.*</resource-name>
+            <resource-name>org.apache.log4j.*</resource-name>
+            <resource-name>org.joda.time.*</resource-name>
+            <resource-name>org.opensaml.*</resource-name>
+            <resource-name>org.opensaml.common.*</resource-name>
+            <resource-name>org.opensaml.saml2.*</resource-name>
+            <resource-name>org.opensaml.xml.*</resource-name>
+        </prefer-application-resources>
+    </container-descriptor>
+    <session-descriptor>
+        <cookie-name>SESSIONID</cookie-name>
+		<cookie-path>/SP</cookie-path>
+    </session-descriptor>
+    <context-root>/SP</context-root>
+</weblogic-web-app>
