@@ -1,4 +1,4 @@
-// Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+// Copyright (C) 2012-13 MINHAP, Gobierno de España
 // This program is licensed and may be used, modified and redistributed under the terms
 // of the European Public License (EUPL), either version 1.1 or (at your
 // option) any later version as soon as they are approved by the European Commission.
@@ -23,12 +23,14 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import junit.framework.TestCase;
 
 import org.apache.xml.security.c14n.Canonicalizer;
 
 import es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerFacade;
+import es.gob.afirma.afirma5ServiceInvoker.Afirma5ServiceInvokerProperties;
 import es.gob.afirma.afirma5ServiceInvoker.ws.WebServiceInvoker;
 import es.gob.afirma.transformers.TransformersConstants;
 import es.gob.afirma.transformers.TransformersException;
@@ -56,8 +58,14 @@ public class DSSServicesManager extends TestCase {
     /**
      * Attribute that represents application name for tests.
      */
-    private static final String APPLICATION_NAME = "dipucr.sigem_quijote";
+    private static String APPLICATION_NAME = "dipucr.sigem_quijote";
     
+	// [UPNA-Josemi] Coger el nombre de la aplicación desde fichero de propiedades
+	static {
+		Properties props = Afirma5ServiceInvokerProperties.getAfirma5ServiceProperties();
+		APPLICATION_NAME = props.getProperty(Afirma5ServiceInvokerProperties.APPLICATION_NAME);
+	}
+
     private static final Logger LOGGER = Logger.getLogger(WebServiceInvoker.class);
 
     /**
@@ -107,15 +115,15 @@ public class DSSServicesManager extends TestCase {
 	inParams.put(DSSTagsRequest.ADDITIONAL_DOCUMENT_NAME, "ficheroAfirmar.txt");
 	inParams.put(DSSTagsRequest.ADDITIONAL_DOCUMENT_TYPE, "txt");
 	
-	// paramÃ¡metros errÃ³neos (generan un excepciÃ³n).
+	// paramámetros erróneos (generan un excepción).
 	inParams.put(DSSTagsRequest.CLAIMED_IDENTITY, null);
 	
 	try {
 	    TransformersFacade.getInstance().generateXml(inParams, GeneralConstants.DSS_AFIRMA_SIGN_REQUEST, GeneralConstants.DSS_AFIRMA_SIGN_METHOD, TransformersConstants.VERSION_10);
-	    fail("no se ha lanzado la excepciÃ³n por parÃ¡metros invÃ¡lidos");
+	    fail("no se ha lanzado la excepción por parámetros inválidos");
 	} catch (TransformersException e) {}
 
-	// paramÃ¡metros no vÃ¡lidos (generan un mensaje de respuesta con un
+	// paramámetros no válidos (generan un mensaje de respuesta con un
 	// error)
 	inParams.put(DSSTagsRequest.CLAIMED_IDENTITY, "no_valido");
 	String xmlInput = TransformersFacade.getInstance().generateXml(inParams, GeneralConstants.DSS_AFIRMA_SIGN_REQUEST, GeneralConstants.DSS_AFIRMA_SIGN_METHOD, TransformersConstants.VERSION_10);
@@ -123,7 +131,7 @@ public class DSSServicesManager extends TestCase {
 	Map<String, Object> propertiesResult = TransformersFacade.getInstance().parseResponse(xmlOutput, GeneralConstants.DSS_AFIRMA_SIGN_REQUEST, GeneralConstants.DSS_AFIRMA_SIGN_METHOD, TransformersConstants.VERSION_10);
 	assertEquals(ResultProcessIds.REQUESTER_ERROR, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 
-	// parÃ¡metros vÃ¡lidos (firma de tipo CADES y XADES)
+	// parámetros válidos (firma de tipo CADES y XADES)
 	inParams.put(DSSTagsRequest.CLAIMED_IDENTITY, APPLICATION_NAME);
 
 	// ->CADES
@@ -236,10 +244,10 @@ public class DSSServicesManager extends TestCase {
 //	xmlOutput = Afirma5ServiceInvokerFacade.getInstance().invokeService(xmlInput, GeneralConstants.DSS_AFIRMA_VERIFY_REQUEST, GeneralConstants.DSS_AFIRMA_VERIFY_METHOD, APPLICATION_NAME);
 //	propertiesResult = TransformersFacade.getInstance().parseResponse(xmlOutput, GeneralConstants.DSS_AFIRMA_VERIFY_REQUEST, GeneralConstants.DSS_AFIRMA_VERIFY_METHOD, TransformersConstants.VERSION_10);
 
-	// extraemos la informaciÃ³n de la firma
+	// extraemos la información de la firma
 	Map<String, Object>[ ] signReports = (Map[ ]) propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("IndividualSignatureReport"));
 	Map<String, Object> individualSignReport = signReports[0];
-	// comprobamos valores de la informaciÃ³n del certificado (tipo mapa)
+	// comprobamos valores de la información del certificado (tipo mapa)
 	//Map<String, String> certificateInfo = (Map<String, String>) individualSignReport.get(TransformersFacade.getInstance().getParserParameterValue("ReadableCertificateInfo"));
 	//assertEquals("3729941487142038484", certificateInfo.get("serialNumber"));
 	//assertEquals("ES", certificateInfo.get("pais"));
@@ -333,7 +341,7 @@ public class DSSServicesManager extends TestCase {
 	String xmlOutput = Afirma5ServiceInvokerFacade.getInstance().invokeService(xmlInput, GeneralConstants.DSS_AFIRMA_VERIFY_CERTIFICATE_REQUEST, GeneralConstants.DSS_AFIRMA_VERIFY_METHOD, APPLICATION_NAME);
 	Map<String, Object> propertiesResult = TransformersFacade.getInstance().parseResponse(xmlOutput, GeneralConstants.DSS_AFIRMA_VERIFY_CERTIFICATE_REQUEST, GeneralConstants.DSS_AFIRMA_VERIFY_METHOD, TransformersConstants.VERSION_10);
 	assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
-	// comprobamos valores de la informaciÃ³n del certificado (tipo mapa)
+	// comprobamos valores de la información del certificado (tipo mapa)
 	Map<String, String> certificateInfo = (Map<String, String>) propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("CertificateInfo"));
 	//assertEquals("3729941487142038484", certificateInfo.get("serialNumber"));
 	//assertEquals("ES", certificateInfo.get("pais"));
@@ -346,10 +354,10 @@ public class DSSServicesManager extends TestCase {
     }
 
     public void doDSSBatchVerifySignature() throws Exception {
-	// parÃ¡metros de entrada generales
+	// parámetros de entrada generales
 	Map<String, Object> inputParam = new HashMap<String, Object>();
 
-	// parÃ¡metros para la firma 1 (XADES)
+	// parámetros para la firma 1 (XADES)
 	Map<String, Object> signParams = new HashMap<String, Object>();
 	signParams.put(DSSTagsRequest.INCLUDE_CERTIFICATE, "true");
 	signParams.put(DSSTagsRequest.INCLUDE_REVOCATION, "true");
@@ -363,7 +371,7 @@ public class DSSServicesManager extends TestCase {
 	signParams.put(DSSTagsRequest.BASE64XML, signatureB64XML);
 	signParams.put(DSSTagsRequest.VERIFY_REQUEST_ATTR_REQUEST_ID, "BCJJHGFBBCGEAA");
 
-	// parÃ¡metros para la firma 2 (de tipo CAdES)
+	// parámetros para la firma 2 (de tipo CAdES)
 	Map<String, Object> signParams2 = new HashMap<String, Object>();
 
 	signParams2.put(DSSTagsRequest.VERIFY_REQUEST_ATTR_REQUEST_ID, "BCJJHGFBBCGEBB");
@@ -378,12 +386,12 @@ public class DSSServicesManager extends TestCase {
 	signParams2.put(DSSTagsRequest.RETURN_READABLE_CERT_INFO, "");
 	signParams2.put(DSSTagsRequest.ADDICIONAL_REPORT_OPT_SIGNATURE_TIMESTAMP, "urn:afirma:dss:1.0:profile:XSS:SignatureProperty:SignatureTimeStamp");
 
-	// creamos dos peticiones de validaciÃ³n firma asÃ­ncronas.
+	// creamos dos peticiones de validación firma asíncronas.
 	Map<?, ?>[ ] requests = { signParams, signParams2 };
 	inputParam.put(DSSTagsRequest.VERIFY_REQUEST, requests);
 	inputParam.put(DSSTagsRequest.CLAIMED_IDENTITY, APPLICATION_NAME);
 
-	// tipo de validaciÃ³n por lotes: verificaciÃ³n de firmas
+	// tipo de validación por lotes: verificación de firmas
 	inputParam.put(DSSTagsRequest.BATCH_REQUEST_ATTR_TYPE, DSSTagsRequest.BATCH_VERIFY_SIGN_TYPE);
 
 	String xmlInput = TransformersFacade.getInstance().generateXml(inputParam, GeneralConstants.DSS_BATCH_VERIFY_SIGNATURE_REQUESTS, GeneralConstants.DSS_AFIRMA_VERIFY_SIGNATURES_METHOD, TransformersConstants.VERSION_10);
@@ -394,10 +402,10 @@ public class DSSServicesManager extends TestCase {
     }
 
     public void doDSSBatchVerifyCertificate() throws Exception {
-	// parÃ¡metros de entrada generales
+	// parámetros de entrada generales
 	Map<String, Object> inputParams = new HashMap<String, Object>();
 
-	// parÃ¡metros para el certificados 1
+	// parámetros para el certificados 1
 	Map<String, Object> certParams = new HashMap<String, Object>();
 
 	certParams.put(DSSTagsRequest.INCLUDE_CERTIFICATE, "true");
@@ -413,7 +421,7 @@ public class DSSServicesManager extends TestCase {
 	certParams.put(DSSTagsRequest.RETURN_READABLE_CERT_INFO, "");
 	certParams.put(DSSTagsRequest.VERIFY_REQUEST_ATTR_REQUEST_ID, "BCJJHGFBBCGEAA");
 
-	// parÃ¡metros para el certificados 2
+	// parámetros para el certificados 2
 	Map<String, Object> certParams2 = new HashMap<String, Object>();
 	certParams2.putAll(certParams);
 	certParams2.put(DSSTagsRequest.VERIFY_REQUEST_ATTR_REQUEST_ID, "BCJJHGFBBCGEBB");
@@ -422,7 +430,7 @@ public class DSSServicesManager extends TestCase {
 	inputParams.put(DSSTagsRequest.VERIFY_REQUEST, requests);
 	inputParams.put(DSSTagsRequest.CLAIMED_IDENTITY, APPLICATION_NAME);
 
-	// tipo de validaciÃ³n por lotes: verificaciÃ³n de certificados
+	// tipo de validación por lotes: verificación de certificados
 	inputParams.put(DSSTagsRequest.BATCH_REQUEST_ATTR_TYPE, DSSTagsRequest.BATCH_VERIFY_CERT_TYPE);
 
 	String xmlInput = TransformersFacade.getInstance().generateXml(inputParams, GeneralConstants.DSS_BATCH_VERIFY_CERTIFICATE_REQUEST, GeneralConstants.DSS_AFIRMA_VERIFY_CERTIFICATES_METHOD, TransformersConstants.VERSION_10);
@@ -432,7 +440,7 @@ public class DSSServicesManager extends TestCase {
     }
 
     public void doDSSAsyncRequestStatus() throws Exception {
-	// parÃ¡metros de entrada
+	// parámetros de entrada
 	Map<String, Object> inputParam = new HashMap<String, Object>();
 
 	inputParam.put(DSSTagsRequest.CLAIMED_IDENTITY, APPLICATION_NAME);
@@ -445,7 +453,7 @@ public class DSSServicesManager extends TestCase {
 
 	assertEquals(ResultProcessIds.PENDING, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	// Para verificar los resultados de las validaciones de firma, esperar a
-	// procesar las peticiones asÃ­ncronas.
+	// procesar las peticiones asíncronas.
 	assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	assertEquals(2, ((Map[ ]) propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("VerifyResponse"))).length);
     }
@@ -489,7 +497,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.DIGEST_METHOD_ATR_ALGORITHM, DSSConstants.AlgorithmTypes.SHA1);
@@ -504,7 +512,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 
 	    /*
@@ -530,7 +538,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.DIGEST_METHOD_ATR_ALGORITHM, DSSConstants.AlgorithmTypes.SHA1);
@@ -545,7 +553,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 
 	} catch (Exception e) {
@@ -580,7 +588,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.BASE64DATA, base64Data);
@@ -594,7 +602,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 
 	    /*
@@ -619,7 +627,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.BASE64DATA, base64Data);
@@ -633,7 +641,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 	} catch (Exception e) {
 	    assertTrue(false);
@@ -673,7 +681,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.BASE64XML, new String(Base64Coder.encodeBase64(file)));
@@ -687,7 +695,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 
 	    /*
@@ -714,7 +722,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.DOCUMENT_HASH_TRANSFORM_ATR_ALGORITHM, Canonicalizer.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
@@ -730,7 +738,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 	} catch (Exception e) {
 	    assertTrue(false);
@@ -740,7 +748,7 @@ public class DSSServicesManager extends TestCase {
 	 * Prueba 4:
 	 * - Tipo de Sello de Tiempo: XML
 	 * - Input Document: Base64XML
-	 * - Mecanismo de AutenticaciÃ³n: Usuario/ContraseÃ±a
+	 * - Mecanismo de Autenticación: Usuario/Contraseña
 	 * - La respuesta no viene firmada
 	 * - La respuesta no viene encriptada
 	 */
@@ -767,7 +775,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.BASE64XML, inputDocumentProcessed);
@@ -781,7 +789,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 
 	    /*
@@ -806,7 +814,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.BASE64XML, inputDocumentProcessed);
@@ -820,7 +828,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 
 	} catch (Exception e) {
@@ -831,7 +839,7 @@ public class DSSServicesManager extends TestCase {
 	 * Prueba 5:
 	 * - Tipo de Sello de Tiempo: XML
 	 * - Input Document: InlineXML
-	 * - Mecanismo de AutenticaciÃ³n: Usuario/ContraseÃ±a
+	 * - Mecanismo de Autenticación: Usuario/Contraseña
 	 * - La respuesta no viene firmada
 	 * - La respuesta no viene encriptada
 	 */
@@ -858,7 +866,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.INLINEXML, inlineXML);
@@ -872,7 +880,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 
 	    /*
@@ -897,7 +905,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.INLINEXML, inlineXML);
@@ -911,7 +919,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 	} catch (Exception e) {
 	    assertTrue(false);
@@ -921,7 +929,7 @@ public class DSSServicesManager extends TestCase {
 	 * Prueba 6:
 	 * - Tipo de Sello de Tiempo: XML
 	 * - Input Document: EscapedXML
-	 * - Mecanismo de AutenticaciÃ³n: Usuario/ContraseÃ±a
+	 * - Mecanismo de Autenticación: Usuario/Contraseña
 	 * - La respuesta no viene firmada
 	 * - La respuesta no viene encriptada
 	 */
@@ -948,7 +956,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.ESCAPEDXML, escapedXML);
@@ -962,7 +970,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 
 	    /*
@@ -987,7 +995,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.ESCAPEDXML, escapedXML);
@@ -1001,7 +1009,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 	} catch (Exception e) {
 	    assertTrue(false);
@@ -1038,7 +1046,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.TRANSFORMED_DATA_TRANSFORM_ATR_ALGORITHM, Canonicalizer.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
@@ -1053,7 +1061,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 
 	    /*
@@ -1079,7 +1087,7 @@ public class DSSServicesManager extends TestCase {
 	     */
 
 	    /*
-	     * INICIO VALIDACIÃ“N
+	     * INICIO VALIDACIÓN
 	     */
 	    inParams = new HashMap<String, Object>();
 	    inParams.put(DSSTagsRequest.TRANSFORMED_DATA_TRANSFORM_ATR_ALGORITHM, Canonicalizer.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
@@ -1094,7 +1102,7 @@ public class DSSServicesManager extends TestCase {
 	    assertNotNull(propertiesResult);
 	    assertEquals(ResultProcessIds.SUCESS, propertiesResult.get(TransformersFacade.getInstance().getParserParameterValue("ResultMayor")));
 	    /*
-	     * FIN VALIDACIÃ“N
+	     * FIN VALIDACIÓN
 	     */
 	} catch (Exception e) {
 	    assertTrue(false);

@@ -183,6 +183,7 @@ public class UpdateServiceDCOImpl implements UpdateServiceDCO, Serializable {
     	try {
     		nameFileInitUnits = getUpdateServiceDCO().getFileUpdateUnitsDCO( updateStatus.getUpdateDate());
     		
+    		LOGGER.warn("*********** Fichero de unidades orgánicas recuperado, vamos a parsearlo **************");
     		if(StringUtils.isNotEmpty(nameFileInitUnits)){
 				fileInitUnits = new File( getTempFilesDir() + "/" + nameFileInitUnits);
 				directoryUnits = new File( getTempFilesDir() + "/" + nameFileInitUnits.replace( ".zip", ""));
@@ -191,12 +192,17 @@ public class UpdateServiceDCOImpl implements UpdateServiceDCO, Serializable {
 	    	
 		    	if (null != filesUnzippedUnits){
 		    		UnitsVO unitsDCO = converter.getUnitsFromXmlFile(filesUnzippedUnits.get(UNITS));
+		    		LOGGER.warn("*********** Unidades parseadas, vamos con los contactos **************");
 
 		    		replaceFileString(filesUnzippedUnits.get(CONTACTUO));
 		    		ContactsUOVO contactsUO = converter.getContactsUOFromXmlFile( filesUnzippedUnits.get(CONTACTUO));
+		    		LOGGER.warn("*********** Contactos listos, vamos con las histories **************");
+		    		
 		    		HistoriesVO historiesUO = converter.getHistoriesFromXmlFile( filesUnzippedUnits.get(HISTORIESUO));
 		
+		    		LOGGER.warn("*********** Se actualizan las uidades en DIR3 **************");
 		    		getUnitManager().updateUnits( unitsDCO, contactsUO, historiesUO);
+		    		LOGGER.warn("*********** Se actualizan las unidades en registro **************");
 		    		getUnitRegisterManager().updateUnits( unitsDCO, contactsUO);
 		
 		        	unitsDCO = null;
@@ -239,6 +245,7 @@ public class UpdateServiceDCOImpl implements UpdateServiceDCO, Serializable {
     	try {
     		nameFileInitNotOrgUnits = getUpdateServiceDCO().getFileUpdateNotOrgUnitsDCO(updateStatus.getUpdateDate());
 
+    		LOGGER.warn("*********** Fichero de unidades no orgánicas recuperado, vamos a parsearlo **************");
     		if(StringUtils.isNotEmpty(nameFileInitNotOrgUnits)){
 	    		fileInitNotOrgUnits = new File(getTempFilesDir() + "/" + nameFileInitNotOrgUnits);
 	    		directoryNotOrgUnits = new File( getTempFilesDir() + "/" + nameFileInitNotOrgUnits.replace( ".zip", ""));
@@ -247,11 +254,14 @@ public class UpdateServiceDCOImpl implements UpdateServiceDCO, Serializable {
 	    		
 		    	if (null != filesUnzippedNotOrgUnits){
 		    		UnitsVO NotOrgunitsDCO = converter.getUnitsFromXmlFile(filesUnzippedNotOrgUnits.get(UNITSUNO));
+		    		LOGGER.warn("*********** Unidades no orgánicas parseadas, vamos con los contactos **************");
 
 		    		replaceFileString(filesUnzippedNotOrgUnits.get(CONTACTUNO));
 		    		ContactsUOVO contactsUNO = converter.getContactsUNOFromXmlFile( filesUnzippedNotOrgUnits.get(CONTACTUNO));
-		
+
+		    		LOGGER.warn("*********** Se actualizan las unidades no orgánicas en DIR3 **************");
 		    		getUnitManager().updateUNOUnits(NotOrgunitsDCO, contactsUNO);
+		    		LOGGER.warn("*********** Se actualizan las unidades no orgánicas en registro **************");
 		    		getUnitRegisterManager().updateUNOUnits( NotOrgunitsDCO, contactsUNO);
 		    		
 		    		NotOrgunitsDCO= null;
@@ -291,6 +301,7 @@ public class UpdateServiceDCOImpl implements UpdateServiceDCO, Serializable {
     	try {
     		nameFileInitOffice = getUpdateServiceDCO().getFileUpdateOfficesDCO( updateStatus.getUpdateDate());
     		
+    		LOGGER.warn("*********** Fichero de Oficinas recuperado, vamos a parsearlo **************");
 	    	if(StringUtils.isNotEmpty(nameFileInitOffice)){
 	
 	    		fileInitOffice = new File( getTempFilesDir() + "/" + nameFileInitOffice);
@@ -301,19 +312,25 @@ public class UpdateServiceDCOImpl implements UpdateServiceDCO, Serializable {
 		
 		    	if (null != filesUnzippedOffice){
 		    		OfficesVO officesDCO = converter.getOfficesFromXmlFile( filesUnzippedOffice.get(OFFICES));
+		    		LOGGER.warn("*********** Oficinas listas, vamos con los contactos **************");
 
 		    		replaceFileString(filesUnzippedOffice.get(CONTACTOFFICE));
 		    		ContactsOFIVO contactsDCO = converter.getContactsOFIFromXmlFile( filesUnzippedOffice.get(CONTACTOFFICE));
+		    		LOGGER.warn("*********** Contactos listos, vamos con los services **************");
 
 		    		ServicesVO servicesDCO = converter.getServicesFromXmlFile( filesUnzippedOffice.get(SERVICESOFFICE));
+		    		LOGGER.warn("*********** Services listos, vamos con las histories **************");
+
 		    		HistoriesVO historiesDCO = converter.getHistoriesFromXmlFile( filesUnzippedOffice.get(HISTORIESOFFICE));
 		    		
+		    		LOGGER.warn("*********** Se actualizan las oficinas en DIR3 **************");
 		        	getOfficeManager().updateOffices( officesDCO, contactsDCO, servicesDCO, historiesDCO);
 		
 		        	officesDCO = null;
 		        	contactsDCO = null;
 		        	historiesDCO = null;
 		
+		    		LOGGER.warn("*********** Se actualizan las oficinas en registro **************");
 		        	RelationshipsOFIUOVO organizationalRelationshipsDCO = converter.getRelationsFromXmlFile( filesUnzippedOffice.get(ORGANIZATIONALRELATIONSHIPSOFFICE));
 		        	getOrganizationalRelationshipsManager().updateRelationships( organizationalRelationshipsDCO);
 		        	RelationshipsOFIUOVO relationshipsSIRDCO = converter.getRelationsSIRFromXmlFile( filesUnzippedOffice.get(RELATIONSHIPSSIROFFICE));

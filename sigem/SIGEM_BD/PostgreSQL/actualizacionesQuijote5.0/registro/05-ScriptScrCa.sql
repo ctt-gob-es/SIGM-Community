@@ -1,0 +1,1 @@
+alter table scr_ca add column for_distrt integer DEFAULT 0;

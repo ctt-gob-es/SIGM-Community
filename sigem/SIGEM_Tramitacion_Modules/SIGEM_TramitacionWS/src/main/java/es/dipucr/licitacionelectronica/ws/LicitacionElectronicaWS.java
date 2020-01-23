@@ -12,6 +12,8 @@ import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.dipucr.contratacion.objeto.Adjudicatario;
+import es.dipucr.contratacion.objeto.Peticion;
 import es.dipucr.contratacion.objeto.sw.EspacioVirtualLicitacionBean;
 import es.dipucr.contratacion.utils.EspacioVirtualLicitacionUtilsSW;
 
@@ -19,7 +21,7 @@ public class LicitacionElectronicaWS {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LicitacionElectronicaWS.class);
 	
-	public EspacioVirtualLicitacionBean getEspacioVirtualLicitacionBean(String entidadId, String numexp){
+	public EspacioVirtualLicitacionBean getEspacioVirtualLicitacionBean(String entidadId, String numexp) throws Exception{
 	
 		EspacioVirtualLicitacionBean anuncioLicitacion= null;
 		try{
@@ -38,9 +40,11 @@ public class LicitacionElectronicaWS {
 		
 		} catch (ISPACException e){
 			LOGGER.error("ERROR al recuperar el espacio virtual de licitación para el expediente: " + numexp + ", de la entidad: " + entidadId + ". " + e.getMessage(), e);
+			throw e;
 		
 		} catch (Exception e) {
 			LOGGER.error("ERROR al recuperar el espacio virtual de licitación para el expediente: " + numexp + ", de la entidad: " + entidadId + ". " + e.getMessage(), e);
+			throw e;
 		}
 		
 		if (LOGGER.isDebugEnabled()) {
@@ -48,6 +52,35 @@ public class LicitacionElectronicaWS {
 		}
 
 		return anuncioLicitacion;
+	}
+	
+	public void crearAdjucatario(Adjudicatario[] adjudicatario, Peticion peticPlace) throws Exception{
+		try{
+			
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("LicitacionElectronicaWS - getEspacioVirtualLicitacionBean(entidadId: [" + peticPlace.getEntidad() + "], numexp:[" + peticPlace.getExpediente() + "]) - Inicio");
+			}
+			
+			// Establecer la entidad para la multientidad
+			setOrganizationUserInfo(peticPlace.getEntidad());
+		
+			// Crear el contexto de tramitación para la consulta
+			IClientContext cct = createClientContext();
+		
+			EspacioVirtualLicitacionUtilsSW.crearLicitadorAdjudicatario(cct, adjudicatario, peticPlace);
+		
+		} catch (ISPACException e){
+			LOGGER.error("ERROR al recuperar el espacio virtual de licitación para el expediente: " + peticPlace.getExpediente() + ", de la entidad: " + peticPlace.getEntidad() + ". " + e.getMessage(), e);
+			throw e;
+		
+		} catch (Exception e) {
+			LOGGER.error("ERROR al recuperar el espacio virtual de licitación para el expediente: " + peticPlace.getExpediente() + ", de la entidad: " + peticPlace.getEntidad() + ". " + e.getMessage(), e);
+			throw e;
+		}
+		
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("LicitacionElectronicaWS - getEspacioVirtualLicitacionBean(entidadId: [" + peticPlace.getEntidad() + "], numexp:[" + peticPlace.getExpediente() + "]) - Fin");
+		}
 	}
 	
 	/**

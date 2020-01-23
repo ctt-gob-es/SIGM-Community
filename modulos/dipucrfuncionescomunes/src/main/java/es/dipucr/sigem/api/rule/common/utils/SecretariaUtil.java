@@ -831,6 +831,110 @@ public class SecretariaUtil {
 		
 		return esOrganoColegiado;
 	}
+	
+	public static IItem getDocAcuerdoPlenJGByNumExpPropuesta(IClientContext cct, String numExpPropuesta) throws ISPACRuleException{
+		IItem acuerdo = null;
+		try{
+			Vector<String> colOrgaCol = ExpedientesRelacionadosUtil.getExpRelacionadosHijos(cct.getAPI().getEntitiesAPI(), numExpPropuesta);
+			for (int i=0; i<colOrgaCol.size(); i++){
+				IItem expediente = ExpedientesUtil.getExpediente(cct, colOrgaCol.get(i));
+				//Sesión de Pleno -> CR-SECR-03
+				//Sesión de Junta de Gobierno -> CR-SECR-05
+				if(expediente.getString("CODPROCEDIMIENTO").equals("CR-SECR-03") || expediente.getString("CODPROCEDIMIENTO").equals("CR-SECR-05")){
+					IItemCollection icDoc = DocumentosUtil.getDocumentos(cct, expediente.getString("NUMEXP"), "DESCRIPCION LIKE '%" + numExpPropuesta + "%'", "");
+					Iterator<?> docNotificaciones;
+					
+					if (icDoc.next()) {
+						String tipoPropuesta = "";
+						String numeroPropuesta = "";
+						String esUrgencia = "";
+						docNotificaciones = icDoc.iterator();
+						
+						if (docNotificaciones.hasNext()) {
+							String descripcion = ((IItem) docNotificaciones.next()).getString("DESCRIPCION");
+							String[] vectorDescripcion = descripcion.split(" . ");
+							
+							if (vectorDescripcion.length > 1) {
+								tipoPropuesta = vectorDescripcion[0];
+								numeroPropuesta = vectorDescripcion[1];
+							}
+							if ("PROPUESTA URGENCIA".equalsIgnoreCase(tipoPropuesta)) {
+								esUrgencia = ".- Urgencia Certificado";
+							} else{
+								esUrgencia = ".-Certificado";
+							}
+
+							String consulta = "((UPPER(DESCRIPCION) LIKE UPPER('" + numeroPropuesta + esUrgencia + "%')";
+
+							/*if (StringUtils.isNotEmpty(nombre)){
+								consulta += "OR UPPER(DESCRIPCION) LIKE UPPER('"
+										+ numeroPropuesta
+										+ "%"
+										+ esUrgencia2
+										+ "%" + nombre + "%')";
+							}*/
+
+							consulta += ") AND ESTADOFIRMA IN ('02','03')) OR (TP_REG = 'ENTRADA' AND (UPPER(EXTENSION) = 'PDF' OR UPPER(EXTENSION_RDE) ='PDF'))";
+							IItemCollection icDoc2 = DocumentosUtil.getDocumentos( cct, expediente.getString("NUMEXP"), consulta, " CASE WHEN FAPROBACION IS NULL THEN FFIRMA ELSE FAPROBACION END, DESCRIPCION DESC");
+							Iterator<?> it2 = icDoc2.iterator();
+						
+							while (it2.hasNext()) {
+								acuerdo = (IItem) it2.next();
+							}
+						}
+					}					
+				}
+			}
+		} catch (ISPACRuleException e) {
+			LOGGER.error("Error al obtenerDocAcuerdoPlenJGByNumExpPropuesta en la propuesta."+numExpPropuesta+" - "+e.getMessage(),e);
+			throw new ISPACRuleException("Error al obtenerDocAcuerdoPlenJGByNumExpPropuesta en la propuesta."+numExpPropuesta+" - "+e.getMessage(),e);
+		} catch (ISPACException e) {
+			LOGGER.error("Error al obtenerDocAcuerdoPlenJGByNumExpPropuesta en la propuesta."+numExpPropuesta+" - "+e.getMessage(),e);
+			throw new ISPACRuleException("Error al obtenerDocAcuerdoPlenJGByNumExpPropuesta en la propuesta."+numExpPropuesta+" - "+e.getMessage(),e);
+		}
+		
+		return acuerdo;
+	}
+	
+	public static String getUltimoNumexpPropuesta(IClientContext cct, String numexp) {
+        return getNumexpPropuesta(cct, numexp, QueryUtils.EXPRELACIONADOS.ORDER_DESC);
+    }
+    
+    public static String getPrimerNumexpPropuesta(IClientContext cct, String numexp) {
+        return getNumexpPropuesta(cct, numexp, QueryUtils.EXPRELACIONADOS.ORDER_ASC);
+    }
+        
+    public static String getNumexpPropuesta(IClientContext cct, String numexp, String orden) {
+        String numexpPropuesta = "";
+        
+        try{
+            //Obtenemos el expediente de decreto
+            IItemCollection expRelacionadosPadreCollection = cct.getAPI().getEntitiesAPI().queryEntities(Constants.TABLASBBDD.SPAC_EXP_RELACIONADOS, "WHERE " + ExpedientesRelacionadosUtil.NUMEXP_PADRE + " = '" + numexp + "' " + orden);
+            Iterator<?> expRelacionadosPadreIterator = expRelacionadosPadreCollection.iterator();
+            boolean encontrado = false;
+            
+            while (expRelacionadosPadreIterator.hasNext() && !encontrado){
+                
+                IItem expRel = (IItem)expRelacionadosPadreIterator.next();
+                String numexpRel = "";
+                if(StringUtils.isNotEmpty(expRel.getString(ExpedientesRelacionadosUtil.NUMEXP_HIJO)))numexpRel=expRel.getString(ExpedientesRelacionadosUtil.NUMEXP_HIJO);
+                IItem expediente = ExpedientesUtil.getExpediente(cct, numexpRel);
+                
+                if(null != expediente){
+                    String nombreProc = "";
+                    if(StringUtils.isNotEmpty(expediente.getString(ExpedientesUtil.NOMBREPROCEDIMIENTO)))nombreProc=expediente.getString(ExpedientesUtil.NOMBREPROCEDIMIENTO);
+                    
+                    if(nombreProc.trim().toUpperCase().contains(Constants.CONSTANTES.PROPUESTA)){
+                    	numexpPropuesta = numexpRel;
+                        encontrado = true;
+                    }
+                }
+            }
+        } catch (ISPACException e ){
+            LOGGER.error("ERROR al recuperar el expediente de propuesta relacionado con el expediente: " + numexp + ". " + e.getMessage(), e);
+        }
+        return numexpPropuesta;
+    }
 
 	public static String obtenerPlantillasCOMISesion(IRuleContext rulectx, String sesion, String area) throws ISPACRuleException {
 		String nombrePlantilla = "";

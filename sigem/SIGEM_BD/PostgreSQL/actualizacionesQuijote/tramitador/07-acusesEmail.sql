@@ -1,14 +1,14 @@
 CREATE TABLE dpcr_acuse_email
 (
   id integer NOT NULL,
-  numexp  varchar2(30) NOT NULL,
-  nombre_notif varchar2(128),
+  numexp  varchar(30) NOT NULL,
+  nombre_notif varchar(128),
   fecha_envio timestamp,
-  nombre_doc varchar2(128),
+  nombre_doc varchar(128),
   enviado numeric(1,0),
-  email varchar2(100),
-  descripcion_error varchar2(255),
-  descripcion_documento varchar2(255),
+  email varchar(100),
+  descripcion_error varchar(255),
+  descripcion_documento varchar(255),
   CONSTRAINT pk_346066818 PRIMARY KEY (id)
 );
 
@@ -17,7 +17,7 @@ CREATE INDEX ind_346066818 ON dpcr_acuse_email (numexp);
 
 
 insert into spac_ct_entidades (id,tipo,nombre,campo_pk,campo_numexp,schema_expr,descripcion,sec_pk,fecha)
-VALUES( NEXTVAL('SPAC_SQ_ID_CTENTIDADES'),'1','DPCR_ACUSE_EMAIL','ID','NUMEXP','NUMEXP','','SPAC_SQ_346066818',SYSDATE);
+VALUES( NEXTVAL('SPAC_SQ_ID_CTENTIDADES'),'1','DPCR_ACUSE_EMAIL','ID','NUMEXP','NUMEXP','','SPAC_SQ_346066818', NOW());
 
 
 CREATE SEQUENCE SPAC_SQ_346066818 

@@ -36,6 +36,7 @@ import com.ieci.tecdoc.common.utils.ISUnitsValidator;
 import com.ieci.tecdoc.utils.HibernateUtil;
 import com.lowagie.text.pdf.codec.Base64;
 
+import es.dipucr.api.helper.UTFHelper;
 import es.dipucr.metadatos.beans.MetadatosDocumentoBean;
 import es.dipucr.metadatos.diccionarios.EstadosElaboracion;
 import es.dipucr.metadatos.diccionarios.OrigenCiudadanoAdministracion;
@@ -79,6 +80,7 @@ public class SICRES30Utils {
         FicheroIntercambioSICRES3 objRegistroSICRES3 = null;
         
         try{
+        	registro = registro.replaceAll("&", "&amp;").replaceAll("amp;amp;", "amp;");
             JAXBContext jaxbContext = JAXBContext.newInstance(FicheroIntercambioSICRES3.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             StringReader reader = new StringReader(registro);
@@ -86,6 +88,7 @@ public class SICRES30Utils {
             
         } catch (JAXBException e){            
             LOGGER.error("ERROR al unmarshalear el registro. " + e.getMessage(), e);
+            LOGGER.error(registro);
         }
         
         return objRegistroSICRES3;
@@ -150,19 +153,19 @@ public class SICRES30Utils {
                 String nombreFicheroAnexado = anexo.getNombreFicheroAnexado();
                 
                 if(StringUtils.isNotEmpty(identificadorDocumentoFirmado) && null != mapDocumentos.get(identificadorDocumentoFirmado)){
-                    documento.setDocumentName(mapDocumentos.get(identificadorDocumentoFirmado));                    
+                    documento.setDocumentName(UTFHelper.parseUTF8ToISO885916(mapDocumentos.get(identificadorDocumentoFirmado)));                    
                     documento.setDocumentContent(Base64.decode(new String(anexo.getAnexo())));
                     
                 } else {
-                    documento.setDocumentName(nombreFicheroAnexado);
+                    documento.setDocumentName(UTFHelper.parseUTF8ToISO885916(nombreFicheroAnexado));
                     documento.setDocumentContent(anexo.getAnexo());
                 }
                 
                 
                 documento.setExtension(FileUtils.getExtensionByNombreDoc(documento.getDocumentName()));
                 
-                documento.setFileName(anexo.getNombreFicheroAnexado());
-                documento.setPageName(anexo.getNombreFicheroAnexado());
+                documento.setFileName(UTFHelper.parseUTF8ToISO885916(anexo.getNombreFicheroAnexado()));
+                documento.setPageName(UTFHelper.parseUTF8ToISO885916(anexo.getNombreFicheroAnexado()));
                 
                 MetadatosDocumentoBean metadatosDocumento = getMetadatos(dFechaOrveRegistroOriginal, anexo);
                 

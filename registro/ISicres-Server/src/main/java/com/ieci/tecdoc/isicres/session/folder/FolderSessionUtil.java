@@ -1323,33 +1323,20 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 			HibernateException {
 
 		boolean launchDistribution = false;
-		if ((Repository.getInstance(entidad).isInBook(bookID).booleanValue() || (Repository
-				.getInstance(entidad).isOutBook(bookID).booleanValue() && launchDistOutRegister
-				.intValue() == 1))
-				&& data.isCompletedState() && data.isDistributeRegInAccepted())
-		{
+		// Para poder distribuir, como mínimo el estado debe ser completo y aceptada la distribución de registros de entrada
+		if ((Repository.getInstance(entidad).isInBook(bookID).booleanValue() || 
+			 (Repository.getInstance(entidad).isOutBook(bookID).booleanValue() && launchDistOutRegister.intValue() == 1)
+			) && data.isCompletedState() &&	data.isDistributeRegInAccepted()) {
+			
+			// Recuperar el identificador de la Unidad Administrativa destino del asiento. ID existente en SCR_ORGS. 
 			ScrOrg scrorg = null;
-			if ((data.getAxsfOld() != null)
-					//Identificador de la Unidad Administrativa destino del asiento. ID existente en SCR_ORGS.
-					&& (data.getOldAttributeValue("fld8") != null))
-			{
-				scrorg = (ScrOrg) session.load(ScrOrg.class, new Integer(data
-						.getOldAttributeValueAsString("fld8")));
-			} else
-			{
-				if (!data.isCreate() && data.getAxsfOld() != null)
-				{
-					scrorg = (ScrOrg) session.load(ScrOrg.class, new Integer(data
-						.getOldAttributeValueAsString("fld8")));
-				} else
-				{
-					if (data.getNewAttributeValue("fld8") != null)
-					{
-						scrorg = (ScrOrg) session.load(ScrOrg.class, new Integer(data
-							.getNewAttributeValueAsString("fld8")));
-					}
-				}
-			}
+			if ((data.getAxsfOld() != null)	&& (data.getOldAttributeValue("fld8") != null))	{
+				scrorg = (ScrOrg) session.load(ScrOrg.class, new Integer(data.getOldAttributeValueAsString("fld8")));
+			} else if (!data.isCreate() && data.getAxsfOld() != null) {
+				scrorg = (ScrOrg) session.load(ScrOrg.class, new Integer(data.getOldAttributeValueAsString("fld8")));
+			} else if (data.getNewAttributeValue("fld8") != null) {
+				scrorg = (ScrOrg) session.load(ScrOrg.class, new Integer(data.getNewAttributeValueAsString("fld8")));
+			}			
 
 			launchDistribution = scrorg != null
 					&& scrorg.getScrTypeadm() != null
@@ -2041,18 +2028,17 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 						.getNewAttributeValue("fld6"));
 				data.changedPut(new Integer(6), new Object[] { oldFld6,
 						data.getNewAttributeValue("fld6") });
-	    }
+			}
 
-	    List inter = data.getInter();
-	    boolean fullInter = inter != null && !inter.isEmpty();
-	    boolean deleteInter = false;
+			List inter = data.getInter();
+			boolean fullInter = inter != null && !inter.isEmpty();
+			boolean deleteInter = false;
 			if (fullInter) {
 				FlushFdrInter flushFdrInter = null;
 				Object oInteresado = inter.get(0);
 				if(oInteresado instanceof FlushFdrInter) {
 					flushFdrInter = (FlushFdrInter) oInteresado;
-				}
-				else if(oInteresado instanceof Interesado){
+				} else if(oInteresado instanceof Interesado){
 					flushFdrInter = new FlushFdrInter();
 
 					Interesado iInteresado = (Interesado) oInteresado;
@@ -2071,18 +2057,22 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 				fullInter = flushFdrInter.getInterName() != null;
 				deleteInter = flushFdrInter.getInterName() == null;
 			}
+			
 			if (!fullInter && !deleteInter) {
 				fullInter = data.getOldAttributeValue("fld9") != null;
 			}
-	    boolean finalChangeState = false;
-	    if (changeState) {
-		int old = 0;
-		if (data.getOldAttributeValue("fld6") instanceof Integer) {
-					old = ((Integer) data.getOldAttributeValue("fld6"))
-							.intValue();
+			
+			boolean finalChangeState = false;
+			if (changeState) {
+				int old = 0;
+				if (data.getOldAttributeValue("fld6") instanceof Integer) {
+					old = ((Integer) data.getOldAttributeValue("fld6")).intValue();
+				// El campo fld6 puede cargarse como un BigDecimal dependiendo de su definición en BBDD
+				} else if (data.getOldAttributeValue("fld6") instanceof BigDecimal) {
+					old = ((BigDecimal) data.getOldAttributeValue("fld6")).intValue();
 				}
-				if (Repository.getInstance(entidad).isInBook(bookID)
-						.booleanValue()) {
+				
+				if (Repository.getInstance(entidad).isInBook(bookID).booleanValue()) {
 					if ((data.getOldAttributeValue("fld7") != null || fullInter)
 							&& (data.getOldAttributeValue("fld8") != null)
 							&& (data.getOldAttributeValue("fld16") != null || data
@@ -2093,38 +2083,36 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 						}
 						completedState = true;
 					} else {
-			data.setOldAttributeValue("fld6", new Integer(1));
-			if (old != 1) {
-			    finalChangeState = true;
-			}
-		    }
+						data.setOldAttributeValue("fld6", new Integer(1));
+						if (old != 1) {
+							finalChangeState = true;
+						}
+					}
 				} else {
-		    if (((data.getOldAttributeValue("fld8") != null || fullInter)
-			    && (data.getOldAttributeValue("fld7") != null) && (data
-			    .getOldAttributeValue("fld12") != null || data
-			    .getOldAttributeValue("fld13") != null))) {
-			data.setOldAttributeValue("fld6", new Integer(0));
-			if (old != 0) {
-			    finalChangeState = true;
-			}
-			completedState = true;
+					if (((data.getOldAttributeValue("fld8") != null || fullInter) && 
+						 (data.getOldAttributeValue("fld7") != null) && 
+						 (data.getOldAttributeValue("fld12") != null || data.getOldAttributeValue("fld13") != null))) {
+						data.setOldAttributeValue("fld6", new Integer(0));
+						if (old != 0) {
+							finalChangeState = true;
+						}
+						completedState = true;
 					} else {
-			data.setOldAttributeValue("fld6", new Integer(1));
-			if (old != 1) {
-			    finalChangeState = true;
+						data.setOldAttributeValue("fld6", new Integer(1));
+						if (old != 1) {
+							finalChangeState = true;
+						}
+					}
+				}
+				if (finalChangeState) {
+					data.changedPut(new Integer(6), new Object[] { oldFld6,	data.getOldAttributeValue("fld6") });
+				}
 			}
-		    }
 		}
-		if (finalChangeState) {
-					data.changedPut(new Integer(6), new Object[] { oldFld6,
-							data.getOldAttributeValue("fld6") });
-		}
-	    }
-	}
 
-	data.setCompletedState(completedState);
-	return data;
-    }
+		data.setCompletedState(completedState);
+		return data;
+	}
 
 	private static FolderDataSession isAutomaticRegisterCreationType(
 			Session session, Integer bookID, int fdrid, String entidad,
@@ -2284,7 +2272,12 @@ public class FolderSessionUtil extends UtilsSession implements ServerKeys,
 
 				flushFdrInter.setInterId(idTercero);
 				flushFdrInter.setInterName((docIdentidad + " " + nombre + " " + pApellido + " " + sApellido).trim());
-				flushFdrInter.setInterNif(((Interesado) oInteresado).getDocIdentidad());				
+				flushFdrInter.setInterNif(((Interesado) oInteresado).getDocIdentidad());
+				
+				if(null != iInteresado.getDireccionFisicaPrincipal()){
+					flushFdrInter.setDomId(iInteresado.getDireccionFisicaPrincipal().getIdAsInteger());
+					flushFdrInter.setDirection(iInteresado.getDireccionFisicaPrincipal().getDireccion());
+				}
 			}
 			int interId = flushFdrInter.getInterId();
 			String interName = flushFdrInter.getInterName();

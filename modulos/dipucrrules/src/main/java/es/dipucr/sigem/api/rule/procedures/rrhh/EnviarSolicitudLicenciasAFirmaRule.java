@@ -149,7 +149,7 @@ public class EnviarSolicitudLicenciasAFirmaRule implements IRule
 			//Copiamos el documento de Justificante en el trámite
 			//***************************************************
 			//Obtenemos el documento de justificante
-			collection = DocumentosUtil.getDocumentsByNombre(numexp, rulectx, _DOC_JUSTIFICANTE);
+			collection = DocumentosUtil.getDocumentsByNombre(cct, numexp, _DOC_JUSTIFICANTE);
 			IItem itemDocJustificante = (IItem)collection.iterator().next();
 			String strInfoPag = itemDocJustificante.getString("INFOPAG");
 			File fileACopiar = DocumentosUtil.getFile(cct, strInfoPag, null, null);
@@ -203,8 +203,7 @@ public class EnviarSolicitudLicenciasAFirmaRule implements IRule
 			//INICIO [eCenpri-Felipe #549] Anexamos los documentos adjuntos al justificante
 			//INICIO [dipucr-Felipe #1350]
 			IItemCollection anexosCollection = entitiesAPI.getDocuments
-					(numexp, "UPPER(NOMBRE) = 'ANEXO A SOLICITUD'"
-						  + " AND UPPER(DESCRIPCION) LIKE '%ZIP'", ""); //[dipucr-Felipe #1350]
+					(numexp, " TP_REG = 'ENTRADA' AND UPPER(DESCRIPCION) LIKE '%ZIP'", ""); //[dipucr-Felipe #1350]
 			
 			if (anexosCollection.toList().size() > 0){ //[eCenpri-Felipe #925]
 				

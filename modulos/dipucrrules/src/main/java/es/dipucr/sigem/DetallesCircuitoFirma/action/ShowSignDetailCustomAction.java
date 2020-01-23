@@ -14,6 +14,7 @@ import ieci.tdw.ispac.ispaclib.sign.SignConnectorFactory;
 import ieci.tdw.ispac.ispaclib.sign.SignDetailEntry;
 import ieci.tdw.ispac.ispaclib.sign.SignDocument;
 import ieci.tdw.ispac.ispaclib.sign.exception.InvalidSignatureValidationException;
+import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispaclib.utils.XmlFacade;
 import ieci.tdw.ispac.ispacmgr.action.BaseAction;
@@ -134,8 +135,9 @@ public class ShowSignDetailCustomAction extends BaseAction {
 				}
 
 				// Obtenemos el xml con las firmas adjuntadas antes de añadir la nueva
+				String nombreMetadatoFirma = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER_SIGN_METADATA_NAME);
 				signProperty = genDocAPI.getDocumentProperty(connectorSession,
-						infoPageRDE, "Firma");
+						infoPageRDE, nombreMetadatoFirma);
 
 				XmlFacade xmlFacade = new XmlFacade(signProperty);
 

@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import es.dipucr.api.helper.UTFHelper;
 import es.dipucr.sigem.api.rule.common.AccesoBBDDRegistro;
 import es.dipucr.sigem.api.rule.common.AccesoBBDDeTramitacion;
 
@@ -276,11 +277,11 @@ public class RegistroPresencialUtil {
     		
     		// Información del documento en el registro presencial
     		docs[i] = new DocumentInfo();
-    		docs[i].setDocumentName(documento.getCode());
+    		docs[i].setDocumentName(UTFHelper.parseUTF8ToISO885916(documento.getCode()));
     		docs[i].setExtension(contenedor.getExtension());
     		docs[i].setDocumentContent(contenedor.getContent());
-    		docs[i].setFileName(documento.getRegistryNumber() + "_" + documento.getCode() + "_" + i);
-    		docs[i].setPageName(documento.getCode());
+    		docs[i].setFileName(UTFHelper.parseUTF8ToISO885916(documento.getRegistryNumber() + "_" + documento.getCode() + "_" + i));
+    		docs[i].setPageName(UTFHelper.parseUTF8ToISO885916(documento.getCode()));
     	}
     	
     	return docs;

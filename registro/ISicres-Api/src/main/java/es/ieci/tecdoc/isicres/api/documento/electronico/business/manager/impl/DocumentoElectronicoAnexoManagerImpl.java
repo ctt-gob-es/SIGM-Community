@@ -35,6 +35,8 @@ import es.ieci.tecdoc.isicres.api.documento.electronico.business.vo.DocumentoEle
 import es.ieci.tecdoc.isicres.api.documento.electronico.business.vo.DocumentoElectronicoAnexoDatosFirmaVO;
 import es.ieci.tecdoc.isicres.api.documento.electronico.business.vo.DocumentoElectronicoAnexoVO;
 import es.ieci.tecdoc.isicres.api.documento.electronico.business.vo.IdentificadorDocumentoElectronicoAnexoVO;
+import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 
 
 public class DocumentoElectronicoAnexoManagerImpl implements DocumentoElectronicoAnexoManager {
@@ -333,7 +335,21 @@ public class DocumentoElectronicoAnexoManagerImpl implements DocumentoElectronic
 			PaginaDocumentoRegistroVO paginaIt = (PaginaDocumentoRegistroVO) iterator.next();
 			if (paginaIt.getName().equals(namePagina)){
 				idPagina=Long.parseLong(paginaIt.getId());
-				idFile = Long.parseLong(paginaIt.getDocumentoFisico().getLocation());
+				
+				// Adaptación a Alfresco. Si el conector no es de alfresco, se mantiene la anterior funcionalidad
+				String connectorManager = null;
+				try {
+					connectorManager = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER);
+				} catch (ISPACException e) {
+					LOGGER.error(e);
+				}
+				if (connectorManager != null && (connectorManager.equalsIgnoreCase("alfresco") || 
+												connectorManager.equalsIgnoreCase("alfrescoCMIS"))) {
+					idFile = new Long(idDocumento);
+				} else {	
+					idFile = Long.parseLong(paginaIt.getDocumentoFisico().getLocation());
+				}
+				
 			}
 		}
 

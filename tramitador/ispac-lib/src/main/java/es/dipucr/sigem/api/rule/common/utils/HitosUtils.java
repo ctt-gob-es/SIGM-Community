@@ -15,7 +15,7 @@ import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class HitosUtils {
 
-	private static Logger logger = Logger.getLogger(HitosUtils.class);
+	private static final Logger LOGGER = Logger.getLogger(HitosUtils.class);
 	
 	public static IItemCollection getHitos(IClientContext cct, String numexp) throws ISPACException{
 		IItemCollection resultado = null;
@@ -29,9 +29,9 @@ public class HitosUtils {
 				cnt = cct.getConnection();
 				resultado = TXHitoHDAO.getMilestones(cnt, numexp).disconnect();
 			}
-		}
-		catch(Exception e){
-			logger.error("Error al recuperar los hitos del expediente: " + numexp + "(procedureId=" + procedureId + "). " + e.getMessage(), e);
+		
+		} catch(Exception e){
+			LOGGER.error("Error al recuperar los hitos del expediente: " + numexp + "(procedureId=" + procedureId + "). " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar los hitos del expediente: " + numexp + "(procedureId=" + procedureId + "). " + e.getMessage(), e);
 		}
 
@@ -49,9 +49,9 @@ public class HitosUtils {
 				cnt = cct.getConnection();
 				resultado = TXHitoHDAO.getMilestones(cnt, procedureId).disconnect();
 			}
-		}
-		catch(Exception e){
-			logger.error("Error al recuperar los hitos del expediente con id: " + procedureId + ". " + e.getMessage(), e);
+		
+		} catch(Exception e){
+			LOGGER.error("Error al recuperar los hitos del expediente con id: " + procedureId + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar los hitos del expediente con id: " + procedureId + ". " + e.getMessage(), e);
 		}
 
@@ -69,9 +69,9 @@ public class HitosUtils {
 				cnt = cct.getConnection();
 				resultado = TXHitoHDAO.getMilestones(cnt, procedureId, query).disconnect();
 			}
-		}
-		catch(Exception e){
-			logger.error("Error al recuperar los hitos del expediente con id: " + procedureId + ". " + e.getMessage(), e);
+		
+		} catch(Exception e){
+			LOGGER.error("Error al recuperar los hitos del expediente con id: " + procedureId + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al recuperar los hitos del expediente con id: " + procedureId + ". " + e.getMessage(), e);
 		}
 
@@ -87,10 +87,12 @@ public class HitosUtils {
 		ObjectDAO hito_nuevo = null;
 		
 		DbCnt cnt = cct.getConnection();
-		if(Constants.TABLASBBDD.SPAC_HITOS.equals(tabla))
+		if(Constants.TABLASBBDD.SPAC_HITOS.equals(tabla)) {
 			hito_nuevo = new TXHitoDAO(cnt);
-		else
-		    hito_nuevo = new TXHitoHDAO(cnt);
+		
+		} else {
+			hito_nuevo = new TXHitoHDAO(cnt);
+		}
 		
 		hito_nuevo.createNew(cnt);		
 		hito_nuevo.set("ID", hito_viejo.getInt("ID"));
@@ -104,16 +106,19 @@ public class HitosUtils {
 		hito_nuevo.set("INFO", hito_viejo.getString("INFO"));
 		hito_nuevo.set("AUTOR", hito_viejo.getString("AUTOR"));
 		hito_nuevo.set("DESCRIPCION", hito_viejo.getString("DESCRIPCION"));
-		if(hito_viejo.getInt("ID_INFO") != Integer.MIN_VALUE)
-			hito_nuevo.set("ID_INFO", hito_viejo.getInt("ID_INFO"));
 		
-		try{
-			hito_nuevo.store(cct);
+		if(hito_viejo.getInt("ID_INFO") != Integer.MIN_VALUE) {
+			hito_nuevo.set("ID_INFO", hito_viejo.getInt("ID_INFO"));
 		}
-		catch(Exception e){
+		
+		try {
+			hito_nuevo.store(cct);
+			
+		} catch(Exception e) {
+			LOGGER.warn("ERROR al insertar el HITO con id: " + hito_viejo.getInt("ID") + " en la tabla: " + hito_nuevo.getTableName()+ ". " + e.getMessage(), e);
+			
 			try{
 				hito_nuevo.createNew(cnt);		
-				hito_nuevo.set("ID_EXP", hito_viejo.getInt("ID_EXP"));
 				hito_nuevo.set("ID_EXP", hito_viejo.getInt("ID_EXP"));
 				hito_nuevo.set("ID_FASE", hito_viejo.getInt("ID_FASE"));
 				hito_nuevo.set("ID_TRAMITE", hito_viejo.getInt("ID_TRAMITE"));
@@ -123,16 +128,19 @@ public class HitosUtils {
 				hito_nuevo.set("INFO", hito_viejo.getString("INFO"));
 				hito_nuevo.set("AUTOR", hito_viejo.getString("AUTOR"));
 				hito_nuevo.set("DESCRIPCION", hito_viejo.getString("DESCRIPCION"));
-				if(hito_viejo.getInt("ID_INFO") != Integer.MIN_VALUE)
+				
+				if(hito_viejo.getInt("ID_INFO") != Integer.MIN_VALUE) {
 					hito_nuevo.set("ID_INFO", hito_viejo.getInt("ID_INFO"));
+				}
 				
 				hito_nuevo.store(cct);
 				return true;
-			}
-			catch(Exception e1){
-				logger.warn("No insertamos el hito en historicos. " + e1.getMessage(), e1);
+			
+			} catch(Exception e1) {
+				LOGGER.warn("ERROR. No insertamos el hito en historicos. " + e1.getMessage(), e1);
 				return false;
 			}
+			
 		} finally {
 			cct.releaseConnection(cnt);
 		}

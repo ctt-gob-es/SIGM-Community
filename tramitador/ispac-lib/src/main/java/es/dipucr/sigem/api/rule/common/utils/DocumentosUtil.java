@@ -127,44 +127,47 @@ public class DocumentosUtil {
 		public static final String SALIDA = "SALIDA";
 		public static final String NINGUNO = "NINGUNO";
 	}
-		
-	@SuppressWarnings("unchecked")
+
+	@Deprecated
+	//Hay que usar el del IClientContext
 	public static IItemCollection getDocumentosByTramites (IRuleContext rulectx, String numexp, int tramite)  throws ISPACException {
+		return getDocumentosByTramites (rulectx.getClientContext(), numexp, tramite);
+	}
+		
+	public static IItemCollection getDocumentosByTramites (IClientContext cct, String numexp, int tramite)  throws ISPACException {
+
 		IItemCollection resultado = null;
 		
 		/****************************************************************/
-		 IClientContext cct = rulectx.getClientContext();
 		 IInvesflowAPI invesFlow = cct.getAPI();
 		 IEntitiesAPI entitiesAPI = invesFlow.getEntitiesAPI();
 		 /****************************************************************/
 
-		resultado = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS, " WHERE NUMEXP = '"+numexp+"' AND ID_TRAMITE ="+tramite);
-		Iterator<IItem> itDoc = resultado.iterator();
+		resultado = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS, " WHERE NUMEXP = '" + numexp + "' AND ID_TRAMITE = " + tramite);
+		Iterator<?> itDoc = resultado.iterator();
+		
 		if(!itDoc.hasNext()){
-			resultado = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS_H, " WHERE NUMEXP = '"+numexp+"' AND ID_TRAMITE ="+tramite);
+			resultado = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_DT_DOCUMENTOS_H, " WHERE NUMEXP = '" + numexp + "' AND ID_TRAMITE = " + tramite);
 			itDoc = resultado.iterator();
 			if(!itDoc.hasNext()){
 				resultado = null;
 			}
-			
 		}
 		
 		return resultado;
 	}
+
+	public static IItemCollection getDocumentosByCodTramites (IRuleContext rulectx, String numexp, String cod_tramite)  throws ISPACException {
 		
-		@SuppressWarnings("unchecked")
-		public static IItemCollection getDocumentosByCodTramites (IRuleContext rulectx, String numexp, String cod_tramite)  throws ISPACException {
-			 
-			IItem tramExcel = TramitesUtil.getTramiteByCode(rulectx, cod_tramite);
-				
-			 String consulta = "WHERE ID_TRAM_CTL = "+tramExcel.getInt("ID")+" AND NUMEXP='"+rulectx.getNumExp()+"'";
-			IItemCollection tramspacDtTramite = TramitesUtil.queryTramites(rulectx.getClientContext(), consulta);
-			Iterator<IItem> iterator = tramspacDtTramite.iterator();
-			IItem itTramitedt = iterator.next();
-			
-			return getDocumentosByTramites(rulectx, numexp, itTramitedt.getInt("ID_TRAM_EXP"));
-		}
-	
+		IItem tramExcel = TramitesUtil.getTramiteByCode(rulectx.getClientContext(), rulectx.getNumExp(), cod_tramite);
+		
+		String consulta = "WHERE ID_TRAM_CTL = "+tramExcel.getInt("ID")+" AND NUMEXP='"+rulectx.getNumExp()+"'";
+		IItemCollection tramspacDtTramite = TramitesUtil.queryTramites(rulectx.getClientContext(), consulta);
+		Iterator<?> iterator = tramspacDtTramite.iterator();
+		IItem itTramitedt = (IItem) iterator.next();
+
+		return getDocumentosByTramites(rulectx.getClientContext(), numexp, itTramitedt.getInt(TramitesUtil.ID_TRAM_EXP));
+	}
 
 	@SuppressWarnings("rawtypes")
 	static private Iterator getListaDocumentos(IRuleContext rulectx, int idTramite) throws ISPACException {
@@ -310,7 +313,11 @@ public class DocumentosUtil {
 	 */
 	@Deprecated //Cuando sea posible hay que ir sustituyendo los métodos que usan IRuleContext por IClientContex para que se puedan usar en todo el código y no solo desde reglas
 	public static IItemCollection getDocumentsByNombre(String numexp, IRuleContext rulectx, String nombre) {
-		return getDocumentsByNombre(rulectx.getClientContext(), numexp, nombre, "FDOC DESC");
+		return getDocumentsByNombre(rulectx.getClientContext(), numexp, nombre);
+	}
+		
+	public static IItemCollection getDocumentsByNombre(IClientContext cct, String numexp, String nombre) {
+		return getDocumentsByNombre(cct, numexp, nombre, "FDOC DESC");
 	}
 
 	/**
@@ -691,14 +698,20 @@ public class DocumentosUtil {
 		return numexp;
 	}
 
-	static public String getInfoPag(IRuleContext rulectx, int idDoc)
-			throws ISPACException {
+	@Deprecated
+	public static String getInfoPag(IRuleContext rulectx, int idDoc) throws ISPACException {
+		return getInfoPag(rulectx.getClientContext(), idDoc);
+	}
+	
+	public static String getInfoPag(IClientContext cct, int idDoc) throws ISPACException {
 
 		String infoPag = "";
-		IItem item = DocumentosUtil.getDocumento(rulectx.getClientContext().getAPI().getEntitiesAPI(), idDoc);
+		IItem item = DocumentosUtil.getDocumento(cct.getAPI().getEntitiesAPI(), idDoc);
+		
 		if (item != null) {
 			infoPag = item.getString("INFOPAG");
 		}
+		
 		return infoPag;
 	}
 
@@ -1331,16 +1344,20 @@ public class DocumentosUtil {
         if(StringUtils.isNotEmpty(valorVariable)) extensionEntidad = valorVariable;
         return extensionEntidad;
 	}
-	
+
+	@Deprecated
 	public static IItem generarDocumentoDesdePlantilla(IRuleContext rulectx, int taskId, int documentTypeId, int templateId, String descripcion, String extension) throws ISPACException{
-		
+		return generarDocumentoDesdePlantilla(rulectx.getClientContext(), taskId, documentTypeId, templateId, descripcion, extension);
+	}
+	
+	public static IItem generarDocumentoDesdePlantilla(IClientContext cct, int taskId, int documentTypeId, int templateId, String descripcion, String extension) throws ISPACException{
+
 		Object connectorSession = null;
-		IClientContext cct = null;
+		
 		IGenDocAPI gendocAPI = null;
 		IItem entityDocument = null;
 		
 		try {
-			cct = rulectx.getClientContext();
 			IInvesflowAPI invesflowAPI = cct.getAPI();
 			gendocAPI = invesflowAPI.getGenDocAPI();
 			
@@ -1384,6 +1401,7 @@ public class DocumentosUtil {
 			cct.endTX(false);
 			LOGGER.error("Error al generar el documento: " + descripcion + ". " + e.getMessage(), e);
 			throw new ISPACException("Error al generar el documento: " + descripcion + ". " + e.getMessage(), e);
+			
 		} finally {
 			if (connectorSession != null) {
 				gendocAPI.closeConnectorSession(connectorSession);
@@ -1459,6 +1477,49 @@ public class DocumentosUtil {
 			else{
 				LOGGER.error( "ERROR al recuperar el nombre de la plantilla con el código: " + strCodPlantillaDoc + ". ");
 				throw new ISPACException("No se encuentra la plantilla con el código: " + strCodPlantillaDoc + ". ");
+			}
+			
+		} catch (Exception e) {
+			LOGGER.error( "ERROR al recuperar el tipo de documento de la plantilla indicada. " + e.getMessage(), e);
+			throw new ISPACException(e);
+		}
+		return nombrePlantilla;
+	}
+	public static String getCodigoByNombreTipoDocumento(IClientContext cct,String strTipoDoc) throws ISPACException {
+		String nombrePlantilla = "";
+		try {
+			IItemCollection plantillasDelTPDocCollection = cct.getAPI().getEntitiesAPI().queryEntities("SPAC_CT_TPDOC", "WHERE NOMBRE='" + strTipoDoc + "';");
+			Iterator<?> plantillasDelTPDocIterator = plantillasDelTPDocCollection.iterator();
+			
+			if (plantillasDelTPDocIterator.hasNext()) {
+				nombrePlantilla = ((IItem) plantillasDelTPDocIterator.next()).getString("COD_TPDOC");		
+			}
+			
+			else{
+				LOGGER.error( "ERROR al recuperar el código del tipo doc con el nombre: " + strTipoDoc + ". ");
+				throw new ISPACException("No se encuentra la código con el nombre: " + strTipoDoc + ". ");
+			}
+			
+		} catch (Exception e) {
+			LOGGER.error( "ERROR al recuperar el tipo de documento de la plantilla indicada. " + e.getMessage(), e);
+			throw new ISPACException(e);
+		}
+		return nombrePlantilla;
+	}
+	
+	public static String getCodigoByNombrePlantilla(IClientContext cct, String strPlantillaDoc) throws ISPACException{
+		String nombrePlantilla = "";
+		try {
+			IItemCollection plantillasDelTPDocCollection = cct.getAPI().getEntitiesAPI().queryEntities("SPAC_P_PLANTDOC", "WHERE NOMBRE='" + strPlantillaDoc + "';");
+			Iterator<?> plantillasDelTPDocIterator = plantillasDelTPDocCollection.iterator();
+			
+			if (plantillasDelTPDocIterator.hasNext()) {
+				nombrePlantilla = ((IItem) plantillasDelTPDocIterator.next()).getString("COD_PLANT");		
+			}
+			
+			else{
+				LOGGER.error( "ERROR al recuperar el código de la plantilla con el nombre: " + strPlantillaDoc + ". ");
+				throw new ISPACException("No se encuentra la código con el nombre: " + strPlantillaDoc + ". ");
 			}
 			
 		} catch (Exception e) {
@@ -2235,4 +2296,6 @@ public class DocumentosUtil {
 		
 		return infoPagRDE;
 	}
+
+	
 }

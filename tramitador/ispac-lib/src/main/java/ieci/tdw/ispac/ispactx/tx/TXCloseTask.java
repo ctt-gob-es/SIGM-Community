@@ -19,6 +19,8 @@ import ieci.tdw.ispac.ispactx.TXTransactionDataContainer;
 import java.util.Date;
 import java.util.Map;
 
+import com.sun.star.uno.Exception;
+
 /**
  * Acción para cerrar un trámite.
  */
@@ -112,6 +114,7 @@ public class TXCloseTask implements ITXAction {
 			
 			hito.set("INFO", composeInfo());
 			hito.set("FECHA_LIMITE",taskdeadline);
+			hito.store(cs.getConnection());//[dipucr-Felipe Manuel #884]
 			
 			//Ejecutar eventos de sistema tras terminar el trámite.
 			eventmgr.processSystemEvents(EventsDefines.EVENT_OBJ_TASK,

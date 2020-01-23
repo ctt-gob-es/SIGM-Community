@@ -134,12 +134,18 @@
 												</ui:fragment>
 											</f:facet>
 											<f:facet name="input">
-												<p:selectOneMenu id="provinciaInput" value="#{dir.provincia.nombre}" style="width: 100% !important;"
-												valueChangeListener="#{tercerosAction.actualizaCiudades}" filter="true">
-													<f:attribute name="direccion" value="#{dir}" />
-													<f:selectItems value="#{tercerosAction.provincias}" />
-													<p:ajax event="change" update="modificarTerceroDireccionesFisicasTbl"/>
-												</p:selectOneMenu>
+												<ui:fragment rendered="${dir.pais.nombre == 'Espa&ntilde;a'}">
+													<p:selectOneMenu id="provinciaSelectOne" value="#{dir.provincia.nombre}" style="width: 100% !important;"
+													valueChangeListener="#{tercerosAction.actualizaCiudades}" filter="true">
+														<f:attribute name="direccion" value="#{dir}" />
+														<f:selectItems value="#{tercerosAction.provincias}" />
+														<p:ajax event="change" update="modificarTerceroDireccionesFisicasTbl"/>
+													</p:selectOneMenu>
+												</ui:fragment>
+												<ui:fragment rendered="${dir.pais.nombre != 'Espa&ntilde;a'}">
+													<p:inputText id="provinciaInput" value="#{dir.provincia.nombre}"/>
+												</ui:fragment>
+
 											</f:facet>
 										</p:cellEditor>
 									</p:column>
@@ -151,10 +157,16 @@
 												</ui:fragment>
 											</f:facet>
 											<f:facet name="input">
-												<p:selectOneMenu id="localidadInput" value="#{dir.ciudad.nombre}" style="width: 100% !important;" filter="true">
-													<f:selectItem itemLabel="#{msgs.labelSeleccioneValor}" itemValue=""/>
-													<f:selectItems value="#{dir.provincia.ciudades}" />						
-												</p:selectOneMenu>
+												<ui:fragment rendered="${dir.pais.nombre == 'Espa&ntilde;a'}">
+													<p:selectOneMenu id="selectOnelocalidadInput" value="#{dir.ciudad.nombre}" style="width: 100% !important;" filter="true" editable="true">
+														<f:selectItem itemLabel="#{msgs.labelSeleccioneValor}" itemValue=""/>
+														<f:selectItems value="#{dir.provincia.ciudades}" />						
+													</p:selectOneMenu>
+												</ui:fragment>
+												<ui:fragment rendered="${dir.pais.nombre != 'Espa&ntilde;a'}">
+													<p:inputText id="localidadInput" value="#{dir.ciudad.nombre}"/>
+												</ui:fragment>
+
 											</f:facet>
 										</p:cellEditor>
 									</p:column>
@@ -167,7 +179,8 @@
 											</f:facet>
 											<f:facet name="input">
 												<p:selectOneMenu id="paisInput" value="#{dir.pais.nombre}" style="width: 100% !important;" filter="true">
-													<f:selectItems value="#{tercerosAction.paises}" />						
+													<f:selectItems value="#{tercerosAction.paises}" />
+													<p:ajax event="change" update="modificarTerceroDireccionesFisicasTbl"/>					
 												</p:selectOneMenu>
 											</f:facet>
 										</p:cellEditor>						

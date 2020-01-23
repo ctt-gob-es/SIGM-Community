@@ -49,6 +49,8 @@ public class Interesado implements Serializable {
 	private DireccionFisicaVO direccionFisicaPrincipal;
 	private List<DireccionTelematicaVO> direccionesTelematicas = new ArrayList<DireccionTelematicaVO>();
 	private DireccionTelematicaVO direccionTelematicaPrincipal;
+	
+	private DireccionFisicaVO direccionSeleccionada;
 
 	/**
 	 * Constructor.
@@ -275,6 +277,14 @@ public class Interesado implements Serializable {
 	public void setDireccionTelematicaPrincipal(
 			DireccionTelematicaVO direccionTelematicaPrincipal) {
 		this.direccionTelematicaPrincipal = direccionTelematicaPrincipal;
+	}
+
+	public DireccionFisicaVO getDireccionSeleccionada() {
+		return direccionSeleccionada;
+	}
+
+	public void setDireccionSeleccionada(DireccionFisicaVO direccionSeleccionada) {
+		this.direccionSeleccionada = direccionSeleccionada;
 	}
 
 	public boolean equals(Object obj) {

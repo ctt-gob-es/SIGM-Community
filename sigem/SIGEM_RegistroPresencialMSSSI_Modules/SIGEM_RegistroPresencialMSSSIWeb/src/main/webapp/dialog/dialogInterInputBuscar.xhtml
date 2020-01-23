@@ -186,7 +186,10 @@
 							<h:outputText value="#{msgs.labelDireccion}" />
 						</f:facet>
 						<ui:fragment>
-							<h:outputText value="#{int.direccionFisicaPrincipal}" />
+							<p:selectOneMenu id="dirFisicasSelectOne" styleClass="dirFisicasSelectOne" value="#{int.direccionSeleccionada}" filter="true" converter="direccionFisicaConverter">
+								<f:selectItems value="#{int.direccionesFisicas}" />
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
 						</ui:fragment>
 					</p:column>
 					<p:column width="7%">
@@ -232,8 +235,11 @@
 						<f:facet name="header">
 							<h:outputText value="#{msgs.labelDireccion}" />
 						</f:facet>
-						<ui:fragment>
-							<h:outputText value="#{int.representante.direccionFisicaPrincipal}" />
+						<ui:fragment rendered="${int.representante.docIdentidad != null}">
+							<p:selectOneMenu id="dirFisicasSelectOneRepre" styleClass="dirFisicasSelectOne" value="#{int.representante.direccionSeleccionada}" filter="true" converter="direccionFisicaConverter">
+								<f:selectItems value="#{int.representante.direccionesFisicas}" var="dirRepre" itemValue="#{dirRepre}"/>
+								<p:ajax event="change" update="@this"/>
+							</p:selectOneMenu>
 						</ui:fragment>
 					</p:column>
 					<p:column width="7%">

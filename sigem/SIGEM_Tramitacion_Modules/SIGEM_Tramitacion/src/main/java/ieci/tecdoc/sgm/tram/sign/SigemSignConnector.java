@@ -561,11 +561,13 @@ public class SigemSignConnector extends AFirmaSignSimpleVerifyConnector implemen
 
 			connectorSession = genDocAPI.createConnectorSession();
 			//Obtenemos el xml con las firmas adjuntadas antes de añadir la nueva
-		    signProperty = genDocAPI.getDocumentProperty(connectorSession, infoPagRDE, "Firma");
+
+			String nombreMetadatoFirma = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER_SIGN_METADATA_NAME);
+			signProperty = genDocAPI.getDocumentProperty(connectorSession, infoPagRDE, nombreMetadatoFirma);
 
 		    XmlFacade xmlFacade = new XmlFacade(signProperty);
 		    xmlFacade.set("/firmas/firma["+signerNumber+"]/@idTransaccion", idTransaccion);
-		    genDocAPI.setDocumentProperty(connectorSession, infoPagRDE, "Firma", xmlFacade.toString() );
+		    genDocAPI.setDocumentProperty(connectorSession, infoPagRDE, nombreMetadatoFirma, xmlFacade.toString() );
 		    logger.debug(xmlFacade.toString());
 
 		}

@@ -2,11 +2,13 @@ package ieci.tdw.ispac.ispaclib.alfresco.doc;
 
 import ieci.tdw.ispac.api.connector.IDocConnector;
 import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.ispaclib.alfresco.doc.helper.AlfrescoCMISHelper;
 import ieci.tdw.ispac.ispaclib.alfresco.doc.helper.AlfrescoHelper;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.gendoc.config.Repositories;
 import ieci.tdw.ispac.ispaclib.gendoc.config.RepositoriesCache;
 import ieci.tdw.ispac.ispaclib.gendoc.config.Repository;
+import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.ArrayUtils;
 import ieci.tdw.ispac.ispaclib.utils.FileUtils;
 import ieci.tdw.ispac.ispaclib.utils.MapUtils;
@@ -41,12 +43,12 @@ public class AlfrescoConnector implements IDocConnector {
 	/**
 	 * Información del repositorio documental que se va a utilizar.
 	 */
-	private Repository repository = null;
+	protected Repository repository = null;
 	
 	/**
 	 * Conector documental.
 	 */
-	private ISicresDocumentConnector connector = new AlfrescoDocumentConnector();
+	protected ISicresDocumentConnector connector = new AlfrescoDocumentConnector();;
 
 	
 	/**
@@ -298,7 +300,14 @@ public class AlfrescoConnector implements IDocConnector {
 			alfrescoDocumentVO.setName(AlfrescoHelper.getDocName(repository, properties));
 			alfrescoDocumentVO.setContent(FileUtils.retrieveFile(in));
 			alfrescoDocumentVO.setConfiguration(AlfrescoHelper.getConfiguration(repository));
-			alfrescoDocumentVO.setDatosEspecificos(AlfrescoHelper.getDatosEspecificos(repository, properties));
+			
+			// [Ruben CMIS] Integracion CMIS se llama al AlfrescoCMISHelper en vez del anterior AlfrescoHelper
+			String connectorManager = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER);
+			if (connectorManager.equalsIgnoreCase("alfrescoCMIS")) {
+				alfrescoDocumentVO.setDatosEspecificos(AlfrescoCMISHelper.getDatosEspecificos(repository, properties));
+			} else {
+				alfrescoDocumentVO.setDatosEspecificos(AlfrescoHelper.getDatosEspecificos(repository, properties));
+			}
 
 			ISicresAbstractDocumentVO result = connector.create(alfrescoDocumentVO);
 			if (result != null) {

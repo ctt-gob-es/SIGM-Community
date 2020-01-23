@@ -54,6 +54,12 @@ public class KeysRP {
 	 */
 	public static final String I18N_DISTRIBUTION_NEW_FOLDERS_FOR_USER = "distribution.new.folders.for.user";
 	/**
+	 * Constante correspondiente al nombre de la variable del
+	 * archivo de propiedades que contiene el texto de que existen entradas
+	 * incompletas.
+	 */
+	public static final String I18N_INCOMPLETOS_FOR_USER = "incompletos.for.user";
+	/**
 	 * Constante correspondiente al nombre de la variable de distribución del
 	 * archivo de propiedades que contiene el texto de que existe una entrada
 	 * nueva rechazada.

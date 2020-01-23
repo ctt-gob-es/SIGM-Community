@@ -80,6 +80,8 @@ public class ExpedientesUtil {
         String AP25 = "AP25";
         String RC = "RC";
 		String RN = "RN";
+		String NR = "NR";
+		String RNN = "RNN";
 		String NT = "NT";
 		String NE = "NE";
 		String JF = "JF";
@@ -176,7 +178,11 @@ public class ExpedientesUtil {
 			IProcess itemProcess = invesflowAPI.getProcess(numexp);
         	int idProcess = itemProcess.getInt("ID");
 			
-	        cct.beginTX();
+        	boolean ongoingTX = cct.ongoingTX();//[dipucr-Felipe Manuel #884]
+        	
+        	if (!ongoingTX){
+        		cct.beginTX();
+        	}
         	
 	        //Avanzamos fase
         	IItemCollection collectionStages = cct.getAPI().getStagesProcess(idProcess);
@@ -189,7 +195,9 @@ public class ExpedientesUtil {
         		tx.deployNextStage(idProcess, idPcdStage, idStage);
 	        }
         	
-        	cct.endTX(true);
+        	if (!ongoingTX){
+        		cct.endTX(true);
+        	}
 	        		
 		}
 		catch (Exception e) {

@@ -1,7 +1,7 @@
 package es.dipucr.contratacion.rule;
 
-import es.dipucr.contratacion.common.DipucrFuncionesComunes;
-import es.dipucr.contratacion.objeto.DatosContrato;
+import es.dipucr.contratacion.objeto.sw.DatosContrato;
+import es.dipucr.contratacion.objeto.sw.common.DipucrFuncionesComunesSW;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.FasesUtil;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
@@ -26,7 +26,7 @@ public class AvanzarFaseByCodigoFaseLiquSiContMnrContratacionRule implements IRu
 
     public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
     	boolean rellenaProcContr = false;
-    	DatosContrato datosContrato = DipucrFuncionesComunes.getDatosContrato(rulectx, rulectx.getNumExp());
+    	DatosContrato datosContrato = DipucrFuncionesComunesSW.getDatosContrato(rulectx.getClientContext(), rulectx.getNumExp());
     	
 		if(datosContrato!=null && datosContrato.getProcedimientoContratacion()!=null){
 			rellenaProcContr = true;
@@ -41,7 +41,7 @@ public class AvanzarFaseByCodigoFaseLiquSiContMnrContratacionRule implements IRu
     	
     	try{ 
     		ClientContext cct = (ClientContext) rulectx.getClientContext();
-    		DatosContrato datosContrato = DipucrFuncionesComunes.getDatosContrato(rulectx, numexp);
+    		DatosContrato datosContrato = DipucrFuncionesComunesSW.getDatosContrato(rulectx.getClientContext(), numexp);
     		
     		if(datosContrato!=null && datosContrato.getProcedimientoContratacion()!=null){
     			//6 - Contrato Menor

@@ -1,12 +1,12 @@
 package es.dipucr.contratacion.objeto.sw;
 
 public class DatosLicitacion {
-	private Campo tipoPresentacionOferta;
-	private AplicacionPresupuestaria[] aplicacionPres;
-	private CriteriosAdjudicacion critAdj;
-	private VariantesOfertas variantes;
-	private FundacionPrograma fundacionPrograma;
-	private String revisionPrecios;
+	private Campo tipoPresentacionOferta = null;
+	private AplicacionPresupuestaria[] aplicacionPres = null;
+	private CriteriosAdjudicacion critAdj = null;
+	private VariantesOfertas variantes = null;
+	private FundacionPrograma fundacionPrograma = null;
+	private String revisionPrecios = null;
 	private Campo contratoSujetoRegArmon = null;
 	private OrganoAsistencia organoAsistencia = null;
 	

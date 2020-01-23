@@ -1,88 +1,91 @@
+
+-- Molinero: adaptado a Oracle
+
 CREATE TABLE IUSERUSERHDR_WS
 (
-  NAME           VARCHAR(32)                  NULL,
+  NAME           VARCHAR2(32 CHAR)                  NULL,
   SIGN_REQUIRED  integer                          NULL,
-  ID             VARCHAR(32)                  NULL
+  ID             VARCHAR2(32 CHAR)                  NULL
 );
 
 
 CREATE TABLE QRTZ_BLOB_TRIGGERS
 (
-  TRIGGER_NAME   VARCHAR(200 )                 NULL,
-  TRIGGER_GROUP  VARCHAR(200 )                 NULL,
-  bytea_DATA      bytea                               NULL
+  TRIGGER_NAME   VARCHAR2(200 CHAR)                 NULL,
+  TRIGGER_GROUP  VARCHAR2(200 CHAR)                 NULL,
+  bytea_DATA      BLOB                               NULL
 );
 
 
 CREATE TABLE QRTZ_CALENDARS
 (
-  CALENDAR_NAME  VARCHAR(200 )                 NULL,
-  CALENDAR       bytea                               NULL
+  CALENDAR_NAME  VARCHAR2(200 CHAR)                 NULL,
+  CALENDAR       BLOB                               NULL
 );
 
 
 CREATE TABLE QRTZ_CRON_TRIGGERS
 (
-  TRIGGER_NAME     VARCHAR(200 )               NULL,
-  TRIGGER_GROUP    VARCHAR(200 )               NULL,
-  CRON_EXPRESSION  VARCHAR(120 )               NULL,  TIME_ZONE_ID     VARCHAR(80 )                NULL
+  TRIGGER_NAME     VARCHAR2(200 CHAR)               NULL,
+  TRIGGER_GROUP    VARCHAR2(200 CHAR)               NULL,
+  CRON_EXPRESSION  VARCHAR2(120 CHAR)               NULL,  TIME_ZONE_ID     VARCHAR2(80 CHAR)                NULL
 );
 
 
 CREATE TABLE QRTZ_FIRED_TRIGGERS
 (
-  ENTRY_ID           VARCHAR(95 )              NULL,
-  TRIGGER_NAME       VARCHAR(200 )             NULL,
-  TRIGGER_GROUP      VARCHAR(200 )             NULL,
-  IS_VOLATILE        boolean               NULL,
-  INSTANCE_NAME      VARCHAR(200 )             NULL,
-  FIRED_TIME         bigint                     NULL,
-  PRIORITY           bigint                     NULL,
-  STATE              VARCHAR(16 )              NULL,
-  JOB_NAME           VARCHAR(200 )             NULL,
-  JOB_GROUP          VARCHAR(200 )             NULL,
-  IS_STATEFUL        boolean               NULL,
-  REQUESTS_RECOVERY  boolean               NULL
+  ENTRY_ID           VARCHAR2(95 CHAR)              NULL,
+  TRIGGER_NAME       VARCHAR2(200 CHAR)             NULL,
+  TRIGGER_GROUP      VARCHAR2(200 CHAR)             NULL,
+  IS_VOLATILE        number(1)               NULL,
+  INSTANCE_NAME      VARCHAR2(200 CHAR)             NULL,
+  FIRED_TIME         number(19)                     NULL,
+  PRIORITY           number(19)                     NULL,
+  STATE              VARCHAR2(16 CHAR)              NULL,
+  JOB_NAME           VARCHAR2(200 CHAR)             NULL,
+  JOB_GROUP          VARCHAR2(200 CHAR)             NULL,
+  IS_STATEFUL        number(1)               NULL,
+  REQUESTS_RECOVERY  number(1)               NULL
 );
 
 
 CREATE TABLE QRTZ_JOB_DETAILS
 (
-  JOB_NAME           VARCHAR(200 )             NULL,
-  JOB_GROUP          VARCHAR(200 )             NULL,
-  DESCRIPTION        VARCHAR(250 )             NULL,
-  JOB_CLASS_NAME     VARCHAR(250 )             NULL,
-  IS_DURABLE         boolean               NULL,
-  IS_VOLATILE        boolean	               NULL,
-  IS_STATEFUL        boolean               NULL,
-  REQUESTS_RECOVERY  boolean               NULL,
-  JOB_DATA           bytea                           NULL
+  JOB_NAME           VARCHAR2(200 CHAR)             NULL,
+  JOB_GROUP          VARCHAR2(200 CHAR)             NULL,
+  DESCRIPTION        VARCHAR2(250 CHAR)             NULL,
+  JOB_CLASS_NAME     VARCHAR2(250 CHAR)             NULL,
+  IS_DURABLE         number(1)               NULL,
+  IS_VOLATILE        number(1)	               NULL,
+  IS_STATEFUL        number(1)               NULL,
+  REQUESTS_RECOVERY  number(1)               NULL,
+  JOB_DATA           BLOB                           NULL
 );
 
 
 CREATE TABLE QRTZ_JOB_LISTENERS
 (
-  JOB_NAME      VARCHAR(200 )                  NULL,
-  JOB_GROUP     VARCHAR(200 )                  NULL,
-  JOB_LISTENER  VARCHAR(200 )                  NULL
+  JOB_NAME      VARCHAR2(200 CHAR)                  NULL,
+  JOB_GROUP     VARCHAR2(200 CHAR)                  NULL,
+  JOB_LISTENER  VARCHAR2(200 CHAR)                  NULL
 );
 
 
 CREATE TABLE QRTZ_LOCKS
 (
-  LOCK_NAME  VARCHAR(40 )                      NULL
+  LOCK_NAME  VARCHAR2(40 CHAR)                      NULL
 );
 
 
 CREATE TABLE QRTZ_PAUSED_TRIGGER_GRPS
 (
-  TRIGGER_GROUP  VARCHAR(200 )                 NULL
+  TRIGGER_GROUP  VARCHAR2(200 CHAR)                 NULL
 );
 
 
 CREATE TABLE QRTZ_SCHEDULER_STATE
 (
-  INSTANCE_NAME      VARCHAR(200 )             NULL,
+  INSTANCE_NAME      VARCHAR2(200 CHAR)             NULL,
   LAST_CHECKIN_TIME  integer                     NULL,
   CHECKIN_INTERVAL   integer                     NULL
 );
@@ -90,8 +93,8 @@ CREATE TABLE QRTZ_SCHEDULER_STATE
 
 CREATE TABLE QRTZ_SIMPLE_TRIGGERS
 (
-  TRIGGER_NAME     VARCHAR(200 )               NULL,
-  TRIGGER_GROUP    VARCHAR(200 )               NULL,
+  TRIGGER_NAME     VARCHAR2(200 CHAR)               NULL,
+  TRIGGER_GROUP    VARCHAR2(200 CHAR)               NULL,
   REPEAT_COUNT     integer                        NULL,
   REPEAT_INTERVAL  integer                       NULL,
   TIMES_TRIGGERED  integer                       NULL
@@ -100,37 +103,37 @@ CREATE TABLE QRTZ_SIMPLE_TRIGGERS
 
 CREATE TABLE QRTZ_TRIGGERS
 (
-  TRIGGER_NAME    VARCHAR(200 )                NULL,
-  TRIGGER_GROUP   VARCHAR(200 )                NULL,
-  JOB_NAME        VARCHAR(200 )                NULL,
-  JOB_GROUP       VARCHAR(200 )                NULL,
-  IS_VOLATILE     boolean	               NULL,
-  DESCRIPTION     VARCHAR(250 )                NULL,
-  NEXT_FIRE_TIME  bigint                        NULL,
-  PREV_FIRE_TIME  bigint                        NULL,
+  TRIGGER_NAME    VARCHAR2(200 CHAR)                NULL,
+  TRIGGER_GROUP   VARCHAR2(200 CHAR)                NULL,
+  JOB_NAME        VARCHAR2(200 CHAR)                NULL,
+  JOB_GROUP       VARCHAR2(200 CHAR)                NULL,
+  IS_VOLATILE     number(1)	               NULL,
+  DESCRIPTION     VARCHAR2(250 CHAR)                NULL,
+  NEXT_FIRE_TIME  number(19)                        NULL,
+  PREV_FIRE_TIME  number(19)                        NULL,
   PRIORITY        integer                        NULL,
-  TRIGGER_STATE   VARCHAR(16 )                 NULL,
-  TRIGGER_TYPE    VARCHAR(8 )                  NULL,
-  START_TIME      bigint                        NULL,
-  END_TIME        bigint                        NULL,
-  CALENDAR_NAME   VARCHAR(200 )                NULL,
+  TRIGGER_STATE   VARCHAR2(16 CHAR)                 NULL,
+  TRIGGER_TYPE    VARCHAR2(8 CHAR)                  NULL,
+  START_TIME      number(19)                        NULL,
+  END_TIME        number(19)                        NULL,
+  CALENDAR_NAME   VARCHAR2(200 CHAR)                NULL,
   MISFIRE_INSTR   integer                         NULL,
-  JOB_DATA        bytea                              NULL
+  JOB_DATA        BLOB                              NULL
 );
 
 
 CREATE TABLE QRTZ_TRIGGER_LISTENERS
 (
-  TRIGGER_NAME      VARCHAR(200 )              NULL,
-  TRIGGER_GROUP     VARCHAR(200 )              NULL,
-  TRIGGER_LISTENER  VARCHAR(200 )              NULL
+  TRIGGER_NAME      VARCHAR2(200 CHAR)              NULL,
+  TRIGGER_GROUP     VARCHAR2(200 CHAR)              NULL,
+  TRIGGER_LISTENER  VARCHAR2(200 CHAR)              NULL
 );
 
 
 CREATE TABLE SCR_CCAA
 (
-  ID       VARCHAR(2)                         NULL,
-  NAME     VARCHAR(50)                        NULL,
+  ID       VARCHAR2(2 CHAR)                         NULL,
+  NAME     VARCHAR2(50 CHAR)                        NULL,
   TMSTAMP  DATE                                     NULL
 );
 
@@ -138,32 +141,33 @@ CREATE TABLE SCR_CCAA
 CREATE TABLE XT_FIELD
 (
   FLDID        integer                           NULL,
-  NAME         VARCHAR(32)                    NULL,
-  DESCRIPCION  VARCHAR(256)                   NULL,
-  SECCION      VARCHAR(32)                    NULL
+  NAME         VARCHAR2(32 CHAR)                    NULL,
+  DESCRIPCION  VARCHAR2(256 CHAR)                   NULL,
+  SECCION      VARCHAR2(32 CHAR)                    NULL
 );
 
 
 CREATE TABLE VERSION
 (
-  VERSION      VARCHAR(20),
+  VERSION      VARCHAR2(20 CHAR),
   VERSIONDATE  DATE
 );
 
 
-ALTER TABLE SCR_ORGS ADD COLUMN HIERARCHICAL_LEVEL INTEGER;
-ALTER TABLE SCR_ORGS ADD COLUMN ADMIN_LEVEL VARCHAR(2);
-ALTER TABLE SCR_ORGS ADD COLUMN ENTITY_TYPE VARCHAR(2);
-ALTER TABLE SCR_ORGS ADD COLUMN UO_TYPE VARCHAR(3);
-ALTER TABLE SCR_ORGS ADD COLUMN ID_ROOT INTEGER;
-ALTER TABLE SCR_ORGS ADD COLUMN ID_CCAA VARCHAR(2);
-ALTER TABLE SCR_ORGS ADD COLUMN ID_PROV INTEGER;
+ALTER TABLE SCR_ORGS ADD HIERARCHICAL_LEVEL INTEGER;
+ALTER TABLE SCR_ORGS ADD ADMIN_LEVEL VARCHAR2(2 CHAR);
+ALTER TABLE SCR_ORGS ADD ENTITY_TYPE VARCHAR2(2 CHAR);
+ALTER TABLE SCR_ORGS ADD UO_TYPE VARCHAR2(3 CHAR);
+ALTER TABLE SCR_ORGS ADD ID_ROOT INTEGER;
+ALTER TABLE SCR_ORGS ADD ID_CCAA VARCHAR2(2 CHAR);
+ALTER TABLE SCR_ORGS ADD ID_PROV INTEGER;
 
 ALTER TABLE IUSERDEPTHDR ADD IDORG INTEGER;
+ALTER TABLE IUSERDEPTHDR ADD EMAIL VARCHAR2(255 CHAR);
 
-ALTER TABLE SCR_PAGEREPOSITORY ADD COLUMN DELETEDATE DATE;
+ALTER TABLE SCR_PAGEREPOSITORY ADD DELETEDATE DATE;
 
-ALTER TABLE SCR_PAGEREPOSITORY ADD COLUMN FLAG INTEGER;
+ALTER TABLE SCR_PAGEREPOSITORY ADD FLAG INTEGER;
 
 
 ALTER TABLE IUSERUSERHDR_WS ADD CONSTRAINT IUSERUSERHDR_WS_NAME_UQ UNIQUE (NAME);
@@ -316,15 +320,18 @@ AS
      FROM A2SF INNER JOIN SCR_DISTREG ON FDRID = ID_FDR AND ID_ARCH = 2;
 
 
- --Insert into QRTZ_JOB_DETAILS (JOB_NAME, JOB_GROUP, DESCRIPTION, JOB_CLASS_NAME, IS_DURABLE, IS_VOLATILE, IS_STATEFUL, REQUESTS_RECOVERY, JOB_DATA)
- --Values ('updateStatesSIRJobSigemImpl', 'DEFAULT', NULL, 'es.msssi.sgm.registropresencial.jobs.UpdateStatesSIRJobSigem', 'false', 'false', 'false', 'false', null);
- --Insert into QRTZ_JOB_DETAILS (JOB_NAME, JOB_GROUP, DESCRIPTION, JOB_CLASS_NAME, IS_DURABLE, IS_VOLATILE, IS_STATEFUL, REQUESTS_RECOVERY, JOB_DATA)
- --Values ('unlockRegisterJobSigemImpl', 'DEFAULT', NULL, 'es.msssi.sgm.registropresencial.jobs.UnlockRegisterJobSigem', 'false', 'false', 'false', 'false', null);
+-- El campo boolean da problemas. Al ser integer pasamos el valor false a 0.
+ Insert into QRTZ_JOB_DETAILS (JOB_NAME, JOB_GROUP, DESCRIPTION, JOB_CLASS_NAME, IS_DURABLE, IS_VOLATILE, IS_STATEFUL, REQUESTS_RECOVERY, JOB_DATA)
+-- Values ('updateStatesSIRJobSigemImpl', 'DEFAULT', NULL, 'es.msssi.sgm.registropresencial.jobs.UpdateStatesSIRJobSigem', 'false', 'false', 'false', 'false', null);
+ Values ('updateStatesSIRJobSigemImpl', 'DEFAULT', NULL, 'es.msssi.sgm.registropresencial.jobs.UpdateStatesSIRJobSigem', 0, 0, 0, 0, null);
+ Insert into QRTZ_JOB_DETAILS (JOB_NAME, JOB_GROUP, DESCRIPTION, JOB_CLASS_NAME, IS_DURABLE, IS_VOLATILE, IS_STATEFUL, REQUESTS_RECOVERY, JOB_DATA)
+-- Values ('unlockRegisterJobSigemImpl', 'DEFAULT', NULL, 'es.msssi.sgm.registropresencial.jobs.UnlockRegisterJobSigem', 'false', 'false', 'false', 'false', null);
+ Values ('unlockRegisterJobSigemImpl', 'DEFAULT', NULL, 'es.msssi.sgm.registropresencial.jobs.UnlockRegisterJobSigem', 0, 0, 0, 0, null);
 
- --Insert into QRTZ_TRIGGERS (TRIGGER_NAME, TRIGGER_GROUP, JOB_NAME, JOB_GROUP, IS_VOLATILE, DESCRIPTION, NEXT_FIRE_TIME, PREV_FIRE_TIME, PRIORITY, TRIGGER_STATE, TRIGGER_TYPE, START_TIME, END_TIME, CALENDAR_NAME, MISFIRE_INSTR, JOB_DATA)
---Values ('unlockRegisterJobSigemTrigger', 'DEFAULT', 'unlockRegisterJobSigemImpl', 'DEFAULT', 'false', NULL, 2147483647, 2147483647, 5, 'WAITING', 'CRON', 2147483647, 0, NULL, 0, NULL);
---Insert into QRTZ_TRIGGERS (TRIGGER_NAME, TRIGGER_GROUP, JOB_NAME, JOB_GROUP, IS_VOLATILE, DESCRIPTION, NEXT_FIRE_TIME, PREV_FIRE_TIME, PRIORITY, TRIGGER_STATE, TRIGGER_TYPE, START_TIME, END_TIME, CALENDAR_NAME, MISFIRE_INSTR, JOB_DATA)
- --Values ('updateStatesSIRJobSigemTrigger', 'DEFAULT', 'updateStatesSIRJobSigemImpl', 'DEFAULT', 'false', NULL, 2147483647, 2147483647, 5, 'WAITING', 'CRON', 2147483647, 0, NULL, 0, NULL);
+ Insert into QRTZ_TRIGGERS (TRIGGER_NAME, TRIGGER_GROUP, JOB_NAME, JOB_GROUP, IS_VOLATILE, DESCRIPTION, NEXT_FIRE_TIME, PREV_FIRE_TIME, PRIORITY, TRIGGER_STATE, TRIGGER_TYPE, START_TIME, END_TIME, CALENDAR_NAME, MISFIRE_INSTR, JOB_DATA)
+  values ('unlockRegisterJobSigemTrigger', 'DEFAULT', 'unlockRegisterJobSigemImpl', 'DEFAULT', 0, NULL, 2147483647, 2147483647, 5, 'WAITING', 'CRON', 2147483647, 0, NULL, 0, NULL);
+ Insert into QRTZ_TRIGGERS (TRIGGER_NAME, TRIGGER_GROUP, JOB_NAME, JOB_GROUP, IS_VOLATILE, DESCRIPTION, NEXT_FIRE_TIME, PREV_FIRE_TIME, PRIORITY, TRIGGER_STATE, TRIGGER_TYPE, START_TIME, END_TIME, CALENDAR_NAME, MISFIRE_INSTR, JOB_DATA)
+  Values ('updateStatesSIRJobSigemTrigger', 'DEFAULT', 'updateStatesSIRJobSigemImpl', 'DEFAULT', '0', NULL, 2147483647, 2147483647, 5, 'WAITING', 'CRON', 2147483647, 0, NULL, 0, NULL);
 
 Insert into QRTZ_CRON_TRIGGERS (TRIGGER_NAME, TRIGGER_GROUP, CRON_EXPRESSION, TIME_ZONE_ID)
  Values ('unlockRegisterJobSigemTrigger', 'DEFAULT', '0 0/5 * * * ?', 'Europe/Paris');
@@ -357,14 +364,12 @@ Insert into SCR_CCAA (ID, NAME, TMSTAMP) Values ('17', 'La Rioja', TO_DATE('01/1
 Insert into SCR_CCAA (ID, NAME, TMSTAMP) Values ('18', 'Ciudad Autónoma de Ceuta', TO_DATE('01/12/2015 12:58:13', 'MM/DD/YYYY HH24:MI:SS'));
 Insert into SCR_CCAA (ID, NAME, TMSTAMP) Values ('19', 'Ciudad Autónoma de Melilla', TO_DATE('01/12/2015 12:58:13', 'MM/DD/YYYY HH24:MI:SS'));
 
-
 -- Libro de entrada
 update idocarchdet set 
-detval = E'"01.00"|31|1,"Número de registro",1,20,1,"Fld1",0,0,""|2,"Fecha de registro",9,0,1,"Fld2",0,0,""|3,"Usuario",1,32,1,"Fld3",0,0,""|4,"Fecha de trabajo",7,0,1,"Fld4",0,0,""|5,"Oficina de registro",4,0,1,"Fld5",0,0,""|6,"Estado",4,0,1,"Fld6",0,0,""|7,"Origen",4,0,1,"Fld7",0,0,""|8,"Destino",4,0,1,"Fld8",0,0,""|9,"Remitentes",1,80,1,"Fld9",0,0,""|10,"Nº. registro original",1,20,1,"Fld10",0,0,""|11,"Tipo de registro original",4,0,1,"Fld11",0,0,""|12,"Fecha de registro original",7,0,1,"Fld12",0,0,""|13,"Registro original",4,0,1,"Fld13",0,0,""|14,"Tipo de transporte",1,31,1,"Fld14",0,0,""|15,"Número de transporte",1,30,1,"Fld15",0,0,""|16,"Tipo de asunto",4,0,1,"Fld16",0,0,""|17,"Resumen",1,240,1,"Fld17",0,0,""|18,"Comentario",2,65535,1,"Fld18",0,0,""|19,"Referencia de Expediente",1,50,1,"Fld19",0,0,""|20,"Fecha del documento",7,0,1,"Fld20",0,0,""|1002,"Campo que no sé qué hace",4,0,1,"Fld1002",0,0,""|1003,"Obligatorio el registro original",4,0,1,"Fld1003",0,0,""|1004,"Último acuse generado",1,255,1,"Fld1004",0,0,""|500,"LimiteInferiorReserva",2,65535,1,"Fld500",0,0,""|1000,"LimiteSuperiorReserva",2,65535,1,"Fld1000",0,0,""|501,"Expone",2,65535,1,"Fld501",0,0,""|502,"Solicita",2,65535,1,"Fld502",0,0,""|503,"Involucrado en Interc. Registral",4,0,1,"Fld503",0,0,""|504,"Acompaña doc. física requerida",4,0,1,"Fld504",0,0,""|505,"Acompaña doc. física complementaria",4,0,1,"Fld505",0,0,""|506,"No acompaña doc. física ni otros soportes",4,0,1,"Fld506",0,0,""|8|1,"EREG1",1,1,1|2,"EREG2",0,1,2|3,"EREG3",0,1,4|4,"EREG4",0,1,6|5,"EREG5",0,1,7|6,"EREG6",0,1,8|7,"EREG7",0,1,9|8,"EREG8",0,1,5'
+detval = '"01.00"|31|1,"Número de registro",1,20,1,"Fld1",0,0,""|2,"Fecha de registro",9,0,1,"Fld2",0,0,""|3,"Usuario",1,32,1,"Fld3",0,0,""|4,"Fecha de trabajo",7,0,1,"Fld4",0,0,""|5,"Oficina de registro",4,0,1,"Fld5",0,0,""|6,"Estado",4,0,1,"Fld6",0,0,""|7,"Origen",4,0,1,"Fld7",0,0,""|8,"Destino",4,0,1,"Fld8",0,0,""|9,"Remitentes",1,80,1,"Fld9",0,0,""|10,"Nº. registro original",1,20,1,"Fld10",0,0,""|11,"Tipo de registro original",4,0,1,"Fld11",0,0,""|12,"Fecha de registro original",7,0,1,"Fld12",0,0,""|13,"Registro original",4,0,1,"Fld13",0,0,""|14,"Tipo de transporte",1,31,1,"Fld14",0,0,""|15,"Número de transporte",1,30,1,"Fld15",0,0,""|16,"Tipo de asunto",4,0,1,"Fld16",0,0,""|17,"Resumen",1,240,1,"Fld17",0,0,""|18,"Comentario",2,65535,1,"Fld18",0,0,""|19,"Referencia de Expediente",1,50,1,"Fld19",0,0,""|20,"Fecha del documento",7,0,1,"Fld20",0,0,""|1002,"Campo que no sé qué hace",4,0,1,"Fld1002",0,0,""|1003,"Obligatorio el registro original",4,0,1,"Fld1003",0,0,""|1004,"Último acuse generado",1,255,1,"Fld1004",0,0,""|500,"LimiteInferiorReserva",2,65535,1,"Fld500",0,0,""|1000,"LimiteSuperiorReserva",2,65535,1,"Fld1000",0,0,""|501,"Expone",2,65535,1,"Fld501",0,0,""|502,"Solicita",2,65535,1,"Fld502",0,0,""|503,"Involucrado en Interc. Registral",4,0,1,"Fld503",0,0,""|504,"Acompaña doc. física requerida",4,0,1,"Fld504",0,0,""|505,"Acompaña doc. física complementaria",4,0,1,"Fld505",0,0,""|506,"No acompaña doc. física ni otros soportes",4,0,1,"Fld506",0,0,""|8|1,"EREG1",1,1,1|2,"EREG2",0,1,2|3,"EREG3",0,1,4|4,"EREG4",0,1,6|5,"EREG5",0,1,7|6,"EREG6",0,1,8|7,"EREG7",0,1,9|8,"EREG8",0,1,5'
 where dettype=1 and archid in (select id from idocarchhdr where type=1);
-
 
 --- Libros de Salida
 update idocarchdet set 
-detval = E'"01.00"|26|1,"Número de registro",1,20,1,"Fld1",0,0,""|2,"Fecha de registro",9,0,1,"Fld2",0,0,""|3,"Usuario",1,32,1,"Fld3",0,0,""|4,"Fecha de trabajo",7,0,1,"Fld4",0,0,""|5,"Oficina de registro",4,0,1,"Fld5",0,0,""|6,"Estado",4,0,1,"Fld6",0,0,""|7,"Origen",4,0,1,"Fld7",0,0,""|8,"Destino",4,0,1,"Fld8",0,0,""|9,"Destinatarios",1,80,1,"Fld9",0,0,""|10,"Tipo de transporte",1,31,1,"Fld10",0,0,""|11,"Número de transporte",1,30,1,"Fld11",0,0,""|12,"Tipo de asunto",4,0,1,"Fld12",0,0,""|13,"Resumen",1,240,1,"Fld13",0,0,""|14,"Comentario",2,65535,1,"Fld14",0,0,""|15,"Fecha del documento",7,0,1,"Fld15",0,0,""|1002,"Campo que no sé qué hace",4,0,1,"Fld1002",0,0,""|1003,"Obligatorio el registro original",4,0,1,"Fld1003",0,0,""|1004,"Último acuse generado",1,255,1,"Fld1004",0,0,""|500,"LimiteInferiorReserva",2,65535,1,"Fld500",0,0,""|1000,"LimiteSuperiorReserva",2,65535,1,"Fld1000",0,0,""|501,"Expone",2,65535,1,"Fld501",0,0,""|502,"Solicita",2,65535,1,"Fld502",0,0,""|503,"Involucrado en Interc. Registral",4,0,1,"Fld503",0,0,""|504,"Acompaña doc. física requerida",4,0,1,"Fld504",0,0,""|505,"Acompaña doc. física complementaria",4,0,1,"Fld505",0,0,""|506,"No acompaña doc. física ni otros soportes",4,0,1,"Fld506",0,0,""|8|1,"EREG1",1,1,1|2,"EREG2",0,1,2|3,"EREG3",0,1,4|4,"EREG4",0,1,6|5,"EREG5",0,1,7|6,"EREG6",0,1,8|7,"EREG7",0,1,9|8,"EREG8",0,1,5'
+detval = '"01.00"|26|1,"Número de registro",1,20,1,"Fld1",0,0,""|2,"Fecha de registro",9,0,1,"Fld2",0,0,""|3,"Usuario",1,32,1,"Fld3",0,0,""|4,"Fecha de trabajo",7,0,1,"Fld4",0,0,""|5,"Oficina de registro",4,0,1,"Fld5",0,0,""|6,"Estado",4,0,1,"Fld6",0,0,""|7,"Origen",4,0,1,"Fld7",0,0,""|8,"Destino",4,0,1,"Fld8",0,0,""|9,"Destinatarios",1,80,1,"Fld9",0,0,""|10,"Tipo de transporte",1,31,1,"Fld10",0,0,""|11,"Número de transporte",1,30,1,"Fld11",0,0,""|12,"Tipo de asunto",4,0,1,"Fld12",0,0,""|13,"Resumen",1,240,1,"Fld13",0,0,""|14,"Comentario",2,65535,1,"Fld14",0,0,""|15,"Fecha del documento",7,0,1,"Fld15",0,0,""|1002,"Campo que no sé qué hace",4,0,1,"Fld1002",0,0,""|1003,"Obligatorio el registro original",4,0,1,"Fld1003",0,0,""|1004,"Último acuse generado",1,255,1,"Fld1004",0,0,""|500,"LimiteInferiorReserva",2,65535,1,"Fld500",0,0,""|1000,"LimiteSuperiorReserva",2,65535,1,"Fld1000",0,0,""|501,"Expone",2,65535,1,"Fld501",0,0,""|502,"Solicita",2,65535,1,"Fld502",0,0,""|503,"Involucrado en Interc. Registral",4,0,1,"Fld503",0,0,""|504,"Acompaña doc. física requerida",4,0,1,"Fld504",0,0,""|505,"Acompaña doc. física complementaria",4,0,1,"Fld505",0,0,""|506,"No acompaña doc. física ni otros soportes",4,0,1,"Fld506",0,0,""|8|1,"EREG1",1,1,1|2,"EREG2",0,1,2|3,"EREG3",0,1,4|4,"EREG4",0,1,6|5,"EREG5",0,1,7|6,"EREG6",0,1,8|7,"EREG7",0,1,9|8,"EREG8",0,1,5'
 where dettype=1 and archid in (select id from idocarchhdr where type=2);

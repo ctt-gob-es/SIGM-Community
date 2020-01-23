@@ -99,9 +99,7 @@ public class EnviarComisionServicioAFirmaRule implements IRule
             stateContext.setProcessId(exp.getKeyInt());
             stateContext.setNumexp(numexp);
 			
-			IItemCollection anexosCollection = entitiesAPI.getDocuments
-					(numexp, "UPPER(NOMBRE) = 'ANEXO A SOLICITUD'"
-						  + " AND UPPER(DESCRIPCION) LIKE '%ZIP'", "");
+			IItemCollection anexosCollection = entitiesAPI.getDocuments (numexp, "TP_REG = 'ENTRADA' AND UPPER(DESCRIPCION) LIKE '%ZIP'", "");
 			
 			FileBean fb = null;
 			if (anexosCollection.toList().size() > 0){

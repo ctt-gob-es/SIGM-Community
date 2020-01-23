@@ -1,23 +1,22 @@
 
 package es.dipucr.contratacion.objeto.sw;
 
+import java.util.Calendar;
+
 public class DuracionContratoBean{
-    private java.lang.String duracion;
-
+    private String duracion;
     private Campo durationMeasure;
-
-    private java.util.Calendar fechaFinal;
-
-    private java.util.Calendar fechaInicio;
+    private Calendar fechaFinal;
+    private Calendar fechaInicio;
 
     public DuracionContratoBean() {
     }
 
     public DuracionContratoBean(
-           java.lang.String duracion,
+           String duracion,
            Campo durationMeasure,
-           java.util.Calendar fechaFinal,
-           java.util.Calendar fechaInicio) {
+           Calendar fechaFinal,
+           Calendar fechaInicio) {
            this.duracion = duracion;
            this.durationMeasure = durationMeasure;
            this.fechaFinal = fechaFinal;
@@ -30,7 +29,7 @@ public class DuracionContratoBean{
      * 
      * @return duracion
      */
-    public java.lang.String getDuracion() {
+    public String getDuracion() {
         return duracion;
     }
 
@@ -40,7 +39,7 @@ public class DuracionContratoBean{
      * 
      * @param duracion
      */
-    public void setDuracion(java.lang.String duracion) {
+    public void setDuracion(String duracion) {
         this.duracion = duracion;
     }
 
@@ -70,7 +69,7 @@ public class DuracionContratoBean{
      * 
      * @return fechaFinal
      */
-    public java.util.Calendar getFechaFinal() {
+    public Calendar getFechaFinal() {
         return fechaFinal;
     }
 
@@ -80,7 +79,7 @@ public class DuracionContratoBean{
      * 
      * @param fechaFinal
      */
-    public void setFechaFinal(java.util.Calendar fechaFinal) {
+    public void setFechaFinal(Calendar fechaFinal) {
         this.fechaFinal = fechaFinal;
     }
 
@@ -90,7 +89,7 @@ public class DuracionContratoBean{
      * 
      * @return fechaInicio
      */
-    public java.util.Calendar getFechaInicio() {
+    public Calendar getFechaInicio() {
         return fechaInicio;
     }
 
@@ -100,7 +99,7 @@ public class DuracionContratoBean{
      * 
      * @param fechaInicio
      */
-    public void setFechaInicio(java.util.Calendar fechaInicio) {
+    public void setFechaInicio(Calendar fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 }

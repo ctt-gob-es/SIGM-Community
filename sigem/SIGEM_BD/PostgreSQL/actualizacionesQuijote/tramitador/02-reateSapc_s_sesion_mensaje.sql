@@ -1,9 +1,9 @@
 CREATE TABLE spac_s_sesion_mensaje(
   id integer NOT NULL,
-  numexp varchar2(30) NOT NULL,
-  id_sesion varchar2(200),
-  id_mensaje varchar2(200),
-  usuario varchar2(200),
+  numexp varchar(30) NOT NULL,
+  id_sesion varchar(200),
+  id_mensaje varchar(200),
+  usuario varchar(200),
   CONSTRAINT pk_2081913613 PRIMARY KEY (id)
 );
 
@@ -12,7 +12,7 @@ CREATE INDEX ind_2081913613 ON spac_s_sesion_mensaje (numexp);
 
 
 insert into spac_ct_entidades (id,tipo,nombre,campo_pk,campo_numexp,schema_expr,descripcion,sec_pk,fecha)
-VALUES( NEXTVAL('SPAC_SQ_ID_CTENTIDADES'),'1','SPAC_S_SESION_MENSAJE','ID','NUMEXP','NUMEXP','','SPAC_SQ_2081913613',SYSDATE);
+VALUES( NEXTVAL('SPAC_SQ_ID_CTENTIDADES'),'1','SPAC_S_SESION_MENSAJE','ID','NUMEXP','NUMEXP','','SPAC_SQ_2081913613', NOW());
 
 
 CREATE SEQUENCE SPAC_SQ_2081913613 

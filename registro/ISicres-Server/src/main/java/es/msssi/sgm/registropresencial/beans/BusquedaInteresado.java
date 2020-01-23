@@ -13,6 +13,7 @@ import com.ieci.tecdoc.utils.HibernateUtil;
 
 import es.ieci.tecdoc.fwktd.core.spring.configuration.jdbc.datasource.MultiEntityContextHolder;
 import es.ieci.tecdoc.isicres.terceros.business.manager.TerceroManager;
+import es.ieci.tecdoc.isicres.terceros.business.vo.DireccionFisicaVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoFisicoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoJuridicoVO;
 import es.ieci.tecdoc.isicres.terceros.business.vo.TerceroValidadoVO;
@@ -274,6 +275,22 @@ public class BusquedaInteresado implements Serializable {
 						    interesado.setDireccionesTelematicas(tercero.getDireccionesTelematicas());
 						    interesado.setDireccionTelematicaPrincipal(tercero.getDireccionTelematicaPrincipal());
 						    
+						    if( null != tercero.getDireccionFisicaPrincipal()){
+						    	DireccionFisicaVO direccionSeleccionadaAux = new DireccionFisicaVO();
+						    	
+						    	direccionSeleccionadaAux.setId(tercero.getDireccionFisicaPrincipal().getId());
+						    	direccionSeleccionadaAux.setCiudad(tercero.getDireccionFisicaPrincipal().getCiudad());
+						    	direccionSeleccionadaAux.setCodigoPostal(tercero.getDireccionFisicaPrincipal().getCodigoPostal());
+						    	direccionSeleccionadaAux.setDireccion(tercero.getDireccionFisicaPrincipal().getDireccion());
+						    	direccionSeleccionadaAux.setPais(tercero.getDireccionFisicaPrincipal().getPais());
+						    	direccionSeleccionadaAux.setPrincipal(tercero.getDireccionFisicaPrincipal().isPrincipal());
+						    	direccionSeleccionadaAux.setProvincia(tercero.getDireccionFisicaPrincipal().getProvincia());
+						    	direccionSeleccionadaAux.setTercero(tercero.getDireccionFisicaPrincipal().getTercero());
+						    	direccionSeleccionadaAux.setTipo(tercero.getDireccionFisicaPrincipal().getTipo());
+						    	
+								interesado.setDireccionSeleccionada(direccionSeleccionadaAux );
+						    }
+						    
 						    if(resultInteresados.size()<100){
 						    	resultInteresados.add(interesado);
 						    }					    
@@ -302,6 +319,22 @@ public class BusquedaInteresado implements Serializable {
 						    interesado.setDireccionFisicaPrincipal(tercero.getDireccionFisicaPrincipal());
 						    interesado.setDireccionesTelematicas(tercero.getDireccionesTelematicas());
 						    interesado.setDireccionTelematicaPrincipal(tercero.getDireccionTelematicaPrincipal());
+						    
+						    if( null != tercero.getDireccionFisicaPrincipal()){
+						    	DireccionFisicaVO direccionSeleccionadaAux = new DireccionFisicaVO();
+						    	
+						    	direccionSeleccionadaAux.setId(tercero.getDireccionFisicaPrincipal().getId());
+						    	direccionSeleccionadaAux.setCiudad(tercero.getDireccionFisicaPrincipal().getCiudad());
+						    	direccionSeleccionadaAux.setCodigoPostal(tercero.getDireccionFisicaPrincipal().getCodigoPostal());
+						    	direccionSeleccionadaAux.setDireccion(tercero.getDireccionFisicaPrincipal().getDireccion());
+						    	direccionSeleccionadaAux.setPais(tercero.getDireccionFisicaPrincipal().getPais());
+						    	direccionSeleccionadaAux.setPrincipal(tercero.getDireccionFisicaPrincipal().isPrincipal());
+						    	direccionSeleccionadaAux.setProvincia(tercero.getDireccionFisicaPrincipal().getProvincia());
+						    	direccionSeleccionadaAux.setTercero(tercero.getDireccionFisicaPrincipal().getTercero());
+						    	direccionSeleccionadaAux.setTipo(tercero.getDireccionFisicaPrincipal().getTipo());
+						    	
+								interesado.setDireccionSeleccionada(direccionSeleccionadaAux );
+						    }
 			
 							if(resultInteresados.size()<100){
 						    	resultInteresados.add(interesado);

@@ -9,13 +9,11 @@ bin
 *\.classpath
 *.component
 *.project
-*.ear
 *.war
 *.bat
 *.zip
 *.pdf
 .settings
-*database*
 /modulos/dipucrintegra/target
 /framework-audit/fwktd-audit-api/target
 /framework-audit/fwktd-audit-core/target

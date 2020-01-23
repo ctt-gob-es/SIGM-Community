@@ -48,6 +48,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.alfresco.webservice.accesscontrol.GetClassPermissionsResult;
 import org.apache.axis.AxisFault;
 import org.apache.axis.client.Call;
 import org.apache.axis.encoding.Base64;
@@ -631,7 +632,7 @@ public class FuncionesComunes {
 				}
 				else{
 					if(!recaudacion.getRuta().equals("")){
-						if(recaudacion.isRecaudacionNueva() || recaudacion.isRecaudacionFicheroZona() || recaudacion.isRecaudacionSWALExpedientes()){
+						if(recaudacion.isDiligenciasEmbargo() || recaudacion.isRecaudacionFicheroZona() || recaudacion.isProvidenciaApremio()){
 							Notificados notificados = new Notificados();
 							Table table = obtenerTablaRecaudacionNueva(recaudacion, notificados);
 							metadatos.setNotificados(notificados);
@@ -921,7 +922,7 @@ public class FuncionesComunes {
 			            			inforMostrar = "CONTRIBUYENTE";
 			            			insertar = true;
 			            		}
-			            		if(recaudacionFichero.isRecaudacionFicheroZona() || recaudacionFichero.isRecaudacionSWALExpedientes()){
+			            		if(recaudacionFichero.isRecaudacionFicheroZona() || recaudacionFichero.isDiligenciasEmbargo() || recaudacionFichero.isProvidenciaApremio()){
 				            		if(dato.getNodeName().equals("DNI")){
 				            			inforMostrar = "N.I.F.";
 				            			insertar = true;
@@ -958,14 +959,19 @@ public class FuncionesComunes {
 			                if(datoContenido!=null && datoContenido.getNodeType()==Node.TEXT_NODE){
 			                	if(columnasMostrar(dato.getNodeName(), recaudacionFichero)){
 			                		if(nombre){
-				                		notificado.setValue(datoContenido.getNodeValue());
+			                			notificado.setValue(datoContenido.getNodeValue());				                		
 				                		nombre = false;
 				                	}
 				                	if(dni){
 				                		notificado.setId(datoContenido.getNodeValue());
 				                		dni = false;
 				                	}
-									celdaTabla.setValue(datoContenido.getNodeValue());
+				                	if(datoContenido.getNodeValue().contains("------------")){
+				                		celdaTabla.setValue(" ");
+				                	}
+				                	else{
+				                		celdaTabla.setValue(datoContenido.getNodeValue());
+				                	}									
 									filaTabla.getTd().add(celdaTabla);
 									insertadoCelda = true;
 			                	}			                	
@@ -1010,8 +1016,8 @@ public class FuncionesComunes {
 
 	private static boolean columnasMostrar(String nodeName, RecaudacionFichero recaudacionFichero) {
 		boolean mostrar = false;
-		if(recaudacionFichero.isRecaudacionNueva()){
-			if(nodeName.equals("Nombre") || nodeName.equals("NomPadro") || nodeName.equals("Anio") || 
+		if(recaudacionFichero.isProvidenciaApremio()){
+			if(nodeName.equals("Nombre") || nodeName.equals("DNI") || nodeName.equals("NomPadro") || nodeName.equals("Anio") || 
 					nodeName.equals("NomMunic") || nodeName.equals("NumRecibo") || nodeName.equals("ImpRecib")){
 				mostrar= true;
 			}
@@ -1022,7 +1028,8 @@ public class FuncionesComunes {
 				mostrar= true;
 			}
 		}
-		if(recaudacionFichero.isRecaudacionSWALExpedientes()){
+		if(recaudacionFichero.isDiligenciasEmbargo()){
+			//if(nodeName.equals("Nombre") || nodeName.equals("DNI") || nodeName.equals("Anio") || nodeName.equals("NumRecibo") || nodeName.equals("ImpRecib") || nodeName.equals("NomMunic") || nodeName.equals("NomPadro")){
 			if(nodeName.equals("Nombre") || nodeName.equals("DNI") || nodeName.equals("TipActAdmin")){
 				mostrar= true;
 			}
@@ -1111,7 +1118,7 @@ public class FuncionesComunes {
 			java.sql.Timestamp fDoc = null;
 			File fichero = null;
 
-			IItem tramRecauda = TramitesUtil.getTramiteByCode(rulectx,"fichNuevaRecauda");
+			IItem tramRecauda = TramitesUtil.getTramiteByCode(rulectx,"providenciaApre");
 
 			String consulta = "WHERE ID_TRAM_CTL = " + tramRecauda.getInt("ID")+ " AND NUMEXP='" + rulectx.getNumExp() + "'";
 			IItemCollection tramspacDtTramite = TramitesUtil.queryTramites(rulectx.getClientContext(), consulta);
@@ -1132,12 +1139,12 @@ public class FuncionesComunes {
 						tramspacDtTramite = TramitesUtil.queryTramites(rulectx.getClientContext(), consulta);
 						iterator = tramspacDtTramite.iterator();
 						if(!iterator.hasNext()){
-							tramRecauda = TramitesUtil.getTramiteByCode(rulectx, "fichNuevaRecExp");
+							tramRecauda = TramitesUtil.getTramiteByCode(rulectx, "diligenciaEmb");
 							consulta = "WHERE ID_TRAM_CTL = " + tramRecauda.getInt("ID")+ " AND NUMEXP='" + rulectx.getNumExp() + "'";
 							tramspacDtTramite = TramitesUtil.queryTramites(rulectx.getClientContext(), consulta);
 							iterator = tramspacDtTramite.iterator();
 							if(iterator.hasNext()){
-								recaudacion.setRecaudacionSWALExpedientes(true);
+								recaudacion.setDiligenciasEmbargo(true);
 							}
 						}
 						else{
@@ -1150,7 +1157,7 @@ public class FuncionesComunes {
 				}				
 			}
 			else {
-					recaudacion.setRecaudacionNueva(true);
+					recaudacion.setProvidenciaApremio(true);
 			}
 
 			if (iterator.hasNext()) {

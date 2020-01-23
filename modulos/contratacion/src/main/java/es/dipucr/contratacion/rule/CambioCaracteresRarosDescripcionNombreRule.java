@@ -1,10 +1,5 @@
 package es.dipucr.contratacion.rule;
 
-import java.util.Iterator;
-
-import org.apache.log4j.Logger;
-
-import es.dipucr.contratacion.common.DipucrFuncionesComunes;
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
@@ -14,6 +9,12 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+
+import java.util.Iterator;
+
+import org.apache.log4j.Logger;
+
+import es.dipucr.contratacion.objeto.sw.common.DipucrFuncionesComunesSW;
 
 public class CambioCaracteresRarosDescripcionNombreRule implements IRule{
 	
@@ -42,8 +43,8 @@ public class CambioCaracteresRarosDescripcionNombreRule implements IRule{
 				IItem docPres = docIterator.next();
 				String descripcion = docPres.getString("DESCRIPCION");
 				rulectx.setInfoMessage("La descripción del documento ha cambiado "+descripcion);
-				descripcion = DipucrFuncionesComunes.quitarExtensionNombre(descripcion);
-				descripcion = DipucrFuncionesComunes.limpiarCaracteresEspeciales(descripcion);
+				descripcion = DipucrFuncionesComunesSW.quitarExtensionNombre(descripcion);
+				descripcion = DipucrFuncionesComunesSW.limpiarCaracteresEspeciales(descripcion);
 				docPres.set("DESCRIPCION", descripcion);
 				docPres.store(cct);			
 			}

@@ -65,6 +65,10 @@ public class AlfrescoHelper {
 		configuration.setUsuario(repository.getProperty(AlfrescoConstants.ALFRESCO_USER));
 		configuration.setPass(repository.getProperty(AlfrescoConstants.ALFRESCO_PASSWORD));
 
+		// UPCT - Valores para CMIS
+		configuration.setVersion(repository.getProperty(AlfrescoConstants.ALFRESCO_VERSION)); 
+		configuration.setProtocolo(repository.getProperty(AlfrescoConstants.ALFRESCO_PROTOCOL)); 
+		
 		return configuration;
 	}
 

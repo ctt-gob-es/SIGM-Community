@@ -188,6 +188,7 @@ public class TXCreateTask implements ITXAction {
 		TXHitoDAO hito = dtc.newMilestone(process.getKeyInt(), nIdPCDStage,
 				mnIdTaskPCD, TXConstants.MILESTONE_TASK_START);
 		hito.set("INFO", composeInfo());
+		hito.store(cs.getConnection());//[dipucr-Felipe Manuel #884]
 
 		// Se construye el contexto de ejecución de scripts.
 		eventmgr.getRuleContextBuilder().addContext(process);

@@ -42,6 +42,7 @@ public class TramitesUtil {
 	//Mapeo de las columnas de la tablas SPAC_DT_TRAMITES y SPAC_DT_TRAMITES_H
 	public static final String NUMEXP = "NUMEXP";
 	public static final String ID_TRAM_PCD = "ID_TRAM_PCD";
+	public static final String ID_TRAM_EXP = "ID_TRAM_EXP";
 	public static final String NOMBRE = "NOMBRE";
 	public static final String FECHA_CIERRE = "FECHA_CIERRE";
 	
@@ -56,7 +57,7 @@ public class TramitesUtil {
 	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA7 = "TABLA7";
 	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA8 = "TABLA8";
 	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA9 = "TABLA9";
-	
+
 	public static void cargarObservacionesTramite (ClientContext cct, boolean campoFormateo, String numexp, int tramite, String texto) throws ISPACRuleException, ISPACException{
 		try{
 	        IItem itTram = TramitesUtil.getTramite(cct, numexp, tramite);
@@ -69,6 +70,9 @@ public class TramitesUtil {
 			}
 			else{
 				observaciones=observaciones+"\n"+texto;
+			}
+			if(observaciones.length()>250){
+				observaciones = observaciones.substring(0, 250);
 			}
 			itTram.set("OBSERVACIONES", observaciones);
 			itTram.store(cct);

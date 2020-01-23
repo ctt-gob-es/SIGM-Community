@@ -19,6 +19,7 @@ public class DatosContrato {
 	private String organoContratacion = null;
 	private String presupuestoConImpuesto = null;
 	private String presupuestoSinImpuesto = null;
+	private boolean nuevaLey = false;
 	
 	public String getObjetoContrato() {
 		return objetoContrato;
@@ -154,6 +155,14 @@ public class DatosContrato {
 
 	public void setPresupuestoSinImpuesto(String presupuestoSinImpuesto) {
 		this.presupuestoSinImpuesto = presupuestoSinImpuesto;
+	}
+
+	public boolean isNuevaLey() {
+		return nuevaLey;
+	}
+
+	public void setNuevaLey(boolean nuevaLey) {
+		this.nuevaLey = nuevaLey;
 	}
 
 }

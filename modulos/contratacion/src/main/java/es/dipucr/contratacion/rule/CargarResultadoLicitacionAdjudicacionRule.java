@@ -1,5 +1,8 @@
 package es.dipucr.contratacion.rule;
 
+import java.util.Iterator;
+
+import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
@@ -27,11 +30,21 @@ public class CargarResultadoLicitacionAdjudicacionRule implements IRule{
 	        IInvesflowAPI invesFlowAPI = cct.getAPI();
 	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 	        //-----------------------------------------------------------------------------
-		
-			IItem itempartDep = entitiesAPI.createEntity("CONTRATACION_ADJUDICACION","");		
-			itempartDep.set("NUMEXP", rulectx.getNumExp());
-			itempartDep.set("RES_LICITACION", "8 - Adjudicado");
+			
+			 /***********************************************************/
+	        cct.beginTX();
+			Iterator<IItem> itpartDep = ConsultasGenericasUtil.queryEntities(cct, "CONTRATACION_ADJUDICACION", "NUMEXP='"+rulectx.getNumExp()+"'");
+			IItem itempartDep = null;
+			if(itpartDep.hasNext()){
+				itempartDep = itpartDep.next();
+			}
+			else{
+				itempartDep = entitiesAPI.createEntity("CONTRATACION_ADJUDICACION",rulectx.getNumExp());
+			}
+			//https://contrataciondelestado.es/codice/cl/2.02/TenderResultCode-2.02.gc
+			itempartDep.set("RES_LICITACION", "8 - Adjudicado");			
 			itempartDep.store(cct);
+			cct.endTX(true);
 			
 		} catch(Exception e) {
         	throw new ISPACRuleException("Error en el numexp. "+rulectx.getNumExp()+" - "+e.getMessage(),e);

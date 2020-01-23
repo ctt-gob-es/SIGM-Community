@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://ws.licitacionelectronica.dipucr.es" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://ws.licitacionelectronica.dipucr.es" xmlns:intf="http://ws.licitacionelectronica.dipucr.es" xmlns:tns1="http://sw.objeto.contratacion.dipucr.es" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="http://ws.licitacionelectronica.dipucr.es" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://ws.licitacionelectronica.dipucr.es" xmlns:intf="http://ws.licitacionelectronica.dipucr.es" xmlns:tns1="http://sw.objeto.contratacion.dipucr.es" xmlns:tns2="http://objeto.contratacion.dipucr.es" xmlns:tns3="http://dto.tramitacion.services.core.sgm.tecdoc.ieci" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <!--WSDL created by Apache Axis version: 1.4
 Built on Apr 22, 2006 (06:55:48 PDT)-->
  <wsdl:types>
   <schema elementFormDefault="qualified" targetNamespace="http://ws.licitacionelectronica.dipucr.es" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://objeto.contratacion.dipucr.es"/>
+   <import namespace="http://dto.tramitacion.services.core.sgm.tecdoc.ieci"/>
    <import namespace="http://sw.objeto.contratacion.dipucr.es"/>
    <element name="getEspacioVirtualLicitacionBean">
     <complexType>
@@ -20,11 +22,6 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      </sequence>
     </complexType>
    </element>
-   <complexType name="ArrayOf_tns1_AplicacionPresupuestaria">
-    <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:AplicacionPresupuestaria"/>
-    </sequence>
-   </complexType>
    <complexType name="ArrayOf_tns1_Campo">
     <sequence>
      <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:Campo"/>
@@ -33,6 +30,16 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
    <complexType name="ArrayOf_xsd_string">
     <sequence>
      <element maxOccurs="unbounded" minOccurs="0" name="item" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="ArrayOf_tns1_RequisitfiDeclaraciones">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:RequisitfiDeclaraciones"/>
+    </sequence>
+   </complexType>
+   <complexType name="ArrayOf_tns1_AplicacionPresupuestaria">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:AplicacionPresupuestaria"/>
     </sequence>
    </complexType>
    <complexType name="ArrayOf_tns1_CriterioAdjudicacionMultCrit">
@@ -45,6 +52,11 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:PersonaComite"/>
     </sequence>
    </complexType>
+   <complexType name="ArrayOf_tns1_LicitadorBean">
+    <sequence>
+     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:LicitadorBean"/>
+    </sequence>
+   </complexType>
    <complexType name="ArrayOf_tns1_Documento">
     <sequence>
      <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:Documento"/>
@@ -55,19 +67,9 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:Garantia"/>
     </sequence>
    </complexType>
-   <complexType name="ArrayOf_tns1_LicitadorBean">
-    <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:LicitadorBean"/>
-    </sequence>
-   </complexType>
    <complexType name="ArrayOf_tns1_Lote">
     <sequence>
      <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:Lote"/>
-    </sequence>
-   </complexType>
-   <complexType name="ArrayOf_tns1_RequisitfiDeclaraciones">
-    <sequence>
-     <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:RequisitfiDeclaraciones"/>
     </sequence>
    </complexType>
    <complexType name="ArrayOf_tns1_SobreElectronico">
@@ -85,26 +87,48 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element maxOccurs="unbounded" minOccurs="0" name="item" type="tns1:SolvenciaTecnica"/>
     </sequence>
    </complexType>
+   <element name="crearAdjucatario">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" name="adjudicatario" type="tns2:Adjudicatario"/>
+      <element name="peticPlace" type="tns2:Peticion"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="crearAdjucatarioResponse">
+    <complexType/>
+   </element>
   </schema>
   <schema elementFormDefault="qualified" targetNamespace="http://sw.objeto.contratacion.dipucr.es" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://objeto.contratacion.dipucr.es"/>
    <import namespace="http://ws.licitacionelectronica.dipucr.es"/>
-   <complexType name="AplicacionPresupuestaria">
-    <sequence>
-     <element name="anualidad" nillable="true" type="xsd:string"/>
-     <element name="aplicPres" nillable="true" type="xsd:string"/>
-     <element name="importe" nillable="true" type="xsd:string"/>
-    </sequence>
-   </complexType>
+   <import namespace="http://dto.tramitacion.services.core.sgm.tecdoc.ieci"/>
    <complexType name="Campo">
     <sequence>
      <element name="id" nillable="true" type="xsd:string"/>
      <element name="valor" nillable="true" type="xsd:string"/>
     </sequence>
    </complexType>
-   <complexType name="Clasificacion">
+   <complexType name="DatosContrato">
     <sequence>
-     <element name="clasificacion" nillable="true" type="impl:ArrayOf_tns1_Campo"/>
-     <element name="clasificacionAcreditarRequisito" nillable="true" type="tns1:Campo"/>
+     <element name="caracteristicasBienes" nillable="true" type="xsd:string"/>
+     <element name="cpv" nillable="true" type="impl:ArrayOf_tns1_Campo"/>
+     <element name="criteriosMultiples" type="xsd:boolean"/>
+     <element name="nuevaLey" type="xsd:boolean"/>
+     <element name="numContrato" nillable="true" type="xsd:string"/>
+     <element name="objetoContrato" nillable="true" type="xsd:string"/>
+     <element name="organoContratacion" nillable="true" type="xsd:string"/>
+     <element name="presupuestoConImpuesto" nillable="true" type="xsd:string"/>
+     <element name="presupuestoSinImpuesto" nillable="true" type="xsd:string"/>
+     <element name="procNegCausa" nillable="true" type="xsd:string"/>
+     <element name="procedimientoContratacion" nillable="true" type="tns1:Campo"/>
+     <element name="provinciaContrato" nillable="true" type="tns1:Campo"/>
+     <element name="regulacionArmonizada" type="xsd:boolean"/>
+     <element name="subTipoContrato" nillable="true" type="tns1:Campo"/>
+     <element name="tipoContrato" nillable="true" type="tns1:Campo"/>
+     <element name="tipoTramitacion" nillable="true" type="tns1:Campo"/>
+     <element name="tramitacionGasto" nillable="true" type="tns1:Campo"/>
+     <element name="valorEstimadoContrato" nillable="true" type="xsd:string"/>
     </sequence>
    </complexType>
    <complexType name="CondicionesLicitadores">
@@ -118,6 +142,29 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element name="numMinEmpleadosAcreditarRequisito" nillable="true" type="tns1:Campo"/>
      <element name="requerCVVVA" nillable="true" type="xsd:string"/>
      <element name="requerCVVVAcreditarRequisito" nillable="true" type="tns1:Campo"/>
+    </sequence>
+   </complexType>
+   <complexType name="RequisitfiDeclaraciones">
+    <sequence>
+     <element name="descripcion" nillable="true" type="xsd:string"/>
+     <element name="nombre" nillable="true" type="xsd:string"/>
+     <element name="requisitEspecifico" nillable="true" type="tns1:Campo"/>
+     <element name="requisitEspecificoAcreditarRequisito" nillable="true" type="tns1:Campo"/>
+    </sequence>
+   </complexType>
+   <complexType name="DatosEmpresa">
+    <sequence>
+     <element name="clasificacion" nillable="true" type="impl:ArrayOf_tns1_Campo"/>
+     <element name="clasificacionEvidence" nillable="true" type="tns1:Campo"/>
+     <element name="condLicit" nillable="true" type="tns1:CondicionesLicitadores"/>
+     <element name="tipoDeclaracion" nillable="true" type="impl:ArrayOf_tns1_RequisitfiDeclaraciones"/>
+    </sequence>
+   </complexType>
+   <complexType name="AplicacionPresupuestaria">
+    <sequence>
+     <element name="anualidad" nillable="true" type="xsd:string"/>
+     <element name="aplicPres" nillable="true" type="xsd:string"/>
+     <element name="importe" nillable="true" type="xsd:string"/>
     </sequence>
    </complexType>
    <complexType name="CriterioAdjudicacionMultCrit">
@@ -157,34 +204,70 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element name="valoracionTipoOferta" nillable="true" type="tns1:Campo"/>
     </sequence>
    </complexType>
-   <complexType name="PublicacionesOficialesBean">
+   <complexType name="FundacionPrograma">
     <sequence>
-     <element name="enviarBOE" type="xsd:boolean"/>
-     <element name="enviarDOUE" type="xsd:boolean"/>
-     <element name="fechaEnvioBOE" nillable="true" type="xsd:dateTime"/>
-     <element name="fechaEnvioDOUE" nillable="true" type="xsd:dateTime"/>
-     <element name="fechaPubDOUE" nillable="true" type="xsd:dateTime"/>
-     <element name="fechaPubOtrosDiarios" nillable="true" type="xsd:dateTime"/>
-     <element name="nombreOtrosDiarios" nillable="true" type="xsd:string"/>
-     <element name="publishURLOtrosDiarios" nillable="true" type="xsd:string"/>
-     <element name="yaEnviadoBOE" type="xsd:boolean"/>
-     <element name="yaEnviadoDOUE" type="xsd:boolean"/>
+     <element name="programa" nillable="true" type="xsd:string"/>
+     <element name="programasFinanciacionCode" nillable="true" type="tns1:Campo"/>
     </sequence>
    </complexType>
-   <complexType name="Documento">
+   <complexType name="Departamento">
     <sequence>
-     <element name="buyerProfileId" nillable="true" type="xsd:string"/>
-     <element name="contenido" nillable="true" type="xsd:base64Binary"/>
-     <element name="descripcion" nillable="true" type="xsd:string"/>
-     <element name="expedientNumber" nillable="true" type="xsd:string"/>
-     <element name="fechaFirma" nillable="true" type="xsd:dateTime"/>
-     <element name="idTypeDoc" nillable="true" type="xsd:string"/>
-     <element name="mimeCode" nillable="true" type="xsd:string"/>
-     <element name="nameDoc" nillable="true" type="xsd:string"/>
-     <element name="organoContratacion" nillable="true" type="xsd:string"/>
-     <element name="publicationId" nillable="true" type="xsd:string"/>
-     <element name="typeDoc" nillable="true" type="xsd:string"/>
-     <element name="urlDocument" nillable="true" type="xsd:string"/>
+     <element name="calle" nillable="true" type="xsd:string"/>
+     <element name="ciudad" nillable="true" type="xsd:string"/>
+     <element name="codFormatoDirec" nillable="true" type="tns1:Campo"/>
+     <element name="cp" nillable="true" type="xsd:string"/>
+     <element name="email" nillable="true" type="xsd:string"/>
+     <element name="localizacionGeografica" nillable="true" type="tns1:Campo"/>
+     <element name="nombreContacto" nillable="true" type="xsd:string"/>
+     <element name="numeroEdificio" nillable="true" type="xsd:string"/>
+     <element name="pais" nillable="true" type="tns1:Campo"/>
+     <element name="provincia" nillable="true" type="xsd:string"/>
+     <element name="telefono" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="OrganoAsistencia">
+    <sequence>
+     <element name="identificacion" nillable="true" type="xsd:string"/>
+     <element name="informacionOC" nillable="true" type="tns1:Departamento"/>
+     <element name="nombreOrgAsist" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="VariantesOfertas">
+    <sequence>
+     <element name="descVariantes" nillable="true" type="impl:ArrayOf_xsd_string"/>
+     <element name="numMaxVar" nillable="true" type="xsd:string"/>
+     <element name="varianteOferta" type="xsd:boolean"/>
+    </sequence>
+   </complexType>
+   <complexType name="DatosLicitacion">
+    <sequence>
+     <element name="aplicacionPres" nillable="true" type="impl:ArrayOf_tns1_AplicacionPresupuestaria"/>
+     <element name="contratoSujetoRegArmon" nillable="true" type="tns1:Campo"/>
+     <element name="critAdj" nillable="true" type="tns1:CriteriosAdjudicacion"/>
+     <element name="fundacionPrograma" nillable="true" type="tns1:FundacionPrograma"/>
+     <element name="organoAsistencia" nillable="true" type="tns1:OrganoAsistencia"/>
+     <element name="revisionPrecios" nillable="true" type="xsd:string"/>
+     <element name="tipoPresentacionOferta" nillable="true" type="tns1:Campo"/>
+     <element name="variantes" nillable="true" type="tns1:VariantesOfertas"/>
+    </sequence>
+   </complexType>
+   <complexType name="DiariosOficiales">
+    <sequence>
+     <element name="adjudicatarioPYME" nillable="true" type="xsd:boolean"/>
+     <element name="anunAdjudicacionPerfilContratante" nillable="true" type="xsd:dateTime"/>
+     <element name="anunFormalizacionPerfilContratante" nillable="true" type="xsd:dateTime"/>
+     <element name="anunLicitacionPerfilContratante" nillable="true" type="xsd:dateTime"/>
+     <element name="anuncioAdjudicacionBOE" nillable="true" type="xsd:dateTime"/>
+     <element name="anuncioAdjudicacionDOUE" nillable="true" type="xsd:dateTime"/>
+     <element name="anuncioFormalizacionBOE" nillable="true" type="xsd:dateTime"/>
+     <element name="anuncioFormalizacionDOUE" nillable="true" type="xsd:dateTime"/>
+     <element name="anuncioLicitacionBOE" nillable="true" type="xsd:dateTime"/>
+     <element name="anuncioLicitacionDOUE" nillable="true" type="xsd:dateTime"/>
+     <element name="boeAdjudicacion" type="xsd:boolean"/>
+     <element name="boeFormalizacion" type="xsd:boolean"/>
+     <element name="contratoSujetoRegArmon" nillable="true" type="tns1:Campo"/>
+     <element name="doueAdjudicacion" type="xsd:boolean"/>
+     <element name="doueFormalizacion" type="xsd:boolean"/>
     </sequence>
    </complexType>
    <complexType name="DuracionContratoBean">
@@ -195,21 +278,16 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element name="fechaInicio" nillable="true" type="xsd:dateTime"/>
     </sequence>
    </complexType>
-   <complexType name="FundacionPrograma">
+   <complexType name="FormalizacionBean">
     <sequence>
-     <element name="programa" nillable="true" type="xsd:string"/>
-     <element name="programasFinanciacionCode" nillable="true" type="tns1:Campo"/>
-    </sequence>
-   </complexType>
-   <complexType name="Garantia">
-    <sequence>
-     <element name="amountRate" nillable="true" type="xsd:string"/>
-     <element name="constitutionPeriod" nillable="true" type="xsd:dateTime"/>
-     <element name="descripcion" nillable="true" type="impl:ArrayOf_xsd_string"/>
-     <element name="importeGarantia" nillable="true" type="xsd:string"/>
-     <element name="periodoGarantia" nillable="true" type="xsd:string"/>
-     <element name="tipoGarantia" nillable="true" type="tns1:Campo"/>
-     <element name="tipoPeriodo" nillable="true" type="tns1:Campo"/>
+     <element name="descripcionPeriodoFormalizacionContrato" nillable="true" type="xsd:string"/>
+     <element name="diariosOficialesFormalizacion" nillable="true" type="tns1:DiariosOficiales"/>
+     <element name="fechaContrato" nillable="true" type="xsd:dateTime"/>
+     <element name="numContrato" nillable="true" type="xsd:string"/>
+     <element name="periodoValidezFinContrato" nillable="true" type="xsd:dateTime"/>
+     <element name="periodoValidezInicioContrato" nillable="true" type="xsd:dateTime"/>
+     <element name="porcentajeSubcontratacion" nillable="true" type="xsd:string"/>
+     <element name="textoAcuerdoFormalizacion" nillable="true" type="xsd:string"/>
     </sequence>
    </complexType>
    <complexType name="LicitadorBean">
@@ -234,48 +312,11 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element name="tipoIdentificador" nillable="true" type="xsd:string"/>
     </sequence>
    </complexType>
-   <complexType name="Lote">
+   <complexType name="OfertasRecibidas">
     <sequence>
-     <element name="cpv" nillable="true" type="impl:ArrayOf_tns1_Campo"/>
-     <element name="descripcion" nillable="true" type="xsd:string"/>
-     <element name="idLote" nillable="true" type="xsd:string"/>
-     <element name="lugarEjecucionContratoPais" nillable="true" type="tns1:Campo"/>
-     <element name="lugarEjecucionContratoPaisNUTS" nillable="true" type="tns1:Campo"/>
-     <element name="lugarEjecucionContratoProvincia" nillable="true" type="tns1:Campo"/>
-     <element name="presupuestoConIva" nillable="true" type="xsd:double"/>
-     <element name="presupuestoSinIva" nillable="true" type="xsd:double"/>
-    </sequence>
-   </complexType>
-   <complexType name="Lotes">
-    <sequence>
-     <element name="detallePosibilidadAdjudicacion" nillable="true" type="xsd:string"/>
-     <element name="lotes" nillable="true" type="impl:ArrayOf_tns1_Lote"/>
-     <element name="numeroMaximoAdjudicacion" nillable="true" type="xsd:int"/>
-     <element name="numeroMaximoPresentacion" nillable="true" type="xsd:int"/>
-     <element name="seDebeOfertar" nillable="true" type="tns1:Campo"/>
-     <element name="tieneLotes" type="xsd:boolean"/>
-    </sequence>
-   </complexType>
-   <complexType name="PersonalContacto">
-    <sequence>
-     <element name="calle" nillable="true" type="xsd:string"/>
-     <element name="ciudad" nillable="true" type="xsd:string"/>
-     <element name="codFormatoDirec" nillable="true" type="tns1:Campo"/>
-     <element name="cp" nillable="true" type="xsd:string"/>
-     <element name="email" nillable="true" type="xsd:string"/>
-     <element name="localizacionGeografica" nillable="true" type="tns1:Campo"/>
-     <element name="nombreContacto" nillable="true" type="xsd:string"/>
-     <element name="numeroEdificio" nillable="true" type="xsd:string"/>
-     <element name="pais" nillable="true" type="tns1:Campo"/>
-     <element name="provincia" nillable="true" type="xsd:string"/>
-     <element name="telefono" nillable="true" type="xsd:string"/>
-    </sequence>
-   </complexType>
-   <complexType name="OrganoAsistencia">
-    <sequence>
-     <element name="identificacion" nillable="true" type="xsd:string"/>
-     <element name="informacionOC" nillable="true" type="tns1:PersonalContacto"/>
-     <element name="nombreOrgAsist" nillable="true" type="xsd:string"/>
+     <element name="numOfertasRecibidas" nillable="true" type="xsd:string"/>
+     <element name="ofertaMasAlta" nillable="true" type="xsd:string"/>
+     <element name="ofertaMasBaja" nillable="true" type="xsd:string"/>
     </sequence>
    </complexType>
    <complexType name="Periodo">
@@ -289,12 +330,84 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element name="tipoDuracion" nillable="true" type="tns1:Campo"/>
     </sequence>
    </complexType>
-   <complexType name="RequisitfiDeclaraciones">
+   <complexType name="DatosTramitacion">
     <sequence>
+     <element name="adjudicatarioPYME" nillable="true" type="xsd:boolean"/>
+     <element name="codigoAdjudicacion" nillable="true" type="tns1:Campo"/>
+     <element name="diariosOficiales" nillable="true" type="tns1:DiariosOficiales"/>
+     <element name="duracionContrato" nillable="true" type="tns1:DuracionContratoBean"/>
+     <element name="estadoExpediente" nillable="true" type="xsd:string"/>
+     <element name="fechaAperturaProposiones" nillable="true" type="xsd:dateTime"/>
+     <element name="fechaAprobacionExpedienteContratacion" nillable="true" type="xsd:dateTime"/>
+     <element name="fechaAprobacionProyecto" nillable="true" type="xsd:dateTime"/>
+     <element name="fechaBOPExpCont" nillable="true" type="xsd:dateTime"/>
+     <element name="fechaBOPFormalizacion" nillable="true" type="xsd:dateTime"/>
+     <element name="formalizacion" nillable="true" type="tns1:FormalizacionBean"/>
+     <element name="invitacioneLicitar" nillable="true" type="xsd:string"/>
+     <element name="licitador" nillable="true" type="impl:ArrayOf_tns1_LicitadorBean"/>
+     <element name="ofertasRecibidas" nillable="true" type="tns1:OfertasRecibidas"/>
+     <element name="presentacionOfertas" nillable="true" type="tns1:Periodo"/>
+     <element name="prorroga" type="xsd:boolean"/>
+     <element name="textoAcuerdo" nillable="true" type="xsd:string"/>
+     <element name="tmpProrroga" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <complexType name="DepartamentosContacto">
+    <sequence>
+     <element name="personalContactoContratacion" nillable="true" type="tns1:Departamento"/>
+     <element name="personalContactoOrganoAsistencia" nillable="true" type="tns1:Departamento"/>
+     <element name="personalContactoSecretaria" nillable="true" type="tns1:Departamento"/>
+    </sequence>
+   </complexType>
+   <complexType name="Documento">
+    <sequence>
+     <element name="buyerProfileId" nillable="true" type="xsd:string"/>
+     <element name="contenido" nillable="true" type="xsd:base64Binary"/>
      <element name="descripcion" nillable="true" type="xsd:string"/>
-     <element name="nombre" nillable="true" type="xsd:string"/>
-     <element name="requisitEspecifico" nillable="true" type="tns1:Campo"/>
-     <element name="requisitEspecificoAcreditarRequisito" nillable="true" type="tns1:Campo"/>
+     <element name="expedientNumber" nillable="true" type="xsd:string"/>
+     <element name="fechaFirma" nillable="true" type="xsd:dateTime"/>
+     <element name="idTypeDoc" nillable="true" type="xsd:string"/>
+     <element name="mimeCode" nillable="true" type="xsd:string"/>
+     <element name="nameDoc" nillable="true" type="xsd:string"/>
+     <element name="organoContratacion" nillable="true" type="xsd:string"/>
+     <element name="publicationId" nillable="true" type="xsd:string"/>
+     <element name="typeDoc" nillable="true" type="xsd:string"/>
+     <element name="urlDocument" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="Garantia">
+    <sequence>
+     <element name="amountRate" nillable="true" type="xsd:string"/>
+     <element name="constitutionPeriod" nillable="true" type="xsd:dateTime"/>
+     <element name="descripcion" nillable="true" type="impl:ArrayOf_xsd_string"/>
+     <element name="importeGarantia" nillable="true" type="xsd:string"/>
+     <element name="periodoGarantia" nillable="true" type="xsd:string"/>
+     <element name="tipoGarantia" nillable="true" type="tns1:Campo"/>
+     <element name="tipoPeriodo" nillable="true" type="tns1:Campo"/>
+    </sequence>
+   </complexType>
+   <complexType name="Lote">
+    <sequence>
+     <element name="cpv" nillable="true" type="impl:ArrayOf_tns1_Campo"/>
+     <element name="datosTramitacion" nillable="true" type="tns1:DatosTramitacion"/>
+     <element name="descripcion" nillable="true" type="xsd:string"/>
+     <element name="idLote" nillable="true" type="xsd:string"/>
+     <element name="lugarEjecucionContratoPais" nillable="true" type="tns1:Campo"/>
+     <element name="lugarEjecucionContratoPaisNUTS" nillable="true" type="tns1:Campo"/>
+     <element name="lugarEjecucionContratoProvincia" nillable="true" type="tns1:Campo"/>
+     <element name="presupuestoConIva" nillable="true" type="xsd:double"/>
+     <element name="presupuestoSinIva" nillable="true" type="xsd:double"/>
+    </sequence>
+   </complexType>
+   <complexType name="Lotes">
+    <sequence>
+     <element name="detallePosibilidadAdjudicacion" nillable="true" type="xsd:string"/>
+     <element name="lotes" nillable="true" type="impl:ArrayOf_tns1_Lote"/>
+     <element name="numLotes" type="xsd:int"/>
+     <element name="numeroMaximoAdjudicacion" type="xsd:int"/>
+     <element name="numeroMaximoPresentacion" type="xsd:int"/>
+     <element name="seDebeOfertar" nillable="true" type="tns1:Campo"/>
+     <element name="tieneLotes" type="xsd:boolean"/>
     </sequence>
    </complexType>
    <complexType name="EventoAperturaBean">
@@ -347,59 +460,85 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      <element name="valorUmbralNoImporte" nillable="true" type="xsd:string"/>
     </sequence>
    </complexType>
-   <complexType name="VariantesOfertas">
+   <complexType name="Solvencia">
     <sequence>
-     <element name="descVariantes" nillable="true" type="impl:ArrayOf_xsd_string"/>
-     <element name="numMaxVar" nillable="true" type="xsd:string"/>
-     <element name="varianteOferta" type="xsd:boolean"/>
+     <element name="solvenciaEconomica" nillable="true" type="impl:ArrayOf_tns1_SolvenciaEconomica"/>
+     <element name="solvenciaTecn" nillable="true" type="impl:ArrayOf_tns1_SolvenciaTecnica"/>
     </sequence>
    </complexType>
    <complexType name="EspacioVirtualLicitacionBean">
     <sequence>
-     <element name="apliPesu" nillable="true" type="impl:ArrayOf_tns1_AplicacionPresupuestaria"/>
-     <element name="clasificacion" nillable="true" type="tns1:Clasificacion"/>
-     <element name="condLicit" nillable="true" type="tns1:CondicionesLicitadores"/>
-     <element name="contratoSujetoRegArmon" nillable="true" type="tns1:Campo"/>
-     <element name="cpv" nillable="true" type="impl:ArrayOf_tns1_Campo"/>
-     <element name="criterios" nillable="true" type="tns1:CriteriosAdjudicacion"/>
-     <element name="diarios" nillable="true" type="tns1:PublicacionesOficialesBean"/>
-     <element name="docAdicionales" nillable="true" type="impl:ArrayOf_tns1_Documento"/>
+     <element name="datosContrato" nillable="true" type="tns1:DatosContrato"/>
+     <element name="datosEmpresa" nillable="true" type="tns1:DatosEmpresa"/>
+     <element name="datosLicitacion" nillable="true" type="tns1:DatosLicitacion"/>
+     <element name="datosTramitacion" nillable="true" type="tns1:DatosTramitacion"/>
+     <element name="departamentosContacto" nillable="true" type="tns1:DepartamentosContacto"/>
+     <element name="diariosOficiales" nillable="true" type="tns1:DiariosOficiales"/>
+     <element name="docAnexoPliegoAdicionales" nillable="true" type="impl:ArrayOf_tns1_Documento"/>
      <element name="documentoPCAP" nillable="true" type="tns1:Documento"/>
      <element name="documentoPPT" nillable="true" type="tns1:Documento"/>
-     <element name="duracionContrato" nillable="true" type="tns1:DuracionContratoBean"/>
-     <element name="fechaPresentacionSolcitudesParticipacion" nillable="true" type="xsd:dateTime"/>
-     <element name="formulaRevisionPrecios" nillable="true" type="xsd:string"/>
-     <element name="fundacionPrograma" nillable="true" type="tns1:FundacionPrograma"/>
+     <element name="documentoPublicacion" nillable="true" type="tns1:Documento"/>
      <element name="garantia" nillable="true" type="impl:ArrayOf_tns1_Garantia"/>
      <element name="licitadores" nillable="true" type="impl:ArrayOf_tns1_LicitadorBean"/>
      <element name="lotes" nillable="true" type="tns1:Lotes"/>
-     <element name="lugarEjecucionContrato" nillable="true" type="tns1:Campo"/>
      <element name="numexp" nillable="true" type="xsd:string"/>
-     <element name="objetoContrato" nillable="true" type="xsd:string"/>
-     <element name="organoAsistencia" nillable="true" type="tns1:OrganoAsistencia"/>
-     <element name="organoContratacion" nillable="true" type="xsd:string"/>
-     <element name="personalContactoContratacion" nillable="true" type="tns1:PersonalContacto"/>
-     <element name="personalContactoSecretaria" nillable="true" type="tns1:PersonalContacto"/>
-     <element name="presentacionOfertas" nillable="true" type="tns1:Periodo"/>
-     <element name="presupuestoConIva" nillable="true" type="xsd:string"/>
-     <element name="presupuestoSinIva" nillable="true" type="xsd:string"/>
-     <element name="procContratacion" nillable="true" type="tns1:Campo"/>
      <element name="publishedByUser" nillable="true" type="xsd:string"/>
-     <element name="reqDecl" nillable="true" type="impl:ArrayOf_tns1_RequisitfiDeclaraciones"/>
-     <element name="sobreElect" nillable="true" type="impl:ArrayOf_tns1_SobreElectronico"/>
-     <element name="solvenciaEconomica" nillable="true" type="impl:ArrayOf_tns1_SolvenciaEconomica"/>
-     <element name="solvenciaTecn" nillable="true" type="impl:ArrayOf_tns1_SolvenciaTecnica"/>
-     <element name="subTipoContrato" nillable="true" type="tns1:Campo"/>
-     <element name="tipoContrato" nillable="true" type="tns1:Campo"/>
-     <element name="tipoPresentacionOferta" nillable="true" type="tns1:Campo"/>
-     <element name="tipoTramitacion" nillable="true" type="tns1:Campo"/>
-     <element name="tramitacionGasto" nillable="true" type="tns1:Campo"/>
-     <element name="valorEstimadoContrato" nillable="true" type="xsd:string"/>
-     <element name="varOfert" nillable="true" type="tns1:VariantesOfertas"/>
+     <element name="sobreElectronico" nillable="true" type="impl:ArrayOf_tns1_SobreElectronico"/>
+     <element name="solvencia" nillable="true" type="tns1:Solvencia"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://dto.tramitacion.services.core.sgm.tecdoc.ieci" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://objeto.contratacion.dipucr.es"/>
+   <import namespace="http://ws.licitacionelectronica.dipucr.es"/>
+   <import namespace="http://sw.objeto.contratacion.dipucr.es"/>
+   <complexType name="DocumentoExpediente">
+    <sequence>
+     <element name="code" nillable="true" type="xsd:string"/>
+     <element name="content" nillable="true" type="xsd:base64Binary"/>
+     <element name="extension" nillable="true" type="xsd:string"/>
+     <element name="id" nillable="true" type="xsd:string"/>
+     <element name="lenght" type="xsd:int"/>
+     <element name="name" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema elementFormDefault="qualified" targetNamespace="http://objeto.contratacion.dipucr.es" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://ws.licitacionelectronica.dipucr.es"/>
+   <import namespace="http://dto.tramitacion.services.core.sgm.tecdoc.ieci"/>
+   <import namespace="http://sw.objeto.contratacion.dipucr.es"/>
+   <complexType name="Adjudicatario">
+    <sequence>
+     <element name="codigoPostal" nillable="true" type="xsd:string"/>
+     <element name="direccionPostal" nillable="true" type="xsd:string"/>
+     <element name="documento" nillable="true" type="tns3:DocumentoExpediente"/>
+     <element name="identificador" nillable="true" type="xsd:string"/>
+     <element name="lote" nillable="true" type="xsd:string"/>
+     <element name="mail" nillable="true" type="xsd:string"/>
+     <element name="municipio" nillable="true" type="xsd:string"/>
+     <element name="nombre" nillable="true" type="xsd:string"/>
+     <element name="provincia" nillable="true" type="xsd:string"/>
+     <element name="telefono" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="Peticion">
+    <sequence>
+     <element name="entidad" nillable="true" type="xsd:string"/>
+     <element name="expediente" nillable="true" type="xsd:string"/>
+     <element name="idFase" type="xsd:int"/>
+     <element name="idTramite" type="xsd:int"/>
     </sequence>
    </complexType>
   </schema>
  </wsdl:types>
+
+   <wsdl:message name="crearAdjucatarioRequest">
+
+      <wsdl:part element="impl:crearAdjucatario" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
 
    <wsdl:message name="getEspacioVirtualLicitacionBeanRequest">
 
@@ -417,6 +556,14 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
    </wsdl:message>
 
+   <wsdl:message name="crearAdjucatarioResponse">
+
+      <wsdl:part element="impl:crearAdjucatarioResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
    <wsdl:portType name="LicitacionElectronicaWS">
 
       <wsdl:operation name="getEspacioVirtualLicitacionBean">
@@ -426,6 +573,18 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
        </wsdl:input>
 
          <wsdl:output message="impl:getEspacioVirtualLicitacionBeanResponse" name="getEspacioVirtualLicitacionBeanResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="crearAdjucatario">
+
+         <wsdl:input message="impl:crearAdjucatarioRequest" name="crearAdjucatarioRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:crearAdjucatarioResponse" name="crearAdjucatarioResponse">
 
        </wsdl:output>
 
@@ -448,6 +607,24 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
          </wsdl:input>
 
          <wsdl:output name="getEspacioVirtualLicitacionBeanResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="crearAdjucatario">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="crearAdjucatarioRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="crearAdjucatarioResponse">
 
             <wsdlsoap:body use="literal"/>
 

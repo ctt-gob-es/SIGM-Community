@@ -76,6 +76,24 @@ public class BaseDireccionVO extends Entity {
 	 * Tercero al que pertenece la direccion.
 	 */
 	protected BaseTerceroVO tercero;
+	
+	public boolean equals(Object o) {
+		if (null == o || !(o instanceof BaseDireccionVO)){
+			return false;
+		}
+		
+		BaseDireccionVO comparador = (BaseDireccionVO) o;
+		
+		if(null == comparador.getId()){
+			if(null == this.getId()){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		return comparador.getId().equals(this.getId());
+	}
 
 	private static final long serialVersionUID = -7149794802390742709L;
 }

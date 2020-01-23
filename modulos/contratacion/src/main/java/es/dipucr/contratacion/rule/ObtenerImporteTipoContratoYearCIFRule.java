@@ -1,19 +1,5 @@
 package es.dipucr.contratacion.rule;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.apache.log4j.Logger;
-
-import com.sun.star.lang.XComponent;
-import com.sun.star.text.XTextTable;
-
-import es.dipucr.contratacion.common.DipucrFuncionesComunes;
-import es.dipucr.sigem.api.rule.common.documento.DipucrAutoGeneraDocIniTramiteRule;
-import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
-import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
-import es.dipucr.sigem.api.rule.common.utils.LibreOfficeUtil;
-import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
@@ -22,6 +8,21 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.apache.log4j.Logger;
+
+import com.sun.star.lang.XComponent;
+import com.sun.star.text.XTextTable;
+
+import es.dipucr.contratacion.objeto.sw.common.DipucrFuncionesComunesSW;
+import es.dipucr.sigem.api.rule.common.documento.DipucrAutoGeneraDocIniTramiteRule;
+import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.LibreOfficeUtil;
+import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
 
 public class ObtenerImporteTipoContratoYearCIFRule extends DipucrAutoGeneraDocIniTramiteRule {
 	
@@ -122,15 +123,15 @@ public class ObtenerImporteTipoContratoYearCIFRule extends DipucrAutoGeneraDocIn
 	    					else{
 	    						numexpErroneos = new StringBuilder();	
 	    						int color = 0;
-	    						if(tiposContratos.get(j).equals("3 - Obras") && cantiaAdj>DipucrFuncionesComunes.CUANTIACONTRATISTAOBRAS){
+	    						if(tiposContratos.get(j).equals("3 - Obras") && cantiaAdj>DipucrFuncionesComunesSW.CUANTIACONTRATISTAOBRAS){
 	    							color=0xFF0000;
 	    						}
 	    						else{
-	    							if(tiposContratos.get(j).equals("2 - Servicios") && cantiaAdj>DipucrFuncionesComunes.CUANTIACONTRATISTASERVICIOS){
+	    							if(tiposContratos.get(j).equals("2 - Servicios") && cantiaAdj>DipucrFuncionesComunesSW.CUANTIACONTRATISTASERVICIOS){
 	    								color=0xFF0000;
 		    						}
 	    							else{
-	    								if(tiposContratos.get(j).equals("1 - Suministros") && cantiaAdj>DipucrFuncionesComunes.CUANTIACONTRATISTASUMINISTROS){
+	    								if(tiposContratos.get(j).equals("1 - Suministros") && cantiaAdj>DipucrFuncionesComunesSW.CUANTIACONTRATISTASUMINISTROS){
 	    									color=0xFF0000;
 			    						}
 	    							}

@@ -12,7 +12,7 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.contratacion.services.PlataformaContratacionStub.Campo;
+import es.dipucr.contratacion.objeto.sw.Campo;
 import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
@@ -36,7 +36,7 @@ public class ControlarDocObligatorioTramContratoDepRule implements IRule{
 		try {	
 			//Informe razonado de la necesidad de un contrato administrativo
 			if(tieneFirmadoTipoDoc(rulectx, "inf-nec-cont-adm")){
-				Iterator<IItem> itPeticion = ConsultasGenericasUtil.queryEntities(rulectx, "CONTRATACION_PETICION", "NUMEXP='"+rulectx.getNumExp()+"'");
+				Iterator<IItem> itPeticion = ConsultasGenericasUtil.queryEntities(rulectx.getClientContext(), "CONTRATACION_PETICION", "NUMEXP='"+rulectx.getNumExp()+"'");
 				if(itPeticion.hasNext()){
 					IItem peticion = itPeticion.next();
 					String tipoContrato = "";

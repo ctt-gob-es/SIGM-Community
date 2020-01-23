@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import es.msssi.dir3.api.dao.UnitDao;
+import es.dipucr.api.helper.UTFHelper;
 import es.msssi.dir3.api.dao.direccion.ConstantesAddress;
 import es.msssi.dir3.api.type.OperatorCriterionEnum;
 import es.msssi.dir3.api.type.UOCriterionEnum;

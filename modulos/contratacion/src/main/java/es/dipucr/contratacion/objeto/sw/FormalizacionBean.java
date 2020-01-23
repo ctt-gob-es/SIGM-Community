@@ -2,18 +2,16 @@ package es.dipucr.contratacion.objeto.sw;
 
 import java.util.Calendar;
 
-import es.dipucr.contratacion.services.PlataformaContratacionStub.Documento;
-
 public class FormalizacionBean {
 	//Datos del contrato.
 	private String numContrato;
 	private Calendar fechaContrato;
 	private Calendar periodoValidezInicioContrato;
 	private Calendar periodoValidezFinContrato;
-	private Documento docContrato;
 	private String porcentajeSubcontratacion;
 	private String textoAcuerdoFormalizacion = null;
 	private String descripcionPeriodoFormalizacionContrato = null;
+	private DiariosOficiales diariosOficialesFormalizacion = null;
 	
 	
 	public String getNumContrato() {
@@ -41,12 +39,6 @@ public class FormalizacionBean {
 	public void setPeriodoValidezFinContrato(Calendar periodoValidezFinContrato) {
 		this.periodoValidezFinContrato = periodoValidezFinContrato;
 	}
-	public Documento getDocContrato() {
-		return docContrato;
-	}
-	public void setDocContrato(Documento docContrato) {
-		this.docContrato = docContrato;
-	}
 	public String getPorcentajeSubcontratacion() {
 		return porcentajeSubcontratacion;
 	}
@@ -65,5 +57,12 @@ public class FormalizacionBean {
 	public void setDescripcionPeriodoFormalizacionContrato(
 			String descripcionPeriodoFormalizacionContrato) {
 		this.descripcionPeriodoFormalizacionContrato = descripcionPeriodoFormalizacionContrato;
+	}
+	public DiariosOficiales getDiariosOficialesFormalizacion() {
+		return diariosOficialesFormalizacion;
+	}
+	public void setDiariosOficialesFormalizacion(
+			DiariosOficiales diariosOficialesFormalizacion) {
+		this.diariosOficialesFormalizacion = diariosOficialesFormalizacion;
 	}
 }

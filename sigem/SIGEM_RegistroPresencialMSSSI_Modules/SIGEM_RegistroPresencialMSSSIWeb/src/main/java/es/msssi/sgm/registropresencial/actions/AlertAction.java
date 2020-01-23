@@ -22,6 +22,7 @@ import com.ieci.tecdoc.common.exception.SessionException;
 import com.ieci.tecdoc.common.exception.ValidationException;
 
 import es.msssi.sgm.registropresencial.businessobject.DistributionBo;
+import es.msssi.sgm.registropresencial.businessobject.IncompletosBo;
 import es.msssi.sgm.registropresencial.errors.ErrorConstants;
 import es.msssi.sgm.registropresencial.utils.Utils;
 
@@ -38,11 +39,52 @@ public class AlertAction extends GenericActions {
 	private DistributionBo distributionBo;
 	/** alertas de distribución. */
 	private List<String> alertDistribution;
+	
+	private boolean hayAlertDistribution = false;
+	
+	private IncompletosBo incompletosBo;
+	private List<String> alertIncompletos;
+	private boolean hayAlertIncompletos = false;
 
 	/**
 	 * Constructor.
 	 */
 	public AlertAction() {
+	}
+
+	/**
+	 * Método que muestra las alertas de registros incompletos
+	 * al contexto.
+	 */
+	public void showAlertIncompletos() {
+		
+		if(incompletosBo == null){
+			incompletosBo = new IncompletosBo();
+		}
+		
+		try {
+			alertIncompletos = incompletosBo.getListMessageInit(useCaseConf);
+			
+			if (alertIncompletos != null && alertIncompletos.size() > 0) {
+				hayAlertIncompletos = true;
+				for (int cont = 0; cont < alertIncompletos.size(); cont++) {
+
+					FacesContext.getCurrentInstance().addMessage( "messagesIncompletos", new FacesMessage(FacesMessage.SEVERITY_INFO, "", alertIncompletos.get(cont)));
+				}
+			}
+			
+		} catch (SessionException sessionException) {
+			LOG.error(ErrorConstants.SHOW_DISTRIBUTION_ALERTS_ERROR_MESSAGE, sessionException);
+			Utils.redirectToErrorPage(null, sessionException, null);
+			
+		} catch (ValidationException validationException) {
+			LOG.error(ErrorConstants.SHOW_DISTRIBUTION_ALERTS_ERROR_MESSAGE, validationException);
+			Utils.redirectToErrorPage(null, validationException, null);
+			
+		} catch (DistributionException distributionException) {
+			LOG.error(ErrorConstants.SHOW_DISTRIBUTION_ALERTS_ERROR_MESSAGE, distributionException);
+			Utils.redirectToErrorPage(null, distributionException, null);
+		}
 	}
 
 	/**
@@ -59,9 +101,10 @@ public class AlertAction extends GenericActions {
 			alertDistribution = distributionBo.getListMessageInit(useCaseConf);
 			
 			if (alertDistribution != null && alertDistribution.size() > 0) {
+				hayAlertDistribution = true;
 				for (int cont = 0; cont < alertDistribution.size(); cont++) {
 
-					FacesContext.getCurrentInstance().addMessage( null, new FacesMessage(FacesMessage.SEVERITY_INFO, "", alertDistribution.get(cont)));
+					FacesContext.getCurrentInstance().addMessage( "messages", new FacesMessage(FacesMessage.SEVERITY_INFO, "", alertDistribution.get(cont)));
 				}
 			}
 			
@@ -97,4 +140,41 @@ public class AlertAction extends GenericActions {
 	public void setAlertDistribution(List<String> alertDistribution) {
 		this.alertDistribution = alertDistribution;
 	}
+
+	public boolean isHayAlertDistribution() {
+		return hayAlertDistribution;
+	}
+
+	public void setHayAlertDistribution(boolean hayAlertDistribution) {
+		this.hayAlertDistribution = hayAlertDistribution;
+	}
+
+	/**
+	 * Obtiene el valor del parámetro alertIncompletos
+	 * 
+	 * @return alertIncompletos
+	 * 				valor del campo a obtener
+	 */
+	public List<String> getAlertIncompletos() {
+		return alertIncompletos;
+	}
+
+	/**
+	 * Guarda el valor del parámetro alertIncompletos
+	 * 
+	 * @return alertIncompletos
+	 * 				valor del campo a guardar
+	 */
+	public void setAlertIncompletos(List<String> alertIncompletos) {
+		this.alertIncompletos = alertIncompletos;
+	}
+
+	public boolean isHayAlertIncompletos() {
+		return hayAlertIncompletos;
+	}
+
+	public void setHayAlertIncompletos(boolean hayAlertIncompletos) {
+		this.hayAlertIncompletos = hayAlertIncompletos;
+	}
+	
 }

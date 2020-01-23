@@ -140,6 +140,8 @@ public abstract class TXCloseStage implements ITXAction {
 		hito.set("INFO", composeInfo());
 		hito.set("FECHA_LIMITE",stagedeadline);
 		
+		hito.store(cs.getConnection());//[dipucr-Felipe Manuel #884]
+		
 		// Se lanza los eventos correspondientes tras terminar
 		executeAfterEvents(cs, process, stage);
 		

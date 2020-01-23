@@ -64,7 +64,8 @@ public class PrepararAnuncioBopRule implements IRule
     		
     		//[eCenpri-Felipe Ticket #63] 29.07.2010 Se añade la extensión odt
     		//Buscamos el anuncio entre los documentos adjuntos
-			IItemCollection docs = entitiesAPI.getDocuments(rulectx.getNumExp(), " NOMBRE='Anexo a Solicitud' AND (EXTENSION='DOC' OR EXTENSION='ODT')", "");
+			IItemCollection docs = entitiesAPI.getDocuments(rulectx.getNumExp(), " TP_REG = 'ENTRADA' "
+					+ " AND (UPPER(EXTENSION) = UPPER('" + Constants._EXTENSION_DOC + "') OR UPPER(EXTENSION) = UPPER('" + Constants._EXTENSION_ODT + "'))", "");
 	        Iterator it = docs.iterator();
         	
 	        while (it.hasNext())
@@ -98,7 +99,7 @@ public class PrepararAnuncioBopRule implements IRule
     		file.delete();
     		
     		//Borra los documentos intermedios del gestor documental
-	        IItemCollection collection = DocumentosUtil.getDocumentsByDescripcion(rulectx.getNumExp(), rulectx, "borrar");
+	        IItemCollection collection = DocumentosUtil.getDocumentsByDescripcion(rulectx.getNumExp(), cct, "borrar");
 	        it = collection.iterator();
 	        while (it.hasNext())
 	        {

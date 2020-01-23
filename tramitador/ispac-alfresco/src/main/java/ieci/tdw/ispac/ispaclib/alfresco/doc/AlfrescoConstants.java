@@ -19,5 +19,9 @@ public class AlfrescoConstants {
 	public static final String ALFRESCO_REPOSITORY_WEBSCRIPT_URL = "ALFRESCO_REPOSITORY_WEBSCRIPT_URL";
 	
 	public static final String DOCUMENT_NAME_TOKEN 		= "DOCUMENT_NAME_TOKEN";
-	
+
+	// UPCT - Versión de alfresco para CMIS
+	public static final String ALFRESCO_VERSION 		= "ALFRESCO_VERSION";
+	public static final String ALFRESCO_PROTOCOL 		= "ALFRESCO_PROTOCOL";
+
 }

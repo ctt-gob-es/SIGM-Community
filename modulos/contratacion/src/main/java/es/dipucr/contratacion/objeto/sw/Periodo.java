@@ -1,31 +1,27 @@
 
 package es.dipucr.contratacion.objeto.sw;
 
+import java.util.Calendar;
+
 public class Periodo{
-    private java.lang.String[] description;
-
+    private String[] description;
     private Campo[] descriptionCode;
-
-    private java.lang.String duracion;
-
+    private String duracion;
     private Campo durationMeasure;
-
-    private java.util.Calendar endCalendar;
-
-    private java.util.Calendar startCalendar;
-
+    private Calendar endCalendar;
+    private Calendar startCalendar;
     private Campo tipoDuracion;
 
     public Periodo() {
     }
 
     public Periodo(
-           java.lang.String[] description,
+           String[] description,
            Campo[] descriptionCode,
-           java.lang.String duracion,
+           String duracion,
            Campo durationMeasure,
-           java.util.Calendar endCalendar,
-           java.util.Calendar startCalendar,
+           Calendar endCalendar,
+           Calendar startCalendar,
            Campo tipoDuracion) {
            this.description = description;
            this.descriptionCode = descriptionCode;
@@ -42,7 +38,7 @@ public class Periodo{
      * 
      * @return description
      */
-    public java.lang.String[] getDescription() {
+    public String[] getDescription() {
         return description;
     }
 
@@ -52,7 +48,7 @@ public class Periodo{
      * 
      * @param description
      */
-    public void setDescription(java.lang.String[] description) {
+    public void setDescription(String[] description) {
         this.description = description;
     }
 
@@ -82,7 +78,7 @@ public class Periodo{
      * 
      * @return duracion
      */
-    public java.lang.String getDuracion() {
+    public String getDuracion() {
         return duracion;
     }
 
@@ -92,7 +88,7 @@ public class Periodo{
      * 
      * @param duracion
      */
-    public void setDuracion(java.lang.String duracion) {
+    public void setDuracion(String duracion) {
         this.duracion = duracion;
     }
 
@@ -122,7 +118,7 @@ public class Periodo{
      * 
      * @return endCalendar
      */
-    public java.util.Calendar getEndCalendar() {
+    public Calendar getEndCalendar() {
         return endCalendar;
     }
 
@@ -132,7 +128,7 @@ public class Periodo{
      * 
      * @param endCalendar
      */
-    public void setEndCalendar(java.util.Calendar endCalendar) {
+    public void setEndCalendar(Calendar endCalendar) {
         this.endCalendar = endCalendar;
     }
 
@@ -142,7 +138,7 @@ public class Periodo{
      * 
      * @return startCalendar
      */
-    public java.util.Calendar getStartCalendar() {
+    public Calendar getStartCalendar() {
         return startCalendar;
     }
 
@@ -152,7 +148,7 @@ public class Periodo{
      * 
      * @param startCalendar
      */
-    public void setStartCalendar(java.util.Calendar startCalendar) {
+    public void setStartCalendar(Calendar startCalendar) {
         this.startCalendar = startCalendar;
     }
 

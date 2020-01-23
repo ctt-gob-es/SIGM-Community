@@ -1,7 +1,9 @@
 package es.ieci.tecdoc.isicres.document.connector.alfresco.utils;
 
-import java.io.File;
 import java.rmi.RemoteException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,7 +13,6 @@ import org.alfresco.webservice.authoring.CheckoutResult;
 import org.alfresco.webservice.content.Content;
 import org.alfresco.webservice.content.ContentServiceSoapBindingStub;
 import org.alfresco.webservice.repository.RepositoryServiceSoapBindingStub;
-import org.alfresco.webservice.repository.UpdateResult;
 import org.alfresco.webservice.types.CML;
 import org.alfresco.webservice.types.CMLAddAspect;
 import org.alfresco.webservice.types.CMLCreate;
@@ -24,15 +25,16 @@ import org.alfresco.webservice.types.Predicate;
 import org.alfresco.webservice.types.Reference;
 import org.alfresco.webservice.types.Store;
 import org.alfresco.webservice.util.Constants;
-import org.alfresco.webservice.util.ContentUtils;
 import org.alfresco.webservice.util.Utils;
+import org.apache.commons.lang.StringUtils;
+
+//import ctsi.StringCTSI;
 
 import es.ieci.tecdoc.isicres.document.connector.alfresco.keys.AlfrescoKeys;
 import es.ieci.tecdoc.isicres.document.connector.alfresco.vo.AlfrescoAspectVO;
 import es.ieci.tecdoc.isicres.document.connector.alfresco.vo.AlfrescoDatosEspecificosValueVO;
 import es.ieci.tecdoc.isicres.document.connector.alfresco.vo.AlfrescoDatosEspecificosVO;
 import es.ieci.tecdoc.isicres.document.connector.vo.ISicresAbstractDocumentVO;
-import es.ieci.tecdoc.isicres.document.connector.vo.ISicresDatosEspecificos;
 
 /**
  * 
@@ -42,6 +44,7 @@ import es.ieci.tecdoc.isicres.document.connector.vo.ISicresDatosEspecificos;
  */
 public class UtilsAlfresco {
 
+	public static final String PATH_SEPARATOR = "/";   
 	protected static final Store STORE = new Store(Constants.WORKSPACE_STORE, AlfrescoKeys.NAME_SPACE_STORE);
 	
 	/**
@@ -248,5 +251,25 @@ public class UtilsAlfresco {
 	    
 	    return cml;
     }
+    
+ 	// [Ruben CMIS] Incluyo este metodo que no teníamos para la integración CMIS
+    // SIGEM-1129 Grabar en directorios según fecha en TRAMITADOR (YYYY/MM/DD)
+ 	// Devuelve una cadena en formato YYYY/MM/DD
+ 	public static String getFolderPathYYYYMMDD() {
+ 		Date fechaActual = new Date();
+ 		Calendar c = new GregorianCalendar();
+ 		c.setTime(fechaActual);
+
+ 		Integer year = c.get(Calendar.YEAR);
+ 		Integer month = c.get(Calendar.MONTH) + 1;
+ 		Integer day = c.get(Calendar.DAY_OF_MONTH);
+ 	 	
+ 		String folderYYYYMMDDD = String.valueOf(year) + 
+								PATH_SEPARATOR + StringUtils.leftPad(String.valueOf(month), 2, '0') +
+								PATH_SEPARATOR + StringUtils.leftPad(String.valueOf(day), 2, '0');
+		
+		return folderYYYYMMDDD;
+ 	}
+ 	
 
 }

@@ -4,6 +4,9 @@ public class Peticion {
 	private String presupuestoConIva;
 	private String presupuestoSinIva;
 	private String objetoContrato;
+	private String servicioResponsable;
+	private String presupuestoIva;
+	private String iva;
 	
 	public String getPresupuestoConIva() {
 		return presupuestoConIva;
@@ -22,5 +25,23 @@ public class Peticion {
 	}
 	public void setObjetoContrato(String objetoContrato) {
 		this.objetoContrato = objetoContrato;
+	}
+	public String getServicioResponsable() {
+		return servicioResponsable;
+	}
+	public void setServicioResponsable(String servicioResponsable) {
+		this.servicioResponsable = servicioResponsable;
+	}
+	public String getPresupuestoIva() {
+		return presupuestoIva;
+	}
+	public void setPresupuestoIva(String presupuestoIva) {
+		this.presupuestoIva = presupuestoIva;
+	}
+	public String getIva() {
+		return iva;
+	}
+	public void setIva(String iva) {
+		this.iva = iva;
 	}
 }

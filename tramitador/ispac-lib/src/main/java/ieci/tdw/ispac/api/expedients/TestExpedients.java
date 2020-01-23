@@ -73,7 +73,7 @@ public class TestExpedients {
         /* Tipo mime no permitido
         File f3 = new File("C:\\temp\\prueba.java");
         InputStream in3 = new FileInputStream(f3);
-        Document document3 = new Document("Anexo a Solicitud", "Informe de Valoración", in3, "java", (int) f3.length());
+        Document document3 = new Document("TD14 - Solicitud", "Informe de Valoración", in3, "java", (int) f3.length());
         */
         
         //documents.add(document1);

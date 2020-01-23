@@ -32,8 +32,12 @@ public class ISPACConfiguration extends PropertiesConfiguration {
 	public final static String TEMPLATE_PATH = "TEMPLATE_PATH";
 	public final static String REPORT_PATH ="REPORT_PATH";
 	public final static String IMAGES_REPOSITORY_PATH="IMAGES_REPOSITORY_PATH";
+	
+	// Conector gestor documental
 	public final static String CONNECTOR_MANAGER = "CONNECTOR_MANAGER";
 	public final static String CONNECTOR_MANAGER_CFG_VARNAME = "CONNECTOR_MANAGER_CFG_VARNAME";
+	public final static String CONNECTOR_MANAGER_SIGN_METADATA_NAME = "CONNECTOR_MANAGER_SIGN_METADATA_NAME";
+	
 	public final static String CONNECTOR_ARCHIVE = "CONNECTOR_ARCHIVE";
 	public final static String REPOSITORY_PATH = "REPOSITORY_PATH";
 	public final static String MAX_DIRECTORY_FILES = "MAX_DIRECTORY_FILES";
@@ -234,9 +238,24 @@ public class ISPACConfiguration extends PropertiesConfiguration {
 		if (mInstance == null) {
 			mInstance = new ISPACConfiguration();
 			mInstance.initiate(DEFAULT_CONFIG_FILENAME);
+			
+			inicializaValoresPorDefecto();
 		}
 		return mInstance;
 	}
+	
+	/* Este método permite inicializar variables con un valor por defecto si no se
+	 * definieron en el fichero de configuracion.
+	 */
+	private static synchronized void inicializaValoresPorDefecto() {
+		
+		// Respetamos el valor por defecto que tenía antes de definir la propiedad en el fichero
+		if (mInstance.get(CONNECTOR_MANAGER_SIGN_METADATA_NAME) == null) {
+			mInstance.setProperty(CONNECTOR_MANAGER_SIGN_METADATA_NAME, "Firma");
+		}
+		
+	}
+	
 
 //	public FileInputStream getFileInputStream(String fileName)
 //            throws ISPACException {

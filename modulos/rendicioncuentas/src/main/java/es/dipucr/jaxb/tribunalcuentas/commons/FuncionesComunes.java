@@ -25,14 +25,16 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.log4j.Logger;
 
-import es.dipucr.contratacion.objeto.DatosContrato;
-import es.dipucr.contratacion.objeto.DatosEmpresa;
-import es.dipucr.contratacion.objeto.DatosLicitacion;
-import es.dipucr.contratacion.objeto.DatosTramitacion;
-import es.dipucr.contratacion.objeto.DiariosFechaOficiales;
 import es.dipucr.contratacion.objeto.sw.AplicacionPresupuestaria;
 import es.dipucr.contratacion.objeto.sw.Campo;
+import es.dipucr.contratacion.objeto.sw.DatosContrato;
+import es.dipucr.contratacion.objeto.sw.DatosEmpresa;
+import es.dipucr.contratacion.objeto.sw.DatosLicitacion;
+import es.dipucr.contratacion.objeto.sw.DatosTramitacion;
+import es.dipucr.contratacion.objeto.sw.DiariosOficiales;
 import es.dipucr.contratacion.objeto.sw.LicitadorBean;
+import es.dipucr.contratacion.objeto.sw.Lotes;
+import es.dipucr.contratacion.objeto.sw.Peticion;
 import es.dipucr.jaxb.juntaconsultiva.commons.Constantes.PROC_ADJUDICACION;
 import es.dipucr.jaxb.juntaconsultiva.commons.Constantes.TRAMITE;
 import es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion;
@@ -43,12 +45,15 @@ import es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.EnteContratante.Depa
 import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos;
 import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos.Contrato;
 import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos.Contrato.Contratista;
+import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos.Contrato.Modificacion;
 import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos.Contrato.Publicidad;
 import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos.Contrato.Publicidad.PublicidadAdjudicacion;
 import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos.Contrato.Publicidad.PublicidadFormalizacion;
 import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos.Contrato.Publicidad.PublicidadLicitacion;
+import es.dipucr.jaxb.tribunalcuentas.beans.RelacionContratos.ContratoMenor;
 import es.dipucr.jaxb.tribunalcuentas.beans.SistemaAdjudicacion;
 import es.dipucr.jaxb.tribunalcuentas.beans.TipoContrato;
+import es.dipucr.jaxb.tribunalcuentas.beans.TipoContratoMenor;
 import es.dipucr.jaxb.tribunalcuentas.beans.Tramitacion;
 import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.FechasUtil;
@@ -131,7 +136,7 @@ public class FuncionesComunes {
 		return usuario;
 	}
 
-	public static Vector<String> obtenerCodProcedRendicionCuentas(IRuleContext rulectx) throws ISPACRuleException {
+	/*public static Vector<String> obtenerCodProcedRendicionCuentas(IRuleContext rulectx) throws ISPACRuleException {
 		Vector <String> codProc = new Vector<String>();
 		try{
 			
@@ -146,20 +151,289 @@ public class FuncionesComunes {
 			throw new ISPACRuleException("Error. "+e.getMessage(),e);
 		}
 		return codProc;
+	}*/
+	
+	public static Vector<String> obtenerCodProcedRendicionCuentas(IRuleContext rulectx) throws ISPACRuleException {
+		Vector <String> codProc = new Vector<String>();
+		try{
+			String query = " id_padre in (SELECT id FROM spac_ct_procedimientos WHERE nombre='Procedimiento Contratación' or nombre='Procedimiento de Contratación')";
+			Iterator <IItem> it = ConsultasGenericasUtil.queryEntities(rulectx.getClientContext(), "SPAC_CT_PROCEDIMIENTOS", query);
+			while(it.hasNext()){
+				IItem datos = it.next();
+				codProc.add(datos.getString("COD_PCD"));
+			}
+			
+		}catch (ISPACException e){
+			LOGGER.error(e.getMessage(), e);
+			throw new ISPACRuleException("Error. "+e.getMessage(),e);
+		}
+		return codProc;
+	}
+	
+	public static ContratoMenor getContratoMenor(DatosContrato datosContrato, DatosTramitacion datosTramitacion, Peticion peticion, DiariosOficiales diariosOficiales) {
+		ContratoMenor contratoMenor = null;
+		if(null != datosTramitacion && null != datosContrato){	
+			contratoMenor = new ContratoMenor();
+			
+			//Contrato menor
+			contratoMenor.setLey("2");		
+			
+			//Numero de referencia
+			contratoMenor.setReferencia(datosContrato.getNumContrato());
+			
+			contratoMenor.setTipoContrato(obtenerTipoContratoMenor(datosContrato.getTipoContrato()));
+			
+			contratoMenor.setObjeto(remove(datosContrato.getObjetoContrato()));
+			
+			if(null != datosTramitacion.getDuracionContrato() && null != datosTramitacion.getDuracionContrato().getDuracion()){
+				String duracion = datosTramitacion.getDuracionContrato().getDuracion();
+				String[] vDuracion = duracion.split("\\.");
+				if(vDuracion.length==1){
+					contratoMenor.setDuracion(new BigDecimal(duracion+".0"));
+				} else{
+					contratoMenor.setDuracion(new BigDecimal(duracion));
+				}
+			}
+			else{
+				contratoMenor.setDuracion(new BigDecimal("1.0"));
+			}
+			
+			
+			//Compruebo que tenga los dos decimales
+			if(null != peticion.getPresupuestoConIva()){
+				String valor = peticion.getPresupuestoConIva();
+				String [] vValor = valor.split("\\.");
+				if(vValor.length==1){
+					contratoMenor.setPrecLicitacion(new BigDecimal(valor+".00"));
+				} else{
+					if(vValor[1].length()==1){
+						contratoMenor.setPrecLicitacion(new BigDecimal(valor+"0"));
+					} else{
+						if(vValor[1].length()==2){
+							contratoMenor.setPrecLicitacion(new BigDecimal(valor));							
+						}
+						else{
+							contratoMenor.setPrecLicitacion(new BigDecimal(vValor[0]+"."+vValor[1].substring(0, 1)));
+						}					
+					}
+				}
+			}
+			else{
+				if(null != datosTramitacion.getLicitador()[0].getImporteConImpuestos()){
+					String valor = datosTramitacion.getLicitador()[0].getImporteConImpuestos();
+					valor = valor.replace(",", ".");
+					valor = valor.replace(" ", "");
+					String [] vValor = valor.split("\\.");
+					if(vValor.length==1){
+						contratoMenor.setPrecLicitacion(new BigDecimal(valor+".00"));
+					} else{
+						if(vValor[1].length()==1){
+							contratoMenor.setPrecLicitacion(new BigDecimal(valor+"0"));
+						} else{
+							if(vValor[1].length()==2){
+								contratoMenor.setPrecLicitacion(new BigDecimal(valor));							
+							}
+							else{
+								contratoMenor.setPrecLicitacion(new BigDecimal(vValor[0]+"."+vValor[1].substring(0, 1)));
+							}
+						}
+					}
+				}
+			}
+			
+			if(null != datosTramitacion.getLicitador() && datosTramitacion.getLicitador().length>0){
+				if(null != peticion && null!= peticion.getPresupuestoIva()){
+					String valor = peticion.getPresupuestoIva();
+					valor = valor.replace(",", ".");
+					valor = valor.replace(" ", "");
+					LOGGER.warn("IVA. "+valor);
+					String [] vValor = valor.split("\\.");
+					LOGGER.warn("IVA. "+vValor.length);
+					if(vValor.length==1){
+						contratoMenor.setIvaLicitacion(new BigDecimal(valor+".00"));
+					} else{
+						if(vValor[1].length()==1){
+							contratoMenor.setIvaLicitacion(new BigDecimal(valor+"0"));
+						} else{
+							if(vValor[1].length()==2){
+								contratoMenor.setIvaLicitacion(new BigDecimal(valor));							
+							}
+							else{
+								contratoMenor.setIvaLicitacion(new BigDecimal(vValor[0]+"."+vValor[1].substring(0, 1)));
+							}
+						}
+					}
+				}
+				else{
+					if(null != datosTramitacion.getLicitador()[0].getImporteConImpuestos() && null != datosTramitacion.getLicitador()[0].getImporteSinImpuestos()){
+						String valorConImpuestos = datosTramitacion.getLicitador()[0].getImporteConImpuestos();
+						valorConImpuestos = valorConImpuestos.replace(",", ".");
+						valorConImpuestos = valorConImpuestos.replace(" ", "");
+						String valorSinImpuestos = datosTramitacion.getLicitador()[0].getImporteSinImpuestos();
+						valorSinImpuestos = valorSinImpuestos.replace(",", ".");
+						valorSinImpuestos = valorSinImpuestos.replace(" ", "");
+						float decValorConImpuestos = Float.parseFloat(valorConImpuestos);
+						float decValorSinImpuestos = Float.parseFloat(valorSinImpuestos);
+						float total = decValorConImpuestos - decValorSinImpuestos;
+						String sTotal = total+"";
+						LOGGER.warn("IVA. "+sTotal);
+						String [] vValor = sTotal.split("\\.");
+						LOGGER.warn("IVA. "+vValor.length);
+						if(vValor.length==1){
+							contratoMenor.setIvaLicitacion(new BigDecimal(sTotal+".00"));
+						} else{
+							if(vValor[1].length()==1){
+								contratoMenor.setIvaLicitacion(new BigDecimal(sTotal+"0"));
+							} else{
+								if(vValor[1].length()==2){
+									contratoMenor.setIvaLicitacion(new BigDecimal(sTotal));							
+								}
+								else{
+									contratoMenor.setIvaLicitacion(new BigDecimal(vValor[0]+"."+vValor[1].substring(0, 1)));
+								}
+							}
+						}
+					}
+				}
+				
+				if(null != datosTramitacion.getLicitador()[0].getImporteConImpuestos()){
+					String valor = datosTramitacion.getLicitador()[0].getImporteConImpuestos();
+					valor = valor.replace(",", ".");
+					valor = valor.replace(" ", "");
+					String [] vValor = valor.split("\\.");
+					if(vValor.length==1){
+						contratoMenor.setPrecAdjudicacion(new BigDecimal(valor+".00"));
+					} else{
+						if(vValor[1].length()==1){
+							contratoMenor.setPrecAdjudicacion(new BigDecimal(valor+"0"));
+						} else{
+							if(vValor[1].length()==2){
+								contratoMenor.setPrecAdjudicacion(new BigDecimal(valor));							
+							}
+							else{
+								contratoMenor.setPrecAdjudicacion(new BigDecimal(vValor[0]+"."+vValor[1].substring(0, 1)));
+							}
+						}
+					}
+				}
+				if(null != datosTramitacion.getLicitador()[0].getImporteConImpuestos() && null != datosTramitacion.getLicitador()[0].getImporteSinImpuestos()){
+					String valorConImpuestos = datosTramitacion.getLicitador()[0].getImporteConImpuestos();
+					valorConImpuestos = valorConImpuestos.replace(",", ".");
+					valorConImpuestos = valorConImpuestos.replace(" ", "");
+					String valorSinImpuestos = datosTramitacion.getLicitador()[0].getImporteSinImpuestos();
+					valorSinImpuestos = valorSinImpuestos.replace(",", ".");
+					valorSinImpuestos = valorSinImpuestos.replace(" ", "");
+					float decValorConImpuestos = Float.parseFloat(valorConImpuestos);
+					float decValorSinImpuestos = Float.parseFloat(valorSinImpuestos);
+					float total = decValorConImpuestos - decValorSinImpuestos;
+					String sTotal = total+"";
+					LOGGER.warn("sTotal "+sTotal);
+					String [] vValor = sTotal.split("\\.");
+					LOGGER.warn("vValor "+vValor.length);
+					if(vValor.length==1){
+						contratoMenor.setIvaAdjudicacion(new BigDecimal(sTotal+".00"));
+					} else{
+						if(vValor[1].length()==1){
+							contratoMenor.setIvaAdjudicacion(new BigDecimal(sTotal+"0"));
+						} else{
+							if(vValor[1].length()==2){
+								contratoMenor.setIvaAdjudicacion(new BigDecimal(sTotal));							
+							}
+							else{
+								contratoMenor.setIvaAdjudicacion(new BigDecimal(vValor[0]+"."+vValor[1].substring(0, 1)));
+							}
+						}
+					}
+				}
+				//Indicador de adjudicación definitiva del contrato
+				if(null != datosTramitacion.getLicitador()[0].getFechaAdjudicacion()){
+					contratoMenor.setFechaAdjDef(FechasUtil.getFormattedDate(datosTramitacion.getLicitador()[0].getFechaAdjudicacion().getTime()));
+				}				
+			}
+			
+			RelacionContratos.ContratoMenor.Publicidad publicidad = new RelacionContratos.ContratoMenor.Publicidad();
+			
+			boolean existePublicidad = false;
+			boolean existePublicidadLicitacion = false;
+			boolean existePublicidadFormalizacion = false;
+			RelacionContratos.ContratoMenor.Publicidad.PublicidadLicitacion publicidadLictacion = new RelacionContratos.ContratoMenor.Publicidad.PublicidadLicitacion();
+		
+			if(null != diariosOficiales){
+				//Licitacion
+				if(null != diariosOficiales.getAnuncioLicitacionBOE()){
+					existePublicidadLicitacion = true;
+					existePublicidad = true;
+					publicidadLictacion.setFechaOtros(FechasUtil.getFormattedDate(diariosOficiales.getAnuncioLicitacionBOE().getTime()));
+				}
+				if(null != datosTramitacion.getFechaBOPExpCont()){
+					existePublicidad = true;
+					existePublicidadLicitacion = true;
+					publicidadLictacion.setFechaOtros(FechasUtil.getFormattedDate(datosTramitacion.getFechaBOPExpCont().getTime()));
+				}
+				if(null != diariosOficiales.getAnunLicitacionPerfilContratante()){
+					existePublicidad = true;
+					existePublicidadLicitacion = true;
+					publicidadLictacion.setFechaContEstado(FechasUtil.getFormattedDate(diariosOficiales.getAnunLicitacionPerfilContratante().getTime()));
+					publicidadLictacion.setFechaPerfil(FechasUtil.getFormattedDate(diariosOficiales.getAnunLicitacionPerfilContratante().getTime()));
+				}
+				publicidad.setPublicidadLicitacion(publicidadLictacion);
+			}
+			
+
+			if(existePublicidad){
+				publicidad.setExistePublicidad(Constantes.TIPO_INFORMATIVO.SI);
+			} else{
+				publicidad.setExistePublicidad(Constantes.TIPO_INFORMATIVO.NO);
+			}
+			contratoMenor.setPublicidad(publicidad);
+			
+			
+			LicitadorBean[] vlicitador = datosTramitacion.getLicitador();
+			if(vlicitador.length>0){
+				RelacionContratos.ContratoMenor.Contratista contratista = null;
+				for(int i=0; i<vlicitador.length; i++){
+					LicitadorBean licitador = vlicitador[i];
+					contratista = new RelacionContratos.ContratoMenor.Contratista();
+					contratista.setAdjudicatario(licitador.getNombre());
+					contratista.setNacionalidad("ES");
+					contratista.setNIF(licitador.getIdentificador());
+				}
+				contratoMenor.getContratista().add(contratista);
+			}
+			
+			if(datosTramitacion.getTextoAcuerdo()==null || StringUtils.isEmpty(datosTramitacion.getTextoAcuerdo())){
+				contratoMenor.setObservaciones(remove(datosContrato.getObjetoContrato()));
+			} else{
+				contratoMenor.setObservaciones(remove(datosTramitacion.getTextoAcuerdo()));
+			}
+			
+		}
+		return contratoMenor;
 	}
 
-	public static Contrato getContrato(DatosContrato datosContrato, DatosTramitacion datosTramitacion, DiariosFechaOficiales diariosFechaOficiales) {
+	public static Contrato getContrato(DatosContrato datosContrato, DatosTramitacion datosTramitacion, DiariosOficiales diariosFechaOficiales, Lotes lotes) {
 		Contrato contrato = null;
 		
 		if(null != datosTramitacion && null != datosContrato){	
 			contrato = new Contrato();
 			
+			if(datosContrato.isNuevaLey())contrato.setLey("4");
+			else contrato.setLey("1");
+		
+			
 			//Numero de referencia
 			contrato.setReferencia(datosContrato.getNumContrato());
 			
 			//Indicador de si es un contarto por lotes.
-			//No tenemos contratos por lotes.
-			contrato.setLotes(Constantes.TIPO_INFORMATIVO.NO);
+			if(lotes!=null && lotes.isTieneLotes()){
+				contrato.setLotes(Constantes.TIPO_INFORMATIVO.SI);
+				contrato.setNumLotes(lotes.getNumLotes());
+			}
+			else{
+				//No tenemos contratos por lotes.
+				contrato.setLotes(Constantes.TIPO_INFORMATIVO.NO);
+			}
+			
 			
 			//Indicador de si es un contrato derivado de acuerdo marco
 			contrato.setAcuerdoMarco(Constantes.TIPO_INFORMATIVO.NO);
@@ -223,7 +497,12 @@ public class FuncionesComunes {
 					if(vValor[1].length()==1){
 						contrato.setPrecLicitacion(new BigDecimal(valor+"0"));
 					} else{
-						contrato.setPrecLicitacion(new BigDecimal(valor));
+						if(vValor[1].length()==2){
+							contrato.setPrecLicitacion(new BigDecimal(valor));
+						}
+						else{
+							contrato.setPrecLicitacion(new BigDecimal(vValor[0]+"."+vValor[1].substring(0, 1)));
+						}
 					}
 				}
 			}
@@ -238,7 +517,12 @@ public class FuncionesComunes {
 						if(vValor[1].length()==1){
 							contrato.setPrecAdjudicacion(new BigDecimal(valor+"0"));
 						} else{
-							contrato.setPrecAdjudicacion(new BigDecimal(valor));
+							if(vValor[1].length()==2){
+								contrato.setPrecAdjudicacion(new BigDecimal(valor));								
+							}
+							else{
+								contrato.setPrecAdjudicacion(new BigDecimal(vValor[0]+"."+vValor[1].substring(0, 1)));
+							}							
 						}
 					}
 				}
@@ -247,6 +531,25 @@ public class FuncionesComunes {
 				//contrato.setAdjDef("ADJ DEF");
 				if(null != datosTramitacion.getLicitador()[0].getFechaAdjudicacion()){
 					contrato.setAdjDef(Constantes.TIPO_INFORMATIVO.SI);
+					if(null != datosTramitacion.getLicitador()[0].getImporteConImpuestos()){
+						String valor = datosTramitacion.getLicitador()[0].getImporteConImpuestos();
+						String [] vValor = valor.split("\\.");
+						if(vValor.length==1){
+							contrato.setIvaAdjudicacion(new BigDecimal(valor+".00"));
+						} else{
+							if(vValor[1].length()==1){
+								contrato.setIvaAdjudicacion(new BigDecimal(valor+"0"));
+							} else{
+								if(vValor[1].length()==2){
+									contrato.setIvaAdjudicacion(new BigDecimal(valor));							
+								}
+								else{
+									contrato.setIvaAdjudicacion(new BigDecimal(vValor[0]+"."+vValor[1].substring(0, 1)));
+								}							
+							}
+						}
+					}
+					contrato.setIngreso(Constantes.TIPO_INFORMATIVO.NO);
 					contrato.setFechaAdjDef(FechasUtil.getFormattedDate(datosTramitacion.getLicitador()[0].getFechaAdjudicacion().getTime()));
 				} else{
 					contrato.setAdjDef(Constantes.TIPO_INFORMATIVO.NO);
@@ -349,11 +652,11 @@ public class FuncionesComunes {
 			contrato.setPublicidad(publicidad);
 
 			
-			es.dipucr.contratacion.services.PlataformaContratacionStub.LicitadorBean[] vlicitador = datosTramitacion.getLicitador();
+			LicitadorBean[] vlicitador = datosTramitacion.getLicitador();
 			if(vlicitador.length>0){
 				Contratista contratista = null;
 				for(int i=0; i<vlicitador.length; i++){
-					es.dipucr.contratacion.services.PlataformaContratacionStub.LicitadorBean licitador = vlicitador[i];
+					LicitadorBean licitador = vlicitador[i];
 					contratista = new Contratista();
 					contratista.setAdjudicatario(licitador.getNombre());
 					contratista.setNacionalidad("ES");
@@ -385,7 +688,7 @@ public class FuncionesComunes {
 	    return output;
 	}//remove
 
-	private static Tramitacion obtenerTramitacion(es.dipucr.contratacion.services.PlataformaContratacionStub.Campo campo) {
+	private static Tramitacion obtenerTramitacion(Campo campo) {
 		Tramitacion tramitacion = null;
 		if("Ordinaria".equals(campo.getValor())){
 			tramitacion = Tramitacion.O;
@@ -398,8 +701,26 @@ public class FuncionesComunes {
 		}
 		return tramitacion;
 	}
-
-	private static SistemaAdjudicacion obtenerSistemaAdjudicacion(es.dipucr.contratacion.services.PlataformaContratacionStub.Campo campo, boolean criterioMultiples) {
+	/**
+	 * Sistema de Adjudicación.
+				Los valores posibles son:
+				A - Abierto criterio precio (solo Contrato no menor, sujeto al Real Decreto Legislativo 3/2011 (TRLCSP))
+				M - Abierto criterios múltiples
+				R - Restringido criterio precio (solo Contrato no menor, sujeto al Real Decreto Legislativo 3/2011 (TRLCSP))
+				C - Restringido criterios múltiples
+				N - Negociado con publicidad (solo Contrato no menor, sujeto al Real Decreto Legislativo 3/2011 (TRLCSP))
+				S - Negociado sin publicidad
+				D - Diálogo competitivo
+				O - Otros
+				B - Abierto único criterio (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				E - Abierto simplificado (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				F - Abierto simplificado sumario (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				G - Concurso de proyectos (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				H - Restringido único criterio (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				I - Licitación con negociación (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				J - Asociación para la innovación (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+	 * **/
+	private static SistemaAdjudicacion obtenerSistemaAdjudicacion(Campo campo, boolean criterioMultiples) {
 		SistemaAdjudicacion sistemaAdj = null;
 		if("Abierto".equals(campo.getValor())){
 			if(criterioMultiples){
@@ -407,12 +728,24 @@ public class FuncionesComunes {
 			} else{
 				sistemaAdj = SistemaAdjudicacion.A;
 			}
-		}
+		}		
 		if("Negociado sin publicidad".equals(campo.getValor())){
 			sistemaAdj = SistemaAdjudicacion.S;
 		}
 		if("Negociado con publicidad".equals(campo.getValor())){
 			sistemaAdj = SistemaAdjudicacion.N;
+		}
+		if("Abierto simplificado".equals(campo.getValor())){
+			sistemaAdj = SistemaAdjudicacion.E;
+		}
+		if("Restringido".equals(campo.getValor())){
+			sistemaAdj = SistemaAdjudicacion.H;
+		}
+		if("Licitación con negociación".equals(campo.getValor())){
+			sistemaAdj = SistemaAdjudicacion.I;
+		}
+		if("Asociación para la innovación".equals(campo.getValor())){
+			sistemaAdj = SistemaAdjudicacion.J;
 		}
 		return sistemaAdj;
 	}
@@ -423,13 +756,15 @@ public class FuncionesComunes {
 				E - Servicios
 				C - Suministro
 				F - Contratos Administrativos Especiales
-				H - Contratos ConcesiÃ³n Obras PÃºblicas
-				B - Contratos GestiÃ³n Servicios PÃºblicos
+				H - Contratos Concesión Obras Públicas
+				B - Contratos Gestión Servicios Públicos
 				I - Contratos Privados
-				J - Contratos ColaboraciÃ³n Sector PÃºblico y Privado
+				J - Contratos Colaboración Sector Público y Privado
 				Z - Otros
+				K - Concesión de Obras (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
+				L - Concesión de Servicios (solo Contrato no menor, sujeto a la Ley 9/2017 (LCSP))
 	 * **/
-	private static TipoContrato obtenerTipoContrato(es.dipucr.contratacion.services.PlataformaContratacionStub.Campo campo) {
+	private static TipoContrato obtenerTipoContrato(Campo campo) {
 		TipoContrato tipoContratoTribunal = null;
 		if("Obras".equals(campo.getValor())){
 			tipoContratoTribunal = TipoContrato.A;
@@ -442,9 +777,67 @@ public class FuncionesComunes {
 				} else{
 					if("Privado".equals(campo.getValor())){
 						tipoContratoTribunal = TipoContrato.I;
-					} else{
-						tipoContratoTribunal = TipoContrato.Z;
-					}
+					}else{
+						if("Administrativo especial".equals(campo.getValor())){
+							tipoContratoTribunal = TipoContrato.F;
+						}
+						else{
+							if("Concesión de Obras Públicas".equals(campo.getValor())){
+								tipoContratoTribunal = TipoContrato.H;
+							}
+							else{
+								if("Gestión de Servicios Públicos".equals(campo.getValor())){
+									tipoContratoTribunal = TipoContrato.B;
+								}
+								else{
+									if("Colaboración entre el sector público y sector privado".equals(campo.getValor())){
+										tipoContratoTribunal = TipoContrato.J;
+									}
+									else{
+										if("Concesión de Obras".equals(campo.getValor())){
+											tipoContratoTribunal = TipoContrato.K;
+										}
+										else{
+											if("Concesión de Servicios".equals(campo.getValor())){
+												tipoContratoTribunal = TipoContrato.L;
+											}
+											else{
+												tipoContratoTribunal = TipoContrato.Z;
+											}											
+										}										
+									}
+									
+								}								
+							}
+						}						
+					}					
+				}
+			}
+		}
+		return tipoContratoTribunal;
+	}
+	/**
+	 * Tipo de Contrato.
+				Los valores posibles son:
+				Tipo de Contrato.
+				Los valores posibles son:
+				A - Obras
+				E - Servicios
+				C - Suministro
+				Z - Otros
+	 * **/
+	private static TipoContratoMenor obtenerTipoContratoMenor(Campo campo) {
+		TipoContratoMenor tipoContratoTribunal = null;
+		if("Obras".equals(campo.getValor())){
+			tipoContratoTribunal = TipoContratoMenor.A;
+		} else{
+			if("Servicios".equals(campo.getValor())){
+				tipoContratoTribunal = TipoContratoMenor.E;
+			} else{
+				if("Suministros".equals(campo.getValor())){
+					tipoContratoTribunal = TipoContratoMenor.C;
+				} else{
+						tipoContratoTribunal = TipoContratoMenor.Z;
 				}
 			}
 		}
@@ -500,7 +893,7 @@ public class FuncionesComunes {
 	}
 
 	public static es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.EnteContratante.Departamento.OrganoContratante.Contrato getContratoJuntaConsultiva(DatosContrato datosContrato,
-			DatosTramitacion datosTramitacion, DiariosFechaOficiales diariosFechaOficiales, DatosLicitacion datosLicitacion, DatosEmpresa datosEmpresa) throws ISPACRuleException {
+			DatosTramitacion datosTramitacion, DiariosOficiales diariosFechaOficiales, DatosLicitacion datosLicitacion, DatosEmpresa datosEmpresa) throws ISPACRuleException {
 		es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.EnteContratante.Departamento.OrganoContratante.Contrato contrato = new es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.EnteContratante.Departamento.OrganoContratante.Contrato();
 		
 		try {
@@ -534,9 +927,9 @@ public class FuncionesComunes {
 			
 			//Sólo permite meter un CPV
 			if(null != datosContrato.getCpv() && datosContrato.getCpv().length>0){
-				es.dipucr.contratacion.services.PlataformaContratacionStub.Campo[] sCPV = datosContrato.getCpv();
+				Campo[] sCPV = datosContrato.getCpv();
 				for(int i=0; i<datosContrato.getCpv().length; i++){
-					es.dipucr.contratacion.services.PlataformaContratacionStub.Campo cpv = sCPV[i];
+					Campo cpv = sCPV[i];
 					CPV jcCpv = new CPV();
 					jcCpv.setCodigoCPV(cpv.getId());
 					Calendar calendar = Calendar.getInstance(); 
@@ -648,11 +1041,11 @@ public class FuncionesComunes {
 			contrato.setRevisionPrecios("No");
 			if(null != datosLicitacion && null != datosLicitacion.getAplicacionPres()){
 				//Aplicacion Presupuestaria
-				es.dipucr.contratacion.services.PlataformaContratacionStub.AplicacionPresupuestaria[] vPresupuestaria = datosLicitacion.getAplicacionPres();
+				AplicacionPresupuestaria[] vPresupuestaria = datosLicitacion.getAplicacionPres();
 				if(null != vPresupuestaria && vPresupuestaria.length>0){
 					contrato.setPlurianual("Si");
 					for(int i=0; i<vPresupuestaria.length; i++){
-						es.dipucr.contratacion.services.PlataformaContratacionStub.AplicacionPresupuestaria aplicacPre = vPresupuestaria[i];
+						AplicacionPresupuestaria aplicacPre = vPresupuestaria[i];
 						Anualidad anualidad = new Anualidad();
 						Calendar calendar = Calendar.getInstance(); 
 						calendar.set(Calendar.YEAR, Integer.parseInt(aplicacPre.getAnualidad()));
@@ -676,10 +1069,10 @@ public class FuncionesComunes {
 			}
 
 			if(null != datosEmpresa && null != datosEmpresa.getClasificacion()){
-				es.dipucr.contratacion.services.PlataformaContratacionStub.Campo[] vClasificacion = datosEmpresa.getClasificacion();
+				Campo[] vClasificacion = datosEmpresa.getClasificacion();
 				//clasificacion exigida
 				for(int i = 0; i < vClasificacion.length; i++){
-					es.dipucr.contratacion.services.PlataformaContratacionStub.Campo clasi = vClasificacion[i];
+					Campo clasi = vClasificacion[i];
 					ClasificacionExigida clasificacion = new ClasificacionExigida();
 					clasificacion.setCategoria(clasi.getId().substring(2,3));
 					clasificacion.setGrupo(clasi.getId().substring(0,1));
@@ -690,7 +1083,7 @@ public class FuncionesComunes {
 	
 			//Contratista
 			if(null != datosTramitacion.getLicitador() && datosTramitacion.getLicitador().length>0){
-				es.dipucr.contratacion.services.PlataformaContratacionStub.LicitadorBean licitador = datosTramitacion.getLicitador()[0];
+				LicitadorBean licitador = datosTramitacion.getLicitador()[0];
 				boolean bcontratista = false;
 				es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.EnteContratante.Departamento.OrganoContratante.Contrato.Contratista contratista = 
 						new es.dipucr.jaxb.juntaconsultiva2.beans.DgpDeclaracion.EnteContratante.Departamento.OrganoContratante.Contrato.Contratista();
@@ -746,7 +1139,7 @@ public class FuncionesComunes {
 	}
 
 
-	private static String getProcedimientoAdjud(es.dipucr.contratacion.services.PlataformaContratacionStub.Campo campo) {
+	private static String getProcedimientoAdjud(Campo campo) {
 		String procedimiento = "";
 		if(null != campo){
 			if(campo.getValor().contains("Abierto")){
@@ -762,7 +1155,7 @@ public class FuncionesComunes {
 		return procedimiento;
 	}
 
-	private static String getTramite(es.dipucr.contratacion.services.PlataformaContratacionStub.Campo campo) {
+	private static String getTramite(Campo campo) {
 		String tramite = "";
 		if(null != campo){
 			if("Ordinaria".equals(campo.getValor())){

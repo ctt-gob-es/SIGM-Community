@@ -10,7 +10,7 @@ package es.dipucr.contratacion.services;
 
 public class PlataformaContratacionDatatypeConfigurationExceptionException extends java.lang.Exception{
 
-    private static final long serialVersionUID = 1544789038051L;
+    private static final long serialVersionUID = 1552041273772L;
     
     private es.dipucr.contratacion.services.PlataformaContratacionStub.PlataformaContratacionDatatypeConfigurationException faultMessage;
 

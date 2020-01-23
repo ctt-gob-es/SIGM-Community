@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.api.helper.UTFHelper;
 import es.msssi.dir3.api.type.OfficeCriterionEnum;
 import es.msssi.dir3.api.type.OperatorCriterionEnum;
 import es.msssi.dir3.api.vo.AddressVO;
