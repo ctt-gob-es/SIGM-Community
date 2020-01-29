@@ -17,7 +17,8 @@
 
 	<name>fwktd-audit</name>
 	<description>Modulo de auditoria</description>
-
+  
+  <!--  
   <repositories>
     <repository>
       <id>googlecode</id>
@@ -27,7 +28,15 @@
       <id>uji</id>
       <url>http://devel.uji.es/nexus/content/groups/public/</url>
     </repository>
-  </repositories>
+  </repositories>  
+  -->
+  <repositories>
+		<repository>
+			<id>repo_arch</id>
+			<name>repo_arch</name>
+			<url>file:${project.basedir}/../../lib</url>
+		</repository>
+	</repositories>
 
   <properties>
 
