@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- SECURITY POLICY -->
+	<!-- Validate SP by ID and Domain or only by Domain (spid|domain) -->
+	<entry key="validation.method">spid</entry>
+	<!-- limit of requests per IP during max.time (-1 unlimited) -->
+	<entry key="max.requests">-1</entry>
+	<!-- time frame for IP requests (seconds) -->
+	<entry key="max.time">60</entry>
+	<!-- allowed domains (none|all|list;Of;Domains) -->
+	<entry key="trusted.domains">all</entry>
+
+    <entry key="allow.redirect.binding">true</entry>
+	<entry key="validate.binding">true</entry>
+
+    <!-- Feature selector for the security header added to the EidasNode-->
+    <!-- This feature once disabled, switch off the content security policy-->
+    <entry key="security.header.CSP.enabled">true</entry>
+    <!-- Header specific for mozilla browser backwards compatibility : xhr-src: 'self' -->
+    <entry key="security.header.CSP.includeMozillaDirectives">true</entry>
+    <!-- X-XSS-Protection:1; mode=block -->
+    <entry key="security.header.XXssProtection.block">true</entry>
+    <!-- X-Content-Type-Options:nosniff -->
+    <entry key="security.header.XContentTypeOptions.noSniff">true</entry>
+    <!-- X-Frame-Options:SAMEORIGIN -->
+    <entry key="security.header.XFrameOptions.sameOrigin">false</entry>
+
+</properties>

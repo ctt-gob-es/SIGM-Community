@@ -3,27 +3,26 @@
 CREATE TABLE ORVE_HISTO_REGISTRO(
 	id integer NOT NULL,
 	identificador_orve int,
-	nreg_sigem varchar(20),
-	fecha_registro timestamp without time zone,
+	nreg_sigem VARCHAR2(20 CHAR),
+	fecha_registro timestamp,
 	  
 	CONSTRAINT pk_id_orve_histo_registro PRIMARY KEY (id)
 );
 
 --DROP SEQUENCE SPAC_SQ_ID_ORVEHISTOREGISTRO;
 CREATE SEQUENCE SPAC_SQ_ID_ORVEHISTOREGISTRO
-  INCREMENT 1
+  INCREMENT BY 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
+  START WITH 1;
 
 
-CREATE OR REPLACE FUNCTION spac_nextval(
-    IN sequence_name character varying,
+  -- Molinero: esta función no se crea. No debería ser necesaria en Oracle.
+--CREATE OR REPLACE FUNCTION spac_nextval(
+/**    IN sequence_name VARCHAR2,
     OUT sequence_id numeric)
-  RETURNS numeric AS
-$BODY$
-DECLARE stmt varchar(512);
+  RETURN numeric AS $BODY$
+DECLARE stmt VARCHAR2(512 CHAR);
 
 BEGIN
 
@@ -31,26 +30,33 @@ stmt:='SELECT nextval(''' || sequence_name || ''')' ;
 
 EXECUTE  stmt INTO sequence_id;
 
-END$BODY$
+END
+
+$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
+*/
+-------------------------------
   
---DROP TABLE  orve_fecha_ultima_actualizacion;
-create table orve_fecha_ultima_actualizacion(
-	id integer NOT NULL,
-	fecha_ultima_actualizacion timestamp without time zone,
-	correo_enviado varchar(2),
+-- Molinero: hubo que recortar el nombre de este objeto. Seguramente provoque errores en ejecución.
 
-	CONSTRAINT pk_id_orve_fecha_ultima_actualizacion PRIMARY KEY (id)
+--DROP TABLE  orve_fecha_ultima_act;
+create table orve_fecha_ultima_act(
+	id integer NOT NULL,
+	fecha_ultima_actualizacion timestamp,
+	correo_enviado VARCHAR2(2 CHAR),
+
+	CONSTRAINT pk_id_orve_fecha_ultima_act PRIMARY KEY (id)
 );
 
---DROP SEQUENCE SPAC_SQ_ID_ORVEFECHAULTIMAACTUALIZACION;
-CREATE SEQUENCE SPAC_SQ_ID_ORVEFECHAULTIMAACTUALIZACION
-  INCREMENT 1
+-- Molinero: hubo que recortar el nombre de este objeto. Seguramente provoque errores en ejecución.
+
+--DROP SEQUENCE SPAC_SQ_ID_ORVEFECHAULTIMAACT;
+CREATE SEQUENCE SPAC_SQ_ID_ORVEFECHAULTIMAACT
+  INCREMENT BY 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
+  START WITH 1;
 
 
 
@@ -84,18 +90,19 @@ INSERT INTO scr_usrloc (userid, tmstamp, address, city, zip, country, telephone,
 
 UPDATE iusernextid SET id= id+1 WHERE type=1;
 
-
-INSERT INTO iuserdepthdr (id, name, parentid, mgrid, type, remarks, crtrid, crtndate, updrid, upddate) VALUES ((select id From iusernextid where type=2), 'OFICINA DE ORVE', 0, 3, 1, NULL, 3, '2018-09-12 14:44:22', 3, '2018-09-12 14:44:22');
+INSERT INTO iuserdepthdr (id, name, parentid, mgrid, type, remarks, crtrid, crtndate, updrid, upddate) VALUES ((select id From iusernextid where type=2), 'OFICINA DE ORVE', 0, 3, 1, NULL, 3, to_date('2018-09-12','yyyy-mm-dd'), 3, to_date('2018-09-12','yyyy-mm-dd'));
 
 UPDATE SCR_CONTADOR SET CONTADOR = CONTADOR+1 where tablaid='SCR_OFIC';
-INSERT INTO scr_ofic (id, code, acron, name, creation_date, disable_date, id_orgs, stamp, deptid, type) VALUES ((select CONTADOR from scr_contador where tablaid='SCR_OFIC'), '998', 'ORVE', 'SIR/ORVE', '2018-09-12 14:44:22', NULL, 4890, '', (select id From iusernextid where type=2), 2);
+INSERT INTO scr_ofic (id, code, acron, name, creation_date, disable_date, id_orgs, stamp, deptid, type) VALUES ((select CONTADOR from scr_contador where tablaid='SCR_OFIC'), '998', 'ORVE', 'SIR/ORVE', to_date('2018-09-12','yyyy-mm-dd'), NULL, 4890, '', (select id From iusernextid where type=2), 2);
 
 UPDATE iusernextid SET id = id+1  WHERE type=2;
 
 
 UPDATE SCR_CONTADOR SET CONTADOR = CONTADOR+1 where tablaid='SCR_CA';
-insert into scr_ca (id, code, matter, for_ereg, for_sreg, all_ofics, id_arch, creation_date, disable_date, enabled, id_org) values ((select CONTADOR from scr_contador where tablaid='SCR_CA'),'ORVE','ORVE',1,1,1,0,'2018-09-12 14:44:22',null,1,0);
+insert into scr_ca (id, code, matter, for_ereg, for_sreg, all_ofics, id_arch, creation_date, disable_date, enabled, id_org) values ((select CONTADOR from scr_contador where tablaid='SCR_CA'),'ORVE','ORVE',1,1,1,0,to_date('2018-09-12','yyyy-mm-dd'),null,1,0);
 
 
+-- En la UPNA no tenemos definido el contador para la tabla SCR_TT
+insert into scr_contador values ('SCR_TT',0);
 UPDATE SCR_CONTADOR SET CONTADOR = CONTADOR+1 where tablaid='SCR_TT';
 insert into scr_tt (id, transport) values ((select CONTADOR from scr_contador where tablaid='SCR_TT'),'ORVE');

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+  ~ Copyright (c) 2015 by European Commission
+  ~
+  ~ Licensed under the EUPL, Version 1.1 or - as soon they will be approved by
+  ~ the European Commission - subsequent versions of the EUPL (the "Licence");
+  ~ You may not use this work except in compliance with the Licence.
+  ~ You may obtain a copy of the Licence at:
+  ~ http://www.osor.eu/eupl/european-union-public-licence-eupl-v.1.1
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the Licence is distributed on an "AS IS" basis,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the Licence for the specific language governing permissions and
+  ~ limitations under the Licence.
+  ~
+  ~ This product combines work with different licenses. See the "NOTICE" text
+  ~ file for details on the various modules and licenses.
+  ~ The "NOTICE" text file is part of the distribution. Any derivative works
+  ~ that you distribute must include a readable copy of the "NOTICE" text file.
+  -->
+
+<configuration>
+
+    <!--
+        This define the CONSOLE appender - the level of the console appender is based on the root level
+    -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd; HH:mm:ss.SSS} [%thread] %-5level %logger{66} %marker -%X{sessionId} -%X{remoteHost} -%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--
+        This define the log file appender - the level of the console appender is based on the root level
+        The environment variable LOG_HOME could be set to indicate the directory containing the log files
+    -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>${LOG_HOME}/SP.log</file>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd; HH:mm:ss.SSS} [%thread] %-5level %logger{66} %marker -%X{sessionId} -%X{remoteHost} -%msg%n</pattern>
+        </encoder>
+
+        <param name="Append" value="true" />
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>500KB</maxFileSize>
+        </triggeringPolicy>
+
+         <!--Support multiple-JVM writing to the same log file-->
+        <prudent>true</prudent>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/SP.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>14</maxHistory>
+        </rollingPolicy>
+
+    </appender>
+
+    <!--
+        This define the API fine grained level
+    -->
+    <logger name="org.opensaml">
+        <level value="ERROR" />
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="com.opensymphony.xwork2">
+        <level value="WARN"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="org.apache.struts2">
+        <level value="WARN"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="org.springframework">
+        <level value="WARN" />
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="org.apache.xml.security">
+        <level value="WARN" />
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="freemarker">
+        <level value="WARN" />
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!--
+        The root level is set to debug for development purposes, for production environment it could be set to INFO
+    -->
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>

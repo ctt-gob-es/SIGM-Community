@@ -6,39 +6,38 @@
 -- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD506 INTEGER;
 -- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD1002 INTEGER;
 -- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD1003 INTEGER;
--- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD1004 VARCHAR(255);
+-- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD1004 VARCHAR2(255 CHAR);
 
-ALTER TABLE A1SF ADD COLUMN FLD503 INTEGER;
-ALTER TABLE A1SF ADD COLUMN FLD504 INTEGER;
-ALTER TABLE A1SF ADD COLUMN FLD505 INTEGER;
-ALTER TABLE A1SF ADD COLUMN FLD506 INTEGER;
-ALTER TABLE A1SF ADD COLUMN FLD1002 INTEGER;
-ALTER TABLE A1SF ADD COLUMN FLD1003 INTEGER;
-ALTER TABLE A1SF ADD COLUMN FLD1004 VARCHAR(255);
+ALTER TABLE A1SF ADD FLD503 INTEGER;
+ALTER TABLE A1SF ADD FLD504 INTEGER;
+ALTER TABLE A1SF ADD FLD505 INTEGER;
+ALTER TABLE A1SF ADD FLD506 INTEGER;
+ALTER TABLE A1SF ADD FLD1002 INTEGER;
+ALTER TABLE A1SF ADD FLD1003 INTEGER;
+ALTER TABLE A1SF ADD FLD1004 VARCHAR2(255 CHAR);
 
 
 -- Para cada Libro de salida
 -- Hay que ejecutar las sentencias para cada libro de salida a parte del que viene por defecto (id_libro = 2)
 -- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLd16 INTEGER;
--- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD17 VARCHAR(1000);
--- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD19 VARCHAR(80);
+-- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD17 VARCHAR2(1000 CHAR);
+-- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD19 VARCHAR2(80 CHAR);
 -- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD503 INTEGER;
 -- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD504 INTEGER;
 -- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD505 INTEGER;
 -- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD506 INTEGER;
 -- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD1002 INTEGER;
--- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD1004 VARCHAR(255);
+-- ALTER TABLE A[[id_libro]]SF ADD COLUMN FLD1004 VARCHAR2(255 CHAR);
 
-ALTER TABLE A2SF ADD COLUMN FLd16 INTEGER;
-ALTER TABLE A2SF ADD COLUMN FLD17 VARCHAR(1000);
-ALTER TABLE A2SF ADD COLUMN FLD19 VARCHAR(80);
-ALTER TABLE A2SF ADD COLUMN FLD503 INTEGER;
-ALTER TABLE A2SF ADD COLUMN FLD504 INTEGER;
-ALTER TABLE A2SF ADD COLUMN FLD505 INTEGER;
-ALTER TABLE A2SF ADD COLUMN FLD506 INTEGER;
-ALTER TABLE A2SF ADD COLUMN FLD1002 INTEGER;
-ALTER TABLE A2SF ADD COLUMN FLD1004 VARCHAR(255);
-
+ALTER TABLE A2SF ADD FLd16 INTEGER;
+ALTER TABLE A2SF ADD FLD17 VARCHAR2(1000 CHAR);
+ALTER TABLE A2SF ADD FLD19 VARCHAR2(80 CHAR);
+ALTER TABLE A2SF ADD FLD503 INTEGER;
+ALTER TABLE A2SF ADD FLD504 INTEGER;
+ALTER TABLE A2SF ADD FLD505 INTEGER;
+ALTER TABLE A2SF ADD FLD506 INTEGER;
+ALTER TABLE A2SF ADD FLD1002 INTEGER;
+ALTER TABLE A2SF ADD FLD1004 VARCHAR2(255 CHAR);
 
 /* Formatted on 29/06/2016 11:17:03 (QP5 v5.139.911.3011) */
 -- Hay que añadir para cada libro de entrada a parte del que viene por defecto (id_libro = 1)
@@ -69,24 +68,24 @@ AS
 
 
 
-
--- Hay que insertar únicamente los que no se encuentren ya en SC_TYPEADM
+-- Molinero: Ya existían en Quijote 4.
+-- Hay que insertar únicamente los que no se encuentren ya en SCR_TYPEADM
 -- es obligatorio que PROPIOS tenga el código 0
 -- PROPIOS
-INSERT INTO scr_typeadm (id, code, description) VALUES (select CONTADOR From scr_contador where tablaid='SCR_TYPEADM', '0', 'PROPIOS');
+INSERT INTO scr_typeadm (id, code, description) VALUES ((select CONTADOR From scr_contador where tablaid='SCR_TYPEADM'), '0', 'PROPIOS');
 UPDATE scr_contador SET contador = contador + 1 where tablaid='SCR_TYPEADM';
 -- ADMINISTRACIÓN ESTATAL
-INSERT INTO scr_typeadm (id, code, description) VALUES (select CONTADOR From scr_contador where tablaid='SCR_TYPEADM', 'E', 'PODER EJECUTIVO');
+INSERT INTO scr_typeadm (id, code, description) VALUES ((select CONTADOR From scr_contador where tablaid='SCR_TYPEADM'), 'E', 'PODER EJECUTIVO');
 UPDATE scr_contador SET contador = contador + 1 where tablaid='SCR_TYPEADM';
 -- ADMINISTRACIÓN AUTONÓMICA
-INSERT INTO scr_typeadm (id, code, description) VALUES (select CONTADOR From scr_contador where tablaid='SCR_TYPEADM', 'A', 'COMUNIDADES AUTÓNOMAS');
+INSERT INTO scr_typeadm (id, code, description) VALUES ((select CONTADOR From scr_contador where tablaid='SCR_TYPEADM'), 'A', 'COMUNIDADES AUTÓNOMAS');
 UPDATE scr_contador SET contador = contador + 1 where tablaid='SCR_TYPEADM';
 -- ADMINISTRACIÓN LOCAL
-INSERT INTO scr_typeadm (id, code, description) VALUES (select CONTADOR From scr_contador where tablaid='SCR_TYPEADM', 'L', 'ADMINISTRACIÓN LOCAL');
+INSERT INTO scr_typeadm (id, code, description) values ((select CONTADOR From scr_contador where tablaid='SCR_TYPEADM'), 'L', 'ADMINISTRACIÓN LOCAL');
 UPDATE scr_contador SET contador = contador + 1 where tablaid='SCR_TYPEADM';
 -- UNIVERSIDADES
-INSERT INTO scr_typeadm (id, code, description) VALUES (select CONTADOR From scr_contador where tablaid='SCR_TYPEADM', 'U', 'UNIVERSIDADES');
+INSERT INTO scr_typeadm (id, code, description) VALUES ((select CONTADOR From scr_contador where tablaid='SCR_TYPEADM'), 'U', 'UNIVERSIDADES');
 UPDATE scr_contador SET contador = contador + 1 where tablaid='SCR_TYPEADM';
 -- OTROS
-INSERT INTO scr_typeadm (id, code, description) VALUES (select CONTADOR From scr_contador where tablaid='SCR_TYPEADM', 'I', 'OTROS');
+INSERT INTO scr_typeadm (id, code, description) VALUES ((select CONTADOR From scr_contador where tablaid='SCR_TYPEADM'), 'I', 'OTROS');
 UPDATE scr_contador SET contador = contador + 1 where tablaid='SCR_TYPEADM';

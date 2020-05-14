@@ -1,16 +1,19 @@
+
+-- Molinero: adaptado para Oracle
+
 alter table scr_attachment add fileid integer;
 
 
 CREATE TABLE scr_modifdoc(
-	id integer NOT NULL,
-	usr character varying(32) NOT NULL,
-	modif_date timestamp without time zone NOT NULL,
-	num_reg character varying(20) NOT NULL,
-	id_arch integer NOT NULL,
-	tipodoc integer NOT NULL,
-	nombreDoc varchar(255) NOT NULL,
-	nombreDocNuevo varchar(255),
-	accion integer NOT NULL
+	id number(10) NOT NULL,
+	usr varchar2(32 CHAR) NOT NULL,
+	modif_date timestamp NOT NULL,
+	num_reg varchar2(20 CHAR) NOT NULL,
+	id_arch number(10) NOT NULL,
+	tipodoc number(10) NOT NULL,
+	nombreDoc varchar2(255 CHAR) NOT NULL,
+	nombreDocNuevo varchar2(255 CHAR),
+	accion number(10) NOT NULL
 );
 
 CREATE UNIQUE INDEX scr_modifdoc0 ON scr_modifdoc (id);
