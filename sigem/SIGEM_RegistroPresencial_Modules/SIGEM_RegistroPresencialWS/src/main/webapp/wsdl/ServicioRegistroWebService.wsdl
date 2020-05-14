@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://server.ws.registropresencial.sgm.tecdoc.ieci" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://server.ws.registropresencial.sgm.tecdoc.ieci" xmlns:intf="http://server.ws.registropresencial.sgm.tecdoc.ieci" xmlns:tns1="http://dto.services.core.sgm.tecdoc.ieci" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="http://server.ws.registropresencial.sgm.tecdoc.ieci" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://server.ws.registropresencial.sgm.tecdoc.ieci" xmlns:intf="http://server.ws.registropresencial.sgm.tecdoc.ieci" xmlns:tns1="http://dto.services.core.sgm.tecdoc.ieci" xmlns:tns2="http://sw.metadatos.dipucr.es" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 <!--WSDL created by Apache Axis version: 1.3
 Built on Oct 05, 2005 (05:23:37 EDT)-->
  <wsdl:types>
   <schema elementFormDefault="qualified" targetNamespace="http://server.ws.registropresencial.sgm.tecdoc.ieci" xmlns="http://www.w3.org/2001/XMLSchema">
    <import namespace="http://dto.services.core.sgm.tecdoc.ieci"/>
+   <import namespace="http://sw.metadatos.dipucr.es"/>
    <element name="getDistribution">
     <complexType>
      <sequence>
@@ -140,6 +141,7 @@ Built on Oct 05, 2005 (05:23:37 EDT)-->
        <element name="folder" nillable="true" type="impl:Folder"/>
        <element name="pageID" nillable="true" type="xsd:string"/>
        <element name="pageName" nillable="true" type="xsd:string"/>
+       <element name="metadatosDocumento" nillable="true" type="tns2:MetadatosDocumentoSW"/>
       </sequence>
      </extension>
     </complexContent>
@@ -847,8 +849,43 @@ Built on Oct 05, 2005 (05:23:37 EDT)-->
    </complexType>
    <complexType name="Entidad">
     <sequence>
+     <element name="codigoINE" nillable="true" type="xsd:string"/>
+     <element name="deh" nillable="true" type="xsd:string"/>
+     <element name="dir3" nillable="true" type="xsd:string"/>
      <element name="identificador" nillable="true" type="xsd:string"/>
      <element name="nombre" nillable="true" type="xsd:string"/>
+     <element name="nombreCorto" nillable="true" type="xsd:string"/>
+     <element name="nombreLargo" nillable="true" type="xsd:string"/>
+     <element name="sia" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://sw.metadatos.dipucr.es" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://dto.services.core.sgm.tecdoc.ieci"/>
+   <import namespace="http://server.ws.registropresencial.sgm.tecdoc.ieci"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="MetadatosDocumentoSW">
+    <sequence>
+     <element name="anioCaptura" nillable="true" type="xsd:string"/>
+     <element name="bookId" type="xsd:int"/>
+     <element name="csv" nillable="true" type="xsd:string"/>
+     <element name="entidadId" nillable="true" type="xsd:string"/>
+     <element name="estadoElaboracion" nillable="true" type="xsd:string"/>
+     <element name="fechaCaptura" nillable="true" type="xsd:dateTime"/>
+     <element name="fileId" type="xsd:int"/>
+     <element name="folderId" type="xsd:int"/>
+     <element name="idEspecificoDocumento" nillable="true" type="xsd:string"/>
+     <element name="identificador" nillable="true" type="xsd:string"/>
+     <element name="identificadorDocOrigen" nillable="true" type="xsd:string"/>
+     <element name="nombreDoc" nillable="true" type="xsd:string"/>
+     <element name="nombreFormato" nillable="true" type="xsd:string"/>
+     <element name="organo" nillable="true" type="xsd:string"/>
+     <element name="origen" nillable="true" type="xsd:string"/>
+     <element name="pageId" type="xsd:int"/>
+     <element name="sFechaCaptura" nillable="true" type="xsd:string"/>
+     <element name="tipoDocumental" nillable="true" type="xsd:string"/>
+     <element name="tipoFirma" nillable="true" type="xsd:string"/>
+     <element name="versionNTI" nillable="true" type="xsd:string"/>
     </sequence>
    </complexType>
   </schema>

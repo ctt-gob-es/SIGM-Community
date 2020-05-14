@@ -2,7 +2,8 @@
 <deployment xmlns="http://xml.apache.org/axis/wsdd/"
 	xmlns:java="http://xml.apache.org/axis/wsdd/providers/java"
 	xmlns:ns1="http://server.ws.registropresencial.sgm.tecdoc.ieci"
-	xmlns:ns2="http://dto.services.core.sgm.tecdoc.ieci">
+	xmlns:ns2="http://dto.services.core.sgm.tecdoc.ieci"
+	xmlns:ns3="http://sw.metadatos.dipucr.es">
 	<globalConfiguration>
 		<parameter name="sendMultiRefs" value="true" />
 		<parameter name="disablePrettyXML" value="true" />
@@ -473,7 +474,11 @@
 			encodingStyle="" qname="ns1:UserInfo"
 			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
 			type="java:ieci.tecdoc.sgm.registropresencial.ws.server.UserInfo" />
-
+		<typeMapping
+			deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+			encodingStyle="" qname="ns3:MetadatosDocumentoSW"
+			serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+			type="java:es.dipucr.metadatos.sw.MetadatosDocumentoSW" />
 
 		<arrayMapping innerType="ns1:BookInfo"
 			languageSpecificType="java:ieci.tecdoc.sgm.registropresencial.ws.server.BookInfo[]"

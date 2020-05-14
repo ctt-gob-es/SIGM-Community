@@ -1,6 +1,7 @@
 package ieci.tecdoc.sgm.registropresencial.ws.server;
 
 import ieci.tecdoc.sgm.core.services.dto.RetornoServicio;
+import es.dipucr.metadatos.sw.MetadatosDocumentoSW;
 
 /**
  * 
@@ -49,6 +50,11 @@ public class Document extends RetornoServicio {
 	 * Identificador de la página.
 	 */
 	private String pageID;
+	
+	/**
+	 *  Metadatos del documento
+     */
+    private MetadatosDocumentoSW metadatosDocumento = null;
 
 	/**
 	 * @return
@@ -160,6 +166,14 @@ public class Document extends RetornoServicio {
 	 */
 	public void setPageName(String pageName) {
 		this.pageName = pageName;
+	}
+
+	public MetadatosDocumentoSW getMetadatosDocumento() {
+		return metadatosDocumento;
+	}
+
+	public void setMetadatosDocumento(MetadatosDocumentoSW metadatosDocumento) {
+		this.metadatosDocumento = metadatosDocumento;
 	}
 
 }
