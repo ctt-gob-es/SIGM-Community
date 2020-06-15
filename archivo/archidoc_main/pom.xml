@@ -42,7 +42,7 @@
 		<bouncycastle.version>140</bouncycastle.version>
 		<cglib-asm.version>1.0</cglib-asm.version>
 		<commons-beanutils.version>1.7.0</commons-beanutils.version>
-		<commons-collections.version>3.2.1</commons-collections.version>
+		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-dbcp.version>1.0</commons-dbcp.version>
 		<commons-digester.version>1.8</commons-digester.version>
 		<commons-io.version>1.4</commons-io.version>
@@ -690,7 +690,7 @@
 		</snapshotRepository>-->
 		<repository>
 			<id>DipucrRepDeploy</id>
-			<name>Repositorio de la Diputación de Ciudad Real</name>
+			<name>Repositorio de la DiputaciÃ³n de Ciudad Real</name>
 			<url>http://10.12.200.113:8081/nexus/content/repositories/DipucrRepo/</url>
 		</repository>
 	</distributionManagement>
