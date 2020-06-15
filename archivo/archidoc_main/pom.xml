@@ -72,7 +72,7 @@
 		<pja.version>1.0</pja.version>
 		<poi.version>2.0-final-20040126</poi.version>
 		<serializer.version>2.7.1</serializer.version>
-		<spring.version>3.0.2.RELEASE</spring.version>
+		<spring.version>5.2.7.RELEASE</spring.version>
 		<standard.version>1.0.4</standard.version>
 		<struts.version>1.1</struts.version>
 		<struts-menu.version>2.4.3</struts-menu.version>
@@ -690,7 +690,7 @@
 		</snapshotRepository>-->
 		<repository>
 			<id>DipucrRepDeploy</id>
-			<name>Repositorio de la Diputación de Ciudad Real</name>
+			<name>Repositorio de la DiputaciÃ³n de Ciudad Real</name>
 			<url>http://10.12.200.113:8081/nexus/content/repositories/DipucrRepo/</url>
 		</repository>
 	</distributionManagement>
