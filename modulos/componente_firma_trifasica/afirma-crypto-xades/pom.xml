@@ -6,12 +6,15 @@
 	<artifactId>afirma-crypto-xades</artifactId>
 	<name>afirma-crypto-xades</name>
 
+<!--
 	<repositories>
+		 
 		<repository>
 			<id>uji</id>
 			<url>http://devel.uji.es/nexus/content/groups/public/</url>
 		</repository>
 	</repositories>
+	-->
 	
 	<parent>
 		<groupId>es.gob.afirma</groupId>

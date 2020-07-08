@@ -48,18 +48,21 @@
 		<module>afirma-server-triphase-signer-core</module>
 	</modules>
 	
+	<!--
 	<repositories>
 		<repository>
 			<id>uji</id>
 			<url>http://devel.uji.es/nexus/content/groups/public/</url>
 		</repository>
 	</repositories>
+	-->
 	
 	<scm>
 		<connection>scm:svn:http://svn-ctt.administracionelectronica.gob.es/svn/clienteafirma/project/afirma/trunk</connection>
 		<url>http://svn-ctt.administracionelectronica.gob.es/svn/clienteafirma/project/afirma/trunk</url>
 	</scm>
 
+  <!--
 	<distributionManagement>
 		<repository>
 			<id>nexus</id>
@@ -70,6 +73,7 @@
 			<url>http://devel01.uji.es:8080/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
+	-->
 
 	<dependencies>
 		<dependency>
