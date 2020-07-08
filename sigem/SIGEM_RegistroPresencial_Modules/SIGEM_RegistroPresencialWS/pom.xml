@@ -250,7 +250,13 @@
 			<version>2.1.1-b04</version>
 		</dependency>
 		<!-- [Dipucr-Manu Ticket # 485] - FIN - ALSIGM3 Recuperar Documentos por CSV del registro presencial. --> 
-
+		
+		<dependency>
+			<groupId>es.dipucr</groupId>
+			<artifactId>Metadatos</artifactId>
+			<version>1.0</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

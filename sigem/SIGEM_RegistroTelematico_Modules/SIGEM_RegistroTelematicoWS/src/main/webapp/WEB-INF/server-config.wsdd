@@ -58,7 +58,7 @@
    <parameter qname="ns9:additionalInfo" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <parameter qname="ns9:idiom" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <parameter qname="ns9:oficina" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <parameter qname="ns9:plantilla" type="xsd:StringB64" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+   <parameter qname="ns9:plantilla" type="ns9:StringB64" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <parameter qname="ns9:certificado" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <parameter qname="ns9:entidad" type="ns10:Entidad" xmlns:ns10="http://dto.services.core.sgm.tecdoc.ieci"/>
   </operation>
@@ -79,7 +79,7 @@
    <parameter qname="ns13:additionalInfo" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <parameter qname="ns13:idiom" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <parameter qname="ns13:oficina" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
-   <parameter qname="ns13:plantilla" type="xsd:StringB64" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+   <parameter qname="ns13:plantilla" type="ns13:StringB64" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <parameter qname="ns13:certificado" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <parameter qname="ns13:tramiteId" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <parameter qname="ns13:entidad" type="ns14:Entidad" xmlns:ns14="http://dto.services.core.sgm.tecdoc.ieci"/>

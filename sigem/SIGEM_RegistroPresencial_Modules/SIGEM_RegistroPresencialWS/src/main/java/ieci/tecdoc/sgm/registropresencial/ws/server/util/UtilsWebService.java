@@ -302,6 +302,11 @@ public class UtilsWebService {
 			docIf.setExtension(docS[i].getExtension());
 			docIf.setFileName(docS[i].getFileName());
 			docIf.setPageName(docS[i].getPageName());
+			
+			if(null != docS[i].getMetadatosDocumento()){
+				docIf.setMetadatosDocumento(docS[i].getMetadatosDocumento().toMetadatosDocumentoBean());
+			}
+			
 			docCo[i] = docIf;
 		}
 

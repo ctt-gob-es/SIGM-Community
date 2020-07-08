@@ -43,7 +43,7 @@ public class DocumentInfo {
      */
     private String csv;
     
-    /* CSV del documento
+    /* Metadatos del documento
      */
     private Object metadatosDocumento = null;
 

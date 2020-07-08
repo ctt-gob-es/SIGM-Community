@@ -6,7 +6,7 @@
   <service name="ServicioRegistroWebService" provider="java:RPC" style="wrapped" use="literal">
       <parameter name="wsdlTargetNamespace" value="http://server.ws.registropresencial.sgm.tecdoc.ieci"/>
       <parameter name="wsdlServiceElement" value="ServicioRegistroWebServiceService"/>
-      <parameter name="schemaQualified" value="http://dto.services.core.sgm.tecdoc.ieci,http://server.ws.registropresencial.sgm.tecdoc.ieci"/>
+      <parameter name="schemaQualified" value="http://sw.metadatos.dipucr.es,http://dto.services.core.sgm.tecdoc.ieci,http://server.ws.registropresencial.sgm.tecdoc.ieci"/>
       <parameter name="wsdlServicePort" value="ServicioRegistroWebService"/>
       <parameter name="className" value="ieci.tecdoc.sgm.registropresencial.ws.server.ServicioRegistroWebService"/>
       <parameter name="wsdlPortType" value="ServicioRegistroWebService"/>
@@ -207,6 +207,7 @@
       <typeMapping xmlns:ns="http://server.ws.registropresencial.sgm.tecdoc.ieci" qname="ns:RegistersInfo" type="java:ieci.tecdoc.sgm.registropresencial.ws.server.RegistersInfo" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
       <typeMapping xmlns:ns="http://server.ws.registropresencial.sgm.tecdoc.ieci" qname="ns:SearchCriteria" type="java:ieci.tecdoc.sgm.registropresencial.ws.server.SearchCriteria" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
       <typeMapping xmlns:ns="http://server.ws.registropresencial.sgm.tecdoc.ieci" qname="ns:UserInfo" type="java:ieci.tecdoc.sgm.registropresencial.ws.server.UserInfo" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
+      <typeMapping xmlns:ns="http://sw.metadatos.dipucr.es" qname="ns:MetadatosDocumentoSW" type="java:es.dipucr.metadatos.sw.MetadatosDocumentoSW" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
 
       <arrayMapping xmlns:ns="http://server.ws.registropresencial.sgm.tecdoc.ieci" xmlns:cmp-ns="http://server.ws.registropresencial.sgm.tecdoc.ieci" qname="ns:ArrayOfBookInfo" type="java:ieci.tecdoc.sgm.registropresencial.ws.server.BookInfo[]" innerType="cmp-ns:BookInfo" encodingStyle=""/>
       <arrayMapping xmlns:ns="http://server.ws.registropresencial.sgm.tecdoc.ieci" xmlns:cmp-ns="http://server.ws.registropresencial.sgm.tecdoc.ieci" qname="ns:ArrayOfDistributionInfo" type="java:ieci.tecdoc.sgm.registropresencial.ws.server.DistributionInfo[]" innerType="cmp-ns:DistributionInfo" encodingStyle=""/>
