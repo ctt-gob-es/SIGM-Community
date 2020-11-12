@@ -38,6 +38,9 @@ public class SeleccionarTipoAccesoAction extends Action{
 			}else if (tipoAceptado == TipoAutenticacionCodigos.X509_CERTIFICATE){
 				request.getSession().setAttribute(Defs.ACCESO_SEL, ""+TipoAutenticacionCodigos.X509_CERTIFICATE);
 				return mapping.findForward("certificado");
+			}else if (tipoAceptado == TipoAutenticacionCodigos.CLAVE){
+				request.getSession().setAttribute(Defs.ACCESO_SEL, ""+TipoAutenticacionCodigos.CLAVE);
+				return mapping.findForward("clave");
 			}else return mapping.findForward("failure");
 		}catch(Exception e){
 	   		return mapping.findForward("failure");

@@ -85,8 +85,10 @@ public class ObtenerTipoAccesoAction extends Action{
 			else if (tipoAceptado == TipoAutenticacionCodigos.X509_CERTIFICATE)
 				return mapping.findForward("only_cert");
 			else if (tipoAceptado == TipoAutenticacionCodigos.WEB_USER_AND_CERTIFICATE){
+				
 				tiposAcceso.add(new TipoAccesoForm(TipoAutenticacionCodigos.X509_CERTIFICATE, "autenticacion.tipo_certificado"));
 				tiposAcceso.add(new TipoAccesoForm(TipoAutenticacionCodigos.WEB_USER, "autenticacion.tipo_login"));
+				
 			}else if (tipoAceptado == TipoAutenticacionCodigos.SIN_AUTENTICACION){
 				//[eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.
 				session.setAttribute(Defs.SESION_ID, Goodies.getUniqueId());
@@ -97,11 +99,42 @@ public class ObtenerTipoAccesoAction extends Action{
 				session.setAttribute(Defs.URL_PUERTO, port);
 				
 				return mapping.findForward("sin_autenticacion");
+			//[DipuCR-Agustin] #548 integrar Cl@ve autentificacion
+			}else if (tipoAceptado == TipoAutenticacionCodigos.CLAVE){
+				
+				redireccion = (String)session.getAttribute(Defs.REDIRECCION);
+				String url = (String)request.getSession().getServletContext().getAttribute("redir" + redireccion);
+				String port = PortsConfig.getCertPort();
+				session.setAttribute(Defs.URL_REDIRECCION, url);
+				session.setAttribute(Defs.URL_PUERTO, port);
+				
+				return mapping.findForward("only_clave");
+			}
+			else if (tipoAceptado == TipoAutenticacionCodigos.CERTIFICATE_AND_CLAVE){
+				
+				tiposAcceso.add(new TipoAccesoForm(TipoAutenticacionCodigos.X509_CERTIFICATE, "autenticacion.tipo_certificado"));
+				tiposAcceso.add(new TipoAccesoForm(TipoAutenticacionCodigos.CLAVE, "autenticacion.tipo_clave"));				
+				
+			}
+			else if (tipoAceptado == TipoAutenticacionCodigos.WEB_USER_AND_CLAVE){
+				
+				tiposAcceso.add(new TipoAccesoForm(TipoAutenticacionCodigos.WEB_USER, "autenticacion.tipo_login"));
+				tiposAcceso.add(new TipoAccesoForm(TipoAutenticacionCodigos.CLAVE, "autenticacion.tipo_clave"));				
+				
+			}
+			else if (tipoAceptado == TipoAutenticacionCodigos.WEB_USER_CERT_AND_CLAVE){
+				
+				tiposAcceso.add(new TipoAccesoForm(TipoAutenticacionCodigos.WEB_USER, "autenticacion.tipo_login"));
+				tiposAcceso.add(new TipoAccesoForm(TipoAutenticacionCodigos.X509_CERTIFICATE, "autenticacion.tipo_certificado"));
+				tiposAcceso.add(new TipoAccesoForm(TipoAutenticacionCodigos.CLAVE, "autenticacion.tipo_clave"));			
+				
 			}
 			else{
+				
 		    	request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_OBTENER_TIPO_ACCESO);
 		    	request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, "Error: Al obtener los tipos de acceso");
 				return mapping.findForward("failure");
+				
 			}
 		}catch(Exception e){
 	    	request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_OBTENER_TIPO_ACCESO);

@@ -8,6 +8,7 @@
 <%@page import="ieci.tecdoc.sgm.autenticacion.form.TipoAccesoForm"%>
 <%@page import="java.io.File"%>
 
+
 <%
 String rutaEstilos = (String)session.getAttribute("PARAMETRO_RUTA_ESTILOS");
 if (rutaEstilos == null) rutaEstilos = "";

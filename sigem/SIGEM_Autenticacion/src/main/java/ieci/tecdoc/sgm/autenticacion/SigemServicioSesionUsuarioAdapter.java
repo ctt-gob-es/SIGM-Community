@@ -219,6 +219,24 @@ public class SigemServicioSesionUsuarioAdapter implements ServicioSesionUsuario 
 		}
 		return idSesion;
 	}
+	
+	//[DipuCR-Agustin] #548 integrar Cl@ve autentificacion
+	//Login con Clave
+	public String login(String actSessionId, String nombre, String apellidos, String email, String senderId, Entidad entidad, String infoClave)
+			throws SesionUsuarioException {
+		
+		String idSesion = null;
+		try {
+			idSesion = AutenticacionManager.login(actSessionId, nombre, apellidos, email, senderId, getIdEntidad(entidad));
+		} catch (AutenticacionExcepcion e) {
+			logger.error(e.getMessage());
+			throw new SesionUsuarioException(SesionUsuarioException.AUTENTICATION_ERROR_CODE, e.getMessage(), e);
+		} catch (SeguridadExcepcion e) {
+			logger.error(e.getMessage());
+			throw new SesionUsuarioException(SesionUsuarioException.SECURITY_ERROR_CODE, e.getMessage(), e);
+		}
+		return idSesion;
+	}
 
 	public String login(String actSessionId, String authId, X509Certificate certificate, Entidad entidad) throws SesionUsuarioException {
 		String idSesion = null;
@@ -233,7 +251,7 @@ public class SigemServicioSesionUsuarioAdapter implements ServicioSesionUsuario 
 		}
 		return idSesion;
 	}
-
+	
 	public String login(String procedureId, X509Certificate certificate, Entidad entidad) throws SesionUsuarioException {
 		String idSesion = null;
 		try {
@@ -247,6 +265,8 @@ public class SigemServicioSesionUsuarioAdapter implements ServicioSesionUsuario 
 		}
 		return idSesion;
 	}
+	
+
 
 	public void logout(String sessionId, Entidad entidad) throws SesionUsuarioException {
 		try {
@@ -263,5 +283,7 @@ public class SigemServicioSesionUsuarioAdapter implements ServicioSesionUsuario 
 		}
 		return poEntidad.getIdentificador();
 	}
+
+
 
 }

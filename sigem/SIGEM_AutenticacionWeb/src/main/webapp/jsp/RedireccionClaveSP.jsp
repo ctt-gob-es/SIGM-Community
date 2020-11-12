@@ -27,8 +27,8 @@
 		<script language="Javascript">
 			function redirige(){
 				//[DipuCR-Agustin] #548 integrar Cl@ve autentificacion, indicar puerto de no autentificacion cliente, conexion segura sin indicar certificado cliente
-				document.location.href = '<%="https://"+request.getServerName()+":"+serverPort+request.getContextPath()+"/validacionCertificado.do"%>';
-				
+				//document.location.href = '<%="https://"+request.getServerName()+":"+proxyHttpsPort+"/SPProxy/defaultRequestIndexPage"%>';
+	      		document.location.href = '<%="https://"+request.getServerName()+":"+proxyHttpsPort+"/SP2/IndexPage"%>';				
 			}
 		</script>
 	</head>

@@ -96,13 +96,14 @@ public class ValidacionCertificadoAction extends Action {
 			else{
 				sessionId = oServicio.login(null, "", certificate, oEntidad);
 			}
+			
 			session.setAttribute(Defs.SESION_ID, sessionId);
-
 			String redireccion = (String)session.getAttribute(Defs.REDIRECCION);
 			String url = (String)request.getSession().getServletContext().getAttribute("redir" + redireccion);
 			String port = PortsConfig.getCertPort();
 			session.setAttribute(Defs.URL_REDIRECCION, url);
-			session.setAttribute(Defs.URL_PUERTO, port);
+			session.setAttribute(Defs.URL_PUERTO, port);		
+			
 	   	}catch(SesionUsuarioException e){
 
 	   		//TODO Revisar mensajes

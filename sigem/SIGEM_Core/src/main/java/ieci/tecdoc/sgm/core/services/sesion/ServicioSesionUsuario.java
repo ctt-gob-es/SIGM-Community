@@ -6,6 +6,26 @@ import java.security.cert.X509Certificate;
 
 public interface ServicioSesionUsuario {
 
+		
+		/**
+		* Permite al usuario acceder al sistema si posee las credenciales adecuadas.
+		* En este caso, la información debe ser previamente recuperada de la validación de 
+	    * los datos de usuario contra un aplicativo externo.
+	    *
+	    * @param actSessionId Identificador de sesión actual.
+	    * @param user Login de usuario.
+	    * @param email Correo del usuario.
+	    * @param senderId Identificador del remitente (NIF).
+	    * @return Un identificador de sesión.
+	    * @throws SesionUsuarioException 
+	    * 
+	    * [DipuCR-Agustin] #548 integrar Cl@ve autentificacion
+		*  Login con Clave
+	    */
+	   public String login(String actSessionId, String nombre, String apellidos, String email, String senderId, Entidad entidad, String infoClave) throws SesionUsuarioException;
+	
+	
+		
 		/**
 		* Permite al usuario acceder al sistema si posee las credenciales adecuadas.
 		* En este caso, la información debe ser previamente recuperada de la validación de 

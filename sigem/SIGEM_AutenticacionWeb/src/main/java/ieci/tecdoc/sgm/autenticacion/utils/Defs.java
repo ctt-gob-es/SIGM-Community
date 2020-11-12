@@ -1,6 +1,20 @@
 package ieci.tecdoc.sgm.autenticacion.utils;
 
 public class Defs {
+	
+	//[DipuCR-Agustin] #548 integrar Cl@ve autentificacion
+	public static final String CLAVE_ATRIBUTOS = "attrList";
+	public static final String CLAVE_SCOPE = "scope";	;
+	public static final String CLAVE_ATTRLIST_EIDENTIFIER = "eIdentifier";
+	public final static String CLAVE_ATTRLIST_NAME = "givenName";	
+	public final static String CLAVE_ATTRLIST_SURNAME = "surname";	
+	public final static String CLAVE_ATTRLIST_NIVEL_CITIZENQAALEVEL = "citizenQAALevel";
+	public final static String CLAVE_ATTRLIST_EMAIL = "eMail";
+	public final static String SCOPE_AFIRMA = "AFIRMA";
+	public final static String SCOPE_STORK = "STORK";
+	public final static String SCOPE_SS = "SEGSOC";
+	public final static String SCOPE_AEAT = "PIN24H";
+	
 	public static final String USUARIO = "username";
 	public static final String PASSWORD = "password";
 	
@@ -16,6 +30,7 @@ public class Defs {
 
 	//INICIO - [eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.
 	public static final String PLUGIN_REDIRARBOLDOCUMENTAL = "redirArbolDocumental";
+	public static final String PLUGIN_REDINDICEFOLIADO = "redirIndiceElectronico";
 	//FIN
 	
 	public static final String ACCESO_SEL = "ACCESO_SEL";
@@ -23,7 +38,7 @@ public class Defs {
 	
 	public static final String XML_DATA = "XML_DATA";
 	public static final String SESION_ID = "SESION_ID";
-	public static final String REDIRECCION = "REDIRECCION";
+	public static final String REDIRECCION = "REDIRECCION";	
 	public static final String URL_REDIRECCION = "URL_REDIRECCION";
 	public static final String URL_PUERTO = "URL_PUERTO";
 	public static final String TRAMITE_ID = "tramiteId";
@@ -51,12 +66,16 @@ public class Defs {
 	public static final String CERT_REVOCADO = "CERT_REVOCADO";
 	public static final String CERT_YA_VALIDADO = "CERT_YA_VALIDADO";
 	public static final String CERT_NO_VALIDO = "CERTIFICADO_NO_VALIDO";
+	public static final String CLAVE_PRIMER_ACCESO = "CLAVE_PRIMER_ACCESO";
+	public static final String CLAVE_YA_VALIDADO = "CLAVE_YA_VALIDADO";
+	public static final String CLAVE_NO_VALIDO = "CLAVE_NO_VALIDO";
 	public static final String METODO_AUTH_NO_ACEPTADA = "METODO_AUTH_NO_ACEPTADA";
 	
 	public static final String CONFIG_NOMBRE_REGISTRO = "RegistroTelematico.nombre";
 	public static final String CONFIG_ACCESO_PAGOELECTRONICO = "PagoElectronico.acceso";
 	public static final String CONFIG_ACCESO_CONSULTA = "Consulta.acceso";
 	public static final String CONFIG_ACCESO_NOTIFICACION = "Notificacion.acceso";
+	
 	
 	//public static final String DEFAULT_SERVER_PORT = "defaultServerPort";
 	public static final String IDIOMAS_DISPONIBLES = "IdiomasDisponibles";

@@ -81,7 +81,9 @@ public class ConectorAutenticacionAction extends CatalogoTramitesWebAction {
 	            hook = (Conector)hooks.get(i);
 	            if ( (hook.getType() == TipoConector.WEB_USER_AUTH) ||
 	            		(hook.getType() == TipoConector.CERTIFICATE_AUTH) ||
-	            		(hook.getType() == TipoConector.CERTIFICATE_WEB_AUTH))
+	            		(hook.getType() == TipoConector.CERTIFICATE_WEB_AUTH)||
+	            		//[DipuCR-Agustin] #548 integrar Cl@ve autentificacion
+	            		(hook.getType() == TipoConector.CLAVE_AUTENTICACION))
 	            		hookList.add(new ConectorAutenticacionForm(hook.getId(), hook.getDescription(), ConectorAutenticacionForm.HOOK));
 	         }
 

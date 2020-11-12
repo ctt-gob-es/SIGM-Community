@@ -17,6 +17,7 @@
 				validate="false">
 				<forward name="login" path="/jsp/Autenticacion.jsp"/>
 				<forward name="certificado" path="/jsp/RedireccionCertificados.jsp"/>
+				<forward name="clave" path="/jsp/RedireccionClaveSP.jsp"/>
 				<forward name="failure" path="/jsp/NoAutenticacion.jsp"/>
 		</action>
 		<!-- Usuarios -->
@@ -36,6 +37,15 @@
 				<forward name="success" path="/jsp/Redireccion.jsp"/>
 				<forward name="failure" path="/jsp/MensajeError.jsp"/>
 		</action>
+		
+		<action path="/validacionClave"
+				type="ieci.tecdoc.sgm.autenticacion.action.ValidacionClaveAction"
+				scope="request"
+				validate="false">
+				<forward name="success" path="/jsp/Redireccion.jsp"/>
+				<forward name="failure" path="/jsp/MensajeError.jsp"/>
+		</action>
+		 
 		<!-- Acceso -->
 		<action path="/obtenerTipoAcceso"
 				type="ieci.tecdoc.sgm.autenticacion.action.ObtenerTipoAccesoAction"
@@ -43,12 +53,14 @@
 				name="tipoAccesoBean"
 				validate="false">
 				<forward name="success" path="/jsp/MostrarTipoAcceso.jsp"/>
+				<!-- //[DipuCR-Agustin] #548 integrar Cl@ve autentificacion -->
+				<forward name="only_clave" path="/jsp/RedireccionClaveSP.jsp"/>
 				<forward name="only_cert" path="/jsp/RedireccionCertificados.jsp"/>
 				<forward name="only_login" path="/jsp/Autenticacion.jsp"/>
 				<forward name="none" path="/jsp/NoAutenticacion.jsp"/>
 				<forward name="failure" path="/jsp/MensajeError.jsp"/>
 				<forward name="logged" path="/jsp/Redireccion.jsp"/>
-			<!--[eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.-->
+			    <!--[eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.-->
 				<forward name="sin_autenticacion" path="/jsp/RedireccionSinAutenticar.jsp"/>				
 			<!-- FIN -->
 		</action>
@@ -75,6 +87,7 @@
 		</action>
 		
 		<!-- INICIO [eCenpri-Felipe Ticket#691] -->
+		<!-- //[DipuCR-Agustin] #548 integrar Cl@ve autentificacion -->
 		<!-- Para redireccionar directamente a un tipo de acceso -->
 		<action path="/redireccionarTipoAcceso" 
 				type="ieci.tecdoc.sgm.autenticacion.action.RedireccionarTipoAccesoAction" 
@@ -83,6 +96,7 @@
 				validate="false"> 
 				<forward name="login" path="/jsp/Autenticacion.jsp"/> 
 				<forward name="certificado" path="/jsp/RedireccionCertificados.jsp"/> 
+				<forward name="clave" path="/jsp/RedireccionClaveSP.jsp"/>
 				<forward name="failure" path="/jsp/NoAutenticacion.jsp"/> 
 		</action>
 		<!-- FIN [eCenpri-Felipe Ticket#691] -->
@@ -101,6 +115,7 @@
 		<!-- FIN -->
 	<!--[eCenpri-Manu Ticket #295] +* ALSIGM3 Nuevo proyecto Árbol Documental.-->
 		<set-property property="redirArbolDocumental" value="SIGEM_ArbolDocumentalWeb/" />
+		<set-property property="redirIndiceElectronico" value="SIGEM_IndiceElectronicoWeb/" />
 	<!-- FIN -->
 	
 	</plug-in>
