@@ -14,7 +14,7 @@
 		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory>
 
 		<commons-fileupload.version>1.2.2</commons-fileupload.version>
-		<commons-io.version>2.0.1</commons-io.version>
+		<commons-io.version>2.7</commons-io.version>
 		<commons-collections.version>3.2.1</commons-collections.version>
 		<dwr.version>2.0.10</dwr.version>
 	</properties>
