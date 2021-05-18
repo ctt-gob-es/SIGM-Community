@@ -49,7 +49,7 @@
     <easymock.version>2.5.2</easymock.version>
     <axis.version>1.4</axis.version>
     <quartz.version>1.5.2</quartz.version>
-    <xstream.version>1.3.1</xstream.version>
+    <xstream.version>1.4.17</xstream.version>
     <joda.time.version>1.6</joda.time.version>
     <dwr.version>2.0.3</dwr.version>
     <mime-util.version>2.1.3</mime-util.version>
