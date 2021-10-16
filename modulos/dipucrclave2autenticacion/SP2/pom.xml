@@ -411,7 +411,7 @@
         <repository>
             <id>repoDependencias</id>
             <name>repoDependencias</name>
-            <url>file://C:\....\SIGM-Community\modulos\dipucrclave2autenticacion\SP2\lib_repository_dependencias</url>
+            <url>file://C:\github\SIGM-Community\modulos\dipucrclave2autenticacion\SP2\Dependencias</url>
         </repository>
     </repositories>
 </project>

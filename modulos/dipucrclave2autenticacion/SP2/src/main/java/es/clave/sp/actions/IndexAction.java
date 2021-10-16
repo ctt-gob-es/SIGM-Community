@@ -47,16 +47,16 @@ public class IndexAction extends AbstractSPServlet {
 
     private String samlRequest;
 
-    private static Properties configs;
-    private static String nodeServiceUrl;
+    private static Properties configs=null;
+    private static String nodeServiceUrl;    
     
-    private boolean forceAuthCheck = true;
     private String nameIDPolicy = null;
     
-    private boolean afirmaCheck = false;
-    private boolean gissCheck = false;
-    private boolean aeatCheck = false;
-    private boolean eidasCheck = false;
+    private static boolean forceAuthCheck = true;    
+    private static boolean afirmaCheck = false;
+    private static boolean gissCheck = false;
+    private static boolean aeatCheck = true;
+    private static boolean eidasCheck = false;
 
     private static String providerName = "";
     private static String spApplication = ""; 
@@ -74,12 +74,16 @@ public class IndexAction extends AbstractSPServlet {
 			throws ServletException, IOException {
 		if (acceptsHttpRedirect()) {
 			configs = SPUtil.loadSPConfigs();
-		    nodeServiceUrl = configs.getProperty("service.url");
-		    providerName = configs.getProperty(Constants.PROVIDER_NAME);
-		    spApplication = configs.getProperty(Constants.SP_APLICATION);
+		    this.nodeServiceUrl = configs.getProperty("service.url");
+		    this.providerName = configs.getProperty(Constants.PROVIDER_NAME);
+		    this.spApplication = configs.getProperty(Constants.SP_APLICATION);
+		    this.forceAuthCheck = Boolean.valueOf(configs.getProperty(Constants.SP_FORCEAUTHCHECK));
+		    this.gissCheck = Boolean.valueOf(configs.getProperty(Constants.SP_GISSCHECK));
+		    this.aeatCheck = Boolean.valueOf(configs.getProperty(Constants.SP_AEATCHECK));
+		    this.eidasCheck = Boolean.valueOf(configs.getProperty(Constants.SP_EIDASCHECK));
+		    this.afirmaCheck = Boolean.valueOf(configs.getProperty(Constants.SP_AFIRMACHECK));
 		    
-		    String peticion = "https://"+request.getServerName()+":4443";
-	        peticion = peticion.concat(configs.getProperty(Constants.SP_RETURN));
+		    String peticion = configs.getProperty(Constants.SP_RETURN);
 		    returnUrl = peticion;
 		    
 			doPost(request, response);
@@ -99,12 +103,21 @@ public class IndexAction extends AbstractSPServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// The input data is parsed
-		forceAuthCheck = Boolean.parseBoolean(request.getParameter("forceCheck"));
-		gissCheck = Boolean.parseBoolean(request.getParameter("gissCheck"));
-		aeatCheck = Boolean.parseBoolean(request.getParameter("aeatCheck"));
-		eidasCheck = Boolean.parseBoolean(request.getParameter("eidasCheck"));
-		afirmaCheck = Boolean.parseBoolean(request.getParameter("afirmaCheck"));
+		
+		if (configs==null) {
+			configs = SPUtil.loadSPConfigs();
+		    this.nodeServiceUrl = configs.getProperty("service.url");
+		    this.providerName = configs.getProperty(Constants.PROVIDER_NAME);
+		    this.spApplication = configs.getProperty(Constants.SP_APLICATION);
+		    this.forceAuthCheck = Boolean.valueOf(configs.getProperty(Constants.SP_FORCEAUTHCHECK));
+		    this.gissCheck = Boolean.valueOf(configs.getProperty(Constants.SP_GISSCHECK));
+		    this.aeatCheck = Boolean.valueOf(configs.getProperty(Constants.SP_AEATCHECK));
+		    this.eidasCheck = Boolean.valueOf(configs.getProperty(Constants.SP_EIDASCHECK));
+		    this.afirmaCheck = Boolean.valueOf(configs.getProperty(Constants.SP_AFIRMACHECK));
+		    
+		    String peticion = configs.getProperty(Constants.SP_RETURN);
+		    returnUrl = peticion;
+		}
 		
 
         ImmutableAttributeMap.Builder reqAttrMapBuilder = new ImmutableAttributeMap.Builder();

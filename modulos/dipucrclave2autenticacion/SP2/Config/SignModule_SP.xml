@@ -33,7 +33,7 @@
 		http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512;
 		http://www.w3.org/2007/05/xmldsig-more#sha256-rsa-MGF1
 	</entry>
-	<!-- signing response assertion true/false (default false) INICIAL 	-->
+	<!-- signing response assertion true/false (default false) INICIAL
 	<entry key="response.sign.assertions">false</entry>
 	<entry key="keyStorePath">./KeyStore.jks</entry>
 	<entry key="keyStorePassword">local-demo</entry>
@@ -41,6 +41,14 @@
 	<entry key="issuer">CN=local-demo-cert, OU=DIGIT, O=European Comission, L=Brussels, ST=Spain, C=ES</entry>
 	<entry key="serialNumber">58764336</entry>
 	<entry key="keyStoreType">JKS</entry>
-
+	-->
+	
+	<entry key="response.sign.assertions">false</entry>
+	<entry key="keyStorePath">client-keystore-clave.jks</entry>
+	<entry key="keyStorePassword">passw_store</entry>
+	<entry key="keyPassword">passw_certificate</entry>
+	<entry key="issuer">issuer_or_subject</entry>
+	<entry key="serialNumber">123321ABC</entry>
+	<entry key="keystoreType">JKS</entry>
 	
 </properties>

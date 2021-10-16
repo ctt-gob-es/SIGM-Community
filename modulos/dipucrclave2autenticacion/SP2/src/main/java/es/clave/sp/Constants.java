@@ -1,6 +1,7 @@
 package es.clave.sp;
 
 public final class Constants {
+	
     private  Constants() { }
 
     public static final String SP_PROPERTIES = "sp.properties";
@@ -15,5 +16,15 @@ public final class Constants {
     public static final String SP_CONFIG_REPOSITORY = "SP_CONFIG_REPOSITORY";
     public static final String SP_REPO_BEAN_NAME = "spConfigRepository";
     public static final String REDIRECT_METHOD = "redirect.method";
+    public static final String SP_FORCEAUTHCHECK = "sp.forceCheck";
+    public static final String SP_GISSCHECK = "sp.gissCheck";
+    public static final String SP_AEATCHECK = "sp.aeatCheck";
+    public static final String SP_EIDASCHECK = "sp.eidasCheck";
+    public static final String SP_AFIRMACHECK = "sp.afirmaCheck";
+    public static final String SP_RETURN_SIGEM = "sp.return.sigem";
+    public static final String SP_PROXY_SIGEM_REGISTRO = "sp.proxy.sigem.registro";
+    public static final String SP_PROXY_PORTAFIRMAS = "sp.proxy.portafirmas";
+    public static final String SP_RETURN_PORTAFIRMAS = "sp.return.portafirmas";
+  		
 }
 

@@ -55,6 +55,8 @@ public class ReturnAction extends AbstractSPServlet {
     private String logoutResponse = null;
     private ImmutableMap<AttributeDefinition<?>, ImmutableSet<? extends AttributeValue<?>>> attrMap = null;
     private Properties configs = null;
+    private static boolean proxy_portafirmas= false;
+    private static boolean proxy_sigem_registro= false;
 
     @Override
 	protected Logger getLogger() {
@@ -92,18 +94,10 @@ public class ReturnAction extends AbstractSPServlet {
 			IAuthenticationResponseNoMetadata authnResponse = null;
 			try {
 				
-				String peticion = "https://"+request.getServerName()+":4443";
-		        peticion = peticion.concat(configs.getProperty(Constants.SP_RETURN));
+				String peticion = configs.getProperty(Constants.SP_RETURN);
 				
 				//validate SAML Token
 				authnResponse = protocolEngine.unmarshallResponseAndValidate(decSamlToken, request.getRemoteHost(), 0, 0, peticion);
-
-				// For extract an encrypted Assertion from SAMLResponse, that can be signed itself
-//           	boolean encryptedResponse = SPUtil.isEncryptedSamlResponse(decSamlToken);
-//           	if (encryptedResponse) {
-//          		byte[] eidasTokenSAML = engine.checkAndDecryptResponse(decSamlToken);
-//              	SPUtil.extractAssertionAsString(EidasStringUtil.toString(eidasTokenSAML));
-//            	}
 
 				// Check session
 				String prevRelayState = SessionHolder.sessionsSAML.get(authnResponse.getInResponseToId());
@@ -122,6 +116,8 @@ public class ReturnAction extends AbstractSPServlet {
 				attrMap = authnResponse.getAttributes().getAttributeMap();
 			}
 
+			
+			//CARGA DE PARAMETROS PARA PASARLOS AL CONTEXTO QUE CORRESPONDA
 			request.setAttribute("attrMap", attrMap);
 			
 			request.setAttribute("FamilyName",authnResponse.getAttributes().getAttributeValuesByFriendlyName("FamilyName"));
@@ -130,35 +126,30 @@ public class ReturnAction extends AbstractSPServlet {
 			request.setAttribute("FirstSurname",authnResponse.getAttributes().getAttributeValuesByFriendlyName("FirstSurname"));
 			request.setAttribute("PartialAfirma",authnResponse.getAttributes().getAttributeValuesByFriendlyName("PartialAfirma"));
 			request.setAttribute("SelectedIdP",authnResponse.getAttributes().getAttributeValuesByFriendlyName("SelectedIdP"));
-			request.setAttribute("RelayState",authnResponse.getAttributes().getAttributeValuesByFriendlyName("RelayState"));
-			
-//			ServletActionContext.getServletContext().setAttribute("attrList", attrMap);			
-//			ServletActionContext.getServletContext().setAttribute("FamilyName",authnResponse.getAttributes().getAttributeValuesByFriendlyName("FamilyName"));
-//			ServletActionContext.getServletContext().setAttribute("FirstName",authnResponse.getAttributes().getAttributeValuesByFriendlyName("FirstName"));
-//			ServletActionContext.getServletContext().setAttribute("PersonIdentifier",authnResponse.getAttributes().getAttributeValuesByFriendlyName("PersonIdentifier"));
-//			ServletActionContext.getServletContext().setAttribute("FirstSurname",authnResponse.getAttributes().getAttributeValuesByFriendlyName("FirstSurname"));
-//			ServletActionContext.getServletContext().setAttribute("PartialAfirma",authnResponse.getAttributes().getAttributeValuesByFriendlyName("PartialAfirma"));
-//			ServletActionContext.getServletContext().setAttribute("SelectedIdP",authnResponse.getAttributes().getAttributeValuesByFriendlyName("SelectedIdP"));
-//			ServletActionContext.getServletContext().setAttribute("RelayState",authnResponse.getAttributes().getAttributeValuesByFriendlyName("RelayState"));
-								
+			request.setAttribute("RelayState",authnResponse.getAttributes().getAttributeValuesByFriendlyName("RelayState"));			
+	
 			this.getServletContext().setAttribute("FamilyName",authnResponse.getAttributes().getAttributeValuesByFriendlyName("FamilyName"));
 			this.getServletContext().setAttribute("FirstName",authnResponse.getAttributes().getAttributeValuesByFriendlyName("FirstName"));
 			this.getServletContext().setAttribute("PersonIdentifier",authnResponse.getAttributes().getAttributeValuesByFriendlyName("PersonIdentifier"));
 			this.getServletContext().setAttribute("FirstSurname",authnResponse.getAttributes().getAttributeValuesByFriendlyName("FirstSurname"));
 			this.getServletContext().setAttribute("PartialAfirma",authnResponse.getAttributes().getAttributeValuesByFriendlyName("PartialAfirma"));
 			this.getServletContext().setAttribute("SelectedIdP",authnResponse.getAttributes().getAttributeValuesByFriendlyName("SelectedIdP"));
-			this.getServletContext().setAttribute("RelayState",authnResponse.getAttributes().getAttributeValuesByFriendlyName("RelayState"));
-			 
+			this.getServletContext().setAttribute("RelayState",authnResponse.getAttributes().getAttributeValuesByFriendlyName("RelayState"));			
+			
+			//LEER CONFIGURACION PARA SABER EN QUE ENTORNO ESTOY, SOLO UNO PUEDE SER TRUE			
+			proxy_sigem_registro = Boolean.valueOf(configs.getProperty(Constants.SP_PROXY_SIGEM_REGISTRO));
+			proxy_portafirmas = Boolean.valueOf(configs.getProperty(Constants.SP_PROXY_PORTAFIRMAS));	
+			String redirect = "";			
 			
 			
-			response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);		
-			String redirect = "https://"+request.getServerName()+":4443/SIGEM_AutenticacionWeb/validacionClave.do";
-			response.setHeader("Location", redirect);
-						
-			//Asi funciona pero pierde el identidad
-//			ServletContext context= getServletContext().getContext("/SIGEM_AutenticacionWeb");
-//			dispatcher= context.getRequestDispatcher("/validacionClave.do");
+			//LEER LA URL DE SALTO UNA VEZ RECIVIDA LA RESPUESTA DE LA PASARELA DE CLAVE			
+			if(proxy_sigem_registro)
+				redirect = redirect.concat(configs.getProperty(Constants.SP_RETURN_SIGEM));
+			else if(proxy_portafirmas)
+				redirect = configs.getProperty(Constants.SP_RETURN_PORTAFIRMAS);
 			
+			response.setHeader("Location", redirect);						
+			response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);			
 
 			//logout data
 			String samlId = SAMLEngineUtils.generateNCName();
@@ -207,12 +198,8 @@ public class ReturnAction extends AbstractSPServlet {
 			throw new InvalidParameterEIDASException(
 					EidasErrors.get(EidasErrorKey.COLLEAGUE_RESP_INVALID_SAML.errorCode()),
 					EidasErrors.get(EidasErrorKey.COLLEAGUE_RESP_INVALID_SAML.errorMessage()));
-		}
-		
-		//Asi funciona pero pierde el idEntidad
-		//dispatcher.forward(request, response);
-		
-		//response.sendRedirect(redirect);		
+		}		
+
     }
 	
 	private String generateLogout(String assertionConsumerUrl, String providerName, 
