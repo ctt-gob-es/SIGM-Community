@@ -1,5 +1,6 @@
 package ieci.tecdoc.sgm.registro.action;
 
+import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tecdoc.sgm.base.base64.Base64Util;
 import ieci.tecdoc.sgm.base.miscelanea.Goodies;
 import ieci.tecdoc.sgm.base.xml.core.XmlDocument;
@@ -38,6 +39,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.MultipartRequestHandler;
 import org.apache.struts.util.MessageResources;
 
+import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
+
 public class EnviarSubsanacionAction extends EnviarSolicitudAction {
 
 	private static final Logger logger = Logger.getLogger(EnviarSubsanacionAction.class);
@@ -51,6 +54,21 @@ public class EnviarSubsanacionAction extends EnviarSolicitudAction {
         HttpServletRequest request, HttpServletResponse response) {
 
     	HttpSession session = request.getSession();
+    	
+    	//Acceder a la configuracion
+    	Entidad entidad = Misc.obtenerEntidad(request);
+		String entityId = entidad.getIdentificador();
+		FirmaConfiguration fc = null;
+    	
+    	try {
+			fc = FirmaConfiguration.getInstanceNoSingleton(entityId);
+			
+		} catch (ISPACRuleException e1) {
+			request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_ENVIO_SOLICITUD);
+	    	request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, "ERROR AL LEER FICHERO DE CONFIGURACION DE FIRMA");
+
+	    	return mapping.findForward("failure");
+		}
 
 	    try {
 	    	Boolean maxLengthExceeded = (Boolean)request.getAttribute(MultipartRequestHandler.ATTRIBUTE_MAX_LENGTH_EXCEEDED);
@@ -68,7 +86,6 @@ public class EnviarSubsanacionAction extends EnviarSolicitudAction {
 	    	String sessionId = (String)session.getAttribute(Defs.SESION_ID);
 	    	String tramiteId = (String)session.getAttribute(Defs.TRAMITE_ID);
 
-	    	Entidad entidad = Misc.obtenerEntidad(request);
 	    	Locale idioma = LocaleFilterHelper.getCurrentLocale(request);
 		   	if (idioma == null || idioma.getLanguage() == null) {
 		   		idioma = request.getLocale();
@@ -91,7 +108,7 @@ public class EnviarSubsanacionAction extends EnviarSolicitudAction {
 	    	if (bRefresco) {
 
 	        	FormularioSubsanacionForm formulario = (FormularioSubsanacionForm)form;
-
+	        	
 		        ServicioCatalogoTramites oServicioCatalogoTramites = LocalizadorServicios.getServicioCatalogoTramites();
 	        	ServicioRegistroTelematico oServicioRegistroTelematico = LocalizadorServicios.getServicioRegistroTelematico();
 
@@ -102,26 +119,60 @@ public class EnviarSubsanacionAction extends EnviarSolicitudAction {
 		    	String numRegistro = (String)session.getAttribute(Defs.NUMERO_REGISTRO);
 		    	if (StringUtils.isNotBlank(numRegistro)) {
 
-		    		// Registro telemático que generó el expediente
-			    	Registro registro = oServicioRegistroTelematico.obtenerRegistro("", numRegistro, entidad);
+					String oficina = null;
+					boolean firma = false;
+					
+					String sFirma;
+					// Registro telemático que generó el expediente
+		    		try{
+		    			Registro registro = oServicioRegistroTelematico.obtenerRegistro("", numRegistro, entidad);
+		    			oficina = registro.getOficina();
+			    		String asunto = registro.getTopic();
+		    			
+		    			// Obtener el trámite del registro de la solicitud
+				        TramiteConsulta tramiteConsulta = new TramiteConsulta();
+				        tramiteConsulta.setTopic(asunto);
+				        Tramites tramites = oServicioCatalogoTramites.query(tramiteConsulta, entidad);
+				        Tramite tramite = tramites.get(0);
+
+				        // La subsanación se firma o no en función de la configuración
+				        // establecida para el trámite en la opción de Firmar solicitud
+				    	firma = tramite.getFirma();
+				    	if (firma) {
+				    		sFirma = "1";
+				    	} else {
+				    		sFirma = "0";
+				    	}
+				    	
+		    		} catch(Exception err){
+		    			oficina = (String) session.getServletContext().getAttribute(Defs.PLUGIN_SUBSANACIONSINNUMEROREGISTROINICIAL_CODIGO_OFICINA);
+			    		if (StringUtils.isBlank(oficina)) {
+			    			logger.error("En la configuracion del Registro Telematico no se ha establecido una oficina de registro para las subsanaciones sin registro inicial");
+
+			    			MessageResources resources = getResources(request);
+				   			request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_ENVIO_SOLICITUD);
+				   			request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, resources.getMessage(Defs.MENSAJE_ERROR_SUBSANACION_SIN_OFICINA_REGISTRO));
+				   			return mapping.findForward("failure");
+			    		}
+
+			    		try {
+			    			firma = new Boolean((String) session.getServletContext().getAttribute(Defs.PLUGIN_SUBSANACIONSINNUMEROREGISTROINICIAL_FIRMAR_SOLICITUD)).booleanValue();
+					    	if (firma) {
+					    		sFirma = "1";
+					    	} else {
+					    		sFirma = "0";
+					    	}
+			    		} catch (Exception e) {
+			    			// Si no se ha definido en la configuración
+			    			// por defecto firmar la solicitud y no generar error
+			    			sFirma =  "1";
+			    		}
+		    		}
 
 			    	// Oficina de registro la misma que la del registro de la solicitud
-			    	session.setAttribute(Defs.OFICINA, registro.getOficina());
+			    	session.setAttribute(Defs.OFICINA, oficina);
+		    		session.setAttribute(Defs.FIRMAR_SOLICITUD, sFirma);
 
-			    	// Obtener el trámite del registro de la solicitud
-			        TramiteConsulta tramiteConsulta = new TramiteConsulta();
-			        tramiteConsulta.setTopic(registro.getTopic());
-			        Tramites tramites = oServicioCatalogoTramites.query(tramiteConsulta, entidad);
-			        Tramite tramite = tramites.get(0);
-
-			        // La subsanación se firma o no en función de la configuración
-			        // establecida para el trámite en la opción de Firmar solicitud
-			    	boolean firma = tramite.getFirma();
-			    	if (firma) {
-			    		session.setAttribute(Defs.FIRMAR_SOLICITUD, "1");
-			    	} else {
-			    		session.setAttribute(Defs.FIRMAR_SOLICITUD, "0");
-			    	}
 		    	} else {
 			    	// Cuando no existe el registro inicial
 		    		// obtener la oficina de registro y si hay que firmar de la configuración
@@ -163,6 +214,8 @@ public class EnviarSubsanacionAction extends EnviarSolicitudAction {
 		    	xmlDocs += xmlData.substring(index+TAG_SPECIFIC.length(), indexa+TAG_SIGNED.length()) +
 		    			   "<"+Definiciones.SIGNATURE+"></"+Definiciones.SIGNATURE+">" +
 		    			   xmlData.substring(indexa+TAG_SIGNED.length(), xmlData.length());
+		    	
+			   	xmlDocs = xmlDocs.replaceAll(TAG_SPECIFIC,"<"+Definiciones.SPECIFIC_DATA+">" + formulario.getDatosEspecificos() + "</"+Definiciones.SPECIFIC_DATA+">");
 
 			   	XmlDocument xmlDoc = new XmlDocument();
 			   	xmlDoc.createFromStringText(xmlDocs);
@@ -186,6 +239,8 @@ public class EnviarSubsanacionAction extends EnviarSolicitudAction {
 			   	String xml_w_xsl = XmlTransformer.transformXmlDocumentToHtmlStringTextUsingXslFile(xmlDoc, xslPath);
 			   	session.setAttribute(Defs.SOLICITUD_REGISTRO, xml_w_xsl);
 			   	session.setAttribute(Defs.REQUEST, Base64Util.encode(Goodies.fromStrToUTF8(strSolicitud)));
+			   	
+			   	session.setAttribute(Defs.DATOS_ESPECIFICOS, formulario.getDatosEspecificos());
 
 			   	// Realizar la misma operación de obtener el texto de la solicitud de registro que
 			   	// al registrar cuando se incrusta la firma en la solicitud de registro para que
@@ -197,13 +252,14 @@ public class EnviarSubsanacionAction extends EnviarSolicitudAction {
 
 			   	int index1 = strSolicitud.indexOf("<"+Definiciones.SIGNED_DATA+">");
 			   	int index2 = strSolicitud.indexOf("</"+Definiciones.SIGNED_DATA+">");
-			   	String strSolicitudFirma = strSolicitud.substring(index1 + ("<"+Definiciones.SIGNED_DATA+">").length(), index2);
-			   	session.setAttribute(Defs.DATOS_A_FIRMAR, formatear(Base64Util.encode(Goodies.fromStrToUTF8(strSolicitudFirma))));
+			   	String strSolicitudFirma = formatearXML(strSolicitud.substring(index1 + ("<"+Definiciones.SIGNED_DATA+">").length(), index2));
+			   	//session.setAttribute(Defs.DATOS_A_FIRMAR, formatear(Base64Util.encode(Goodies.fromStrToUTF8(strSolicitudFirma))));
+			   	session.setAttribute(Defs.DATOS_A_FIRMAR, strSolicitudFirma);
 			    //[Manu Ticket #1090] - INICIO Poner en marcha la opción Consulta de Expedientes.
 			   	session.setAttribute(Defs.HASH_SOLICITUD, Utilities.getHash(xmlDocs.getBytes()));
 				//[Manu Ticket #1090] - FIN Poner en marcha la opción Consulta de Expedientes.
-	    	}
-	    	else {
+
+	    	} else {
 			   	byte[] solicitud = Base64Util.decode((String)session.getAttribute(Defs.REQUEST));
 
 			   	XmlDocument xmlDoc = new XmlDocument();

@@ -1,5 +1,7 @@
 package ieci.tecdoc.sgm.registro.action;
 
+import ieci.tdw.ispac.api.errors.ISPACRuleException;
+import ieci.tecdoc.sgm.autenticacion.util.TipoAutenticacionCodigos;
 import ieci.tecdoc.sgm.base.base64.Base64Util;
 import ieci.tecdoc.sgm.base.miscelanea.Goodies;
 import ieci.tecdoc.sgm.base.xml.core.XmlDocument;
@@ -33,10 +35,12 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -44,12 +48,31 @@ import org.apache.struts.upload.FormFile;
 import org.apache.struts.upload.MultipartRequestHandler;
 import org.apache.struts.util.MessageResources;
 
+import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
+
 public class EnviarSolicitudAction extends RegistroWebAction {
+	
+	private static final Logger logger = Logger.getLogger(EnviarSolicitudAction.class);
 
     public ActionForward executeAction(ActionMapping mapping, ActionForm form,
         HttpServletRequest request, HttpServletResponse response) {
 
     	HttpSession session = request.getSession();
+    	
+    	//Acceder a la configuracion
+    	Entidad entidad = Misc.obtenerEntidad(request);
+		String entityId = entidad.getIdentificador();
+		FirmaConfiguration fc =null;
+		
+    	try {
+			fc = FirmaConfiguration.getInstanceNoSingleton(entityId);
+			
+		} catch (ISPACRuleException e1) {
+			request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_ENVIO_SOLICITUD);
+	    	request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, "ERROR AL LEER FICHERO DE CONFIGURACION DE FIRMA");
+
+	    	return mapping.findForward("failure");
+		}
 
 	    try {
 	    	Boolean maxLengthExceeded = (Boolean)request.getAttribute(MultipartRequestHandler.ATTRIBUTE_MAX_LENGTH_EXCEEDED);
@@ -68,7 +91,6 @@ public class EnviarSolicitudAction extends RegistroWebAction {
 	    	String tramiteId = (String)session.getAttribute(Defs.TRAMITE_ID);
 	    	String numExp = (String)session.getAttribute(Defs.NUMERO_EXPEDIENTE);
 
-	    	Entidad entidad = Misc.obtenerEntidad(request);
 	    	Locale idioma = LocaleFilterHelper.getCurrentLocale(request);
 		   	if (idioma == null || idioma.getLanguage() == null) {
 		   		idioma = request.getLocale();
@@ -91,6 +113,7 @@ public class EnviarSolicitudAction extends RegistroWebAction {
 	    	if (bRefresco) {
 
 	    		FormularioSolicitudForm formulario = (FormularioSolicitudForm)form;
+	    		//formulario.procesaDatosEspecificos();
 	    		
 	    		//INICIO [dipucr-Felipe #1055] Errores por lanzar el action dos veces debidos a IE y Java 7.55
 		    	String specificData = formulario.getDatosEspecificos();
@@ -153,6 +176,35 @@ public class EnviarSolicitudAction extends RegistroWebAction {
 		    		datosEspecificos += "<cod_organo>" + datosOrgano.getId() + "</cod_organo>";
 		    		datosEspecificos += "<descr_organo><![CDATA[" + datosOrgano.getDescription() + "]]></descr_organo>";
 		    	}
+		    	
+		    	if(session.getAttribute(Defs.ACCESO_SEL).toString().equals(String.valueOf(TipoAutenticacionCodigos.CLAVE))) {
+		    	    			    	
+			    	//Firmar evidencia de la pasarela Clave, Agustin #1356
+			    	//Cargo la respuesta de Cl@ve en los datosEspecificos que son firmados y sellados
+			    	ServletContext srcServletContext = request.getSession().getServletContext();
+			        ServletContext targetServletContext = srcServletContext.getContext("/SP2");
+			        String partialAfirma = null;
+			        	
+				        try {
+								partialAfirma=(String)  targetServletContext.getAttribute("PartialAfirma").toString().subSequence(targetServletContext.getAttribute("PartialAfirma").toString().indexOf("[")+1, targetServletContext.getAttribute("PartialAfirma").toString().indexOf("]"));
+						} catch (Exception e) {
+					}
+			        			        
+				    if(partialAfirma!=null) {
+				    	
+				    	datosEspecificos += "<partialAfirma>" + partialAfirma + "</partialAfirma>";			    				    		
+				  		    		 
+				    }
+				    else{
+				    	logger.error("ERROR EN LA SESION DE CLAVE, partialAfirma es nulo, AHORA VIENE NULO AL ENTRAR POR CLAVE PERMANENTE");
+				    	//request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_REGISTRAR_SOLICITUD);
+					   	//request.setAttribute(Defs.MENSAJE_ERROR_DETALLE, "Error: se ha caducado la sesión no existen datos de identificación en Cl@ve");
+						//return mapping.findForward("failure");			    		
+				    }
+				    //FIN Firmar evidencia de la pasarela Clave, Agustin #1356
+			    
+		    	}
+		    	
 		    	requestInfo.setSpecificData(datosEspecificos);
 
 		    	//requestInfo.setSpecificData(Base64Util.decodeToString(formulario.getDatosEspecificos()));
@@ -198,12 +250,15 @@ public class EnviarSolicitudAction extends RegistroWebAction {
 
 			   	int index1 = strSolicitud.indexOf("<"+Definiciones.SIGNED_DATA+">");
 			   	int index2 = strSolicitud.indexOf("</"+Definiciones.SIGNED_DATA+">");
-			   	String strSolicitudFirma = strSolicitud.substring(index1 + ("<"+Definiciones.SIGNED_DATA+">").length(), index2);
-			   	session.setAttribute(Defs.DATOS_A_FIRMAR, formatear(Base64Util.encode(Goodies.fromStrToUTF8(strSolicitudFirma))));
+			   	String strSolicitudFirma = formatearXML(strSolicitud.substring(index1 + ("<"+Definiciones.SIGNED_DATA+">").length(), index2));
+			   	//session.setAttribute(Defs.DATOS_A_FIRMAR, formatear(Base64Util.encode(Goodies.fromStrToUTF8(strSolicitudFirma))));
+			   	//session.setAttribute(Defs.DATOS_A_FIRMAR, Goodies.fromStrToUTF8(strSolicitudFirma));
+			   	session.setAttribute(Defs.DATOS_A_FIRMAR, strSolicitudFirma);
+			   	//session.setAttribute(Defs.DATOS_A_FIRMAR, Base64.encode(strSolicitudFirma.getBytes()));
 			   	//INICIO [eCenpri-Felipe #457]
 			   	//Obtenemos el hash de la solicitud
 			   	session.setAttribute(Defs.HASH_SOLICITUD, Utilities.getHash(solicitud));
-			   	//FIN [eCenpri-Felipe #457]
+			   	//FIN [eCenpri-Felipe #457]	
 	    	}
 	    	else {
 			   	byte[] solicitud = Base64Util.decode((String)session.getAttribute(Defs.REQUEST));
@@ -314,6 +369,7 @@ public class EnviarSolicitudAction extends RegistroWebAction {
 		document.setExtension(ext);
 		document.setLocation(fileName);
 		document.setIdioma(idioma);
+		document.setFileContent(formFile.getFileData());//[dipucr-Felipe #940]
 
 		return document;
 	}
@@ -373,5 +429,25 @@ public class EnviarSolicitudAction extends RegistroWebAction {
 
 		return d;
 	}
+	
+	
+	protected String formatearXML(String datos) {
+		//<?xml version="1.0" encoding="UTF-8"?>
+		//String cabecera="<?xml version=";
+		//cabecera=cabecera.concat("\"");
+		//cabecera=cabecera.concat("1.0");
+		//cabecera=cabecera.concat("\"");
+		//cabecera=cabecera.concat("encoding=\"UTF-8\"?>");
+		
+		String cabecera="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+		cabecera=cabecera.concat("<datos_a_firmar>");
+		cabecera=cabecera.concat(datos);
+		cabecera=cabecera.concat("</datos_a_firmar>");
+		
+		return cabecera;
+		
+	}
+	
+	
 
 }

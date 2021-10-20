@@ -43,6 +43,7 @@ public class Definiciones
    public static final String SENDER = "Remitente";
    public static final String LEGAL_REPRESENTATIVE = "Representante_Legal";
    public static final String ID = "Documento_Identificacion";
+   public static final String DOCUMENTO_IDENTIFICACION_NUMERO = "Numero";
    public static final String SENDER_ID_TYPE = "Tipo";
    public static final String SENDER_ID = "Numero";
    public static final String SENDER_NAME = "Nombre";
@@ -85,5 +86,8 @@ public class Definiciones
    
    public static final String ID_TRANSACCION = "Id_Transaccion";//[dipucr-Felipe #457]
    public static final String NUMERO_EXPEDIENTE = "numExpediente";//[dipucr-Felipe #1354]
+   
+   public static final String FIRMA_X509_BEGIN = "<ds:X509Certificate>";//[Agustin #1354]
+   public static final String FIRMA_X509_END = "</ds:X509Certificate>";//[Agustin #1354]
    
 }

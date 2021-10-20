@@ -1,5 +1,7 @@
 package ieci.tecdoc.sgm.registro.action;
 
+import java.util.Properties;
+
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tecdoc.sgm.autenticacion.AutenticacionManager;
@@ -14,6 +16,7 @@ import ieci.tecdoc.sgm.core.services.catalogo.ServicioCatalogoTramites;
 import ieci.tecdoc.sgm.core.services.catalogo.TipoConector;
 import ieci.tecdoc.sgm.core.services.catalogo.Tramite;
 import ieci.tecdoc.sgm.core.services.dto.Entidad;
+import ieci.tecdoc.sgm.registro.form.FormularioSolicitudForm;
 import ieci.tecdoc.sgm.registro.form.SolicitudesRegistroForm;
 import ieci.tecdoc.sgm.registro.util.Definiciones;
 import ieci.tecdoc.sgm.registro.utils.Defs;
@@ -33,12 +36,22 @@ public class RealizarSolicitudRegistroAction extends RegistroWebAction{
 
 	public ActionForward executeAction(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
+		
+		FirmaConfiguration fc = null;
+		String xmlDataSpecific ="";
+		
+		String sessionIdIni = null;
+		SesionInfo sessionInfo = null;
+		String sessionId = null;
+		boolean loginWeb = false;
+		boolean loginCert = false;
+		boolean loginClave = false;
 
 		//INICIO [eCenpri-Felipe #818]
 		try{
 			Entidad entidad = Misc.obtenerEntidad(request);
 			String entityId = entidad.getIdentificador();
-			FirmaConfiguration fc = FirmaConfiguration.getInstanceNoSingleton(entityId);
+			fc = FirmaConfiguration.getInstanceNoSingleton(entityId);
 			
 			String sDeshabilitarFirma = fc.getProperty("rt.firmar.deshabilitar");
 			boolean bDeshabilitarFirma = false;
@@ -73,10 +86,7 @@ public class RealizarSolicitudRegistroAction extends RegistroWebAction{
 		if (numExp == null)
 			numExp = new String("");
 
-		String sessionIdIni = null;
-		SesionInfo sessionInfo = null;
-		String sessionId = null;
-		boolean certificado = true;
+		
 		HttpSession session = request.getSession();
 		//[dipucr-Felipe #206 3#108]
 //		session.removeAttribute(Defs.DATOS_ESPECIFICOS);
@@ -117,24 +127,27 @@ public class RealizarSolicitudRegistroAction extends RegistroWebAction{
 			//conector seleccionado por el usuario
 			Conector hook = oServicioCatalogo.getHook(sessionInfo.getHookId(), Misc.obtenerEntidad(request));
 			if (hook.getType() == TipoConector.WEB_USER_AUTH || hook.getType() == TipoConector.CERTIFICATE_WEB_AUTH){
-				certificado = false;
+				loginWeb = true;
+			}
+			else if (hook.getType() == TipoConector.CLAVE_AUTENTICACION ){
+				loginClave = true;
 			}
 			
-			if(certificado)
-				xml = prepararSolicitudCertificado(sessionInfo.getSender());
-			else
+			if(loginWeb)
 				xml = prepararSolicitud(sessionInfo.getSender());
+			else
+				xml = prepararSolicitudCertificado_o_Clave(sessionInfo.getSender());
+				
 			
 			session.setAttribute(Defs.XML_DATA, xml);
 			//FIN [DipuCR-Agustin 3#235]
 			
 			//INICIO [dipucr-Felipe #206 3#108]
-			String xmlDataSpecific = (String)request.getParameter(Defs.DATOS_ESPECIFICOS);
+			xmlDataSpecific = (String)request.getParameter(Defs.DATOS_ESPECIFICOS);
 			if (null != xmlDataSpecific && !xmlDataSpecific.equals("")){
 				session.setAttribute(Defs.DATOS_ESPECIFICOS, xmlDataSpecific);
 			}
 			//FIN [dipucr-Felipe #206 3#108]
-
 			
 	   	}catch(Exception e){
 	   		request.setAttribute(Defs.MENSAJE_ERROR, Defs.MENSAJE_ERROR_REALIZAR_SOLICITUD);
@@ -155,22 +168,25 @@ public class RealizarSolicitudRegistroAction extends RegistroWebAction{
 	   		if (puertoServer.equals(puertoSeguro))
 	   			return mapping.findForward("success_web");
 	   		else return mapping.findForward("success_web_change_port");
-	   	}*/
-
-	   	// TODO UNIR RedirecionUsuario.jsp y RedirecionCertificados.jsp usando
-		// como discriminate el atributo pasado por session!!!!
-	   	if (certificado){
-	   		session.setAttribute(Defs.ACCESO_SEL, ""+TipoAutenticacionCodigos.X509_CERTIFICATE);
-	   		return mapping.findForward("success_change_port");
-	   	}else{
+	   	}*/   			   	
+	 	   		   	
+	   	
+	   	if (loginWeb){
 	   		session.setAttribute(Defs.ACCESO_SEL, ""+TipoAutenticacionCodigos.WEB_USER);
-	   		return mapping.findForward("success_web_change_port");
+	   		return mapping.findForward("success_web_change_port");	   		
+	   	}if (loginClave){
+	   		session.setAttribute(Defs.ACCESO_SEL, ""+TipoAutenticacionCodigos.CLAVE);
+	   		return mapping.findForward("success_change_port");	   		
+	   	}if (loginCert){
+	   		session.setAttribute(Defs.ACCESO_SEL, ""+TipoAutenticacionCodigos.X509_CERTIFICATE);
+	   		return mapping.findForward("success_change_port");	   		
 	   	}
-   		//return mapping.findForward("success_web_change_port");
+	   	
+	   	return mapping.findForward("failure");
 	}
 
 	//[DipuCR-Agustin #235]
-	private String prepararSolicitudCertificado(Solicitante solicitante){
+	private String prepararSolicitudCertificado_o_Clave(Solicitante solicitante){
 
 		XmlTextBuilder bdr = new XmlTextBuilder();
 
@@ -201,5 +217,7 @@ public class RealizarSolicitudRegistroAction extends RegistroWebAction{
 
         return bdr.getText();
 	}
+	
+
 	
 }

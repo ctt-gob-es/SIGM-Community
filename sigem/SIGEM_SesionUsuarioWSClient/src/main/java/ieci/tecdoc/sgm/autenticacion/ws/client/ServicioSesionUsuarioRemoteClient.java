@@ -387,4 +387,25 @@ public class ServicioSesionUsuarioRemoteClient implements ServicioSesionUsuario{
 		oEntidad.setNombre(poEntidad.getNombre());
 		return oEntidad;
 	}
+
+	public String login(String actSessionId, String nombre, String apellidos,
+			String email, String senderId, Entidad entidad, String infoClave)
+			throws SesionUsuarioException {
+		try{
+			LoginExternalUser oUser = new LoginExternalUser();
+			oUser.setActSessionId(actSessionId);
+			oUser.setNombre(nombre);
+			oUser.setApellidos(apellidos);
+			oUser.setEmail(email);
+			oUser.setSenderId(senderId);
+			IdentificadorSesion oId = service.loginExternalUser(oUser, getEntidadWS(entidad));
+			if(ServiciosUtils.isReturnOK((IRetornoServicio)oId)){
+				return oId.getSessionId();
+			}else{
+				throw getSesionUsuarioException((IRetornoServicio)oId);
+			}
+		} catch (RemoteException e) {
+			throw new SesionUsuarioException(SesionUsuarioException.EXC_GENERIC_EXCEPCION, e.getMessage(), e);
+		}
+	}
 }

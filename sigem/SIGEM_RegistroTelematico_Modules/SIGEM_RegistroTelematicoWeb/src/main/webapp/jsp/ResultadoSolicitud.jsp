@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
+<%@ page import="java.text.DecimalFormat" %>
 <%@ page import="ieci.tecdoc.sgm.registro.utils.Defs" %>
 <%@ page import="ieci.tecdoc.sgm.autenticacion.util.TipoAutenticacionCodigos" %>
 <%@ page import="ieci.tecdoc.sgm.core.services.telematico.PeticionDocumento" %>
@@ -86,54 +87,20 @@
 						}				
 <% 	
 if (bFirma) {	
-%>			
+%>			 								
 									function FirmarReg()
-									{										
-										try {
-															document.getElementById('acciones').style.visibility = 'hidden';				
-															document.getElementById('aceptar_registro').disabled = true;
-															document.getElementById('firmar_solicitud').disabled = true;
-															document.getElementById('corregir').disabled = true;
-																												
-															//alert("Ha pasado el echo");															
-															
-															dataB64 ="<%=request.getSession().getAttribute(Defs.DATOS_A_FIRMAR)%>";		
-															
-															//alert("ANTES DE FIRMAR: Este es el contenido de dataB64: "+dataB64);				
-															
-															var parametros = "expPolicy=" + "FirmaAGE";		
-															
-															var datasignB64 = firmaBasicaXades(dataB64);
-																
-															//alert("DESPUES DE FIRMAR: Este es el contenido de signB64: "+datasignB64);
-															var campoFirma = document.getElementById("<%= Defs.FIRMA %>");
-															
-															//En el script de firma ya cargo el contenido de la firma														
-															//campoFirma.value = datasignB64;
-															
-															//alert("DESPUES DE FIRMAR: Este es el contenido de campoFirma.value: "+campoFirma.value);
-															
-															
-														} catch(e) {				
-															alert('ERROR AL REALIZAR LA FIRMA, es posible que usted haya cancelado el proceso, en ese caso para poder hacer el registro debe cerrar el navegador y volver a realizar la solicitud. Si le aparece este mensaje siempre sin raz\u00f3n ponga una incidencia en la siguiente direcci\u00f3n https://sede.dipucr.es/soporte');
-															//Descomenta esta linea para ver la excepcion															
-															//alert("ERROR EN LA FIRMA EXCEPCION: "+e);
-															document.getElementById('aceptar_registro').disabled = false;
-															document.getElementById('firmar_solicitud').disabled = false;									
-															document.getElementById('corregir').disabled = false;				
-															document.getElementById('acciones').style.visibility = 'visible';
-															
-															return false;
-										}
-														
-										
-										return false;		
+									{										  
+											//alert("SE VA A FIRMA CON FIRE");
+											return true;
 									}
 <%}else{%>
 									function FirmarReg()
 									{										  
-											alert("SE HA CANCELADO EL PROCESO DE FIRMA");
-											return false;
+											//alert("REGISTRAR SIN FIRMA");
+											//document.getElementById('overlay').style.display='';
+											//document.getElementById('divConsultaApodera').style.display='';
+											document.getElementById('form_acept_request').action='<html:rewrite page="/registrarSolicitud.do"/>';
+											return true;
 									}
 <%
 	}
@@ -142,6 +109,11 @@ if (bFirma) {
 						function mostrarSolicitud() 
 						{						
 								parent.mostrarSolicitud();
+						}
+						
+						//[dipucr-Felipe #940] Descargar anexos
+						function obtenerAnexo(filename, code){
+							document.location.href = "descargarAnexo.do?filename=" + filename + '&code=' + code;
 						}
 						
 					</script>
@@ -177,7 +149,7 @@ if (bFirma) {
 		
 			<div class="contenedor_centrado">
 
-				<form id="form_acept_request" name="form_acept_request" action="<html:rewrite page="/registrarSolicitud.do"/>" method="post" onsubmit="javascript:return FirmarReg();">
+				<form id="form_acept_request" name="form_acept_request" action="<html:rewrite page="/firmarSolicitud.do"/>" method="post" onsubmit="javascript:return FirmarReg();">
 
 					<div class="cuerpo">
 		      			<div class="cuerporight">
@@ -215,6 +187,7 @@ if (bFirma) {
 									
 									<%									
 										PeticionDocumentos petDocs = (PeticionDocumentos)session.getAttribute(Defs.DOCUMENTOS_REQUEST);	
+									    session.setAttribute(Defs.DOCUMENTOS_REQUEST, petDocs);//[dipucr-Felipe #940]
 										if(petDocs != null && petDocs.count()>0){
 									%>
 											<div class="submenu">
@@ -231,7 +204,12 @@ if (bFirma) {
 														<bean:message key="resultado.documento"/><%=h+1%>:
 													</label>
 													<label>
-														<%=petDoc.getFileName()%>
+														<a onclick="javascript:obtenerAnexo('<%=petDoc.getFileName()%>','<%=petDoc.getCode()%>');" style="cursor:pointer"><%=petDoc.getFileName()%></a>
+														<% if ((petDoc.getFileContent().length / 1024) < 1024){ %>
+															(<%= petDoc.getFileContent().length / 1024 %> KB)
+														<% } else{ %>
+															(<%= new DecimalFormat("#.00").format((double) petDoc.getFileContent().length / (1024*1024)) %> MB)
+														<%}%>
 													</label>
 												</div>
 									<%
@@ -294,7 +272,7 @@ if (bFirma) {
 				</form>
 			</div>
 		</div>
-	</div>
+	</div>	
 	
 	<%}else{%>
 		<p><bean:message key="cargando"/></p>

@@ -3,6 +3,8 @@
 
 <!-- <xsl:include href="../templates_comunes.xsl" /> -->
 
+<!-- <xsl:call-template name="ENTIDAD_ID" /> -->
+
 <!-- <xsl:call-template name="DATOS_PRESENTADOR" /> -->
 <!-- especificos[xx] = new Array('documentoIdentidad','documentoIdentidad'); -->
 <!-- especificos[xx] = new Array('nombreSolicitante','nombreSolicitante'); -->
@@ -37,6 +39,14 @@
 <!-- <xsl:call-template name="TEXTO_DATOS_PERSONALES_COMUNRELLENO" /> -->
 
 <!-- <xsl:call-template name="TEXTO_COMPARECE_COMUN" /> -->
+
+	<xsl:variable name="entidadId" select="'005'"/>
+
+	<xsl:template name="ENTIDAD_ID">
+		var entidadId = '005';
+		var nombreCorto = 'Diputación de Ciudad Real';
+		var nombreLargo = 'Diputación Provincial de Ciudad Real';
+	</xsl:template>
 
 	<xsl:template name="DATOS_PRESENTADOR">
 		<xsl:variable name="lang.datosPresentador" select="'Datos del presentador'"/>
@@ -329,11 +339,13 @@
 		</div>
 
 		<script>
+			<xsl:call-template name="ENTIDAD_ID" />
+
 			function getDatosObligado(nif){
-				window.open('tramites/000/buscaObligado.jsp?valor=' + nif + ';000', '', 'width=3,height=3');
+				window.open('tramites/' + entidadId + '/buscaObligado.jsp?valor=' + nif + ';' + entidadId, '', 'width=3,height=3');
 			}
 			function getDatosRepresentante(nif){
-				window.open('tramites/000/buscaRepresentante.jsp?valor=' + nif + ';000', '', 'width=3,height=3');
+				window.open('tramites/' + entidadId + '/buscaRepresentante.jsp?valor=' + nif + ';' + entidadId, '', 'width=3,height=3');
 			}
 			function validaNIFObligado(){
 				var valorNif = document.getElementById('nif');
@@ -562,7 +574,7 @@
 		<div class="cuadro">
 			<xsl:attribute name="style">text-align:justify;</xsl:attribute>
 		   	<label class="gr">
-				<input type="checkbox">
+				<input type="hidden">
 					<xsl:attribute name="style">width:auto;</xsl:attribute>
 					<xsl:attribute name="name">texto_legal_comun_ck</xsl:attribute>
 					<xsl:attribute name="id">texto_legal_comun_ck</xsl:attribute>
@@ -590,7 +602,7 @@
 			<div class="col">
 				<label class="gr">
 					<xsl:attribute name="style">position: relative; width:100%; padding-left:5px; text-align: justify;</xsl:attribute>
-					<input type="checkbox">
+					<input type="hidden">
 						<xsl:attribute name="style">width:auto;</xsl:attribute>
 						<xsl:attribute name="name">texto_legal_comun_ck</xsl:attribute>
 						<xsl:attribute name="id">texto_legal_comun_ck</xsl:attribute>
@@ -614,7 +626,7 @@
 	</xsl:template>
 
 	<xsl:template name="TEXTO_DATOS_PERSONALES_COMUN">
-		<xsl:variable name="lang.texto_datos_personales_comun" select="'Los datos personales, identificativos y de contacto, aportados mediante esta comunicación se entienden facilitados voluntariamente, y serán incorporados a un fichero cuya finalidad es la de mantener con Vd. relaciones dentro del ámbito de las competencias de esta Administración Pública así como informarle de nuestros servicios presentes y futuros ya sea por correo ordinario o por medios telemáticos y enviarle invitaciones para eventos y felicitaciones en fechas señaladas. Entenderemos que presta su consentimiento tácito para este tratamiento de datos si en el plazo de un mes no expresa su voluntad en contra. Podrá ejercer sus derechos de acceso, rectificación, cancelación y oposición ante el Responsable del Fichero, la Diputación Provincial de Ciudad Real en C/ Toledo, 17, 13071 Ciudad Real - España, siempre acreditando conforme a Derecho su identidad en la comunicación. En cumplimiento de la L.O. 34/2002 le informamos de que puede revocar en cualquier momento el consentimiento que nos otorga dirigiéndose a la dirección citada ut supra o bien al correo electrónico lopd@dipucr.es o bien por telefono al numero gratuito 900 714 080.'"/>
+		<xsl:variable name="lang.texto_datos_personales_comun" select="'Los datos personales, identificativos y de contacto, aportados mediante esta comunicación se entienden facilitados voluntariamente, y serán incorporados a un fichero cuya finalidad es la de mantener con Vd. relaciones dentro del ámbito de las competencias legalmente atribuidad a esta Administración Pública. Podrá ejercer sus derechos de acceso, rectificación, cancelación y oposición ante el Responsable del Fichero, la Entidad Local arriba indicada, a través de su sede física o electrónica, o dirigiéndose a su Delegado de Protección de Datos, siempre acreditando conforme a Derecho su identidad en la comunicación.'"/>
 
 		<div class="cuadro">
 			<xsl:attribute name="style">text-align:justify;</xsl:attribute>
@@ -646,7 +658,7 @@
 		<xsl:variable name="lang.Comparece10" select="'QUEREMOS SER MÁS ÁGILES Y CONTESTARLE CON RAPIDEZ'"/>
 		<xsl:variable name="lang.Comparece20" select="'Puede acceder a la notificación electrónica de las resoluciones que sean de su interés a través de:'"/>
 		<xsl:variable name="lang.Comparece30" select="'Portal de Notificaciones Telemáticas de la Diputación de Ciudad Real COMPARECE'"/>
-		<xsl:variable name="lang.Comparece40" select="'Notifica/Carpeta Ciudadana'"/>
+		<xsl:variable name="lang.Comparece40" select="'Notifica/DEH/Carpeta Ciudadana'"/>
 		<xsl:variable name="lang.Comparece50" select="'Dirección Electrónica Habilitada (DEH)'"/>
 		<xsl:variable name="lang.Comparece60" select="'RÁPIDO, GRATUITO, SIN PAPEL.'"/>
 
@@ -752,7 +764,7 @@
 			<div style="width:100%; padding-bottom:5px;">
 				<li>
 					<xsl:attribute name="style">padding-left:10px;</xsl:attribute>
-					<a href="https://www.youtube.com/watch?v=i0Uebz-HyiU" target="_blank">
+					<a href="https://www.youtube.com/watch?v=w9BnzCA_jek" target="_blank">
 						<xsl:attribute name="style">font-weight:bold; color:blue; padding-top:5px;</xsl:attribute>
 						<xsl:value-of select="$lang.Autofirma70"/>
 					</a>

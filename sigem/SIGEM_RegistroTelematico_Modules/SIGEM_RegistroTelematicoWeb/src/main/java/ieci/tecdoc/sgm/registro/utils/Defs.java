@@ -26,6 +26,9 @@ public class Defs {
 	public static final String DESC_ORGANO = "descOrgano";
 	public static final String HAY_VIRUS = "hayVirus";
 	public static final String HAY_VIRUS_DOCUMENTOS = "hayVirusDocumentos";
+	
+	public static final String REPRESENTADO = "representado";
+	public static final String REPRESENTANTE = "documentoIdentidad";	
 
 	public static final String USUARIO = "username";
 	public static final String PASSWORD = "password";
@@ -141,5 +144,27 @@ public class Defs {
 	//[eCenpri-Felipe #457] SIGEM IncluiridTransaccion en el registro telemático
 	public static final String HASH_SOLICITUD = "HASH_SOLICITUD";
 	//[eCenpri-Felipe #457] SIGEM IncluiridTransaccion en el registro telemático
-
+	
+	//INICIO [DipuCR-Agustin #548 Integrar Clave]
+	public static final String CLAVE_FIRMA_URL= "CLAVE_FIRMA_URL";
+	public static final String CLAVE_FIRMA_TRANSACTION_ID= "CLAVE_FIRMA_TRANSACTION_ID";
+	public static final String CLAVE_FIRMA_SUBJECT_ID= "CLAVE_FIRMA_SUBJECT_ID";
+	//FIN [DipuCR-Agustin #548]
+	
+	public final static String CLAVE_EVIDENCIAS_FAMILYNAME = "FamilyName";
+	public final static String CLAVE_EVIDENCIAS_FIRSTNAME = "FirstName";
+	public final static String CLAVE_EVIDENCIAS_PERSONALIDENTIFIER = "PersonIdentifier";
+	public final static String CLAVE_EVIDENCIAS_FIRSTSURNAME = "FirstSurname";
+	public final static String CLAVE_EVIDENCIAS_PARTIALAFIRMA = "PartialAfirma";
+	public final static String CLAVE_EVIDENCIAS_SELECTEDIDP = "SelectedIdP";
+	public final static String CLAVE_EVIDENCIAS_REALYSTATE = "RelayState";
+	public final static String CLAVE_EVIDENCIAS_NUMERO_SERIE = "<afxp:FieldIdentity>numeroSerie</afxp:FieldIdentity>";
+	public final static String CLAVE_EVIDENCIAS_VALOR = "<afxp:FieldValue>";
+	public final static String CLAVE_EVIDENCIAS_VALOR_END = "<afxp:FieldValue>";
+	
+	public static final String FIRMA_X509_BEGIN = "<ds:X509Certificate>";//[Agustin #1354]
+	public static final String FIRMA_X509_END = "</ds:X509Certificate>";//[Agustin #1354]
+	
+	public static final String MENSAJE_ERROR_OBTENER_ANEXO = "mensaje_error.obtener_anexo";
+	
 }

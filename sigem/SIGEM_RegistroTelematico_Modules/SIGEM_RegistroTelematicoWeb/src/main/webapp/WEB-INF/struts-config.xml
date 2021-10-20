@@ -76,6 +76,15 @@
 				<forward name="error_login" path="/jsp/RedireccionAutenticacionIFrame.jsp"/>
 				<forward name="refrescar" path="/jsp/JustificanteRegistro.jsp"/>
 		</action>
+		<action path="/firmarSolicitud"
+				type="ieci.tecdoc.sgm.registro.action.FirmarSolicitudAction"
+				scope="request"
+				validate="false">
+				<forward name="registrarSolicitud"  path="/jsp/RedireccionClaveFirma.jsp" redirect="true"/>
+				<forward name="registrarSolicitud_sinfirma"  path="/registrarSolicitud.do" redirect="true"/>  <!-- [eCenpri-Agustin #1356] -->	
+				<forward name="failure" path="/mostrarErrorRegistro.do" redirect="true"/>
+				<forward name="error_login" path="/jsp/RedireccionAutenticacionIFrame.jsp"/>
+		</action>
 		<!-- Certificados -->
 		<action path="/listaCertificados"
 				type="ieci.tecdoc.sgm.registro.action.ListaCertificadosAction"
@@ -156,6 +165,11 @@
 
 		<action path="/descargarJustificante"
 				type="ieci.tecdoc.sgm.registro.action.DescargarJustificanteAction">
+				<forward name="failure" path="/jsp/MensajeError.jsp"/>
+		</action>
+		
+		<action path="/descargarAnexo"
+				type="ieci.tecdoc.sgm.registro.action.DescargarAnexoAction">
 				<forward name="failure" path="/jsp/MensajeError.jsp"/>
 		</action>
 
