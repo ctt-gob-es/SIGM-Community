@@ -16,7 +16,7 @@
 
 	<properties>
 		<cxf.version>2.2.3</cxf.version>
-		<spring.version>3.0.2.RELEASE</spring.version>
+		<spring.version>5.2.22.RELEASE</spring.version>
 		<unpack.config.directory>${project.build.directory}/generated-resources</unpack.config.directory>
 	</properties>
 
