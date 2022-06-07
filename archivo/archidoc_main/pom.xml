@@ -74,7 +74,7 @@
 		<serializer.version>2.7.1</serializer.version>
 		<spring.version>3.0.2.RELEASE</spring.version>
 		<standard.version>1.0.4</standard.version>
-		<struts.version>1.1</struts.version>
+		<struts.version>1.2.9</struts.version>
 		<struts-menu.version>2.4.3</struts-menu.version>
 		<taglibs-string.version>1.1.0</taglibs-string.version>
 		<wss4j.version>1.5.7</wss4j.version>
@@ -690,7 +690,7 @@
 		</snapshotRepository>-->
 		<repository>
 			<id>DipucrRepDeploy</id>
-			<name>Repositorio de la Diputación de Ciudad Real</name>
+			<name>Repositorio de la DiputaciÃ³n de Ciudad Real</name>
 			<url>http://10.12.200.113:8081/nexus/content/repositories/DipucrRepo/</url>
 		</repository>
 	</distributionManagement>
