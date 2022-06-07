@@ -159,7 +159,7 @@
 		<dependency>
 			<groupId>struts</groupId>
 			<artifactId>struts</artifactId>
-			<version>1.1</version>
+			<version>1.2.9</version>
 			<exclusions>
 				<exclusion>
 					<groupId>javax.sql</groupId>
