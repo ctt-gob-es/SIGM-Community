@@ -51,7 +51,7 @@
     <quartz.version>1.5.2</quartz.version>
     <xstream.version>1.3.1</xstream.version>
     <joda.time.version>1.6</joda.time.version>
-    <dwr.version>2.0.3</dwr.version>
+    <dwr.version>2.0.11-RELEASE</dwr.version>
     <mime-util.version>2.1.3</mime-util.version>
     <jasper.version>3.5.3</jasper.version>
     <servlet-api.version>2.4</servlet-api.version>
