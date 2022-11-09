@@ -1,0 +1,109 @@
+/*********************************/
+/*   input con boton auxiliar    */
+
+.input-auxbtn {
+    // display: inline-block;
+    margin-bottom: 0.5em;
+
+    white-space: nowrap;
+}
+
+.sticked-input-right,
+.sticked-input-left {
+    display: inline-block;
+    margin: 0;
+    position: relative;
+    height: 18px;
+    
+    line-height: 18px;
+    vertical-align: text-top;
+}
+
+.sticked-input-right {
+    margin: 0;
+
+    -webkit-border-radius: 3px 0 0 3px;
+    -moz-border-radius:    3px 0 0 3px;
+    border-radius:         3px 0 0 3px;
+}
+
+.sticked-input-left {
+    margin: 0 0 0 -1px;
+
+    border-left-color: #CCC;
+    
+    -webkit-border-radius: 0 3px 3px 0;
+    -moz-border-radius:    0 3px 3px 0;
+    border-radius:         0 3px 3px 0;
+}
+
+.simbutton.stick-btn-right,
+.stick-btn-right,
+.simbutton.stick-btn-left,
+.stick-btn-left {
+    display: inline-block;
+    padding: 5px 8px 3px 8px;
+    position: relative;
+    height: 18px;
+    margin: 0;
+
+    line-height: 18px;
+    vertical-align: text-top;
+    white-space: nowrap;
+
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+
+    border: 1px solid #CCC;
+    border-color: #D9D9D9 #BABABA #A3A3A3 #CCC;
+
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3), 
+                        0 1px 1px rgba(255, 255, 255, 0.6) inset;
+    -moz-box-shadow:    0 1px 1px rgba(0, 0, 0, 0.3), 
+                        0 1px 1px rgba(255, 255, 255, 0.6) inset;
+    box-shadow:         0 1px 1px rgba(0, 0, 0, 0.3), 
+                        0 1px 1px rgba(255, 255, 255, 0.6) inset;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow:    none;
+    box-shadow:         none;
+
+    background: #eae7e7;
+    background: -moz-linear-gradient(top, #eae7e7 0%, #b8b8b8 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eae7e7), color-stop(100%,#b8b8b8));
+    background: -webkit-linear-gradient(top, #eae7e7 0%,#b8b8b8 100%);
+    background: -o-linear-gradient(top, #eae7e7 0%,#b8b8b8 100%);
+    background: -ms-linear-gradient(top, #eae7e7 0%,#b8b8b8 100%);
+    background: linear-gradient(to bottom, #eae7e7 0%,#b8b8b8 100%);
+}
+
+.ie7 .simbutton.stick-btn-right,
+.ie7 .stick-btn-right,
+.ie7 .simbutton.stick-btn-left,
+.ie7 .stick-btn-left {
+    vertical-align: text-top;
+}
+
+.simbutton.stick-btn-right,
+.stick-btn-right {
+    margin: 0 10px 0 -1px;
+
+    -webkit-border-radius: 0 3px 3px 0;
+    -moz-border-radius:    0 3px 3px 0;
+    border-radius:         0 3px 3px 0;
+}
+
+.simbutton.stick-btn-left,
+.stick-btn-left {
+    margin: 0 -1px 0 0;
+
+    -webkit-border-radius: 3px 0 0 3px;
+    -moz-border-radius:    3px 0 0 3px;
+    border-radius:         3px 0 0 3px;
+}
+
+.stick-btn-right .ui-icon,
+.stick-btn-right .mf-icon,
+.stick-btn-left .ui-icon,
+.stick-btn-left .mf-icon, {
+    display: inline-block;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-login-layout">
+	<head>
+		<title>Portafirmas</title>
+		<style>
+			label { display: inline-block; width: 15%;}
+			.realperson-challenge { display: inline-block; }			
+		</style>
+		<script>
+			$(function() {
+				$('#captcha').realperson({chars: $.realperson.alphanumeric,
+					regenerate: 'Escriba los caracteres que vea en la imagen.'});
+			});
+		</script>
+	</head>
+	<body>
+		<div layout:fragment="content" >
+			<div class="modulableLogin numModules_2" id="login" style="text-align: center;">
+					<h4 class="mt20" th:text="#{welcomeValidParagraph1}"></h4>
+					<form id="formCVS" th:action="@{valida}" method="post">
+						<input class="w250 mt20" name="csvId" id="csvId" th:value="${csvId}" th:placeholder="#{welcomeValidParagraph2}"/>
+						<div class="errorMessage mt10" style="margin-bottom:10px">
+							<span th:each="error : ${errors}" th:text="${error}"></span>
+						</div>
+						<input type="text" class="w60 mt10" name="captcha" id="captcha" style="margin-left:auto; margin-right:auto" />
+					</form>
+					<a class="simbutton mt10" th:href="|${#httpServletRequest.getContextPath()}/j_spring_security_logout|" th:title="#{back}">
+						<span th:text="#{back}"></span>
+					</a>
+					<button class="simbutton mt10" th:title="#{validateButton}" onclick="$('.errorMessage').text('');$('#formCVS').submit();">
+						<span th:text="#{validateButton}"></span>
+					</button>
+					<button class="simbutton" th:title="#{clean}" onclick="$('#csvId').val('');$('.errorMessage').text('');$('#captcha').val('')">
+						<span th:text="#{clean}"></span>
+					</button>
+			</div>
+		</div>
+	</body>
+</html>	    

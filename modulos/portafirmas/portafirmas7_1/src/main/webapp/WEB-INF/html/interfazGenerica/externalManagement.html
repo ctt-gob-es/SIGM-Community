@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+		<div layout:fragment="content" >
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/interfazGenerica/users.js?#{versionNumber}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/interfazGenerica/portafirmas.js?#{versionNumber}|"></script>
+	
+			<div id="mainWindow">
+				<div class="windowHeader">
+					<div>
+						<h3 class="windowTitle" th:text="#{externalManagement}"></h3>
+					</div>
+				</div>
+				<div id="contentData">
+					<div id="contentDataBody" class="p10">	
+							<div class="ui-tabs ui-widget ui-widget-content ">
+								<div class="tabs ui-tabs msgBoxBodyTabs">
+									<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ">
+											<li id="externalUserOption" class="ui-state-default ui-tabs-selected ui-state-active"><a href="#tab1" class="tab-icon mf-icon-user-16 pl30" th:text="#{external.users}">Usuarios</a></li>
+											<li id="externalPfOption" class="ui-state-default"><a href="#tab2" onclick="loadPortafirmas()" class="tab-icon mf-icon-pf-16 pl30" th:text="#{external.portafirmas}">Portafirmas</a></li>
+									</ul>
+									<div id="tab1" class="ui-tabs-panel ui-widget-content ui-corner-bottom" th:include="interfazGenerica/users::users"></div>
+									<div id="tab2" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+								</div>
+							</div>
+						<div id="contentDataFooter"></div>
+					</div>
+				</div>
+			</div>
+
+ 			<div id="externalUser_dialog" title="Edición usuario" th:include="interfazGenerica/externalUserModal::user" style="display: none;"></div>     
+		</div>
+	</body>
+</html>	    

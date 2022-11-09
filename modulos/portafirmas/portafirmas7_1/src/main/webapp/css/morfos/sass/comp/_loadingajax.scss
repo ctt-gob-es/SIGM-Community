@@ -1,0 +1,41 @@
+/****************/
+/* Loading-AJAX */
+
+div#loading-ajax {
+    position:fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10002;
+    cursor: wait;
+    
+    background-color: #FFFFFF;
+    background-color: rgba(255,255,255,0.5);
+    filter:alpha(opacity=60);
+}
+
+div#loading-container {
+    width: 75px;
+    height: 75px;
+    margin: 25% auto;
+    
+    -webkit-border-radius: 6px;
+    -moz-border-radius:    6px;
+    border-radius:         6px;
+    
+    background-color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.6);
+    background-image: url("images/ajax-loader.gif");
+    background-position: center center;
+    background-repeat: no-repeat;
+    
+    -webkit-box-shadow: 0 1px 7px rgba(0,0,0,0.4);
+    -moz-box-shadow:    0 1px 7px rgba(0,0,0,0.4);
+    box-shadow:         0 1px 7px rgba(0,0,0,0.4);
+}
+    
+div#loading-ajax img {
+    margin-top: 25%;
+    margin-left: 45%;
+}

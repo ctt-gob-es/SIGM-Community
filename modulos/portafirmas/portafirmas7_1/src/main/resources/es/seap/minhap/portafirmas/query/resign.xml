@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm/orm_1_0.xsd">
+
+	<named-query name="sign.signsByValidDateCount">
+		<query><![CDATA[select count(sign)
+						from PfSignsDTO sign
+						where sign.fValid between current_date() and :fecha
+						and sign.ctype = 'BLOB']]></query>
+	</named-query>
+	<named-query name="sign.signsByValidDate">
+		<query><![CDATA[select sign
+						from PfSignsDTO sign
+						where sign.fValid between current_date() and :fecha
+						and sign.ctype = 'BLOB'
+						order by sign.fValid asc, sign.pfDocument.pfRequest.dsubject asc, sign.pfDocument.dname asc]]></query>
+	</named-query>
+
+</entity-mappings>

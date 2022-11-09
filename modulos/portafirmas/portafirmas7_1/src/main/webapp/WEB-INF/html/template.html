@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+	   <div layout:fragment="content" >
+
+		<script th:src="|${#httpServletRequest.getContextPath()}/js/templates/template.js?#{versionNumber}.#{versionFase}|"></script>
+		<script type="text/javascript">
+			//<![CDATA[
+				$(document).ready(function() {
+					listaAccionesFirmante = cargarListaAccionesFirmante();
+					
+					$('#templateNameErrorMessage').removeClass("dsp_ib").addClass("dsp_n");
+
+					$('#templateForm').bind('submit', function(event) {
+						// Se comprueba que el nombre de plantilla no sea nulo
+						var action = $('#action').val();
+						var templateName = $('#templateCode').val();
+						if ((templateName == null || templateName == "") && action == 'guardar') {
+							event.preventDefault();
+							$('#templateNameErrorMessage').removeClass("dsp_n").addClass("dsp_ib");
+							jsAjaxStatus.stopAjax();
+						} else {
+							// Se activa la cortinilla de espera
+							jsAjaxStatus.startAjax();
+						}
+				    });
+				});
+			//]]>	
+		</script>
+
+    	<script th:src="|${#httpServletRequest.getContextPath()}/js/redaction/redaction.js?#{versionNumber}.#{versionFase}|"></script>
+    	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery-picklist/jquery-picklist.js?#{versionNumber}.#{versionFase}|"></script>
+        <!-- INICIO DEL CONTENIDO-->			 
+			<div  id="mainWindow" class="">
+				<div id="contentData">
+					<div id="contentDataHeader">
+
+						<ul id="pfToolbar">
+							<li>
+								<a class="mf-icon-send-24" th:text="#{saveButton}"
+								href="javascript:void(0)" onclick="saveTemplates();">
+								   Guardar plantilla
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" class="mf-icon-delete-24" th:text="#{cancelButton}"
+								   onclick="enviarFormulario('templateForm', 'cancelar', []);">
+								   Cancelar
+								</a>
+							</li>
+							<!-- 
+							<li><a href="#" class="mf-icon-savedraft-24"><fmt:message key="saveDraft"/></a></li>
+							<li><a href="#" class="mf-icon-savetmpl-24"><fmt:message key="saveTemplate"/></a></li>
+							-->
+						</ul>
+					</div>
+
+					<div id="contentDataBody" class="">
+						<form class="mailContent" id="templateForm" name="templateForm" method="POST" th:action="@{template}" th:object="${redaction}" enctype="multipart/form-data">
+							<!-- ATRIBUTOS DEL FORMULARIO -->
+							<input type="hidden" id="action" name="action" th:field="*{action}" />
+							<input type="hidden" id="signers" name="signers" th:field="*{signers}" />
+							<input type="hidden" id="signLinesConfig" name="signLinesConfig" th:field="*{signLinesConfig}" />
+							<input type="hidden" id="signlinesType" name="signlinesType" th:field="*{signlinesType}" />
+							<input type="hidden" id="signlinesAccion" name="signlinesAccion" th:field="*{signlinesAccion}" />
+							<input type="hidden" id="templateId" name="templateId" th:value="${templateId}" />
+
+							<fieldset>
+								<div class="templateName">
+									<input type="text" th:placeholder="#{requestTemplateName}" id="templateCode"  name="templateCode" th:field="*{templateCode}"/>
+									<span id="templateNameErrorMessage" class="dsp_n" style="display: none;" th:text="#{templateNameError}">
+										Debe indicar un nombre para la plantilla
+									</span>
+								</div>
+								
+								<div class="mailHeader template">
+									<div class="fsb mailHeaderSubject">
+										<div class="fld wv100">
+											<label for="example_input1" th:text="#{for}">Para</label>
+											<a href="javascript:void(0)" onclick="prepareUserPickList();">
+												<span class="btn_em p3 mt2 mf-icon mf-icon-user-16" th:text="#{selectUsers}">Seleccionar usuarios</span>
+											</a>
+
+											<ul id="signlines" class="ml0">
+												<li>
+													<select class="signline" type="text" id="signline_type_0" name="signline_type_0" value="" maxlength="15">
+														<option th:text="#{sign}">Firma</option>
+														<option th:text="#{pass}">Visto bueno</option>
+													</select>
+													<div class="overflowh">
+														<input id="signer_0" class="ui-autocomplete-input signer_input" style="width: 58%;" type="text" th:field="*{signer}" value="" name="signer_0" th:errorClass="error" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true" codigo=""/>
+														<select id="actionSigner_0" name="actionSigner_0" class="actionSigner" > 
+															<option th:each="accionFirmanteType : ${@applicationBO.queryAccionFirmante()}"
+																	th:text="${accionFirmanteType.cdescription}" th:value="${accionFirmanteType.ccodigo}" th:selected="${accionFirmanteType.ccodigo}=='1'"></option>
+														</select>
+													</div>
+												</li>
+													
+											</ul>
+											<p id="signersErrorMessage" th:if="${#fields.hasErrors('signers')}" th:errors="*{signers}" class="dsp_b error">
+												Debe seleccionar al menos un firmante
+											</p>
+										</div>
+ 										
+										<div class="fld ">
+											<label></label>
+											<a href="#" onclick="addSignLine();"  class="btn_em p1 mt5 mb5">
+												<span class="mf-icon mf-icon-add-16"></span>
+											</a>
+										</div>
+										
+										<div class="fld dsp_b">
+											<label for="subject_input" th:text="#{subject}">Asunto</label>
+											<input type="text" id="subject_input" class="mr0" th:field="*{request.dsubject}"/>
+										</div>
+										<div class="fld dsp_b">
+											<label for="reference_input" th:text="#{reference}">Referencia</label>
+											<input type="text" id="reference_input" class="mr0" th:field="*{request.dreference}"/>
+										</div>
+										<div class="fld">
+											<label for="text_message" th:text="#{message}">Mensaje</label>
+											<input type="text" id="text_message" class="p20 test-editor wv80" th:field="*{requestText.trequest}"/>
+										</div>
+
+									</div>
+									<div class="fsb mailOptions">
+											<div class="fld">
+												<label th:text="#{signType}">Tipo de firma</label>
+												<ul class="radio_list">
+													<li class="left">
+														<input type="radio" th:field="*{signType}" value="signTypeCascade"/>&nbsp;
+														<label for="radio_1" th:text="#{signTypeCascade}">Cascada</label>
+													</li>
+													<li class="left">
+														<input type="radio" th:field="*{signType}" value="signTypeParallel"/>&nbsp;
+														<label for="radio_2" th:text="#{signTypeParallel}">Paralela</label>
+													</li>
+												</ul>
+											</div>
+											<div class="fld">
+												<label class="dsp_n" th:text="#{add}">A&ntilde;adir</label>
+												<ul class="checkbox_list">
+													<li>
+														<input type="checkbox" id="radio_1" th:field="*{addTimestamp}" />&nbsp;
+														<label for="radio_1" th:text="#{timestamp}">Sello de tiempo</label>
+													</li>
+												</ul>
+											</div>
+											<div class="fld">
+												<label for="example_select1" class="w140" th:text="#{confSign}">Configuraci&oacute;n de firma</label>
+												<select th:field="*{signatureConfig}">
+													<option th:each="signConf : ${signatureConfigurations}" 
+												    	    th:value="${signConf.key}" 
+												        	th:text="${signConf.value}">
+													</option>
+												</select>
+											</div>
+											<div class="fld">
+												<label for="example_select1" th:text="#{priority}">Prioridad</label>
+												<select th:field="*{importanceLevel}" class="w100">
+													<option th:each="level : ${importanceLevelList}" 
+												    	    th:value="${level.key}" 
+												        	th:text="${level.value}">
+													</option>
+												</select>
+											</div>
+											<div class="fld">
+												<div class="more-options-panel" style="display: none;">	
+													<div class="fld left stkd mr20">
+														<label th:text="#{sendTo}">Notificar a</label>
+		
+														<ul class="radio_list">
+															<li class="left">
+																<input type="radio" th:field="*{request.lOnlyNotifyActionsToRemitter}" value="false"/>&nbsp;
+																<label for="radio_3" th:text="#{allSigners}">Todos</label>
+															</li>
+															<li class="left">
+																<input type="radio" th:field="*{request.lOnlyNotifyActionsToRemitter}" value="true"/>&nbsp;
+																<label for="radio_4" th:text="#{onlySender}">S&oacute;lo remitente</label>
+															</li>
+														</ul>
+													</div>
+													<div class="fld left stkd mr20">
+														<label>Avisar cuando</label>
+														<ul class="checkbox_list">
+															<li>
+																<input type="checkbox" th:field="*{notices}" value="noticeRead" />&nbsp;
+																<label for="radio_1" th:text="#{cRead}">Le&iacute;do</label>
+															</li>
+															<li>
+																<input type="checkbox" th:field="*{notices}" value="noticeSign" />&nbsp;
+																<label for="radio_3" th:text="#{cSigned}">Firmado</label>
+															</li>
+															<li>
+																<input type="checkbox" th:field="*{notices}" value="noticePassed" />&nbsp;
+																<label for="radio_4" th:text="#{cPassed}">Visto bueno</label>
+															</li>
+															<li>
+																<input type="checkbox" th:field="*{notices}" value="noticeReject" />&nbsp;
+																<label for="radio_2" th:text="#{cRejected}">Rechazado</label>
+															</li>
+														</ul>
+													</div>
+												</div>
+												
+												<a href="#!" id="more-options-btn" class="btn_em toggle ">
+													<span class="mf-icon-24 mf-icon-add-16" th:text="#{advancedOptions}"></span> 
+													Opciones avanzadas
+												</a>		
+										</div>										
+									</div>
+
+								</div>
+								
+							</fieldset>
+						</form>
+					</div>
+					<div id="contentDataFooter">
+					</div>
+					</div>
+				</div>
+
+
+		<!--FIN DEL CONTENIDO-->	
+			
+
+		<!-- MODAL SELECTOR DE CONTACTOS-->
+		<div id="signers_modal" title="Contactos" style="display: none;">			
+			<fieldset class="nolegend pt20">
+				<div>
+					<div class="fld dsp_ib stkd">
+						<label th:text="#{search}">Buscar</label>
+						<input type="text" class="w220 ui-autocomplete-input" id="userNameFilter" autocomplete="off"/>
+					</div>
+					<div class="fld dsp_ib mb10 va_bottom">
+						<input class="secondary" type="submit" value="Ver"
+							   onclick="prepareUserPickListFilter();"></input>
+					</div>
+				</div>
+				<div>
+					<div class="fld dsp_ib stkd">
+						<label th:text="#{users}">Usuarios</label>
+						<select id="userTypeFilter" name="userTypeFilter">
+						</select>
+					</div>
+					<div class="fld dsp_ib stkd">
+						<label th:text="#{province}">Sede</label>
+						<select id="userSeatFilter" name="userSeatFilter">
+						</select>
+					</div>
+					<div class="fld dsp_ib stkd">
+						<label th:text="#{external.portafirmas}">Portafirmas</label>
+						<select id="portafirmasFilter" name="portafirmasFilter">
+						</select>
+					</div>
+				</div>
+				<div>
+					<div class="fsb wv100">			
+						<select id="userPickList" name="userPickList" multiple="multiple" class="userList dsp_n">
+						</select>	
+					</div>
+				</div>
+			</fieldset>
+		</div>
+    </div>
+</body>
+</html>

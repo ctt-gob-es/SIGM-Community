@@ -1,0 +1,45 @@
+{
+	"name": "picklist",
+	"version": "0.11.0",
+	"title": "jQuery PickList",
+
+	"author":
+	{
+		"name": "Jonathon Freeman",
+		"email": "jonathon@awnry.com",
+		"url": "http://www.awnry.com/"
+	},
+
+	"licenses":
+	[
+		{
+			"type": "MIT",
+			"url": "http://jquery-ui-picklist.googlecode.com/svn/trunk/LICENSE"
+		}
+	],
+
+	"dependencies":
+	{
+		"jquery": ">=1.4"
+	},
+
+	"homepage": "http://code.google.com/p/jquery-ui-picklist/",
+	"bugs": "http://code.google.com/p/jquery-ui-picklist/issues/list",
+	"docs": "http://code.google.com/p/jquery-ui-picklist/w/list",
+	"demo": "http://code.google.com/p/jquery-ui-picklist/wiki/Demos",
+	"download": "http://code.google.com/p/jquery-ui-picklist/downloads/detail?name=jquery-picklist-0.11.0.zip",
+
+	"description": "Turns an HTML multiple option select box into a side-by-side pick list control",
+
+	"files":
+	[
+		"jquery-picklist.js",
+		"jquery.ui.widget.js",
+		"jquery-picklist.css",
+		"jquery-picklist-ie7.css",
+		"LICENSE",
+		"README.md",
+		"examples",
+		"tests"
+	]
+}

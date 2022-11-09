@@ -1,0 +1,88 @@
+@charset "UTF-8";
+
+/*
+ * MORFOS FRAMEWORK CSS
+ * Copyright (C) 2012 Ministerio Hacienda y Administración Pública (MINHAP).
+ * Realizado por la División de Sistemas de Información de la
+ * Secretaría de Estado de Administraciones Públicas del
+ * Ministerio de Hacienda y Administraciones Públicas.
+ * 
+ * Este fichero se distribuye bajo licencia EUPL versión 1.1 según las condiciones que figuran 
+ * en el fichero 'Licencia.pdf' que se acompaña. Si se distribuyera este fichero individualmente, 
+ * deben incluirse aquí las condiciones expresadas allí.
+ *
+ */
+
+ 
+
+// 1. Login (#login)
+   @import "comp/login";
+
+// 2. Pagination (.pagination)
+    @import "comp/pagination";
+
+// 3. Table (table.data)
+    @import "comp/table";
+
+// 4. Tabs (.tabs)
+    @import "comp/tabs";
+
+// 5. User boxes (#userBoxes)
+    @import "comp/userboxes";
+
+// 6. vCard (.vcard)
+    @import "comp/vcard";
+
+// 7. loading-ajax (#loading-ajax)
+    @import "comp/loadingajax";
+
+// 8. Panel (.panel)
+    @import "comp/panel";
+
+// 9. Breadcrumbs (.breadC)
+    @import "comp/breadcrumb";
+
+// 10. Filter form (.filterForm)
+    @import "comp/filterform";
+
+// 11. Report (.report)
+    @import "comp/report";
+
+// 12. windowHeader Toolbar
+    @import "comp/windowtoolbar";
+
+// 13. Tooltips (.tooltip)
+    @import "comp/tooltips";
+
+// 14. Button w/ multiple actions (.multisimbutton)
+    @import "comp/multisimbutton";
+
+// 15. Dropdown menu
+    @import "comp/dropdownmenu";
+
+// 16. Buttonbar
+    @import "comp/buttonbar";
+
+// 17. Sandboxed window
+    @import "comp/sandboxed.scss";
+
+// 18. window w/parent list
+    @import "comp/windowwparent";
+
+// 19. non-compliant browser
+    @import "comp/noncompliantwarning";
+
+// 20. notifications inbox
+    @import "comp/notifications";
+
+// 21. autocompletado (widget helper)
+    @import "comp/autocomplete";
+
+// 22. inputs con boton auxiliar
+    @import "comp/input-auxbtn";
+
+// 23. reCaptcha
+    @import "comp/recaptcha";
+
+// 24. Nota-página de error
+    @import "comp/error";

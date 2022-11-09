@@ -1,0 +1,44 @@
+<fieldset class="nolegend pt20">
+	<form id="paramConfig_form">
+		<input type="hidden" th:value="${configurationPk}" name="configurationPk"/>
+		<div class="catalogueOverflow">
+			<table class="data noborder tl">
+				<thead>
+					<tr>
+						<th></th>											
+						<th>Parámetro</th>
+						<th>Valor</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="parameter : ${parameterList}">
+						<td>
+							<input type="checkbox" th:checked="${parameter.checked}" th:value="${parameter.id}" name="arrayChecked"/>
+							<input type="hidden" th:value="${parameter.id}" name="arrayId" />
+						</td>											
+						<td th:text="${parameter.name}" th:title="${parameter.description}">Nombre</td>
+							<input type="hidden" th:value="${parameter.name}" name="arrayName" />
+						<td>
+							<input class="w500" th:value="${parameter.value}" type="text" name="arrayValue"/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</form>
+</fieldset>
+<div class="dsp_b error errorMessage" id="paramConfigErrorMessage"></div>
+<div id="questionParamConfig" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageParamConfig" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonParamConfig" name="yesButtonParamConfig" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonParamConfig" name="noButtonParamConfig" class=" simbuttom secondary" onclick="$('#questionParamConfig').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>

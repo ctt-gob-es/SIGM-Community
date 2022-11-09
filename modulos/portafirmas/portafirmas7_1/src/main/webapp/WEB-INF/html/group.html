@@ -1,0 +1,24 @@
+
+<button class="secondary mb10 right" onclick="prepareNewGroup();">
+	<span class="mf-icon mf-icon-add-16 "></span>
+	<span th:text="#{newButton}">Nueva grupo</span>
+</button>
+
+<div id="groupList" class="fld catalogueOverflow" th:include="groupList::groupList"></div>
+<div id="group_modal" title="Grupo" th:include="groupModal::groupModal"></div>
+<div id="groupUsersModal" title="Grupo de Usuarios"></div>
+<div id="questionGroup" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageGroup" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonGroup" name="yesButtonGroup" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonGroup" name="noButtonGroup" class=" simbuttom secondary" onclick="$('#questionGroup').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>
+

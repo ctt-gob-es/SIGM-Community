@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm/orm_1_0.xsd">
+	<named-query name="sign.block">
+		<query><![CDATA[from PfBlocksDTO where primaryKey = :primaryKey]]></query>
+	</named-query>
+	<named-query name="sign.sign">
+		<query><![CDATA[from PfSignsDTO where primaryKey = :primaryKey]]></query>
+	</named-query>
+	<named-query name="sign.signDoc">
+		<query><![CDATA[from PfSignsDTO sign 
+						join fetch sign.pfDocument doc
+						where sign.primaryKey = :primaryKey]]></query>
+	</named-query>
+	<named-query name="sign.signBlock">
+		<query><![CDATA[from PfBlocksDTO block 
+						where block.primaryKey = :primaryKey]]></query>
+	</named-query>
+	<named-query name="sign.signTransaction">
+		<query><![CDATA[from PfSignsDTO where ctransaction = :transactionId]]></query>
+	</named-query>
+	<named-query name="sign.lastSignHashDoc">
+		<query><![CDATA[select sign
+						from PfSignsDTO sign join sign.pfDocument doc
+						where doc.chash = :hashDoc
+						order by sign.primaryKey desc]]></query>
+	</named-query>
+	<named-query name="sign.requestDataPetitionList">
+		<query><![CDATA[select distinct req
+						from PfRequestsDTO req 
+						     join fetch req.pfApplication app
+						     join fetch app.pfConfiguration conf
+							 join fetch req.pfDocuments doc	
+							 join fetch doc.pfDocumentType docTyp
+							 join fetch doc.pfFile fil
+							 join fetch req.pfRequestsTags rTag
+							 join fetch rTag.pfTag tag
+							 join fetch rTag.pfUser usr
+							 left join fetch doc.pfSigns signs
+							 join fetch req.pfSignsLines sli
+							 join fetch sli.pfSigners sig
+							 left join fetch sig.pfSigns signs2
+						where req.chash IN (:listHashes)
+						and conf.primaryKey = :idConf
+						and (usr = :usr or usr=:usrJob)
+						and tag.ctype = 'ESTADO']]>
+		</query>
+	</named-query>
+	<named-query name="sign.requestTagsDataPetitionList">
+		<query><![CDATA[select distinct reqTag
+						from PfRequestTagsDTO reqTag
+							 join fetch reqTag.pfRequest req
+							 left join fetch reqTag.pfSignLine signLine
+						     join fetch req.pfApplication app
+						     join fetch app.pfConfiguration conf
+							 join fetch req.pfDocuments doc	
+							 join fetch doc.pfDocumentType docTyp
+							 join fetch doc.pfFile fil
+							 join fetch req.pfRequestsTags rTag
+							 join fetch rTag.pfTag tag
+							 join fetch rTag.pfUser usr
+							 left join fetch doc.pfSigns signs
+							 join fetch req.pfSignsLines sli
+							 join fetch sli.pfSigners sig
+							 left join fetch sig.pfSigns signs2
+						where reqTag.primaryKey IN (:listPks)
+						and conf.primaryKey = :idConf
+						and (usr = :usr or usr=:usrJob)
+						and tag.ctype = 'ESTADO']]>
+		</query>
+	</named-query>
+	<named-query name="sign.requestTagsDataPetition">
+		<query><![CDATA[from PfRequestTagsDTO reqTag
+							 join fetch reqTag.pfRequest req
+							 left join fetch reqTag.pfSignLine signLine
+						     join fetch req.pfApplication app
+						     join fetch app.pfConfiguration conf
+							 join fetch req.pfDocuments doc	
+							 join fetch doc.pfDocumentType docTyp
+							 join fetch doc.pfFile fil
+							 join fetch req.pfRequestsTags rTag
+							 join fetch rTag.pfTag tag
+							 join fetch rTag.pfUser usr
+							 left join fetch doc.pfSigns signs
+							 join fetch req.pfSignsLines sli
+							 join fetch sli.pfSigners sig
+							 left join fetch sig.pfSigns signs2
+						where reqTag.primaryKey = :pk
+						and conf.primaryKey = :idConf
+						and (usr = :usr or usr=:usrJob)
+						and tag.ctype = 'ESTADO']]>
+		</query>
+	</named-query>
+	<named-query name="pass.requestDataPetitionList">
+		<query><![CDATA[select distinct req
+						from PfRequestsDTO req 
+						     join fetch req.pfApplication app
+						     join fetch app.pfConfiguration conf
+							 join fetch req.pfDocuments doc	
+							 join fetch doc.pfDocumentType docTyp
+							 join fetch doc.pfFile fil
+							 join fetch req.pfRequestsTags rTag
+							 join fetch rTag.pfTag tag
+							 join fetch rTag.pfUser usr
+							 left join fetch doc.pfSigns signs
+							 join fetch req.pfSignsLines sli
+							 join fetch sli.pfSigners sig
+							 left join fetch sig.pfSigns signs2
+						where req.chash IN (:listHashes)
+						and (usr = :usr or usr=:usrJob)
+						and tag.ctype = 'ESTADO']]>
+		</query>
+	</named-query>
+	<named-query name="pass.requestTagDataPetitionList">
+		<query><![CDATA[select distinct reqTag
+						from PfRequestTagsDTO reqTag
+							 join fetch reqTag.pfRequest req
+							 left join fetch reqTag.pfSignLine signLine
+						     join fetch req.pfApplication app
+						     join fetch app.pfConfiguration conf
+							 join fetch req.pfDocuments doc	
+							 join fetch doc.pfDocumentType docTyp
+							 join fetch doc.pfFile fil
+							 join fetch req.pfRequestsTags rTag
+							 join fetch rTag.pfTag tag
+							 join fetch rTag.pfUser usr
+							 left join fetch doc.pfSigns signs
+							 join fetch req.pfSignsLines sli
+							 join fetch sli.pfSigners sig
+							 left join fetch sig.pfSigns signs2
+						where reqTag.primaryKey IN (:listPks)
+						and (usr = :usr or usr=:usrJob)
+						and tag.ctype = 'ESTADO']]>
+		</query>
+	</named-query>
+	<named-query name="pass.requestTagDataPetition">
+		<query><![CDATA[from PfRequestTagsDTO reqTag
+							 join fetch reqTag.pfRequest req
+							 left join fetch reqTag.pfSignLine signLine
+						     join fetch req.pfApplication app
+						     join fetch app.pfConfiguration conf
+							 join fetch req.pfDocuments doc	
+							 join fetch doc.pfDocumentType docTyp
+							 join fetch doc.pfFile fil
+							 join fetch req.pfRequestsTags rTag
+							 join fetch rTag.pfTag tag
+							 join fetch rTag.pfUser usr
+							 left join fetch doc.pfSigns signs
+							 join fetch req.pfSignsLines sli
+							 join fetch sli.pfSigners sig
+							 left join fetch sig.pfSigns signs2
+						where reqTag.primaryKey = :pk
+						and (usr = :usr or usr=:usrJob)
+						and tag.ctype = 'ESTADO']]>
+		</query>
+	</named-query>
+	<named-query name="sign.defaultConfig">
+		<query><![CDATA[select conf
+						from PfConfigurationsDTO conf							 
+						where conf.lmain = 'S'
+						and conf.pfServer.lmain = 'S']]></query>
+	</named-query>
+	<named-query name="sign.typeReport">
+		<query><![CDATA[select confParam
+						from PfConfigurationsParameterDTO confParam,
+							 PfParametersDTO params
+						WHERE confParam.pfParameter = params
+							  and params.cparameter = :typeParam]]>
+		</query>
+	</named-query>
+	<named-query name="sign.signTypeParameter">
+		<query><![CDATA[select distinct(copa)
+							from PfConfigurationsParameterDTO copa
+							join copa.pfParameter para
+						where para.cparameter = 'CLIENTE.TIPO.FIRMA' ]]></query>
+	</named-query>
+	<named-query name="sign.signDataParameter">
+		<query><![CDATA[select distinct(copa)
+							from PfConfigurationsParameterDTO copa
+							join copa.pfParameter para
+						where para.cparameter = 'CLIENTE.DATOS' ]]></query>
+	</named-query>
+	<named-query name="sign.signsByDate">
+		<query><![CDATA[select sign
+						from PfSignsDTO sign
+						join fetch sign.pfDocument doc
+						join fetch doc.pfFile file
+						where DAY(sign.fcreated)   = DAY(:fecha)
+						and	  MONTH(sign.fcreated) = MONTH(:fecha)
+						and   YEAR(sign.fcreated)  = YEAR(:fecha)
+						and sign.ctype = 'BLOB']]></query>
+	</named-query>
+</entity-mappings>

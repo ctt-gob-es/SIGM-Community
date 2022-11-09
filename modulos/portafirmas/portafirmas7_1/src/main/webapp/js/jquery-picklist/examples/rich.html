@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>jQuery PickList - Rich Content Example</title>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+
+	<!-- REMOVE THIS if you're using jQuery UI. -->
+	<script type="text/javascript" src="../jquery.ui.widget.js"></script>
+
+	<script type="text/javascript" src="../jquery-picklist.js"></script>
+	<script type="text/javascript">
+		$(function()
+		{
+			// Example of adding rich content items during picklist creation.
+			$("#rich").pickList(
+			{
+				items:
+				[
+					{
+						value:    3,
+						label:    "Basketball",
+						selected: true,
+						element:  $(".rich1")
+					},
+
+					{
+						value:    4,
+						label:    "Soccer",
+						selected: true,
+						element:  $("<img src='images/soccer.png'/>")
+					}
+				]
+			});
+
+			// Example of adding rich content items after picklist creation.
+			$("#rich").pickList("insert",
+			{
+				value:    5,
+				label:    "Football",
+				selected: false,
+				element:  $(".rich3")
+			});
+		});
+	</script>
+
+	<link type="text/css" href="../jquery-picklist.css" rel="stylesheet" />
+	<!--[if IE 7]><link href="../jquery-picklist-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+
+	<style type="text/css">
+		.pickList_listItem .image { float: left; }
+		.pickList_listItem .label { float: left; padding-left: 0.25em; }
+		.pickList_listItem .clear { clear: both; }
+	</style>
+</head>
+
+<body>
+
+	<div>
+		<select id="rich" name="rich" multiple="multiple">
+			<option value="1">Non-Rich Item 1</option>
+			<option value="2">Non-Rich Item 2</option>
+		</select>
+
+		<div class="rich1">
+			<div class="image"><img src="images/basketball.png" /></div>
+			<div class="label">Basketball</div>
+			<div class="clear"></div>
+		</div>
+
+		<div class="rich3">
+			<img src="images/football.png" /> Football
+		</div>
+	</div>
+
+</body></html>

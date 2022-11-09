@@ -1,0 +1,255 @@
+/**********************/
+
+/* LOGIN */
+
+#login {
+    margin: 5% auto 10%;
+    width: 400px;
+    overflow: hidden;
+    padding: 6px;
+    
+    background-color: #DEDEDE;
+    
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius:    5px 5px 0 0;
+    border-radius:         5px 5px 0 0;
+    
+    -webkit-border-radius: 5px;
+    -moz-border-radius:    5px;
+    border-radius:         5px;
+    
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.6), 
+                        0 1px 1px rgba(255,255,255,0.5) inset;
+    -moz-box-shadow:    0 1px 2px rgba(0,0,0,0.6), 
+                        0 1px 1px rgba(255,255,255,0.5) inset;
+    box-shadow:         0 1px 2px rgba(0,0,0,0.6), 
+                        0 1px 1px rgba(255,255,255,0.5) inset;  
+}
+
+.ie7 #login, 
+.ie8 #login {
+    border-top: 1px solid #CCC;
+    border-left: 1px solid #CCC;
+    border-right: 1px solid #999;
+    border-bottom: 1px solid #999;
+}
+
+#login div#loginData {
+    overflow: hidden;
+    
+    padding-left: 79px;
+    background: #D0D0D0 url("images/escudo.jpg") no-repeat left center;
+
+    -webkit-border-radius: 2px;
+    -moz-border-radius:    2px;
+    border-radius:         2px;
+}
+    
+#login form {
+    padding: 30px 30px 36px 30px;
+    
+    background: #f0f0f0;
+    background: -moz-linear-gradient(top, #f0f0f0 0%, #d8d8d8 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0f0f0), color-stop(100%,#d8d8d8));
+    background: -webkit-linear-gradient(top, #f0f0f0 0%,#d8d8d8 100%);
+    background: -o-linear-gradient(top, #f0f0f0 0%,#d8d8d8 100%);
+    background: -ms-linear-gradient(top, #f0f0f0 0%,#d8d8d8 100%);
+    background: linear-gradient(top, #f0f0f0 0%,#d8d8d8 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#d8d8d8',GradientType=0 );
+}
+
+#login form label {
+    display: inline-block;
+    display: block;
+    width: 60px;
+    margin-right: 10px;
+    
+    font-size: 0.917em;
+}
+
+#login form input[type="text"], 
+#login form input[type="password"] { 
+    margin: 3px 0 1em 0;
+    width: 180px;
+    display: block;
+    
+    padding: 5px;
+    
+    -webkit-border-radius: 2px;
+    -moz-border-radius:    2px;
+    border-radius:         2px;
+    
+    border: 1px solid #ccc;
+    
+    -moz-box-shadow:    0px 1px 2px rgba(0,0,0,0.7) inset, 
+                        0px 1px 1px rgba(255,255,255,0.3);
+    -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,0.7) inset, 
+                        0px 1px 1px rgba(255,255,255,0.3);
+    box-shadow:         0px 1px 2px rgba(0,0,0,0.7) inset, 
+                        0px 1px 1px rgba(255,255,255,0.3);
+}
+    
+#login form input[type="text"]:focus, 
+#login form input[type="password"]:focus { 
+    -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,0.7) inset, 
+                        0px 1px 1px rgba(255,255,255,0.3), 
+                        0 1px 12px rgba(88, 172, 196, 0.5);
+    -moz-box-shadow:    0px 1px 2px rgba(0,0,0,0.7) inset, 
+                        0px 1px 1px rgba(255,255,255,0.3), 
+                        0 1px 12px rgba(88, 172, 196, 0.5);
+    box-shadow:         0px 1px 2px rgba(0,0,0,0.7) inset, 
+                        0px 1px 1px rgba(255,255,255,0.3), 
+                        0 1px 12px rgba(88, 172, 196, 0.5);
+}
+    
+#login h5 {
+    font-size: 1.167em;
+    color: #777;
+    margin-bottom: 1em;
+    font-weight: normal;
+    padding-top: 0;
+    
+    text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+}
+
+div.loginSSO {
+    padding: 0 30px 30px 30px;
+    background: #dbdbdb;
+    background: -moz-linear-gradient(top, #D8D8D8 0%, #c2c2c2 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#D8D8D8), color-stop(100%,#c2c2c2));
+    background: -webkit-linear-gradient(top, #D8D8D8 0%,#c2c2c2 100%);
+    background: -o-linear-gradient(top, #D8D8D8 0%,#c2c2c2 100%);
+    background: -ms-linear-gradient(top, #D8D8D8 0%,#c2c2c2 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#D8D8D8', endColorstr='#c2c2c2',GradientType=0 );
+    background: linear-gradient(top, #D8D8D8 0%,#c2c2c2 100%);
+}
+    
+div.loginSSO hr {
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #DDD;
+    border-top: 1px solid #999;
+}
+    
+.ie7 div.loginSSO hr, 
+.ie8 div.loginSSO hr {
+    border: none;
+}
+
+#login .error-box {
+    padding: 12px 10px 10px 50px;
+    margin: 2em 2px 0 2px;
+    min-height: 18px;
+
+    color: #666;
+    border: 1px solid #D6D6D6;  
+    background: transparent url('images/boxes_error_24.png') no-repeat 10px center;
+    
+    border-color: #FF8F8F;
+    border-width: 1px 0;
+    
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    
+    -webkit-box-shadow: 0 1px 0px rgba(255,255,255,0.5) inset, 
+                        0 1px 0px rgba(255,255,255,0.5);
+    -moz-box-shadow:    0 1px 0px rgba(255,255,255,0.5) inset, 
+                        0 1px 0px rgba(255,255,255,0.5);
+    box-shadow:         0 1px 0px rgba(255,255,255,0.5) inset, 
+                        0 1px 0px rgba(255,255,255,0.5);
+}
+    
+#login.error {
+    display: block;
+    
+    -moz-animation-name: shake;
+    -moz-animation-duration: .35s;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: ease;
+    -moz-animation-direction: alternate;
+    -moz-animation-delay: 0.7s;
+    
+    -webkit-animation-name: shake;
+    -webkit-animation-duration: .35s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-direction: alternate;
+    -webkit-animation-delay: 0.7s;
+}
+    
+/*******************/
+/* Modulable login */
+
+#login.modulableLogin {
+    width: 644px;
+    padding-bottom: 30px;
+
+    background: #f0f0f0;
+    background: -moz-linear-gradient(top, #f0f0f0 0%, #d8d8d8 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f0f0f0), color-stop(100%,#d8d8d8));
+    background: -webkit-linear-gradient(top, #f0f0f0 0%,#d8d8d8 100%);
+    background: -o-linear-gradient(top, #f0f0f0 0%,#d8d8d8 100%);
+    background: -ms-linear-gradient(top, #f0f0f0 0%,#d8d8d8 100%);
+    background: linear-gradient(top, #f0f0f0 0%,#d8d8d8 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#d8d8d8',GradientType=0 );
+    
+    -moz-box-shadow:    0 1px 2px rgba(0,0,0,0.6), 
+                        0 1px 1px rgba(255,255,255,0.75) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.6), 
+                        0 1px 1px rgba(255,255,255,0.75) inset;
+    box-shadow:         0 1px 2px rgba(0,0,0,0.6), 
+                        0 1px 1px rgba(255,255,255,0.75) inset;
+}
+    
+.modulableLogin > div {
+    float: left;
+    width: 220px;
+    margin: 30px 0 0 0;
+    padding: 0 30px;
+}
+    
+.modulableLogin .text {
+    width: 280px;
+    border-right: 1px solid #FFF;
+}
+    
+.modulableLogin .loginData {
+    border-left: 1px solid #DDD;
+}
+    
+.modulableLogin .loginData p {
+    font-size: 0.917em;
+}
+    
+.modulableLogin .loginData h6 {
+    margin-bottom: 1em;
+}
+
+.modulableLogin .text h6 a:link, 
+.modulableLogin .text h6 a:visited {
+    color: #666;
+    text-decoration: none;
+}
+    
+.modulableLogin .loginData hr {
+    margin-top: 2em;
+}
+    
+.modulableLogin a:link, 
+.modulableLogin a:visited, 
+.modulableLogin a:hover {
+    text-decoration: underline;
+}
+    
+.modulableLogin a.simbutton:link, 
+.modulableLogin a.simbutton:visited, 
+.modulableLogin a.simbutton:hover {
+    text-decoration: none;
+    margin-bottom: 1em;
+}
+    
+#login.modulableLogin form {
+    padding: 0;
+    background: transparent;
+}

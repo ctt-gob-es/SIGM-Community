@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<div class="catalogueOverflow">
+	<table class="data noborder tl">
+		<thead>
+			<tr>
+				<th>Estado</th>
+				<th th:alt-title="#{sentReceived}">E/R</th>
+				<th>Tipo</th>
+				<th>Remitente/Destinatario</th>
+				<th>Inicio</th>
+				<th>Autorización</th>
+				<th>Revocación</th>
+				<th>Entidad</th>
+				<th class="w80">Acciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr id="tableAuthorizations_tbody" th:each="authorized : ${authorizedList}">
+				<td th:switch="${authorized.state}" style="text-align: center;">
+				    <span th:id="|icon_${authorized.primaryKey}|" th:case="'accepted'" class="mf-icon mf-icon-accepted-16" th:title="#{accepted}"></span>
+					<span th:id="|icon_${authorized.primaryKey}|" th:case="'revoked'" class="mf-icon mf-icon-rejected-16" th:title="#{revoked}"></span>
+					<span th:id="|icon_${authorized.primaryKey}|" th:case="'unresolvedAuthorization'" class="mf-icon mf-icon-waiting-16" th:title="#{unresolvedAuthorization}"></span>
+				</td>
+				<td style="text-align: center;">
+					<span th:if="${authorized.pfUser.primaryKey == user.primaryKey}" class="mf-icon mf-icon-authorized_out-16" th:title="#{outbox}"></span>
+					<span th:unless="${authorized.pfUser.primaryKey == user.primaryKey}" class="mf-icon mf-icon-authorized_in-16" th:title="#{inbox}"></span>
+				</td>
+				<td th:id="|type_${authorized.primaryKey}|" th:each="authorizationsType : ${authorizationsTypesList}"
+					th:if="${authorized.pfAuthorizationType.primaryKey == authorizationsType.primaryKey}"
+				    th:text="${#strings.capitalize(#strings.toLowerCase(authorizationsType.cauthorizationType))}">
+				</td>
+				<td th:id="|fullName_${authorized.primaryKey}|" th:if="${user.primaryKey == authorized.pfUser.primaryKey}" th:text="${authorized.pfAuthorizedUser.fullName}"></td>
+				<td th:if="${user.primaryKey == authorized.pfAuthorizedUser.primaryKey}" th:text="${authorized.pfUser.fullName}"></td>
+				<td th:id="|frequest_${authorized.primaryKey}|" th:text="${#dates.format(authorized.frequest,'dd/MM/yyyy HH:mm:ss')}"></td>
+				<td th:id="|fauthorization_${authorized.primaryKey}|" th:text="${authorized.fauthorization != null ? #dates.format(authorized.fauthorization,'dd/MM/yyyy HH:mm:ss') : ''}"></td>
+				<td th:id="|frevocation_${authorized.primaryKey}|" th:text="${authorized.frevocation != null ? #dates.format(authorized.frevocation,'dd/MM/yyyy HH:mm:ss') : ''}"></td>
+				<td th:if="|entidad_${authorized.primaryKey}|" th:text="${authorized.entidad}"></td>
+				<td>
+
+				    <input type="hidden" th:id="|authorizedPk_${authorized.primaryKey}|" th:value="${authorized.pfAuthorizedUser.primaryKey}"/>
+				    <input type="hidden" th:id="|authorizationTypeId_${authorized.primaryKey}|" th:value="${authorized.pfAuthorizationType.primaryKey}"/>
+					<input type="hidden" th:id="|observations_${authorized.primaryKey}|" th:value="${authorized.tobservations}"/>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="questionAuthorized" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageAuthorized" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonAuthorized" name="yesButtonAuthorized" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonAuthorized" name="noButtonAuthorized" class=" simbuttom secondary" onclick="$('#questionAuthorized').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>
+
+</html>

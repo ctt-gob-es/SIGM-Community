@@ -1,0 +1,124 @@
+<?php $this->boxOpen('FIRMA MASIVA DE EXPEDIENTES');?>
+<?=$this->button('Volver','edit','/acceda/admin/firma');?>
+  <?php if(!count($this->expedientes)) : ?>
+    <h3 class="info">No hay expedientes para firmar </h3>
+  <?php else:  ?>
+
+<script type="text/javascript">
+
+  $('document').ready(function(){
+    $('#check_all').click(function(){
+      $('#tabla_firmas td input').attr('checked', $(this).attr('checked') );
+    })
+    $('#tabla_firmas td input').click(function(){
+      $('#check_all').attr('checked','');
+    })
+
+    var browser=(function x(){})[-5]=='x'?'FF3':(function x(){})[-6]=='x'?'FF2':/a/[-1]=='a'?'FF':'\v'=='v'?'IE':/a/.__proto__=='//'?'Saf':/s/.test(/a/.toString)?'Chr':/^function \(/.test([].sort)?'Op':'Unknown'
+
+    if (browser!='FF2' && browser!='IE'){
+      $('#error').html('<br/><br/><div style="margin:20px" class="alert"><b>La versión del navegador que esta usando no es compatible con los componentes de @firma. <br/><br/>Solo puede firmar con Firefox 2 e Internet Explorer 6 o 7.<\/b><\/span>'
+        +'<br/><br/><span style="color:red">Versión del navegador detectada: '+navigator.userAgent+'<\/div>');
+    }
+
+  });
+  var a = 0;
+  $('document').ready(function() {
+    $('#submit').click(function() {
+      $("tbody tr").each(function(index,obj){
+        if($("#check_" + index).attr('checked')) {
+          $("#solicitud").val($("#solicitud_" + index).val());
+          $("#idp").val($("#idp_" + index).val());
+          $("#ide").val($("#ide_" + index).val());
+          $("#id_ciudadano").val($("#id_ciudadano_" + index).val());
+          $("#firma_solicitud").val("");
+          $("#formularioweb").val("");
+          var para_firmar = $("#notificacion_" + index).val();
+          registro_telematico(para_firmar,false,'<?=$this->numero_serie?>','');
+          $.post('/acceda/admin/firma/firma-masiva-proceso',
+          {ide:$("#ide").val(),
+            solicitud:$('#solicitud').val(),
+            firma_solicitud:$('#firma_solicitud').val(),
+            formularioweb:$('#formularioweb').val(),
+            firma_formularioweb:$('#firma_formularioweb').val(),
+            idp: $("#idp").val()
+          },
+          function(json) {
+            if (json.error)  {
+              $('#messages').html($('#messages').html() +"<p class='error'>Expediente " + $("#ide").val() + " ERROR:"  +json.error + "</p>");
+              $('#submit').show();
+            } else if(json.ticket){
+              $('#messages').html($('#messages').html() +"<p class='info> Registro del expediente " + json.ide + " realizado con &eacute;xito (ticket:" +json.ticket+') </p>') ;
+            } else {
+              $("#messages").html($('#messages').html() +"<p class='info'>Mensaje desconocido" +$("#ide").val() + " Mensaje :"+ json + "</p>");
+            }
+          },'json');
+          $(this).fadeOut(600, function() {
+          $(this).remove();
+          });
+          }
+      });
+      $("#message_wait").html("Ha finalizado el proceso de firma masiva.  Espere mientras lleguen los resultados.");
+    });
+  });
+  $(document).ready(function(){
+    $(".tooltip").tooltip({
+      delay: 0,
+      positon: "top left",
+      fade: 0});
+  });
+</script>
+<form name="formulario" id="formulario" action="/acceda/admin/firma/resolucion-firma" method="post">
+  <input type="hidden" name="solicitud" id="solicitud" value=""/>
+  <input type="hidden" value="" id="firma_solicitud" name="firma_solicitud" />
+  <input type="hidden" value="" id="formularioweb" name="formularioweb" />
+  <input type="hidden" value="" id="firma_formularioweb" name="firma_formularioweb" />
+  <input type="hidden" value="" id="ide" name="ide" />
+  <input type="hidden" value="" id="idp" name="idp" />
+  <input type="hidden" value="" id="firmar" name="firmar" />
+  <input type="hidden" value="" id="id_ciudadano" name="id_ciudadano" />
+</form>
+<div id="messages" class="info"></div>
+<div id="message_wait" class="info"></div>
+
+<table id="tabla_firmas" class="special_table">
+  <thead>
+    <tr>
+      <th><input type="checkbox" id="check_all" checked/></th>
+      <th>ID</th>
+      <th>Procedimiento</th>
+      <th>Ciudadano</th>
+      <th>Resolución</th>
+      <th>Notificación</th>
+
+
+    </tr>
+  </thead>
+  <tbody>
+    <?php foreach ($this->expedientes as $id => $expediente) :?>
+    <tr>
+      <td>
+        <input type="checkbox" id="check_<?php echo $id?>" name="check_<?php echo $id?>" checked value="<?php echo $id?>"/>
+      </td>
+      <td><?php echo $expediente['ide']?>
+        <input type="hidden" id="ide_<?=$id?>" name="ide_<?=$id?>" value="<?=$expediente['ide'];?>"/>
+        <input type="hidden" id="idp_<?=$id?>" name="idp_<?=$id?>" value="<?=$expediente['idp'];?>"/>
+        <input type="hidden" id="notificacion_<?=$id?>" name="notificacion_<?=$id?>" value="<?=$expediente['notificacion'];?>"/>
+        <input type="hidden" id="id_ciudadano_<?=$id?>" name="id_ciudadano_<?=$id?>" value="<?=$expediente['id_ciudadano'];?>"/>
+        <input type="hidden" id="firmar_<?=$id?>" name="firmar_<?=$id?>" value="<?=htmlentities($expediente['notificacion_contenido']);?>"/>
+        <input type="hidden" id="solicitud_<?=$id?>" name="firmar_<?=$id?>" value="<?=($expediente['solicitud']);?>"/>
+      </td>
+      <td><?php echo $expediente['idp'] . " - " . $expediente['procedimiento']?></td>
+      <td><?php echo $expediente['nombre_completo']?></td>
+      <td><?php echo $expediente['resolucion']?></td>
+      <td title='<?=$expediente['notificacion_contenido']?>' class="tooltip"><b>Ver</b></td>
+    </tr>
+    <?php endforeach;?>
+  </tbody>
+  <tfoot>
+    <tr><td colspan="6"><button class="edit" id="submit" name="submit">Firmar Solicitudes</button></td></tr>
+  </tfoot>
+</table>
+
+<?php endif; ?>
+<?php $this->boxClose();?>

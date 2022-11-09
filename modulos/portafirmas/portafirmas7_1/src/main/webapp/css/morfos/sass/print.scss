@@ -1,0 +1,221 @@
+@charset "UTF-8";
+
+/*
+ * MORFOS FRAMEWORK CSS
+ * Copyright (C) 2012 Ministerio Hacienda y Administración Pública (MINHAP).
+ * Realizado por la División de Sistemas de Información de la
+ * Secretaría de Estado de Administraciones Públicas del
+ * Ministerio de Hacienda y Administraciones Públicas.
+ * 
+ * Este fichero se distribuye bajo licencia EUPL versión 1.1 según las condiciones que figuran 
+ * en el fichero 'Licencia.pdf' que se acompaña. Si se distribuyera este fichero individualmente, 
+ * deben incluirse aquí las condiciones expresadas allí.
+ *
+ */
+
+/* main.css */
+
+body {
+	min-width: 0;
+}
+	
+div#container {
+	min-height: 0;
+	background: transparent;
+}
+	
+.ie7 div#container, 
+.ie8 div#container {
+	background: transparent;
+}
+	
+div#wrap {
+	margin: 0;
+}
+	
+/* Header */
+
+div#header {
+	background: transparent;
+	border-bottom: 1px solid #666;
+}
+	
+div#header #appTitle {
+	color: #000;
+}
+	
+div#header #appTitle h2 {
+	text-shadow: none;
+}
+	
+div#header #logoMPTAP {
+	border-right: none;
+}
+	
+div#shadow {
+	display: none;
+}
+	
+/* CONTENIDO */
+
+#mainWindow { }
+
+/* FOOTER */
+
+div#footer {
+	position: static;
+	margin: 0;
+	
+	color: #000;
+	background: transparent;
+}
+	
+	
+/* ---------------- */
+/* 	typography.css	*/
+
+h1 {	text-shadow: none;}
+h2 { 	text-shadow: none;}
+h5 {	text-shadow: none;}
+hr {	background-color: transparent;}
+
+/* ---------------- */
+/*   libraries.css  */
+
+.shadow1, 
+.shadowbox, 
+.shadowline.down, 
+.shadowline.up, 
+.shadowimg {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: 	none;
+	box-shadow: 		none;
+	
+	border: 1px solid #CCC;
+}
+	
+.ie7 .shadowbox_ie, 
+.ie8 .shadowbox_ie  {
+	border-right: none;
+	border-bottom: none;
+	border-left: none;
+}
+	
+.shadowimg { border: none; }
+	
+/* ---------------- */
+/*     menus.css    */
+
+ul#langMenu li {
+	background: transparent;
+	color: #000;
+}
+	
+ul#langMenu li a { color: #000; }
+
+ul#userMenu li a, 
+ul#userMenu li span { color: #000 }
+
+/* topMenu */
+
+#topMenu ul.menu > li {
+	background: transparent;
+	
+	-webkit-box-shadow: none;
+	-moz-box-shadow: 	none;
+	box-shadow: 		none;
+}
+	
+.ie7 #topMenu ul.menu > li, 
+.ie8 #topMenu ul.menu > li {
+	border-bottom: none;
+	border-left: none;
+	border-right: none;
+}
+	
+#topMenu ul.menu > li a {
+	color: #000;
+}
+	
+/* footerMenu */
+
+#footerMenu ul li {
+	color: #000;
+	background-color: transparent;
+}
+	
+#footerMenu ul li a {
+	color: #000;
+	border: none;
+	background: transparent;
+}
+	
+/* Tool Menu */
+
+ul.toolMenu {
+	background-color: #E3E3E3;
+	
+	-webkit-box-shadow: none;
+	-moz-box-shadow: 	none;
+	box-shadow: 		none;
+}
+
+/* ---------------- */
+/* Components */
+
+/* Login */
+
+#login {
+	-webkit-border-radius: 0;
+	-moz-border-radius:    0;
+	border-radius: 		   0;
+}
+	
+#login div.loginSSO, 
+#login form {
+	background: #dbdbdb;
+}
+	
+/* Pagination */
+
+.pagination ol li a {
+	color: #000;
+	border: 1px solid #666;
+}
+	
+.pagination ol li.summary {
+	border: 1px solid #666;
+	color: #000;
+	background-color: white;
+}
+	
+.pagination ol li.selected {
+	border: 1px solid #666;
+	color: #FFF;
+	background-color: #666;
+}
+	
+.pagination ol li.summary a.showGoto {
+	display: none;
+}
+	
+.pagination li.paginationNumbers { border: 1px solid #666; }
+
+/* Table */
+
+/* jQuery */
+
+.ui-widget-header {
+	background: #CCC !important;
+}
+	
+.header-content {
+	text-shadow: none;
+}
+	
+.ui-corner-top {
+	-webkit-border-radius: 0;
+	-moz-border-radius:    0;
+	border-radius: 		   0;
+}
+	

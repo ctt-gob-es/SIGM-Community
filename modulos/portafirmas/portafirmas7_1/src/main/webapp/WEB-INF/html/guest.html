@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-login-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+	   <div layout:fragment="content" >
+	        <div class="modulableLogin numModules_2" id="login"  style="text-align: center;">
+	        	<h4 class="mt20" th:text="#{welcomeInvitedUsersTitle}"></h4>
+	        	<p></p>
+		        <h7 class="mt20" th:text="#{invitedUserMail}"></h7>
+				<form id="invitedForm" name="invitedForm" th:action="@{/guest}" method="post" th:object="${invitedForm}">
+					<fieldset class="nolegend pt10" style="text-align: center;">
+						<div class="fld stkd">
+							<input class="w250" style="display: inline;" name="invitedMail" id="invitedMail" type="text"  th:field="*{email}"/>
+						</div>
+					
+						<div class="fld stkd" style="display: none;" id="divDni">
+							<div>
+								<h7 for="invitedDni" th:text="#{invitedUserDNI}" style="width: 40px;">Identificador</h7>
+							</div>
+							<div>
+								<input class="w250" style="display: inline;" name="invitedDni" id="invitedDni" type="text" th:field="*{dni}"/>
+							</div>
+						</div>
+						
+						<div class="fld stkd" style="display: none;" id="divUsername">
+							<div>
+								<h7 for="invitedName" th:text="#{invitedUserName}" style="width: 40px;">Nombre</h7>
+							</div>
+							<div>
+								<input class="w250" style="display: inline;" name="invitedName" id="invitedName" type="text" th:field="*{name}"/>
+							</div>
+						</div>
+						
+						<div class="fld stkd" style="display: none;" id="divSurname1">
+							<div>
+								<h7 for="invitedSurname1" th:text="#{invitedUserSurname1}" style="width: 80px;">Primer Apellido</h7>
+							</div>
+							<div>
+								<input class="w250" style="display: inline;" name="invitedSurname1" id="invitedSurname1" type="text" th:field="*{surname1}"/>
+							</div>
+						</div>
+					
+						<div class="fld stkd" style="display: none;" id="divSurname2">
+							<div>
+								<h7 for="invitedSurname2" th:text="#{invitedUserSurname2}" style="width: 90px;">Segundo Apellido</h7>
+							</div>
+							<div>
+								<input class="w250" style="display: inline;" name="invitedSurname2" id="invitedSurname2" type="text" th:field="*{surname2}"/>
+							</div>
+						</div>
+						
+						<div class="errorMessage mt10" th:each="error : ${errors}">
+							<span   th:text="${error}"></span>
+						</div>
+					
+				</fieldset>
+				</form>
+				<!-- Volver -->
+				<a class="simbutton" th:href="|${#httpServletRequest.getContextPath()}/j_spring_security_logout|" th:title="#{back}">
+					<span th:text="#{back}"></span>
+				</a>
+				<!-- Validar -->
+				<a class="simbutton" id="validateButton" th:onclick="|validateInvitationMail();|" th:title="#{validateButton}">
+					<span th:text="#{validateButton}">Validar</span>
+				</a>
+				
+				<!-- Limpiar Form. -->
+ 				<a style="display: none;" id="cleanButton" class="simbutton" th:title="#{clean}" th:onclick="|cleanLoginForm();|">
+					<span th:text="#{clean}"></span>
+				</a>
+					
+				<!-- Guardar onclick="$('#invitedForm')[0].submit();"-->
+ 				<a style="display: none;" class="simbutton"  id="saveButton" th:title="#{saveButton}"  th:onclick="|validateInvitationFields();|">
+					<span th:text="#{saveButton}"></span>
+				</a>
+			</div>
+		</div>
+	</body>
+</html>

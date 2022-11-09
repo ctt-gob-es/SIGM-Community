@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-login-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+	   	<div layout:fragment="content" >	   
+	        <div class="modulableLogin numModules_2" id="login"  style="text-align: center;">
+		        <h4 class="mt20" th:text="#{welcomeReportParagraph}"></h4>
+		        <p></p>
+		        <h7 class="mt20" th:text="#{loadDocument}"></h7>
+		        <form id="reportForm" th:action="@{report}" method="post" enctype="multipart/form-data">
+					<input type="file" class="w250 mt20" name="file" id="file" th:value="${reportId}" onchange="$('.errorMessage').text('')"/>
+					<div class="errorMessage mt10">
+						<span th:each="error : ${errors}" th:text="${error}"></span>
+					</div>
+				</form>
+				<button class="simbutton mt20" th:title="#{validateButton}" onclick="$('#reportForm').submit();">
+					<span th:text="#{generarInforme}"></span>
+				</button>
+				<button class="simbutton mt20" th:title="#{clean}" onclick="$('#file').val('');$('.errorMessage').text('')">
+					<span th:text="#{clean}"></span>
+				</button>				
+				<a class="simbutton mt20" th:href="|${#httpServletRequest.getContextPath()}/j_spring_security_logout|" th:title="#{back}">
+						<span th:text="#{back}"></span>
+				</a>		
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	  
+	<div th:fragment="user" onload="inicializarFragmentoUsuarios()">
+		<form id="form_users_modal">
+			<div class="fsb wv50">
+				<div class="fld">
+					<div class="fld">
+						<label th:title="#{nif}" th:text="#{nif}"></label>
+						<input size="14" th:value="${user.nif}" th:title="#{nif}" name="nif" id="nif"/>
+						<input type="hidden" th:value="${user.primaryKey}" name="primaryKey" id="primaryKeyUser"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{name}" th:text="#{name}"></label>
+						<input size="14" th:value="${user.name}" th:title="#{name}" class="" name="name" id="name"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{lastName1}" th:text="#{lastName1}"></label>
+						<input size="14" th:value="${user.lastName1}" th:title="#{lastName1}" class="" name="lastName1" id="lastName1"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{lastName2}" th:text="#{lastName2}"></label>
+						<input size="14" th:value="${user.lastName2}" th:title="#{lastName2}" class="" name="lastName2" id="lastName2"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{password}" th:inline="text">
+							 [[#{password}]]&nbsp;&nbsp;<span onmousedown="showPassword();" onmouseup="hidePassword();"	title="Ver password" class="pointer mf-icon mf-icon-see-password-16"></span>
+						</label>															
+						<input th:value="${user.password}" type="password" size="14" th:title="#{password}" class="mr0" name="password" id="password"/>
+						<input type="text" size="14" style="display:none;" th:title="#{password}" class="mr0" name="" id="passwordVisible"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{ldapId}" th:text="#{ldapId}" id="labelldapId"></label>
+						<input size="14" th:value="${user.ldapId}" th:title="#{ldapId}" class="" name="ldapId" id="ldapId"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{email}" th:text="#{email}" id="labelEmail"></label>
+						<input size="14" th:value="${user.email}" th:title="#{email}" class="" name="email" id="email"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{province}" th:text="#{province}"></label>
+						<select name="province" id="province">
+							<option value=""></option>
+							<option th:each="province : ${seatList}" th:value="${province.ccodigoprovincia}" th:text="${province.cnombre}" th:selected="${province.ccodigoprovincia eq user.province}"></option>
+						</select>
+					</div>
+					<div th:if="${user.adminOrg != null and !user.adminOrg.empty}" class="fld">
+						<label th:title="#{organismo}" th:text="#{organismo}"></label>
+						<input th:value="${user.adminOrg}" type="text" id="idInputOrganismo" name="organismo" th:disabled = "true"/>
+					</div>
+					
+					<div class="fld">
+						<label th:title="#{valid}" th:text="#{valid}"></label>
+						<input type="checkbox" th:title="#{valid}" class="" name="valid" id="valid" th:checked="${user.valid eq 'S'}" value="S"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{public}" th:text="#{public}"></label>
+						<input type="checkbox" th:title="#{public}" class="" name="publico" id="publico" th:checked="${user.publico eq 'S'}" value="S"/>
+					</div>
+				</div>
+			</div>
+			<div class="fsb wv50">
+				<div class="fld">
+					<h5 th:text="#{profiles}"></h5>
+					<div class="fld">
+							<ul class="checkbox_list">
+							<li th:each="profile : ${profilesList}">
+								<input type="checkbox" class="w50" th:id="|profile_${profile.cprofile}|" name="profiles" th:value="${profile.primaryKey}"
+								 th:checked="${#arrays.contains(user.profiles, profile.primaryKeyString)}"
+								 th:onclick="|toogleAdminSeats('${profile.cprofile}')|"/>
+								<label th:text="${profile.cprofile}"></label>
+							</li>
+						</ul>	
+					</div> 
+				</div>
+				<div class="fld" id="adminSeatDiv">
+					<h5 th:text="#{administrationProvinceProfile}"></h5>
+					<div class="fld catalogueOverflow" id="scrollAdminSeat" style="height:100px;">
+							<ul class="checkbox_list">
+							<li th:each="adminSeat : ${adminSeatList}">
+								<input type="checkbox" class="w50" id="adminSeats" name="adminSeats" th:value="${adminSeat.id}" th:checked="${adminSeat.checked}"/>
+								<label th:text="${adminSeat.name}"></label>
+							</li>
+						</ul>	
+					</div> 
+				</div>
+				<div class="fld" id="adminOrgDiv">
+					<h5 th:text="#{administrationSeatProfile}"></h5>
+					<div class="fld catalogueOverflow" id="scrollAdminOrg" style="height:100px;">
+							<ul class="checkbox_list">
+							<li th:each="adminOrg : ${adminOrgList}">
+								<input type="radio" class="w50" id="adminOrg" name="adminOrg" th:value="${adminOrg.id}" th:checked="${adminOrg.checked}"/>
+								<label th:text="${adminOrg.name}"></label>
+							</li>
+						</ul>	
+					</div> 
+				</div>
+			</div>
+			<div id="errorMsgUser" class="errorMessage"></div>
+		</form>
+	
+		<div id="warningUserModal" class="capaPregunta" style="display: none;">
+			<div class="fld">
+				<span class="mf-icon-24 mf-icon-warning-24"></span>
+				<span id="warningMessageUserModal" class="pregunta"></span> 
+			</div>
+		</div>		
+	</div>								
+</html>	    

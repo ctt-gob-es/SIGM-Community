@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"> 	
+
+<div th:fragment="groupList">
+	<table class="data tl noborder">
+		<thead>
+			<tr>
+				<th><span th:text="#{code}"> Código </span></th>
+				<th><span th:text="#{description}"> Descripción </span></th>											
+				<th><span th:text="#{administrationProvince}"> Sede </span></th>	
+				<th class="wv2"></th>
+				<th class="wv2"></th>
+				<th class="wv2"></th>
+				
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="group,status : ${listGroup}">
+				<td>
+					<span th:text="${group.cnombre}"></span>
+					<input type="hidden" th:id="|groupIdCode_${group.primaryKey}|" th:value="${group.cnombre}"/>
+					<input type="hidden" th:id="|groupIdDescription_${group.primaryKey}|" th:value="${group.cdescripcion}"/>
+					<input type="hidden" th:id="|groupIdSede_${group.primaryKey}|" th:value="${group.pfProvince.ccodigoprovincia}"/>
+				</td>
+				<td><span th:text="${group.cdescripcion}"></span></td>
+				<td>
+					<span th:text="${group.pfProvince.cnombre}"></span>
+				</td>
+				<td>
+					<a href="javascript:void(0)" th:onclick="|prepareUsersGroup('${group.primaryKey}')|">
+						<span class="mf-icon mf-icon-group-b-16"></span>
+					</a>
+				</td>
+				<td>
+					<a href="javascript:void(0)" th:onclick="|prepareModifyGroup('${group.primaryKey}')|">
+						<span class="mf-icon mf-icon-edit-16"></span>
+					</a>
+				</td>
+				<td>
+					<a href="javascript:void(0)" th:onclick="|prepareDeleteGroup('${group.primaryKey}')|">
+						<span class="mf-icon mf-icon-delete-16"></span>
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</html>

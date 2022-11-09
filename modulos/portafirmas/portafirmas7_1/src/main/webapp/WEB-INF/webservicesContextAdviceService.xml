@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><beans xmlns="http://www.springframework.org/schema/beans" xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+    <!-- Se importan los recursos de Apache CXF necesarios -->
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+
+
+    <!-- Declaramos el bean implementación del Servicio Web. Como vemos, es
+         un bean más de Spring, por lo que podemos inyectarle dependencias,
+         interceptores, y demás.
+    -->
+   <bean class="juntadeandalucia.cice.pfirma.advice.v2_0.AdviceServiceImpl" id="adviceServiceImpl"/>
+    
+    <!-- Declaramos el endpoint de nuestro servicio web, indicando cual es la
+         clase de implementación. En el atributo "implementor" podemos escribir
+         el nombre completo de la clase implementación, o referenciar a un
+         bean de Spring usando un # seguido del nombre del bean.
+    -->
+    <jaxws:endpoint address="/AdviceService" id="adviceService" implementor="#adviceServiceImpl">
+<!-- 	  <jaxws:inInterceptors> -->
+<!-- 			<ref bean="logInBound" /> -->
+<!--       </jaxws:inInterceptors> -->
+<!-- 	  <jaxws:outInterceptors> -->
+<!-- 			<ref bean="logOutBound" /> -->
+<!--       </jaxws:outInterceptors> -->
+	</jaxws:endpoint>
+	
+	<bean class="org.apache.cxf.interceptor.LoggingInInterceptor" id="logInBound"/>
+	<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" id="logOutBound"/>
+
+</beans>

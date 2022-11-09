@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+
+	<mvc:annotation-driven/>
+	
+    <mvc:interceptors>
+      <bean class="es.seap.minhap.portafirmas.interceptor.PortafirmasInterceptor"/>
+    </mvc:interceptors>
+
+	<!-- the application context definition for the portafirmas DispatcherServlet -->
+<context:component-scan base-package="es.seap.minhap.portafirmas, es.seap.minhap.interfazGenerica"/>
+
+	<!-- Locale configuration -->
+	<bean class="org.springframework.context.support.ResourceBundleMessageSource" id="messageSource">
+		<property name="basename" value="Messages"/>
+	</bean>
+
+	<bean class="org.springframework.web.servlet.i18n.SessionLocaleResolver" id="localeResolver">
+		<property name="defaultLocale" value="es"/>
+	</bean>
+ 
+	<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" id="localeChangeInterceptor">
+		<property name="paramName" value="language"/>
+	</bean>
+ 
+	<bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping">
+		<property name="interceptors">
+		   <list>
+		   	<ref bean="localeChangeInterceptor"/>
+		   </list>
+		</property>
+	</bean>
+
+	<!-- Thymeleaf configuration -->
+	<bean class="org.thymeleaf.templateresolver.ServletContextTemplateResolver" id="templateResolver">
+	  <property name="prefix" value="/WEB-INF/html/"/>
+	  <property name="suffix" value=".html"/>
+	  <property name="cacheable" value="false"/>
+	  <property name="characterEncoding" value="UTF-8"/>
+	  <property name="templateMode" value="HTML5"/>
+	</bean>
+    
+	<bean class="org.thymeleaf.spring3.SpringTemplateEngine" id="templateEngine">
+	  <property name="templateResolver" ref="templateResolver"/>
+	  <property name="additionalDialects">
+		<set>
+			<bean class="nz.net.ultraq.thymeleaf.LayoutDialect"/>
+			<bean class="org.thymeleaf.extras.springsecurity3.dialect.SpringSecurityDialect"/>
+		</set>
+      </property>
+	</bean>
+
+	<bean class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+	  <property name="templateEngine" ref="templateEngine"/>
+	  <property name="characterEncoding" value="UTF-8"/>
+	  <property name="order" value="1"/>
+	</bean>
+
+	<mvc:view-controller path="/" view-name="login"/>
+
+	<mvc:resources location="/css/" mapping="/css/**"/>
+    <mvc:resources location="/images/" mapping="/images/**"/>
+    <mvc:resources location="/js/" mapping="/js/**"/>
+
+	<!-- Configure the multipart resolver -->
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+	</bean>
+
+	<!-- Negociador JSON -->
+	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"/>
+
+	<bean class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean" id="contentNegotiationManager">
+		<property name="favorPathExtension" value="false"/>
+	</bean>
+	
+	<bean class="es.seap.minhap.portafirmas.actions.ApplicationVO" factory-method="getInstance" id="applicationVO" name="applicationVO"/>
+	<bean class="es.seap.minhap.portafirmas.utils.quartz.QuartzInvoker" factory-method="getInstance"/>	
+</beans>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<div id="users_jobs_list">
+	<div class="fld">
+		<span class="fwb" th:text="${loadUser} ? ${loadUser.fullName}"></span>
+		<input type="hidden" th:value="${loadUser} ? ${loadUser.primaryKey}" id="loadUserId"/>
+		<button class="secondary" onclick="prepareInsertJob();">
+			<span th:title="#{new}" th:text="#{new}">Nuevo</span>
+		</button>
+	</div>
+	<form id="users_jobs_form">
+	<div id="table_tags_modal" class="fld" >
+		<table class="data tl">
+			<tbody>	
+				<tr>
+					<th class="w300" th:text="#{job}">Cargo</th>
+					<th>Inicio</th>
+					<th>Fin</th>
+					<th></th>
+				</tr>
+				<tr th:each="userJob, status : ${userJobList}">
+					<td>
+						<span th:text="${userJob.pfUserJob.dname}"></span>
+						<input type="hidden" th:id="|jobId_${userJob.primaryKey}|" th:value="${userJob.pfUserJob.primaryKey}"/>
+					</td>
+					<td>
+						<input type="text" th:value="${userJob.fstart != null}? ${#dates.format(userJob.fstart,'dd/MM/yyyy')}" title="dd/mm/aaaa" class="fecha datepicker w90 left" th:id="|dateStart_${userJob.primaryKey}|"/>
+					</td>
+					<td>
+						<input type="text" th:value="${userJob.fend != null}? ${#dates.format(userJob.fend,'dd/MM/yyyy')}" title="dd/mm/aaaa" class="fecha datepicker w90 left" th:id="|dateEnd_${userJob.primaryKey}|"/>
+					</td>
+					<td class="w50">									
+						<a href="#!" class="simbutton secondary dsp_ib left" th:onclick="|prepareModifyUserJob(${userJob.primaryKey},'${userJob.pfUserJob.dname}')|">
+							<span class="mf-icon mf-icon-save-16" th:text="#{saveButton}">Guardar cambios</span>
+						</a>
+						<a href="#!" class=" simbutton secondary dsp_ib left" th:onclick="|prepareDeleteUserJob(${userJob.primaryKey},'${userJob.pfUserJob.dname}')|">
+							<span class="mf-icon mf-icon-delete-16" th:text="#{cancelButton}">Cancelar</span>
+						</a>
+					</td>
+				</tr>
+				<tr id="trNewJob" style="display: none;">
+					<td>
+						<input type="hidden" name="userJobPk" id="userJobPk" value=""/>
+						<input type="text" id="jobName" class="w250"/>
+						<input type="hidden" name="jobId" id="jobId" value=""/>
+						<input type="hidden" name="userId" id="userId" th:value="${loadUser} ? ${loadUser.primaryKey}"/>
+					</td>
+					<td>
+						<input type="text" title="dd/mm/aaaa" class="fecha datepicker w90 left" name="fStart" id="dateStart"/>
+					</td>
+					<td>
+						<input type="text" title="dd/mm/aaaa" class="fecha datepicker w90 left" name="fEnd" id="dateEnd"/>
+					</td>
+					<td class="w50">									
+						<a href="#!" class="simbutton secondary dsp_ib left" onclick="">
+							<span class="mf-icon mf-icon-save-16" th:text="#{saveButton}" onclick="saveUserJob()">Guardar cambios</span>
+						</a>
+						<a href="#!" class=" simbutton secondary dsp_ib left" onclick="">
+							<span class="mf-icon mf-icon-delete-16" th:text="#{cancelButton}" onclick="$('#trNewJob').hide();">Cancelar</span>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	</form>
+	<div id="errorMsgUserJob" class="errorMessage"></div>
+	<div id="questionUserJob" class="capaPregunta" style="display: none;">
+		<div class="fld">
+			<span class="mf-icon-24 mf-icon-warning-24"></span>
+			<span id="questionMessageUserJob" class="pregunta"></span> 
+		</div>
+		<div class="fld">
+		  	<button id="yesButtonUserJob" name="yesButtonUserJob" class="simbuttom secondary">
+				<span th:title="#{yes}" th:text="#{yes}"></span>
+			</button>
+		  	<button id="noButtonUserJob" name="noButtonUserJob" class=" simbuttom secondary" onclick="$('#questionUserJob').hide();">
+				<span th:title="#{no}" th:text="#{no}"></span>
+			</button>
+		</div>
+	</div>
+</div>
+								
+</html>	    

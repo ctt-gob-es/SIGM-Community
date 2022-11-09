@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--[if lt IE 7 ]> <html class="ie6" xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> <![endif]-->
+<!--[if IE 7 ]> <html class="ie7" xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> <![endif]-->
+<!--[if IE 8 ]> <html class="ie8" xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="en"
+	  xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!--<![endif]-->  
+
+  <head layout:fragment="header"> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="title" content="" />
+	<meta name="description" content="" />
+	<meta name="keywords"
+		content="Ministerio de Política Territorial y Función Pública, Secretar�a de Estado de Administraciones P�blicas, MINHAP, Nombre de aplicaci�n" />
+	<meta name="ctx" th:content="${#httpServletRequest.getContextPath()}" />
+	<title>Portafirmas - SEAP - MINHAP</title>
+	
+	<link rel="icon" th:href="|${#httpServletRequest.getContextPath()}/images/favicon#{appScope}.ico?#{versionNumber}.#{versionFase}|" type="image/x-icon"/>
+	<link rel="shortcut icon" th:href="|${#httpServletRequest.getContextPath()}/images/favicon#{appScope}.ico?#{versionNumber}.#{versionFase}|" type="image/x-icon"/>
+
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/morfos/reset.css?#{versionNumber}.#{versionFase}|" />
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/morfos/main.css?#{versionNumber}.#{versionFase}|" />
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/morfos/typography.css?#{versionNumber}.#{versionFase}|" />
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/morfos/libraries.css?#{versionNumber}.#{versionFase}|" />
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/morfos/menus.css?#{versionNumber}.#{versionFase}|" />
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/morfos/components.css?#{versionNumber}.#{versionFase}|" />
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/morfos/colors.css?#{versionNumber}.#{versionFase}|" />
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/morfos/grid-min.css?#{versionNumber}.#{versionFase}|" />
+
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/custom-theme/jquery-ui-1.8.14.custom.css?#{versionNumber}.#{versionFase}|" />
+		
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/js/jQuery-TE_v.1.4.0/jquery-te-1.4.0.css?#{versionNumber}.#{versionFase}|" />
+
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/colorpicker/spectrum.css?#{versionNumber}.#{versionFase}|" />
+
+	<!-- Cualquier modificacion adicional sobre los estilos debe hacerse en el custom.css. Por favor, mantened los otros como est�n, es fundamental para futuras actualizaciones o correciones. -->
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/custom/custom.css?#{versionNumber}.#{versionFase}|" />
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/custom/custom#{appScope}.css?#{versionNumber}.#{versionFase}|" />
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/fineuploader/fine-uploader.css?#{versionNumber}.#{versionFase}|" />
+	<link rel="stylesheet" type="text/css" media="print" th:href="|${#httpServletRequest.getContextPath()}/css/morfos/print.css?#{versionNumber}.#{versionFase}|" />
+	
+	
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}/css/theme/theme-#{color}.css?#{versionNumber}.#{versionFase}|" />
+	
+	<link rel="stylesheet" type="text/css" media="all" th:href="|${#httpServletRequest.getContextPath()}css/jquery.realperson.css?#{versionNumber}.#{versionFase}|" />
+	
+	<!--SCRIPTS -->
+
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/morfos/modernizr.custom.js?#{versionNumber}.#{versionFase}|"></script>
+	
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery/jquery-1.7.1.min.js?#{versionNumber}.#{versionFase}|"></script>
+
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery/jquery-ui-1.8.17.custom.min.js?#{versionNumber}.#{versionFase}|"></script>
+	
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery/jquery.ui.datepicker-es.js?#{versionNumber}.#{versionFase}|"></script>
+	
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/morfos/main.js?#{versionNumber}.#{versionFase}|"></script>
+	
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/commons.js?#{versionNumber}.#{versionFase}|" type="text/javascript"></script>
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery/jquery-portafirmas.js?#{versionNumber}.#{versionFase}|"></script>
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/fineuploader.jquery/fine-uploader.js?#{versionNumber}.#{versionFase}|"></script>
+	
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/jQuery-TE_v.1.4.0/jquery-te-1.4.0.min.js?#{versionNumber}.#{versionFase}|"></script>
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery-1.8.3-MPT-extension.js?#{versionNumber}.#{versionFase}|"></script>
+
+	<script th:inline="javascript">/*<![CDATA[*/httpContextPathPortafirmas = [[${#httpServletRequest.getContextPath()}]] /*]]>*/</script>
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/snippets/ajaxStatus.js?#{versionNumber}.#{versionFase}|" ></script>
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/session/session.js?#{versionNumber}.#{versionFase}|"></script>
+
+  </head>
+  <body>
+  	<div id="container">
+  		<div th:include="common/header::header" id="header">
+		</div>
+    	<!-- div id="body"-->
+    	<div id="wrap">
+    		<!-- CAJAS DE ADVERTENCIA-->
+			<div id="userBoxes">
+				<div class="success-box" id="success" style="display: none;"></div>
+				<div class="error-box" id="error" style="display: none;"></div>
+				<div class="warning-box" id="warning" style="display: none;"></div>
+				<div class="info-box" id="info" style="display: none;"></div>
+			</div>
+
+			<div id="ajaxStatus">
+			</div>
+
+    		<div layout:fragment="content">
+  			</div>
+    	</div>    	
+  	</div>
+  	<div th:include="common/footer::footer" id="footer">
+	</div>
+  </body>
+</html>

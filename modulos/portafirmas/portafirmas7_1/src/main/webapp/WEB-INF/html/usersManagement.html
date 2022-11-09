@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+		<div layout:fragment="content" >
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/usersManagement/users.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/usersManagement/jobs.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/usersManagement/usersJob.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/usersManagement/groups.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/usersManagement/usersGroup.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/usersManagement/seatAuthorizations.js?#{versionNumber}.#{versionFase}|"></script>
+	    	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery.maskedinput.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery-picklist/jquery-picklist.js?#{versionNumber}.#{versionFase}|"></script>
+						<script th:src="|${#httpServletRequest.getContextPath()}/js/usersManagement/restriction.js?#{versionNumber}.#{versionFase}|"></script>
+	
+	        <!-- INICIO DEL CONTENIDO-->
+			<div id="mainWindow">
+				<div class="windowHeader">
+					<div>
+						<h3 class="windowTitle">Gestión de usuarios</h3>
+					</div>
+				</div>
+				<div id="contentData">
+					<div id="contentDataBody" class="p10">	
+							<div id="documentTabs" class="ui-tabs ui-widget ui-widget-content ">
+								<div class="tabs ui-tabs msgBoxBodyTabs">
+									<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ">
+											<li id="userOption" class="ui-state-default ui-tabs-selected ui-state-active"><a href="#tab1" class="tab-icon mf-icon-user-16 pl30">Usuarios</a></li>
+											<li id="jobOption" class="ui-state-default"><a href="#tab2" onclick="loadJobs();" class="tab-icon mf-icon-userposition-16 pl30">Cargos</a></li>
+											<li id="groupOption" class="ui-state-default"><a href="#tab3" onclick="loadGroups();" class="tab-icon mf-icon-group-16 pl30">Grupos</a></li>
+											<li id="seatAuthorizationOption" class="ui-state-default"><a href="#tab4" onclick="loadSeatAuthorizations();" class="tab-icon mf-icon-authorization-16 pl30">Autorizaciones</a></li>
+											<li id="restrictOption" class="ui-state-default"><a href="#tab5" onclick="loadRestrictions();" class="tab-icon mf-icon-user-16 pl30">Restricciones</a></li>
+									</ul>
+									<div id="tab1" class="ui-tabs-panel ui-widget-content ui-corner-bottom" th:include="users::users"></div>
+									<div id="tab2" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab3" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab4" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab5" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+								</div>
+							</div>
+						<div id="contentDataFooter"></div>
+					</div>
+				</div>
+			</div>
+		    <!-- FIN CONTENIDO-->      
+			<div id="users_modal" title="Edición usuario" th:include="userModal::user" style="display: none;"></div>     
+			<div id="users_jobs_modal" title="Edición cargos usuario" style="display: none;"></div>     
+		</div>
+	</body>
+</html>	    

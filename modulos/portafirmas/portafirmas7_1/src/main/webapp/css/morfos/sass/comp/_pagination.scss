@@ -1,0 +1,260 @@
+/**************/
+/* PAGINATION */
+
+.pagination {
+    font-size: 0.9em;
+    overflow: hidden;
+    padding: 1em 0;
+}
+
+.pagination > * {
+    display: inline;
+}
+
+.pagination ol {
+    overflow: hidden;
+    list-style: none;
+    margin: 0 auto;
+}
+
+.ie7 .pagination ol {
+    margin: 0;
+}
+
+.pagination ol li {
+    float: left;
+    margin: 0 2px 0 0;
+}
+
+.pagination li.paginationNumbers ol li {
+    border: none;
+}
+    
+.pagination ol li:last-child{
+    margin: 0;
+}
+    
+.pagination ol li a {
+    float: left;
+    padding: 4px;
+    color: #8B8B8B;
+    border: 1px solid #C8C8C8;
+}
+
+.pagination ol li a:hover {
+    background-color: #CCCCCC;
+    color: #FFFFFF;
+}
+
+.pagination ol li.summary {
+    padding: 4px 8px;
+    color: white;
+}
+
+.pagination ol li.summary span {
+    float: left;
+}
+
+.pagination ol li.summary a.showGoto {
+    float: left;
+    height: 0;
+    width: 6px;
+    margin-right: -2px;
+    
+    background: url('images/icons_white.png') no-repeat -64px -18px;
+    border: none;
+}
+    
+.pagination .gotoPage {
+    display: none;
+    float: left;
+    clear: both;
+    position: absolute;
+    margin: 15px 0 0 0;
+    
+    color: #CCCCCC;
+}
+
+.pagination li.summary:hover .gotoPage {
+    display: block;
+}
+    
+.ie7 .pagination li.summary:hover .gotoPage {
+    margin: -4px 0 0 -9px;
+}
+    
+.pagination form {
+    float: left;
+    margin-top: 5px;
+    padding: 2px;
+}
+    
+.pagination .summary form {
+    border: 1px solid #CCCCCC;
+    background-color: #FFF;
+}
+
+.pagination fieldset {
+    padding: 0;
+    margin-bottom: 0;
+    border: none;
+    background: transparent;
+}
+    
+.ie7 .pagination fieldset, 
+.ie8 .pagination fieldset {
+    padding-top: 0;
+}
+    
+.pagination form label {
+    width: auto;
+    float: left;
+    margin: 0 5px;
+    color: #696969;
+}
+    
+.pagination input {
+    font-size: 0.9em;
+    border: 1px solid #CCC;
+    
+    -webkit-box-shadow: none;
+    -moz-box-shadow:    none;
+    box-shadow:         none;
+}
+
+.pagination input.gotoPageInput {
+    width: auto;
+    margin: 0;
+    padding: 3px;
+    
+    background: #FFF;
+    
+    -webkit-box-shadow: none;
+    -moz-box-shadow:    none;
+    box-shadow:         none;
+}
+  
+.ie7 .pagination input.gotoPageInput {
+    margin-top: -4px;
+}
+  
+.pagination input.gotoPageSubmit {
+    height: 100%;
+    padding: 3px;
+    
+    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+
+    background: #696969;
+    
+    -webkit-border-radius: 0;
+    -moz-border-radius:    0;
+    border-radius:         0;
+    
+    -webkit-box-shadow: none;
+    -moz-box-shadow:    none;
+    box-shadow:         none;
+    
+    text-shadow: none;
+    
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eae7e7', endColorstr='#b8b8b8',GradientType=0, enabled=0 );
+}
+    
+.pagination input.gotoPageSubmit:hover {
+    background: #999;
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FCFCFC', endColorstr='#d3d3d3',GradientType=0, enabled=0 );
+}
+    
+.pagination ol li.selected  {
+    padding: 4px;
+}
+    
+.pagination ol li a.selected  {
+    color: white;
+    background-color: #696969;
+}
+
+.pagination ol li.etc {
+    padding: 4px;
+}
+    
+.pagination li.paginationNumbers {
+    margin-bottom: 0;
+    border: 1px solid #CCCCCC;
+}
+    
+.pagination .paginationNumbers a {
+    padding: 4px;
+    border: none;
+}
+
+.pagination .paginationNumbers a:hover {
+    font-weight: bold;
+    background-color: #CCCCCC;
+    color: #FFFFFF;
+}
+    
+.pagination ol li.numResults {
+    padding: 0;
+    color: white;
+}
+    
+.pagination .numResults form {
+    margin: 0;
+    padding: 0;
+}
+    
+.ie7 .pagination .numResults form {
+    margin: 2px 0;
+}
+    
+.pagination .numResults fieldset {
+    margin-bottom: 0;
+    color: #FFF;
+    padding: 0 4px;
+}
+    
+.pagination .numResults select {
+    width: auto;
+    margin: 0 3px 0 0;
+    font-size: 1em;
+    padding: 2px;
+}
+    
+.pagination .numResults label {
+    color: #FFF;
+    margin: 0 8px;
+    font-size: 1em;
+    padding: 0;
+}
+    
+.ie7 .pagination .numResults label {
+    margin-top: 2px;
+}
+    
+.ie7 .pagination .numResults span {
+    margin-right: 8px;
+    position: relative;
+    top: -2px;
+    }
+    
+.pagination ol li.numResults, 
+.pagination ol li.summary, 
+.pagination ol li.selected {
+    border: 1px solid #696969;
+    background-color: #696969;
+    color: white;
+}
+    
+.pagination ol li a {
+    color: #8B8B8B;
+    border: 1px solid #C8C8C8;
+}
+
+/* Paginador en ui-dialog */
+
+.ui-dialog .pagination {
+    padding-bottom: 2.5em;
+}

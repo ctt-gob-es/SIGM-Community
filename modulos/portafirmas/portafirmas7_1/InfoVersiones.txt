@@ -1,0 +1,808 @@
+T970 - Cambiar captcha cotejo CSV
+1476 - [PLIEGOS 2019] FUN31.3 Mostrar errores del login del usuario
+1588 - Configuración JNDI vía Spring (Prioridad 1)
+
+	Versión 7.1
+------------------------------------------------------------------------
+	Integración correcta de Autofirma con Internet Explorer
+	T941 - Bloquear alta de superadmin
+	T932 - Modificar métodos MobileService
+	T279 - Mostrar usuario remitente IG
+	T945 - Anexos ordenados alfabéticamente
+	T278 - Textos en firmas XADES (comentario)
+	T193 - Integración Sede nuevo DIR3
+	T256 - Auditoría usuarios
+	
+	1503 - Error retirar petición dirigida a cargo
+	1550 - Visualización de anexos
+	1562 - Incidencia 545794: correo alta usuario
+	Se elimina el uso de miniapplet por tema de licencias
+	
+	Versión 7.0
+------------------------------------------------------------------------
+	#1317 - Integración Portafirmas - DocelWeb
+	Sello de tiempo al firmar con FIRe
+
+	Versión 6.1
+------------------------------------------------------------------------
+	#1527 - Popup peticiones firma
+	#1528 - Check factura
+	#1478 - [PLIEGOS 2019] FUN32.2 Adaptación del flujo de firma con Cl@veFirma. Firma en la nube móvil.
+
+	Versión 6.0.0.4
+------------------------------------------------------------------------
+	#1556 - [PLIEGOS 2019] Integración con FIRe. Firma en la nube web.
+
+	Versión 6.0
+------------------------------------------------------------------------
+	#1477 - [PLIEGOS 2019] FUN32.1 Identificación mediante Cl@ve
+	#1474 - [PLIEGOS 2019] FUN31.1 Visualización del mensaje de las peticiones
+	#1472 - Drag&drop adjuntar ficheros
+	#1390 - AutenticA: Nueva librería aut-sdk disponible
+	#1013 - Llamar a @firma con certificado
+	#917 - Restringir el conjunto destinatarios de un usuario
+	#916 - Campo remitente configurable
+	#738 - Actualizado algoritmo de firma
+
+	Versión 5.0.7.1
+------------------------------------------------------------------------
+	#1439 - Integración genérica por LDAP
+
+	Versión 5.0.7
+------------------------------------------------------------------------
+	#0980 - Validador por aplicación Interfaz Genérica
+	#1193 - Generar CSV offline
+	#1217 - Generación QR de CSV con descarga directa
+	#1240 - Bug al actualizar URL IGAE
+	#1242 - Error opción de enviar por email
+	#1244 - Corregido error en vistos buenos con validadores por aplicación
+	#1260 - Acceso por user/password
+	#1261, 1309 - Optimizado proceso de firma para evitar errores en caídas del sistema
+	#1262 - Generación de informes aún cuando falle el sello
+	
+	Versión 5.0.6
+------------------------------------------------------------------------
+	Eliminado de la vista el botón anular firma.
+	Incidencia 473230 Se modifica método como indican para que no falle el paso al historico de peticiones con textos grandes, el problema de que se guarden caracteres raros no he podido reproducirlo.
+	Incidencia 586785 Problema con los validadores por aplicación, en la bendeja de entrada del validador ve las de todas las aplicaciones, no solo las que el valida
+	Incidencia 587869 Problema con las plantillas para añadir usuarios de otras sedes
+	Incidencia 476095 Se modifica la URL para gestionar las incidencias del CAID
+	
+	#973 - Revisar indicador firma móvil
+	#1044 - Pérdida login Usuario-Contraseña
+	#1042 - Marcar usuarios de aplicaciones
+	#1268 - Cambio imagen aniversario constitución
+	#1152 - Cambiar nombre del Ministerio
+	#1218 - Modificar cliente Inside
+	#1143,1106 - Problemas en administración de sedes (Incidencia: 552101).
+	#1175, #1153, #1173 - Incidencia 449382 - Incidencia Fecha inicio
+
+	Versión 5.0.5
+------------------------------------------------------------------------
+	#1142 Problema al retirar petición bloqueada. Se impide a los servicios web borrar el último documento de una petición
+	#968 Bug cotejo informes normalizados
+	#925 Corregir error 500 informes
+	#955 Bug Generación de informes
+	
+	#994 Se rehabilita las notificaciones a remitentes especificados vía servicio web (<emailToNotifyList> en createRequest)
+	#1049 Problemas DNI letra minúscula
+	#982 Error Bandeja Enviadas-Terminadas siempre negrita.
+	
+	#956 Bug en histórico
+	#959 Bug en listado de comentarios
+	#953 Bug restricción nombre plantillas
+	#957 Bug en envío de avisos
+	#958 Bug en número de firmantes en plantillas
+	#961 Bug en reenviado de peticiones terminadas
+	#962 Bug en filtrado de aplicaciones
+	#963 Bug en algoritmo de firma
+
+	Versión 5.0.4
+------------------------------------------------------------------------
+	#1180 Documentos desaparecen en Portafirmas al redactar si se borrar documentos ya cargados.
+	#1141,998 Problemas al retirar peticiones con Visto Bueno
+	#1139 Corregido fallo en alta de invitado
+	#1054,1147 Portafirmas cambia orden de las líneas de firma al buscarlos desde Sede
+	#1040 Petición downloadSign devuelve valor FACTURAE. Para que el cliente de servicio web pueda interpretar que la firma enviada es FACTURAE
+	#1035 Comportamiento anómalo al adjuntar documentos. En el mensaje de validación, a veces, muestra el nombre de otro documento.
+	#989 Previsualización debajo de documento en vez de en parte inferior
+	#981 Error al enviar correo de una petición que contenga linea de Visto bueno
+	#951 Actualizado extensión de firmas CAdES a csig
+	#960 Bug en bloqueo de peticiones. Solucionado un problema en el sistema de bloqueo de peticiones que previene la pérdida de firmas en paralelas.
+	#952 Bug en peticiones caducadas. Problema solucionado en la tarea Quartz para que realice correctamente la caducidad de peticiones.
+	#954 Bug Resellado de firmas. Eliminado error en la pantalla para ampliar sello de firmas.
+	Corregido fallo en informe de firma, saca correctamente las acciones de los firmantes.
+
+	Versión 5.0.1.1e
+------------------------------------------------------------------------
+	Se impide el uso de Autofirma con Internet Explorer
+
+	Versión 5.0.1.1d
+------------------------------------------------------------------------
+	Control para impedir la firma cuando el navegador es Firefox inferior a la versión 43
+
+	Versión 5.0.1
+------------------------------------------------------------------------
+- Despliegue en pro: /03/2017 (domingo.sanchez):
+  	(Necesita script BB.DD.)
+	#527 - Mejoras peticiones invitación
+	#591 - Servicios de consulta automática de usuarios
+	#654 - Marca de documentos firmados
+	#655 - Rol gestor
+	#690 - Integración con FIRe
+	#722 - Actualización servicios web del móvil
+	#725 - Enviar correo al grupo
+	#765 - Error al acceder con ldap a Portafirmas Redsara (PRE y PRO)
+	#766 - Incidencia 373927 - Error en PF Redsara al crear plantillas con el mismo nombre
+	#767 - Error ws PF AGE con petición removeRequest
+	#768 - Correos a validadores
+	#774 - Controlar error 500 bandeja de entrada
+	#797 - PDF como anexo documentos con visor
+	#800 - Pruebas FIRe
+	#801 - Subida a PRO versión 5 sin FIRe
+	#806 - Error - Portafirmas AGE y Redsara no guardan comentarios cuando se retira petición
+	#819 - Bug cotejo al anular firma
+	#830 - Actualizar @firma 1.6
+	#831 - Eliminar correos de falsos positivos de eeutil
+	#832 - Incluir mime
+	#813 - Error al descargar factura en PF
+	#847- [PLIEGOS 2018] Implementación del concepto organismo y rol administrador de organismo
+	#848 - Integración con Autentica
+	#850 - Llamar a @firma con certificado (16)
+	#853 - Añadir captcha al cotejar un csv (16)
+	#885 - Corregido el fallo por el que se borraban los perfiles de los usuarios de las aplicaciones que usan los servicios web de Portafirmas.
+	
+	Versión 4.7.6.9
+------------------------------------------------------------------------
+- Despliegue en pro: /03/2017 (domingo.sanchez):
+  	(Necesita script BB.DD.)
+
+	#516 - Gestión de generación de WARs
+	#546 - Controlar la configuración de usuarios LDAP
+	#618 - Visor de .tcn en anexos
+	#650 - Menú Guía rápida
+	#767 - Error ws PF AGE con petición removeRequest
+	#677 - [PF Móvil] WS Activar/desactivar Push
+	#678 - [PF Móvil] WS comprobación estado
+	#583 - [PLIEGOS 2018] Permitir la visualización de anexos desde el Portafirmas móvil y timestamp
+	#662 - Botón generar informe en pantalla inicial
+	#680 - Validar documento al adjuntar
+	#713 - Errores en generación de plantillas
+	#682 - Soporte a firma con alias
+	#721 - Error al adjuntar documentos
+
+	Versión 4.7.6.8
+------------------------------------------------------------------------
+- Despliegue en pro: 12/12/2017 (domingo.sanchez):
+  	(Necesita script BB.DD.)
+
+	#301 - Añadir observaciones al rechazo en IGPF.
+	#462 - Añadir una entrada al menú de ayuda con Guía Rápida
+	#478 - [Portafirmas móvil] Correos de cambio de estado
+	#495 - Filtro de año
+	#496 - Configuración del tamaño de la bandeja
+	#502 - Problemas de usuarios LDAP repetidos
+	#511 - Igualar comportamientos firma desde Web y móvil
+	#530 - Envío de peticiones a cargos-usuarios vigentes
+	#535 - #649 - Visualización PDF en IE
+	#536 - Error app Drogas: User has not required profiles
+	#703 - Incidencia Lapuente. Habilitada la búsqueda de usuario que ya existe.
+	Restricción para recuperar un máximo de 1000 peticiones
+
+	Versión 4.7.6.7
+------------------------------------------------------------------------
+- Despliegue en pro: /11/2017 (olaya.gonzalez):
+	#454 - [Portafirmas móvil] Modificaciones sobre los servicios existentes
+	#457 - Modificaciones anular firma
+	#444 - Desactivar el job que envia peticiones al histórico
+	#447 - Error al añadir sello de tiempo a pdf con firma con sello de tiempo (PDF Basic)
+
+	Versión 4.7.6.6
+------------------------------------------------------------------------
+- Despliegue en pro: /11/2017 (olaya.gonzalez):
+	#386 - Invitación de usuarios a Portafirmas
+	Incidencia Retirar peticiones: se añade mensaje de error cuando no se puede retirar una petición seleccionada.
+	Control de longitud del campo asunto en la redacción de peticiones y de peticiones de invitación (Longitud <=255)
+	Validación del formato del campo destinatario (correo electrónico) en peticiones de invitación.
+	Validación en Firma/Informe ENI: Identificador, 1 órgano obligatorio, órgano no vacío al añadir.
+	Se elimina el parámetro AMBITO.DEFECTO
+	Mensaje de error: firma previa con certificado revocado o inválido
+	Pestaña configuración (se modifica la query).
+	Validación cargos de usuario (se elimina la validación de descripción y se deja sólo la de código de cargo) en creación y modificación.
+	Se comenta la planificación de la tarea de mover peticiones al histórico en el arranque de la aplicación
+	Se modifica el orden del sellado de tiempo (se hace a posteriori de la firma)
+	Visualizar documentos
+	Solucionado el problema del filtro de las peticiones validadas
+	En el detalle de la petición se ha añadido la configuración de firma 
+	#398 - Generar pdf .tcn. Se modifica el servicio web de móvil para que cuando el documento a visualizar sea un TCN, se visualice como un PDF. 
+	Corregido error al generar el QR del informe de firma. Modificación en clase que llama a EEUTILS/GenerarCopiaFirma. 
+	
+	Versión 4.7.6.5
+------------------------------------------------------------------------
+
+- Despliegue en pro: 03/10/2017 (olaya.gonzalez):
+	Modificación MimeType application/rtf por text/rtf para que la llamada a obtener el informe y el normalizado a EEutils no de un error.
+	Añadido control de error en ValidarFirma para el caso del error de certificado en firma previa caducado.
+	Se añaden iconos de comentarios/adjuntos en la bandeja de entrada para indicar si las peticiones tienen o no adjuntos y/o comentarios.
+	Se vuelve a incluir la firma en servidor en la generación del informe y del informe normalizado.
+	Se elimina el combo de "ámbito" en la creación de plantillas
+	Se añade control de error para la operación ValidarFirma del WS ValidarFirma de @Firma, así como para la creación del propio cliente del WS 
+	ValidarFirma de @Firma.
+	Se añade control de error para la operación ValidarCertificado del WS ValidarCertificado de @Firma, así como para la creación del propio
+	cliente del WS ValidarCertificado de @Firma.
+	#389 - Limitar el textbox del campo Referencia a 30 caracteres
+	#374 - Error al firmar varios documentos con sello de tiempo 
+	#394 - Mejoras cotejo CSV
+	Configuración de las notificaciones PUSH a nivel de usuario [Menú Configuración]
+	Deshabilitar el chunking a nivel Eeutils 
+	Descarga informe en Firefox
+    #222 - Se incluye una pestaña de anular firma tanto en las peticiones pendientes como en las peticiones firmadas y se incluye una nueva sección
+	de Peticiones Anuladas, además las firmas anuladas no pueden ser cotejadas por CSV.
+    Se modifican los informes de firma normalizados para que se guarden en BBDD en un campo diferente y no se sobrescriba el informe.
+    #422 - Se modifica la llamada al web service de móviles para que se envíen al móvil las peticiones sólo validadas en lugar de todas. 
+	
+	Versión 4.7.6.4
+------------------------------------------------------------------------
+
+- Despliegue en pro: 09/08/2017 (olaya.gonzalez):
+	Trazas de logs
+	Descarga Informe Normalizado se actualiza el campo b_informe en la tabla de firmas en BD
+	Se modifica el tratamiento del ámbito, se elimina el combo y se deja el valor por defecto a INTERNO.
+	Se añade el envío de notificaciones en el reenvío de las peticiones (3 casos distintos: botón menú en pendientes/terminadas y en visualización de
+		petición para las pendientes).
+	Cambios en la generación del informe: se reduce el tiempo de espera partiendo la query en trosos, así como la forma de copiar del input al output.
+		Además se muestra la rueda de espera tanto en la descarga del informe del menú como en el de a nivel de petición (e/Informe)
+	Se elimina el permiso "Simular" en la creación de nuevos usuarios.
+	Se corrige el problema al seleccionar un firmante de otra sede y ya no se duplica la línea vacía que no se podía borrar (Inc. 466282)
+	Se corrige el problema del usuario que es validador de otros para que se muestren los mismos que en la pantalla de login (no se muestra los usuarios
+		ya dados de baja en el sistema).
+	Se añade un Advice Service para pruebas.
+    Se incluye control errores (try/catch) para que el caso de firmas CADES el error al parsear un XML, no conlleve un error en la previsualizacion del fichero. 
+	El log4j.properties fue actualizado para añadir un appender para el GrayLog en una subida posterior que no incluyó cambios de código.
+	
+Versión 4.7.6.3_1
+------------------------------------------------------------------------
+
+- Despliegue en pro: 03/07/2017 (olaya.gonzalez):
+	Trazas de logs
+	Descarga Informe/Normalizado con caracteres CAT (apostrofe)
+	Se introduce Java Melody para monitorización
+	
+Versión 4.7.6.3
+------------------------------------------------------------------------
+
+- Despliegue en pro: 27/06/2017 (olaya.gonzalez):
+	Sprint 23/06/2017
+	Find Bugs
+	Check Validar Firma
+	Link Incidencias
+	Previsualizar firma para TCN
+	Corregido error con firma de peticiones con N documentos
+	Cambio versión de Quartz a 2.2.3.
+    Cambio tiempo repetición Job Principal encargado de reenvío correos, a ejecución cada 20 minutos.
+
+Versión 4.6.9
+------------------------------------------------------------------------
+
+	Pliego para la auditoría    
+
+- Despliegue en des: /10/2016 (domingo.sanchez)
+- Despliegue en pre: /10/2016 (domingo.sanchez)
+- Despliegue en pro: /10/2016 (domingo.sanchez)
+
+Versión 4.6.8.9.3
+------------------------------------------------------------------------
+
+	-Ticket  #178  Distinguir entre firmas y no firmas para los documentos de la IGAE    
+
+- Despliegue en des: 10/10/2016 (domingo.sanchez)
+- Despliegue en pre: 10/10/2016 (domingo.sanchez)
+- Despliegue en pro: 10/10/2016 (domingo.sanchez)
+
+Versión 4.6.8.9.2
+------------------------------------------------------------------------
+
+	-Ticket  #177  Desactivar la opción de sello de tiempo para las peticiones entrantes de la IGAE.  
+
+- Despliegue en des: 13/09/2016 (domingo.sanchez)
+- Despliegue en pre: 13/09/2016 (domingo.sanchez)
+- Despliegue en pro: 13/09/2016 (domingo.sanchez)
+
+Versión 4.6.8.9.1
+------------------------------------------------------------------------
+
+	-Ticket  #176  Gestión previsualización de documentos previamente firmados.  
+
+- Despliegue en des: 09/09/2016 (domingo.sanchez)
+- Despliegue en pre: 09/09/2016 (domingo.sanchez)
+- Despliegue en pro: 09/09/2016 (domingo.sanchez)
+
+Versión 4.6.8.9
+------------------------------------------------------------------------
+
+    -Ticket  #165  Correccion IGAE para que se informe correctamente del error 07  
+	-Ticket  #171  Nueva pestaña de comentarios  
+	-Ticket  #169  Ampliar información mensaje error  
+	-Ticket  #170  Corregir validación usuario existente para la IGAE  
+  
+
+- Despliegue en des: 28/07/2016 (domingo.sanchez)
+- Despliegue en pre: 28/07/2016 (domingo.sanchez)
+- Despliegue en pro: 28/07/2016 (domingo.sanchez)
+
+Versión 4.6.8.8
+------------------------------------------------------------------------
+
+	-Ticket  #168  MiniApplet 1.4  
+	-Ticket  #167  Registro de usuario para SIM  
+
+- Despliegue en des: 06/07/2016 (domingo.sanchez)
+- Despliegue en pre: 06/07/2016 (domingo.sanchez)
+- Despliegue en pro: 12/07/2016 (domingo.sanchez)
+
+Versión 4.6.8.7
+------------------------------------------------------------------------
+
+	-Ticket  #166  Desarrollo para Integración con la IGAE  
+	-Ticket  #164  No mostrar los validadores dados de baja al autenticarse  
+	-Ticket  #162  Acceso a Portafirmas con Clave  
+	-Ticket  #163  Corregido fallo del filtro de fechas Móvil  
+
+- Despliegue en des: 20/06/2016 (domingo.sanchez)
+- Despliegue en pre: 20/06/2016 (domingo.sanchez)
+- Despliegue en pro: 21/06/2016 (domingo.sanchez)
+
+Versión 4.6.8.6
+------------------------------------------------------------------------
+
+	-Ticket  #161  Modificado método insertSigner para los servicios web
+
+- Despliegue en des: 19/04/2016 (domingo.sanchez)
+- Despliegue en pre: 19/04/2016 (domingo.sanchez)
+- Despliegue en pro: 21/04/2016 (domingo.sanchez)
+
+Versión 4.6.8.5
+------------------------------------------------------------------------
+
+	-Ticket  #160  Botón para regenerar informe  
+
+- Despliegue en des: 14/04/2016 (domingo.sanchez)
+- Despliegue en pre: 14/04/2016 (domingo.sanchez)
+- Despliegue en pro: 19/04/2016 (domingo.sanchez)
+
+Versión 4.6.8.4
+------------------------------------------------------------------------
+
+	-Ticket  #159  Incluido scroll en la lista de destinatarios del detalle de una petición.  
+	-Ticket  #158  Incluida la firma Xades en el catálogo de los servicios web del móvil.  
+	-Ticket  #157  Actualizada plantilla de FacturaE  
+	-Ticket  #154  Optimizar consulta para recuperar el detalle de una petición  
+	-Ticket  #156  Implementado opción de firma PADES-T (Deshabilitado)  
+	-Ticket  #155  Habilitar el aviso a aplicaciones cuando se firma vía móvil.  
+
+- Despliegue en des: 09/03/2016 (domingo.sanchez)
+- Despliegue en pre: 09/03/2016 (domingo.sanchez)
+- Despliegue en pro: 10/03/2016 (domingo.sanchez)
+
+Versión 4.6.8.3
+------------------------------------------------------------------------
+
+	-Ticket  #153  Corregido fallo al dar el visto bueno con el móvil.
+
+- Despliegue en des: 28/01/2016 (domingo.sanchez)
+- Despliegue en pre: 28/01/2016 (domingo.sanchez)
+- Despliegue en pro: 02/02/2016 (domingo.sanchez)
+
+Versión 4.6.8.2
+------------------------------------------------------------------------
+
+	-Ticket  #152  Eliminar codificación b64 extra al recuperar la firma vía móvil  
+	-Ticket  #143  Se produce un error en el Portafirmas al adjuntar documentos cades. 
+
+- Despliegue en des: 21/01/2016 (domingo.sanchez)
+- Despliegue en pre: 21/01/2016 (domingo.sanchez)
+- Despliegue en pro: 26/01/2016 (domingo.sanchez)
+		
+Versión 4.6.8
+------------------------------------------------------------------------
+
+	-Ticket #136  Parametrizar la tarea del histórico    
+	-Ticket #138  Agregar campo tipo de firma en detalle petición.  
+	-Ticket #139  Introducir trazas para detectar nuevo servicio web  
+
+- Despliegue en des: 05/10/2015 (domingo.sanchez)
+- Despliegue en pre: 05/10/2015 (domingo.sanchez)
+- Despliegue en pro: 06/10/2015 (domingo.sanchez)
+
+Versión 4.6.7
+------------------------------------------------------------------------
+
+	-Ticket #131  Tarea para pasar peticiones a BB.DD. histórico  
+	-Ticket #133  Informe normalizado 
+	-Ticket #134  Habilitar el botón retirar en grupos  
+	
+- Despliegue en des: 14/09/2015 (domingo.sanchez)
+- Despliegue en pre: 15/09/2015 (domingo.sanchez)
+- Despliegue en pro: 21/09/2015 (domingo.sanchez)
+
+Versión 4.6.6
+------------------------------------------------------------------------
+
+	-Ticket #130 	Eliminar llamadas ajax para cargar la configuración de firma
+	-Ticket #17 	En las plantillas no se guarda el tipo de línea de firma
+	
+- Despliegue en des: 06/07/2015 (domingo.sanchez)
+- Despliegue en pre: 06/07/2015 (domingo.sanchez)
+- Despliegue en pro: 07/07/2015 (domingo.sanchez)
+
+Versión 4.6.5
+------------------------------------------------------------------------
+
+	-Ticket #129 	Actualizar dominios MiniApplet version 1.2_u1
+	-Ticket #127 	Función javascript del MiniApplet stickySignatory
+	
+- Despliegue en des: 23/06/2015 (domingo.sanchez)
+- Despliegue en pre: 23/06/2015 (domingo.sanchez)
+- Despliegue en pro: 24/06/2015 (domingo.sanchez)
+
+Versión 4.6.4
+------------------------------------------------------------------------
+
+	-Ticket #125 	Habilitar un scroll en detalle petición
+	-Ticket #126 	Validación para no permitir destinatario nulo y mensaje de error
+	-Ticket #128 	Actualizar MiniApplet a version 1.2u1
+	-Ticket #122 	Fallo al enviar petición
+	-Ticket #123 	Pasar certificado para poder aplicar sello de tiempo
+	-Ticket #124 	Validación javascript para cuando llega nulo al leer el documento a firmar	
+	
+- Despliegue en des: 01/06/2015 (domingo.sanchez)
+- Despliegue en pre: 01/06/2015 (domingo.sanchez)
+- Despliegue en pro: 02/06/2015 (domingo.sanchez)
+
+Versión 4.6.3
+------------------------------------------------------------------------
+
+	-Ticket #113 	No aparece el infome a la derecha de la petición.
+	
+- Despliegue en des: 21/04/2015 (domingo.sanchez)
+- Despliegue en pre: 21/04/2015 (domingo.sanchez)
+- Despliegue en pro: 21/04/2015 (domingo.sanchez)
+
+Versión 4.6.2
+------------------------------------------------------------------------
+
+	-Ticket	#119 	Validación javascript para las firmas
+	-Ticket	#120 	Implementación de trazas en redacción y carga detalle petición
+	-Ticket	#121 	Confirmación de la sesión para que se apliquen las autorizaciones
+	
+- Despliegue en des: 15/04/2015 (domingo.sanchez)
+- Despliegue en pre: 15/04/2015 (domingo.sanchez)
+- Despliegue en pre: 16/04/2015 (domingo.sanchez)
+
+Versión 4.6.1
+------------------------------------------------------------------------
+
+	-Ticket #116 	Los validadores no pueden descargarse documentos, firmas e informes
+	
+- Despliegue en des: 23/03/2015 (domingo.sanchez)
+- Despliegue en pre: 23/03/2015 (domingo.sanchez)
+- Despliegue en pre: 24/03/2015 (domingo.sanchez)
+
+Versión 4.6 (TAG)
+------------------------------------------------------------------------
+
+	-Ticket #32 	Implementación de cambios para apuntar a los nuevos eeutil
+	-Ticket #68 	Eliminar lógica de controlador de grupos
+	-Ticket #85 	Incluir filtro de fechas en la búsqueda
+	-Ticket #88 	Mostrar icono de acción previa en bandeja de recibidas-pendientes
+	-Ticket #101 	Eliminar cabecera de grupos cuando no hay grupos.
+	-Ticket #102 	Agregar mensaje informativo en las cajas de texto para las búsquedas de autocompletar
+	-Ticket #103 	Configurar un scroll para las ventanas de validar y rechazar.
+	-Ticket #104 	Creación de autorizaciones desde Administración
+	-Ticket #107 	Configuración de correos en peticiones de WS
+	-Ticket #108 	Incluir parámetro de versión para evitar problemas de caché de ficheros javascript
+	-Ticket #109 	El icono del informe aparece en documentos que no tienen firma
+	-Ticket #110 	Los correos no se mandan nunca "online" por un gazapo en el código
+	
+- Despliegue en des: 26/02/2015 (domingo.sanchez)
+- Despliegue en pre: 26/02/2015 (domingo.sanchez)
+
+Versión 4.5 (TAG)
+------------------------------------------------------------------------
+
+	-Ticket	#96 	Envío de correos en línea en lugar de programar tareas
+	-Ticket	#99 	Error al invocar al WS de aplicaciones que tienen aplicación padre
+	-Ticket	#98 	Revistar transaccionalidad
+	-Ticket	#87 	Descarga masiva de justificantes de firma
+	-Ticket	#95 	Refactorización de código para descarga de documentos, firmas, justificantes
+	-Ticket	#97 	Cambiar el número de días de la tarea DAILYEXTERNALADVICE a 7 en lugar de 30
+	-Ticket	#82 	Icono descarga de firma y descarga de informe no aparece en Enviadas
+	-Ticket	#4 		Integrar los web services
+	-Ticket	#83 	Mostrar fecha de fin en peticiones
+	-Ticket	#56 	Revisar funcionamiento del WSDocBO
+	-Ticket	#94 	Funcionalidad de grupos de redacción
+	-Ticket	#86 	Mostrar destinatarios en bandejas de Enviadas
+	-Ticket	#70 	Manual de usuario
+	-Ticket	#93 	Añadir filtro por cargo en la pantalla de usuarios
+	-Ticket	#92 	Página de validación de CSV
+	-Ticket	#89 	Mostrar combo para navegar entre páginas en bandejas
+	-Ticket	#91 	Mostrar combo para navegar entre páginas en Usuarios
+	-Ticket	#59 	Simplificar la escritura de ficheros en directorio temporal
+	-Ticket	#71 	Pestaña de "Ayuda" en la pantalla de Login
+	-Ticket	#73 	Pestaña de "Ayuda" en la cabecera
+	-Ticket	#84 	Mostrar referencia de petición en las bandejas
+	-Ticket	#66 	El botón de reenviar no debería aparecer cuando se entra como validador de alguien
+	-Ticket	#81 	Agregar etiqueta "servidor" en el combo de la pestaña Administración/Configuración
+	-Ticket	#80 	Optimizar el procedimiento para firma masiva de peticiones	
+	-Ticket	#79 	Overflow dinámico para la ventana modal de firma de peticiones
+	-Ticket	#100 	Pintar errores en la traza cuando no se pueda cargar el documento
+	
+- Despliegue en des: 04/02/2015 (rus.poves)
+- Despliegue en pre: 04/02/2015 (rus.poves)
+
+Versión 4.4 (TAG)
+------------------------------------------------------------------------
+
+	 - Ticket #78 Firma masiva de 50 peticiones falla					 		
+	 - Ticket #74 No se listan las aplicaciones que tienen configuraciones sin parámetros 		
+	 - Ticket #72 Error no controlado al borrar un usuario con cargo 					
+	 - Ticket #75 Bandeja terminadas/en espera/caducadas no se refresca bien cuando hay validadores 	
+	 - Ticket #77 Filtro ver peticiones de firma / ver peticiones de v.b no funciona correctamente 	
+	 - Ticket #69 Manual de administración de sede 							
+	 - Ticket #76 Cambiar implementación de Configuración General
+	 
+- Despliegue en des: 13/01/2015 (domingo.sanchez)
+- Despliegue en pre: 14/01/2014 (domingo.sanchez)
+- Despliegue en pro: 15/01/2014 (rus.poves)
+
+Versión 4.3.1 (TAG)
+------------------------------------------------------------------------
+
+	- Ticket #62 	Simplificar el set del truststore
+	- Ticket #53 	Gestión de cargos desde Gestión de usuarios
+	- Ticket #64	Gestionar la visibilidad correctamente
+	- Ticket #67	Modificar texto de pantalla de login
+
+- Despliegue en des: 16/12/2014 (rus.poves).
+- Despliegue en pre: 16/12/2014 (rus.poves).
+
+Versión 4.3 (TAG)
+------------------------------------------------------------------------
+
+	- Ticket #60 	Simplificar el set del truststore
+	- Ticket #58 	Gestión de cargos desde Gestión de usuarios
+	- Ticket #31 	Gestionar la visibilidad correctamente
+	- Ticket #37 	Error al aplicar etiquetas
+	- Ticket #34 	Validar usuarios antes de enviar petición 
+	- Ticket #30 	Los usuarios no deben poder acceder a la aplicación si no están vigentes
+
+- Despliegue en des: 15/12/2014 (domingo.sanchez).
+- Despliegue en pre: 15/12/2014 (domingo.sanchez).
+
+Versión 4.2 (TAG)
+------------------------------------------------------------------------
+
+	- Ticket #57 	Error al editar usuario sin sede
+	- Ticket #48 	Permitir configurar las sedes que administra un usuario
+	- Ticket #55 	Revisar el funcionamiento de la aplicación con IE11
+	- Ticket #35 	Desactivar filtro de tipo de peticiones al ir a las bandejas de peticiones enviadas
+	- Ticket #54 	Ordenación incorrecta en bandejas de peticiones enviadas
+	- Ticket #45 	Correcciones en gestión de grupos
+	- Ticket #50 	No aparece el icono de descargar informe en la bandeja cuando es una petición a un cargo
+
+
+- Despliegue en des: 03/12/2014 (rus.poves).
+- Despliegue en pre: 03/12/2014 (rus.poves).
+
+Versión 4.1 (TAG)
+------------------------------------------------------------------------
+
+	- Checkbox firma trifásica cuando firma no es cades.
+	
+- Despliegue en des: 01/12/2014 (rus.poves).
+
+Versión 4.0 (TAG)
+------------------------------------------------------------------------
+
+	- Ticket #23 Gestión de aplicaciones desde Administración
+	- Ticket #47 Se permite crear usuarios con el mismo identificador
+	- Ticket #51 Número de peticiones en bandeja en configuración de usuario
+	- Ticket #44 Estadísticas
+	- Ticket #39 Gestión de variables globales desde Administración
+	- Ticket #43 Gestión de histórico
+	- Ticket #42 Actualización de peticiones desde "Administración"
+	- Ticket #40 Gestión de configuraciones de firma desde Administración
+	- Ticket #49 Se queda la conexión abierta cuando se descarga el informe
+	- Ticket #46 Las notificaciones configuradas en la redacción no se guardan correctamente
+	- Ticket #28 Gestión de usuarios desde "Gestión de usuarios"
+	- Ticket #24 Gestión de grupos desde "Gestión de usuarios"
+	- Ticket #41 Gestión de tareas (pestaña Programadores) en Administración.
+	- Ticket #38 Gestión de servidores desde Administración
+	- Ticket #33 Iconos más intuitivos en la Bandeja de Recibidas
+	- Ticket #29 Error al Rechazar peticiones
+	- Ticket #27 Eliminar asociación de etiquetas en reenvío de peticiones 
+	- Ticket #26 Errores varios al marcar el check "Seleccionar todos".
+	- Ticket #52 Se pierden los parámetros en configuración global
+	- Checkbox firma trifásica comentado.
+	
+- Despliegue en pre: 01/12/2014 (rus.poves)
+
+Versión 1.7.5
+------------------------------------------------------------------------
+
+	- Ticket #44 Estadísticas con filtros
+	- Ticket #39 Gestión de variables globales desde Administración
+	- Ticket #43 Gestión de histórico.
+	- Ticket #42 Actualización de peticiones desde "Administración"
+	- Ticket #51 Número de peticiones en bandeja en configuración de usuario
+
+
+- Despliegue en des: 28/11/2014 (rus.poves)
+
+Versión 1.7.4
+------------------------------------------------------------------------
+
+	- Ticket #44 Estadísticas
+	- Ticket #42 Actualizar Peticiones.
+	- Ticket #49 Cierre de conexión al descargar informe
+	- Ticket #46 Notificaciones configuradas se guardan correctamente.		
+
+- Despliegue en des: 25/11/2014 (rus.poves)
+
+Versión 1.7.3
+------------------------------------------------------------------------
+
+	- Ticket #40 Gestión de configuraciones de firma desde Administración,
+	- Ticket #47 Se permite crear usuarios con el mismo identificador	
+
+- Despliegue en des: 21/11/2014 (domingo.sanchez)
+
+Versión 1.7.2
+------------------------------------------------------------------------
+
+	- Ticket #28 Gestión de usuarios desde "Gestión de usuarios"	
+	- Ticket #24 Gestión de grupos desde "Gestión de usuarios"	
+	- Ticket #41 Gestión de tareas (pestaña Programadores) en Administración.
+	- Ticket #38 Gestión de servidores desde Administración
+	- Ticket #33 Iconos más intuitivos en la Bandeja de Recibidas
+	- Ticket #29 Error al Rechazar peticiones
+	- Ticket #27 Eliminar asociación de etiquetas en reenvío de peticiones
+	- Ticket #26 Errores varios al marcar el check "Seleccionar todos"
+	
+- Despliegue en des: 14/11/2014 (domingo.sanchez)
+
+Versión 1.7.1 (TAG)
+------------------------------------------------------------------------
+	- Ticket #36: ENo se puede descargar el justificante de firma desde dentro de la petición. Solucionado.
+	
+- Despliegue en pre: 30/10/2014 (rus.poves)
+- Despliegue en pro: 04/11/2014 (rus.poves)
+
+Versión 1.7 (TAG)
+------------------------------------------------------------------------
+	- Ticket #21: El parámetro de configuración para autenticación contra servidor SMTP no se coge.
+	- Ticket #16: Retirar peticiones.
+	- Ticket #11: Método en el Web Service de consulta getCSVandJustificanteDocument
+	- Ticket #25: Error al abrir algunas peticiones enviadas, solucionado.
+
+- Despliegue en desarrollo: 17/10/2014 (rus.poves)
+
+Versión 1.6.2
+-----------------------------------------------------------------------
+	- Ticket #14: Gestión de sede en panel de administración
+	- Ticket #19: Mejora en validación de autorizaciones.
+	- Ticket #20: No se envían correos de notificación al crear autorizaciones.
+	- Ticket #22: Control de seguridad.
+	
+- Despliegue en desarrollo: 16/10/2014
+
+Versión 1.6 (TAG)
+-----------------------------------------------------------------------
+	- Ticket #18: Algunas tareas no se ejecutan por la noche, y deberían.
+	
+- Despliegue en desarrollo: 14/10/2014
+- Despliegue en pre: 15/10/2014
+
+Versión 1.5.3
+----------------------------------------------------------------------
+	- Ticket #15: Descargar informe o zip desde la bandeja
+		
+- Despliegue en desarrollo: 10/10/2014
+
+Versión 1.5.2
+----------------------------------------------------------------------
+	- Ticket #3: Gestión de autorizaciones
+	- Ticket #2: Gestión de validadores, mejora para que se vea bien en IE8
+	- Ticket #1: Gestión de emails de usuario, mejora para refrescar el listado al gestionar
+	
+- Despliegue en desarrollo: 09/10/2014
+
+Versión 1.5.1 (TAG)
+----------------------------------------------------------------------
+	- Ticket #13: Solucionado error al hacer firma masiva desde "Marcar Todos".	
+	
+- Despliegue en pre: 08/10/2014
+
+Versión 1.5 (TAG)
+----------------------------------------------------------------------
+	- Ticket #9: Cambiada configuración de pool de conexiones de BBDD
+	- Ticket #10: Integrado quartz correctamente.
+	- Ticket #5: Opción de validar firma o no a la hora de firmar.
+	- Ticket #8: Logs configurados correctamente.
+	- Ticket #7: Política de firma 1.9
+	- Ticket #6: Corregido error al administrar las tareas.
+	- Ticket #12: Corregido error de quartz (por insertar tareas duplicadas) al arrancar la aplicación en varios nodos.
+	
+- Despliegue en desarrollo: 07/10/2014
+- Despliegue en pre: 07/10/2014
+
+Versión 1.4 (TAG)
+---------------------------------------------------------------------
+	- Gestión de línea de firma
+	- Configuración:
+		· Datos personales y gestión de correo electrónico
+		· Gestión de validadores.
+
+- Despliegue en desarrollo: 22/09/2014
+- Despliegue en pre:        22/09/2014
+- Despliegue en producción: 22/09/2014
+
+Versión 1.3.1
+---------------------------------------------------------------------
+- Cambios:
+    - Eliminar etiqueta de una petición.
+    - Mostrar ámbito y referencia en el detalle de la petición.
+
+- Despliegue en desarrollo: 09/09/2014
+
+Versión 1.3
+---------------------------------------------------------------------
+- Cambios:
+	- Ordenación
+	- Texto enriquecido
+    - Solucionado error al enviar petición "de segundas" con la recarga de combos
+    - Rehabilitada la navegación de siguiente y previa petición.
+    - Formateo de fechas
+    - Eliminado cacheo al anexar documentos y anexos
+
+- Despliegue en desarrollo: 03/09/2014
+- Despliegue en pre: 03/09/2014
+- Despliegue en pro: 09/09/2014
+
+Versión 1.2
+---------------------------------------------------------------------
+- Cambios:
+	- Introducido filtro de etiquetas.
+	- Mensajes de confirmación para eliminar y modificar etiquetas.
+    - Eliminada restricción para mostrar menú de etiquetas.
+
+- Despliegue en desarrollo: 26/08/2014
+- Despliegue en pre: 26/08/2014
+
+Versión 1.1.1
+---------------------------------------------------------------------
+- Cambios:
+	- Se permite añadir nuevas etiquetas
+
+- Despliegue en desarrollo: 25/08/2014
+
+Versión 1.1
+---------------------------------------------------------------------
+- Primera versión numerada:
+	- Se guardan todos los campos en las plantillas.
+	- Redacción desde plantilla funciona OK
+
+- Despliegue en desarrollo: 11/08/2014
+- Despliegue en pre: 12/08/2014
+- Despliegue en produccion: 13/08/2014
+
+Versión 1.0
+---------------------------------------------------------------------
+- Primera versión numerada:
+	- Se permiten validar peticiones individuales.
+	- Funciona el AdviceService.
+
+- Despliegue en desarrollo: 11/08/2014
+- Despliegue en pre: 12/08/2014
+- Despliegue en produccion: 13/08/2014
+

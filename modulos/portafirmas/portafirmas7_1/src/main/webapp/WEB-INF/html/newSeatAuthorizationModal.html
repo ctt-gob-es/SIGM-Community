@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"> 	
+
+<div th:fragment="newAuthorizationModal">
+	<fieldset class="nolegend pt20 va_bottom">
+	<form id="newSeatAuthorizationForm">
+		<div id="newFullName" class="fld">
+			<label class="w100">Autorizante</label>
+			<input type="text" id="new_authorized_fullName" class="w240" th:placeholder="#{searchByIdNameProvince}"/>
+			<input type="hidden" id="new_authorized_pk" name="remittentId"/>
+		</div>
+		<div id="newFullName" class="fld">
+			<select id="new_authorizationType" name="authorizationTypeId" class="w100" style="margin-right:7px">
+				<option th:each="authorizationsType : ${authorizationsTypesList}"
+						th:value="${authorizationsType.primaryKey}"
+						th:text="${#strings.capitalize(#strings.toLowerCase(authorizationsType.cauthorizationType))}"></option>
+			</select>
+			<input type="text" id="new_receiver_fullName" class="w240" th:placeholder="#{searchByIdNameProvince}"/>
+			<input type="hidden" id="new_receiver_pk" name="receiverId"/>
+		</div>
+		<div class="fld">
+			<label class="w100" th:text="#{frequest}"></label>
+			<input type="text" title="dd/mm/aaaa" class="fecha datepicker w90 left" id="new_frequest" name="frequest"/>
+			<input type="text" title="hh:mm:ss" class="w50" id="new_hrequest" name="hrequest" value="00/00/00"/>
+		</div>
+		<div class="fld">
+			<label class="w100" th:text="#{frevocation}"></label>
+			<input type="text" title="dd/mm/aaaa" class="fecha datepicker w90 left" id="new_frevocation" name="frevocation"/>
+			<input type="text" title="hh:mm:ss" class="w50" id="new_hrevocation" value="00/00/00" name="hrevocation"/>
+		</div>
+		<div class="fld stkd">
+			<label th:text="#{observations}"></label>
+			<textarea id="new_observations" name="tobservations" class="w350" style="height: 45px;"></textarea>
+		</div>
+		<div class="dsp_b error errorMessage" id="errorInsertAuthorization"></div>
+	</form>
+	</fieldset>
+</div>
+
+</html>

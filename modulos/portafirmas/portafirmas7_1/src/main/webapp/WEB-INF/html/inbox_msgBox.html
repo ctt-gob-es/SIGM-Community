@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html onload="hideAllPopUps()" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"> 
+
+<script th:src="|${#httpServletRequest.getContextPath()}/js/inbox/inbox_msgBox.js?#{versionNumber}.#{versionFase}|"></script>
+<script th:src="|${#httpServletRequest.getContextPath()}/js/FileSaver.js?#{versionNumber}.#{versionFase}|"></script>
+<script th:src="|${#httpServletRequest.getContextPath()}/js/inbox/anexos.js?#{versionNumber}.#{versionFase}|"></script>
+
+<script>
+hideAllPopUps();
+</script>
+
+<div>
+	<form id="regenerateForm" th:action="|${#httpServletRequest.getContextPath()}/servlet/RegenerarInformeServlet|" method="get">
+		<input type="hidden" id="regenerateChash" name="idDocument" value="user"/>
+	</form>
+	<div class="h20">
+		<div class="center">
+				<a href="#!" id="previousRequest" class="mf-icon mf-icon-prev-16"
+					th:title="#{previous}" onclick="loadPreviousRequest();"></a> <span
+					th:text="(((${currentPage}-1)*${pageSize})+${currentRequest}) + |/${inboxSize}|">9/300</span>
+				<a href="#!" id="nextRequest" class="mf-icon mf-icon-next-16"
+					th:title="#{next}" onclick="loadNextRequest();"></a>
+			</div>
+		</div>
+
+</div>
+<div id="msg">
+	<div class="msgBoxHead">
+		<div class="statusBox dsp_ib">
+			<div sec:authorize="hasRole('FIRMA') and !hasRole('GRUPO') and !hasRole('SIMULADOR') and !hasRole('GESTOR')" class="btn_em p5"
+				th:if="${inbox.requestBarSelected == 'unresolved'}"
+				th:onclick="|loadRequestToSign('requestsIds=${inbox.selectedRequest.requestTagHash}');|">
+				<span class="mf-icon mf-icon-sign-16 "></span> <span
+					th:text="#{signButton}">Firmar</span>/ <span
+					th:text="#{passButton}">Visto Bueno</span>
+			</div>
+			<div sec:authorize="hasRole('FIRMA') and !hasRole('GRUPO') and !hasRole('SIMULADOR') and !hasRole('GESTOR')" class="btn_em p5"
+			    th:if="${inbox.requestBarSelected == 'unresolved'}"
+			    th:onclick="|fireSign('${inbox.selectedRequest.requestTagHash}');|">
+				<span class="mf-icon mf-icon-sign-16 "></span>
+				<img th:src="|${#httpServletRequest.getContextPath()}/images/FIRe.png|" width="36px"/>
+			</div>
+			<div sec:authorize="hasRole('VALIDADOR') and !hasRole('SIMULADOR') and !hasRole('GESTOR')" class="btn_em p5"
+				th:if="${inbox.requestBarSelected == 'unresolved'}"
+				onclick="validateSelectedRequest();">
+				<span class="mf-icon mf-icon-sign-16 "></span> <span
+					th:text="#{validateButton}">Validar</span>
+			</div>
+			<div sec:authorize="!hasRole('SIMULADOR') and !hasRole('GESTOR')" class="btn_em p5"
+				th:if="${inbox.requestBarSelected == 'unresolved'}"
+				onclick="rejectSelectedRequest();">
+				<span class="mf-icon mf-icon-reject-16 "></span> <span
+					th:text="#{rejectButton}">Rechazar</span>
+			</div>
+			<div sec:authorize="!hasRole('SIMULADOR') and !hasRole('GESTOR') and !hasRole('FIRMA')" class="btn_em p5"
+				th:if="${inbox.requestBarSelected == 'unresolved'}"
+				onclick="forwardSelectedRequest();">
+				<span class="mf-icon mf-icon-resubmit-16 "></span> <span
+					th:text="#{forwardButton}">Reenviar</span>
+			</div>
+			
+			<div sec:authorize="!hasRole('SIMULADOR') and !hasRole('GESTOR') and !hasRole('FIRMA')" class="btn_em p5" th:if="${inbox.requestBarSelected == 'sent' || inbox.requestBarSelected == 'groupSent'}"
+				onclick="sendToRemoveSelectedRequest();">
+				<span class="mf-icon mf-icon-reject-16"></span> <span
+					th:text="#{remove2Button}">Retirar</span>
+			</div>
+			<div sec:authorize="!hasRole('SIMULADOR') and !hasRole('GESTOR') and !hasRole('FIRMA')" class="btn_em p5"
+				th:if="${inbox.requestBarSelected == 'finished' || inbox.requestBarSelected == 'sentFinished'}">
+				<a th:href="|${#httpServletRequest.getContextPath()}/forwardRequest?requestId=${inbox.selectedRequest.requestTagHash}|">
+					<span class="mf-icon mf-icon-resubmit-16" ></span> 
+					<span th:text="#{forwardSignedButton}">Reenviar petición</span> 
+				</a>
+			</div>
+			<div sec:authorize="!hasRole('SIMULADOR') and !hasRole('GESTOR') and !hasRole('FIRMA')" class="btn_em p5"
+				th:if="${inbox.requestBarSelected == 'finished' || inbox.requestBarSelected == 'sentFinished'}" 
+				th:onclick="|sendEmail('${inbox.selectedRequest.requestTagHash}');|">
+				<span class="mf-icon mf-icon-send-24 pl30" ></span> 
+				<span th:text="#{sendByEmail}">Enviar por email</span> 
+				
+			</div>
+
+			<!--/*--> 
+			<div sec:authorize="!hasRole('SIMULADOR') and !hasRole('GESTOR') and !hasRole('FIRMA')" class="btn_em p5"
+				th:if="${(inbox.requestBarSelected == 'finished' || inbox.requestBarSelected == 'sentFinished' ||
+				inbox.requestBarSelected == 'unresolved' || inbox.requestBarSelected == 'sent') and inbox.selectedRequest.cCreated != 'WS' and inbox.selectedRequest.anySign}">  
+				
+				<a href="#" th:onclick="|prepareAnullation('${inbox.selectedRequest.requestTagHash}', true);|">
+				<span class="mf-icon mf-icon-reject-16" ></span>
+				<span th:text="#{anularFirma}">Anular firma</span>	
+				</a>	
+			</div>
+			<!--*/--> 
+
+			<div sec:authorize="!hasRole('SIMULADOR') and !hasRole('GESTOR') and !hasRole('FIRMA')" class="btn_em p5"
+				th:if="${inbox.requestBarSelected == 'cancelled' || inbox.requestBarSelected == 'sentCancelled'}" >
+				<a href="#" th:onclick="|prepareAnullation('${inbox.selectedRequest.requestTagHash}', false);|">
+				<span class="mf-icon mf-icon-sign-16 "></span>
+				<span th:text="#{recuperarFirma}">Recuperar firma anulada</span>	
+				</a>
+			</div>
+			
+		</div>
+
+		<input type="hidden" id="selectedRequestId" name="selectedRequestId"
+			th:value="${inbox.selectedRequest.requestTagHash}" /> <input type="hidden"
+			id="selectedRequestPosition" name="selectedRequestPosition"
+			th:value="${currentRequest}" /> <input type="hidden"
+			id="indexPosition" name="indexPosition"
+			th:value="((${currentPage}-1)*${pageSize})+${currentRequest}" /> <input
+			type="hidden" id="lastPosition" name="lastPosition"
+			th:value="${inboxSize}" />
+		
+		<input type="hidden" id="currentRequestHash" name="currentRequestHash"
+			th:value="${currentRequestHash}" />		
+
+		<div class="fields">
+			<div class="fld">
+				<label th:text="#{oneSender}">Remitente</label>
+				<p id="selected_request_sender"
+					th:text="${inbox.selectedRequest.sender}">Remitente</p>
+			</div>
+			<div class="fld">
+				<label th:text="#{subject}">Asunto</label>
+				<p id="selected_request_subject" class="subject"
+					th:text="${inbox.selectedRequest.subject_sin_html}">Asunto</p>
+			</div>
+			<div th:if="${not #strings.isEmpty(inbox.selectedRequest.reference)}"
+				class="fld">
+				<label th:text="#{reference}"></label>
+				<p id="selected_request_subject"
+					th:text="${inbox.selectedRequest.reference}">Referencia</p>
+			</div>
+			<div class="fld sobreCapaBotonCierre">
+				<div id="requestInfo" class="" style="display: none;">
+					<div class="fld">
+				<label>Estado</label>
+				<div>
+					<span th:if="${inbox.selectedRequest.stateTag.ctag == 'NUEVO'}"
+						class="mf-icon mf-icon-nuevo-16 "></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'NUEVO'}"
+						th:text="${inbox.selectedRequest.stateTag.ctagCapitalized}"></span>
+
+					<span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'LEIDO' and not inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pfm-solicitada-16 "></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'LEIDO' and not inbox.selectedRequest.pass}"
+						th:text="#{pfmRequest}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'LEIDO' and inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pvb-solicitada-16 "></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'LEIDO' and inbox.selectedRequest.pass}"
+						th:Text="#{pvbRequest}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'FIRMADO' and not inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pfmd-16"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'FIRMADO' and not inbox.selectedRequest.pass}"
+						th:text="#{pfmd}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'FIRMADO' and inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pvbd-16"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'FIRMADO' and inbox.selectedRequest.pass}"
+						th:text="#{pvbd}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'EN ESPERA'}"
+						class="mf-icon mf-icon-enespera-16"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'EN ESPERA'}"
+						th:text="#{cAwaiting}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'VISTOBUENO'}"
+						class="mf-icon mf-icon-pvb-solicitada-16"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'VISTOBUENO'}"
+						th:text="#{pvbd}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'DEVUELTO' and not inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pfm-devuelta-16"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'DEVUELTO' and not inbox.selectedRequest.pass}"
+						th:text="#{pfmRejected}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'DEVUELTO' and inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pvb-devuelta-16"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'DEVUELTO' and inbox.selectedRequest.pass}"
+						th:text="pvbRejected"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'CADUCADO' and not inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pfm-caducada-16"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'CADUCADO' and not inbox.selectedRequest.pass}"
+						th:text="#{pfmExpired}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'CADUCADO' and inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pvb-caducada-16"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'CADUCADO' and inbox.selectedRequest.pass}"
+						th:text="#{pvbExpired}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'VALIDADO' and not inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pfm-validada-16 "></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'VALIDADO' and not inbox.selectedRequest.pass}"
+						th:text="#{pfmAwaitingPassed}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'VALIDADO' and inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pvb-validada-16 "></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'VALIDADO' and inbox.selectedRequest.pass}"
+						th:text="#{pvbAwaitingPassed}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'RETIRADO' and not inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pfmd-retirada-16 "></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'RETIRADO' and not inbox.selectedRequest.pass}"
+						th:text="#{pfmRemoved}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'RETIRADO' and inbox.selectedRequest.pass}"
+						class="mf-icon mf-icon-pvbd-retirada-16 "></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'RETIRADO' and inbox.selectedRequest.pass}"
+						th:text="#{pvbRemoved}"></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'ANULADA' and not inbox.selectedRequest.pass}"
+						class="mf-icon-pfm-anulada-16 "></span> <span
+						th:if="${inbox.selectedRequest.stateTag.ctag == 'ANULADA' and not inbox.selectedRequest.pass}"
+						th:text="#{pfmdCancel}"></span>						
+				</div>
+			</div>
+			<div class="fld">
+				<label th:text="#{signType}">Tipo firma</label>
+				<p th:text="${inbox.selectedRequest.signType}">cascada/paralela</p>
+			</div>
+					<div class="fld">
+						<label th:text="#{entryDate}">Entrada</label>
+						<p th:text="${inbox.selectedRequest.startDate}">Entrada</p>
+					</div>
+					<div class="fld">
+						<label th:text="#{modifiedDate2}">Modificado</label>
+						<p th:text="${inbox.selectedRequest.modifiedDate}">Modificado</p>
+					</div>
+					<div class="fld" th:if="${inbox.selectedRequest.expirationDate != null }">
+						<label th:text="#{expiredDate}">Caducada</label>
+						<span th:text="${inbox.selectedRequest.expirationDate}">Fecha de caducidad</span>
+					</div>
+					<div class="fld">
+						<label th:text="#{application}">Aplicación</label>
+						<p th:text="${inbox.selectedRequest.application}">Aplicación</p>
+					</div>
+					<div
+						th:if="${not #strings.isEmpty(inbox.selectedRequest.importanceLevel.ccodigonivel)}"
+						class="fld">
+						<label th:text="#{priority}"></label>
+						<p th:each="importanceLevel : ${importanceLevelList}"
+							th:if="${inbox.selectedRequest.importanceLevel.ccodigonivel == importanceLevel.ccodigonivel}"
+							th:text="${importanceLevel.cdescription}"></p>
+					</div>
+					<!--/*
+					<div class="fld">
+						<label th:text="#{scopeType}"></label>
+						<p th:each="scope : ${scopeList}"
+							th:if="${inbox.selectedRequest.cScope == scope.primaryKey}"
+							th:text="${scope.cdescription}"></p>
+					</div>
+					 */-->
+					<div class="fld">
+						<label th:text="#{confSign}">Configuración de firma</label>
+						<p th:text="${inbox.selectedRequest.signConfig}">Configuración de firma</p>
+					</div>
+					
+					<div class="fld"
+						th:if="${not #lists.isEmpty(inbox.selectedRequest.userTags)}">
+						<label th:text="#{labels}"></label>
+						<div class="capaBotonCierre"
+							th:each="userTag : ${inbox.selectedRequest.userTags}"
+							th:onmouseout="|ocultarEliminarEtiqueta('img_${userTag.id}')|"
+							th:onmouseover="|mostrarEliminarEtiqueta('img_${userTag.id}')|">
+							<span th:class="|userTag ${userTag.colour}|"
+								th:style="|background-color: ${userTag.colour}|"
+								th:text="${userTag.name}">Etiqueta</span>
+							<div th:id="|img_${userTag.id}|" class="botonCierre">
+								<img
+									th:onclick="|deleteLabelRequest('${userTag.id}','${inbox.selectedRequest.primaryKey}')|"
+									src="images/morfos/eliminar_10.png" style="margin-bottom: 4px;" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<a id="toggleRequestInfo">
+					<span id="toggleRequestInfoButton" class="mf-icon mf-icon-windowopen-16"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="msgBoxBody msgBoxBodyTxt" th:utext="${inbox.selectedRequest.text}">Texto de la petición</div>
+	<div id="documentTabs" class="msgBoxBody">
+		<div class="tabs ui-tabs msgBoxBodyTabs">
+			<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix">
+				<li
+					th:if="${not #lists.isEmpty(inbox.selectedRequest.documentList)}"
+					class="ui-state-default ui-tabs-selected ui-state-active"><a
+					href="#tab1" class="tab-icon mf-icon-attach-16 pl30"
+					th:text="#{documents}">Documentos</a></li>
+  
+  		<!-- dentro del <li th:if="${not #lists.isEmpty(inbox.selectedRequest.annexList)}" -->
+				<li					
+					class="ui-state-default"><a href="#tab2"
+					class="tab-icon mf-icon-attach-anexo-16 pl30" th:text="#{attached}" onclick="visualizarAnexo(0)">Anexos</a>					
+				</li>
+				
+				<li
+					class="ui-state-default"><a href="#tab3"
+					class="tab-icon mf-icon-comment-16 pl30" th:text="#{comments}" onclick="loadComments()">Comentarios</a>
+				</li>
+
+				<li
+					th:if="${not #lists.isEmpty(inbox.selectedRequest.historicList)}"
+					class="ui-state-default"><a href="#tab4"
+					class="tab-icon mf-icon-historic-16 pl30" th:text="#{historic}">Histórico</a>
+				</li>
+				
+			</ul>
+
+			<div id="tab1" class="ui-tabs-panel ui-widget-content" style="overflow: auto;">
+				<table class="data noborder">
+					<tbody class="document">
+						<tr th:id="|visualizarDocumento${documentStatus.index}|"
+						    th:each="document,documentStatus : ${inbox.selectedRequest.documentList}"
+						    th:onclick="|verDocumentoRequest('${document.chash}',${documentStatus.index})|">
+							<td th:text="${document.dname}">Nombre</td>
+							<td th:text="${document.pfDocumentType.ddocumentType}">Tipo	de documento</td>
+							<td>
+								<ul class="buttonbar">
+									<!-- Descarga del documento original -->
+									<li><a
+										th:href="|${#httpServletRequest.getContextPath()}/servlet/DescargaDocumentoServlet?idDocument=${document.chash}|"
+										class="dsp_ib p4"> <span
+											class="mf-icon mf-icon-downloadfile-16"
+											th:title="#{downloadDocument}"></span> Documento
+									</a></li>
+
+									<!-- Descarga previa de la firma en caso de que el documento esté firmado -->
+									<li th:if="${document.lissign and @applicationVO.getViewPreSignActivated()}">
+										<a th:href="|${#httpServletRequest.getContextPath()}/servlet/DescargaPrevisorServlet?idDocument=${document.chash}|" class="dsp_ib p4">
+											<span class="mf-icon mf-icon-downloadprevioussign-16" th:title="#{downloadSignedDocument}"></span><span th:text="#{signedDocument}">Visualizaci&oacute;n firma</span>
+										</a>
+									</li>
+
+									<!-- Descarga del documento de tipo factura electrónica -->
+									<li
+										th:if="${document.pfDocumentType.cdocumentType == 'FACTURAE'}">
+										<a th:href="|${#httpServletRequest.getContextPath()}/servlet/DescargaFacturaeServlet?idDocument=${document.chash}|"
+										class="dsp_ib p4"> <span
+											class="mf-icon mf-icon-downloadinvoid-16"
+											th:title="#{downloadFacturae}"></span> Factura
+									</a>
+									</li>
+
+									<!-- Descarga del documento de tipo TCN -->
+									<li th:if="${document.tcn and @applicationVO.getViewTCNActivated()}">
+										<a th:href="|${#httpServletRequest.getContextPath()}/servlet/DescargaTCNServlet?idDocument=${document.chash}|" class="dsp_ib p4">
+											<span class="mf-icon mf-icon-downloadfile-16" th:title="#{downloadTCN}"></span> Documento TCN
+										</a>
+									</li>
+
+									<!-- Descarga de la firma del documento -->
+									<li
+										th:if="${document.signed}">
+										<a
+										th:href="|${#httpServletRequest.getContextPath()}/servlet/DescargaFirmaServlet?idDocument=${document.chash}|"
+										class="dsp_ib p4 "> <span
+											class="mf-icon mf-icon-downloadsign-16"
+											th:title="#{downloadSign}"></span> Firma
+									</a>
+									</li>
+									
+									<!-- Descarga de la firma del documento en formato ENI -->
+									<li
+										th:if="${document.signed and visibleEniButtons}">
+										<a href="javascript:void(0)" th:onclick="|prepareGenerateSignEni('${document.chash}')|"
+										class="dsp_ib p4 "> <span
+											class="mf-icon mf-icon-downloadsign-16"
+											th:title="#{downloadSignEni}"></span> Firma ENI
+									</a>
+									</li>
+
+									<!-- Descarga de informe de firma del documento -->
+									<li
+										th:if="${document.signed and @applicationVO.getCsvActivated() and @applicationVO.getReportActivated()}">
+										<a th:href="|${#httpServletRequest.getContextPath()}/servlet/DescargaInformeServlet?idDocument=${document.chash}|"
+										class="dsp_ib p4"> <span
+											class="mf-icon mf-icon-downloadreport-16"
+											th:title="#{downloadReport}"></span> Informe
+									</a>
+									</li>
+									
+									<!-- Descarga de informe de firma del documento ENI -->
+									<li
+										th:if="${document.signed and @applicationVO.getCsvActivated() and @applicationVO.getReportActivated() and visibleEniButtons}">
+										<a href="javascript:void(0)" th:onclick="|prepareGenerateReportEni('${document.chash}')|"
+										class="dsp_ib p4 "> <span
+											class="mf-icon mf-icon-downloadsign-16"
+											th:title="#{downloadReportEni}"></span> Informe ENI
+									</a>
+									</li>
+
+									<!-- Regenera un informe. Indicado para cuando se creo dañado -->
+									<li
+										th:if="${document.signed and @applicationVO.getCsvActivated() and @applicationVO.getReportActivated()}">
+										<a
+										th:onclick="|prepareRegenerateReport('${document.chash}')|" href='#'
+										class="dsp_ib p4"> <span
+											class="mf-icon mf-icon-clearreport-16"
+											th:title="#{regenerateReport}"></span> Regenerar
+									</a>
+									</li>
+
+									<!-- Descarga de informe normalizado de firma del documento -->
+									<li
+										th:if="${document.signed and @applicationVO.getCsvActivated() and @applicationVO.getReportActivated()}">									   
+										<a th:href="|${#httpServletRequest.getContextPath()}/servlet/DescargaNormalizadoServlet?idDocument=${document.chash}|" class="dsp_ib p4">
+											<span class="mf-icon mf-icon-downloadreport-16" th:text="${normalized}"	th:title="#{downloadNormalizedReport}"></span> Normalizado
+									    </a>
+									</li>
+										
+								</ul>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="data noborder">
+					<tr>
+						<td style="text-align: center;">
+							<span id="previousDocument" class="mf-icon mf-icon-prev-16" th:title="#{previous}" onclick="visualizarAnteriorDocumento()"></span>
+							<span id="infoNavegadorDoc"></span>
+							<span id="nextDocument" class="mf-icon mf-icon-next-16" th:title="#{next}" onclick="visualizarSiguienteDocumento();"></span>
+						</td>
+					</tr>
+						<tr>
+						<td th:id="viewDocument" style="display: none;"></td>
+						</tr>
+					<tr>
+						<td>
+							<span class="error-box" id="viewDocumentError" style="display: none;"></span>
+						</td>
+					</tr>
+				</table>
+				
+			</div>
+			<div id="tab2" class="ui-tabs-panel ui-widget-content ui-tabs-hide" >				
+				<table id="tablaDeAnexosSolicitudSeleccionada" class="data noborder">
+					<tbody>
+						<tr th:id="|visualizarAnexo${annexStatus.index}|"
+						    th:each="annex,annexStatus : ${inbox.selectedRequest.annexList}"
+						    th:onclick="|verAnexoRequest('${annex.chash}',${annexStatus.index})|">
+							<td th:text="${annex.dname}">Nombre</td>
+							<td th:text="${annex.pfDocumentType.ddocumentType}">Tipo de
+								documento</td>
+								
+							<td th:if="${ annex.usuXUsuarioAnexa != null }"
+							th:text="${annex.usuXUsuarioAnexa.fullName}">Usuario que anexa</td>
+							<td th:unless="${ annex.usuXUsuarioAnexa != null }"></td>
+							
+							<td th:if="${ annex.comentarioAnexo != null }"
+							th:text="${annex.comentarioAnexo}">comentario del nuevo anexo</td>
+							<td th:unless="${ annex.comentarioAnexo != null }"></td>
+							
+							<td>
+								<ul class="buttonbar">
+									<!-- Descarga del documento original -->
+									<li>
+										<a th:href="|${#httpServletRequest.getContextPath()}/servlet/DescargaDocumentoServlet?idDocument=${annex.chash}|" class="dsp_ib ">
+											<span class="mf-icon mf-icon-downloadfile-16" th:title="#{downloadDocument}"></span> Documento
+										</a>
+									</li>
+									<!-- Descarga del documento de tipo TCN -->
+									<li th:if="${annex.tcn and @applicationVO.getViewTCNActivated()}">
+										<a th:href="|${#httpServletRequest.getContextPath()}/servlet/DescargaTCNServlet?idDocument=${annex.chash}|" class="dsp_ib p4">
+											<span class="mf-icon mf-icon-downloadfile-16" th:title="#{downloadTCN}"></span> Documento TCN
+										</a>
+									</li>
+									<!-- Descarga del documento de tipo factura electrónica -->
+									<li th:if="${annex.pfDocumentType.cdocumentType=='FACTURAE'}">
+										<a target="_blank"
+										th:href="|${#httpServletRequest.getContextPath()}/servlet/DescargaFacturaeServlet?idDocument=${annex.chash}|"
+										class="dsp_ib"> <span class="mf-icon mf-icon-download-16"
+											th:title="#{downloadFacturae}"></span>
+										</a>
+									</li>
+								</ul>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="data noborder">
+					<tr>
+						<td style="text-align: center;">
+							<span id="previousAnex" class="mf-icon mf-icon-prev-16" th:title="#{previous}" onclick="visualizarAnteriorAnexo()"></span>
+							<span id="infoNavegadorAnex"></span>
+							<span id="nextAnex" class="mf-icon mf-icon-next-16" th:title="#{next}" onclick="visualizarSiguienteAnexo();"></span>
+						</td>
+					</tr>
+						<tr>
+						<td th:id="viewAnex" style="display: none;"></td>
+						</tr>
+					<tr>
+						<td>
+							<span class="error-box" id="viewAnnexError" style="display: none;"></span>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div id="tab3" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+			<div id="tab4" class="ui-tabs-panel ui-widget-content ui-tabs-hide">
+				<table class="data noborder">
+					<tbody>
+						<tr th:each="historic : ${inbox.selectedRequest.historicList}">
+							<td th:text="${historic.thistoricRequestShow}">Histórico</td>
+							<td th:text="${#dates.format(historic.fcreated,'dd/MM/yyyy HH:mm:ss')}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="receivers" style="overflow: auto; height: 300px;">
+	<h5 th:text="#{receivers}">Firmantes</h5>
+	<ul>
+		<li th:each="signLine, status : ${inbox.selectedRequest.signLines}">
+			<h6>
+				<span th:if="${signLine.type == 'FIRMA'}" th:text="|Línea ${status.index+1} de firma|"></span>
+				<span th:if="${signLine.type == 'VISTOBUENO'}" th:text="|Línea ${status.index+1} de visto bueno|"></span>
+				<span th:if="${signLine.terminate}" class="mf-icon-24 mf-icon-checked-current-24"></span>
+			</h6>
+			<ul>
+				<li th:each="signer : ${signLine.signers}">
+					<span th:if="${signer.esValidador and inbox.selectedRequest.lInvited == false or (inbox.selectedRequest.lInvited == true and inbox.selectedRequest.lAccepted == true)}" th:text="|Validado por ${signer.pfUser.fullName}|" class="w140">Firmante</span>
+					<span th:if="${!signer.esValidador and inbox.selectedRequest.lInvited == false or (inbox.selectedRequest.lInvited == true and inbox.selectedRequest.lAccepted == true)}" th:text="${signer.pfUser.fullName}" class="w140">Firmante</span>
+					<span th:if="${!signer.esValidador and inbox.selectedRequest.lInvited == true and inbox.selectedRequest.lAccepted == false}" th:text="${inbox.selectedRequest.invitedUser.cMail}" class="w140">Firmante</span>
+				</li>
+			</ul>
+		</li>
+
+	</ul>
+</div>
+
+<!-- Modal para confirmar -->		    
+<div id="confirmRegenerate" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="confirmRegenerateMessage" class="pregunta"></span> 
+	</div>
+</div>
+
+			<!-- Modal para confirmar la anulación-->		    
+<!-- 			<div id="confirmAnullate">
+			<input type="hidden" id="requestId" name="requestId" th:value="${inbox.selectedRequest.requestTagHash}" /> 
+				<div class="fld">
+					<span class="mf-icon-24 mf-icon-warning-24"></span>
+					<span id="confirmAnullateMsg" class="pregunta"></span> 
+				</div>
+			</div> -->
+
+<!-- Modal para rellenar los metadatos de la firma ENI -->
+<div id="metadataEni" style="overflow: auto; height: 300px; display: none;">
+	<fieldset class="nolegend pt20 va_bottom">
+
+	
+	<form id="metadataEniForm" name="metadataEniForm" th:object="${documentEni}" method="post">
+	
+	<input type="hidden" id="idDocumentEni" name="idDocument"/>
+	
+	<input type="hidden" id="actionSign" th:value="|${#httpServletRequest.getContextPath()}/servlet/DescargaFirmaENIServlet|"/>
+	<input type="hidden" id="actionReport" th:value="|${#httpServletRequest.getContextPath()}/servlet/DescargaInformeENIServlet|"/>
+	
+	
+	<h5 th:text="#{metadataEni}">Metadatos ENI</h5>
+	 <div class="fld">
+         <label for="identificador" class="required" th:text="#{metadato.identificador}"></label> 
+         <input type="text" id="identificador" class="mr0" th:field="*{metadatosEni.identificador}"  maxlength="50"/>
+     </div>
+      
+      <div class="fld">
+           <label for="origen" th:text="#{metadato.origen}"></label>
+           <select id="origen" name="origen" th:field="*{metadatosEni.origenCiudadanoAdministracion}">
+               <option th:each="origen,iterationStatus  : ${origen}"
+                   th:text="${origen.key}" th:value="${origen.value}" />
+           </select>
+       </div>                          
+
+       <div class="fld">
+           <label for="estadoElaboracion"
+               th:text="#{metadato.estadoElaboracion}"></label>
+           <select id="estadoElaboracion" name="estadoElaboracion"
+               th:field="*{metadatosEni.estadoElaboracion.valorEstadoElaboracion}" onchange="checkEstado()">
+               <option th:each="estado,iterationStatus  : ${estadosElaboracion}"
+                   th:text="${estado.key}" th:value="${estado.value}" />
+           </select>
+       </div>       
+       
+      <div class="fld">
+           <label for="fechaCaptura" th:text="#{metadato.fechaCaptura}"></label> 
+   
+           <input type="text" th:field="*{fcaptura}" size="14" title="dd/mm/aaaa" class="fecha datepicker w90 left" name="fcaptura" id="fcaptura"/>
+      </div>    
+       
+        <div class="fld">
+            <label for="tipoDocumental"
+                th:text="#{metadato.tipoDocumental}"></label> 
+            <select id="tipoDocumental" name="tipoDocumental"
+                th:field="*{metadatosEni.tipoDocumental}">
+                <option th:each="tipoDocumental,iterationStatus  : ${tiposDocumentales}"
+                    th:text="${tipoDocumental.key}" th:value="${tipoDocumental.value}" />
+            </select>
+        </div>
+        
+        <div class="fld">
+             <label for="organos" class="required" th:text="#{metadato.organos}"></label> 
+             <div class="input-auxbtn">
+                 <div>
+                     <input type="text" class="sticked-input-right" id="organos" name="organos" maxlength="50" />
+                     <button type="button" name="button" th:text="#{addButton}" onclick="addOrganoDoc($('#organos').val())"></button>
+                 </div>              
+                             
+                 <div id="listOrganos">
+                 	<div th:each="key, iterationStatus : *{metadatosEni.organo}" th:id="${'divOrgano_'+__${iterationStatus.index}__}">
+                      <input type="text" class="sticked-input-right" disabled="disabled"
+                          th:field="*{metadatosEni.organo[__${iterationStatus.index}__]}"/>
+                      <button th:id="${'removeOrganoButton_' + __${iterationStatus.index}__}" class="mf-icon mf-icon-cancel2" type="button" name="button" th:text="#{removeButton}" th:onclick="'removeOrganoDoc(' + ${iterationStatus.index} + ')'"></button>	                                       
+                 	</div>
+                 </div> 
+             </div>
+         </div>
+         
+    <h5 th:text="#{metadatasAditional}">Metadatos Adicionales</h5>   
+    	<div class="fld">
+             <label for="adicionalNombre" th:text="#{metadato.adicional}"></label> 
+             <div>
+             	 <select id="adicionalNombre" name="adicionalNombre">
+             	 	 <option value="">Seleccione una opcion</option>
+               		 <option th:each="metadatoAdicional,iterationStatus  : ${metadatosAdicionales}" th:text="${metadatoAdicional}" th:value="${metadatoAdicional}" />
+           		 </select>
+                 <input type="text" class="sticked-input-right" id="adicionalValor" name="adicionalValor" maxlength="50" />
+                 <button type="button" name="button" th:text="#{addButton}" onclick="addAdicional($('#adicionalNombre').val(), $('#adicionalValor').val())"></button>
+             </div>              
+                         
+             <div id="listAdicionales">                 
+             </div> 
+         </div>
+    
+   </form>
+   </fieldset>
+   <div id="errorMsgEni" class="errorMessage"></div>
+</div>
+
+
+
+<!-- Modal para seleccionar los tipos de documentos a enviar y los destinatarios -->
+<div id="sendEmailDialog" style="overflow: auto; height: 300px; display: none;" title="Envío de documentos por email">
+	<form id="sendEmailForm" name="sendEmailForm" th:object="${email}" method="POST">
+		<input type="hidden" id="requestId" name="requestId" th:value="${inbox.selectedRequest.requestTagHash}" />  
+	
+		<fieldset class="nolegend pt20 va_bottom">
+			<div class="mailHeader">
+				<div class="fsb mailHeaderSubject">
+					<div class="fld wv100">
+						<table id="targetlines">
+						<tr>
+						<td><label for="example_input1" th:text="#{for}">Para</label></td>
+						<td>
+							<input id="target_0" name="target_0" class="target_input" type="email" value="" role="textbox" />
+						</td>
+						</tr>
+						</table>
+					</div>
+
+					<div class="fld ">
+						<label></label>
+						<a href="#" onclick="addTargetLine();" id="more-target-line" class="btn_em p1 mt5 mb5">
+							<span class="mf-icon mf-icon-add-16"></span>
+						</a>
+					</div>
+					
+					<div class="fld">
+						<label th:text="#{documentsToSend}">Documentos a enviar</label>
+						<ul class="checkbox_list">
+							<li>
+								<input id="chkboxFirma" type="checkbox" name="chkboxFirma" th:checked="false" />&nbsp;
+								<label for="chkboxFirma" th:text="#{sign}">Firma</label>
+							</li>
+							<li>
+								<input id="chkboxInforme" type="checkbox" name="chkboxInforme" th:checked="false" />&nbsp;
+								<label for="chkboxInforme" th:text="#{report}">Informe</label>
+							</li>
+							<li>
+								<input id="chkboxNormalizado" type="checkbox" name="chkboxNormalizado" th:checked="false" />&nbsp;
+								<label for="chkboxNormalizado" th:text="#{normalized}">Informe Normalizado</label>
+							</li>
+						</ul>
+						 
+					</div>
+					
+					<div id="ajaxBusy">
+					  <p>
+					    <img src="images/morfos/loading.gif"/>
+					  </p>
+					</div>
+					<div id="errorMsgSendEmail" class="errorMessage"></div>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+
+</div>
+
+<!-- PopUps -->
+<div id="addAttachFilesModal" class="ui-dialog-content ui-widget-content popupPortafirmas" style="display: none;" title="Nuevos Anexos" th:include="popups/addAttachFilesModal"></div>
+
+
+</html>

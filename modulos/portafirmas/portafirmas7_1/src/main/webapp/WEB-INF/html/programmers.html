@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<div class="fld">
+	<input type="search" id="searchTaskTextField" placeholder="Buscar..." class="mr0 w120 ui-autocomplete-input" 
+	name="" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true" th:value="|${taskFilter}|" onkeyup="search(event);"/>
+</div>
+<div class="fld" style="overflow: auto; height: 300px; width: 100%;" th:fragment="programmers">
+<!-- fieldset class="pt20"-->
+	<!-- legend class="nolegend"></legend-->
+	<table class="data noborder tl">
+		<thead>
+			<tr>
+				<th th:text="#{name}">Nombre</th>
+				<th th:text="#{group}">Grupo</th>
+				<th th:text="#{state}">Estado</th>
+				<!-- th th:text="#{errors}">Errores</th-->
+				<th th:text="#{date}">Fecha</th>				
+				<!-- th class="tc">Autorización</th>
+				<th class="tc">Activo</th>
+				<th class="tc">Público</th-->												
+				<th class="w40"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="task : ${taskList}" th:id="|task_${task.name}|">
+				<td th:id="|task_name_${task.name}|" th:text="${task.name}"></td>
+				<td th:id="|task_group_${task.name}|" th:text="${task.group}"></td>
+				<td th:id="|task_state_${task.name}|" th:text="${task.state}"></td>
+				<td th:id="|task_date_${task.name}|" th:text="${task.date}"></td>			
+				<td>
+					<a th:if="${task.state == 'Parado'}" href="javascript:void(0)" th:id="|buttonStart_${task.name}|">
+						<span th:alt-title="#{startTask}" class=" mf-icon mf-icon-resubmit-16" th:onclick="|startTask('${task.name}','${task.group}')|">Arrancar</span>
+					</a>
+					<a th:unless="${task.state == 'Parado'}" href="javascript:void(0)" th:id="|buttonStop_${task.name}|">
+						<span th:alt-title="#{stopTask}" class=" mf-icon mf-icon-reject-16" th:onclick="|stopTask('${task.name}','${task.group}')|">Parar</span>
+					</a>
+					<!-- a href="javascript:void(0)" th:onclick="|startTask('${task.name}','${task.group}')|"><span class="mf-icon mf-icon-edit-16">Arrancar</span></a-->
+					<!-- a href="javascript:void(0)" th:onclick="|stopTask('${task.name}','${task.group}')|"><span class="mf-icon mf-icon-edit-16">Parar</span></a-->					
+					<a href="javascript:void(0)" th:id="|buttonDelete_${task.name}|" th:onclick="|prepareDeleteTask('${task.name}','${task.group}')|">
+						<span th:alt-title="#{removeButton}" class="mf-icon mf-icon-delete-16">Eliminar</span>
+					</a>
+				</td>
+			</tr>			
+			<tr></tr>
+			<tr></tr>
+			<tr></tr>	
+		</tbody>
+	</table>
+<!-- /fieldset-->
+</div>
+<div id="questionTask" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageTask" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonTask" name="yesButtonTask" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonTask" name="noButtonTask" class=" simbuttom secondary" onclick="$('#questionTask').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>									
+</html>	    

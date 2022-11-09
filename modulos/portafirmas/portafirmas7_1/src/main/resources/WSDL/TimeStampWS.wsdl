@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:dss="urn:oasis:names:tc:dss:1.0:core:schema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tsa="http://www.map.es/TSA/V1/TSA.wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.map.es/TSA/V1/TSA.wsdl">
+	<types>
+		<xs:schema targetNamespace="http://www.map.es/TSA/V1/TSA.wsdl">
+			<xs:import namespace="urn:oasis:names:tc:dss:1.0:core:schema" schemaLocation="oasis-dss-core-schema-v1.0-os.xsd"/>
+		</xs:schema>
+	</types>
+	
+	
+<!--  Mensajes operación createTimeStamp -->
+
+	<message name="TimeStampRequest">
+		<part element="dss:SignRequest" name="TimeStampRequest"/>
+	</message>
+
+	<message name="TimeStampResponse">
+		<part element="dss:SignResponse" name="TimeStampResponse"/>
+	</message>
+
+
+<!--  Mensajes operación verifyTimeStamp -->
+
+	<message name="VerifyTimeStampRequest">
+		<part element="dss:VerifyRequest" name="VerifyTimeStampRequest"/>
+	</message>
+
+	<message name="VerifyTimeStampResponse">
+		<part element="dss:VerifyResponse" name="VerifyTimeStampResponse"/>
+	</message>
+	
+<!--  Mensajes operación renewTimeStamp -->	
+
+	<message name="RenewTimeStampRequest">
+		<part element="dss:SignRequest" name="RenewTimeStampRequest"/>
+	</message>
+
+	<message name="RenewTimeStampResponse">
+		<part element="dss:SignResponse" name="RenewTimeStampResponse"/>
+	</message>
+	
+	
+	
+	<!-- PortTypes -->
+	
+	<portType name="CreateTimeStampPort">
+		<operation name="createTimeStamp">
+			<input message="tsa:TimeStampRequest"/>
+			<output message="tsa:TimeStampResponse"/>
+		</operation>
+	</portType>
+
+	<portType name="VerifyTimeStampPort">
+		<operation name="verifyTimeStamp">
+			<input message="tsa:VerifyTimeStampRequest"/>
+			<output message="tsa:VerifyTimeStampResponse"/>
+		</operation>
+	</portType>
+
+	<portType name="RenewTimeStampPort">
+		<operation name="renewTimeStamp">
+			<input message="tsa:RenewTimeStampRequest"/>
+			<output message="tsa:RenewTimeStampRequest"/>
+		</operation>		
+	</portType>
+
+	<!--  Bindings -->
+	<binding name="CreateTimeStampBinding" type="tsa:CreateTimeStampPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="createTimeStamp">
+			<soap:operation style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	
+	
+	<binding name="VerifyTimeStampBinding" type="tsa:VerifyTimeStampPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+		<operation name="verifyTimeStamp">
+			<soap:operation style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	
+	
+	<binding name="RenewTimeStampBinding" type="tsa:RenewTimeStampPort">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="renewTimeStamp">
+			<soap:operation style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+
+
+<!--  Definición del servicio -->
+
+	<service name="CreateTimeStampWS">
+		<port binding="tsa:CreateTimeStampBinding" name="CreateTimeStampWSPort">
+			<soap:address location="http://10.252.144.129/tsamap/CreateTimeStampWS"/>
+		</port>
+	</service>
+	
+	<service name="VerifyTimeStampWS">
+		<port binding="tsa:VerifyTimeStampBinding" name="VerifyTimeStampWSPort">
+			<soap:address location="http://10.252.144.129/tsamap/VerifyTimeStampWS"/>
+		</port>
+	</service>
+	
+
+	<service name="RenewTimeStampWS">
+		<port binding="tsa:RenewTimeStampBinding" name="RenewTimeStampWSPort">
+			<soap:address location="http://10.252.144.129/tsamap/RenewTimeStampWS"/>
+		</port>
+	</service>	
+	
+	
+</definitions>

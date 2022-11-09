@@ -1,0 +1,123 @@
+/***************/
+/* Breadcrumbs */
+
+ol.breadC {
+    list-style: none;
+    margin-left: 0;
+    overflow: hidden;
+    }
+    
+ol.breadC > li {
+    float: left;
+    display: block;
+    color: #8C8A8C;
+    margin: 0 0.35em 5px 0;
+    }
+    
+ol.breadC li a:link, 
+ol.breadC li a:visited {
+    color: #8C8A8C;
+    }
+
+ol.breadC li span.ui-icon {
+    float: right;
+    background-image: url("images/ui-icons_888888_256x240.png");
+    }
+    
+.ie7 ol.breadC li span.ui-icon {
+    float: none;
+    display: inline-block;
+    }
+    
+ol.breadC > li > ul {
+    visibility: hidden;
+    height: 0;
+    opacity: 0;
+    float: left;
+    position: absolute;
+    clear: both;
+    min-width: 180px;
+    max-width: 20%;
+    padding: 4px 5px 4px 5px;
+    margin: 0;
+    z-index: 100;
+    
+    background: #FFF;
+
+    list-style-image: none;
+    
+    -webkit-box-shadow: 0 2px 2px rgba(0,0,0,0.4);
+    -moz-box-shadow:    0 2px 2px rgba(0,0,0,0.4);
+    box-shadow:         0 2px 2px rgba(0,0,0,0.4);
+    }
+    
+.ie7 ol.breadC > li > ul, 
+.ie8 ol.breadC > li > ul {
+    border-top: 1px solid #CCC;
+    border-right: 1px solid #999;
+    border-bottom: 1px solid #999;
+    border-left: 1px solid #CCC;
+    }
+    
+.ie7 ol.breadC > li > ul {
+    float: none;
+    clear: both;
+    height: auto;
+    }
+
+ol.breadC > li:hover ul {
+    visibility: visible;
+    opacity: 1;
+    height: auto;
+    
+    -webkit-transition: opacity 0.25s linear;
+    -moz-transition:    opacity 0.25s linear;
+    -ms-transition:     opacity 0.25s linear;
+    -o-transition:      opacity 0.25s linear;
+    transition:         opacity 0.25s linear;
+    
+    }
+    
+.ie7 ol.breadC > li:hover ul {
+    margin-top: 0;
+    width: 240px;
+    padding: 0;
+    margin-left: 0;
+    }
+    
+.ie7 ol.breadC > li:hover ul {
+    white-space: nowrap;
+    }
+    
+ol.breadC > li > ul > li {
+    margin-bottom: 3px;
+    font-size: 1.083em;
+    }
+    
+ol.breadC > li > ul > li a {
+    display: block;
+    padding: 3px 5px;
+    }
+    
+ol.breadC > li > ul > li:hover {
+    color: #333;
+    background-color: #DDD;
+    }
+    
+ol.breadC > li.home {
+    /* width: 24px; */
+    }
+    
+ol.breadC > li.home > a {
+    width: 16px;
+    height: 16px;
+    float: left;
+    text-indent: -99999em;
+    
+    border: 1px solid red;
+    }
+    
+ol.breadC > li.highlight > span {
+    overflow: hidden;
+    background-color: #CCC;
+    }

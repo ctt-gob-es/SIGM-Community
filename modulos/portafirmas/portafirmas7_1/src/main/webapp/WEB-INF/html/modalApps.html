@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	
+<form id="modalAppForm">
+	<fieldset class="nolegend pt20">
+		<div class="dsp_b error errorMessage" id="applicatonErrorMessage"></div>
+	
+		<div id="applicationTabs" class="ui-tabs ui-widget ui-widget-content ">
+		
+			<div class="tabs ui-tabs msgBoxBodyTabs">
+			
+				<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ">
+					<li id="generalData" class="ui-state-default ui-tabs-selected ui-state-active"><a href="#tab1" class="tab-icon pl30" th:text="#{appGeneral}"></a></li>
+					<li class="ui-state-default"><a href="#tab2" class="tab-icon pl30" th:text="#{params.Informes}"></a></li>
+					<li class="ui-state-default"><a href="#tab3" class="tab-icon pl30" th:text="#{metadataEni}" onclick="prepareModifyMetadata($('#primaryKey').val())"></a></li>
+				</ul>
+			
+				<div id="tab1" class="ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
+					<div class="fsb wv55">
+						<div class="fld stkd">
+							<input type="hidden" name="primaryKey" id="primaryKey"/>
+							<label th:title="#{appCode}" th:text="#{appCode}"></label> 
+							<input type="text" class="w220" id="appCode" name="appCode" th:value="${app.appCode}" autocomplete="off" />
+						</div>
+						<div class="fld stkd">
+							<label th:text="#{appName}">Descripción</label>
+							<textarea cols="8" rows="4" class="" name="appName" id="appName" th:text="${app.appName}" ></textarea>
+						</div>
+						<div class="fld stkd">
+							<label th:text="#{appConfiguration}">Configuracion del servidor</label> 
+							<select	id="pfConfiguration" name="pfConfiguration">
+								<option value="0">Seleccione una opcion</option>
+								<option th:each="conf:${conf}" th:text="${conf.cconfiguration}" th:value="${conf.primaryKey}" th:selected="${conf.cconfiguration == app.pfConfiguration}" ></option>
+							</select>
+						</div>
+						<div class="fld stkd">
+							<label th:text="#{appParent}">Aplicación padre</label> 
+							<select id="appParent" name="appParent">
+							<option value="0">Seleccione una opcion</option>
+								<option th:each="appsList:${appsList}" th:text="${appsList.capplication}" th:value="${appsList.primaryKey}" th:selected="${appsList.capplication == app.appParent}" ></option>
+							</select>
+						</div>
+					</div>
+					<div class="fsb wv40 whiteBox">
+						<h5>Parámetros</h5>
+						<div class="fld stkd">
+							<label>Respuesta.WS.Usuario</label> <input type="text" class="w220"	id="wsUser" name="wsUser" th:value="${app.wsUser}" />
+						</div>
+						<div class="fld stkd">
+							<label>Respuesta.WS.WSDLLocation</label> 
+							<input type="text" class="w220" id="wsLocation" name="wsLocation" th:value="${app.wsLocation}" />
+						</div>
+						<div class="fld stkd">
+							<label>Respuesta.WS.Password</label> <input type="text" class="w220" id="wsPassword" name="wsPassword" th:value="${app.wsPassword}" />
+						</div>
+						<div class="fld stkd">
+							<label>Respuesta.WS.Activa</label>
+							<ul class="radio_list">
+								<li class="left"><input type="radio" th:checked="${app.wsActiva == 'S'}" value="S" name="wsActiva" id="wsActiva"  />
+									<label for="radio_1">Si</label></li>
+								<li class="left"><input type="radio" th:checked="${app.wsActiva == 'N'}" value="N" name="wsActiva" id="wsActiva" />
+									<label for="radio_2"> No</label></li>
+							</ul>
+						</div>
+						<div class="fld stkd">
+							<label>Respuesta.WS.Notif.Intermedios</label>
+							<ul class="radio_list">
+								<li class="left"><input type="radio" th:checked="${app.wsNotifIntermedios == 'S'}"
+									value="S" name="wsNotifIntermedios" id="wsNotifIntermedios" /><label for="radio_3">Si</label></li>
+								<li class="left"><input type="radio" th:checked="${app.wsNotifIntermedios == 'N'}" value="N"
+								name="wsNotifIntermedios" id="wsNotifIntermedios" /><label for="radio_4"> No</label></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			
+				
+				<!-- Parámetros config Informes -->
+				<div id="tab2" class="ui-tabs-panel ui-widget-content ui-tabs-hide">
+					<div class="fsb wv90 whiteBox catalogueDinOverflow">
+						<div class="fld stkd" th:each="param,status : ${parametersInforme}" >
+							<label th:text="${param.description}"></label>
+							<input type="hidden" th:name="|paramInfomes[${status.index}].id|" th:value="${param.id}"/>
+							<input type="hidden" th:name="|paramInfomes[${status.index}].name|" th:value="${param.name}"/>
+							<input type="text" class="w220" th:name="|paramInfomes[${status.index}].value|" th:value="${param.value}"/>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Metadatos ENI -->
+				<div id="tab3" class="ui-tabs-panel ui-widget-content ui-tabs-hide">
+					<div class="fsb wv80 whiteBox catalogueDinOverflow">
+						<h5><label th:text="#{metadataEni}">Metadatos ENI</label></h5>
+					
+						 <div class="fld">
+					         <label for="identificador" class="required" th:text="#{metadato.identificador}"></label> 
+					         <input type="text" id="identificador" class="mr0" th:field="${app.documentEni.metadatosEni.identificador}"  maxlength="50"/>
+					     </div>
+						<div class="fld">
+				           <label for="origen" th:text="#{metadato.origen}"></label>
+				           <select id="origen" name="origen" th:field="${app.documentEni.metadatosEni.origenCiudadanoAdministracion}">
+				               <option th:each="origen,iterationStatus  : ${origen}"
+				                   th:text="${origen.key}" th:value="${origen.value}" />
+				           </select>
+				       </div>                          
+				
+				       <div class="fld">
+				           <label for="estadoElaboracion"
+				               th:text="#{metadato.estadoElaboracion}"></label>
+				           <select id="estadoElaboracion" name="estadoElaboracion"
+				               th:field="${app.documentEni.metadatosEni.estadoElaboracion.valorEstadoElaboracion}">
+				               <option th:each="estado,iterationStatus  : ${estadosElaboracion}"
+				                   th:text="${estado.key}" th:value="${estado.value}" />
+				           </select>
+				       </div>       
+				       
+				        <div class="fld">
+				            <label for="tipoDocumental"
+				                th:text="#{metadato.tipoDocumental}"></label> 
+				            <select id="tipoDocumental" name="tipoDocumental"
+				                th:field="${app.documentEni.metadatosEni.tipoDocumental}">
+				                <option th:each="tipoDocumental,iterationStatus  : ${tiposDocumentales}"
+				                    th:text="${tipoDocumental.key}" th:value="${tipoDocumental.value}" />
+				            </select>
+				        </div>
+				        
+				        <div class="fld">
+				             <label for="organos" class="required" th:text="#{metadato.organos}"></label> 
+				             <div class="input-auxbtn">
+				                 <div>
+				                     <input type="text" class="sticked-input-right" id="organos" name="organos" maxlength="50" />
+				                     <button type="button" name="button" th:text="#{addButton}" onclick="addOrganoDoc($('#organos').val())"></button>
+				                 </div>              
+				                             
+				                 <div id="listOrganos">
+				                 	<!-- div th:each="key, iterationStatus : ${app.documentEni.metadatosEni.organo}" th:id="${'divOrgano_'+__${iterationStatus.index}__}">
+				                      <input type="text" class="sticked-input-right" disabled="disabled"
+				                          th:field="${app.documentEni.metadatosEni.organo[__${iterationStatus.index}__]}"/>
+				                      <button th:id="${'removeOrganoButton_' + __${iterationStatus.index}__}" class="mf-icon mf-icon-cancel2" type="button" name="button" th:text="#{removeButton}" th:onclick="'removeOrganoDoc(' + ${iterationStatus.index} + ')'"></button>	                                       
+				                 	</div-->
+				                 </div> 
+				             </div>
+				         </div>
+				         
+				        <h5 th:text="#{metadatasAditional}">Metadatos Adicionales</h5>   
+				    	<div class="fld">
+				             <label for="adicionalNombre" th:text="#{metadato.adicional}"></label> 
+				             <div>
+				                 <input type="text" class="sticked-input-right" id="adicionalNombre" name="adicionalNombre" maxlength="50" />
+				                 <input type="text" class="sticked-input-right" id="adicionalValor" name="adicionalValor" maxlength="50" />
+				                 <button type="button" name="button" th:text="#{addButton}" onclick="addAdicional($('#adicionalNombre').val(), $('#adicionalValor').val(), false)"></button>
+				             </div>              
+				                      
+				             <div id="listAdicionales">                 
+				             </div> 
+				         </div>
+						
+					</div>
+					
+					 <script th:inline="javascript">
+                    /*<![CDATA[*/
+                       
+                        var organosAdded = 0;
+                        var adicionalesAdded = 0;
+                        
+                    /*]]>*/
+                </script>
+					
+				</div>
+			</div>
+		</div>		
+	</fieldset>
+	</form>
+</html>

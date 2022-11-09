@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<div th:fragment="restrictionModal">
+		<div class="fld">
+			<form id="validators_modal">		
+			<!-- MODAL SELECTOR DE VALIDADORES-->
+				<fieldset class="nolegend pt20">
+					<div class="fld stkd">
+						<label for="new_restriction" th:text="#{newUserToRestrict}"></label>
+						<input type="text" id="new_restriction" class="w320" style="margin: 0px;" th:placeholder="#{searchByIdNameJob}"/>
+						
+						<span id="restrictionLoading" class="mf-icon mf-icon-firmando-16" title="En proceso" style="display:none;"></span>
+						<input type="hidden" id="new_restriction_pk"/>
+					</div>
+					<div class="fld stkd">
+						<label for="new_valid_user" th:text="#{newUserValid}"></label>
+						<input type="text" id="new_valid_user" class="w320" style="margin: 0px;" th:placeholder="#{searchByIdNameJob}"/>
+						<span id="restrictionUserValidLoading" class="mf-icon mf-icon-firmando-16" title="En proceso" style="display:none;"></span>
+						<input type="hidden" id="new_valid_user_pk"/>
+					</div>
+					<div class="dsp_b error errorMessage" id="validatorErrorMessage"></div>
+				</fieldset>
+			</form>		
+		</div>
+		<div id="errorMsgRestriction" class="errorMessage"></div>
+	</div>									
+</html>	    

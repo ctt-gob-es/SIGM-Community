@@ -1,0 +1,152 @@
+@charset "UTF-8";
+
+/*
+ * MORFOS FRAMEWORK CSS
+ * Copyright (C) 2012 Ministerio Hacienda y Administración Pública (MINHAP).
+ * Realizado por la División de Sistemas de Información de la
+ * Secretaría de Estado de Administraciones Públicas del
+ * Ministerio de Hacienda y Administraciones Públicas.
+ * 
+ * Este fichero se distribuye bajo licencia EUPL versión 1.1 según las condiciones que figuran 
+ * en el fichero 'Licencia.pdf' que se acompaña. Si se distribuyera este fichero individualmente, 
+ * deben incluirse aquí las condiciones expresadas allí.
+ *
+ */
+
+/**********************************************
+    LAYOUT  
+***********************************************/
+
+html {
+    height: 100%;
+    width: 100%;
+}
+    
+body {
+    height: 100%;
+    width: 100%;
+    min-width: 960px;
+}
+    
+.ie7 body, 
+.ie8 body {
+    height: 100%;
+}
+
+div#container {
+    width: 100%;
+    min-height: 100%;
+    
+    background: #F4F4F4;
+    background: -moz-linear-gradient(top, #F4F4F4 0%, #EBEBEB 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F4F4F4), color-stop(100%,#EBEBEB));
+    background: -webkit-linear-gradient(top, #F4F4F4 0%,#EBEBEB 100%);
+    background: -o-linear-gradient(top, #F4F4F4 0%,#EBEBEB 100%);
+    background: -ms-linear-gradient(top, #F4F4F4 0%,#EBEBEB 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F4F4F4', endColorstr='#EBEBEB',GradientType=0 );
+    background: linear-gradient(top, #F4F4F4 0%,#EBEBEB 100%);
+}
+    
+.ie7 div#container, 
+.ie8 div#container {
+    background: url("images/degradado.png") repeat-x scroll 0 0 #EAEAEA;
+}   
+
+div#wrap {
+    margin: auto;
+    padding-bottom: 15px;
+    margin-bottom: 65px;
+}
+    
+.ie7 div#wrap {
+    margin-bottom: 225px;
+}
+    
+/* DEV & PRE */
+
+body.dev div#container:before,
+body.pre div#container:before {
+    content: '';
+    position: fixed;
+    top: 120px;
+    width: 50px;
+    height: 163px;
+
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-image: url('images/devzone.png');
+}
+    
+body.pre div#container:before {
+    background-image: url('images/testzone.png');
+}
+    
+/*CONTENIDO*/
+
+#mainWindow {
+    margin: 40px auto 10%;
+    overflow: hidden;
+}
+
+.ie7 #mainWindow {
+    margin-top: 10px;
+}
+    
+/* content: header, body, footer, #footer */
+
+.windowHeader {
+    margin: 20px;
+    overflow: hidden;
+}
+
+.windowHeader h1, 
+.windowHeader h2, 
+.windowHeader h3, 
+.windowHeader h4, 
+.windowHeader h5, 
+.windowHeader h6 {
+    float: left;
+    clear: left;
+}
+
+.ie7 .windowHeader h1, 
+.ie7 .windowHeader h2, 
+.ie7 .windowHeader h3, 
+.ie7 .windowHeader h4, 
+.ie7 .windowHeader h5, 
+.ie7 .windowHeader h6 {
+    float: none;
+    clear: both;
+}
+    
+.windowHeader h3 {
+    font-size: 2em;
+    font-style: normal;
+    padding: 0.6em 0 0 0;
+}
+    
+.windowHeader h4 {
+    font-size: 1.167em;
+    font-weight: normal;
+}
+    
+.windowHeader > div {
+    float: left;
+    margin: 10px 0;
+}
+    
+#contentData {
+    clear: both;
+}
+    
+#contentDataHeader {
+    padding: 10px;
+}
+
+//
+// @firma
+//
+
+applet {
+    position: absolute;
+}

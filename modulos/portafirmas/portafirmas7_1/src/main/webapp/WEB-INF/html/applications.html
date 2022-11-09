@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<button class="secondary mb10 right" onclick="prepareNewApplication();">
+	<span class="mf-icon mf-icon-add-16"></span>
+	<span th:text="#{newButtonF}">Nueva aplicación</span>
+</button>
+<div class="fld stkd" style="overflow: auto; height: 300px; width: 100%;">
+	<table class="data noborder tl">
+		<thead>
+			<tr>
+				<th class="w100">Codigo</th>
+				<th>Nombre</th>											
+				<th class="w200">Configuracion servidor</th>
+				<th class="w40"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="app : ${appsList}" th:id="|app_${app.primaryKey}|">
+				<td th:id="|code_${app.primaryKey}|" th:text="${app.capplication}"></td>
+				<td th:id="|name_${app.primaryKey}|" th:text="${app.dapplication}"></td>
+				<td th:id="|configuration_${app.primaryKey}|" th:text="${app.pfConfiguration.cconfiguration}"></td>													
+				<td>
+					<a href="javascript:void(0)" th:onclick="|prepareModifyApplication('${app.primaryKey}')|"><span class="mf-icon mf-icon-edit-16">Editar</span></a>
+					<a href="javascript:void(0)" th:if="${app.capplication ne 'PFIRMA'}" th:onclick="|prepareDeleteApplication('${app.primaryKey}')|"><span class="mf-icon mf-icon-delete-16">Eliminar</span></a>
+				</td> 
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="questionApp" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageApp" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonApp" name="yesButtonApp" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonApp" name="noButtonApp" class=" simbuttom secondary" onclick="$('#questionApp').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>
+<!-- FIN CONTENIDO--> 
+<div id="modalApps" title="Nueva Aplicacion" th:include="modalApps"></div>     
+
+
+</html>

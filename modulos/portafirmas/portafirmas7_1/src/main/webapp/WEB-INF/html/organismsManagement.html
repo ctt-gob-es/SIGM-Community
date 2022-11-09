@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body onload="reloadSedesAdministradorOrganismo()">
+		<div layout:fragment="content">
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery-picklist/jquery-picklist.js?#{versionNumber}.#{versionFase}|"></script>
+	    	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery.maskedinput.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/jsadministration.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/seats.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/applications.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/servers.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/serverConfig.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/parameterConfig.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/storage.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/programmers.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/fineuploader.jquery/fine-uploader.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/updateRequest.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/adminSign.js?#{versionNumber}.#{versionFase}|"></script>	
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/message.js?#{versionNumber}.#{versionFase}|"></script>  
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/adminOrganism.js?#{versionNumber}.#{versionFase}|"></script>
+			
+	        <!-- INICIO DEL CONTENIDO-->
+			<div id="mainWindow">
+				<div class="windowHeader">
+					<div>
+						<h3 class="windowTitle" th:text="#{'Admin.organismo'}">Administración</h3>
+					</div>
+				</div>
+				
+				<div id="contentData">
+					<div id="contentDataBody" class="p10">	
+						<div id="contenidoDeSedes">
+						
+						</div>
+						<div id="contentDataFooter">
+						
+						</div>
+					</div>
+				</div>
+			</div>		    
+		</div>
+	</body>
+</html>

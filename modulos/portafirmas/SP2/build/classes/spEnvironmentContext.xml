@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--
+    Se puede configurar la ruta base mediante variables de entorno o mediante el parámetro -D por lineas de comando
+    del siguiente modo: Ejemplo con SP_CONFIG_REPOSITORY -->
+         
+    <bean id="spConfigRepository" class="java.lang.String">
+        <constructor-arg value="#{ systemProperties['CLAVE_SP2_CONFIG_REPOSITORY'] ?: systemEnvironment['CLAVE_SP2_CONFIG_REPOSITORY'] }" />
+    </bean>
+</beans>

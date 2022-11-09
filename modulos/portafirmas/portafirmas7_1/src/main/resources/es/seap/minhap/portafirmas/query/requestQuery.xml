@@ -1,0 +1,2714 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm/orm_1_0.xsd">
+	<named-query name="request.userAll">
+		<query><![CDATA[from PfUsersDTO user 
+						join fetch user.pfProvince prov 
+						where user.ctype = 'USUARIO'
+						and user.lvalid = 'S']]></query>
+	</named-query>
+	<named-query name="request.usersDni">
+		<query><![CDATA[from PfUsersDTO where upper(cidentifier) in (upper(:dni)) and ctype = 'USUARIO']]></query>
+	</named-query>
+	<named-query name="request.usersAndJobDni">
+		<query><![CDATA[from PfUsersDTO where upper(cidentifier) in (upper(:dni))]]></query>
+	</named-query>
+	
+ 	<named-query name="invitedRequest.byMail">
+		<query><![CDATA[select invReq 
+						from PfRequestsDTO invreq, PfInvitedUsersDTO invUs 
+						where invReq.linvited='S' 
+						AND invReq.invitedUser.primaryKey = invUs.primaryKey 
+						AND invUs.cMail = :cMail]]>
+		</query>
+	</named-query>
+	
+	<named-query name="request.usersAndJobWithProvincePk">
+		<query><![CDATA[select user 
+						from PfUsersDTO user
+						left join fetch user.pfProvince province						 
+						where user.primaryKey = :pk]]></query>
+	</named-query>
+	
+	<named-query name="request.userProfilesDni">
+		<query><![CDATA[from PfUsersDTO user
+							 left join fetch user.pfUsersProfiles uPro
+							 left join fetch user.pfProvince prov
+							 left join fetch user.validadores val
+							 left join fetch val.pfProvince provVal
+							 left join fetch user.validadorDe valDe
+							 left join fetch uPro.pfProfile pro
+							 left join fetch user.pfTagsUsers userTag
+							 left join fetch userTag.pfTag tag
+							 left join fetch user.pfUsersParameters userPar
+							 left join fetch userPar.pfParameter par
+							 left join fetch user.pfUsersJobs userJob
+							 left join fetch userJob.pfUserJob job
+							 left join fetch user.pfUsersProfiles userProf
+							 left join fetch userProf.pfProfile
+							 left join fetch user.pfUsersGroups userGroup
+							 left join fetch userGroup.pfGroup grp
+							 left join fetch user.gestores ges
+							 left join fetch user.gestorDe gesDe
+						where user.cidentifier = :dni
+							  and user.ctype = :tipo]]></query>
+	</named-query>
+
+	<named-query name="request.userProfilesPk">
+		<query><![CDATA[from PfUsersDTO user
+							 left join fetch user.pfUsersProfiles uPro
+							 left join fetch user.pfProvince prov
+							 left join fetch user.pfValidatorApplicationsUser valUs
+							 left join fetch user.validadores val
+							 left join fetch val.pfProvince provVal
+							 left join fetch user.validadorDe valDe
+							 left join fetch uPro.pfProfile pro
+							 left join fetch user.pfTagsUsers userTag
+							 left join fetch userTag.pfTag tag
+							 left join fetch user.pfUsersParameters userPar
+							 left join fetch userPar.pfParameter par
+							 left join fetch user.pfUsersJobs userJob
+							 left join fetch userJob.pfUserJob job
+							 left join fetch user.pfUsersProfiles userProf
+							 left join fetch userProf.pfProfile
+							 left join fetch user.pfUsersGroups userGroup
+							 left join fetch userGroup.pfGroup grp
+							 left join fetch user.gestores ges
+							 left join fetch user.gestorDe gesDe
+						where user.primaryKey = :pk
+							  and user.ctype = :tipo]]></query>
+	</named-query>
+
+	<named-query name="request.userProfilesDniPass">
+		<query><![CDATA[from PfUsersDTO user
+							 left join fetch user.pfUsersProfiles uPro
+							 left join fetch user.pfProvince prov
+							 left join fetch user.validadores val
+							 left join fetch val.pfProvince provVal
+							 left join fetch user.validadorDe valDe
+							 left join fetch uPro.pfProfile pro
+							 left join fetch user.pfTagsUsers userTag
+							 left join fetch userTag.pfTag tag
+							 left join fetch user.pfUsersJobs userJob
+							 left join fetch userJob.pfUserJob job
+							 left join fetch user.pfUsersProfiles userProf
+							 left join fetch userProf.pfProfile
+							 left join fetch user.pfUsersGroups userGroup
+							 left join fetch userGroup.pfGroup grp
+							 left join fetch user.pfUsersProvinces adminProvs
+							 left join fetch adminProvs.pfProvince adminProv
+							 left join fetch user.gestores ges
+							 left join fetch user.gestorDe gesDe
+							 join fetch user.pfUsersParameters userPar
+							 join fetch userPar.pfParameter par
+						where user.cidentifier = :dni
+							  and user.ctype = 'USUARIO'
+							  and par.cparameter = 'USUARIO.PASSWORD'
+							  and userPar.tvalue = :password]]></query>
+	</named-query>
+
+	<named-query name="request.userProfilesLdapId">
+		<query><![CDATA[from PfUsersDTO user
+							 left join fetch user.pfUsersProfiles uPro
+							 left join fetch user.pfProvince prov
+							 left join fetch user.validadores val
+							 left join fetch val.pfProvince provVal
+							 left join fetch user.validadorDe valDe
+							 left join fetch uPro.pfProfile pro
+							 left join fetch user.pfTagsUsers userTag
+							 left join fetch userTag.pfTag tag
+							 left join fetch user.pfUsersJobs userJob
+							 left join fetch userJob.pfUserJob job
+							 left join fetch user.pfUsersProfiles userProf
+							 left join fetch userProf.pfProfile
+							 left join fetch user.pfUsersGroups userGroup
+							 left join fetch userGroup.pfGroup grp
+							 left join fetch user.gestores ges
+							 left join fetch user.gestorDe gesDe
+							 join fetch user.pfUsersParameters userPar
+							 join fetch userPar.pfParameter par
+						where user.ctype = 'USUARIO'
+							  and par.cparameter = 'USUARIO.LDAP.IDATRIBUTO'
+							  and userPar.tvalue = :ldapId]]></query>
+	</named-query>
+
+	<named-query name="request.queryUserSignValidation">
+		<query><![CDATA[from PfUsersParameterDTO userParam
+							 left join fetch userParam.pfParameter param
+							 left join fetch userParam.pfUser user
+						where user = :usuario
+						and   param.cparameter = 'USUARIO.FIRMA.VALIDAR']]></query>
+	</named-query>
+
+	<named-query name="request.userJob">
+		<query><![CDATA[from PfUsersJobDTO userJob
+							 left join fetch userJob.pfUser user
+							 left join fetch userJob.pfUserJob job
+						where user = :usuario]]></query>
+	</named-query>
+
+	<named-query name="request.userById">
+		<query><![CDATA[from PfUsersDTO user
+						where trim(upper(user.cidentifier)) = trim(upper(:id))
+						and user.ctype = 'USUARIO']]></query>
+	</named-query>
+
+	<named-query name="request.usersNameAndSurnames">
+		<query><![CDATA[from PfUsersDTO where trim(upper(dname||' '||coalesce(dsurname1,'')||' '||coalesce(dsurname2,'')))
+										in (trim(upper(:nameAndSurnames)))
+										and lvalid = 'S']]></query>
+	</named-query>
+	<named-query name="request.userNameAndSurnames">
+		<query><![CDATA[from PfUsersDTO user
+							 left join fetch user.validadores val
+							 left join fetch user.validadorDe valDe
+							 left join fetch user.gestores ges
+							 left join fetch user.gestorDe gesDe 
+							 where trim(upper(user.dname||' '||coalesce(user.dsurname1,'')||' '||coalesce(user.dsurname2,''))) = trim(upper(:nameAndSurnames))
+										and user.lvalid = 'S']]></query>
+	</named-query>
+	<named-query name="request.userNameSurnamesAndProvince">
+		<query><![CDATA[from PfUsersDTO user
+							 left join fetch user.validadores val
+							 left join fetch user.validadorDe valDe
+							 left join fetch user.gestores ges
+							 left join fetch user.gestorDe gesDe
+							 left join fetch user.pfProvince seat
+							 where convert(trim(upper(user.dname||' '||coalesce(user.dsurname1,'')||' '||coalesce(user.dsurname2,''))), 'US7ASCII') = convert(trim(upper(:nameAndSurnames)), 'US7ASCII')
+							 and convert(trim(upper(seat.cnombre)), 'US7ASCII') = convert(trim(upper(:province)), 'US7ASCII')
+							 and user.lvalid = 'S']]></query>
+	</named-query>
+	<named-query name="request.identifierExists">
+		<query><![CDATA[from PfUsersDTO user
+						where trim(upper(user.cidentifier)) = upper(:id)]]></query>
+	</named-query>	
+	<named-query name="request.applicationPfirma">
+		<query><![CDATA[from PfApplicationsDTO app						
+						 where app.capplication = 'PFIRMA']]></query>
+	</named-query>
+	<named-query name="request.applicationPfirmaPADES">
+		<query><![CDATA[from PfApplicationsDTO where capplication = 'PFIRMA_PADES']]></query>
+	</named-query>
+	<named-query name="request.applicationPfirmaXADES">
+		<query><![CDATA[from PfApplicationsDTO where capplication = 'PFIRMA_XADES']]></query>
+	</named-query>
+	<named-query name="request.applicationPfirmaXADESENVELOPED">
+		<query><![CDATA[from PfApplicationsDTO where capplication = 'PFIRMA_XADES_ENVELOPED']]></query>
+	</named-query>
+	<named-query name="request.applicationPfirmaCADES">
+		<query><![CDATA[from PfApplicationsDTO where capplication = 'PFIRMA_CADES']]></query>
+	</named-query>
+	
+	<named-query name="request.applicationPfirmaCombo">
+		<query><![CDATA[from PfApplicationsDTO where visibleEnPortaFirmaWeb = 1]]></query>
+	</named-query>
+	
+	<named-query name="request.appInterfazGenerica">
+		<query><![CDATA[from PfApplicationsDTO where capplication = upper(:idApp)]]></query>
+	</named-query>
+
+	<named-query name="request.usersComplete">
+		<query><![CDATA[from PfUsersDTO user 
+						join fetch user.pfProvince prov 
+						where (convert(trim(upper(user.dname||' '||coalesce(user.dsurname1,'')||' '||coalesce(user.dsurname2,''))), 'US7ASCII') like convert(trim(upper(:find)), 'US7ASCII')										   
+										   or convert(upper(user.cidentifier),'US7ASCII') like convert(upper(:find), 'US7ASCII'))
+										   and user.lvalid = 'S'
+										   order by user.dsurname1,user.dsurname2,user.dname asc]]>
+		</query>
+	</named-query>
+	
+	<named-query name="request.enhancedUsersComplete">
+		<query><![CDATA[select distinct user 
+						from PfUsersDTO user
+						left join fetch user.pfProvince province
+						left join fetch user.pfUsersEmails emails
+						left join fetch user.pfUsersMobiles mobiles
+						left join fetch user.pfUsersProvinces admnprov
+						left join fetch user.pfUsersParameters userparams
+						left join fetch userparams.pfParameter param
+						left join fetch user.pfUsersProfiles profiles
+						left join fetch user.pfSessionAttributes att						
+						where (
+							(    
+								(
+								 (
+								  convert(trim(upper(user.dname||' '||coalesce(user.dsurname1,'')||' '||coalesce(user.dsurname2,''))), 'US7ASCII') = convert(upper(:userQuery), 'US7ASCII')		
+								  or								   
+								  convert(upper(user.cidentifier),'US7ASCII') =  convert(upper(:userQuery), 'US7ASCII')
+								 )
+								 
+								 and
+								 (:userQuery is not null)
+								 )
+								  
+								or
+								
+							 	  :userQuery is null
+								 
+							)
+							
+							and 
+							
+							(
+								(
+								 (
+								  convert(upper(province.cnombre), 'US7ASCII') = convert(upper(:seatQuery), 'US7ASCII')
+								  or
+								  province.ccodigoprovincia = :seatQuery
+								 )								  
+							     and 
+							     (:seatQuery is not null)
+							     )
+							     							     							     
+								or
+								 
+							 	  :seatQuery is null
+							)
+							
+							and
+							(:validQuery is not null and user.lvalid = :validQuery or
+							 :validQuery is null
+							)
+							and
+							(user.ctype = :typeQuery)							
+						)
+						order by user.dsurname1,user.dsurname2,user.dname asc]]>				
+		</query>
+	</named-query>
+	
+	
+	<named-query name="request.usersCompleteWithProvince">
+		<query><![CDATA[select user 
+						from PfUsersDTO user
+						left join fetch user.pfProvince province						 
+						where 
+							(convert(trim(upper(user.dname||' '||coalesce(user.dsurname1,'')||' '||coalesce(user.dsurname2,''))),'US7ASCII') like convert(trim(upper(:find)),'US7ASCII')										   
+							 or upper(user.cidentifier) like upper(:find)
+							 or convert(upper(province.cnombre), 'US7ASCII') like convert(upper(:find), 'US7ASCII') )
+										   and user.lvalid = 'S'
+										   and user.ctype != 'APLICACION'
+										   and (:findProvince is null or 
+										        province is null or
+										        user.lvisible = 'S' or
+										        (province.ccodigoprovincia = :findProvince)
+										       )
+										   order by user.dsurname1,user.dsurname2,user.dname asc]]>
+		</query>
+	</named-query>
+	
+	<named-query name="request.usersCompleteWithProvinceWithoutVisible">
+		<query><![CDATA[select user 
+						from PfUsersDTO user
+						left join fetch user.pfProvince province						 
+						where 
+							(convert(trim(upper(user.dname||' '||coalesce(user.dsurname1,'')||' '||coalesce(user.dsurname2,''))),'US7ASCII') like convert(trim(upper(:find)),'US7ASCII')										   
+							 or upper(user.cidentifier) like upper(:find)
+							 or convert(upper(province.cnombre), 'US7ASCII') like convert(upper(:find), 'US7ASCII') )
+										   and user.lvalid = 'S'
+										   and user.ctype != 'APLICACION'
+										   and (province.ccodigoprovincia = :findProvince)
+										   order by user.dsurname1,user.dsurname2,user.dname asc]]>
+		</query>
+	</named-query>
+		
+	<named-query name="request.usersCompleteNoWebServiceUsers">
+		<query><![CDATA[select user 
+						from PfUsersDTO user
+						left join fetch user.pfProvince province
+						left join fetch user.portafirmas portafirmas																			
+						where 
+							(convert(trim(upper(user.dname||' '||coalesce(user.dsurname1,'')||' '||coalesce(user.dsurname2,''))), 'US7ASCII') like convert(trim(upper(:userNameOrId)), 'US7ASCII')										   
+							 or convert(upper(user.cidentifier), 'US7ASCII') like convert(upper(:userNameOrId), 'US7ASCII'))
+						and user.lvalid = 'S'
+						
+						and (:province is not null and province.ccodigoprovincia = :province or :province is null)
+
+						and (:idPortafirmas is not null and portafirmas.idPortafirmas = :idPortafirmas or :idPortafirmas is null) 
+							
+						and (
+							(user.lvisible = 'S')
+							or
+							(:provinceUser is null)
+							or
+							(province is null)
+							or
+							(:provinceUser is not null and province.ccodigoprovincia = :provinceUser)
+							)
+						and (
+							(:typeUser is not null and user.ctype = :typeUser)
+							or (:typeUser is null)
+							)
+						and (
+							exists (
+								select userProfile.primaryKey
+								from user.pfUsersProfiles userProfile
+								where userProfile.pfProfile.cprofile = 'ACCESO'
+							) 
+							or not exists (
+								select userProfile.primaryKey
+								from user.pfUsersProfiles userProfile
+								where userProfile.pfProfile.cprofile = 'WEBSERVICE'
+							)
+						)						
+						order by user.dsurname1,user.dsurname2,user.dname asc]]>
+		</query>
+	</named-query>
+	<named-query name="request.usersSelectableCompleteNoWebServiceUsersCount">
+		<query><![CDATA[select count(*) 
+						from PfUsersDTO user,
+							 PfProvinceDTO province
+						where user.pfProvince = province
+						and 
+							(trim(upper(user.dname||' '||coalesce(user.dsurname1,'')||' '||coalesce(user.dsurname2,''))) like upper(:userNameOrId)										   
+							 or upper(user.cidentifier) like upper(:userNameOrId))												
+						and user.primaryKey != :user
+						and user.lvalid = 'S'
+						and (
+							(:province is not null and province.ccodigoprovincia = :province) 
+							or (:province is null)
+							)
+						and (
+							(user.lvisible = 'S')
+							or
+							(:provinceUser is null)
+							or
+							(province is null)
+							or
+							(:provinceUser is not null and province.ccodigoprovincia = :provinceUser)
+							)						
+						and (
+							(:typeUser is not null and user.ctype = :typeUser)
+							or (:typeUser is null)
+							)
+						and (
+							exists (
+								select userProfile.primaryKey
+								from user.pfUsersProfiles userProfile
+								where userProfile.pfProfile.cprofile = 'ACCESO'
+							) 
+							or not exists (
+								select userProfile.primaryKey
+								from user.pfUsersProfiles userProfile
+								where userProfile.pfProfile.cprofile = 'WEBSERVICE'
+							)
+						)]]>
+		</query>
+	</named-query>
+	<named-query name="request.usersSelectableCompleteNoWebServiceUsers">
+		<query><![CDATA[select user 
+						from PfUsersDTO user
+						left join fetch user.pfProvince province
+						where 
+							(trim(upper(user.dname||' '||coalesce(user.dsurname1,'')||' '||coalesce(user.dsurname2,''))) like upper(:userNameOrId)										   
+							 or upper(user.cidentifier) like upper(:userNameOrId))												
+						and user.primaryKey != :user
+						and user.lvalid = 'S'
+						and (
+							(:province is not null and province.ccodigoprovincia = :province) 
+							or (:province is null)
+							)
+						and (
+							(user.lvisible = 'S')
+							or
+							(:provinceUser is null)
+							or
+							(province is null)
+							or
+							(:provinceUser is not null and province.ccodigoprovincia = :provinceUser)
+							)						
+						and (
+							(:typeUser is not null and user.ctype = :typeUser)
+							or (:typeUser is null)
+							)
+						and (
+							exists (
+								select userProfile.primaryKey
+								from user.pfUsersProfiles userProfile
+								where userProfile.pfProfile.cprofile = 'ACCESO'
+							) 
+							or not exists (
+								select userProfile.primaryKey
+								from user.pfUsersProfiles userProfile
+								where userProfile.pfProfile.cprofile = 'WEBSERVICE'
+							)
+						)
+						order by user.dsurname1,user.dsurname2,user.dname asc]]>
+		</query>
+	</named-query>
+	<named-query name="request.jobsComplete">
+		<query><![CDATA[from PfUsersDTO where ((upper(dname) like upper(:find)
+										   or upper(dsurname1) like upper(:find)
+										   or upper(dsurname2) like upper(:find)
+										   or upper(cidentifier) like upper(:find))
+										   and lvalid = 'S'
+										   and ctype = 'CARGO') or primaryKey = :pk]]>
+		</query>
+	</named-query>
+	<named-query name="request.jobsCompleteWithProvince">
+		<query><![CDATA[from PfUsersDTO user
+						left join fetch user.pfProvince province 
+						where ((upper(user.dname) like upper(:find)
+							   or upper(user.dsurname1) like upper(:find)
+							   or upper(user.dsurname2) like upper(:find)
+							   or upper(user.cidentifier) like upper(:find))
+							   and user.lvalid = 'S'
+							   and user.ctype = 'CARGO') or user.primaryKey = :pk]]>
+		</query>
+	</named-query>
+	<named-query name="request.stateTags">
+		<query><![CDATA[from PfTagsDTO
+						where ctype = 'ESTADO']]></query>
+	</named-query>
+	<named-query name="request.systemTags">
+		<query><![CDATA[from PfTagsDTO
+						where ctype = 'SISTEMA']]></query>
+	</named-query>
+	<named-query name="request.tagID">
+		<query><![CDATA[from PfTagsDTO
+						where ctag = :tagID
+						and ctype = 'ESTADO']]></query>
+	</named-query>
+
+	<named-query name="request.usersRemitters">
+		<query><![CDATA[select user
+						from PfUsersDTO user,
+							 PfUsersRemitterDTO rem,
+							 PfRequestsDTO req
+						where rem.pfUser = user
+						  and rem.pfRequest = req
+						  and req.primaryKey = :requestPK]]>
+		</query>
+	</named-query>
+	<named-query name="request.documentTypePfirma">
+		<query><![CDATA[from PfDocumentTypesDTO
+						where pfApplication is null
+						and lvalid = 'S']]></query>
+	</named-query>
+	<named-query name="request.accionFirmante">
+		<query><![CDATA[from PfAccionFirmanteDTO
+						where lvalid = 'S']]></query>
+	</named-query>
+	<named-query name="file.parameterFileHash">
+		<query><![CDATA[from PfFilesDTO files WHERE chash = :hash]]></query>
+	</named-query>
+	<named-query name="file.parameterFileDocument">
+		<query><![CDATA[from PfFilesDTO files WHERE primaryKey = :filePK]]></query>
+	</named-query>
+	<named-query name="file.documentAll">
+		<query><![CDATA[from PfDocumentsDTO documents WHERE chash = :hash]]></query>
+	</named-query>
+	<named-query name="file.documentFile">
+		<query><![CDATA[from PfDocumentsDTO doc
+						join fetch doc.pfFile file
+						WHERE doc.chash = :hash]]></query>
+	</named-query>
+	
+	<named-query name="file.documentUsers.1">
+			<query><![CDATA[select distinct user
+						from PfUsersDTO user
+						where user in (
+							select userRemitter.pfUser from PfDocumentsDTO doc1,
+							PfUsersRemitterDTO userRemitter  
+							where doc1.pfRequest = userRemitter.pfRequest
+							and doc1.chash = :hash
+						)]]></query>
+	</named-query>
+
+	<named-query name="file.documentUsers.2">
+			<query><![CDATA[select distinct user
+						from PfUsersDTO user
+						where user in (
+							select reqTags.pfUser from PfDocumentsDTO doc2,
+							PfRequestTagsDTO reqTags							  
+							where doc2.pfRequest = reqTags.pfRequest
+							and doc2.chash = :hash
+						)]]></query>
+	</named-query>
+
+	<named-query name="file.documentUsers.3">
+			<query><![CDATA[select distinct user
+						from PfUsersDTO user
+						where user in (
+							select userJob.pfUser from PfDocumentsDTO doc3,
+							PfRequestTagsDTO reqTags,
+							PfUsersJobDTO userJob							
+							where doc3.pfRequest = reqTags.pfRequest
+							and reqTags.pfUser = userJob.pfUserJob	
+							and doc3.chash = :hash
+						)]]></query>
+	</named-query>
+
+	<named-query name="file.documentUsers.4">
+			<query><![CDATA[select distinct user
+						from PfUsersDTO user
+						where user in (
+							select userGroup.pfUser
+							from PfUsersGroupsDTO userGroup,
+								 PfDocumentsDTO doc4,
+								 PfUsersRemitterDTO userRemitter1 
+							where doc4.pfRequest = userRemitter1.pfRequest
+							and   doc4.chash = :hash
+							and   userRemitter1.pfGroup = userGroup.pfGroup
+						)]]></query>
+	</named-query>
+	
+	<named-query name="file.documentUsers">
+		<query><![CDATA[select distinct user
+						from PfUsersDTO user
+						where user in (
+							select userRemitter.pfUser from PfDocumentsDTO doc1,
+							PfUsersRemitterDTO userRemitter  
+							where doc1.pfRequest = userRemitter.pfRequest
+							and doc1.chash = :hash
+						) or
+							user in (
+							select reqTags.pfUser from PfDocumentsDTO doc2,
+							PfRequestTagsDTO reqTags							  
+							where doc2.pfRequest = reqTags.pfRequest
+							and doc2.chash = :hash
+						) or user in (
+							select userJob.pfUser from PfDocumentsDTO doc3,
+							PfRequestTagsDTO reqTags,
+							PfUsersJobDTO userJob							
+							where doc3.pfRequest = reqTags.pfRequest
+							and reqTags.pfUser = userJob.pfUserJob	
+							and doc3.chash = :hash
+						) or user in (
+							select userGroup.pfUser
+							from PfUsersGroupsDTO userGroup,
+								 PfDocumentsDTO doc4,
+								 PfUsersRemitterDTO userRemitter1 
+							where doc4.pfRequest = userRemitter1.pfRequest
+							and   doc4.chash = :hash
+							and   userRemitter1.pfGroup = userGroup.pfGroup
+						)]]></query>
+	</named-query>
+	<named-query name="file.documentOwner">
+		<query><![CDATA[select userRemitter.pfUser from PfDocumentsDTO doc1,
+						PfUsersRemitterDTO userRemitter  
+						where doc1.pfRequest = userRemitter.pfRequest
+						and doc1.chash = :hash
+						]]></query>
+	</named-query>
+	<named-query name="request.applicationsUser">
+		<query><![CDATA[select distinct app
+						from PfRequestsDTO req
+							 join req.pfRequestsTags reqTag
+							 join reqTag.pfTag tag
+							 join req.pfApplication app
+							 left join fetch app.pfApplication
+						where reqTag.pfUser = :user
+						  and tag.ctype = 'ESTADO' 
+						order by app.capplication asc]]>
+		</query>
+	</named-query>
+	<named-query name="request.applicationsSent">
+		<query><![CDATA[select app
+						from PfApplicationsDTO app
+						where app.capplication like 'PFIRMA%' 
+						order by app.capplication asc]]>
+		</query>
+	</named-query>
+	<named-query name="request.tagAll">
+		<query><![CDATA[select distinct tag from PfTagsDTO tag
+						where tag.ctag = :ctag
+						  and tag.ctype = :ctype]]>
+		</query>
+	</named-query>
+	<named-query name="request.tagsUser">
+		<query><![CDATA[select requestTag
+						from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+							 join fetch requestTag.pfUser user
+							 join fetch requestTag.pfRequest req
+						where
+							user = :user and
+							req = :req
+						  ]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestTagByHash">
+		<query><![CDATA[select requestTag
+						from PfRequestTagsDTO requestTag
+						join fetch requestTag.pfTag tag
+						join fetch requestTag.pfUser user
+						join fetch requestTag.pfRequest req
+						join fetch req.pfApplication app
+						join fetch req.pfImportance imp
+						join fetch req.pfDocuments docs
+						join fetch docs.pfFile files
+						join fetch docs.pfDocumentType docTypes
+						left join fetch req.pfComments comm
+						left join fetch req.pfHistoricRequests hist
+						join fetch req.pfSignsLines signLines
+						join fetch signLines.pfSigners signers
+						join fetch req.pfUsersRemitters rems
+						join fetch rems.pfUser urem
+						join fetch req.pfRequestsTags requestTags
+						join fetch requestTags.pfTag requestTagsTag
+						join fetch requestTags.pfUser requestTagsUser
+						where requestTag.chash =:hash]]>
+		</query>
+	</named-query>
+		<named-query name="request.requestTagByHashInvited">
+		<query><![CDATA[select requestTag
+						from PfRequestTagsDTO requestTag
+						join fetch requestTag.pfTag tag
+						join fetch requestTag.pfRequest req
+						join fetch req.pfApplication app
+						join fetch req.pfImportance imp
+						join fetch req.pfDocuments docs
+						join fetch docs.pfFile files
+						join fetch docs.pfDocumentType docTypes
+						left join fetch req.pfComments comm
+						left join fetch req.pfHistoricRequests hist
+						join fetch req.pfSignsLines signLines
+						join fetch signLines.pfSigners signers
+						join fetch req.pfUsersRemitters rems
+						join fetch rems.pfUser urem
+						join fetch req.pfRequestsTags requestTags
+						join fetch requestTags.pfTag requestTagsTag
+						where requestTag.chash =:hash]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestTagByPk">
+		<query><![CDATA[select requestTag
+						from PfRequestTagsDTO requestTag
+						join fetch requestTag.pfTag tag						
+						where requestTag.primaryKey =:pk]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestTagByReqAndUser">
+		<query><![CDATA[select requestTag
+						from PfRequestTagsDTO requestTag
+						join fetch requestTag.pfTag tag
+						join fetch requestTag.pfUser user
+						join fetch requestTag.pfRequest req
+						join fetch req.pfApplication app
+						join fetch req.pfImportance imp
+						join fetch req.pfDocuments docs
+						join fetch req.pfSignsLines signLines
+						join fetch signLines.pfSigners signers
+						join fetch app.pfConfiguration conf
+						join fetch conf.pfConfigurationsParameters confparam
+						join fetch req.pfUsersRemitters rems
+						join fetch rems.pfUser urem
+						where req = :req
+						and   user = :user]]>
+		</query>
+	</named-query>
+	<named-query name="request.tagsUserbySignLine">
+		<query><![CDATA[select requestTag
+						from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+							 join fetch requestTag.pfUser user
+							 join fetch requestTag.pfRequest req
+							 left join fetch requestTag.pfSignLine signLine
+						where user = :user
+						and   req = :req
+						and   signLine = :signLine]]>
+		</query>
+	</named-query>
+	<named-query name="request.tagsbySignLine">
+		<query><![CDATA[select requestTag
+						from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+							 join fetch requestTag.pfUser user
+							 join fetch requestTag.pfRequest req
+							 left join fetch requestTag.pfSignLine signLine
+						where user = :user
+						and   req = :req
+						and   signLine = :signLine]]>
+		</query>
+	</named-query>
+	<named-query name="request.stateTagRequest">
+		<query><![CDATA[from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+						where
+							tag.ctype = 'ESTADO' and
+							requestTag.pfRequest = :request
+						  ]]>
+		</query>
+	</named-query>
+	
+		<named-query name="request.systemAnulledType">
+		<query><![CDATA[from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+						where
+							tag.ctype = 'SISTEMA' and tag.ctag = 'TIPO.ANULADA'
+							and requestTag.pfRequest = :request
+						  ]]>
+		</query>
+	</named-query>
+	
+	<named-query name="request.allRequestTags">
+		<query><![CDATA[from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+							 join fetch requestTag.pfRequest req
+							 join fetch requestTag.pfUser user
+						where
+							requestTag.pfRequest = :request
+						  ]]>
+		</query>
+	</named-query>
+	<named-query name="request.allRequestTagsFromHash">
+		<query><![CDATA[from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+							 join fetch requestTag.pfRequest req
+							 join fetch requestTag.pfUser user
+						where
+							req.chash = :chash
+						  ]]>
+		</query>
+	</named-query>
+	<named-query name="request.otherRequestTagsFromHash">
+		<query><![CDATA[select count(*) from
+							 PfRequestTagsDTO requestTag
+							 join requestTag.pfTag tag
+							 join requestTag.pfRequest req
+							 join requestTag.pfUser user							 
+						where
+							req.chash = :chash and
+							user != :user and
+							tag.ctype = 'ESTADO' and
+							tag.ctag in (:ctag)
+						  ]]>
+		</query>
+	</named-query>
+	<named-query name="request.stateTagRequestUser">
+		<query><![CDATA[from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+							 join fetch requestTag.pfUser user
+						where
+							tag.ctype = 'ESTADO' and
+							requestTag.pfRequest = :req and
+							user = :user
+						  ]]>
+		</query>
+	</named-query>
+	<named-query name="request.stateTagRequestUserSignLine">
+		<query><![CDATA[from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+							 join fetch requestTag.pfUser user
+							 left join fetch requestTag.pfSignLine signLine
+						where
+							tag.ctype = 'ESTADO' and
+							requestTag.pfRequest = :req and
+							user = :user and
+							(signLine = :signLine or signLine is null)
+						  ]]>
+		</query>
+	</named-query>
+		<named-query name="request.stateTagRequestUserSignLineInvited">
+		<query><![CDATA[from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+							 left join fetch requestTag.pfSignLine signLine
+						where
+							tag.ctype = 'ESTADO' and
+							requestTag.pfRequest = :req and
+							(signLine = :signLine or signLine is null)
+						  ]]>
+		</query>
+	</named-query>
+	<named-query name="request.passTagRequestUser">
+		<query><![CDATA[from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+							 join fetch requestTag.pfUser user
+						where
+							tag.ctype = 'SISTEMA' and
+							tag.ctag = 'TIPO.VISTOBUENO' and
+							requestTag.pfRequest = :req and
+							user = :user
+						  ]]>
+		</query>
+	</named-query>
+	<named-query name="request.passTagRequestUserSignLine">
+		<query><![CDATA[from
+							 PfRequestTagsDTO requestTag
+							 join fetch requestTag.pfTag tag
+							 join fetch requestTag.pfUser user
+							 left join fetch requestTag.pfSignLine signLine
+						where
+							tag.ctype = 'SISTEMA' and
+							tag.ctag = 'TIPO.VISTOBUENO' and
+							requestTag.pfRequest = :req and
+							user = :user and
+							(signLine = :signLine or signLine is null)
+						  ]]>
+		</query>
+	</named-query>
+	<named-query name="request.stateTagHashUser">
+		<query><![CDATA[select tag
+						from PfTagsDTO tag
+							 join fetch tag.pfRequestsTags rTag
+							 join rTag.pfUser user
+							 join rTag.pfRequest req
+						where
+							tag.ctype = 'ESTADO' and
+							upper(user.cidentifier) = upper(:dni) and
+							req.chash = :hash
+						  ]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestHash">
+		<query><![CDATA[from PfRequestsDTO req WHERE chash = :hash]]></query>
+	</named-query>
+	
+	<named-query name="request.requestDReferecia">
+		<query><![CDATA[from PfRequestsDTO req WHERE dreference = :dreference]]></query>
+	</named-query>
+	
+	<named-query name="request.requestHashWithSigners">
+		<query><![CDATA[from PfRequestsDTO req
+						join fetch req.pfSignsLines sli
+						join fetch sli.pfSigners sig
+						join fetch sig.pfUser user
+						join fetch req.pfApplication app
+						left join fetch app.pfApplicationsParameters appParams
+						left join fetch appParams.pfParameter param
+						left join fetch req.pfDocuments doc
+						left join fetch doc.pfDocumentType docType
+						left join fetch doc.pfFile pfFiledoc
+						join fetch req.pfUsersRemitters rem
+						join fetch rem.pfUser userRem
+						left join fetch req.pfRequestsTags reqTag
+						left join fetch reqTag.pfUser userReqTag
+						left join fetch reqTag.pfTag tag
+						left join fetch req.pfComments comment
+						left join fetch comment.pfUser
+						WHERE req.chash = :hash]]></query>
+	</named-query>
+	<named-query name="request.applicationId">
+		<query><![CDATA[from PfApplicationsDTO where capplication = :capp]]></query>
+	</named-query>
+	<named-query name="request.requestHashRemitter">
+		<query><![CDATA[select req
+						from PfRequestsDTO req
+							 left join fetch req.pfUsersRemitters rem
+						WHERE req.chash = :hash]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestHashSignerCount">
+		<query><![CDATA[select count(req)
+		from PfRequestsDTO req
+		join req.pfSignsLines sli
+		join sli.pfSigners sig
+		join sig.pfUser user
+		WHERE req.chash = :hash
+		and upper(user.cidentifier) = upper(:dni)
+		order by req.primaryKey, sli.primaryKey]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestHashSigner">
+		<query><![CDATA[select distinct (req)
+						from PfRequestsDTO req
+							 join fetch req.pfDocuments doc
+							 join fetch req.pfSignsLines sli
+							 join fetch sli.pfSigners sig
+							 left join fetch sig.pfSigns signs
+							 join sig.pfUser user
+						WHERE req.chash = :hash
+						and upper(user.cidentifier) = upper(:dni)
+						order by req.primaryKey, sli.primaryKey]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestHashSigners">
+		<query><![CDATA[select distinct (req)
+						from PfRequestsDTO req
+							 join fetch req.pfDocuments doc
+							 join fetch req.pfSignsLines sli
+							 join fetch sli.pfSigners sig
+							 left join fetch sig.pfSigns signs
+							 join fetch sig.pfUser user
+						WHERE req.chash = :hash
+						order by req.primaryKey, sli.primaryKey]]>
+		</query>
+	</named-query>
+		<named-query name="request.requestHashSignersInvited">
+		<query><![CDATA[select distinct (req)
+						from PfRequestsDTO req
+							 join fetch req.pfDocuments doc
+							 join fetch req.pfSignsLines sli
+							 join fetch sli.pfSigners sig
+							 left join fetch sig.pfSigns signs
+						WHERE req.chash = :hash
+						order by req.primaryKey, sli.primaryKey]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestOnlySignLines">
+		<query><![CDATA[from PfSignLinesDTO sli
+						where sli.pfRequest = :req]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestSignLinesCascade">
+		<query><![CDATA[select distinct (sli)
+						from PfSignLinesDTO sli
+							 join fetch sli.pfRequest req
+							 join fetch sli.pfSigners sig
+							 left join fetch sig.pfSigns signs
+							 join fetch sig.pfUser user
+						WHERE req = :req
+						order by sli.primaryKey]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestSignLinesByUser">
+		<query><![CDATA[select sli
+						from PfSignLinesDTO sli
+							 join sli.pfSigners sig
+							 join sig.pfUser user
+						WHERE sli.pfRequest = :req
+						and upper(user.cidentifier) = upper(:identifier)
+						order by sli.primaryKey]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestFetchSignLinesByUser">
+		<query><![CDATA[select sli
+						from PfSignLinesDTO sli
+							 join fetch sli.pfSigners sig
+							 join fetch sig.pfUser user
+						WHERE sli.pfRequest = :req
+						and upper(user.cidentifier) = upper(:identifier)
+						order by sli.primaryKey]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestSignLinesNotCascade">
+		<query><![CDATA[select distinct (sli)
+						from PfSignLinesDTO sli
+							 join fetch sli.pfRequest req
+							 join fetch sli.pfSigners sig
+							 left join fetch sig.pfSigns signs
+							 join fetch sig.pfUser user
+						WHERE req = :req
+						order by signs.primaryKey,sli.primaryKey]]>
+		</query>
+	</named-query>
+	<named-query name="request.signerWithSigns">
+		<query><![CDATA[select count(sig)
+						from PfSignsDTO sig
+						WHERE sig.pfSigner = :signer]]>
+		</query>
+	</named-query>
+	<named-query name="request.documentTypeId">
+		<query><![CDATA[from PfDocumentTypesDTO type
+						where pfApplication is null
+						and cdocumentType = :type]]></query>
+	</named-query>
+	<named-query name="request.userDni">
+		<query><![CDATA[from PfUsersDTO where upper(cidentifier) = upper(:dni) and ctype = 'USUARIO']]></query>
+	</named-query>
+	<named-query name="request.requestTextHash">
+		<query><![CDATA[from PfRequestsTextDTO req WHERE chash = :hash]]></query>
+	</named-query>
+	<named-query name="request.requestDataHash">
+		<query><![CDATA[select req
+						from PfRequestsDTO req
+							 join fetch req.pfApplication app
+							 join fetch req.pfDocuments doc
+							 join fetch doc.pfDocumentType docTyp
+							 join fetch doc.pfFile fil
+							 left join fetch req.pfHistoricRequests
+							 left join fetch req.pfComments com
+							 left join fetch doc.pfSigns signs
+							 left join fetch req.pfUsersRemitters uRem
+							 left join fetch uRem.pfUser
+							 left join fetch req.pfImportance
+						WHERE req.chash = :hash]]>
+		</query>
+	</named-query>
+	<named-query name="request.documentsAll">
+		<query><![CDATA[from PfDocumentsDTO doc where pfRequest = :request]]></query>
+	</named-query>
+	<named-query name="request.documentsAllByReqTagHash">
+		<query><![CDATA[from PfDocumentsDTO doc
+						left join fetch doc.pfRequest req
+						left join fetch req.pfRequestsTags reqTag
+						where reqTag.chash = :requestTag
+						and doc.lsign = 'S']]></query>
+	</named-query>
+	<!-- named-query name="request.documentsAllByRequestList">
+		<query><![CDATA[from PfDocumentsDTO doc
+						join fetch doc.pfFile
+						where doc.pfRequest in (:requestList)
+						and doc.lsign = 'S']]></query>
+	</named-query-->
+	<named-query name="request.documentsAllByRequestTagHashList">
+		<query><![CDATA[from PfDocumentsDTO doc
+						join fetch doc.pfFile
+						join fetch doc.pfRequest req
+						join fetch req.pfRequestsTags reqTag
+						where reqTag.chash in (:requestTagHashList)
+						and doc.lsign = 'S']]></query>
+	</named-query>
+	
+	<named-query name="request.documentsAllFiles">
+		<query><![CDATA[from PfDocumentsDTO doc left join fetch doc.pfFile
+						where doc.pfRequest = :request]]></query>
+	</named-query>
+	<named-query name="request.commentsAll">
+		<query><![CDATA[from PfCommentsDTO comments join fetch comments.pfUser where comments.pfRequest = :request]]></query>
+	</named-query>
+	<named-query name="request.historicRequestAll">
+		<query><![CDATA[from PfHistoricRequestsDTO where pfRequest = :request order by fcreated DESC]]></query>
+	</named-query>
+	<named-query name="request.requestsToHistoric">
+		<query><![CDATA[select distinct req
+						from PfRequestsDTO req
+							 left join req.pfRequestsTags reqTag
+							 left join reqTag.pfTag tag
+						where (tag.ctag not in (:tags) or reqTag is null)
+						  and req.fmodified >= :dia
+						  and req.fmodified < :diaSiguiente
+						  
+				]]></query>
+	</named-query>
+	<named-query name="request.requestUserTagByPK">
+		<query><![CDATA[
+			select userTag
+			from PfUserTagsDTO userTag
+			join fetch userTag.pfTag tag
+			where userTag.primaryKey = :pk]]></query>
+	</named-query>
+	<named-query name="request.requestTagAssociated">
+		<query><![CDATA[
+			select count (*)
+			from
+				PfRequestTagsDTO requestTags
+			where
+				requestTags.pfTag = :tag and
+				requestTags.pfUser != :user]]></query>
+	</named-query>
+	<named-query name="request.requestTagOtherUserAssociated">
+		<query><![CDATA[
+			select count (*)
+			from
+				PfUserTagsDTO userTags
+			where
+				userTags.pfTag = :tag and
+				userTags.pfUser != :user]]></query>
+	</named-query>
+	<named-query name="request.requestsTagged">
+		<query><![CDATA[select distinct req
+						from PfRequestsDTO req
+							 join req.pfRequestsTags reqTag
+							 join reqTag.pfTag tag
+						where tag.ctag in (:tags)
+						and	  tag.ctype = 'ESTADO']]></query>
+	</named-query>
+	<named-query name="request.requestUserTagAssociated">
+		<query><![CDATA[select
+							requestTags
+						from
+							PfRequestTagsDTO requestTags
+						where
+							requestTags.pfUser = :user and
+							requestTags.pfTag = :tag]]></query>
+	</named-query>
+	<named-query name="request.requestStateTagAssociated">
+		<query><![CDATA[select count (*)
+						from PfRequestsDTO req
+							 join req.pfRequestsTags reqTag
+							 join reqTag.pfTag tag
+						where req.chash = :chash
+							  and tag.ctype = 'ESTADO']]></query>
+	</named-query>
+	<named-query name="request.requestHashUsers">
+		<query><![CDATA[select distinct(user)
+						from PfUsersDTO user
+							 join user.pfSigners sig
+							 join sig.pfSignLine sli
+							 join sli.pfRequest req
+						WHERE req.chash = :hash]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestHashDocuments">
+		<query><![CDATA[select distinct(doc)
+						from PfDocumentsDTO doc
+							 join fetch doc.pfDocumentType tdoc
+							 join doc.pfRequest req
+						WHERE req.chash = :hash
+						and doc.lsign = 'S']]>
+		</query>
+	</named-query>
+	<named-query name="request.signersRequestTagAll">
+		<query><![CDATA[
+		select distinct signers
+		from
+			PfSignersDTO signers
+			join fetch signers.pfSignLine signLine
+			join fetch signLine.pfRequest request
+			join fetch request.pfRequestsTags reqTag
+			join fetch reqTag.pfTag tag
+			where
+			signLine.pfRequest = :request
+			and reqTag.pfTag.ctype = 'ESTADO'
+		]]></query>
+	</named-query>
+	<named-query name="request.signersRequestUser">
+		<query><![CDATA[
+		select distinct signers
+		from
+			PfSignersDTO signers
+			join fetch signers.pfUser user
+			join fetch signers.pfSignLine sli
+			join fetch sli.pfRequest request
+			left join fetch signers.pfSigns sign
+			where request.chash = :hash
+			and upper(user.cidentifier) = upper(:dni)
+		]]></query>
+	</named-query>
+	<named-query name="request.signersRequestUserLine">
+		<query><![CDATA[
+		select distinct signers
+		from
+			PfSignersDTO signers
+			join fetch signers.pfUser user
+			join fetch signers.pfSignLine sli
+			join fetch sli.pfRequest request
+			left join fetch signers.pfSigns sign
+			where request.chash = :hash
+			and upper(user.cidentifier) = upper(:dni)
+			and sli.primaryKey = :signLineId
+		]]></query>
+	</named-query>	
+	
+	
+	<named-query name="request.documentHash">
+		<query><![CDATA[select doc
+						from PfDocumentsDTO doc
+						join fetch doc.pfRequest req
+						WHERE doc.chash = :hash]]>
+		</query>
+	</named-query>
+	<named-query name="request.documentHashFetch">
+		<query><![CDATA[select doc
+						from PfDocumentsDTO doc
+						join fetch doc.pfRequest req
+						join fetch req.pfRequestsTags rTag
+						join fetch rTag.pfUser user
+						join fetch rTag.pfTag tag
+						join fetch req.pfApplication app
+						WHERE doc.chash = :hash]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestNoticesHash">
+		<query><![CDATA[select notice
+						from PfNoticeRequestsDTO notice
+							 join fetch notice.pfTag tag
+							 join notice.pfRequest req
+						WHERE req.chash = :hash]]>
+		</query>
+	</named-query>
+	<named-query name="request.noticeRequestHash">
+		<query><![CDATA[select notice
+						from PfNoticeRequestsDTO notice
+							 join fetch notice.pfTag tag
+							 join notice.pfRequest req
+						WHERE req.chash = :hash
+							 and tag.ctag = :noticeId]]>
+		</query>
+	</named-query>
+	<named-query name="request.statesRequestHash">
+		<query><![CDATA[select distinct(req)
+						from PfRequestsDTO req
+							 join fetch req.pfDocuments doc
+							 join fetch req.pfRequestsTags rTag
+							 join fetch rTag.pfTag tag
+							 join fetch rTag.pfUser usr
+							 left join fetch doc.pfSigns sign
+							 left join fetch sign.pfBlockSigns bSign
+							 left join fetch bSign.pfBlock block
+						WHERE req.chash = :hash
+							  and tag.ctype = 'ESTADO']]>
+		</query>
+	</named-query>
+	<named-query name="request.statesAll">
+		<query><![CDATA[select tag
+						from PfTagsDTO tag
+						WHERE tag.ctype = 'ESTADO'
+						order by tag.ctag]]>
+		</query>
+	</named-query>
+	<named-query name="request.textRejectHash">
+		<query><![CDATA[select com
+						from PfCommentsDTO com
+							 join com.pfRequest req
+							 join req.pfRequestsTags rTag
+							 join req.pfDocuments doc
+							 join rTag.pfUser user
+							 join rTag.pfTag tag
+						WHERE com.dsubject = 'DEVUELTO'
+						and doc.chash = :hash
+						and upper(user.cidentifier) = upper(:dni)
+						and com.pfUser = user
+						and tag.ctype = 'ESTADO']]>
+		</query>
+	</named-query>
+	<named-query name="request.signDocumentHash">
+		<query><![CDATA[select sign
+						from PfSignsDTO sign
+							 join fetch sign.pfDocument doc
+						WHERE doc.chash = :hash
+						order by sign.fstate desc]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestSignLineUser">
+		<query><![CDATA[select signLine
+						from PfSignLinesDTO signLine
+							 join fetch signLine.pfSigners sign
+							 join sign.pfUser user
+							 join signLine.pfRequest req
+						WHERE req.chash = :chash
+							  and upper(user.cidentifier) = upper(:cdni) ]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestSignLineDesc">
+		<query><![CDATA[select signLine
+						from PfSignLinesDTO signLine
+							 join fetch signLine.pfSigners sign
+							 join signLine.pfRequest req
+						WHERE req.chash = :chash
+						order by signLine.primaryKey desc]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestSignLineAsc">
+		<query><![CDATA[select distinct(signLine)
+						from PfSignLinesDTO signLine
+							 join fetch signLine.pfSigners sign
+							 join signLine.pfRequest req
+						WHERE req.chash = :chash
+						order by signLine.primaryKey asc]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestTag">
+		<query><![CDATA[select reqTag
+						from PfRequestTagsDTO reqTag
+							 join reqTag.pfTag
+							 join reqTag.pfRequest
+						WHERE
+							reqTag.pfTag = :tag and
+							reqTag.pfRequest = :request]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestUserTags">
+		<query><![CDATA[select userTags
+						from
+							PfUserTagsDTO userTags
+							join fetch userTags.pfUser
+							join fetch userTags.pfTag,
+							PfRequestTagsDTO reqTags
+						where
+							reqTags.pfRequest = :request and
+							reqTags.pfUser = :user and
+							userTags.pfUser = reqTags.pfUser and
+							userTags.pfTag = reqTags.pfTag
+						order by userTags.pfTag.ctag
+						]]>
+		</query>
+	</named-query>
+	
+	<named-query name="request.requestUserTagsByGroup">
+		<query><![CDATA[select userTags
+						from
+							PfUserTagsDTO userTags
+							join fetch userTags.pfUser
+							join fetch userTags.pfTag,
+							PfRequestTagsDTO reqTags
+						where
+							reqTags.pfRequest = :request and
+							reqTags.pfGroup = :grupo and
+							userTags.pfUser = reqTags.pfUser and
+							userTags.pfTag = reqTags.pfTag
+						order by userTags.pfTag.ctag
+						]]>
+		</query>
+	</named-query>
+	
+	<named-query name="request.requestHistoryID">
+		<query><![CDATA[select hist
+						from PfHistoricRequestsDTO hist
+							 join fetch hist.pfRequest req
+						WHERE req = :req
+							  and hist.chistoricRequest = :chist]]>
+		</query>
+	</named-query>
+	<!--
+		<named-query name="request.documentsActions"> <query><![CDATA[select
+		act from PfActionsDTO act join act.pfDocument doc join act.pfTag tag
+		WHERE doc.hash in (:docs) and tag.ctag = :tag]]> </query>
+		</named-query>
+	-->
+	<named-query name="request.requestsActionsByDocument">
+		<query><![CDATA[select act
+						from PfActionsDTO act
+							 join fetch act.pfDocument doc
+							 join act.pfTag tag
+							 join fetch doc.pfRequest req
+						WHERE req in (:reqs)
+							  and tag.ctag = :tag]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestsActionsByRequest">
+		<query><![CDATA[select act
+						from PfActionsDTO act
+							 join fetch act.pfRequest req
+							 join act.pfTag tag
+							 join fetch req.pfDocuments doc
+						WHERE req in (:reqs)
+							  and tag.ctag = :tag]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestsActionsByRequestAll">
+		<query><![CDATA[select act
+						from PfActionsDTO act
+							 join fetch act.pfRequest req
+							 join act.pfTag tag
+							 join fetch req.pfDocuments doc
+						WHERE req in (:reqs)]]>
+		</query>
+	</named-query>
+	<named-query name="request.paramValue">
+		<query><![CDATA[select confParam
+						from PfConfigurationsParameterDTO confParam,
+							 PfConfigurationsDTO conf,
+							 PfParametersDTO params
+						WHERE confParam.pfConfiguration = conf
+							  and confParam.pfParameter = params
+							  and conf.primaryKey = :idConf
+							  and params.cparameter = :tvalor]]>
+		</query>
+	</named-query>
+	<named-query name="request.genericParamValue">
+		<query><![CDATA[select confParam
+						from PfConfigurationsParameterDTO confParam,
+							 PfParametersDTO params
+						WHERE confParam.pfParameter = params
+							  and params.cparameter = :tvalor]]>
+		</query>
+	</named-query>	
+	<named-query name="request.signerDocument">
+		<query><![CDATA[select distinct(signer)
+						from PfSignersDTO signer
+							 join signer.pfUser usr
+							 join signer.pfSignLine sli
+							 join sli.pfRequest req
+							 join req.pfRequestsTags reqTag
+							 join reqTag.pfTag tag
+							 join reqTag.pfUser usrTag
+							 join sli.pfRequest req
+							 join req.pfDocuments doc
+						WHERE usr = :usr
+							  and doc = :doc
+							  and usrTag = :usr
+							  and tag.ctag IN ('NUEVO','LEIDO','VALIDADO')]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestsNoticesNotRejected">
+		<query><![CDATA[select distinct(req)
+						from PfRequestsDTO req
+							join fetch req.pfUsersRemitters usre
+							join fetch usre.pfUser user
+							left join fetch user.pfUsersEmails
+							left join fetch user.pfUsersMobiles
+						where req in (:reqs)]]>
+		</query>
+	</named-query>
+	<named-query name="request.requestsNoticesRejected">
+		<query><![CDATA[select distinct(req)
+						from PfRequestsDTO req
+							left join fetch req.pfHistoricRequests hire
+							left join fetch req.pfComments comm
+							join fetch req.pfUsersRemitters usre
+							join fetch usre.pfUser user
+							left join fetch user.pfUsersEmails
+							left join fetch user.pfUsersMobiles
+						where req in (:reqs)]]>
+		</query>
+	</named-query>
+
+	<named-query name="request.queryNoticeConfigurationParameterList">
+		<query><![CDATA[from PfConfigurationsParameterDTO copa
+						join fetch copa.pfParameter para
+						where para.cparameter like 'NOTIFICACION.%']]>
+		</query>
+	</named-query>
+
+	<named-query name="request.querySignReportParameterList">
+		<query><![CDATA[from PfConfigurationsParameterDTO copa
+						join fetch copa.pfParameter para
+						where para.cparameter like 'INFORME.FIRMAPDF%']]>
+		</query>
+	</named-query>
+
+
+
+	<named-query name="request.signsOrderedDate">
+		<query><![CDATA[select signs
+						from PfSignsDTO signs,
+							 PfDocumentsDTO doc
+							 left join fetch signs.pfBlockSigns blockSigns
+							 left join fetch blockSigns.pfBlock block
+							 left join fetch signs.pfSigner signer
+							 left join fetch signer.pfUser
+						where signs.pfDocument = doc
+							  and doc.chash = :hashDoc
+						order by signs.fstate desc]]>
+		</query>
+	</named-query>
+
+	<named-query name="request.signTransaction">
+		<query><![CDATA[select sign
+						from PfSignsDTO sign
+							 join fetch sign.pfDocument doc
+							 join fetch sign.pfSigner signer
+							 join fetch sign.pfUser user
+							 join fetch signer.pfUser
+						where doc.chash = :hashDoc
+							 and sign.ctransaction = :transactionId]]>
+		</query>
+	</named-query>
+	
+	<named-query name="request.primaryKey">
+		<query><![CDATA[select req
+						from PfRequestsDTO req
+						where req.primaryKey = :requestId]]>
+		</query>
+	</named-query>
+
+	<named-query name="request.primaryKeyApp">
+		<query><![CDATA[select req
+						from PfRequestsDTO req
+						join fetch req.pfApplication app
+						left join fetch app.pfApplicationsParameters appParams
+						left join fetch appParams.pfParameter param
+						where req.primaryKey = :requestId]]>
+		</query>
+	</named-query>
+
+	<named-query name="request.signsOrderedDateReportBlock">
+		<query><![CDATA[select sign
+						from PfSignsDTO sign
+							 join fetch sign.pfBlockSigns bSign
+							 join fetch bSign.pfBlock block
+							 join fetch sign.pfDocument doc
+							 join fetch doc.pfDocumentScope docScope
+							 join fetch doc.pfFile file
+							 join fetch sign.pfSigner signer
+							 join fetch sign.pfUser user
+							 join fetch signer.pfUser
+						where doc.chash = :hashDoc
+							 and sign.ctype != 'VISTOBUENO'	
+						order by sign.fstate desc]]>
+		</query>
+	</named-query>
+
+	<named-query name="request.signsOrderedDateReport">
+		<query><![CDATA[select sign
+						from PfSignsDTO sign
+							 join fetch sign.pfDocument doc
+							 join fetch doc.pfDocumentScope docScope
+							 join fetch doc.pfFile file
+							 join fetch sign.pfSigner signer
+							 join fetch sign.pfUser user
+							 join fetch signer.pfUser
+						where doc.chash = :hashDoc
+							 and sign.ctype != 'VISTOBUENO'	
+						order by sign.fstate desc]]>
+		</query>
+	</named-query>
+
+	<named-query name="request.signConfigParam">
+		<query><![CDATA[from PfConfigurationsParameterDTO copa
+							 join fetch copa.pfConfiguration conf
+							 join fetch copa.pfParameter para
+						WHERE para.ctype = 'SERVIDOR'
+							  and para.cparameter like :cparam
+							  and conf.primaryKey = :idConf]]>
+		</query>
+	</named-query>
+
+	<named-query name="request.historicRequestUser">
+		<query><![CDATA[from PfHistoricRequestsDTO hire
+							 join fetch hire.pfUser
+						where hire.pfRequest = :request
+						order by hire.fcreated DESC ]]>
+		</query>
+	</named-query>
+	
+	<named-query name="request.historicRequestUserValueRequest">
+		<query><![CDATA[from PfHistoricRequestsDTO hire
+							 join fetch hire.pfUser user
+						where hire.pfRequest.primaryKey = :request 
+						and upper(user.primaryKey) = upper(:usuario) 
+						and hire.chistoricRequest = :valorPeticion]]>
+		</query>
+	</named-query>
+	
+	<named-query name="request.historicRequestValueRequest">
+		<query><![CDATA[from PfHistoricRequestsDTO hire
+							join fetch hire.pfUser user
+						where hire.pfRequest.primaryKey = :request 
+						and hire.chistoricRequest = :valorPeticion 
+						order by hire.fmodified ASC ]]>
+		</query>
+	</named-query>
+	
+	<named-query name="request.signConfigParamDoc">
+		<query><![CDATA[select copa
+						from PfConfigurationsParameterDTO copa
+							 join fetch copa.pfConfiguration conf
+							 join conf.pfApplications app
+							 join app.pfRequests req
+							 join req.pfDocuments doc
+							 join fetch copa.pfParameter para
+						WHERE para.ctype = 'SERVIDOR'
+							  and para.cparameter like :cparam
+							  and doc.chash = :chash]]>
+		</query>
+	</named-query>
+	<named-query name="request.documentSignHash">
+		<query><![CDATA[select count(doc)
+						from PfDocumentsDTO doc
+							 join doc.pfSigns sign
+							 join sign.pfUser user
+						WHERE doc.chash = :chash
+							  and upper(user.cidentifier) = upper(:user)]]>
+		</query>
+	</named-query>
+	<named-query name="request.documentStateHash">
+		<query><![CDATA[select distinct(doc)
+						from PfDocumentsDTO doc
+							 join fetch doc.pfRequest req
+							 join req.pfRequestsTags rTag
+							 join rTag.pfUser user
+							 join rTag.pfTag tag
+						WHERE doc.chash = :chash
+							  and upper(user.cidentifier) = upper(:user)
+							  and (tag.ctag = 'NUEVO' or tag.ctag = 'LEIDO' or tag.ctag = 'VALIDADO')
+							  and tag.ctype = 'ESTADO']]>
+		</query>
+	</named-query>
+	<named-query name="request.documentsSignCount">
+		<query><![CDATA[select count(doc)
+						from PfDocumentsDTO doc
+							 join doc.pfRequest req
+							 join doc.pfSigns sign
+							 join sign.pfUser user
+						WHERE req.chash = :chash
+							  and upper(user.cidentifier) = upper(:user)]]>
+		</query>
+	</named-query>
+	<named-query name="request.documentsRequestCount">
+		<query><![CDATA[select count(doc)
+						from PfDocumentsDTO doc
+							 join doc.pfRequest req
+						WHERE req.chash = :chash]]>
+		</query>
+	</named-query>
+	<named-query name="request.documentRequestHash">
+		<query><![CDATA[select doc
+						from PfDocumentsDTO doc
+							 join doc.pfRequest req
+						WHERE req.chash = :hashReq
+							  and doc.chash = :hashDoc]]>
+		</query>
+	</named-query>
+
+	<named-query name="request.jobsSigner">
+		<query><![CDATA[select user
+						from PfUsersDTO user
+							 join user.pfUsersJobs userJob
+							 join userJob.pfUserJob job
+						where job = :job
+							  and userJob.fstart <= current_date()
+							  and (userJob.fend is null
+
+							  	   or userJob.fend > current_date())
+							  and job.lvalid = 'S']]></query>
+	</named-query>
+	<named-query name="request.affectedRequests">
+		<query><![CDATA[select distinct(req)
+						from PfRequestsDTO req
+							join fetch req.pfSignsLines sli
+							join fetch sli.pfSigners sig
+							join fetch sig.pfUser usr
+							join req.pfRequestsTags reqTag
+							join reqTag.pfTag tag
+							join reqTag.pfUser userTag
+						where
+							(tag.ctag = 'NUEVO' or
+							 tag.ctag = 'LEIDO' or
+							 tag.ctag = 'VALIDADO' or
+							 tag.ctag = 'EN ESPERA')
+						and	usr = :sender
+						and userTag = :sender]]></query>
+	</named-query>
+	<named-query name="request.affectedRequestsCount">
+		<query><![CDATA[select count(req)
+						from PfRequestsDTO req
+							join req.pfSignsLines sli
+							join sli.pfSigners sig
+							join sig.pfUser usr
+							join req.pfRequestsTags reqTag
+							join reqTag.pfTag tag
+							join reqTag.pfUser userTag
+						where
+							(tag.ctag = 'NUEVO' or
+							 tag.ctag = 'LEIDO' or
+							 tag.ctag = 'VALIDADO' or
+							 tag.ctag = 'EN ESPERA')
+						and	usr = :sender
+						and userTag = :sender]]></query>
+	</named-query>
+
+	<named-query name="request.queryRequest">
+		<query><![CDATA[from PfRequestsDTO request
+						where request = :req
+						]]></query>
+	</named-query>
+
+	<named-query name="request.queryHistoricFromRequest">
+		<query><![CDATA[select historicRequest
+						from PfHistoricRequestsDTO historicRequest
+						where historicRequest.pfRequest = :req
+						]]></query>
+	</named-query>
+
+	<named-query name="request.queryCommentsFromRequest">
+		<query><![CDATA[select comments
+						from PfCommentsDTO comments
+						join fetch comments.pfUser
+						where comments.pfRequest = :req
+						]]></query>
+	</named-query>
+
+	<named-query name="request.queryRemittersFromRequest">
+		<query><![CDATA[select remitters
+						from PfUsersRemitterDTO remitters
+						join fetch remitters.pfUser user
+						left join fetch user.pfUsersEmails userEmail
+						left join fetch user.pfUsersMobiles userMobile
+						where remitters.pfRequest = :req
+						]]></query>
+	</named-query>
+
+	<named-query name="request.querySignLinesFromRequest">
+		<query><![CDATA[select signLines
+						from PfSignLinesDTO signLines
+						join fetch signLines.pfSigners signer
+						join fetch signer.pfUser user
+						left join fetch user.pfUsersEmails userEmail
+						left join fetch user.pfUsersMobiles userMobile
+						where signLines.pfRequest = :req
+						]]></query>
+	</named-query>
+
+	<named-query name="request.queryUsersFromJob">
+		<query><![CDATA[select usersJob
+						from PfUsersJobDTO usersJob
+						join fetch usersJob.pfUser user
+						left join fetch user.pfUsersEmails userEmail
+						left join fetch user.pfUsersMobiles userMobile
+						where usersJob.pfUserJob = :job
+						]]></query>
+	</named-query>
+
+	<named-query name="request.queryNoticeRequestByCtag">
+		<query><![CDATA[select noticeRequest
+						from PfNoticeRequestsDTO noticeRequest
+							 join noticeRequest.pfTag tag
+						where noticeRequest.pfRequest = :req
+						and tag.ctag = :cTag]]></query>
+	</named-query>
+
+	<named-query name="request.requestComments">
+		<query><![CDATA[select comm
+						from PfCommentsDTO comm
+						join comm.pfUser user
+						where comm.pfRequest = :req ]]></query>
+	</named-query>
+
+	<named-query name="request.confIdRequest">
+		<query><![CDATA[select conf
+						from PfConfigurationsDTO conf
+						join fetch conf.pfApplications app
+						join fetch app.pfRequests req
+						where req = :req ]]></query>
+	</named-query>
+
+	<named-query name="request.userByFullName">
+		<query><![CDATA[select usr from PfUsersDTO usr
+						where trim(upper(usr.dname || ' ' || coalesce(usr.dsurname1,'') || ' ' || coalesce(usr.dsurname2,'')))  = upper(:fullName) ]]></query>
+	</named-query>
+	<named-query name="request.queryRequestSignLines">
+		<query><![CDATA[select distinct(req)
+						from PfRequestsDTO req
+						join fetch req.pfSignsLines sli
+						join fetch sli.pfSigners sig
+						join fetch sig.pfUser user
+						where req.primaryKey = :pk]]></query>
+	</named-query>
+	<named-query name="request.delegatedUsersComplete">
+		<query><![CDATA[select autUser
+						from PfUsersDTO autUser
+						join fetch autUser.pfUsersAuthorizations usrAut
+						join fetch usrAut.pfUser usr
+						where usr.primaryKey = :usrPk and
+						(upper(autUser.dname) like upper(:find)
+										   or upper(autUser.dsurname1) like upper(:find)
+										   or upper(autUser.dsurname2) like upper(:find)
+										   or upper(autUser.cidentifier) like upper(:find))]]>
+		</query>
+	</named-query>
+	<named-query name="request.filtersByRequest">
+		<query><![CDATA[select distinct(filter)
+						from PfFiltersDTO filter
+						join fetch filter.pfAuthorizationFilters filtAuth
+						join fetch filtAuth.pfUsersAuthorization userAuth
+						join fetch userAuth.pfUser user
+						join fetch userAuth.pfAuthorizedUser usrAut
+						join fetch user.pfSigners sig
+						join fetch sig.pfSignLine sli
+						join fetch sli.pfRequest req
+						where req = :req
+						and filter.lvalid = 'S'
+						and (filter.fstart < current_date() or filter.fstart is null)
+						and (filter.fend > current_date() or filter.fend is null)
+						and (userAuth.fauthorization is not null)
+						and (userAuth.frevocation > current_date() or userAuth.frevocation is null)
+						order by sli.primaryKey,sig.primaryKey,filter.corder asc]]></query>
+	</named-query>
+	<named-query name="request.requestSignMode">
+		<query><![CDATA[select distinct(req)
+						from PfRequestsDTO req
+						join fetch req.pfDocuments doc
+						left join fetch doc.pfSigns sign
+						left join fetch sign.pfBlockSigns bsign
+						where req in (:reqs)]]></query>
+	</named-query>
+	<named-query name="request.mostUsedSigners">
+	<query><![CDATA[select
+						signerUsers.primaryKey as primaryKey,
+						signerUsers.cidentifier as cidentifier,
+						signerUsers.dname as dname,
+						signerUsers.dsurname1 as dsurname1,
+						signerUsers.dsurname2 as dsurname2
+					from 
+						PfUsersDTO remitters,
+						PfUsersRemitterDTO userRemitters,
+						PfRequestsDTO requests,
+						PfSignLinesDTO signLines,
+						PfSignersDTO signers,
+						PfUsersDTO signerUsers
+					where
+						remitters = userRemitters.pfUser and
+						requests = userRemitters.pfRequest and
+						requests = signLines.pfRequest and
+						signLines = signers.pfSignLine and
+						signerUsers = signers.pfUser and
+						remitters = :remitter
+					group by 
+						signerUsers.primaryKey,
+						signerUsers.cidentifier,
+						signerUsers.dname,
+						signerUsers.dsurname1,
+						signerUsers.dsurname2
+					order by count(signerUsers.primaryKey) desc]]></query>
+	</named-query>
+	<named-query name="request.requestAuthorizations">
+		<query><![CDATA[from PfRequestsDTO request
+							 left join fetch request.pfSignsLines signLines
+							 left join fetch signLines.pfSigners signers
+							 left join fetch signers.pfUser user
+							 left join fetch user.pfUsersAuthorizations authorizations
+						where request.primaryKey = :requestPk]]></query>
+	</named-query>
+	
+	<named-query name="request.userAuthorizations">
+		<query><![CDATA[from PfUsersAuthorizationDTO authorizations
+							 left join fetch authorizations.pfAuthorizedUser authorizedUsers
+							 left join fetch authorizations.pfAuthorizationType types
+							 left join fetch authorizations.pfAuthorizationFilters filters
+						where authorizations.pfUser.primaryKey = :userPk and authorizations.entidad = :entidad]]></query>
+	</named-query>
+	<named-query name="request.queryAuthorization">
+		<query><![CDATA[from PfUsersAuthorizationDTO authorization
+						where authorization = :aut
+						]]></query>
+	</named-query>
+	
+	
+	<named-query name="request.queryUserContact">
+		<query><![CDATA[from PfUsersDTO user
+							 left join fetch user.pfUsersEmails emails
+							 left join fetch user.pfUsersMobiles mobiles
+						where user = :user
+						]]></query>
+	</named-query>
+	<named-query name="request.signByCsv">
+		<query><![CDATA[from PfSignsDTO sign
+							 left join fetch sign.pfDocument document
+							 left join fetch document.pfFile
+							 left join fetch document.pfRequest req
+							 left join fetch req.pfRequestsTags rTag
+							 left join fetch rTag.pfTag tag
+						where sign.csv = :csv]]></query>
+	</named-query>	
+	<named-query name="request.signByCsvNormalizado">
+		<query><![CDATA[from PfSignsDTO sign
+							 left join fetch sign.pfDocument document
+							 left join fetch document.pfFile
+							 left join fetch document.pfRequest req
+							 left join fetch req.pfRequestsTags rTag
+							 left join fetch rTag.pfTag tag
+						where sign.csvNormalizado = :csv]]></query>
+	</named-query>
+<!-- 	<named-query name="request.signByCsvAndScope">
+		<query><![CDATA[from PfSignsDTO sign
+							 left join fetch sign.pfDocument document							 							 
+							 left join fetch document.pfDocumentScope scope
+						where sign.csv = :csv		
+						and   scope = :scope
+						and (sign.lanulada = 'N' or sign.lanulada is null)]]></query>
+	</named-query> -->
+	<named-query name="request.scopeTypes">
+		<query><![CDATA[from PfDocumentScopesDTO scope]]></query>
+	</named-query>
+	<named-query name="request.importanceLevels">
+		<query><![CDATA[from PfImportanceLevelsDTO level]]></query>
+	</named-query>
+	<named-query name="request.queryImportanceLevelById">
+		<query><![CDATA[from PfImportanceLevelsDTO level
+						where level.primaryKey = :idLevel]]></query>
+	</named-query>
+	<named-query name="request.queryImportanceLevelByCode">
+		<query><![CDATA[from PfImportanceLevelsDTO level
+						where level.ccodigonivel = :codLevel]]></query>
+	</named-query>
+	<named-query name="request.queryNormalLevel">
+		<query><![CDATA[from PfImportanceLevelsDTO level
+						where level.ccodigonivel = '1']]></query>
+	</named-query>
+	<named-query name="request.queryAccionFirmanteByCode">
+		<query><![CDATA[from PfAccionFirmanteDTO accion
+						where accion.ccodigo = :code]]></query>
+	</named-query>
+	<named-query name="request.queryAccionFirmanteSinEspecificar">
+		<query><![CDATA[from PfAccionFirmanteDTO accion
+						where accion.ccodigo = '1']]></query>
+	</named-query>
+	<named-query name="request.queryScopeById">
+		<query><![CDATA[from PfDocumentScopesDTO scope
+						where scope.primaryKey = :idScope]]></query>
+	</named-query>
+		<named-query name="request.queryScopeByDescription">
+		<query><![CDATA[from PfDocumentScopesDTO scope
+						where scope.cdescription = :cdescription]]></query>
+	</named-query>
+	
+	<named-query name="request.queryInternalScope">
+		<query><![CDATA[from PfDocumentScopesDTO scope
+						where scope.cdescription = 'INTERNO']]></query>
+	</named-query>
+	<named-query name="request.queryExternalScope">
+		<query><![CDATA[from PfDocumentScopesDTO scope
+						where scope.cdescription = 'EXTERNO']]></query>
+	</named-query>
+	<named-query name="request.querySeats">
+		<query><![CDATA[from PfProvinceDTO province
+						where (:find is not null and ccodigoprovincia = :find) or
+							  (:find is not null and convert(upper(cnombre), 'US7ASCII') = convert(upper(:find),'US7ASCII')) or
+							  (:find is null)]]></query>
+	</named-query>
+	<named-query name="request.queryAllProvinces">
+		<query><![CDATA[from PfProvinceDTO province order by cnombre]]></query>
+	</named-query>
+	
+	<named-query name="request.queryAllOrganisms">
+		<query><![CDATA[from PfUnidadOrganizacionalDTO organismo order by denominacion]]></query>
+	</named-query>
+	
+	<named-query name="request.queryOrganismById">
+		<query><![CDATA[from PfUnidadOrganizacionalDTO organismo where organismo.id =:id]]></query>
+	</named-query>
+	
+	<named-query name="request.queryOrganismByCode">
+		<query><![CDATA[from PfUnidadOrganizacionalDTO organismo where organismo.codigo =:codigoOrganismo]]></query>
+	</named-query>
+	
+	<named-query name="request.queryFilterOrganisms">
+		<query><![CDATA[select organismo.codigo + ' - ' + organismo.denominacion from PfUnidadOrganizacionalDTO organismo where upper(organismo.codigo) like upper(:filtro)
+		or upper(organismo.denominacion) like upper(:filtro)
+		order by organismo.denominacion]]></query>
+	</named-query>
+	
+	<named-query name="request.queryVisibleProvinces">
+		<query><![CDATA[from PfProvinceDTO province
+						where (
+								(:province is null)
+								or
+								(province.ccodigoprovincia = :province)
+								or
+								( province.primaryKey in
+									(select distinct province2.primaryKey
+									 from PfUsersDTO user
+									 join user.pfProvince province2
+									 where user.lvisible = 'S' and user.lvalid = 'S'
+									 )
+								) 
+						)
+						 order by cnombre
+						]]></query>
+	</named-query>	
+	<named-query name="request.queryAdminProvinces">
+		<query><![CDATA[select province
+						from PfProvinceAdminDTO admProv
+						join admProv.pfProvince province
+						where admProv.pfUser = :usuario
+						order by province.cnombre]]></query>
+	</named-query>
+			
+	<named-query name="request.queryAdminProvincesRelation">
+		<query><![CDATA[from PfProvinceDTO province
+						where province.organismo = :unidadOrg]]></query>
+	</named-query>
+	<named-query name="request.queryProvinceByCode">
+		<query><![CDATA[from PfProvinceDTO province
+						where province.ccodigoprovincia = :cod]]></query>
+	</named-query>
+	<named-query name="request.queryUserProvince">
+		<query><![CDATA[from PfUsersDTO user
+							 left join fetch user.pfProvince province
+						where user = :user
+						]]></query>
+	</named-query>
+	<named-query name="request.usersFromProvince">
+		<query><![CDATA[from PfUsersDTO user
+							 left join fetch user.pfProvince province
+						where province = :seat
+						]]></query>
+	</named-query>
+	<named-query name="request.provinceAdminFromProvince">
+		<query><![CDATA[from PfProvinceAdminDTO provinceAdmin
+							 left join fetch provinceAdmin.pfProvince province
+						where province = :seat
+						]]></query>
+	</named-query>
+	<named-query name="request.usersFromGroup">
+		<query><![CDATA[select user
+						from PfUsersDTO user,
+							 PfUsersGroupsDTO userGroup						
+						where userGroup.pfUser = user
+						and   userGroup.pfGroup = :group]]></query>
+	</named-query>
+	<named-query name="request.allGroups">
+		<query><![CDATA[from PfGroupsDTO groups
+						left join fetch groups.pfProvince province
+						]]></query>
+	</named-query>
+	<named-query name="request.groupsBySeat">
+		<query><![CDATA[from PfGroupsDTO groups
+						left join fetch groups.pfProvince province
+						where province.ccodigoprovincia = :seatCod
+						]]></query>
+	</named-query>
+	<named-query name="request.groupsFromUser">
+		<query><![CDATA[select grupo
+						from PfGroupsDTO grupo,
+							 PfUsersGroupsDTO userGroup						
+						where userGroup.pfGroup = grupo
+						and   userGroup.pfUser = :user]]></query>
+	</named-query>
+	<named-query name="request.groupByPk">
+		<query><![CDATA[select grupo
+						from PfGroupsDTO grupo
+						where grupo.primaryKey = :pk]]></query>
+	</named-query>
+	<named-query name="request.userGroup">
+		<query><![CDATA[select userGroup
+						from PfUsersGroupsDTO userGroup
+						where userGroup.pfUser =  :user
+						and   userGroup.pfGroup = :group]]></query>
+	</named-query>
+	<named-query name="request.userGroupByPk">
+		<query><![CDATA[select userGroup
+						from PfUsersGroupsDTO userGroup
+						where userGroup.primaryKey = :pk]]></query>
+	</named-query>
+	<named-query name="request.usersGroup">
+		<query><![CDATA[select userGroup
+						from PfUsersGroupsDTO userGroup
+						join userGroup.pfUser user						
+						where userGroup.pfGroup = :group
+						order by user.dsurname1 || ' ' || user.dsurname2 || ' ' ||user.dname 
+						]]></query>
+	</named-query>
+	<named-query name="request.filterGroups">
+		<query><![CDATA[select grupo
+						from PfGroupsDTO grupo
+						where trim(grupo.cnombre) like :filter]]></query>
+	</named-query>
+	<named-query name="request.queryMobileAgents">
+		<query><![CDATA[from PfMobileAgentsDTO agent]]></query>
+	</named-query>
+	
+	<named-query name="request.querySessionAttributes">
+		<query><![CDATA[from PfSessionAttributesDTO attributes
+						join fetch attributes.pfUser user
+						where attributes.csessionid = :id]]></query>
+	</named-query>
+	
+	<named-query name="request.queryOldSessions">
+		<query><![CDATA[from PfSessionAttributesDTO attributes
+						join fetch attributes.pfUser user
+						where attributes.fmodified <= :date]]></query>
+	</named-query>
+
+	<!-- STATISTICS -->
+	<named-query name="request.requestsByUser">
+		<query><![CDATA[select user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2 as name,
+							   count(remitters.primaryKey) as requests
+						from PfUsersDTO user
+							 join user.pfUsersRemitters remitters
+							 join user.pfProvince province
+						where user.ctype = 'USUARIO'
+						and	  province in (:seats)
+						group by user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2
+						order by user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2]]></query>
+	</named-query>
+
+	<named-query name="request.requestsByUserAndYear">
+		<query><![CDATA[select user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2 as name,
+							   count(remitters.primaryKey) as requests
+						from PfUsersDTO user
+							 join user.pfUsersRemitters remitters
+							 join user.pfProvince province
+						where user.ctype = 'USUARIO'
+						and	  province in (:seats)
+						and   extract(YEAR from remitters.fcreated) = :year
+						group by user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2
+						order by user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2]]></query>
+	</named-query>
+
+	<named-query name="request.signsByUser">
+		<query><![CDATA[select user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2 as name,
+							   count(signs.primaryKey) as signscount
+						from PfUsersDTO user, PfSignsDTO signs
+							 join user.pfProvince province
+						where user.ctype = 'USUARIO'
+						and   signs.pfUser = user
+						and	  province in (:seats)
+						group by user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2
+						order by user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2]]></query>
+	</named-query>
+
+	<named-query name="request.signsByUserAndYear">
+		<query><![CDATA[select user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2 as name,
+							   count(signs.primaryKey) as signscount
+						from PfUsersDTO user, PfSignsDTO signs
+							 join user.pfProvince province
+						where user.ctype = 'USUARIO'
+						and   signs.pfUser = user
+						and	  province in (:seats)
+						and   extract(YEAR from signs.fcreated) = :year
+						group by user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2
+						order by user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2]]></query>
+	</named-query>
+
+	<named-query name="request.requestsBySeat">
+		<query><![CDATA[select province.cnombre as name,
+							   count(remitters.primaryKey) as requests
+						from PfProvinceDTO province
+							 join province.pfUsers users
+							 join users.pfUsersRemitters remitters
+						where users.ctype = 'USUARIO' and
+						      province in (:seats)
+						group by province.cnombre
+						order by province.cnombre]]></query>
+	</named-query>
+
+	<named-query name="request.requestsBySeatAndYear">
+		<query><![CDATA[select province.cnombre as name,
+							   count(remitters.primaryKey) as requests
+						from PfProvinceDTO province
+							 join province.pfUsers users
+							 join users.pfUsersRemitters remitters
+						where users.ctype = 'USUARIO'
+						and   province in (:seats)
+						and   extract(YEAR from remitters.fcreated) = :year
+						group by province.cnombre
+						order by province.cnombre]]></query>
+	</named-query>
+
+	<named-query name="request.signsBySeat">
+		<query><![CDATA[select province.cnombre as name,
+							   count(signs.primaryKey) as signscount
+						from PfUsersDTO user, PfSignsDTO signs
+							 join user.pfProvince province
+						where user.ctype = 'USUARIO'
+						and   signs.pfUser = user
+						and   province in (:seats)
+						group by province.cnombre
+						order by province.cnombre]]></query>
+	</named-query>
+
+	<named-query name="request.signsBySeatAndYear">
+		<query><![CDATA[select province.cnombre as name,
+							   count(signs.primaryKey) as signscount
+						from PfUsersDTO user, PfSignsDTO signs
+							 join user.pfProvince province
+						where user.ctype = 'USUARIO'
+						and   signs.pfUser = user
+						and   province in (:seats)
+						and   extract(YEAR from signs.fcreated) = :year
+						group by province.cnombre
+						order by province.cnombre]]></query>
+	</named-query>
+
+	<named-query name="request.requestsByDateUserSeat">
+		<query><![CDATA[select province.cnombre as seat,
+							   user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2 as name,
+							   extract(MONTH from request.fcreated) as Mes,
+       						   extract(YEAR from request.fcreated) as Anio,
+							   count(request.primaryKey) as requests
+						from PfUsersDTO user
+							 join user.pfUsersRemitters remitters
+							 join remitters.pfRequest request
+							 join user.pfProvince province
+						where user.ctype = 'USUARIO' and
+						      province in (:seats)
+						group by province.cnombre,
+							     user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2,
+							     extract(MONTH from request.fcreated),
+       						     extract(YEAR from request.fcreated)
+						order by province.cnombre,
+							     user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2,
+							     extract(MONTH from request.fcreated),
+       						     extract(YEAR from request.fcreated)]]></query>
+	</named-query>
+
+	<named-query name="request.requestsByDateUserSeatAndYear">
+		<query><![CDATA[select province.cnombre as seat,
+							   user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2 as name,
+							   extract(MONTH from request.fcreated) as Mes,
+       						   extract(YEAR from request.fcreated) as Anio,
+							   count(request.primaryKey) as requests
+						from PfUsersDTO user
+							 join user.pfUsersRemitters remitters
+							 join remitters.pfRequest request
+							 join user.pfProvince province
+						where user.ctype = 'USUARIO'
+						and   province in (:seats)
+						and   extract(YEAR from request.fcreated) = :year
+						group by province.cnombre,
+							     user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2,
+							     extract(MONTH from request.fcreated),
+       						     extract(YEAR from request.fcreated)
+						order by province.cnombre,
+							     user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2,
+							     extract(MONTH from request.fcreated),
+       						     extract(YEAR from request.fcreated)]]></query>
+	</named-query>
+
+	<named-query name="request.signsByDateUserSeat">
+		<query><![CDATA[select province.cnombre as seat,
+							   user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2 as name,
+							   extract(MONTH from sign.fcreated) as Mes,
+       						   extract(YEAR from sign.fcreated) as Anio,
+							   count(sign.primaryKey) as signscount
+						from PfUsersDTO user,
+							 PfSignsDTO sign,
+							 PfSignersDTO signer,
+							 PfSignLinesDTO signLine,
+							 PfRequestsDTO request,
+							 PfProvinceDTO province
+						where user.ctype = 'USUARIO'
+						and   sign.pfUser = user
+						and   sign.pfSigner = signer
+						and   signer.pfSignLine = signLine
+						and   signLine.pfRequest = request
+						and   user.pfProvince = province
+						and   province in (:seats)
+						group by province.cnombre,
+							     user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2,
+							     extract(MONTH from sign.fcreated),
+       						     extract(YEAR from sign.fcreated)
+						order by province.cnombre,
+							     user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2,
+							     extract(MONTH from sign.fcreated),
+       						     extract(YEAR from sign.fcreated)]]></query>
+	</named-query>
+
+	<named-query name="request.signsByDateUserSeatAndYear">
+		<query><![CDATA[select province.cnombre as seat,
+							   user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2 as name,
+							   extract(MONTH from sign.fcreated) as Mes,
+       						   extract(YEAR from sign.fcreated) as Anio,
+							   count(sign.primaryKey) as signscount
+						from PfUsersDTO user,
+							 PfSignsDTO sign,
+							 PfSignersDTO signer,
+							 PfSignLinesDTO signLine,
+							 PfRequestsDTO request,
+							 PfProvinceDTO province
+						where user.ctype = 'USUARIO'
+						and   sign.pfUser = user
+						and   sign.pfSigner = signer
+						and   signer.pfSignLine = signLine
+						and   signLine.pfRequest = request
+						and   user.pfProvince = province
+						and   province in (:seats)
+						and   extract(YEAR from sign.fcreated) = :year
+						group by province.cnombre,
+							     user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2,
+							     extract(MONTH from sign.fcreated),
+       						     extract(YEAR from sign.fcreated)
+						order by province.cnombre,
+							     user.dname || ' ' || user.dsurname1 || ' ' || user.dsurname2,
+							     extract(MONTH from sign.fcreated),
+       						     extract(YEAR from sign.fcreated)]]></query>
+	</named-query>
+
+	<named-query name="request.usersBySeat">
+		<query><![CDATA[select province.cnombre as name,
+							   count(user.primaryKey) as users
+						from PfProvinceDTO province
+							 left join province.pfUsers user
+						where user.ctype = 'USUARIO' and
+							  province in (:seats)
+						group by province.cnombre
+						order by province.cnombre]]></query>
+	</named-query>
+
+	<named-query name="request.signsAndRequestsByAppSeat">
+		<query><![CDATA[select province.cnombre as seat,
+							   app.dapplication as application,
+							   count(sign.primaryKey) as signscount,
+							   count(distinct request.primaryKey) as requestscount
+						from PfUsersDTO user,
+							 PfSignsDTO sign,
+							 PfSignersDTO signer,
+							 PfSignLinesDTO signLine,
+							 PfRequestsDTO request,
+							 PfProvinceDTO province,
+							 PfApplicationsDTO app
+						where user.ctype = 'USUARIO'
+						and   sign.pfUser = user
+						and   sign.pfSigner = signer
+						and   signer.pfSignLine = signLine
+						and   signLine.pfRequest = request
+						and   user.pfProvince = province
+						and   request.pfApplication = app
+						and   province in (:seats)
+						group by province.cnombre, app.dapplication
+						order by province.cnombre, app.dapplication]]></query>
+	</named-query>
+
+	<named-query name="request.signsAndRequestsByAppSeatAndYear">
+		<query><![CDATA[select province.cnombre as seat,
+							   app.dapplication as application,
+							   count(sign.primaryKey) as signscount,
+							   count(distinct request.primaryKey) as requestscount
+						from PfUsersDTO user,
+							 PfSignsDTO sign,
+							 PfSignersDTO signer,
+							 PfSignLinesDTO signLine,
+							 PfRequestsDTO request,
+							 PfProvinceDTO province,
+							 PfApplicationsDTO app
+						where user.ctype = 'USUARIO'
+						and   sign.pfUser = user
+						and   sign.pfSigner = signer
+						and   signer.pfSignLine = signLine
+						and   signLine.pfRequest = request
+						and   user.pfProvince = province
+						and   request.pfApplication = app
+						and   province in (:seats)
+						and   extract(YEAR from sign.fcreated) = :year
+						group by province.cnombre, app.dapplication
+						order by province.cnombre, app.dapplication]]></query>
+	</named-query>
+	<named-query name="request.userTemplates">
+		<query><![CDATA[from PfRequestTemplatesDTO template
+						join fetch template.pfUser user
+						where user = :user]]></query>
+	</named-query>
+	<named-query name="request.loadTemplate">
+		<query><![CDATA[from PfRequestTemplatesDTO template
+						where template.primaryKey = :templateId]]></query>
+	</named-query>
+
+	<named-query name="request.loadTemplateUser">
+		<query><![CDATA[from PfRequestTemplatesDTO template
+						where template.primaryKey = :templateId
+						and template.pfUser = :user]]></query>
+	</named-query>
+		
+	<!-- DOCEL QUERIES -->
+	<named-query name="request.docelwebGenericUser">
+		<query><![CDATA[select user from PfUsersDTO user
+						where user.cidentifier = 'INTERFAZ_GENERICA']]></query>
+	</named-query>	
+	<named-query name="request.docelwebRequestSpfirma">
+		<query><![CDATA[select requestSpfirma from PfDocelwebRequestSpfirmaDTO requestSpfirma 
+						where requestSpfirma.primaryKey = :idTransaction]]></query>
+	</named-query>	
+	<named-query name="request.docelwebAllRequestSmanager">
+		<query><![CDATA[select requestSmanager from PfDocelwebRequestSmanagerDTO requestSmanager]]></query>
+	</named-query>	
+	<named-query name="request.docelwebRequestSmanager">
+		<query><![CDATA[select requestSmanager
+						  from PfDocelwebRequestSmanagerDTO requestSmanager
+						  join fetch requestSmanager.portafirmas portafirmas
+						  join fetch requestSmanager.pfEtiquetaPeticion etiquetaPeticion
+						  join fetch etiquetaPeticion.pfUser usuario
+						  left join fetch etiquetaPeticion.pfSignLine lineaFirma
+						  left join fetch lineaFirma.pfSigners
+						  left join fetch usuario.pfUsersJobs cargos
+						  left join fetch cargos.pfUserJob cargo
+						  join fetch etiquetaPeticion.pfRequest peticion
+						  left join fetch peticion.pfSignsLines lineasFirma
+						  left join fetch lineasFirma.pfSigners firmantes
+						  left join fetch firmantes.pfUser
+						  left join fetch peticion.pfRequestsTags peticionEtiq
+						  left join fetch peticionEtiq.pfTag
+						  join fetch peticion.pfUsersRemitters remitentes
+						  join fetch remitentes.pfUser remitente
+						  join fetch peticion.pfDocuments documento
+						  join fetch documento.pfFile archivo
+						  join fetch peticion.pfApplication aplicacion
+						  join fetch aplicacion.pfConfiguration
+						where requestSmanager.primaryKey = :idRequest]]></query>
+	</named-query>	
+	<named-query name="request.docelwebRequestSmanagerBySpfirmaData">
+		<query><![CDATA[select requestSmanager
+		 				  from PfDocelwebRequestSmanagerDTO requestSmanager
+						  join fetch requestSmanager.portafirmas portafirmas
+						  join fetch requestSmanager.pfEtiquetaPeticion etiquetaPeticion
+						  join fetch etiquetaPeticion.pfUser usuario
+						  left join fetch etiquetaPeticion.pfSignLine lineaFirma
+						  left join fetch lineaFirma.pfSigners
+						  left join fetch usuario.pfUsersJobs cargos
+						  left join fetch cargos.pfUserJob cargo
+						  join fetch etiquetaPeticion.pfRequest peticion
+						  join fetch peticion.pfUsersRemitters remitentes
+						  join fetch remitentes.pfUser remitente
+						  join fetch peticion.pfDocuments documento
+						  join fetch documento.pfFile archivo
+						  join fetch peticion.pfApplication aplicacion
+						  join fetch aplicacion.pfConfiguration
+						where requestSmanager.idTransaccion = :idTransaction 
+						and	portafirmas.cPortafirmas = :idSystempfirma]]></query>
+	</named-query>		
+	<named-query name="request.docelwebSpfirmaDocumentById">
+		<query><![CDATA[select document from PfDocelwebDocumentDTO document 
+						where document.primaryKey = :idDocumento]]></query>
+	</named-query>
+	<named-query name="request.docelwebSManagerDocumentById">
+		<query><![CDATA[select smDocument from PfDocelwebSmDocDTO smDocument
+						where smDocument.primaryKey = :idDocumento]]></query>
+	</named-query>
+	<named-query name="request.docelwebSManagerDocumentByRequestId">
+		<query><![CDATA[select smDocument from PfDocelwebSmDocDTO smDocument
+						join fetch smDocument.pfDocelwebSolicitudSgestion smRequest
+						join fetch smDocument.pfDocumentDTO
+						where smRequest.primaryKey = :idRequest]]></query>
+	</named-query>
+	<named-query name="request.systemManagerByStatus">
+		<query><![CDATA[select requestSmanager
+		                  from PfDocelwebRequestSmanagerDTO requestSmanager 
+						 where requestSmanager.dState in (:estados)
+						   and requestSmanager.fcreated >= :fecha]]></query>
+	</named-query>	
+	<named-query name="request.systemManagerOldByStatus">
+		<query><![CDATA[select requestSmanager
+		                  from PfDocelwebRequestSmanagerDTO requestSmanager 
+						 where requestSmanager.dState in (:estados)
+						   and requestSmanager.fcreated <= :fecha]]></query>
+	</named-query>	
+	<named-query name="request.docelwebRequestDocumentByDescription">
+		<query><![CDATA[select document from PfDocelwebDocumentDTO document
+						join fetch document.pfRequest requestSpfirma
+						where document.dDescription = :dDescripcion 
+						and requestSpfirma = :request]]></query>
+	</named-query>
+	<named-query name="request.docelwebRequestPfirmaRequestHash">
+		<query><![CDATA[select docelrequest from PfDocelwebRequestSpfirmaDTO docelrequest 
+						join fetch docelrequest.pfRequest pfirmarequest
+						where pfirmarequest.chash = :hash]]></query>
+	</named-query>
+	<named-query name="request.docelwebSystemManagerClientDefaultConfig">
+		<query><![CDATA[select docelconfigparams from PfConfigurationsParameterDTO docelconfigparams 
+						join fetch docelconfigparams.pfParameter docelparam
+						where docelparam.ctype = 'SM_DOCEL']]></query>
+	</named-query>
+	<named-query name="request.docelwebSystemManagerClientDefaultConfigParam">
+		<query><![CDATA[select docelconfigparams from PfConfigurationsParameterDTO docelconfigparams 
+						join fetch docelconfigparams.pfParameter docelparam
+						where docelparam.ctype = 'SM_DOCEL'
+						and docelparam.cparameter = :paramkey]]></query>
+	</named-query>	
+	<named-query name="request.docelwebSystemManagerClientConcreteConfig">
+		<query><![CDATA[select docelconfigparams from PfConfigurationsParameterDTO docelconfigparams 
+						join fetch docelconfigparams.pfParameter docelparam
+						join fetch docelconfigparams.pfConfiguration docelconfig
+						where docelparam.ctype = 'SM_DOCEL'
+						and docelconfig.primaryKey = :idConf]]></query>
+	</named-query>
+	<named-query name="request.docelwebSystemManagerClientConcreteConfigParam">
+		<query><![CDATA[select docelconfigparams from PfConfigurationsParameterDTO docelconfigparams 
+						join fetch docelconfigparams.pfParameter docelparam
+						join fetch docelconfigparams.pfConfiguration docelconfig
+						where docelparam.ctype = 'SM_DOCEL'
+						and docelconfig.primaryKey = :idConf
+						and docelparam.cparameter = :paramkey]]></query>
+	</named-query>	
+	<named-query name="request.docelwebSystemPfirmaClientDefaultConfig">
+		<query><![CDATA[select docelconfigparams from PfConfigurationsParameterDTO docelconfigparams 
+						join fetch docelconfigparams.pfParameter docelparam
+						where docelparam.ctype = 'SP_DOCEL']]></query>
+	</named-query>
+	<named-query name="request.docelwebSystemPfirmaClientDefaultConfigParam">
+		<query><![CDATA[select docelconfigparams from PfConfigurationsParameterDTO docelconfigparams 
+						join fetch docelconfigparams.pfParameter docelparam
+						where docelparam.ctype = 'SP_DOCEL'
+						and docelparam.cparameter = :paramkey]]></query>
+	</named-query>	
+	<named-query name="request.docelwebSystemPfirmaClientConcreteConfig">
+		<query><![CDATA[select docelconfigparams from PfConfigurationsParameterDTO docelconfigparams 
+						join fetch docelconfigparams.pfParameter docelparam
+						join fetch docelconfigparams.pfConfiguration docelconfig
+						where docelparam.ctype = 'SP_DOCEL'
+						and docelconfig.primaryKey = :idConf]]></query>
+	</named-query>
+	<named-query name="request.docelwebSystemPfirmaClientConcreteConfigParam">
+		<query><![CDATA[select docelconfigparams from PfConfigurationsParameterDTO docelconfigparams 
+						join fetch docelconfigparams.pfParameter docelparam
+						join fetch docelconfigparams.pfConfiguration docelconfig
+						where docelparam.ctype = 'SP_DOCEL'
+						and docelconfig.primaryKey = :idConf
+						and docelparam.cparameter = :paramkey]]></query>
+	</named-query>
+	<named-query name="request.docelwebSystemManagerRequestsCanceledAndNew">
+		<query><![CDATA[select requestSmanager from PfDocelwebRequestSmanagerDTO requestSmanager 
+						where requestSmanager.dState = 'A' or requestSmanager.dState = 'N']]></query>
+	</named-query>	
+	<named-query name="request.documentByFileId">
+		<query><![CDATA[select doc
+						from PfDocumentsDTO doc
+						join fetch doc.pfFile file
+						WHERE file.primaryKey = :idFile]]>
+		</query>
+	</named-query>
+	<named-query name="request.docelwebDocumentByFileId">
+		<query><![CDATA[select docelDoc
+						from PfDocelwebDocumentDTO docelDoc
+						join fetch docelDoc.pfFile file
+						WHERE file.primaryKey = :idFile]]>
+		</query>
+	</named-query>
+	
+	 <named-query name="request.usersCommentByRequest">
+		<query><![CDATA[select distinct(comm)
+						  from PfCommentsDTO comm 
+					      join comm.pfUsersComments usrcomm
+					     where comm.pfRequest = :req	
+						   and (usrcomm.pfUser = :user
+						  		or usrcomm.pfUser IN (select userJob.pfUserJob 
+						  		                        from PfUsersJobDTO userJob	 				
+								                       where userJob.pfUser = :user)
+								or usrcomm.pfUser IN (select userGroup.pfUser 
+						  		                        from PfUsersGroupsDTO userGroup,
+						  		                             PfUsersRemitterDTO userRemitter	 				
+								                       where userRemitter.pfRequest = comm.pfRequest
+														 and userRemitter.pfGroup = userGroup.pfGroup
+								                         and userGroup.pfGroup in (select userGroup2.pfGroup  
+								                       						         from PfUsersGroupsDTO userGroup2 
+								                       						        where userGroup2.pfUser = :user)
+								                       )
+						      ) ]]></query>
+	</named-query>
+	
+	<named-query name="request.requestCommentById">
+		<query><![CDATA[select comm
+						from PfCommentsDTO comm
+						left join fetch comm.pfUsersComments usrcomm
+						join fetch usrcomm.pfUser user
+						where comm.primaryKey = :idComment ]]></query>
+	</named-query>
+	
+	<named-query name="request.usersCommentByIdComment">
+		<query><![CDATA[select usrcomm
+						from PfUsersCommentDTO usrcomm
+						join usrcomm.pfComment comm
+						join usrcomm.pfUser user
+						where comm.primaryKey = :idComment
+						  and upper(user.cidentifier) = upper(:identifier)]]></query>
+	</named-query>
+	
+	
+	<named-query name="request.userMessagesByUserCount">
+		<query><![CDATA[select count(mess)
+						  from PfMessagesDTO mess 
+					      left join mess.pfUsersMessages userMess with userMess.pfUser.primaryKey = :user 
+					      left join userMess.pfTag tag
+					     where mess.fstart <= current_date()
+						   and (mess.fexpiration is null
+								 or mess.fexpiration > current_date())
+						   and (mess.pfMessageScope.primaryKey = 1
+						  		or (mess.pfMessageScope.primaryKey = 2 and mess.pfProvince.primaryKey = :province)
+						  		or (mess.pfMessageScope.primaryKey = 3 and mess.pfUser.primaryKey = :user))
+						   and mess.primaryKey not in (select mess2.primaryKey 
+						   								 from PfUsersMessageDTO userMess 
+						   								 join userMess.pfMessage mess2
+														 join userMess.pfUser user2
+														 join userMess.pfTag tag
+						   								where mess2.primaryKey = mess.primaryKey
+						   								  and user2.primaryKey = :user
+						   								  and tag.ctag = 'RETIRADO'))]]></query>
+	</named-query>
+	
+	<named-query name="request.userMessagesByUser">
+		<query><![CDATA[select mess.primaryKey as primaryKey, 
+							   mess.dsubject as dsubject,
+							   mess.ttext as ttext,
+							   mess.fstart as fstart,
+							   mess.fexpiration as fexpiration,
+							   userMess.primaryKey as userMessagePk,
+							   tag.ctag AS ctag
+		                  from PfMessagesDTO mess 
+					      left join mess.pfUsersMessages userMess with userMess.pfUser.primaryKey = :user 
+					      left join userMess.pfTag tag
+					     where mess.fstart <= current_date()
+						   and (mess.fexpiration is null
+								 or mess.fexpiration > current_date())
+						   and (mess.pfMessageScope.primaryKey = 1
+						  		or (mess.pfMessageScope.primaryKey = 2 and mess.pfProvince.primaryKey = :province)
+						  		or (mess.pfMessageScope.primaryKey = 3 and mess.pfUser.primaryKey = :user))
+						   and mess.primaryKey not in (select mess2.primaryKey 
+						   								 from PfUsersMessageDTO userMess 
+						   								 join userMess.pfMessage mess2
+														 join userMess.pfUser user2
+														 join userMess.pfTag tag
+						   								where mess2.primaryKey = mess.primaryKey
+						   								  and user2.primaryKey = :user
+						   								  and tag.ctag = 'RETIRADO')
+						   order by mess.primaryKey desc]]></query>
+	</named-query>
+	
+	<named-query name="request.userMessagesUnresolvedByUserCount">
+		<query><![CDATA[select count(mess)
+						  from PfMessagesDTO mess 
+					     where mess.fstart <= current_date()
+						   and (mess.fexpiration is null
+								 or mess.fexpiration > current_date())
+						   and (mess.pfMessageScope.primaryKey = 1
+						  		or (mess.pfMessageScope.primaryKey = 2 and mess.pfProvince.primaryKey = :province)
+						  		or (mess.pfMessageScope.primaryKey = 3 and mess.pfUser.primaryKey = :user))
+						   and mess.primaryKey not in (select mess2.primaryKey 
+						   								 from PfUsersMessageDTO userMess 
+						   								 join userMess.pfMessage mess2
+														 join userMess.pfUser user2
+						   								where mess2.primaryKey = mess.primaryKey
+						   								  and user2.primaryKey = :user)]]>
+						   
+						   
+						   
+						   </query>
+	</named-query>
+	
+	<named-query name="request.usersMessageByPk">
+		<query><![CDATA[select userMess from PfUsersMessageDTO userMess 
+				 left join fetch userMess.pfMessage mess 
+				 where userMess.primaryKey = :pk]]></query>
+	</named-query>
+	
+	<named-query name="request.applicationMetadasByApplication">
+		<query><![CDATA[select metadata from PfApplicationsMetadataDTO metadata 
+				 join metadata.pfApplication app 
+				 where app.capplication = :idApplication]]></query>
+	</named-query>
+	
+	<named-query name="request.aditionalMetadasByApplication">
+		<query><![CDATA[select metadata from PfApplicationsMetadataDTO metadata 
+				 join metadata.pfApplication app 
+				 where app.capplication = :idApplication
+				 and metadata.leni = 'N']]></query>
+	</named-query>
+	
+	<named-query name="position.getPositionByName">
+		<query><![CDATA[select u 
+		from PfUsersDTO u
+		where u.dname = :nombreCargo]]></query>
+	</named-query>
+	
+	<named-query name="requestQuery.appByRequest">
+		<query><![CDATA[select app from PfRequestsDTO req 
+				join req.pfApplication app 
+				where req = :request]]></query>
+	</named-query>
+	
+	<named-query name="request.queryUserPrimaryKey">
+		<query><![CDATA[select user
+					from PfUsersDTO user 
+					where user.primaryKey = :usuario]]></query>
+	</named-query>
+	
+		<named-query name="request.queryAdminUserProvinces">
+		<query><![CDATA[select admProv
+						from PfProvinceAdminDTO admProv
+						join admProv.pfProvince province
+						where admProv.pfUser = :user 
+						and province = :province]]></query>
+	</named-query>
+	
+	<named-query name="request.queryAdminProvincesOrganism">
+		<query><![CDATA[select province 
+						from PfProvinceDTO province  
+						where province.organismo.id IN (:organList)]]></query>
+	</named-query>
+		<named-query name="request.queryRestrictUsers">
+		<query><![CDATA[select u.pfUserValid 
+						from PfUsersRestrictDTO u 
+						where u.pfUserRestrict = :userRestrict]]></query>
+	</named-query>
+	
+	<named-query name="request.queryOrganismoDIR3ById">
+		<query><![CDATA[from PfOrganismoDIR3DTO organismo where organismo.id =:id]]></query>
+	</named-query>
+	
+	<named-query name="request.queryOrganismoDIR3ByCode">
+		<query><![CDATA[from PfOrganismoDIR3DTO organismo where organismo.codigo =:codigoOrganismo]]></query>
+	</named-query>
+	<named-query name="request.queryOrganismoDIR3ByFind">
+		<query><![CDATA[select organismo 
+						from PfOrganismoDIR3DTO organismo
+						where 
+							(convert(trim(upper(organismo.codigo)),'US7ASCII') like convert(trim(upper(:find)),'US7ASCII')										   
+   						  or convert(trim(upper(organismo.denominacion)),'US7ASCII') like convert(trim(upper(:find)),'US7ASCII'))
+										   order by organismo.codigo,organismo.denominacion asc]]>
+		</query>
+	</named-query>
+</entity-mappings>

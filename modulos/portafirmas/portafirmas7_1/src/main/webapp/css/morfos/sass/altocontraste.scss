@@ -1,0 +1,698 @@
+@charset "UTF-8";
+
+/*
+ * MORFOS FRAMEWORK CSS
+ * Copyright (C) 2012 Ministerio Hacienda y Administración Pública (MINHAP).
+ * Realizado por la División de Sistemas de Información de la
+ * Secretaría de Estado de Administraciones Públicas del
+ * Ministerio de Hacienda y Administraciones Públicas.
+ * 
+ * Este fichero se distribuye bajo licencia EUPL versión 1.1 según las condiciones que figuran 
+ * en el fichero 'Licencia.pdf' que se acompaña. Si se distribuyera este fichero individualmente, 
+ * deben incluirse aquí las condiciones expresadas allí.
+ *
+ */
+ 
+/**********************/
+/*   TYPOGRAPHY.CSS   */
+
+h1{
+	text-shadow: none;
+}
+
+h2{
+	text-shadow: none;
+}
+	
+h5 {
+	text-shadow: none;
+}
+	
+.title.bottomline {
+	border-bottom: 1px solid #000;
+	}
+	
+hr {
+	background-color: #000;
+	}
+	
+a:link {
+	color: #000;
+	}
+	
+a:visited {
+	color: #666;
+	}
+	
+a:hover {
+	text-decoration: underline;
+	}
+	
+a:active {
+	text-decoration: underline;
+	}
+	
+abbr,acronym{
+	border-bottom:1px dotted #000;
+	}
+	
+blockquote{
+	border-left:3px solid #000;
+	}
+	
+blockquote.quotation {
+    background: url("images/open-quotes.png") no-repeat scroll 0 0 transparent;
+}
+
+blockquote.quotation p {
+    background: url("images/close-quotes.png") no-repeat scroll 100% 100% transparent;
+}
+
+.h5 {
+    background-color: #FFFFFF;
+}
+
+.h6 {}
+
+/* FORM */
+
+/* FIELDSET (FORM BLOCK), SUBBLOCKS, FIELD CONTAINERS */
+
+.fb, fieldset{
+	color: #000;
+	}
+
+.fsb {
+	color: #000;
+	}
+
+fieldset legend {
+	color: #000;
+    }
+	
+/* FORMS: INPUT, LABEL, TEXTAREA */
+
+.fieldText, label, span.label {
+	color: #444;
+}
+
+input.fecha, input.datepicker, input.datetimepicker {
+	background:url("images/calendario.gif") no-repeat scroll 97% 50% #FFFFFF;
+}
+	
+input, textarea, select {
+	border: 1px solid #000;
+    
+    -moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	}
+	
+input:focus, input[type=text]:focus, input[type=password]:focus, textarea:focus, select:focus, .error select:focus {
+	border: 1px solid #000;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	}
+	
+input[disabled=disabled] {
+	background-color: #DEDEDE;
+	}
+	
+div.form {
+	background: #FFF;
+	border: 1px solid #000;  
+	
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0; 
+	}
+	
+span.psdinput, input[readonly], input[readonly]:focus {
+	border: 1px solid #000;
+    
+    color: #999;
+
+    background-color: #DEDEDE;
+	
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	}
+	
+/* Checkboxes */
+
+input[type=checkbox]:focus {
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	}
+	
+/* Radio buttons */
+
+input[type=radio]:focus {	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	}
+
+/* Field help */
+
+span.fldHelp {
+	color: #000;
+	}
+	
+/* Errors, warnings, infos */
+
+.error,  .error_list, .warning, .warning_list, .info, .info_list, .success, .success_list {
+	display: inline-block;
+	margin-left: 0;
+	vertical-align: top;
+	}
+	
+.fld.error, .fld.warning, .fld.info, .fld.success {
+	display: block;
+	}
+	
+.ie7 .error, .ie7 .error_list, .ie7 .warning, .ie7 .warning_list, .ie7 .info, .ie7 .info_list {
+	zoom: 1;
+	display: inline;
+	}
+	
+.error_list, .warning_list, .info_list, .success_list {
+	font-size: 0.917em;
+	font-weight: bold;
+	padding-top: 6px;
+	}
+	
+.error_list, .error label {
+	color: red;
+	}
+	
+.warning_list, .warning label {
+	color: #BCBB00;
+	}
+
+.info_list {
+	color: #0099CC;
+	}
+	
+.success_list, .success label {
+	color: #5DBB2D;
+	}
+
+.error input, .error select, .error textarea, 
+.warning input, .warning select, .warning textarea,
+.info input, .info select, .info textarea,
+.success input, .success select, .success textarea  {
+	vertical-align: top;
+	}
+	
+.error input, .error select, .error textarea {
+	border-color: red;
+	background-color: #F1D7D7; 
+	}
+	
+.warning input, .warning select, .warning textarea { border-color: #BCBB00; }
+
+.success input, .success select, .success textarea { border-color: #5DBB2D; }
+
+/* Buttons & simbuttons */
+
+input[type=submit], input[type=button], button, .simbutton, .simbutton:link, .simbutton:visited,
+input[type=submit].ui-state-default ,input[type=button].ui-state-default, button.ui-state-default, .simbutton.ui-state-default, .simbutton.ui-state-default:link, .simbutton.ui-state-default:visited,
+.ui-widget input[type=submit], .ui-widget input[type=button], .ui-widget button {
+	color: #FFF;
+	
+	border: 3px double #FFF;
+	
+    -moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	
+	text-shadow: none;
+
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.gradient( enabled=false );
+	}
+
+.ie7 input[type=submit],.ie7 input[type=button],.ie7 button, .ie7 .simbutton, .ie7 .simbutton:link, .ie8 input[type=submit], .ie8 input[type=button], .ie8 button, .ie8 .simbutton, .ie8 .simbutton:link {
+	border-top: 3px double #FFF;
+	border-left: 3px double #FFF;
+	border-bottom: 3px double #FFF;
+    border-right: 3px double #FFF;
+	}
+
+input[type=submit]:hover, input[type=button]:hover, button:hover, .simbutton:hover, input[type=submit].ui-state-default:hover,
+input[type=button].ui-state-default:hover, button.ui-state-default:hover, .simbutton.ui-state-default:hover,
+input[type=submit]:focus, input[type=button]:focus, button:focus, .simbutton:focus, input[type=submit].ui-state-default:focus,
+input[type=button].ui-state-default:focus, button.ui-state-default:focus, .simbutton.ui-state-default:focus {
+	border: 3px solid #000;
+	background: #FFF;
+	color: #000;
+	filter: progid:DXImageTransform.Microsoft.gradient( enabled=false );
+	}
+
+.ie7 input[type=submit]:hover, .ie7 input[type=button]:hover, .ie7 button:hover, .ie7 .simbutton:hover, .ie7 input[type=submit].ui-state-default:hover,
+.ie7 input[type=button].ui-state-default:hover, .ie7 button.ui-state-default:hover, .ie7 .simbutton.ui-state-default:hover,
+.ie7 input[type=submit]:focus, .ie7 input[type=button]:focus, .ie7 button:focus, .ie7 .simbutton:focus, .ie7 input[type=submit].ui-state-default:focus,
+.ie7 input[type=button].ui-state-default:focus, .ie7 button.ui-state-default:focus, .ie7 .simbutton.ui-state-default:focus
+.ie8 input[type=submit]:hover, .ie8 input[type=button]:hover, .ie8 button:hover, .ie8 .simbutton:hover, .ie8 input[type=submit].ui-state-default:hover,
+.ie8 input[type=button].ui-state-default:hover, .ie8 button.ui-state-default:hover, .ie8 .simbutton.ui-state-default:hover,
+.ie8 input[type=submit]:focus, .ie8 input[type=button]:focus, .ie8 button:focus, .ie8 .simbutton:focus, .ie8 input[type=submit].ui-state-default:focus,
+.ie8 input[type=button].ui-state-default:focus, .ie8 button.ui-state-default:focus, .ie8 .simbutton.ui-state-default:focus {
+	border: 3px solid #000;
+	}
+
+input[type=submit]:active, input[type=button]:active, button:active, .simbutton:active, input[type=submit].ui-state-default:active,
+input[type=button].ui-state-default:active, button.ui-state-default:active, .simbutton.ui-state-default:active {
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+  	box-shadow: none;
+	
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.gradient( enabled=false );
+	}
+	
+input[type="submit"], input[type="button"], button {
+	color: #FFF;
+	}
+
+input[type=button].disabled, button[disabled], .simbutton.disabled,
+input[type=button].disabled:hover, button[disabled]:hover, .simbutton.disabled:hover,
+input[type=button].disabled:active, button[disabled]:active, .simbutton.disabled:active,
+input[type=button].disabled.ui-state-default, button[disabled].ui-state-default, .simbutton.ui-state-default.disabled,
+input[type=button].disabled.ui-state-default:hover, button[disabled].ui-state-default:hover, .simbutton.ui-state-default.disabled:hover,
+input[type=button].disabled.ui-state-default:active, button[disabled].ui-state-default:active, .simbutton.ui-state-default.disabled:active,
+input[type=button].primary.disabled, button[disabled].primary, .simbutton.primary.disabled,
+input[type=button].primary.disabled:hover, button[disabled].primary:hover, .simbutton.primary.disabled:hover,
+input[type=button].primary.disabled:active, button[disabled].primary:active, .simbutton.primary.disabled:active,
+input[type=button].primary.disabled.ui-state-default, button[disabled].primary.ui-state-default, .simbutton.primary.ui-state-default.disabled,
+input[type=button].primary.disabled.ui-state-default:hover, button[disabled].primary.ui-state-default:hover, .simbutton.primary.ui-state-default.disabled:hover,
+input[type=button].primary.disabled.ui-state-default:active, button[disabled].primary.ui-state-default:active, .simbutton.primary.ui-state-default.disabled:active,
+input[type=button].secondary.disabled, button[disabled].secondary, .simbutton.secondary.disabled,
+input[type=button].secondary.disabled:hover, button[disabled].secondary:hover, .simbutton.secondary.disabled:hover,
+input[type=button].secondary.disabled:active, button[disabled].secondary:active, .simbutton.secondary.disabled:active,
+input[type=button].secondary.disabled.ui-state-default, button[disabled].secondary.ui-state-default, .simbutton.secondary.ui-state-default.disabled,
+input[type=button].secondary.disabled.ui-state-default:hover, button[disabled].secondary.ui-state-default:hover, .simbutton.secondary.ui-state-default.disabled:hover,
+input[type=button].secondary.disabled.ui-state-default:active, button[disabled].secondary.ui-state-default:active, .simbutton.secondary.ui-state-default.disabled:active  {
+ 	color: #FFF;
+	
+	border: 3px double #FFF;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	
+	text-shadow: none;
+	
+	background: #999;
+	filter: progid:DXImageTransform.Microsoft.gradient( enabled=false );
+	}
+	
+.ie7 input[type=button].disabled, .ie7 button[disabled], .ie7 .simbutton.disabled {
+	color: #FFF;
+	border: 3px double #999;
+	}
+
+.ie7 input[type=button].primary.disabled, .ie7 button[disabled].primary, .ie7 .simbutton.primary.disabled {
+	border: 3px double #999;
+}
+
+.ie7 input[type=button].primary.disabled, .ie7 button[disabled].primary, .ie7 .simbutton.primary.disabled,
+.ie7 input[type=button].primary.disabled:hover, .ie7 button[disabled].primary:hover, .ie7 .simbutton.primary.disabled:hover,
+.ie7 input[type=button].primary.disabled:active, .ie7 button[disabled].primary:active, .ie7 .simbutton.primary.disabled:active,
+.ie7 input[type=button].primary.disabled.ui-state-default, .ie7 button[disabled].primary.ui-state-default, .ie7 .simbutton.primary.ui-state-default.disabled,
+.ie7 input[type=button].primary.disabled.ui-state-default:hover, .ie7 button[disabled].primary.ui-state-default:hover, .ie7 .simbutton.primary.ui-state-default.disabled:hover,
+.ie7 input[type=button].primary.disabled.ui-state-default:active, .ie7 button[disabled].primary.ui-state-default:active, .ie7 .simbutton.primary.ui-state-default.disabled:active {
+	border: 3px double #999;
+}
+
+.ie8 input[type=button].primary.disabled, .ie8 button[disabled].primary, .ie8 .simbutton.primary.disabled,
+.ie8 input[type=button].primary.disabled:hover, .ie8 button[disabled].primary:hover, .ie8 .simbutton.primary.disabled:hover,
+.ie8 input[type=button].primary.disabled:active, .ie8 button[disabled].primary:active, .ie8 .simbutton.primary.disabled:active,
+.ie8 input[type=button].primary.disabled.ui-state-default, .ie8 button[disabled].primary.ui-state-default, .ie8 .simbutton.primary.ui-state-default.disabled,
+.ie8 input[type=button].primary.disabled.ui-state-default:hover, .ie8 button[disabled].primary.ui-state-default:hover, .ie8 .simbutton.primary.ui-state-default.disabled:hover,
+.ie8 input[type=button].primary.disabled.ui-state-default:active, .ie8 button[disabled].primary.ui-state-default:active, .ie8 .simbutton.primary.ui-state-default.disabled:active {
+	border: 3px double #FFF;
+}
+
+.ie7 input[type=button].secondary.disabled, .ie7 button[disabled].secondary, .ie7 .simbutton.secondary.disabled,
+.ie7 input[type=button].secondary.disabled:hover, .ie7 button[disabled].secondary:hover, .ie7 .simbutton.secondary.disabled:hover,
+.ie7 input[type=button].secondary.disabled:active, .ie7 button[disabled].secondary:active, .ie7 .simbutton.secondary.disabled:active,
+.ie7 input[type=button].secondary.disabled.ui-state-default, .ie7 button[disabled].secondary.ui-state-default, .ie7 .simbutton.secondary.ui-state-default.disabled,
+.ie7 input[type=button].secondary.disabled.ui-state-default:hover, .ie7 button[disabled].secondary.ui-state-default:hover, .ie7 .simbutton.secondary.ui-state-default.disabled:hover,
+.ie7 input[type=button].secondary.disabled.ui-state-default:active, .ie7 button[disabled].secondary.ui-state-default:active, .ie7 .simbutton.secondary.ui-state-default.disabled:active {
+	border: 3px double #999;
+}
+
+.ie8 input[type=button].secondary.disabled, .ie8 button[disabled].secondary, .ie8 .simbutton.secondary.disabled,
+.ie8 input[type=button].secondary.disabled:hover, .ie8 button[disabled].secondary:hover, .ie8 .simbutton.secondary.disabled:hover,
+.ie8 input[type=button].secondary.disabled:active, .ie8 button[disabled].secondary:active, .ie8 .simbutton.secondary.disabled:active,
+.ie8 input[type=button].secondary.disabled.ui-state-default, .ie8 button[disabled].secondary.ui-state-default, .ie8 .simbutton.secondary.ui-state-default.disabled,
+.ie8 input[type=button].secondary.disabled.ui-state-default:hover, .ie8 button[disabled].secondary.ui-state-default:hover, .ie8 .simbutton.secondary.ui-state-default.disabled:hover,
+.ie8 input[type=button].secondary.disabled.ui-state-default:active, .ie8 button[disabled].secondary.ui-state-default:active, .ie8 .simbutton.secondary.ui-state-default.disabled:active {
+	border: 3px double #FFF;
+}
+	
+.ie7 input[type=submit], .ie7 input[type=button], .ie7 button, .ie7 .simbutton, .ie7 .simbutton:link {
+	border-color: #000;
+	}
+	
+/* Simbuttons w/ icons */
+	
+button[disabled] .mf-icon, button[disabled].ui-state-default .mf-icon, button[disabled] .ui-icon, button[disabled].ui-state-default .ui-icon, .disabled .mf-icon, .disabled .ui-icon {
+	opacity: 1;
+	}
+	
+/* Simbutton primary */
+
+input[type=submit].primary, input[type=button].primary, button.primary, .simbutton.primary, .simbutton.primary:link, .simbutton.primary:visited  {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	
+	border: 3px double #FFF;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.gradient( enabled=false );
+	
+	color: #FFF;
+    text-shadow: none;
+}
+
+.ie7 input[type=submit].primary, .ie7 input[type=button].primary, .ie7 button.primary, .ie7 .simbutton.primary, .ie7 .simbutton.primary:link, .ie7 .simbutton.primary:visited,
+.ie8 input[type=submit].primary, .ie8 input[type=button].primary, .ie8 button.primary, .ie8 .simbutton.primary, .ie8 .simbutton.primary:link, .ie8 .simbutton.primary:visited  {
+	border: 3px double #000;
+}
+
+.ie8 input[type=submit].primary, .ie8 input[type=button].primary, .ie8 button.primary, .ie8 .simbutton.primary, .ie8 .simbutton.primary:link, .ie8 .simbutton.primary:visited {
+	border: 3px double #FFF;
+}
+
+input[type=submit].primary:hover, input[type=button].primary:hover, button.primary:hover, .simbutton.primary:hover,
+input[type=submit].primary:focus, input[type=button].primary:focus, button.primary:focus, .simbutton.primary:focus {
+	border: 3px solid #000;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	
+	background: #FFF;
+	filter: progid:DXImageTransform.Microsoft.gradient( enabled=false );
+
+	color: #000;
+    text-shadow: none;
+	}
+
+.ie7 input[type=submit].primary:hover, .ie7 input[type=button].primary:hover, .ie7 button.primary:hover, .ie7 .simbutton.primary:hover,
+.ie7 input[type=submit].primary:focus, .ie7 input[type=button].primary:focus, .ie7 button.primary:focus, .ie7 .simbutton.primary:focus,
+.ie8 input[type=submit].primary:hover, .ie8 input[type=button].primary:hover, .ie8 button.primary:hover, .ie8 .simbutton.primary:hover,
+.ie8 input[type=submit].primary:focus, .ie8 input[type=button].primary:focus, .ie8 button.primary:focus, .ie8 .simbutton.primary:focus {
+	border: 3px solid #000;
+}
+
+input[type=submit].primary:active, input[type=button].primary:active, button.primary:active, .simbutton.primary:active {
+	border: 3px double #FFF;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.gradient( enabled=false );
+	
+	color: #FFF;
+    text-shadow: none;
+	}
+
+input[type=submit].secondary, input[type=button].secondary, button.secondary, .simbutton.secondary, .simbutton.secondary:link, .simbutton.secondary:visited  {
+	border: 3px double #000;
+	
+	color: #000;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	
+	background: #FFF;
+	filter: progid:DXImageTransform.Microsoft.gradient( enabled=false );
+	}
+	
+.ie7 input[type=submit].secondary, .ie7 input[type=button].secondary, .ie7 button.secondary, .ie7 .simbutton.secondary, .ie7 .simbutton.secondary:link, .ie7 .simbutton.secondary:visited {
+	border: 3px double #000;
+	}
+
+.ie8 input[type=submit].secondary, .ie8 input[type=button].secondary, .ie8 button.secondary, .ie8 .simbutton.secondary, .ie8 .simbutton.secondary:link, .ie8 .simbutton.secondary:visited {
+	border: 3px double #000;
+	}
+
+input[type=submit].secondary:hover, input[type=button].secondary:hover, button.secondary:hover, .simbutton.secondary:hover,
+input[type=submit].secondary:focus, input[type=button].secondary:focus, button.secondary:focus, .simbutton.secondary:focus {
+	border: 3px double #000;
+	color: #FFF;
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.gradient( enabled=false );
+	}
+
+.ie7 input[type=submit].secondary:hover, .ie7 input[type=button].secondary:hover, .ie7 button.secondary:hover, .ie7 .simbutton.secondary:hover,
+.ie7 input[type=submit].secondary:focus, .ie7 input[type=button].secondary:focus, .ie7 button.secondary:focus, .ie7 .simbutton.secondary:focus {
+	border: 3px double #000;
+}
+
+input[type=submit].secondary:active, input[type=button].secondary:active, button.secondary:active, 
+.simbutton.secondary:active {
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+  	box-shadow: none;
+	
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.gradient( enabled=false );
+	}
+	
+/* Button: embossed */
+
+.btn_em {
+	color: #000;
+
+	border: 1px solid #000;
+
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	
+	background-color: #FFF;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	}
+	
+.ie7 .btn_em, .ie8 .btn_em {
+	border: 1px solid #000;
+	}
+
+/*************************/
+/*     COMPONENTS.CSS    */
+
+/* INDICE DE COMPONENTES*/
+/*
+2. Pagination (.pagination)
+3. Table (table.data)
+5. User boxes (#userBoxes)
+9. Breadcrumbs (.breadC)
+13. Tooltips (.tooltip)
+19. non-compliant browser
+
+*/
+
+/**********************/
+
+/**************/
+/* PAGINATION */
+
+
+
+/************/
+/*	TABLE	*/
+
+
+/**********************/
+/*     USER BOXES     */
+
+/***************/
+/* Breadcrumbs */
+
+ol.breadC > li {
+	color: #000;
+	}
+	
+ol.breadC li a:link, ol.breadC li a:visited {
+	color: #000;
+	}
+
+ol.breadC li span.ui-icon {
+	background-image: url("images/ui-icons_888888_256x240.png");
+	}
+	
+ol.breadC > li > ul {
+	background: #FFF;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	}
+		
+ol.breadC > li > ul > li:hover {
+	color: #000;
+	background-color: #FFF;
+	}
+	
+ol.breadC > li.home > a {
+	border: 1px solid #000;
+	}
+	
+ol.breadC > li.highlight > span {
+	background-color: #FFF;
+	}
+	
+/************/
+/* Tooltips */
+
+.tooltipContent {
+	border: 3px solid #000;
+	
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	
+	background-color: #FFF;
+	}
+		
+.tooltipArrow {
+	border-color: transparent transparent #000 transparent;
+	}
+	
+.tooltip.pleft .tooltipArrow {
+	border-color: transparent transparent transparent #000;
+	}
+	
+.tooltip.pright .tooltipArrow {
+	border-color: transparent #000 transparent transparent;
+	}
+	
+.tooltip.pbelow .tooltipArrow {
+	border-color: transparent transparent #000 transparent;
+	}
+	
+.tooltip.pabove .tooltipArrow {
+	border-color: #000 transparent transparent transparent;
+	}
+	
+/* miniTooltip */
+
+.minitooltip span, .minitooltip.error span, .minitooltip.warning span, .minitooltip.info span, .minitooltip.success span {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	
+	color: #FFF;
+	
+	background-color: #000;
+	}
+	
+.minitooltip .tooltipArrow {
+	border-color: transparent transparent #000 transparent;
+	}
+	
+.minitooltip.pleft .tooltipArrow, .minitooltip.error.pleft .tooltipArrow, .minitooltip.warning.pleft .tooltipArrow, .minitooltip.info.pleft .tooltipArrow, .minitooltip.success.pleft .tooltipArrow {
+	border-color: transparent transparent transparent #000;
+	}
+	
+.minitooltip.pright .tooltipArrow, .minitooltip.error.pright .tooltipArrow, .minitooltip.warning.pright .tooltipArrow, .minitooltip.info.pright .tooltipArrow, .minitooltip.success.pright .tooltipArrow {
+	border-color: transparent #000 transparent transparent;
+	}
+	
+.minitooltip.pbelow .tooltipArrow, .minitooltip.error.pbelow .tooltipArrow, .minitooltip.warning.pbelow .tooltipArrow, .minitooltip.info.pbelow .tooltipArrow, .minitooltip.success.pbelow .tooltipArrow {
+	border-color: transparent transparent #000 transparent;
+	}
+	
+.minitooltip.pabove .tooltipArrow, .minitooltip.error.pabove .tooltipArrow, .minitooltip.warning.pabove .tooltipArrow, .minitooltip.info.pabove .tooltipArrow, .minitooltip.success.pabove .tooltipArrow {
+	border-color: #000 transparent transparent transparent;
+	}
+	
+/* Mininotes */
+
+.tip, .tip.error, .tip.info, .tip.success, .tip.warning {
+	color: #FFF;
+
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+
+	background-color: #000;
+}
+
+/*********************************/
+/* Non-compliant browser warning */
+
+#noComplWarning {
+	background-color: #FFF;
+}
+
+#noComplWarning #noComplContainer {
+	background-color: #FFF;
+	
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+
+	border-style: solid;
+	border-width: 0 1px 1px 1px;
+	border-color: #000;
+}
+
+#noComplWarning h1 {
+	border-bottom: 1px solid #000;
+}
+
+#noComplWarning h3 {
+	color: #000;
+}
+
+/* Noncompliant browser */
+
+#notCBrowser ul li a span {
+	color: #000;
+}
+
+#notCBrowser ul li a span.noComplBrowserName {
+	color: #000;
+}
+
+#notCBrowser a {
+	color: #3399CC;
+}
+
+/* No JavaScript */

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<div th:fragment="groupUsers">
+	<form id="groupUsersModalForm">
+	<div class="fld">
+		<span class="fwb" th:text="${group.cnombre}"></span>
+		<input type="hidden" th:value="${group.primaryKey}" id="groupPk" />
+	</div>
+	<div id="table_tags_modal" class="fld" >
+		<span th:if="${#lists.isEmpty(userGroupList)}" th:text="#{messageEmptyGroup}"></span>
+		<table th:unless="${#lists.isEmpty(userGroupList)}" class="data tl">
+			<thead>
+				<tr>
+					<td th:text="#{surnames}"></td>
+					<td th:text="#{name}"></td>
+					<td></td>
+				</tr>
+			</thead>
+			<tbody>	
+				<tr th:each="userGroup : ${userGroupList}">
+					<td>
+						<span th:text="${userGroup.pfUser.dsurname1}"></span>
+						<span th:text="' ' + ${userGroup.pfUser.dsurname2} ? ${userGroup.pfUser.dsurname2}"></span>
+					</td>
+					<td>
+						<span th:text="${userGroup.pfUser.dname}"></span>
+					</td>
+					<td class="wv2">									
+						<a href="#!" class=" simbutton secondary dsp_ib left" 
+						   th:onclick="|deleteUserGroup('${userGroup.primaryKey}')|">
+							<span class="mf-icon mf-icon-delete-16" th:text="#{cancelButton}">Cancelar</span>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	</form>
+	<div class="fld stkd">
+		<input type="text" id="newUserGroupName" class="w240" style="margin: 0px;" th:placeholder="#{searchByIdNameProvince}"/>
+	</div>
+</div>
+
+</html>

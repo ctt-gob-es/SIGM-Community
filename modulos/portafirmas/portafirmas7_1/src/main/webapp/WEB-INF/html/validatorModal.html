@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<div th:fragment="validatorsModal">
+	<form id="validator_form">
+		<div class="fsb wv50">
+			<div class="fld">
+				<h6 th:text="#{validator}">Usuario validador</h6>
+				<label th:text="${user.fullName}" style="width: 300px; margin-bottom: 5px; margin-top: 3px;"/> 
+				<input type="hidden" th:value="${user.primaryKey}" name="primaryKey"/>
+			</div>
+		</div>
+		<div class="fsb">
+			<div class="fld">
+				<h6 th:text="#{administrationApplication}">Aplicaciones</h6>
+				<div class="fld catalogueOverflow" style="width: 300px; height: 200px;">											
+					<ul class="checkbox_list" style="margin-top: 5px;">	
+						<li>		
+							<input type="checkbox" name="allApplications" th:value="true" th:id="selectAll"
+								th:checked="${#lists.isEmpty(appListValidadas)}" th:onclick="|checkAll()|" />
+							<label th:text="Todas"></label>	
+						</li>
+						<li th:each="app : ${appsList}">
+							<input type="checkbox" class="w50" name="aplicaciones" th:value="${app.primaryKey}" th:id="aplicaciones" 
+								th:checked="${#arrays.contains(appListValidadas, app)} or ${allApps}" th:onclick="|unCheckAll()|"/> 
+							<label th:text="${app.capplication}"></label>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="dsp_b error errorMessage" id="validatorErrorMessage"></div>
+</div>
+</html>

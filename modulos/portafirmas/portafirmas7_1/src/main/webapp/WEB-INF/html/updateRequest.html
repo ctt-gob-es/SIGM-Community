@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html 	xmlns:th="http://www.thymeleaf.org"
+	  	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<div class="fld" style="overflow: auto; height: 300px;">
+	<div th:replace="fine-uploader/template_fineuploader"></div>
+		<form enctype="multipart/form-data" method="post" th:action="@{updateRequest}" th:object="${updateRequest}">	
+			<div class="secondary mb10 left">
+				<span id="fileUploadButton" class="archivo"></span>	
+			</div> 
+			
+			<div class="fld">
+				<table class="data actionable tl" id="uploadedDocs">
+					<thead>
+						<tr>
+							<th th:text="#{updateRequest.name}"></th>
+							<th></th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<td colspan="2" class="center"> <input type="submit" th:value="#{updateRequest.process}"/></td>
+						</tr>
+					</tfoot>
+					<tbody>
+						
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div id="mensajeUpdateRequest" class="capaMensaje"></div>
+	</div>
+	
+	<script>
+		$(document).ready(function() {
+			$('.test-editor').jqte({"center": false, "color": false,
+				"fsize": false, "format": false,
+				"indent": false, "link": false,
+				"left": false, "ol": false,
+				"outdent": false, "p": false,
+				"remove": false, "right": false,
+				"rule": false, "sub": false,
+				"strike": false, "sup": false,
+				"title": false, "ul": false,
+				"unlink": false, "source": false});
+			createFileUpload('fileUploadButton', 'updateRequest/uploadFile',
+					 '<span></span>', mostrarDocumentos, errorDocumentos);
+		});
+		
+	</script>
+			
+			
+</html>	  
+

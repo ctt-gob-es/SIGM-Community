@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<div th:fragment="portafirmas">
+		<button class="secondary mb10 right" onclick="prepareNewPortafirmas();">
+			<span class="mf-icon mf-icon-add-16 "></span>
+			<span th:text="#{newButton}">Nuevo portafirmas</span>
+		</button>
+		<form id="externalPortafirmasForm" name="externalPortafirmasForm" method="POST" th:action="@{externalPortafirmas}">
+			<div class="catalogueOverflow">
+				<table class="data noborder tl" th:with="administrador=${#authentication.administrator}">
+					<thead>
+						<tr>
+							<th><a href="#" th:text="#{external.portafirmas}">Portafirmas</a></th>	
+							<th><a href="#" th:text="#{portafirmas.dir3}">dir3</a></th>	
+							<th><a href="#" th:text="#{portafirmas.cPortafirmas}">ID</a></th>	
+							<th class="wv2"></th>
+							<th class="wv2"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="portafirmas : ${listaPortafirmas}">
+							<td th:text="${portafirmas.nombre}"></td>
+							<td th:text="${portafirmas.dir3}"></td>
+							<td th:text="${portafirmas.cPortafirmas}"></td>
+							<td>	
+								<a href="javascript:void(0)" th:onclick="|prepareModifyPortafirmas('${portafirmas.idPortafirmas}')|"><span class="mf-icon mf-icon-edit-16">Editar</span></a>
+							</td>
+							<td>		
+								<a href="javascript:void(0)" th:onclick="|prepareDeletePortafirmas('${portafirmas.idPortafirmas}', '${portafirmas.nombre}')|"><span class="mf-icon mf-icon-delete-16">Eliminar</span></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+		<div id="portafirmas_dialog" title="Edición portafirmas"  th:include="interfazGenerica/portafirmasModal::portafirmasModal"></div>
+		<div id="questionPortafirmas" class="capaPregunta" style="display: none;">
+			<div class="fld">
+				<span class="mf-icon-24 mf-icon-warning-24"></span>
+				<span id="questionMessagePortafirmas" class="pregunta"></span> 
+			</div>
+			<div class="fld">
+			  	<button id="yesButtonPortafirmas" name="yesButtonPortafirmas" class="simbuttom secondary">
+					<span th:title="#{yes}" th:text="#{yes}"></span>
+				</button>
+			  	<button id="noButtonPortafirmas" name="noButtonPortafirmas" class=" simbuttom secondary" onclick="$('#questionPortafirmas').hide();">
+					<span th:title="#{no}" th:text="#{no}"></span>
+				</button>
+			</div>
+		</div>
+	</div>
+</html>	    

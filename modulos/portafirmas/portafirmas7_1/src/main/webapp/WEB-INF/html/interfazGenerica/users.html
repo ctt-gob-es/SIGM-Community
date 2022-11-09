@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	<div th:fragment="users">
+		<button class="secondary mb10 right" onclick="prepareInsertExternalUser();">
+			<span class="mf-icon mf-icon-add-16 "></span>
+			<span th:text="#{newButton}">Nuevo usuario</span>
+		</button>
+		<form id="externalUsersForm" name="externalUsersForm" method="POST" th:action="@{externalUser}" th:object="${usersParameters}">
+			<div class="catalogueOverflow">
+				<table class="data noborder tl"  th:with="administrador=${#authentication.administrator}">
+					<thead>
+						<tr>
+							<th><a href="#" th:text="#{userID}">Identificador</a></th>
+							<th><a href="#" th:text="#{name}">Nombre</a></th>	
+							<th><a href="#" th:text="#{lastName1}">Primer apellido</a></th>	
+							<th><a href="#" th:text="#{lastName2}">Segundo apellido</a></th>	
+							<th><a href="#" th:text="#{external.portafirmas}"></a></th>
+							<th class="tc"><a href="#" th:text="#{valid}">Activo</a></th>
+							<th class="wv2"></th>
+							<th class="wv2"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="user : ${usersList}">
+							<td th:text="${user.cidentifier}"></td>
+							<td th:text="${user.dname}"></td>
+							<td th:text="${user.dsurname1}"></td>
+							<td th:text="${user.dsurname2}"></td>
+ 							<td th:text="${user.portafirmas.nombre}"></td>
+							<td th:if="${user.lvalid}" class="tc"><a href="#!"><span class="mf-icon mf-icon-enabled-16"></span></a></td>
+							<td th:unless="${user.lvalid}" class="tc"><a href="#!"><span class="mf-icon mf-icon-disabled-16"></span></a></td>
+							<td>	
+								<a href="javascript:void(0)" th:onclick="|prepareModifyExternalUser('${user.primaryKey}')|"><span class="mf-icon mf-icon-edit-16">Editar</span></a>
+							</td>
+							<td>		
+								<a href="javascript:void(0)" th:onclick="|prepareDeleteExternalUser('${user.primaryKey}', '${user.cidentifier}')|"><span class="mf-icon mf-icon-delete-16">Eliminar</span></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+		
+		<div id="questionExternalUser" class="capaPregunta" style="display: none;">
+			<div class="fld">
+				<span class="mf-icon-24 mf-icon-warning-24"></span>
+				<span id="questionMessageExternalUser" class="pregunta"></span> 
+			</div>
+			<div class="fld">
+			  	<button id="yesButtonExternalUser" name="yesButtonExternalUser" class="simbuttom secondary">
+					<span th:title="#{yes}" th:text="#{yes}"></span>
+				</button>
+			  	<button id="noButtonExternalUser" name="noButtonExternalUser" class=" simbuttom secondary" onclick="$('#questionExternalUser').hide();">
+					<span th:title="#{no}" th:text="#{no}"></span>
+				</button>
+			</div>
+		</div>
+	</div>
+</html>	    

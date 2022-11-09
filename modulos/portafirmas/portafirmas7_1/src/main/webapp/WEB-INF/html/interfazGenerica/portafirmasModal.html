@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	  
+	<div th:fragment="portafirmasModal">
+		<form id="form_portafirmas_modal">
+			<div class="fsb">
+				<div class="fld">
+					<div class="fld">
+						<label th:title="#{portafirmas.nombre}" th:text="#{portafirmas.nombre}"></label>
+						<input th:value="${portafirmas.nombre}" th:title="#{portafirmas.nombre}" name="nombre" id="portafirmasNombre"/>
+						<input type="hidden" th:value="${portafirmas.idPortafirmas}" name="idPortafirmas" id="idPortafirmas"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{portafirmas.dir3}" th:text="#{portafirmas.dir3}"></label>
+						<input th:value="${portafirmas.dir3}" th:title="#{portafirmas.dir3}" class="w300" name="dir3" id="portafirmasDir3"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{portafirmas.urlInterfaz}" th:text="#{portafirmas.urlInterfaz}"></label>
+						<input th:value="${portafirmas.urlInterfaz}" th:title="#{portafirmas.urlInterfaz}" class="w300" name="urlInterfaz" id="urlInterfaz"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{portafirmas.urlNotificacion}" th:text="#{portafirmas.urlNotificacion}"></label>
+						<input th:value="${portafirmas.urlNotificacion}" th:title="${portafirmas.urlNotificacion}" class="w300" name="urlNotificacion" id="urlNotificacion"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{portafirmas.cPortafirmas}" th:text="#{portafirmas.cPortafirmas}"></label>
+						<input th:value="${portafirmas.cPortafirmas}" th:title="#{portafirmas.cPortafirmas}" class="w300" name="cPortafirmas" id="cPortafirmas"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{portafirmas.soapVersion}" th:text="#{portafirmas.soapVersion}"></label>
+						<select th:value="${portafirmas.soapVersion}" th:title="#{portafirmas.soapVersion}" name="soapVersion" id="soapVersion">
+							<option value="1" th:selected="${portafirmas.soapVersion eq null or portafirmas.soapVersion eq 1}">SOAP 1.1</option>
+							<option value="2" th:selected="${portafirmas.soapVersion eq 2}">SOAP 1.2</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div id="errorMsgExternalUser" class="errorMessage"></div>
+		</form>
+	
+		<div id="warningExternalUserModal" class="capaPregunta" style="display: none;">
+			<div class="fld">
+				<span class="mf-icon-24 mf-icon-warning-24"></span>
+				<span id="warningExternalUserModal" class="pregunta"></span> 
+			</div>
+		</div>		
+	</div>								
+</html>	    

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<body>
+		<div layout:fragment="content" >
+			<div id="userBoxes">
+				<div class="error-box" id="error" th:text="${errorMessage}"></div>
+				<div style="float:right;" th:text="${timeError}"></div>
+			</div>
+		</div>
+	</body>
+</html>

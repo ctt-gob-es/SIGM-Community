@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+	<input type="text" id="searchTextRestriction" name="searchText" th:placeholder="#{searchByIdNameJob}" class="mr0 w320 ui-autocomplete-input" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"/>
+	<input type="hidden" id="searchRestrictionId" name="primaryKey" value=""/>
+	
+	<button class="secondary mb10 right" onclick="prepareNewRestriction();">
+		<span class="mf-icon mf-icon-add-16 "></span>
+		<span th:text="#{newButtonF}">Nueva restricción</span>
+	</button>
+	
+	<div id="restrictionList" class="mt10"></div>
+	<div id="restriction_modal" th:title="#{newUserRestriction}" th:include="restrictionModal::restrictionModal">
+	</div>
+</html>

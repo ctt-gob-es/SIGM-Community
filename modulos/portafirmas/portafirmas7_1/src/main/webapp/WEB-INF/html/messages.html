@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<button class="secondary mb10 right" onclick="prepareNewMessage();">
+	<span class="mf-icon mf-icon-add-16"></span>
+	<span th:text="#{newButton}">Nuevo mensaje</span>
+</button>
+<div class="fld stkd" style="overflow: auto; height: 300px; width: 100%;">
+	<table class="data noborder tl">
+		<thead>
+			<tr>
+				<th>Asunto</th>											
+				<th class="w200">Fecha Inicio</th>
+				<th class="w200">Fecha Caducidad</th>
+				<th class="w40"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="message : ${messageList}" th:id="|message_${message.primaryKey}|">
+				<td th:id="|subject_${message.primaryKey}|" th:text="${message.dsubject}"></td>
+				<td th:id="|fstart_${message.primaryKey}|" th:text="${message.fstart}"></td>
+				<td th:id="|fexpiration_${message.primaryKey}|" th:text="${message.fexpiration}"></td>													
+				<td>
+					<a href="javascript:void(0)" th:onclick="|prepareModifyMessage('${message.primaryKey}')|"><span class="mf-icon mf-icon-edit-16">Editar</span></a>
+					<a href="javascript:void(0)" th:onclick="|prepareDeleteMessage('${message.primaryKey}')|"><span class="mf-icon mf-icon-delete-16">Eliminar</span></a>
+				</td> 
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="questionMessage" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageMessage" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonMessage" name="yesButtonMessage" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonMessage" name="noButtonMessage" class=" simbuttom secondary" onclick="$('#questionMessage').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>
+<!-- FIN CONTENIDO--> 
+<div id="messages_modal" title="Mensaje" th:include="messageModal::messageModal"/>					
+
+
+</html>

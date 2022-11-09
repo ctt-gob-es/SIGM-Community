@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pfirma="urn:juntadeandalucia:cice:pfirma:advice:v2.0" xmlns:request="urn:juntadeandalucia:cice:pfirma:advice:request:v2.0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:type="urn:juntadeandalucia:cice:pfirma:type:v2.0" name="AdviceService" targetNamespace="urn:juntadeandalucia:cice:pfirma:advice:v2.0">
+  <wsdl:types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="urn:juntadeandalucia:cice:pfirma:advice:request:v2.0">
+			
+			<xsd:import namespace="urn:juntadeandalucia:cice:pfirma:type:v2.0" schemaLocation="WebServiceTypes.xsd"/>			
+			
+			<xsd:element name="updateRequestStatus">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="request" type="type:request"/>
+						<xsd:element maxOccurs="unbounded" minOccurs="0" name="signature" type="type:signature"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="updateRequestStatusResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element minOccurs="0" name="result" type="xsd:boolean"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="updateRequestStatusResponse">
+    <wsdl:part element="request:updateRequestStatusResponse" name="updateRequestStatusResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="pfirmaException">
+    <wsdl:part element="type:exceptionInfo" name="pfirmaException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateRequestStatus">
+    <wsdl:part element="request:updateRequestStatus" name="updateRequestStatus">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="AdviceService">
+    <wsdl:operation name="updateRequestStatus">
+      <wsdl:input message="pfirma:updateRequestStatus" name="updateRequestStatus">
+    </wsdl:input>
+      <wsdl:output message="pfirma:updateRequestStatusResponse" name="updateRequestStatusResponse">
+    </wsdl:output>
+      <wsdl:fault message="pfirma:pfirmaException" name="pfirmaException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="AdviceServiceSoapBinding" type="pfirma:AdviceService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="updateRequestStatus">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="updateRequestStatus">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="pfirmaException">
+        <soap:fault name="pfirmaException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="AdviceService">
+    <wsdl:port binding="pfirma:AdviceServiceSoapBinding" name="AdviceServicePort">
+      <soap:address location="http://servidor/AdviceService/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

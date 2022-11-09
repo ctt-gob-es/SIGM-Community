@@ -1,0 +1,143 @@
+/*********************************/
+/* Non-compliant browser warning */
+
+#noComplWarning, 
+#notCBrowser, 
+#noJS {
+    display: none;
+}
+
+#noComplWarning {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    margin: 0 auto;
+    z-index: 1010;
+
+    background-color: #DDD;
+    background-color: rgba(0,0,0,0.5);
+}
+
+#noComplWarning #noComplContainer {
+    width: 660px;
+    padding: 20px;
+    margin: 0 auto;
+
+    background-color: #EEE;
+    
+    -webkit-box-shadow: 0 1px 7px rgba(0,0,0,0.4);
+    -moz-box-shadow:    0 1px 7px rgba(0,0,0,0.4);
+    box-shadow:         0 1px 7px rgba(0,0,0,0.4);
+
+    border-style: solid;
+    border-width: 0 1px 1px 1px;
+    border-color: #CCC #999 #999 #CCC;
+}
+
+#noComplWarning h1 {
+    margin-bottom: 1em;
+    padding-bottom: 0.5em;
+
+    border-bottom: 1px solid #CCC;
+}
+
+#noComplWarning h1 span {
+    display: none;
+}
+
+#noComplWarning h2 {
+    margin-bottom: 1em;
+
+    font-size: 1.500em;
+    font-style: normal;
+    font-weight: bold;
+    text-shadow: none;
+}
+
+#noComplWarning h3 {
+    margin: 2em 0;
+
+    font-size: 1em;
+    font-style: normal;
+    font-weight: bold;
+
+    color: green;
+}
+
+#noComplWarning p {
+    font-size: 1em;
+}
+
+/* Noncompliant browser */
+
+#notCBrowser {
+    margin-bottom: 1em;
+}
+
+#notCBrowser ul {
+    margin: 1em 3em 3em 3em;
+    overflow: hidden;
+}
+
+#notCBrowser ul li {
+    float: left;
+    width: 20%;
+
+    text-align: center;
+}
+
+.ie7 #notCBrowser ul li {
+    width: 18%;
+}
+
+#notCBrowser ul li a {
+    display: block;
+}
+
+#notCBrowser ul li a img {
+    margin-bottom: 0.5em;
+}
+
+#notCBrowser ul li a span {
+    display: block;
+}
+
+#notCBrowser ul li a span {
+    font-weight: normal;
+    color: #666;
+}
+
+#notCBrowser ul li a span.noComplBrowserName {
+    font-weight: bold;
+    color: #3399CC;
+}
+
+#notCBrowser a {
+    font-weight: bold;
+    color: #3399CC;
+}
+
+#notCBrowser .noCIE6 {
+    display: none;
+    clear: both;
+}
+
+.ie6 #notCBrowser .noCIE6 {
+    display: block !important;
+}
+
+/* No JavaScript */
+
+#noComplWarning #noJS {
+    clear: both;
+}
+
+.no-js #noComplWarning, 
+.no-js #noComplWarning #noJS {
+    display: block !important;
+}
+
+.ie6 #noComplWarning, 
+.ie6 #notCBrowser {
+    display: block !important;
+}

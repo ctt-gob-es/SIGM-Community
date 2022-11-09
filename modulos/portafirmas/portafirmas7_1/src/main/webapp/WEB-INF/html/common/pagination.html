@@ -1,0 +1,52 @@
+<div th:fragment="paginatorFragment(id, paginatorData, methodJS)">
+
+	<script th:src="|${#httpServletRequest.getContextPath()}/js/pagination.js?#{versionNumber}.#{versionFase}|"></script>
+
+	<div id="paginationDataDiv" class=" wv100 pagination" >
+		
+		<div class="right pr20">
+			<ol>
+				<input type="hidden" id="numPages" th:value="*{paginatorData.numPages}"/>
+			
+				<li class="numResults"><select
+					th:name="|paginator*{id}.pageSize|" th:id="|paginatorPageSize_*{id}|"
+					th:onchange="|goFirst('*{id}');*{methodJS}|">
+						<option value="10"  th:selected="*{paginatorData.pageSize == 10}">10</option>
+						<option value="20" th:selected="*{paginatorData.pageSize == 20}">20</option>
+						<option value="30" th:selected="*{paginatorData.pageSize == 30}">30</option>
+						<option value="50" th:selected="*{paginatorData.pageSize == 50}">50</option>
+				</select> de <span th:text="${paginatorData.inboxSize}">100</span></li>
+				
+				<li th:style="|display: *{paginatorData.isFirst? 'none' : ' '};|">
+					<a href="javascript:void(0)"
+					th:onclick="|goFirst('*{id}');*{methodJS}|">&lt;&lt;</a>
+				</li>
+				
+				<li th:style="|display: *{paginatorData.isFirst? 'none' : ' '};|">
+					<a href="javascript:void(0)"
+					th:onclick="|goPrevious('*{id}');*{methodJS}|">&lt;</a>
+				</li>
+				
+				<li class="numResults"><select
+					th:name="|paginator*{id}.currentPage|" th:id="|paginatorCurrentPage_*{id}|"
+					th:onchange="|*{methodJS}|">
+						<option th:each="pag : *{paginatorData.pages}" th:value="${pag}"
+							th:text="${pag}"
+							th:selected="${paginatorData.currentPage == pag}"></option>
+				</select></li>
+				
+				<li th:style="|display: *{paginatorData.isLast? 'none' : ' '};|">
+					<a href="javascript:void(0)"
+					th:onclick="|goNext('*{id}');*{methodJS}|">&gt;</a>
+				</li>
+				
+				<li th:style="|display: *{paginatorData.isLast? 'none' : ' '};|">
+					<a href="javascript:void(0)"
+					th:onclick="|goLast('*{id}');*{methodJS}|">&gt;&gt;</a>
+				</li>
+				
+			</ol>
+		</div>
+		
+	</div>
+</div>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:http-conf="http://cxf.apache.org/transports/http/configuration" xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd          http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd          http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd                   http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml"/>
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+	
+	<http-conf:conduit name="*.http-conduit">
+		<http-conf:client ConnectionTimeout="0" ReceiveTimeout="0"/>
+	</http-conf:conduit>
+	
+	
+	<http-conf:destination name="*.http-destination">
+    <http-conf:server HonorKeepAlive="true" ReceiveTimeout="0"/>
+  	</http-conf:destination>
+	
+	
+	<jaxws:endpoint address="/QueryService" id="queryServiceWS" implementor="#QueryServiceImpl">
+		<jaxws:properties>
+	        <!-- entry key="mtom-enabled" value="true"/>
+	        <entry key="attachment-directory" value="/tmp/"/>
+	        <entry key="attachment-memory-threshold" value="4000000"/-->
+	        <entry key="com.sun.xml.ws.request.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="com.sun.xml.ws.connect.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+		</jaxws:properties>
+		
+	</jaxws:endpoint>
+	
+	<jaxws:endpoint address="/ModifyService" id="modifyServiceWS" implementor="#ModifyServiceImpl">
+		<jaxws:properties>
+	        <!-- entry key="mtom-enabled" value="true"/>
+	        <entry key="attachment-directory" value="/tmp/"/>
+	        <entry key="attachment-memory-threshold" value="4000000"/-->
+	        <entry key="com.sun.xml.ws.request.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="com.sun.xml.ws.connect.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+		</jaxws:properties>
+		
+	</jaxws:endpoint>
+	
+	<jaxws:endpoint address="/AdminService" id="adminServiceWS" implementor="#AdminServiceImpl">
+		<jaxws:properties>
+	        <!-- entry key="mtom-enabled" value="true"/>
+	        <entry key="attachment-directory" value="/tmp/"/>
+	        <entry key="attachment-memory-threshold" value="4000000"/-->
+	        <entry key="com.sun.xml.ws.request.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="com.sun.xml.ws.connect.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+		</jaxws:properties>
+		
+	</jaxws:endpoint>
+	
+	<jaxws:endpoint address="/ObtenerDocCSV" id="obtenerDocCSVWS" implementor="#WSDocCSVImpl">
+		<jaxws:properties>
+	        <!-- entry key="mtom-enabled" value="true"/>
+	        <entry key="attachment-directory" value="/tmp/"/>
+	        <entry key="attachment-memory-threshold" value="4000000"/-->
+	        <entry key="com.sun.xml.ws.request.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="com.sun.xml.ws.connect.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+		</jaxws:properties>
+		
+	</jaxws:endpoint>
+	
+	<jaxws:endpoint address="/MobileService" id="mobileServiceWS" implementor="#MobileServiceImpl">
+		<jaxws:properties>
+	        <!-- entry key="mtom-enabled" value="true"/>
+	        <entry key="attachment-directory" value="/tmp/"/>
+	        <entry key="attachment-memory-threshold" value="4000000"/-->
+	        <entry key="com.sun.xml.ws.request.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="com.sun.xml.ws.connect.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+		</jaxws:properties>
+		
+	</jaxws:endpoint>
+	
+	<bean class="org.apache.cxf.interceptor.LoggingInInterceptor" id="logInBound"/>
+	<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" id="logOutBound"/>
+
+    <bean class="es.seap.minhap.portafirmas.ws.docelweb.wss.interceptor.server.CustomWSS4JInInterceptor" id="inboundSecurity">
+		<constructor-arg>
+			<map>
+				<entry key="action" value="Signature"/>
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<jaxws:endpoint address="/InterfazGenericaSoapHttpPort" id="interfazGenerica11ServiceWS" implementor="#InterfazGenericaSoap11Impl">
+		<jaxws:properties>
+		 <entry key="faultStackTraceEnabled" value="true"/>
+		 <entry key="exceptionMessageCauseEnabled" value="true"/>
+<!--	        <entry key="mtom-enabled" value="true"/>
+ 	        <entry key="attachment-directory" value="/tmp/"/>
+	        <entry key="attachment-memory-threshold" value="4000000"/>
+ -->	        <entry key="com.sun.xml.ws.request.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="com.sun.xml.ws.connect.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+		</jaxws:properties>
+		
+		<jaxws:inInterceptors>
+			<ref bean="inboundSecurity"/>
+        </jaxws:inInterceptors>
+
+	</jaxws:endpoint>
+	
+	<!-- bean id="callbackInterfazGenerica" class="es.seap.minhap.portafirmas.ws.docelweb.wss.callback.DocelwebServerPasswordCallbackSystemManager" /-->	
+	
+	<jaxws:endpoint address="/InterfazGenericaSoap12HttpPort" id="interfazGenerica12ServiceWS" implementor="#InterfazGenericaSoap12Impl">
+		<jaxws:properties>
+		 <entry key="faultStackTraceEnabled" value="true"/>
+		 <entry key="exceptionMessageCauseEnabled" value="true"/>
+<!--	        <entry key="mtom-enabled" value="true"/>
+ 	        <entry key="attachment-directory" value="/tmp/"/>
+	        <entry key="attachment-memory-threshold" value="4000000"/>
+ -->        <entry key="com.sun.xml.ws.request.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="com.sun.xml.ws.connect.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+		</jaxws:properties>
+		
+	  <jaxws:inInterceptors>
+			<ref bean="inboundSecurity"/>
+      </jaxws:inInterceptors>
+		
+	</jaxws:endpoint>
+	
+	<jaxws:endpoint address="/NotificacionGenericaWSImplBindingPort" id="notificacionGenericaWS" implementor="#NotificacionGenericaWSImpl">
+		<jaxws:properties>
+	        <!-- entry key="mtom-enabled" value="true"/>
+	        <entry key="attachment-directory" value="/tmp/"/>
+	        <entry key="attachment-memory-threshold" value="4000000"/-->
+	        <entry key="com.sun.xml.ws.request.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="com.sun.xml.ws.connect.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+		</jaxws:properties>
+		
+	  <jaxws:inInterceptors>
+			<ref bean="inboundSecurity"/>
+      </jaxws:inInterceptors>
+				
+	</jaxws:endpoint>
+	
+	
+	<jaxws:endpoint address="/CSVQueryDocumentServicePort" id="CSVQueryDocumentService" implementor="#CSVQueryDocumentServiceImpl">
+		<jaxws:properties>
+	        <entry key="com.sun.xml.ws.request.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="com.sun.xml.ws.connect.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+		</jaxws:properties>				
+	</jaxws:endpoint>
+	
+	<jaxws:endpoint address="/EniService" id="eniServiceWS" implementor="#EniServiceImpl">
+		<jaxws:properties>
+	        <entry key="com.sun.xml.ws.request.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="com.sun.xml.ws.connect.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="schema-validation-enabled" value="true"/>
+		</jaxws:properties>
+	</jaxws:endpoint>
+	
+	<jaxws:endpoint address="/Directorio" id="DirectorioWS" implementor="es.minhap.seap.ws.directorio.DirectorioImpl">
+		<jaxws:properties>
+	        <entry key="com.sun.xml.ws.request.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+			<entry key="com.sun.xml.ws.connect.timeout">
+				<value type="java.lang.Integer">60000</value>
+			</entry>
+		</jaxws:properties>
+	</jaxws:endpoint>
+
+</beans>

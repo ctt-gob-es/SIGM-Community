@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<div  style="overflow: auto; height: auto; width: 100%; padding-bottom: 10px;">
+	<input class ="right"  style="width:auto" onchange="subirNuevoDIR3('inputFicheroUnidades')" type="file" name="inputFicheroUnidades" id="inputFicheroUnidades"/>
+</div>
+<div  style="overflow: auto; height: auto; width: 100%;">
+	<button class="secondary mb10 right" onclick="doActualizarDIR3();">
+		<span class="mf-icon mf-icon-add-16"></span>
+		<span th:text="#{ActualizarDIR3}">Actualizar DIR3</span>
+	</button>
+	
+	<form id="actualizarDIR3Form" name="actualizarDIR3Form">
+		<label th:text="#{CodigoDIR3}">Codigo de DIR3</label>
+		<input type="text" class="w70" id="filtroCodigo" name="filtroCodigo"/>
+  		<label for="fstart" th:text="#{initDate}"></label> 
+  		<input type="text" id="messageFStart" name="messageFStart" size="14" title="dd/mm/aaaa" class="fecha datepicker w90"/>
+	</form>
+	<br/>
+	<div id="divActualizarDIR3ErrorMessage">
+		<p id="actualizarDIR3ErrorMessage"   class="errorMessage">
+			Debe adjuntar al menos un documento
+		</p>
+	</div>
+	
+</div>	
+<div class="fld stkd" style="overflow: auto; height: 200px; width: 100%;">
+	<table class="data noborder tl">
+		<thead>
+			<tr>
+				<th class="w200">id</th>											
+				<th>Fecha</th>
+				<th>Codigo</th>
+				<th>Descripcion</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="actualizacion : ${actualizacionesList}" th:id="|actualizacion_${actualizacion.primaryKey}|">
+				<td th:id="|identificador_${actualizacion.primaryKey}|" th:text="${actualizacion.primaryKey}"></td>
+				<td th:id="|fstart_${actualizacion.primaryKey}|" th:text="${actualizacion.fechaConsulta}"></td>
+				<td th:id="|codigo_${actualizacion.codigoRespuesta}|" th:text="${actualizacion.codigoRespuesta}"></td>
+				<td th:id="|descripcion_${actualizacion.primaryKey}|" th:text="${actualizacion.descripcionRespuesta}"></td>
+				<td>
+					<ul class="buttonbar">
+						<!-- Descarga del documento recibido -->
+						<li th:if="${actualizacion.documentoObtenido ne null}"><a
+							th:href="|${#httpServletRequest.getContextPath()}/servlet/AbreRespuestaDIR3Servlet?idResponse=${actualizacion.id}|"
+							class="dsp_ib p4"> <span
+								class="mf-icon mf-icon-downloadfile-16"
+								th:title="#{downloadDocument}"></span> Documento
+						</a></li>
+					</ul>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+</html>

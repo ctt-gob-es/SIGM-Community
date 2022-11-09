@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>jQuery PickList - Advanced Example</title>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+
+	<!-- REMOVE THIS if you're using jQuery UI. -->
+	<script type="text/javascript" src="../jquery.ui.widget.js"></script>
+
+	<script type="text/javascript" src="../jquery-picklist.js"></script>
+	<script type="text/javascript">
+		$(function()
+		{
+			$("#advanced").pickList(
+			{
+				sourceListLabel:	"Unadded",
+				targetListLabel:	"Added",
+				addAllLabel:		"Add All",
+				addLabel:			"Add",
+				removeAllLabel:		"Remove All",
+				removeLabel:		"Remove",
+				sortAttribute:		"value",
+				items:
+				[
+					{
+						value: 6,
+						label: "Afterwards #1",
+						selected: false
+					}
+				]
+			});
+
+			// Example of adding a regular item after picklist creation.
+			// Note there is no "element" property as that's for rich content only.
+			$("#advanced").pickList("insert",
+			{
+				value: 7,
+				label: "Afterwards #2",
+				selected: true
+			});
+		});
+	</script>
+
+	<link type="text/css" href="../jquery-picklist.css" rel="stylesheet" />
+	<!--[if IE 7]><link href="../jquery-picklist-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+</head>
+
+<body>
+
+	<div>
+		<select id="advanced" name="advanced" multiple="multiple">
+			<option value="1">Zebra</option>
+			<option value="2">Rabbit</option>
+			<option value="3">Snake</option>
+			<option value="4">Bear</option>
+			<option value="5">Starfish</option>
+		</select>
+	</div>
+
+</body></html>

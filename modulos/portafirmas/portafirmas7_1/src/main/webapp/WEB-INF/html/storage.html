@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<form id="formPf">
+	<div class="fld">
+			<input name="storage" type="hidden" value="0"/>
+			<input id="remitterPf" type="text" placeholder="Por remitente"/>
+			<input id="remitterIdPf"  name="remitter" type="hidden" /> 
+			<select id="applicationPf" name="application">
+				<option value="">Cualquier aplicación</option>
+				<option th:each="app : ${appList}" th:value="${app.capplication}" th:text="${app.capplication}	"/>
+			</select>
+			<input id="signPf" type="text" placeholder="Por firmante"/>
+			<input id="signIdPf"  name="sign" type="hidden" /> 
+			<select id="monthPf" name="month" class="w110">
+				<option th:each="month : ${monthList}" th:value="${month.id}" th:text="${month.name}" th:selected="${month.id eq currentMonthId}"/>
+			</select>
+			<select id="yearPf" name="year" class="w60">
+				<option th:each="year : ${yearList}" th:value="${year}" th:text="${year}"/>
+			</select>
+			<button id="cleanPf" class="secondary" th:title="#{clean}"><span class="mf-icon mf-icon-clean-16"/></button>
+			<button id="searchPf" class="secondary" th:title="#{search}"><span class="mf-icon mf-icon-search-16"/></button>
+			<button id="movePf" class="secondary" th:title="#{moveToStorage}"><span class="mf-icon mf-icon-down-16"/></button>
+	</div>
+	<div id="requestListPf" th:include="storageTable :: storageTableFragment(idPagination='Pf')"></div>
+	
+</form>
+	
+<hr class="ui-tabs-panel" style="padding: 0px;"/>
+	
+<form id="formHist">
+	<div class="fld">
+			<input name="storage" type="hidden" value="1"/>
+			<input id="remitterHist" type="text" placeholder="Por remitente"/>
+			<input id="remitterIdHist" name="remitter" type="hidden"/> 
+			<select id="applicationHist" name="application">
+				<option value="">Cualquier aplicación</option>
+				<option th:each="app : ${appList}" th:value="${app.capplication}" th:text="${app.capplication}	"/>
+			</select>
+			<input id="signHist" type="text" placeholder="Por firmante"/>
+			<input id="signIdHist"  name="sign" type="hidden" /> 
+			<select id="monthHist" name="month" class="w110">
+				<option th:each="month : ${monthList}" th:value="${month.id}" th:text="${month.name}" th:selected="${month.id == currentMonthId}"/>
+			</select>
+			<select id="yearHist" name="year" class="w60">
+				<option th:each="year : ${yearList}" th:value="${year}" th:text="${year}"/>
+			</select>
+			<button id="cleanHist" class="secondary" th:title="#{clean}"><span class="mf-icon mf-icon-clean-16"/></button>
+			<button id="searchHist" class="secondary" th:title="#{search}"><span class="mf-icon mf-icon-search-16"/></button>
+			<button id="moveHist" class="secondary" th:title="#{returnFromStorage}"><span class="mf-icon mf-icon-up-16"/></button>
+			<button id="deleteHist" class="secondary" th:title="#{removeForever}"><span class="mf-icon mf-icon-delete-grey-16"/></button>
+	</div>
+	<div id="requestListHist" th:include="storageTable :: storageTableFragment(idPagination='Hist')"></div>
+</form>
+
+<div id="questionStorage" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageStorage" class="pregunta"></span> 
+	</div>
+</div>
+
+
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<button class="secondary mb10 right" onclick="prepareInsertGestor();">
+	<span class="mf-icon mf-icon-add-16 "></span>
+	<span th:text="#{newButton}">Nuevo gestor</span>
+</button>
+<div class="catalogueOverflow">
+	<table class="data noborder tl">
+		<thead>
+			<tr>
+				<th class="w100">Identificador </th>
+				<th>Nombre</th>											
+				<th class="w20"></th>
+			</tr>
+		</thead>
+		<tbody id="tableGestores_tbody">
+			<tr th:each="gestor : ${gestoresSet}" th:id="|tr_${gestor.primaryKey}|">
+				<td th:text="${gestor.cidentifier}"></td>
+				<td th:text="|${gestor.fullName}|"></td>
+				<td>
+					<a href="#!" class="simbutton secondary" th:onclick="|prepareDeleteGestor('${gestor.primaryKey}')|">
+						<span class="mf-icon mf-icon-delete-16">Eliminar</span>
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="questionGestor" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageGestor" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonGestor" name="yesButtonGestor" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonGestor" name="noButtonGestor" class=" simbuttom secondary" onclick="$('#questionGestor').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>
+</html>

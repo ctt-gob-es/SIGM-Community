@@ -1,0 +1,937 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm/orm_1_0.xsd">
+	<named-query name="administration.parameterAdmAll">
+		<query><![CDATA[from PfConfigurationsParameterDTO copa
+						join fetch copa.pfParameter para
+						where copa.pfConfiguration is null and
+						para.ctype != 'ESTILO' and para.cparameter not like 'PREFIRMA%']]></query>
+	</named-query>
+
+	<named-query name="administration.documentTypeAdmAll">
+		<query><![CDATA[from PfDocumentTypesDTO where pfApplication is null]]></query>
+	</named-query>
+	
+	<named-query name="administration.AuthorizationsActivasByUser">
+		<query><![CDATA[from PfUsersAuthorizationDTO
+						where usu_x_usuario = :userPk and
+						f_revocacion >= :fechaActiva and
+						entidad = :entidad]]></query>
+	</named-query>
+	
+	<named-query name="administration.AuthorizationsPeriodoRevocar">
+		<query><![CDATA[from PfUsersAuthorizationDTO auto
+						join fetch auto.pfUser user
+						join fetch auto.pfAuthorizedUser userAuto
+						where TO_CHAR(f_revocacion , 'DD/MM/YYYY HH24:MI:SS') = :fechaActiva]]></query>
+	</named-query>
+	
+	<named-query name="administration.AuthorizationsActivasByUserAutorizado">
+		<query><![CDATA[from PfUsersAuthorizationDTO
+						where usu_x_usuario_autorizado = :userPk and
+						f_revocacion >= :fechaActiva and
+						entidad = :entidad]]></query>
+	</named-query>
+	
+	<named-query name="administration.AuthorizationsByUserDate">
+		<query><![CDATA[from PfUsersAuthorizationDTO
+						where usu_x_usuario = :userPk and usu_x_usuario_autorizado = :userPkAutorizado and ((TO_CHAR(f_autorizacion , 'DD/MM/YY') = :fechaInicio) and (TO_CHAR(f_revocacion , 'DD/MM/YY') = :fend)) and
+						entidad = :entidad]]></query>
+	</named-query>
+	
+
+	<named-query name="administration.documentTypeAdmAssociated">
+		<query><![CDATA[select count (*) from PfDocumentsDTO docs where docs.pfDocumentType = :docType]]></query>
+	</named-query>
+
+	<named-query name="administration.parameterConf">
+		<query><![CDATA[from PfConfigurationsParameterDTO conf where conf.pfConfiguration is null]]></query>
+	</named-query>
+	<named-query name="administration.findAllConfig">
+		<query><![CDATA[SELECT conf FROM PfConfigurationsDTO conf where 1 = :todos]]></query>
+	</named-query>
+	<named-query name="administration.findAllAppCode">
+		<query><![CDATA[SELECT DISTINCT app.capplication FROM PfApplicationsDTO app where 1 = :todos]]></query>
+	</named-query>
+	<named-query name="administration.findAllApp">
+		<query><![CDATA[SELECT app FROM PfApplicationsDTO app where 1 = :todos order by app.capplication asc]]></query>
+	</named-query>
+	
+
+	<named-query name="administration.jobAdmAll">
+		<query><![CDATA[from PfUsersDTO where ctype = 'CARGO' order by dname asc]]></query>
+	</named-query>
+
+	<named-query name="administration.jobAdmProvinceAll">
+		<query><![CDATA[select job
+						from PfUsersDTO job
+						left join fetch job.pfProvince prov 
+						where job.ctype = 'CARGO'
+						and job.lvalid = 'S'
+						order by job.dname asc]]></query>
+	</named-query>
+
+	<named-query name="administration.allJobsWithProvince">
+		<query><![CDATA[select job
+						from PfUsersDTO job
+						left join fetch job.pfProvince prov 
+						where job.ctype = 'CARGO'
+						order by job.dname asc]]></query>
+	</named-query>
+
+	<named-query name="administration.jobAdmValid">
+		<query><![CDATA[from PfUsersDTO where ctype = 'CARGO' and lvalid = 'S']]></query>
+	</named-query>
+
+	<named-query name="administration.jobsByProvince">
+		<query><![CDATA[select distinct(job)
+						from PfUsersDTO job
+						left join fetch job.pfProvince prov 
+						where job.ctype = 'CARGO' and
+							  job.lvalid = 'S' and
+							  prov.ccodigoprovincia = :provincia
+						order by job.dname asc]]></query>
+	</named-query>
+
+	<named-query name="administration.jobsByProvinces">
+		<query><![CDATA[select distinct(job)
+						from PfUsersDTO job
+						left join fetch job.pfProvince prov 
+						where job.ctype = 'CARGO'
+						  and job.lvalid = 'S'
+						  and prov in :provinceList
+			              and (   convert(upper(job.dname), 'US7ASCII') like convert(:find, 'US7ASCII')										   
+							   or convert(upper(job.cidentifier), 'US7ASCII') like convert(:find, 'US7ASCII')
+							   or convert(upper(prov.cnombre), 'US7ASCII') like convert(:find, 'US7ASCII'))
+						order by job.dname asc	]]></query>
+	</named-query>
+
+	<named-query name="administration.allJobsByProvince">
+		<query><![CDATA[select distinct(job)
+						from PfUsersDTO job
+						left join fetch job.pfProvince prov 
+						where job.ctype = 'CARGO' and
+							  prov.ccodigoprovincia = :provincia]]></query>
+	</named-query>
+
+	<named-query name="administration.jobAdmAssociated">
+		<query><![CDATA[select count (*) from PfUsersJobDTO userjob where userjob.pfUserJob = :job]]></query>
+	</named-query>
+	
+	<named-query name="administration.jobUserAdmAssociated">
+		<query><![CDATA[from PfUsersJobDTO userjob
+						     join fetch userjob.pfUser user
+							 where userjob.pfUserJob = :job]]></query>
+	</named-query>
+
+	<named-query name="administration.userJobByPk">
+		<query><![CDATA[from PfUsersJobDTO userJob
+							 left join fetch userJob.pfUser user
+							 left join fetch userJob.pfUserJob job
+						where userJob.primaryKey = :primaryKey]]></query>
+	</named-query>
+
+	<named-query name="administration.applicationAdmAll">
+		<query><![CDATA[select distinct(app)
+						from
+							PfApplicationsDTO app
+							left join fetch app.pfConfiguration conf
+							join fetch conf.pfConfigurationsParameters params
+						order by app.capplication asc]]></query>
+	</named-query>
+	
+	<named-query name="administration.applicationList">
+		<query><![CDATA[select app
+						from
+							PfApplicationsDTO app	
+						order by app.capplication asc]]></query>
+	</named-query>
+
+	<named-query name="administration.applicationAdmTree">
+		<query><![CDATA[select distinct(app)
+						from
+							PfApplicationsDTO app
+							join fetch app.pfConfiguration conf
+							join fetch conf.pfConfigurationsParameters params
+							left join fetch app.pfApplications associatedApps
+						where app.capplication != 'PFIRMA' order by app.capplication]]></query>
+	</named-query>
+
+	<named-query name="administration.applicationAdmHasRequest">
+		<query><![CDATA[select count (*) from PfRequestsDTO req where req.pfApplication = :application]]></query>
+	</named-query>
+
+	<named-query name="administration.applicationAdmIsParent">
+		<query><![CDATA[select count (*) from PfApplicationsDTO app where app.pfApplication = :application]]></query>
+	</named-query>
+
+	<named-query name="administration.serverConfigurationAll">
+		<query><![CDATA[from PfConfigurationsDTO conf
+						join fetch conf.pfServer serv
+						order by serv.dserver, conf.lmain desc]]></query>
+	</named-query>
+	
+	<named-query name="administration.configurationByServer">
+		<query><![CDATA[ from PfConfigurationsDTO conf
+						 join fetch conf.pfServer serv
+						where serv.primaryKey = :serverPk
+						order by conf.lmain desc]]></query>
+	</named-query>
+	
+	<named-query name="administration.configurationByCode">
+		<query><![CDATA[ from PfConfigurationsDTO conf
+						where convert(upper(conf.cconfiguration), 'US7ASCII') = 
+							  convert(upper(:code), 'US7ASCII')]]></query>
+	</named-query>
+
+	<named-query name="administration.applicationAdmCodeQuery">
+		<query><![CDATA[from PfApplicationsDTO app where app.capplication = :cApplication]]></query>
+	</named-query>
+	
+	<named-query name="administration.applicationAdmPkQuery">
+		<query><![CDATA[from PfApplicationsDTO app where app.primaryKey = :primaryKey]]></query>
+	</named-query>
+
+	<named-query name="administration.configurationAdmPkQuery">
+		<query><![CDATA[from PfConfigurationsDTO conf where conf.primaryKey = :configPk]]></query>
+	</named-query>
+
+	<named-query name="administration.applicationParametersAdmAll">
+		<query><![CDATA[from PfApplicationsParameterDTO appa where appa.pfApplication = :application]]></query>
+	</named-query>
+
+	<named-query name="administration.applicationParametersAll">
+		<query><![CDATA[from PfParametersDTO para where c_tipo = 'APLICACION']]></query>
+	</named-query>
+	
+	<named-query name="administration.applicationParametersPk">
+		<query><![CDATA[SELECT para FROM PfParametersDTO para WHERE para.ctype = 'APLICACION']]></query>
+	</named-query>
+
+	<named-query name="administration.applicationDocumentTypesAdm">
+		<query><![CDATA[from PfDocumentTypesDTO doty where pfApplication = :application]]></query>
+	</named-query>
+
+	<named-query name="administration.applicationDocumentTypeAdm">
+		<query><![CDATA[from PfDocumentTypesDTO doty
+						where pfApplication = :application
+						and   cdocumentType = :documentTypeId]]></query>
+	</named-query>
+
+	<named-query name="administration.applicationAdmHasParametersQuery">
+		<query><![CDATA[select count (*) from PfApplicationsParameterDTO appa where appa.pfApplication.capplication = :cApplication]]></query>
+	</named-query>
+
+	<named-query name="administration.applicationAdmParameterList">
+		<query><![CDATA[from PfApplicationsParameterDTO appa where appa.pfApplication.capplication = :cApplication]]></query>
+	</named-query>
+
+	<named-query name="administration.serverAdmAll">
+		<query><![CDATA[select distinct(serv) from PfServersDTO serv
+						join fetch serv.pfConfigurations conf
+						left join fetch conf.pfApplications appl
+						join fetch conf.pfConfigurationsParameters copa
+						join fetch copa.pfParameter para
+						order by serv.lmain desc]]></query>
+	</named-query>
+	
+	<named-query name="administration.serverQueryAll">
+		<query><![CDATA[select serv from PfServersDTO serv					
+						order by serv.lmain desc]]></query>
+	</named-query>
+
+	<named-query name="administration.serverAdmDefaultServerCode">
+		<query><![CDATA[from PfServersDTO serv
+						join fetch serv.pfConfigurations conf
+						left join fetch conf.pfApplications appl
+						join fetch conf.pfConfigurationsParameters copa
+						join fetch copa.pfParameter para
+						where
+							serv.lmain = 'S']]></query>
+	</named-query>
+
+	<named-query name="administration.serverAdmCodeQuery">
+		<query><![CDATA[from PfServersDTO where cserver = :cServer]]></query>
+	</named-query>
+	
+	<named-query name="administration.serverAdmPkQuery">
+		<query><![CDATA[from PfServersDTO where primaryKey = :pk]]></query>
+	</named-query>
+
+	<named-query name="administration.serverAdmHasApplications">
+		<query><![CDATA[select count (*)
+						from PfConfigurationsDTO conf join
+						conf.pfApplications appl
+						where conf.pfServer = :server]]></query>
+	</named-query>
+
+	<named-query name="administration.serverConfigurationList">
+		<query><![CDATA[from PfConfigurationsDTO where pfServer = :server]]></query>
+	</named-query>
+
+	<named-query name="administration.serverParametersAll">
+		<query><![CDATA[from PfParametersDTO where c_tipo = 'SERVIDOR' order by cparameter]]></query>
+	</named-query>
+
+	<named-query name="administration.debugParameter">
+		<query><![CDATA[select distinct(copa)
+							from PfConfigurationsParameterDTO copa
+							join copa.pfParameter para
+						where para.cparameter = 'LOGIN.DEBUG' ]]></query>
+	</named-query>
+
+	<named-query name="administration.proxyParameters">
+		<query><![CDATA[select distinct(copa)
+							from PfConfigurationsParameterDTO copa
+							join fetch copa.pfParameter para
+						where para.cparameter like 'PROXY%' 
+						and para.ctype = 'GLOBAL']]></query>
+	</named-query>
+	
+	<named-query name="administration.truststoreParameters">
+		<query><![CDATA[select distinct(copa)
+							from PfConfigurationsParameterDTO copa
+							join fetch copa.pfParameter para
+						where para.cparameter like 'TRUSTSTORE%' 
+						and para.ctype = 'GLOBAL']]></query>
+	</named-query>
+
+	<named-query name="administration.ldapParameter">
+		<query><![CDATA[select distinct(copa)
+							from PfConfigurationsParameterDTO copa
+							join copa.pfParameter para
+						where para.cparameter = 'LOGIN.LDAP' ]]></query>
+	</named-query>
+
+	<named-query name="administration.preSignParameter">
+		<query><![CDATA[select distinct(copa)
+							from PfConfigurationsParameterDTO copa
+							join copa.pfParameter para
+						where para.cparameter = 'PREFIRMA.EXPRESION' ]]></query>
+	</named-query>
+	
+	<named-query name="administration.custodia.dir3">
+		<query><![CDATA[select distinct(copa)
+							from PfConfigurationsParameterDTO copa
+							join copa.pfParameter para
+						where para.cparameter = 'CUSTODIA.DIR3' ]]></query>
+	</named-query>
+
+	<named-query name="administration.storageTypeParameter">
+		<query><![CDATA[select distinct(copa)
+							from PfConfigurationsParameterDTO copa
+							join copa.pfParameter para
+						where para.cparameter = 'CUSTODIA.TIPO' ]]></query>
+	</named-query>
+	
+	<named-query name="administration.storageTypeDOCCustodia">
+		<query><![CDATA[select distinct(copa)
+							from PfConfigurationsParameterDTO copa
+							join copa.pfParameter para
+						where para.cparameter like 'CUSTODIA.'||:tipo ]]></query>
+	</named-query>
+
+	<named-query name="administration.custodyParameters">
+		<query><![CDATA[select distinct(copa)
+							from PfConfigurationsParameterDTO copa
+							join fetch copa.pfParameter para
+						where para.cparameter like 'CUSTODIA.'||:tipo||'.%' ]]></query>
+	</named-query>
+	
+	<named-query name="administration.queryAdminEmailParameter">
+		<query><![CDATA[select copa
+						from PfConfigurationsParameterDTO copa
+						join fetch copa.pfParameter para
+						where para.cparameter = 'NOTIFICACION.CORREO.ADMIN']]>
+		</query>
+	</named-query>
+
+	<named-query name="administration.queryAdminEmailParameterEnabled">
+		<query><![CDATA[select copa
+						from PfConfigurationsParameterDTO copa
+						join fetch copa.pfParameter para
+						where para.cparameter = 'NOTIFICACION.AVISAR.ADMIN']]>
+		</query>
+	</named-query>
+	
+	<named-query name="administration.queryEnvironment">
+		<query><![CDATA[select copa
+						from PfConfigurationsParameterDTO copa
+						join fetch copa.pfParameter para
+						where para.cparameter = 'ENTORNO']]>
+		</query>
+	</named-query>
+	
+
+	<named-query name="administration.userByDate">
+		<query><![CDATA[select user
+						from PfUsersDTO user
+						where user.ctype = 'USUARIO'
+						and user.lvalid = 'S'
+						and (user.fcreated > :fechaDesde
+							 or user.fmodified > :fechaDesde)
+						]]></query>
+	</named-query>
+
+	<named-query name="administration.userAdmAll">
+		<query><![CDATA[select distinct(user)
+						from PfUsersDTO user
+						left join fetch user.pfUsersProfiles uspr
+						left join fetch user.pfUsersProvinces usprov
+						left join fetch uspr.pfProfile prof
+						left join fetch user.pfUsersMobiles usmo
+						left join fetch user.pfUsersEmails usem
+						left join fetch user.pfUsersParameters uspa
+						left join fetch uspa.pfParameter
+						left join fetch user.pfUsersJobs usjo
+						left join fetch user.pfProvince prov
+						left join fetch usjo.pfUserJob
+						left join fetch user.validadores val
+						left join fetch user.validadorDe valDe
+						where user.ctype = 'USUARIO'
+						order by user.dsurname1 asc, user.dsurname2 asc, user.dname asc ]]></query>
+	</named-query>
+
+	<named-query name="administration.allUsersByProvince">
+		<query><![CDATA[select distinct(user)
+						from PfUsersDTO user
+						left join fetch user.pfUsersProfiles uspr
+						left join fetch user.pfUsersProvinces usprov
+						left join fetch uspr.pfProfile prof
+						left join fetch user.pfUsersMobiles usmo
+						left join fetch user.pfUsersEmails usem
+						left join fetch user.pfUsersParameters uspa
+						left join fetch uspa.pfParameter
+						left join fetch user.pfUsersJobs usjo
+						left join fetch usjo.pfUserJob
+						left join fetch user.pfProvince prov
+						left join fetch user.validadores val
+						left join fetch user.validadorDe valDe
+						where user.ctype = 'USUARIO'
+						and prov.ccodigoprovincia = :provincia
+						order by user.dsurname1 asc, user.dsurname2 asc, user.dname asc ]]></query>
+	</named-query>
+	
+	<named-query name="administration.countUsersByProvinceList">
+		<query><![CDATA[select count(*) 					
+						from PfUsersDTO user
+						join user.pfProvince prov						
+						where user.ctype = 'USUARIO'
+						and prov in (:list)
+				]]></query>
+	</named-query>
+	
+	<named-query name="administration.usersByProvinces">
+		<query><![CDATA[select distinct(user)
+						from PfUsersDTO user
+						left join fetch user.pfProvince prov 
+						where user.ctype = 'USUARIO'						  
+						  and prov in :provinceList
+			              and (convert(trim(upper(user.dname||' '||coalesce(user.dsurname1,'')||' '||coalesce(user.dsurname2,''))),'US7ASCII') like convert(:find,'US7ASCII')
+							   or convert(upper(prov.cnombre), 'US7ASCII') like convert(:find, 'US7ASCII'))
+						order by user.dname asc	]]></query>
+	</named-query>
+	
+	<named-query name="administration.userByFullName">
+		<query><![CDATA[select user
+						  from PfUsersDTO user
+						 where user.ctype = 'USUARIO'
+						   and convert(upper(trim(coalesce(user.dname,'')) || ' ' 
+						                  || trim(coalesce(user.dsurname1,'')) || ' '
+						                  || trim(coalesce(user.dsurname2,''))), 'US7ASCII') =
+						       convert(upper(trim(coalesce(:dname,'')) || ' ' 
+						                  || trim(coalesce(:dsurname1,'')) || ' '
+						                  || trim(coalesce(:dsurname2,''))), 'US7ASCII')
+		]]></query>
+	</named-query>
+
+	<named-query name="administration.userByNif">
+		<query><![CDATA[select user
+						  from PfUsersDTO user
+						 where user.ctype = 'USUARIO'
+						   and convert(upper(trim(coalesce(user.cidentifier,''))), 'US7ASCII') =
+						       convert(upper(trim(coalesce(:cidentifier,''))), 'US7ASCII')
+		]]></query>
+	</named-query>
+
+	<named-query name="administration.jobByDescription">
+		<query><![CDATA[select job
+						  from PfUsersDTO job
+						  join job.pfProvince prov
+						 where job.ctype = 'CARGO'
+						   and convert(upper(trim(coalesce(job.dname,''))), 'US7ASCII') =
+						       convert(upper(trim(coalesce(:dname,''))), 'US7ASCII')
+						   and prov.primaryKey = :pkProvince
+		]]></query>
+	</named-query>
+
+	<named-query name="administration.jobByCode">
+		<query><![CDATA[select job
+						  from PfUsersDTO job
+						 where job.ctype = 'CARGO'
+						   and convert(upper(trim(coalesce(job.cidentifier,''))), 'US7ASCII') =
+						       convert(upper(trim(coalesce(:cidentifier,''))), 'US7ASCII')
+		]]></query>
+	</named-query>
+
+	<named-query name="administration.userAssociatedToSigners">
+		<query><![CDATA[from PfUsersDTO user
+						left join fetch user.pfSigners sign						
+						where user = :paramUser ]]></query>
+	</named-query>
+	
+	<named-query name="administration.userAssociatedToRemitters">
+		<query><![CDATA[from PfUsersDTO user
+						left join fetch user.pfUsersRemitters usre						
+						where user = :paramUser ]]></query>
+	</named-query>
+	
+	<named-query name="administration.userAssociatedToComments">
+		<query><![CDATA[from PfUsersDTO user
+						left join fetch user.pfComments comm						
+						where user = :paramUser ]]></query>
+	</named-query>
+	
+	<named-query name="administration.userAssociatedToRequestsTags">
+		<query><![CDATA[from PfRequestTagsDTO reqtags
+						join reqtags.pfUser user
+						where user = :paramUser]]></query>
+		
+	</named-query>
+	
+	<named-query name="administration.userAssociatedToAuthorizations">
+		<query><![CDATA[from PfUsersAuthorizationDTO auth
+						join auth.pfUser user
+						join auth.pfAuthorizedUser authUser					
+						where user = :paramUser or authUser = :paramUser]]></query>
+	</named-query>
+	
+	<named-query name="administration.userAssociatedToJob">
+		<query><![CDATA[from PfUsersJobDTO userjob
+					     join fetch userjob.pfUser user
+						 where userjob.pfUser = :paramUser]]></query>
+	</named-query>
+
+	<named-query name="administration.userAssociatedToGroup">
+		<query><![CDATA[from PfUsersGroupsDTO usergroup
+					     join fetch usergroup.pfUser user
+						 where usergroup.pfUser = :paramUser]]></query>
+	</named-query>
+
+	<named-query name="administration.userAssociatedSpecificJob">
+		<query><![CDATA[select userjob from PfUsersJobDTO userjob
+					     join fetch userjob.pfUser user
+						 where userjob.pfUserJob.primaryKey = :idJob
+						 and userjob.pfUser.primaryKey = :idUsuario]]></query>
+	</named-query>
+
+	<named-query name="administration.userAssociatedToValidators">
+		<query><![CDATA[from PfUsersDTO user
+						left join fetch user.validadores usuvalidadores
+						left join fetch user.validadorDe usuvalidadorDe					
+						where user = :paramUser]]></query>
+		
+	</named-query>
+	
+
+	<named-query name="administration.profilesAll">
+		<query><![CDATA[from PfProfilesDTO
+		 				where cprofile != 'REDACCARGO'
+		 				and cprofile != 'SIMULAR'
+		 				order by cprofile asc]]></query>
+	</named-query>
+
+	<named-query name="administration.profilesAdminProvince">
+		<query><![CDATA[from PfProfilesDTO 
+						where cprofile != 'REDACCARGO'
+						and   cprofile != 'ADMIN'
+						and   cprofile != 'WEBSERVICE'
+						and   cprofile != 'ADMINCAID' 
+						and cprofile != 'SIMULAR'
+						order by cprofile asc]]></query>
+	</named-query>
+	
+	<named-query name="administration.profilesAdminCAID">
+		<query><![CDATA[from PfProfilesDTO 
+						where cprofile != 'REDACCARGO'
+						and cprofile != 'ADMIN'
+						and cprofile != 'SIMULAR'
+						order by cprofile asc]]></query>
+	</named-query>
+	
+	<named-query name="administration.profilesByName">
+		<query><![CDATA[from PfProfilesDTO 
+						where cprofile in (:list)]]></query>
+	</named-query>
+	
+		<named-query name="administration.profileByName">
+		<query><![CDATA[from PfProfilesDTO 
+						where cprofile = :name]]></query>
+	</named-query>
+	
+
+	<named-query name="administration.userPasswordParameter">
+		<query><![CDATA[from PfParametersDTO para
+						where para.ctype = 'LOGIN'
+						and para.cparameter = 'USUARIO.PASSWORD']]></query>
+	</named-query>
+
+	<named-query name="administration.ldapIdParameter">
+		<query><![CDATA[from PfParametersDTO para
+						where para.ctype = 'LOGIN'
+						and para.cparameter = 'USUARIO.LDAP.IDATRIBUTO']]></query>
+	</named-query>
+
+	<named-query name="administration.validateSignParameter">
+		<query><![CDATA[from PfParametersDTO para
+						where para.ctype = 'OTROS'
+						and para.cparameter = 'USUARIO.FIRMA.VALIDAR']]></query>
+	</named-query>
+
+	<named-query name="administration.parameterId">
+		<query><![CDATA[from PfParametersDTO par
+						where par.cparameter = :cparam]]></query>
+	</named-query>
+
+	<named-query name="administration.parameterConfId">
+		<query><![CDATA[select conf
+						from PfConfigurationsParameterDTO conf
+						join conf.pfParameter par
+						where conf.pfConfiguration is null
+							  and par.cparameter = :cparam]]></query>
+	</named-query>
+	
+	<named-query name="administration.applicationParameterConfiguration">
+		<query><![CDATA[select confPar
+						from PfApplicationsDTO app
+						join app.pfConfiguration conf
+						join conf.pfConfigurationsParameters confPar
+						join confPar.pfParameter par
+						where app.capplication = :cApp
+						and par.cparameter = :cParam]]></query>
+	</named-query>
+
+
+	<named-query name="administration.documentTypeAll">
+		<query><![CDATA[select doty
+						from PfDocumentTypesDTO doty
+						where doty.lvalid = 'S']]></query>
+	</named-query>
+
+	<named-query name="administration.documentTypeQueryGeneral">
+		<query><![CDATA[select doty
+						from PfDocumentTypesDTO doty
+						where doty.cdocumentType = :query
+						and doty.lvalid = 'S'
+						and doty.pfApplication is null]]></query>
+	</named-query>
+
+	<named-query name="administration.documentTypeQueryApplication">
+		<query><![CDATA[
+						select doty
+						from PfDocumentTypesDTO doty
+						join doty.pfApplication app
+						where (app.capplication = :query or doty.cdocumentType = :query)
+						and doty.lvalid = 'S']]></query>
+	</named-query>
+
+	<named-query name="administration.jobsAll">
+		<query><![CDATA[select job
+						from PfUsersDTO job
+						where job.ctype = 'CARGO'
+						order by job.cidentifier asc]]></query>
+	</named-query>
+
+	<named-query name="administration.jobsQuery">
+		<query><![CDATA[select job
+						from PfUsersDTO job
+						where job.lvalid = 'S'
+						and job.cidentifier = :query
+						and job.ctype = 'CARGO']]></query>
+	</named-query>
+
+	<named-query name="administration.ldapParameters">
+		<query><![CDATA[select conf
+						from PfConfigurationsParameterDTO conf
+						join fetch conf.pfParameter par
+						where par.cparameter like 'LOGIN.LDAP%' or par.cparameter like 'USUARIO.LDAP.%']]></query>
+	</named-query>
+
+	<named-query name="administration.documentNotPresigned">
+		<query><![CDATA[from PfDocumentsDTO doc
+						where doc.cpresign is null
+						and doc.primaryKey not in
+							(select pfDocument.primaryKey from PfSignsDTO)
+						and doc.pfRequest.primaryKey not in
+							(select pfRequest.primaryKey
+							 from PfRequestTagsDTO reqTag
+							 where reqTag.pfTag.primaryKey in
+							 (select primaryKey from PfTagsDTO tag
+							  where tag.ctag = 'DEVUELTO'))]]></query>
+	</named-query>
+
+
+	<named-query name="administration.userByPK">
+		<query><![CDATA[from PfUsersDTO user
+							left join fetch user.pfUsersProfiles uPro
+							left join fetch uPro.pfProfile pro
+							left join fetch user.pfTagsUsers userTag
+							left join fetch userTag.pfTag tag
+							left join fetch user.pfUsersJobs userJob
+							left join fetch userJob.pfUserJob job
+							left join fetch user.pfUsersProfiles userProf
+							left join fetch userProf.pfProfile
+							left join fetch user.pfUsersParameters userPar
+							left join fetch userPar.pfParameter par
+							left join fetch user.validadores val
+							left join fetch user.validadorDe valDe
+						where user.primaryKey = :pk]]></query>
+	</named-query>
+	<named-query name="administration.jobsFilter">
+		<query><![CDATA[select distinct(filter)
+						from PfFiltersDTO filter
+							join fetch filter.pfAuthorizationType autType
+							join fetch filter.pfUser user
+							left join fetch filter.pfAuthorizationFilters autFilter
+							left join fetch autFilter.pfSigners signers
+							left join fetch filter.pfApplication app
+							left join fetch autFilter.pfUsersAuthorization userAut
+							left join fetch userAut.pfAuthorizedUser
+						where user = :job
+						order by filter.corder asc]]></query>
+	</named-query>
+	<named-query name="administration.filterReceiverJobs">
+		<query><![CDATA[from PfUsersDTO user
+						where user.ctype = 'CARGO'
+							and user.primaryKey != :pk]]></query>
+	</named-query>
+	<named-query name="administration.authorizationTypes">
+		<query><![CDATA[from PfAuthorizationTypesDTO order by cauthorizationType]]></query>
+	</named-query>
+	<named-query name="administration.authorizationTypeByPk">
+		<query><![CDATA[from PfAuthorizationTypesDTO where primaryKey = :pk]]></query>
+	</named-query>
+	<named-query name="administration.userAuthorization">
+		<query><![CDATA[from PfUsersAuthorizationDTO userAut
+						where
+							userAut.pfUser = :user and
+							userAut.pfAuthorizedUser = :userAuthorized and
+							userAut.pfAuthorizationType = :type]]></query>
+	</named-query>
+
+	<named-query name="administration.filterAuthorization">
+		<query><![CDATA[from PfAuthorizationFiltersDTO filterAuth
+							 join fetch filterAuth.pfUsersAuthorization userAut
+							 join fetch filterAuth.pfFilter filter
+						where
+							userAut.pfUser = :user and
+							userAut.pfAuthorizedUser = :userAuthorized and
+							userAut.pfAuthorizationType = :type and
+							filter = :filter]]></query>
+	</named-query>
+
+	<named-query name="administration.provinceByPk">
+		<query><![CDATA[from PfProvinceDTO where primaryKey = :pk]]></query>
+	</named-query>
+
+	<named-query name="administration.queryParameterByName">
+		<query><![CDATA[select conf
+						from PfConfigurationsParameterDTO conf
+						join fetch conf.pfParameter par
+						where par.cparameter = :cParam]]></query>
+	</named-query>
+
+	<named-query name="administration.queryApplicationParameterByName">
+		<query><![CDATA[select app
+						from PfApplicationsParameterDTO app
+						join fetch app.pfParameter par
+						where par.cparameter = :cParam]]></query>
+	</named-query>
+
+	<named-query name="administration.queryDocumentPreSign">
+		<query><![CDATA[select doc
+						from PfDocumentsDTO doc
+						where doc.pfFile = :file
+						and doc.cpresign is not null]]></query>
+	</named-query>
+	<named-query name="administration.applicationAll">
+		<query><![CDATA[select app
+						from PfApplicationsDTO app
+						where app not in
+							(select parents
+							from
+							PfApplicationsDTO sons
+							join sons.pfApplications parents)
+						order by app.capplication]]></query>
+	</named-query>
+	<named-query name="administration.applicationAllReal">
+		<query><![CDATA[select app
+						from PfApplicationsDTO app
+						where app not in
+							(select parents
+							from
+							PfApplicationsDTO sons
+							join sons.pfApplications parents)
+						and app.capplication not in (:list)
+						order by app.capplication]]></query>
+	</named-query>
+	<named-query name="administration.applicationWithParameters">
+		<query><![CDATA[select distinct app
+						from PfApplicationsDTO app						
+						left join fetch app.pfApplicationsParameters appParams
+						left join fetch appParams.pfParameter param
+						where app.primaryKey = :primaryKey]]>
+		</query>
+	</named-query>
+	<named-query name="administration.jobAvailableSenders">
+		<query><![CDATA[from PfUsersDTO user
+						where
+							user.ctype = 'CARGO' and
+							user.primaryKey != :pk
+						]]></query>
+	</named-query>
+
+	<named-query name="administration.updateMassiveDocs">
+		<query><![CDATA[update PfDocumentsDTO doc set doc.cpresign=null
+						where doc.cpresign is not null
+						and doc.pfRequest in
+						(select req from PfRequestsDTO req
+						 join req.pfApplication app
+						 where app.pfConfiguration.primaryKey = :conf)
+						]]></query>
+	</named-query>
+	
+	<named-query name="administration.findGroupById">
+		<query><![CDATA[
+			FROM PfGroupsDTO grupo
+				WHERE grupo.primaryKey = :id
+		]]></query>
+	</named-query>
+	
+	<named-query name="administration.findUserRemitter">
+		<query><![CDATA[
+			 FROM PfUsersRemitterDTO userR
+			WHERE userR.pfGroup = :grupo
+		]]></query>
+	</named-query>
+	
+	<named-query name="administration.validateFullGroupCode">
+		<query><![CDATA[
+			 FROM PfGroupsDTO grupo 
+			WHERE convert(upper(trim(coalesce(grupo.cnombre,''))), 'US7ASCII') =
+			      convert(upper(trim(coalesce(:code,''))), 'US7ASCII')
+			      and grupo.pfProvince.primaryKey = :idProvincia
+		]]></query>
+	</named-query>
+	
+	<named-query name="administration.validateFullGroupDes">
+		<query><![CDATA[
+			 FROM PfGroupsDTO grupo 
+			WHERE convert(upper(trim(coalesce(grupo.cdescripcion,''))), 'US7ASCII') =
+			      convert(upper(trim(coalesce(:description,''))), 'US7ASCII')
+		]]></query>
+	</named-query>
+	
+	<named-query name="administration.findUserGroup">
+		<query><![CDATA[
+			FROM PfUsersGroupsDTO user
+				WHERE user.pfGroup = :grupo
+				AND user.pfUser = :user 
+		]]></query>
+	</named-query>
+	
+	<named-query name="administration.queryGralTypes">
+		<query><![CDATA[
+			FROM PfParametersDTO param 
+				WHERE param.subtipoAdmin = :type
+				and param.esParametroGeneralAdmin = 1
+  				ORDER BY param.cparameter ASC
+		]]></query>
+	</named-query>
+	
+	<named-query name="administration.findValuesFromParameters">
+		<query><![CDATA[
+			FROM PfConfigurationsParameterDTO configParam 
+			WHERE configParam.pfParameter IN (:parameters)
+		]]></query>
+	</named-query>
+	
+	<named-query name="broker.buscarDocumentoPorCsvYAplicacion">
+		<query><![CDATA[
+			select f 
+			from PfSignsDTO f
+				, IN(f.pfDocument.pfRequest.pfApplication.pfApplicationsParameters) param
+				left join fetch f.documentos docs 
+			where param.tvalue = :prefijoAplicacion 
+				and param.pfParameter.cparameter = :tipoParametroIdAplicacion 
+				and f.csv = :csvBuscado
+		]]></query>
+	</named-query>
+	
+	<named-query name="administration.findValueParamByPk">
+		<query><![CDATA[
+			from PfConfigurationsParameterDTO configParam
+			left join fetch configParam.pfParameter
+			where configParam.primaryKey = :pk]]>
+		</query>
+	</named-query>
+	
+	<named-query name="administration.messageQueryAll">
+		<query><![CDATA[select mess from PfMessagesDTO mess					
+						order by mess.fstart desc]]></query>
+	</named-query>
+
+	<named-query name="administration.messageAdmPkQuery">
+		<query><![CDATA[from PfMessagesDTO mess 
+						left join fetch mess.pfProvince 
+						left join fetch mess.pfUser 
+		               where mess.primaryKey = :pk]]></query>
+	</named-query>
+	
+	<named-query name="administration.usersMessageByPkMessage">
+		<query><![CDATA[select userMess from PfUsersMessageDTO userMess 
+				 join fetch userMess.pfMessage mess 
+				 where mess.primaryKey = :pk]]></query>
+	</named-query>
+	
+	<named-query name="administration.scopeMessageTypes">
+		<query><![CDATA[from PfMessageScopesDTO scope]]></query>
+	</named-query>	
+	
+	<named-query name="administration.scopeMessageTypeById">
+		<query><![CDATA[from PfMessageScopesDTO scope
+						where scope.primaryKey = :idScope]]></query>
+	</named-query>
+	
+	<!-- Este query nos srive para recuperar un parametro por nombre de la configuracion general -->
+	<named-query name="administration.parametroGeneralPorNombre">
+		<query><![CDATA[from PfConfigurationsParameterDTO appPar
+						where appPar.pfParameter.cparameter = :nombreParametro and appPar.pfConfiguration is null]]></query>
+	</named-query>
+	
+	<named-query name="administration.applicationMetadata">
+		<query><![CDATA[from PfApplicationsMetadataDTO appm where appm.pfApplication = :application]]></query>
+	</named-query>
+	
+	<named-query name="administration.applicationMetadataByName">
+		<query><![CDATA[from PfApplicationsMetadataDTO appm 
+						where appm.pfApplication = :application and appm.dname = :name]]></query>
+	</named-query>
+	<named-query name="administration.actualizacionesDIR3All">
+		<query><![CDATA[from PfResponseOrganismosDTO ro
+						order by ro.fechaConsulta desc]]></query>
+	</named-query>
+	
+</entity-mappings>

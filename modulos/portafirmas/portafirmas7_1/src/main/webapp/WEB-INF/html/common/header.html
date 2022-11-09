@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+	<div th:fragment="header">
+		<form id="handbookForm" th:action="|${#httpServletRequest.getContextPath()}/help/handbook|" method="post">
+			<input type="hidden" id="handbookId" name="handbookId" value="user"/>
+		</form>
+		<!-- SCRIPTS -->
+		<script th:inline="javascript">
+			$(document).ready(function() {
+				var pathname = window.location.pathname;
+
+				if (pathname.indexOf("inbox") != -1) {
+					$('#inbox').attr('href', '#!');
+					$('#inbox').click(function() {
+						enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'unresolved'},
+																	 {parameterId:'currentPage', parameterValue:'1'},
+																	 {parameterId:'searchFilter', parameterValue:''},
+																	 {parameterId:'appFilter', parameterValue:''}]);
+					});
+				} else {
+					$('#inbox').attr('href', httpContextPathPortafirmas + '/inbox');
+					$('#inbox').click(function() {});
+				}
+
+				var userAuths = $('.user_auth');
+				userAuths.each(function(i, item) {
+					if (!$(item).parent().hasClass('mf-selected')) {
+						$(item).click(function() {
+							jsAjaxStatus.startAjax();
+							$('#userPk').val($(item).attr('id'));
+							$('#changeUserForm').submit();
+						});
+					}
+				});
+				
+				var userAuthsG = $('.user_auth_gestionated');
+				userAuthsG.each(function(i, item) {
+					if (!$(item).parent().hasClass('mf-selected')) {
+						$(item).click(function() {
+							jsAjaxStatus.startAjax();
+							$('#gestorPk').val($(item).attr('id'));
+							$('#changeGestorUserForm').submit();
+						});
+					}
+				});
+			});
+		</script>
+		<div>
+			<h1>
+				<a th:title="#{organizationDisplayName}" href="#" >
+					<img th:alt="#{organizationDisplayName}"/>
+					<span>Ministerio de Política Territorial y Función Pública, Secretaría de Estado de Administraciones Públicas</span>
+				</a>
+			</h1>
+			<form id="changeUserForm" th:action="|${#httpServletRequest.getContextPath()}/authentication/changeUser|" method="post">
+				<input type="hidden" id="userPk" name="userPk"/>
+			</form>
+			<form id="changeGestorUserForm" th:action="|${#httpServletRequest.getContextPath()}/authentication/changeUserGestor|" method="post">
+				<input type="hidden" id="gestorPk" name="gestorPk"/>
+			</form>
+			<div id="headerContent">
+				<div id="topBar">
+					<a id="accGotoContent" href="#wrap">Ir al contenido</a>
+
+					<div id="langMenuDrop">
+						<h6 th:text="#{language}">Idioma</h6>
+						<ul id="langMenu">
+							<li class="mf-selected"><a th:href="|${#httpServletRequest.getContextPath()}?language=es|">Castellano</a></li>
+						</ul>
+					</div>
+					<ul id="userMenu">
+						<li>
+							<a href="#" id="userLn">
+								<span th:text="${#authentication.userDTO.fullName}">Usuario</span>
+								<span th:if="${#authentication.userDTO.validJob != null}"> / </span>
+								<span th:if="${#authentication.userDTO.validJob != null}"
+									  th:text="${#authentication.userDTO.validJob.fullName}">Cargo</span></a>
+							<ul>
+								<li th:class="${#authentication.userDTO.primaryKey == #authentication.principal.primaryKey}? 'mf-selected' : ' '">
+									<a th:id="${#authentication.principal.primaryKey}" href="#" th:text="${#authentication.principal.fullName}" class="user_auth">
+										Nombre Apellido Apellido
+									</a>
+								</li>
+								<li th:each="user,status : ${#authentication.validatedUsers}"
+									th:class="${#authentication.userDTO.primaryKey == user.primaryKey}? 'mf-selected' : ' '">
+									<a th:if="${user.lvalid}" th:id="${user.primaryKey}" href="#" th:text="${user.fullName}" class="user_auth">
+										Nombre Apellido Apellido
+									</a>
+								</li>
+								<li th:each="user,status : ${#authentication.gestionatedUsers}"
+									th:class="${#authentication.userDTO.primaryKey == user.primaryKey}? 'mf-selected' : ' '">
+									<a th:if="${user.lvalid}" th:id="${user.primaryKey}" href="#" th:text="${user.fullName}" class="user_auth_gestionated">
+										Nombre Apellido Apellido
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li sec:authorize="hasRole('GRUPO')">
+							<a href="#" th:text="${#authentication.group.cnombre}">Grupo</a>
+						</li>
+						<li>
+							<a href="#" th:text="#{help}">Ayuda</a>
+							<ul>
+								<li>
+									<a href="#" onclick="downloadHandbook('user');" th:text="#{userHandbook}">
+										Manual usuario
+									</a>
+								</li>
+								<li>
+									<a href="#" onclick="downloadHandbook('guia_rapida');" th:text="#{guiaRapidaHandbook}">
+										Gu&iacute;a r&aacute;pida
+									</a>
+								</li>
+								<li th:if="${#authentication.administrator}">
+									<a href="#" onclick="downloadHandbook('admin');" th:text="#{admHandbook}">
+										Nombre Administrador
+									</a>
+								</li>
+								<li th:if="${#authentication.adminSeat}">
+									<a href="#" onclick="downloadHandbook('admin_seat');" th:text="#{admSeatHandbook}">
+										Nombre Administrador Sede
+									</a>
+								</li>
+								<li th:if="${#authentication.administrator}">
+									<a href="https://incidencias.seap.minhap.es/SSCC/" th:text="#{accessToSSCC}">
+										Incidencias SSCC
+									</a>
+								</li>
+								<li  th:if="${#authentication.administrator || #authentication.adminSeat || #authentication.administratorOrganism}">
+									<a href="https://ssweb.seap.minhap.es/ayuda/consulta/Portafirmasgeneral" th:text="#{accessToCAID}">
+										Incidencias CAID
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li><a th:href="|${#httpServletRequest.getContextPath()}/j_spring_security_logout|" id="logoutLn" th:text="#{closeSession}" onclick="jsAjaxStatus.startAjax();">Cerrar sesión</a></li>
+					</ul>
+				</div>
+				<h2 th:text="#{appDisplayName}"></h2>
+				<h3 th:text="#{organizationDisplayNameTitle}"></h3>
+
+				<div id="appMenu">
+					<ul class="menu">
+						<li>
+							<h4><a id="inbox" th:href="|${#httpServletRequest.getContextPath()}/inbox|" th:text="#{petitions}">Peticiones</a></h4>
+						</li>
+						<li th:if="${#authentication.userDTO.primaryKey == #authentication.principal.primaryKey}">
+							<h4><a th:href="|${#httpServletRequest.getContextPath()}/configuration|" th:text="#{configuration}">Configuración</a></h4>
+						</li>
+ 						<li sec:authorize="!hasRole('SIMULADOR')" th:if="${#authentication.userDTO.primaryKey == #authentication.principal.primaryKey and
+ 						             ( #authentication.administrator or #authentication.administratorCAID ) }">
+				             <h4><a th:href="|${#httpServletRequest.getContextPath()}/administration|" th:text="#{administration}">Administración</a></h4>
+				        </li>
+				        
+						<li sec:authorize="!hasRole('SIMULADOR')" th:if="${#authentication.userDTO.primaryKey == #authentication.principal.primaryKey and
+ 						             ( #authentication.administratorOrganism ) }">
+				             <h4><a th:href="|${#httpServletRequest.getContextPath()}/adminOrganism|" th:text="#{provinceAdministration}">Administración de organismo</a></h4>
+				        </li>
+				        
+  						<li sec:authorize="!hasRole('SIMULADOR')" th:if="${#authentication.userDTO.primaryKey == #authentication.principal.primaryKey and
+ 						             (#authentication.administrator or #authentication.adminSeat or #authentication.administratorOrganism or #authentication.administratorCAID )}">
+  							<h4><a th:href="|${#httpServletRequest.getContextPath()}/usersManagement|" th:text="#{userManagement}">Gestión de usuarios</a></h4>
+  						</li>
+  						<li sec:authorize="!hasRole('SIMULADOR')" th:if="${#authentication.userDTO.primaryKey == #authentication.principal.primaryKey and
+ 						             (#authentication.administrator)}">
+  							<h4><a th:href="|${#httpServletRequest.getContextPath()}/externalUser|" th:text="#{externalManagement}">Gestión de externos</a></h4>
+  						</li>
+  						<li sec:authorize="!hasRole('SIMULADOR')" th:if="${#authentication.userDTO.primaryKey == #authentication.principal.primaryKey and
+ 						             (#authentication.administrator or #authentication.adminSeat)}">
+  							<h4><a th:href="|${#httpServletRequest.getContextPath()}/stats|" th:text="#{administrationStatistics}">Estadísticas</a></h4>
+  						</li>			 
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+	   <div layout:fragment="content" >
+
+		<!-- SCRIPTS -->
+		<script th:src="|${#httpServletRequest.getContextPath()}/js/colorpicker/spectrum.js?#{versionNumber}.#{versionFase}|"></script>
+		<script th:src="|${#httpServletRequest.getContextPath()}/js/inbox/inbox.js?#{versionNumber}.#{versionFase}|"></script>
+		<script th:src="|${#httpServletRequest.getContextPath()}/js/catch_exceptions/listenerExceptions.js?#{versionNumber}.#{versionFase}|"></script>
+		<script th:src="|${#httpServletRequest.getContextPath()}/js/catch_exceptions/PortafirmasJSException.js?#{versionNumber}.#{versionFase}|"></script>
+		<script th:src="|${#httpServletRequest.getContextPath()}/js/applet-firma/miniafirma1.6.5/firma.js?#{versionNumber}.#{versionFase}|"></script>
+		<script th:src="|${#httpServletRequest.getContextPath()}/js/applet-firma/miniafirma1.6.5/constantes.js?#{versionNumber}.#{versionFase}|"></script>
+		<script th:src="|${#httpServletRequest.getContextPath()}/js/applet-firma/miniafirma1.6.5/miniapplet.js?#{versionNumber}.#{versionFase}|"></script>
+		<script th:src="|${#httpServletRequest.getContextPath()}/js/applet-firma/miniafirma1.6.5/authenticator.js?#{versionNumber}.#{versionFase}|"></script>
+    	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery.maskedinput.js?#{versionNumber}.#{versionFase}|"></script>
+    	<script th:src="|${#httpServletRequest.getContextPath()}/js/inbox/comments.js?#{versionNumber}.#{versionFase}|"></script>
+    	<script th:src="|${#httpServletRequest.getContextPath()}/js/inbox/anexos.js?#{versionNumber}.#{versionFase}|"></script>
+    	<script th:src="|${#httpServletRequest.getContextPath()}/js/inbox/inbox_msgBox.js?#{versionNumber}.#{versionFase}|"></script>
+    	
+		<script th:src="|${#httpServletRequest.getContextPath()}/js/libs/pdf.js?#{versionNumber}.#{versionFase}|"></script>
+		<script th:src="|${#httpServletRequest.getContextPath()}/js/libs/pdf.worker.js?#{versionNumber}.#{versionFase}|"></script>
+
+        <!-- INICIO DEL CONTENIDO-->
+		<div class="bandeja" id="mainWindow">
+				<div id="contentData">
+					<div id="contentDataHeader">
+						<ul id="pfToolbar">
+							<li sec:authorize="hasRole('REDACCION') and !hasRole('SIMULADOR') and !hasRole('GESTOR')" class="new arrowSubmenu">
+								<a th:href="|${#httpServletRequest.getContextPath()}/redaction?templateId=|" class="mf-icon-write-24" th:text="#{newPetition}">Redactar</a>
+								<ul id="pfToolbarSubmenu">
+									<li><a th:href="|${#httpServletRequest.getContextPath()}/redaction?templateId=|" class="" >Nueva petición</a></li>
+									<li><a th:href="|${#httpServletRequest.getContextPath()}/redactionInvitation?templateId=|" class="" >Nueva petición invitación</a></li>
+
+									<li>
+										<a> 
+										<!-- th:text="#{setupTemplates}" -->
+										Desde plantilla
+										</a>
+										<ul>
+
+											<li th:each="template, templateStatus : ${inbox.templateList}">
+												<a th:href="|${#httpServletRequest.getContextPath()}/redaction?templateId=${template.primaryKey}|" th:text="${template.ctemplateCode}">
+													Código plantilla
+												</a>
+											</li>
+
+										</ul>
+									</li>
+								</ul>
+							</li>
+							
+							<li sec:authorize="hasRole('REDACCION') and !hasRole('SIMULADOR') and !hasRole('GESTOR')"  class="template arrowSubmenu">
+								<a href="#!" class="mf-icon-template-24" th:text="#{requestTemplate2}">
+									Plantilla de petición
+								</a>
+								<ul id="pfToolbarSubmenu">
+									<li>
+										<a href="javascript:void(0)" th:onclick="|location.href='${#httpServletRequest.getContextPath()}/template?templateId=';|" > 
+										<!-- th:text="#{setupTemplates}" -->
+										Crear nueva
+										</a>
+									</li>
+									<li>
+										<a href="javascript:void(0)" onclick="$('#templates_modal').dialog('open');"
+										   th:text="#{setupTemplates}">
+											Administrar plantillas
+										</a>
+									</li>
+
+									<!--  <li th:each="template, templateStatus : ${inbox.templateList}">
+										<a th:href="|${#httpServletRequest.getContextPath()}/redaction?templateId=${template.primaryKey}|" th:text="${template.ctemplateCode}">
+											Código plantilla
+										</a>
+									</li> -->
+								</ul>
+							</li>
+							
+							<li sec:authorize="!hasRole('SIMULADOR') and !hasRole('GESTOR') and !hasRole('FIRMA')"  class="tags arrowSubmenu">
+								<a href="#!" class="mf-icon-tag-24" th:text="#{labels}">
+									Etiquetas
+								</a>
+
+								<ul id="pfToolbarSubmenu">
+									<li><a href="#!" th:text="#{newLabel}" onclick="$('#tags_modal').dialog('open');newLabel();">Nueva etiqueta</a></li>
+									<li><a href="javascript:void(0)" onclick="$('#tags_modal').dialog('open');" th:text="#{setupLabels}">Administrar etiquetas</a></li>
+
+									<li class="" th:each="label,labelStatus : ${inbox.labelList}">
+										<a href="#!" th:onclick="|applyLabel(${label.primaryKey})|">
+											<span th:class="|userTag ${label.ccolor} left|" th:style="|background-color: ${label.ccolor}|"
+												  th:text="${label.pfTag.ctagCapitalized}">
+												Etiqueta
+											</span>
+										</a>
+									</li>
+								</ul>
+							</li>
+
+							<li sec:authorize="hasRole('FIRMA') and !hasRole('GRUPO') and !hasRole('SIMULADOR') and !hasRole('GESTOR')" class="sign" th:if="${inbox.requestBarSelected == 'unresolved'}">
+								<a th:title="|#{signButton}/#{passButton}|" href="javascript:void(0)" onclick="prepareDataToSign();" class="mf-icon-sign-24">
+									<span th:text="|#{signButton}/#{passButton}|">Firmar/Visto Bueno</span>
+								</a>
+							</li>
+
+ 							<li sec:authorize="hasRole('FIRMA') and !hasRole('GRUPO') and !hasRole('SIMULADOR')" class="sign" th:if="${inbox.requestBarSelected == 'unresolved' and inbox.fireActivo}">
+								<a th:title="#{firmaNube}" href="javascript:void(0)" onclick="prepareFIReSign();" class="mf-icon-sign-24">
+									<img th:src="|${#httpServletRequest.getContextPath()}/images/FIRe.png|" width="36px"/>
+								</a>
+							</li>
+ 
+							<li sec:authorize="hasRole('VALIDADOR') and !hasRole('GRUPO') and !hasRole('SIMULADOR')" class="sign" th:if="${inbox.requestBarSelected == 'unresolved'}">
+								<a href="javascript:void(0)" class="mf-icon-sign-24"  onclick="prepareDataToValidate();">
+									<span th:text="#{validateButton}">Validar</span>
+								</a>
+							</li>
+	
+							<li sec:authorize="!hasRole('GRUPO') and !hasRole('SIMULADOR') and !hasRole('GESTOR')" class="reject" th:if="${inbox.requestBarSelected == 'unresolved'}">
+								<a href="javascript:void(0)" class="mf-icon-reject-24" onclick="prepareDataToReject();">
+									<span th:text="#{rejectButton}">Rechazar</span>
+								</a>
+							</li>
+
+							<li sec:authorize="!hasRole('VALIDADOR') and !hasRole('GRUPO') and !hasRole('SIMULADOR') and !hasRole('GESTOR') and !hasRole('FIRMA')" class="resend" th:if="${inbox.requestBarSelected == 'unresolved' || inbox.requestBarSelected == 'awaiting'}">
+								<a href="#!" class="mf-icon-resend-24" onclick="prepareDataToForward();">
+									<span th:text="#{forwardButton}">Reenviar</span>
+								</a>
+							</li>
+							<li sec:authorize="!hasRole('SIMULADOR')  and !hasRole('GESTOR') and !hasRole('FIRMA')" th:if="${inbox.requestBarSelected == 'sent' || inbox.requestBarSelected == 'groupSent'}">
+								<a href="javascript:void(0)" 
+									onclick="prepareDataSendToRemove();" 
+									 class="mf-icon-reject-24">
+									<span th:text="#{remove2Button}">Retirar</span>
+								</a> 
+ 							</li> 
+ 				
+							<li sec:authorize="!hasRole('VALIDADOR')" class="resend" th:if="${inbox.requestBarSelected == 'finished' || inbox.requestBarSelected == 'sentFinished' || inbox.requestBarSelected == 'groupSentFinished'}">
+								<a href="#!" class="mf-icon-report-24" onclick="getZipReports();">
+									<span th:text="#{massiveReportButton}">Informes</span>
+								</a>
+							</li>
+							
+							<!-- opciones del difusi�n de mensajes -->			
+ 							<li sec:authorize="!hasRole('GRUPO')" class="sign" th:if="${inbox.requestBarSelected == 'diffusion'}">
+								<a href="javascript:void(0)" class="mf-icon-sign-24"  onclick="prepareMarkReadMessage();">
+									<span th:text="#{messageMarkRead}">Marcar como le&iacute;do</span>
+								</a>
+							</li>
+							<li sec:authorize="!hasRole('GRUPO')" class="sign" th:if="${inbox.requestBarSelected == 'diffusion'}">
+								<a href="javascript:void(0)" class="mf-icon-reject-24"  onclick="prepareMarkDeleteMessage();">
+									<span th:text="#{removeButton}">Eliminar</span>
+								</a>
+							</li>
+							
+
+						</ul>
+
+						<form method="POST" id="searchForm" name="searchForm" class="filterForm" th:if="${inbox.requestBarSelected != 'diffusion'}">
+							<fieldset>
+								<span class="search-icon"></span> 
+								<input type="search" 
+									   autocomplete="off" 
+									   name=""	
+									   class="mr0 w200 ui-autocomplete-input" 
+									   th:placeholder="|#{search}...|"
+									   th:value="${inbox.searchFilter}"
+								id="searchTextField"/>
+							</fieldset>
+						</form>
+					</div>
+
+					<div id="contentDataBody" class="p10">
+						<div id="boxNav">
+							<ul>
+								<li sec:authorize="!hasRole('GRUPO')">
+									<h6 id="inboxLn" th:title="#{received}">
+										<span class="mf-icon mf-icon-recibidos-16"></span>
+										<span th:text="#{received}">pendientes</span>
+									</h6>
+									<ul>
+										<li
+										th:class="${inbox.requestBarSelected == 'unresolved'? 'selected newMsg' : 'newMsg'}">
+										<a
+										th:title="#{unresolved}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'unresolved'},
+																							 {parameterId:'currentPage', parameterValue:'1'},
+																							 {parameterId:'pageSize', parameterValue:''},
+																							 {parameterId:'searchFilter', parameterValue:''},
+																							 {parameterId:'appFilter', parameterValue:''},
+																							 {parameterId:'monthFilter', parameterValue:'all'},
+																							 {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span class="numMsg " th:text="${inbox.numUnresolved}"></span><span th:text="#{unresolved}"></span>
+										</a></li>
+
+										<li
+										th:class="${inbox.requestBarSelected == 'awaiting'? 'selected' : ' '}"><a
+										th:title="#{awaiting}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'awaiting'},
+												 											 {parameterId:'currentPage', parameterValue:'1'},
+												 											 {parameterId:'pageSize', parameterValue:''},
+												 											 {parameterId:'searchFilter', parameterValue:''},
+												 											 {parameterId:'appFilter', parameterValue:''},
+												 											 {parameterId:'monthFilter', parameterValue:'all'},
+												 											 {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{awaiting}"></span> </a></li>
+										<li
+										th:class="${inbox.requestBarSelected == 'finished'? 'selected' : ' '}"><a
+										th:title="#{finished}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'finished'},
+												 										     {parameterId:'currentPage', parameterValue:'1'},
+												 										     {parameterId:'pageSize', parameterValue:''},
+												 										     {parameterId:'searchFilter', parameterValue:''},
+												 										     {parameterId:'appFilter', parameterValue:''},
+												 										     {parameterId:'monthFilter', parameterValue:'all'},
+												 										     {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{finished}"></span> </a></li>
+										<li
+										th:class="${inbox.requestBarSelected == 'cancelled'? 'selected' : ' '}"><a
+										th:title="#{cancelled}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'cancelled'},
+												 										     {parameterId:'currentPage', parameterValue:'1'},
+												 										     {parameterId:'pageSize', parameterValue:''},
+												 										     {parameterId:'searchFilter', parameterValue:''},
+												 										     {parameterId:'appFilter', parameterValue:''},
+												 										     {parameterId:'monthFilter', parameterValue:'all'},
+												 										     {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{cancelled}"></span> </a></li>
+										<li
+										th:class="${inbox.requestBarSelected == 'expired'? 'selected' : ' '}"><a
+										th:title="#{expired}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'expired'},
+												 										     {parameterId:'currentPage', parameterValue:'1'},
+												 										     {parameterId:'pageSize', parameterValue:''},
+												 										     {parameterId:'searchFilter', parameterValue:''},
+												 										     {parameterId:'appFilter', parameterValue:''},
+												 										     {parameterId:'monthFilter', parameterValue:'all'},
+												 										     {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{expired}"></span> </a></li>
+									</ul>
+								</li>
+								<li>									
+									<ul sec:authorize="!hasRole('GRUPO') and !hasRole('FIRMA')">
+										<h6 id="outboxLn" th:title="#{sent}">
+										<span class="mf-icon mf-icon-enviados-16"></span>
+										<span th:text="#{sent}"></span>
+										</h6>
+										<li
+										th:class="${inbox.requestBarSelected == 'sent'? 'selected newMsg' : 'newMsg'}"><a
+										th:title="#{unresolved}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'sent'},
+												 											 {parameterId:'currentPage', parameterValue:'1'},
+												 											 {parameterId:'pageSize', parameterValue:''},
+												 											 {parameterId:'searchFilter', parameterValue:''},
+												 											 {parameterId:'appFilter', parameterValue:''},
+												 											 {parameterId:'monthFilter', parameterValue:'all'},
+												 											 {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{unresolved}"></span> </a></li>
+										<li
+										th:class="${inbox.requestBarSelected == 'sentFinished'? 'selected' : ' '}"><a
+										th:title="#{finished}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'sentFinished'},
+												 											 {parameterId:'currentPage', parameterValue:'1'},
+												 											 {parameterId:'pageSize', parameterValue:''},
+												 											 {parameterId:'searchFilter', parameterValue:''},
+												 											 {parameterId:'appFilter', parameterValue:''},
+												 											 {parameterId:'monthFilter', parameterValue:'all'},
+												 											 {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{finished}"></span> </a></li>
+										<li
+										th:class="${inbox.requestBarSelected == 'sentCancelled'? 'selected' : ' '}"><a
+										th:title="#{cancelled}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'sentCancelled'},
+												 										     {parameterId:'currentPage', parameterValue:'1'},
+												 										     {parameterId:'pageSize', parameterValue:''},
+												 										     {parameterId:'searchFilter', parameterValue:''},
+												 										     {parameterId:'appFilter', parameterValue:''},
+												 										     {parameterId:'monthFilter', parameterValue:'all'},
+												 										     {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{cancelled}"></span> </a></li>
+										<li
+										th:class="${inbox.requestBarSelected == 'invited'? 'selected' : ' '}"><a
+										th:title="#{invited}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'invited'},
+												 											 {parameterId:'currentPage', parameterValue:'1'},
+												 											 {parameterId:'pageSize', parameterValue:''},
+												 											 {parameterId:'searchFilter', parameterValue:''},
+												 											 {parameterId:'appFilter', parameterValue:''},
+												 											 {parameterId:'monthFilter', parameterValue:'all'},
+												 											 {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{invited}"></span> </a></li>
+									</ul>
+									<ul sec:authorize="hasRole('GRUPO')">
+										<li
+										th:class="${inbox.requestBarSelected == 'groupSent'? 'selected newMsg' : 'newMsg'}"><a
+										th:title="#{unresolved}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'groupSent'},
+												 											 {parameterId:'currentPage', parameterValue:'1'},
+												 											 {parameterId:'pageSize', parameterValue:''},
+												 											 {parameterId:'searchFilter', parameterValue:''},
+												 											 {parameterId:'appFilter', parameterValue:''},
+												 											 {parameterId:'monthFilter', parameterValue:'all'},
+												 											 {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{unresolved}"></span> </a></li>
+										<li
+										th:class="${inbox.requestBarSelected == 'groupSentFinished'? 'selected' : ' '}"><a
+										th:title="#{finished}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'groupSentFinished'},
+												 											 {parameterId:'currentPage', parameterValue:'1'},
+												 											 {parameterId:'pageSize', parameterValue:''},
+												 											 {parameterId:'searchFilter', parameterValue:''},
+												 											 {parameterId:'appFilter', parameterValue:''},
+												 											 {parameterId:'monthFilter', parameterValue:'all'},
+												 											 {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{finished}"></span> </a></li>
+										<li
+										th:class="${inbox.requestBarSelected == 'groupExpired'? 'selected' : ' '}"><a
+										th:title="#{expired}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'groupExpired'},
+												 										     {parameterId:'currentPage', parameterValue:'1'},
+												 										     {parameterId:'pageSize', parameterValue:''},
+												 										     {parameterId:'searchFilter', parameterValue:''},
+												 										     {parameterId:'appFilter', parameterValue:''},
+												 										     {parameterId:'monthFilter', parameterValue:'all'},
+												 										     {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{expired}"></span> </a></li>
+										<li
+										th:class="${inbox.requestBarSelected == 'groupCancelled'? 'selected' : ' '}"><a
+										th:title="#{cancelled}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'groupCancelled'},
+												 										     {parameterId:'currentPage', parameterValue:'1'},
+												 										     {parameterId:'pageSize', parameterValue:''},
+												 										     {parameterId:'searchFilter', parameterValue:''},
+												 										     {parameterId:'appFilter', parameterValue:''},
+												 										     {parameterId:'monthFilter', parameterValue:'all'},
+												 										     {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+												<span th:text="#{cancelled}"></span> </a></li>
+									</ul>
+								</li>
+								
+								<!-- MENSAJES DE DIFUSION -->
+								<li sec:authorize="!hasRole('GRUPO')">
+									<h6 id="outboxLn" th:title="#{diffusion}">
+										<span class="mf-icon mf-icon-enviados-16"></span>
+										<span th:text="#{diffusion}"></span>
+									</h6>
+									<ul sec:authorize="!hasRole('GRUPO')">
+										<li
+										th:class="${inbox.requestBarSelected == 'diffusion'? 'selected newMsg' : 'newMsg'}"><a
+										th:title="#{diffusionReceived}" href="javascript:void(0)"
+										onclick="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'requestBarSelected', parameterValue:'diffusion'},
+												 											 {parameterId:'currentPage', parameterValue:'1'},
+												 											 {parameterId:'searchFilter', parameterValue:''},
+												 											 {parameterId:'appFilter', parameterValue:''},
+												 											 {parameterId:'monthFilter', parameterValue:'all'},
+												 											 {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}])">
+										<span class="numMsg " id="numMessages" th:text="${inbox.numMessagesUnresolved}"></span><span th:text="#{diffusionReceived}"></span></a></li>
+										
+									</ul>
+								</li>
+
+							</ul>
+						</div>
+						<div id="inboxFilter" th:if="${inbox.requestBarSelected != 'diffusion'}">
+							<select class="ml10" name="application_filter" id="application_filter"
+									onchange="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'appFilter', parameterValue: $('#application_filter').val()}, {parameterId:'currentPage', parameterValue:'1'}]);">
+								<option th:id="combo_app_" value="">Todas las aplicaciones</option>
+								<option th:each="app : ${inbox.applicationList}" th:value="${app.capplication}"
+										th:id="|combo_app_${app.capplication}|" th:text="${app.dapplication}" th:title="${app.dapplication}">Aplicación</option>
+							</select>
+							<select sec:authorize="!hasRole('GRUPO') and !hasRole('FIRMA')" th:if="${inbox.inRequest}" class="ml10" name="validated_request_filter" id="validated_request_filter" onchange="onchangeRequestTypeFilter(this.value);">
+								<option id="view_all" value="view_all">Todos los tipos</option>
+								<option id="view_sign" value="view_sign">Ver peticiones de firma</option>
+								<option id="view_pass" value="view_pass">Ver peticiones de visto bueno</option>
+								<option id="view_validate" value="view_validate">Ver validadas</option>
+								<option id="view_no_validate" value="view_no_validate">Ver no validadas</option>
+							</select>
+							<select sec:authorize="!hasRole('GRUPO') and !hasRole('FIRMA')" class="ml10" name="tags_filter" id="tags_filter" onchange="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'labelFilter', parameterValue: this.value}, {parameterId:'currentPage', parameterValue:'1'}]);">
+								<option value="">Todas las etiquetas</option>
+								<option th:each="label : ${inbox.labelList}" th:value="${label.pfTag.primaryKey}"
+										th:style="|color: ${label.ccolor}|" th:text="${label.pfTag.ctagCapitalized}">Etiqueta</option>
+							</select>
+
+							<select id="month_filter" name="month_filter" class="w130"
+								onchange="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'currentPage', parameterValue:'1'},
+												 									  {parameterId:'searchFilter', parameterValue:''},
+												 									  {parameterId:'appFilter', parameterValue:''},
+												 									  {parameterId:'monthFilter', parameterValue: this.value},
+												 									  {parameterId:'yearFilter', parameterValue: $('#year_filter').val()}]);">
+								<option th:each="month : ${inbox.monthList}" th:value="${month.id}" 
+										th:id="|combo_month_${month.id}|" th:text="${month.name}" th:selected="${month.id eq 'all'}"/>
+							</select>
+				
+							<select id="year_filter" name="year_filter" class="w60"
+								onchange="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'currentPage', parameterValue:'1'},
+												 									  {parameterId:'searchFilter', parameterValue:''},
+												 									  {parameterId:'appFilter', parameterValue:''},
+												 									  {parameterId:'monthFilter', parameterValue: $('#month_filter').val()},
+												 									  {parameterId:'yearFilter', parameterValue: this.value}]);">
+								<option th:each="year : ${inbox.yearList}" th:value="${year}"
+										th:id="|combo_year_${year}|" th:text="${year}"/>
+							</select>
+						</div>
+						<div id="inboxContent">
+							<div>
+								<form id="inboxForm" name="inboxForm" method="POST" th:action="|${#httpServletRequest.getContextPath()}/inbox|" th:object="${inbox}">
+									<!-- ATRIBUTOS DEL FORMULARIO -->
+									<input type="hidden" id="action" 				name="action" th:value="*{action}" />
+									<input type="hidden" id="numUnresolved" 		name="numUnresolved" th:value="*{numUnresolved}" />
+									<input type="hidden" id="requestBarSelected" 	name="requestBarSelected" th:value="*{requestBarSelected}" />
+									<input type="hidden" id="pageSize" 				name="paginator.pageSize" th:value="*{paginator.pageSize}" />
+									<input type="hidden" id="currentPage" 			name="paginator.currentPage" th:value="*{paginator.currentPage}" />
+									<input type="hidden" id="numPages" 				name="paginator.numPages" th:value="*{paginator.numPages}" />
+									<input type="hidden" id="inboxSize" 			name="paginator.inboxSize" th:value="*{paginator.inboxSize}" />
+									<input type="hidden" id="selectedRequest" 		name="selectedRequest" th:value="*{selectedRequest}" />
+									<input type="hidden" id="searchFilter" 			name="searchFilter" th:value="*{searchFilter}" />
+									<input type="hidden" id="appFilter" 			name="appFilter" th:value="*{appFilter}" />
+									<input type="hidden" id="labelFilter" 			name="labelFilter" th:value="*{labelFilter}" />
+									<input type="hidden" id="serialNumber" 			name="serialNumber" th:value="*{serialNumber}" />
+									<input type="hidden" id="hasValidator" 			name="hasValidator" th:value="*{hasValidator}" />
+									<input type="hidden" id="requestTypeFilter" 	name="requestTypeFilter" th:value="*{requestTypeFilter}" />
+									<input type="hidden" id="requestPagination" 	name="requestPagination" th:value="*{requestPagination}" />
+									<input type="hidden" id="orderField" 			name="orderField" th:value="*{orderField}" />
+									<input type="hidden" id="order" 				name="order" th:value="*{order}" />
+									<input type="hidden" id="sinceDate"             name="sinceDate" th:value="*{sinceDate}" />
+									<input type="hidden" id="untilDate"				name="untilDate" th:value="*{untilDate}"/>
+									<input type="hidden" id="hasMessages" 			name="hasMessages" th:value="*{hasMessages}" />
+									<input type="hidden" id="monthFilter" 			name="monthFilter" th:value="*{monthFilter}" />
+									<input type="hidden" id="yearFilter" 			name="yearFilter" th:value="*{yearFilter}" />
+									<input type="hidden" id="viewNoValidate" 		name="viewNoValidate" th:value="*{viewNoValidate}" />
+								<div id="msgTop">
+									<div id="msgList" style="overflow: auto;">
+										<table  id="msgTable" class="data actionable tl" th:if="${inbox.requestBarSelected != 'diffusion'}">
+											<thead>
+												<tr>
+													<th th:if="${inbox.requestBarSelected != 'invited'}" class=""><input type="checkbox" name="select_all" id="select_all"/></th>
+													<!-- Agustin reoorganizar html tras ampliar campo del remitente -->
+													<th th:if="${inbox.requestBarSelected != 'invited'}" class="attachCol w50"></th>
+													<!-- <th class="attachCol w10"></th>Comentarios -->
+													<!--<th class="attachCol w10"></th> Anexos -->
+													<th class=""><a class="sort" href="#" th:text="#{subject}" onclick="ordenar('dsubject')">Asunto</a></th>
+													
+													<th class=""><a class="sort" href="#" th:text="#{reference}" onclick="ordenar('dreference')">Referencia</a></th>
+													<!--<th class=""><a class="sort" href="#" th:text="#{strings.replace(reference,'_',' ')}" onclick="ordenar('dreference')">Referencia</a></th>-->
+																										
+													<th th:unless="${inbox.requestBarSelected == 'sent' || inbox.requestBarSelected == 'invited'  || inbox.requestBarSelected == 'sentFinished' || inbox.requestBarSelected == 'groupSent'
+													          || inbox.requestBarSelected == 'groupSentFinished' || inbox.requestBarSelected == 'groupExpired' || inbox.requestBarSelected == 'groupCancelled'}"
+													    th:text="#{oneSender}">Remitente</th>
+													<th th:if="${inbox.requestBarSelected == 'sent' || inbox.requestBarSelected == 'invited' || inbox.requestBarSelected == 'sentFinished' || inbox.requestBarSelected == 'groupSent'
+													          || inbox.requestBarSelected == 'groupSentFinished' || inbox.requestBarSelected == 'groupExpired' || inbox.requestBarSelected == 'groupCancelled'}"
+													    th:text="#{oneReceiver}">Destinatario</th>
+													<th><a class="sort" href="#" th:text="#{entryDate}" onclick="ordenar('fentry')">Entrada</a></th>
+													<th><a class="sort" href="#" th:text="#{modifiedDate2}" onclick="ordenar('fmodified')">Modificado</a></th>
+													<th th:if="${inbox.requestBarSelected == 'invited'}">
+													<a class="sort" href="#" th:text="#{invitedRequestStatus}" onclick="ordenar('laccepted')">Estado</a></th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:with="idUsuario=${#authentication.userDTO.primaryKey}" th:each="request,status : ${inbox.requestList}"  th:id="|r_${request.chash}" th:class="|row${status.index}|"
+													th:classappend="( ${ ( inbox.requestBarSelected.equalsIgnoreCase('sentFinished') or inbox.requestBarSelected.equalsIgnoreCase('sent') or inbox.requestBarSelected.equalsIgnoreCase('invited')) == false } ) ? 
+													( ${request.newRequest}? (${status.even}? ' new even' : ' new odd') : (${status.even}? ' even' : ' odd' ) ) :
+													( ${request.pfRequest.unreadForRemmitter( idUsuario )} ? ' new':'' ) ">
+													<td th:if="${inbox.requestBarSelected != 'invited'}">
+														<input type="checkbox" name="request_checkbox"
+															   id="request_checkbox" th:value="${request.chash}"/>
+													</td>
+													<td class="wv7" th:if="${inbox.requestBarSelected != 'invited'}">
+													<div th:with="stateUser=${request.stateUser},stateJob=${request.stateJob}">
+														<span th:if="${request.pfRequest.pfImportance.ccodigonivel == '1'}" 
+															th:title="#{priorityNormal}" class="mf-icon mf-icon-normal-16">	
+														</span>
+														
+														<span th:if="${request.pfRequest.pfImportance.ccodigonivel == '2'}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{priorityHigh}" class="mf-icon mf-icon-high-16">
+														</span>
+	
+														<span th:if="${request.pfRequest.pfImportance.ccodigonivel == '3'}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{priorityUrgent}" class="mf-icon mf-icon-urgent-16">
+														</span>
+	
+														<span th:if="${request.pfRequest.pfImportance.ccodigonivel == '4'}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{priorityMaximum}" class="mf-icon mf-icon-maximum-16">
+														</span>
+														
+														<span th:if="${request.pfRequest.listRemmittersIds.contains(#authentication.userDTO.primaryKey) and
+																	stateUser != null and (stateUser.pfTag.ctag == 'NUEVO' or stateUser.pfTag.ctag == 'LEIDO') and 
+																	( ( request.pfRequest.isRemitterInSigners() and 
+																	request.pfRequest.isRemitterNextToSign() ) ) and not stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmRequest}" class="stateTag mf-icon mf-icon-pfm-solicitada-16">
+														</span>	
+														<span th:if="${not request.pfRequest.listRemmittersIds.contains(#authentication.userDTO.primaryKey) and
+																	stateUser != null and (stateUser.pfTag.ctag == 'NUEVO' or stateUser.pfTag.ctag == 'LEIDO') and 
+																	not stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmRequest}" class="stateTag mf-icon mf-icon-pfm-solicitada-16">
+														</span>	
+														<span th:if="${stateJob != null and (stateJob.pfTag.ctag == 'NUEVO' or stateJob.pfTag.ctag == 'LEIDO') and not stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmRequest}" class="stateTag mf-icon mf-icon-pfm-solicitada-16">
+														</span>			
+	
+														<span th:if="${stateUser != null and (stateUser.pfTag.ctag == 'NUEVO' or stateUser.pfTag.ctag == 'LEIDO') and stateUser.pfTag.pass and request.pfRequest.isRemitterNextToSign()}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbRequest}" class="stateTag mf-icon mf-icon-pvb-solicitada-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and (stateJob.pfTag.ctag == 'NUEVO' or stateJob.pfTag.ctag == 'LEIDO') and stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbRequest}" class="stateTag mf-icon mf-icon-pvb-solicitada-16">
+														</span>															
+	
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'FIRMADO' and not stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmd}" class="mf-icon mf-icon-pfmd-16">
+														</span>															
+	
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'FIRMADO' and stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbd}" class="mf-icon mf-icon-pvbd-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'FIRMADO' and not stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmd}" class="mf-icon mf-icon-pfmd-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'FIRMADO' and stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbd}" class="mf-icon mf-icon-pvbd-16">
+														</span>		
+														
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'ANULADA' and not stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmdCancel}" class="mf-icon-pfm-anulada-16">
+														</span>	
+														
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'ANULADA' and not stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmdCancel}" class="mf-icon-pfm-anulada-16">
+														</span>													
+														
+														<span th:if="${request.pfRequest.listRemmittersIds.contains(#authentication.userDTO.primaryKey) and
+																	(stateUser != null and (stateUser.pfTag.ctag == 'EN ESPERA' or ( !request.pfRequest.isRemitterNextToSign() ) ) ) 
+																	and stateUser.pfTag.ctag != 'FIRMADO' and stateUser.pfTag.ctag != 'CADUCADO' 
+																	and stateUser.pfTag.ctag != 'DEVUELTO' and stateUser.pfTag.ctag != 'VISTOBUENO'}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{cAwaiting}" class="mf-icon mf-icon-enespera-16">
+														</span>
+														<span th:if="${not request.pfRequest.listRemmittersIds.contains(#authentication.userDTO.primaryKey) and
+																	(stateUser != null and (stateUser.pfTag.ctag == 'EN ESPERA' ) ) 
+																	and stateUser.pfTag.ctag != 'FIRMADO' and stateUser.pfTag.ctag != 'CADUCADO' 
+																	and stateUser.pfTag.ctag != 'DEVUELTO'}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{cAwaiting}" class="mf-icon mf-icon-enespera-16">
+														</span>
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'EN ESPERA'}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{cAwaiting}" class="mf-icon mf-icon-enespera-16">
+														</span>															
+	
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'DEVUELTO' and not stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmRejected}" class="mf-icon mf-icon-pfm-devuelta-16">
+														</span>															
+	
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'DEVUELTO' and stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbRejected}" class="mf-icon mf-icon-pvb-devuelta-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'DEVUELTO' and !stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmRejected}" class="mf-icon mf-icon-pfm-devuelta-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'DEVUELTO' and stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbRejected}" class="mf-icon mf-icon-pvb-devuelta-16">
+														</span>															
+	
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'CADUCADO' and not stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmExpired}" class="mf-icon mf-icon-pfm-caducada-16">
+														</span>															
+	
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'CADUCADO' and stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbExpired}" class="mf-icon mf-icon-pvb-caducada-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'CADUCADO' and not stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmExpired}" class="mf-icon mf-icon-pfm-caducada-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'CADUCADO' and stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbExpired}" class="mf-icon mf-icon-pvb-caducada-16">
+														</span>															
+	
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'VISTOBUENO'}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbd}" class="mf-icon mf-icon-pvbd-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'VISTOBUENO'}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbd}" class="mf-icon mf-icon-pvbd-16">
+														</span>															
+	
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'VALIDADO' and not stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmAwaitingPassed}" class="mf-icon mf-icon-pfm-validada-16">
+														</span>															
+	
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'VALIDADO' and stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbAwaitingPassed}" class="mf-icon mf-icon-pvb-validada-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'VALIDADO' and not stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmAwaitingPassed}" class="mf-icon mf-icon-pfm-validada-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'VALIDADO' and stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbAwaitingPassed}" class="mf-icon mf-icon-pvb-validada-16">
+														</span>															
+	
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'RETIRADO' and not stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmRemoved}" class="mf-icon mf-icon-pfm-retirada-16">
+														</span>															
+	
+														<span th:if="${stateUser != null and stateUser.pfTag.ctag == 'RETIRADO' and stateUser.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbRemoved}" class="mf-icon mf-icon-pvb-retirada-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'RETIRADO' and not stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pfmRemoved}" class="mf-icon mf-icon-pfm-retirada-16">
+														</span>															
+	
+														<span th:if="${stateJob != null and stateJob.pfTag.ctag == 'RETIRADO' and stateJob.pfTag.pass}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{pvbRemoved}" class="mf-icon mf-icon-pvb-retirada-16">
+														</span>															
+	
+														<span th:if="${inbox.requestBarSelected == 'unresolved' and request.pfRequest.accionesPrevia}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															th:title="#{previousAction}" class="mf-icon mf-icon-ap-16">
+														</span>
+	
+														<span th:if="${inbox.requestBarSelected != 'unresolved' || !request.pfRequest.accionesPrevia}"
+															th:onclick="|loadRequest('${request.chash}',${status.index})|"
+															title="" class="">
+														</span>
+														
+														<span th:if="${request.pfRequest.importeFacturaContrato != null}"
+															th:onclick="|loadRequest('inbox/loadRequest','msgBox','requestTagId=${request.chash}',${status.index})|"
+															th:title="#{textoImporteFacturaContrato} + ${request.pfRequest.importeFacturaContrato}" th:class="${request.pfRequest.obtenerIconoImporteFacturaContrato()}">
+														</span>
+													
+														
+													</div>
+													</td>
+													<!-- Agustin reorganizar codigo html tras cambiar el campo entrada -->
+													<!-- Comentarios
+													<td>
+														<span th:if="${not #lists.isEmpty(request.pfRequest.pfComments)}" 
+															th:title="#{existsComments}" class="mf-icon mf-icon-comment-16">
+														</span>
+													</td>
+													 -->
+													<!-- Anexos 
+													<td>
+														<span th:if="${request.pfRequest.anyAttachment}" 
+															th:title="#{existsAttachments}" class="mf-icon mf-icon-attach-anexo-16">
+														</span>
+													</td>
+													-->
+													
+													<td th:onclick="|loadRequest('${request.chash}',${status.index})|">
+														<a id="subject_row" href="#!" th:title="#{seeRequest}" th:utext="${request.pfRequest.dsubject}">Asunto</a>
+														<span th:each="userTag : ${request.pfRequest.pfUserTagsList}"
+															  th:if="${userTag.pfUser.primaryKey == #authentication.userDTO.primaryKey or ( userTag.pfGroup != null and #authentication.group != null and userTag.pfGroup.primaryKey == #authentication.group.primaryKey )}"
+															  th:class="|userTag ${userTag.pfTag.getCcolor(request.pfRequest.pfRequestsTags)}|" th:style="|background-color: ${userTag.pfTag.getCcolor(request.pfRequest.pfRequestsTags)}|"
+															  th:text="${userTag.pfTag.ctagCapitalized}">
+															Etiqueta
+														</span>
+													</td>
+													<td th:onclick="|loadRequest('${request.chash}',${status.index})|">
+														<!--<a id="remitter_row" href="#!" th:title="#{seeRequest}" th:text="${request.pfRequest.dreference}">Referencia</a>-->
+														<a id="remitter_row" href="#!" th:title="#{seeRequest}" th:text="${#strings.replace(request.pfRequest.dreference,'_',' ')}">Referencia</a>
+													</td>
+													<td th:unless="${inbox.requestBarSelected == 'sent' || inbox.requestBarSelected == 'invited' || inbox.requestBarSelected == 'sentFinished' || inbox.requestBarSelected == 'groupSent'
+													          || inbox.requestBarSelected == 'groupSentFinished' || inbox.requestBarSelected == 'groupExpired' || inbox.requestBarSelected == 'groupCancelled'}"
+													    th:onclick="|loadRequest('${request.chash}',${status.index})|">
+														<a  id="remitter_row" href="#!" th:title="#{seeRequest}">
+															<span th:if="${inbox.requestBarSelected == 'unresolved'}" th:utext="${request.pfRequest.remitenteAndUltiFimanteSiProcede}"></span>
+															<span th:if="${inbox.requestBarSelected != 'unresolved'}" th:utext="${request.pfRequest.remitenteAndUltiFimanteSiProcede}"></span>
+														</a>	
+													</td>
+													<td th:if="${inbox.requestBarSelected == 'sent' || inbox.requestBarSelected == 'invited' || inbox.requestBarSelected == 'sentFinished' || inbox.requestBarSelected == 'groupSent'
+													          || inbox.requestBarSelected == 'groupSentFinished' || inbox.requestBarSelected == 'groupExpired' || inbox.requestBarSelected == 'groupCancelled'}"
+													    th:onclick="|loadRequest('${request.chash}',${status.index})|">
+														<a id="remitter_row" href="#!" th:title="#{seeRequest}">
+															<span th:if="${request.pfRequest.invitedUser == null or (request.pfRequest.Linvited == true and request.pfRequest.Laccepted == true)}" th:utext="${request.pfRequest.signers}"></span>
+															<span th:if="${request.pfRequest.invitedUser != null and (request.pfRequest.Linvited == true and request.pfRequest.Laccepted == false)}" th:utext="${request.pfRequest.invitedUser.cMail}"></span>
+														</a>
+													</td>
+													<td th:onclick="|loadRequest('${request.chash}',${status.index})|">
+														<a id="created_row" href="#!" th:title="#{seeRequest}" th:text="${#dates.format(request.pfRequest.fcreated,'dd/MM/yyyy HH:mm:ss')}">Entrada</a>
+													</td>
+													<td th:onclick="|loadRequest('${request.chash}',${status.index})|">
+														<a id="modified_row" href="#!" th:title="#{seeRequest}" th:text="${#dates.format(request.pfRequest.fmodified,'dd/MM/yyyy HH:mm:ss')}">Modificado</a>
+													</td>
+													
+													<!-- Estado en caso de las invitaciones -->
+													<td th:if="${inbox.requestBarSelected == 'invited'}" th:onclick="|loadRequest('${request.chash}',${status.index})|">
+														<a th:if="${request.pfRequest.laccepted == false}" id="status_row" href="#!" th:title="#{invitedRequestStatus.notAccepted.title}" th:text="#{invitedRequestStatus.notAccepted}">No aceptada</a>
+														<a th:if="${request.pfRequest.laccepted == true}" id="status_row" href="#!" th:title="#{invitedRequestStatus.accepted.title}" th:text="#{invitedRequestStatus.accepted}">Aceptada</a>
+													</td>
+													
+													<!-- Descarga de informe de firma del documento -->
+													<td>
+														<div th:if="${request.pfRequest.anySignNotRejected and request.pfRequest.downloaded and @applicationVO.getCsvActivated() and @applicationVO.getReportActivated()}">
+															<a href="#!" th:onclick ="|abrirPopUpNombreDeInformeFirma('/pf/servlet/DescargaZipServlet?idRequestTag=${request.chash}', '${request.chash}')|" class="dsp_ib p4">
+																<span class="mf-icon mf-icon-downloadreport-16" th:title="#{downloadSignReports}"></span>
+															</a>
+														</div>
+														
+														<div th:if="${request.pfRequest.anySignNotRejected and !request.pfRequest.downloaded and @applicationVO.getCsvActivated() and @applicationVO.getReportActivated()}">
+															<a th:onclick ="|abrirPopUpNombreDeInformeFirma('/pf/servlet/DescargaZipServlet?idRequestTag=${request.chash}', '${request.chash}')|"
+															href="#!" class="dsp_ib p4">
+																<span class="mf-icon mf-icon-downloadreport-16-black" th:title="#{downloadSignReports}"  onclick="ToggleClass(this);"></span>
+															</a>
+														</div>
+														
+													</td>
+  												</tr>
+
+												<tr th:if="${#lists.isEmpty(inbox.requestList) and inbox.requestBarSelected != 'diffusion'}"
+													class="empty even">
+    												<td colspan="8" th:text="#{emptyInbox}"></td>
+												</tr>
+												
+											</tbody>
+										</table>
+										
+										<!-- MENSAJES DE DIFUSION -->
+										<table  id="msgTable" class="data actionable tl" th:if="${inbox.requestBarSelected == 'diffusion'}">
+											<thead>
+												<tr>
+													<th class=""><input type="checkbox" name="select_all_messages" id="select_all_messages"/></th>
+													<th class=""><a class="sort" href="#" th:text="#{subject}" onclick="ordenar('dsubject')">Asunto</a></th>
+													<th><a class="sort" href="#" th:text="#{startDate}" onclick="ordenar('fstart')">Inicio</a></th>
+													<th><a class="sort" href="#" th:text="#{expirationDate}" onclick="ordenar('fexpiration')">Caducidad</a></th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="mess,status : ${inbox.messageList}"  th:id="|r_${mess.primaryKey}" th:class="|row${status.index}|"
+													th:classappend="${mess.userMessagePk == null}? (${status.even}? ' new even' : ' new odd') : (${status.even}? ' even' : ' odd')">
+													<td>
+														<input type="checkbox" name="message_checkbox"
+															   id="message_checkbox" th:value="${mess.primaryKey + '-' + mess.userMessagePk}"/>
+													</td>
+													
+													<td th:onclick="|loadMessage(${mess.primaryKey}, ${mess.userMessagePk})|">
+														<a id="subject_row" href="#!" th:title="#{seeRequest}" th:text="${mess.dsubject}">Asunto</a>
+													</td>
+													<td th:onclick="|loadMessage(${mess.primaryKey}, ${mess.userMessagePk})|">
+														<a id="start_row" href="#!" th:title="#{administrationSeeRequest}" th:text="${#dates.format(mess.fstart,'dd/MM/yyyy')}">Entrada</a>
+													</td>
+													<td th:onclick="|loadMessage(${mess.primaryKey}, ${mess.userMessagePk})|">
+														<a th:if="${mess.fexpiration == null}" id="expiration_row" href="#!" th:title="#{sadministrationSeeRequest}"></a>
+														<a th:if="${mess.fexpiration != null}" id="expiration_row" href="#!" th:title="#{sadministrationSeeRequest}" th:text="${#dates.format(mess.fexpiration,'dd/MM/yyyy')}">Modificado</a>
+													</td>
+													
+												
+  												</tr>
+
+												<tr th:if="${#lists.isEmpty(inbox.messageList) and inbox.requestBarSelected == 'diffusion'}"
+													class="empty even">
+    												<td colspan="8" th:text="#{emptyMessageInbox}"></td>
+												</tr>	
+												
+
+											</tbody>
+										</table>
+										
+									</div>
+									<div id="handler" class="left mf-icon-24 mf-icon-handler-24 ui-resizable-handle ui-resizable-s"></div>
+									<div id="" class=" wv100 pagination">
+										<div  class="right pr20">
+											<ol>
+												<li class="numResults">
+													<select onchange="onchangeInboxPageSize(this.value);">
+														<option value="10" th:selected="${inbox.paginator.pageSize == 10}">10</option>
+														<option value="20" th:selected="${inbox.paginator.pageSize == 20}">20</option>
+														<option value="30" th:selected="${inbox.paginator.pageSize == 30}">30</option>
+														<option th:value="${inbox.customPageSize}" th:text="${inbox.customPageSize}" th:selected="${inbox.paginator.pageSize == inbox.customPageSize}">50</option>
+													</select> de <span th:text="${inbox.paginator.inboxSize}">100</span>
+												</li>
+
+												<li	th:style="|display: ${inbox.paginator.isFirst? 'none' : ' '};|">
+													<a href="javascript:void(0)"
+													   onclick="enviarFormulario('inboxForm', 'loadInbox',
+															   				  [{parameterId:'currentPage', parameterValue:'1'}])">&lt;&lt;</a>
+												</li>
+													<li th:style="|display: ${inbox.paginator.isFirst? 'none' : ' '};|">
+														<a href="javascript:void(0)"
+														   th:onclick="|enviarFormulario('inboxForm', 'loadInbox',
+																   				  [{parameterId:'currentPage', parameterValue:'${inbox.paginator.currentPage - 1}'}])|">&lt;</a>
+												</li>
+												<li class="numResults">
+													<select onchange="enviarFormulario('inboxForm', 'loadInbox', [{parameterId:'currentPage', parameterValue:this.value}])">
+														<option th:each="pag : ${inbox.paginator.pages}" th:value="${pag}" th:text="${pag}" th:selected="${inbox.paginator.currentPage == pag}"></option>
+													</select>
+												</li>
+												<li th:style="|display: ${inbox.paginator.isLast? 'none' : ' '};|">
+													<a href="javascript:void(0)"
+													   th:onclick="|enviarFormulario('inboxForm', 'loadInbox',
+																   				   [{parameterId:'currentPage', parameterValue:'${inbox.paginator.currentPage + 1}'}])|">&gt;</a>
+												</li>
+												<li th:style="|display: ${inbox.paginator.isLast? 'none' : ' '};|">
+													<a href="javascript:void(0)"
+													   th:onclick="|enviarFormulario('inboxForm', 'loadInbox',
+																   				  [{parameterId:'currentPage', parameterValue:'${inbox.paginator.numPages}'}])|">&gt;&gt;</a>
+												</li>
+											</ol>
+										</div>
+									</div>
+									</div>
+								</form>
+								<!--/* Ventana modal para el detalle de la petición de firma */-->
+								<div id="detallePeticion_modal" th:title="#{requestDetail.windowTitle}">
+									<div id="msgBox" style="overflow: auto; weight: 1920px; height: 900px;"></div>
+								</div>
+							</div>						
+						</div>
+					</div>
+					<div id="contentDataFooter"></div>
+				</div>
+
+				<!-- MODAL SELECTOR DE PLANTILLAS -->
+				<div id="templates_modal" th:title="#{configurationTemplate}" style="display: none;">
+					<button id="new_template" class="secondary" th:text="#{new}" th:onclick="|location.href='${#httpServletRequest.getContextPath()}/template?templateId=';|">
+						<span class="mf-icon mf-icon-add-16"  th:title="#{newTemplate}"></span>
+					</button>
+					<table class="data tl">
+ 						<thead>
+							<tr class="|${status.index % 2 == 0 ? 'even' : 'odd'} } row${status.index}|">
+								<th th:text="#{templateCode}"></th>
+								<th class="w40"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="template : ${inbox.templateList}">
+								<td th:text="${template.ctemplateCode}">Código de plantilla</td>
+								<td class="w40">									
+									<a th:href="|${#httpServletRequest.getContextPath()}/template?templateId=${template.primaryKey}|" class="dsp_ib"><span class="mf-icon mf-icon-edit-16" th:title="#{editTemplate}"></span></a>
+									<a href="#!" class="dsp_ib"><span class="mf-icon mf-icon-delete-16" th:title="#{dltTemplate}"
+									   th:onclick="|deleteTemplate(${template.primaryKey})|"></span></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+				<!-- MODAL ADMINISTRADOR DE ETIQUETAS -->
+				<div id="tags_modal" title="Administrar etiquetas" style="display: none;">
+					<div class="fld">
+						<button class="secondary"  onclick="newLabel();">
+							<span th:title="#{newLabel}" th:text="#{new}">Nueva</span>
+						</button>
+					</div>
+					<div id="table_tags_modal" class="fld" >
+						<table class="data tl">
+							<tbody>
+								<tr id="new_row" style="display: none;"> 
+									<td id="label_0" style="display: none;">
+										<a href="#!">
+											<span id="span_0" class="userTag #000000 left" text=""></span>
+										</a>
+									</td>
+									<td id="label_0_editing">
+										<input type="text" id="label_0_editing_id" name="label_0_editing_name" value=""/>
+										<input type="text" id="label_0_editing_color_id" name="label_0_editing_color_name" value="#000000"
+										class="color_selector" />
+									</td>
+									<td id="label_0_editing_color" >
+									</td>
+									<td id="label_0_editing_actions" class="w40">									
+										<a href="#!" class="simbutton secondary " onclick="insertLabel()">
+											<span class="mf-icon mf-icon-save-16" text="#{saveButton}">Guardar cambios</span>
+										</a>
+										<a href="#!" class="simbutton secondary " onclick="cancelNewLabel();">
+											<span class="mf-icon mf-icon-delete-16" text="#{cancelButton}">Cancelar</span>
+										</a>
+									</td>
+								</tr>
+								<tr th:each="label,status : ${inbox.labelList}" th:class="|label_${label.primaryKey}_row|">
+									
+									<td th:id="|label_${label.primaryKey}|">
+										<a href="#!">
+											<span th:id="|span_${label.primaryKey}|" th:class="|userTag ${label.ccolor} left|"
+												  th:style="|background-color: ${label.ccolor}|" th:text="${label.pfTag.ctagCapitalized}"></span>
+										</a>
+									</td>
+									<td th:id="|label_${label.primaryKey}_empty|">
+										<a href="#!">
+											<span></span>
+										</a>
+									</td>
+									<td th:id="|label_${label.primaryKey}_actions|" class="w50">									
+										<a href="#!" class="simbutton secondary dsp_ib left" th:onclick="|prepareLabelToEdit('${label.primaryKey}');|">
+											<span class="mf-icon mf-icon-edit-16" th:title="#{editLabel}">Modificar etiqueta</span>
+										</a>
+										<a href="#!" class="simbutton secondary dsp_ib left">
+											<span class="mf-icon mf-icon-delete-16" th:title="#{deleteLabel}"
+												  th:onclick="|confirmDeleteLabel('${label.primaryKey}','${label.pfTag.ctagCapitalized}')|">Borrar etiqueta</span>
+										</a>
+									</td>
+									
+									<td th:id="|label_${label.primaryKey}_editing|" style="display: none;" >
+										<input type="text" th:id="|label_${label.primaryKey}_editing_id|" th:name="|label_${label.primaryKey}_editing_name|"
+											   th:value="${label.pfTag.ctagCapitalized}"/>
+										<input type="text" th:id="|label_${label.primaryKey}_editing_color_id|" th:name="|label_${label.primaryKey}_editing_color_name|"
+											   class="color_selector" th:value="${label.ccolor}" />
+									</td>
+									<td th:id="|label_${label.primaryKey}_editing_color|" style="display: none;">
+										
+									</td>
+									<td th:id="|label_${label.primaryKey}_editing_actions|" class="w50" style="display: none;">									
+										<a href="#!" class="simbutton secondary dsp_ib left" th:onclick="|confirmModifyLabel('${label.primaryKey}')|">
+											<span class="mf-icon mf-icon-save-16" th:text="#{saveButton}">Guardar cambios</span>
+										</a>
+										<a href="#!" class=" simbutton secondary dsp_ib left" th:onclick="|cancelLabelEdition('${label.primaryKey}');|">
+											<span class="mf-icon mf-icon-delete-16" th:text="#{cancelButton}">Cancelar</span>
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!--div id="capaPregunta" name="capaPregunta" -->
+					<div id="capaPregunta" class="capaPregunta" name="capaPregunta" style="display: none;">
+						<div class="fld">
+							<span class="mf-icon-24 mf-icon-warning-24"></span>
+							<span id="pregunta" name="pregunta" class="pregunta"></span> 
+						</div>
+						<div class="fld">
+						  	<button id="botonSi" name="botonSi" class="simbuttom secondary" >
+								<span th:title="#{yes}" th:text="#{yes}">Si</span>
+							</button>
+						  	<button id="botonNo" name="botonNo" class=" simbuttom secondary"  onclick="ocultarPregunta();">
+								<span th:title="#{no}" th:text="#{no}">Nueva</span>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- MODAL DE FIRMAS -->
+				<div id="sign_modal" title="Firmar / Visto bueno" style="display: none;">
+					<div class="catalogueDinOverflow">
+						<table id="requestsToSignTable" class="data tl">
+							<thead>
+								<tr>
+									<th><a class="" href="#!" th:text="#{subject}">Asunto</a></th>
+									<th class="wv15"><a class="" href="#!" th:text="#{oneSender}">Remitente</a></th>
+									<th class="wv15"></th>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								
+							</tbody>
+						</table>
+					</div>
+					
+				</div>
+
+				<!-- MODAL DE RECHAZO -->
+				<div id="reject_modal" title="Rechazar" style="display: none;">
+					<div class="catalogueDinOverflow">
+						<table id="requestsToRejectTable" class="data actionable tl ">
+							<thead>
+								<tr>
+									<th><a class="" href="#!" th:text="#{subject}">Asunto</a></th>
+									<th><a class="" href="#!" th:text="#{oneSender}">Remitente</a></th>
+									<th><a href="#!" th:text="#{state}">Estado</a></th>
+									<th class="wv30"><a  href="#!" th:text="#{rejectText}">Motivo del rechazo</a></th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- MODAL DE VALIDACIÓN -->
+				<div id="validate_modal" title="Validar" style="display: none;">
+					<div class="catalogueDinOverflow">
+						<table id="requestsToValidateTable" class="data tl ">
+							<thead>
+								<tr>
+									<th><a class="" href="#!" th:text="#{subject}">Asunto</a></th>
+									<th><a class="" href="#!" th:text="#{oneSender}">Remitente</a></th>
+									<th><a href="#!" th:text="#{state}">Estado</a></th>
+								</tr>
+							</thead>
+							<tbody>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<input type="hidden" id="forwardDone" name="forwardDone" value=""/>
+
+				<!-- MODAL SELECTOR DE CONTACTOS -->
+				<div id="forward_modal" title="Usuarios" style="display: none;">			
+					<div class="fld dsp_ib stkd">
+						<label th:text="|#{forwardTo}:|">Reenviar a:</label>
+						<input type="text" class="w220 ui-autocomplete-input" id="userToForward" autocomplete="off"/>
+						<input type="hidden" id="forwardToUserPk" />
+						<label id="forwardErrorMsg" style="color:red;"></label>
+					</div>
+					<input type="hidden" id="requestsToForward" name="requestsToForward" value=""/>
+				</div>
+				
+				<!-- MODAL DE PETICIONES ENVIADAS A RETIRAR -->
+				<div id="sendToRemove_modal" title="Peticiones enviadas a retirar" style="display: none;">
+					<div class="catalogueDinOverflow">
+						<table id="sendToRemoveTable" class="data tl actionable">
+							<thead>
+								<tr>
+									<th><a class="" href="#!" th:text="#{subject}">Asunto</a></th>
+									<th><a class="" href="#!" th:text="#{oneSender}">Remitente</a></th>
+									<th><a href="#!" th:text="#{state}">Estado</a></th>
+									<th class="wv30"><a  href="#!" th:text="#{rejectText}">Motivo del rechazo</a></th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+				
+				<!-- MODAL DE MENSAJES DE DIFUSION -->
+				<div id="message_modal" style="display: none;">
+					<div >
+						<div class="fld dsp_ib left stkd">
+							<label th:text="#{subject}">Asunto</label>
+							<input type="text" class="w640" id="messageSubject" name="dsubject" disabled="disabled" />
+						</div>		
+				
+						<div class="fld dsp_ib stkd">
+							<label th:text="#{message}">Mensaje</label>
+							<textarea cols="14" rows="2" class="w640" style="height: 275px;" id="messageText" name="ttext" disabled="disabled"></textarea>
+						</div>
+
+					</div>
+				</div>	
+				
+				<!-- MODAL DE MENSAJES SIN LEER -->
+				<div id="messagesUnresolved_modal" style="display: none;">
+					<div class="catalogueDinOverflow">
+						<div class="fld">
+							<span class="mf-icon-24 mf-icon-warning-24"></span>
+							<span id="question" name="question" class="question" th:text="#{warningMessagesUnresolved}"></span> 
+						</div>
+					</div>
+				</div>
+				
+				
+				<!-- Modal de definicion del nombre del archivo zip de informe de firma -->
+				<div id="popUpNombreInformeDeFirma" style="display: none;">
+					<div class="catalogueDinOverflow">
+						<div class="fld dsp_ib left stkd">
+							<input type="hidden" id="urlDescargaInforme" name="action" value="" />
+							<label th:text="#{guardarComo}">Guardar como</label>
+							<input type="text" id="nombreInformeZip"/>
+						</div>		
+					</div>
+				</div>
+
+
+			</div>
+			
+			<!-- Modal para confirmar -->		    
+			<div id="confirmInvalidSign" style="display: none;">
+				<div class="fld">
+					<span class="mf-icon-24 mf-icon-warning-24"></span>
+					<span id="confirmInvalidSignMessage" class="pregunta"></span> 
+					<input type="hidden" id="warningInvalidSignMessage" name="warningInvalidSignMessage" th:value="#{warningInvalidSign}" />
+					<input type="hidden" id="warningAFirmaKOMessage" name="warningAFirmaKOMessage" th:value="#{warningAFirmaKO}" />
+				</div>
+			</div>
+			<!-- Modal para comentario de firmas XADES -->
+			<div id="comentario_xades_modal" title="Agrega Comentario a la firma XADES">
+				<fieldset class="nolegend pt20">
+					<div class="fld dsp_ib stkd">
+						<label th:text="#{comentario_xades}">Comentario</label>
+						<textarea cols="120" rows="10" class="w450 h200" name="comentario_xades" id="comentario_xades"></textarea>
+						<input type="hidden" name="comentario_xades_id" id="comentario_xades_id"/>
+						<input type="hidden" name="comentario_xades_num_peticion" id="comentario_xades_num_peticion"/>
+					</div>
+					<div class="dsp_b error errorMessage" id="comentarioXadesErrorMessage"></div>
+				</fieldset>
+			</div>
+		  	<!-- FIN CONTENIDO -->
+		</div>
+	</body>
+</html>

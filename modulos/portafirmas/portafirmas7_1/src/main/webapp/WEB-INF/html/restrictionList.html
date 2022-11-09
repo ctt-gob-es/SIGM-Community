@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<div th:fragment="restrictionList">
+		<span class="spanH5" th:text="#{usersValids}"></span>
+		<span class="mf-icon mf-icon-auth-accept-16" th:title="#{usersValids}"></span>
+		<input type="hidden" id="userId" th:value="${userId}"/>
+		<div id="requestListPf" class="fld catalogueOverflow" style="height: 200px;">
+			<table class="data noborder tl">
+				<thead>
+					<tr>
+						<td th:text="#{nif}"></td>
+						<td th:text="#{name}"></td>
+						<td th:text="#{surnames}"></td>
+						<td th:text="#{job}"></td>				
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="user : ${userList}">
+						<td>
+							<span th:text="${user.cidentifier}"></span>
+						</td>
+						<td>
+							<span th:text="${user.dname}"></span>
+						</td>
+						<td>
+							<span th:text="${user.dsurname1}"></span>
+							<span th:text="' ' + ${user.dsurname2} ? ${user.dsurname2}"></span>
+						</td>	
+						<td><label th:each="userJob : ${user.pfUsersJobs}" th:text="${userJob.pfUserJob.dname}"></label></td>					
+						<td class="wv2">									
+							<a href="#!" class=" simbutton secondary dsp_ib left" 
+							   th:onclick="|prepareDeleteUserValid('${user.primaryKey}')|">
+								<span class="mf-icon mf-icon-delete-16" th:text="#{cancelButton}">Cancelar</span>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div id="questionRestriction" class="capaPregunta" style="display: none;">
+		<div class="fld">
+			<span class="mf-icon-24 mf-icon-warning-24"></span>
+			<span id="questionMessageRestriction" class="pregunta"></span> 
+		</div>
+		<div class="fld">
+		  	<button id="yesButtonRestriction" name="yesButtonRestriction" class="simbuttom secondary">
+				<span th:title="#{yes}" th:text="#{yes}"></span>
+			</button>
+		  	<button id="noButtonRestriction" name="noButtonRestriction" class=" simbuttom secondary" onclick="$('#questionRestriction').hide();">
+				<span th:title="#{no}" th:text="#{no}"></span>
+			</button>
+		</div>
+	</div>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-login-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+	   <div layout:fragment="content" >
+			<!-- SCRIPTS -->
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/login/validator_login.js?#{versionNumber}.#{versionFase}|"></script>
+
+	        <div class="numModules_1" id="validator_login">
+	        	<div class="userSelector ">
+	        		<h5 th:text="#{selectValidator}">Por favor seleccione usuario con el que desea entrar</h5>
+					<table id="validatedUsersTable" class="data actionable tl ">
+						<thead>
+							<tr>
+								<th class="wv10"><a href="#!" th:text="#{profile}">Perfil</a></th>
+								<th class=""><a href="#!" th:text="#{name}">Nombre</a></th>
+								<th class="wv10"><a href="#!" ></a></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:if="${user.lvalid}" th:each="user,status : ${validatedUsersList}" th:classappend="${status.even}? ' even' : ' odd'"
+								th:onclick="|validatorLogin('${user.primaryKey}')|">
+								<td th:text="${status.index == 0? 'Usuario' : 'Validador de'}"
+									th:class="${status.index == 0? 'mf-icon mf-icon-usermain-16' : 'mf-icon mf-icon-uservalidator-16'}">Perfil</td>
+								<td th:text="${user.fullName}">Nombre</td>
+								<th class=""><a href="#!"  class="mf-icon mf-icon-enabled-16">Selector</a></th>
+
+							</tr>
+						</tbody>
+					</table>
+					<form id="userLoginForm" th:action="|${#httpServletRequest.getContextPath()}/authentication/changeUser|" method="post">
+						<input type="hidden" id="userPk" name="userPk"/>
+					</form>
+				</div>
+	        	<div class="userSelector" th:unless="${#lists.isEmpty(groupsList)}">
+	        		<h5 th:text="#{selectGroup}">Seleccione el grupo al que desea acceder</h5>
+					<table id="validatedUsersTable" class="data actionable tl ">
+						<thead>
+							<tr>
+								<th class="wv10"><a href="#!" ></a></th>
+								<th class="wv30"><a href="#!" th:text="#{group}">Grupo</a></th>
+								<th class=""><a href="#!" th:text="#{description}">Descripción</a></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="group,status : ${groupsList}" th:classappend="${status.even}? ' even' : ' odd'"
+								th:onclick="|groupLogin('${group.primaryKey}')|">
+								<th class=""><a href="#!"  class="mf-icon mf-icon-group-login-16">Selector</a></th>
+								<td th:text="${group.cnombre}"></td>
+								<td th:text="${group.cdescripcion}"></td>
+							</tr>
+						</tbody>
+					</table>
+					<form id="groupLoginForm" th:action="|${#httpServletRequest.getContextPath()}/authentication/group|" method="post">
+						<input type="hidden" id="groupPk" name="groupPk"/>
+					</form>
+					<!-- 
+					<div class="fld chckBox_alone pl0 mt20">
+						<input type="checkbox" name="example_input6" id="example_input6"/>
+						<label class="chckLabel ml5" for="example_input6">No preguntar mas y entrar siempre con este perfil. Puede cambiar de usuario en cualquier momento desde su area de usuario.
+						</label>						
+					</div>
+					-->
+					<!--{#lists.isEmpty(gestionatedUsersList)}  -->
+				</div>
+				<div class="userSelector" th:unless="${#lists.isEmpty(gestionatedUsersList)}">
+	        		<h5 th:text="#{selectGestionar}">Por favor seleccione el usuario al que desea gestionar</h5>
+					<table id="gestorUsersTable" class="data actionable tl ">
+						<thead>
+							<tr>
+								<th class="wv10"><a href="#!" th:text="#{profile}">Perfil</a></th>
+								<th class=""><a href="#!" th:text="#{name}">Nombre</a></th>
+								<th class="wv10"><a href="#!" ></a></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:if="${gestor.lvalid}" th:each="gestor,status : ${gestionatedUsersList}" th:classappend="${status.even}? ' even' : ' odd'"
+								th:onclick="|gestorLogin('${gestor.primaryKey}')|">
+								<td text="Gestor de"
+									class="mf-icon mf-icon_manager_green_16">Perfil</td>
+								<td th:text="${gestor.fullName}">Nombre</td>
+								<th class=""><a href="#!"  class="mf-icon mf-icon-enabled-16">Selector</a></th>
+
+							</tr>
+						</tbody>
+					</table>
+					<form id="gestorLoginForm" th:action="|${#httpServletRequest.getContextPath()}/authentication/changeUserGestor|" method="post">
+						<input type="hidden" id="gestorPk" name="gestorPk"/>
+					</form>
+				</div>
+				
+			</div>
+        </div>
+	</body>
+</html>

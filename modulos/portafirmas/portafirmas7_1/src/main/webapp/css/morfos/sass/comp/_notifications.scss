@@ -1,0 +1,68 @@
+/*********************************/
+/*      Notification inbox       */
+
+#topBar ul#userMenu a#notifLn {
+    padding: 7px 5px 5px 5px;
+    min-width: 24px;
+    overflow: hidden;
+
+    background: url('images/icon_notif_16w.png') no-repeat 8px center;
+}
+
+#topBar ul#userMenu a#notifLn span:first-child {
+    float: left;
+    width: 1px;
+    overflow: hidden;
+    text-indent: 9999em;
+}
+
+#topBar ul#userMenu a#notifLn span.tip {
+    display: inline;
+    margin: 0 -3px 0 14px;
+    padding: 0 4px 1px 4px;
+    
+    font-size: 10px;
+    text-align: center;
+    text-indent: 0;
+
+    background: red;
+
+    -webkit-border-radius: 12px;
+    -moz-border-radius:    12px;
+    border-radius:         12px;
+}
+
+#topBar ul#userMenu > li > ul li time {
+    display: block;
+
+    font-style: italic;
+    color: #999;
+}
+
+#topBar ul#userMenu > li > ul li.mf-new {
+    background-image: url('images/icon_activenotes_16w.png');
+    background-position: 6px 11px;
+    background-repeat: no-repeat;
+    background-color: rgba(0,0,0,0.45);
+}
+
+#topBar ul#userMenu > li > ul li.mf-new a, 
+#topBar ul#userMenu > li > ul li.mf-new > a:link, 
+#topBar ul#userMenu > li > ul li.mf-new a:visited {
+    color: #FFF;
+}
+
+#topBar ul#userMenu > li > ul li.mf-new:hover {
+    background-color: rgba(0,0,0,0.3);
+}
+
+#topBar ul#userMenu > li > ul li.mf-read a, 
+#topBar ul#userMenu > li > ul li.mf-read > a:link, 
+#topBar ul#userMenu > li > ul li.mf-read a:visited {
+    color: #AAA;
+}
+
+.ie7 #topBar ul#userMenu > li > ul li.mf-read a:hover,
+.ie8 #topBar ul#userMenu > li > ul li.mf-read a:hover {
+    color: #FFF;
+}

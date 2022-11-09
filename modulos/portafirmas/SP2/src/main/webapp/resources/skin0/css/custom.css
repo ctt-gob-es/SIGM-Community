@@ -1,0 +1,295 @@
+/*
+ _______  _______  _______             _______ _________ ______           
+(  ____ \(  ____ \(  ____ \           (  ____ \\__   __/(  __  \          
+| (    \/| (    \/| (    \/           | (    \/   ) (   | (  \  )         
+| |      | (__    | (__       _____   | (__       | |   | |   ) |   _____ 
+| |      |  __)   |  __)     (_____)  |  __)      | |   | |   | |  (_____)
+| |      | (      | (                 | (         | |   | |   ) |         
+| (____/\| (____/\| )                 | (____/\___) (___| (__/  )         
+(_______/(_______/|/                  (_______/\_______/(______/          
+                                                                          
+ _______ _________ ______   _______  _______          
+(  ____ \\__   __/(  __  \ (  ___  )(  ____ \         
+| (    \/   ) (   | (  \  )| (   ) || (    \/         
+| (__       | |   | |   ) || (___) || (_____    _____ 
+|  __)      | |   | |   | ||  ___  |(_____  )  (_____)
+| (         | |   | |   ) || (   ) |      ) |         
+| (____/\___) (___| (__/  )| )   ( |/\____) |         
+(_______/\_______/(______/ |/     \|\_______)         
+                                                      
+ ______   _______  _______  _______ 
+(  __  \ (  ____ \(       )(  ___  )
+| (  \  )| (    \/| () () || (   ) |
+| |   ) || (__    | || || || |   | |
+| |   | ||  __)   | |(_)| || |   | |
+| |   ) || (      | |   | || |   | |
+| (__/  )| (____/\| )   ( || (___) |
+(______/ (_______/|/     \|(_______)
+
+*/
+
+html {
+  font-size: 100%
+}
+body {
+  width: 100%;
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: #404040;
+  background-color: #fff;
+}
+/*---------------------------HEADER--------------------------*/
+/*-----------------------------------------------------------*/
+.header .container {
+  border-bottom: 1px solid #43c2cb;
+}
+/*---------------------------FOOTER--------------------------*/
+/*-----------------------------------------------------------*/
+.footer .container {
+  border-top: 1px solid #B3B3B3;
+}
+.footer .logo-cef {
+  margin: 10px auto;
+  display: block;
+}
+/* STICKY FOOTER */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin-bottom: 66px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 66px;
+  background-color: #fff;
+}
+/*---------------------------LINKS---------------------------*/
+/*-----------------------------------------------------------*/
+a, a:link, a:active, a:visited, a:hover {
+  color: #43c2cb;
+  text-decoration: none;
+}
+a:hover {
+  color: #43c2cb;
+  background-color: transparent !important;
+  text-decoration: underline;
+}
+/*----------------------------FONT---------------------------*/
+/*-----------------------------------------------------------*/
+h1 {
+  font-size: 2.4em;
+}
+h2 {
+  font-size: 2em;
+}
+h3 {
+  font-size: 1.6em;
+}
+h4 {
+  font-size: 1.2em;
+}
+h1 {
+  display: inline-block;
+  margin-top : 20px;
+  margin-bottom: 10px;
+  padding-right: 50px;
+  color: #43c2cb;
+  background-image: url('../img/ico-tools.svg');
+  background-repeat: no-repeat;
+  background-size: 35px;
+  background-position: right;
+}
+h2 {
+  margin-top : 20px;
+  margin-bottom: 20px;
+}
+h3 {
+  margin-top : 20px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  color: #42c1ca;
+  border-bottom: 1px solid #42c1ca;
+}
+h4 {
+  margin-top : 20px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  position: relative;
+}
+h4 a {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+h4:after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 50px;
+  height: 1px;
+  background: #404040;
+}
+h1, h2, h3, h4, h5, h6, label, form button.btn-default {
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+.sub-title {
+  display: block;
+  font-size: 50%;
+}
+/*------------------------ILLUSTRATION-----------------------*/
+/*-----------------------------------------------------------*/
+.illustration {
+  position: relative;
+  margin-bottom: 40px;
+  height: 555px;
+  width: 100%;
+  display: table;
+  background-image: url('../img/illustration.jpg');
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/*-----------------------------TAB---------------------------*/
+/*-----------------------------------------------------------*/
+.nav-tabs {
+  margin-top: 20px;
+  padding-left: 15px;
+  font-size: 1.6em;
+  border-bottom: 1px solid #404040;
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+  color: inherit;
+  border-color: #404040 #404040 transparent;
+}
+.nav-tabs > li > a {
+  color: #B3B3B3;
+  border-radius: 0;
+}
+.nav-tabs > li > a:hover {
+  border-color: #B3B3B3 #B3B3B3 #B3B3B3;
+}
+/*-----------------------------FORM--------------------------*/
+/*-----------------------------------------------------------*/
+
+/*INPUT*/
+.form-control {
+  background-color: #fff;
+  border: 1px solid #B3B3B3;
+}
+.form-control:hover, .form-control:focus {
+  border-color: #42c1ca;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(66,193,202,.9);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(66,193,202,.9)
+}
+/*RADIO*/
+.radio-inline-group {
+  margin-top: 5px;
+}
+/*BTN*/
+form button.btn-default, .input-group-addon {
+  font-weight: bold;
+  color: #fff;
+  background: #42c1ca;
+  border-color: #42c1ca;
+  transition: all 0.3s ease;
+}
+form button.btn-default {
+  margin-bottom: 20px;
+  font-size: inherit;
+  width: 100%;
+}
+form button.btn-default:hover {
+  color: #fff;
+  text-shadow: none;
+  background: #8edae0;
+  border-color: #8edae0;
+}
+.btn, .form-control {
+  border-radius: 0;
+}
+.btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover {
+  color: #42c1ca;
+  background: #d9f3f5;
+  border-color: #d9f3f5;
+}
+.btn-default.focus, .btn-default:focus {
+  color: #42c1ca;
+  text-shadow: none;
+  background-color: #d9f3f5;
+  border-color: #d9f3f5;
+  -moz-box-shadow: 0px 0px 0px -6px #d9f3f5;
+  -webkit-box-shadow: 0px 0px 0px -6px #d9f3f5;
+  box-shadow: 0px 0px 0px -6px #d9f3f5;
+}
+.button-group {
+  margin-bottom: 40px;
+}
+.button-group .btn {
+  margin-bottom: 10px;
+}
+/*COLLAPSE*/
+h4 a {
+  color: #42c1ca !important;
+  cursor: pointer;
+}
+.toggle:after {
+  content: "(+)"
+}
+.toggle.expanded:after {
+  content: "(-)"
+}
+/*---------------------------TABLE---------------------------*/
+/*-----------------------------------------------------------*/
+.table > thead > tr > th {
+  border-bottom: 1px solid #b3b3b3;
+}
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+  background-color: #F9F9F9;
+}
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+  border-top: 1px solid #b3b3b3;
+}
+.table-options {
+  width: 80%;
+}
+/*-----------------------HELPER CLASS------------------------*/
+/*-----------------------------------------------------------*/
+.m-top-0 {
+  margin-top: 0;
+}
+.text-error {
+  color: #f56680;
+}
+h3.text-error {
+  color: #f56680;
+  border-color: #f56680;
+}
+.lowercase {
+  text-transform: lowercase !important;
+}
+.center-content {
+	text-align: center;
+}
+.option-max-width {
+	max-width: 400px;
+}
+/*-------------------------SELECTION-------------------------*/
+/*-----------------------------------------------------------*/
+::-moz-selection {
+ background:#292929;
+ color:#fff;
+ text-shadow:none;
+}
+::selection {
+  background: #292929;
+  color: #fff;
+  text-shadow: none;
+}

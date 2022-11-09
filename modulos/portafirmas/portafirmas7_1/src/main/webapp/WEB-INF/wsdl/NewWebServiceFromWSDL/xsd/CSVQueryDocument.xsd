@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:ns1="urn:es:gob:aapp:csvbroker:webservices:querydocument:v1.0"
+    xmlns:tns="urn:es:gob:aapp:csvbroker:webservices:querydocument:model:v1.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
+	targetNamespace="urn:es:gob:aapp:csvbroker:webservices:querydocument:model:v1.0">
+	
+	<xs:element name="CSVQueryDocumentResponse" type="tns:CSVQueryDocumentResponse" />
+	
+	<xs:element name="errorInfo" nillable="true" type="tns:csvQueryDocumentException" />
+	
+	<xs:complexType name="CSVQueryDocumentResponse">
+		<xs:sequence>
+			<xs:element name="code" type="xs:string" />
+			<xs:element name="description" type="xs:string" />
+			<xs:element name="documentResponse" type="tns:documentResponse"
+				minOccurs="0" />
+			<xs:element name="waitResponse" type="tns:waitResponse"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="documentResponse">
+		<xs:sequence>
+			<xs:element name="content" type="xs:base64Binary" />
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="mime" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="waitResponse">
+		<xs:sequence>
+			<xs:element name="secondsToWait" type="xs:long" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="csvQueryDocumentException">
+		<xs:sequence>
+			<xs:element name="code" type="xs:string" minOccurs="0" />
+			<xs:element name="description" type="xs:string" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="CSVQueryDocumentRequest">
+		<xs:sequence>
+			<xs:element name="csv" type="xs:string" />
+			<xs:element name="dir3" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="WSCredential">
+		<xs:sequence>
+			<xs:element name="idaplicacion" type="xs:string" />
+			<xs:element name="password" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

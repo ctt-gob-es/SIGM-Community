@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html onload="hideAllPopUps()" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"> 
+
+<!-- <script th:src="|${#httpServletRequest.getContextPath()}/js/inbox/inbox_msgBox.js?#{versionNumber}.#{versionFase}|"></script> -->
+<script th:src="|${#httpServletRequest.getContextPath()}/js/FileSaver.js?#{versionNumber}.#{versionFase}|"></script>
+<script th:src="|${#httpServletRequest.getContextPath()}/js/inbox/anexos.js?#{versionNumber}.#{versionFase}|"></script>
+
+<script>
+hideAllPopUps();
+</script>
+<div th:with="expr_result = ${esIE} == 'true'">
+	<div th:if="${expr_result}" id ="canvasPrevDocument">
+		<div class="fld dsp_b js-pdf-data" th:attr="data-pdfbase64=${documentoBase64}">
+			<button class="js-pdf-prev">
+					<span class="mf-icon mf-icon-prev-24"> Previous </span>
+			</button>
+			<button class="js-pdf-next">
+					<span class="mf-icon mf-icon-next-24"> Next </span>
+			</button>
+		</div>
+		<canvas id="pdfContainer" style="border:1px  solid black;text-align: center" >
+		</canvas>
+	</div>
+	<div  th:unless="${expr_result}" id = "iframePrevDocument">
+		<iframe id="frameView" name="marcoDoc" class="" style="width:100%; height:1024px;"  th:src="${tipoDocumento} + ${documentoBase64}"></iframe> 
+	</div>
+	
+</div>
+</html>

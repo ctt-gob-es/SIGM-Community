@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	
+	<div th:fragment="storageTableFragment(idPagination)">
+		<div  class="fld catalogueOverflow" style="height: 200px;" >
+			<table class="data noborder tl">
+				<thead>
+					<tr>
+						<th class="wv5"><input type="checkbox" id="selectAll"/></th>
+						<th th:text="#{oneSender}" class="wv40"></th>
+						<th th:text="#{application}" class="wv20"></th>
+						<th th:text="#{subject}" class="wv20"></th>
+						<th th:text="#{month}" class="wv10"></th>
+						<th th:text="#{year}" class="wv5"></th>
+					</tr>
+				</thead>
+					<tbody>
+						<tr th:each="request : ${data}">
+							<td><input type="checkbox" th:value="${request.id}" name="requestIds"/></td>
+							<td th:text="${request.remitter}"></td>
+							<td th:text="${request.application}"></td>
+							<td th:text="${request.subject}"></td>
+							<td th:text="${request.month}"></td>
+							<td th:text="${request.year}"></td>
+						</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<!-- datos de paginacion -->
+		<div th:if="${idPagination != null}" th:include="common/pagination :: paginatorFragment(id=${idPagination}, paginatorData=${paginator},methodJS=${methodJS})"></div>
+		<div th:if="${idPagination == null}" th:include="common/pagination :: paginatorFragment(id=*{idPagination}, paginatorData=${paginator},methodJS=${methodJS})"></div>
+	</div>
+
+</html>

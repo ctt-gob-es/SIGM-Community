@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<button class="secondary mb10 right" onclick="prepareNewJob();">
+	<span class="mf-icon mf-icon-add-16 "></span>
+	<span th:text="#{newButton}">Nueva cargo</span>
+</button>
+<form id="jobsForm" name="jobsForm" method="POST" th:object="${jobsParameters}">
+	<input type="hidden" id="currentJobPage" name="paginator.currentPage" th:value="1" />
+	<input type="hidden" id="orderJobField" name="orderField" th:value="*{orderField}" />
+	<input type="hidden" id="orderJob" name="order" th:value="*{order}" />
+	<input type="text" id="searchTextJob" name="searchText" th:value="*{searchText}" th:placeholder="#{searchByCodeDescriptionProvince}" class="mr0 w240 ui-autocomplete-input" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"/>
+	<div class="catalogueOverflow">
+	<table class="data noborder tl">
+		<thead>
+			<tr>
+				<th><a class="sort" href="#" th:text="#{code}" onclick="orderJob(1)">Nombre</a></th>
+				<th><a class="sort" href="#" th:text="#{description}" onclick="orderJob(2)">Descripción</a></th>	
+				<th><a class="sort" href="#" th:text="#{province}" onclick="orderJob(5)">Sede</a></th>
+					<th class="tc"><a class="sort" href="#" th:text="#{valid}" onclick="orderJob(6)">Activo</a></th>
+					<th class="tc"><a class="sort" href="#" th:text="#{public}" onclick="orderJob(7)">Público</a></th>												
+				<th class="wv2"></th>
+				<th class="wv2"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="job : ${jobsList}">
+				<td th:text="${job.cidentifier}"></td>
+				<td th:text="${job.dname}"></td>
+				<td th:text="${job.pfProvince != null} ? ${job.pfProvince.cnombre}"></td>
+				<td th:if="${job.lvalid}" class="tc"><a href="#!"><span class="mf-icon mf-icon-enabled-16"></span></a></td>
+				<td th:unless="${job.lvalid}" class="tc"><a href="#!"><span class="mf-icon mf-icon-disabled-16"></span></a></td>
+				<td th:if="${job.lvisible}" class="tc"><a href="#!"><span class="mf-icon mf-icon-enabled-16"></span></a></td>		
+				<td th:unless="${job.lvisible}" class="tc"><a href="#!"><span class="mf-icon mf-icon-disabled-16"></span></a></td>
+				<td>	
+					<a href="javascript:void(0)" th:onclick="|prepareModifyJob('${job.primaryKey}')|"><span class="mf-icon mf-icon-edit-16">Editar</span></a>
+				</td>
+				<td>		
+					<a href="javascript:void(0)" th:onclick="|prepareDeleteJob('${job.primaryKey}','${job.dname}')|"><span class="mf-icon mf-icon-delete-16">Eliminar</span></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>
+	<div id="" class=" wv100 pagination">
+		<div  class="right pr20">
+			<ol>
+				<li class="numResults">
+					<select id="paginator.pageSize" name="paginator.pageSize" onchange="goJobPage(1);">
+						<option th:selected="*{paginator.pageSize eq 10}" value="10">10</option>
+						<option th:selected="*{paginator.pageSize eq 20}" value="20">20</option>
+						<option th:selected="*{paginator.pageSize eq 30}" value="30">30</option>
+					</select> de <span th:text="*{paginator.inboxSize}"></span>
+				</li>
+
+				<li	th:if="*{not paginator.isFirst}">
+					<a href="javascript:void(0)" onclick="goJobPage(1);">&lt;&lt;</a>
+				</li>
+				<li th:if="*{not paginator.isFirst}">
+					<a href="javascript:void(0)" th:onclick="|goJobPage('*{paginator.currentPage - 1}');|">&lt;</a>
+				</li>
+				<li class="numResults">
+					<select onchange="goJobPage(this.value);">
+						<option th:each="pag : *{paginator.pages}" th:value="${pag}" th:text="${pag}" th:selected="${jobsParameters.paginator.currentPage == pag}"></option>
+					</select>
+				</li>
+				<li th:if="*{not paginator.isLast}">
+					<a href="javascript:void(0)" th:onclick="|goJobPage('*{paginator.currentPage + 1}');|">&gt;</a>
+				</li>
+				<li th:if="*{not paginator.isLast}">
+					<a href="javascript:void(0)" th:onclick="|goJobPage('*{paginator.numPages}');|">&gt;&gt;</a>
+				</li>
+			</ol>
+		</div>
+	</div>
+</form>
+<div id="jobs_modal" title="Edición de cargo" th:include="jobModal::jobModal"></div>
+<div id="questionJob" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageJob" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonJob" name="yesButtonJob" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonJob" name="noButtonJob" class=" simbuttom secondary" onclick="$('#questionJob').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>									
+</html>	    

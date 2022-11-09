@@ -1,0 +1,614 @@
+@charset "UTF-8";
+
+/*
+ * MORFOS FRAMEWORK CSS
+ * Copyright (C) 2012 Ministerio Hacienda y Administración Pública (MINHAP).
+ * Realizado por la División de Sistemas de Información de la
+ * Secretaría de Estado de Administraciones Públicas del
+ * Ministerio de Hacienda y Administraciones Públicas.
+ * 
+ * Este fichero se distribuye bajo licencia EUPL versión 1.1 según las condiciones que figuran 
+ * en el fichero 'Licencia.pdf' que se acompaña. Si se distribuyera este fichero individualmente, 
+ * deben incluirse aquí las condiciones expresadas allí.
+ *
+ */
+
+/* Lib - Common styles */
+
+.dsp_i  { display: inline !important; }
+.dsp_b  { display: block  !important; }
+.dsp_ib { display: inline-block !important; }
+.dsp_n  { display: none !important; }
+
+.hidden { 
+    display: none; 
+    visibility: hidden;
+}
+
+.v-hidden { float: left !important; height: 0 !important; width: 0 !important; text-indent: -99999em !important; }
+    
+.invisible { visibility: hidden; }
+
+.left { float: left  !important; }
+.right { float: right !important; }
+
+.overflowh, .of_h   { overflow: hidden; }
+.overflowS, .of_S   { overflow: scroll; }
+.overflowSV, .of_SY { overflow-y: scroll; }
+.overflowSH, .of_SH { overflow-x: scroll; }
+.overflowA, .of_A   { overflow: auto; }
+
+.clear_b {  clear: both !important;}
+.clear_l {  clear: left !important;}
+.clear_r {  clear: right !important;}
+
+
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+ 
+.nowidth { width: auto !important; }
+    
+.ie8 .nowidth { overflow: hidden; }
+    
+.noheight { height: auto; }
+    
+.va_top         { vertical-align: top; }
+.va_middle      { vertical-align: middle; }
+.va_bottom      { vertical-align: bottom; }
+.va_baseline    { vertical-align: baseline; }
+    
+/* Lib - shadows */
+
+.shadow1 {
+    -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,0.5);
+    -moz-box-shadow:    0px 1px 2px rgba(0,0,0,0.5);
+    box-shadow:         0px 1px 2px rgba(0,0,0,0.5);
+}
+
+.ie7 .shadow1, 
+.ie8 .shadow1 {
+    border-top: 1px solid #DDD;
+    border-right: 1px inset #CCC;
+    border-bottom: 1px inset #CCC;
+    border-left: 1px solid #DDD;
+    }
+    
+.ie7 .fixd_12 .shadow1, 
+.ie8 .fixd_12 .shadow1, 
+.ie8 .fixd_16 .shadow1, 
+.ie8 .fixd_16 .shadow1 {
+    border: none;
+    }
+
+.shadow2 {
+    -webkit-box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow:    1px 2px 5px rgba(0, 0, 0, 0.4);
+    box-shadow:         1px 2px 5px rgba(0, 0, 0, 0.4);
+}
+    
+.shadowbox {
+    -webkit-box-shadow: 2px 5px 5px #C4C4C4;
+    -moz-box-shadow: 2px 5px 5px #C4C4C4;
+    box-shadow: 2px 5px 5px #C4C4C4;
+    
+    -webkit-box-shadow: 2px 5px 5px rgba(123, 123, 123, 0.5);
+    -moz-box-shadow:    2px 5px 5px rgba(123, 123, 123, 0.5);
+    box-shadow:         2px 5px 5px rgba(123, 123, 123, 0.5);
+}
+    
+.ie7 .shadowbox_ie, 
+.ie8 .shadowbox_ie {
+    border-right: 1px inset #CCC;
+    border-bottom: 1px inset #CCC;
+    border-left: 1px solid #DDD;
+}
+    
+.ie7 .shadowbox, 
+.ie8 .shadowbox {
+    border-right: 1px inset #CCC;
+    border-bottom: 1px inset #CCC;
+    border-left: 1px solid #DDD;
+    border-top: 1px solid #DDD;
+}
+
+.shadowline.down {
+    -webkit-box-shadow: -2px 1px 2px #787878;
+    -moz-box-shadow:    -2px 1px 2px #787878;
+    box-shadow:         -2px 1px 2px #787878;
+}
+   
+.shadowline.up {
+    -webkit-box-shadow: -3px -1px 2px #D5D5D5;
+    -moz-box-shadow:    -3px -1px 2px #D5D5D5;
+    box-shadow:         -3px -1px 2px #D5D5D5;
+   }
+   
+.shadowimg {
+    border: 1px solid #EDEDED;
+    
+    -webkit-box-shadow: 1px 1px 2px #000000;
+    -moz-box-shadow: 1px 1px 2px #000000;
+    box-shadow: 1px 1px 2px #000000;
+} 
+    
+/* Lib - border-radius */
+
+.br2 {
+    -webkit-border-radius: 2px;
+    -moz-border-radius:    2px;
+    border-radius:         2px;
+}
+    
+.br3 {
+    -webkit-border-radius: 3px;
+    -moz-border-radius:    3px;
+    border-radius:         3px;
+}
+    
+.br4 {
+    -webkit-border-radius: 4px;
+    -moz-border-radius:    4px;
+    border-radius:         4px;
+}
+    
+.br5 {
+    -webkit-border-radius: 5px;
+    -moz-border-radius:    5px;
+    border-radius:         5px;
+}
+
+.rnd-all {
+    -webkit-border-radius: 5px;
+    -moz-border-radius:    5px;
+    border-radius:         5px;
+}
+    
+.rnd-top-left {
+    -webkit-border-radius-topleft: 5px;
+    -moz-border-radius-topleft:    5px;
+    border-radius-topleft:         5px;
+}
+    
+.rnd-top-right {
+    -webkit-border-radius-topright: 5px;
+    -moz-border-radius-topright:    5px;
+    border-radius-topright:         5px;
+}
+    
+.rnd-bottom-left {
+    -webkit-border-radius-bottomleft: 5px;
+    -moz-border-radius-bottomleft:    5px;
+    border-radius-bottomleft:         5px;
+}
+    
+.rnd-bottom-right {
+    -webkit-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomright:    5px;
+    border-radius-bottomright:         5px;
+}
+    
+/* Generic menu styles */
+
+ul.menu, 
+ul.toolbar, 
+ul.nav {
+    overflow: hidden;
+    margin-left: 0;
+}
+
+ul.menu > li, 
+ul.toolbar li, 
+ul.nav li {
+    display: inline;
+    overflow: hidden;
+    zoom: 1;
+}
+    
+ul.menu li a, 
+ul.toolbar li a {
+    float: left;
+    width: 100%;
+}
+    
+ul.nav li a {
+    float: left;
+}
+    
+ol.nolist, 
+ul.nolist {
+    list-style: none;
+}
+
+/* Mf-toolbar */
+
+.mf-toolbar {
+    margin-left: 0;
+}
+
+.mf-toolbar > li {
+    display: inline-block;
+}
+
+.ie7 .mf-toolbar > li {
+    display: inline;
+    zoom: 1;
+}
+
+.mf-toolbar > li > a {
+    display: block;
+    // padding: 6px;
+    // margin: 5px;
+    
+    text-align: center;
+}
+
+/* buscar un lugar mejor */
+
+.header-content {
+    padding: 5px 10px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* buscar un lugar mejor */
+.note,
+div.note, 
+span.note {
+    margin: 8px;
+    padding: 20px;
+
+    color: #323232;
+    background: none repeat scroll 0 0 #F9F9F9;
+    border-bottom: 1px solid #D4D9DE;
+    border-top: 1px solid #D4D9DE;
+} 
+
+/*GRAPHIC RESOURCES*/
+
+hr.dotted {
+    display: block;
+    height: 1px;
+    margin: 15px 0;
+    
+    border: 1px dotted #EDEDED;
+}
+
+.verticalrule {
+    padding-left: 10px;
+    border-left: 2px groove #CCCCCC;
+}
+
+.vrule_left {
+    margin-left: 10px;
+    padding-left: 10px;
+    border-left: 2px groove #CCCCCC;
+}
+
+.vrule_right {
+    margin-right: 10px;
+    padding-right: 10px;
+    border-right: 2px groove #CCCCCC;
+}
+
+.horizontalrule {
+    background: url("images/horizontalrule.png") repeat-x scroll 0 0 transparent;
+    padding: 7px;
+    margin: 0 0px;
+}
+
+/* Basic backgrounds */
+
+.bg_fff { background-color: #FFF; }
+.bg_eee { background-color: #EEE; }
+.bg_ddd { background-color: #DDD; }
+.bg_ccc { background-color: #CCC; }
+    
+/* Animations */
+
+.hglow_grey:hover {
+    -moz-animation-name: glow_grey;
+    -moz-animation-duration: .8s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -moz-animation-direction: alternate;
+
+    -webkit-animation-name: glow_grey;
+    -webkit-animation-duration: .8s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-direction: alternate;
+}
+
+@-moz-keyframes glow_grey {
+    from { box-shadow: 0px 1px 2px rgba(0,0,0,0.5); }
+    to   { box-shadow: 0px 1px 7px rgba(0,0,0,0.5); }
+}
+
+@-webkit-keyframes glow_grey {
+    from { -webkit-box-shadow: 0px 1px 2px rgba(0,0,0,0.5); }
+    to   { -webkit-box-shadow: 0px 1px 7px rgba(0,0,0,0.5); }
+}
+
+.error_shake {
+    -moz-animation-name: shake;
+    -moz-animation-duration: .35s;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: ease;
+    -moz-animation-direction: alternate;
+    -moz-animation-delay: 0.7s;
+    
+    -webkit-animation-name: shake;
+    -webkit-animation-duration: .35s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-direction: alternate;
+    -webkit-animation-delay: 0.7s;
+}
+    
+@-moz-keyframes shake {
+    0%   { -moz-transform: translate(3px); }
+    20%  { -moz-transform: translate(-3px); }
+    40%  { -moz-transform: translate(6px); }
+    60%  { -moz-transform: translate(-6px); }
+    80%  { -moz-transform: translate(3px); }
+    100% { -moz-transform: translate(-3px); }
+}
+    
+@-webkit-keyframes shake {
+    0%   { -webkit-transform: translate(3px); }
+    20%  { -webkit-transform: translate(-3px); }
+    40%  { -webkit-transform: translate(6px); }
+    60%  { -webkit-transform: translate(-6px); }
+    80%  { -webkit-transform: translate(3px); }
+    100% { -webkit-transform: translate(-3px); }
+}
+    
+.fade {
+    -webkit-transition: opacity 0.15s linear;
+    -moz-transition:    opacity 0.15s linear;
+    -ms-transition:     opacity 0.15s linear;
+    -o-transition:      opacity 0.15s linear;
+    transition:         opacity 0.15s linear;
+    
+    opacity: 0;
+}
+
+.fade.in {
+    opacity: 1;
+}
+
+/* Cursors */
+
+.pointer { cursor: pointer; }
+    
+/* Icons */
+
+.mf-icon,
+.mf-icon.ui-icon {
+    // float: left;
+    display: inline-block;
+    overflow: hidden;
+    height: 16px;
+    width: 16px;
+    margin: 0;
+
+    vertical-align: text-bottom;
+    
+    background-repeat: no-repeat;
+    text-indent: -99999px;
+}
+
+.ie7 .mf-icon, 
+.ie7 span.ui-icon {
+    float: left;
+    margin-right: 4px;
+}
+
+.mf-link-w-icon {
+
+}
+
+.mf-icon-only-16 {
+    display: block;
+    width: 16px;
+    padding: 4px;
+    overflow: hidden;
+
+    outline: none;
+    text-indent: -99999em;
+}
+
+.mf-icon-home-12                { background-image: url('images/icons/home_out_12.png'); }
+    
+.mf-icon-advsearch-16           { background-image: url('images/icons/advsearch_16.png'); }
+.mf-icon-cert-16                { background-image: url('images/icons/cert_16.png'); }
+.mf-icon-down-16                { background-image: url('images/icons/down_out_16.png'); }
+.mf-icon-down-16:hover          { background-image: url('images/icons/down_over_16.png'); }
+.mf-icon-filter-16              { background-image: url('images/icons/filter_16.png'); }
+.mf-icon-first-16               { background-image: url('images/icons/first_16.png'); }
+.mf-icon-info-16                { background-image: url('images/icons/info_16.png'); }
+.mf-icon-last-16                { background-image: url('images/icons/last_16.png'); }
+.mf-icon-log-16                 { background-image: url('images/icons/log_16.png'); }
+.mf-icon-mail-16                { background-image: url('images/icons/mail_16.png'); }
+.mf-icon-next-16                { background-image: url('images/icons/next_16.png'); }
+.mf-icon-permissions-16         { background-image: url('images/icons/permissions_16.png'); }
+.mf-icon-prev-16                { background-image: url('images/icons/prev_16.png'); }
+.mf-icon-print-16               { background-image: url('images/icons/print_16.png');}
+.mf-icon-register-16            { background-image: url('images/icons/register_16.png'); }
+.mf-icon-search-16              { background-image: url('images/icons/search_16.png'); }
+.mf-icon-send-16                { background-image: url('images/icons/send_16.png'); }
+.mf-icon-sign-16                { background-image: url('images/icons/sign_16.png'); }
+.mf-icon-sort-16                { background-image: url('images/icons/sort_16.png'); }
+.mf-icon-sortdown-16            { background-image: url('images/icons/sort-down_16.png'); }
+.mf-icon-sortup-16              { background-image: url('images/icons/sort-up_16.png'); }
+.mf-icon-star-16                { background-image: url('images/icons/star_16.png');}
+.mf-icon-up-16                  { background-image: url('images/icons/up_out_16.png'); }
+.mf-icon-up-16                  { background-image: url('images/icons/up_over_16.png'); }
+.mf-icon-user-16                { background-image: url('images/icons/user_16.png'); }
+.mf-icon-warning-16             { background-image: url('images/icons/warning_16.png'); }
+
+
+.mf-icon-back-32                { background-image: url('images/icons/back_out_32.png'); }
+.mf-icon-back-32:hover          { background-image: url('images/icons/back_over_32.png'); }
+.mf-icon-close-32               { background-image: url('images/icons/close_out_32.png'); }
+.mf-icon-close-32:hover         { background-image: url('images/icons/close_over_32.png'); }
+.mf-icon-config-32              { background-image: url('images/icons/config_out_32.png'); }
+.mf-icon-config-32:hover        { background-image: url('images/icons/config_over_32.png'); }
+.mf-icon-correct-32             { background-image: url('images/icons/correct_out_32.png'); }
+.mf-icon-correct-32:hover       { background-image: url('images/icons/correct_over_32.png'); }
+.mf-icon-csv-32                 { background-image: url('images/icons/csv_out_32.png'); }
+.mf-icon-csv-32:hover           { background-image: url('images/icons/csv_over_32.png'); }
+.mf-icon-csvdl-32               { background-image: url('images/icons/csvdl_out_32.png'); }
+.mf-icon-csvdl-32:hover         { background-image: url('images/icons/csvdl_over_32.png'); }
+.mf-icon-delete-32              { background-image: url('images/icons/delete_out_32.png'); }
+.mf-icon-delete-32:hover        { background-image: url('images/icons/delete_over_32.png'); }
+.mf-icon-download-32            { background-image: url('images/icons/download_out_32.png'); }
+.mf-icon-download-32:hover      { background-image: url('images/icons/download_over_32.png'); }
+.mf-icon-edit-32                { background-image: url('images/icons/edit_out_32.png'); }
+.mf-icon-edit-32:hover          { background-image: url('images/icons/edit_over_32.png'); }
+.mf-icon-email-32               { background-image: url('images/icons/email_out_32.png'); }
+.mf-icon-email-32:hover         { background-image: url('images/icons/email_over_32.png'); }
+.mf-icon-excel-32               { background-image: url('images/icons/excel_out_32.png'); }
+.mf-icon-excel-32:hover         { background-image: url('images/icons/excel_over_32.png'); }
+.mf-icon-exceldl-32             { background-image: url('images/icons/exceldl_out_32.png'); }
+.mf-icon-exceldl-32:hover       { background-image: url('images/icons/exceldl_over_32.png'); }
+.mf-icon-fw-32                  { background-image: url('images/icons/fw_out_32.png'); }
+.mf-icon-fw-32:hover            { background-image: url('images/icons/fw_over_32.png'); }
+.mf-icon-help-32                { background-image: url('images/icons/help_out_32.png'); }
+.mf-icon-help-32:hover          { background-image: url('images/icons/help_over_32.png'); }
+.mf-icon-home-32                { background-image: url('images/icons/home_out_32.png'); }
+.mf-icon-home-32:hover          { background-image: url('images/icons/home_over_32.png'); }
+.mf-icon-info-32                { background-image: url('images/icons/info_out_32.png'); }
+.mf-icon-info-32:hover          { background-image: url('images/icons/info_over_32.png'); }
+.mf-icon-lock-32                { background-image: url('images/icons/lock_out_32.png'); }
+.mf-icon-lock-32:hover          { background-image: url('images/icons/lock_over_32.png'); }
+.mf-icon-log-32                 { background-image: url('images/icons/log_out_32.png'); }
+.mf-icon-log-32:hover           { background-image: url('images/icons/log_over_32.png'); }
+.mf-icon-massivesign-32         { background-image: url('images/icons/massivesign_out_32.png'); }
+.mf-icon-massivesign-32:hover   { background-image: url('images/icons/massivesign_over_32.png'); }
+.mf-icon-new-32                 { background-image: url('images/icons/new_out_32.png'); }
+.mf-icon-new-32:hover           { background-image: url('images/icons/new_over_32.png'); }
+.mf-icon-newfolder-32           { background-image: url('images/icons/newfolder_out_32.png'); }
+.mf-icon-newfolder-32:hover     { background-image: url('images/icons/newfolder_over_32.png'); }
+.mf-icon-pdf-32                 { background-image: url('images/icons/pdf_out_32.png'); }
+.mf-icon-pdf-32:hover           { background-image: url('images/icons/pdf_over_32.png'); }
+.mf-icon-report-32              { background-image: url('images/icons/report_out_32.png'); }
+.mf-icon-report-32:hover        { background-image: url('images/icons/report_over_32.png'); }
+.mf-icon-save-32                { background-image: url('images/icons/save_out_32.png'); }
+.mf-icon-save-32:hover          { background-image: url('images/icons/save_over_32.png'); }
+.mf-icon-search-32              { background-image: url('images/icons/search_out_32.png'); }
+.mf-icon-search-32:hover        { background-image: url('images/icons/search_over_32.png'); }
+.mf-icon-searchlist-32          { background-image: url('images/icons/searchlist_out_32.png'); }
+.mf-icon-searchlist-32:hover    { background-image: url('images/icons/searchlist_over_32.png'); }
+.mf-icon-sign-32                { background-image: url('images/icons/sign_out_32.png'); }
+.mf-icon-sign-32:hover          { background-image: url('images/icons/sign_over_32.png'); }
+.mf-icon-template-32            { background-image: url('images/icons/template_out_32.png'); }
+.mf-icon-template-32:hover      { background-image: url('images/icons/template_over_32.png'); }
+
+.mf-icon-back-48                { background-image: url('images/icons/back_out_48.png'); }
+.mf-icon-back-48:hover          { background-image: url('images/icons/back_over_48.png'); }
+.mf-icon-close-48               { background-image: url('images/icons/close_out_48.png'); }
+.mf-icon-close-48:hover         { background-image: url('images/icons/close_over_48.png'); }
+.mf-icon-config-48              { background-image: url('images/icons/config_out_48.png'); }
+.mf-icon-config-48:hover        { background-image: url('images/icons/config_over_48.png'); }
+.mf-icon-csv-48                 { background-image: url('images/icons/csv_out_48.png'); }
+.mf-icon-csv-48:hover           { background-image: url('images/icons/csv_over_48.png'); }
+.mf-icon-delete-48              { background-image: url('images/icons/delete_out_48.png'); }
+.mf-icon-delete-48:hover        { background-image: url('images/icons/delete_over_48.png'); }
+.mf-icon-download-48            { background-image: url('images/icons/download_out_48.png'); }
+.mf-icon-download-48:hover      { background-image: url('images/icons/download_over_48.png'); }
+.mf-icon-edit-48                { background-image: url('images/icons/edit_out_48.png'); }
+.mf-icon-edit-48:hover          { background-image: url('images/icons/edit_over_48.png'); }
+.mf-icon-email-48               { background-image: url('images/icons/email_out_48.png'); }
+.mf-icon-email-48:hover         { background-image: url('images/icons/email_over_48.png'); }
+.mf-icon-excel-48               { background-image: url('images/icons/excel_out_48.png'); }
+.mf-icon-excel-48:hover         { background-image: url('images/icons/excel_over_48.png'); }
+.mf-icon-fw-48                  { background-image: url('images/icons/fw_out_48.png'); }
+.mf-icon-fw-48:hover            { background-image: url('images/icons/fw_over_48.png'); }
+.mf-icon-help-48                { background-image: url('images/icons/help_out_48.png'); }
+.mf-icon-help-48:hover          { background-image: url('images/icons/help_over_48.png'); }
+.mf-icon-home-48                { background-image: url('images/icons/home_out_48.png'); }
+.mf-icon-home-48:hover          { background-image: url('images/icons/home_over_48.png'); }
+.mf-icon-info-48                { background-image: url('images/icons/info_out_48.png'); }
+.mf-icon-info-48:hover          { background-image: url('images/icons/info_over_48.png'); }
+.mf-icon-lock-48                { background-image: url('images/icons/lock_out_48.png'); }
+.mf-icon-lock-48:hover          { background-image: url('images/icons/lock_over_48.png'); }
+.mf-icon-log-48                 { background-image: url('images/icons/log_out_48.png'); }
+.mf-icon-log-48:hover           { background-image: url('images/icons/log_over_48.png'); }
+.mf-icon-massivesign-48         { background-image: url('images/icons/massivesign_out_48.png'); }
+.mf-icon-massivesign-48:hover   { background-image: url('images/icons/massivesign_over_48.png'); }
+.mf-icon-new-48                 { background-image: url('images/icons/new_out_48.png'); }
+.mf-icon-new-48:hover           { background-image: url('images/icons/new_over_48.png'); }
+.mf-icon-newfolder-48           { background-image: url('images/icons/newfolder_out_48.png'); }
+.mf-icon-newfolder-48:hover     { background-image: url('images/icons/newfolder_over_48.png'); }
+.mf-icon-pdf-48                 { background-image: url('images/icons/pdf_out_48.png'); }
+.mf-icon-pdf-48:hover           { background-image: url('images/icons/pdf_over_48.png'); }
+.mf-icon-report-48              { background-image: url('images/icons/report_out_48.png'); }
+.mf-icon-report-48:hover        { background-image: url('images/icons/report_over_48.png'); }
+.mf-icon-save-48                { background-image: url('images/icons/save_out_48.png'); }
+.mf-icon-save-48:hover          { background-image: url('images/icons/save_over_48.png'); }
+.mf-icon-search-48              { background-image: url('images/icons/search_out_48.png'); }
+.mf-icon-search-48:hover        { background-image: url('images/icons/search_over_48.png'); }
+.mf-icon-searchlist-48          { background-image: url('images/icons/searchlist_out_48.png'); }
+.mf-icon-searchlist-48:hover    { background-image: url('images/icons/searchlist_over_48.png'); }
+.mf-icon-sign-48                { background-image: url('images/icons/sign_out_48.png'); }
+.mf-icon-sign-48:hover          { background-image: url('images/icons/sign_over_48.png'); }
+.mf-icon-template-48            { background-image: url('images/icons/template_out_48.png'); }
+.mf-icon-template-48:hover      { background-image: url('images/icons/template_over_48.png'); }
+
+.mf-icon-back-64                { background-image: url('images/icons/back_out_64.png'); }
+.mf-icon-back-64:hover          { background-image: url('images/icons/back_over_64.png'); }
+.mf-icon-close-64               { background-image: url('images/icons/close_out_64.png'); }
+.mf-icon-close-64:hover         { background-image: url('images/icons/close_over_64.png'); }
+.mf-icon-config-64              { background-image: url('images/icons/config_out_64.png'); }
+.mf-icon-config-64:hover        { background-image: url('images/icons/config_over_64.png'); }
+.mf-icon-csv-64                 { background-image: url('images/icons/csv_out_64.png'); }
+.mf-icon-csv-64:hover           { background-image: url('images/icons/csv_over_64.png'); }
+.mf-icon-delete-64              { background-image: url('images/icons/delete_out_64.png'); }
+.mf-icon-delete-64:hover        { background-image: url('images/icons/delete_over_64.png'); }
+.mf-icon-download-64            { background-image: url('images/icons/download_out_64.png'); }
+.mf-icon-download-64:hover      { background-image: url('images/icons/download_over_64.png'); }
+.mf-icon-edit-64                { background-image: url('images/icons/edit_out_64.png'); }
+.mf-icon-edit-64:hover          { background-image: url('images/icons/edit_over_64.png'); }
+.mf-icon-email-64               { background-image: url('images/icons/email_out_64.png'); }
+.mf-icon-email-64:hover         { background-image: url('images/icons/email_over_64.png'); }
+.mf-icon-excel-64               { background-image: url('images/icons/excel_out_64.png'); }
+.mf-icon-excel-64:hover         { background-image: url('images/icons/excel_over_64.png'); }
+.mf-icon-fw-64                  { background-image: url('images/icons/fw_out_64.png'); }
+.mf-icon-fw-64:hover            { background-image: url('images/icons/fw_over_64.png'); }
+.mf-icon-help-64                { background-image: url('images/icons/help_out_64.png'); }
+.mf-icon-help-64:hover          { background-image: url('images/icons/help_over_64.png'); }
+.mf-icon-home-64                { background-image: url('images/icons/home_out_64.png'); }
+.mf-icon-home-64:hover          { background-image: url('images/icons/home_over_64.png'); }
+.mf-icon-info-64                { background-image: url('images/icons/info_out_64.png'); }
+.mf-icon-info-64:hover          { background-image: url('images/icons/info_over_64.png'); }
+.mf-icon-lock-64                { background-image: url('images/icons/lock_out_64.png'); }
+.mf-icon-lock-64:hover          { background-image: url('images/icons/lock_over_64.png'); }
+.mf-icon-log-64                 { background-image: url('images/icons/log_out_64.png'); }
+.mf-icon-log-64:hover           { background-image: url('images/icons/log_over_64.png'); }
+.mf-icon-massivesign-64         { background-image: url('images/icons/massivesign_out_64.png'); }
+.mf-icon-massivesign-64:hover   { background-image: url('images/icons/massivesign_over_64.png'); }
+.mf-icon-new-64                 { background-image: url('images/icons/new_out_64.png'); }
+.mf-icon-new-64:hover           { background-image: url('images/icons/new_over_64.png'); }
+.mf-icon-newfolder-64           { background-image: url('images/icons/newfolder_out_64.png'); }
+.mf-icon-newfolder-64:hover     { background-image: url('images/icons/newfolder_over_64.png'); }
+.mf-icon-pdf-64                 { background-image: url('images/icons/pdf_out_64.png'); }
+.mf-icon-pdf-64:hover           { background-image: url('images/icons/pdf_over_64.png'); }
+.mf-icon-report-64              { background-image: url('images/icons/report_out_64.png'); }
+.mf-icon-report-64:hover        { background-image: url('images/icons/report_over_64.png'); }
+.mf-icon-save-64                { background-image: url('images/icons/save_out_64.png'); }
+.mf-icon-save-64:hover          { background-image: url('images/icons/save_over_64.png'); }
+.mf-icon-search-64              { background-image: url('images/icons/search_out_64.png'); }
+.mf-icon-search-64:hover        { background-image: url('images/icons/search_over_64.png'); }
+.mf-icon-searchlist-64          { background-image: url('images/icons/searchlist_out_64.png'); }
+.mf-icon-searchlist-64:hover    { background-image: url('images/icons/searchlist_over_64.png'); }
+.mf-icon-sign-64                { background-image: url('images/icons/sign_out_64.png'); }
+.mf-icon-sign-64:hover          { background-image: url('images/icons/sign_over_64.png'); }
+.mf-icon-template-64            { background-image: url('images/icons/template_out_64.png'); }
+.mf-icon-template-64:hover      { background-image: url('images/icons/template_over_64.png'); }

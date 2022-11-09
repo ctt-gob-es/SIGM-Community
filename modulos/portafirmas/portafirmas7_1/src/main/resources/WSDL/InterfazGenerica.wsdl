@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://ip2.docelweb.wsInterfazGenerica/" xmlns:tns0="http://ip2.docelweb.wsInterfazGenerica/types/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="InterfazGenerica" targetNamespace="http://ip2.docelweb.wsInterfazGenerica/">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://ip2.docelweb.wsInterfazGenerica/types/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" elementFormDefault="qualified" targetNamespace="http://ip2.docelweb.wsInterfazGenerica/types/">
+            <complexType name="TOSolicitudNueva">
+                <sequence>
+                    <element name="version_firma" nillable="true" type="string"/>
+                    <element name="prioridad" nillable="true" type="string"/>
+                    <element name="firma_multiple" nillable="true" type="string"/>
+                    <element name="tipo_firma" nillable="true" type="string"/>
+                    <element name="fecha_limite" nillable="true" type="string"/>
+                    <element name="descripcion" nillable="true" type="string"/>
+                    <element name="login_firmante" nillable="true" type="string"/>
+                    <element name="nombre_solicitante" nillable="true" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="TODocumento">
+                <sequence>
+                    <element name="tipo_documento" nillable="true" type="string"/>
+                    <element name="necesita_firma" nillable="true" type="string"/>
+                    <element name="descripcion" nillable="true" type="string"/>
+                    <element name="nombre_documento" nillable="true" type="string"/>
+                    <element name="contenido" nillable="true" type="base64Binary"/>
+                </sequence>
+            </complexType>
+            <element name="anularSolicitudElement">
+                <complexType>
+                    <sequence>
+                        <element name="codigo_sistema_gestor" nillable="true" type="string"/>
+                        <element name="idSolicitud" nillable="true" type="long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="anularSolicitudResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" nillable="true" type="string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="comenzarSolicitudElement">
+                <complexType>
+                    <sequence>
+                        <element name="codigo_sistema_gestor" nillable="true" type="string"/>
+                        <element name="solicitud" nillable="true" type="tns:TOSolicitudNueva"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="comenzarSolicitudResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" nillable="true" type="long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="consultarDocumentoElement">
+                <complexType>
+                    <sequence>
+                        <element name="codigo_sistema_gestor" nillable="true" type="string"/>
+                        <element name="idSolicitud" nillable="true" type="long"/>
+                        <element name="idDocumento" nillable="true" type="long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="consultarDocumentoResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" nillable="true" type="tns:TODocumentoSalida"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <complexType name="TODocumentoSalida">
+                <sequence>
+                    <element name="tipo_documento" nillable="true" type="string"/>
+                    <element name="necesita_firma" nillable="true" type="string"/>
+                    <element name="firmado" nillable="true" type="string"/>
+                    <element name="descripcion" nillable="true" type="string"/>
+                    <element name="nombre_documento" nillable="true" type="string"/>
+                    <element name="contenido" nillable="true" type="base64Binary"/>
+                </sequence>
+            </complexType>
+            <element name="consultarEstadoSolicitudElement">
+                <complexType>
+                    <sequence>
+                        <element name="codigo_sistema_gestor" nillable="true" type="string"/>
+                        <element name="idSolicitud" nillable="true" type="long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="consultarEstadoSolicitudResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" nillable="true" type="string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="consultarSolicitudElement">
+                <complexType>
+                    <sequence>
+                        <element name="codigo_sistema_gestor" nillable="true" type="string"/>
+                        <element name="idSolicitud" nillable="true" type="long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="consultarSolicitudResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" nillable="true" type="tns:TOSolicitudConsulta"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <complexType name="TOSolicitudConsulta">
+                <sequence>
+                    <element name="solicitante" nillable="true" type="string"/>
+                    <element name="prioridad" nillable="true" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0" name="idsDocumentos" nillable="true" type="long"/>
+                    <element name="descripcion" nillable="true" type="string"/>
+                    <element name="login_firmante" nillable="true" type="string"/>
+                    <element name="estadoSolicitud" nillable="true" type="tns:TOSolicitudEstado"/>
+                </sequence>
+            </complexType>
+            <complexType name="TOSolicitudEstado">
+                <sequence>
+                    <element name="estadoRevision" nillable="true" type="string"/>
+                    <element name="estadoFirma" nillable="true" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="registrarDocumentoElement">
+                <complexType>
+                    <sequence>
+                        <element name="codigo_sistema_gestor" nillable="true" type="string"/>
+                        <element name="idSolicitud" nillable="true" type="long"/>
+                        <element name="documento" nillable="true" type="tns:TODocumento"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="registrarDocumentoResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" nillable="true" type="long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="registrarSolicitudElement">
+                <complexType>
+                    <sequence>
+                        <element name="codigo_sistema_gestor" nillable="true" type="string"/>
+                        <element name="idSolicitud" nillable="true" type="long"/>
+                        <element maxOccurs="unbounded" minOccurs="1" name="documento" nillable="false" type="long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="registrarSolicitudResponseElement">
+                <complexType>
+                    <sequence>
+                        <element name="result" nillable="true" type="string"/>
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+    </types>
+    <message name="InterfazGenericaPortType_anularSolicitud">
+        <part element="tns0:anularSolicitudElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_anularSolicitudResponse">
+        <part element="tns0:anularSolicitudResponseElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_comenzarSolicitud">
+        <part element="tns0:comenzarSolicitudElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_comenzarSolicitudResponse">
+        <part element="tns0:comenzarSolicitudResponseElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_consultarDocumento">
+        <part element="tns0:consultarDocumentoElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_consultarDocumentoResponse">
+        <part element="tns0:consultarDocumentoResponseElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_consultarEstadoSolicitud">
+        <part element="tns0:consultarEstadoSolicitudElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_consultarEstadoSolicitudResponse">
+        <part element="tns0:consultarEstadoSolicitudResponseElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_consultarSolicitud">
+        <part element="tns0:consultarSolicitudElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_consultarSolicitudResponse">
+        <part element="tns0:consultarSolicitudResponseElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_registrarDocumento">
+        <part element="tns0:registrarDocumentoElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_registrarDocumentoResponse">
+        <part element="tns0:registrarDocumentoResponseElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_registrarSolicitud">
+        <part element="tns0:registrarSolicitudElement" name="parameters"/>
+    </message>
+    <message name="InterfazGenericaPortType_registrarSolicitudResponse">
+        <part element="tns0:registrarSolicitudResponseElement" name="parameters"/>
+    </message>
+    <portType name="InterfazGenerica">
+        <operation name="anularSolicitud">
+            <input message="tns:InterfazGenericaPortType_anularSolicitud"/>
+            <output message="tns:InterfazGenericaPortType_anularSolicitudResponse"/>
+        </operation>
+        <operation name="comenzarSolicitud">
+            <input message="tns:InterfazGenericaPortType_comenzarSolicitud"/>
+            <output message="tns:InterfazGenericaPortType_comenzarSolicitudResponse"/>
+        </operation>
+        <operation name="consultarDocumento">
+            <input message="tns:InterfazGenericaPortType_consultarDocumento"/>
+            <output message="tns:InterfazGenericaPortType_consultarDocumentoResponse"/>
+        </operation>
+        <operation name="consultarEstadoSolicitud">
+            <input message="tns:InterfazGenericaPortType_consultarEstadoSolicitud"/>
+            <output message="tns:InterfazGenericaPortType_consultarEstadoSolicitudResponse"/>
+        </operation>
+        <operation name="consultarSolicitud">
+            <input message="tns:InterfazGenericaPortType_consultarSolicitud"/>
+            <output message="tns:InterfazGenericaPortType_consultarSolicitudResponse"/>
+        </operation>
+        <operation name="registrarDocumento">
+            <input message="tns:InterfazGenericaPortType_registrarDocumento"/>
+            <output message="tns:InterfazGenericaPortType_registrarDocumentoResponse"/>
+        </operation>
+        <operation name="registrarSolicitud">
+            <input message="tns:InterfazGenericaPortType_registrarSolicitud"/>
+            <output message="tns:InterfazGenericaPortType_registrarSolicitudResponse"/>
+        </operation>
+    </portType>
+    <binding name="InterfazGenericaSoapHttp" type="tns:InterfazGenerica">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="anularSolicitud">
+            <soap:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//anularSolicitud"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="comenzarSolicitud">
+            <soap:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//comenzarSolicitud"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="consultarDocumento">
+            <soap:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//consultarDocumento"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="consultarEstadoSolicitud">
+            <soap:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//consultarEstadoSolicitud"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="consultarSolicitud">
+            <soap:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//consultarSolicitud"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="registrarDocumento">
+            <soap:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//registrarDocumento"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="registrarSolicitud">
+            <soap:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//registrarSolicitud"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <binding name="InterfazGenericaSoap12Http" type="tns:InterfazGenerica">
+        <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="anularSolicitud">
+            <soap12:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//anularSolicitud" soapActionRequired="false"/>
+            <input>
+                <soap12:body use="literal"/>
+            </input>
+            <output>
+                <soap12:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="comenzarSolicitud">
+            <soap12:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//comenzarSolicitud" soapActionRequired="false"/>
+            <input>
+                <soap12:body use="literal"/>
+            </input>
+            <output>
+                <soap12:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="consultarDocumento">
+            <soap12:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//consultarDocumento" soapActionRequired="false"/>
+            <input>
+                <soap12:body use="literal"/>
+            </input>
+            <output>
+                <soap12:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="consultarEstadoSolicitud">
+            <soap12:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//consultarEstadoSolicitud" soapActionRequired="false"/>
+            <input>
+                <soap12:body use="literal"/>
+            </input>
+            <output>
+                <soap12:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="consultarSolicitud">
+            <soap12:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//consultarSolicitud" soapActionRequired="false"/>
+            <input>
+                <soap12:body use="literal"/>
+            </input>
+            <output>
+                <soap12:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="registrarDocumento">
+            <soap12:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//registrarDocumento" soapActionRequired="false"/>
+            <input>
+                <soap12:body use="literal"/>
+            </input>
+            <output>
+                <soap12:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="registrarSolicitud">
+            <soap12:operation soapAction="http://ip2.docelweb.wsInterfazGenerica//registrarSolicitud" soapActionRequired="false"/>
+            <input>
+                <soap12:body use="literal"/>
+            </input>
+            <output>
+                <soap12:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="InterfazGenerica">
+        <port binding="tns:InterfazGenericaSoap12Http" name="InterfazGenericaSoap12HttpPort">
+            <soap12:address location="http://localhost/Portafirma/InterfazGenerica/InterfazGenericaSoap12HttpPort"/>
+        </port>
+        <port binding="tns:InterfazGenericaSoapHttp" name="InterfazGenericaSoapHttpPort">
+            <soap:address location="http://localhost/Portafirma/InterfazGenerica/InterfazGenericaSoapHttpPort"/>
+        </port>
+    </service>
+</definitions>

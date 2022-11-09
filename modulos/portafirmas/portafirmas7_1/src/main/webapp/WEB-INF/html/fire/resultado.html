@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+		<div layout:fragment="content">
+	
+	        <!-- INICIO DEL CONTENIDO-->
+			<div id="mainWindow">
+				<div class="windowHeader">
+					<div>
+						<h3 class="windowTitle" th:text="#{fireSignResult}">Resultado de la Firma</h3>
+					</div>
+				</div>
+				
+				<div id="contentData">
+					<div id="contentDataBody" class="p10">
+						<div class="fld">					
+							<table id="requestsToSignTable" class="data tl">
+								<thead>
+									<tr>
+										<th><a class="wv60" href="#!" th:text="#{subject}">Asunto</a></th>
+										<th><a class="wv60" href="#!" th:text="#{oneSender}">Remitente</a></th>										
+										<th><a href="#!" th:text="#{fireSignResult}">Resultado de la firma</a></th>
+										<th><a href="#!" th:text="#{state}">Estado</a></th>
+									</tr>
+								</thead>
+								<tbody>									
+									<tr th:each="request : ${firmaLista}" th:id="|r_${request.id}">
+										<td><span th:text="${request.asunto}"></span></td>
+
+										<td><span th:text="${request.remitters}"></span></td>
+										
+										<td th:if="${request.errorPeticion != null}">
+											<span th:text="${request.errorPeticion}"></span>
+										</td>
+										<td th:if="${request.errorPeticion eq null and request.contieneErrores}">	
+											<div th:each="docError : ${request.documentos}" th:id="|r_${docError.id}">
+												<span th:if="${docError.error != null}" th:text="${docError.nombre + ' ' + docError.error}"></span>
+											</div>
+										</td>	
+										<td style="text-align: center;" th:if="${not request.contieneErrores}">
+											<span class="mf-icon mf-icon-firma-correcta-16"></span>
+										</td>						
+										
+										<td style="text-align: center;"><span th:class="${request.contieneErrores} ? 'mf-icon mf-icon-firma-erronea-16' : 'mf-icon mf-icon-firma-correcta-16'"></span></td>										
+									</tr>
+								</tbody>
+							</table>
+						</div>					
+					</div>
+				</div>
+				<div style="text-align: center;">
+					<a class="secondary mb10" th:href="|${#httpServletRequest.getContextPath()}/inbox|" th:title="#{acceptButton}">
+						<span class="simbutton" th:text="#{acceptButton}">Aceptar</span>
+					</a>
+				</div>				
+			</div>
+		</div>
+	</body>
+</html>	

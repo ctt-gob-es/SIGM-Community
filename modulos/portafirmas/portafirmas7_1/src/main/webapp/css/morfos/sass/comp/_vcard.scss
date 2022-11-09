@@ -1,0 +1,67 @@
+/**********************/
+/* vCard MPTAP - DSIC */
+
+.vcard .fn {
+    font-weight: bold;
+}
+
+.vcard a.organization-name {
+    color: #444;
+    font-weight: bold;
+}
+    
+.vcard .organization-unit {
+    margin-bottom: 1em;
+    
+    font-weight: normal;
+    font-style: italic;
+}
+    
+.dsic_vcard span.type {
+    display: none;
+}
+    
+.dsic_vcard a.email {
+    display: block;
+    float: left;
+    margin: 1em 0;
+    
+    color: #444;
+}
+    
+.dsic_vcard .logo {
+    clear: both;
+    display: block;
+    padding: 3px;
+    
+    background-color: #FFF;
+    
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    -moz-box-shadow:    0 1px 2px rgba(0,0,0,0.4);
+    box-shadow:         0 1px 2px rgba(0,0,0,0.4);
+}
+
+div#mptap_signature,
+.dsic_vcard {
+    border: 1px solid #CCC;
+    
+    -webkit-border-radius: 3px;
+    -moz-border-radius:    3px;
+    border-radius:         3px;
+    
+    background: #ffffff;
+    background: -moz-linear-gradient(top, #ffffff 0%, #e5e5e5 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));
+    background: -webkit-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    background: -o-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    background: -ms-linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
+    background: linear-gradient(top, #ffffff 0%,#e5e5e5 100%);
+}
+
+.dsic_vcard .locality, 
+.dsic_vcard .region, 
+.dsic_vcard .postal-code, 
+.dsic_vcard .country-name {
+    display: none;
+}

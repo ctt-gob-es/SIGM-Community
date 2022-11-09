@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+
+<div th:fragment="commentModal">
+	<form id="commentForm_modal">
+		<div class="fsb wv50">
+			<div class="fld stkd">
+				<textarea cols="120" rows="10" class="w270 h200" th:field="${comment.tcomment}" name="commentText" id="commentText"></textarea>
+				<input type="hidden" th:value="${comment.primaryKey}" id="commentPrimaryKey" name="commentPrimaryKey"/>
+			</div>
+		</div>
+			
+		<div class="fsb wv50">
+			<div class="fld stkd">
+				<h5 th:text="#{users}" th:title="#{usersComment}">Usuarios</h5>
+			</div>
+			<div class="fld stkd" id="usersCommentList">
+			</div>
+			
+		</div>			
+		
+		<div class="dsp_b error errorMessage" id="commentErrorMessage"></div>
+	</form>	
+</div>				
+
+</html>

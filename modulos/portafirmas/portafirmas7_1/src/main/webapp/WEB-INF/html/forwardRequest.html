@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+	   <div layout:fragment="content" >
+
+    	<script th:src="|${#httpServletRequest.getContextPath()}/js/forwardRequest/forwardRequest.js?#{versionNumber}.#{versionFase}|"></script>
+    	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery-picklist/jquery-picklist.js?#{versionNumber}.#{versionFase}|"></script>
+        <!-- INICIO DEL CONTENIDO-->			 
+			<div  id="mainWindow" class="">
+
+				<div id="contentData">
+					<div id="contentDataHeader">
+
+						<ul id="pfToolbar">
+							<li>
+								<a href="javascript:void(0)" class="mf-icon-send-24" th:text="#{sendButton}" 
+								   onclick="enviarFormulario('forwardRequestForm', 'enviar', [{parameterId:'signLinesConfig', parameterValue: loadSignLineConfig()},{parameterId:'signlinesAccion', parameterValue: loadSignLineAcciones()}])">
+								   Enviar
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" class="mf-icon-close-32" th:text="#{cancelButton}"
+								   onclick="enviarFormulario('forwardRequestForm', 'cancelar', []);">
+								   Cancelar
+								</a>
+							</li>
+						</ul>
+					</div>
+
+					<div id="contentDataBody" class="">
+						<form class="mailContent" id="forwardRequestForm" name="forwardRequestForm" method="POST" th:action="@{forwardRequest}" th:object="${forwardRequest}" enctype="multipart/form-data">
+							<!-- ATRIBUTOS DEL FORMULARIO -->
+							<input type="hidden" id="action" name="action" th:field="*{action}" />
+							<input type="hidden" id="signers" name="signers" th:field="*{signers}" />
+							<input type="hidden" id="signLinesConfig" name="signLinesConfig" th:field="*{signLinesConfig}" />
+							<input type="hidden" id="signlinesAccion" name="signlinesAccion" th:field="*{signlinesAccion}" />
+							<input type="hidden" id="signlinesType" name="signlinesType" th:field="*{signlinesType}" />
+							<input type="hidden" id="requestId" name="requestId" th:value="${forwardRequest.request.chash}" />
+
+							<fieldset>
+								<div class="mailHeader">
+									<div class="fsb mailHeaderSubject" style="width: 97%;">
+										<div class="fld wv100">
+											<input type="checkbox" id="idCheckDeNuevosComentariosYAnexos" name="nameCheckDeNuevosComentariosYAnexos"/>Desea que los comentarios y documentos anexos agregados durante la linea de firma anterior los visualicen los nuevos usuarios de la cadena?<br/>
+											<label for="example_input1" th:text="#{for}">Para</label>
+											<a href="javascript:void(0)" onclick="prepareUserPickList();">
+												<span class="btn_em p3 mt2 mf-icon mf-icon-user-16" th:text="#{selectUsers}">Seleccionar usuarios</span>
+											</a>
+
+											<ul id="signlines" class="ml0">
+												<li>
+													<select class="signline" type="text" id="signline_type_0" name="signline_type_0" value="" maxlength="15">
+														<option th:text="#{sign}">Firma</option>
+														<option th:text="#{pass}">Visto bueno</option>
+													</select>
+													<div class="overflowh">
+														<input id="signer_0" class="ui-autocomplete-input signer_input" style="width: 71%;" type="text" th:field="*{signer}" value="" name="signer_0" th:errorClass="error" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true" codigo=""/>
+														<select id="actionSigner_0" name="actionSigner_0" class="actionSigner" > 
+															<option th:each="accionFirmanteType : ${@applicationBO.queryAccionFirmante()}"
+																	th:text="${accionFirmanteType.cdescription}" th:value="${accionFirmanteType.ccodigo}" th:selected="${accionFirmanteType.ccodigo}=='1'"></option>
+														</select>
+													</div>
+												
+												</li>
+													
+											</ul>
+											<div class="right mb10">
+												 <span th:if="${#fields.hasErrors('signers')}"
+														id="signersErrorMessage"  
+														th:errors="*{signers}" 
+														class="dsp_b error errorMessage"></span>
+														
+												 <ul th:if="${usersNotValid != null}">
+												 	<li th:each="user : ${usersNotValid}" class="dsp_b error errorMessage">	
+												 		<span th:text="${user}" class="dsp_b error errorMessage"></span>
+												 	</li>
+												 </ul> 
+												
+											</div>
+										</div>
+ 
+										<div class="fld ">
+											<label></label>
+											<a href="#" onclick="addSignLine();" id="more-sign-line" class="btn_em p1 mt5 mb5">
+												<span class="mf-icon mf-icon-add-16"></span>
+											</a>
+										</div>
+
+									</div>
+
+								</div>
+								
+							</fieldset>
+							</form>
+							<form onClick="return false;">
+							<fieldset class="fsubmit mr20" style="padding-top:220px;">
+								<button id="cancel_button" class="secondary" name="send" type="submit" th:text="#{cancelButton}"
+										onclick="enviarFormulario('forwardRequestForm', 'cancelar', [])">
+									Cancelar
+								</button>
+								<button id="send_button"  class="primary" name="send" type="submit" th:text="#{sendButton}"
+										onclick="enviarFormulario('forwardRequestForm', 'enviar', [{parameterId:'signLinesConfig', parameterValue: loadSignLineConfig()},{parameterId:'signlinesAccion', parameterValue: loadSignLineAcciones()}])">
+									<span class="mf-icon-24 mf-icon-send-24" th:text="#{sendButton}">Enviar</span>
+								</button>
+	
+							</fieldset>
+						</form>
+					</div>
+
+
+					<div id="contentDataFooter">
+
+					</div>
+
+					</div>
+				</div>
+
+
+		<!--FIN DEL CONTENIDO-->
+			
+
+		<!-- MODAL SELECTOR DE CONTACTOS-->
+		<div id="signers_modal" title="Contactos">			
+			<fieldset class="nolegend pt20">
+				<div class="fld dsp_ib stkd">
+					<label th:text="#{search}">Buscar</label>
+					<input type="text" class="w220 ui-autocomplete-input" id="userNameFilter" autocomplete="off"/>
+				</div>
+				<div class="fld dsp_ib stkd">
+					<label th:text="#{users}">Usuarios</label>
+					<select id="userTypeFilter" name="userTypeFilter">
+					</select>
+				</div>
+				<div class="fld dsp_ib stkd">
+					<label th:text="#{province}">Sede</label>
+					<select id="userSeatFilter" name="userSeatFilter">
+					</select>
+				</div>
+				<div class="fld dsp_ib mb10 va_bottom">
+					<input class="secondary" type="submit" value="Ver"
+						   onclick="prepareUserPickListFilter();"></input>
+				</div>
+				<div class="fsb wv100">			
+					<select id="userPickList" name="userPickList" multiple="multiple" class="userList dsp_n">
+					</select>	
+				</div>
+			</fieldset>
+		</div>
+    </div>
+</body>
+</html>

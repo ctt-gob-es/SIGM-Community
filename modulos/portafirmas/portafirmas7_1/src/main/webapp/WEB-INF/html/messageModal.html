@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"> 	
+<!-- FIN CONTENIDO--> 
+<div th:fragment="messageModal">
+	<form id="messageForm_modal">
+	<fieldset class="nolegend pt20">
+		<div class="fsb wv55">
+			<div class="fld dsp_ib left stkd">
+				<label th:text="#{subject}">Asunto</label>
+				<input type="text" class="w320" id="messageSubject" name="dsubject" th:field="${message.dsubject}" />
+			</div>		
+	
+			<div class="fld dsp_ib stkd">
+				<label th:text="#{message}">Mensaje</label>
+				<textarea cols="14" rows="2" class="w320" id="messageText" name="ttext" th:field="${message.ttext}"></textarea>
+			</div>
+			
+			<div class="dsp_b error errorMessage" id="messageErrorMessage"></div>
+		</div>
+		<div class="fsb wv40">
+			
+			<div class="fld stkd">
+				<label id="scopeMessage" for="scopeMessList" th:text="#{scopeType}">�mbito</label>
+				<select th:field="${message.scopeType}" class="w100" onclick="changeScope()" id="scopeType" name="scopeType">
+					<option th:each="scope : ${scopeList}" 
+				    	    th:value="${scope.key}" 
+				        	th:text="${scope.value}">
+					</option>
+				</select>
+			</div>
+			
+			<div id="divUserMessage" class="fld stkd" style="display: none;">
+				<label class="w100" th:text="#{user}">Usuario</label>
+				<input type="text" id="userNameMessage" name="userName" th:field="${message.userName}" class="w240" th:placeholder="#{searchByIdNameProvince}"/>
+				<input type="hidden" id="userMessage" name="userId" th:field="${message.userId}" />
+			</div>		
+	
+			<div id="divProvinceMessage" class="fld stkd" style="display: none;">
+				<label class="w100" th:text="#{province}">Sede</label>
+				<select id="provinceMessage" name="provinceCode" th:field="${message.provinceCode}" class="w100">
+					<option th:each="province : ${provincesMap}" 
+				    	    th:value="${province.key}" 
+				        	th:text="${province.value}">
+					</option>
+				</select>
+			</div>		
+				
+			<div class="fld stkd">
+				<span>
+					 <label for="fstart" th:text="#{initDate}"></label> 
+		   			 <input type="text" id="messageFStart" size="14" title="dd/mm/aaaa" class="fecha datepicker w90 left" name="fstart" th:field="${message.fstart}"/>
+		   			 
+		   			 <label for="fstart" th:text="#{expirationDate}"></label> 
+		   			 <input type="text" id="messageFExpiration" size="14" title="dd/mm/aaaa" class="fecha datepicker w90 left" name="fexpiration" th:field="${message.fexpiration}"/>
+		   			 <input type="hidden" id="messagePrimaryKey" name="primaryKey" th:value="${message.primaryKey}" />
+	   			 </span>   			 
+			</div>
+		</div>
+	</fieldset>
+	</form>
+	
+	<!-- Modal para confirmar -->		    
+	<div id="confirmMessage">
+		<div class="fld">
+			<span id="confirmMessageMessage" class="pregunta"></span> 
+		</div>
+	</div>
+		
+	
+</div>		
+
+
+</html>				

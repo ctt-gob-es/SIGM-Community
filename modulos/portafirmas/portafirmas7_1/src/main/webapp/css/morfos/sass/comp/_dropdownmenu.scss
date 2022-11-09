@@ -1,0 +1,170 @@
+/********************/
+/* Dropdown buttons */
+
+.dropdownMenu { 
+    display: inline-block;
+    margin: 0 2px;
+    }
+    
+.ie7 .dropdownMenu {
+    display: inline; 
+    zoom: 1;
+    }
+
+.dropdownMenu > div {
+    overflow: hidden;
+    
+    -webkit-border-radius: 2px;
+    -moz-border-radius:    2px;
+    border-radius:         2px;
+    
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.65), 
+                        0 1px 1px rgba(255,255,255,0.6) inset;
+    -moz-box-shadow:    0 1px 2px rgba(0,0,0,0.65), 
+                        0 1px 1px rgba(255,255,255,0.6) inset;
+    box-shadow:         0 1px 2px rgba(0,0,0,0.65), 
+                        0 1px 1px rgba(255,255,255,0.6) inset;
+    }
+    
+.ie7 .dropdownMenu > div, 
+.ie8 .dropdownMenu > div {
+    border: 1px solid #999;
+    border-top: 1px solid #CCC;
+    }
+    
+.dropdownMenu .dropdown {
+    display: inline-block;
+    float: left;
+    padding: 7px 22px 6px 12px;
+    // height: 17px;
+    margin: 0;
+    
+    font-size: 0.917em;
+    font-weight: normal;
+    color: #444;
+    border: none;
+    text-align: center;
+    
+    -webkit-border-radius: 2px;
+    -moz-border-radius:    2px;
+    border-radius:         2px;
+    
+    text-shadow: 0px 1px 0px rgba(255,255,255,0.5);
+
+    background: #CECDCD url("images/icons/sort-down_16.png") no-repeat right center;
+    background: url("images/icons/sort-down_16.png") no-repeat right 3px, 
+                -moz-linear-gradient(top, #eae7e7 0%, #b8b8b8 100%);
+    background: url("images/icons/sort-down_16.png") no-repeat right 3px, 
+                -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eae7e7), color-stop(100%,#b8b8b8));
+    background: url("images/icons/sort-down_16.png") no-repeat right 3px, 
+                -webkit-linear-gradient(top, #eae7e7 0%,#b8b8b8 100%);
+    background: url("images/icons/sort-down_16.png") no-repeat right 3px, 
+                -o-linear-gradient(top, #eae7e7 0%,#b8b8b8 100%);
+    background: url("images/icons/sort-down_16.png") no-repeat right 3px, 
+                -ms-linear-gradient(top, #eae7e7 0%,#b8b8b8 100%);
+    background: url("images/icons/sort-down_16.png") no-repeat right 3px, 
+                linear-gradient(top, #eae7e7 0%,#b8b8b8 100%);
+    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eae7e7', endColorstr='#b8b8b8',GradientType=0 );
+    
+    -moz-box-shadow:    0 1px 2px rgba(0,0,0,0.65), 
+                        0 1px 1px rgba(255,255,255,0.6) inset;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.65), 
+                        0 1px 1px rgba(255,255,255,0.6) inset;
+    box-shadow:         0 1px 2px rgba(0,0,0,0.65), 
+                        0 1px 1px rgba(255,255,255,0.6) inset;
+    }
+
+.ie7 .dropdownMenu .dropdown,
+.ie8 .dropdownMenu .dropdown {
+    background-position: right 3px;
+}
+    
+.dropdownMenu .selected {
+    background: red;
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2JjYmNiYyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjY2NjY2MiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, #bcbcbc 0%, #cccccc 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#bcbcbc), color-stop(100%,#cccccc));
+    background: -webkit-linear-gradient(top, #bcbcbc 0%,#cccccc 100%);
+    background: -o-linear-gradient(top, #bcbcbc 0%,#cccccc 100%);
+    background: -ms-linear-gradient(top, #bcbcbc 0%,#cccccc 100%);
+    background: linear-gradient(top, #bcbcbc 0%,#cccccc 100%);
+    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bcbcbc', endColorstr='#cccccc',GradientType=0 );
+
+    -webkit-box-shadow: 1px 0 1px rgba(0,0,0,0.05) inset, 
+                        0 1px 0px rgba(255,255,255,0.3) inset;
+    -moz-box-shadow:    1px 0 1px rgba(0,0,0,0.05) inset, 
+                        0 1px 0px rgba(255,255,255,0.3) inset;
+    box-shadow:         1px 0 1px rgba(0,0,0,0.05) inset, 
+                        0 1px 0px rgba(255,255,255,0.3) inset;
+    }
+
+.ie7 .dropdownMenu .selected,
+.ie8 .dropdownMenu .selected {
+    background: #bcbcbc;
+}
+    
+.dropdownMenu .dropdown span.ui-icon, 
+.dropdownMenu .dropdown span.mf-icon {
+    float: right;
+    margin-top: -1px;
+    }
+    
+.dropdownMenu .dropdown span.mf-icon {
+    margin-right: -4px;
+    margin-left: 2px;
+    }
+    
+.ie7 .dropdownMenu .dropdown span.mf-icon, 
+.ie7 .dropdownMenu .dropdown span.ui-icon {
+    float: left;
+    display: block;
+    }
+    
+.dropdownMenu ul {
+    float: left;
+    min-width: 80px;
+    clear: both;
+    margin: 0;
+    display: none;
+    position: absolute;
+    overflow: hidden;
+    
+    background-color: #CCC;
+    
+    -webkit-border-radius: 2px 0 3px 3px;
+    -moz-border-radius:    2px 0 3px 3px;
+    border-radius:         2px 0 3px 3px;
+    
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.65);
+    -moz-box-shadow:    0 1px 2px rgba(0,0,0,0.65);
+    box-shadow:         0 1px 2px rgba(0,0,0,0.65);
+    
+    }
+    
+.dropdownMenu ul li {
+    display: block;
+    padding: 0;
+    
+    border-bottom: 1px solid #999;
+    
+    color: #444;
+    text-shadow: 0px 1px 0px rgba(255,255,255,0.5);
+    
+    -webkit-box-shadow: 0 1px 1px rgba(255,255,255,0.4) inset;
+    -moz-box-shadow:    0 1px 1px rgba(255,255,255,0.4) inset;
+    box-shadow:         0 1px 1px rgba(255,255,255,0.4) inset;
+    }
+    
+.dropdownMenu ul li:hover {
+    background-color: #DDD;
+    }
+    
+.dropdownMenu ul li a {
+    display: block;
+    padding: 9px 18px;
+    
+    font-size: 0.917em;
+    
+    color: #444;
+    text-shadow: 0px 1px 0px rgba(255,255,255,0.5);
+    }

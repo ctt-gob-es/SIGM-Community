@@ -1,0 +1,270 @@
+/***************/
+/* Filter form */
+
+form.filterForm {
+    margin-bottom: 1em;
+    text-align: right;
+    
+    -webkit-border-radius: 3px;
+    -moz-border-radius:    3px;
+    border-radius:         3px;
+    }
+    
+form.filterForm fieldset{
+    margin-bottom: 0;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    }
+    
+form.filterForm label {
+    display: block;
+    width: auto;
+    text-align: left;
+    float: none;
+    
+    margin-bottom: 3px;
+    }
+    
+form.filterForm select {
+    width: auto;
+    }
+    
+.ie7 form.filterForm label {
+    /* float: left; */
+    }
+    
+form.filterForm .fld, 
+form.filterForm .cmp {
+    float: left;
+    text-align: left;
+    clear: none;
+    
+    margin-bottom: 0;
+    margin-right: 0.5em;
+    }
+    
+.ie7 form.filterForm .fld *, 
+.ie7 form.filterForm .cmp * {
+    clear: both;
+    }
+    
+form.filterForm .fsb .fld, 
+form.filterForm .fsb .cmp {
+    /* clear: left; */
+    }
+    
+form.filterForm a.clearForm {
+    float: right;
+    margin: 4px 2px 0 1em;
+    padding: 3px 4px 3px 3px;
+    
+    -webkit-border-radius: 2px;
+    -moz-border-radius:    2px;
+    border-radius:         2px;
+    
+    -webkit-box-shadow: 0 1px rgba(255, 255, 255, 0.6) inset, 
+                        0 0 1px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow:    0 1px rgba(255, 255, 255, 0.6) inset, 
+                        0 0 1px rgba(0, 0, 0, 0.5);
+    box-shadow:         0 1px rgba(255, 255, 255, 0.6) inset, 
+                        0 0 1px rgba(0, 0, 0, 0.5);
+    }
+    
+.ie7 form.filterForm a.clearForm, 
+.ie8 form.filterForm a.clearForm {
+    border: 1px solid #CCCCCC;
+    }
+    
+form.filterForm input[type=submit] {
+    float: right;
+    padding: 6px 15px;
+    }
+    
+form.filterForm fieldset.fsubmit {
+    clear: both;
+    text-align: right;
+    padding-right: 30px;
+    }
+    
+form.filterForm fieldset.fsubmit input[type=submit] {
+    margin-top: 0;
+    }
+    
+form.filterForm fieldset.fsubmit a.clearForm {
+    margin: 3px 0 0 1em;
+    }
+    
+form.filterForm .chckBox_alone {
+    padding-left: 0;
+    padding-top: 2em;
+    }
+    
+form.filterForm .chckLabel {
+    display: inline;
+    }
+
+.ui-dialog .filterForm {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+    
+/* Sliding filterForm */
+
+div.slidingFilter {
+    overflow: hidden;
+    margin-bottom: 1px;
+    }
+    
+div.slidingFilter > a {
+    display: block;
+    float: right;
+    padding: 4px 12px;
+    margin-bottom: -1px;
+    
+    cursor: pointer;
+    
+    border: 1px solid #CCC;
+    border-bottom: none;
+    background-color: #DDD;
+    
+    -webkit-border-radius: 3px 3px 0 0;
+    -moz-border-radius:    3px 3px 0 0;
+    border-radius:         3px 3px 0 0;
+    }
+    
+div.slidingFilter > a:focus {
+    outline: none;
+    }
+    
+div.slidingFilter > form {
+    display: none;
+    clear: both;
+    padding: 20px;
+    
+    background-color: #DDD;
+    border: 1px solid #CCC;
+    
+    -webkit-border-radius: 7px 0 7px 7px;
+    -moz-border-radius:    7px 0 7px 7px;
+    border-radius:         7px 0 7px 7px;
+    }
+    
+div.slidingFilter form.filterForm legend {
+    font-size: 1em;
+    }
+
+/* Multiple filter */
+
+div.multipleFilter > a {
+    display: block;
+    float: right;
+    padding: 4px 12px;
+    
+    cursor: pointer;
+    
+    border: 1px solid #CCC;
+    border-bottom: none;
+    background-color: #DDD;
+    
+    -webkit-border-radius: 2px 2px 0 0;
+    -moz-border-radius:    2px 2px 0 0;
+    border-radius:         2px 2px 0 0;
+    }
+    
+div.multipleFilter > a:focus {
+    outline: none;
+    }
+
+.multipleFilter > form {
+    clear: both;
+    border-top: 1px solid #DDD;
+}
+
+.multipleFilter > form > fieldset {
+    padding: 0;
+}
+
+.mfilterItem {
+    overflow: hidden;
+    padding: 6px 20px 5px 20px;
+    
+    border-bottom: 1px solid #CCC;
+
+    background: rgb(238,238,238);
+    background: -moz-linear-gradient(top, rgba(238,238,238,1) 0%, rgba(234,234,234,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(234,234,234,1)));
+    background: -webkit-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(234,234,234,1) 100%);
+    background: -o-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(234,234,234,1) 100%);
+    background: -ms-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(234,234,234,1) 100%);
+    background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(234,234,234,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#eaeaea',GradientType=0 );
+
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.3),
+                        0 1px 1px rgba(255,255,255,1) inset;
+    -moz-box-shadow:    0 1px 1px rgba(0,0,0,0.3),
+                        0 1px 1px rgba(255,255,255,1) inset;
+    box-shadow:         0 1px 1px rgba(0,0,0,0.3),
+                        0 1px 1px rgba(255,255,255,1) inset;
+
+    -webkit-border-radius: 2px;
+    -moz-border-radius:    2px;
+    border-radius:         2px;
+}
+
+.mfilterItem > ul {
+    float: right;
+    padding: 5px 0 3px 0;
+}
+
+.mfilterItem > ul > li {
+    display: inline-block;
+}
+
+.mfilterItem > ul > li > a {
+    display: block;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+
+    border: 1px solid #AAA;
+    border: 1px solid rgba(0,0,0,0.15);
+
+    -webkit-box-shadow: 0 0 1px rgba(0,0,0,0.3),
+                        0 1px 0 rgba(255,255,255,1) inset,
+                        0 1px 0 rgba(255,255,255,1);
+    -moz-box-shadow:    0 0 1px rgba(0,0,0,0.3),
+                        0 1px 0 rgba(255,255,255,1) inset,
+                        0 1px 0 rgba(255,255,255,1);
+    box-shadow:         0 0 1px rgba(0,0,0,0.3),
+                        0 1px 0 rgba(255,255,255,1) inset,
+                        0 1px 0 rgba(255,255,255,1);
+
+    -webkit-border-radius: 12px;
+    -moz-border-radius:    12px;
+    border-radius:         12px;
+}
+
+.mfilterItem a > span {
+    margin-top: -1px;
+}
+
+.multipleFilter fieldset.fsubmit {
+    padding: 5px 20px;
+
+    background-color: #DDD;
+
+    -webkit-border-radius: 0 0 5px 5px;
+    -moz-border-radius:    0 0 5px 5px;
+    border-radius:         0 0 5px 5px;
+    
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.3),
+                        0 1px 1px rgba(255,255,255,1) inset;
+    -moz-box-shadow:    0 1px 1px rgba(0,0,0,0.3),
+                        0 1px 1px rgba(255,255,255,1) inset;
+    box-shadow:         0 1px 1px rgba(0,0,0,0.3),
+                        0 1px 1px rgba(255,255,255,1) inset;
+}
+
+.multipleFilter form.filterForm label {
+    display: inline;
+}

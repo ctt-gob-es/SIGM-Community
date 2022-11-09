@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+		<div layout:fragment="content" >
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/configuration/configuration.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/configuration/personalData.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/configuration/authorizations.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/configuration/validators.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/configuration/gestores.js?#{versionNumber}.#{versionFase}|"></script>
+	    	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery-picklist/jquery-picklist.js?#{versionNumber}.#{versionFase}|"></script>
+	    	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery.maskedinput.js?#{versionNumber}.#{versionFase}|"></script>
+	
+	        <!-- INICIO DEL CONTENIDO-->
+			<div id="mainWindow">
+				<div class="windowHeader">
+					<div>
+						<h3 class="windowTitle">Configuración</h3>
+					</div>
+				</div>
+				
+				<div id="contentData">
+					<div id="contentDataBody" class="p10">	
+							<div id="documentTabs" class="ui-tabs ui-widget ui-widget-content ">
+								<div class="tabs ui-tabs msgBoxBodyTabs">
+									<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ">
+										<li class="ui-state-default ui-tabs-selected ui-state-active"><a href="#tab1" class="tab-icon mf-icon-user-16 pl30">Datos personales</a></li>
+										<li class="ui-state-default"><a href="#tab2" onclick="loadAuthorizations();" class="tab-icon mf-icon-authorization-16 pl30">Autorizaciones</a></li>										
+									</ul>
+						
+									<div id="tab1" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+									<fieldset class="pt20">
+										<legend class="nolegend"></legend>
+										<div class="fsb wv50">
+											<div class="fld">
+												<h5 th:text="#{configurationPersonal}">Datos Personales</h5>
+												<div class="fld ">
+													<label th:title="#{name}" th:text="#{name}">Nombre</label>
+													<input size="14" th:title="#{name}"  name="" id="" th:value="${user.dname}" readonly="readonly"/>
+												</div>
+												<div class="fld">										
+													<label th:title="#{lastName1}" th:text="#{lastName1}">Primer apellido</label>
+													<input size="14" th:title="#{lastName1}"  name="" id="" th:value="${user.dsurname1}" readonly="readonly"/>
+												</div>
+												<div class="fld">										
+													<label th:title="#{lastName2}" th:text="#{lastName2}">Segundo apellido</label>
+													<input size="14" th:title="#{lastName2}"  name="" id="" th:value="${user.dsurname2}" readonly="readonly"/>
+												</div>
+												<div class="fld ">
+													<label th:title="#{UserLDAP}" th:text="#{UserLDAP}">Usuario del LDAP</label>
+													<input size="14" th:title="#{UserLDAP}"  name="" id="" th:value="${user.ldapUser}" readonly="readonly"/>
+												</div>
+												<div class="fld ">
+													<label th:title="#{userID}" th:text="#{userID}">ID</label>
+													<input size="14" th:title="#{userID}"  name="" id="" th:value="${user.cidentifier}" readonly="readonly"/>
+												</div>
+												<div class="fld">
+													<label th:title="#{job}" th:text="#{job}">Cargo</label>
+													<input class="w200" size="14" th:title="${job != null} ? ${job.fullName}" name="" id="" th:value="${job != null} ? ${job.fullName}" readonly="readonly"/>
+												</div>
+												<div class="fld">
+													<label th:title="#{province}" th:text="#{province}">Sede</label>
+													<input size="14" th:title="#{province}" name="" id="" th:value="${province}" readonly="readonly"/>
+												</div>
+												<div class="fld">
+													<label th:title="#{profiles}" th:text="#{profiles}">Perfiles</label>
+													<ul class="checkbox_list">
+														<li th:each="profile : ${profilesList}">
+															<input type="checkbox" th:checked="${#lists.contains(profilesUserList,profile)}" disabled="disabled"/>&nbsp;
+															<label for="radio_1" th:text="${profile.cprofile}"></label>
+														</li>
+													</ul>	
+												</div> 
+											</div>
+										</div>
+										<div class="fsb wv50">
+											<div class="fld stkd">
+												<h5 th:text="#{configurationContact}">Datos de Contacto</h5>
+												<div id="emailList">
+													<div class="fld">
+														<label th:title="#{email}" th:text="#{email}">Correo electrónico</label>
+													</div>
+													<div th:id="|div_${email.primaryKey}|" th:each="email : ${emailsUserList}">
+														<input class="w200" size="14" th:title="#{email}" th:value="${email.demail}" th:id="|demail_${email.primaryKey}|"/>
+														<input type="checkbox" value="notify" th:checked="${email.lnotify}" th:id="|lnotify_${email.primaryKey}|"/>
+														<label th:text="#{notify}" class="dsp_ib w100" style="float:none;">Notificar</label>
+														<a href="#!" class="simbutton secondary " th:onclick="|prepareModifyEmail('${email.primaryKey}');|">
+															<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+														</a>
+														<a href="#!" class="simbutton secondary " th:onclick="|prepareDeleteEmail('${email.primaryKey}');|">
+															<span class="mf-icon mf-icon-delete-16">Cancelar</span>
+														</a>
+													</div>
+												</div>
+												
+												<!-- Push -->
+												<input class="w200" style="visibility: hidden;"/>
+												<input type="checkbox" disabled="disabled" value="notify" th:checked="${user.lNotifyPush}" th:id="lNotifyPush"/>
+												<label th:text="#{notifyPUSH}" class="dsp_ib w100" style="float:none;">Notificar Push</label>
+<!-- 												<a href="#!" class="simbutton secondary " th:onclick="|prepareModifyPushNotif('${user.primaryKey}');|">
+													<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+												</a>
+												<a href="#!" class="simbutton secondary " th:onclick="|prepareDeletePushNotif('${user.primaryKey}');|">
+													<span class="mf-icon mf-icon-delete-16">Cancelar</span>
+												</a> -->													
+												
+												<div class="fld mt10">
+													<button class="secondary" th:onclick="|newEmail('#{notify}');|">
+														<span class="mf-icon mf-icon-add-16"></span>Añadir contacto
+													</button>
+												</div>
+											</div>	
+											<div class="fld mt30">
+												<h5 th:text="#{configurationBox}">Configuración de bandeja</h5>
+												<div>
+													<div class="fld">
+														<label class="dsp_ib w200" th:title="#{configurationPageSize}" th:text="#{configurationPageSize}">Tamaño de página</label>
+														<select id="pageSize" name="pageSize" class="w60">
+															<option value=""></option>
+															<option th:each="size : ${sizeList}" th:value="${size}" th:text="${size}" th:selected="${pageSize == size}"/>
+														</select>
+														<a href="#!" class="simbutton secondary " onclick="prepareSavePageSize();">
+															<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+														</a>
+													</div>
+												</div>
+											</div>
+											<div class="fld mt30">
+												<h5 th:text="#{configurationOtros}">Otros</h5>
+												<div>
+													<label th:text="#{field.validator.filter.movil}" class="dsp_ib w200" style="padding-top: 10px"></label>
+													<input type="checkbox" name="filtroValidadorMovilActivoCheck" id="filtroValidadorMovilActivoCheck" th:checked="${filtroValidadorMovilActivo == 'S' ? true : false}" style="margin-top: 11px; margin-right: 10px" class="secondary mb10 left"/>
+													<a href="#!" class="simbutton secondary " onclick="insertarValorfiltroValidadorMovilActivo()">
+														<span class="mf-icon mf-icon-save-16" style="margin-top: 2px">Guardar cambios</span>
+													</a>
+												</div>
+												<div>
+														<label style="width: 200px; margin-top: 4px;" th:title="#{configurationMostrarFirmanteAnterior}" th:text="#{configurationMostrarFirmanteAnterior}">Mostrar firmante anterior</label>
+														<input style="vertical-align:super;" type="checkbox" th:checked="${user.mostrarFirmanteAnterior}" th:id="mostrarFirmanteAnterior"/>
+														<a href="#!" class="simbutton secondary " onclick="prepareSaveMostrarFirmanteAnterior();">
+															<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+														</a>
+													</div>
+											</div>
+										</div>
+									</fieldset>
+									</div>
+									<div id="tab2" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab3" class="ui-tabs-panel ui-widget-content ui-tabs-hide fld"></div>
+									<div id="tab4" class="ui-tabs-panel ui-widget-content ui-tabs-hide fld"></div>
+								</div>
+							</div>
+						
+						<div id="contentDataFooter"></div>
+					</div>
+				</div>
+			</div>
+		    <!-- FIN CONTENIDO-->   
+
+			<!-- Modal para confirmar -->		    
+			<div id="confirmPersonalData">
+				<div class="fld">
+					<span class="mf-icon-24 mf-icon-warning-24"></span>
+					<span id="confirmPersonalDataMessage" class="pregunta"></span> 
+				</div>
+			</div>
+			<!-- Modal para aceptar -->
+			<div id="okPersonalData">
+				<div class="fld">
+					<span class="mf-icon-24 mf-icon-checked-current-24"></span>
+					<span id="okPersonalDataMessage" class="pregunta"></span> 
+				</div>
+			</div>
+
+			<!-- Modal nueva autorización-->
+			<div id="new_authorization_modal" title="Nueva autorización">			
+				<fieldset class="nolegend pt20 va_bottom">
+					<div id="newFullName" class="fld stkd">
+						<select id="new_authorizationType" class="w100" >
+							<option th:each="authorizationsType : ${authorizationsTypesList}"
+									th:value="${authorizationsType.primaryKey}"
+									th:text="${#strings.capitalize(#strings.toLowerCase(authorizationsType.cauthorizationType))}"></option>
+						</select>
+						<input type="text" id="new_authorized_fullName" class="w240" th:placeholder="#{searchByIdNameProvince}"/>
+						<input type="hidden" id="new_authorized_pk"/>
+					</div>
+					<div class="fld stkd">
+						<label th:text="#{frequest}"></label>
+						<input type="text" title="dd/mm/aaaa" class="fecha datepicker w90 left" name="frequest" id="new_frequest"/>
+						<input type="text" title="hh:mm:ss" class="w50" id="new_hrequest" value="00/00/00"/>
+					</div>
+					<div class="fld stkd">
+						<label th:text="#{frevocation}"></label>
+						<input type="text" title="dd/mm/aaaa" class="fecha datepicker w90 left" id="new_frevocation"/>
+						<input type="text" title="hh:mm:ss" class="w50" id="new_hrevocation" value="00/00/00"/>
+					</div>
+					<div class="fld stkd">
+						<label th:text="#{observations}"></label>
+						<textarea id="new_observations" class="w350" style="height: 45px;"></textarea>
+					</div>
+					<div class="dsp_b error errorMessage" id="divErrorMessage"></div>
+				</fieldset>
+			</div>
+
+			<!-- Modal modificar autorización-->
+			<div id="modify_authorization_modal" title="Modificar autorización">			
+				<fieldset class="nolegend pt20 va_bottom">
+					<div id="modifyFullName" class="fld stkd">
+						<select id="authorizationTypeId" class="w80">
+							<option th:each="authorizationsType : ${authorizationsTypesList}"
+									th:value="${authorizationsType.primaryKey}"
+									th:text="${#strings.capitalize(#strings.toLowerCase(authorizationsType.cauthorizationType))}"></option>
+						</select>
+						<label id="labelFullName" style="display:inline;"></label>
+						<input type="hidden" id="authorizedPk"/>
+					</div>
+					<div class="fld stkd">
+						<label th:text="#{frequest}"></label>
+						<input type="text" title="dd/mm/aaaa" class="fecha datepicker w90 left" name="frequest" id="frequest"/>
+						<input type="hidden" id="modifyPk" name="modifyPk"/>
+						<input type="text" title="hh:mm:ss" class="w50" id="hrequest" value="00/00/00"/>
+					</div>
+					<div class="fld stkd">
+						<label th:text="#{frevocation}"></label>
+						<input type="text" title="dd/mm/aaaa" class="fecha datepicker w90 left" name="frevocation" id="frevocation"/>
+						<input type="text" title="hh:mm:ss" class="w50" id="hrevocation" value="00/00/00"/>
+					</div>
+					<div class="fld stkd">
+						<label th:text="#{observations}"></label>
+						<textarea id="observations" style="height: 45px;"></textarea>
+					</div>
+					<div class="dsp_b error errorMessage" id="divErrorMessageModify"></div>
+				</fieldset>
+			</div>
+
+			<!-- MODAL SELECTOR DE VALIDADORES-->
+			<div id="validators_modal" title="Búsqueda de validadores">			
+				<fieldset class="nolegend pt20">
+					<div class="fld stkd">
+						<input type="text" id="new_validator_fullName" class="w240" style="margin: 0px;" th:placeholder="#{searchByIdNameProvince}"/>
+						<span id="validatorLoading" class="mf-icon mf-icon-firmando-16" title="En proceso" style="display:none;"></span>
+						<input type="hidden" id="new_validator_pk"/>
+					</div>
+					<div>
+						<input type="checkbox" id="listApps" class="w50" name="listApps" th:onclick="|toogleApps()|"/>
+						<label for="listApps" th:text="#{validateByApp}"></label>
+					</div>		
+					<div id="scrollAppsTitle">
+						<h6 th:text="#{administrationApplication}"></h6>
+					</div>		
+					<div class="fld catalogueOverflow" id="scrollApps" style="height:100px;">
+						<ul class="checkbox_list">
+							<li th:each="apps : ${appsList}">
+								<input type="checkbox" class="w50" id="apps" name="apps" th:value="${apps.primaryKey}"/>
+								<label th:text="${apps.capplication}"></label>
+							</li>
+						</ul>	
+					</div> 
+					<div class="dsp_b error errorMessage" id="validatorErrorMessage"></div>
+				</fieldset>
+			</div>
+			<!-- MODAL SELECTOR DE GESTORES-->
+			<div id="gestores_modal" title="Búsqueda de gestores">			
+				<fieldset class="nolegend pt20">
+					<div class="fld stkd">
+						<input type="text" id="new_gestor_fullName" class="w240" style="margin: 0px;" th:placeholder="#{searchByIdNameProvince}"/>
+						<span id="gestorLoading" class="mf-icon mf-icon-firmando-16" title="En proceso" style="display:none;"></span>
+						<input type="hidden" id="new_gestor_pk"/>
+					</div>
+					<div class="dsp_b error errorMessage" id="gestorErrorMessage"></div>
+				</fieldset>
+			</div>
+		</div>
+	</body>
+</html>	    

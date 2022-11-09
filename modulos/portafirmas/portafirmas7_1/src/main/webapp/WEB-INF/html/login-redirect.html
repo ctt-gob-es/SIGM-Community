@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/portafirmas-login-layout">
+<head>
+<title>Portafirmas</title>
+</head>
+<body id="home" onload="document.redirectForm.submit();">
+	<div layout:fragment="content">
+		<form name="redirectForm" method="post" th:action="*{claveServiceUrl}"
+			style="width: 1000px">
+			<input name="excludedIdPList" type="hidden"
+				th:value="*{excludedIdPList}" /> <input name="forcedIdP"
+				type="hidden" th:value="*{forcedIdP}" /> <input name="SAMLRequest"
+				type="hidden" th:value="*{SAMLRequest}" />
+		</form>
+		<div class="mf-window-header"
+			style="width: 600px; margin: 100px auto;">
+			<div class="mf-window-header--hgroup" style="width: 100%;">
+				<h3 style="text-align: center;">
+					<span class="mf-window-header--title" style="text-align: center;">Redirigiendo...</span>
+				</h3>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

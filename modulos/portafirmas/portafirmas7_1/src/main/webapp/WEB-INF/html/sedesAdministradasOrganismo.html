@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<button class="secondary mb10 right" onclick="prepareNewSeat();">
+	<span class="mf-icon mf-icon-add-16"></span>
+	<span th:text="#{newButtonF}">Nueva sede</span>
+</button>
+<div class="fld" style="overflow: auto; height: 300px; width: 100%;">
+	<table class="data noborder tl">
+		<thead>
+			<tr>
+				<th class="w100">Codigo</th>
+				<th>Nombre</th>		
+				<th>Organismo padre</th>									
+				<th class="w40"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${province.organismo != null and organismos.contains(province.organismo.primaryKey) }" th:each="province : ${provincesList}" th:id="|province_${province.primaryKey}|">
+				<td th:id="|seatCode_${province.primaryKey}|" th:text="${province.ccodigoprovincia}"></td>
+				<td th:id="|seatName_${province.primaryKey}|" th:text="${province.cnombre}"></td>
+				<td th:id="|seatNameParent_${province.primaryKey}|" th:text="${province.organismo == null ? '' : province.organismo.denominacion}"></td>
+																	
+				<td>
+					<a href="javascript:void(0)" th:onclick="|prepareModifySeat('${province.primaryKey}')|"><span class="mf-icon mf-icon-edit-16">Editar</span></a>
+					<a href="javascript:void(0)" th:onclick="|prepareDeleteSeat('${province.primaryKey}')|"><span class="mf-icon mf-icon-delete-16">Eliminar</span></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="questionSeat" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageSeat" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonSeat" name="yesButtonSeat" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonSeat" name="noButtonSeat" class=" simbuttom secondary" onclick="$('#questionSeat').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>
+<div id="seat_modal" title="Edición de organismo">
+	<fieldset class="nolegend pt20">
+		<div class="fld dsp_ib stkd">
+			<label th:text="#{seatCode}">Código</label>
+			<input class="w140" type="text" id="seatCode" th:value="${seatCode}"/>
+		</div>
+		<div class="fld dsp_ib stkd">
+			<label th:text="#{seatName}">Nombre</label>
+			<input type="text" class="w280" id="seatName" th:value="${seatName}"/>
+			<input type="hidden" id="seatPk" value=""/>
+		</div>
+		
+		<div class="fld dsp_ib stkd">
+			<label th:text="#{seatParent}"></label>
+			<select id="seatParent">
+                <option th:each="org : ${organismosCombo}"
+                        th:value="${org.codigo}" th:text="${org.denominacion}"></option>
+            </select>
+		</div>
+		
+		<div class="dsp_b error errorMessage" id="seatErrorMessage"></div>
+	</fieldset>
+</div>
+
+</html>

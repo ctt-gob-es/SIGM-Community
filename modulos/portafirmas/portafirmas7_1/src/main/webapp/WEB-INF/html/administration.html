@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+		<div layout:fragment="content">
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery-picklist/jquery-picklist.js?#{versionNumber}.#{versionFase}|"></script>
+	    	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery.maskedinput.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/jsadministration.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/seats.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/applications.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/servers.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/serverConfig.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/parameterConfig.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/storage.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/programmers.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/fineuploader.jquery/fine-uploader.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/updateRequest.js?#{versionNumber}.#{versionFase}|"></script>
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/adminSign.js?#{versionNumber}.#{versionFase}|"></script>	
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/message.js?#{versionNumber}.#{versionFase}|"></script>  
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/organism.js?#{versionNumber}.#{versionFase}|"></script> 
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/jsadministration/administrarDIR3.js?#{versionNumber}.#{versionFase}|"></script>
+			
+			<input type="hidden" id="updateRequestMsm" name="updateRequestMsm" th:value="${updateRequestMsm}" />
+			<input type="hidden" id="message" name="message" th:value="${message}" />
+			
+	        <!-- INICIO DEL CONTENIDO-->
+			<div id="mainWindow">
+				<div class="windowHeader">
+					<div>
+						<h3 class="windowTitle" th:text="#{administration}">Administración</h3>
+					</div>
+				</div>
+				
+				<div id="contentData">
+					<div id="contentDataBody" class="p10">	
+							<div id="documentTabs" class="ui-tabs ui-widget ui-widget-content ">
+								<div class="tabs ui-tabs msgBoxBodyTabs">
+									<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ">
+										<li id="generalOption" 	   		class="ui-state-default ui-tabs-selected ui-state-active" th:if="${#authentication.administrator}"><a href="#tab1" class="tab-icon mf-icon-general-16 pl30" th:text="#{administrationGeneral}">General</a></li>
+										<li id="ServerOption"      		class="ui-state-default" th:if="${#authentication.administrator}"><a href="#tab3" class="tab-icon mf-icon-servers-16 pl30" th:text="#{administrationServer}" onclick="loadServers()">Servidores</a></li>
+										<li id="ConfigOption" 			class="ui-state-default" th:if="${#authentication.administrator}"><a href="#tab8" class="tab-icon mf-icon-conf-16 pl30" th:text="#{administrationServerConfig}" onclick="loadServerConfig()">Configuración servidores</a></li>
+										<li id="ApplicationOption" 		class="ui-state-default"><a href="#tab2" class="tab-icon mf-icon-apps-16 pl30" th:text="#{administrationApplication}" onclick="loadApplications()">Aplicaciones</a></li>
+										<li id="SeatOption"				class="ui-state-default"><a href="#tab4" class="tab-icon mf-icon-sedes-16 pl30" th:text="#{administrationProvince}" onclick="loadSeats()">Sedes</a></li>
+										<li id="OrganismOption"			class="ui-state-default"><a href="#tab11" class="tab-icon mf-icon-sedes-16 pl30" th:text="#{administrationOrganism}" onclick="loadOrganisms()">Organismos</a></li>
+										<li id="HistoricOption"			class="ui-state-default" th:if="${#authentication.administrator}"><a href="#tab5" class="tab-icon mf-icon-historic-16 pl30" th:text="#{historic}" onClick="loadStorage()">Histórico</a></li>
+										<li id="ProgrammerOption"		class="ui-state-default" th:if="${#authentication.administrator}"><a href="#tab6" class="tab-icon mf-icon-programmer-16 pl30" th:text="#{programmer}" onclick="loadTasks()">Programadores</a></li>
+										<li id="updateRequestOption" 	class="ui-state-default" th:if="${#authentication.administrator}"><a href="#tab7" class="tab-icon mf-icon-historic-16 pl30" th:text="#{administrationUpdateRequests}" onclick="loadUpdateRequest()">Actualizar Peticiones</a></li>
+										<li id="adminSigntOption" 		class="ui-state-default" th:if="${#authentication.administrator}"><a href="#tab9" class="tab-icon mf-icon-historic-16 pl30" th:text="#{administration.gestionarFirmas.tab}" onclick="loadSign()">Gestionar Firmas</a></li>
+										<li id="MessageOption" 			class="ui-state-default" th:if="${#authentication.administrator}"><a href="#tab10" class="tab-icon mf-icon-mensajes-16 pl30" th:text="#{administrationMessage}" onclick="loadMessages()">Mensajes</a></li>
+										<li id="adminDir3Option" 		class="ui-state-default" th:if="${#authentication.administrator}"><a href="#tab11" class="tab-icon mf-icon-programmer-16 pl30" th:text="#{administrationDIR3}" onclick="cargaActualizarDIR3()">Actualizar DIR3</a></li>
+									</ul>
+						
+									<div th:if="${#authentication.administrator}" id="tab1" class="ui-tabs-panel ui-widget-content ui-corner-bottom adminFormGral">
+										<!--/* PARTE IZQUIERDA */-->
+										<div class="fsb wv50">
+											<div class="fld">
+												<h5 th:text="#{administrationGeneral}">General</h5>
+												<div th:each="param,status : ${listGlobal}">
+													<div class="fld">
+															<label 	th:title="${param.dparameter}" 
+																	th:text="${param.cparameter}">
+															</label>
+															<div th:each="va,status : ${listValores}">
+																<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																	<input disabled="disabled" th:value="${va.tvalue}" th:name="guardar + ${param.primaryKey}"  th:id="guardar + ${param.primaryKey}"/>
+																	<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																	<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																		<span class="mf-icon mf-icon-edit-16"></span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																	</a>
+																	<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none;">	</div>
+																</span>
+															</div>	
+														</div>
+												</div>
+											</div>
+											
+											<div class="fld">
+												<h5 th:text="#{proxy}">Proxy</h5>
+												<div th:each="param,status : ${listProxy}">
+													<div class="fld">
+														<label 	th:title="${param.dparameter}" 
+																th:text="${param.cparameter}">
+														</label>
+														<div th:each="va,status : ${listValoresProxy}">
+															<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																<input disabled="disabled" th:value="${va.tvalue}"  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																	<span class="mf-icon mf-icon-edit-16"></span>
+																</a>
+																<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																	<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																</a>
+																<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																	<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																</a>
+																<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+															</span>
+														</div>	
+													</div>
+												</div>
+											</div>
+											
+											<div class="fld">
+												<h5 th:text="#{administrationTrustStore}">Almacén de confianza</h5>
+												<div th:each="param,status : ${listAlmacenConfianza}">
+														<div class="fld">
+															<label 	th:title="${param.dparameter}" 
+																	th:text="${param.cparameter}">
+															</label>
+															<div th:each="va,status : ${listValoresAlmacenConfianza}">
+																<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																	<input disabled="disabled" th:value="${va.tvalue}"  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																	<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																	<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																		<span class="mf-icon mf-icon-edit-16"></span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																	</a>
+																	<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+																</span>
+															</div>	
+														</div>
+													</div>
+												</div>
+											
+											<div class="fld">
+												<h5 th:text="#{administrationLogin}">Login</h5>
+												<div th:each="param,status : ${listLogin}">
+													<div class="fld">
+															<label 	th:title="${param.dparameter}" 
+																	th:text="${param.cparameter}">
+															</label>
+															<div th:each="va,status : ${listValoresLogin}">
+																<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																	<input disabled="disabled" th:value="${va.tvalue}"  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																	<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																	<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																		<span class="mf-icon mf-icon-edit-16"></span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																	</a>
+																	<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+																</span>
+															</div>	
+														</div>
+													</div>
+											</div>
+											
+											<div class="fld">
+												<h5 th:text="#{administrationValidaciones}">Validaciones</h5>
+												<div th:each="param,status : ${listValidaciones}">
+													<div class="fld">
+															<label 	th:title="${param.dparameter}" 
+																	th:text="${param.cparameter}">
+															</label>
+															<div th:each="va,status : ${listValoresValidaciones}">
+																<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																	<input disabled="disabled" th:value="${va.tvalue}" th:name="guardar + ${param.primaryKey}"  th:id="guardar + ${param.primaryKey}"/>
+																	<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																	<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																		<span class="mf-icon mf-icon-edit-16"></span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																	</a>
+																	<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+																</span>
+															</div>	
+														</div>
+												</div>
+											</div>
+											
+										</div>
+											
+										<!--/*  PARTE DERECHA */-->
+										<div class="fsb wv50">
+
+											<!-- Se agrega la configuracion de la conexion con Fire -->
+											<div class="fld">
+												<h5 th:text="#{administrationConexionFire}">Conexión Fire</h5>
+												<div th:each="param,status : ${listCF}">
+													<div class="fld">
+														<label 	th:title="${param.dparameter}" 
+																th:text="${param.cparameter}">
+														</label>
+														<div th:each="va,status : ${listValoresCF}">
+															<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																<input disabled="disabled" th:value="${va.tvalue}"  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																	<span class="mf-icon mf-icon-edit-16"></span>
+																</a>
+																<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																	<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																</a>
+																<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																	<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																</a>
+																<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+															</span>
+														</div>	
+													</div>
+												</div>
+											</div>
+											
+											<div class="fld">
+												<h5 th:text="#{administrationSIM}">SIM</h5>
+												<div th:each="param,status : ${listSIM}">
+													<div class="fld">
+															<label 	th:title="${param.dparameter}" 
+																	th:text="${param.cparameter}">
+															</label>
+															<div th:each="va,status : ${listValoresSIM}">
+																<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																	<input disabled="disabled" th:value="${va.tvalue}"  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																	<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																	<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																		<span class="mf-icon mf-icon-edit-16"></span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																	</a>
+																	<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+																</span>
+															</div>	
+														</div>
+													</div>
+											</div>
+											
+											<div class="fld">
+												<h5 th:text="#{administrationEstilo}">Estilo</h5>
+												<div th:each="param,status : ${listEstilo}">
+													<div class="fld">
+															<label 	th:title="${param.dparameter}" 
+																	th:text="${param.cparameter}">
+															</label>
+															<div th:each="va,status : ${listValoresEstilo}">
+																<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																	<input disabled="disabled" th:value="${va.tvalue}"  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																	<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																	<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																		<span class="mf-icon mf-icon-edit-16"></span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																	</a>
+																	<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+																</span>
+															</div>	
+														</div>
+													</div>
+												</div>
+											
+											<div class="fld">
+												<h5 th:text="#{notifications}">Notificaciones</h5>
+												<div th:each="param,status : ${listNotificacion}">
+													<div class="fld">
+															<label 	th:title="${param.dparameter}" 
+																	th:text="${param.cparameter}">
+															</label>
+															<div th:each="va,status : ${listValoresNotificacion}">
+																<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																	<input disabled="disabled" th:value="${va.tvalue}"  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																	<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																	<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																		<span class="mf-icon mf-icon-edit-16"></span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																	</a>
+																	<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+																</span>
+															</div>	
+														</div>
+													
+												</div>
+											</div>
+											
+											<div class="fld">
+												<h5 th:text="#{administrationAutentica}">Autentica</h5>
+												<div th:each="param,status : ${listAutenticaParameters}">
+													
+														<div class="fld">
+															<label 	th:title="${param.dparameter}" 
+																	th:text="${param.cparameter}">
+															</label>
+															<div th:each="va,status : ${listValoresAutentica}">
+																<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																	<input disabled="disabled" th:value="${va.tvalue}"  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																	<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																	<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																		<span class="mf-icon mf-icon-edit-16"></span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																	</a>
+																	<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+																</span>
+															</div>	
+														</div>
+													
+												</div>
+											</div>
+											
+											<div class="fld">
+												<h5 th:text="#{administrationBroker}">Broker</h5>
+												<div th:each="param,status : ${listBrokerParameters}">
+													
+														<div class="fld">
+															<label 	th:title="${param.dparameter}" 
+																	th:text="${param.cparameter}">
+															</label>
+															<div th:each="va,status : ${listValoresBroker}">
+																<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																	<input disabled="disabled" th:value="${va.tvalue}"  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																	<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																	<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																		<span class="mf-icon mf-icon-edit-16"></span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																	</a>
+																	<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+																</span>
+															</div>	
+														</div>
+													
+												</div>
+											</div>
+											
+											<div class="fld">
+												<h5 th:text="#{administrationDIR3}">DIR3</h5>
+												<div th:each="param,status : ${listDIR3Parameters}">
+													
+														<div class="fld">
+															<label 	th:title="${param.dparameter}" 
+																	th:text="${param.cparameter}">
+															</label>
+															<div th:each="va,status : ${listValoresDIR3}">
+																<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																	<input disabled="disabled" th:value="${va.tvalue}"  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																	<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																	<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																		<span class="mf-icon mf-icon-edit-16"></span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																	</a>
+																	<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+																</span>
+															</div>	
+														</div>
+													
+												</div>
+											</div>
+											
+											
+											
+											<!-- Se agregan las propuedades de jobs, estos parametros son de dos valores, un combo y una caja de texto -->
+											<div class="fld">
+												<h5 th:text="#{administrationPropiedadesJobs}">Propiedades de Jobs</h5>
+												<div th:each="param,status : ${listJobsParameters}">													
+													<div class="fld">
+														<label 	th:title="${param.dparameter}" 
+																th:text="${param.cparameter}">
+														</label>
+														<div th:each="va,status : ${listValoresJobs}">
+															<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																<input type="number" min="1" max="50" disabled="disabled" th:value='${va.tvalue.split(" ")[0]}'  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																<select disabled="disabled" th:value='${va.tvalue.split(" ")[1]}'  th:name='guardar + ${param.primaryKey} + 2' th:id='guardar + ${param.primaryKey} + 2'>
+  																	<option value="dia" th:selected='${va.tvalue.split(" ")[1].equalsIgnoreCase("dia")}'>dia</option>
+  																	<option value="mes" th:selected='${va.tvalue.split(" ")[1].equalsIgnoreCase("mes")}'>mes</option>
+  																	<option value="año" th:selected='${va.tvalue.split(" ")[1].equalsIgnoreCase("año")}'>año</option>
+																</select>
+																<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}', 2)|">
+																	<span class="mf-icon mf-icon-edit-16"></span>
+																</a>
+																<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}', 2)|" style="display: none; ">
+																	<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																</a>
+																<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}', 2)|" style="display: none; ">
+																	<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																</a>
+																<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+															</span>
+														</div>	
+													</div>													
+												</div>
+											</div>
+											<div class="fld">
+												<h5 th:text="#{administrationCUSTODIA}">CUSTODIA DE INFORMES FIRMAS Y DOCUMENTOS</h5>
+												<div th:each="param,status : ${listCUSTODIAParameters}">
+													
+														<div class="fld">
+															<label 	th:title="${param.dparameter}" 
+																	th:text="${param.cparameter}">
+															</label>
+															<div th:each="va,status : ${listValoresCUSTODIA}">
+																<span th:if="${param.primaryKey == va.pfParameter.primaryKey}">
+																	<input disabled="disabled" th:value="${va.tvalue}"  th:name="guardar + ${param.primaryKey}" th:id="guardar + ${param.primaryKey}"/>
+																	<input type="hidden" th:value="${va.tvalue}" th:name="ocultar + ${param.primaryKey}" th:id="ocultar + ${param.primaryKey}"/>
+																	<a th:alt-title="#{administrationHabilitar}" th:id="editar + ${param.primaryKey}" class="simbutton secondary" href="javascript:void(0)" th:onclick="|cambio('guardar${param.primaryKey}','editar${param.primaryKey}','cancelar${param.primaryKey}','salvar${param.primaryKey}')|">
+																		<span class="mf-icon mf-icon-edit-16"></span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationSalvar}" th:id="salvar + ${param.primaryKey}" th:name="salvar + ${param.primaryKey}" class="simbutton secondary" th:onclick="|guardar('${param.primaryKey}','${va.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-save-16">Guardar cambios</span>
+																	</a>
+																	<a href="#!" th:alt-title="#{administrationCancelar}" th:id="cancelar +  ${param.primaryKey}" th:name="cancelar +  ${param.primaryKey}" class="simbutton secondary" th:onclick="|cancelar('${param.primaryKey}')|" style="display: none; ">
+																		<span class="mf-icon mf-icon-error-blue-16">Cancelar cambios</span>
+																	</a>
+																	<div class="adminFormGralError" th:id="error + ${param.primaryKey}" th:name="error + ${param.primaryKey}" style="display: none; font-weight: bold; padding: .5em; color: red; margin-left: .5em;">	</div>
+																</span>
+															</div>	
+														</div>
+													
+												</div>
+											</div>
+										</div>										
+									</div>
+									<div id="tab2" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab3" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab4" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab11" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab5" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab6" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab7" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab8" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab9" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab10" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+									<div id="tab11" class="ui-tabs-panel ui-widget-content ui-tabs-hide"></div>
+								</div>
+							</div>
+						<div id="contentDataFooter"></div>
+					</div>
+				</div>
+			</div>		    
+		</div>
+	</body>
+</html>

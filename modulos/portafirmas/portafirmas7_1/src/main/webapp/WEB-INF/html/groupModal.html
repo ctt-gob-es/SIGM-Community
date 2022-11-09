@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"> 	
+
+<div th:fragment="groupModal">
+	<div class="fld">
+		<form id="groupForm_modal">
+			<input type="hidden" id="groupId" name="id" th:value="${groupId}"/>
+			<div class="fld stkd">
+				<label th:text="#{code}"></label> <input class="w220" type="text" id="groupCode" name="code"/>
+			</div>
+			<div class="fld stkd">
+				<label th:text="#{description}">Descripción</label> <input class="w220" type="text" id="groupDescription" name="description"/>
+			</div>
+			<div class="fld stkd">
+				<label th:text="#{province}"></label>
+				<select id="groupSeat" name="seat">
+					<option th:each="prov : ${seatList}" th:value="${prov.ccodigoprovincia}" th:text="${prov.cnombre}"></option>
+				</select>
+			</div>
+		</form>
+	</div>
+	<div id="errorMsgGroup" class="errorMessage"></div>
+</div>
+
+</html>

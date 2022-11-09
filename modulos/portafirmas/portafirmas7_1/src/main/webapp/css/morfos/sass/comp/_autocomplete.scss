@@ -1,0 +1,22 @@
+/*********************************/
+/*  Autocomplete (widget helper) */
+
+.mfAutoCompWidgSelectedContainer{
+    margin-left: 120px;
+    margin-right: 10px;
+    padding: 5px;
+
+    white-space: normal;
+    
+    border: 1px solid #CCC;
+    
+    -webkit-border-radius: 3px;
+    -moz-border-radius:    3px;
+    border-radius:         3px;
+    
+    background: #FFF;
+}
+
+.filterForm .mfAutoCompWidgSelectedContainer {
+    margin: 0 10px 0 0;
+}

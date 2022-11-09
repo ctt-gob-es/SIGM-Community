@@ -1,0 +1,61 @@
+/**********/
+/* Report */
+
+div.report,
+.report {
+    overflow: hidden;
+    }
+    
+div.reportSection,
+.reportSection {
+    clear: both;
+    padding: 15px 20px 15px 20px;
+    margin-bottom: 1em;
+    overflow: hidden;
+    
+    border: none;
+    background-color: #FBFBFB;
+    
+    -webkit-border-radius: 2px;
+    -moz-border-radius:    2px;
+    border-radius:         2px;
+    }
+    
+div.reportSection h5 {
+    padding-top: 0;
+    font-size: 1.333em;
+    font-weight: bold;
+    }
+    
+.report span.label, .report span.fieldtext .report label {
+    float: left;
+    
+    color: #939393;
+    }
+    
+.report .fld {
+    margin-bottom: 0.5em;
+    }
+    
+.report p {
+    padding-top: 4px;
+    margin-left: 120px;
+    
+    font-size: 1em;
+    }
+    
+.report p.textarea {
+    width: 260px;
+    }
+    
+.report .fld input[type=submit], 
+.report .fld input[type=button], 
+.report .fld button, .report .fld .simbutton, 
+.report .fld .simbutton:link, 
+.report .cmp input[type=submit], 
+.report .cmp input[type=button], 
+.report .cmp button, .report .cmp .simbutton, 
+.report .cmp .simbutton:link {
+    font-size: 11px;
+    }
+    

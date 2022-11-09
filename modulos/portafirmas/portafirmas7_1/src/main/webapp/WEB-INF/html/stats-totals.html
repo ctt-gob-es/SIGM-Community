@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<div th:fragment="statsTotals">
+  	<div class="fld dsp_ib">
+	<label>Sedes</label>
+		<p id="numSedes" th:text="${totals.seatsNumber}"></p>
+	</div>
+	<div class="fld dsp_ib">
+		<label>Usuarios</label>
+		<p id="numUsuarios" th:text="${totals.usersNumber}">65757</p>
+	</div>
+	<div class="fld dsp_ib">
+		<label>Años</label>
+		<p id="numAnios" th:text="${totals.yearsNumber}">7</p>
+	</div>
+
+
+	<div class="fld dsp_ib">
+		<label>Firmas</label>
+		<p id="numFirmas" th:text="${totals.signaturesNumber}">58877</p>
+	</div>
+	<div class="fld dsp_ib">
+		<label>Peticiones</label>
+		<p id="numPeticiones" th:text="${totals.requestsNumber}">2556788</p>
+	</div>
+	<div class="fld dsp_ib">
+		<label>Aplicaciones</label>
+		<p id="numAplicaciones" th:text="${totals.applicationsNumber}">34</p>
+	</div>
+	
+	<div class="dsp_b error" style="color: red;">
+		<p id="totalError" th:text="${error}"></p>
+	</div>
+</div>	  
+ 	  
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+
+<input type="hidden" id="currentUser" th:value="${currentUser}"/>
+<input type="hidden" id="currentGroup" th:value="${currentGroup}"/>
+
+<div class="fld" style="overflow: auto; width: 100%;" id="usersComentList">	
+	<table class="data noborder">
+		<tbody>
+		
+			<tr th:each="comment : ${commentsList}" th:id="|comment_${comment.primaryKey}|">
+				<td th:text="${#dates.format(comment.fcreated,'dd/MM/yyyy HH:mm:ss')}">Creado</td>
+				<td th:text="${comment.userName}">Nombre</td>
+				<td th:text="${comment.tcomment}" th:id="|comment_tcomment_${comment.primaryKey}|">Comentario</td>
+				
+				
+				
+				<td>
+					<!-- input type="hidden" id="commentPrimaryKey" value="{comment.primaryKey}"/-->
+					<ul class="buttonbar">
+						<!-- Editar comentario -->
+						<li
+							th:if="${comment.userId == currentUser}">
+							<a href="javascript:void(0)" 
+							th:onclick="|prepareModifyComment('${comment.primaryKey}')|"
+							class="dsp_ib p4"> <span
+								class="mf-icon mf-icon-edit-16"
+								th:title="#{editComment}"></span>Editar Comentario
+							</a>
+						</li>
+						<!-- Eliminar comentario -->
+						<li
+							th:if="${comment.userId == currentUser}">
+							<a href="javascript:void(0)" 
+							th:onclick="|prepareDeleteComment('${comment.primaryKey}')|"
+							class="dsp_ib p4"> <span
+								class="mf-icon mf-icon-delete-16"
+								th:title="#{deleteComment}"></span>Eliminar Comentario
+							</a>
+						</li>
+
+					</ul>
+				</td>
+				
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="questionComment" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageComment" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonComment" name="yesButtonComment" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonComment" name="noButtonComment" class=" simbuttom secondary" onclick="$('#questionComment').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>
+
+
+<div id="commentModal" title="Edición de comentario" th:include="commentModal"></div>
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+		<div layout:fragment="content" >
+			<script th:src="|${#httpServletRequest.getContextPath()}/js/stats/stats.js?#{versionNumber}.#{versionFase}|"></script>
+	        <!-- INICIO DEL CONTENIDO-->
+			<div id="mainWindow">
+				<div class="windowHeader">
+					<div>
+						<h3 class="windowTitle">Estadísticas</h3>						
+					</div>					 
+				</div>
+				<div id="contentData">
+					<div id="contentDataBody" class="p10">	
+						<div id="" class="whiteBox mb20">
+							<a id="toggleRequestInfo"> 
+								<span class="mf-icon mf-icon-windowopen-16" id="toggleRequestInfoButton"></span>
+								<h6 class="dsp_ib">Resumen totales</h6>
+							</a>
+							<div style="display: none;height: 40px;" id="requestStats" class="pl20"></div>
+							<div class="fld" style="margin-top:10px;">
+								<button class="secondary" onclick="loadTotals();">Actualizar</button>
+							</div>
+						</div>
+						<div id="stats" class="whiteBox mb20 pl20">
+							<form id="statForm" method="post" th:object="${parameterStat}">
+								<input type="hidden" id="format" name="format"/>
+								<h6 class="dsp_ib">Datos específicos</h6>
+								<div id="statsDiv" class="mt10 mb10 ml0">
+									<select id="select_req_sig" name="reqSig" class="ml10">												
+										<option value="requests" th:selected="*{reqSig == 'requests' or #strings.isEmpty(reqSig)}">Peticiones</option>
+										<option value="signatures" th:selected="*{reqSig == 'signatures'}">Firmas</option>					
+									</select>						
+									<select id="select_type" name="type" class="ml10">
+										<option value="xu" th:selected="*{type == 'xu' or #strings.isEmpty(type)}">Por usuario remitente</option>
+										<option value="xs" th:selected="*{type == 'xs'}">Por sede remitente</option>
+										<option value="xsu" th:selected="*{type == 'xsu'}">Por sede remitente y usuario remitente</option>
+										<option value="xsuf" th:selected="*{type == 'xsuf'}">Por sede remitente, usuario remitente y fecha</option>
+										<option value="xsa" th:selected="*{type == 'xsa'}">Por sede firmante y aplicación</option>
+										<option value="xsaf" th:selected="*{type == 'xsaf'}">Por sede firmante, aplicación y fecha</option>
+									</select>								
+									<select id="select_total_desg" name="totDesg" class="ml10">
+										<option value="total" th:selected="*{totDesg == 'total' or #strings.isEmpty(totDesg)}">Total</option>
+										<option value="desglose" th:selected="*{totDesg == 'desglose'}">Desglose</option>				
+									</select>
+								</div>
+								<h6 class="dsp_ib">Filtros</h6>
+								<div id="statsFilterDiv" class="mb10 ml0">
+									<table class="data noborder tl">
+										<tr>
+											<td>										
+												<input type="text" id="statsFechaInicio" name="fStart" placeholder="Fecha Inicio" th:value="*{fStart}" title="dd/mm/aaaa" class="fecha datepicker w90 left"/>
+											</td>
+											<td>										
+												<input type="text" id="statsFechaFin" name="fEnd" placeholder="Fecha Fin" th:value="*{fEnd}" title="dd/mm/aaaa" class="fecha datepicker w90 left"/>
+											</td>										
+											<td>									
+												<select id="select_seat" name="seat" class="ml10">
+													<option value="" th:selected="*{#strings.isEmpty(seat)}">Sede</option>
+													<option th:each="seat : ${seatList}" th:value="${seat.primaryKey}" th:text="${seat.cnombre}" th:selected="${seat.primaryKeyString == parameterStat.seat}"></option>									
+												</select>
+											</td>
+											<td>
+												<select id="select_application" name="application" class="ml10">
+													<option value="" th:selected="*{#strings.isEmpty(application)}">Aplicación</option>
+													<option th:each="app : ${applicationList}" th:value="${app.primaryKey}" th:text="${app.dapplication}" th:selected="${app.primaryKeyString == parameterStat.application}"></option>					
+												</select>
+											</td>
+											<td>
+												<input type="text" id="statsUserName" name="userName" placeholder="Usuario remitente" th:value="*{userName}"/>
+												<input type="hidden" name="user" id="statsUserId" th:value="*{user}"/>
+											</td>											
+											<td>
+												<button id="searchButton" class="secondary" th:title="#{search}">
+													<span class="mf-icon mf-icon-search-16"></span>
+												</button>
+											</td>
+											<td>
+												<button id="cleanButton" class="secondary" th:title="#{clean}">
+													<span class="mf-icon mf-icon-clean-16"></span>
+												</button>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</form>
+							<div th:unless="${#lists.isEmpty(rows)}">
+								<div id="exportDiv" class="fld">							  	
+									<a href="#" onclick="exportStat('xls')" class="dsp_ib p4">
+										<span class="mf-icon mf-icon-excel-16" th:title="#{exportExcel}"></span>
+									</a>
+									<a href="#" onclick="exportStat('pdf')" class="dsp_ib p4">
+										<span class="mf-icon mf-icon-pdf-16" th:title="#{exportPdf}"></span>
+									</a>
+								</div>
+								<div id="statsResults" class="catalogueOverflow">
+									<table id="statsResultsTable" class="data noborder tl">
+										<thead>		
+											<tr>
+												<th th:each="header : ${headers}" th:text="${header}"></th>
+											</tr>							
+										</thead>
+										<tbody>		
+											<th:block th:each="row, rowStat : *{rows}">
+											<tr th:class="${rowStat.even ? 'even' : 'odd'}">
+												<td th:each="column, columnStat : *{rows[__${rowStat.index}__]}" th:text="${column}"></td>			
+											</tr>
+											</th:block>
+										</tbody>
+									</table>
+								</div>
+							</div>	
+						</div>
+						<div id="contentDataFooter"></div>
+					</div>
+				</div>
+			</div>
+		    <!-- FIN CONTENIDO-->
+		</div>
+	</body>
+</html>

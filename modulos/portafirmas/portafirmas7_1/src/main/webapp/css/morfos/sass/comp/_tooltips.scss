@@ -1,0 +1,299 @@
+/************/
+/* Tooltips */
+
+.tooltip {
+    position: absolute;
+    padding: 20px;
+    z-index: 1000;
+    }
+    
+.tooltipContent {
+    width: 250px;
+    padding: 10px;
+    
+    border: 3px solid #09C;
+    border: 3px solid #999;
+    
+    -webkit-border-radius: 5px;
+    -moz-border-radius:    5px;
+    border-radius:         5px;
+    
+    background-color: #FFF;
+    }
+    
+.tooltipContent h6 {
+    margin-bottom: 0.5em;
+    }
+    
+.tooltipArrow {
+    width: 0;
+    height: 0;
+    
+    display: block;
+    position: absolute;
+    width:0;
+    height:0;
+    
+    border-color: transparent transparent #999 transparent;
+    border-style: solid;
+    border-width: 10px;
+    }
+    
+.tooltip.pleft .tooltipArrow {
+    top: 50%;
+    right: 0;
+    margin-top: -10px;
+    border-color: transparent transparent transparent #999;
+    }
+    
+.tooltip.pright .tooltipArrow {
+    top: 50%;
+    left: 0;
+    margin-top: -10px;
+    border-color: transparent #999 transparent transparent;
+    }
+    
+.tooltip.pbelow .tooltipArrow {
+    left: 50%;
+    top: 0;
+    margin-left: -10px;
+    border-color: transparent transparent #999 transparent;
+    }
+    
+.tooltip.pabove .tooltipArrow {
+    left: 50%;
+    bottom: 0;
+    margin-left: -10px;
+    border-color: #999 transparent transparent transparent;
+    }
+    
+/* miniTooltip */
+
+.minitooltip {
+    position: absolute;
+    padding: 10px;
+    z-index: 1000;
+    }
+    
+.minitooltip span {
+    display: block;
+    padding: 3px 6px;
+    
+    color: #FFF;
+    font-size: 0.917em;
+
+    -webkit-border-radius: 3px;
+    -moz-border-radius:    3px;
+    border-radius:         3px;
+    
+    background-color: #333;
+    background-color: rgba(0,0,0,0.65);
+    }
+    
+.minitooltip .tooltipArrow {
+    display: block;
+    position: absolute;
+    width:0;
+    height:0;
+    padding: 0;
+    
+    border-color: transparent transparent #333 transparent;
+    border-color: transparent transparent rgba(0,0,0,0.65) transparent;
+    border-style: solid;
+    border-width: 5px;
+
+    background: transparent;
+
+    -webkit-border-radius: 0;
+    -moz-border-radius:    0;
+    border-radius:         0;
+    }
+    
+.minitooltip.pleft .tooltipArrow {
+    top: 50%;
+    right: 0;
+    margin-top: -5px;
+    border-color: transparent transparent transparent #333;
+    border-color: transparent transparent transparent rgba(0,0,0,0.65);
+    }
+    
+.minitooltip.pright .tooltipArrow {
+    top: 50%;
+    left: 0;
+    margin-top: -5px;
+    border-color: transparent #333 transparent transparent;
+    border-color: transparent rgba(0,0,0,0.65) transparent transparent;
+    }
+    
+.minitooltip.pbelow .tooltipArrow {
+    left: 50%;
+    top: 0;
+    margin-left: -5px;
+    border-color: transparent transparent #333 transparent;
+    border-color: transparent transparent rgba(0,0,0,0.65) transparent;
+    }
+    
+.minitooltip.pabove .tooltipArrow {
+    left: 50%;
+    bottom: 0;
+    margin-left: -5px;
+    border-color: #333 transparent transparent transparent;
+    border-color: rgba(0,0,0,0.65) transparent transparent transparent;
+    }
+    
+.minitooltip.error span {
+    background-color: red;
+    background: rgba(255,0,0,0.65);
+}
+
+.minitooltip.error .tooltipArrow {
+    background: transparent;
+}
+    
+.minitooltip.error.pabove .tooltipArrow {
+    border-color: red transparent transparent transparent;
+    border-color: rgba(255,0,0,0.65) transparent transparent transparent;
+    }
+    
+.minitooltip.error.pright .tooltipArrow {
+    border-color: transparent red transparent transparent;
+    border-color: transparent rgba(255,0,0,0.65) transparent transparent;
+    }
+    
+.minitooltip.error.pbelow .tooltipArrow {
+    border-color: transparent transparent red transparent;
+    border-color: transparent transparent rgba(255,0,0,0.65) transparent;
+    }
+    
+.minitooltip.error.pleft .tooltipArrow {
+    border-color: transparent transparent transparent red;
+    border-color: transparent transparent transparent rgba(255,0,0,0.65);
+    }
+    
+.minitooltip.warning span {
+    background-color: #BCBB00;
+    background: rgba(188, 187, 0,0.65);
+    }
+
+.minitooltip.warning .tooltipArrow {
+    background: transparent;
+}
+    
+.minitooltip.warning.pabove .tooltipArrow {
+    border-color: #BCBB00 transparent transparent transparent;
+    border-color: rgba(188,187,0,0.65) transparent transparent transparent;
+    }
+    
+.minitooltip.warning.pright .tooltipArrow {
+    border-color: transparent #BCBB00 transparent transparent;
+    border-color: transparent rgba(188,187,0,0.65) transparent transparent;
+    }
+    
+.minitooltip.warning.pbelow .tooltipArrow {
+    border-color: transparent transparent #BCBB00 transparent;
+    border-color: transparent transparent rgba(188,187,0,0.65) transparent;
+    }
+    
+.minitooltip.warning.pleft .tooltipArrow {
+    border-color: transparent transparent transparent #BCBB00;
+    border-color: transparent transparent transparent rgba(188,187,0,0.65);
+    }
+    
+.minitooltip.info span {
+    background-color: #0099CC;
+    background: rgba(0,153,204,0.65);
+    }
+    
+.minitooltip.info .tooltipArrow {
+    background: transparent;
+}
+
+.minitooltip.info.pabove .tooltipArrow {
+    border-color: #0099CC transparent transparent transparent;
+    border-color: rgba(0,153,204,0.65) transparent transparent transparent;
+    }
+    
+.minitooltip.info.pright .tooltipArrow {
+    border-color: transparent #0099CC transparent transparent;
+    border-color: transparent rgba(0,153,204,0.65) transparent transparent;
+    }
+    
+.minitooltip.info.pbelow .tooltipArrow {
+    border-color: transparent transparent #0099CC transparent;
+    border-color: transparent transparent rgba(0,153,204,0.65) transparent;
+    }
+    
+.minitooltip.info.pleft .tooltipArrow {
+    border-color: transparent transparent transparent #0099CC;
+    border-color: transparent transparent transparent rgba(0,153,204,0.65);
+    }
+    
+.minitooltip.success span {
+    background-color: #5DBB2D;
+    background: rgba(93,187,45,0.65);
+    }
+
+.minitooltip.success .tooltipArrow {
+    background: transparent;
+}
+    
+.minitooltip.success.pabove .tooltipArrow {
+    border-color: #5DBB2D transparent transparent transparent;
+    border-color: rgba(93,187,45,0.65) transparent transparent transparent;
+    }
+    
+.minitooltip.success.pright .tooltipArrow {
+    border-color: transparent #5DBB2D transparent transparent;
+    border-color: transparent rgba(93,187,45,0.65) transparent transparent;
+    }
+    
+.minitooltip.success.pbelow .tooltipArrow {
+    border-color: transparent transparent #5DBB2D transparent;
+    border-color: transparent transparent rgba(93,187,45,0.65) transparent;
+    }
+    
+.minitooltip.success.pleft .tooltipArrow {
+    border-color: transparent transparent transparent #5DBB2D;
+    border-color: transparent transparent transparent rgba(93,187,45,0.65);
+    }
+    
+/* Mininotes */
+
+.tip {
+    display: inline;
+    vertical-align: baseline;
+    margin: 0 0.5em;
+    padding: 3px 6px;
+
+    color: #FFF;
+    white-space: nowrap;
+    font-size: 10px;
+    font-weight: bold;
+
+    -webkit-border-radius: 3px;
+    -moz-border-radius:    3px;
+    border-radius:         3px;
+
+    background-color: #333;
+    background-color: rgba(0,0,0,0.65);
+}
+
+.tip.error {
+    background-color: red;
+    background: rgba(255,0,0,0.75);
+}
+
+.tip.info {
+    background-color: #0099CC;
+    background: rgba(0,153,204,0.65);
+}
+
+.tip.success {
+    background-color: #5DBB2D;
+    background: rgba(93,187,45,0.85);
+    }
+
+.tip.warning {
+    background-color: #BCBB00;
+    background: rgba(220,197,0,0.95);
+}

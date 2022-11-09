@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm/orm_1_0.xsd">
+
+	<named-query name="configuration.emailUser">
+		<query><![CDATA[from PfUsersEmailDTO where pfUser = :user]]></query>
+	</named-query>
+
+	<named-query name="configuration.usersEmailByPK">
+		<query><![CDATA[
+			select userEmail
+			from PfUsersEmailDTO userEmail
+			where userEmail.primaryKey = :pk]]>
+		</query>
+	</named-query>
+
+	<named-query name="configuration.mobileUser">
+		<query><![CDATA[from PfMobileUsersDTO where pfUser = :user]]></query>
+	</named-query>
+
+	<named-query name="configuration.receivedAutAwaiting">
+		<query><![CDATA[select distinct userAut
+						from PfUsersAuthorizationDTO userAut
+						join fetch userAut.pfUser
+						join fetch userAut.pfAuthorizedUser
+						join fetch userAut.pfAuthorizationType
+						left join fetch userAut.pfAuthorizationFilters autFilter
+						left join fetch autFilter.pfSigners
+						where (userAut.pfAuthorizedUser.primaryKey = :userPk) and
+						(
+							userAut.fauthorization is null and
+							(
+								userAut.frevocation is null or
+								(userAut.frevocation is not null and userAut.frevocation > current_date())
+							)
+						)
+						order by userAut.fmodified desc
+						]]></query>
+	</named-query>
+	<named-query name="configuration.receivedAutOthers">
+		<query><![CDATA[select distinct userAut
+						from PfUsersAuthorizationDTO userAut
+						join fetch userAut.pfUser
+						join fetch userAut.pfAuthorizedUser
+						join fetch userAut.pfAuthorizationType
+						left join fetch userAut.pfAuthorizationFilters autFilter
+						left join fetch autFilter.pfSigners
+						where userAut.pfAuthorizedUser.primaryKey = :userPk and
+						not (
+							userAut.fauthorization is null and
+							(
+								userAut.frevocation is null or
+								(userAut.frevocation is not null and userAut.frevocation > current_date())
+							)
+						)
+						order by userAut.fmodified desc
+						]]></query>
+	</named-query>
+	<named-query name="configuration.sentAutAwaiting">
+		<query><![CDATA[select distinct userAut
+						from PfUsersAuthorizationDTO userAut
+						join fetch userAut.pfUser
+						join fetch userAut.pfAuthorizedUser
+						join fetch userAut.pfAuthorizationType
+						left join fetch userAut.pfAuthorizationFilters autFilter
+						left join fetch autFilter.pfSigners
+						where userAut.pfUser.primaryKey = :userPk and
+						userAut.fauthorization is null and
+						(
+							userAut.frevocation is null or
+							(userAut.frevocation is not null and userAut.frevocation > current_date())
+						)
+						order by userAut.fmodified desc
+						]]></query>
+	</named-query>
+	<named-query name="configuration.sentAutOthers">
+		<query><![CDATA[select distinct userAut
+						from PfUsersAuthorizationDTO userAut
+						join fetch userAut.pfUser
+						join fetch userAut.pfAuthorizedUser
+						join fetch userAut.pfAuthorizationType
+						left join fetch userAut.pfAuthorizationFilters autFilter
+						left join fetch autFilter.pfSigners
+						where userAut.pfUser.primaryKey = :userPk and
+						not (
+							userAut.fauthorization is null and
+							(
+								userAut.frevocation is null or
+								(userAut.frevocation is not null and userAut.frevocation > current_date())
+							)
+						)
+						order by userAut.fmodified desc
+						]]></query>
+	</named-query>
+
+	<named-query name="configuration.userPk">
+		<query><![CDATA[select user
+						  from PfUsersDTO user
+					      left join fetch user.validadores
+						 where user.primaryKey = :pk]]>
+		</query>
+	</named-query>
+	
+	
+	<named-query name="configuration.userIdentifier">
+		<query><![CDATA[select user
+						  from PfUsersDTO user
+					      left join fetch user.validadores
+						 where user.cidentifier = :identifier]]>
+		</query>
+	</named-query>
+	<named-query name="configuration.dataUser">
+		<query><![CDATA[from PfUsersDTO user
+						join fetch user.pfUsersProfiles prof
+						join fetch prof.pfProfile
+						where user.primaryKey = :key]]></query>
+	</named-query>
+
+	<named-query name="configuration.label">
+		<query><![CDATA[from PfTagsDTO where ctag = :ctag]]></query>
+	</named-query>
+
+	<named-query name="configuration.userlabel">
+		<query><![CDATA[select
+							userTag
+						from
+							PfUserTagsDTO userTag
+							join fetch userTag.pfTag
+							join fetch userTag.pfUser
+						where
+							userTag.pfTag.ctag = :ctag and
+							userTag.pfUser = :pfUser]]></query>
+	</named-query>
+	<named-query name="configuration.otherUserlabel">
+		<query><![CDATA[select
+							userTag
+						from
+							PfUserTagsDTO userTag
+							join fetch userTag.pfTag
+							join fetch userTag.pfUser
+						where
+							userTag.pfTag.ctag = :ctag and
+							userTag.pfUser != :pfUser]]></query>
+	</named-query>
+
+	<named-query name="configuration.userlabelsAll">
+		<query><![CDATA[select distinct(userTag)
+						from
+							 PfUserTagsDTO userTag
+							 join fetch userTag.pfTag tag
+							 join fetch userTag.pfUser user
+						where
+							tag.ctype = 'USUARIO' and
+							userTag.pfUser = :user
+						order by tag.ctag asc]]></query>
+	</named-query>
+
+	<named-query name="configuration.userlabelsAllForAGroup">
+		<query><![CDATA[select distinct p.pfTag.pfUsersTags 
+		from PfRequestTagsDTO p 
+		where (:grupo is null or p.pfGroup = :grupo)
+		and (:user is null or p.pfUser <> :user)]]></query>
+	</named-query>
+
+	<named-query name="configuration.userRequestTagsAll">
+		<query><![CDATA[from
+							PfRequestTagsDTO
+						where
+							pfTag = :pfTag and
+							pfUser = :pfUser
+
+						]]></query>
+	</named-query>
+
+	<named-query name="configuration.parameter">
+		<query><![CDATA[from PfParametersDTO where cparameter = :cparameter]]></query>
+	</named-query>
+
+	<named-query name="configuration.parameterByPk">
+		<query><![CDATA[from PfParametersDTO where primaryKey = :primaryKey]]></query>
+	</named-query>
+
+	<named-query name="configuration.userParam">
+		<query><![CDATA[from PfUsersParameterDTO where pfParameter = :pfParameter and pfUser = :pfUser]]></query>
+	</named-query>
+
+	<named-query name="configuration.userAll">
+		<query><![CDATA[from PfUsersDTO]]></query>
+	</named-query>
+
+	<named-query name="configuration.filterAll">
+		<query><![CDATA[from PfFiltersDTO]]></query>
+	</named-query>
+
+	<named-query name="configuration.authorizationReceivers">
+		<query><![CDATA[from PfUsersDTO user
+						left join fetch user.pfUsersJobs usjo
+						left join fetch usjo.pfUserJob
+						left join fetch user.pfProvince province
+		 				where user.primaryKey != :pk and user.ctype = 'USUARIO'
+		 				and ( user.lvalid = 'S')
+		 				and (
+							(user.lvisible = 'S')
+							or
+							(:provinceUser is null)
+							or
+							(province is null)
+							or
+							(:provinceUser is not null and province.ccodigoprovincia = :provinceUser)
+							)						
+						]]></query>
+	</named-query>
+
+	<named-query name="configuration.authorizationProvinceReceivers">
+		<query><![CDATA[from PfUsersDTO user
+						left join fetch user.pfUsersJobs usjo
+						left join fetch usjo.pfUserJob
+						left join fetch user.pfProvince prov
+		 				where user.primaryKey != :pk
+		 				and user.ctype = 'USUARIO'
+		 				and user.lvalid = 'S'
+		 				and prov.ccodigoprovincia = :province]]></query>
+	</named-query>
+
+	<named-query name="configuration.userAuthorizationsInbox">
+		<query><![CDATA[select distinct userAut
+						from PfUsersAuthorizationDTO userAut
+						left join fetch userAut.pfAuthorizationFilters autFilter
+						left join fetch autFilter.pfSigners
+						join fetch userAut.pfUser user
+						join fetch userAut.pfAuthorizationType autType
+						join fetch userAut.pfAuthorizedUser autorized
+						where autorized.primaryKey = :userPk
+						order by userAut.frequest desc]]></query>
+	</named-query>
+
+	<named-query name="configuration.userAuthorizationsOutbox">
+		<query><![CDATA[select distinct userAut
+						from PfUsersAuthorizationDTO userAut
+						left join fetch userAut.pfAuthorizationFilters autFilter
+						left join fetch autFilter.pfSigners
+						join fetch userAut.pfUser user
+						join fetch userAut.pfAuthorizationType autType
+						join fetch userAut.pfAuthorizedUser autorized
+						where user.primaryKey = :userPk
+						order by userAut.frequest desc]]></query>
+	</named-query>
+
+	<named-query name="configuration.userAuthorizationsAll">
+		<query><![CDATA[select distinct userAut
+						from PfUsersAuthorizationDTO userAut
+						left join fetch userAut.pfAuthorizationFilters autFilter
+						left join fetch autFilter.pfSigners
+						join fetch userAut.pfUser user
+						join fetch userAut.pfAuthorizationType autType
+						join fetch userAut.pfAuthorizedUser autorized
+						where user.primaryKey = :userPk
+						   or autorized.primaryKey = :userPk
+						order by userAut.frequest desc]]></query>
+	</named-query>
+
+	<named-query name="configuration.userAuthorizationsByPk">
+		<query><![CDATA[select userAut
+		                  from PfUsersAuthorizationDTO userAut
+		                  left join fetch userAut.pfUser
+		                  left join fetch userAut.pfAuthorizedUser
+		                  left join fetch userAut.pfAuthorizationType
+						 where userAut.primaryKey = :pk]]></query>
+	</named-query>
+
+	<named-query name="configuration.userParamValidate">
+		<query><![CDATA[
+			from PfUsersParameterDTO 
+				where usu_x_usuario = :id 
+				and par_x_parametro 
+				in (select primaryKey 
+					from PfParametersDTO 
+					where c_parametro = :value)
+		]]></query>
+	</named-query>
+	
+	<named-query name="configuration.validatorAppPkList">
+		<query><![CDATA[select val
+						  from PfValidatorApplicationDTO val
+						 where usu_x_usuario = :pk]]>
+		</query>
+	</named-query>
+	
+	<named-query name="configuration.validatorAppByValidatorList">
+		<query><![CDATA[select val.pfApplication
+						  from PfValidatorApplicationDTO val
+						 where usu_x_usuario_validador = :validator
+						 and usu_x_usuario = :user]]>
+		</query>
+	</named-query>
+	
+	<named-query name="configuration.validatorAppPkAndValidatorList">
+		<query><![CDATA[select val 
+						  from PfValidatorApplicationDTO val 
+						 where usu_x_usuario = :user 
+						 and usu_x_usuario_validador = :validator]]>
+		</query>
+	</named-query>
+	
+	<named-query name="configuration.validatorAppPkAndValidator">
+		<query><![CDATA[select val 
+						  from PfValidatorApplicationDTO val 
+						 where usu_x_usuario = :user 
+						 and usu_x_usuario_validador = :validator 
+						 and apl_x_aplicacion = :application]]>
+		</query>
+	</named-query>
+	
+	<named-query name="configuration.validatorAppPkUserList">
+		<query><![CDATA[select distinct val.pfUser
+						  from PfValidatorApplicationDTO val
+						 where usu_x_usuario_validador = :validator]]>
+		</query>
+	</named-query>
+	
+	<named-query name="configuration.validatorAppPkDistinctUserList">
+		<query><![CDATA[select distinct val.pfUser
+						  from PfValidatorApplicationDTO val
+						 where usu_x_usuario_validador = :validator]]>
+		</query>
+	</named-query>
+	
+		<named-query name="configuration.validatorAppPk">
+		<query><![CDATA[select val
+						  from PfValidatorApplicationDTO val 
+						 where usu_x_usuario = :user 
+						 and apl_x_aplicacion = :application]]>
+		</query>
+	</named-query>
+	
+</entity-mappings>

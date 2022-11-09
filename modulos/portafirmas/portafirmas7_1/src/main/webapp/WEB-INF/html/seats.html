@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	  
+
+<button class="secondary mb10 right" onclick="prepareNewSeat();">
+	<span class="mf-icon mf-icon-add-16"></span>
+	<span th:text="#{newButtonF}">Nueva sede</span>
+</button>
+
+<div class="fld" style="overflow: auto; height: 300px; width: 100%;">
+	<table class="data noborder tl">
+		<thead>
+			<tr>
+				<th class="w100">Codigo</th>
+				<th>Denominacion</th>
+				<th>Nombre</th>					
+				<th>Larga duración documentos</th>
+				<th>URL documento CSV</th>
+				<th>Gestionar LDAP</th>															
+				<th class="w40"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="seat : ${seatList}" th:id="|seat_${seat.primaryKey}|">
+				<td th:id="|seatCode_${seat.primaryKey}|" th:text="${seat.ccodigoprovincia}"></td>
+				<td th:id="|seatDenom_${seat.primaryKey}|" th:text="${seat.denominacion}"></td>
+				<td th:id="|seatName_${seat.primaryKey}|" th:text="${seat.cnombre}"></td>
+				<td class="tc">
+					<a href="#!">
+						<span th:if="${seat.lLargaDuracion}" class="mf-icon mf-icon-enabled-16"></span>
+						<span th:unless="${seat.lLargaDuracion}" class="mf-icon mf-icon-disabled-16"></span>			
+					</a>
+					<input type="hidden" th:id="|isLongDuration_${seat.primaryKey}|" th:value="${seat.lLargaDuracion}"/>
+				</td>
+				<td th:id="|seatURLCSV_${seat.primaryKey}|" th:text="${seat.cUrlCSV}"></td>
+				<td class="tc">
+					<a href="#!">
+						<span th:if="${seat.lLdap}" class="mf-icon mf-icon-enabled-16"></span>
+						<span th:unless="${seat.lLdap}" class="mf-icon mf-icon-disabled-16"></span>			
+					</a>
+					<input type="hidden" th:id="|isLdap_${seat.primaryKey}|" th:value="${seat.lLdap}"/>
+				</td>													
+				<td>
+					<a href="javascript:void(0)" th:onclick="|prepareModifySeat('${seat.primaryKey}')|"><span class="mf-icon mf-icon-edit-16">Editar</span></a>
+					<a href="javascript:void(0)" th:onclick="|prepareDeleteSeat('${seat.primaryKey}')|"><span class="mf-icon mf-icon-delete-16">Eliminar</span></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="questionSeat" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageSeat" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonSeat" name="yesButtonSeat" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonSeat" name="noButtonSeat" class=" simbuttom secondary" onclick="$('#questionSeat').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>
+<div id="seat_modal" title="Edición de sede">
+	<fieldset class="nolegend pt20">
+		<div class="fld dsp_ib stkd">
+			<label th:text="#{CodigoDIR3}">Código</label>
+			<input class="w140" type="text" id="seatCode" />
+		</div>
+		<div class="fld dsp_ib stkd">
+			<label th:text="#{seatDenom}">Denominacion</label>
+			<input class="w400" type="text" id="seatDenom" disabled="disabled"/>
+		</div>
+		<div class="fld dsp_ib stkd">
+			<label th:text="#{seatName}">Nombre</label>
+			<input type="text" class="w400" id="seatName" />
+			<input type="hidden" id="seatPk" value=""/>
+		</div>
+		<div class="fld stkd">
+			<input type="checkbox" name="" id="seatLongDuration" onclick="chequear();"/>
+			<label class="dsp_ib" for="seatLongDuration">Larga duración documentación</label>
+			<input type="hidden" id="seatPk" value=""/>
+		</div>
+		<div class="fld stkd">
+			<input type="checkbox" name="" id="seatLdap" />
+			<label class="dsp_ib" for="seatLdap">Gestionar LDAP</label>
+			<input type="hidden" id="seatPk" value=""/>
+		</div>
+		<div style="display:none">
+			<div class="fld dsp_ib stkd" >
+				<label th:text="#{seatURLCSV}">URL documento CSV</label>
+				<input type="text" class="w320" id="seatURLCSV" />
+				<input type="hidden" id="seatPk" value=""/>
+			</div>
+		</div>
+		<div class="dsp_b error errorMessage" id="seatErrorMessage"></div>
+	</fieldset>
+</div>
+
+</html>

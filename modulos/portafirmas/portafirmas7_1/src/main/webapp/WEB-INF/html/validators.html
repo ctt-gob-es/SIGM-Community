@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+	<div class="catalogueOverflow">
+		<table class="data noborder tl">
+			<thead>
+				<tr>
+					<th class="w100">Identificador </th>
+					<th>Nombre</th>											
+					<th class="w20"></th>
+					<th class="w20"></th>
+				</tr>
+			</thead>
+			<tbody id="tableValidators_tbody" style="text-align: center;">
+				<tr th:each="validator : ${validatorsSet}" th:id="|tr_${validator.primaryKey}|">
+					<td th:text="${validator.cidentifier}"></td>
+					<td th:text="|${validator.fullName}|"></td>
+					<td>	
+						<a href="javascript:void(0)" th:onclick="|prepareModifyValidator('${validator.primaryKey}')|">
+							<span class="mf-icon mf-icon-edit-16">Editar</span>
+						</a>
+					</td>
+					<td>
+						<a href="#!" class="simbutton secondary" th:onclick="|prepareDeleteValidator('${validator.primaryKey}')|">
+							<span class="mf-icon mf-icon-delete-16">Eliminar</span>
+						</a>
+					</td>								
+				</tr>
+			</tbody>
+		</table>
+		
+	</div>
+	<div id="questionValidator" class="capaPregunta" style="display: none;">
+		<div class="fld">
+			<span class="mf-icon-24 mf-icon-warning-24"></span>
+			<span id="questionMessageValidator" class="pregunta"></span> 
+		</div>
+		<div class="fld">
+		  	<button id="yesButtonValidator" name="yesButtonValidator" class="simbuttom secondary">
+				<span th:title="#{yes}" th:text="#{yes}"></span>
+			</button>
+		  	<button id="noButtonValidator" name="noButtonValidator" class=" simbuttom secondary" onclick="$('#questionValidator').hide();">
+				<span th:title="#{no}" th:text="#{no}"></span>
+			</button>
+		</div>
+	</div>
+	<div id="validator_modal" th:title="#{editValidator}" th:include="validatorModal::validatorsModal" style="display: none;"/>		
+</html>

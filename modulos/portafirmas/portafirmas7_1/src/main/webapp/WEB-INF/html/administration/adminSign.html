@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html 	xmlns:th="http://www.thymeleaf.org"
+	  	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+	<form id="adminSignForm">
+		<div id="adminSignFilter">
+			<input type="hidden" id="idSign" name="idSign"/>
+			<input type="hidden" id="mensajeError" name="mensajeError" th:value="${adminSign.mensajeError}"/>
+			
+			<label for="applicationMode" th:text="#{administration.gestionarFirmas.modoBusqueda}"></label>
+			<input type="radio" name="applicationMode" id="applicationMode" value="0" th:text="#{administration.gestionarFirmas.modoBusqueda.actual}" th:checked="${adminSign.applicationMode == 0}"/>
+			<input type="radio" name="applicationMode" id="applicationMode" value="1" th:text="#{administration.gestionarFirmas.modoBusqueda.historico}" th:checked="${adminSign.applicationMode == 1}"/>
+			
+			<input type="text" title="dd/mm/aaaa" class="fecha datepicker w90" name="fValidez" id="fValidez" th:placeholder="#{administration.gestionarFirmas.fValidez}" th:value="${adminSign.fValidez}"/>
+			<button id="searchAdminSign" class="secondary" th:title="#{search}"><span class="mf-icon mf-icon-search-16"/></button>
+			
+			<button class="secondary mb10 right" id="reSign">
+				<span class="mf-icon mf-icon-sign-16"></span>
+				<span th:text="#{administration.gestionarFirmas.ampliarFirma}">Resellar</span>
+			</button>
+		</div>
+		<div id="adminSignContent">
+			<div class="fld" style="overflow: auto; height: 320px;">
+				<div id="msgTop">
+					<div id="msgList" style="overflow: auto;">
+			
+						<!-- listado de firmas -->
+						<table  id="signTable" class="data actionable tl">
+							<thead>
+								<tr>
+									<th><input type="checkbox" name="select_all" id="select_all"/></th>
+									<th th:text="#{administration.gestionarFirmas.fValidez}">Fecha Validez</th>
+									<th th:text="#{subject}">Peticion</th>
+									<th th:text="#{document}">Documento</th>
+									<th th:text="#{signer}">Firmante</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="firma : ${adminSign.data}" th:id="|sign_${firma.primaryKey}|">
+									<td>
+										<input type="checkbox" name="request_checkbox"
+											   id="sign_checkbox" th:value="${firma.primaryKey}"/>	   
+									</td>
+									<td th:text="${#dates.format(firma.fValid,'dd/MM/yyyy')}"></td>	
+									<td th:text="${firma.pfDocument.pfRequest.dsubject}"></td>				
+									<td th:text="${firma.pfDocument.dname}"></td>
+									<td th:text="${firma.pfSigner.pfUser.dname + firma.pfSigner.pfUser.dsurname1}"></td>						
+								</tr>
+							</tbody>
+						</table>
+						
+					</div>
+					
+				</div>
+			</div>
+			
+			<!-- datos de paginacion -->
+			<div th:include="common/pagination :: paginatorFragment(id='Resign',paginatorData=${adminSign.paginatorResign},methodJS='loadData()')"></div>
+		</div>
+		
+	</form>
+	
+	<script>
+	$(document).ready(function() {
+		$( ".datepicker" ).datepicker({ minDate: -0 });
+		
+		$('#searchAdminSign').click(function (e) {
+			e.preventDefault();
+			goFirst('Resign');
+			loadData();
+		});
+		
+		$('#reSign').click(function (e) {
+			e.preventDefault();
+			reSign();
+		});
+		
+		$("#select_all").click(function(e){
+			if ($(this).is(":checked")) {
+				$('input[id="sign_checkbox"]').prop("checked", "checked");
+			} else {
+				$('input[id="sign_checkbox"]').removeProp("checked");
+			}
+		});
+	});
+	</script>
+			
+</html>	  
+

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	
+<button class="secondary mb10 right" onclick="prepareNewServer();">
+	<span class="mf-icon mf-icon-add-16"></span>
+	<span th:text="#{newButton}">Nuevo servidor</span>
+</button>
+<div class="fld" style="overflow: auto; height: 300px; width: 100%;">	
+<table class="data noborder tl">
+	<thead>
+		<tr>
+			<th th:text="#{code}">Código</th>
+			<th th:text="#{description}">Descripción</th>
+			<!-- th>Configuración del servidor</th-->			
+			<th th:text="#{serverDefault}">Servidor por defecto</th>
+			<th class="w40"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr th:each="server : ${serverList}" th:id="|server_${server.primaryKey}|">
+			<td th:id="|server_code_${server.primaryKey}|" th:text="${server.cserver}"></td>
+			<td th:id="|server_description_${server.primaryKey}|" th:text="${server.dserver}"></td>			
+			<td class="tc"><a href="#!">
+			<span th:if="${server.lmain}" class="mf-icon mf-icon-enabled-16"></span>
+			<span th:unless="${server.lmain}" class="mf-icon mf-icon-disabled-16"></span>			
+			</a>
+			<input type="hidden" th:id="|isDefault_${server.primaryKey}|" th:value="${server.lmain}"/>
+			</td>
+			
+				<td>
+					<!-- a href="javascript:void(0)" onclick="$('#servers_modal').dialog('open');"><span class="mf-icon mf-icon-edit-16">Editar</span></a>
+					<a href="#!"><span class="mf-icon mf-icon-delete-16">Eliminar</span></a-->
+					<a href="javascript:void(0)" th:onclick="|prepareModifyServer('${server.primaryKey}')|"><span class="mf-icon mf-icon-edit-16">Editar</span></a>
+					<a href="javascript:void(0)" th:onclick="|prepareDeleteServer('${server.primaryKey}')|"><span class="mf-icon mf-icon-delete-16">Eliminar</span></a>
+				</td>
+		</tr>
+		<tr></tr>
+		<tr></tr>	
+	</tbody>
+</table>
+</div>
+<div id="questionServer" class="capaPregunta" style="display: none;">
+	<div class="fld">
+		<span class="mf-icon-24 mf-icon-warning-24"></span>
+		<span id="questionMessageServer" class="pregunta"></span> 
+	</div>
+	<div class="fld">
+	  	<button id="yesButtonServer" name="yesButtonServer" class="simbuttom secondary">
+			<span th:title="#{yes}" th:text="#{yes}"></span>
+		</button>
+	  	<button id="noButtonServer" name="noButtonServer" class=" simbuttom secondary" onclick="$('#questionServer').hide();">
+			<span th:title="#{no}" th:text="#{no}"></span>
+		</button>
+	</div>
+</div>
+<div id="servers_modal" title="Servidores">
+	<fieldset class="nolegend pt20" th:fragment="server">
+		<div class="fld dsp_ib left stkd">
+			<label th:text="#{code}">Código</label>
+			<input type="text" class="w220" id="serverCode"  />
+		</div>
+		<div class="fld dsp_ib stkd">
+			<label th:text="#{description}">Descripción</label>
+			<textarea cols="14" rows="2" class="w220" name="example_textarea1" id="serverDescription"></textarea>
+		</div>
+		<div class="fld stkd">
+			<input type="checkbox" value="true" name="" id="serverIsDefault"/>
+			<label class="dsp_ib" for="serverIsDefault">Servidor por defecto</label>
+			<input type="hidden" id="serverPrimaryKey" value=""/>
+		</div>
+		<div class="dsp_b error errorMessage" id="serverErrorMessage"></div>
+	</fieldset>
+</div>						    		
+
+
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<div th:fragment="jobModal">
+	<div class="fld">
+		<form id="jobForm_modal">
+			<div class="fld">
+				<label th:title="#{code}" th:text="#{code}">Código</label>
+				<input size="14" th:value="${job.nif}" th:title="#{code}" name="nif" id="codeJob"/>
+				<input type="hidden" th:value="${job.primaryKey}" name="primaryKey" id="primaryKeyJob"/>
+			</div>
+			<div class="fld">
+				<label th:title="#{description}" th:text="#{description}">Descripción</label>
+				<input size="14" th:value="${job.name}" th:title="#{description}" class="" name="name" id="descriptionJob"/>
+			</div>
+			<div class="fld">
+				<label th:title="#{province}" th:text="#{province}">Provincia</label>
+				<select name="province" id="provinceJob">
+					<option value=""></option>
+					<option th:each="province : ${seatList}" th:value="${province.ccodigoprovincia}" th:text="${province.cnombre}" th:selected="${province.ccodigoprovincia eq job.province}"></option>
+				</select>
+			</div>
+			<div class="fld">
+				<label th:title="#{valid}" th:text="#{valid}">Vigente</label>
+				<input type="checkbox" th:title="#{valid}" class="" name="valid" id="validJob" th:checked="${job.valid eq 'S'}" value="S"/>
+			</div>
+			<div class="fld">
+				<label th:title="#{public}" th:text="#{public}">Público</label>
+				<input type="checkbox" th:title="#{public}" class="" name="publico" id="publicoJob" th:checked="${job.publico eq 'S'}" value="S"/>
+			</div>
+		</form>		
+	</div>
+	<div id="errorMsgJob" class="errorMessage"></div>
+</div>
+									
+</html>	    

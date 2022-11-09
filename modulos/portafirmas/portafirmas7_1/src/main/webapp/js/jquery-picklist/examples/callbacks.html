@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>jQuery PickList - Callbacks Example</title>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+
+	<!-- REMOVE THIS if you're using jQuery UI. -->
+	<script type="text/javascript" src="../jquery.ui.widget.js"></script>
+
+	<script type="text/javascript" src="../jquery-picklist.js"></script>
+	<script type="text/javascript">
+		$(function()
+		{
+			// Example of adding your event handler during initialization via options.
+			$("#callbacks").pickList(
+			{
+				"beforeBuild": eventHandler,
+				"afterBuild": eventHandler,
+				"beforePopulate": eventHandler,
+				"afterPopulate": eventHandler,
+				"beforeAddAll": eventHandler,
+				"afterAddAll": eventHandler,
+				"beforeAdd": eventHandler,
+				"afterAdd": eventHandler,
+				"beforeRemove": eventHandler,
+				"afterRemove": eventHandler,
+				"beforeRemoveAll": eventHandler,
+				"afterRemoveAll": eventHandler,
+				"beforeRefresh": eventHandler,
+				"afterRefresh": eventHandler,
+				"beforeRefreshControls": eventHandler,
+				"afterRefreshControls": eventHandler,
+				"onDestroy": eventHandler
+			});
+
+			// Example of adding your event handler after initialization via type binding.
+			$("#callbacks").bind("picklist_onchange", changeHandler);
+
+			$("#clearConsole").click(function()
+			{
+				clearConsole();
+				return false;
+			});
+		});
+
+		function eventHandler(event)
+		{
+			logConsole(event.type.replace("picklist_", ""));
+		}
+
+		function changeHandler(event, obj)
+		{
+			var itemIds = [];
+
+			obj.items.each(function()
+			{
+				itemIds.push($(this).attr("data-value"));
+			});
+
+			logConsole(event.type.replace("picklist_", "") + " [" + obj.type + ": " + itemIds.join(", ") + "]");
+		}
+
+		function logConsole(msg)
+		{
+			$("#console ol").append("<li>" + msg + "</li>");
+			$("#console").scrollTop( $("#console")[0].scrollHeight - $("#console").height() );
+		}
+
+		function clearConsole()
+		{
+			$("#console ol").html("");
+		}
+	</script>
+
+	<link type="text/css" href="../jquery-picklist.css" rel="stylesheet" />
+	<!--[if IE 7]><link href="../jquery-picklist-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+
+	<style type="text/css">
+		#console
+		{
+			height: 10em;
+			width: 30em;
+			margin: 0.5em;
+			overflow-y: scroll;
+			border: 1px inset;
+		}
+
+		#consoleLabel
+		{
+			font-weight: bold;
+			margin-top: 1em;
+		}
+
+		#console ol
+		{
+			margin: 0;
+			padding: 0 0 0 2em;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div>
+		<select id="callbacks" name="callbacks" multiple="multiple">
+			<option value="1">Option 1</option>
+			<option value="2" selected="selected">Option 2</option>
+			<option value="3">Option 3</option>
+			<option value="4" selected="selected">Option 4</option>
+			<option value="5">Option 5</option>
+		</select>
+	</div>
+
+	<div id="consoleLabel">Event Log:</div>
+	<div id="console"><ol></ol></div>
+	<a id="clearConsole" href="#">Clear Console</a>
+
+</body></html>

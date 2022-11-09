@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:eni="urn:juntadeandalucia:cice:pfirma:eni:request:v2.0" xmlns:pfirma="urn:juntadeandalucia:cice:pfirma:eni:v2.0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:type="urn:juntadeandalucia:cice:pfirma:type:v2.0" name="EniService" targetNamespace="urn:juntadeandalucia:cice:pfirma:eni:v2.0">
+	
+	<wsdl:types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:juntadeandalucia:cice:pfirma:eni:request:v2.0">
+			
+			<xsd:import namespace="urn:juntadeandalucia:cice:pfirma:type:v2.0" schemaLocation="WebServiceTypes.xsd"/>					
+			
+			
+			<xsd:element name="downloadSignEniResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="signatureEni" type="type:signature"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="downloadSignEni">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="documentId" type="xsd:string"/>
+						<xsd:element name="metadatosEni" type="type:metadatosEni"/>
+						<xsd:element minOccurs="0" name="metadatosAdicionales" type="type:TipoMetadatosAdicionales"/>						 			
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="justificanteCsvEni">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="documentId" type="xsd:string"/>
+						<xsd:element name="metadatosEni" type="type:metadatosEni"/>	
+						<xsd:element minOccurs="0" name="metadatosAdicionales" type="type:TipoMetadatosAdicionales"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="justificanteCsvEniResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="csvJustificante" type="type:CsvJustificante"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="downloadSignEniResponse">
+		<wsdl:part element="eni:downloadSignEniResponse" name="downloadSignEniResponse"/>
+	</wsdl:message>
+	<wsdl:message name="downloadSignEni">
+		<wsdl:part element="eni:downloadSignEni" name="downloadSignEni"/>
+	</wsdl:message>
+
+	<wsdl:message name="pfirmaException">
+		<wsdl:part element="type:exceptionInfo" name="pfirmaException"/>
+	</wsdl:message>
+	
+	<wsdl:message name="justificanteCsvEni">
+		<wsdl:part element="eni:justificanteCsvEni" name="justificanteCsvEni"/>
+	</wsdl:message>
+	<wsdl:message name="justificanteCsvEniResponse">
+		<wsdl:part element="eni:justificanteCsvEniResponse" name="justificanteCsvEniResponse"/>
+	</wsdl:message>
+	
+	<wsdl:portType name="EniService">
+		<wsdl:operation name="downloadSignEni">
+			<wsdl:input message="pfirma:downloadSignEni" name="downloadSignEni"/>
+			<wsdl:output message="pfirma:downloadSignEniResponse" name="downloadSignEniResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		
+		<wsdl:operation name="justificanteCsvEni">
+			<wsdl:input message="pfirma:justificanteCsvEni" name="justificanteCsvEni"/>
+			<wsdl:output message="pfirma:justificanteCsvEniResponse" name="justificanteCsvEniResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	
+	<wsdl:binding name="EniServiceSoapBinding" type="pfirma:EniService">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		
+		<wsdl:operation name="downloadSignEni">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="downloadSignEni">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="downloadSignEniResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		
+		<wsdl:operation name="justificanteCsvEni">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="justificanteCsvEni">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="justificanteCsvEniResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="EniService">
+		<wsdl:port binding="pfirma:EniServiceSoapBinding" name="EniServicePort">
+			<soap:address location="http://servidor/portafirma/servicesv2/EniServicePort"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

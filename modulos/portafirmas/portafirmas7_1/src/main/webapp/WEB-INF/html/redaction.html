@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+	   <div layout:fragment="content" >
+
+    	<script th:src="|${#httpServletRequest.getContextPath()}/js/redaction/redaction.js?#{versionNumber}.#{versionFase}|"></script>
+    	<script th:src="|${#httpServletRequest.getContextPath()}/js/jquery-picklist/jquery-picklist.js?#{versionNumber}.#{versionFase}|"></script>
+    	<div th:replace="fine-uploader/template_fineuploader"></div>
+        <!-- INICIO DEL CONTENIDO-->			 
+			<div  id="mainWindow" class="">
+				<div id="contentData">
+					<div id="contentDataHeader"> 
+
+						<ul id="pfToolbar">
+							<li>
+								<a href="javascript:void(0)" class="mf-icon-send-24" th:text="#{sendButton}" 
+								   onclick="enviarFormulario('redactionForm', 'enviar', [{parameterId:'signLinesConfig', parameterValue: loadSignLineConfig()}, {parameterId:'signlinesAccion', parameterValue: loadSignLineAcciones()}])">
+								   Enviar
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" class="mf-icon-delete-24" th:text="#{cancelButton}"
+								   onclick="enviarFormulario('redactionForm', 'cancelar', []);">
+								   Cancelar
+								</a>
+							</li>
+						
+						</ul>
+					</div>
+
+					<div id="contentDataBody" class="">
+						<form class="mailContent" id="redactionForm" name="redactionForm" method="POST" th:action="@{redaction}" th:object="${redaction}" enctype="multipart/form-data">
+							<!-- ATRIBUTOS DEL FORMULARIO -->
+							<input type="hidden" id="action" name="action" th:field="*{action}" />
+							<input type="hidden" id="signers" name="signers" th:field="*{signers}" />
+							<input type="hidden" id="signLinesConfig" name="signLinesConfig" th:field="*{signLinesConfig}" />
+							<input type="hidden" id="signlinesType" name="signlinesType" th:field="*{signlinesType}" />
+							<input type="hidden" id="signlinesAccion" name="signlinesAccion" th:field="*{signlinesAccion}" />
+							<input type="hidden" id="linvited" name="linvited" th:field="*{request.linvited}" value="false"/>
+							<input type="hidden" id="laccepted" name="laccepted" th:field="*{request.laccepted}" value="false"/>
+
+
+							<fieldset>
+								<div class="mailHeader">
+									<div class="fsb mailHeaderSubject">
+										
+										<div class="fld wv100">
+											<label for="example_input1" th:text="#{for}">Para</label>
+											<a href="javascript:void(0)" onclick="prepareUserPickList();">
+												<span class="btn_em p3 mt2 mf-icon mf-icon-user-16" th:text="#{selectUsers}">Seleccionar usuarios</span>
+											</a>
+
+											<ul id="signlines" class="ml0">
+												<li>
+													<select class="signline" id="signline_type_0" name="signline_type_0">
+														<option th:text="#{sign}">Firma</option>
+														<option th:text="#{pass}">Visto bueno</option>
+													</select>
+													<div class="overflowh" style="position: relative;">
+														<input id="signer_0" class="ui-autocomplete-input signer_input" style="width: 58%;" type="text" th:field="*{signer}" value="" name="signer_0" th:errorClass="error" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true" codigo=""/>
+														<select id="actionSigner_0" name="actionSigner_0" class="actionSigner" > 
+															<option th:each="accionFirmanteType : ${@applicationBO.queryAccionFirmante()}"
+																	th:text="${accionFirmanteType.cdescription}" th:value="${accionFirmanteType.ccodigo}" th:selected="${accionFirmanteType.ccodigo}=='1'"></option>
+														</select>
+													</div>
+													
+												</li>
+													
+											</ul>
+											<div class="right mb10">
+												 <span th:if="${#fields.hasErrors('signers')}"
+														id="signersErrorMessage"  
+														th:errors="*{signers}" 
+														class="dsp_b error errorMessage"></span>
+														
+												 <ul th:if="${usersNotValid != null}">
+												 	<li th:each="user : ${usersNotValid}" class="dsp_b error errorMessage">	
+												 		<span th:text="${user}" class="dsp_b error errorMessage"></span>
+												 	</li>
+												 </ul> 
+												
+											</div>
+										</div>
+ 
+										<div class="fld">
+											<label></label>
+											
+											<a href="#" onclick="addSignLine();" id="more-sign-line" class="btn_em p3 mt2">
+												<span class="mf-icon mf-icon-add-16"></span>
+											</a>
+										</div>
+
+										<div class="fld dsp_b">
+											<label for="subject_input" th:text="#{subject}">Asunto</label>
+											<input type="text" id="subject_input" class="mr0" th:field="*{request.dsubject}"/>
+											<div class="right mb10">
+												<p th:if="${#fields.hasErrors('subjectLengthError')}" th:errors="*{subjectLengthError}" class="dsp_b error errorMessage">
+													Longitud excedida
+												</p>
+											</div>
+										</div>
+										<div class="fld dsp_b">
+											<label for="reference_input" th:text="#{reference}">Referencia</label>
+											<input type="text" id="reference_input" class="mr0" th:field="*{request.dreference}" maxlength="30"/>
+											<div class="right mb10">
+												<p th:if="${#fields.hasErrors('referenceLengthError')}" th:errors="*{referenceLengthError}" class="dsp_b error errorMessage">
+													Longitud excedida
+												</p>
+											</div>
+										</div>
+										<div class="fld">
+											<label for="text_message" th:text="#{message}">Mensaje</label>
+											<input type="text" id="text_message" class="p20 test-editor wv80" th:field="*{requestText.trequest}"/>
+										</div>
+										<div class="fld "  style="margin-top: 10px;">
+											<label for="" th:text="#{documents}">Documentos</label>
+											<div>	
+												<span id="fileUploadButton" ></span>
+												
+												<div class="right mb10">
+													<ul id="uploadedDocs"></ul>
+													<p id="uploadedDocsErrorMessage"  th:if="${#fields.hasErrors('uploadedDocsError')}" th:errors="*{uploadedDocsError}" class="dsp_b error errorMessage">
+														Debe adjuntar al menos un documento
+													</p>
+												</div>
+											</div>
+										</div>
+
+										<input type="hidden" id="thereAreErrors" name="thereAreErrors" th:value="${#fields.hasAnyErrors()}"/>
+										<input type="hidden" id="documentString" name="documentString" th:value="${@redactionUploadedDocuments.getDocumentString()}"/>
+										<input type="hidden" id="annexString" name="annexString" th:value="${@redactionUploadedDocuments.getAnnexString()}"/>
+
+										<div id="documentTypesCombo" style="display: none;">
+											<select type="text" id="document_types" name="document_types" value="" maxlength="15"> 
+												<option th:each="docType : ${@applicationBO.queryDocumentTypePfirma()}"
+														 th:text="${docType.cdocumentType}" th:value="${docType.primaryKey}">Generico</option>
+											</select>
+										</div>
+										
+										<div class="fld " style="margin-top: 5px;">
+											<label for="" th:text="#{attached}">Adjuntos</label>
+											<div>
+												<span id="annexUploadButton" ></span>
+												<ul id="uploadedAnexos"></ul>
+											</div>
+										
+											<!-- <span class="fldHelp left"><fmt:message key="fileSizeAdvice"/></span> -->
+										</div>
+
+										<div class="fld">
+											<label th:text="#{validations}">Validaciones</label>
+											<ul class="checkbox_list">
+												<li>
+													<input id="chkbox_1" type="checkbox" value="isPDFA" th:checked="${validacionPDFA}"
+														th:disabled="${validacionesAutomaticas}" />&nbsp;
+													<label for="chkbox_1" th:text="#{isPDFA}">Es PDF/A</label>
+												</li>
+												<li>
+													<input id="chkbox_2" type="checkbox" value="fileSize" th:checked="${validacionTamano}" th:disabled="${validacionesAutomaticas}"/>&nbsp;
+													<label for="chkbox_2" th:text="#{fileSize}">Tama&ntilde;o de fichero</label>
+												</li>
+											</ul>		
+										</div>
+
+									</div>
+									
+	
+									
+									<div class="fsb mailOptions">
+											<div class="fld">
+												<label th:text="#{signType}">Tipo de firma</label>
+												<ul class="radio_list">
+													<li class="left">
+														<input type="radio" th:field="*{signType}" value="signTypeCascade"/>&nbsp;
+														<label for="radio_1" th:text="#{signTypeCascade}">Cascada</label>
+													</li>
+													<li class="left">
+														<input type="radio" th:field="*{signType}" value="signTypeParallel"/>&nbsp;
+														<label for="radio_2" th:text="#{signTypeParallel}">Paralela</label>
+													</li>
+												</ul>
+											</div>
+											<div class="fld">
+												<label class="dsp_n" th:text="#{add}">A&ntilde;adir</label>
+												<ul class="checkbox_list">
+													<li>
+														<input type="checkbox" id="radio_1" th:field="*{addTimestamp}" />&nbsp;
+														<label for="radio_1" th:text="#{timestamp}">Sello de tiempo</label>
+													</li>
+												</ul>
+											</div>
+											<div class="fld">
+												<ul class="checkbox_list">
+													<li>
+														<input type="checkbox" id="checkAddImporteFacturaContrato" onClick="mostrarOcultarImporte()" />&nbsp;
+														<label for="checkAddImporteFacturaContrato" th:text="#{textoAddImporteFacturaContrato}">Factura/Contrato</label>
+													</li>
+												</ul>
+												<label style="display:none" th:title="#{importeEuros}" th:text="#{importeEuros}" id="textoImporteEuros"></label>
+												<input style="display:none" type="text" size="14" maxlength="18" min="-99999999999999" max="999999999999999" th:field="*{request.importeFacturaContrato}" th:title="#{importeEuros}" name="importeEuros" id="importeEuros" onkeypress="return soloNumeros(event)" />
+											</div>
+											<div class="fld">
+												<label for="example_select1" class="w140" th:text="#{confSign}">Configuraci&oacute;n de firma</label>
+												<select th:field="*{signatureConfig}">
+													<option th:each="signConf : ${signatureConfigurations}" 
+												    	    th:value="${signConf.key}" 
+												        	th:text="${signConf.value}">
+													</option>
+												</select>
+											</div>
+											<div class="fld">
+												<label for="example_select1" th:text="#{priority}">Prioridad</label>
+												<select th:field="*{importanceLevel}" class="w100">
+													<option th:each="level : ${importanceLevelList}" 
+												    	    th:value="${level.key}" 
+												        	th:text="${level.value}">
+													</option>
+												</select>
+											</div>
+<!-- 04/08/2017: Se oculta el combo de selección del ámbito por los problemas generados con el CSV -->
+<!-- 											<div class="fld">
+												<label for="example_select1" th:text="#{scopeType}">&Aacute;mbito</label>
+												<select th:field="*{scopeType}" class="w100">
+													<option th:each="scope : ${scopeList}" 
+												    	    th:value="${scope.key}" 
+												        	th:text="${scope.value}">
+													</option>
+												</select>
+											</div> -->
+											<div class="fld">
+												<div class="left w100">
+													<label for="fstart_input" th:text="#{startDate}">Fecha de inicio</label>
+													<input type="text" th:field="*{fstart}" size="14" title="dd/mm/aaaa" class="fecha datepicker w90 left" name="Caducidad" id="fstart_input"/>
+												</div>
+												<div class="left ml10 w100">
+													<label for="fexpiration_input" th:text="#{expirationDate}">Fecha de caducidad</label>
+													<input type="text" th:field="*{fexpiration}" size="14" title="dd/mm/aaaa" class="fecha datepicker w90 left" name="Caducidad" id="fexpiration_input"/>
+												</div>
+											</div>
+											<div class="fld">
+												<div class="more-options-panel" style="display: none;">
+													<div class="fld left stkd mr20">
+														<label th:text="#{markAs}">Marcar como</label>		
+														<ul class="radio_list">
+															<li class="left">
+																<input type="checkbox" th:field="*{request.lSignMarked}" value="false"/>&nbsp;
+																<label for="radio_1" th:text="#{signedMark}">Firmado</label>
+															</li>
+														</ul>
+													</div>
+													<div class="fld left stkd mr20">
+														<label th:text="#{sendTo}">Notificar a</label>
+		
+														<ul class="radio_list">
+															<li class="left">
+																<input type="radio" th:field="*{request.lOnlyNotifyActionsToRemitter}" value="false"/>&nbsp;
+																<label for="radio_3" th:text="#{allSigners}">Todos</label>
+															</li>
+															<li class="left">
+																<input type="radio" th:field="*{request.lOnlyNotifyActionsToRemitter}" value="true"/>&nbsp;
+																<label for="radio_4" th:text="#{onlySender}">S&oacute;lo remitente</label>
+															</li>
+														</ul>
+													</div>
+													<div class="fld left stkd mr20">
+														<label>Avisar cuando</label>
+														<ul class="checkbox_list">
+															<li>
+																<input type="checkbox" th:field="*{notices}" value="noticeRead" />&nbsp;
+																<label for="radio_1" th:text="#{cRead}">Le&iacute;do</label>
+															</li>
+															<li>
+																<input type="checkbox" th:field="*{notices}" value="noticeSign" />&nbsp;
+																<label for="radio_3" th:text="#{cSigned}">Firmado</label>
+															</li>
+															<li>
+																<input type="checkbox" th:field="*{notices}" value="noticePassed" />&nbsp;
+																<label for="radio_4" th:text="#{cPassed}">Visto bueno</label>
+															</li>
+															<li>
+																<input type="checkbox" th:field="*{notices}" value="noticeReject" />&nbsp;
+																<label for="radio_2" th:text="#{cRejected}">Rechazado</label>
+															</li>
+														</ul>
+													</div>
+												</div>
+												
+												<a href="#!" id="more-options-btn" class="btn_em toggle ">
+													<span class="mf-icon-24 mf-icon-add-16" th:text="#{advancedOptions}"></span> 
+													Opciones avanzadas
+												</a>		
+										</div>										
+									</div>
+
+								</div>
+							</fieldset>
+						</form>
+						
+						<fieldset class="fsubmit mr20" style="text-align: right;padding-top: 6px; margin-bottom: 0;">
+								<button id="cancel_button" class="secondary" name="send" type="submit" th:text="#{cancelButton}"
+										onclick="enviarFormulario('redactionForm', 'cancelar', [])">
+									Cancelar
+								</button>
+								<button id="send_button"  class="primary" name="send" type="submit" th:text="#{sendButton}"
+										onclick="enviarFormulario('redactionForm', 'enviar', [{parameterId:'signLinesConfig', parameterValue: loadSignLineConfig()},{parameterId:'signlinesAccion', parameterValue: loadSignLineAcciones()}])">
+									<span class="mf-icon-24 mf-icon-send-24" th:text="#{sendButton}">Enviar</span>
+								</button>
+	
+							</fieldset>
+					</div>
+
+
+					<div id="contentDataFooter">
+
+					</div>
+
+					</div>
+				</div>
+
+
+		<!--FIN DEL CONTENIDO-->
+			
+
+		<!-- MODAL SELECTOR DE CONTACTOS-->
+		<div id="signers_modal" title="Contactos" style="display: none;">			
+			<fieldset class="nolegend pt20">
+				<div>
+					<div class="fld dsp_ib stkd">
+						<label th:text="#{user}">Usuario</label>
+						<input type="text" class="w220 ui-autocomplete-input" id="userNameFilter" autocomplete="off"/>
+					</div>
+					<div class="fld dsp_ib mb10 va_bottom">
+						<input class="secondary" type="submit" value="Buscar"
+							   onclick="prepareUserPickListFilter();"></input>
+					</div>
+				</div>
+				<div>
+					<div class="fld dsp_ib stkd">
+						<label th:text="#{userType}">Tipo de Usuario</label>
+						<select id="userTypeFilter" name="userTypeFilter">
+						</select>
+					</div>
+					<div class="fld dsp_ib stkd">
+						<label th:text="#{province}">Sede</label>
+						<select id="userSeatFilter" name="userSeatFilter">
+						</select>
+					</div>
+					<div class="fld dsp_ib stkd">
+						<label th:text="#{external.portafirmas}">Portafirmas</label>
+						<select id="portafirmasFilter" name="portafirmasFilter">
+						</select>
+					</div>
+				</div>
+				<div>
+					<div class="fsb wv100">			
+						<select id="userPickList" name="userPickList" multiple="multiple" class="userList dsp_n">
+						</select>	
+					</div>
+				</div>
+			</fieldset>
+		</div>
+    </div>
+</body>
+</html>

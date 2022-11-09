@@ -1,0 +1,107 @@
+/************/
+/*  TABLE   */
+
+table.data{
+    width: 100%;
+    background-color: #EFEFEF;
+}
+    
+.ie7 table.data, 
+.ie8 table.data {
+    border: 1px solid #AAA;
+}
+    
+table.data thead th, 
+table.data thead td{
+    border: 1px solid #B0B0B0;
+    
+    background-color: #DADADA;
+}
+    
+table.data tr td{
+    border-right: 1px solid #CCC;
+}
+    
+table.data tbody {
+    border: 1px solid #CCC;
+    border-top: 1px solid #AAA;
+}
+
+table.data .odd {
+    background-color: #EAEAEA;
+}
+    
+table.data tbody tr:nth-child(2n+1) {
+    background-color: #EAEAEA;
+}
+
+table.data .even {
+    background-color: #E4E4E4;
+}
+    
+table.data tbody tr:nth-child(2n) {
+    background-color: #E4E4E4;
+}
+    
+table.data td.actions {
+    white-space: nowrap;
+}
+    
+table.data tr.emptyTableMsg td {
+    color: #CCC;
+    color: rgba(0,0,0,0.5);
+    
+    height: 200px;
+    text-align: center;
+}
+    
+/* Sort column links */
+
+a.sort {
+    display: block;
+    padding-right: 16px;
+    background: url('images/sort.png') no-repeat right center;
+}
+    
+a.sorted_up {
+    display: block;
+    padding-right: 16px;
+    background: url('images/sort_up.png') no-repeat right center;
+}
+
+a.sorted_down {
+    display: block;
+    padding-right: 16px;
+    background: url('images/sort_down.png') no-repeat right center;
+}
+    
+a.sort:visited, 
+a.sorted_up:visited, 
+a.sorted_down:visited {
+    color: #666;
+    text-decoration: none;
+}
+    
+/* Sortable table */
+
+table.sortable th {
+    padding: 0 4px 0 0;
+}
+    
+table.sortable th a.sort, 
+table.sortable th a.sorted_up, 
+table.sortable th a.sorted_down {
+    padding: 0.3em 16px 0.3em 0.5em;
+}
+    
+/* Table w/actionable items */
+
+table.actionable td {
+    padding: 0;
+}
+    
+table.actionable td > a, 
+table.actionable td > a:link {
+    display: block;
+    padding: 0.3em 0.5em;
+}

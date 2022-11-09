@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:p="http://www.springframework.org/schema/p" xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd          http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd          http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+	<context:annotation-config/>
+	<context:component-scan base-package="es.seap.minhap.portafirmas, es.seap.minhap.interfazGenerica, es.seap.minhap.portafirmas.annotation"/>
+	
+	<task:annotation-driven/>
+	
+ 	<util:properties id="quartzProperties" location="file:${sgtic.configpath}/properties/quartz.properties"/>
+ 	<util:properties id="storageProperties" location="file:${sgtic.configpath}/properties/storage.properties"/>
+ 	<util:properties id="fireProperties" location="file:${sgtic.configpath}/properties/fire.properties"/>
+ 	<util:properties id="claveProperties" location="file:${sgtic.configpath}/properties/clave/clave.properties"/>
+ 	<util:properties id="claveMobileProperties" location="file:${sgtic.configpath}/properties/clave/clave.mobile.properties"/>
+ 	<util:properties id="autenticaProperties" location="file:${sgtic.configpath}/properties/autentica.properties"/>
+	<util:properties id="afirmaProperties" location="file:${sgtic.configpath}/properties/afirma.properties"/>
+	<util:properties id="interfazGenericaProperties" location="file:${sgtic.configpath}/properties/interfazGenerica.properties"/>
+	<util:properties id="tramitacionWebServiceProperties" location="file:${sgtic.configpath}/properties/tramitacionWebService.properties"/>
+	<util:properties id="messageProperties" location="classpath:Messages_es.properties"/>
+	<util:properties id="messageFireErrors" location="classpath:FireErrors.properties"/>
+	<util:properties id="configCSVQRProperties" location="file:${sgtic.configpath}/properties/configCSVQR.properties"/>
+	<util:properties id="CSVStorageProperties" location="file:${sgtic.configpath}/properties/CSVStorage.properties"/>
+	
+
+	<!-- MessageSource --> 
+	<bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource" id="messageSource"> 
+	    <property name="basename"> 
+	        <value>file:${sgtic.configpath}/properties/i18n/CustomMessages</value> 
+	    </property> 
+	    <property name="cacheSeconds" value="600"/> 
+	</bean>
+
+	<bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
+		<property name="persistenceUnitName" value="portafirmasDataSource"/>
+		<property name="dataSource" ref="dataSource"/>
+		<property name="jpaDialect">
+			<bean class="es.seap.minhap.portafirmas.business.dao.jpaisolationimplementation.CustomHibernateJpaDialect"/>
+		</property>
+	</bean>
+	
+	<!-- Aspecto asociado a la auditoria simulada -->
+	<bean class="es.seap.minhap.portafirmas.annotation.AuditSimulateAspect" id="auditSimulateAspect"/>
+	
+	<bean class="es.seap.minhap.portafirmas.actions.ApplicationVO" factory-method="getInstance" id="applicationVO" name="applicationVO"/>
+	<bean class="es.seap.minhap.portafirmas.utils.quartz.QuartzInvoker" factory-method="getInstance"/>
+	
+	
+</beans>

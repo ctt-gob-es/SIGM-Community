@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pfirma="urn:juntadeandalucia:cice:pfirma:admin:v2.0" xmlns:request="urn:juntadeandalucia:cice:pfirma:admin:request:v2.0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:type="urn:juntadeandalucia:cice:pfirma:type:v2.0" name="AdminServiceService" targetNamespace="urn:juntadeandalucia:cice:pfirma:admin:v2.0">
+	
+	<wsdl:types>
+
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:juntadeandalucia:cice:pfirma:admin:request:v2.0">
+
+			<xsd:import namespace="urn:juntadeandalucia:cice:pfirma:type:v2.0" schemaLocation="WebServiceTypes.xsd"/>	
+
+			<xsd:element name="insertDocumentsType">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="applicationId" type="xsd:string"/>
+						<xsd:element name="documentTypeList" type="type:documentTypeList"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="insertDocumentsTypeResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="applicationId" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="deleteDocumentsType">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="applicationId" type="xsd:string"/>
+						<xsd:element name="documentTypeList" type="type:documentTypeList"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="deleteDocumentsTypeResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="applicationId" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="updateDocumentsType">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="applicationId" type="xsd:string"/>
+						<xsd:element name="documentTypeList" type="type:documentTypeList"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="updateDocumentsTypeResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="applicationId" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="insertEnhancedUsers">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="enhancedUserList" type="type:enhancedUserList"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="insertEnhancedUsersResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="enhancedUsersInserted" type="xsd:integer"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+						
+			<xsd:element name="insertEnhancedJobs">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="enhancedJobList" type="type:enhancedJobList"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="insertEnhancedJobsResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="enhancedJobsInserted" type="xsd:integer"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="updateEnhancedUsers">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="enhancedUserList" type="type:enhancedUserList"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="updateEnhancedUsersResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="enhancedUsersUpdated" type="xsd:integer"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="updateEnhancedJobs">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="enhancedJobList" type="type:enhancedJobList"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="updateEnhancedJobsResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="enhancedJobsUpdated" type="xsd:integer"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="deleteUsers">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="userIdentifierList" type="type:stringList"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="deleteUsersResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="usersDeleted" type="xsd:integer"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="deleteJobs">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="jobIdentifierList" type="type:stringList"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="deleteJobsResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="jobsDeleted" type="xsd:integer"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="assignJobToUser">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="jobIdentifier" type="xsd:string"/>
+						<xsd:element name="userIdentifier" type="xsd:string"/>
+						<xsd:element minOccurs="0" name="fstart" nillable="true" type="xsd:date"/>
+						<xsd:element minOccurs="0" name="fend" nillable="true" type="xsd:date"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="assignJobToUserResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="assigned" type="xsd:boolean"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="autorizacionCreada">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="userIdenAutoriza" type="xsd:string"/>
+						<xsd:element name="userIdenAutorizado" type="xsd:string"/>
+						<xsd:element name="fstart" type="xsd:date"/>
+						<xsd:element name="fend" type="xsd:date"/>	
+						<xsd:element name="descripcion" type="xsd:string"/>
+						<xsd:element name="entidad" type="xsd:string"/>			
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="autorizacionCreadaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="insertada" type="xsd:boolean"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="insertarAutorizaciones">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="userIdenAutoriza" type="xsd:string"/>
+						<xsd:element name="userIdenAutorizado" type="xsd:string"/>
+						<xsd:element name="fstart" type="xsd:date"/>
+						<xsd:element name="fend" type="xsd:date"/>	
+						<xsd:element name="descripcion" type="xsd:string"/>
+						<xsd:element name="entidad" type="xsd:string"/>				
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="insertarAutorizacionesResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="insertada" type="xsd:boolean"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="revocarAutorizacionActiva">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="userIdenAutoriza" type="xsd:string"/>
+						<xsd:element name="userIdenAutorizado" type="xsd:string"/>
+						<xsd:element name="fstart" type="xsd:date"/>
+						<xsd:element name="fend" type="xsd:date"/>
+						<xsd:element name="entidad" type="xsd:string"/>					
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="revocarAutorizacionActivaResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="revocado" type="xsd:boolean"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="separateJobToUser">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="authentication" type="type:authentication"/>
+						<xsd:element name="jobIdentifier" type="xsd:string"/>
+						<xsd:element name="userIdentifier" type="xsd:string"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="separateJobToUserResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="separated" type="xsd:boolean"/>						
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="updateDocumentsTypeResponse">
+		<wsdl:part element="request:updateDocumentsTypeResponse" name="updateDocumentsTypeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="deleteDocumentsTypeResponse">
+		<wsdl:part element="request:deleteDocumentsTypeResponse" name="deleteDocumentsTypeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="insertDocumentsType">
+		<wsdl:part element="request:insertDocumentsType" name="insertDocumentsType"/>
+	</wsdl:message>
+	<wsdl:message name="insertDocumentsTypeResponse">
+		<wsdl:part element="request:insertDocumentsTypeResponse" name="insertDocumentsTypeResponse"/>
+	</wsdl:message>
+	<wsdl:message name="deleteDocumentsType">
+		<wsdl:part element="request:deleteDocumentsType" name="deleteDocumentsType"/>
+	</wsdl:message>
+	<wsdl:message name="updateDocumentsType">
+		<wsdl:part element="request:updateDocumentsType" name="updateDocumentsType"/>
+	</wsdl:message>
+	<wsdl:message name="insertEnhancedUsers">
+		<wsdl:part element="request:insertEnhancedUsers" name="insertEnhancedUsers"/>
+	</wsdl:message>
+	<wsdl:message name="insertEnhancedUsersResponse">
+		<wsdl:part element="request:insertEnhancedUsersResponse" name="insertEnhancedUsersResponse"/>
+	</wsdl:message>
+	<wsdl:message name="insertEnhancedJobs">
+		<wsdl:part element="request:insertEnhancedJobs" name="insertEnhancedJobs"/>
+	</wsdl:message>
+	<wsdl:message name="insertEnhancedJobsResponse">
+		<wsdl:part element="request:insertEnhancedJobsResponse" name="insertEnhancedJobsResponse"/>
+	</wsdl:message>	
+	<wsdl:message name="updateEnhancedUsers">
+		<wsdl:part element="request:updateEnhancedUsers" name="updateEnhancedUsers"/>
+	</wsdl:message>
+	<wsdl:message name="updateEnhancedUsersResponse">
+		<wsdl:part element="request:updateEnhancedUsersResponse" name="updateEnhancedUsersResponse"/>
+	</wsdl:message>
+	<wsdl:message name="updateEnhancedJobs">
+		<wsdl:part element="request:updateEnhancedJobs" name="updateEnhancedJobs"/>
+	</wsdl:message>
+	<wsdl:message name="updateEnhancedJobsResponse">
+		<wsdl:part element="request:updateEnhancedJobsResponse" name="updateEnhancedJobsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="deleteUsers">
+		<wsdl:part element="request:deleteUsers" name="deleteUsers"/>
+	</wsdl:message>
+	<wsdl:message name="deleteUsersResponse">
+		<wsdl:part element="request:deleteUsersResponse" name="deleteUsersResponse"/>
+	</wsdl:message>
+	<wsdl:message name="deleteJobs">
+		<wsdl:part element="request:deleteJobs" name="deleteJobs"/>
+	</wsdl:message>
+	<wsdl:message name="deleteJobsResponse">
+		<wsdl:part element="request:deleteJobsResponse" name="deleteJobsResponse"/>
+	</wsdl:message>
+	<wsdl:message name="assignJobToUser">
+		<wsdl:part element="request:assignJobToUser" name="assignJobToUser"/>
+	</wsdl:message>
+	<wsdl:message name="assignJobToUserResponse">
+		<wsdl:part element="request:assignJobToUserResponse" name="assignJobToUserResponse"/>
+	</wsdl:message>
+	<wsdl:message name="autorizacionCreada">
+		<wsdl:part element="request:autorizacionCreada" name="autorizacionCreada"/>
+	</wsdl:message>
+	<wsdl:message name="autorizacionCreadaResponse">
+		<wsdl:part element="request:autorizacionCreadaResponse" name="autorizacionCreadaResponse"/>
+	</wsdl:message>
+	<wsdl:message name="insertarAutorizaciones">
+		<wsdl:part element="request:insertarAutorizaciones" name="insertarAutorizaciones"/>
+	</wsdl:message>
+	<wsdl:message name="insertarAutorizacionesResponse">
+		<wsdl:part element="request:insertarAutorizacionesResponse" name="insertarAutorizacionesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="revocarAutorizacionActiva">
+		<wsdl:part element="request:revocarAutorizacionActiva" name="revocarAutorizacionActiva"/>
+	</wsdl:message>
+	<wsdl:message name="revocarAutorizacionActivaResponse">
+		<wsdl:part element="request:revocarAutorizacionActivaResponse" name="revocarAutorizacionActivaResponse"/>
+	</wsdl:message>
+	<wsdl:message name="separateJobToUser">
+		<wsdl:part element="request:separateJobToUser" name="separateJobToUser"/>
+	</wsdl:message>
+	<wsdl:message name="separateJobToUserResponse">
+		<wsdl:part element="request:separateJobToUserResponse" name="separateJobToUserResponse"/>
+	</wsdl:message>
+	
+	
+	<wsdl:message name="pfirmaException">
+		<wsdl:part element="type:exceptionInfo" name="pfirmaException"/>
+	</wsdl:message>
+	
+	
+	<wsdl:portType name="AdminService">
+		<wsdl:operation name="insertDocumentsType">
+			<wsdl:input message="pfirma:insertDocumentsType" name="insertDocumentsType"/>
+			<wsdl:output message="pfirma:insertDocumentsTypeResponse" name="insertDocumentsTypeResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="deleteDocumentsType">
+			<wsdl:input message="pfirma:deleteDocumentsType" name="deleteDocumentsType"/>
+			<wsdl:output message="pfirma:deleteDocumentsTypeResponse" name="deleteDocumentsTypeResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateDocumentsType">
+			<wsdl:input message="pfirma:updateDocumentsType" name="updateDocumentsType"/>
+			<wsdl:output message="pfirma:updateDocumentsTypeResponse" name="updateDocumentsTypeResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="insertEnhancedUsers">
+			<wsdl:input message="pfirma:insertEnhancedUsers" name="insertEnhancedUsers"/>
+			<wsdl:output message="pfirma:insertEnhancedUsersResponse" name="insertEnhancedUsersResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="insertEnhancedJobs">
+			<wsdl:input message="pfirma:insertEnhancedJobs" name="insertEnhancedJobs"/>
+			<wsdl:output message="pfirma:insertEnhancedJobsResponse" name="insertEnhancedJobsResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateEnhancedUsers">
+			<wsdl:input message="pfirma:updateEnhancedUsers" name="updateEnhancedUsers"/>
+			<wsdl:output message="pfirma:updateEnhancedUsersResponse" name="updateEnhancedUsersResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="updateEnhancedJobs">
+			<wsdl:input message="pfirma:updateEnhancedJobs" name="updateEnhancedJobs"/>
+			<wsdl:output message="pfirma:updateEnhancedJobsResponse" name="updateEnhancedJobsResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="deleteUsers">
+			<wsdl:input message="pfirma:deleteUsers" name="deleteUsers"/>
+			<wsdl:output message="pfirma:deleteUsersResponse" name="deleteUsersResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="deleteJobs">
+			<wsdl:input message="pfirma:deleteJobs" name="deleteJobs"/>
+			<wsdl:output message="pfirma:deleteJobsResponse" name="deleteJobsResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="assignJobToUser">
+			<wsdl:input message="pfirma:assignJobToUser" name="assignJobToUser"/>
+			<wsdl:output message="pfirma:assignJobToUserResponse" name="assignJobToUserResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="insertarAutorizaciones">
+			<wsdl:input message="pfirma:insertarAutorizaciones" name="insertarAutorizaciones"/>
+			<wsdl:output message="pfirma:insertarAutorizacionesResponse" name="insertarAutorizacionesResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="autorizacionCreada">
+			<wsdl:input message="pfirma:autorizacionCreada" name="autorizacionCreada"/>
+			<wsdl:output message="pfirma:autorizacionCreadaResponse" name="autorizacionCreadaResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="revocarAutorizacionActiva">
+			<wsdl:input message="pfirma:revocarAutorizacionActiva" name="revocarAutorizacionActiva"/>
+			<wsdl:output message="pfirma:revocarAutorizacionActivaResponse" name="revocarAutorizacionActivaResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		<wsdl:operation name="separateJobToUser">
+			<wsdl:input message="pfirma:separateJobToUser" name="separateJobToUser"/>
+			<wsdl:output message="pfirma:separateJobToUserResponse" name="separateJobToUserResponse"/>
+			<wsdl:fault message="pfirma:pfirmaException" name="pfirmaException"/>
+		</wsdl:operation>
+		
+	</wsdl:portType>
+	<wsdl:binding name="AdminServiceSoapBinding" type="pfirma:AdminService">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="insertDocumentsType">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="insertDocumentsType">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="insertDocumentsTypeResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		<wsdl:operation name="deleteDocumentsType">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="deleteDocumentsType">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="deleteDocumentsTypeResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		<wsdl:operation name="updateDocumentsType">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="updateDocumentsType">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="updateDocumentsTypeResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		<wsdl:operation name="insertEnhancedUsers">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="insertEnhancedUsers">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="insertEnhancedUsersResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		<wsdl:operation name="insertEnhancedJobs">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="insertEnhancedJobs">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="insertEnhancedJobsResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		<wsdl:operation name="updateEnhancedUsers">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="updateEnhancedUsers">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="updateEnhancedUsersResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		<wsdl:operation name="updateEnhancedJobs">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="updateEnhancedJobs">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="updateEnhancedJobsResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		<wsdl:operation name="deleteUsers">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="deleteUsers">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="deleteUsersResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		<wsdl:operation name="deleteJobs">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="deleteJobs">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="deleteJobsResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>		
+		<wsdl:operation name="assignJobToUser">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="assignJobToUser">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="assignJobToUserResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		<wsdl:operation name="autorizacionCreada">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="autorizacionCreada">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="autorizacionCreadaResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		<wsdl:operation name="insertarAutorizaciones">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="insertarAutorizaciones">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="insertarAutorizacionesResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>
+		<wsdl:operation name="revocarAutorizacionActiva">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="revocarAutorizacionActiva">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="revocarAutorizacionActivaResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>			
+		<wsdl:operation name="separateJobToUser">
+			<soap:operation soapAction="" style="document"/>
+			<wsdl:input name="separateJobToUser">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="separateJobToUserResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		    <wsdl:fault name="pfirmaException">
+		    	<soap:fault name="pfirmaException" use="literal"/>
+		    </wsdl:fault>			
+		</wsdl:operation>		
+		
+		
+		
+	</wsdl:binding>
+	<wsdl:service name="AdminService">
+		<wsdl:port binding="pfirma:AdminServiceSoapBinding" name="AdminServicePort">
+			<soap:address location="http://servidor:puerto/AdminServicePort"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

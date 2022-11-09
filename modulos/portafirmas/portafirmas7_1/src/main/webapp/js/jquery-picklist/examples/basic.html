@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>jQuery PickList - Basic Example</title>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+
+	<!-- REMOVE THIS if you're using jQuery UI. -->
+	<script type="text/javascript" src="../jquery.ui.widget.js"></script>
+
+	<script type="text/javascript" src="../jquery-picklist.js"></script>
+	<script type="text/javascript">
+		$(function()
+		{
+			$("#basic").pickList();
+		});
+	</script>
+
+	<link type="text/css" href="../jquery-picklist.css" rel="stylesheet" />
+	<!--[if IE 7]><link href="../jquery-picklist-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+</head>
+
+<body>
+
+	<div>
+		<select id="basic" name="basic" multiple="multiple">
+			<option value="1">Option 1</option>
+			<option value="2" selected="selected">Option 2</option>
+			<option value="3">Option 3</option>
+			<option value="4" selected="selected">Option 4</option>
+			<option value="5">Option 5</option>
+		</select>
+	</div>
+
+</body></html>

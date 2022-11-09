@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+
+<div th:fragment="addAttachFilesModal" class="fsb wv50">
+	<form id="addAttachFilesForm_modal">
+		<table>
+			<tr>
+				<td><label>Descripcion para los anexos adicionales</label></td>
+				<td><input type="text" id="descripcion_anexos" size="40"/></td>
+			</tr>
+			<tr>
+				<td><input onchange="subirNuevoAnexo('inputAnexosNuevos')" type="file" name="anexosNuevos" id="inputAnexosNuevos" multiple="" /></td>
+			</tr>
+			<tr>
+				<td><div id="divListaAnexosNuevos"></div></td>
+			</tr>
+		</table>
+	</form>
+	<div class="dsp_b error errorMessage" id="erroraddAttachFilesModal"></div>
+</div>				
+
+</html>

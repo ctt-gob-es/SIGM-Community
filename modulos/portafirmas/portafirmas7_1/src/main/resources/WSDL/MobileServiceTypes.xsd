@@ -1,0 +1,191 @@
+<?xml version='1.0' encoding='UTF-8'?><xsd:schema targetNamespace="urn:juntadeandalucia:cice:pfirma:mobile:type:v2.0" xmlns:type="urn:juntadeandalucia:cice:pfirma:mobile:type:v2.0" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="mobileError">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element minOccurs="0" name="message" type="xsd:string"/>
+				<xsd:element minOccurs="0" name="code" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>	
+	<xsd:complexType name="mobileRequest">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="identifier" nillable="true" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="subject" nillable="true" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="view" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="text" nillable="true" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="ref" nillable="true" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="fentry" nillable="true" type="xsd:dateTime"/>
+			<xsd:element minOccurs="0" name="fexpiration" nillable="true" type="xsd:dateTime"/>
+			<xsd:element minOccurs="0" name="importanceLevel" nillable="true" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="application" nillable="true" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="workflow" nillable="true" type="xsd:boolean"/>
+			<xsd:element minOccurs="0" name="forward" nillable="true" type="xsd:boolean"/>
+			<xsd:element minOccurs="0" name="rejected" nillable="true" type="xsd:boolean"/>
+			<xsd:element minOccurs="0" name="rejectedText" nillable="true" type="xsd:string"/>
+			<xsd:element minOccurs="1" name="cascadeSign" nillable="false" type="xsd:boolean"/>
+			<xsd:element minOccurs="0" name="senders" nillable="false" type="type:mobileStringList"/>
+			<xsd:element minOccurs="0" name="signLineList" nillable="true" type="type:mobileSignLineList"/>
+			<xsd:element minOccurs="1" name="documentList" nillable="false" type="type:mobileDocumentList"/>
+			<xsd:element minOccurs="0" name="attachList" nillable="true" type="type:mobileDocumentList"/>
+			<xsd:element minOccurs="0" name="requestType" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="requestTagId" nillable="false" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileRequestList">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="request" type="type:mobileRequest"/>
+			<xsd:element minOccurs="0" name="size" nillable="false" type="xsd:int"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileDocument">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="identifier" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="name" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="mime" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="signatureType" nillable="true" type="type:mobileSignFormat"/>
+			<xsd:element minOccurs="0" name="signAlgorithm" nillable="true" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="operationType" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="signatureParameters" nillable="true" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="data" nillable="true" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
+			<xsd:element minOccurs="0" name="size" nillable="true" type="xsd:int"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileDocumentList">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="document" type="type:mobileDocument"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileSignLine">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="mobileSignerList" nillable="true" type="type:mobileStringList"/> 
+			<xsd:element minOccurs="0" name="type" nillable="true" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="terminate" nillable="true" type="xsd:boolean"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileSignLineList">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="mobileSignLine" type="type:mobileSignLine"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileRequestFilterList">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="requestFilter" type="type:mobileRequestFilter"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileRequestFilter">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="key" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="value" nillable="false" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="mobileSignFormat">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="PKCS7"/>
+			<xsd:enumeration value="CMS"/>
+			<!-- xsd:enumeration value="XADES-BES"/>
+			<xsd:enumeration value="XADES-T"/ -->
+			<xsd:enumeration value="CADES"/>			
+			<xsd:enumeration value="XADES"/>
+			<xsd:enumeration value="XADES IMPLICITO"/>
+			<xsd:enumeration value="XADES EXPLICITO"/>
+			<xsd:enumeration value="XADES ENVELOPED"/>
+			<xsd:enumeration value="XADES ENVELOPING"/>
+			<xsd:enumeration value="PDF"/>
+			<xsd:enumeration value="FACTURAE"/>
+		</xsd:restriction>
+	</xsd:simpleType>	
+	<xsd:complexType name="mobileStringList">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="str" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileFormatoFirma">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="hash" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="formatoFirma" nillable="false" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileFormatoFirmaList">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="mobileFormatoFirma" type="type:mobileFormatoFirma"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileDocSignInfo">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="documentId" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="signature" nillable="false" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
+			<xsd:element minOccurs="0" name="signFormat" nillable="false" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileDocSignInfoList">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="mobileDocSignInfo" type="type:mobileDocSignInfo"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileApplicationList">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="applicationList" type="type:mobileApplication"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileApplication">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="id" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="name" nillable="false" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileSIMUser">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="IdRegistro" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="Plataforma" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="IdDispositivo" nillable="false" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileSIMUserStatus">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="statusCode" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="statusText" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="details" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="idDispositivo" nillable="false" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileAccesoClave">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="claveServiceUrl" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="excludedIdPList" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="forcedIdP" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="samlRequest" nillable="false" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileFireDocument">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="id" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="nombre" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="error" nillable="false" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileFireDocumentList">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="mobileFireDocumentList" nillable="false" type="type:mobileFireDocument"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileFireRequest">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="id" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="asunto" nillable="false" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="documentos" nillable="false" type="type:mobileFireDocumentList"/>
+			<xsd:element minOccurs="0" name="errorPeticion" nillable="false" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileFireRequestList">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0" name="mobileFireRequest" nillable="false" type="type:mobileFireRequest"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="mobileFireTrasactionResponse">
+		<xsd:sequence>
+                <xsd:element name="transactionId" type="xsd:string"/>
+                <xsd:element name="urlRedirect" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>

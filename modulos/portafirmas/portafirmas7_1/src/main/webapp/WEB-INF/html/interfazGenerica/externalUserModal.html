@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	  
+	<div th:fragment="user">
+		<form id="form_externalUsers_modal">
+			<div class="fsb">
+				<div class="fld">
+					<div class="fld">
+						<label th:title="#{nif}" th:text="#{nif}"></label>
+						<input size="14" th:value="${user.cidentifier}" th:title="#{nif}" name="cidentifier" id="dni"/>
+						<input type="hidden" th:value="${user.primaryKey}" name="primaryKey" id="idUsuario"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{name}" th:text="#{name}"></label>
+						<input size="14" th:value="${user.dname}" th:title="#{name}" class="" name="dname" id="nombre"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{lastName1}" th:text="#{lastName1}"></label>
+						<input size="14" th:value="${user.dsurname1}" th:title="#{lastName1}" class="" name="dsurname1" id="apellido1"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{lastName2}" th:text="#{lastName2}"></label>
+						<input size="14" th:value="${user.dsurname2}" th:title="#{apellido2}" class="" name="dsurname2" id="apellido2"/>
+					</div>
+					<div class="fld">
+						<label th:title="#{external.portafirmas}" th:text="#{external.portafirmas}"></label>
+						<select name="portafirmas.idPortafirmas" id="portafirmas">
+							<option value=""></option>
+							<option th:each="portafirmas : ${portafirmasList}" th:value="${portafirmas.idPortafirmas}" th:text="${portafirmas.nombre}" th:selected="${user.portafirmas ne null and portafirmas.idPortafirmas eq user.portafirmas.idPortafirmas}"></option>
+						</select>
+					</div>
+					<div class="fld">
+						<label th:title="#{valid}" th:text="#{valid}"></label>
+						<input type="checkbox" th:title="#{valid}" class="" name="lvalid" id="valid" th:checked="${user.lvalid}" value="true"/>
+					</div>
+				</div>
+			</div>
+			<div id="errorMsgExternalUser" class="errorMessage"></div>
+		</form>
+	
+		<div id="warningExternalUserModal" class="capaPregunta" style="display: none;">
+			<div class="fld">
+				<span class="mf-icon-24 mf-icon-warning-24"></span>
+				<span id="warningExternalUserModal" class="pregunta"></span> 
+			</div>
+		</div>		
+	</div>								
+</html>	    

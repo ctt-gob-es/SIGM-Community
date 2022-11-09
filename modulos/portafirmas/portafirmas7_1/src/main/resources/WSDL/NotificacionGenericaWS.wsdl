@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns1="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://ip2/docelweb/proceso/notificacionGenerica/NotificacionGenericaWSImpl.wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="NotificacionGenericaWS" targetNamespace="http://ip2/docelweb/proceso/notificacionGenerica/NotificacionGenericaWSImpl.wsdl">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" elementFormDefault="qualified" targetNamespace="http://ip2/docelweb/proceso/notificacionGenerica/NotificacionGenericaWSImpl.wsdl"/>
+    </types>
+    <message name="notificarDevolucionSolicitud0Request">
+        <part name="aplicacion" type="xsd:string"/>
+        <part name="idSolicitud" type="xsd:long"/>
+        <part name="estSolicitud" type="xsd:string"/>
+    </message>
+    <message name="notificarDevolucionSolicitud0Response">
+        <part name="return" type="xsd:string"/>
+    </message>
+    <portType name="NotificacionGenericaWSImplPortType">
+        <operation name="notificarDevolucionSolicitud" parameterOrder="aplicacion idSolicitud estSolicitud">
+            <input message="tns:notificarDevolucionSolicitud0Request"/>
+            <output message="tns:notificarDevolucionSolicitud0Response"/>
+        </operation>
+    </portType>
+    <binding name="NotificacionGenericaWSImplBinding" type="tns:NotificacionGenericaWSImplPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="notificarDevolucionSolicitud">
+            <soap:operation soapAction="http://ip2/docelweb/proceso/notificacionGenerica/NotificacionGenericaWSImpl.wsdl/notificarDevolucionSolicitud"/>
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://ip2/docelweb/proceso/notificacionGenerica/NotificacionGenericaWSImpl.wsdl" parts="aplicacion idSolicitud estSolicitud" use="encoded"/>
+            </input>
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://ip2/docelweb/proceso/notificacionGenerica/NotificacionGenericaWSImpl.wsdl" parts="return" use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="NotificacionGenericaWS">
+        <port binding="tns:NotificacionGenericaWSImplBinding" name="NotificacionGenericaWSImplBindingPort">
+            <soap:address location="http://localhost/Portafirma/NotificacionGenericaWS"/>
+        </port>
+    </service>
+</definitions>

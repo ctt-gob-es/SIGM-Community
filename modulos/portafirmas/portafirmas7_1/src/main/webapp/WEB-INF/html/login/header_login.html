@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+	<div th:fragment="header">
+		<form id="handbookForm" th:action="|${#httpServletRequest.getContextPath()}/help/handbook|" method="post">
+			<input type="hidden" id="handbookId" name="handbookId" value="user"/>
+		</form>
+		<div>
+			<h1>
+				<a href="#" th:title="#{organizationDisplayName}"></a>
+			</h1>
+
+			<div id="headerContent">
+				<h2 th:text="#{appDisplayName}"></h2>
+				<h3 th:text="#{organizationDisplayNameTitle}"></h3>
+			</div>
+		</div>
+	</div>
+	<div th:fragment="help">
+		<div id="topBar" class="help">
+ 			<ul id="userMenu" style="float: right; margin-right: 50px;"> 					
+				<li>
+					<a href="#" th:text="#{help}" onclick="$('#handbookForm').submit()">Ayuda</a>
+					<ul>
+						<li>
+							<a href="#" onclick="downloadHandbook('user');" th:text="#{userHandbook}">
+								Manual usuario
+							</a>
+						</li>
+						<li>
+							<a href="#" onclick="downloadHandbook('guia_rapida');" th:text="#{guiaRapidaHandbook}">
+								Gu&iacute;a r&aacute;pida
+							</a>
+						</li>
+						<li>
+							<a href="https://sede.dipucr.es/soporteGeneral" th:text="#{accessToSSCC}">
+								Incidencias CENPRI
+							</a>
+						</li>
+					</ul>
+				</li>				
+			</ul>
+		</div>
+	</div>	
+</body>
+</html>

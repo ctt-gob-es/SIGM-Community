@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+	<label style="font-weight: bold;" th:text="#{serverLabel}">Servidor</label>
+	<select name="searchServerPk" id="searchServerPk" onchange="reLoadServerConfig(this.value)">
+		<option th:each="server : ${serverList}" th:value="${server.primaryKey}" th:text="${server.cserver}" th:selected="${server.primaryKeyString eq searchServerPk}"></option>
+	</select>
+	<button class="secondary mb10 right" onclick="prepareNewServerConfig();">
+		<span class="mf-icon mf-icon-add-16"></span>
+		<span th:text="#{newButtonF}">Nueva configuración</span>
+	</button>
+	<div class="fld" style="overflow: auto; height: 300px; width: 100%;">
+		<table class="data noborder tl">
+			<thead>
+				<tr>
+					<th class="w80">Por defecto</th>
+					<th>Código</th>
+					<th>Nombre</th>											
+					<th class="w60"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="config : ${serverConfigList}">
+					<td th:if="${config.lmain}" class="mf-icon mf-icon-accepted-16">Por defecto</td>
+					<td th:unless="${config.lmain}" class="mf-icon mf-icon-rejected-16">Por defecto</td>
+					<td th:text="${config.cconfiguration}">Configuración</td>
+					<td th:text="${config.pfServer.dserver}">Servidor</td>
+					<td>
+						<a href="javascript:void(0)" th:onclick="|prepareLoadParameters('${config.primaryKey}')|"><span class="mf-icon mf-icon-param-16">Gestionar cargos</span></a>
+						<a href="javascript:void(0)" th:onclick="|prepareModifyServerConfig('${config.primaryKey}')|"><span class="mf-icon mf-icon-edit-16">Editar</span></a>
+						<a href="javascript:void(0)" th:onclick="|prepareDeleteServerConfig('${config.primaryKey}','${config.cconfiguration}')|"><span class="mf-icon mf-icon-delete-16">Eliminar</span></a>
+						
+						<input type="hidden" th:value="${config.cconfiguration}" th:id="|cConfiguration_${config.primaryKey}|"/>
+						<input type="hidden" th:value="${config.pfServer.primaryKey}" th:id="|serverPk_${config.primaryKey}|"/>
+						<input type="hidden" th:value="${config.lmain}" th:id="|mainConfig_${config.primaryKey}|"/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div id="questionServerConfig" class="capaPregunta" style="display: none;">
+		<div class="fld">
+			<span class="mf-icon-24 mf-icon-warning-24"></span>
+			<span id="questionMessageServerConfig" class="pregunta"></span> 
+		</div>
+		<div class="fld">
+		  	<button id="yesButtonServerConfig" name="yesButtonServerConfig" class="simbuttom secondary">
+				<span th:title="#{yes}" th:text="#{yes}"></span>
+			</button>
+		  	<button id="noButtonServerConfig" name="noButtonServerConfig" class=" simbuttom secondary" onclick="$('#questionServerConfig').hide();">
+				<span th:title="#{no}" th:text="#{no}"></span>
+			</button>
+		</div>
+	</div>
+	
+	<div id="serverConfig_modal" title="Edición de configuración">
+		<fieldset class="nolegend pt20">
+			<form id="serverConfig_form">
+				<div class="fld">
+					<label th:text="#{code}">Código</label>
+					<input size="14" type="text" id="cConfiguration" name="cConfiguration"/>
+					<input type="hidden" value="" id="configurationPk" name="configurationPk" />
+				</div>
+				<div class="fld">
+					<label th:text="#{serverLabel}">Servidor</label>
+					<select name="serverPk" id="serverPk">
+						<option value=""></option>
+						<option th:each="server : ${serverList}" th:value="${server.primaryKey}" th:text="${server.cserver}"></option>
+					</select>
+				</div>
+				<div class="fld">
+					<label th:text="#{defaultConf}">Por defecto</label>
+					<input type="checkbox" name="mainConfig" id="mainConfig" value="S"/>
+				</div>
+				<div class="dsp_b error errorMessage" id="serverConfigErrorMessage"></div>
+			</form>
+		</fieldset>
+	</div>
+	
+	<div id="parameterConfig_modal" title="Edición de parámetros"></div>
+
+</html>

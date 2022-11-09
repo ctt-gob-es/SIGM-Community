@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--   Copyright (C) 2012-13 MINHAP, Gobierno de EspaÃ±a
+   This program is licensed and may be used, modified and redistributed under the terms
+   of the European Public License (EUPL), either version 1.1 or (at your
+   option) any later version as soon as they are approved by the European Commission.
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+   or implied. See the License for the specific language governing permissions and
+   more details.
+   You should have received a copy of the EUPL1.1 license
+   along with this program; if not, you may find it at
+   http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+
+--><beans:beans xmlns:beans="http://www.springframework.org/schema/beans" xmlns="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans            http://www.springframework.org/schema/beans/spring-beans-3.2.xsd            http://www.springframework.org/schema/security            http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<global-method-security secured-annotations="enabled"/>
+
+ 	<http auto-config="false" use-expressions="true">
+		
+        <form-login authentication-failure-handler-ref="pfAuthenticationFailureHandler" authentication-success-handler-ref="pfAuthenticationSuccessHandler" login-page="/login"/>
+					
+ 		<custom-filter position="PRE_AUTH_FILTER" ref="compositePreAuthFilter"/>
+        
+		<logout logout-success-url="/login"/>
+	
+		<intercept-url access="isAnonymous()" pattern="/login*"/>
+		<intercept-url access="isAnonymous()" pattern="/login/error*"/>
+		<intercept-url access="permitAll" pattern="/servicesv2/**"/>
+		<intercept-url access="permitAll" pattern="/help/*"/>
+		<intercept-url access="permitAll" pattern="/login/accesoRedirectClave*"/>
+		<intercept-url access="principal" pattern="/login/accesoClave*"/>
+		<intercept-url access="permitAll" pattern="/valida*"/>
+		<intercept-url access="permitAll" pattern="/guest*"/> 
+		<intercept-url access="permitAll" pattern="/guest/**"/>
+		<intercept-url access="permitAll" pattern="/report*"/>
+		<intercept-url access="permitAll" pattern="/css/**"/>
+		<intercept-url access="permitAll" pattern="/images/**"/>
+		<intercept-url access="permitAll" pattern="/js/**"/>
+		<intercept-url access="isAuthenticated()" pattern="/**"/>
+	</http>
+
+	<authentication-manager alias="authenticationManager">
+        <authentication-provider ref="pfAuthenticationProvider"/>
+    </authentication-manager>
+
+	<beans:bean class="org.springframework.web.filter.CompositeFilter" id="compositePreAuthFilter">
+	    <beans:property name="filters">
+	        <beans:list>
+				<beans:ref bean="autenticaLoginFilter"/>	        
+	            <beans:ref bean="claveLoginFilter"/> 
+	        </beans:list>
+	    </beans:property>
+	</beans:bean>
+
+	<beans:bean class="es.seap.minhap.portafirmas.security.filter.ClaveLoginFilter" id="claveLoginFilter">
+    	<beans:property name="authenticationManager" ref="authenticationManager"/>
+    	<beans:property name="authenticationSuccessHandler" ref="pfAuthenticationSuccessHandler"/>
+    	<beans:property name="authenticationFailureHandler" ref="pfAuthenticationFailureHandler"/>
+	</beans:bean>
+
+	<beans:bean class="es.seap.minhap.portafirmas.security.filter.AutenticaLoginFilter" id="autenticaLoginFilter">
+    	<beans:property name="authenticationManager" ref="authenticationManager"/>
+    	<beans:property name="authenticationSuccessHandler" ref="pfAuthenticationSuccessHandler"/>
+    	<beans:property name="authenticationFailureHandler" ref="pfAuthenticationFailureHandler"/>
+	</beans:bean>
+
+</beans:beans>

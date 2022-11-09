@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3" 
+ 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/portafirmas-login-layout">
+	<head>
+		<title>Portafirmas</title>
+	</head>
+	<body>
+	   <div layout:fragment="content" >
+	        <div class="modulableLogin numModules_2" id="login">
+				<div class="text">
+				
+				    <!-- 
+				    <h3 style="color:red;">AVISO IMPORTANTE</h3>
+					<h3 style="color:red;"> 01/10/2021 10:48</h3>
+					<h6> Buenas días, siguen los problemas de acceso por la pasarela Cl@ve a Port@firmas, tenemos otra alternativa más de acceso mediante usuario/contraseña, si no dispone de usuario/contraseña contacte con informática de su Ayuntamiento o envíe una incidencia a <a href="https://sede.dipucr.es/soporteGeneral">https://sede.dipucr.es/soporteGeneral</a></h6>
+					<h6> Motivo: INCIDENCIA</h6>
+					<h6> Asunto: ALSIGM - Problema firma tramitador expediente</h6>
+					 -->
+					
+					<!--
+				    <h3 style="color:red;">AVISO IMPORTANTE</h3>
+				    <h3 style="color:red;"> 30/09/2021 14:45</h3>
+					<h6> Buenas tardes, hay problemas en la plataforma Cl@ve y @firma del Ministerio de Asuntos Económicos y Transformación Digital, lo que impide entrar en Port@firmas. Estamos esperando que resuelvan el problema. Rogamos disculpen las molestias.</h6>
+					<h6> Hay otra alternativa, es posible firmar mediante dispositivos móviles y tablets ya que no se usa la pasarela Cl@ve.</h6>
+					<h6> 1. Como obtener y configurar un certificado electrónico en el ordenador, si aún no dispone de uno:</h6>
+					<h6><a href="https://youtu.be/GWqlbii5DII">Ver vídeo</a></h6>
+					
+					<h6> 2. Cómo pasar un certificado del ordenador al móvil:</h6>
+					<h6><a href="https://youtu.be/V-35uY0hKeU">Ver vídeo</a></h6>
+					
+					<h6> 3. Cómo configurar Port@firmas en móvil / tablet Android:</h6>
+					<h6><a href="https://youtu.be/TnYp_DZfKwo">Ver vídeo</a></h6>
+					
+					<h6> 4. Cómo configurar Port@firmas en móvil iPhone o iPad:</h6>
+					<h6><a href="https://youtu.be/vSlEeKgidX0">Ver vídeo</a></h6>	
+					-->	
+				   
+				    
+					<h6 th:text="#{important}">Importante</h6>
+					<p th:text="#{welcomeParagraph1}"></p>
+					<p><a href="https://youtu.be/GWqlbii5DII">Como obtener y configurar un certificado electr&oacute;nico en el ordenador:</a></p>
+					
+					<p th:text="#{welcomeParagraph2}"></p>
+					<p><a href="https://youtu.be/w9BnzCA_jek">Proceso de alta en Cl@ve, ver v&iacute;deo</a></p>
+					
+					<h6 th:text="#{welcomeParagraph3}"></h6>					
+					<p th:text="#{welcomeParagraph4}"></p>
+					
+					<!-- 
+					<p th:text="#{welcomeParagraph2}">El certificado elegido al ingresar en la aplicaciÃ³n serÃ¡ el utilizado en las operaciones de firma.Para entrar escoja una de las opciones disponibles.</p>
+					 -->
+					 
+					 <!-- 
+					<p th:text="#{welcomeParagraph5}"></p>
+					-->
+					
+					<p th:text="#{welcomeParagraph6}"></p>
+					<p><a href="https://sede.dipucr.es/soporteGeneral">Enlace para poner incidencia al soporte t&eacute;cnico</a></p>
+					<h6>Motivo: INCIDENCIA</h6>
+					<h6>Asunto: ALSIGM - Problema firma tramitador expediente</h6>
+
+					
+					
+					<a th:href="${autenticaUrl}" style="cursor:none; text-decoration:none;">&nbsp;</a>
+				</div>
+				<div class="loginData">
+					<form id="loginForm" name="loginForm" action="#" th:action="@{/j_spring_security_check}" th:object="${loginForm}" method="post">
+						<div style="margin-top: 10px; margin-left: 50px;">
+							<h5 th:text="#{welcomeButtonAccessUser}">Acceso restringido</h5>
+						</div>
+						<div th:if="${showLDAP}">							
+							<label for="mptAuthLdap_username" th:text="#{user}">Usuario</label>
+							<input name="j_username" id="mptAuthLdap_username" type="text"/>
+
+							<label for="mptAuthLdap_password" th:text="#{password}">ContraseÃ±a</label>
+							<input name="j_password" id="mptAuthLdap_password" type="password" />
+
+							<input id="mptAuthLdap_submit" class="" type="submit" value="Entrar" name="mptAuthLdap[submit]" />
+
+							<div class="error-box" style="display: none;" th:style="*{error}" th:text="#{incorrectUserPassword}"></div>
+							<div class="error-box" style="display: none;" th:style="*{errorClave}" th:text="#{incorrectClaveLogin}"></div>
+							<div class="info-box" id="info" style="display: none;" th:style="*{info}" th:text="#{userInvitedOK}"></div>
+						</div>						
+						<div>
+							<hr></hr>
+							<a class="simbutton" th:href="|${#httpServletRequest.getContextPath()}/login/accesoRedirectClave|">
+								<img th:src="|${#httpServletRequest.getContextPath()}/images/logo_clave.png|" width="80px"/>
+							</a>
+						</div>			
+ 						<div th:if="${autenticaActivo}">
+							<hr></hr>
+							<a class="simbutton" th:href="${autenticaUrl}">
+								<img th:src="|${#httpServletRequest.getContextPath()}/images/logo_autentica.png|" width="100px"/>
+							</a>
+						</div>						
+					</form>
+				</div>
+			</div>
+        </div>
+	</body>
+</html>

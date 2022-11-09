@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"> 	
+
+<div th:fragment="seatAuthorizationsList">
+	<span class="spanH5" th:text="#{sent}"></span>
+	<span class="mf-icon mf-icon-authorized_out-16" th:title="#{sent}"></span>
+	<div id="requestListPf" class="fld catalogueOverflow" style="height: 200px;">
+		<table class="data noborder tl">
+			<thead>
+				<tr>
+					<th class="wv10">Estado</th>
+					<th class="wv10">Tipo</th>
+					<th>Destinatario</th>
+					<th class="wv10">Inicio</th>
+					<th class="wv10">Autorización</th>
+					<th class="wv10">Revocación</th>
+					<th class="wv2"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="authorization : ${sendAutList}">
+					<td th:switch="${authorization.state}" style="text-align: center;">
+					    <span th:case="'accepted'" class="mf-icon mf-icon-accepted-16" th:title="#{accepted}"></span>
+						<span th:case="'revoked'" class="mf-icon mf-icon-rejected-16" th:title="#{revoked}"></span>
+						<span th:case="'unresolvedAuthorization'" class="mf-icon mf-icon-waiting-16" th:title="#{unresolvedAuthorization}"></span>
+					</td>
+					<td th:each="authorizationsType : ${authorizationsTypesList}"
+						th:if="${authorization.authorizationType == authorizationsType.cauthorizationType}"
+					    th:text="${#strings.capitalize(#strings.toLowerCase(authorizationsType.cauthorizationType))}">
+					</td>
+					<td th:text="${authorization.receiver}"></td>
+					<td th:text="${authorization.frequest} + ' ' + ${authorization.hrequest}"></td>
+					<td th:text="${authorization.fauthorization}"></td>
+					<td th:text="${authorization.frevocation} ? ${authorization.frevocation} + ' ' + ${authorization.hrevocation}" th:id="|frevocation_${authorization.primaryKey}|"></td>
+					<td>
+						<a th:if="${authorization.revocable}" href="#" class="simbutton secondary">
+							<span th:alt-title="#{editButton}" class=" mf-icon mf-icon-auth-edit-16" th:onclick="|prepareModifySeatAuthorization('${authorization.primaryKey}')|"></span>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<hr class="ui-tabs-panel" style="padding: 0px;"/>
+
+	<span class="spanH5" th:text="#{received}"></span>
+	<span class="mf-icon mf-icon-authorized_in-16" th:title="#{received}"></span>
+	<div id="requestListPf" class="fld catalogueOverflow" style="height: 200px;">
+		<table class="data noborder tl">
+			<thead>
+				<tr>
+					<th class="wv10">Estado</th>
+					<th class="wv10">Tipo</th>
+					<th>Remitente</th>
+					<th class="wv10">Inicio</th>
+					<th class="wv10">Autorización</th>
+					<th class="wv10">Revocación</th>
+					<th class="wv2"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="authorization : ${receiverAutList}">
+					<td th:switch="${authorization.state}" style="text-align: center;">
+					    <span th:case="'accepted'" class="mf-icon mf-icon-accepted-16" th:title="#{accepted}"></span>
+						<span th:case="'revoked'" class="mf-icon mf-icon-rejected-16" th:title="#{revoked}"></span>
+						<span th:case="'unresolvedAuthorization'" class="mf-icon mf-icon-waiting-16" th:title="#{unresolvedAuthorization}"></span>
+					</td>
+					<td th:each="authorizationsType : ${authorizationsTypesList}"
+						th:if="${authorization.authorizationType == authorizationsType.cauthorizationType}"
+					    th:text="${#strings.capitalize(#strings.toLowerCase(authorizationsType.cauthorizationType))}">
+					</td>
+					<td th:text="${authorization.remittent}"></td>
+					<td th:text="${authorization.frequest} + ' ' + ${authorization.hrequest}"></td>
+					<td th:text="${authorization.fauthorization}"></td>
+					<td th:text="${authorization.frevocation} ? ${authorization.frevocation} + ' ' + ${authorization.hrevocation}" th:id="|frevocation_${authorization.primaryKey}|"></td>
+					<td>
+						<a th:if="${authorization.revocable}" href="#" class="simbutton secondary" th:id="|buttonEdit_${authorization.primaryKey}|">
+							<span th:alt-title="#{editButton}" class=" mf-icon mf-icon-auth-edit-16" th:onclick="|prepareModifySeatAuthorization('${authorization.primaryKey}')|"></span>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+</html>
