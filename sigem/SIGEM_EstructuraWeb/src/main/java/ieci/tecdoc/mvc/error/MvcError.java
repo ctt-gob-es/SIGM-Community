@@ -69,6 +69,11 @@ public final class MvcError
    public static final long EC_DEPT_HAS_USERS = EC_PREFIX + 47; 
    public static final long EC_DEPT_HAS_DEPTS = EC_PREFIX + 48;
    
+   public static final long EC_NOT_CAN_VIEW_USR = EC_PREFIX + 49;
+   
+   public static final long EC_ERROR_PORTAFIRMAS = EC_PREFIX + 50;
+
+   
    // **************************************************************************
 
    private MvcError()

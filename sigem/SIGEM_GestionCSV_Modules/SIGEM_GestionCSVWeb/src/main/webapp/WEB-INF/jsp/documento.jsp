@@ -94,13 +94,30 @@
 				<h4><spring:message code="label.document.title" /></h4>
 			</div>
 			<div class="column last textright">
-					<p class="botones">
+				<p class="botones">
 					<c:if test="${infoDocumento.disponible}">
-						<a href='<spring:url value="action/documento/download" />' title='<spring:message code="label.form.button.download"/>' class="descargar">
-							<span>
-								<spring:message code="label.form.button.download"/>
-							</span>
-						</a>
+						<c:if test="${!infoDocumento.firmaConJustificante}">
+							<a href='<spring:url value="action/documento/download" />' title='<spring:message code="label.form.button.download"/>' class="descargar">
+								<span>
+									<spring:message code="label.form.button.download"/>
+								</span>
+							</a>
+						</c:if>
+										
+						<c:if test="${infoDocumento.firmaConJustificante}">
+							<a href='<spring:url value="action/documento/download" />' title='<spring:message code="label.form.button.downloadReceipt"/>' class="descargar">
+								<span>
+									<spring:message code="label.form.button.downloadReceipt"/>
+								</span>
+							</a>
+							<!-- [dipucr-Felipe #1246] -->
+							<br/>
+							<a href='<spring:url value="action/documento/downloadOriginal" />' title='<spring:message code="label.form.button.downloadOriginal"/>' class="descargar">
+								<span>
+									<spring:message code="label.form.button.downloadOriginal"/>
+								</span>
+							</a>
+						</c:if>
 					</c:if>
 				</p>
 			</div>
@@ -167,7 +184,7 @@
 	<div class="infoDoc">
 		<!-- [Manu #65] + ALSIGM3 Añadir texto jurídico en formulario de búsqueda de documentos -->
 			<p style='text-align:justify;display:block;padding:0;margin: 0px 0px 0px 0px;color:#105CB6;'>
-De conformidad con lo dispuesto en el art. 18.1.b) de la ley 11/2007, de 22 de junio, de acceso electrónico de los ciudadanos a los Servicios Públicos, mediante la inserción del Código Seguro de Verificación (CVE) que aparece en la banda gris del documento electrónico, se permite al interesado la comprobación de la integridad del documento en esta sede electrónica.
+				<spring:message code="label.textoLegal" />
 			</p>
 		<!-- [Manu #65] + ALSIGM3 Añadir texto jurídico en formulario de búsqueda de documentos -->
 	</div>

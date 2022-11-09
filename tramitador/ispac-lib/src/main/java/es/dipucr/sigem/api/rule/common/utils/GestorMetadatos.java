@@ -8,7 +8,6 @@ import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.sign.SignDocument;
-import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispaclib.utils.XmlFacade;
 
@@ -58,12 +57,10 @@ public class GestorMetadatos {
  			//INICIO [dipucr #186]
  			String infoFirmas = null;
  			if (!StringUtils.isEmpty(infopagRdeBefore)){
- 				// [Ruben CMIS] adapto la referencia al metadato de firma para que funcione con CMIS Firma --> sign
- 				infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infopagRdeBefore, "sign");
+ 				infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infopagRdeBefore, "Firma");
  			}
  			else{
- 			// [Ruben CMIS] adapto la referencia al metadato de firma para que funcione con CMIS Firma --> sign
- 				infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, "sign");
+ 				infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, "Firma");
  			}
  			//FIN [dipucr #186]
 		    
@@ -88,8 +85,7 @@ public class GestorMetadatos {
  			try{ 				
  			
  			xmlInfoFirmas.set(xPath, firmante);
- 			// [Ruben CMIS] adapto la referencia al metadato de firma para que funcione con CMIS Firma --> sign
- 			genDocAPI.setDocumentProperty(connectorSession, infoPageRDE, "sign", xmlInfoFirmas.toString() );
+ 			genDocAPI.setDocumentProperty(connectorSession, infoPageRDE, "Firma", xmlInfoFirmas.toString() );
  			
  			}
  			catch(Exception e){
@@ -131,13 +127,11 @@ public class GestorMetadatos {
  		// Documentos Electronicos
  		String infoPageRDE = itemDoc.getString("INFOPAG_RDE");
  		String xml = "";
- 		
-		String nombreMetadatoFirma = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER_SIGN_METADATA_NAME);
  		if(StringUtils.isEmpty(infoPageRDE)){
- 			xml = genDocAPI.getDocumentProperty(connectorSession, infopagRdeAfter, nombreMetadatoFirma);
+ 			xml = genDocAPI.getDocumentProperty(connectorSession, infopagRdeAfter, "Firma");
  		}
  		else{
- 			xml = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, nombreMetadatoFirma);
+ 			xml = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, "Firma");
  		}
  		
 		if (logger.isInfoEnabled()){
@@ -150,7 +144,7 @@ public class GestorMetadatos {
 			//throw new ISPACInfo("exception.documents.notExists", false);
 			
 			//Obtenemos el xml con las firmas adjuntadas antes de añadir la nueva
- 			String infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, nombreMetadatoFirma);
+ 			String infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, "Firma");
 
 		    
  			xmlInfoFirmas = new XmlFacade(infoFirmas);

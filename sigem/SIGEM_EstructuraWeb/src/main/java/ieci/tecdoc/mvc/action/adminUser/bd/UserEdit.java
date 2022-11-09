@@ -4,25 +4,10 @@
  */
 package ieci.tecdoc.mvc.action.adminUser.bd;
 
-import ieci.tecdoc.core.exception.IeciTdException;
-import ieci.tecdoc.idoc.admin.api.ObjFactory;
-import ieci.tecdoc.idoc.admin.api.exception.UserErrorCodes;
-import ieci.tecdoc.idoc.admin.api.user.AplicacionPerfil;
-import ieci.tecdoc.idoc.admin.api.user.Group;
-import ieci.tecdoc.idoc.admin.api.user.GroupUserRel;
-import ieci.tecdoc.idoc.admin.api.user.Groups;
-import ieci.tecdoc.idoc.admin.api.user.Permission;
-import ieci.tecdoc.idoc.admin.api.user.Permissions;
-import ieci.tecdoc.idoc.admin.api.user.User;
-import ieci.tecdoc.idoc.admin.api.user.UserAccess;
-import ieci.tecdoc.idoc.admin.api.user.UserData;
-import ieci.tecdoc.idoc.admin.api.user.UserDefs;
-import ieci.tecdoc.idoc.admin.api.user.UserProfile;
-import ieci.tecdoc.idoc.admin.api.user.UserProfiles;
-import ieci.tecdoc.idoc.admin.internal.Defs;
-import ieci.tecdoc.idoc.admin.internal.GroupImpl;
-import ieci.tecdoc.idoc.admin.internal.GrpUsrRelImpl;
-import ieci.tecdoc.idoc.admin.internal.UserProfileImpl;
+import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector;
+import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorFactory;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tecdoc.mvc.action.BaseAction;
 import ieci.tecdoc.mvc.dto.access.UserConnectedDTO;
 import ieci.tecdoc.mvc.dto.adminUser.bd.GroupDTO;
@@ -32,6 +17,25 @@ import ieci.tecdoc.mvc.form.adminUser.bd.UserForm;
 import ieci.tecdoc.mvc.service.adminUser.ServiceCertificate;
 import ieci.tecdoc.mvc.service.adminUser.ServiceCommon;
 import ieci.tecdoc.mvc.util.SessionHelper;
+import ieci.tecdoc.seo.core.exception.IeciTdException;
+import ieci.tecdoc.seo.idoc.admin.api.ObjFactory;
+import ieci.tecdoc.seo.idoc.admin.api.exception.UserErrorCodes;
+import ieci.tecdoc.seo.idoc.admin.api.user.AplicacionPerfil;
+import ieci.tecdoc.seo.idoc.admin.api.user.Group;
+import ieci.tecdoc.seo.idoc.admin.api.user.GroupUserRel;
+import ieci.tecdoc.seo.idoc.admin.api.user.Groups;
+import ieci.tecdoc.seo.idoc.admin.api.user.Permission;
+import ieci.tecdoc.seo.idoc.admin.api.user.Permissions;
+import ieci.tecdoc.seo.idoc.admin.api.user.User;
+import ieci.tecdoc.seo.idoc.admin.api.user.UserAccess;
+import ieci.tecdoc.seo.idoc.admin.api.user.UserData;
+import ieci.tecdoc.seo.idoc.admin.api.user.UserDefs;
+import ieci.tecdoc.seo.idoc.admin.api.user.UserProfile;
+import ieci.tecdoc.seo.idoc.admin.api.user.UserProfiles;
+import ieci.tecdoc.seo.idoc.admin.internal.Defs;
+import ieci.tecdoc.seo.idoc.admin.internal.GroupImpl;
+import ieci.tecdoc.seo.idoc.admin.internal.GrpUsrRelImpl;
+import ieci.tecdoc.seo.idoc.admin.internal.UserProfileImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -87,13 +91,21 @@ public class UserEdit extends BaseAction {
 			return mapping.findForward("success");
 		} else {
 			UserAccess userAccess = ObjFactory.createUserAccess();
-			boolean userCanEditUser = userAccess.userCanEditUser(userId,
-					idUsuario, entidad);
-			if (!userCanEditUser)
-				throw new IeciTdException(
-						String.valueOf(MvcError.EC_NOT_CAN_EDIT_USER), null);
-			guardarDatos(session, userForm, userId, idUsuario, entidad);
+			boolean userCanEditUser = userAccess.userCanEditUser(userId, idUsuario, entidad);
+			if (!userCanEditUser){
+				throw new IeciTdException( String.valueOf(MvcError.EC_NOT_CAN_EDIT_USER), null);
+			}
+			
+			String dni = userForm.getDni();
+			if(StringUtils.isNotEmpty(dni)){
+				dni = dni.replace(" " , "").toUpperCase();
+				userForm.setDni(dni);
+			}
+			
+            modificarUsuarioPortafirmas(entidad, userForm); 
 
+			guardarDatos(session, userForm, userId, idUsuario, entidad);
+			
 			request.setAttribute("tipo", "Usuario");
 
 			User user = ObjFactory.createUser();
@@ -105,6 +117,28 @@ public class UserEdit extends BaseAction {
 			return mapping.findForward("ok");
 		}
 
+	}
+	
+	 private void modificarUsuarioPortafirmas(String entidadId, UserForm userForm) throws ISPACException, IeciTdException {
+    	ProcessSignConnector portafirmasSignConnector = ProcessSignConnectorFactory.getInstance(entidadId).getProcessSignConnector();
+
+    	//Solo tiene un campo para el apellido, no podemos saber el segundo apellido
+		try {
+			if(null != userForm && StringUtils.isNotEmpty(userForm.getDni())){
+				if(portafirmasSignConnector.existeUsuarioPortafirmas(userForm.getDni())){
+					portafirmasSignConnector.modificarUsuarioPortafirmas(entidadId, userForm.getDni(), StringUtils.defaultString(userForm.getNombrePersonal()), StringUtils.defaultString(userForm.getApellidos()), "", StringUtils.defaultString(userForm.getEmail()));
+				
+				} else {
+					portafirmasSignConnector.crearUsuarioPortafirmas(entidadId, userForm.getDni(), StringUtils.defaultString(userForm.getNombrePersonal()), StringUtils.defaultString(userForm.getApellidos()), "", StringUtils.defaultString(userForm.getEmail()));
+				}
+			}
+		} catch (ISPACException e) {
+			logger.error("ERROR al modificar el usuario: " + StringUtils.defaultString(userForm.getDni()) + " - " + StringUtils.defaultString(userForm.getNombrePersonal()) + " " + StringUtils.defaultString(userForm.getApellidos()) + " - " + StringUtils.defaultString(userForm.getEmail())+" - "+e.getMessage(), e);
+			
+			if(!e.getMessage().contains("No tiene permiso en la sede con codigo")){
+				throw new IeciTdException( String.valueOf(MvcError.EC_ERROR_PORTAFIRMAS), null);
+			}		
+		}
 	}
 
 	public void guardarDatos(HttpSession session, UserForm userForm,
@@ -148,6 +182,8 @@ public class UserEdit extends BaseAction {
 		user.getUserDataImpl().setNombre(userForm.getNombrePersonal());
 		//[Manu Ticket#175] Crear un campo con dni en el usuario
 		user.getUserDataImpl().setDni(userForm.getDni());
+		
+		user.getUserDataImpl().setAsignaNumDecreto(userForm.getAsignaNumDecreto());
 
 		// Perfiles del usuario
 		// user.resetProfiles();
@@ -285,6 +321,8 @@ public class UserEdit extends BaseAction {
 			userForm.setNombrePersonal(userData.getNombre());
 			//[Manu Ticket#175] Crear un campo con dni en el usuario
 			userForm.setDni(userData.getDni());
+			
+			userForm.setAsignaNumDecreto(userData.getAsignaNumDecreto());
 
 		}
 

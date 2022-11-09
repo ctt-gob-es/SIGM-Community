@@ -121,14 +121,15 @@
 						</ispac:hasFunction>
 		
 						<ispac:hasFunction functions="FUNC_INV_SIGN_CIRCUITS_READ, FUNC_INV_SIGN_CIRCUITS_EDIT">
-						<c:set var="digitalSignManagementActive" value="${ISPACConfiguration.DIGITAL_SIGN_CONNECTOR_CLASS}"/>
-						<c:if test="${!empty digitalSignManagementActive}">
+						<!-- [dipucr-Felipe/Manu #1246] Configuración multientidad de las clases de firma -->
+<%-- 						<c:set var="digitalSignManagementActive" value="${ISPACConfiguration.DIGITAL_SIGN_CONNECTOR_CLASS}"/> --%>
+<%-- 						<c:if test="${!empty digitalSignManagementActive}"> --%>
             			<li>
 							<html:link action="showSignProcessList">
 								<bean:message key="menu.signprocess"/>
 				  			</html:link>
             			</li>
-            			</c:if>
+<%--             			</c:if> --%>
 						</ispac:hasFunction>
             			
 	          		</ul>

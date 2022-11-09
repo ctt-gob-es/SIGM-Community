@@ -132,6 +132,39 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      </sequence>
     </complexType>
    </element>
+   <element name="anularSolicitudPortalEmpleado">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="numexp" type="xsd:string"/>
+      <element name="documentoAnular" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="anularSolicitudPortalEmpleadoResponse">
+    <complexType>
+     <sequence>
+      <element name="anularSolicitudPortalEmpleadoReturn" type="tns1:Booleano"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="sellarDocumento">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="password" type="xsd:string"/>
+      <element name="nombreDocumento" type="xsd:string"/>
+      <element name="documento" type="tns1:Binario"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="sellarDocumentoResponse">
+    <complexType>
+     <sequence>
+      <element name="sellarDocumentoReturn" type="tns1:Binario"/>
+     </sequence>
+    </complexType>
+   </element>
    <element name="archivarExpedientes">
     <complexType>
      <sequence>
@@ -319,6 +352,21 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
     <complexType>
      <sequence>
       <element name="getFicheroReturn" type="tns1:Binario"/>
+     </sequence>
+    </complexType>
+   </element>
+    <element name="getJustificanteFirma">
+    <complexType>
+     <sequence>
+      <element name="idEntidad" type="xsd:string"/>
+      <element name="guid" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getJustificanteFirmaResponse">
+    <complexType>
+     <sequence>
+      <element name="getJustificanteFirmaReturn" type="tns1:Binario"/>
      </sequence>
     </complexType>
    </element>
@@ -753,6 +801,22 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
       </wsdl:part>
 
    </wsdl:message>
+   
+   <wsdl:message name="anularSolicitudPortalEmpleadoResponse">
+
+      <wsdl:part element="impl:anularSolicitudPortalEmpleadoResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+   
+   <wsdl:message name="sellarDocumentoResponse">
+
+      <wsdl:part element="impl:sellarDocumentoResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
 
    <wsdl:message name="getInfoOcupacionResponse">
 
@@ -905,10 +969,26 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
       </wsdl:part>
 
    </wsdl:message>
-
+   
    <wsdl:message name="anularLicenciaRRHHRequest">
 
       <wsdl:part element="impl:anularLicenciaRRHH" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+   
+   <wsdl:message name="anularSolicitudPortalEmpleadoRequest">
+
+      <wsdl:part element="impl:anularSolicitudPortalEmpleado" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+   
+   <wsdl:message name="sellarDocumentoRequest">
+
+      <wsdl:part element="impl:sellarDocumento" name="parameters">
 
       </wsdl:part>
 
@@ -949,6 +1029,14 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
    <wsdl:message name="getFicheroRequest">
 
       <wsdl:part element="impl:getFichero" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+   
+   <wsdl:message name="getJustificanteFirmaRequest">
+
+      <wsdl:part element="impl:getJustificanteFirma" name="parameters">
 
       </wsdl:part>
 
@@ -1037,6 +1125,14 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
    <wsdl:message name="getFicheroResponse">
 
       <wsdl:part element="impl:getFicheroResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+   
+   <wsdl:message name="getJustificanteFirmaResponse">
+
+      <wsdl:part element="impl:getJustificanteFirmaResponse" name="parameters">
 
       </wsdl:part>
 
@@ -1195,6 +1291,30 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
        </wsdl:output>
 
       </wsdl:operation>
+      
+      <wsdl:operation name="anularSolicitudPortalEmpleado">
+
+         <wsdl:input message="impl:anularSolicitudPortalEmpleadoRequest" name="anularSolicitudPortalEmpleadoRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:anularSolicitudPortalEmpleadoResponse" name="anularSolicitudPortalEmpleadoResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+      
+      <wsdl:operation name="sellarDocumento">
+
+         <wsdl:input message="impl:sellarDocumentoRequest" name="sellarDocumentoRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:sellarDocumentoResponse" name="sellarDocumentoResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
 
       <wsdl:operation name="archivarExpedientes">
 
@@ -1323,6 +1443,18 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
        </wsdl:input>
 
          <wsdl:output message="impl:getFicheroResponse" name="getFicheroResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+      
+      <wsdl:operation name="getJustificanteFirma">
+
+         <wsdl:input message="impl:getJustificanteFirmaRequest" name="getJustificanteFirmaRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:getJustificanteFirmaResponse" name="getJustificanteFirmaResponse">
 
        </wsdl:output>
 
@@ -1549,6 +1681,42 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
          </wsdl:output>
 
       </wsdl:operation>
+      
+      <wsdl:operation name="anularSolicitudPortalEmpleado">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="anularSolicitudPortalEmpleadoRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="anularSolicitudPortalEmpleadoResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+      
+      <wsdl:operation name="sellarDocumento">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="sellarDocumentoRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="sellarDocumentoResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
 
       <wsdl:operation name="archivarExpedientes">
 
@@ -1741,6 +1909,24 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
          </wsdl:input>
 
          <wsdl:output name="getFicheroResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+      
+      <wsdl:operation name="getJustificanteFirma">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getJustificanteFirmaRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getJustificanteFirmaResponse">
 
             <wsdlsoap:body use="literal"/>
 

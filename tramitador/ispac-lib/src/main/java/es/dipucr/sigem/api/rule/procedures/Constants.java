@@ -2,6 +2,14 @@ package es.dipucr.sigem.api.rule.procedures;
 
 public class Constants {
 	
+	//[dipucr-Felipe #1246]
+	public static final String DEFAULT_USER_PORTAFIRMAS = "PORTAFIRMAS";
+	public static final String DEFAULT_USER_PORTAFIRMAS_PWD = "sigem";
+	
+	//[dipucr-Felipe #1716]
+	public static final String DEFAULT_USER_AUTOMATIZACION = "AUTOMATIZACION";
+	public static final String DEFAULT_USER_AUTOMATIZACION_PWD = "sigem";
+	
 	//Tipo de Relación Participantes
 	public static final String _RELACION_INTERESADO = "INT";
 	public static final String _RELACION_TRASLADO = "TRAS";
@@ -34,6 +42,7 @@ public class Constants {
 		public static final String SPAC_EXP_RELACIONADOS = "SPAC_EXP_RELACIONADOS";
 		public static final String SPAC_DT_DOCUMENTOS = "SPAC_DT_DOCUMENTOS";
 		public static final String SPAC_DT_DOCUMENTOS_H = "SPAC_DT_DOCUMENTOS_H";
+		public static final String SPAC_DT_DOCUMENTOS_BORRADOS = "SPAC_DT_DOCUMENTOS_BORRADOS";//[dipucr-Felipe #1462]
 		public static final String SPAC_DT_INTERVINIENTES = "SPAC_DT_INTERVINIENTES";
 		public static final String SPAC_DT_INTERVINIENTES_H = "SPAC_DT_INTERVINIENTES_H";
 		public static final String SECR_PROPUESTA = "SECR_PROPUESTA";
@@ -54,6 +63,7 @@ public class Constants {
 		public static final String SPAC_CT_PROCEDIMIENTOS = "SPAC_CT_PROCEDIMIENTOS";
 		public static final String ASES_REPRES = "ASES_REPRES";
 		public static final String ASES_EMISION = "ASES_EMISION";
+		public static final String FIRMA_DOC_EXTERNO = "FIRMA_DOC_EXTERNO";
 		
 		public static final String SPAC_HITOS = "SPAC_HITOS";
 		public static final String SPAC_HITOS_H = "SPAC_HITOS_H";
@@ -96,8 +106,13 @@ public class Constants {
 		public static final String LIBRO_ACTAS = "Libro de Actas";
 		public static final String LIBRO_ACTAS_DILIG = "Libro de Actas: Diligencia";
 		public static final String LIBRO_ACTAS_DILIG_JUNTA = "Libro de Actas Junta: Diligencia";
+		public static final String LIBRO_ACTAS_DILIG_PLENO = "Libro de Actas Pleno: Diligencia";//[dipucr-Felipe #890]
+		public static final String LIBRO_ACTAS_DILIG_CONSEJO = "Libro de Actas Consejo: Diligencia";
 		public static final String LIBRO_ACTAS_DILIG_COMISION = "Libro de Actas Comision: Diligencia";
 		// FIN [eCenpri-Felipe #911]
+		// [dipucr-Felipe #1606]
+		public static final String CREACION_AVANZADA = "Creación avanzada";
+		
 	}
 	public interface PLANTILLADOC {
 		public static final String DECRETO_CABECERA = "Decreto Cabecera";
@@ -107,6 +122,9 @@ public class Constants {
 		public static final String NOTIFICACIONES_LEVANTAMIENTO_ACTAS = "EXPR-011 - Notificacion de Levantamiento de Actas Previas";
 		public static final String BOPANUNCIO = "BOP - Anuncio";
 		public static final String IMPRIMIR = "Documento Imprimir";
+		// [dipucr-Felipe #1606]
+		public static final String NOTIF_AVANZADA_CABECERA = "Notificación Avanzada - Cabecera";
+		public static final String NOTIF_AVANZADA_PIE = "Notificación Avanzada - Pie";
 	}
 	public interface SECRETARIATRAMITES {
 		public static final String NOTIFTRASLDICTAMEN = "Notificaciones y traslado de dictamenes";
@@ -155,12 +173,22 @@ public class Constants {
 		public static final String JUNTA = "Sesión de Junta de Gobierno";
 		public static final String PLENO = "Sesión de Pleno";
 		public static final String MESA = "Sesión de Mesa de Contratación";
+		public static final String CONSEJO = "Sesión del Consejo Rector";
 		
 		//Tipos de órgano de gobierno
 		public static final String TIPO_PLENO = "PLEN";
+		public static final String TIPO_PLENO_TABLON = "PLENO";
 		public static final String TIPO_JUNTA = "JGOB";
 		public static final String TIPO_MESA = "MESA";
 		public static final String TIPO_COMISION = "COMI";
+		public static final String TIPO_CONSEJO = "CONS";
+		public static final String TIPO_CONSEJOGERENCIA = "CGE";
+		public static final String TIPO_CONSEJORECTOR = "JRE";
+		public static final String TIPO_MESAGENERALNEGOCIACION = "MGN";
+		
+		public static final String TIPO_RELACION = "Sesion/Propuesta";
+		
+		public static final String TABLA_SECR_PROPUESTA = "SECR_PROPUESTA";
 	}
 	public interface MENSAJESECRETARIA{
 		public static final String MENSAJEDICTAMINADO = "La propuesta no ha sido todavía dictaminada o certificada.";
@@ -236,6 +264,23 @@ public class Constants {
 		public static final String COD_TPDOC_COMISION = "COM-SERV";
 	}
 	
+	//[dipucr-Felipe #1677] 
+	public interface TRAMITES_PERSONALIZADOS{
+		public interface TIPODOC{
+			public static final String NOMBRE = "Documento Personalizado";
+			public static final String CODIGO = "DOC-CUSTOM";
+			
+		}
+		public interface PLANTILLA{
+			public static final String NOMBRE = "Plantilla Personalizada";
+			public static final String CODIGO = "PLANT-CUSTOM";
+		}
+		public interface TRAMITE{
+			public static final String NOMBRE = "Trámite Personalizado";
+			public static final String CODIGO = "TRAM-CUSTOM";
+		}
+	}
+	
 	public interface VALIDACION{
 		public static final String SI = "SI";
 		public static final String NO = "NO";
@@ -257,7 +302,7 @@ public class Constants {
 	}	
 	
 	public interface NOTIFICACIONES_VALOR{
-	    public static final String VALOR_ESTADO_PENDIENTE = "PE";
+	    public static final String VALOR_ESTADO_PENDIENTE = "NTPENSEDE";
 	    public static final String VALOR_ESTADO_EN_PROCESO = "PR";
 	    public static final String VALOR_ESTADO_OK = "OK";
 	    public static final String VALOR_ESTADO_CADUCADA = "CA";
@@ -283,35 +328,37 @@ public class Constants {
 		public static final String VALOR_ESTADO_NOTIFICA_FECHA_ENVIO_PROGRAMADO = "NTWNVPRO";
 		public static final String VALOR_ESTADO_NOTIFICA_SIN_INFORMACION = "NTSININF";
 		public static final String VALOR_ESTADO_NOTIFICA_CADUCADA = "NTCADUCA";
+		public static final String VALOR_ESTADO_NOTIFICA_EXPIRADA = "NTEXPIRADA";
 	    
 	}
 	
 	//Agustin #414 Integracion de Notifica
 	public interface NOTIFICACIONES_ESTADOS{
-		public static final String ESTADO_PENDIENTE = "Pendiente";
+		public static final String ESTADO_PENDIENTE = "pendiente_sede";
 		public static final String ESTADO_EN_PROCESO = "En Proceso";		
 		public static final String ESTADO_OK = "Finalizada";		
 		public static final String ESTADO_CADUCADA = "Caducada";		
-		public static final String ESTADO_RECHAZADA = "Rechazada";		
+		public static final String ESTADO_RECHAZADA = "rehusada";		
 		public static final String ESTADO_ERROR = "Error";		
 		public static final String ESTADO_COMPARECE = "Enviada a Comparece";
 		public static final String ESTADO_NOTIFICA = "Enviada a Notifica";
 		public static final String ESTADO_NOTIFICA_ENVIO_POSTAL = "Envío postal"; //Este campo no viene de Notifica, lo indico al generar documentos sellados para mandarlos por carta
-		public static final String ESTADO_NOTIFICA_AUSENTE = "Ausente";//(sólo notificaciones)
-		public static final String ESTADO_NOTIFICA_DESCONOCIDO = "Desconocido";//(sólo notificaciones)
-		public static final String ESTADO_NOTIFICA_DIRECCION_INCORRECTA = "Dirección incorrecta";//(sólo notificaciones)
-		public static final String ESTADO_NOTIFICA_ENVIO_AL_CENTRO_DE_IMPRESION = "Enviado al centro de impresión";
-		public static final String ESTADO_NOTIFICA_ENVIO_A_LA_DEH = "Enviado a la DEH";
-		public static final String ESTADO_NOTIFICA_LEIDA = "Leída"; //(sólo comunicaciones leídas en Carpeta Ciudadana o Sede Electrónica).
-		public static final String ESTADO_NOTIFICA_ERROR = "Error en el envío";
-		public static final String ESTADO_NOTIFICA_EXTRAVIADA = "Extraviada"; //(sólo notificaciones)
-		public static final String ESTADO_NOTIFICA_FALLECIDO = "Fallecido"; //cuando el destinatario de la notificación o comunicación ha fallecido. (sólo cuando el destinatario de la notificación o comunicación ha fallecido. (sólo notificaciones)
-		public static final String ESTADO_NOTIFICA_NOTIFICADA = "Notificada"; //(sólo notificaciones)
-		public static final String ESTADO_NOTIFICA_PENDIENTE_DE_ENVIO = "Pendiente de envío";
-		public static final String ESTADO_NOTIFICA_PENDIENTE_DE_COMPARECENCIA = "Pendiente de comparecencia"; //Cuando existe un número de días naturales que estará disponible el envío para su comparecencia desde la sede electrónica del Punto de Acceso General (Carpeta Ciudadana) antes de enviar a otro medio alternativo de entrega.
+		public static final String ESTADO_NOTIFICA_AUSENTE = "ausente";//(sólo notificaciones)
+		public static final String ESTADO_NOTIFICA_DESCONOCIDO = "desconocido";//(sólo notificaciones)
+		public static final String ESTADO_NOTIFICA_DIRECCION_INCORRECTA = "direccion_incorrecta";//(sólo notificaciones)
+		public static final String ESTADO_NOTIFICA_ENVIO_AL_CENTRO_DE_IMPRESION = "enviado_ci";
+		public static final String ESTADO_NOTIFICA_ENVIO_A_LA_DEH = "enviado_deh";
+		public static final String ESTADO_NOTIFICA_LEIDA = "leida"; //(sólo comunicaciones leídas en Carpeta Ciudadana o Sede Electrónica).
+		public static final String ESTADO_NOTIFICA_ERROR = "error";
+		public static final String ESTADO_NOTIFICA_EXTRAVIADA = "extraviada"; //(sólo notificaciones)
+		public static final String ESTADO_NOTIFICA_FALLECIDO = "fallecido"; //cuando el destinatario de la notificación o comunicación ha fallecido. (sólo cuando el destinatario de la notificación o comunicación ha fallecido. (sólo notificaciones)
+		public static final String ESTADO_NOTIFICA_NOTIFICADA = "notificada"; //(sólo notificaciones)
+		public static final String ESTADO_NOTIFICA_PENDIENTE_DE_ENVIO = "pendiente_envio";
+		public static final String ESTADO_NOTIFICA_PENDIENTE_DE_COMPARECENCIA = "pendiente_sede"; //Cuando existe un número de días naturales que estará disponible el envío para su comparecencia desde la sede electrónica del Punto de Acceso General (Carpeta Ciudadana) antes de enviar a otro medio alternativo de entrega.
 		public static final String ESTADO_NOTIFICA_REHUSADA = "Rehusada"; //Cuando la comunicación o notificación es rechazada por el interesado. También se dará este estado cuando después de los intentos de entrega estipulados por ley, no comparece el interesado. (sólo notificaciones)
-		public static final String ESTADO_NOTIFICA_FECHA_ENVIO_PROGRAMADO = "Fecha envío programado"; //Cuando la comunicación o notificación se encuentra en espera de ser enviada en la fecha indicada por el usuario.
-		public static final String ESTADO_NOTIFICA_SIN_INFORMACION = "Sin información";		
+		public static final String ESTADO_NOTIFICA_FECHA_ENVIO_PROGRAMADO = "envio_programado"; //Cuando la comunicación o notificación se encuentra en espera de ser enviada en la fecha indicada por el usuario.
+		public static final String ESTADO_NOTIFICA_SIN_INFORMACION = "sin_informacion";	
+		public static final String ESTADO_NOTIFICA_EXPIRADA = "expirada";
 	}
 	
 	public interface NOTIFICACIONES_ERROR{		

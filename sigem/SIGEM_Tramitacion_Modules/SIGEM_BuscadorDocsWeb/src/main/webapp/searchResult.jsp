@@ -57,7 +57,8 @@
 		                		<input type="submit" class="ok" value='<bean:message key="search.form.button"/>' style="position:relative; left:535px;"/>
 		              			<br/><br/>
 		            		</html:form>
-		            		<br/>De conformidad con lo dispuesto en el art. 18.1.b) de la ley 11/2007, de 22 de junio, de acceso electrónico de los ciudadanos a los Servicios Públicos, mediante la inserción del Código Seguro de Verificación (CVE) que aparece en la banda gris del documento electrónico, se permite al interesado la comprobación de la integridad del documento en esta sede electrónica.<br/>
+		            		<br/>
+		            		<bean:message key="label.textoLegal"/>
 		          		</div>
 		        	</div>
 		      	</div>
@@ -119,9 +120,20 @@
 					        			</div>
 				        			</logic:equal>
 				        			<br/>
-				        			<div>
-				        				<a href='<%=request.getContextPath()%>/showDocument.do?id=<bean:write name="searchBean" property="id"/>'><bean:message key="search.result.viewDocument"/></a>
-				        			</div>
+				        			<logic:equal name="searchBean" property="firmaConJustificante" value="true">
+				        				<div>
+				        					<a href='<%=request.getContextPath()%>/showDocument.do?id=<bean:write name="searchBean" property="id"/>'><bean:message key="search.result.viewDocumentJustificante"/></a>
+				        				</div>
+				        				<div>
+				        					<a href='<%=request.getContextPath()%>/showDocumentOriginal.do?id=<bean:write name="searchBean" property="id"/>'><bean:message key="search.result.viewDocumentOriginal"/></a>
+				        				</div>
+				        			</logic:equal>
+				        			<logic:equal name="searchBean" property="firmaConJustificante" value="false">
+				        				<div>
+				        					<a href='<%=request.getContextPath()%>/showDocument.do?id=<bean:write name="searchBean" property="id"/>'><bean:message key="search.result.viewDocument"/></a>
+				        				</div>
+				        			</logic:equal>
+
 			        			</logic:present>
 			        		</logic:messagesNotPresent>
 		        		</div>

@@ -216,6 +216,24 @@ public class SustitucionDAO extends ObjectDAO {
 		
 		return objlist;
 	}
+	
+	static public CollectionDAO getSustitucion(DbCnt cnt, int idFechSustitucion)
+	throws ISPACException
+	{					
+		TableJoinFactoryDAO factory = new TableJoinFactoryDAO();
+		factory.addTable(TABLENAME, "SUSTITUCION");
+		factory.addTable(SustitucionFechaDAO.TABLENAME, "SUSTITUCIONFECHA");
+		factory.addTable(FechSustitucionesDAO.TABLENAME, "FECHASUST");
+
+		String sql = "WHERE SUSTITUCION.ID = SUSTITUCIONFECHA.ID_SUSTITUCION"
+				   + " AND FECHASUST.ID=SUSTITUCIONFECHA.ID_FECHSUSTITUCION"
+				   + " AND SUSTITUCIONFECHA.ID_FECHSUSTITUCION = " + idFechSustitucion +""
+				   + " ORDER BY FECHASUST.FECHA_INICIO, FECHASUST.FECHA_FIN, FECHASUST.DESCRIPCION";
+		
+   		return factory.queryTableJoin(cnt, sql);
+		
+
+	}
 
 	static public CollectionDAO getSubstitutes(DbCnt cnt, Map sustitutosUIDs)
 	throws ISPACException

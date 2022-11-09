@@ -70,7 +70,6 @@ public class AplicacionExternaCSVConnectorWS {
 		return existe;
 	}
 
-
 	public byte[] getContenidoDocumento(java.lang.String csv, String entidad)
 			throws java.rmi.RemoteException {
 
@@ -92,6 +91,70 @@ public class AplicacionExternaCSVConnectorWS {
 			setAuditContext();
 
 			content = DocumentsHelper.getContenidoDocumento(context, csv);
+
+		} catch (Throwable e){
+			LOGGER.error("Error al obtener el contenido del documento con CSV: [" + csv + "]", e);
+		}
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("AplicacionExternaCSVConnectorWS - getContenidoDocumento(CSV: [{}], Entidad: [{}]) - Fin", csv, entidad);
+		}
+
+		return content;
+	}
+	
+	public boolean existeDocumentoOriginal(java.lang.String csv, String entidad) throws java.rmi.RemoteException {
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("AplicacionExternaCSVConnectorWS - existeDocumento(CSV: [{}], Entidad: [{}]) - Inicio", csv, entidad);
+		}
+
+		boolean existe = false;
+
+		try {
+			// Establecer la entidad para la multientidad
+			setOrganizationUserInfo(entidad);
+
+			// Crear el contexto de tramitación para la consulta
+			ClientContext context = createClientContext();
+
+			// Auditoría
+			setAuditContext();
+
+			// Comprobar si existe un documento con el CSV recibido
+			existe = DocumentsHelper.existeDocumentoOriginal(context, csv);
+
+		} catch (Throwable e){
+			LOGGER.error("Error al comprobar si existe el documento para el CSV: [" + csv + "]", e);
+		}
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("AplicacionExternaCSVConnectorWS - existeDocumento(CSV: [{}], Entidad: [{}]) - Fin", csv, entidad);
+		}
+
+		return existe;
+	}
+	
+	public byte[] getContenidoDocumentoOriginal(java.lang.String csv, String entidad) throws java.rmi.RemoteException {
+
+		// Contenido del documento
+		byte[] content = null;
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("AplicacionExternaCSVConnectorWS - getContenidoDocumento(CSV: [{}], Entidad: [{}]) - Inicio", csv, entidad);
+		}
+
+		try {
+			// Establecer la entidad para la multientidad
+			setOrganizationUserInfo(entidad);
+
+			// Crear el contexto de tramitación para la consulta
+			ClientContext context = createClientContext();
+
+			// Auditoría
+			setAuditContext();
+
+			content = DocumentsHelper.getContenidoDocumentoOriginal(context, csv);
 
 		} catch (Throwable e){
 			LOGGER.error("Error al obtener el contenido del documento con CSV: [" + csv + "]", e);

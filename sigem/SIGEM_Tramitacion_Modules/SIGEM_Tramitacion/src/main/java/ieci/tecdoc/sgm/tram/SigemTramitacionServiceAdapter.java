@@ -28,6 +28,7 @@ import ieci.tecdoc.sgm.core.services.tramitacion.dto.InfoFichero;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.InfoOcupacion;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.InteresadoExpediente;
 import ieci.tecdoc.sgm.core.services.tramitacion.dto.Procedimiento;
+import ieci.tecdoc.sgm.tram.sign.PortafirmasMinhapSignConnector;
 import ieci.tecdoc.sgm.tram.vo.SGMExpedienteVO;
 import ieci.tecdoc.sgm.tram.vo.SGMInfoBExpedienteVO;
 import ieci.tecdoc.sgm.tram.vo.SGMInfoBProcedimientoVO;
@@ -42,6 +43,7 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 
 /**
@@ -137,6 +139,26 @@ public class SigemTramitacionServiceAdapter implements ServicioTramitacion {
 		try {
 			setOrganizationUserInfo(idEntidad);
 			return CustodiaManager.getInstance().getFichero(guid);
+		} catch (Throwable e){
+			logger.error("Error inesperado al obtener el contenido del fichero[guid="
+					+ guid + "]", e);
+			throw new TramitacionException(
+					TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+    }
+    
+    
+    /**
+     * [Dipucr-Agustin #1297]
+     * Obtiene el contenido del justificante de firma que genera sigem a partir de la firma de portafirmas
+     * @param guid GUID del documento
+     * @param identidad GUID idEntidad
+     * @return Contenido del documento.
+     */
+    public byte [] getJustificanteFirma(String idEntidad, String guid) throws TramitacionException {
+		try {
+			setOrganizationUserInfo(idEntidad);
+			return CustodiaManager.getInstance().getFicheroJustificanteFirma(guid);
 		} catch (Throwable e){
 			logger.error("Error inesperado al obtener el contenido del fichero[guid="
 					+ guid + "]", e);
@@ -493,6 +515,26 @@ public class SigemTramitacionServiceAdapter implements ServicioTramitacion {
 					TramitacionException.EXC_GENERIC_EXCEPCION, e);
 		}
 	}
+	
+	public String[] queryExpedientes(String idEntidad, String consulta)throws TramitacionException {
+		try {
+			setOrganizationUserInfo(idEntidad);
+			return TramitacionManager.getInstance().queryExpedientes(idEntidad, consulta);
+		} catch (Throwable e) {
+			logger.error("Error al obtener la consulta", e);
+			throw new TramitacionException(TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+	}
+	
+	public int creaTramiteByCod(String idEntidad, String codTramite, String numExp)throws TramitacionException {
+		try {
+			setOrganizationUserInfo(idEntidad);
+			return TramitacionManager.getInstance().creaTramiteByCod(codTramite, numExp);
+		} catch (Throwable e) {
+			logger.error("Error al obtener la consulta", e);
+			throw new TramitacionException(TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+	}
 
 	public String obtenerRegistroEntidad(String idEntidad,
 			String nombreEntidad, String numExp, int idRegistro)
@@ -530,12 +572,78 @@ public class SigemTramitacionServiceAdapter implements ServicioTramitacion {
 			ClientContext ctx = TramitacionManager.getInstance().getContext();
 			ctx.setLocale(new Locale("es", "ES"));
 			IEntitiesAPI entitiesAPI = ctx.getAPI().getEntitiesAPI();
-			IItem itemDoc = entitiesAPI.getDocument(Integer.parseInt(idDocumento));
+			
+			//[dipucr-Felipe #1326] Controlamos que el documento no haya sido ya firmado y esté en los históricos
+			IItem itemDoc = getDocumento(idDocumento, entitiesAPI);
+			
 			if ((itemDoc!=null)&&(StringUtils.isEmpty(itemDoc.getString("INFOPAG_RDE")))){
 				SignDocument signDocument = new SignDocument(itemDoc);
-				ISignConnector signConnector = SignConnectorFactory.getSignConnector();
+				ISignConnector signConnector = SignConnectorFactory.getInstance(idEntidad).getSignConnector();
 				signConnector.initializate(signDocument, ctx);
 				signConnector.sign(true);
+				return itemDoc.getString("ID");
+			}
+			return null;
+
+		} catch (Throwable e) {
+			logger.error("Error al recibir un documento firmado '" + idEntidad + "'", e);
+			throw new TramitacionException(
+					TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+	}
+
+	/**
+	 * [dipucr-Felipe #1326] Controlar documento en históricos
+	 * @param idDocumento
+	 * @param entitiesAPI
+	 * @return
+	 * @throws ISPACException
+	 * @throws Exception
+	 */
+	private IItem getDocumento(String idDocumento, IEntitiesAPI entitiesAPI) throws ISPACException, Exception {
+		
+		IItem itemDoc = null;
+		try{
+			itemDoc = entitiesAPI.getDocument(Integer.parseInt(idDocumento));
+		}
+		catch(Exception ex){
+			itemDoc = DocumentosUtil.getDocumento(entitiesAPI, Integer.parseInt(idDocumento));
+			if (null != itemDoc && StringUtils.isNotEmpty(itemDoc.getString("INFOPAG_RDE"))){
+				logger.info("El documento " + idDocumento + " ya está firmado en los históricos");
+				return null;
+			}
+			else{
+				throw ex;
+			}
+		}
+		return itemDoc;
+	}
+	
+	/**
+	* [dipucr-Felipe #1246] 
+    * {@inheritDoc}
+    * @see ieci.tecdoc.sgm.core.services.tramitacion.ServicioTramitacion#recibirDocumentoFirmado(java.lang.String, java.lang.String, java.lang.String)
+    */
+	public String rechazarDocumento(String idEntidad, String numExp, String idDocumento,
+			String motivo, String idUsuario, String nombreUsuario) throws TramitacionException{
+		
+		try {
+			setOrganizationUserInfo(idEntidad);
+			ClientContext ctx = TramitacionManager.getInstance().getContext();
+			ctx.setLocale(new Locale("es", "ES"));
+			IEntitiesAPI entitiesAPI = ctx.getAPI().getEntitiesAPI();
+			
+			//[dipucr-Felipe #1326] Controlamos que el documento no haya sido ya firmado y esté en los históricos
+			IItem itemDoc = getDocumento(idDocumento, entitiesAPI);
+			
+//			if ((itemDoc!=null)&&(StringUtils.isEmpty(itemDoc.getString("INFOPAG_RDE")))){ //[dipucr-Felipe #1326]
+			if ((itemDoc!=null)&&(SignStatesConstants.RECHAZADO != itemDoc.getString("ESTADOFIRMA"))){
+				
+				SignDocument signDocument = new SignDocument(itemDoc);
+//				ISignConnector signConnector = SignConnectorFactory.getSignConnector();
+				PortafirmasMinhapSignConnector signConnector = new PortafirmasMinhapSignConnector();
+				signConnector.initializate(signDocument, ctx);
+				signConnector.rechazarDocumento(true, motivo, idUsuario, nombreUsuario);
 				return itemDoc.getString("ID");
 			}
 			return null;
@@ -655,7 +763,16 @@ public class SigemTramitacionServiceAdapter implements ServicioTramitacion {
 				int documentId = itemDocumento.getKeyInt();
 				
 				//Borramos los pasos de firma pendientes del documento
-				signAPI.deleteStepsByDocument(documentId);
+				//INICIO [dipucr-Felipe #1503] Borrar/anular los documentos del portafirmas 
+				if (entitiesAPI.isDocumentPortafirmas(itemDocumento)){
+					if (SignStatesConstants.PENDIENTE_CIRCUITO_FIRMA.equals(itemDocumento.getString("ESTADOFIRMA"))){
+						signAPI.deleteCircuitPortafirmas(documentId);
+					}
+				}
+				else{
+					signAPI.deleteStepsByDocument(documentId);
+				}
+				//FIN [dipucr-Felipe #1503]
 				
 				//Desmarcamos el documento como pendiente de firma
 				itemDocumento.set("ESTADOFIRMA", SignStatesConstants.SIN_FIRMA);
@@ -673,6 +790,74 @@ public class SigemTramitacionServiceAdapter implements ServicioTramitacion {
 					
 		} catch (Throwable e) {
 			logger.error("Error al anular la licencia de RRHH del expediente " + numexp);
+			throw new TramitacionException(TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+	}
+	
+	/**
+     * [dipucr-Felipe #1771]
+     * @param idEntidad
+     * @param numexp
+     * @param documentoAnular
+     * @return
+     * @throws TramitacionException
+     */
+	public boolean anularSolicitudPortalEmpleado(String idEntidad, String numexp, String documentoAnular) throws TramitacionException{
+		
+		try {
+			setOrganizationUserInfo(idEntidad);
+			ClientContext ctx = TramitacionManager.getInstance().getContext();
+			ctx.setLocale(new Locale("es", "ES"));
+			IInvesflowAPI invesflowAPI = ctx.getAPI();
+			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
+			ISignAPI signAPI = invesflowAPI.getSignAPI();
+			
+			if (!org.apache.commons.lang.StringUtils.isEmpty(documentoAnular)){
+				
+				IItemCollection colDocumentos = DocumentosUtil.getDocumentsByNombre(ctx, numexp, documentoAnular, "");
+				if (colDocumentos.toList().size() > 0){
+					IItem itemDocumento = colDocumentos.value();
+					int documentId = itemDocumento.getKeyInt();
+				
+					//Borrar/anular los documentos del portafirmas 
+					if (entitiesAPI.isDocumentPortafirmas(itemDocumento)){
+						if (SignStatesConstants.PENDIENTE_CIRCUITO_FIRMA.equals(itemDocumento.getString("ESTADOFIRMA"))){
+							signAPI.deleteCircuitPortafirmas(documentId);
+						}
+					}
+					else{
+						signAPI.deleteStepsByDocument(documentId);
+					}
+				
+					//Desmarcamos el documento como pendiente de firma
+					itemDocumento.set("ESTADOFIRMA", SignStatesConstants.SIN_FIRMA);
+					itemDocumento.store(ctx);
+				}
+				else{
+					logger.warn("No se ha encontrado el documento: " + documentoAnular);
+				}
+			}
+			
+			//Modificamos el asunto del expediente
+			IItem itemExpediente = entitiesAPI.getExpedient(numexp);
+			String asunto = itemExpediente.getString("ASUNTO");
+			final String TEXTO_ANULADO = "[Anulado a solicitud del usuario]"; 
+			if (!asunto.startsWith(TEXTO_ANULADO)){ 
+				asunto = TEXTO_ANULADO + " " + asunto;
+				itemExpediente.set("ASUNTO", asunto);
+				itemExpediente.store(ctx);
+			}
+			
+			//Eliminamos todas las relaciones
+			ExpedientesRelacionadosUtil.eliminarTodosRelacionados(ctx, numexp);
+				
+			//Cerramos trámites y expediente
+			ExpedientesUtil.cerrarExpediente(ctx, numexp);
+			
+			return true;
+					
+		} catch (Throwable e) {
+			logger.error("Error al anular la solicitud del expediente " + numexp);
 			throw new TramitacionException(TramitacionException.EXC_GENERIC_EXCEPCION, e);
 		}
 	}
@@ -696,6 +881,48 @@ public class SigemTramitacionServiceAdapter implements ServicioTramitacion {
 		} catch (Throwable e){
 			logger.error("Error inesperado al anexar documentos al expediente [numExp=" + numExp + ", numReg=" + numReg + ", fechaReg=" + fechaReg + ", documentos=" + documentos + "]", e);
 			throw new TramitacionException( TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+    }
+    
+    /**
+     * Añade documentos al trámite de un expediente.
+     * @param numExp Número de expediente.
+     * @param idTramite Identificador del trámite al que anexar los documentos.
+     * @param numReg Número de registro de entrada.
+     * @param fechaReg Fecha de registro de entrada.
+     * @param documentos Lista de documentos asociados al expediente.
+     * @return Cierto si los documentos se han creado correctamente.
+     * @throws TramitacionException Si se produce algún error.
+     */
+	public boolean insertaApoderamiento(String idEntidad, String numExp, String representado, String representante) throws TramitacionException{    	
+		try {
+			setOrganizationUserInfo(idEntidad);
+			return TramitacionManager.getInstance().insertaApoderamiento(idEntidad, numExp, representado, representante);
+			
+		} catch (Throwable e){
+			logger.error("Error inesperado al insertar el apoderamiento al expediente [numExp=" + numExp + ", representado=" + representado + ", representante=" + representante + "]", e);
+			throw new TramitacionException( TramitacionException.EXC_GENERIC_EXCEPCION, e);
+		}
+    }
+	
+	/**
+	 * [dipucr-Felipe #1745]
+     * Realiza el sellado/firma del documento pasado como parámetro
+     * @param idEntidad
+     * @param password - Contraseña
+     * @param nombreDocumento
+     * @param documento - Documento a firmar
+     * @return Contenido del documento firmado
+     * @throws ISPACException si ocurre algún error.
+     */
+    public byte [] sellarDocumento(String idEntidad, String password, String nombreDocumento, byte[] documento) throws TramitacionException {
+		try {
+			setOrganizationUserInfo(idEntidad);
+			return TramitacionManager.getInstance().sellarDocumento(password, nombreDocumento, documento);
+		} catch (Throwable e){
+			String error = "Error inesperado al sellar el documento en la entidad " + idEntidad;
+			logger.error(error, e);
+			throw new TramitacionException(error, e);
 		}
     }
 }

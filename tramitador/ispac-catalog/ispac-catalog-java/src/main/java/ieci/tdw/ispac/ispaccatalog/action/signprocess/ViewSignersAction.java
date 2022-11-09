@@ -2,13 +2,16 @@ package ieci.tdw.ispac.ispaccatalog.action.signprocess;
 
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.IRespManagerAPI;
-import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.impl.SessionAPI;
 import ieci.tdw.ispac.ispaccatalog.action.BaseAction;
 import ieci.tdw.ispac.ispaccatalog.action.form.UsersForm;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorFactory;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.vo.Signer;
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativa;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuarios;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +28,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
+
 public class ViewSignersAction extends BaseAction {
 
 	/** Logger de la clase. */
@@ -33,8 +38,8 @@ public class ViewSignersAction extends BaseAction {
 
 	protected static final String PARAM_UID		 			= "uid";
 	protected static final String PARAM_ACTION		 		= "action";
-	protected static final String PARAM_SIGNER_NAME		 		= "signerName";
-	protected static final String PARAM_SIGNER_TYPE		 		= "signerType";
+	protected static final String PARAM_SIGNER_NAME		 	= "signerName";
+	protected static final String PARAM_SIGNER_TYPE		 	= "signerType";
 	protected static final String PARAM_INVALID_SELECT 		= "invalidSelect";
 
 	public ActionForward executeAction(ActionMapping mapping, ActionForm form,
@@ -54,6 +59,7 @@ public class ViewSignersAction extends BaseAction {
 		if (!"true".equals(request.getParameter("accept")) ||
 	        	(request.getAttribute(PARAM_INVALID_SELECT) != null)) {
     		List<Signer> signers = new ArrayList <Signer>() ;
+    		List<Signer> signersFinal = new ArrayList <Signer>() ;
     		if (StringUtils.isNotEmpty(busqueda)){
 
         		if (logger.isDebugEnabled()) {
@@ -61,8 +67,7 @@ public class ViewSignersAction extends BaseAction {
         					.info("ViewSignersAction->Comienzo action viewSignerAction. Se va a obtener el conector del portafirmas....");
         		}
 
-    			ProcessSignConnector processSignConnector = ProcessSignConnectorFactory
-    					.getInstance().getProcessSignConnector();
+    			ProcessSignConnector processSignConnector = ProcessSignConnectorFactory.getInstance(session.getClientContext()).getProcessSignConnector();
 
     			if (logger.isDebugEnabled()) {
         			logger
@@ -70,18 +75,52 @@ public class ViewSignersAction extends BaseAction {
         		}
 
     			try{
-
-    			signers = processSignConnector.getSigners(session
-    					.getClientContext(), filtro);
+    				
+	    			signers = processSignConnector.getSigners(session.getClientContext(), filtro);
+	    			/**
+	    			 * Ticket1273#Teresa Compruebo que estén en la estrucutra organizativa
+	    			 * **/
+	    			for (Signer signer : signers) {
+	        			ServicioEstructuraOrganizativa estructu = LocalizadorServicios.getServicioEstructuraOrganizativa();
+	        			try{
+	        				//INICIO [dipucr-Felipe #1514] Distintos cargos por usuario
+	        				Usuarios usuarios = estructu.getUsuariosByNif(signer.getIdentifier(), EntidadesAdmUtil.obtenerEntidadObject(session.getClientContext()).getIdentificador());
+	        				List<Usuario> listaUsuarios = usuarios.get_list();
+	        				if (listaUsuarios.size() > 0){
+	        					if (listaUsuarios.size() == 1){
+	        						Usuario usuarioALSIGM = listaUsuarios.get(0);
+			        				signer.setNameALSIGM(usuarioALSIGM.get_name());
+			        				signer.setIdALSIGM("1-"+usuarioALSIGM.get_id());
+			        				signersFinal.add(signer);
+	        					}
+	        					else{
+	        						for (Usuario usuarioALSIGM : listaUsuarios){
+	        							Signer signerAux = new Signer();
+	        							signerAux.setIdentifier(signer.getIdentifier());
+	        							signerAux.setName(signer.getName());
+	        							signerAux.setNameALSIGM(usuarioALSIGM.get_name());
+	        							signerAux.setIdALSIGM("1-"+usuarioALSIGM.get_id());
+				        				signersFinal.add(signerAux);
+	        						}
+	        					}
+		        			} 
+	        				//FIN [dipucr-Felipe #1514] Distintos cargos por usuario
+	        			}catch(Exception e){
+	        				
+	        			}
+	        			       			
+	    			}
     			}catch(Exception e){
-    				logger.error("Se produjo una excepción al invocar al método getSigners del conector del portafirmas con el filtro:"+filtro,e);
+    				logger.error("Se produjo una excepción al invocar al método getSigners del conector del portafirmas con el filtro:"+filtro+" - "+e.getMessage(),e);
     				//Se ha detectado que si se busca por un filtro que no devuelve nada en lugar de devolver un listado vacío o nulo devuelve una excepción
     				//por eso no se lanza excepción para que se muestre la página sin datos
 
     			}
     		}
+    		
+    		
 
-    		request.setAttribute("signers", signers);
+    		request.setAttribute("signers", signersFinal);
     		request.setAttribute("filtro", filtro);
 
     		if (logger.isDebugEnabled()) {

@@ -1,27 +1,56 @@
 package es.dipucr.sigem.api.rule.procedures;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+
 
 public class ConstantesSubvenciones {
-    
+   
     public static final String CAMPO_NUMEXP = "NUMEXP";
-
+    
+    public static final String ESTADO_ADM_ = "ESTADO_ADM_";
+    
+    //Estados adminsitrativos que van en la tabla de los resueltos, rechazados o que han renunciado respectivamente
+    public static final List<String> ESTADOS_TABLA_RESOLUCION = new ArrayList<String>();
+    static{
+    	ESTADOS_TABLA_RESOLUCION.add(ExpedientesUtil.EstadoADM.RS);
+    	ESTADOS_TABLA_RESOLUCION.add(ExpedientesUtil.EstadoADM.AP);
+    }
+    
+    public static final List<String> ESTADOS_TABLA_RECHAZADO = new ArrayList<String>();
+    static{
+    	ESTADOS_TABLA_RECHAZADO.add(ExpedientesUtil.EstadoADM.RC);
+    }
+    
+    public static final List<String> ESTADOS_TABLA_RENUNCIADO = new ArrayList<String>();
+    static{
+    	ESTADOS_TABLA_RENUNCIADO.add(ExpedientesUtil.EstadoADM.RN);
+    }
+    
    
      /**
      * Mapeo de las tablas
      */
-    
+
      /**
       *    Tabla con los datos de la solicitud
       * Tabla DPCR_SOL_CONV_SUB
       **/
     public final class DatosSolicitud{
         public static final String NOMBRE_TABLA = "DPCR_SOL_CONV_SUB";
-        
+
         public static final String NUMEXP = CAMPO_NUMEXP;
+        public static final String NUMEXP_CONVOCATORIA = "NUMEXP_PADRE";
         public static final String FINALIDAD = "FINALIDAD";
         public static final String PRESUPUESTO = "PRESUPUESTO";
         public static final String SUBVENCION = "SUBVENCION";
-        
+
+        public static final String ASUNTO_CONVOCATORIA = "CONVOCATORIA";
+
+        public static final String CONSENTIMIENTO_SVD = "CONSENTIMIENTO_SVD";
+
         private DatosSolicitud(){
         }
     }
@@ -95,6 +124,10 @@ public class ConstantesSubvenciones {
         public static final String MODALIDAD1 = "MODALIDAD1";
         public static final String MODALIDAD2 = "MODALIDAD2";
         public static final String MODALIDAD3 = "MODALIDAD3";
+        
+        public static final String ESTADO_ADM_1 = ESTADO_ADM_ + "1";
+        public static final String ESTADO_ADM_2 = ESTADO_ADM_ + "2";
+        public static final String ESTADO_ADM_3 = ESTADO_ADM_ + "3";
 
         private DatosResolucion(){
         }
@@ -155,7 +188,7 @@ public class ConstantesSubvenciones {
     }
     
     public final class VariablesSesion{
-        
+
         public static final String NRESOLUCIONPARCIAL = "NRESOLUCIONPARCIAL";
         public static final String ANIO = "ANIO";
         public static final String NOMBRE_TRAMITE = "NOMBRE_TRAMITE";
@@ -164,7 +197,7 @@ public class ConstantesSubvenciones {
         public static final String TEXTO_RESOLUCION2 = "TEXTO_RESOLUCION2";
         public static final String TEXTO_RESOLUCION3 = "TEXTO_RESOLUCION3";
         public static final String EXTRACTO_DECRETO = "EXTRACTO_DECRETO";
-        
+
         public static final String NUM_DECRETO_APRB = "NUM_DECRETO_APRB";
         public static final String FECHA_DECRETO_APRB = "FECHA_DECRETO_APRB";
         public static final String NUM_DECRETO = "NUM_DECRETO";
@@ -173,7 +206,7 @@ public class ConstantesSubvenciones {
         public static final String FECHA_BOLETIN = "FECHA_BOLETIN";
         public static final String NUM_INFORME = "NUM_INFORME";
         public static final String CONVOCATORIA = "CONVOCATORIA";
-        
+
         public static final String DATOSSOLICITUD = "DATOSSOLICITUD";
         public static final String TEXTO_ALTERNATIVO = "TEXTO_ALTERNATIVO";
         public static final String TEXTO_ALTERNATIVO2 = "TEXTO_ALTERNATIVO2";
@@ -184,7 +217,7 @@ public class ConstantesSubvenciones {
         public static final String TEXTO_ALTERNATIVOPUNTOTERCERO = "TEXTO_ALTERNATIVOPUNTOTERCERO";
         public static final String TEXTO_ALTERNATIVOPUNTOTERCEROCONTENIDO = "TEXTO_ALTERNATIVOPUNTOTERCEROCONTENIDO";
         public static final String TEXTO_ALTERNATIVOPUNTOTERCEROCONTENIDO2 = "TEXTO_ALTERNATIVOPUNTOTERCEROCONTENIDO2";
-                
+
         public static final String CABECERA = "CABECERA";
         public static final String TEXTO_MODIFICACION = "TEXTO_MODIFICACION";
         public static final String TEXTO_CACHE = "TEXTO_CACHE";
@@ -197,7 +230,7 @@ public class ConstantesSubvenciones {
         public static final String TEXTOPAGODIPU1 = "textoPagoDipu1";
         public static final String TEXTOPAGODIPU2 = "textoPagoDipu2";
         public static final String TEXTOPAGODIPU3 = "textoPagoDipu3";
-        
+
         public static final String IMPORTE = "IMPORTE";
         public static final String TEXTO1 = "TEXTO1";
         public static final String TEXTO2 = "TEXTO2";
@@ -208,11 +241,29 @@ public class ConstantesSubvenciones {
         public static final String TEXTO7 = "TEXTO7";
         public static final String TEXTO8 = "TEXTO8";
         public static final String TEXTO9 = "TEXTO9";
-        
+
+        public static final String IMPORTE_1_TOTAL = "IMPORTE_1_TOTAL";
+        public static final String IMPORTE_2_TOTAL = "IMPORTE_2_TOTAL";
+        public static final String IMPORTE_3_TOTAL = "IMPORTE_3_TOTAL";
+
+        public static final String IMPORTE_1_TOTAL_SOLICITADO = "IMPORTE_1_TOTAL_SOLICITADO";
+        public static final String IMPORTE_2_TOTAL_SOLICITADO = "IMPORTE_2_TOTAL_SOLICITADO";
+        public static final String IMPORTE_3_TOTAL_SOLICITADO = "IMPORTE_3_TOTAL_SOLICITADO";
+
+        public static final String DEVOLUCION_1_TOTAL = "DEVOLUCION_1_TOTAL";
+        public static final String DEVOLUCION_2_TOTAL = "DEVOLUCION_2_TOTAL";
+        public static final String DEVOLUCION_3_TOTAL = "DEVOLUCION_3_TOTAL";
+
+        public static final String IMPORTE_TOTAL = "IMPORTE_TOTAL";
+        public static final String IMPORTE_TOTAL_SOLICITADO = "IMPORTE_TOTAL_SOLICITADO";
+        public static final String DEVOLUCION_TOTAL = "DEVOLUCION_TOTAL";
+
+        public static final String IMPORTE_GUIA_TOTAL = "IMPORTE_GUIA_TOTAL";
+
         private VariablesSesion(){
         }
     }
-    
+
     private ConstantesSubvenciones(){
     }
 }

@@ -9,9 +9,11 @@ import ieci.tdw.ispac.api.errors.ISPACLockedObject;
 import ieci.tdw.ispac.api.rule.EventManager;
 import ieci.tdw.ispac.api.rule.EventsDefines;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.dao.CollectionDAO;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXHitoDAO;
 import ieci.tdw.ispac.ispaclib.dao.tx.TXTramiteDAO;
 import ieci.tdw.ispac.ispaclib.notices.Notices;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispactx.ITXAction;
 import ieci.tdw.ispac.ispactx.TXConstants;
 import ieci.tdw.ispac.ispactx.TXTransactionDataContainer;
@@ -19,7 +21,7 @@ import ieci.tdw.ispac.ispactx.TXTransactionDataContainer;
 import java.util.Date;
 import java.util.Map;
 
-import com.sun.star.uno.Exception;
+import es.dipucr.sigem.api.rule.procedures.Constants;
 
 /**
  * Acción para cerrar un trámite.
@@ -80,6 +82,15 @@ public class TXCloseTask implements ITXAction {
 						new String[] { task.getString("NOMBRE"), task.getString("NUMEXP")});
 			}
 			
+			//[dipucr-Felipe #1246]
+			// Comprobar si el trámite tiene documentos pendientes de descarga Portafirmas
+			if (entitiesAPI.countTaskDocumentsErrorPortafirmas(task.getKeyInt()) > 0 
+					&& !Constants.DEFAULT_USER_PORTAFIRMAS.equals(cs.getUser().getRespName()))
+			{
+				throw new ISPACInfo("exception.expedients.closeTask.docsErrorPortafirmas", 
+						new String[] { task.getString("NOMBRE"), task.getString("NUMEXP")});
+			}
+			
 			String bpmTaskId = task.getString("ID_TRAMITE_BPM");
 
 			// Obtener el API de BPM
@@ -128,6 +139,21 @@ public class TXCloseTask implements ITXAction {
 			//Si existe un aviso electronico que indica que el tramite a cerrar ha sido delegado, se archiva
 			Notices notices = new Notices(cs);
 			notices.archiveDelegateTaskNotice(task.getInt("ID_FASE_EXP"), task.getKeyInt());
+			
+			//INICIO [dipucr-Felipe #1026] Comprobamos si se delegó el trámite para mandar un aviso de fin de trámite
+			String query = "HITO = " + TXConstants.MILESTONE_EXPED_DELEGATED + " AND ID_TRAMITE = " + nIdPCDTask;
+			CollectionDAO colHitos = TXHitoDAO.getMilestones(cs.getConnection(), nIdProc, query);
+			if (colHitos.next()){
+				TXHitoDAO hitoDelegacion = (TXHitoDAO) colHitos.value();
+				String idAutor = hitoDelegacion.getString("AUTOR");
+				if (!StringUtils.isEmpty(idAutor) && !idAutor.equals(cs.getRespId())){
+					String message = "<a href=\"showTask.do?taskId=" + mnIdTask + 
+							"\" class=\"displayLink\">Terminado trámite " + task.getString("NOMBRE") + "</a>.";
+					Notices.generateNotice(cs, nIdProc, cs.getStateContext().getStageId(), mnIdTask, cs.getStateContext().getNumexp(), message, 
+							idAutor, Notices.TIPO_AVISO_TRAMITE_FINALIZADO, nIdPCDStage, cs.getStateContext().getTaskPcdId());
+				}
+			}
+			//FIN [dipucr-Felipe #1026]
 	}
 
 	private String composeInfo(){

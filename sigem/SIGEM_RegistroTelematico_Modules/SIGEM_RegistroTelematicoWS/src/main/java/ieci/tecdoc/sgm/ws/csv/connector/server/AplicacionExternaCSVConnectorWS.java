@@ -64,6 +64,22 @@ public class AplicacionExternaCSVConnectorWS {
 		}
 		return existe;
 	}
+	
+	/*
+	 * 
+	 * Es necesario conocer la entidad para conocer el Datasource que hay que
+	 * utilizar para la conexión (MultiEntityDataSource)
+	 */
+	/**
+	 * De momento no se implementa la opción de documento original firmado para el registro telemático
+	 */
+
+	public boolean existeDocumentoOriginal(java.lang.String csv, String entidad) throws java.rmi.RemoteException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("existeDocumentoOriginal(java.lang.String) - start. CSV: [{}]",csv);
+		}
+		return false;
+	}
 
 	
 	public byte[] getContenidoDocumento(java.lang.String csv, String entidad)
@@ -101,5 +117,15 @@ public class AplicacionExternaCSVConnectorWS {
 		}
 		return content;
 	}
+	
+	/**
+	 * De momento no se implementa la opción de documento original firmado para el registro telemático
+	 */
+	public byte[] getContenidoDocumentoOriginal(java.lang.String csv, String entidad) throws java.rmi.RemoteException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("getContenidoDocumento(java.lang.String) - start. CSV[{}]",csv);
+		}
 
+		return null;
+	}
 }

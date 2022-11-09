@@ -1,6 +1,5 @@
 package ieci.tdw.ispac.api;
 
-import ieci.tdw.ispac.api.entities.SpacEntities;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
@@ -226,6 +225,16 @@ public interface IEntitiesAPI {
      * @throws ISPACException si ocurre algún error.
      */
     public int countTaskDocumentsInSignCircuit(int taskId) 
+    	throws ISPACException;
+    
+    /**
+     * Obtiene el número de documentos asociados al trámite que están pendientes de descarga
+     * del portafirmas por errores en el procesamiento de eventos
+     * @param taskId Identificador del trámite activo.
+     * @return Número de documentos
+     * @throws ISPACException si ocurre algún error.
+     */
+    public int countTaskDocumentsErrorPortafirmas(int taskId) 
     	throws ISPACException;
 
     /**
@@ -690,6 +699,17 @@ public interface IEntitiesAPI {
      * @throws ISPACException si ocurre algún error.
      */
     public IItemCollection getExpedientsByRegNum(String regNum)
+		throws ISPACException;
+    
+    /**
+     * Obtiene los registros históricos de la entidad de expedietes
+     * a partir del número de registro.
+     * 
+     * @param regNum Número de registro.
+     * @return Lista de expedientes.
+     * @throws ISPACException si ocurre algún error.
+     */
+    public IItemCollection getExpedientsByRegNumHistorico(String regNum)
 		throws ISPACException;
     
     // INTERVINIENTES //
@@ -1505,6 +1525,24 @@ public interface IEntitiesAPI {
 	public void deleteDocument(IItem document) throws ISPACException;
 	
 	/**
+	 * [dipucr-Felipe #1462]
+	 * Simula el borrado de un documento insertándolo en la tabla de documentos borrados
+	 *
+	 * @param documentId Id del documento
+	 * @throws ISPACException
+	 */
+	public void dipucrFakeDeleteDocument(int documentId) throws ISPACException;
+	
+	/**
+	 * [dipucr-Felipe #1462]
+	 * Simula el borrado de un documento insertándolo en la tabla de documentos borrados
+	 *
+	 * @param document Documento a borrar
+	 * @throws ISPACException
+	 */
+	public void dipucrFakeDeleteDocument(IItem document) throws ISPACException;
+	
+	/**
 	 * Elimina todos los documentos (incluso los físicos) para un expediente
 	 * @param numExp : Expediente del que se quieren eliminar todos los documentos
 	 * @throws ISPACException
@@ -1553,4 +1591,11 @@ public interface IEntitiesAPI {
     
     public SearchResultVO getLimitedQueryEntities(String entityName, String query, String order) throws ISPACException;
 	
+    /**
+	 * [dipucr-Felipe #1246]
+	 * @param document
+	 * @return true si el documento se ha enviado a firmas en el portafirmas
+	 * @throws ISPACException 
+	 */
+	public boolean isDocumentPortafirmas(IItem document) throws ISPACException;
 }

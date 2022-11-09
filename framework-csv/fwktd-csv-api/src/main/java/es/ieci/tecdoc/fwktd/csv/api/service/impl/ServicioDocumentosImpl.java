@@ -448,6 +448,35 @@ public class ServicioDocumentosImpl implements ServicioDocumentos {
 
 		return conector.existeDocumento(documento.getCsv(), configuracion.getParametros());
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.core.service.ServicioDocumentos#existeContenidoDocumentoOriginal(java.lang.String)
+	 */
+	public boolean existeContenidoDocumentoOriginal(String id) {
+
+		logger.info("Llamada a existeContenidoDocumento: id=[{}]", id);
+
+		Assert.hasText(id, "'id' must not be empty");
+
+		// Obtener la información del documento
+		DocumentoVO documento = getDocumentoManager().get(id);
+		if (documento == null) {
+			logger.warn("El documento con identificador [{}] no existe", id);
+			throw new CSVException( "error.csv.document.idNotFound", new String[] { id }, "No existe ningún documento con el identificador: " + id);
+		}
+
+		// Obtener la configuración de conexión a la aplicación externa asociada al documento
+		ConfiguracionConexion configuracion = getDocumentoManager().getConfiguracionConexion(documento);
+		AplicacionExternaConnector conector = getAplicacionExternaConnectorRegistry().getConector(configuracion.getConector());
+		if (conector == null) {
+			logger.warn("No se ha encontrado el conector [{}]", configuracion.getConector());
+			throw new CSVException( "error.csv.application.connectorNotFound", new String[] { configuracion.getConector() }, "No se ha encontrado el conector con aplicaciones externas con identificador: " + configuracion.getConector());
+		}
+
+		return conector.existeDocumentoOriginal(documento.getCsv(), configuracion.getParametros());
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -483,6 +512,35 @@ public class ServicioDocumentosImpl implements ServicioDocumentos {
 		}
 
 		return conector.getContenidoDocumento(documento.getCsv(), configuracion.getParametros());
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.core.service.ServicioDocumentos#getContenidoDocumentoOriginal(java.lang.String)
+	 */
+	public byte[] getContenidoDocumentoOriginal(String id) {
+
+		logger.info("Llamada a getContenidoDocumento: id=[{}]", id);
+
+		Assert.hasText(id, "'id' must not be empty");
+
+		// Obtener la información del documento
+		DocumentoVO documento = getDocumentoManager().get(id);
+		if (documento == null) {
+			logger.warn("El documento con identificador [{}] no existe", id);
+			throw new CSVException( "error.csv.document.idNotFound", new String[] { id }, "No existe ningún documento con el identificador: " + id);
+		}
+
+		// Obtener la configuración de conexión a la aplicación externa asociada al documento
+		ConfiguracionConexion configuracion = getDocumentoManager().getConfiguracionConexion(documento);
+		AplicacionExternaConnector conector = getAplicacionExternaConnectorRegistry().getConector(configuracion.getConector());
+		if (conector == null) {
+			logger.warn("No se ha encontrado el conector [{}]", configuracion.getConector());
+			throw new CSVException( "error.csv.application.connectorNotFound", new String[] { configuracion.getConector() }, "No se ha encontrado el conector con aplicaciones externas con identificador: " + configuracion.getConector());
+		}
+
+		return conector.getContenidoDocumentoOriginal(documento.getCsv(), configuracion.getParametros());
 	}
 
 	/**
@@ -521,6 +579,36 @@ public class ServicioDocumentosImpl implements ServicioDocumentos {
 		}
 
 		conector.writeDocumento(documento.getCsv(), outputStream, configuracion.getParametros());
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.core.service.ServicioDocumentos#writeDocumentoOriginal(java.lang.String, java.io.OutputStream)
+	 */
+	public void writeDocumentoOriginal(String id, OutputStream outputStream) throws IOException {
+
+		logger.info("Llamada a writeDocumento: id=[{}]", id);
+
+		Assert.hasText(id, "'id' must not be empty");
+		Assert.notNull(outputStream, "'outputStream' must not be null");
+
+		// Obtener la información del documento
+		DocumentoVO documento = getDocumentoManager().get(id);
+		if (documento == null) {
+			logger.warn("El documento con identificador [{}] no existe", id);
+			throw new CSVException( "error.csv.document.idNotFound", new String[] { id }, "No existe ningún documento con el identificador: " + id);
+		}
+
+		// Obtener la configuración de conexión a la aplicación externa asociada al documento
+		ConfiguracionConexion configuracion = getDocumentoManager().getConfiguracionConexion(documento);
+		AplicacionExternaConnector conector = getAplicacionExternaConnectorRegistry().getConector(configuracion.getConector());
+		if (conector == null) {
+			logger.warn("No se ha encontrado el conector [{}]", configuracion.getConector());
+			throw new CSVException( "error.csv.application.connectorNotFound", new String[] { configuracion.getConector() }, "No se ha encontrado el conector con aplicaciones externas con identificador: " + configuracion.getConector());
+		}
+
+		conector.writeDocumentoOriginal(documento.getCsv(), outputStream, configuracion.getParametros());
 	}
 
 	/**

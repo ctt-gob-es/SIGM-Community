@@ -58,23 +58,6 @@ public interface ISignConnector {
 	public void sign(boolean changeState) throws ISPACException;
 	
 	/**
-	 * [Dipucr-Agustin #781]
-	 * Realiza la prefirma
-	 * @param changeState Indica si hay que cambiar el estado de la firma del documento
-	 * @throws ISPACException
-	 */
-	public String presign(boolean changeState) throws ISPACException;
-	
-	/**
-	 * [Dipucr-Agustin #781]
-	 * Realiza la postfirma
-	 * @param changeState Indica si hay que cambiar el estado de la firma del documento
-	 * @param path del fichero temporal firmado
-	 * @throws ISPACException
-	 */
-	public String postsign(String pathFicheroTempFirmado, boolean changeState) throws ISPACException;
-	
-	/**
 	 * Inicializa el conector con el documento a firmar y el contexto del cliente
 	 * @param signDocument
 	 * @param clientContext
@@ -96,4 +79,37 @@ public interface ISignConnector {
 	 * @throws ISPACException
 	 */
 	public ResultadoValidacionCertificado validateCertificate(String x509CertString)throws ISPACException;
+	
+	/**
+	 * [dipucr-Felipe #1366]
+	 * @param changeState
+	 * @param motivo
+	 * @param nif
+	 * @param nombre
+	 * @throws ISPACException
+	 */
+	public void rechazarDocumento(boolean changeState, String motivo, String nif, String nombre) throws ISPACException;
+	
+	/****************************************************************************
+	 * FUNCIONES NECESARIAS ANTES DE PORTAFIRMAS
+	 * [dipucr-Felipe #1246] Eliminar cuando todos los aytos estén migrados
+	 ****************************************************************************/
+	
+	/**
+	 * [Dipucr-Agustin #781]
+	 * Realiza la prefirma
+	 * @param changeState Indica si hay que cambiar el estado de la firma del documento
+	 * @throws ISPACException
+	 */
+	public String presign(boolean changeState) throws ISPACException;
+	
+	/**
+	 * [Dipucr-Agustin #781]
+	 * Realiza la postfirma
+	 * @param changeState Indica si hay que cambiar el estado de la firma del documento
+	 * @param path del fichero temporal firmado
+	 * @throws ISPACException
+	 */
+	public String postsign(String pathFicheroTempFirmado, boolean changeState) throws ISPACException;
+	
 }

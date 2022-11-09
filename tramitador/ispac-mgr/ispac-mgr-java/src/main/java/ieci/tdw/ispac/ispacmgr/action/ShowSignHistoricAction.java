@@ -61,9 +61,16 @@ public class ShowSignHistoricAction extends BaseAction {
 				saveErrors(request,messages);
 				return mapping.findForward("error");
 	        }
+	        
+	        //[dipucr-Felipe #958]
+	        String numexp = entityForm.getProperty("NUMEXP");
+	        String nombreDoc = entityForm.getProperty("NOMBREDOC");
+	        String asunto = entityForm.getProperty("ASUNTO");
 	
 	        ISignAPI signAPI = session.getAPI().getSignAPI();
-	        IItemCollection itemcol = signAPI.getHistorics(session.getClientContext().getRespId(), dtFechaInicio, dtFechaFin, SignCircuitStates.FINALIZADO);
+//	        IItemCollection itemcol = signAPI.getHistorics(session.getClientContext().getRespId(), dtFechaInicio, dtFechaFin, SignCircuitStates.FINALIZADO);
+	        IItemCollection itemcol = signAPI.getHistorics(session.getClientContext().getRespId(), 
+	        		dtFechaInicio, dtFechaFin, numexp, nombreDoc, asunto, SignCircuitStates.FINALIZADO);//[dipucr-Felipe #958]
 	        list = CollectionBean.getBeanList(itemcol);
 		}
 		request.setAttribute(ActionsConstants.BATCH_SIGN_LIST, list);
@@ -72,7 +79,7 @@ public class ShowSignHistoricAction extends BaseAction {
 	    // Menus
 		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 		IState state = managerAPI.currentState(getStateticket(request));
-		request.setAttribute("menus", MenuFactory.getSingHistoric(cct, getResources(request), state));    		
+		request.setAttribute("menus", MenuFactory.getSignHistoric(cct, getResources(request), state));    		
 		///////////////////////////////////////////////
 	    // Formateador
 		CacheFormatterFactory factory = CacheFormatterFactory.getInstance();

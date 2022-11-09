@@ -84,6 +84,7 @@ public class ActionsConstants {
 	public static final String SIGN_CIRCUIT_LIST = getKey("signCircuitList");
 	public static final String SIGN_CIRCUITTRAM_LIST = getKey("signCircuitTramList"); //[eCenpri-Felipe #592]
 	public static final String SIGN_CIRCUIT_ID = getKey("signCircuitId");
+	public static final String SIGN_MY_CIRCUIT = "myCircuit";//[dipucr-Felipe #1246]
 	public static final String SIGN_HISTORICS_DATE_ERROR = getKey("sighHistoricsDateError");
 
 	public static final String NEW_EXPEDIENTS_LIST = getKey("newExpedientList");
@@ -116,6 +117,9 @@ public class ActionsConstants {
 	// Ahora el formulario de búsqueda está en sesión y se mantienen los parámetros de la última búsqueda realizada
 	// public static final String FROM_SEARCH_RESULTS = "fromSearchResults";
 	public static final String FORM_SEARCH_RESULTS = "searchForm";
+	
+	//[dipucr-Felipe #1586] Volver a los avisos electrónicos desde el expediente
+	public static final String FROM_NOTICE_LIST = "fromNoticeList";
 
 	public static final String THIRDPARTY_POSTAL_ADDRESSES_LIST = "ThirPartyPostalAddressesList";
 	public static final String POSTAL_ADDRESS = "PostalAddress";

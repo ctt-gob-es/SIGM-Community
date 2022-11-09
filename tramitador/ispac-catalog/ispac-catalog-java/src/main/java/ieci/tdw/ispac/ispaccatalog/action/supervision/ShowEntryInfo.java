@@ -14,9 +14,17 @@ import ieci.tdw.ispac.ispaclib.bean.BeanFormatter;
 import ieci.tdw.ispac.ispaclib.bean.CacheFormatterFactory;
 import ieci.tdw.ispac.ispaclib.bean.CollectionBean;
 import ieci.tdw.ispac.ispaclib.resp.Responsible;
+import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector;
+import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorFactory;
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.entidades.Entidad;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativa;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -28,12 +36,16 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
+
+
 public class ShowEntryInfo extends DirectoryAction {
 
 	
 	public static String SOLAPA_FUNCIONES_SISTEMA="1";
 	public static String SOLAPA_SUPERVISION="2";
 	public static String SOLAPA_SUSTITUTOS="3";
+
 	
 	public ActionForward directoryExecuteAction(ActionMapping mapping, 
 												ActionForm form,
@@ -106,8 +118,8 @@ public class ShowEntryInfo extends DirectoryAction {
 			else if (SOLAPA_SUSTITUTOS.equals(tab)) {
 				
 				// Lista de sustitutos
-	            IItemCollection itemCollSustitutes = respAPI.getSustitutesAssets(uid);
-	            substitutesList = CollectionBean.getBeanList(itemCollSustitutes);
+	            IItemCollection itemCollSustitutes = respAPI.getSustitutesAssets(uid);	            
+	            substitutesList = CollectionBean.getBeanList(itemCollSustitutes);	            
 	            
 	            BeanFormatter sustitutoFormatter = factory.getFormatter(getISPACPath("/formatters/supervision/substitutionformatter.xml"));
 	            request.setAttribute("SustitutoFormatter", sustitutoFormatter);

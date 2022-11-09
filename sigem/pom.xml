@@ -35,9 +35,9 @@
 				<module>SIGEM_Tramitacion_Modules</module>
 				<module>SIGEM_Archivo_Modules</module>
 
-			<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto Árbol Documental.-->
+			<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto 2bol Documental.-->
 				<module>SIGEM_ArbolDocumentalWeb</module>
-			<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto Árbol Documental.-->
+			<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto 2bol Documental.-->
 				<!-- [Teresa]Ticket#1020 -->
 				<!-- <module>SIGEM_Scheduler_Modules</module> -->
 				<module>SIGEM_Terceros_Modules</module>
@@ -207,6 +207,7 @@
 				<module>SIGEM_CertificacionWS</module>  <!--WAR-->
 				<module>SIGEM_ConsultaWeb</module>    <!--WAR-->
 				<module>SIGEM_ConsultaWebMiembros</module>    <!--WAR-->
+				<module>SIGEM_IndiceElectronicoWeb</module>
 				<module>SIGEM_ConsultaWS</module>    <!--WAR-->
 				<module>SIGEM_CriptoValidacionWS</module>   <!--WAR-->
 				<module>SIGEM_EntidadesWS</module>   <!--WAR-->
@@ -220,6 +221,7 @@
 				<module>SIGEM_PagoElectronico_Modules</module> <!--WAR-->
 				<module>SIGEM_portal</module>  <!--WAR-->
 				<module>SIGEM_portal_Entidades</module>  <!--WAR-->
+				<module>SIGEM_portal_novedades</module>  <!--WAR-->
 				<module>SIGEM_RdeWS</module>  <!--WAR-->
 				<module>SIGEM_RegistroPresencial_Modules</module>  <!--WAR-->
 				<module>SIGEM_RegistroPresencialMSSSI_Modules</module>
@@ -236,16 +238,16 @@
 				<module>SIGEM_GestionCSV_Modules</module>
 				<module>SIGEM_SignoWS_Modules</module>
 
-			<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto Árbol Documental.-->
+			<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto 2bol Documental.-->
 				<module>SIGEM_ArbolDocumentalWeb</module>
-			<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto Árbol Documental.-->
+			<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto 2bol Documental.-->
 
 				<module>SIGEM_ORVE_Modules</module>
 
 				<module>SIGEM_Config_Fwktd</module>
 				<module>SIGEM_Config</module>
 				
-				<module>SIGEM_BD_DIST</module>
+			    <module>SIGEM_BD_DIST</module>
 				
 			</modules>
 
@@ -322,12 +324,14 @@
 									<tasks>
 										<property name="dist.dir" value="${basedir}/SIGEM_DIST"/>
 
-										<delete>
-											<fileset dir="${dist.dir}" includes="*.*"/>
-										</delete>
+<!-- esto solo vale para la primera compilación, luego no lo podemos ejecutar porque tenemos la carpeta compartida por NFS, luego se borra solo el contenido -->
 										<!--<delete dir="${dist.dir}"/>
 										<mkdir dir="${dist.dir}"/>-->
 
+										<delete>
+											<fileset dir="${dist.dir}" includes="*.*"/>
+										</delete>
+	
 										<copy overwrite="true" todir="${dist.dir}" verbose="true">
 											<fileset dir="${basedir}\SIGEM_AdministracionSesionesAdmWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_AdministracionSesionesBackOfficeWS\target" includes="*.war"/>
@@ -347,6 +351,7 @@
 											<fileset dir="${basedir}\SIGEM_CertificacionWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_ConsultaWeb\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_ConsultaWebMiembros\target" includes="*.war"/>
+											<fileset dir="${basedir}\SIGEM_IndiceElectronicoWeb\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_ConsultaWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_CriptoValidacionWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_EntidadesWS\target" includes="*.war"/>
@@ -394,12 +399,19 @@
 											<fileset dir="${basedir}\SIGEM_GestionCSV_Modules\SIGEM_GestionCSVWS\target" includes="*.war"/>
 											<fileset dir="${basedir}\SIGEM_SignoWS_Modules\SIGEM_SignoWS\target" includes="*.war"/>
 
-										<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto Árbol Documental.-->
+											<!-- #[eCenpri-Manu Ticket #295] - INICIO - ALSIGM3 Nuevo proyecto 2bol Documental.-->
 											<fileset dir="${basedir}\SIGEM_ArbolDocumentalWeb\target" includes="*.war"/>
-										<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto Árbol Documental.-->
+											<!-- #[eCenpri-Manu Ticket #295] - FIN - ALSIGM3 Nuevo proyecto 2bol Documental.-->
 
 											<fileset dir="${basedir}\SIGEM_ORVE_Modules\SIGEM_ORVE_Web\target" includes="*.war"/>
-
+											
+											<!-- #[eCenpri-Agustin Ticket #548] - Proxy Clave-->
+											<fileset dir="${basedir}\..\modulos\dipucrclaveautenticacion\SPProxy\target" includes="*.war"/>
+											<!-- #[eCenpri-Agustin Ticket #548] - Proxy Clave-->
+										
+											<!-- [dipucr-Felipe #1223] Mejoras y novedades -->
+											<fileset dir="${basedir}\SIGEM_portal_novedades\target" includes="*.war"/>
+											
 
 											<fileset dir="${basedir}\SIGEM_Config\target" includes="*.zip"/>
 											<fileset dir="${basedir}\SIGEM_BD_DIST\target" includes="*.zip"/>

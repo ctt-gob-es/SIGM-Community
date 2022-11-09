@@ -48,12 +48,7 @@ public class BuscadorDocsUtils {
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	public static ActionForward imprimirDocumento(HttpServletResponse response, ClientContext ctx, IItem itemDoc)
-			throws IeciTdException, Exception, IOException {
-		
-		ServletOutputStream out = response.getOutputStream();
-		IGenDocAPI genDocAPI = ctx.getAPI().getGenDocAPI();
-		String idDoc = itemDoc.getString("ID");
+	public static ActionForward imprimirDocumento(HttpServletResponse response, ClientContext ctx, IItem itemDoc) throws IeciTdException, Exception, IOException {
 		
 		// Obtener el GUID del documento en el repositorio de documentos
 		String documentGUID = itemDoc.getString("INFOPAG_RDE");
@@ -61,6 +56,38 @@ public class BuscadorDocsUtils {
 			documentGUID = itemDoc.getString("INFOPAG");
 		}
 
+		return imprimirDocumento(response, ctx, itemDoc, documentGUID);
+	}
+	
+	/**
+	 * Método para imprimir el documento original firmado en una página del navegador
+	 * @param response
+	 * @param searchBean
+	 * @param volumeBean
+	 * @throws IeciTdException
+	 * @throws Exception
+	 * @throws IOException
+	 */
+	public static ActionForward imprimirDocumentoOriginal(HttpServletResponse response, ClientContext ctx, IItem itemDoc) throws IeciTdException, Exception, IOException {
+		
+		// Obtener el GUID del documento en el repositorio de documentos
+		String documentGUID = itemDoc.getString("INFOPAG_RDE_ORIGINAL");
+		if (StringUtils.isBlank(documentGUID)) {
+			documentGUID = itemDoc.getString("INFOPAG_RDE");
+			if (StringUtils.isBlank(documentGUID)) {
+				documentGUID = itemDoc.getString("INFOPAG");
+			}
+		}
+		
+		return imprimirDocumento(response, ctx, itemDoc, documentGUID);
+	}
+	
+	public static ActionForward imprimirDocumento(HttpServletResponse response, ClientContext ctx, IItem itemDoc, String documentGUID) throws IeciTdException, Exception, IOException {
+
+		ServletOutputStream out = response.getOutputStream();
+		IGenDocAPI genDocAPI = ctx.getAPI().getGenDocAPI();
+		String idDoc = itemDoc.getString("ID");
+		
 		if (StringUtils.isBlank(documentGUID)) {
 			return null;
 		}
@@ -75,8 +102,7 @@ public class BuscadorDocsUtils {
 				// Se saca el mensaje de error en la propia ventana, que habra
 				// sido lanzada con un popup
 				response.setContentType("text/html");
-				logger.error("No se ha encontrado el documento físico con identificador: '"
-						+ documentGUID + "' en el repositorio de documentos");
+				logger.error("No se ha encontrado el documento físico con identificador: '" + documentGUID + "' en el repositorio de documentos");
 				String message = new ISPACInfo("exception.documents.notExists").getExtendedMessage(ctx.getLocale());
 				out.write(message.getBytes());
 				out.close();

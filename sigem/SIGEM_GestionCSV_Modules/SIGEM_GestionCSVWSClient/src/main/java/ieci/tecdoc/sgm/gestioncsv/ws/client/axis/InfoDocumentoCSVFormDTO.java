@@ -2,13 +2,12 @@
  * InfoDocumentoCSVFormDTO.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis 1.3 Oct 05, 2005 (05:23:37 EDT) WSDL2Java emitter.
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
 package ieci.tecdoc.sgm.gestioncsv.ws.client.axis;
 
 public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
-
     private java.lang.String codigoAplicacion;
 
     private boolean disponible;
@@ -42,7 +41,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Gets the codigoAplicacion value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @return codigoAplicacion
      */
     public java.lang.String getCodigoAplicacion() {
@@ -52,7 +51,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Sets the codigoAplicacion value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @param codigoAplicacion
      */
     public void setCodigoAplicacion(java.lang.String codigoAplicacion) {
@@ -62,7 +61,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Gets the disponible value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @return disponible
      */
     public boolean isDisponible() {
@@ -72,7 +71,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Sets the disponible value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @param disponible
      */
     public void setDisponible(boolean disponible) {
@@ -82,7 +81,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Gets the fechaCaducidad value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @return fechaCaducidad
      */
     public java.util.Calendar getFechaCaducidad() {
@@ -92,7 +91,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Sets the fechaCaducidad value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @param fechaCaducidad
      */
     public void setFechaCaducidad(java.util.Calendar fechaCaducidad) {
@@ -102,7 +101,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Gets the fechaCreacion value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @return fechaCreacion
      */
     public java.util.Calendar getFechaCreacion() {
@@ -112,7 +111,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Sets the fechaCreacion value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @param fechaCreacion
      */
     public void setFechaCreacion(java.util.Calendar fechaCreacion) {
@@ -122,7 +121,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Gets the nombre value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @return nombre
      */
     public java.lang.String getNombre() {
@@ -132,7 +131,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Sets the nombre value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @param nombre
      */
     public void setNombre(java.lang.String nombre) {
@@ -142,7 +141,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Gets the tipoMime value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @return tipoMime
      */
     public java.lang.String getTipoMime() {
@@ -152,7 +151,7 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
 
     /**
      * Sets the tipoMime value for this InfoDocumentoCSVFormDTO.
-     *
+     * 
      * @param tipoMime
      */
     public void setTipoMime(java.lang.String tipoMime) {
@@ -170,21 +169,21 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
         }
         __equalsCalc = obj;
         boolean _equals;
-        _equals = true &&
-            ((this.codigoAplicacion==null && other.getCodigoAplicacion()==null) ||
+        _equals = true && 
+            ((this.codigoAplicacion==null && other.getCodigoAplicacion()==null) || 
              (this.codigoAplicacion!=null &&
               this.codigoAplicacion.equals(other.getCodigoAplicacion()))) &&
             this.disponible == other.isDisponible() &&
-            ((this.fechaCaducidad==null && other.getFechaCaducidad()==null) ||
+            ((this.fechaCaducidad==null && other.getFechaCaducidad()==null) || 
              (this.fechaCaducidad!=null &&
               this.fechaCaducidad.equals(other.getFechaCaducidad()))) &&
-            ((this.fechaCreacion==null && other.getFechaCreacion()==null) ||
+            ((this.fechaCreacion==null && other.getFechaCreacion()==null) || 
              (this.fechaCreacion!=null &&
               this.fechaCreacion.equals(other.getFechaCreacion()))) &&
-            ((this.nombre==null && other.getNombre()==null) ||
+            ((this.nombre==null && other.getNombre()==null) || 
              (this.nombre!=null &&
               this.nombre.equals(other.getNombre()))) &&
-            ((this.tipoMime==null && other.getTipoMime()==null) ||
+            ((this.tipoMime==null && other.getTipoMime()==null) || 
              (this.tipoMime!=null &&
               this.tipoMime.equals(other.getTipoMime())));
         __equalsCalc = null;
@@ -273,10 +272,10 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
      * Get Custom Serializer
      */
     public static org.apache.axis.encoding.Serializer getSerializer(
-           java.lang.String mechType,
-           java.lang.Class _javaType,
+           java.lang.String mechType, 
+           java.lang.Class _javaType,  
            javax.xml.namespace.QName _xmlType) {
-        return
+        return 
           new  org.apache.axis.encoding.ser.BeanSerializer(
             _javaType, _xmlType, typeDesc);
     }
@@ -285,10 +284,10 @@ public class InfoDocumentoCSVFormDTO  implements java.io.Serializable {
      * Get Custom Deserializer
      */
     public static org.apache.axis.encoding.Deserializer getDeserializer(
-           java.lang.String mechType,
-           java.lang.Class _javaType,
+           java.lang.String mechType, 
+           java.lang.Class _javaType,  
            javax.xml.namespace.QName _xmlType) {
-        return
+        return 
           new  org.apache.axis.encoding.ser.BeanDeserializer(
             _javaType, _xmlType, typeDesc);
     }

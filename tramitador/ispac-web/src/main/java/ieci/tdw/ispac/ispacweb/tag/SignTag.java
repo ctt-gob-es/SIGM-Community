@@ -60,7 +60,9 @@ public class SignTag extends TagSupport {
 	        
 			String htmlCode = "";
 
-			ISignConnector signConnector = SignConnectorFactory.getSignConnector();
+			String idEntidad = (String) pageContext.findAttribute("idEntidad");
+			
+			ISignConnector signConnector = SignConnectorFactory.getInstance(idEntidad).getSignConnector();
 			if (signConnector != null) {
 	
 				if (massive) {

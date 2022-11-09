@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions targetNamespace="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:intf="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-<!--WSDL created by Apache Axis version: 1.4
-Built on Apr 22, 2006 (06:55:48 PDT)-->
+<!--WSDL created by Apache Axis version: 1.3
+Built on Oct 05, 2005 (05:23:37 EDT)-->
  <wsdl:types>
   <schema elementFormDefault="qualified" targetNamespace="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns="http://www.w3.org/2001/XMLSchema">
    <element name="getContenidoDocumento">
@@ -16,6 +16,21 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
     <complexType>
      <sequence>
       <element name="getContenidoDocumentoReturn" type="xsd:base64Binary"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="existeDocumentoOriginal">
+    <complexType>
+     <sequence>
+      <element name="csv" type="xsd:string"/>
+      <element name="entidad" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="existeDocumentoOriginalResponse">
+    <complexType>
+     <sequence>
+      <element name="existeDocumentoOriginalReturn" type="xsd:boolean"/>
      </sequence>
     </complexType>
    </element>
@@ -34,38 +49,69 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
      </sequence>
     </complexType>
    </element>
+   <element name="getContenidoDocumentoOriginal">
+    <complexType>
+     <sequence>
+      <element name="csv" type="xsd:string"/>
+      <element name="entidad" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="getContenidoDocumentoOriginalResponse">
+    <complexType>
+     <sequence>
+      <element name="getContenidoDocumentoOriginalReturn" type="xsd:base64Binary"/>
+     </sequence>
+    </complexType>
+   </element>
   </schema>
  </wsdl:types>
 
+   <wsdl:message name="getContenidoDocumentoOriginalRequest">
+
+      <wsdl:part element="impl:getContenidoDocumentoOriginal" name="parameters"/>
+
+   </wsdl:message>
+
    <wsdl:message name="existeDocumentoResponse">
 
-      <wsdl:part element="impl:existeDocumentoResponse" name="parameters">
+      <wsdl:part element="impl:existeDocumentoResponse" name="parameters"/>
 
-      </wsdl:part>
+   </wsdl:message>
+
+   <wsdl:message name="existeDocumentoOriginalRequest">
+
+      <wsdl:part element="impl:existeDocumentoOriginal" name="parameters"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="existeDocumentoOriginalResponse">
+
+      <wsdl:part element="impl:existeDocumentoOriginalResponse" name="parameters"/>
 
    </wsdl:message>
 
    <wsdl:message name="getContenidoDocumentoRequest">
 
-      <wsdl:part element="impl:getContenidoDocumento" name="parameters">
-
-      </wsdl:part>
+      <wsdl:part element="impl:getContenidoDocumento" name="parameters"/>
 
    </wsdl:message>
 
-   <wsdl:message name="existeDocumentoRequest">
+   <wsdl:message name="getContenidoDocumentoOriginalResponse">
 
-      <wsdl:part element="impl:existeDocumento" name="parameters">
-
-      </wsdl:part>
+      <wsdl:part element="impl:getContenidoDocumentoOriginalResponse" name="parameters"/>
 
    </wsdl:message>
 
    <wsdl:message name="getContenidoDocumentoResponse">
 
-      <wsdl:part element="impl:getContenidoDocumentoResponse" name="parameters">
+      <wsdl:part element="impl:getContenidoDocumentoResponse" name="parameters"/>
 
-      </wsdl:part>
+   </wsdl:message>
+
+   <wsdl:message name="existeDocumentoRequest">
+
+      <wsdl:part element="impl:existeDocumento" name="parameters"/>
 
    </wsdl:message>
 
@@ -73,31 +119,39 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       <wsdl:operation name="getContenidoDocumento">
 
-         <wsdl:input message="impl:getContenidoDocumentoRequest" name="getContenidoDocumentoRequest">
+         <wsdl:input message="impl:getContenidoDocumentoRequest" name="getContenidoDocumentoRequest"/>
 
-       </wsdl:input>
+         <wsdl:output message="impl:getContenidoDocumentoResponse" name="getContenidoDocumentoResponse"/>
 
-         <wsdl:output message="impl:getContenidoDocumentoResponse" name="getContenidoDocumentoResponse">
+      </wsdl:operation>
 
-       </wsdl:output>
+      <wsdl:operation name="existeDocumentoOriginal">
+
+         <wsdl:input message="impl:existeDocumentoOriginalRequest" name="existeDocumentoOriginalRequest"/>
+
+         <wsdl:output message="impl:existeDocumentoOriginalResponse" name="existeDocumentoOriginalResponse"/>
 
       </wsdl:operation>
 
       <wsdl:operation name="existeDocumento">
 
-         <wsdl:input message="impl:existeDocumentoRequest" name="existeDocumentoRequest">
+         <wsdl:input message="impl:existeDocumentoRequest" name="existeDocumentoRequest"/>
 
-       </wsdl:input>
+         <wsdl:output message="impl:existeDocumentoResponse" name="existeDocumentoResponse"/>
 
-         <wsdl:output message="impl:existeDocumentoResponse" name="existeDocumentoResponse">
+      </wsdl:operation>
 
-       </wsdl:output>
+      <wsdl:operation name="getContenidoDocumentoOriginal">
+
+         <wsdl:input message="impl:getContenidoDocumentoOriginalRequest" name="getContenidoDocumentoOriginalRequest"/>
+
+         <wsdl:output message="impl:getContenidoDocumentoOriginalResponse" name="getContenidoDocumentoOriginalResponse"/>
 
       </wsdl:operation>
 
    </wsdl:portType>
 
-   <wsdl:binding name="AplicacionExternaCSVConnectorWSSoapBinding" type="impl:AplicacionExternaCSVConnectorWS">
+   <wsdl:binding name="AplicacionExternaCSVConnectorServiceSoapBinding" type="impl:AplicacionExternaCSVConnectorWS">
 
       <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 
@@ -112,6 +166,24 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
          </wsdl:input>
 
          <wsdl:output name="getContenidoDocumentoResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="existeDocumentoOriginal">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="existeDocumentoOriginalRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="existeDocumentoOriginalResponse">
 
             <wsdlsoap:body use="literal"/>
 
@@ -137,13 +209,31 @@ Built on Apr 22, 2006 (06:55:48 PDT)-->
 
       </wsdl:operation>
 
+      <wsdl:operation name="getContenidoDocumentoOriginal">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getContenidoDocumentoOriginalRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getContenidoDocumentoOriginalResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
    </wsdl:binding>
 
    <wsdl:service name="AplicacionExternaCSVConnectorWSService">
 
-      <wsdl:port binding="impl:AplicacionExternaCSVConnectorWSSoapBinding" name="AplicacionExternaCSVConnectorWS">
+      <wsdl:port binding="impl:AplicacionExternaCSVConnectorServiceSoapBinding" name="AplicacionExternaCSVConnectorWS">
 
-         <wsdlsoap:address location="http://localhost:8080/SIGEM_RegistroTelematicoWS/services/AplicacionExternaCSVConnectorWS"/>
+         <wsdlsoap:address location="http://localhost:8080/SIGEM_TramitacionWS/services/AplicacionExternaCSVConnectorWS"/>
 
       </wsdl:port>
 

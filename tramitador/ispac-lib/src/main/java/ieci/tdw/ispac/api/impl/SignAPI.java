@@ -31,6 +31,7 @@ import ieci.tdw.ispac.ispaclib.dao.sign.SignCircuitHeaderDAO;
 import ieci.tdw.ispac.ispaclib.dao.sign.SignCircuitInstanceDAO;
 import ieci.tdw.ispac.ispaclib.dao.sign.SignTransactionDAO;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
+import ieci.tdw.ispac.ispaclib.gendoc.converter.DocumentConverter;
 import ieci.tdw.ispac.ispaclib.gendoc.sign.SignDocumentMgr;
 import ieci.tdw.ispac.ispaclib.sign.ISignConnector;
 import ieci.tdw.ispac.ispaclib.sign.ResultadoValidacionCertificado;
@@ -44,15 +45,14 @@ import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorFactory;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.vo.ProcessSignProperties;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
-import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
-import ieci.tdw.ispac.ispaclib.utils.XmlFacade;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -63,16 +63,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.bouncycastle.util.encoders.Base64;
 
 import com.lowagie.text.pdf.PdfReader;
 
-import es.dipucr.sigem.api.rule.common.utils.GestorMetadatos;
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class SignAPI implements ISignAPI {
-
-	private static final String SIGNER_DATE_SEPARATOR = ";;";
 
 	public static final Logger LOGGER = Logger.getLogger(SignAPI.class);
 
@@ -82,19 +81,63 @@ public class SignAPI implements ISignAPI {
 		this.mcontext = mcontext;
 	}
 
+	/**
+	 * [dipucr-Felipe #1246]
+	 * Sobrecargamos el método siguiente para facilitar la migración
+	 * Sustituimos todas las llamadas procedimentales a initCircuit
+	 * @param idCircuito
+	 * @param documentId
+	 * @return
+	 * @throws ISPACException
+	 */
+	/** Antiguo formato **/
+	public int initCircuitPortafirmas(int idCircuito, int documentId) throws ISPACException {
+		
+		ProcessSignProperties properties = new ProcessSignProperties();
+		initCircuitPortafirmas(String.valueOf(idCircuito), null, documentId, properties);
+		return idCircuito;
+	}
+	
+	/** Circuito del sistema **/
+	public String initCircuitPortafirmas(String idCircuito, int documentId, ProcessSignProperties properties) throws ISPACException {
+		
+		return initCircuitPortafirmas(idCircuito, null, documentId, properties);
+	}
+	
+	/** Circuito al vuelo (lista de usuarios) **/
+	public String initCircuitPortafirmas(List<Usuario> listUsuarios, int documentId, ProcessSignProperties properties) throws ISPACException {
+		
+		return initCircuitPortafirmas(null, listUsuarios, documentId, properties);
+	}
+	
+	/** Único usuario (mandar a mi firma) **/
+	public String initCircuitPortafirmas(Usuario usuario, int documentId, ProcessSignProperties properties) throws ISPACException {
 
-	public String initCircuitPortafirmas(int id, int documentId, ProcessSignProperties properties)
+		ArrayList<Usuario> listUsuarios = new ArrayList<Usuario>();
+		listUsuarios.add(usuario);
+		return initCircuitPortafirmas(null, listUsuarios, documentId, properties);
+	}
+
+	/**
+	 * [dipucr-Felipe #1246]
+	 * Añadimos la posibilidad de que en vez 
+	 * @param sIdCircuito
+	 * @param Usuario usuario //[dipucr-Felipe #1246]
+	 * @param documentId
+	 * @param properties
+	 * @return
+	 * @throws ISPACException
+	 */
+	private String initCircuitPortafirmas(String sIdCircuito, List<Usuario> listUsuarios, int documentId, ProcessSignProperties properties)
 			throws ISPACException {
 
 		String identificador = "";
 		IEntitiesAPI entitiesAPI = mcontext.getAPI().getEntitiesAPI();
-		ProcessSignConnector processSignConnector = ProcessSignConnectorFactory
-				.getInstance().getProcessSignConnector();
-		IItemCollection documentos = entitiesAPI.getEntities(
-				SpacEntities.SPAC_DT_DOCUMENTOS, mcontext.getStateContext()
-						.getNumexp(), " ID=" + documentId);
-		if (documentos.next()) {
-			IItem documento = documentos.value();
+		ProcessSignConnector processSignConnector = ProcessSignConnectorFactory.getInstance(mcontext).getProcessSignConnector();
+		IItem documento = DocumentosUtil.getDocumento(entitiesAPI, documentId);
+		
+		if (null != documento) {
+			
 			// Comprobar si para el documento ya se ha iniciado un circuito de firma
 			String estadoFirma = documento.getString("ESTADOFIRMA");
 			if (SignStatesConstants.PENDIENTE_CIRCUITO_FIRMA.equals(estadoFirma)) {
@@ -105,7 +148,10 @@ public class SignAPI implements ISignAPI {
 			String infoPage = documento.getString("INFOPAG");
 			IGenDocAPI genDocAPI = this.mcontext.getAPI().getGenDocAPI();
 			Object connectorSession = null;
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+			//INICIO [dipucr-Felipe #1246] Conversión a PDF
+			//Todos los documentos remitidos al portafirmas deben estar en formato PDF
+//			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			connectorSession = genDocAPI.createConnectorSession();
 			if (!genDocAPI.existsDocument(connectorSession, infoPage)) {
 				LOGGER
@@ -115,14 +161,26 @@ public class SignAPI implements ISignAPI {
 				throw new ISPACInfo("exception.documents.notExists", false);
 			}
 
-			genDocAPI.getDocument(connectorSession, infoPage, baos);
+//			genDocAPI.getDocument(connectorSession, infoPage, baos);
+			String pathPdf = DocumentConverter.convert2PDF(mcontext.getAPI(), documentId);
+			File filePdf = new File(pathPdf);
+			
 			Document document = new Document();
-			document.setContent(new ByteArrayInputStream(baos.toByteArray()));
-			document.setExtension(documento.getString("EXTENSION"));
-			document.setName(documento.getString("NOMBRE"));
+//			document.setContent(new ByteArrayInputStream(baos.toByteArray()));
+			try{
+				document.setContent(new ByteArrayInputStream(FileUtils.readFileToByteArray(filePdf)));
+			}
+			catch(IOException ex){
+				throw new ISPACException("Error al recuperar el contenido del fichero pdf: " + ex.getMessage(), ex);
+			}
+//			document.setExtension(documento.getString("EXTENSION"));
+			document.setExtension(Constants._EXTENSION_PDF);
+//			document.setName(documento.getString("NOMBRE"));
+			document.setName(documento.getString("DESCRIPCION"));
 			document.setId(documento.getString("ID"));
-			document.setLength(genDocAPI.getDocumentSize(connectorSession,
-					infoPage));
+//			document.setLength(genDocAPI.getDocumentSize(connectorSession, infoPage));
+			document.setLength((int) filePdf.length());
+			//FIN [dipucr-Felipe #1246]
 
 			// Ejecucion en un contexto transaccional
 			boolean ongoingTX = mcontext.ongoingTX();
@@ -133,13 +191,21 @@ public class SignAPI implements ISignAPI {
 					mcontext.beginTX();
 				}
 
-
-				identificador = processSignConnector.initSignProcess(mcontext,
-						String.valueOf(id),document, properties);
-
-
-				documento.set("ID_PROCESO_FIRMA", identificador);
-				documento.set("ID_CIRCUITO", id);
+				//[dipucr-Felipe #1246] usuario/s al vuelo
+				if (StringUtils.isNotEmpty(sIdCircuito)){
+					identificador = processSignConnector.initSignProcess(mcontext, sIdCircuito, document, properties);
+				}
+				else{
+					identificador = processSignConnector.initSignProcess(mcontext, listUsuarios, document, properties);
+				}
+				 
+				if (!ProcessSignConnectorFactory.getInstance(mcontext).isDefaultConnector()){//[dipucr-Felipe #1246]
+					documento.set("ID_PROCESO_FIRMA", identificador);
+				}
+				
+				if (!StringUtils.isEmpty(sIdCircuito)){//[dipucr-Felipe #1246]
+					documento.set("ID_CIRCUITO", sIdCircuito);
+				}
 
 				// Estado de Firma del documento a PENDIENTE
 				documento.set("ESTADOFIRMA", SignStatesConstants.PENDIENTE_CIRCUITO_FIRMA);
@@ -165,6 +231,28 @@ public class SignAPI implements ISignAPI {
 		}
 		return identificador;
 	}
+	
+	
+	/**
+	 * [dipucr-Felipe #1246]
+	 * Borrado de documentos remitidos al circuito de firmas
+	 * @param documentId
+	 * @return
+	 * @throws ISPACException 
+	 */
+	public boolean deleteCircuitPortafirmas(int documentId) throws ISPACException{
+		
+		IEntitiesAPI entitiesAPI = mcontext.getAPI().getEntitiesAPI();
+		ProcessSignConnector processSignConnector = ProcessSignConnectorFactory.getInstance(mcontext).getProcessSignConnector();
+		IItem documento = DocumentosUtil.getDocumento(entitiesAPI, documentId);
+		
+		String idProcesoFirma = documento.getString("ID_PROCESO_FIRMA");
+		processSignConnector.deleteDocument(mcontext, idProcesoFirma);
+		
+		return true;
+	}
+	
+	
 	public int initCircuit(int id, int documentId) throws ISPACException {
 
 		// Ejecucion en un contexto transaccional
@@ -291,6 +379,17 @@ public class SignAPI implements ISignAPI {
 			mcontext.releaseConnection(cnt);
 		}
 	}
+	
+	//[dipucr-Felipe #958]
+	public IItemCollection getHistorics(String respId, Date init, Date end,
+			String numexp, String docName, String asunto, int state) throws ISPACException {
+		DbCnt cnt = mcontext.getConnection();
+		try {
+			return SignCircuitInstanceDAO.getHistorics(cnt, respId, init, end, numexp, docName, asunto, state).disconnect();
+		} finally {
+			mcontext.releaseConnection(cnt);
+		}
+	}
 
 	public IItemCollection getCircuits() throws ISPACException {
         DbCnt cnt = mcontext.getConnection();
@@ -350,10 +449,10 @@ public class SignAPI implements ISignAPI {
 					.size() - 1);
 			Map params = new HashMap();
 			try {
-				ISignConnector signConnector = SignConnectorFactory
-						.getSignConnector();
-				//String nameFirmante = signConnector.getInfoCert(x509CertString);
-				String nameFirmante = "POR HACER, RECUPERAR EL NOMBRE DEL FIRMANTE DE LA SESIÓN";
+				ISignConnector signConnector = SignConnectorFactory.getInstance(mcontext).getSignConnector();
+//				String nameFirmante = signConnector.getInfoCert(x509CertString);
+				//[dipucr-Agustín / Felipe #1246] Compatibilidad con Firma 3 Fases
+				String nameFirmante = "";//Por hacer, recuperar el nombre de la sesión
 				params.put("FIRMANTE", nameFirmante);
 
 			} catch (Exception e) {
@@ -364,7 +463,7 @@ public class SignAPI implements ISignAPI {
 					EventsDefines.EVENT_OBJ_SIGN_CIRCUIT_STEP_SIGN_AFTER,
 					signCircuitInstanceDAO, params);
 
-			this.sign(signDocument, signCircuitMgr.isLastStep(instancedStepId));
+			this.sign(signDocument, signCircuitMgr.isLastStep(instancedStepId), true);
 
 			boolean ret = signCircuitMgr.signStep(signDocument, instancedStepId);
 
@@ -381,38 +480,23 @@ public class SignAPI implements ISignAPI {
 			}
 		}
 	}
-	
+
+	/**
+	 * [dipucr-Felipe #1246]
+	 * Sobrecargando el método
+	 */
+	public void sign(SignDocument signDocument, boolean changeState) throws ISPACException {
+		sign(signDocument, changeState, false);
+	}
 	
 	/**
-	 * [Dipucr-Agustin #781] 
-	 * Fase de prefirma en firma 3 fases 
-	 * @param SignDocument
-	 * @param boolean changeState
-	 * @return String path
+	 * 
+	 * @param signDocument
+	 * @param changeState
+	 * @param b3Fases [dipucr-Felipe #1246] Añado este parámetro para compatibilizar con firma residual de docs antiguos
 	 * @throws ISPACException
 	 */
-	public String presign(SignDocument signDocument, boolean changeState) throws ISPACException {
-		  boolean ongoingTX = this.mcontext.ongoingTX();
-		  boolean bCommit = false;
-		  try {
-		      if (!ongoingTX) {
-		        this.mcontext.beginTX();
-		      }
-		      
-		      ISignConnector signConnector = SignConnectorFactory.getSignConnector();
-		      signConnector.initializate(signDocument, this.mcontext);
-		      String path = signConnector.presign(changeState);   
-		      bCommit = true;
-		  	
-			  return path;		  
-		  } finally {
-		      if (!ongoingTX) {
-		        this.mcontext.endTX(bCommit);		    	  
-		      }
-		  }
-	  }
-	
-	public void sign(SignDocument signDocument, boolean changeState)throws ISPACException {
+	public void sign(SignDocument signDocument, boolean changeState, boolean b3Fases) throws ISPACException {
 
 		// Ejecucion en un contexto transaccional
 		boolean ongoingTX = mcontext.ongoingTX();
@@ -424,7 +508,15 @@ public class SignAPI implements ISignAPI {
 			}
 
 			// Firmamos con el conector de firma que estemos utilizando
-			ISignConnector signConnector = SignConnectorFactory.getSignConnector();
+			// INICIO [dipucr-Felipe #1246] Firma residual de documentos antiguos
+			ISignConnector signConnector = null;
+			if (b3Fases){
+				signConnector = SignConnectorFactory.getInstance(mcontext).getDefaultSignConnector();
+			}
+			else{
+				signConnector = SignConnectorFactory.getInstance(mcontext).getSignConnector();
+			}
+			// FIN [dipucr-Felipe #1246]
 
 			signConnector.initializate(signDocument, mcontext);
 			signConnector.sign(changeState);
@@ -460,61 +552,6 @@ public class SignAPI implements ISignAPI {
 				mcontext.endTX(bCommit);
 			}
         }
-	}
-	
-	/**
-	 * [Dipucr-Agustin #781] 
-	 * Fase de postfirma en firma 3 fases 
-	 * @param SignDocument
-	 * @param String pathFicheroTemporalFirmado
-	 * @param boolean changeState
-	 * @return String "OK"
-	 * @throws ISPACException
-	 */
-	public String postsign(SignDocument signDocument,
-			String pathFicheroTemporalFirmado, boolean changeState)
-			throws ISPACException {
-
-		boolean ongoingTX = this.mcontext.ongoingTX();
-	    boolean bCommit = false;
-	    try {
-	      if (!ongoingTX) {
-	        this.mcontext.beginTX();
-	      }
-
-	      ISignConnector signConnector = SignConnectorFactory.getSignConnector();
-	      signConnector.initializate(signDocument, this.mcontext);
-	      signConnector.postsign(pathFicheroTemporalFirmado, changeState);
-
-	      IItem doc = signDocument.getItemDoc();
-
-	      ExpedientContext expCtx = new ExpedientContext(this.mcontext);
-	      ITXTransaction tx = this.mcontext.getAPI().getTransactionAPI();
-
-	      StateContext stateContext = this.mcontext.getStateContext();
-	      if (stateContext.getActivityId() > 0) {
-	        expCtx.setStage(stateContext.getStageId());
-	        expCtx.setTask(doc.getInt("ID_TRAMITE"));
-	        expCtx.setActivity(stateContext.getActivityId(), doc.getInt("ID_TRAMITE"), doc.getInt("ID_TRAMITE_PCD"));
-	        tx.executeEvents(8, doc.getInt("ID_FASE_PCD"), 33, expCtx);
-	      } else if (doc.getInt("ID_TRAMITE") > 0) {
-	        expCtx.setStage(doc.getInt("ID_FASE"));
-	        expCtx.setTask(doc.getInt("ID_TRAMITE"));
-	        tx.executeEvents(3, doc.getInt("ID_TRAMITE_PCD"), 33, expCtx);
-	      } else if (doc.getInt("ID_FASE") > 0) {
-	        expCtx.setStage(doc.getInt("ID_FASE"));
-	        tx.executeEvents(2, doc.getInt("ID_FASE_PCD"), 33, expCtx);
-	      }
-
-	      bCommit = true;
-	    } finally {
-	      if (!ongoingTX) {
-	        this.mcontext.endTX(bCommit);	    	  
-	      }
-	    }
-	    
-	    return "OK";
-		
 	}
 
 	public IItem getCircuitStep(int circuitId, int stepId) throws ISPACException {
@@ -625,7 +662,7 @@ public class SignAPI implements ISignAPI {
 	 * @return Lista de documentos firmados
 	 * @throws ISPACException
 	 */
-	public List batchSignSteps(String[] stepIds, String[] signs, String certificado, String entityId) throws ISPACException {
+	public List batchSignSteps(String[] stepIds, String[] signs, String certificado) throws ISPACException {
 
 		//Se comprubea la validez del certificado
 		IInvesflowAPI invesflowAPI = mcontext.getAPI();
@@ -646,37 +683,29 @@ public class SignAPI implements ISignAPI {
 			for (int i = 0; i < stepIds.length; i++) {
 
 				// Paso del circuito
-				int idpaso = Integer.parseInt(stepIds[i]);
-				IItem stepCircuit = getStepInstancedCircuit(idpaso);
-				
-				
+				IItem stepCircuit = getStepInstancedCircuit(Integer.parseInt(stepIds[i]));
+
 				// Documento asociado al paso
 				IItem document = entitiesAPI.getDocument(stepCircuit.getInt("ID_DOCUMENTO"));
-	
 
 				// Expediente del documento
 				String numExp = document.getString("NUMEXP");
-				int idPcd = entitiesAPI.getExpedient(numExp).getInt("ID_PCD");				
+				int idPcd = entitiesAPI.getExpedient(numExp).getInt("ID_PCD");
 
 				// Documento a firmar
 				SignDocument signDocument = new SignDocument(document);
-				
-				signDocument.setEntityId(entityId);
 
 				signDocument.setIdPcd(idPcd);
 				signDocument.setNumExp(numExp);
 				signDocument.addCertificate(certificado);
 				signDocument.setHash(generateHashCode(signDocument));
-				
-				//if(i<signs.length)
 				signDocument.addSign(signs[i]);
-				
 				signDocument.setNumSigner(stepCircuit.getInt("ID_PASO"));
 
 
 				// Firma asociada al paso del circuito
 				signStep(signDocument, stepCircuit.getKeyInt());
-				
+
 				signDocuments.add(signDocument);
 			}
 
@@ -692,7 +721,16 @@ public class SignAPI implements ISignAPI {
 	}
 
 
-
+	/**
+	 * [dipucr-Felipe #1352] Sobrecargamos el método
+	 * @param documentId
+	 * @return
+	 * @throws ISPACException
+	 * @throws InvalidSignatureValidationException
+	 */
+	public List<SignDetailEntry> showSignInfo(int documentId) throws ISPACException, InvalidSignatureValidationException {
+		return showSignInfo(documentId, false);
+	}
 
 	/**
 	 * Muestra los detalles de la firma de un documento asociado al expediente.
@@ -703,147 +741,154 @@ public class SignAPI implements ISignAPI {
 	 * @param documentId
 	 *            Identificador del documento dado por ispac
 	 *            (SPAC_DT_DOCUMENTOS)
+	 * @param includeSubstitutes - [dipucr-Felipe #1352] Incluye todos los firmantes de una línea (autorizados)
 	 *
 	 * @throws ISPACException
 	 */
-
-	public List showSignInfo(int documentId) throws ISPACException, InvalidSignatureValidationException {
-		IGenDocAPI genDocAPI = this.mcontext.getAPI().getGenDocAPI();
-		Object connectorSession = null;
-		String signProperty = null;
-
-
+	//[dipucr-Felipe #1246]
+	public List<SignDetailEntry> showSignInfo(int documentId, boolean includeSubstitutes) throws ISPACException, InvalidSignatureValidationException {
+		
 		IEntitiesAPI entitiesAPI = this.mcontext.getAPI().getEntitiesAPI();
-
 		IItem iitem = entitiesAPI.getDocument(documentId);
 
-		List  details = new ArrayList();
+		List<SignDetailEntry> details = new ArrayList<SignDetailEntry>();
 
 		String state = iitem.getString("ESTADOFIRMA");
 		if (state.equals(ESTADO_SIN_FIRMA)){
 			return details;
 		}
+		else{
+	//		ISignConnector signConnector= SignConnectorFactory.getSignConnector();
+	//		signConnector.getSignerList;
+			ProcessSignConnector processSignConnector = ProcessSignConnectorFactory.getInstance(mcontext).getProcessSignConnector();
+//			details = processSignConnector.getSigns(this.mcontext, String.valueOf(documentId));
+			details = processSignConnector.getSigns(this.mcontext, String.valueOf(documentId), includeSubstitutes);//[dipucr-Felipe #1352]
+			
+			LOGGER.debug("Firmas del documento: \n " + details.toString());
+		}
 
-		// Referencia al objeto en el gestor documental que almacena el documento fisico.
-		String infoPage = iitem.getString("INFOPAG");
-
-		//Referencia al documento firmado almacenado en el Repositorio de Documentos Electronicos
-		String infoPageRDE = iitem.getString("INFOPAG_RDE");
-
-	    List list =new ArrayList();
-	    List certificates=new ArrayList();
-
-		try {
-			if (StringUtils.isNotBlank(infoPageRDE)){ // Existe al menos un firmante.
-
-			// String guid = "<guid><archive>4</archive><folder>29</folder><document>1</document></guid>";
-			connectorSession = genDocAPI.createConnectorSession();
-			if (!genDocAPI.existsDocument(connectorSession, infoPageRDE)){
-				LOGGER.error("No se ha encontrado el documento fisico con identificador: '"+infoPageRDE+"' en el repositorio de documentos");
-				throw new ISPACInfo("exception.documents.notExists", false);
-			}
-
-			//Obtenemos el xml con las firmas adjuntadas antes de aniadir la nueva
-			String nombreMetadatoFirma = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER_SIGN_METADATA_NAME);
-		    signProperty = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, nombreMetadatoFirma);
-
-	    	XmlFacade xmlFacade = new XmlFacade(signProperty);
-
-		    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			if (StringUtils.isBlank(infoPage) || !genDocAPI.existsDocument(connectorSession, infoPage)){
-				LOGGER.error("No se ha encontrado el documento fisico con identificador: '"+infoPage+"' en el repositorio de documentos");
-				throw new ISPACInfo("exception.documents.notExists", false);
-			}
-		    genDocAPI.getDocument(connectorSession, infoPage, baos);
-
-
-		    list = xmlFacade.getList("/" + SignDocument.TAG_FIRMAS + "/" + SignDocument.TAG_FIRMA);
-			String tipo = xmlFacade.get("/" + SignDocument.TAG_FIRMAS + "/@" + SignDocument.ATTR_TYPE);
-			SignDetailEntry entry = null;
-
-			if (SignDocument.TYPE_PORTAFIRMAS.equals(tipo)){
-				String signerInfo = null;
-				String [] signerDateInfo = null;
-				for (int i=0; i<list.size(); i++) {
-					signerInfo = new String(Base64.decode((String)list.get(i)));
-					signerDateInfo = signerInfo.split(SIGNER_DATE_SEPARATOR);
-					entry = new SignDetailEntry();
-					entry.setIntegrity(ISignAPI.INTEGRIDAD_PORTAFIRMAS);
-					entry.setSignDate(signerDateInfo[1]);
-					entry.setFirmado(true);
-					entry.setAuthor(signerDateInfo[0]);
-					details.add(entry);
-				}
-			} else {
-
-              certificates=xmlFacade.getList("/" + SignDocument.TAG_CERTIFICADOS + "/" + SignDocument.TAG_CERTIFICADO);
-
-              ISignConnector signConnector= SignConnectorFactory.getSignConnector();
-
-				LOGGER.debug("Firmas del documento: \n " + list.toString());
-
-              for (int i=0; i<list.size(); i++) {
-					Map results = null;
-					entry = new SignDetailEntry();
-					//Verificamos la integridad de la firma
-
-				byte signedContent [] = Base64.encode (baos.toByteArray()) ;
-					results = signConnector.verify((String) list.get(i),new String(Base64.encode(signedContent)));
-					//Obtenemos la informacion del firmante
-					if(i<certificates.size()){
-
-						entry.setAuthor(signConnector.getInfoCert((String) certificates.get(i)));
-					}
-					else{
-
-						//Firmado por el servidor de @ firma
-					}
-
-					entry.setIntegrity((String) results.get(INTEGRIDAD));
-					if (StringUtils.isNotEmpty( (String) results.get(ISignAPI.DN))){
-						entry.setAuthor((String) results.get(ISignAPI.DN));
-
-					} else {
-						if(results.get(NOMBRE)!=null){
-							entry.setAuthor( results.get(NOMBRE) + " " + results.get(ISignAPI.APELLIDOS));
-						} else {
-							entry.setAuthor("");
-						}
-					}
-
-					entry.setSignDate(iitem.getString("FFIRMA"));
-					entry.setFirmado(true);
-					details.add(entry);
-				}
-              }
-
-              IItemCollection rs = getStepsByDocument(documentId);
-
-			// NOMBRE_FIRMANTE
-				int numberOfSigner = 0;
-				while (rs.next()){
-					numberOfSigner ++;
-					IItem row = rs.value();
-					if (numberOfSigner > list.size() ){
-						entry = new SignDetailEntry();
-						entry.setAuthor((String) row.get("NOMBRE_FIRMANTE"));
-						entry.setSignDate("");
-						entry.setFirmado(false);
-						details.add(entry);
-					}
-				}
-			}
-			for (int i=0; i< details.size(); i++) {
-				SignDetailEntry signDetailEntry=(SignDetailEntry) details.get(i);
-				LOGGER.debug(signDetailEntry);
-			}
-		} finally {
-	    	if (connectorSession != null) {
-				genDocAPI.closeConnectorSession(connectorSession);
-			}
-    	}
 	    return details;
 	}
+	
+	
+//	public List showSignInfo(int documentId) throws ISPACException, InvalidSignatureValidationException {
+//		IGenDocAPI genDocAPI = this.mcontext.getAPI().getGenDocAPI();
+//		Object connectorSession = null;
+//		String signProperty = null;
+//
+//
+//		IEntitiesAPI entitiesAPI = this.mcontext.getAPI().getEntitiesAPI();
+//
+//		IItem iitem = entitiesAPI.getDocument(documentId);
+//
+//		List  details = new ArrayList();
+//
+//		String state = iitem.getString("ESTADOFIRMA");
+//		if (state.equals(ESTADO_SIN_FIRMA)){
+//			return details;
+//		}
+//
+//		// Referencia al objeto en el gestor documental que almacena el documento fisico.
+//		String infoPage = iitem.getString("INFOPAG");
+//
+//		//Referencia al documento firmado almacenado en el Repositorio de Documentos Electronicos
+//		String infoPageRDE = iitem.getString("INFOPAG_RDE");
+//
+//	    List list =new ArrayList();
+//	    List certificates=new ArrayList();
+//
+//		try {
+//			if (StringUtils.isNotBlank(infoPageRDE)){ // Existe al menos un firmante.
+//
+//			// String guid = "<guid><archive>4</archive><folder>29</folder><document>1</document></guid>";
+//			connectorSession = genDocAPI.createConnectorSession();
+//			if (!genDocAPI.existsDocument(connectorSession, infoPageRDE)){
+//				LOGGER.error("No se ha encontrado el documento fisico con identificador: '"+infoPageRDE+"' en el repositorio de documentos");
+//				throw new ISPACInfo("exception.documents.notExists", false);
+//			}
+//
+//			//Obtenemos el xml con las firmas adjuntadas antes de aniadir la nueva
+//		    signProperty = genDocAPI.getDocumentProperty(connectorSession, infoPageRDE, "Firma");
+//
+//	    	XmlFacade xmlFacade = new XmlFacade(signProperty);
+//
+//		    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//			if (StringUtils.isBlank(infoPage) || !genDocAPI.existsDocument(connectorSession, infoPage)){
+//				LOGGER.error("No se ha encontrado el documento fisico con identificador: '"+infoPage+"' en el repositorio de documentos");
+//				throw new ISPACInfo("exception.documents.notExists", false);
+//			}
+//		    genDocAPI.getDocument(connectorSession, infoPage, baos);
+//
+//
+//		    list = xmlFacade.getList("/" + SignDocument.TAG_FIRMAS + "/" + SignDocument.TAG_FIRMA);
+//		    certificates=xmlFacade.getList("/" + SignDocument.TAG_CERTIFICADOS + "/" + SignDocument.TAG_CERTIFICADO);
+//
+//		    ISignConnector signConnector= SignConnectorFactory.getSignConnector();
+//
+//			LOGGER.debug("Firmas del documento: \n " + list.toString());
+//
+//		    for (int i=0; i<list.size(); i++) {
+//				Map results = null;
+//				SignDetailEntry entry = new SignDetailEntry();
+//				//Verificamos la integridad de la firma
+//
+//		    	byte signedContent [] = Base64.encode (baos.toByteArray()) ;
+//				results = signConnector.verify((String) list.get(i),new String(Base64.encode(signedContent)));
+//				//Obtenemos la informacion del firmante
+//				if(i<certificates.size()){
+//
+//					entry.setAuthor(signConnector.getInfoCert((String) certificates.get(i)));
+//				}
+//				else{
+//
+//					//Firmado por el servidor de @ firma
+//				}
+//
+//				entry.setIntegrity((String) results.get(INTEGRIDAD));
+//				if (StringUtils.isNotEmpty( (String) results.get(ISignAPI.DN))){
+//					entry.setAuthor((String) results.get(ISignAPI.DN));
+//
+//				}else{
+//					if(results.get(NOMBRE)!=null){
+//						entry.setAuthor( results.get(NOMBRE) + " " + results.get(ISignAPI.APELLIDOS));
+//					}
+//					else{
+//						entry.setAuthor("");
+//					}
+//				}
+//
+//				entry.setSignDate(iitem.getString("FFIRMA"));
+//				entry.setFirmado(true);
+//				details.add(entry);
+//			}
+//		    }
+//
+//		    IItemCollection rs = getStepsByDocument(documentId);
+//
+//		 // NOMBRE_FIRMANTE
+//			int numberOfSigner = 0;
+//			while (rs.next()){
+//				numberOfSigner ++;
+//				IItem row = rs.value();
+//				if (numberOfSigner > list.size() ){
+//					SignDetailEntry entry = new SignDetailEntry();
+//					entry.setAuthor((String) row.get("NOMBRE_FIRMANTE"));
+//					entry.setSignDate("");
+//					entry.setFirmado(false);
+//					details.add(entry);
+//				}
+//			}
+//			for (int i=0; i< details.size(); i++) {
+//				SignDetailEntry signDetailEntry=(SignDetailEntry) details.get(i);
+//				LOGGER.debug(signDetailEntry);
+//			}
+//		} finally {
+//	    	if (connectorSession != null) {
+//				genDocAPI.closeConnectorSession(connectorSession);
+//			}
+//    	}
+//	    return details;
+//	}
 
 
 	/**
@@ -993,9 +1038,10 @@ public class SignAPI implements ISignAPI {
 
            // No se permite aniadir un firmante al circuito de firma si ya ha
 			// esta presente en el circuito
-	        if (existsSigner(circuitId, signerUID, signerType)) {
-	        	throw new SignerMinhapAlreadyExistsException(signerName);
-	        }
+	        //[Ticket1286#Teresa] Quito esta comprobación
+//	        if (existsSigner(circuitId, signerUID, signerType)) {
+//	        	throw new SignerMinhapAlreadyExistsException(signerName);
+//	        }
 
            // numero de pasos del circuito
         	int numsteps = countCircuitSteps(circuitId) + 1;
@@ -1253,8 +1299,7 @@ public class SignAPI implements ISignAPI {
 						.getNumexp(), " ID=" + documentId);
 		if (itemcol.next()) {
 			IItem documento = itemcol.value();
-			ProcessSignConnector processSignConnector = ProcessSignConnectorFactory
-					.getInstance().getProcessSignConnector();
+			ProcessSignConnector processSignConnector = ProcessSignConnectorFactory.getInstance(mcontext).getProcessSignConnector();
 			details = processSignConnector.getSigns(mcontext, documento
 					.getString("ID_PROCESO_FIRMA"));
 		}
@@ -1280,8 +1325,7 @@ public class SignAPI implements ISignAPI {
 						.getNumexp(), " ID=" + documentId);
 		if (itemcol.next()) {
 			IItem documento = itemcol.value();
-			ProcessSignConnector processSignConnector = ProcessSignConnectorFactory
-					.getInstance().getProcessSignConnector();
+			ProcessSignConnector processSignConnector = ProcessSignConnectorFactory.getInstance(mcontext).getProcessSignConnector();
 			estado = processSignConnector.getState(mcontext, documento
 					.getString("ID_PROCESO_FIRMA"));
 		}
@@ -1298,7 +1342,7 @@ public class SignAPI implements ISignAPI {
 
 	public ResultadoValidacionCertificado validateCertificate(String certificado)
 			throws ISPACException {
-		ISignConnector signConnector = SignConnectorFactory.getSignConnector();
+		ISignConnector signConnector = SignConnectorFactory.getInstance(mcontext).getSignConnector();
 		return signConnector.validateCertificate(certificado);
 	}
 	
@@ -1318,7 +1362,24 @@ public class SignAPI implements ISignAPI {
 			mcontext.releaseConnection(cnt);
 		}
 	}
-	
+
+
+	public IItemCollection getTransactionsByDocument(int documentId)
+			throws ISPACException {
+		
+		DbCnt cnt = this.mcontext.getConnection();
+	    try {
+	      return SignTransactionDAO.getTransactionsByDocument(cnt, documentId).disconnect();
+	    } finally {
+	      this.mcontext.releaseConnection(cnt);
+	    }
+	}
+
+	/****************************************************************************
+	 * FUNCIONES NECESARIAS ANTES DE PORTAFIRMAS
+	 * [dipucr-Felipe #1246] Eliminar cuando todos los aytos estén migrados
+	 ****************************************************************************/
+
 	/**
 	 * [eCenpri-Felipe #871] 19.04.2013
 	 * Devuelve el bloqueo de firmas para un cierto tipo de documento
@@ -1390,16 +1451,100 @@ public class SignAPI implements ISignAPI {
 			mcontext.releaseConnection(cnt);
 		}
 	}
+	
+	/**
+	 * [Dipucr-Agustin #781] 
+	 * Fase de prefirma en firma 3 fases 
+	 * @param SignDocument
+	 * @param boolean changeState
+	 * @return String path
+	 * @throws ISPACException
+	 */
+	public String presign(SignDocument signDocument, boolean changeState) throws ISPACException {
+		boolean ongoingTX = this.mcontext.ongoingTX();
+		boolean bCommit = false;
+		
+		try {
+			if (!ongoingTX) {
+				this.mcontext.beginTX();
+			}
+			
+			//[dipucr-Felipe #1246] La pre-firma y la post-firma sólo se llaman desde la firma 3 fases,
+			// que compatibilizaremos con el nuevo portafirmas MINHAP para terminar firmas antiguas
+			//TODO: Eliminar cuando se haya firmado todo lo antiguo en todas las entidades
+//			ISignConnector signConnector = SignConnectorFactory.getInstance(mcontext).getSignConnector();
+			ISignConnector signConnector = SignConnectorFactory.getInstance(mcontext).getDefaultSignConnector();
+			signConnector.initializate(signDocument, this.mcontext);
+			String path = signConnector.presign(changeState);   
+			bCommit = true;
+		  	
+			return path;
+			
+		} finally {
+			if (!ongoingTX) {
+				this.mcontext.endTX(bCommit);		    	  
+			}
+		}
+	}
 
-
-	public IItemCollection getTransactionsByDocument(int documentId)
+	/**
+	 * [Dipucr-Agustin #781] 
+	 * Fase de postfirma en firma 3 fases 
+	 * @param SignDocument
+	 * @param String pathFicheroTemporalFirmado
+	 * @param boolean changeState
+	 * @return String "OK"
+	 * @throws ISPACException
+	 */
+	public String postsign(SignDocument signDocument, String pathFicheroTemporalFirmado, boolean changeState)
 			throws ISPACException {
 		
-		DbCnt cnt = this.mcontext.getConnection();
-	    try {
-	      return SignTransactionDAO.getTransactionsByDocument(cnt, documentId).disconnect();
-	    } finally {
-	      this.mcontext.releaseConnection(cnt);
-	    }
+		boolean ongoingTX = this.mcontext.ongoingTX();
+		boolean bCommit = false;
+	    
+		try {
+			if (!ongoingTX) {
+				this.mcontext.beginTX();
+			}
+	
+			//[dipucr-Felipe #1246] La pre-firma y la post-firma sólo se llaman desde la firma 3 fases,
+			// que compatibilizaremos con el nuevo portafirmas MINHAP para terminar firmas antiguas
+			//TODO: Eliminar cuando se haya firmado todo lo antiguo en todas las entidades
+//			ISignConnector signConnector = SignConnectorFactory.getInstance(mcontext).getSignConnector();
+			ISignConnector signConnector = SignConnectorFactory.getInstance(mcontext).getDefaultSignConnector();
+			signConnector.initializate(signDocument, this.mcontext);
+			signConnector.postsign(pathFicheroTemporalFirmado, changeState);
+	
+			IItem doc = signDocument.getItemDoc();
+	
+			ExpedientContext expCtx = new ExpedientContext(this.mcontext);
+			ITXTransaction tx = this.mcontext.getAPI().getTransactionAPI();
+	
+			StateContext stateContext = this.mcontext.getStateContext();
+	      
+			if (stateContext.getActivityId() > 0) {
+				expCtx.setStage(stateContext.getStageId());
+				expCtx.setTask(doc.getInt("ID_TRAMITE"));
+				expCtx.setActivity(stateContext.getActivityId(), doc.getInt("ID_TRAMITE"), doc.getInt("ID_TRAMITE_PCD"));
+				tx.executeEvents(8, doc.getInt("ID_FASE_PCD"), 33, expCtx);
+			} 
+			else if (doc.getInt("ID_TRAMITE") > 0) {
+				expCtx.setStage(doc.getInt("ID_FASE"));
+				expCtx.setTask(doc.getInt("ID_TRAMITE"));
+				tx.executeEvents(3, doc.getInt("ID_TRAMITE_PCD"), 33, expCtx);
+			} else if (doc.getInt("ID_FASE") > 0) {
+				expCtx.setStage(doc.getInt("ID_FASE"));
+				tx.executeEvents(2, doc.getInt("ID_FASE_PCD"), 33, expCtx);
+			}
+	
+			bCommit = true;
+			
+		} finally {
+			if (!ongoingTX) {
+				this.mcontext.endTX(bCommit);	    	  
+			}
+		}
+	    
+	    return "OK";
 	}
 }

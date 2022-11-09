@@ -196,6 +196,8 @@ public interface ISecurityAPI
     
     public void deleteSustituciones(String[] idsSustitucionFecha)
     throws ISPACException;
+    public Map<String, Object> getSustitucion(String idsSustitucionFecha) 
+    throws ISPACException;
     
     public boolean existPermissions(IStage stage, String resp, int[] typePermissions)
 	throws ISPACException;

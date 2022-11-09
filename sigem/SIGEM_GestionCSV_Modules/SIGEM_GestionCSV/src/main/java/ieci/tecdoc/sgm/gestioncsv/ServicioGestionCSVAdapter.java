@@ -232,6 +232,38 @@ public class ServicioGestionCSVAdapter implements ServicioGestionCSV {
 		}
 		return returnboolean;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws CSVException
+	 *
+	 * @see ieci.tecdoc.sgm.core.services.gestioncsv.ServicioGestionCSV#existeContenidoDocumentoOriginal(ieci.tecdoc.sgm.core.services.entidades.Entidad,
+	 *      java.lang.String)
+	 */
+	public boolean existeContenidoDocumentoOriginal(Entidad entidad, String id) throws CSVException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("existeContenidoDocumento(Entidad, String) - start");
+		}
+
+		MultiEntityContextHolder.setEntity(entidad.getIdentificador());
+
+		boolean returnboolean = false;
+
+		try {
+			returnboolean = servicioDocumentos.existeContenidoDocumentoOriginal(id);
+		} catch (Exception e) {
+			logger.error("Error al comprobar si existe contenido del documento: " + id
+					+ " Entidad: " + entidad.getIdentificador(), e);
+			throw new CSVException("Error al comprobar si existe contenido del documento", e);
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("existeContenidoDocumento(Entidad, String) - end");
+		}
+		return returnboolean;
+	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -251,6 +283,35 @@ public class ServicioGestionCSVAdapter implements ServicioGestionCSV {
 		byte[] returnbyteArray;
 		try {
 			returnbyteArray = servicioDocumentos.getContenidoDocumento(id);
+		} catch (Exception e) {
+			logger.error("Error al obtener el contenido del documento: " + id + " Entidad: "
+					+ entidad.getIdentificador(), e);
+			throw new CSVException("Error al obtener el contenido del documento", e);
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("getContenidoDocumento(Entidad, String) - end");
+		}
+		return returnbyteArray;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws CSVException
+	 *
+	 * @see ieci.tecdoc.sgm.core.services.gestioncsv.ServicioGestionCSV#getContenidoDocumentoOriginal(ieci.tecdoc.sgm.core.services.entidades.Entidad,
+	 *      java.lang.String)
+	 */
+	public byte[] getContenidoDocumentoOriginal(Entidad entidad, String id) throws CSVException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("getContenidoDocumento(Entidad, String) - start");
+		}
+
+		MultiEntityContextHolder.setEntity(entidad.getIdentificador());
+
+		byte[] returnbyteArray;
+		try {
+			returnbyteArray = servicioDocumentos.getContenidoDocumentoOriginal(id);
 		} catch (Exception e) {
 			logger.error("Error al obtener el contenido del documento: " + id + " Entidad: "
 					+ entidad.getIdentificador(), e);
@@ -292,6 +353,33 @@ public class ServicioGestionCSVAdapter implements ServicioGestionCSV {
 		}
 	}
 
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws CSVException
+	 *
+	 * @see ieci.tecdoc.sgm.core.services.gestioncsv.ServicioGestionCSV#writeDocumentoOriginal(ieci.tecdoc.sgm.core.services.entidades.Entidad, java.io.OutputStream)
+	 */
+	public void writeDocumentoOriginal(Entidad entidad, String id, OutputStream outputStream) throws CSVException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("writeDocumento(Entidad, String, OutputStream) - start");
+		}
+
+		MultiEntityContextHolder.setEntity(entidad.getIdentificador());
+		try {
+			servicioDocumentos.writeDocumentoOriginal(id, outputStream);
+			
+		} catch (Exception e) {
+			logger.error( "Error al escribir el documento: " + id + " Entidad: " + entidad.getIdentificador(), e);
+			throw new CSVException("Error al escribir el documento", e);
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("writeDocumento(Entidad, String, OutputStream) - end");
+		}
+	}
+	
 	/**
 	 * @return el servicioDocumentos
 	 */

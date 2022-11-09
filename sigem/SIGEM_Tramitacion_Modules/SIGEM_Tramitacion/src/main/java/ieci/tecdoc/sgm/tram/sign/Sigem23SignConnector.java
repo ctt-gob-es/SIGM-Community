@@ -3,8 +3,10 @@ package ieci.tecdoc.sgm.tram.sign;
 import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.ispaclib.messages.MessagesFormatter;
+import ieci.tdw.ispac.ispaclib.sign.SignDetailEntry;
 import ieci.tdw.ispac.ispaclib.sign.SignDocument;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
@@ -19,11 +21,10 @@ import ieci.tecdoc.sgm.core.services.cripto.firma.ServicioFirmaDigital;
 import ieci.tecdoc.sgm.core.services.tiempos.ServicioTiempos;
 
 import java.awt.Color;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.bouncycastle.util.encoders.Base64;
 
 import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.Rectangle;
@@ -50,6 +52,8 @@ import com.lowagie.text.pdf.PdfSignatureAppearance;
 import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfString;
 import com.lowagie.text.pdf.PdfWriter;
+
+import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
 
 /**
  */
@@ -230,61 +234,81 @@ public class Sigem23SignConnector extends SigemSignConnector {
 
 			PdfReader readerInicial = new PdfReader(file.getAbsolutePath());
 			int n = readerInicial.getNumberOfPages();
-			int largo = (int) readerInicial.getPageSize(n).getHeight();
-			int ancho = (int) readerInicial.getPageSize(n).getWidth();
+			int largo = (int) readerInicial.getPageSize(1).getHeight();
+			int ancho = (int) readerInicial.getPageSize(1).getWidth();
+			Rectangle r = new Rectangle(ancho, largo);//[dipucr-Felipe #1246] Páginas horizontales
 
 			bandSize += (signerLineSize * signerList.size());
 
-			Image imagen = createBgImage();
-			Document document = new Document();
+			Image imagenGris = createBgImage();
+			Document document = new Document(r);//[dipucr-Felipe #1246] Páginas horizontales
 
-			FileOutputStream fileOut = new FileOutputStream(
-					FileTemporaryManager.getInstance().getFileTemporaryPath()
-							+ "/" + pathFileTemp, true);
+			FileOutputStream fileOut = new FileOutputStream(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + pathFileTemp, true);
 			PdfWriter writer = PdfWriter.getInstance(document, fileOut);
 			document.open();
-			Rectangle r = document.getPageSize();
 
 			String dateFirma = getSignDateFormatter(DATE_FORMATTER).format(signDate);
 
 			for (int i = 1; i <= n; i++) {
 				PdfImportedPage page = writer.getImportedPage(readerInicial, i);
-				Image image = Image.getInstance(page);
-				if (band == 1) {
-					image.setAbsolutePosition(bandSize, 0.0F);
-					image.scaleAbsoluteWidth(r.getWidth() - bandSize);
-					image.scaleAbsoluteHeight(r.getHeight());
-					imagen.setRotationDegrees(90F);
-					document.add(image);
-					if (imagen != null) {
-						for (int j = 0; j < largo; j = (int) ((float) j + imagen
-								.getWidth())) {
-							imagen.setAbsolutePosition(0.0F, j);
-							imagen.scaleAbsoluteHeight(bandSize);
-							document.add(imagen);
+				Image imagenPagina = Image.getInstance(page);
+				if (band == 1) {//Banda margen derecho (configurado por defecto)
+					//Reescalamos la página
+					imagenPagina.setAbsolutePosition(bandSize, 0.0F);
+					imagenPagina.scaleAbsoluteWidth(r.getWidth() - bandSize);
+					imagenPagina.scaleAbsoluteHeight(r.getHeight());
+					document.add(imagenPagina);
+					
+					//Imagen gris
+					imagenGris.setRotationDegrees(90F);
+					if (imagenGris != null) {
+						for (int j = 0; j < largo; j = (int) ((float) j + imagenGris.getWidth())) {
+							imagenGris.setAbsolutePosition(0.0F, j);
+							imagenGris.scaleAbsoluteHeight(bandSize);
+							document.add(imagenGris);
 						}
 					}
+					
+					//Texto de la imagen gris
 					PdfContentByte over = writer.getDirectContent();
 					//getImagen(dateFirma, over, margen, true, margen, n, i, codCotejo, signerList);
 					generateGrayBandImagen(dateFirma, over, margen, true, margen, n, i, codCotejo, signerList);
-				} else {
-					image.setAbsolutePosition(0.0F, 0.0F);
-					image.scaleAbsoluteWidth(r.getWidth());
-					image.scaleAbsoluteHeight(r.getHeight() - bandSize);
-					document.add(image);
-					if (imagen != null) {
-						for (int j = 0; j < ancho; j = (int) ((float) j + imagen
-								.getWidth())) {
-							imagen.setAbsolutePosition(j, (float) largo
-									- bandSize);
-							imagen.scaleAbsoluteHeight(bandSize);
-							document.add(imagen);
+					
+				} else {//Banda margen superior
+					//Reescalamos la página
+					imagenPagina.setAbsolutePosition(0.0F, 0.0F);
+					imagenPagina.scaleAbsoluteWidth(r.getWidth());
+					imagenPagina.scaleAbsoluteHeight(r.getHeight() - bandSize);
+					document.add(imagenPagina);
+					
+					//Imagen gris
+					if (imagenGris != null) {
+						for (int j = 0; j < ancho; j = (int) ((float) j + imagenGris.getWidth())) {
+							imagenGris.setAbsolutePosition(j, (float) largo - bandSize);
+							imagenGris.scaleAbsoluteHeight(bandSize);
+							document.add(imagenGris);
 						}
 
 					}
+					
+					//Texto de la imagen gris
 					PdfContentByte over = writer.getDirectContent();
 					//getImagen(dateFirma, over, margen, false, (float) largo - margen, n, i, codCotejo, signerList);
 					generateGrayBandImagen(dateFirma, over, margen, false, (float) largo - margen, n, i, codCotejo, signerList);
+				}
+				
+				//INICIO [dipucr-Felipe #1246] Numeración de decretos
+				if (!StringUtils.isEmpty(signDocument.getNumDecreto())){
+					PdfContentByte over = writer.getDirectContent();
+					addNumDecreto(over, signDocument.getNumDecreto(), ancho, largo);
+				}
+				//FIN [dipucr-Felipe #1246]
+				
+				if(i < n){
+					largo = (int) readerInicial.getPageSize(i + 1).getHeight();
+					ancho = (int) readerInicial.getPageSize(i + 1).getWidth();
+					r = new Rectangle(ancho, largo);
+					document.setPageSize(r);
 				}
 				document.newPage();
 			}
@@ -297,6 +321,38 @@ public class Sigem23SignConnector extends SigemSignConnector {
 		} catch (Exception exc) {
 			logger.error("Error al añadir la banda lateral al PDF", exc);
 			throw new ISPACException(exc);
+		}
+	}
+	
+	/**
+	 * [dipucr-Felipe #1246]
+	 * En el caso de decretos, añade el número en la parte izda de la cabecera
+	 * @param over
+	 * @param sNumDecreto
+	 * @param x
+	 * @param y
+	 */
+	protected void addNumDecreto(PdfContentByte over, String sNumDecreto, int x, int y) {
+		try {
+			String font = ISPACConfiguration.getInstance().getProperty(FONT_BAND);
+			String encoding = ISPACConfiguration.getInstance().getProperty(ENCODING_BAND);
+		
+			BaseFont fuente;
+			fuente = BaseFont.createFont(font, encoding, false);
+			String texto = "Decreto número: "+sNumDecreto; 
+    	
+	    	over.beginText();	    	
+	    	over.setFontAndSize(fuente, 12);
+	    	over.moveText(x-275, y-75);
+	    	over.showText(texto);
+	    	over.endText();
+	    	
+		} catch (IOException e) {
+			logger.error("ERROR. " + e.getMessage(), e);
+		} catch (ISPACException e) {
+			logger.error("ERROR. " + e.getMessage(), e);
+		} catch (DocumentException e) {
+			logger.error("ERROR. " + e.getMessage(), e);
 		}
 	}
 
@@ -315,10 +371,20 @@ public class Sigem23SignConnector extends SigemSignConnector {
 			pdfContentByte.beginText();
 			pdfContentByte.setFontAndSize(bf, fontSize);
 
-			BufferedReader br = new BufferedReader(new FileReader(getDataFile()));
-			String sCadena = null;
+			//INICIO [dipucr-Felipe #1246]
+//			BufferedReader br = new BufferedReader(new FileReader(getDataFile()));
+//			String sCadena = null;
 			int i = 0;
-			while ((sCadena = br.readLine()) != null) {
+//			while ((sCadena = br.readLine()) != null) {
+			
+			FirmaConfiguration fc = FirmaConfiguration.getInstance(clientContext);
+			
+			String[] datosFirma = new String[2];
+			datosFirma[0] = fc.get(FirmaConfiguration.GRAYBAND.TEXT1);
+			datosFirma[1] = fc.get(FirmaConfiguration.GRAYBAND.TEXT2);
+			
+			while(i < datosFirma.length){//FIN [dipucr-Felipe #1246]
+				String sCadena = datosFirma[i];
 				if (vh) {
 					pdfContentByte.setTextMatrix(0.0F, 1.0F, -1F, 0.0F, x, margen);
 					if (i == 0) {
@@ -328,12 +394,16 @@ public class Sigem23SignConnector extends SigemSignConnector {
 							for (int signerCont = 0; signerCont < signerList.size(); signerCont++) {
 								x += fontSize;
 								pdfContentByte.setTextMatrix(0.0F, 1.0F, -1F, 0.0F, x, margen);
-								pdfContentByte.showText((String) signerList.get(signerCont));
+								//[dipucr-Felipe #1246]
+//								pdfContentByte.showText((String) signerList.get(signerCont));
+								Object signer = signerList.get(signerCont);
+								pdfContentByte.showText(getSignLine(signer));
 							}
 						}
 					} else if (i == 1) {
 						pdfContentByte.showText(sCadena
-								+ MessagesFormatter.format(getString(clientContext.getLocale(), "pdf.band.pageInfo"), new String[] {
+//								+ MessagesFormatter.format(getString(clientContext.getLocale(), "pdf.band.pageInfo"), new String[] {
+								+ MessagesFormatter.format(fc.get(FirmaConfiguration.GRAYBAND.PAGINAS), new String[] {//[dipucr-Felipe #1246]
 									String.valueOf(numberOfPages),
 									String.valueOf(pageActual),
 									String.valueOf(numberOfPages) }));
@@ -351,13 +421,17 @@ public class Sigem23SignConnector extends SigemSignConnector {
 							for (int signerCont = 0; signerCont < signerList.size(); signerCont++) {
 								x -= fontSize;
 								pdfContentByte.setTextMatrix(margen, x);
-								pdfContentByte.showText((String) signerList.get(signerCont));
+								//[dipucr-Felipe #1246]
+//								pdfContentByte.showText((String) signerList.get(signerCont));
+								Object signer = signerList.get(signerCont);
+								pdfContentByte.showText(getSignLine(signer));
 							}
 	                    }
 	                } else if (i == 1) {
 	                    //pdfContentByte.showText(sCadena + numberOfPages + " folios. Folio " + pageActual + " de " + numberOfPages + ".");
 						pdfContentByte.showText(sCadena
-								+ MessagesFormatter.format(getString(clientContext.getLocale(), "pdf.band.pageInfo"), new String[] {
+//								+ MessagesFormatter.format(getString(clientContext.getLocale(), "pdf.band.pageInfo"), new String[] {
+								+ MessagesFormatter.format(fc.get(FirmaConfiguration.GRAYBAND.PAGINAS), new String[] {//[dipucr-Felipe #1246]
 									String.valueOf(numberOfPages),
 									String.valueOf(pageActual),
 									String.valueOf(numberOfPages) }));
@@ -377,6 +451,29 @@ public class Sigem23SignConnector extends SigemSignConnector {
 		}
 	}
 
+	/**
+	 * [dipucr-Felipe #1246] Devuelve la línea de firma
+	 * @param signer
+	 * @return
+	 * @throws ISPACRuleException 
+	 */
+	protected String getSignLine(Object signer) throws ISPACRuleException {
+		
+		FirmaConfiguration fc = FirmaConfiguration.getInstance(clientContext);
+		String signLine = "";
+		
+		if (signer instanceof String){
+			signLine = (String) signer;
+		}
+		else if (signer instanceof SignDetailEntry){ //Portafirmas externo MINHAP
+			SignDetailEntry firma = (SignDetailEntry) signer;
+			signLine = MessagesFormatter.format(fc.get(FirmaConfiguration.GRAYBAND.FIRMANTE), 
+					new String[] { StringUtils.nullToEmpty(firma.getCargo()), firma.getAuthor(), firma.getSignDate() });
+		}
+		return signLine;
+	}
+
+	
 	protected List getSignerList(SignDocument signDocument) throws ISPACException {
 
 		List signerList = new ArrayList();
@@ -494,8 +591,7 @@ public class Sigem23SignConnector extends SigemSignConnector {
 
 	    		connectorSession = genDocAPI.createConnectorSession();
 
-				String nombreMetadatoFirma = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER_SIGN_METADATA_NAME);
-				String infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infoPagRDE, nombreMetadatoFirma);
+	    		String infoFirmas = genDocAPI.getDocumentProperty(connectorSession, infoPagRDE, "Firma");
 	    		XmlFacade xmlInfoFirmas = new XmlFacade(infoFirmas);
 
 	    		List firmas = xmlInfoFirmas.getList("/" + SignDocument.TAG_FIRMAS + "/" + SignDocument.TAG_FIRMA);

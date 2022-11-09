@@ -8,16 +8,12 @@ import ieci.tdw.ispac.api.entities.SpacEntities;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
-import ieci.tdw.ispac.ispaccatalog.messages.Messages;
 import ieci.tdw.ispac.ispaclib.app.SimpleEntityApp;
 import ieci.tdw.ispac.ispaclib.bean.CollectionBean;
 import ieci.tdw.ispac.ispaclib.bean.ValidationError;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.item.CompositeItem;
-import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorFactory;
-import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorImpl;
-import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
@@ -26,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
 
 public class SignProcessApp extends SimpleEntityApp {
 
@@ -96,8 +94,8 @@ public class SignProcessApp extends SimpleEntityApp {
 		IItem item = getItem();
 
 		if (item.getString("SPAC_CTOS_FIRMA_CABECERA:ID_CIRCUITO")==null){
-			setProperty("SPAC_CTOS_FIRMA_CABECERA:SISTEMA",  ProcessSignConnectorFactory.getInstance().getProcessSignConnector().getIdSystem());
-			setProperty("SPAC_CTOS_FIRMA_CABECERA:APLICACION", ISPACConfiguration.getInstance().get(ISPACConfiguration.PROCESS_SIGN_CONNECTOR_APPLICATION));
+			setProperty("SPAC_CTOS_FIRMA_CABECERA:SISTEMA",  ProcessSignConnectorFactory.getInstance(mContext).getProcessSignConnector().getIdSystem());
+			setProperty("SPAC_CTOS_FIRMA_CABECERA:APLICACION", FirmaConfiguration.getInstance(mContext).get(FirmaConfiguration.PROCESS_SIGN_CONNECTOR_APPLICATION));
 
 		}
     }

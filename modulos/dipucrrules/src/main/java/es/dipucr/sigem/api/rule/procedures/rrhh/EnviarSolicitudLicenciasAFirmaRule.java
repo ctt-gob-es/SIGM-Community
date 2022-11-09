@@ -310,7 +310,7 @@ public class EnviarSolicitudLicenciasAFirmaRule implements IRule
     		//FIN [eCenpri-Felipe #514]
 			
     		//Esta instrucción coge el sustituto de firma, si está definido
-    		signAPI.initCircuit(idCircuitoFirma, idDocumento);
+    		signAPI.initCircuitPortafirmas(idCircuitoFirma, idDocumento);//[dipucr-Felipe #1246]
     		
     		//Creamos la licencia pendiente en la BBDD de personal
 			//Esto se hace llamando al servicio web LicenciasWS de la WebEmpleado

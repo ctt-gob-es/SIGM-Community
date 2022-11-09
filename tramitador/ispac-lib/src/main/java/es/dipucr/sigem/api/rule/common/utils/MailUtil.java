@@ -9,37 +9,23 @@ import ieci.tdw.ispac.ispaclib.configuration.ConfigurationMgr;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigFilePathResolver;
 import ieci.tecdoc.sgm.core.exception.SigemException;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.mensajes_cortos.ServicioMensajesCortos;
 import ieci.tecdoc.sgm.core.services.mensajes_cortos.dto.Attachment;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.Authenticator;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.SendFailedException;
-import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.log4j.Logger;
 
@@ -55,13 +41,17 @@ public class MailUtil {
 	private static final Logger logger = Logger.getLogger(MailUtil.class);
 	
 	//Constantes de envío de mensajes
-	private static final String NOTIF_TYPE_EMAIL = "EM";
+	static final String NOTIF_TYPE_EMAIL = "EM";
 //	private static final String NOTIF_TYPE_SMS 	 = "SM";
 	//Variable FROM para el envío de mails
 	private static final String EMAIL_FROM_VAR_NAME = "AVISO_FIRMANTE_EMAIL_FROM";
 	
 	private static final String NOTA_NO_RESPONDER = "NOTA_NO_RESPONDER";
 	private static final String NOTA_NO_RESPONDER_TEXTO_PLANO = "NOTA_NO_RESPONDER_TEXTOPLANO"; //[eCenpri-Felipe #817]
+	
+	//[dipucr-Felipe #1606]
+	private static final String STYLE_NO_RESPONDER = "font-style: italic; margin-left: 10px";
+	private static final String STYLE_PIE = "font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px; color: #3c5876";
 	
 	//[eCenpri-Felipe #739]
 	//Separador de correos. En la clase oCorreo se usa la coma (,)
@@ -70,6 +60,20 @@ public class MailUtil {
 	
 	public static String ESPACIADO_PRIMERA_LINEA = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	
+	
+	public static boolean validarEmail(String email){
+		// Patrón para validar el email
+        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
+        Matcher mather = pattern.matcher(email);
+
+        if (mather.find() == true) {
+            return true;
+        } else {
+        	 return false;
+        }
+
+	}
 	
 	/**
 	 * [eCenpri-Felipe] Llama al enviarCorreo de Teresa
@@ -173,10 +177,17 @@ public class MailUtil {
 	 * @throws ISPACException
 	 */
 	public static void enviarCorreoConAcuses(IRuleContext rulectx, String emailNotif, File attachment, String contenido, String asunto, String nombreFichero, String nombreNotif, boolean bAnadirCita) throws ISPACException{
-		enviarCorreoConAcuses(rulectx, emailNotif, attachment, contenido, asunto, nombreFichero, nombreNotif, bAnadirCita, null);
+		try {
+			enviarCorreoConAcuses(rulectx, emailNotif, attachment, contenido, asunto, nombreFichero, nombreNotif, bAnadirCita, null);
+		} catch (AddressException e) {
+			throw new ISPACException("Error en el envio del correo "+ e.getMessage(), e);
+		} catch (SendFailedException e) {
+			throw new ISPACException("Error en el envio del correo "+ e.getMessage(), e);
+		}
 	}
 	
-	public static void enviarCorreoConAcuses(IRuleContext rulectx, String emailNotif, File attachment, String contenido, String asunto, String nombreFichero, String nombreNotif, boolean bAnadirCita, List<Object[]> embebed) throws ISPACException{
+	@Deprecated //[dipucr-Felipe #1606] Llamar siempre con clientContext
+	public static void enviarCorreoConAcuses(IRuleContext rulectx, String emailNotif, File attachment, String contenido, String asunto, String nombreFichero, String nombreNotif, boolean bAnadirCita, List<Object[]> embebed) throws ISPACException, SendFailedException, AddressException{
 		//Variable para saber si se ha enviado el email
 		boolean bEnviadoEmail = false;
 		//Variable de fecha de envío del email
@@ -187,132 +198,97 @@ public class MailUtil {
 		try{
 			//Se cambia la configuración del correo de ApplicationResources.properties a su archivo de configuración por entidad
 			CorreoConfiguration correoConfig = CorreoConfiguration.getInstance(rulectx.getClientContext());
-			
-			String strHost = correoConfig.get(CorreoConfiguration.HOST_MAIL);
-			String strPort = correoConfig.get(CorreoConfiguration.PORT_MAIL);
 			String strFrom = correoConfig.get(CorreoConfiguration.CONV_FROM);
-			String strLocation = correoConfig.get(CorreoConfiguration.CONV_LUGAR);
 			
-			String strContenido = contenido;
+			ArrayList<File> listAttachment = new ArrayList<File>();
+			if (null != attachment) listAttachment.add(attachment);
+			enviarCorreo(rulectx.getClientContext(), strFrom, emailNotif, listAttachment, asunto, contenido, embebed);
 			
-			String notasNoResponder = ConfigurationMgr.getVarGlobal(rulectx.getClientContext(), NOTA_NO_RESPONDER_TEXTO_PLANO);
-			strContenido += notasNoResponder;
-			
-			String strAsunto = asunto;
-	        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMdd'T'HHmmss", new Locale("es"));
-			String strDtStamp = dateformat.format(new Date());	
-
-			// Configurar correo
-	        Properties props = new Properties();
-	        props.put("mail.transport.protocol", "smtp");
-	        props.put("mail.smtp.host", strHost);
-	        props.put("mail.smtp.port", strPort);
-	        props.put("mail.smtp.auth", "true");
-	        Authenticator auth = new SMTPAuthenticator();
-	        Session mailSession = Session.getDefaultInstance(props, auth);
-	        //mailSession.setDebug(true);
-	        Transport transport = mailSession.getTransport();
-
-			// Definir mensaje
-			MimeMessage message = new MimeMessage(mailSession);
-			message.addHeaderLine("method=REQUEST");
-			//message.addHeaderLine("charset=UTF-8");
-			message.addHeaderLine("component=VEVENT");
-			message.setFrom(new InternetAddress(strFrom));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(emailNotif));
-			message.setSubject(strAsunto);
-			
-			//Insertar el pie del correo
-			strContenido = anadePieEmail(rulectx.getClientContext(), strContenido);
-
-			//[eCenpri-Felipe] Si tenemos que añadir cita, añadimos el fichero ics
-			BodyPart messageBodyPart = new MimeBodyPart();
-			if (bAnadirCita){
-				//Fichero iCalencar (ics)
-				StringBuffer sbCalendar = new StringBuffer();
-				sbCalendar.append("BEGIN:VCALENDAR\n");
-				sbCalendar.append("PRODID:-//Microsoft Corporation//Outlook 9.0 MIMEDIR//EN\n"); 
-				sbCalendar.append("VERSION:2.0\n");
-				sbCalendar.append("METHOD:REQUEST\n");
-				sbCalendar.append("BEGIN:VEVENT\n");
-				sbCalendar.append("ATTENDEE;ROLE=REQ-PARTICIPANT;RSVP=TRUE:MAILTO:"+emailNotif+"\n");
-				sbCalendar.append("ORGANIZER:MAILTO:"+strFrom+"\n");
-				sbCalendar.append("LOCATION:"+strLocation+"\n");
-				sbCalendar.append("TRANSP:OPAQUE\n");
-				sbCalendar.append("SEQUENCE:0\n");
-				sbCalendar.append("DTSTAMP:"+strDtStamp+"\n");
-				//sbCalendar.append("CATEGORIES:Meeting\n");
-				sbCalendar.append("DESCRIPTION:"+strContenido+"\n\n");
-				sbCalendar.append("SUMMARY:"+strAsunto+"\n");
-				sbCalendar.append("PRIORITY:5\n");
-				sbCalendar.append("CLASS:PUBLIC\n");
-				//sbCalendar.append("BEGIN:VALARM\n");
-				//sbCalendar.append("TRIGGER:PT1440M\n");
-				//sbCalendar.append("ACTION:DISPLAY\n");
-				//sbCalendar.append("DESCRIPTION:Reminder\n");
-				//sbCalendar.append("END:VALARM\n");
-				sbCalendar.append("END:VEVENT\n");
-				sbCalendar.append("END:VCALENDAR");
-	
-				// Crear la parte con el texto y la cita 
-				messageBodyPart.setHeader("Content-Class", "urn:content-classes:calendarmessage");
-				messageBodyPart.setHeader("Content-ID","calendar_message");
-				messageBodyPart.setDataHandler(new DataHandler(
-					new ByteArrayDataSource(sbCalendar.toString(), "text/calendar")));
-			}
-			else{
-				messageBodyPart.setText(strContenido);
-			}
-				
-			// Crear la parte con el fichero adjunto
-			MimeBodyPart attachFilePart = null;
-			if (attachment != null){
-				attachFilePart = new MimeBodyPart();
-				FileDataSource fds = new FileDataSource(attachment);
-				attachFilePart.setDataHandler(new DataHandler(fds));
-				attachFilePart.setFileName(nombreFichero);
-			}
-
-			// Crear un Multipart y añadirlo al mensaje 
-			Multipart multipart = new MimeMultipart();
-			multipart.addBodyPart(messageBodyPart);
-			if (attachment!=null) multipart.addBodyPart(attachFilePart);
-			message.setContent(multipart);
-
-			// Envío del mensaje
-	        transport.connect();
-	        transport.sendMessage(message,
-	            message.getRecipients(Message.RecipientType.TO));
-	        transport.close();
 	        bEnviadoEmail = true;
 			dFechaEnvio = new Date();
 			DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,dFechaEnvio, nombreFichero, nombreFichero, bEnviadoEmail, 
 					emailNotif, sDescripError, rulectx);
 		}
-		catch(SendFailedException e){
-			sDescripError = "Error en el envío a '" + emailNotif + "'. ";
+		catch(Exception e){
+			sDescripError = "Error al enviar el correo electrónico de " + nombreFichero + " a '" + emailNotif + "'. ";
 			bEnviadoEmail = false;
-			DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,dFechaEnvio, nombreFichero, nombreFichero, bEnviadoEmail, 
-					emailNotif, sDescripError, rulectx);
-			throw new ISPACRuleException(sDescripError ,e);
+			DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,dFechaEnvio, nombreFichero, nombreFichero, bEnviadoEmail, emailNotif, sDescripError, rulectx);
+			throw new ISPACException("Error en el envio del correo "+ e.getMessage(), e);
+        }
+	}
+	
+	/**
+	 * [dipucr-Felipe #1606] Sobrecargamos el método para que se pueda llamar desde los action
+	 * @param rulectx
+	 * @param emailNotif
+	 * @param attachment
+	 * @param contenido
+	 * @param asunto
+	 * @param nombreFichero
+	 * @param nombreNotif
+	 * @param bAnadirCita
+	 * @param embebed
+	 * @throws ISPACException
+	 * @throws SendFailedException
+	 * @throws AddressException
+	 */
+	public static void enviarCorreoConAcusesLogo(IClientContext cct, String numexp, String emailNotif, File attachment, String contenido, String asunto, String nombreFichero, 
+			String nombreNotif, boolean bAnadirCita) throws ISPACException, SendFailedException, AddressException{
+		
+		String rutaImg = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + EntidadesAdmUtil.obtenerEntidad(cct), "/SIGEM_TramitacionWeb");
 
-		}
-		catch(AddressException e){
-			sDescripError = "Error en la dirección de correo '" + emailNotif + "'. ";
-			bEnviadoEmail = false;
+		Object[] imagen = {rutaImg, Boolean.TRUE, "logoCabecera.gif", "escudo"};
+		List<Object[]> imagenes = new ArrayList<Object[]>();
+		imagenes.add(imagen);
+		
+		enviarCorreoConAcuses(cct, numexp, emailNotif, attachment, contenido, asunto, nombreFichero, nombreNotif, false, imagenes);
+	}
+	
+	/**
+	 * [dipucr-Felipe #1606] Sobrecargamos el método para que se pueda llamar desde los action
+	 * @param rulectx
+	 * @param emailNotif
+	 * @param attachment
+	 * @param contenido
+	 * @param asunto
+	 * @param nombreFichero
+	 * @param nombreNotif
+	 * @param bAnadirCita
+	 * @param embebed
+	 * @throws ISPACException
+	 * @throws SendFailedException
+	 * @throws AddressException
+	 */
+	public static void enviarCorreoConAcuses(IClientContext cct, String numexp, String emailNotif, File attachment, String contenido, String asunto, String nombreFichero, 
+			String nombreNotif, boolean bAnadirCita, List<Object[]> embebed) throws ISPACException, SendFailedException, AddressException{
+		
+		//Variable para saber si se ha enviado el email
+		boolean bEnviadoEmail = false;
+		//Variable de fecha de envío del email
+		Date dFechaEnvio = null;
+		//Descripcioón del error
+		String sDescripError = "";
+		
+		try{
+			//Se cambia la configuración del correo de ApplicationResources.properties a su archivo de configuración por entidad
+			CorreoConfiguration correoConfig = CorreoConfiguration.getInstance(cct);
+			String strFrom = correoConfig.get(CorreoConfiguration.CONV_FROM);
+			
+			ArrayList<File> listAttachment = new ArrayList<File>();
+			if (null != attachment) listAttachment.add(attachment);
+			enviarCorreo(cct, strFrom, emailNotif, listAttachment, asunto, contenido, embebed);
+			
+	        bEnviadoEmail = true;
+			dFechaEnvio = new Date();
 			DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,dFechaEnvio, nombreFichero, nombreFichero, bEnviadoEmail, 
-					emailNotif, sDescripError, rulectx);
-        	throw new ISPACRuleException(sDescripError ,e);
+					emailNotif, sDescripError, cct, numexp, null);
 		}
 		catch(Exception e){
-			sDescripError = "Error al enviar el correo electrónico de Certificado de Asistencia a '" + emailNotif + "'. ";
+			sDescripError = "Error al enviar el correo electrónico de " + nombreFichero + " a '" + emailNotif + "'. ";
 			bEnviadoEmail = false;
 			DipucrCommonFunctions.insertarAcuseEmail(nombreNotif ,dFechaEnvio, nombreFichero, nombreFichero, bEnviadoEmail, 
-					emailNotif, sDescripError, rulectx);
-						
-        	if (e instanceof ISPACRuleException)
-			    throw new ISPACRuleException(e);
-        	throw new ISPACRuleException(sDescripError ,e);
+					emailNotif, sDescripError, cct, numexp, null);
+			throw new ISPACException("Error en el envio del correo "+ e.getMessage(), e);
         }
 	}
 	
@@ -364,11 +340,15 @@ public class MailUtil {
 		boolean enviadoEmail = false;
 		Date dFechaEnvio = new Date();
 		
+		logger.debug("correos. "+strTo);
 		String[] arrTo = separarDestinatarios(strTo);
-		
+		logger.debug("separarDestinatarios. "+arrTo.toString());
 		String destinatario = null;
 		for (int i = 0; i < arrTo.length; i++){
 			destinatario = arrTo[i];
+			logger.debug("destinatario. "+destinatario);
+			logger.debug("strAsunto. "+strAsunto);
+			logger.debug("strContenido. "+strContenido);
 			//Método de Teresa. Con acuses de recibo
 			if(embebed == null){
 				MailUtil.enviarCorreoConAcuses(rulectx, destinatario, strAsunto, 
@@ -436,6 +416,11 @@ public class MailUtil {
 		enviarCorreo(cct, "", strTo, strAsunto, strContenido, attachment, embebed);
 	}
 	public static String[] enviarCorreo(IClientContext cct, String from, String strTo, String strAsunto, String strContenido, File attachment, List<Object[]> embebed) throws ISPACException{
+		ArrayList<File> listAttachment = new ArrayList<File>();
+		if (null != attachment) listAttachment.add(attachment);
+		return enviarCorreo(cct, from, strTo, listAttachment, strAsunto, strContenido, embebed);
+	}
+	public static String[] enviarCorreo(IClientContext cct, String from, String strTo, List<File> listAttachment, String strAsunto, String strContenido, List<Object[]> embebed) throws ISPACException{
 		try{
 			String dir[] = null;
 			
@@ -457,7 +442,7 @@ public class MailUtil {
         	//MQE ticket #817 Añadir información de no responder
         	String notasNoResponder = ConfigurationMgr.getVarGlobal(cct, NOTA_NO_RESPONDER);
 //			strContenido = strContenido +  "</br></br>"+notasNoResponder; //[eCenpri-Felipe #817] Eliminar los br del mensaje, añadirlos a la constante
-        	strContenido += notasNoResponder;
+        	strContenido += "<p align='justify' style='" + STYLE_NO_RESPONDER + "'>" + notasNoResponder + "</p>";
 			//MQE Fin modificaciones no responder
         	
         	strContenido = MailUtil.anadePieEmail(cct, strContenido);
@@ -465,12 +450,17 @@ public class MailUtil {
 			// Configurar correo
 			Correo oCorreo = new Correo(strHost, Integer.parseInt(strPort), strUser, strPwd);
 			oCorreo.ponerTo(0, strTo);
+			logger.debug("FROM "+from);
+			logger.debug("email correo "+strTo);
 			if (strFrom != null && !strFrom.equals("")){
 				oCorreo.ponerFrom(strFrom);
 				oCorreo.ponerAsunto(strAsunto);
 				oCorreo.ponerContenido(strContenido, true);
 				// Adjuntar fichero al email
-				if (null != attachment){
+//				if (null != attachment){
+//					oCorreo.adjuntar(attachment.getParent(), true, attachment.getName());
+//				}
+				for (File attachment : listAttachment){
 					oCorreo.adjuntar(attachment.getParent(), true, attachment.getName());
 				}
 				
@@ -536,7 +526,7 @@ public class MailUtil {
         	//MQE ticket #817 Añadir información de no responder
         	String notasNoResponder = ConfigurationMgr.getVarGlobal(cct, NOTA_NO_RESPONDER);
 //			strContenido = strContenido +  "</br></br>"+notasNoResponder; //[eCenpri-Felipe #817] Eliminar los br del mensaje, añadirlos a la constante
-        	strContenido += notasNoResponder;
+        	strContenido += "<p align='justify' style='" + STYLE_NO_RESPONDER + "'>" + notasNoResponder + "</p>";
 			//MQE Fin modificaciones no responder
         	
         	strContenido = MailUtil.anadePieEmail(cct, strContenido);
@@ -749,6 +739,32 @@ public class MailUtil {
 		enviarCorreoConVariablesUsoExterno(rulectx, NOTIF_TYPE_EMAIL, strDirNotif, 
 				spacVarAsunto, spacVarContent, attachment, variables, bHTML);
 	}
+	//[dipucr-Felipe WE#192] Sobrecarga del método
+	public static void enviarCorreoConVariablesUsoExterno
+			(IClientContext ctx, String strDirNotif, String spacVarAsunto, 
+			String spacVarContent, Map<String,String> variables, List<File> listAttachment, boolean bHTML)
+			throws ISPACException, SigemException
+	{
+		if (StringUtils.isNotEmpty(strDirNotif)){
+			
+			String subject = ConfigurationMgr.getVarGlobal(ctx, spacVarAsunto);
+			String content = ConfigurationMgr.getVarGlobal(ctx, spacVarContent);
+
+			if (StringUtils.isNotBlank(subject)) {
+				subject = StringUtils.replaceVariables(subject, variables);
+			}
+
+			if (StringUtils.isNotBlank(content)) {
+				content = StringUtils.replaceVariables(content, variables);
+				
+				if(!bHTML){
+					content = content.replace("\n", "<br/>");
+				}
+			}
+
+			enviarCorreo(ctx, "", strDirNotif, listAttachment, subject, content, null);
+		}
+	}
 	
 	/**
 	 * [eCenpri-Felipe #1224]
@@ -863,9 +879,13 @@ public class MailUtil {
 			
 			String lugar = correoConfig.get(CorreoConfiguration.CONV_LUGAR);
 			String entidad = correoConfig.get(CorreoConfiguration.CONV_ENTIDAD);
-			String sede = correoConfig.get(CorreoConfiguration.CONV_SEDE);
+			String sede = DipucrCommonFunctions.getVarGlobal("SEDE_ELECTRONICA");
+			if(StringUtils.isEmpty(sede)){
+				sede = correoConfig.get(CorreoConfiguration.CONV_SEDE);
+			}
 			
-			contenido = contenido+  "<p align=center>"
+			contenido = contenido
+					+ "<p align='center' style='" + STYLE_PIE + "'>"
 	        		+ entidad
 	        		+ "<br/>"
 	        		+ lugar
@@ -890,9 +910,24 @@ public class MailUtil {
 	 * @return String
 	 * @throws ISPACRuleException 
 	 */
+	@Deprecated //Para que se use siempre con client context
 	public static String formateContenidoEmail(IRuleContext rulectx, String asunto, String contenido) throws ISPACRuleException{
+
+		return formateContenidoEmail(rulectx.getClientContext(), rulectx.getNumExp(), asunto, contenido);
+		
+	}
+	
+	/**
+	 * Formatea el contenido para que añada la cabecera con las imágenes de la diputación y el pie de página
+	 * @param rulectx
+	 * @param asunto
+	 * @param contenido
+	 * @return String
+	 * @throws ISPACRuleException 
+	 */
+	public static String formateContenidoEmail(IClientContext cct, String numexp, String asunto, String contenido) throws ISPACRuleException{
 		try{
-			CorreoConfiguration correoConfig = CorreoConfiguration.getInstance(rulectx.getClientContext());
+			CorreoConfiguration correoConfig = CorreoConfiguration.getInstance(cct);
 			
 			String lugar = correoConfig.get(CorreoConfiguration.CONV_LUGAR);
 			String entidad = correoConfig.get(CorreoConfiguration.CONV_ENTIDAD);
@@ -900,7 +935,7 @@ public class MailUtil {
 			
 			contenido = contenido
 					+ "<br/>"
-					+ MailUtil.ESPACIADO_PRIMERA_LINEA + "Expediente: <b>" + rulectx.getNumExp() + "</b>."
+					+ MailUtil.ESPACIADO_PRIMERA_LINEA + "Expediente: <b>" + numexp + "</b>."
 					+ "<br/>"
 					+ MailUtil.ESPACIADO_PRIMERA_LINEA + "Asunto: <b>" + asunto + "</b>."
 					+ "<br/>";
@@ -914,7 +949,7 @@ public class MailUtil {
 	        		+ "<br/> <br/>";
 		}
 		catch(Exception e){
-			throw new ISPACRuleException("Error al recuperar el expediente: " + rulectx.getNumExp(), e);
+			throw new ISPACRuleException("Error al recuperar el expediente: " + numexp, e);
 		}	
 		
 		return contenido;

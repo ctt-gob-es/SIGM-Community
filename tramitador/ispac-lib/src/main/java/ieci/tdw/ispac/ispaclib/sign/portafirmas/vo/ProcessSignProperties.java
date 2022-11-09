@@ -24,6 +24,9 @@ public class ProcessSignProperties {
 	Calendar fexpiration;
 
 	String content;
+	
+	String signType;//[dipucr-Felipe #1310] Tipo de circuito de firma
+	public static final String DEFAULT_SIGNTYPE = "CASCADA";
 
 	/**
 	 * Nivel de Importancia. Sólo admite cuatro valores
@@ -37,9 +40,24 @@ public class ProcessSignProperties {
 	public ProcessSignProperties() {
 		super();
 	}
-
+	
+	/**
+	 * [dipucr-Felipe #1310]
+	 * Sobrecarga del constructor inicial para añadir el parámetro "signType"
+	 * @param subject
+	 * @param fstart
+	 * @param fexpiration
+	 * @param content
+	 * @param levelOfImportance
+	 * @throws ParseException
+	 */
 	public ProcessSignProperties(String subject, String fstart,
 			String fexpiration, String content, String levelOfImportance) throws ParseException {
+		this(subject, fstart, fexpiration, content, levelOfImportance, null);
+	}
+
+	public ProcessSignProperties(String subject, String fstart,
+			String fexpiration, String content, String levelOfImportance, String signType) throws ParseException {
 		super();
 		this.subject = subject;
 		this.content = content;
@@ -58,8 +76,16 @@ public class ProcessSignProperties {
 			Date fexpirationD = dateFormat.parse(fexpiration);
 			this.fexpiration.setTime(fexpirationD);
 		}
-
+		//INICIO [dipucr-Felipe #1310]
+		if (StringUtils.isNotBlank(signType)) {
+			this.signType = signType;
+		}
+		else{
+			this.signType = DEFAULT_SIGNTYPE;
+		}
+		//FIN [dipucr-Felipe #1310]
 	}
+
 
 	public String getSubject() {
 		return subject;
@@ -101,6 +127,12 @@ public class ProcessSignProperties {
 		this.levelOfImportance = levelOfImportance;
 	}
 
+	public String getSignType() {
+		return signType;
+	}
 
+	public void setSignType(String signType) {
+		this.signType = signType;
+	}
 
 }

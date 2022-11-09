@@ -53,7 +53,7 @@ import org.bouncycastle.util.encoders.Base64;
  * Conector de firma por defecto.
  *
  */
-public abstract class DefaultSignConnector implements ISignConnector {
+public class DefaultSignConnector implements ISignConnector {
 
 	/**
 	 * Logger
@@ -325,7 +325,7 @@ public abstract class DefaultSignConnector implements ISignConnector {
 
 	}
 
-	private Integer getRdeArchiveId() throws ISPACException {
+	protected Integer getRdeArchiveId() throws ISPACException {
 		Object obj = mapStorageObject.get("invesDoc");
 		if (obj == null) {
 			ISPACConfiguration config = ISPACConfiguration.getInstance();
@@ -356,17 +356,10 @@ public abstract class DefaultSignConnector implements ISignConnector {
 		// Se cambia el estado del documento a FIRMADO si asi esta indicado,
 		// se establece la fecha de firma y se asigna tambien esta fecha al
 		// campo que indica la fecha de aprobacion
-		if (changeState){
-			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> se marca como firmado 02, se firma desde el expediente sin circuito de firma");
-			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> se marca como firmado ID: "+itemDoc.getString("ID"));
-			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> se marca como firmado NUMEXP: "+itemDoc.getString("NUMEXP"));
-			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> se marca como firmado NOMBRE: "+itemDoc.getString("NOMBRE"));
+		if (changeState)
 			itemDoc.set("ESTADOFIRMA", SignStatesConstants.FIRMADO);
-			
-		}
 		itemDoc.set("FFIRMA", new Date());
 		itemDoc.set("FAPROBACION", new Date());
-		logger.warn("AJM ESTADOFIRMA updateDataDoc---------> actauliza fecha de firma y fecha de aprobacion ");
 		// Bloqueamos el documento para la edicion
 		
 		//[Manu Ticket #584] INICIO - SIGEM regla decretos evitar borrado tramite y documento.
@@ -376,7 +369,6 @@ public abstract class DefaultSignConnector implements ISignConnector {
 		//[Manu Ticket #584] FIN - SIGEM regla decretos evitar borrado tramite y documento.
 				
 		itemDoc.store(clientContext);
-		logger.warn("AJM ESTADOFIRMA updateDataDoc---------> ha realizado la transaccion");
 	}
 
 	/**
@@ -429,8 +421,8 @@ public abstract class DefaultSignConnector implements ISignConnector {
 		String firmante = null;
 		try {
 			X509Certificate x509cer = getX509Certificate(x509CertString);
-			
-			//[DipuCR-Agustin] Firma 3 fases INICIO
+
+			//[DipuCR-Agustin / Felipe #1246] Firma 3 fases INICIO
 			if(x509cer!=null)
 				firmante = x509cer.getSubjectDN().getName();
 			else
@@ -483,6 +475,32 @@ public abstract class DefaultSignConnector implements ISignConnector {
 		X509Certificate x509cer = (X509Certificate) cf
 				.generateCertificate(bais);
 		return x509cer;
+	}
+
+	/**
+	 * [dipucr-Felipe #1366]
+	 * Método que sólo se usa en portafirmas
+	 */
+	public void rechazarDocumento(boolean changeState, String motivo,
+			String nif, String nombre) throws ISPACException {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/****************************************************************************
+	 * FUNCIONES NECESARIAS ANTES DE PORTAFIRMAS
+	 * [dipucr-Felipe #1246] Eliminar cuando todos los aytos estén migrados
+	 ****************************************************************************/
+	
+	public String presign(boolean changeState) throws ISPACException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String postsign(String pathFicheroTempFirmado, boolean changeState)
+			throws ISPACException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

@@ -59,14 +59,14 @@
 			</div>
 
 			<div id="label_FIRMA_DOC_EXTERNO:DESCRIPCION_CARGO"
-				style="position: absolute; top: 35px; left: 400px; width: 110px;"
+				style="position: absolute; top: 35px; left: 420px; width: 110px;"
 				class="formsTitleB">
 				<bean:write name="defaultForm"
 					property="entityApp.label(FIRMA_DOC_EXTERNO:DESCRIPCION_CARGO)" />
 				:
 			</div>
 			<div id="data_FIRMA_DOC_EXTERNO:DESCRIPCION_CARGO"
-				style="position: absolute; top: 35px; left: 520px; width: 100%;">
+				style="position: absolute; top: 35px; left: 540px; width: 100%;">
 				<ispac:htmlText
 					property="property(FIRMA_DOC_EXTERNO:DESCRIPCION_CARGO)"
 					readonly="false" propertyReadonly="readonly" styleClass="input"
@@ -101,15 +101,33 @@
 					</ispac:htmlTextImageFrame>
 				</nobr>
 			</div>
+			<div id="enlaces" style="position: absolute; top: 90px; left: 10px; width:100% ;">
+				<div id="enlace1" style="position: absolute; top: 15px; left: 0px; width:100% ;">
+					<html:link href="javascript:ejecutar('EnviarDocPortafirmasRule');" styleClass="formaction">
+						Enviar documento a firmar
+					</html:link>
+				</div>				
+			</div>	
 		</div>
 	</ispac:tab>
 </ispac:tabs>
-
+<%
+	String taskId = request.getParameter("taskId");
+%>
 <script language='JavaScript' type='text/javascript'>
 function  hideShowFrameCPV3(target, action, width, height, msgConfirm, doSubmit, needToConfirm, form) {
 	document.forms[0].elements['property(FIRMA_DOC_EXTERNO:CARGO)'].value = "";
 	document.forms[0].elements['property(FIRMA_DOC_EXTERNO:DESCRIPCION_CARGO)'].value = "";
 	showFrame(target, action, width, height, msgConfirm, doSubmit, needToConfirm, form) ;
 
+}
+function ejecutar(regla) 
+{
+	if (confirm("¿Confirma que desea ejecutar esta acción?")) 
+	{
+			var taskId = <%= taskId %>;
+			document.defaultForm.action = "ExecuteRule.do?taskId="+taskId+"&rule="+regla;
+			document.defaultForm.submit();
+	}
 }
 </script>

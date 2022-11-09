@@ -1,6 +1,8 @@
 package ieci.tdw.ispac.api;
 
 import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.api.errors.sign.SameSignerException;
+import ieci.tdw.ispac.api.errors.sign.SignerAlreadyExistsException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.ispaclib.sign.ResultadoValidacionCertificado;
@@ -9,12 +11,11 @@ import ieci.tdw.ispac.ispaclib.sign.SignDetailEntry;
 import ieci.tdw.ispac.ispaclib.sign.SignDocument;
 import ieci.tdw.ispac.ispaclib.sign.exception.InvalidSignatureValidationException;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.vo.ProcessSignProperties;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario;
 
 import java.security.cert.CertificateException;
 import java.util.Date;
 import java.util.List;
-
-
 
 
 public interface ISignAPI {
@@ -70,16 +71,22 @@ public interface ISignAPI {
 	int  initCircuit(int id, int documentId) throws ISPACException;
 
 	/**
-	 * Instancia un circuito de firma donde el <code>'id'<code>
-	 * identificada la definici&oacute;n del circuito de firma,
-	 * retornando el identificador del circuito instanciado.
-	 * @param id identificador del circuito de firma
-	 * @param documentId Identificador del documento a firmar por el circuito de firma
-	 * @param properties Propiedades del proceso de firma
-	 * @return identificador del circuito de firma instanciado
+	 * [dipucr-Felipe #1246]
+	 * Sobrecargamos el método siguiente para facilitar la migración
+	 * Sustituimos todas las llamadas procedimentales a initCircuit
+	 * @param idCircuito
+	 * @param documentId
+	 * @return
 	 * @throws ISPACException
 	 */
-	String  initCircuitPortafirmas(int id, int documentId, ProcessSignProperties properties) throws ISPACException;
+	int initCircuitPortafirmas(int idCircuito, int documentId) throws ISPACException;
+	/** Circuito del sistema **/
+	String initCircuitPortafirmas(String idCircuito, int documentId, ProcessSignProperties properties) throws ISPACException;
+	/** Circuito al vuelo (lista de usuarios) **/
+	String initCircuitPortafirmas(List<Usuario> listUsuarios, int documentId, ProcessSignProperties properties) throws ISPACException;
+	/** Único usuario (mandar a mi firma) **/
+	String initCircuitPortafirmas(Usuario usuario, int documentId, ProcessSignProperties properties) throws ISPACException;
+
 	
 	int addFirmanteCtosFirma(int circuitId, int documentId, int idPaso, String idFirmante, String nombreFirmante, Date fechaFirma) throws ISPACException;
 
@@ -120,6 +127,28 @@ public interface ISignAPI {
 	 * @throws ISPACException
 	 */
 	IItemCollection getHistorics(String respId, Date init, Date end, int state) throws ISPACException;
+	
+	/**
+	 * @author FELIPE
+	 * @since 14/08/2019 [dipucr-Felipe #958]
+	 * Devuelve los pasos de cualquier circuito de firma instanciado
+	 * en el cual el el usuario identificado por <code>'respId'</code> haya firmado,
+	 * filtrando la consulta por las firmas realizadas en el intervalo
+	 * de fechas [init , end], pudiendo estar alguna o las dos vac&iacute;as,
+	 * en cuyo caso no se aplicar&aacute; filtro por el extremo del intervalo
+	 * donde no se pase valor.
+	 * @param respId Identificador de usuario
+	 * @param init Fecha inicio del intervalo
+	 * @param end Fecha fin del intervalo
+	 * @param numexp Número de expediente
+	 * @param docName Nombre del documento
+	 * @param asunto Asunto del expediente
+	 * @param state Estado del paso del circuito de firma
+	 * @return Lista de pasos de circuitos de firma firmados por el usuario <code>'respId'</code>
+	 * filtrados por el intervalo de fechas [<code>'init'</code> , <code>'end'</code>]
+	 * @throws ISPACException
+	 */
+	IItemCollection getHistorics(String respId, Date init, Date end, String numexp, String docName, String asunto, int state) throws ISPACException;
 
 	/**
 	 * Devuelve todos los circuitos de firma definidos en el sistema.
@@ -165,7 +194,7 @@ public interface ISignAPI {
 	 * @return Lista de documentos firmados
 	 * @throws ISPACException
 	 */
-	public List batchSignSteps(String[] stepIds, String[] signs, String certificado, String entityId) throws ISPACException;
+	public List batchSignSteps(String[] stepIds, String[] signs, String certificado) throws ISPACException;
 
 	/**
 	 * Obtiene los datos de un paso de un circuito de firmas.
@@ -193,27 +222,6 @@ public interface ISignAPI {
 	 */
 	void sign(SignDocument signDocument, boolean changeState) throws ISPACException;
 	
-	/**
-	 * [DipuCR-Agustin #781]
-	 * Incluya la prefirma en el documento, almacenando el documento y la firma en el 
-	 * repositorio de documentos electr&oacute;nicos
-	 * @param signDocument Documento de firma
-	 * @param changeState Indica si se debe cambiar el estado del documento a firmado.
-	 * @throws ISPACException
-	 */
-	String presign(SignDocument signDocument, boolean changeState) throws ISPACException;
-
-	/**
-	 * [DipuCR-Agustin #781]
-	 * Incluya la postfirma en el documento, almacenando el documento y la firma en el 
-	 * repositorio de documentos electr&oacute;nicos
-	 * @param signDocument Documento de firma
-	 * @param changeState Indica si se debe cambiar el estado del documento a firmado.
-	 * @param path del fichero temporal en el que se ha guardado la firma.
-	 * @throws ISPACException
-	 */
-	String postsign(SignDocument signDocument, String pathFicheroTemporalFirmado, boolean changeState) throws ISPACException;
-
 	/**
 	 * Calcula el Hash para el documento a firmar
 	 * @param signDocument Documento de firma
@@ -281,6 +289,8 @@ public interface ISignAPI {
 	 * @throws InvalidSignatureValidationException
 	 */
 	public List showSignInfo(int documentId) throws ISPACException, InvalidSignatureValidationException;
+	//[dipucr-Felipe #1352]
+	public List showSignInfo(int documentId, boolean includeSubstitutes) throws ISPACException, InvalidSignatureValidationException;
 
 	/**
 	 *
@@ -403,6 +413,30 @@ public interface ISignAPI {
 	IItemCollection getCircuitsTramite(SignCircuitFilter filter) throws ISPACException;
 	
 	/**
+	/**
+	 * [eCenpri-Felipe #436]
+	 * Obtiene las transacciones de firma de un documento a partir de su id
+	 * 
+	 * @param documentId Identificador del documento
+	 * @return
+	 * @throws ISPACException
+	 */
+	public IItemCollection getTransactionsByDocument(int documentId) throws ISPACException;	
+
+	/**
+	 * [dipucr-Felipe #1246]
+	 * @param documentId
+	 * @throws ISPACException
+	 */
+	public boolean deleteCircuitPortafirmas(int documentId) throws ISPACException;
+	
+	
+	/****************************************************************************
+	 * FUNCIONES NECESARIAS ANTES DE PORTAFIRMAS
+	 * [dipucr-Felipe #1246] Eliminar cuando todos los aytos estén migrados
+	 ****************************************************************************/
+	
+	/**
 	 * [eCenpri-Felipe #871] 19.04.2013
 	 * Devuelve el bloqueo de firmas para un cierto tipo de documento
 	 * @param tipoDoc
@@ -446,13 +480,25 @@ public interface ISignAPI {
 	public void deleteBloqueoFirmaDocs(String tipoDoc) throws ISPACException;
 	
 	/**
-	 * [eCenpri-Felipe #436]
-	 * Obtiene las transacciones de firma de un documento a partir de su id
-	 * 
-	 * @param documentId Identificador del documento
-	 * @return
+	 * [Dipucr-Agustin #781] 
+	 * Fase de prefirma en firma 3 fases 
+	 * @param SignDocument
+	 * @param boolean changeState
+	 * @return String path
 	 * @throws ISPACException
 	 */
-	public IItemCollection getTransactionsByDocument(int documentId) throws ISPACException;	
-
+	public String presign(SignDocument signDocument, boolean changeState) throws ISPACException;
+	
+	/**
+	 * [Dipucr-Agustin #781] 
+	 * Fase de postfirma en firma 3 fases 
+	 * @param SignDocument
+	 * @param String pathFicheroTemporalFirmado
+	 * @param boolean changeState
+	 * @return String "OK"
+	 * @throws ISPACException
+	 */
+	public String postsign(SignDocument signDocument, String pathFicheroTemporalFirmado, boolean changeState) throws ISPACException;
+	
 }
+

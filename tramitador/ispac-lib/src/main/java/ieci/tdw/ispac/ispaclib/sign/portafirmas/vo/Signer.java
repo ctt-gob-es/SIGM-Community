@@ -14,6 +14,9 @@ public class Signer {
 	private String identifier;
 
 	private String name;
+	//[Ticket1273#Teresa]Información de ALSIGM
+	private String nameALSIGM;
+	private String idALSIGM;
 
 
 	/*Indica el tipo de firmante asociado (usuario o cargo).
@@ -52,6 +55,19 @@ public class Signer {
 		this.tipoFirmante = tipoFirmante;
 	}
 
+	public String getNameALSIGM() {
+		return nameALSIGM;
+	}
 
+	public void setNameALSIGM(String nameALSIGM) {
+		this.nameALSIGM = nameALSIGM;
+	}
 
+	public String getIdALSIGM() {
+		return idALSIGM;
+	}
+
+	public void setIdALSIGM(String idALSIGM) {
+		this.idALSIGM = idALSIGM;
+	}
 }

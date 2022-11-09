@@ -229,6 +229,20 @@ public class ServicioDocumentosWSClientImpl implements ServicioDocumentos {
 
 		return getServicioDocumentos().existeContenidoDocumento(id);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.core.service.ServicioDocumentos#existeContenidoDocumentoOriginal(java.lang.String)
+	 */
+	public boolean existeContenidoDocumentoOriginal(String id) {
+
+		logger.info("Llamada a existeContenidoDocumento: id=[{}]", id);
+
+		Assert.hasText(id, "'id' must not be empty");
+
+		return getServicioDocumentos().existeContenidoDocumento(id);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -236,6 +250,19 @@ public class ServicioDocumentosWSClientImpl implements ServicioDocumentos {
 	 * @see es.ieci.tecdoc.fwktd.csv.core.service.ServicioDocumentos#getContenidoDocumento(java.lang.String)
 	 */
 	public byte[] getContenidoDocumento(String id) {
+
+		logger.info("Llamada a getContenidoDocumento: id=[{}]", id);
+
+		Assert.hasText(id, "'id' must not be empty");
+		return getServicioDocumentos().getContenidoDocumento(id);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.core.service.ServicioDocumentos#getContenidoDocumentoOriginal(java.lang.String)
+	 */
+	public byte[] getContenidoDocumentoOriginal(String id) {
 
 		logger.info("Llamada a getContenidoDocumento: id=[{}]", id);
 
@@ -262,7 +289,26 @@ public class ServicioDocumentosWSClientImpl implements ServicioDocumentos {
 			FileUtils.copy(new ByteArrayInputStream(contenido), outputStream);
 		}
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.core.service.ServicioDocumentos#writeDocumentoOriginal(java.lang.String, java.io.OutputStream)
+	 */
+	public void writeDocumentoOriginal(String id, OutputStream outputStream) throws IOException {
 
+		logger.info("Llamada a writeDocumento: id=[{}]", id);
+
+		Assert.hasText(id, "'id' must not be empty");
+		Assert.notNull(outputStream, "'outputStream' must not be null");
+
+		// Obtener el contenido del documento
+		byte[] contenido = getServicioDocumentos().getContenidoDocumento(id);
+		if (contenido != null) {
+			FileUtils.copy(new ByteArrayInputStream(contenido), outputStream);
+		}
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 *

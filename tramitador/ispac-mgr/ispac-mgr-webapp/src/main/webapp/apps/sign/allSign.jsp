@@ -96,7 +96,7 @@
 								cargarMiniApplet3f("<%=host %>");
 		</script> 
 		
-	<html:form action="/signAllDocument">
+	<html:form action="/signAllDocument3Fases">
 	<div id="contenido" class="move">
 		<div class="ficha">
 			<div class="encabezado_ficha">

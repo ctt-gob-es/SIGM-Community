@@ -68,6 +68,25 @@
 		  	<artifactId>Contratacion</artifactId>
   			<version>3.0</version>
   		</dependency>
+
+		<dependency>
+			<groupId>es.dipucr.resoluciones</groupId>
+			<artifactId>Resoluciones</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.dipucr.gtri</groupId>
+			<artifactId>GTRI</artifactId>
+			<version>3.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>telefonica.sigem</groupId>
+			<artifactId>SIGEM_Telefonica_Procedimientos</artifactId>
+			<version>2.0.0.6</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
@@ -125,11 +144,12 @@
 						<version>1.3</version>
 
 						<configuration>
-							<filename>${project.artifactId}-csv-connector.wsdl</filename>
+<!-- 							<filename>${project.artifactId}-csv-connector.wsdl</filename> -->
+							<filename>AplicacionExternaCSVConnectorWS.wsdl</filename>
 							<namespace>http://server.connector.csv.ws.sgm.tecdoc.ieci</namespace>
 							<namespaceImpl>http://server.connector.csv.ws.sgm.tecdoc.ieci</namespaceImpl>
 							<classOfPortType>ieci.tecdoc.sgm.ws.csv.connector.server.AplicacionExternaCSVConnectorWS</classOfPortType>
-							<location>http://localhost:8080/SIGEM_TramitacionWS/services/AplicacionExternaCSVConnectorService</location>
+							<location>http://localhost:8080/SIGEM_TramitacionWS/services/AplicacionExternaCSVConnectorWS</location>
 							<bindingName>AplicacionExternaCSVConnectorServiceSoapBinding</bindingName>
 							<style>WRAPPED</style>
 							<use>literal</use>

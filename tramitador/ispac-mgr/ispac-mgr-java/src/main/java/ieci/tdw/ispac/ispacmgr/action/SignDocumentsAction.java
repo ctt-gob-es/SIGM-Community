@@ -1,7 +1,6 @@
 package ieci.tdw.ispac.ispacmgr.action;
 
 import ieci.tdw.ispac.api.IEntitiesAPI;
-import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.ISignAPI;
 import ieci.tdw.ispac.api.entities.SpacEntities;
 import ieci.tdw.ispac.api.errors.ISPACException;
@@ -13,8 +12,8 @@ import ieci.tdw.ispac.ispaclib.bean.CollectionBean;
 import ieci.tdw.ispac.ispaclib.bean.ItemBean;
 import ieci.tdw.ispac.ispaclib.common.constants.SignStatesConstants;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
-import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
-import ieci.tdw.ispac.ispaclib.sign.InfoFirmante;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.sign.ResultadoValidacionCertificado;
 import ieci.tdw.ispac.ispaclib.sign.SignCircuitFilter;
 import ieci.tdw.ispac.ispaclib.sign.SignDocument;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorFactory;
@@ -27,10 +26,11 @@ import ieci.tdw.ispac.ispacmgr.common.constants.ActionsConstants;
 import ieci.tdw.ispac.ispacweb.api.IManagerAPI;
 import ieci.tdw.ispac.ispacweb.api.IState;
 import ieci.tdw.ispac.ispacweb.api.ManagerAPIFactory;
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativa;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -38,38 +38,28 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import es.dipucr.sigem.api.firma.xml.peticion.ObjectFactoryFirmaLotesPeticion;
-import es.dipucr.sigem.api.firma.xml.peticion.Signbatch;
-import es.dipucr.sigem.api.rule.common.utils.FirmaLotesError;
-import es.dipucr.sigem.api.rule.common.utils.FirmaLotesUtil;
-import es.dipucr.sigem.api.rule.common.utils.GestorDatosFirma;
-import es.dipucr.sigem.api.rule.common.utils.GestorMetadatos;
-import es.dipucr.sigem.api.rule.common.utils.UsuariosUtil;
+import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 
 /**
  * Action para la firma de documentos en bloque.
  * 
  * @author Iecisa
  * @version $Revision$
- * [eCenpri-Agustin #871] FIRMA 3 FASES
+ * 
  */
-@SuppressWarnings("restriction")
 public class SignDocumentsAction extends BaseDispatchAction {
 	
 	protected static final String SIGN_DOCUMENT_IDS_PARAM = "SIGN_DOCUMENT_IDS"; 
 	protected static final String SIGN_DOCUMENT_HASHCODES_PARAM = "SIGN_DOCUMENT_HASHCODES";
 	
-	protected static final String ERROR_TITULO = "firmar.titulo";
-	protected static final String ERROR_TEXTO = "firmar.texto";
-	protected static final String ERROR_MAPPING = "nofirmar";
+	protected boolean bFirmarTodo = false;//[dipucr-Felipe #1246]
+	protected boolean bFirmarDetalle = false;//[dipucr-Felipe #1246]
+
 	/**
 	 * Muestra las opciones disponibles para firmar los documentos.
 	 * 
@@ -88,7 +78,7 @@ public class SignDocumentsAction extends BaseDispatchAction {
 		// Identificadores de los documentos seleccionados
 		String[] documentIds = ((SignForm) form).getMultibox();
 
-		if (ArrayUtils.isEmpty(documentIds)) {
+		if (!bFirmarTodo && !bFirmarDetalle && ArrayUtils.isEmpty(documentIds)) {
 			LOGGER.warn("No se ha seleccionado ningún documento");
 			throw new ISPACInfo(getResources(request).getMessage(
 					"forms.listdoc.firmarDocumentos.empty"), false);
@@ -97,10 +87,30 @@ public class SignDocumentsAction extends BaseDispatchAction {
 		// Almacenar los identificadores de los documentos para el tratamiento posterior
 		storeDocumentIds(session, documentIds);
 		
-		// Establecer el action para el asistente
-		request.setAttribute("action", "signDocuments.do");
+		// [dipucr-Felipe #1246] Establecer el action para el asistente
+		request.setAttribute("action", getAction());
 		
 		return mapping.findForward("selectOption");
+	}
+	
+	/**
+	 * [dipucr-Felipe #1246] Devuelve el action en el que nos encontramos
+	 * - Firmar todo -> signAllDocumentAction
+	 * - Firmar detalle -> signDocumentAction
+	 * - Firmar selección -> signDocumentsAction
+	 * @return
+	 */
+	protected String getAction(){
+		
+		if (bFirmarTodo){
+			return "signAllDocument.do";
+		}
+		else if (bFirmarDetalle){
+			return "signDocument.do";
+		}
+		else{
+			return "signDocuments.do";
+		}
 	}
 
 
@@ -119,119 +129,49 @@ public class SignDocumentsAction extends BaseDispatchAction {
 			HttpServletRequest request, HttpServletResponse response,
 			SessionAPI session) throws Exception {
 		
-		//Código de entidad
-		ClientContext cct = session.getClientContext();
-		String codEntidad = OrganizationUser.getOrganizationUserInfo().getOrganizationId();
-
-		//INICIO [eCenpri-Felipe #818]
-		FirmaLotesError error = FirmaLotesUtil.getErrorDeshabilitar(codEntidad);
-		if (null != error){
-			request.setAttribute(ERROR_TITULO, error.getTitulo());
-			request.setAttribute(ERROR_TEXTO, error.getTexto());
-			return mapping.findForward(ERROR_MAPPING);
-		}
-		//FIN [eCenpri-Felipe #818]
-		
-		IEntitiesAPI entitiesAPI = session.getAPI().getEntitiesAPI();
 		ISignAPI signAPI = session.getAPI().getSignAPI();
 
 		// Información del estado
 		getCurrentState(request, session);
+
+		// Codigos hash de los documentos
+		List<String> hashCodes = new ArrayList<String>();
 		
 		// Obtener la información de los documentos seleccionados
-		IItemCollection documents = entitiesAPI.queryEntities(
-				SpacEntities.SPAC_DT_DOCUMENTOS, new StringBuffer(" WHERE ")
-						.append(DBUtil.addOrCondition("ID", retrieveDocumentIds(session)))
-						.append(" ORDER BY ID")//[dipucr-Felipe #184]
-						.toString());
+		IItemCollection documents = getDocuments(request, session);//[dipucr-Felipe #1246]
 
 		@SuppressWarnings("unchecked")
 		Iterator<IItem> iterator = documents.iterator();
-		
-		//Informacion del firmante
-		InfoFirmante infoFirmante = FirmaLotesUtil.getInfoFirmante(cct, codEntidad);
-		
-		//INICIO [dipucr-Felipe 3#231]
-		error = FirmaLotesUtil.getErrorFirmanteNoConfigurado(codEntidad, infoFirmante);
-	    if (null != error) {
-			request.setAttribute(ERROR_TITULO, error.getTitulo());
-			request.setAttribute(ERROR_TEXTO, error.getTexto());
-			return mapping.findForward(ERROR_MAPPING);
-		}
-	    //FIN [dipucr-Felipe 3#231]
-		
-		//Lista de documentos con su id temporal
-		List<String> hashCodes = new ArrayList<String>();
-		String result = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
-		int count = 0;
-		
-		ObjectFactoryFirmaLotesPeticion peticion = new ObjectFactoryFirmaLotesPeticion();
-		Signbatch signbatch = FirmaLotesUtil.getSignBatch(cct, peticion);
-		
-		LOGGER.info("Se van a realizar la Prefirma");
 		while (iterator.hasNext()) {
 			
-			///////////// SIGUIENTE DOCUMENTO DE LA LISTA DEL PANEL DE TRAMITE
-			//Información del documento
+			// Información del documento
 			IItem document = iterator.next();
-			
-			//PRE-FIRMA
-			// Obtengo documento y agrego entidad junto con la informacion del firmante
-			SignDocument signDocument = new SignDocument(document);
-			signDocument.setEntityId(codEntidad);
-			signDocument.addFirmante(infoFirmante);
-//			String idDoc = String.valueOf(signDocument.getItemDoc().getKeyInt());
-			
-			//Genero documento temporal
-			String docRef = signAPI.presign(signDocument, true);
-			LOGGER.info("Prefirma realizada, el iddocumento temporal es: "+docRef);			
-			
-			//Agrego a la lista de documentos la referencia del documento temporal
-			//Existe otra lista con las referencias los documentos originales
-			hashCodes.add(docRef);
-			
-			///////////// AJM CONSTRUIR NODOS XML SINGLESIGN
-			//[dipucr-Felipe #791] Recuperar el singleSign del documento con sus EXTRAPARAMS
-			String extraparams = FirmaLotesUtil.getFirmaExtraParams(codEntidad, cct, infoFirmante, 
-					signDocument.getDocumentType(), docRef, 1, 1, new Date());
-			Signbatch.Singlesign singlesign = FirmaLotesUtil.getSingleSign(cct, peticion, codEntidad, count, extraparams);
-			signbatch.getSinglesign().add(singlesign);			
-			
-			count++;
-		}
-		
-		///////////// AJM CONSTRUIR NODO XML ROOT SIGNBATCH
-		//File file = new File("lotes_firma3.xml");		
-		JAXBContext jaxbContext;
-		try {
-			
-			jaxbContext = JAXBContext.newInstance(ObjectFactoryFirmaLotesPeticion.class);
-		
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-				
-			//Obtener XML en un String
-			java.io.StringWriter sw = new StringWriter();
-			//Indico esto por que no se cual es la funcion del atributo standalone asi que lo pongo a false 
-			//para que no aparezca, asi esta en la demo de integracion del servidor de firma
-			jaxbMarshaller.setProperty("com.sun.xml.bind.xmlDeclaration", Boolean.FALSE);
-			jaxbMarshaller.marshal(signbatch, sw);				
-			result = result.concat(sw.toString());
-			
-		} catch (JAXBException e) {
-			LOGGER.error("ERROR. " + e.getMessage(), e);
+
+			// Obtener el codigo hash del documento
+			hashCodes.add(signAPI.generateHashCode(new SignDocument(document)));
 		}
 
 		// Almacenar los hash de los documentos para el tratamiento posterior
 		storeDocumentHashCodes(session, hashCodes);
 		
-		request.setAttribute("hashCodes",hashCodes.toArray(new String[hashCodes.size()]));
-		//Seteamos los parametros en la firma tres fases
-		SignForm signForm = ((SignForm) form);
-		signForm.setSerialNumber(infoFirmante.getNumeroSerie());
-		signForm.setListaDocs(result);
-		signForm.setCodEntidad(codEntidad);
+		request.setAttribute("hashCodes",
+				hashCodes.toArray(new String[hashCodes.size()]));
 		
 		return mapping.findForward("sign");
+	}
+
+	/**
+	 * [dipucr-Felipe #1246] Integración Port@firmas 
+	 * @param request 
+	 * @param session
+	 * @return
+	 * @throws ISPACException 
+	 */
+	public IItemCollection getDocuments(HttpServletRequest request, SessionAPI session) throws ISPACException {
+		
+		IEntitiesAPI entitiesAPI = session.getAPI().getEntitiesAPI();
+		return entitiesAPI.queryEntities(SpacEntities.SPAC_DT_DOCUMENTOS, new StringBuffer(" WHERE ")
+						.append(DBUtil.addOrCondition("ID", retrieveDocumentIds(session))).toString());
 	}
 
 
@@ -251,39 +191,37 @@ public class SignDocumentsAction extends BaseDispatchAction {
 			HttpServletRequest request, HttpServletResponse response,
 			SessionAPI session) throws Exception {		
 
-		IEntitiesAPI entitiesAPI = session.getAPI().getEntitiesAPI();
 		ISignAPI signAPI = session.getAPI().getSignAPI();
 
 		// Información del estado
 		IState state = getCurrentState(request, session);
 
 		SignForm signForm = (SignForm) form;
-		//String[] signs = signForm.getSigns().split("!");
+		String[] signs = signForm.getSigns().split("!");
 		String[] hashCodes = retrieveDocumentHashCodes(session);
 		
-		//TODO en principio no recojo las firmas, seguramente en el futuro no haga falta
-		//Dejo este if por si luego quisiera entrarlas como metadatos
-		//if (ArrayUtils.isEmpty(signs)
-		//		|| (StringUtils.isBlank(signForm.getSignCertificate()) || "undefined"
-		//				.equalsIgnoreCase(signForm.getSignCertificate()))) {
-		//	return mapping.findForward("failure");
-		//}
+		if (ArrayUtils.isEmpty(signs)
+				|| (StringUtils.isBlank(signForm.getSignCertificate()) || "undefined"
+						.equalsIgnoreCase(signForm.getSignCertificate()))) {
+			return mapping.findForward("failure");
+		}
 
 		List<ItemBean> documents_ok = new ArrayList<ItemBean>();
 		List<Map<String, Object>> documents_ko = new ArrayList<Map<String, Object>>();
 
 		// Obtener la información de los documentos seleccionados
-		IItemCollection documents = entitiesAPI.queryEntities(
-				SpacEntities.SPAC_DT_DOCUMENTOS, new StringBuffer(" WHERE ")
-						.append(DBUtil.addOrCondition("ID", retrieveDocumentIds(session)))
-						.append(" ORDER BY ID")//[dipucr-Felipe #184]
-						.toString());
+		IItemCollection documents = getDocuments(request, session);//[dipucr-Felipe #1246]
 
 		@SuppressWarnings("unchecked")
 		Iterator<IItem> iterator = documents.iterator();
 		int count = 0;
-		//[DipuCR-Agustin] #150 Agregar metadatos
-		String autorCert = UsuariosUtil.getNombreFirma(session.getClientContext());
+		
+		//Se comprueba la validez del certificado
+		ResultadoValidacionCertificado resultado = signAPI.validateCertificate(signForm.getSignCertificate());
+		if (resultado.getResultadoValidacion().equals(ResultadoValidacionCertificado.VALIDACION_ERROR)){
+			request.setAttribute("SIGN_ERROR", "Error en la validación del certificado. "+resultado.getMensajeValidacion());
+			return mapping.findForward("success");
+		}
 		
 		while (iterator.hasNext()) {
 			
@@ -303,20 +241,13 @@ public class SignDocumentsAction extends BaseDispatchAction {
 				SignDocument signDocument = new SignDocument(document);
 				signDocument.setIdPcd(state.getPcdId());
 				signDocument.setNumExp(state.getNumexp());
-				//signDocument.addSign(signs[count]);
+				signDocument.addSign(signs[count]);
 		        signDocument.addCertificate(signForm.getSignCertificate());
 		        signDocument.setHash(hashCodes[count]);
 
-	        	//signAPI.sign(signDocument, true);
-		        signAPI.postsign(signDocument, hashCodes[count] , true);
+	        	signAPI.sign(signDocument, true);
 
-				documents_ok.add(new ItemBean(document));				
-				
-				//[DipuCR-Agustin] #150 Agregar metadatos
-				GestorMetadatos.storeMetada(session, signDocument, autorCert, null);
-				
-				//[dipucr-Felipe #817]
-				GestorDatosFirma.storeDatosFirma(session.getClientContext(), signDocument, null);
+				documents_ok.add(new ItemBean(document));
 
 			} catch (ISPACException e) {
 				LOGGER.error(
@@ -368,10 +299,8 @@ public class SignDocumentsAction extends BaseDispatchAction {
 		filter.setTaskPcdId(state.getTaskPcdId()); //[eCenpri-Felipe #592]
 
 		
-		filter.setIdSistema(ProcessSignConnectorFactory.getInstance()
-				.getProcessSignConnector().getIdSystem());
-		filter.setDefaultPortafirmas(ProcessSignConnectorFactory.getInstance()
-				.isDefaultConnector());
+		filter.setIdSistema(ProcessSignConnectorFactory.getInstance(session.getClientContext()).getProcessSignConnector().getIdSystem());
+		filter.setDefaultPortafirmas(ProcessSignConnectorFactory.getInstance(session.getClientContext()).isDefaultConnector());
 
 		// Obtenemos los circuitos de firma
 		ISignAPI signAPI = session.getAPI().getSignAPI();
@@ -379,8 +308,9 @@ public class SignDocumentsAction extends BaseDispatchAction {
 		request.setAttribute(ActionsConstants.SIGN_CIRCUIT_LIST,
 				CollectionBean.getBeanList(itemcol));
 
-		// Establecer el action para el asistente
-		request.setAttribute("action", "signDocuments.do");
+		// [dipucr-Felipe #1246] Establecer el action para el asistente
+		request.setAttribute("action", getAction());
+		
 		
 		//INICIO [eCenpri-Felipe #592] Obtenemos los circuitos del trámite
 		IItemCollection itemcolTram = signAPI.getCircuitsTramite(filter);
@@ -428,7 +358,7 @@ public class SignDocumentsAction extends BaseDispatchAction {
 
 	/**
 	 * Inicia los circuitos de firma de los documentos.
-	 * 
+	 * [dipucr-Felipe #1246] Adaptamos el código para que se pueda "mandar a mi firma"
 	 * @param mapping
 	 * @param form
 	 * @param request
@@ -442,8 +372,23 @@ public class SignDocumentsAction extends BaseDispatchAction {
 			HttpServletResponse response, SessionAPI session) throws Exception {
 		
 		// Obtenemos identificador del circuito de firma a iniciar
-		int circuitId = Integer.parseInt(request
-				.getParameter(ActionsConstants.SIGN_CIRCUIT_ID));
+		// INICIO [dipucr-Felipe #1246] Posibilidad de mandar a mi propia firma
+		String sMyCircuit = request.getParameter(ActionsConstants.SIGN_MY_CIRCUIT);
+		boolean myCircuit = (!StringUtils.isEmpty(sMyCircuit) && "true".equals(sMyCircuit));
+		String circuitId = null;
+		Usuario usuario = null;
+		
+		if (myCircuit){
+			IClientContext cct = session.getClientContext();
+			String entidad = EntidadesAdmUtil.obtenerEntidad(cct);
+			ServicioEstructuraOrganizativa servicioEstructuraOrganizativa = LocalizadorServicios.getServicioEstructuraOrganizativa();
+			String idUsuario = cct.getUser().getUID().replace("1-", "");
+			usuario = servicioEstructuraOrganizativa.getUsuario(Integer.valueOf(idUsuario), entidad);
+		}
+		else{
+			circuitId = request.getParameter(ActionsConstants.SIGN_CIRCUIT_ID);
+		}
+		//FIN [dipucr-Felipe #1246]
 
 		// Propiedades del circuito de firmas
 		SignForm formulario = (SignForm) form;
@@ -452,8 +397,6 @@ public class SignDocumentsAction extends BaseDispatchAction {
 				formulario.getFexpiration(), formulario.getContent(),
 				formulario.getLevelOfImportance());
 		
-		IInvesflowAPI invesFlowAPI = session.getAPI();
-		IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
 		ISignAPI signAPI = session.getAPI().getSignAPI();
 
 		// Guardar el estado en el ClientContext
@@ -463,10 +406,7 @@ public class SignDocumentsAction extends BaseDispatchAction {
 		List<Map<String, Object>> documents_ko = new ArrayList<Map<String, Object>>();
 
 		// Obtener la información de los documentos seleccionados
-		IItemCollection documents = entitiesAPI.queryEntities(
-				SpacEntities.SPAC_DT_DOCUMENTOS, new StringBuffer(" WHERE ")
-						.append(DBUtil.addOrCondition("ID", retrieveDocumentIds(session)))
-						.toString());
+		IItemCollection documents = getDocuments(request, session);//[dipucr-Felipe #1246]
 
 		@SuppressWarnings("unchecked")
 		Iterator<IItem> iterator = documents.iterator();
@@ -486,7 +426,13 @@ public class SignDocumentsAction extends BaseDispatchAction {
 				}
 				
 				// Iniciar el circuito de firmas
-				signAPI.initCircuitPortafirmas(circuitId, document.getKeyInt(), properties);
+				// [dipucr-Felipe #1246]
+				if (myCircuit){
+					signAPI.initCircuitPortafirmas(usuario, document.getKeyInt(), properties);
+				}
+				else{
+					signAPI.initCircuitPortafirmas(circuitId, document.getKeyInt(), properties);
+				}
 
 				documents_ok.add(new ItemBean(document));
 
@@ -510,6 +456,7 @@ public class SignDocumentsAction extends BaseDispatchAction {
 
 		return mapping.findForward("success");
 	}
+	
 
 	private IState getCurrentState(HttpServletRequest request, SessionAPI session) throws ISPACException {
 		IManagerAPI managerAPI=ManagerAPIFactory.getInstance().getManagerAPI(session.getClientContext());

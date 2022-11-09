@@ -9,6 +9,7 @@ import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
+import ieci.tdw.ispac.ispaclib.common.constants.SignStatesConstants;
 import ieci.tdw.ispac.ispaclib.configuration.ConfigurationHelper;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.gendoc.converter.DocumentConverter;
@@ -24,7 +25,11 @@ import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacweb.api.impl.states.TaskState;
 import ieci.tecdoc.core.base64.Base64Util;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.cripto.firma.CertificadoX509Info;
 import ieci.tecdoc.sgm.core.services.cripto.firma.ServicioFirmaDigital;
+import ieci.tecdoc.sgm.core.services.cripto.validacion.InfoCertificado;
+import ieci.tecdoc.sgm.core.services.cripto.validacion.ResultadoValidacion;
+import ieci.tecdoc.sgm.core.services.cripto.validacion.ServicioCriptoValidacion;
 import ieci.tecdoc.sgm.core.services.dto.Entidad;
 import ieci.tecdoc.sgm.core.services.gestioncsv.CodigosAplicacionesConstants;
 import ieci.tecdoc.sgm.core.services.gestioncsv.InfoDocumentoCSV;
@@ -36,13 +41,11 @@ import ieci.tecdoc.sgm.tram.sign.ISigemSignConnector;
 import ieci.tecdoc.sgm.tram.sign.SigemSignConnector;
 
 import java.awt.Color;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -55,6 +58,7 @@ import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 
+import com.itextpdf.xmp.impl.Base64;
 import com.lowagie.text.Document;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
@@ -72,6 +76,8 @@ import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfString;
 import com.lowagie.text.pdf.PdfWriter;
 
+import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
+
 /**
  * Convierte el documento asociado al trámite a PDF y lo firma.
  * validando previamente que
@@ -83,6 +89,7 @@ import com.lowagie.text.pdf.PdfWriter;
  * @version $Revision$
  *
  */
+@Deprecated /* Sustituida por la clase SellarDocumentosRule */
 public class ConvertDocumentToPDFAndSignRule implements IRule {
 
 	/**
@@ -184,7 +191,7 @@ public class ConvertDocumentToPDFAndSignRule implements IRule {
 					signDate.setTime(date);
 				    sap.setSignDate(signDate);
 
-				    sap.setReason("Indice Electronico del Expediente " + rulectx.getNumExp());
+				    sap.setReason("Sellado del documento " + rulectx.getNumExp());
 				    sap.setLocation("Es");
 
 				    PdfSignature dic = new PdfSignature(PdfName.ADOBE_PPKMS, PdfName.ADBE_PKCS7_DETACHED);
@@ -224,6 +231,10 @@ public class ConvertDocumentToPDFAndSignRule implements IRule {
 
 					// Actualizar el documento original con el PDF firmado
 					updateDocument(documento, originalPDFFile, ctx);
+					
+					//[dipucr-Felipe #1143]
+					documento.set("ESTADOFIRMA", SignStatesConstants.SELLADO);
+					documento.store(ctx);
 				}
 			}
 
@@ -268,19 +279,6 @@ public class ConvertDocumentToPDFAndSignRule implements IRule {
 				RuleHelper.setInfoMessage(rulectx, TaskState.class,
 						"operation.noExecute.task.noDocuments", null,
 						"operation.noExecute.task.noDocuments.numexp",
-						new String[] { rulectx.getNumExp() });
-
-				return false;
-			}
-
-			// Comprobar que no haya ningún documento al que no se le haya aplicado la función resumen
-			// entre los documentos que no sean los del trámite actual
-			IItemCollection itemcol = invesflowAPI.getEntitiesAPI().getEntities(SpacEntities.SPAC_DT_DOCUMENTOS, rulectx.getNumExp(), " ID_TRAMITE <> " + rulectx.getTaskId() + " AND INFOPAG IS NOT NULL AND HASH IS NULL");
-			if (itemcol.next()) {
-
-				RuleHelper.setInfoMessage(rulectx, TaskState.class,
-						"operation.noExecute.task.newDocuments", null,
-						"operation.noExecute.task.newDocuments.numexp",
 						new String[] { rulectx.getNumExp() });
 
 				return false;
@@ -406,29 +404,50 @@ public class ConvertDocumentToPDFAndSignRule implements IRule {
 		try {
 
 			PdfReader readerInicial = new PdfReader(file.getAbsolutePath());
+			
 			int n = readerInicial.getNumberOfPages();
-			int largo = (int) readerInicial.getPageSize(n).getHeight();
-			int ancho = (int) readerInicial.getPageSize(n).getWidth();
+			int largo = (int) readerInicial.getPageSize(1).getHeight();
+			int ancho = (int) readerInicial.getPageSize(1).getWidth();
+			Rectangle r = new Rectangle(ancho, largo);
 
 			Image imagen = createBgImage();
-			Document document = new Document();
+			Document document = new Document(r);
 
-			FileOutputStream fileOut = new FileOutputStream(
-					FileTemporaryManager.getInstance().getFileTemporaryPath()
-					+ "/" + pathFileTemp, true);
+			FileOutputStream fileOut = new FileOutputStream(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + pathFileTemp, true);
 			PdfWriter writer = PdfWriter.getInstance(document, fileOut);
 			document.open();
-			Rectangle r = document.getPageSize();
 			String dateFirma = DATE_FORMATTER.format(signDate);
 
 			// Obtener el conector de firma configurado a partir del cual
 			// se generará la banda gris lateral
-			ISignConnector signConnector = SignConnectorFactory.getSignConnector();
+			ISignConnector signConnector = SignConnectorFactory.getInstance(clientContext).getSignConnector();
 			signConnector.initializate(null, clientContext);
 			// Nuevo interface a partir de SIGM3
 			ISigemSignConnector sigemSignConnector = null;
 			if (signConnector instanceof ISigemSignConnector) {
 				sigemSignConnector = (ISigemSignConnector) signConnector;
+			}
+			
+			// Obtenemos la información del certificado
+			InfoCertificado infoCertificado = null;
+			ServicioFirmaDigital firmaDigital = LocalizadorServicios.getServicioFirmaDigital();
+			CertificadoX509Info certificadoX509Info = firmaDigital.getcertInfo();
+			
+			if (certificadoX509Info != null) {
+				ServicioCriptoValidacion servicioCriptoValidacion = LocalizadorServicios.getServicioCriptoValidacion("SIGEM_ServicioValidacion.SIGEM.API");
+
+				Base64 encoder = new Base64();
+
+				byte[] psB64Certificate = Base64.encode(certificadoX509Info.getCertificate().getEncoded());
+
+				ResultadoValidacion resultado = servicioCriptoValidacion.validateCertificate(new String(psB64Certificate));
+
+				if (resultado.getResultadoValidacion() == ResultadoValidacion.VALIDACION_ERROR) {
+					logger.info("Justificante de Registro - incluirBandaLateralDocumentoPDF: El certificado de la firma no es valido. Certificado: ["
+							+ certificadoX509Info.getCertificate() + "]");
+				} else {
+					infoCertificado = resultado.getCertificado();
+				}
 			}
 
 			for (int i = 1; i <= n; i++) {
@@ -452,7 +471,7 @@ public class ConvertDocumentToPDFAndSignRule implements IRule {
 					if (sigemSignConnector != null) {
 						sigemSignConnector.generateGrayBandImagen(dateFirma, over, margen, true, margen, n, i, codCotejo, null);
 					} else {
-						getImagen(dateFirma, over, margen, true, margen, n, i, codCotejo, locale);
+						getImagen(clientContext, dateFirma, over, margen, true, margen, n, i, codCotejo, infoCertificado, locale);
 					}
 				} else {
 					image.setAbsolutePosition(0.0F, 0.0F);
@@ -473,8 +492,15 @@ public class ConvertDocumentToPDFAndSignRule implements IRule {
 					if (sigemSignConnector != null) {
 						sigemSignConnector.generateGrayBandImagen(dateFirma, over, margen, false, (float) largo - margen, n, i, codCotejo, null);
 					} else {
-						getImagen(dateFirma, over, margen, false, (float) largo - margen, n, i, codCotejo, locale);
+						getImagen(clientContext, dateFirma, over, margen, false, (float) largo - margen, n, i, codCotejo, infoCertificado, locale);
 					}
+				}
+				
+				if(i < n){
+					largo = (int) readerInicial.getPageSize(i + 1).getHeight();
+					ancho = (int) readerInicial.getPageSize(i + 1).getWidth();
+					r = new Rectangle(ancho, largo);
+					document.setPageSize(r);
 				}
 				document.newPage();
 			}
@@ -501,64 +527,53 @@ public class ConvertDocumentToPDFAndSignRule implements IRule {
 	 * @param numberOfPages Número de páginas del documento PDF.
 	 * @param pageActual Número de página actual.
 	 * @param codCotejo Código de cotejo (código seguro de verificación) para el documento.
+	 * @param infoCertificado 
 	 * @param locale Idioma para el texto de la banda lateral.
 	 *
 	 * @throws ISPACException Si se produce algún error.
 	 */
-	protected void getImagen(String dateFirma, PdfContentByte pdfContentByte,
-			float margen, boolean vh, float x, int numberOfPages,
-			int pageActual, String codCotejo, Locale locale) throws ISPACException {
+	protected void getImagen(IClientContext clientContext, String dateFirma, PdfContentByte pdfContentByte,
+			float margen, boolean vh, float x, int numberOfPages, int pageActual, String codCotejo, InfoCertificado infoCertificado, Locale locale) throws ISPACException {
 
 		try {
-
+			
 			String font = ISPACConfiguration.getInstance().getProperty(SigemSignConnector.FONT_BAND);
 			String encoding = ISPACConfiguration.getInstance().getProperty(SigemSignConnector.ENCODING_BAND);
 			float fontSize = Float.parseFloat(ISPACConfiguration.getInstance().getProperty(SigemSignConnector.FONTSIZE_BAND));
-
+			
 			BaseFont bf = BaseFont.createFont(font, encoding, false);
 			pdfContentByte.beginText();
 			pdfContentByte.setFontAndSize(bf, fontSize);
+			
+			FirmaConfiguration fc = FirmaConfiguration.getInstance(clientContext);
+			
+			String texto = fc.get("sellar.grayband.text");
+			texto = MessagesFormatter.format(texto, new String[] {
+				StringUtils.defaultIfEmpty(infoCertificado.getName(), ""),
+				StringUtils.defaultIfEmpty(infoCertificado.getNif(), ""),
+				StringUtils.defaultIfEmpty(infoCertificado.getSerialNumber(), ""),
+				String.valueOf(numberOfPages), 
+				String.valueOf(pageActual), 
+				String.valueOf(numberOfPages),
+				codCotejo });
 
-			BufferedReader br = new BufferedReader(new FileReader(getDataFile(locale.getLanguage())));
-			String sCadena = null;
-			int i = 0;
-			while ((sCadena = br.readLine()) != null) {
-				if (vh) {
+			fontSize += 3F;
+			String[] arrTexto = texto.split("\n");
+			for (String linea : arrTexto){
+				if (vh){
 					pdfContentByte.setTextMatrix(0.0F, 1.0F, -1F, 0.0F, x, margen);
-					if (i == 0) {
-						pdfContentByte.showText(sCadena + codCotejo);
-					} else if (i == 1) {
-						pdfContentByte.showText(sCadena
-								+ MessagesFormatter.format(getString(locale, "pdf.band.pageInfo"), new String[] {
-									String.valueOf(numberOfPages),
-									String.valueOf(pageActual),
-									String.valueOf(numberOfPages) }));
-					} else {
-						pdfContentByte.showText(sCadena);
-					}
-					i++;
+					pdfContentByte.showText(linea);
 					x += fontSize;
-				} else {
+				}
+				else{
 	                pdfContentByte.setTextMatrix(margen, x);
-	                if(i == 0) {
-	                    pdfContentByte.showText(sCadena + codCotejo);
-	                } else if (i == 1) {
-	                    //pdfContentByte.showText(sCadena + numberOfPages + " folios. Folio " + pageActual + " de " + numberOfPages + ".");
-						pdfContentByte.showText(sCadena
-								+ MessagesFormatter.format(getString(locale, "pdf.band.pageInfo"), new String[] {
-									String.valueOf(numberOfPages),
-									String.valueOf(pageActual),
-									String.valueOf(numberOfPages) }));
-	                } else {
-	                    pdfContentByte.showText(sCadena);
-	                }
-	                i++;
+					pdfContentByte.showText(linea);
 	                x -= fontSize;
-	            }
+				}
 			}
-
-			pdfContentByte.endText();
-
+			
+			pdfContentByte.endText();		
+			
 		} catch (Exception e) {
 			logger.error("Error al componer la imagen de la banda lateral", e);
 			throw new ISPACException(e);

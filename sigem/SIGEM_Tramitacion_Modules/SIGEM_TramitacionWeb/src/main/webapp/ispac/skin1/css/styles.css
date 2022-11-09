@@ -1,13 +1,19 @@
 body {
 	font-family: verdana, arial, tahoma, geneva, sans-serif;
-	font-size: 69%;
 	margin: 5px 5px 10px 5px; /* PARA DEJAR BORDES EN LA PAGINA: QUITAR SI NO SE QUIERE ASI */
 	padding: 0px;
 }
+:root {
+    --rojodipucr: #d53434;
+}
+:root {
+    --azuldipucr: #333;
+}
 /* 'MS Sans Serif', arial, helvetica*/
 td {
-	font-family:  Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+	font-family: Verdana, Arial, Helvetica, Sans-serif;
+	font-size: 11px;
+	color: #3c5876;
 }
 th {
 	margin:0;
@@ -17,8 +23,8 @@ th {
 	list-style-type:none;
 }
 a, a:hover {
-	font-family:  Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
 	color: #666666;
 	text-decoration: none;
 }
@@ -42,6 +48,10 @@ h3 {
   background-color: #eee;
   font-weight: normal;
   font-size: large;
+}
+
+hr{
+    border-top: 1px dotted #9F9F9F;
 }
 
 /* estilo para el texto del error */
@@ -108,6 +118,7 @@ a:hover {
 	background-color: #D7EDFA;
 	font-size: 10px;
 	border:1px solid #D3D5DD;
+	border-radius: 5px;
 }
 /* color del borde de las cajas de los formularios */
 .boxform {
@@ -117,17 +128,19 @@ a:hover {
 .boxGris {
 	background-color: #E8E9EE;
 	border:1px solid #DADBDE;
+	border-radius: 5px;
 }
 
 .boxTab {
 	background-color: #D7EDFA;
 	font-size: 10px;
 	border:1px solid #D3D5DD;
+	border-radius: 5px;
 	border-top:none;
 }
 
 .caja {
-	border:1px solid #9EA4C7;
+	border:1px solid #D3D5DD;
 	padding-right:5px;
 }
 
@@ -137,7 +150,6 @@ a:hover {
 	color: #5C65A0;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
 	font-size: 10px;
-	font-weight: bold;
 	border-top:1px solid #D3D5DD;
 }
 .blankSinTop {
@@ -163,11 +175,25 @@ a.titleTab:hover {
 	text-decoration: underline;
 }
 /* estilo para los títulos de las cajas */
+
+
+/******************************************
+* Quitamos padding y radius a ver como afecta al resto de formularios
+*******************************************/
 .title {
-	color: #5C65A0;
-	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+	min-height: 15px;
+	vertical-align: middle;
+	font-size: 13px;
+	font-weight: bold;
+	/*padding: 0.8em 0.4em 0.4em 1em;*/
+	padding: 4px;
+	color: #123152;
+	background: #9EBFD0 url(../img/fondo-titular.jpg) bottom left repeat-x;
+	border-bottom: 1px solid #8AC3E7; 
+	/*border-radius: 5px;*/
 }
+
+
 /* estilo para el título de configuración */
 .titleConfiguration {
 /*	background-color: #5C65A0;*/
@@ -218,23 +244,25 @@ a.elementTab:hover {
 
 /* estilo para los objetos de los formularios */
 .input, .inputSelect, .inputSelectS, .textareaAsunto, .textareaIdentidad, .textareaDir {
-	color: #003b73;
+	color: #3c5876;
 	background-color: #FFFFFF;
-	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
-	border-color: #5C65A0;
+	font-family: Calibri, Helvetica, Arial, Sans-serif;
+	font-size: 13.5px;
+	border-color: #919191;
 	border-style: solid;
 	border-width: 1px;
+	border-radius: 3px;
 }
 /* estilo para los objetos de los formularios en readonly */
 .inputReadOnly, .inputSelectRO, .inputReadOnlySelectS, .textareaAsuntoRO, .textareaIdentidadRO, .textareaDirRO {
 	color: #606060;
 	background-color: #EEEEEE;
-	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
-	border-color: #5C65A0;
+	font-family: Calibri, Helvetica, Arial, Sans-serif;
+	font-size: 13.5px;
+	border-color: #a5a5a5;
 	border-style: solid;
 	border-width: 1px;
+	border-radius: 3px;
 }
 
 .textareaAsunto, .textareaAsuntoRO {
@@ -270,11 +298,12 @@ a.elementTab:hover {
 	color: #33469A;
 	background-color: #D7EDFA;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+	font-size: 11.5px;
 	border-color: #8898E0 #5C65A0 #5C65A0 #8898E0;
 	border-style: solid;
 	border-width: 1px;
 	cursor: pointer;
+	border-radius: 2px;
 }
 
 /* estilo para los botones que se muestran en una capa transparente*/
@@ -293,15 +322,23 @@ a.elementTab:hover {
 
 /* estilo para botones del formulario con fondo blanco*/
 .form_button_white {
-	color: #33469A;
+	color: #3c5876;
 	background-color: #FFFFFF;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+	font-size: 11.5px;
 	border-color: #8898E0 #5C65A0 #5C65A0 #8898E0;
 	border-style: solid;
 	border-width: 1px;
 	cursor: pointer;
+	border-radius: 2px;
+	padding: 2px 8px;
 }
+
+.form_button_white:hover {
+	color: #FFFFFF;
+	background-color: #526d89;
+}
+
 /* estilo para la búsqueda de formularios */
 .field
 {
@@ -353,24 +390,22 @@ a.titulo_menu, a.titulo_menu:hover {
 
 /* estilo para los formularios de búsqueda */
 .forms {
-	color: #4477aa;
+	color: #3c5876;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+	font-size: 11.5px;
 	text-decoration: none;
 }
 .formsTitleBig {
-	color: #5C65A0;
+	color: #3c5876;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
 	font-size: 12px;
-	font-weight: bold;
 }
 
 /* estilo para el título de los campos del formulario */
 .formsTitle {
-	color: #5C65A0;
+	color: #3c5876;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
-	font-weight: bold;
+	font-size: 11.5px;
 }
 a.formsTitle {
 	color: #5C65A0;
@@ -381,10 +416,9 @@ a.formsTitle {
 }
 /* estilo para el título de los campos más destacados */
 .formsTitleB {
-	color: #5C65A0;
+	color: #3c5876;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
-	font-weight: bold;
+	font-size: 11.5px;
 }
 
 /* estilo para los errores del formulario */
@@ -403,7 +437,7 @@ a.formsTitle {
 a.navigation {
 	color: #4C537E;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+	font-size: 11px;
 	text-decoration: none;
     cursor: pointer;
 }
@@ -432,7 +466,7 @@ a.schema:hover {
 }
 
 /* estilo para el texto de los títulos de tablas */
-.menuhead {
+/*.menuhead {
 	color: #5C65A0;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
 	font-size: 11px;
@@ -448,57 +482,83 @@ a.menuhead, a.menuhead:hover {
 a.menuhead:hover {
 	text-decoration: underline;
 }
+*/
+.menuHead{
+	font-size: 12px;
+	font-weight: bold;
+	/*color: #123152;*/
+	color: #475a6e;
+}
+
 /* estilo para el texto de registros seleccionados */
 .menuSelect {
     font-size: 10px;
-    font-family:  Verdana, Arial, Helvetica, Sans-serif;
+    font-family: font-family: Arial, Helvetica, sans-serif;
     margin-left: 0px;
     color: #B7C2FF;
 }
 /* estilo para texto en general */
 .menu {
-    font-family:  Verdana, Arial, Helvetica, Sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
     margin-left: 0px;
     color: #5C65A0;
 }
 .menu_red {
-    font-family:  Verdana, Arial, Helvetica, Sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 10px;
     margin-left: 0px;
     color: #FF0000;
 }
 a.menu {
     font-family: Verdana, Arial, Helvetica, Sans-serif;
-    font-size: 10px;
+    font-size: 11px;
     margin-left: 0px;
-    color: #5C65A0;
+    color: #123152;
     text-decoration: none
 }
 a.menu:hover {
 	text-decoration: underline;
 }
+a.menu_inbox {
+    font-family: Verdana, Arial, Helvetica, Sans-serif;
+    font-size: 11.5px;
+    margin-left: 0px;
+    padding-bottom: 1px;
+    color: #123152;
+    text-decoration: none;
+    display: inline-block;
+}
+a.menu_inbox:hover {
+	text-decoration: underline;
+}
 /* estilo para texto en negrita */
 .menuBold {
-    font-family:  Verdana, Arial, Helvetica, Sans-serif;
-    font-size: 8px;
-    font-weight: bold;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11.5px;
     margin-left: 0px;
-    color: #5C65A0;
+    color: #123152;
 }
 
 .menubold {
   list-style-type: none;
-  background-image: url(../img/menu_item.gif);
+  background-image: url(../img/ul.gif);
   background-repeat: no-repeat;
   background-position: 0px 8px;
-  padding-left: 10px;
+  padding-left: 15px !important;
   list-style-position: outside;
   line-height: 1.2em;
-  font-size: 10px;
+  font-size: 11.5px;
 }
 .menu11Bold {
-    font-family:  Verdana, Arial, Helvetica, Sans-serif;
+    font-family: Calibri, Arial, Helvetica, sans-serif;
+    font-size: 14.5px;
+    font-weight: bold;
+    margin-left: 0px;
+    color: #006D85;
+}
+.menu11BoldLeaf {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 11px;
     font-weight: bold;
     margin-left: 0px;
@@ -545,14 +605,14 @@ a.menu:hover {
 }
 /* estilo para los registros de las tablas */
 .element {
-	color: #5C65A0;
+	color: #3c6087;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+	font-size: 11px;
 }
 a.element {
-	color: #5C65A0;
+	color: #3c6087;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+	font-size: 11px;
   	text-decoration: none;
 }
 a.element:hover {
@@ -568,15 +628,15 @@ a.element:hover {
 /* estilo que indica que está seleccionada
 	una pestaña  del formulario*/
 .select {
-	border: #D3D5DD 1px solid;
+	border: #ccc 1px solid;
 	border-bottom: none;
-    padding: 3px 6px 3px 6px;
-	color: #5C65A0;
-	background-color: #D7EDFA;
-	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 11px;
-    font-weight: bold;
-    cursor:pointer;
+    	padding: 4px 20px 2px 20px;
+	color: #5a81ab;
+	background-color: #fff;
+	font-family: Arial, Helvetica, Sans-serif;
+	font-size: 12px;
+    	font-weight: bold;
+    	cursor:pointer;
 }
 a.select {
 	color: #5C65A0;
@@ -606,21 +666,16 @@ a.select:hover {
 /* estilo que indica que la pestaña del formulario
 	no está seleccionada */
 .unselect {
-/*	border-right: #B6CBEB 1px solid;
-    border-top: #B6CBEB 1px solid;
-    border-bottom: #B6CBEB 0px solid;
-    border-left: #B6CBEB 1px solid;*/
-	border-right: #C8C8C8 1px solid;
-    border-top: #C8C8C8 1px solid;
-    border-bottom: #C8C8C8 0px solid;
-    border-left: #C8C8C8 1px solid;
-    padding: 3px 6px 3px 6px;
-	color: #5C65A0;
-	background-color: #eeeeee;
-	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 11px;
+	border: #ccc 1px solid;
+	border-bottom: none;
+    	padding: 4px 20px 2px 20px;
+	color: #6d8c97;
+	background-color: #f9f9f9;
+	font-family: Arial, Helvetica, Sans-serif;
+	font-size: 12px;
 	font-weight: bold;
-    cursor:pointer;
+    	cursor:pointer;
+    	height: 22px;
 }
 a.unselect {
 	color: #5C65A0;
@@ -703,14 +758,19 @@ a.tabUnselect:hover {
 	padding: 4px 6px 4px 6px;
 	text-decoration: none;
 }
-a.formaction, a.formaction:hover {
-	color: #5C65A0;
+a.formaction{
+	color: #414d5c;
 	font-size: 11px;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
 	font-weight: bold;
-	padding: 4px 6px 4px 6px;
-	text-decoration: underline;
+	padding: 4px 6px 4px 10px;
+	/*text-decoration: underline;*/
+	text-decoration: none;
+	/*background: url(../img/ul-2.gif) 0px 6px no-repeat;*/
 }
+/*a.formaction:hover {
+	color: #d16301;
+}*/
 
 a.danger, a.danger:hover {
 	color: #942323;
@@ -718,14 +778,14 @@ a.danger, a.danger:hover {
 
 /* barra de separación en los formularios */
 .formbar, .formbar1 {
-	background-color: #5C65A0;
+	background-color: #596f76;
 	border-bottom-style: none;
 	border-left-style: none;
 	border-right-style: none;
 	border-top-style: none;
 	clear: both;
-	color: #5C65A0;
-	height: 2px;
+	color: #596f76;
+	height: 1px;
 	margin: 0px 0px;
 	padding: 0px;
 }
@@ -738,9 +798,9 @@ a.danger, a.danger:hover {
 /* texto de la barra de los formularios*/
 .textbar, .textbar1 {
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 11px;
+	font-size: 11.5px;
 	font-weight: bold;
-	color: #5C65A0;
+	color: #596f76;
 }
 
 .textbar1 {
@@ -930,8 +990,8 @@ span.sortarrow {
 }
 
 a.tdlinkBig, a.tdlinkBig:hover {
-	color: #6471AC;
-  	font-family:  Verdana, Arial, Helvetica, Sans-serif;
+	color: #3c6087;
+  	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	font-weight: bold;
   	text-decoration: underline;
@@ -941,9 +1001,9 @@ a.tdlinkBig:hover {
 }
 
 a.tdlink, a.tdlink:hover {
-	color: #6471AC;
-  	font-family:  Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+	color: #3c6087;
+  	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
 	font-weight: bold;
   	text-decoration: underline;
 }
@@ -951,35 +1011,43 @@ a.tdlink:hover {
 	text-decoration: underline;
 }
 
+/* [dipucr-Felipe #1366] */
+a.tdlinkRed, a.tdlinkRed:hover {
+	color: #ff4d4d;
+	font-weight: bold;
+  	text-decoration: underline;
+}
+a.tdlinkRed:hover {
+	text-decoration: underline;
+}
+
 /* estilos del displaytag */
 .odd {
   	background-color: #FFFFFF;
-  	color: #616EAA;
-  	font-family:  Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+  	color: #3c5876;
+  	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
 	text-align : left;
 }
 .even {
-  	background-color: #E7ECFB;
-  	color: #616EAA;
-  	font-family:  Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+  	background-color: #f2f5f9;
+  	color: #3c5876;
+  	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
 	text-align : left;
 }
 
 .none {
   	color: #616EAA;
-  	font-family:  Verdana, Arial, Helvetica, Sans-serif;
+  	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	text-align : left;
 }
 
 a.displayLink, a.displayLink:hover {
-/*	color: #4080BF;*/
-/*	color: #3366CC;*/
-	color: #6471AC;
-  	font-family:  Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
+	color: #3c6087;
+  	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
 	font-weight: bold;
 	background-color: transparent;
 	text-decoration: none;
@@ -990,15 +1058,16 @@ a.displayLink:hover {
 
 
 a.displayBullet {
-	color: #5C65A0;
+	color: #3c6087;
 	background-color: transparent;
 	text-decoration: none;
 	text-align: left;
-	background-image: url(../img/bullet.png);
+	background-image: url(../img/ul.gif);
 	background-repeat: no-repeat;
 	background-position: 0 0.4em;
-	padding-left: 10px;
+	padding-left: 20px;
 	line-height: 1.2em;
+	font-weight: bold;
 }
 
 a.displayBullet:hover {
@@ -1009,20 +1078,20 @@ a.displayBullet:hover {
 
 th {
 /*    background-color:#5C65A0;*/
-    background-color:#D7EDFA;
+    background-color:#fff3d9;
 	padding: 2px 4px 2px 4px;
 	color: #5C65A0;
-  	font-family:  Verdana, Arial, Helvetica, Sans-serif;
+  	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	text-align: left;
 }
-th a, th a:visited {
-  color: #5C65A0;
+th a, th a:visited, th a:hover {
+  color: #3c6087;
   text-decoration: none;
 }
 th a:hover {
   text-decoration: underline;
-  color: #5C65A0;
+  color: #3c6087;
 }
 th.sorted a, th.sortable a {
 	background-repeat:no-repeat;
@@ -1033,7 +1102,7 @@ th.sorted a, th.sortable a {
 }
 th.sortable a {
 	background-image: url(../img/arrow_off_display.gif);
-	padding-right: 10px;
+	padding-right: 0px;
 }
 th.order1 a {
 	background-repeat:no-repeat;
@@ -1060,6 +1129,7 @@ th.order2 a {
     border-bottom: 1px dotted #DCDCDC;
     border-collapse: collapse;
 	TEXT-ALIGN: left;
+    border-radius:5px;
 }
 
 .tableDisplayUserManager {
@@ -1075,16 +1145,20 @@ th.order2 a {
 
 TABLE.tableDisplay TD {
 	TEXT-ALIGN: left;
-	padding-left:2px;
+	padding-left:10px;
 	padding-right:2px;
+	border: 1px solid #ddd;
+	height:28px;
 }
 TABLE.tableDisplay TH {
-	BORDER-RIGHT: #DCDCDC 0px solid;
-	BORDER-TOP: #DCDCDC 1px solid;
-	BORDER-LEFT: #DCDCDC 0px solid;
-	BORDER-BOTTOM: #DCDCDC 1px solid;
-	padding-left:5px;
+	BORDER: #DCDCDC 1px solid;
+	padding-left:10px;
 	padding-right:5px;
+	height:32px;
+	background: #fff url(../img/table_header.png) top left repeat-x;
+	color: #3c6087;
+    	font-family: Verdana, Arial, Helvetica, sans-serif;
+    	font-size: 11px;
 }
 .milestonetableDisplay {
 	border: 1px solid #C8C8C8;
@@ -1096,45 +1170,44 @@ TABLE.tableDisplay TH {
 
 th.headerDisplay {
 /*    background-color:#5C65A0;*/
-    background-color:#D7EDFA;
+    	background-color:#fff3d9;
   	color: #5C65A0;
-  	font-family:  Verdana, Arial, Helvetica, Sans-serif;
+  	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10px;
-	text-align : center;
 }
 th.headerDisplayLeft {
-	background-color: #D7EDFA;
+	background-color: #fff3d9;
   	color: #5C65A0;
-  	font-family:  Verdana, Arial, Helvetica, Sans-serif;
+  	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	text-align : left;
 }
 span{
 	margin: 0 5px 0 5px;
 	padding:0;
-	font-size: 10px;
+	font-size: 11px;
 	background-repeat:no-repeat;
 	list-style-type:none;
 }
 span.pagebanner {
 	background-color: #FFFFFF;
-	color: #636DAD;
-	font-family:  Verdana, Arial, Helvetica, Sans-serif;
+	color: #3c5876;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	text-align: left;
-	border-top: 0px dotted #999999;
-	border-bottom: 1px dotted #999999;
+	border-bottom: 1px dotted #D3D5DD;
 	padding: 2px 4px 2px 4px;
 	margin-top: 5px;
 	clear: both;
 	display:block;
+	font-size: 11.5px;
 }
 
 span.emptybanner {
 	background-color: #FFFFFF;
-	color: #000000;
+	color: #3c5876;
 	font-weight:normal;
-	font-size:10px;
-	font-family:  Verdana, Arial, Helvetica, Sans-serif;
+	font-size:11px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	text-align: left;
 	padding: 5px 5px 5px 15px;
 	display:block;
@@ -1143,29 +1216,29 @@ span.emptybanner {
 
 span.pagelinks {
 	background-color: #FFFFFF;
-	color: #636DAD;
-	font-family:  Verdana, Arial, Helvetica, Sans-serif;
+	color: #3c5876;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	text-align: left;
 	padding: 2px 4px 2px 4px;
 	display:block;
 	margin-bottom: 5px;
+	font-size: 11.5px;
 }
 
 span.pagelinks a, span.pagelinks a:hover, span.pagelinks a:visited{
-	color: #636DAD;
-	font-size: 10px;
-	font-weight:bold;
+	color: #3c5876;
+	font-size: 11.5px;
 	text-decoration:underline;
 }
 
 div.exportlinks {
 	background-color: #FFFFFF;
-	color: #636DAD;
-	font-size: 10px;
-	font-family:  Verdana, Arial, Helvetica, Sans-serif;
+	color: #3c5876;
+	font-size: 11.5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	text-align: left;
-	border-bottom: 1px dotted #999999;
-	padding: 2px 4px 2px 4px;
+	/*border-bottom: 1px dotted #999999;*/
+	padding: 6px 4px 2px 4px;
 	margin: 0px 5px 10px 5px;
 }
 
@@ -1173,19 +1246,20 @@ span.export {
 	padding: 0px 4px 1px 20px;
 	display:inline;display:inline-block;
 	cursor: pointer;
+	height: 16px;
 }
 
 span.excel {
-	background-image: url(../img/ico_file_excel.png);
+	background-image: url(../img/docs/doc_xls.gif);
 }
 span.csv {
-	background-image: url(../img/ico_file_csv.png);
+	background-image: url(../img/docs/doc_ods.gif);
 }
 span.xml {
 	background-image: url(../img/ico_file_xml.png);
 }
 span.pdf {
-	background-image: url(../img/ico_file_pdf.png);
+	background-image: url(../img/docs/doc_pdf.gif);
 }
 
 /* estilos del displaytag */
@@ -1212,7 +1286,7 @@ span.pdf {
 
 /* Color de fondo para la fila de datos actualmente seleccionada en el detalle */
 .selected {
-	background: rgb(255,255,183);
+	background: rgb(255,255,210);
 }
 
 .selectedTask {
@@ -1411,10 +1485,10 @@ a.btLisoThin, a.btLisoThin:link, a.btLisoThin:visited, a.btLisoThin:hover {
 }
 
 .actionsMenuList li a {
-  color: #636DAD;
+  color: #3c5876;
   text-decoration: none;
   white-space: nowrap;
-  font-size: 10px;
+  font-size: 11.5px;
   margin: 0px;
   font-weight: bold;
   padding: 1px 10px 1px 10px;
@@ -1480,23 +1554,12 @@ a.btLisoThin, a.btLisoThin:link, a.btLisoThin:visited, a.btLisoThin:hover {
 	padding: 8px;
 }
 
-a.resplink {
-	color: #4477aa;
-	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
-  	text-decoration: none;
-}
-
-a.resplink:hover {
-	color: #4477aa;
-	text-decoration: underline;
-}
 
 a.resplink {
 	color: #4477aa;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
-	font-size: 10px;
-  text-decoration: none;
+	font-size: 11px;
+	text-decoration: none;
 }
 
 a.resplink:hover {
@@ -1546,16 +1609,17 @@ a.resplink:hover {
 }
 
 .group_checkBox{
-	border: 1px solid gray;
+	border: 1px solid #919191;
 	overflow-y:auto;
+	border-radius: 3px;
 }
 
 /* estilo para el aviso en la lista de sustitutos */
 .aviso {
 	width: 100%;
 	font-weight: normal;
-	font-size: 10px;
-	color: #FF1713;
+	font-size: 11px;
+	color: #f52e2a;
 	font-family: Verdana, Arial, Helvetica, Sans-serif;
 	margin-top: 10px;
  	padding-left: 20px;
@@ -1608,12 +1672,16 @@ ul.list li {
 
 /* INICIO [eCenpri-Felipe #467] */
 .caja_tramite {
-	border:1px solid #9EA4C7;
-	background-color:#D7EDFA;
+	border: 1px solid #ccc;
+	background-color: #D7EDFA;
+	padding: 3px 10px;
+	border-radius: 3px;
 }
 
 .caja_documento {
-	border:1px solid #9EA4C7;
-	background-color:#FEFBDA;
+	border: 1px solid #ccc;
+	background-color: #ffeccf;
+	padding: 2px 10px;
+	border-radius: 3px;
 }
 /* FIN [eCenpri-Felipe #467] */

@@ -74,7 +74,7 @@ public class ShowSignRechazoHistoricAction extends BaseAction {
 	    // Menus
 		//[eCenpri-Manu Ticket #131] - ALSIGM3 Filtrar el área de trabajo por año de inicio de expediente.
 		IState state = managerAPI.currentState(getStateticket(request));
-		request.setAttribute("menus", MenuFactory.getSingHistoric(cct, getResources(request), state));    		
+		request.setAttribute("menus", MenuFactory.getSignRechazoHistoric(cct, getResources(request), state));//[dipucr-Felipe #1438]  		
 		///////////////////////////////////////////////
 	    // Formateador
 		CacheFormatterFactory factory = CacheFormatterFactory.getInstance();

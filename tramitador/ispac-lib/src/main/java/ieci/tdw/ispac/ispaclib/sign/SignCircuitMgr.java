@@ -213,17 +213,11 @@ public class SignCircuitMgr {
 
 			// Actualizar estado de firma del documento
 			IItem document = mcontext.getAPI().getEntitiesAPI().getDocument(documentId);
-			logger.warn("AJM ESTADOFIRMA instanceNextStep---------> No hay mas pasos, se marca como firmado 02");
-			logger.warn("AJM ESTADOFIRMA instanceNextStep---------> se marca como firmado ID: "+document.getString("ID"));
-			logger.warn("AJM ESTADOFIRMA instanceNextStep---------> se marca como firmado NUMEXP: "+document.getString("NUMEXP"));
-			logger.warn("AJM ESTADOFIRMA instanceNextStep---------> se marca como firmado NOMBRE: "+document.getString("NOMBRE"));
 			document.set("ESTADOFIRMA", SignStatesConstants.FIRMADO);
 			document.store(mcontext);
-			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> realizada transaccion, ha actualizado el estado de firma a 02");
 
 			// EVENTO: Fin del circuito de firma
 			processCircuitEvents(EventsDefines.EVENT_EXEC_END, circuitId, instancedCircuitId, documentId);
-			logger.warn("AJM ESTADOFIRMA updateDataDoc---------> Termina el metodo");
 		}
 	}
 
@@ -247,8 +241,7 @@ public class SignCircuitMgr {
 			throws ISPACException {
 
 		EventManager eventmgr = new EventManager(mcontext);
-		ProcessSignConnector processSignConnector = ProcessSignConnectorFactory
-		.getInstance().getProcessSignConnector();
+		ProcessSignConnector processSignConnector = ProcessSignConnectorFactory.getInstance(mcontext).getProcessSignConnector();
 		int typeObj=processSignConnector.getTypeObject();
 
 		// Inicializar contexto
@@ -278,8 +271,7 @@ public class SignCircuitMgr {
 		int stepId = circuitInstance.getInt("ID_PASO");
 		int documentId = circuitInstance.getInt("ID_DOCUMENTO");
 
-		ProcessSignConnector processSignConnector = ProcessSignConnectorFactory
-		.getInstance().getProcessSignConnector();
+		ProcessSignConnector processSignConnector = ProcessSignConnectorFactory.getInstance(mcontext).getProcessSignConnector();
 
 		// Información del detalle del paso
 		SignCircuitDetailDAO detail = SignCircuitDetailDAO.getStep(cnt, circuitId, stepId);

@@ -42,9 +42,10 @@
 
 					<table width="100%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
-							<c:set var="digitalSignManagementActive" value="${ISPACConfiguration.DIGITAL_SIGN_CONNECTOR_CLASS}"/>
+							<%-- [dipucr-Felipe #1246] Portafirmas/multientidad - No realizamos esta comprobacion --%>
+<%-- 							<c:set var="digitalSignManagementActive" value="${ISPACConfiguration.DIGITAL_SIGN_CONNECTOR_CLASS}"/> --%>
 							<c:forEach var="tabName" items="${tabNames}" varStatus="status">
-								<c:if test="${!(tabName == 'ctosfirma' && empty digitalSignManagementActive)}">
+<%-- 								<c:if test="${!(tabName == 'ctosfirma' && empty digitalSignManagementActive)}"> --%>
 								<c:choose>
 									<c:when test="${tabName == currentTabName}">
 										<td class="select" align="center">
@@ -68,7 +69,7 @@
 								       	</td>
 									</c:otherwise>
 								</c:choose>
-								</c:if>
+<%-- 								</c:if> --%>
 								<td width="5px" class="tabSeparator"><img height="1" width="5px" src="img/pixel.gif"/></td>
 							</c:forEach>
 							<td width="100%" class="tabSeparator"><img height="1" width="5px" src="img/pixel.gif"/></td>

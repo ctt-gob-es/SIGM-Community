@@ -243,6 +243,22 @@ public interface ServicioTramitacion {
     public String recibirDocumentoFirmado(String idEntidad, String numExp, String idDocumento)throws TramitacionException;
     
     /**
+	 * [dipucr-Felipe #1246] 
+     * Realiza el rechazo de un documento
+     * @param idEntidad identificador de la entidad
+     * @param numExp numero de expediente
+     * @param idDocumento identificador del documento
+     * @param motivo Motivo de rechazo
+     * @param idUsuario Identificador del usuario
+     * @param nombreUsuario Nombre del usuario
+     * @return identificador del nuevo documento rechazado
+     * @throws TramitacionException
+     */
+	public String rechazarDocumento(String idEntidad, String numExp, String idDocumento,
+			String motivo, String idUsuario, String nombreUsuario) throws TramitacionException;
+    
+    /**
+     * [Dipucr-Agustin #781]
      * Obtiene el contenido del documento temporal.
      * @param guid GUID del documento
      * @param idEntidad codigo de entidad de sigem
@@ -252,15 +268,25 @@ public interface ServicioTramitacion {
     public byte [] getFicheroTemp(String idEntidad, String guid) throws TramitacionException;
     
     /**
+     * [Dipucr-Agustin #781]
      * Guarda el contenido de un byte array en un fichero temporal.
      * @param data array de bytes que representa el documento a guardar. 
      * @param guid GUID del documento.
      * @param idEntidad codigo de entidad de sigem.
-     * @return path temporal donde se ha guardado el documento.
+     * @param data contenido del documento.
+     * @return boolean resultado de la operacion.
      * @throws TramitacionException si ocurre algún error.
      */
     public boolean setFicheroTemp(String idEntidad, String guid, byte[] data) throws TramitacionException;
-
+    
+    /**
+     * [Dipucr-Agustin #1297]
+     * Obtiene el contenido del justificante de firma que genera sigem a partir de la firma de portafirmas
+     * @param guid GUID del documento
+     * @param identidad GUID idEntidad
+     * @return Contenido del documento.
+     */
+    public byte [] getJustificanteFirma(String idEntidad, String guid) throws TramitacionException;
 
     /**
      * [dipucr-Felipe #563]
@@ -280,6 +306,15 @@ public interface ServicioTramitacion {
      * @throws TramitacionException
      */
 	public boolean anularLicenciaRRHH(String idEntidad, String numexp) throws TramitacionException;
+	
+	/**
+     * [dipucr-Felipe #1771]
+     * @param idEntidad
+     * @param numexp
+     * @return
+     * @throws TramitacionException
+     */
+	public boolean anularSolicitudPortalEmpleado(String idEntidad, String numexp, String documentoAnular) throws TramitacionException;
     
     /**
      * Añade documentos al trámite de un expediente.
@@ -292,5 +327,44 @@ public interface ServicioTramitacion {
      * @throws TramitacionException Si se produce algún error.
      */
     public boolean anexarDocsTramite(String idEntidad, String numExp, int idTramite, String numReg, Date fechaReg, DocumentoExpediente[] documentos) throws TramitacionException;
+
+    /***
+     * Hace una consulta a la tabla expedientes en BBDD
+     * @param string
+     * @return
+     */
+	public String[] queryExpedientes(String idEntidad, String consutla)throws TramitacionException;
+	
+	/***
+	 * Crea Trámite en un expediente
+	 * @param idEntidad
+	 * @param codTramite
+	 * @param numExp
+	 * @return
+	 * @throws TramitacionException
+	 */
+	public int creaTramiteByCod(String idEntidad, String codTramite, String numExp) throws TramitacionException;
+	
+	/***
+	 * Inserta un apoderamiento en la pesataña de los apoderamientos del expediente
+	 * @param idEntidad
+	 * @param numExp
+	 * @param representado
+	 * @param representante
+	 * @return
+	 * @throws TramitacionException
+	 */
+	public boolean insertaApoderamiento(String idEntidad, String numExp, String representado, String representante) throws TramitacionException;
+	
+	/**
+     * [dipucr-Felipe #1745]
+     * @param idEntidad
+     * @param password
+     * @param nombreDocumento
+     * @param documento
+     * @return
+     * @throws TramitacionException
+     */
+	public byte[] sellarDocumento(String idEntidad, String password, String nombreDocumento, byte[] documento) throws TramitacionException;
 
 }

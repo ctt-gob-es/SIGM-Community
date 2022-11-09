@@ -32,6 +32,12 @@
 
 
 		<!-- Third party dependencies -->
+		
+		<dependency>
+			<groupId>es.ieci.tecdoc.sigem</groupId>
+			<artifactId>SIGEM_Tramitacion</artifactId>
+			<version>${sigem.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>commons-fileupload</groupId>

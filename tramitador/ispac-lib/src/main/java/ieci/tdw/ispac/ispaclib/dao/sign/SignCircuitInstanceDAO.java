@@ -9,6 +9,7 @@ import ieci.tdw.ispac.ispaclib.dao.idsequences.IdSequenceMgr;
 import ieci.tdw.ispac.ispaclib.dao.join.TableJoinFactoryDAO;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispactx.TXConstants;
 
 import java.sql.Timestamp;
@@ -23,6 +24,8 @@ public class SignCircuitInstanceDAO extends ObjectDAO
 	static final String TABLENAME = "SPAC_CTOS_FIRMA";
 	static final String IDSEQUENCE = "SPAC_SQ_ID_CTOS_FIRMA";
 	static final String IDKEY = "ID";
+	
+	static final int MAX_DOCS_HISTORIC = 1000;
 
 	/**
     *
@@ -143,12 +146,19 @@ public class SignCircuitInstanceDAO extends ObjectDAO
 		return objlist;
 	}
 
-	@SuppressWarnings("unchecked")
+	//[dipucr-Felipe #958] Sobrecargamos el método
 	public static CollectionDAO getHistorics(DbCnt cnt, String respId, Date init, Date end, int state) throws ISPACException {
+		return getHistorics(cnt, respId, init, end, null, null, null, state);
+	}
+	
+	//[dipucr-Felipe #958]
+	@SuppressWarnings("unchecked")
+	public static CollectionDAO getHistorics(DbCnt cnt, String respId, Date init, Date end, String numexp, String docName, String asunto, int state) throws ISPACException {
 
 		String dateFilter = "";
 		if (init != null){
-			dateFilter = " AND "  + TABLENAME + ".FECHA >= " + DBUtil.getToDateByBD(cnt, init);
+//			dateFilter = " AND "  + TABLENAME + ".FECHA >= " + DBUtil.getToDateByBD(cnt, init);
+			dateFilter = " AND SPAC_DT_DOCUMENTOS.FAPROBACION >= " + DBUtil.getToDateByBD(cnt, init);//[dipucr-Felipe #958]
 		}
 		if (end != null){
 
@@ -157,20 +167,42 @@ public class SignCircuitInstanceDAO extends ObjectDAO
 			aux = DateUtils.setMinutes(aux, 59);
 			aux = DateUtils.setSeconds(aux, 59);
 
-			dateFilter += " AND " + TABLENAME + ".FECHA <= " + DBUtil.getToTimestampByBD(cnt, new Timestamp(aux.getTime()));
+//			dateFilter += " AND " + TABLENAME + ".FECHA <= " + DBUtil.getToTimestampByBD(cnt, new Timestamp(aux.getTime()));
+			dateFilter += " AND SPAC_DT_DOCUMENTOS.FAPROBACION <= " + DBUtil.getToTimestampByBD(cnt, new Timestamp(aux.getTime()));//[dipucr-Felipe #958]
 		}
 
 		TableJoinFactoryDAO tableJoinFactoryDAO = new TableJoinFactoryDAO();
 		tableJoinFactoryDAO.addTable(TABLENAME, TABLENAME);
 		tableJoinFactoryDAO.addTable("SPAC_DT_DOCUMENTOS", "SPAC_DT_DOCUMENTOS");
+		tableJoinFactoryDAO.addTable("SPAC_EXPEDIENTES", "SPAC_EXPEDIENTES");//[dipucr-Felipe #958]
 		tableJoinFactoryDAO.addTable("SPAC_TBL_008", "SPAC_TBL_008");
 
 		String filtro = " WHERE " + TABLENAME + ".ID_FIRMANTE = '" + DBUtil.replaceQuotes(respId)
 				+ "' AND " + TABLENAME + ".ESTADO = " + state
 				+ " AND " + TABLENAME + ".ID_DOCUMENTO = SPAC_DT_DOCUMENTOS.ID "
+				+ " AND SPAC_EXPEDIENTES.NUMEXP = SPAC_DT_DOCUMENTOS.NUMEXP "
 				+ dateFilter
-				+ " AND SPAC_DT_DOCUMENTOS.ESTADOFIRMA = SPAC_TBL_008.VALOR"
-				+ " ORDER BY " + TABLENAME + ".FECHA DESC";
+				+ " AND SPAC_DT_DOCUMENTOS.ESTADOFIRMA = SPAC_TBL_008.VALOR";
+		//INICIO [dipucr-Felipe #958]
+		if (StringUtils.isNotEmpty(numexp)){
+			filtro += " AND UPPER(SPAC_DT_DOCUMENTOS.NUMEXP) LIKE UPPER('%" + numexp + "%')";
+		}
+		if (StringUtils.isNotEmpty(docName)){
+			filtro += " AND UPPER(SPAC_DT_DOCUMENTOS.NOMBRE) LIKE UPPER('%" + docName + "%')";
+		}
+		if (StringUtils.isNotEmpty(asunto)){
+			filtro += " AND UPPER(SPAC_EXPEDIENTES.ASUNTO) LIKE UPPER('%" + asunto + "%')";
+		}
+		//INICIO [dipucr-Felipe #958]
+		if (SignCircuitStates.RECHAZADO == state){
+			filtro += " ORDER BY " + TABLENAME + ".FECHA DESC";
+		}
+		else{
+			filtro += " AND SPAC_DT_DOCUMENTOS.FAPROBACION IS NOT NULL";
+			filtro += " ORDER BY SPAC_DT_DOCUMENTOS.FAPROBACION DESC";
+		}
+		filtro += " LIMIT " + MAX_DOCS_HISTORIC;
+		//FIN [dipucr-Felipe #958]
 
 		CollectionDAO objlist = tableJoinFactoryDAO.queryTableJoin(cnt, filtro);
 		
@@ -179,6 +211,7 @@ public class SignCircuitInstanceDAO extends ObjectDAO
 		TableJoinFactoryDAO tableJoinFactoryDAOh = new TableJoinFactoryDAO();
 		tableJoinFactoryDAOh.addTable(TABLENAME, TABLENAME);
 		tableJoinFactoryDAOh.addTable("SPAC_DT_DOCUMENTOS_H", "SPAC_DT_DOCUMENTOS");
+		tableJoinFactoryDAOh.addTable("SPAC_EXPEDIENTES_H", "SPAC_EXPEDIENTES");//[dipucr-Felipe #958]
 		tableJoinFactoryDAOh.addTable("SPAC_TBL_008", "SPAC_TBL_008");
 		
 		CollectionDAO objlisth = tableJoinFactoryDAOh.queryTableJoin(cnt, filtro);

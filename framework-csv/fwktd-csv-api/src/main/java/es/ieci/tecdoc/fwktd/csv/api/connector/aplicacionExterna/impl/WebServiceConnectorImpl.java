@@ -102,6 +102,18 @@ public class WebServiceConnectorImpl extends
 		AplicacionExternaConnectorWS aplicacionExternaConnectorWS = getAplicacionExternaConnectorWS(params);
 		return aplicacionExternaConnectorWS.existeDocumento(csv);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.fwktd.csv.api.connector.aplicacionExterna.AplicacionExternaConnector#existeDocumentoOriginal(java.lang.String, java.util.Map)
+	 */
+	public boolean existeDocumentoOriginal(String csv, Map<String, String> params) {
+
+		logger.info("Llamada a existeDocumento: csv=[{}], params=[{}]", csv, params);
+
+		AplicacionExternaConnectorWS aplicacionExternaConnectorWS = getAplicacionExternaConnectorWS(params);
+		return aplicacionExternaConnectorWS.existeDocumentoOriginal(csv);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -115,6 +127,18 @@ public class WebServiceConnectorImpl extends
 		return aplicacionExternaConnectorWS.getContenidoDocumento(csv);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.fwktd.csv.api.connector.aplicacionExterna.AplicacionExternaConnector#getContenidoDocumentoOriginal(java.lang.String, java.util.Map)
+	 */
+	public byte[] getContenidoDocumentoOriginal(String csv, Map<String, String> params) {
+
+		logger.info("Llamada a getContenidoDocumento: csv=[{}], params=[{}]", csv, params);
+
+		AplicacionExternaConnectorWS aplicacionExternaConnectorWS = getAplicacionExternaConnectorWS(params);
+		return aplicacionExternaConnectorWS.getContenidoDocumentoOriginal(csv);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * @see es.ieci.tecdoc.fwktd.csv.api.connector.aplicacionExterna.AplicacionExternaConnector#writeDocumento(java.lang.String, java.io.OutputStream, java.util.Map)
@@ -139,6 +163,29 @@ public class WebServiceConnectorImpl extends
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.fwktd.csv.api.connector.aplicacionExterna.AplicacionExternaConnector#writeDocumentoOriginal(java.lang.String, java.io.OutputStream, java.util.Map)
+	 */
+	public void writeDocumentoOriginal(String csv, OutputStream outputStream, Map<String, String> params) throws IOException {
+
+		logger.info("Llamada a writeDocumento: csv=[{}], params=[{}]", csv, params);
+
+		AplicacionExternaConnectorWS aplicacionExternaConnectorWS = getAplicacionExternaConnectorWS(params);
+		byte[] contenido = null;//aplicacionExternaConnectorWS.getContenidoDocumentoOriginal(csv);
+
+		if ((contenido != null) && (contenido.length > 0)) {
+
+			logger.info("Escribiendo {} bytes...", contenido.length);
+
+			outputStream.write(contenido);
+			outputStream.flush();
+
+		} else {
+			logger.info("El contenido está vacío");
+		}
+	}
+	
 	public AplicacionExternaConnectorWS getAplicacionExternaConnectorWS(Map<String, String> params) {
 
 		AplicacionExternaConnectorWSService aplicacionExternaConnectorWSService = new AplicacionExternaConnectorWSService(getWSDLLocation(params));

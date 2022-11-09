@@ -15,6 +15,9 @@ import ieci.tdw.ispac.ispaccatalog.action.usrmanager.ViewUsersManagerAction;
 import ieci.tdw.ispac.ispaccatalog.helpers.FunctionHelper;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorFactory;
 import ieci.tdw.ispac.ispaclib.utils.TypeConverter;
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativa;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
+import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 
 public class SelectSignerAction extends ViewUsersManagerAction {
 	
@@ -73,7 +78,7 @@ public class SelectSignerAction extends ViewUsersManagerAction {
 		        int keyId = TypeConverter.parseInt(request.getParameter(PARAM_REPLACE_SIGNER_ID), -1);
 		        int circuitId = TypeConverter.parseInt(request.getParameter(PARAM_SIGN_PROCESS_ID), -1);
 		        
-				if(ProcessSignConnectorFactory.getInstance().isDefaultConnector()){
+				if(ProcessSignConnectorFactory.getInstance(session.getClientContext()).isDefaultConnector()){
 			        if (keyId > 0) {
 			        	signAPI.substituteSigner(circuitId, keyId, uid);
 			        } else {
@@ -82,6 +87,11 @@ public class SelectSignerAction extends ViewUsersManagerAction {
 				} else {
 			        String signerName = request.getParameter(PARAM_SIGNER_NAME);
 			        String signerType = request.getParameter(PARAM_SIGNER_TYPE);
+			        ServicioEstructuraOrganizativa estructu = LocalizadorServicios.getServicioEstructuraOrganizativa();
+			        Usuario usuario = estructu.getUsuarioByNif(uid, EntidadesAdmUtil.obtenerEntidadObject(session.getClientContext()).getIdentificador());
+			        if(usuario!=null){
+			        	uid="1-"+usuario.get_id();
+			        }			        
 			        if (keyId > 0) {
 			        	signAPI.substituteSigner(circuitId, keyId, uid, signerName, signerType);
 			        } else {

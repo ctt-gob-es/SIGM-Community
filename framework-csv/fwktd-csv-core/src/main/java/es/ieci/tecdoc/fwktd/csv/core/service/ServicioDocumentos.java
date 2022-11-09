@@ -108,6 +108,17 @@ public interface ServicioDocumentos {
 	 *         contrario.
 	 */
 	public boolean existeContenidoDocumento(String id);
+	
+	/**
+	 * Comprueba si el contenido del documento original firmado se puede descargar de la
+	 * aplicación externa.
+	 *
+	 * @param id
+	 *            Identificador del documento.
+	 * @return true si el contenido del documento existe, false en caso
+	 *         contrario.
+	 */
+	public boolean existeContenidoDocumentoOriginal(String id);
 
 	/**
 	 * Obtiene el contenido del documento.
@@ -117,6 +128,15 @@ public interface ServicioDocumentos {
 	 * @return Contenido del documento.
 	 */
 	public byte[] getContenidoDocumento(String id);
+	
+	/**
+	 * Obtiene el contenido del documento original firmado.
+	 *
+	 * @param id
+	 *            Identificador del documento.
+	 * @return Contenido del documento.
+	 */
+	public byte[] getContenidoDocumentoOriginal(String id);
 
 	/**
 	 * Guarda el contenido del documento en el OutputStream.
@@ -130,6 +150,18 @@ public interface ServicioDocumentos {
 	 */
 	public void writeDocumento(String id, OutputStream outputStream)
 			throws IOException;
+	
+	/**
+	 * Guarda el contenido del documento original firmado en el OutputStream.
+	 *
+	 * @param id
+	 *            Identificador del documento.
+	 * @param outputStream
+	 *            OutputStream para escribir el documento.
+	 * @throws IOException
+	 *             si ocurre algún error en la escritura del documento.
+	 */
+	public void writeDocumentoOriginal(String id, OutputStream outputStream) throws IOException;
 
 	/**
 	 * Revoca la disponibilidad del documento.

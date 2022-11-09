@@ -4,16 +4,10 @@
  */
 package ieci.tecdoc.mvc.action.adminUser.bd;
 
-import ieci.tecdoc.core.exception.IeciTdException;
-import ieci.tecdoc.idoc.admin.api.ObjFactory;
-import ieci.tecdoc.idoc.admin.api.user.AplicacionPerfil;
-import ieci.tecdoc.idoc.admin.api.user.Permission;
-import ieci.tecdoc.idoc.admin.api.user.Permissions;
-import ieci.tecdoc.idoc.admin.api.user.User;
-import ieci.tecdoc.idoc.admin.api.user.UserAccess;
-import ieci.tecdoc.idoc.admin.api.user.UserDefs;
-import ieci.tecdoc.idoc.admin.api.user.UserProfiles;
-import ieci.tecdoc.idoc.admin.internal.UserProfileImpl;
+import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector;
+import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorFactory;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tecdoc.mvc.action.BaseAction;
 import ieci.tecdoc.mvc.dto.access.UserConnectedDTO;
 import ieci.tecdoc.mvc.error.MvcError;
@@ -21,6 +15,16 @@ import ieci.tecdoc.mvc.form.adminUser.bd.UserForm;
 import ieci.tecdoc.mvc.service.adminUser.ServiceCertificate;
 import ieci.tecdoc.mvc.util.Constantes;
 import ieci.tecdoc.mvc.util.SessionHelper;
+import ieci.tecdoc.seo.core.exception.IeciTdException;
+import ieci.tecdoc.seo.idoc.admin.api.ObjFactory;
+import ieci.tecdoc.seo.idoc.admin.api.user.AplicacionPerfil;
+import ieci.tecdoc.seo.idoc.admin.api.user.Permission;
+import ieci.tecdoc.seo.idoc.admin.api.user.Permissions;
+import ieci.tecdoc.seo.idoc.admin.api.user.User;
+import ieci.tecdoc.seo.idoc.admin.api.user.UserAccess;
+import ieci.tecdoc.seo.idoc.admin.api.user.UserDefs;
+import ieci.tecdoc.seo.idoc.admin.api.user.UserProfiles;
+import ieci.tecdoc.seo.idoc.admin.internal.UserProfileImpl;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -94,9 +98,19 @@ public class UserNew extends BaseAction {
             if (logger.isDebugEnabled()) {
                 logger.debug("Creando usuario colgando de: " + idDept);
             }
+            
+            String dni = userForm.getDni();
+    		if(StringUtils.isNotEmpty(dni)){
+    			dni = dni.replace(" " , "").toUpperCase();
+    			userForm.setDni(dni);
+    		}
+    		
+            crearUsuarioPortafirmas(entidad, userForm); 
+
             User user = ObjFactory.createUser(userId, idDept);
             
             guardarDatos(user, userForm, entidad);
+            
             request.setAttribute("tipo", "Usuario");
 
             byte tipo = Constantes.DEPARTAMENT;
@@ -109,11 +123,25 @@ public class UserNew extends BaseAction {
         }
     }
 
-    /**
+    private void crearUsuarioPortafirmas(String entidadId, UserForm userForm) throws ISPACException, IeciTdException {
+    	ProcessSignConnector portafirmasSignConnector = ProcessSignConnectorFactory.getInstance(entidadId).getProcessSignConnector();
+
+    	//Solo tiene un campo para el apellido, no podemos saber el segundo apellido
+		try {
+			if(null != userForm && StringUtils.isNotEmpty(userForm.getDni()) && !portafirmasSignConnector.existeUsuarioPortafirmas(userForm.getDni())){
+				portafirmasSignConnector.crearUsuarioPortafirmas(entidadId, userForm.getDni(), StringUtils.defaultString(userForm.getNombrePersonal()), StringUtils.defaultString(userForm.getApellidos()), "", StringUtils.defaultString(userForm.getEmail()));
+			}
+		} catch (ISPACException e) {
+			logger.error("ERROR al crear el usuario: " + StringUtils.defaultString(userForm.getDni()) + " - " + StringUtils.defaultString(userForm.getNombrePersonal()) + " " + StringUtils.defaultString(userForm.getApellidos()) + " - " + StringUtils.defaultString(userForm.getEmail()), e);
+			throw new IeciTdException( String.valueOf(MvcError.EC_ERROR_PORTAFIRMAS), null);
+		}
+	}
+
+	/**
      * @param userDTO2
      */
     private void iniciaBasico(UserConnectedDTO userDTO) {
-       Map profiles = new TreeMap();
+       Map<String, Integer> profiles = new TreeMap<String, Integer>();
        profiles.put(String.valueOf(UserDefs.PRODUCT_IDOC), new Integer(UserDefs.PROFILE_NONE) );
        profiles.put(String.valueOf(UserDefs.PRODUCT_USER), new Integer(UserDefs.PROFILE_NONE) );
        profiles.put(String.valueOf(UserDefs.PRODUCT_VOLUME), new Integer(UserDefs.PROFILE_NONE) );
@@ -156,6 +184,9 @@ public class UserNew extends BaseAction {
         user.getUserDataImpl().setApellidos(userForm.getApellidos());
 		user.getUserDataImpl().setNombre(userForm.getNombrePersonal());
 		//[Manu Ticket#175] Crear un campo con dni en el usuario
+		
+		user.getUserDataImpl().setAsignaNumDecreto(userForm.getAsignaNumDecreto());
+		
 		user.getUserDataImpl().setDni(userForm.getDni());
         
         //Almacenamos el usuario en BD
@@ -168,8 +199,8 @@ public class UserNew extends BaseAction {
 
         user.resetProfiles();
         UserProfiles profiles=user.getProfiles();
-        Collection listaPerfilesAplicacion=userForm.getListaAplicaciones();
-        for (Iterator iter = listaPerfilesAplicacion.iterator(); iter.hasNext();) {
+        Collection<?> listaPerfilesAplicacion=userForm.getListaAplicaciones();
+        for (Iterator<?> iter = listaPerfilesAplicacion.iterator(); iter.hasNext();) {
 			AplicacionPerfil element = (AplicacionPerfil) iter.next();
 			int idAplicacion=Integer.parseInt(element.getIdetificador());
 			profiles.add(new UserProfileImpl(id,idAplicacion,element.getPerfil()));
@@ -255,6 +286,5 @@ public class UserNew extends BaseAction {
         }
 
     }
-       
-
+    
 }

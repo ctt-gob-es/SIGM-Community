@@ -90,7 +90,7 @@ public class EnviarAnticipoAFirmaRule implements IRule
 			int idCircuito = itemCircuito.getInt("CFC:ID_CIRCUITO");
 			
 			//Mandamos a la firma el documento
-			signAPI.initCircuit(idCircuito, idDocumento);
+			signAPI.initCircuitPortafirmas(idCircuito, idDocumento);//[dipucr-Felipe #1246]
 			
 			//Si todo ha ido bien creamos el anticipo pendiente en el portal
 			AnticiposWSProxy wsAnticipos = new AnticiposWSProxy();

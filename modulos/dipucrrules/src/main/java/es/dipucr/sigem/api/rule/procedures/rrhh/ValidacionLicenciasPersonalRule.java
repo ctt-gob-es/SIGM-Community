@@ -10,6 +10,7 @@ import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.common.constants.SignStatesConstants;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.sign.SignConnectorFactory;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import org.apache.log4j.Logger;
 import es.dipucr.sigem.api.rule.common.utils.CircuitosUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+import es.dipucr.sigem.portafirmas.DipucrDocPortafirmas;
 
 
 /**
@@ -76,7 +78,16 @@ public class ValidacionLicenciasPersonalRule implements IRule
 				String strIdSolicitud = itemSolicitudLicencias.getString("ID_SOLICITUD");
 				
 				//Hacemos la petición al servicio web
-				String firmantes = CircuitosUtil.getFirmantesCircuito(rulectx);
+				//[dipucr-Felipe #1246]
+				boolean bPortafirmas = entitiesAPI.isDocumentPortafirmas(itemDocumento);
+				String firmantes = null;
+				if (bPortafirmas){
+					firmantes = CircuitosUtil.getFirmantesDocumentoPortafirmas(cct, idDoc);
+				}
+				else{
+					firmantes = CircuitosUtil.getFirmantesCircuito(rulectx);//[dipucr-Felipe #1246]
+				}
+				
 				LicenciasWSDispatcher.ponerLicenciaValidada(cct, strIdSolicitud, false, strMotivo, firmantes);
 				
 				//Cerramos el trámite y el expediente
@@ -105,7 +116,17 @@ public class ValidacionLicenciasPersonalRule implements IRule
 				}
 				
 	    		//Esta instrucción coge el sustituto de firma, si está definido
-	    		signAPI.initCircuit(idCircuitoFirma, idDoc);
+				//INICIO [dipucr-Felipe #1246] Portafirmas
+				// Volvemos a mandar el mismo idDoc a la firma, por lo que borramos su registro en la tabla DPCR_DOC_PORTAFIRMAS
+				if (entitiesAPI.isDocumentPortafirmas(itemDocumento)){ //Portafirmas
+					DipucrDocPortafirmas docPortafirmas = new DipucrDocPortafirmas(cct, itemDocumento);
+					docPortafirmas.delete();
+					
+					itemDocumento.set("INFOPAG_RDE", "");
+					itemDocumento.store(cct);
+				}
+				//FIN [dipucr-Felipe #1246]
+	    		signAPI.initCircuitPortafirmas(idCircuitoFirma, idDoc);//[dipucr-Felipe #1246]
 			}
 		}
 		catch (Exception e) {

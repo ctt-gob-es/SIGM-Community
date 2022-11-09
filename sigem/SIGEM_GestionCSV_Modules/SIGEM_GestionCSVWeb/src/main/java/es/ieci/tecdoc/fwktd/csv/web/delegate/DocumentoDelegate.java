@@ -36,6 +36,17 @@ public interface DocumentoDelegate {
 	 *         contrario.
 	 */
 	public boolean existeContenidoDocumento(String id);
+	
+	/**
+	 * Comprueba si el contenido del documento original firmado se puede descargar de la
+	 * aplicación externa.
+	 *
+	 * @param id
+	 *            Identificador del documento.
+	 * @return true si el contenido del documento existe, false en caso
+	 *         contrario.
+	 */
+	public boolean existeContenidoDocumentoOriginal(String id);
 
 	/**
 	 * Guarda el contenido del documento en el OutputStream.
@@ -49,5 +60,17 @@ public interface DocumentoDelegate {
 	 */
 	public void writeDocumento(String id, OutputStream outputStream)
 			throws IOException;
+	
+	/**
+	 * Guarda el contenido del documento original en el OutputStream.
+	 *
+	 * @param id
+	 *            Identificador del documento.
+	 * @param outputStream
+	 *            OutputStream para escribir el documento.
+	 * @throws IOException
+	 *             si ocurre algún error en la escritura del documento.
+	 */
+	public void writeDocumentoOriginal(String id, OutputStream outputStream) throws IOException;
 
 }

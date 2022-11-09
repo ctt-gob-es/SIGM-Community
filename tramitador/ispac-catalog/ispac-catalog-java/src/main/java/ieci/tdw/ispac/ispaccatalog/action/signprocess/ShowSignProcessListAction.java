@@ -41,9 +41,9 @@ public class ShowSignProcessListAction extends BaseAction {
 
 
 		StringBuffer sql = new StringBuffer();
-		sql.append(" WHERE  (SISTEMA='"+DBUtil.replaceQuotes(ProcessSignConnectorFactory.getInstance().getProcessSignConnector().getIdSystem())+"'");
+		sql.append(" WHERE  (SISTEMA='"+DBUtil.replaceQuotes(ProcessSignConnectorFactory.getInstance(session.getClientContext()).getProcessSignConnector().getIdSystem())+"'");
 		//Almacenamos en sesión si el conector del portafirmas utilizado es el de por defecto
-		if(ProcessSignConnectorFactory.getInstance().isDefaultConnector()){
+		if(ProcessSignConnectorFactory.getInstance(session.getClientContext()).isDefaultConnector()){
 			request.getSession().setAttribute("defaultPortafirmas", true);
 			sql.append(" OR SISTEMA IS NULL ");
 		}

@@ -48,6 +48,7 @@
 			
 			document.getElementById('etiqueta').style.display='';
 			document.getElementById('formulario').style.display='none';
+			document.getElementById('acciones_ficha').style.display='none';
 			document.getElementById('espere').style.display='';
 		}
 		
@@ -60,18 +61,20 @@
 		<div class="ficha">
 			<div class="encabezado_ficha">
 				<div class="titulo_ficha">
-					<h4><bean:message key="sign.document.circuit.available"/></h4>
-					<div class="acciones_ficha">
-						<a href="#" id="btnCancel" onclick='<ispac:hideframe/>' class="btnCancel">
-							<bean:message key="common.message.close" />
-						</a>
+					<div id="acciones_ficha">
+						<h4><bean:message key="sign.document.circuit.available"/></h4>
+						<div class="acciones_ficha">
+							<a href="#" id="btnCancel" onclick='<ispac:hideframe/>' class="btnCancel">
+								<bean:message key="common.message.close" />
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
 
 			<div class="cuerpo_ficha">
-			<form>
-				<div class="seccion_ficha">
+				<form>
+				<div id="formulario" class="seccion_ficha">
 					<logic:messagesPresent>
 						<div class="infoError">
 							<bean:message key="forms.errors.messagesPresent" />
@@ -86,14 +89,36 @@
 										<c:param name="method" value="${appConstants.actions.INIT_SIGN_CIRCUIT}"/>
 										<c:param name="${appConstants.actions.SIGN_CIRCUIT_ID}"><bean:write name="circuit" property="property(ID_CIRCUITO)" /></c:param>
 									</c:url>
-									<a class="linkRight" style="color:#990100" id="btCircFirmaRojo" href='<c:out value="${_link}"/>'>* <bean:write name="circuit" property="property(DESCRIPCION)"/></a><br/><br/>
+									<a class="linkRight2" style="color:#990100" id="btCircFirmaRojo" href='<c:out value="${_link}"/>'>
+										* <bean:write name="circuit" property="property(DESCRIPCION)"/>
+										<!-- [dipucr-Felipe #1310] -->
+										<c:set var="secuencia"><bean:write name="circuit" property="property(SECUENCIA)" /></c:set>
+										<c:if test="${secuencia == 2}">
+											(FIRMA EN PARALELO)
+										</c:if>
+										<c:if test="${secuencia == 3}">
+											(PRIMER FIRMANTE)
+										</c:if>
+									</a>
+									<br/><br/>
 							</c:forEach>
 							<c:forEach items="${requestScope[appConstants.actions.SIGN_CIRCUIT_LIST]}" var="circuit">
 									<c:url var="_link" value="${action}">
 										<c:param name="method" value="${appConstants.actions.INIT_SIGN_CIRCUIT}"/>
 										<c:param name="${appConstants.actions.SIGN_CIRCUIT_ID}"><bean:write name="circuit" property="property(ID_CIRCUITO)" /></c:param>
 									</c:url>
-									<a class="linkRight" id="btCircFirma" href='<c:out value="${_link}"/>'><bean:write name="circuit" property="property(DESCRIPCION)"/></a><br/><br/>
+									<a class="linkRight2" id="btCircFirma" href='<c:out value="${_link}"/>'>
+										<bean:write name="circuit" property="property(DESCRIPCION)"/>
+										<!-- [dipucr-Felipe #1310] -->
+										<c:set var="secuencia"><bean:write name="circuit" property="property(SECUENCIA)" /></c:set>
+										<c:if test="${secuencia == 2}">
+											(FIRMA EN PARALELO)
+										</c:if>
+										<c:if test="${secuencia == 3}">
+											(PRIMER FIRMANTE)
+										</c:if>
+									</a>
+									<br/><br/>
 							</c:forEach>
 						</c:when>
 						<c:otherwise>
@@ -109,8 +134,8 @@
 				<div id='etiqueta'
 					style='display: none; text-align: center; color: #0033FF; font-size: 13px'
 					class="seccion_ficha">
-					<label>En proceso...</label> <br />
-					<br /> <img src="apps/sign/ajax-loader.gif" alt='En proceso...' />
+					<!-- [dipucr-Felipe #1606] -->
+					<img id="img_loadingInicio" height="200px" src='<ispac:rewrite href="img/loading_inicio.gif" />' />
 				</div>
 				
 	   		</div>

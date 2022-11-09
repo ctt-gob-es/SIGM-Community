@@ -38,7 +38,7 @@ public interface DocumentoDelegate {
 	public boolean existeContenidoDocumento(String id);
 
 	/**
-	 * Guarda el contenido del documento en el OutputStream.
+	 * Guarda el contenido del documento original firmado en el OutputStream.
 	 *
 	 * @param id
 	 *            Identificador del documento.

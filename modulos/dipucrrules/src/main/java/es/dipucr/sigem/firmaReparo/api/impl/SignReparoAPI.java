@@ -19,6 +19,7 @@ import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.firmaReparo.sign.SignReparoCircuitMgr;
 
+@Deprecated
 public class SignReparoAPI extends SignAPI{
 	
 	public static final Logger logger = Logger.getLogger(SignReparoAPI.class);
@@ -88,13 +89,13 @@ public class SignReparoAPI extends SignAPI{
 //				IItemCollection tramitesAbiertos = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_DT_TRAMITES, consulta);
 				IItemCollection tramitesAbiertos = TramitesUtil.queryTramites(mcontext, consulta);//[eCenpri-Felipe #1023]
 				IItem tramiteDAO = (IItem) tramitesAbiertos.iterator().next();
-				String observaciones = tramiteDAO.getString("OBSERVACIONES");
+				String observaciones = tramiteDAO.getString(TramitesUtil.OBSERVACIONES);
 				if(observaciones != null && !observaciones.equals("")) observaciones += "\n";
 				else observaciones="";
 				observaciones += "Reparo Firma: "+ motivoReparo;
 				//observaciones += motivoRechazo;
 				if(observaciones.length()>254) observaciones = observaciones.substring(0,253);
-				tramiteDAO.set("OBSERVACIONES", observaciones);
+				tramiteDAO.set(TramitesUtil.OBSERVACIONES, observaciones);
 				tramiteDAO.store(mcontext);	
 				
 				// MQE Ticket #176, añadimos el motivo de reparo al documento

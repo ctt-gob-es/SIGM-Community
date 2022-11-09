@@ -2,12 +2,12 @@
  * BooleanRetorno.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis 1.3 Oct 05, 2005 (05:23:37 EDT) WSDL2Java emitter.
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
 package ieci.tecdoc.sgm.gestioncsv.ws.client.axis;
 
-public class BooleanRetorno  extends ieci.tecdoc.sgm.core.services.dto.RetornoServicio  implements java.io.Serializable {
+public class BooleanRetorno  extends ieci.tecdoc.sgm.gestioncsv.ws.client.axis.RetornoServicio  implements java.io.Serializable {
     private boolean valor;
 
     public BooleanRetorno() {
@@ -17,9 +17,9 @@ public class BooleanRetorno  extends ieci.tecdoc.sgm.core.services.dto.RetornoSe
            java.lang.String errorCode,
            java.lang.String returnCode,
            boolean valor) {
-        super();
-        this.errorCode = errorCode;
-        this.returnCode = returnCode;
+        super(
+            errorCode,
+            returnCode);
         this.valor = valor;
     }
 

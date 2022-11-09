@@ -4,6 +4,7 @@ import ieci.tecdoc.sgm.core.services.ServiciosUtils;
 import ieci.tecdoc.sgm.core.services.dto.IRetornoServicio;
 import ieci.tecdoc.sgm.core.services.estructura_organizativa.EstructuraOrganizativaException;
 import ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativa;
+import ieci.tecdoc.sgm.core.services.gestion_backoffice.DatosUsuario;
 import ieci.tecdoc.sgm.estructura.ws.client.axis.Archive;
 import ieci.tecdoc.sgm.estructura.ws.client.axis.ArchiveFld;
 import ieci.tecdoc.sgm.estructura.ws.client.axis.ArchiveFlds;
@@ -153,6 +154,26 @@ public class EstructuraOrganizativaWSRemoteClient implements ServicioEstructuraO
 		} catch (RemoteException e) {
 			throw new EstructuraOrganizativaException(EstructuraOrganizativaException.EXC_GENERIC_EXCEPCION, e.getMessage(), e);
 		}
+	}
+	
+	/**
+	 * [dipucr-Felipe #1246]
+	 */
+	public ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario getUsuarioByNif(String nif, String entidad) throws EstructuraOrganizativaException {
+		
+		//TODO: Recuperar usuario a través del servicio web
+		return null;
+
+	}
+	
+	/**
+	 * [dipucr-Felipe #1514]
+	 */
+	public ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuarios getUsuariosByNif(String nif, String entidad) throws EstructuraOrganizativaException {
+		
+		//TODO: Recuperar usuario a través del servicio web
+		return null;
+
 	}
 
 	public ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuarios getUsuariosAplicacion(int aplicacion, boolean sinPermisos, boolean usuarios, boolean superusuarios, String entidad) throws EstructuraOrganizativaException {
@@ -1162,7 +1183,52 @@ public class EstructuraOrganizativaWSRemoteClient implements ServicioEstructuraO
 		return null;
 	}
 
+	public ieci.tecdoc.sgm.core.services.estructura_organizativa.Grupo getGrupo(
+			String nombreGrupo, String entidad)
+			throws EstructuraOrganizativaException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	public ieci.tecdoc.sgm.core.services.estructura_organizativa.Grupo crearGrupo(
+			String nombreGrupo, String descripcion, String emails,
+			String entidad) throws EstructuraOrganizativaException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	public void asociarUsuarioAGrupo(
+			ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario usuario,
+			ieci.tecdoc.sgm.core.services.estructura_organizativa.Grupo grupo,
+			String entidad) throws EstructuraOrganizativaException {
+		// TODO Auto-generated method stub
+		
+	}
 
+	public void eliminarGrupo(
+			ieci.tecdoc.sgm.core.services.estructura_organizativa.Grupo grupo,
+			String entidad) throws EstructuraOrganizativaException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public DatosUsuario getDatosUsuario(
+			ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario usuario,
+			String entidad) throws EstructuraOrganizativaException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ieci.tecdoc.sgm.core.services.estructura_organizativa.Grupo getGrupoSinCheckPermisos(
+			int idGrupo, String entidad) throws EstructuraOrganizativaException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ieci.tecdoc.sgm.core.services.estructura_organizativa.Grupo getGrupoSinCheckPermisos(
+			String nombreGrupo, String entidad)
+			throws EstructuraOrganizativaException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

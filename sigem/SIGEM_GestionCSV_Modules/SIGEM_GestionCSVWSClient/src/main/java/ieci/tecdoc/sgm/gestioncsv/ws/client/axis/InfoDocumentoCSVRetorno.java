@@ -2,13 +2,12 @@
  * InfoDocumentoCSVRetorno.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis 1.3 Oct 05, 2005 (05:23:37 EDT) WSDL2Java emitter.
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
 package ieci.tecdoc.sgm.gestioncsv.ws.client.axis;
 
-public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.RetornoServicio  implements java.io.Serializable {
-
+public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.gestioncsv.ws.client.axis.RetornoServicio  implements java.io.Serializable {
     private java.lang.String codigoAplicacion;
 
     private java.lang.String csv;
@@ -45,7 +44,9 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
            java.lang.String nombre,
            java.lang.String nombreAplicacion,
            java.lang.String tipoMime) {
-        super();
+        super(
+            errorCode,
+            returnCode);
         this.codigoAplicacion = codigoAplicacion;
         this.csv = csv;
         this.disponible = disponible;
@@ -61,7 +62,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Gets the codigoAplicacion value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @return codigoAplicacion
      */
     public java.lang.String getCodigoAplicacion() {
@@ -71,7 +72,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Sets the codigoAplicacion value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @param codigoAplicacion
      */
     public void setCodigoAplicacion(java.lang.String codigoAplicacion) {
@@ -81,7 +82,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Gets the csv value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @return csv
      */
     public java.lang.String getCsv() {
@@ -91,7 +92,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Sets the csv value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @param csv
      */
     public void setCsv(java.lang.String csv) {
@@ -101,7 +102,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Gets the disponible value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @return disponible
      */
     public boolean isDisponible() {
@@ -111,7 +112,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Sets the disponible value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @param disponible
      */
     public void setDisponible(boolean disponible) {
@@ -121,7 +122,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Gets the fechaCSV value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @return fechaCSV
      */
     public java.util.Calendar getFechaCSV() {
@@ -131,7 +132,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Sets the fechaCSV value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @param fechaCSV
      */
     public void setFechaCSV(java.util.Calendar fechaCSV) {
@@ -141,7 +142,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Gets the fechaCaducidad value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @return fechaCaducidad
      */
     public java.util.Calendar getFechaCaducidad() {
@@ -151,7 +152,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Sets the fechaCaducidad value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @param fechaCaducidad
      */
     public void setFechaCaducidad(java.util.Calendar fechaCaducidad) {
@@ -161,7 +162,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Gets the fechaCreacion value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @return fechaCreacion
      */
     public java.util.Calendar getFechaCreacion() {
@@ -171,7 +172,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Sets the fechaCreacion value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @param fechaCreacion
      */
     public void setFechaCreacion(java.util.Calendar fechaCreacion) {
@@ -181,7 +182,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Gets the id value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @return id
      */
     public java.lang.String getId() {
@@ -191,7 +192,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Sets the id value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @param id
      */
     public void setId(java.lang.String id) {
@@ -201,7 +202,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Gets the nombre value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @return nombre
      */
     public java.lang.String getNombre() {
@@ -211,7 +212,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Sets the nombre value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @param nombre
      */
     public void setNombre(java.lang.String nombre) {
@@ -221,7 +222,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Gets the nombreAplicacion value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @return nombreAplicacion
      */
     public java.lang.String getNombreAplicacion() {
@@ -231,7 +232,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Sets the nombreAplicacion value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @param nombreAplicacion
      */
     public void setNombreAplicacion(java.lang.String nombreAplicacion) {
@@ -241,7 +242,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Gets the tipoMime value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @return tipoMime
      */
     public java.lang.String getTipoMime() {
@@ -251,7 +252,7 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
 
     /**
      * Sets the tipoMime value for this InfoDocumentoCSVRetorno.
-     *
+     * 
      * @param tipoMime
      */
     public void setTipoMime(java.lang.String tipoMime) {
@@ -269,33 +270,33 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
         }
         __equalsCalc = obj;
         boolean _equals;
-        _equals = super.equals(obj) &&
-            ((this.codigoAplicacion==null && other.getCodigoAplicacion()==null) ||
+        _equals = super.equals(obj) && 
+            ((this.codigoAplicacion==null && other.getCodigoAplicacion()==null) || 
              (this.codigoAplicacion!=null &&
               this.codigoAplicacion.equals(other.getCodigoAplicacion()))) &&
-            ((this.csv==null && other.getCsv()==null) ||
+            ((this.csv==null && other.getCsv()==null) || 
              (this.csv!=null &&
               this.csv.equals(other.getCsv()))) &&
             this.disponible == other.isDisponible() &&
-            ((this.fechaCSV==null && other.getFechaCSV()==null) ||
+            ((this.fechaCSV==null && other.getFechaCSV()==null) || 
              (this.fechaCSV!=null &&
               this.fechaCSV.equals(other.getFechaCSV()))) &&
-            ((this.fechaCaducidad==null && other.getFechaCaducidad()==null) ||
+            ((this.fechaCaducidad==null && other.getFechaCaducidad()==null) || 
              (this.fechaCaducidad!=null &&
               this.fechaCaducidad.equals(other.getFechaCaducidad()))) &&
-            ((this.fechaCreacion==null && other.getFechaCreacion()==null) ||
+            ((this.fechaCreacion==null && other.getFechaCreacion()==null) || 
              (this.fechaCreacion!=null &&
               this.fechaCreacion.equals(other.getFechaCreacion()))) &&
-            ((this.id==null && other.getId()==null) ||
+            ((this.id==null && other.getId()==null) || 
              (this.id!=null &&
               this.id.equals(other.getId()))) &&
-            ((this.nombre==null && other.getNombre()==null) ||
+            ((this.nombre==null && other.getNombre()==null) || 
              (this.nombre!=null &&
               this.nombre.equals(other.getNombre()))) &&
-            ((this.nombreAplicacion==null && other.getNombreAplicacion()==null) ||
+            ((this.nombreAplicacion==null && other.getNombreAplicacion()==null) || 
              (this.nombreAplicacion!=null &&
               this.nombreAplicacion.equals(other.getNombreAplicacion()))) &&
-            ((this.tipoMime==null && other.getTipoMime()==null) ||
+            ((this.tipoMime==null && other.getTipoMime()==null) || 
              (this.tipoMime!=null &&
               this.tipoMime.equals(other.getTipoMime())));
         __equalsCalc = null;
@@ -420,10 +421,10 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
      * Get Custom Serializer
      */
     public static org.apache.axis.encoding.Serializer getSerializer(
-           java.lang.String mechType,
-           java.lang.Class _javaType,
+           java.lang.String mechType, 
+           java.lang.Class _javaType,  
            javax.xml.namespace.QName _xmlType) {
-        return
+        return 
           new  org.apache.axis.encoding.ser.BeanSerializer(
             _javaType, _xmlType, typeDesc);
     }
@@ -432,10 +433,10 @@ public class InfoDocumentoCSVRetorno  extends ieci.tecdoc.sgm.core.services.dto.
      * Get Custom Deserializer
      */
     public static org.apache.axis.encoding.Deserializer getDeserializer(
-           java.lang.String mechType,
-           java.lang.Class _javaType,
+           java.lang.String mechType, 
+           java.lang.Class _javaType,  
            javax.xml.namespace.QName _xmlType) {
-        return
+        return 
           new  org.apache.axis.encoding.ser.BeanDeserializer(
             _javaType, _xmlType, typeDesc);
     }

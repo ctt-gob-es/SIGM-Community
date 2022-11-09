@@ -85,5 +85,49 @@ public class DocumentosDAO extends BaseDAO {
 
 		return (Documento) getVO(cnt, query.toString(), DocumentoVO.class);
 	}
+	
+	/**
+	 * [DipuCR-Agustin #1297] Obtiene el infopag_rde_original del documento que se ha firmado.
+	 * @param cnt
+	 * @param localizador Localizador del documento justificante de firma, id documento
+	 * @return Información del documento
+	 * @throws ISPACException
+	 */
+	
+	public static Documento getDocumentoJustificanteFirma(DbCnt cnt, String localizador) throws ISPACException
+	{
+		if (logger.isDebugEnabled()) {
+			logger.debug("Llamada a getDocumentoOriginal(" + localizador + ")");
+		}
+
+		if (StringUtils.isBlank(localizador)) {
+			return null;
+		}
+
+		StringBuffer query = new StringBuffer()
+			.append(" SELECT")
+			.append(" INFOPAG_RDE AS GUID,")
+			.append(" DESCRIPCION AS NOMBRE,")
+			.append(" EXTENSION_RDE AS EXTENSION")
+			.append(" FROM")
+			.append(" SPAC_DT_DOCUMENTOS")
+			.append(" WHERE")
+			.append(" ID='")
+			.append(localizador)
+			.append("'")
+			.append(" UNION")
+			.append(" SELECT")
+			.append(" INFOPAG_RDE AS GUID,")
+			.append(" DESCRIPCION AS NOMBRE,")
+			.append(" EXTENSION_RDE AS EXTENSION")
+			.append(" FROM")
+			.append(" SPAC_DT_DOCUMENTOS_H")
+			.append(" WHERE")
+			.append(" ID='")
+			.append(localizador)
+			.append("'");
+
+		return (Documento) getVO(cnt, query.toString(), DocumentoVO.class);
+	}
 
 }

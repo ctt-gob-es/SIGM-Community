@@ -3,7 +3,6 @@ package ieci.tdw.ispac.services.helpers;
 import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.ISignAPI;
 import ieci.tdw.ispac.api.errors.ISPACException;
-import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
 import ieci.tdw.ispac.ispaclib.sign.ISignConnector;
@@ -75,6 +74,59 @@ public class DocumentsHelper {
 
 		return out.toByteArray();
     }
+    
+    
+	/**
+	 * [DipuCR-Agustin #1297]
+     * Obtiene el contenido del documento.
+     * @param context Contexto de cliente.
+     * @param guid GUID del documento.
+     * @return Contenido del documento.
+     * @throws ISPACException si ocurre algún error.
+     */
+    public static byte [] getContenidoDocumentoJustificanteFirma(IClientContext context, 
+    		String guid) throws ISPACException {
+
+    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+    	final String id_documento = guid;
+    	
+    	if (logger.isInfoEnabled()) {
+    		logger.info("Se va a obtener el contenido del documento justificante de firma: " + guid);
+    	}
+
+		IGenDocAPI genDocAPI = context.getAPI().getGenDocAPI();
+		Object connectorSession = genDocAPI.createConnectorSession();
+		try {
+			
+			//Obtengo el infoPag por mediación el infoPagRde TODO revisar	    	
+	    	DbCommand sCommand = new DbCommand(context) {
+	    		
+				public Object logic(DbCnt cnt) throws ISPACException {
+					return DocumentosDAO.getDocumentoJustificanteFirma(cnt, id_documento);
+				}
+			};
+			
+			DocumentoVO docOriginal = (DocumentoVO) sCommand.exec();
+	    	
+	    	// Contenido del documento original
+		    //byte [] content = getContenidoDocumento(context, docOriginal.getGuid());
+			genDocAPI.getDocument(connectorSession, docOriginal.getGuid(), out);
+			
+			
+    	} catch (Exception e) {
+    		logger.error(
+    				"Error al obtener el contenido del documento justificante de firma: " + guid, e);
+    		throw new ISPACException(
+    				"Error al obtener el contenido del documento justificante de firma: " + guid, e);
+		} finally {
+			if (connectorSession != null) {
+				genDocAPI.closeConnectorSession(connectorSession);
+			}
+    	}		        	
+
+		return out.toByteArray();
+    }
+    
 
     /**
      * Obtiene los metadatos del documento.
@@ -182,8 +234,7 @@ public class DocumentsHelper {
 		};
 		
 		DocumentoVO docOriginal = (DocumentoVO) sCommand.exec();
-		String nombreMetadatoFirma = ISPACConfiguration.getInstance().get(ISPACConfiguration.CONNECTOR_MANAGER_SIGN_METADATA_NAME);
-    	String signProperty = genDocAPI.getDocumentProperty(connectorSession, doc.getGuid(), nombreMetadatoFirma);
+    	String signProperty = genDocAPI.getDocumentProperty(connectorSession, doc.getGuid(), "Firma");
 		    
 	    XmlFacade xmlFacade = new XmlFacade(signProperty);
 	    	
@@ -198,7 +249,7 @@ public class DocumentsHelper {
 	       String firma= (String) firmas.get(i);
 	        try {
 		       Firma firmaVO = new Firma();
-		       ISignConnector signConnector= SignConnectorFactory.getSignConnector();
+		       ISignConnector signConnector= SignConnectorFactory.getInstance(context).getSignConnector();
 		       Map datosVerificarFirma= signConnector.verify(firma, new String(Base64.encode(signedContent)));
 		       String integridad=(String) datosVerificarFirma.get(ISignAPI.INTEGRIDAD);
 		       firmaVO.setAutenticada(StringUtils.equalsIgnoreCase(ISignAPI.INTEGRIDAD_OK, integridad));

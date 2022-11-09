@@ -87,6 +87,11 @@ public class InfoDocumentoVO extends Entity {
 	/**
 	 *  [Manu Ticket #625] CVE Consulta de documentos - Añadir campos para registros de salida 
 	 */
+	
+	/**
+	 * Indica si el mostrar botón para descargar justificante de firma y documento original firmado o solo el botón de siempre
+	 */
+	private boolean firmaConJustificante = false;
 
 	/**
 	 * Constructor.
@@ -187,6 +192,14 @@ public class InfoDocumentoVO extends Entity {
 
 	public void setDisponible(boolean disponible) {
 		this.disponible = disponible;
+	}
+	
+	public boolean isFirmaConJustificante() {
+		return firmaConJustificante;
+	}
+
+	public void setFirmaConJustificante(boolean firmaConJustificante) {
+		this.firmaConJustificante = firmaConJustificante;
 	}
 
 	public String getCsv() {

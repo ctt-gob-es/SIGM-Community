@@ -59,7 +59,6 @@ import es.dipucr.sigem.api.rule.common.utils.GestorDecretos;
 import es.dipucr.sigem.api.rule.common.utils.GestorMetadatos;
 import es.dipucr.sigem.api.rule.common.utils.UsuariosUtil;
 
-@SuppressWarnings("restriction")
 public class BatchSignAction extends BaseDispatchAction {
 	
 	private final static String DOC_SEPARATOR = "&&";
@@ -493,7 +492,7 @@ public class BatchSignAction extends BaseDispatchAction {
 			
 			// Firmar los documentos asociados a los pasos de firma
 			//List signDocuments = signAPI.batchSignSteps(stepIds, signs, batchSignForm.getSignCertificate(), entityId);
-			signDocuments = signAPI.batchSignSteps(stepIds, signs, null, entityId);
+			signDocuments = signAPI.batchSignSteps(stepIds, signs, entityId);
 		
 		}
 		//INICIO [dipucr-Felipe #1116] 09.10.14
@@ -554,7 +553,8 @@ public class BatchSignAction extends BaseDispatchAction {
 		
 		try{
 			generaResumen(session, request, entitiesAPI, signDocuments, entityId, batchSignForm, state);			
-		} catch(Exception e){			
+		} catch(Exception e){
+			LOGGER.error("ERROR al generar el resumen del proceso de firma. " + e.getMessage(), e);
 			resultado = "failureResumen";
 		}
 		

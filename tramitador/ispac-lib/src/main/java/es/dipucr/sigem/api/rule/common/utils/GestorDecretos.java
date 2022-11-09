@@ -9,14 +9,21 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.dao.idsequences.IdSequenceMgr;
 import ieci.tdw.ispac.ispaclib.db.DbCnt;
+import ieci.tdw.ispac.ispaclib.sign.SignDetailEntry;
 import ieci.tdw.ispac.ispaclib.sign.SignDocument;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativa;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.UsuarioData;
 import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
 
 /**
@@ -28,15 +35,16 @@ import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
  */
 public class GestorDecretos {
 	
-	protected static final Logger logger = Logger.getLogger("loggerFirma");
+	protected static final Logger LOGGER = Logger.getLogger("loggerFirma");
 
 
-	public static String SEQUENCE_NUM_DECRETOS_AUX = "SPAC_SQ_NUMDECRETO";
-	public static String SEQUENCE_NUM_DECRETOS_REAL = "SPAC_SQ_NUMDECRETO_FIRMADO";
-	public static String CATALOG_SPAC_TRAMITES_COD_TRAMITE_DECRETOS = "PREP_FIRMAS_DEC";
+	public static final String SEQUENCE_NUM_DECRETOS_AUX = "SPAC_SQ_NUMDECRETO";
+	public static final String SEQUENCE_NUM_DECRETOS_REAL = "SPAC_SQ_NUMDECRETO_FIRMADO";
+	public static final String CATALOG_SPAC_TRAMITES_COD_TRAMITE_DECRETOS = "PREP_FIRMAS_DEC";
+	public static final String CATALOG_SPAC_TRAMITES_COD_TRAMITE_DECRETO_DIRECTO = "DECRETO-DIRECTO";
 	
 	//Separador para los números de decreto
-	public static String NUM_DECRETO_SEPARATOR = "/";
+	public static final String NUM_DECRETO_SEPARATOR = "/";
 	
 	//Bloqueos de firma
 	//Tipo de bloqueo para documentos de decretos
@@ -60,6 +68,7 @@ public class GestorDecretos {
 	 * @return
 	 * @throws ISPACException
 	 */
+	@Deprecated //Portafirmas
 	public static boolean esFirmaPresidente(IClientContext cct, int idDoc) throws ISPACException{
 		
 		int tipoFirma = comprobarFirmaDecretos(cct, idDoc);
@@ -67,27 +76,84 @@ public class GestorDecretos {
 	}
 	
 	/**
+	 * [dipucr-Felipe #1564]
+	 * @param cct
+	 * @param idDoc
+	 * @return
+	 * @throws ISPACException
+	 */
+	public static boolean esFirmaAlcaldiaPresidencia(IClientContext cct, int idDoc) throws ISPACException{
+		
+		try{
+			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+			ISignAPI signAPI = cct.getAPI().getSignAPI();
+			
+			IItem itemDoc = entitiesAPI.getDocument(idDoc);
+			String sIdCircuito = itemDoc.getString("ID_CIRCUITO");
+			
+			if (!StringUtils.isEmpty(sIdCircuito)){
+				//Vemos si el primer firmante del circuito tiene el rol alcalde/presidente
+				IItem itemPasoCircuito = signAPI.getCircuitStep(Integer.valueOf(sIdCircuito), 1);
+				String idFirmante = itemPasoCircuito.getString("ID_FIRMANTE");
+				
+				if (esUsuarioAsignaNumDecreto(cct, idFirmante)){
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+			else{
+				//Enviar a mi firma. Hay casos que damos por buena la firma de decreto?
+				return false;
+			}
+		}
+		catch(Exception ex){
+			String error = "Error al comprobar si el circuito del documento puede asignar número de decreto";
+			LOGGER.error(error, ex);
+			throw new ISPACException(error, ex);
+		}
+	}
+	
+	/**
+	 * [dipucr-Felipe #1564]
+	 * @param cct
+	 * @param idFirmante
+	 * @return
+	 */
+	public static boolean esUsuarioAsignaNumDecreto(IClientContext cct, String idUsuario) throws ISPACException{
+		
+		try{
+			String entidad = EntidadesAdmUtil.obtenerEntidad(cct);
+			ServicioEstructuraOrganizativa servicioEstructuraOrganizativa = LocalizadorServicios.getServicioEstructuraOrganizativa();
+			int id = Integer.parseInt(idUsuario.replace("1-", ""));
+			Usuario usuario = servicioEstructuraOrganizativa.getUsuario(id, entidad);
+			UsuarioData datosUsuario = usuario.getUserData();
+			return datosUsuario.isAsignaNumDecreto();
+		}
+		catch(Exception ex){
+			String error = "Error al comprobar si el usuario tiene activado el check de asignación de número de decretos";
+			LOGGER.error(error, ex);
+			throw new ISPACException(error, ex);
+		}
+	}
+
+	/**
 	 * Comprueba la firma de los documentos de decretos
 	 * @param cct
 	 * @param idDoc
 	 * @return
 	 * @throws ISPACException 
 	 */
+	@Deprecated //Portafirmas. No se comprueba la firma presidente-fedatario ni tampoco los circuitos
 	public static int comprobarFirmaDecretos(IClientContext cct, int idDoc) throws ISPACException{
 		
 		int tipoFirma = 0;
 		
 		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
 		
-		//AJM OTRO CONTROL, ¿¿ESTOY EN EL SEGUNDO TRAMITE?? SI CUANDO EL ID_TRAM_CTL = 31
-		IItem itemDoc = entitiesAPI.getDocument(idDoc);
-		int taskProcessId = (Integer) itemDoc.get("ID_TRAMITE");
-		IItem itemTram = entitiesAPI.getTask(taskProcessId);	
-		int idTaskTramCtl = (Integer) itemTram.get("ID_TRAM_CTL");
-		String codTram = TramitesUtil.getCodTram(idTaskTramCtl, cct);
-
 		// Estado adm. "Esperando firmas"
-		if (CATALOG_SPAC_TRAMITES_COD_TRAMITE_DECRETOS.equals(codTram)) {
+		if (esTramiteFirmaDecreto(cct, idDoc)) {
 
 			String sqlQuery = "WHERE ID_DOCUMENTO = " + idDoc + " ORDER BY ID_PASO ASC";
 			IItemCollection collection = entitiesAPI.queryEntities(
@@ -104,6 +170,27 @@ public class GestorDecretos {
 		return tipoFirma;
 	}
 	
+	/**
+	 * [dipucr-Felipe #1246]
+	 * Sacamos este trámtie para el Portafirmas, pues ya no tenemos que mirar la tabla de circuitos
+	 * @return
+	 */
+	public static boolean esTramiteFirmaDecreto(IClientContext cct, int idDoc) throws ISPACException{
+		
+		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+		
+		// Comprobamos que estasmo en el trámite de Preparación de Firmas
+		IItem itemDoc = entitiesAPI.getDocument(idDoc);
+		int taskProcessId = (Integer) itemDoc.get("ID_TRAMITE");
+		IItem itemTram = entitiesAPI.getTask(taskProcessId);	
+		int idTaskTramCtl = (Integer) itemTram.get("ID_TRAM_CTL");
+		String codTram = TramitesUtil.getCodTram(idTaskTramCtl, cct);
+
+		// Estado adm. "Esperando firmas"
+		return CATALOG_SPAC_TRAMITES_COD_TRAMITE_DECRETOS.equals(codTram) || CATALOG_SPAC_TRAMITES_COD_TRAMITE_DECRETO_DIRECTO.equals(codTram);
+		
+	}
+	
 	
 	/**
 	 * Devuelve el número de decreto
@@ -114,6 +201,7 @@ public class GestorDecretos {
 	 * @return
 	 * @throws ISPACException 
 	 */
+	@Deprecated // Portafirmas. Ya no usamos las secuencias 
 	public static String getNumDecreto(IClientContext cct, boolean bActual) throws ISPACException{
 		
 		int numDecreto = 0;
@@ -162,6 +250,24 @@ public class GestorDecretos {
 			numDecreto = itemUltimoDecreto.getInt("NUMERO_DECRETO");
 		}
 		return numDecreto;
+	}
+	
+	/**
+	 * [dipucr-Felipe #1246] Recupera un nuevo número de decreto
+	 * @param cct
+	 * @param bActual
+	 * @return
+	 * @throws ISPACException
+	 */
+	public static String getNuevoNumDecreto(IClientContext cct) throws ISPACException{
+		
+		GregorianCalendar gc = new GregorianCalendar();
+		int anio = gc.get(Calendar.YEAR);
+
+		int numDecreto = getUltimoNumDecreto(cct) + 1;
+		
+		String sNumDecreto = anio + NUM_DECRETO_SEPARATOR + numDecreto;
+		return sNumDecreto;
 	}
 	
 	/**
@@ -284,6 +390,7 @@ public class GestorDecretos {
 	 * @param numDecreto
 	 * @throws ISPACException 
 	 */
+	@Deprecated //Portafirmas
 	public static void actualizarValoresDecreto(IClientContext cct, SignDocument signDocument, String numDecreto) throws ISPACException{
 		
 		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
@@ -327,12 +434,161 @@ public class GestorDecretos {
 	}
 	
 	/**
+	 * [dipucr-Felipe #1246]
+	 * Actualiza los valores del decreto dependiendo de si se trata del presidente o del fedatario
+	 * @param cct
+	 * @param signDocument
+	 * @param numDecreto
+	 * @param listFirmas
+	 * @throws ISPACException 
+	 */
+	public static void actualizarValoresDecretoPortafirmas
+		(IClientContext cct, SignDocument signDocument, String numDecreto, List<SignDetailEntry> listFirmas) throws ISPACException{
+
+		String numExp = signDocument.getNumExp();
+		try{
+			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+			
+			//Primero buscamos si existe decreto directo, si es así, que haga lo de siempre pero con este (solo puede haber uno, etc. etc.)
+			//Si no hay directo, hace lo de siempre.
+			String idTramiteDoc = signDocument.getItemDoc().getString(DocumentosUtil.ID_TRAMITE);
+			StringBuilder consulta = new StringBuilder(" WHERE ");
+			consulta.append(" NUMEXP = '" + numExp + "' ");
+			consulta.append(" AND ID_TRAMITE = " + idTramiteDoc);
+			
+			IItemCollection colDecretos = entitiesAPI.queryEntities("SGD_DECRETO", consulta.toString());
+			
+			if(null == colDecretos || colDecretos.toList().size() == 0){
+				colDecretos = entitiesAPI.getEntities("SGD_DECRETO", numExp);
+			}
+			
+			
+			// Si aún no se ha creado la entidad Decreto, aunque esto nunca debe de suceder
+			IItem itemDecreto = null;
+			
+			if (null == colDecretos || colDecretos.toList().size() == 0){
+				itemDecreto = entitiesAPI.createEntity("SGD_DECRETO", numExp);
+			}
+			else if (null != colDecretos && colDecretos.toList().size() == 1){
+				itemDecreto = (IItem)colDecretos.iterator().next();
+			}else {
+		        throw new ISPACRuleException("Error al seleccionar el registro Decreto");
+			}
+			
+			// Controlamos si no tiene ya asignado un número de decreo
+			if (StringUtils.isEmpty(itemDecreto.getString("NUMERO_DECRETO"))){
+				
+				GregorianCalendar gc = new GregorianCalendar();
+				itemDecreto.set("ANIO", getOnlyAnio(numDecreto));
+				Date fechaDecreto = gc.getTime();
+				itemDecreto.set("FECHA_DECRETO", fechaDecreto);
+				itemDecreto.set("NUMERO_DECRETO", getOnlyNumero(numDecreto));
+	
+				SignDetailEntry firmaPresidente = listFirmas.get(0);
+				itemDecreto.set("NOMBRE_PRESIDENTE", firmaPresidente.getAuthor());
+				Date fechaPresidente = FechasUtil.convertToDate(firmaPresidente.getSignDate(), FechasUtil.SIMPLE_DATE_PATTERN_HOUR);
+				itemDecreto.set("FECHA_PRESIDENTE", fechaPresidente);
+				
+				if (listFirmas.size() > 1){//Hay firma de fedatario
+					SignDetailEntry firmaFedatario = listFirmas.get(1);
+					itemDecreto.set("NOMBRE_FEDATARIO", firmaFedatario.getAuthor());
+					Date fechaFedatario = FechasUtil.convertToDate(firmaFedatario.getSignDate(), FechasUtil.SIMPLE_DATE_PATTERN_HOUR);
+					itemDecreto.set("FECHA_FEDATARIO", fechaFedatario);
+				}
+				
+				itemDecreto.store(cct);
+			}
+		}
+		catch(Exception ex){
+			String error = "Error al actualizar los valores del decreto. Num.Decreto: " + numDecreto 
+					+ ". Numexp: " + numExp + " - " + ex.getMessage();
+			LOGGER.error(error, ex);
+			throw new ISPACException(error, ex);
+		}
+	}
+	
+	public static void actualizarValoresDecretoFirmaSello (IClientContext cct, String numexp, int idTramite, String numDecreto) throws ISPACException{
+		try{
+			//Se recupera el decreto del expediente
+			IItem itemDecreto = DecretosUtil.getDecreto(cct, numexp, idTramite);
+			
+			// Controlamos si no tiene ya asignado un número de decreo
+			if (StringUtils.isEmpty(itemDecreto.getString(DecretosUtil.DecretoTabla.NUMERO_DECRETO))){
+				
+				GregorianCalendar gc = new GregorianCalendar();
+				itemDecreto.set(DecretosUtil.DecretoTabla.ANIO, GestorDecretos.getOnlyAnio(numDecreto));
+				Date fechaDecreto = gc.getTime();
+				itemDecreto.set(DecretosUtil.DecretoTabla.FECHA_DECRETO, fechaDecreto);
+				itemDecreto.set(DecretosUtil.DecretoTabla.NUMERO_DECRETO, GestorDecretos.getOnlyNumero(numDecreto));
+				
+				itemDecreto.set(DecretosUtil.DecretoTabla.NOMBRE_PRESIDENTE, SelladoUtil.NOMBRE_FIRMANTE_SELLO);
+				itemDecreto.set(DecretosUtil.DecretoTabla.FECHA_PRESIDENTE, fechaDecreto);
+				
+				itemDecreto.store(cct);
+			}
+		}
+		catch(Exception ex){
+			String error = "Error al actualizar los valores del decreto. Num.Decreto: " + numDecreto + ". Numexp: " + numexp + " - " + ex.getMessage();
+			LOGGER.error(error, ex);
+			throw new ISPACException(error, ex);
+		}
+	}
+	
+	/**
+	 * [dipucr-Felipe #1246]
+	 * Devuelve el número de decreto actual para el expediente, si lo tuviera
+	 * @param cct
+	 * @param signDocument
+	 * @throws ISPACException 
+	 */
+	public static String getNumDecretoActual(IClientContext cct, SignDocument signDocument) throws ISPACException{
+		return getNumDecretoActual(cct, signDocument.getNumExp(), signDocument.getItemDoc().getInt(DocumentosUtil.ID_TRAMITE));
+	}
+
+	//Se sobrecarga el método para que se pueda usar en las reglas también
+	public static String getNumDecretoActual(IClientContext cct, String numexp, int idTramiteDoc) throws ISPACException{
+	
+		String numDecreto = null;
+		try{
+			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+
+			//Primero buscamos si existe decreto directo, si es así, que haga lo de siempre pero con este (mira si ya tiene número de decreto, si es así lo devuelve, si no, devuelve null)
+			//Si no hay directo, hace lo de siempre.
+			StringBuilder consulta = new StringBuilder(" WHERE ");
+			consulta.append(" NUMEXP = '" + numexp + "' ");
+			consulta.append(" AND ID_TRAMITE = " + idTramiteDoc);
+			
+			IItemCollection colDecretos = entitiesAPI.queryEntities("SGD_DECRETO", consulta.toString());
+			
+			if(null == colDecretos || colDecretos.toList().size() == 0){
+				colDecretos = entitiesAPI.getEntities("SGD_DECRETO", numexp);
+			}
+			
+			if(colDecretos.next()){
+				IItem itemDecreto = colDecretos.value();
+				String numero = itemDecreto.getString("NUMERO_DECRETO");
+				if (!StringUtils.isEmpty(numero)){
+					String anio = itemDecreto.getString("ANIO");
+					numDecreto = anio + NUM_DECRETO_SEPARATOR + numero;
+				}
+			}
+		}
+		catch(Exception ex){
+			String error = "Error al recuperar el num.decreto actual del exp " + numexp + " - " + ex.getMessage();
+			LOGGER.error(error, ex);
+			throw new ISPACException(error, ex);
+		}
+		return numDecreto;
+	}
+	
+	/**
 	 * Actualiza los valores del decreto dependiendo de si se trata del presidente o del fedatario
 	 * @param cct
 	 * @param signDocument
 	 * @param numDecreto
 	 * @throws ISPACException 
 	 */
+	@Deprecated //Portafirmas
 	public static void deshacerValoresDecreto(IClientContext cct, String numExp, String numDecreto) throws ISPACException{
 		
 		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
@@ -353,6 +609,31 @@ public class GestorDecretos {
 			itemDecreto.set("NOMBRE_PRESIDENTE", objNull);
 			itemDecreto.set("FECHA_PRESIDENTE", objNull);
 		}
+		itemDecreto.store(cct);
+	}
+	
+	/**
+	 * [dipucr-Felipe #1246] Deshacer valores decretos portafirmas
+	 * @param cct
+	 * @param numExp
+	 * @param numDecreto
+	 * @throws ISPACException
+	 */
+	public static void deshacerValoresDecretoPortafirmas(IClientContext cct, String numExp, String numDecreto) throws ISPACException{
+		
+		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+		
+		IItemCollection colDecretos = entitiesAPI.getEntities("SGD_DECRETO", numExp);
+		IItem itemDecreto = (IItem)colDecretos.iterator().next();
+		
+		Object objNull = null;
+		itemDecreto.set("NOMBRE_FEDATARIO", objNull);
+		itemDecreto.set("FECHA_FEDATARIO", objNull);
+		itemDecreto.set("ANIO", objNull);
+		itemDecreto.set("FECHA_DECRETO", objNull);
+		itemDecreto.set("NUMERO_DECRETO", objNull);
+		itemDecreto.set("NOMBRE_PRESIDENTE", objNull);
+		itemDecreto.set("FECHA_PRESIDENTE", objNull);
 		itemDecreto.store(cct);
 	}
 	
@@ -435,6 +716,29 @@ public class GestorDecretos {
 		sbIdTransaccion.append(idDoc);
 		sbIdTransaccion.append(new Date().getTime());
 		return sbIdTransaccion.toString();
+	}
+	
+	/**
+	 * [dipucr-Felipe #1246] Copiado de TelefonicaSignConnector
+	 * @param SignDocument signDocument
+	 * @return True: El documento es de "Decreto" 
+	 *  
+	 */
+	public static boolean isDocDecreto (SignDocument signDocument){
+		
+		String nombreDoc = "";
+		try {
+			nombreDoc = signDocument.getItemDoc().getString("NOMBRE");
+		} catch (ISPACException e) {
+			LOGGER.error("ERROR. " + e.getMessage(), e);
+			return false;
+		}
+		
+		if (nombreDoc.equals("Decreto")){
+			return true;
+		}
+		
+		return false;
 	}
 	
 }

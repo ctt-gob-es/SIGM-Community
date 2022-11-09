@@ -25,7 +25,13 @@ import ieci.tdw.ispac.ispaclib.app.EntityApp;
 import ieci.tdw.ispac.ispaclib.common.constants.DocumentLockStates;
 import ieci.tdw.ispac.ispaclib.common.constants.SignStatesConstants;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.context.StateContext;
+import ieci.tdw.ispac.ispaclib.dao.cat.CTEntityDAO;
+import ieci.tdw.ispac.ispaclib.dao.entity.EntityFactoryDAO;
+import ieci.tdw.ispac.ispaclib.entity.def.EntityDef;
+import ieci.tdw.ispac.ispaclib.entity.def.EntityField;
+import ieci.tdw.ispac.ispaclib.security.SecurityMgr;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorFactory;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tdw.ispac.ispacmgr.action.form.EntityForm;
@@ -56,6 +62,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.EntidadTramiteUtil;
+
 public class ShowTaskAction extends BaseAction
 {
 	IspacAuditoriaManager auditoriaManager;
@@ -79,6 +88,7 @@ public class ShowTaskAction extends BaseAction
     	IBPMAPI bpmAPI = null;
     	boolean commit = true;
     	boolean inTrash=false;
+		String numexp = null;
     	
     	//TODO: Auditoría: Añadir en el ThreadLocal el objeto AuditContext.
 		AuditContext auditContext = new AuditContext();
@@ -93,7 +103,7 @@ public class ShowTaskAction extends BaseAction
 			//Iniciamos la sesion con el BPM
 			bpmAPI.initBPMSession();
 
-			if(ProcessSignConnectorFactory.getInstance().isDefaultConnector()){
+			if(ProcessSignConnectorFactory.getInstance(cct).isDefaultConnector()){
 				request.getSession().setAttribute("defaultPortafirmas", true);
 			}
 
@@ -104,6 +114,7 @@ public class ShowTaskAction extends BaseAction
 			int taskId = Integer.parseInt(taskIdParam);
 			//Obtenemos el identificador de la fase instanciada a la que pertenece el tramite
 			ITask task =invesFlowAPI.getTask(taskId);
+					
 			if(task.getInt("ESTADO")!=TXConstants.STATUS_DELETED){
 				//IItem item = itemcol.value();
 				int stageId = task.getInt("ID_FASE_EXP");
@@ -112,10 +123,10 @@ public class ShowTaskAction extends BaseAction
 				//Se invoca al BPM para adquirir la fase del expediente, si es necesario
 				bpmAPI.acquireStage(stage.getString("ID_FASE_BPM"), cct.getRespId());
 				
-				String numExpediente = task.getString(PropName.TRM_NUMEXP);
+				numexp = task.getString(PropName.TRM_NUMEXP);
 				
 				//Auditar la consulta del trámite
-				this.auditConsultaTramite(taskId, numExpediente, cct);
+				this.auditConsultaTramite(taskId, numexp, cct);
 			}
 			else{
 				inTrash=true;
@@ -135,8 +146,29 @@ public class ShowTaskAction extends BaseAction
 		// Se cambia el estado de tramitación
 		IState state = null;
 		Map params = request.getParameterMap();
+		
+		//INICIO [dipucr-Felipe #1716] Multientidades relacionadas automáticamente con su trámite
+		Map<String, String[]> paramsCopy = new HashMap(params);
+		String sEntityId = request.getParameter(ManagerState.PARAM_ENTITYID);
+		String sEntityRegId = request.getParameter(ManagerState.PARAM_ENTREGID);
+		if (!StringUtils.isEmpty(sEntityId) && StringUtils.isEmpty(sEntityRegId)){
+
+			String sTaskId = request.getParameter(ManagerState.PARAM_TASKID);
+			
+			if (StringUtils.isEmpty(numexp)){
+				numexp = request.getParameter(ManagerState.PARAM_NUMEXP);
+			}
+			
+			String key = EntidadTramiteUtil.getRegIdTramite(cct, numexp, sTaskId, sEntityId);
+			if (!StringUtils.isEmpty(key)){
+				paramsCopy.put(ManagerState.PARAM_ENTREGID, new String[]{key});
+			}
+		}
+		
 		try {
-			state = managerAPI.enterState(getStateticket(request), ManagerState.TASK, params);
+//			state = managerAPI.enterState(getStateticket(request), ManagerState.TASK, params);
+			state = managerAPI.enterState(getStateticket(request), ManagerState.TASK, paramsCopy);
+			//FIN [dipucr-Felipe #1716]
 		}
     	catch (ISPACNullObject e) {
 
@@ -241,6 +273,8 @@ public class ShowTaskAction extends BaseAction
 
 		// Comprobar si hay que borrar los documentos marcados en la lista de documentos del trámite
 		deleteDocuments(request, defaultForm, entitiesAPI);
+		// [dipucr-Felipe #1606] COmprobar si se ha ejecutado la opción de eliminar todos
+		deleteAllDocuments(session, request, state);
 
 		// Visualiza los datos de la entidad
         // Si hay errores no se recargan los datos de la entidad
@@ -321,6 +355,7 @@ public class ShowTaskAction extends BaseAction
 		//mandamos los parámetros entity y regentity
 		request.setAttribute("entityid", Integer.toString(state.getEntityId()));
 		request.setAttribute("entityregid", Integer.toString(state.getEntityRegId()));
+		
 		String stageId=state.getStageId()+"";
 		String stagePcdId=request.getParameter("stagePcdIdActual");
 
@@ -409,12 +444,29 @@ public class ShowTaskAction extends BaseAction
         	returnToSearch = searchForm.getDisplayTagParams();
         }
 
+        //[dipucr-Felipe #1586] Volver a los avisos electrónicos desde el expediente
+        boolean returnToNoticeList = (Boolean.TRUE == request.getSession().getAttribute(ActionsConstants.FROM_NOTICE_LIST));
+
         IWorklist managerwl = managerAPI.getWorklistAPI();
+        
+        //INICIO [dipucr-Felipe #1366]
+        if (state.getEntityId() == ISPACEntities.DT_ID_DOCUMENTOS){
+	        SecurityMgr securityMgr = new SecurityMgr(cct.getConnection());
+	        boolean totalSupervisor = securityMgr.isSupervisorTotal(session.getClientContext().getUser().getUID());
+	        request.setAttribute("totalSupervisor", totalSupervisor);
+	        
+	        int idDoc = state.getEntityRegId();
+	        IItem itemDoc = DocumentosUtil.getDocumento(entitiesAPI, idDoc);
+	        boolean docPortafirmas = entitiesAPI.isDocumentPortafirmas(itemDoc);
+	        request.setAttribute("docPortafirmas", docPortafirmas);
+        }
+        //FIN [dipucr-Felipe #1366]
 
 		// Responsabilidades del usuario conectado
 		String resp = managerwl.getRespString(state);
 		// Menús
-	    request.setAttribute("menus", MenuFactory.getTaskMenu(cct, state, (String) servlet.getServletContext().getAttribute("ispacbase"), getResources(request), stageId, returnToSearch,resp));
+	    request.setAttribute("menus", MenuFactory.getTaskMenu(cct, state, (String) servlet.getServletContext().getAttribute("ispacbase"), 
+	    		getResources(request), stageId, returnToSearch, returnToNoticeList, resp));
 
 		//[Manut Eickt #707] INICIO - SIGEM Problemas de rendimiento
         //Cargamos enlaces para los expedientes relacionados
@@ -427,7 +479,9 @@ public class ShowTaskAction extends BaseAction
         //Cargamos las aplicaciones de gestion asociadas
         SpacMgr.loadAppGestion(session, state, request);
 
-        if (StringUtils.equals(request.getParameter("actions"), "deleteDocument")){
+        if (StringUtils.equals(request.getParameter("actions"), "deleteDocument")
+        		|| StringUtils.equals(request.getParameter("actions"), "deleteAllDocument"))//[dipucr-Felipe #1606]
+        {
         	action = mapping.findForward("showtask");
     		return new ActionForward(action.getName(), action.getPath() + "?taskId=" + String.valueOf(state.getTaskId()), action.getRedirect());
         }
@@ -510,14 +564,50 @@ public class ShowTaskAction extends BaseAction
 		    	IItem document = entitiesAPI.getEntity(SpacEntities.SPAC_DT_DOCUMENTOS, Integer.parseInt(multibox[i]));
 
 		    	// Un documento se puede eliminar si no tiene ningun tipo de bloqueo y no está registrado de salida.
-		    	if (!DocumentLockStates.hasAnyLock(document.getString("BLOQUEO"))
+//		    	if (!DocumentLockStates.hasAnyLock(document.getString("BLOQUEO"))
+		    	if (!DocumentLockStates.hasTotalLock(document.getString("BLOQUEO"))
 		    			&& !("SALIDA".equalsIgnoreCase(document.getString("TP_REG"))
 		    					&& StringUtils.isNotBlank(document.getString("NREG")))) {
-		    		entitiesAPI.deleteDocument(document);
+//		    		entitiesAPI.deleteDocument(document);
+		    		entitiesAPI.dipucrFakeDeleteDocument(document);//[dipucr-Felipe #1462]
 		    	}
 			}
 
 			defaultForm.setMultibox(null);
+		}
+	}
+	
+	/**
+	 * [dipucr-Felipe #1606] Borrar todos los del trámite
+     * @throws ISPACException
+	 */
+	private void deleteAllDocuments(SessionAPI session, HttpServletRequest request, IState state) throws ISPACException {
+
+		// Comprobar si hay que borrar documentos
+		String actions = request.getParameter("actions");
+		
+		if (actions != null && actions.equals("deleteAllDocument")) {
+			
+			ClientContext cct = session.getClientContext();
+			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+			
+			IItemCollection colDocumentos = DocumentosUtil.getDocumentosByTramites(cct, state.getNumexp(), state.getTaskId());
+
+			if (null != colDocumentos){
+				while (colDocumentos.next()){
+					
+					IItem document = colDocumentos.value();
+	
+			    	// Un documento se puede eliminar si no tiene ningun tipo de bloqueo y no está registrado de salida.
+//			    	if (!DocumentLockStates.hasAnyLock(document.getString("BLOQUEO"))
+					if (!DocumentLockStates.hasTotalLock(document.getString("BLOQUEO"))
+			    			&& !("SALIDA".equalsIgnoreCase(document.getString("TP_REG")) 
+			    					&& StringUtils.isNotBlank(document.getString("NREG"))))
+			    	{
+			    		entitiesAPI.dipucrFakeDeleteDocument(document);//[dipucr-Felipe #1462]
+			    	}
+				}
+			}
 		}
 	}
 

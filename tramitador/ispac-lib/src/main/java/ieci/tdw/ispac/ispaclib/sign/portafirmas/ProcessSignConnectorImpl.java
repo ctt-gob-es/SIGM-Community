@@ -7,28 +7,30 @@ import ieci.tdw.ispac.api.expedients.Document;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.rule.EventsDefines;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.resp.Responsible;
 import ieci.tdw.ispac.ispaclib.sign.SignCircuitMgr;
 import ieci.tdw.ispac.ispaclib.sign.SignDetailEntry;
 import ieci.tdw.ispac.ispaclib.sign.exception.InvalidSignatureValidationException;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.vo.ProcessSignProperties;
 import ieci.tdw.ispac.ispaclib.sign.portafirmas.vo.Signer;
+import ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import es.dipucr.sigem.portafirmas.UsuarioRechazo;
 
 public class ProcessSignConnectorImpl implements ProcessSignConnector {
 
 	/**
 	 * Logger de la clase.
 	 */
-	private static final Logger logger = Logger
-			.getLogger(ProcessSignConnectorImpl.class);
-
-
+	private static final Logger logger = Logger.getLogger(ProcessSignConnectorImpl.class);
 
 	/**
 	 * Constructor.
@@ -45,9 +47,7 @@ public class ProcessSignConnectorImpl implements ProcessSignConnector {
 	 * @see ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector#getState(ieci.tdw.ispac.ispaclib.context.ClientContext,
 	 *      java.lang.String)
 	 */
-	public String getState(ClientContext ctx, String processId)
-			throws ISPACException {
-
+	public String getState(ClientContext ctx, String processId) throws ISPACException {
 
 		return "";
 
@@ -85,6 +85,10 @@ public class ProcessSignConnectorImpl implements ProcessSignConnector {
 	 * @throws InvalidSignatureValidationException
 	 * @see ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector#getSigns(ieci.tdw.ispac.ispaclib.context.ClientContext, java.lang.String)
 	 */
+	public List <SignDetailEntry> getSigns(ClientContext ctx, String documentId, boolean includeSubstitutes) throws InvalidSignatureValidationException, ISPACException {
+		return getSigns(ctx, documentId, false);
+	}
+	
 	public List <SignDetailEntry> getSigns(ClientContext ctx, String documentId) throws InvalidSignatureValidationException, ISPACException {
 
 			/*IEntitiesAPI entitiesAPI = ctx.getAPI().getEntitiesAPI();
@@ -117,8 +121,7 @@ public class ProcessSignConnectorImpl implements ProcessSignConnector {
 	 * {@inheritDoc}
 	 * @see ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector#initSignProcess(ieci.tdw.ispac.ispaclib.context.ClientContext, java.lang.String, ieci.tdw.ispac.api.expedients.Document)
 	 */
-	public String initSignProcess(ClientContext ctx, String processTemplateId,
-			Document document , ProcessSignProperties properties) throws ISPACException {
+	public String initSignProcess(ClientContext ctx, String processTemplateId, Document document, ProcessSignProperties properties) throws ISPACException {
 
 		SignCircuitMgr signCircuitMgr = new SignCircuitMgr(ctx);
 		signCircuitMgr.initCircuit(Integer.parseInt(processTemplateId), Integer
@@ -126,6 +129,15 @@ public class ProcessSignConnectorImpl implements ProcessSignConnector {
 		return document.getId();
 
 	}
+	
+	/**
+	 * [dipucr-Felipe #1246]
+	 */
+	public String initSignProcess(ClientContext ctx, List<Usuario> listUsuarios, Document document, ProcessSignProperties properties) throws ISPACException{
+		return null;
+	}
+	
+	
 	/**
 	 * Este método no aplica en el conector por defecto ya que se seguirá tirando de la estructura organizativa como siempre
 	 * y se permitirá navegar a través de la misma a la hora de seleccionar u
@@ -152,4 +164,72 @@ public class ProcessSignConnectorImpl implements ProcessSignConnector {
 		return SIGNPROCESS_SYSTEM_DEFAULT;
 	}
 
+	/**
+	 * Este método no tiene aplicación en la implementación por defecto ya que el portafirmas por defecto maneja los usuarios internos de la aplicación
+ 	 * {@inheritDoc}
+ 	 * @see ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector#crearUsuarioPortafirmas(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	public boolean crearUsuarioPortafirmas(String entidadid, String dni, String nombre, String apellido1, String apellido2, String email) throws ISPACException {
+		return false;
+	}
+	
+	/**
+	 * Este método no tiene aplicación en la implementación por defecto ya que el portafirmas por defecto maneja los usuarios internos de la aplicación
+ 	 * {@inheritDoc}
+ 	 * @see ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector#modificarUsuarioPortafirmas(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	public boolean modificarUsuarioPortafirmas(String entidadid, String dni, String nombre, String apellido1, String apellido2, String email) throws ISPACException {
+		return false;
+	}
+	
+	/**
+	 * Este método no tiene aplicación en la implementación por defecto ya que el portafirmas por defecto maneja los usuarios internos de la aplicación
+ 	 * {@inheritDoc}
+ 	 * @see ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector#existeUsuarioPortafirmas(java.lang.String)
+	 */
+	public boolean existeUsuarioPortafirmas(String dni) throws ISPACException {
+		return false;
+	}
+	
+	/**
+	 * Este método no tiene aplicación en la implementación por defecto ya que el portafirmas por defecto maneja los usuarios internos de la aplicación
+ 	 * {@inheritDoc}
+ 	 * @see ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector#insertaAutorizacionPortafirmas(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	public boolean insertaAutorizacionPortafirmas(Date fstart, Date fend, String userIdenAutoriza, String userIdenAutorizado, String descripcion, String entidad) throws ISPACException {
+		return false;
+	}
+	
+	/**
+	 * Este método no tiene aplicación en la implementación por defecto ya que el portafirmas por defecto maneja los usuarios internos de la aplicación
+ 	 * {@inheritDoc}
+ 	 * @see ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector#revocarAutorizacion(java.util.Date, java.util.Date, java.lang.String)
+	 */
+	public boolean revocarAutorizacion(Date fstart, Date fend, String userIdenAutoriza, String userIdentAutorizado, String entidad) throws ISPACException {
+		return false;
+	}
+
+	/**
+	 * Este método no tiene aplicación en la implementación por defecto ya que el portafirmas por defecto no necisita inicializar ninguna variable
+ 	 * {@inheritDoc}
+ 	 * @see ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector#incializar(java.lang.String)
+	 */
+	public boolean inicializar(String entidadId) {
+		return false;
+	}
+	/**
+	 * [Ticket1269#Teresa] Anular circuito de firmas
+	 * Este método no tiene aplicación en la implementación por defecto ya que el portafirmas
+ 	 * {@inheritDoc}
+ 	 * @see ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnector#deleteDocument(java.lang.String)
+	 */
+	public void deleteDocument(ClientContext ctx, String processId) throws ISPACException{
+	}
+
+	/**
+	 * [dipucr-Felipe #1360] Sólo tiene sentido en portafirmas 
+	 */
+	public UsuarioRechazo getUsuarioRechazo(IClientContext ctx, IItem itemDoc) throws ISPACException {
+		return null;
+	}
 }

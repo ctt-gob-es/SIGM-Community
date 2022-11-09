@@ -80,6 +80,76 @@ public class SearchDAO {
 	}
 	
 	/**
+	 * [dipucr-Felipe #1725]
+	 * @param ctx
+	 * @param numDecreto
+	 * @return
+	 * @throws ISPACException
+	 */
+	public SearchBean searchDecretoByNumDecreto(ClientContext ctx, String numDecreto)
+			throws ISPACException{
+		
+		IItem itemDecreto = getItemDecreto(ctx, numDecreto);
+		String idTramite = itemDecreto.getString("ID_TRAMITE");
+		String numexp = itemDecreto.getString("NUMEXP");
+		LOGGER.warn("Consulta por decretos. Numexp: " + numexp + ". IdTramite: " + idTramite);
+		
+		if (null == idTramite || idTramite.equals("")){
+			return searchDecreto(ctx, numexp);
+		}
+		else{
+			//Tiene idTramite -> procedimientos genéricos que pueden tener varios decretos
+			StringBuffer sbQuery = new StringBuffer();
+			sbQuery.append(" WHERE numexp = '");
+			sbQuery.append(numexp);
+			sbQuery.append("' AND id_tramite = ");
+			sbQuery.append(idTramite);
+			sbQuery.append(" AND nombre = '");
+			sbQuery.append(Constants.DECRETOS._DOC_DECRETO);
+			sbQuery.append("' AND estadofirma = '");
+			sbQuery.append(SignStatesConstants.FIRMADO);
+			sbQuery.append("' ORDER BY id DESC");
+			LOGGER.warn("Consulta de decretos: " + sbQuery.toString());
+			
+			return searchDocumentQuery(ctx, sbQuery.toString());
+		}
+		
+	}
+	
+	/**
+	 * [dipucr-Felipe #1216]
+	 * Recupera el documento de decreto firmado a partir del numexp
+	 * @param entidad
+	 * @param numexp
+	 * @return
+	 * @throws ISPACException 
+	 */
+	public IItem getItemDecreto(ClientContext ctx, String numDecreto)
+			throws ISPACException{
+		
+		String[] arrNumDecreto = numDecreto.split("/");
+		String anio = arrNumDecreto[0];
+		String numero = arrNumDecreto[1];
+		
+		StringBuffer sbQuery = new StringBuffer();
+		sbQuery.append(" WHERE anio = ");
+		sbQuery.append(anio);
+		sbQuery.append(" AND numero_decreto = ");
+		sbQuery.append(numero);
+		
+		IEntitiesAPI entitiesAPI = ctx.getAPI().getEntitiesAPI();
+		
+    	IItemCollection colDecretos = entitiesAPI.queryEntities("SGD_DECRETO", sbQuery.toString());
+    	IItem itemDecreto = null;
+    	
+    	if (colDecretos.next()){
+    		itemDecreto = colDecretos.value();
+    	}
+    	
+    	return itemDecreto;
+	}
+	
+	/**
 	 * [dipucr-Felipe #1216]
 	 * Recupera el documento de decreto firmado a partir del numexp
 	 * @param entidad
@@ -206,6 +276,12 @@ public class SearchDAO {
 			searchBean.setDestino(documento.getString("DESTINO"));
 			//FIN [eCenpri-Felipe #625]
 			searchBean.setEstado(documento.getString("ESTADO"));//[eCenpri-Felipe #828]
+			
+			String valor = "false";
+			if(StringUtils.isNotEmpty(documento.getString("INFOPAG_RDE_ORIGINAL"))){
+				valor = "true";
+			}
+			searchBean.setFirmaConJustificante(valor);
 		}
 		return searchBean;
 	}

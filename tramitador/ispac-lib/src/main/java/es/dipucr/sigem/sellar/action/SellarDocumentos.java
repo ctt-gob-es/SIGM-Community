@@ -1,5 +1,7 @@
 package es.dipucr.sigem.sellar.action;
 
+import https.administracionelectronica_gob_es.notifica.ws.notificaws_v2._1_0.altaremesaenvios.AltaRemesaEnvios;
+import https.administracionelectronica_gob_es.notifica.ws.notificaws_v2._1_0.altaremesaenvios.ResultadoAltaRemesaEnvios;
 import ieci.tdw.ispac.api.IEntitiesAPI;
 import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
@@ -16,8 +18,6 @@ import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.session.OrganizationUser;
 import ieci.tdw.ispac.ispaclib.sign.DatosCompletosFirma;
-import ieci.tdw.ispac.ispaclib.sign.FMNTCertificateParser;
-import ieci.tdw.ispac.ispaclib.sign.InfoFirmante;
 import ieci.tdw.ispac.ispaclib.sign.SignDocument;
 import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
 import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
@@ -25,16 +25,12 @@ import ieci.tdw.ispac.ispaclib.utils.FileUtils;
 import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigFilePathResolver;
-import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
 import ieci.tecdoc.sgm.core.services.entidades.Entidad;
-import ieci.tecdoc.sgm.core.services.estructura_organizativa.ServicioEstructuraOrganizativa;
-import ieci.tecdoc.sgm.core.services.estructura_organizativa.Usuario;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -42,19 +38,21 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
+import javax.mail.SendFailedException;
+import javax.mail.internet.AddressException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -67,32 +65,28 @@ import com.lowagie.text.Image;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.AcroFields;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfPKCS7;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfWriter;
 
-import es.dipucr.notifica.ws.notifica._1_0.Tipo_envio;
-import es.dipucr.sigem.api.rule.common.AccesoBBDDRegistro;
 import es.dipucr.sigem.api.rule.common.DipucrDatosParticipante;
-import es.dipucr.sigem.api.rule.common.comparece.CompareceConfiguration;
 import es.dipucr.sigem.api.rule.common.firma.FirmaConfiguration;
-import es.dipucr.sigem.api.rule.common.utils.CompareceUtil;
+import es.dipucr.sigem.api.rule.common.notifica.NotificaConfiguration;
 import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.FechasUtil;
 import es.dipucr.sigem.api.rule.common.utils.GestorDatosFirma;
-import es.dipucr.sigem.api.rule.common.utils.NotificaUtil;
+import es.dipucr.sigem.api.rule.common.utils.MailUtil;
+import es.dipucr.sigem.api.rule.common.utils.NotificaUtilV2;
+import es.dipucr.sigem.api.rule.common.utils.ParticipantesUtil;
 import es.dipucr.sigem.api.rule.common.utils.PdfFirmaUtils;
 import es.dipucr.sigem.api.rule.common.utils.PdfUtil;
-import es.dipucr.sigem.api.rule.common.utils.UsuariosUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 import es.dipucr.sigem.sgm.tram.sign.DipucrSignConnector;
 
@@ -103,14 +97,13 @@ public class SellarDocumentos{
 	// Id de los documentos seleccionados
 	private String idDocSeleccionado = "";
 	int contadorNotifica;
-	int contadorComparece;
-	
-	File fileComparece = null;
-	Document documentComparece = null;
+		
 	File fileNotifica = null;
 	Document documentNotifica = null;
-	PdfWriter pdfCopyComparece = null;
 	PdfWriter pdfCopyNotifica = null;
+	
+	AltaRemesaEnvios remesa = null;
+	ResultadoAltaRemesaEnvios resultado_remesa = null;
 
 	/**
 	 * Ruta por defecto de la imagen de fondo del PDF.
@@ -163,7 +156,6 @@ public class SellarDocumentos{
 		IItem entityDocument = null;
 		int documentId = 0;
 		contadorNotifica = 0;
-		contadorComparece = 0;
 		
 		String tipoRegistro = "";
 		String numRegistro = "";
@@ -215,11 +207,11 @@ public class SellarDocumentos{
 			String consultaDocumentosRegistrados = "WHERE ID_TRAMITE=" + taskId + " AND (NREG IS NOT NULL AND NREG != '')";
 			
 			if (StringUtils.isNotEmpty(this.idDocSeleccionado)) {
-				logger.debug("Se va a sellar o enviar a COMPARECE el documento: " + this.idDocSeleccionado);
+				logger.debug("Se va a sellar o enviar a Notifica el documento: " + this.idDocSeleccionado);
 				consultaDocumentosRegistrados += " AND ID = " + this.idDocSeleccionado;
 			}
-			consultaDocumentosRegistrados += " AND UPPER(EXTENSION_RDE) = 'PDF' ORDER BY DESCRIPCION;";
-			logger.debug("Se van a enviar a COMPARECE o sellar los documentos: " + consultaDocumentosRegistrados);
+			consultaDocumentosRegistrados += " AND UPPER(EXTENSION_RDE) = 'PDF' AND ID_NOTIFICACION IS NULL ORDER BY DESCRIPCION;";
+			logger.debug("Se van a enviar a Notifica o sellar los documentos: " + consultaDocumentosRegistrados);
 
 			IItemCollection documentosRegistradosCollection = DocumentosUtil.queryDocumentos(cct, consultaDocumentosRegistrados);
 			Iterator<?> documentosRegistradosIterator = documentosRegistradosCollection.iterator();
@@ -227,12 +219,13 @@ public class SellarDocumentos{
 			pathFileTempConcatenada = FileTemporaryManager.getInstance().newFileName(".pdf");
 			
 			if(!documentosRegistradosIterator.hasNext())
-				throw new Exception("\nPara registrar un documento se deben cumplir tres requisitos:"
-						+ "\n1. Debe SELECCIONAR el documento a registrar o pulsar sobre el botón Registrar todo."
-						+ "\n2. Deben estar FIRMADO."
-						+ "\n3. Debe tener asignado un DESTINO que se carga de los participantes del expediente, "
-						+ "si no tiene destino asignelo dentro de las propiedades del documento (icono carpeta).\n "
-						+ "A continuacion Pulse Volver-->Cancelar");
+				//[dipucr-Felipe #1606] Error controlado ISPACInfo. HTML que saldrá en popup de avisos
+				throw new ISPACInfo("<b>NO SE HA PODIDO REALIZAR EL REGISTRO DE SALIDA</b>"
+						+ "<br/>Para registrar un documento se deben cumplir los siguientes requisitos:"
+						+ "<br/><br/><b>1.</b> Debe SELECCIONAR el documento a registrar o pulsar sobre el botón 'Registrar todos'."
+						+ "<br/><b>2.</b> Debe estar FIRMADO."
+						+ "<br/><b>3.</b> Debe ser de tipo SALIDA y tener asignado un DESTINO, que se carga de los participantes del expediente. "
+						+ "Si no tiene destino, asignelo dentro de las propiedades del documento (icono carpeta).");
 			
 			while (documentosRegistradosIterator.hasNext()) {
 				tipoRegistro = "";
@@ -299,10 +292,6 @@ public class SellarDocumentos{
 				//Manda la notificacion a Comparece o Notifica
 				enviaNotificacion(cct, thirdPartyAPI, numexp, document);
 				
-				//Se vuelve a comprobar si se han dado de alta en COMPARECE los que antes no estaban, si es así se envía por comparece ahora.		
-				generaParcipantesComparece(entitiesAPI, numexp, idDoc, descripcion, destino, fuenteTitulo, fuenteDocumento, sFechaRegistro, 
-						documentoRegistrado,pathFileTemp, infoPagRDE, tipoRegistro, numRegistro, departamento, document, listaDocumentosSellar);
-				
 				try{
 					
 					if(!(ConfigurationMgr.getVarGlobal(cct, Constants.NOTIFICA.API_KEY_NOTIFICA).equals(""))){
@@ -310,41 +299,21 @@ public class SellarDocumentos{
 								documentoRegistrado,pathFileTemp, infoPagRDE, tipoRegistro, numRegistro, departamento, document, listaDocumentosSellar);
 					}
 					else{
-						
 						logger.info("La entidad no tiene configurado la variable de sistema API_KEY_NOTIFICA, no se generan participantes Notifica");
-						
 					}
 				
 				}
 			    catch(Exception e){
-			    	
 			    	logger.error("La entidad no tiene configurado la variable de sistema API_KEY_NOTIFICA, expcepcion:"+e.getMessage());
-			    	
 			    }
-				
-			}
-			
-			if (fileComparece != null && fileComparece.exists()) {
-				documentComparece.close();
-				pdfCopyComparece.close();
-				
-				cct.beginTX();				
-				entityDocument = DocumentosUtil.generaYAnexaDocumento(cct, taskId, idTipDoc, Constants.COMPARECE.PARTICIPANTES_COMPARECE, 
-						fileComparece, Constants._EXTENSION_PDF);
-				entityDocument.set("ID_PLANTILLA", idPlantillaComparece);
-				
-				entityDocument.store(cct);
-				cct.endTX(true);
-				fileComparece.delete();
-			}
+			}			
 			
 			if (fileNotifica != null && fileNotifica.exists()) {
 				documentNotifica.close();
 				pdfCopyNotifica.close();
 				
 				cct.beginTX();		
-				entityDocument = DocumentosUtil.generaYAnexaDocumento(cct, taskId, idTipDoc, Constants.NOTIFICA.PARTICIPANTES_NOTIFICA, 
-						fileNotifica, Constants._EXTENSION_PDF);
+				entityDocument = DocumentosUtil.generaYAnexaDocumento(cct, taskId, idTipDoc, Constants.NOTIFICA.PARTICIPANTES_NOTIFICA,	fileNotifica, Constants._EXTENSION_PDF);
 				entityDocument.set("ID_PLANTILLA", idPlantillaComparece);
 				
 				entityDocument.store(cct);
@@ -381,9 +350,10 @@ public class SellarDocumentos{
 				idTipDoc = idTipDocAux;
 			}
 		} catch (ISPACInfo e) {
-			logger.error("Error al sellar el documento. " + e.getMessage(), e);
+			logger.error("Error controlado al sellar el documento. " + e.getMessage(), e);
 			e.setRefresh(false);
-			throw new ISPACException("Error al registrar el documento. " + e.getMessage(), e);
+//			throw new ISPACException("Error al registrar el documento. " + e.getMessage(), e);
+			throw e; //[dipucr-Felipe #1606] Lanzamos las excepciones ISPACInfo sin convertir para que se muestren en el popup de información
 		} catch (Exception e) {
 			logger.error("Error al sellar el documento. " + e.getMessage(), e);
 			throw new ISPACException("Error al registrar el documento."+ e.getMessage(), e);
@@ -395,10 +365,7 @@ public class SellarDocumentos{
 				for(int i = 0; i < listaDocumentosSellar.size(); i++){
 					if(listaDocumentosSellar.get(i) != null && listaDocumentosSellar.get(i).exists()) listaDocumentosSellar.get(i).delete();
 				}
-			}
-			if (fileComparece != null && fileComparece.exists()) {
-				fileComparece.delete();
-			}
+			}		
 			if (fileNotifica != null && fileNotifica.exists()) {
 				fileNotifica.delete();
 			}
@@ -496,7 +463,12 @@ public class SellarDocumentos{
 						}
 						
 						pathFileTemp = FileTemporaryManager.getInstance().put(documentoRegistradoConEstadoEnvioPostal.getAbsolutePath(), ".pdf");
-						addDatosFirma(documentoRegistradoConEstadoEnvioPostal, pathFileTemp, document); //[dipucr-Felipe #791-3]
+						
+						//[dipucr-Felipe #1246] Portafirmas - Compatibilidad con firma 3 fases
+						IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+						if (!entitiesAPI.isDocumentPortafirmas(document)){
+							addDatosFirma(documentoRegistradoConEstadoEnvioPostal, pathFileTemp, document); //[dipucr-Felipe #791-3]
+						}
 						
 						File file = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + pathFileTemp);
 						pathFileTemp = FileTemporaryManager.getInstance().put(file.getAbsolutePath(), ".pdf");
@@ -524,9 +496,9 @@ public class SellarDocumentos{
 		}		
 		
 		} catch (ISPACException e) {
-			logger.error("ERROR AL CARGAR EN LA LISTA DE DOCUMENTOS SELLADOS LOS DOCUMENTOS QUE NO SE HAN ENVIADO POR NOTIFICACION ELECTRONICA", e);
+			logger.error("ERROR AL CARGAR EN LA LISTA DE DOCUMENTOS SELLADOS LOS DOCUMENTOS QUE NO SE HAN ENVIADO POR NOTIFICACION ELECTRONICA " + e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error("ERROR AL GENERAR BANDA GRIS DE DOCUMENTOS SELLADOS"+e.getMessage(), e);
+			logger.error("ERROR AL GENERAR BANDA GRIS DE DOCUMENTOS SELLADOS " + e.getMessage(), e);
 			throw new Exception("ERROR AL GENERAR BANDA GRIS DE DOCUMENTOS SELLADOS", e);
 		}
 		
@@ -567,84 +539,6 @@ public class SellarDocumentos{
 	}
 	
 
-	private void generaParcipantesComparece(IEntitiesAPI entitiesAPI, String numexp, int idDoc, String descripcion,String destino, Font fuenteTitulo, Font fuenteDocumento, String sFechaRegistro, File documentoRegistrado, String pathFileTemp, String infoPagRDE, String tipoRegistro, String numRegistro, String departamento, IItem document, ArrayList<File> listaDocumentosSellar) throws Exception{
-		
-		IItemCollection enviadosCompareceCollection = entitiesAPI.getEntities(Constants.TABLASBBDD.DPCR_ACUSES_COMPARECE, numexp, " IDENT_DOC = '" + idDoc + "'");
-		Iterator<?> enviadosCompareceIterator = enviadosCompareceCollection.iterator();	
-		
-		File fileSello = null;
-		String rutaFileName="";
-		
-		if(enviadosCompareceIterator.hasNext()){
-			contadorComparece++;
-			if(fileComparece == null){
-				//fileComparece = new File(FileTemporaryManager.getInstance().getFileTemporaryPath() + "/documentoComparece.pdf");
-				fileComparece = new File(FileTemporaryManager.getInstance().getFileTemporaryPath()  + File.separator + FileTemporaryManager.getInstance().newFileName(".pdf"));						
-				documentComparece = new Document();
-
-				pdfCopyComparece = PdfCopy.getInstance(documentComparece, new FileOutputStream(fileComparece));
-				documentComparece.open();
-
-				String entidad = EntidadesAdmUtil.obtenerEntidad(cct);
-				String imageLogoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_LOGO_PATH_DIPUCR);
-				String imageFondoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_FONDO_PATH_DIPUCR);
-				String imagePiePath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_PIE_PATH_DIPUCR);
-
-				File logoURL = new File(imageLogoPath);
-				if (logoURL != null) {
-					Image logo = Image.getInstance(imageLogoPath);
-					logo.scalePercent(50);
-					documentComparece.add(logo);
-				}
-				File fondoURL = new File(imageFondoPath);
-				if(fondoURL != null){
-					Image fondo = Image.getInstance(imageFondoPath);
-					fondo.setAbsolutePosition(250, 50);
-					fondo.scalePercent(70);
-					documentComparece.add(fondo);
-					
-				}
-
-				File pieURL = new File(imagePiePath);
-				if(pieURL != null){
-					Image pie = Image.getInstance(imagePiePath);
-					pie.setAbsolutePosition(documentComparece.getPageSize().getWidth() - 550, 15);
-					pie.scalePercent(80);
-					documentComparece.add(pie);
-					
-				}
-
-				documentComparece.add(new Phrase("\n\n"));
-				Paragraph titulo = new Paragraph(new Phrase("DOCUMENTOS ENVIADOS A COMPARECE", fuenteTitulo));
-				titulo.setAlignment(Element.ALIGN_CENTER);
-				documentComparece.add(titulo);
-				documentComparece.add(new Phrase("\n"));
-			}
-			logger.debug("Documento enviado a COMPARECE: " + descripcion);
-			
-			logger.debug("Insertar Ayuntamiento en documento comparece. " + destino);
-
-			documentComparece.add(new Phrase(contadorComparece + ".- Destino del registro: " + destino + " : "));
-			documentComparece.add(new Phrase("\n"));					
-			documentComparece.add(new Phrase("\t\tDocumento: " + descripcion + " : ", fuenteDocumento));
-			documentComparece.add(new Phrase("\n"));
-			documentComparece.add(new Phrase("\t\t\t Interesado o Representante - ID Notificación - Fecha de notificación"));
-			documentComparece.add(new Phrase("\n"));
-			int contadorRepresentantes = 0;
-			while(enviadosCompareceIterator.hasNext()){	
-				contadorRepresentantes++;
-				//se ha enviado por comparece
-				IItem enviadosCompareceItem = (IItem) enviadosCompareceIterator.next();
-				String dniNotificado = enviadosCompareceItem.getString("DNI_NOTIFICADO");
-				String idNotificacion = enviadosCompareceItem.getString("ID_NOTIFICACION");
-				
-				documentComparece.add(new Phrase("\t\t\t" + contadorRepresentantes + ".- " + dniNotificado + " - " + idNotificacion + " - " + sFechaRegistro + "."));
-				documentComparece.add(new Phrase("\n"));
-			}
-			documentComparece.add(new Phrase("\n"));
-		}
-	}
-	
 	
 	private void generaParcipantesNotifica(IEntitiesAPI entitiesAPI, String numexp, int idDoc, String descripcion,String destino, Font fuenteTitulo, Font fuenteDocumento, String sFechaRegistro, File documentoRegistrado, String pathFileTemp, String infoPagRDE, String tipoRegistro, String numRegistro, String departamento, IItem document, ArrayList<File> listaDocumentosSellar) throws Exception{
 		
@@ -664,9 +558,9 @@ public class SellarDocumentos{
 				documentNotifica.open();
 
 				String entidad = EntidadesAdmUtil.obtenerEntidad(cct);
-				String imageLogoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_LOGO_PATH_DIPUCR);
-				String imageFondoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_FONDO_PATH_DIPUCR);
-				String imagePiePath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + CompareceConfiguration.getInstanceNoSingleton(entidad).getProperty(CompareceConfiguration.IMAGE_PIE_PATH_DIPUCR);
+				String imageLogoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + NotificaConfiguration.getInstanceNoSingleton(entidad).getProperty(NotificaConfiguration.IMAGE_LOGO_PATH_DIPUCR);
+				String imageFondoPath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + NotificaConfiguration.getInstanceNoSingleton(entidad).getProperty(NotificaConfiguration.IMAGE_FONDO_PATH_DIPUCR);
+				String imagePiePath = SigemConfigFilePathResolver.getInstance().resolveFullPath("skinEntidad_" + entidad + File.separator, "/SIGEM_TramitacionWeb") + NotificaConfiguration.getInstanceNoSingleton(entidad).getProperty(NotificaConfiguration.IMAGE_PIE_PATH_DIPUCR);
 
 				File logoURL = new File(imageLogoPath);
 				if (logoURL != null) {
@@ -713,8 +607,8 @@ public class SellarDocumentos{
 				contadorRepresentantes++;
 				//se ha enviado por Notifica
 				IItem enviadosNotificaItem = (IItem) enviadosNotificaIterator.next();
-				String dniNotificado = enviadosNotificaItem.getString("DNI_NOTIFICADO");
-				String idNotificacion = enviadosNotificaItem.getString("ID_NOTIFICACION");
+				String dniNotificado = StringUtils.defaultString(enviadosNotificaItem.getString("DNI_NOTIFICADO"));
+				String idNotificacion = StringUtils.defaultString(enviadosNotificaItem.getString("ID_NOTIFICACION"));
 				
 				documentNotifica.add(new Phrase("\t\t\t" + dniNotificado + " - " + idNotificacion + " - " + sFechaRegistro + "."));
 				documentNotifica.add(new Phrase("\n"));
@@ -731,7 +625,7 @@ public class SellarDocumentos{
 			
 			String nif="";
 			
-			if(CompareceConfiguration.getInstanceNoSingleton(EntidadesAdmUtil.obtenerEntidad(ctx)).getProperty(CompareceConfiguration.TIENE_COMPARECE).equals("S")){
+			
 				int idDoc = documento.getKeyInt();
 				
 				String descripcion = "";
@@ -746,7 +640,7 @@ public class SellarDocumentos{
 				Vector<String> dnisRepresentantesComparece = new Vector<String>();
 				
 				DipucrDatosParticipante interesado = new DipucrDatosParticipante();
-				File documentoEnviarComparece = null;
+				File documentoEnviarNotifica = null;
 				
 				if(StringUtils.isNotEmpty(destinatario)){
 					
@@ -760,12 +654,12 @@ public class SellarDocumentos{
 					if(StringUtils.isEmpty(extension))
 						extension = documento.getString("EXTENSION");
 					
-					byte[] documentContent;
+					//byte[] documentContent;
 					//[Dipucr-Manu Ticket #404] - INICIO - ALSIGM3 Problema al registrar y enviar a comparece.
-					documentoEnviarComparece = DocumentosUtil.getFile(ctx, infoPag, "", extension);
+					documentoEnviarNotifica = DocumentosUtil.getFile(ctx, infoPag, "", extension);
 					//[Dipucr-Manu Ticket #404] - FIN - ALSIGM3 Problema al registrar y enviar a comparece.
 					
-					documentContent = IOUtils.toByteArray(new FileInputStream(documentoEnviarComparece));
+					//documentContent = IOUtils.toByteArray(new FileInputStream(documentoEnviarComparece));
 			
 					try{
 						asunto = ExpedientesUtil.getAsunto(ctx, numexp);
@@ -788,7 +682,7 @@ public class SellarDocumentos{
 						else
 							numexp = "";
 						try {
-							interesado = CompareceUtil.esUsuarioComparece(ctx, numexp, destinatario, destinatarioId, dnisRepresentantesComparece, descripcion);
+							interesado = this.dameParticipante(ctx, numexp, destinatario, destinatarioId, dnisRepresentantesComparece, descripcion);
 							
 							//Validacion del tipo persona, ver en la documentacion de notifica el fichero de hacienda de tipos de nif
 							//String tipo_persona = documento.getString("DESTINO_TIPO");
@@ -838,12 +732,9 @@ public class SellarDocumentos{
 							throw new ISPACRuleException("Error en el envío de las notificaciones electrónicas, revise los datos de los participantes del expediente. " + e.getMessage(), e);
 						}
 						
-						if (interesado.isUsuario_en_comparece()){
-							CompareceUtil.envioDocComparece(ctx, numexp, idDoc, dnisRepresentantesComparece, destinatario, documentoItem, documentContent, extension);
-						}
-						
+												
 						//Agustin #414 Integracion de Notifica-DEH
-						else{
+						
 							
 							if(null!=interesado.getNif()){
 								
@@ -852,6 +743,9 @@ public class SellarDocumentos{
 									
 								Entidad entidadAdm = EntidadesAdmUtil.obtenerEntidadObject(ctx);
 								String destino = DocumentosUtil.getAutorUID(entitiesAPI, idDoc);
+								
+								// Notifica v1 #1550
+								/*
 								Tipo_envio envio_type = NotificaUtil.para_notifica_altaEnvio_generaTipoEnvio(
 										numexp, //concepto
 										entidadAdm.getDir3(), //codigoDIR3
@@ -877,18 +771,93 @@ public class SellarDocumentos{
 										entidadAdm.getSia(), //codigoSIA, 
 										"Notificación Electrónica Genérica", //nombreDeProcedimientoSIA
 										"Notificación"//notificación o comunicación tipoEnvio
-								);
+								);		
 								
-					
 								if(!(ConfigurationMgr.getVarGlobal(ctx, Constants.NOTIFICA.API_KEY_NOTIFICA).equals(""))){
-										NotificaUtil nu = new NotificaUtil(ConfigurationMgr.getVarGlobal(ctx, Constants.NOTIFICA.API_KEY_NOTIFICA));							
-										nu.notifica_altaEnvio(ctx, numexp, destino, idDoc, documentoItem, envio_type);
+									NotificaUtil nu = new NotificaUtil(ConfigurationMgr.getVarGlobal(ctx, Constants.NOTIFICA.API_KEY_NOTIFICA));							
+									nu.notifica_altaEnvio(ctx, numexp, destino, idDoc, documentoItem, envio_type);									
+								}
+								else{									
+									logger.info("La entidad no tiene configurado la variable de sistema API_KEY_NOTIFICA, la notificación se enviará sólo por Comparece");									
+								}
+								
+								*/
+								
+								
+								// Notifica v2 #1550
+								
+								if(!(ConfigurationMgr.getVarGlobal(ctx, Constants.NOTIFICA.API_KEY_NOTIFICA).equals(""))){
+									
+										NotificaUtilV2 nuv2 = new NotificaUtilV2(ConfigurationMgr.getVarGlobal(ctx, Constants.NOTIFICA.API_KEY_NOTIFICA));
+																				
+										String asunto_ = DocumentosUtil.getNumExp(entitiesAPI, idDoc).concat(": ").concat(ExpedientesUtil.getAsunto(ctx, DocumentosUtil.getNumExp(entitiesAPI, idDoc)));
+																		
+										//Mandar asunto del expediente en el asunto de la notificacion, quitar caracteres que no sean letras o numeros
+										String normalized = Normalizer.normalize(asunto_, Form.NFD);
+										//asunto_ = normalized.replaceAll("[^A-Za-z0-9]", " ");
+										asunto_ = normalized.replaceAll("[^ A-Za-z0-9/:]", "");
+										
+										if(asunto_.length()>250)
+											asunto_=asunto_.substring(0,249);
+								
+										Date date = new Date();
+									    long timeMilli = date.getTime();
+										remesa = nuv2.getClienteNotifica().para_notifica_altaremesa(
+														asunto_, //no puedo mandar mas de 255 caracteres
+														DocumentosUtil.getNombreDocumento(entitiesAPI,idDoc),
+														documentoEnviarNotifica,
+														entidadAdm.getDir3(),
+														interesado.getDir3(),
+														nif,
+														interesado.getNombreDestinatario().trim(),
+														interesado.getApellidosDestinatario().trim(),
+														10, //int diasParaCaducar
+														new String(String.valueOf(idDoc)).concat(String.valueOf(timeMilli)),
+														entidadAdm.getSia(),
+														"2" //tipoEnvio notificación o comunicación.			
+										);												
+										try{
+											if(StringUtils.isNotEmpty(interesado.getEmailDestinatario())){
+												String mailInicio = "<img src='cid:escudo' width='200px'/>"
+														+ "<p align='justify' style='font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11.5px; color: #3c5876; margin-left: 10px'>";
+												StringBuffer sbContenido = new StringBuffer(mailInicio);
+												sbContenido.append("<b>ESTE EMAIL SE CORRESPONDE CON UN AVISO DE UNA NOTIFICACIÓN.</b></br>");
+												sbContenido.append("Le informamos que está disponible una nueva notificación para "+interesado.getApellidosDestinatario().toUpperCase()
+														+" "+interesado.getNombreDestinatario().toUpperCase()+" con los siguientes datos:</br>");										
+												
+
+												sbContenido.append("<ul><li type='circle'>Organismo emisor: "+EntidadesAdmUtil.obtenerNombreLargoEntidadById(ctx)+"</li>");
+												sbContenido.append("<li type='circle'>Concepto: "+numexp+"</li>");
+												sbContenido.append("<li type='circle'>Asunto: "+asunto+"</li>");
+												sbContenido.append("</ul>");
+												
+												String enlaceHtml = "Puede acceder a esta notificación en la Dirección Electrónica Habilitada única (DEHú), disponible en: "
+														+ "<a href='https://dehu.redsara.es/' target='_blank'>https://dehu.redsara.es/</a> </br>";
+												sbContenido.append(enlaceHtml);
+												sbContenido.append("De acuerdo con lo previsto en los artículos 41 y 43 de la Ley 39/2015, de 1 de octubre, del Procedimiento Administrativo Común de las Administraciones Públicas, la aceptación de la notificación, el rechazo expreso de la notificación o bien la presunción de rechazo por no haber accedido a la notificación durante el periodo de puesta a disposición, dará por efectuado el trámite de notificación y se continuará el procedimiento.</br>");
+												
+												sbContenido.append("Usted puede recibir esta notificación por distintas vías electrónicas o incluso en papel por vía postal. Si usted accediera al contenido de esta notificación por más de una de estas vías, sepa que los efectos jurídicos, si los hubiera, siempre empiezan a contar desde la fecha en que se produzca su primer acceso.</br>");
+												
+												
+												String asuntEmail = "Envío: Aviso de nueva notificación puesta a disposición";
+												MailUtil.enviarCorreoConAcusesLogo(ctx, numexp, interesado.getEmailDestinatario(), null, sbContenido.toString() , asuntEmail, nombreDoc, interesado.getNombreDestinatario().trim(), false);
+											}											
+										} catch (AddressException e) {
+											logger.error("Error en el envío del email " + numexp + ". " + e.getMessage(), e);
+										} catch (SendFailedException e) {
+											logger.error("Error en el envío del email " + numexp + ". " + e.getMessage(), e);
+										}
+															
+										resultado_remesa=nuv2.notifica_altaRemesaEnvios(ctx, numexp, destino, idDoc, documentoItem, remesa);
 								}
 								else{
 										
 										logger.info("La entidad no tiene configurado la variable de sistema API_KEY_NOTIFICA, la notificación se enviará sólo por Comparece");
 										
 								}
+								
+								
+								
 							
 							}
 							
@@ -903,29 +872,22 @@ public class SellarDocumentos{
 							
 						}
 						
-						logger.debug("¿El usuario: " + destinatario + " es usuario de COMPARECE?" + interesado.isUsuario_en_comparece());
-						
-					}
-				}
+					
+					}				
 				
-				//[Dipucr-Manu Ticket #404] - INICIO - ALSIGM3 Problema al registrar y enviar a comparece.
-				if(null != documentoEnviarComparece && documentoEnviarComparece.exists()){
-					documentoEnviarComparece.delete();
-				}
-				//[Dipucr-Manu Ticket #404] - FIN - ALSIGM3 Problema al registrar y enviar a comparece.
-			}
+			
 		} catch (ISPACException e1) {
 			logger.error("Error al enviar el documento a notifica del expediente " + numexp + ". " + e1.getMessage(), e1);
-			throw new ISPACException("Error al enviar el documento a comparece del expediente " + numexp + ". " + e1.getMessage(), e1);
+			throw new ISPACException("Error SellarDocumentos al enviar el documento a comparece del expediente " + numexp + ". " + e1.getMessage(), e1);
 		} catch (FileNotFoundException e1) {
 			logger.error("Error al recuperar el contenido del documentos del expediente " + numexp + ". " + e1.getMessage(), e1);
-			throw new ISPACException("Error al recuperar el contenido del documentos del expediente " + numexp + ". " + e1.getMessage(), e1);
+			throw new ISPACException("Error SellarDocumentos al recuperar el contenido del documentos del expediente " + numexp + ". " + e1.getMessage(), e1);
 		} catch (IOException e1) {
 			logger.error("Error al recuperar el contenido del documentos del expediente " + numexp + ". " + e1.getMessage(), e1);
-			throw new ISPACException("Error al recuperar el contenido del documentos del expediente " + numexp + ". " + e1.getMessage(), e1);
-		} catch (NoSuchAlgorithmException e) {
-			logger.error("Error al calcular hash de documentos en el envio a Notifica " + numexp + ". " + e.getMessage(), e);
-			throw new ISPACException("Error al calcular hash de documentos en el envio a Notifica " + numexp + ". " + e.getMessage(), e);
+			throw new ISPACException("Error SellarDocumentos al recuperar el contenido del documentos del expediente " + numexp + ". " + e1.getMessage(), e1);
+		} catch (NoSuchAlgorithmException e1) {
+			logger.error("Error NoSuchAlgorithmException " + numexp + ". " + e1.getMessage(), e1);
+			throw new ISPACException("Error SellarDocumentos NoSuchAlgorithmException" + numexp + ". " + e1.getMessage(), e1);
 		}
 	}
 	
@@ -999,19 +961,21 @@ public class SellarDocumentos{
 
 		try {
 			PdfReader readerInicial = new PdfReader(file.getAbsolutePath());
+
 			int n = readerInicial.getNumberOfPages();
-			int largo = (int) readerInicial.getPageSize(n).getHeight();
+			int largo = (int) readerInicial.getPageSize(1).getHeight();
+			int ancho = (int) readerInicial.getPageSize(1).getWidth();
+			Rectangle r = new Rectangle(ancho, largo);
 
 			bandSize = 15;
 
 			Image imagen = this.createBgImage();
-			Document document = new Document();
+			Document document = new Document(r);
 			String ruta = FileTemporaryManager.getInstance().getFileTemporaryPath() + "/" + pathFileTemp;
 			FileOutputStream fileOut = new FileOutputStream(ruta, true);
 
 			PdfWriter writer = PdfWriter.getInstance(document, fileOut);
 			document.open();
-			Rectangle r = document.getPageSize();
 
 			for (int i = 1; i <= n; i++) {
 				PdfImportedPage page = writer.getImportedPage(readerInicial, i);
@@ -1024,8 +988,7 @@ public class SellarDocumentos{
 				imagen.setRotationDegrees(90F);
 				document.add(image);
 				if (imagen != null) {
-					for (int j = 0; j < largo; j = (int) ((float) j + imagen
-							.getWidth())) {
+					for (int j = 0; j < largo; j = (int) ((float) j + imagen.getWidth())) {
 						imagen.setAbsolutePosition(0.0F, j);
 						imagen.scaleAbsoluteHeight(bandSize);
 						document.add(imagen);
@@ -1034,6 +997,13 @@ public class SellarDocumentos{
 				PdfContentByte over = writer.getDirectContent();
 				getImagen(over, margen, margen, n, i, tipoRegistro,	numRegistro, fechaRegistro, departamento);
 
+				if(i < n){
+					largo = (int) readerInicial.getPageSize(i + 1).getHeight();
+					ancho = (int) readerInicial.getPageSize(i + 1).getWidth();
+					r = new Rectangle(ancho, largo);
+					document.setPageSize(r);
+				}
+				
 				document.newPage();
 			}
 
@@ -1044,10 +1014,10 @@ public class SellarDocumentos{
 			readerInicial.close();
 
 		} catch (ISPACException e) {
-			logger.error("Error al añadir la banda lateral al PDF", e);
+			logger.error("Error al añadir la banda lateral al PDF " + e.getMessage(), e);
 			throw new ISPACRuleException("Error. ", e);
 		} catch (Exception exc) {
-			logger.error("Error al añadir la banda lateral al PDF", exc);
+			logger.error("Error al añadir la banda lateral al PDF " + exc.getMessage(), exc);
 			throw new ISPACException(exc);
 		}
 	}
@@ -1196,4 +1166,78 @@ public class SellarDocumentos{
 
 		return null;
 	}
+	
+	
+public DipucrDatosParticipante dameParticipante(IClientContext ctx, String numexp, String destinatario, String destinatarioId, Vector<String> dnisRepresentantesComparece, String descripcion)	throws RemoteException, ISPACRuleException{
+		
+		DipucrDatosParticipante participante = new DipucrDatosParticipante();
+
+		try {
+			
+			IInvesflowAPI invesflowAPI = ctx.getAPI();
+			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
+			
+			String sqlQuery = "";
+			if (StringUtils.isEmpty(destinatarioId) || destinatarioId.equals("0")) {				
+				destinatario = StringUtils.replace(destinatario, "'", "\\'");
+				sqlQuery = ParticipantesUtil.NOMBRE + " = E'" + destinatario + "'";
+			} else {
+				sqlQuery = ParticipantesUtil.ID_EXT + " = '" + destinatarioId + "'";
+			}
+
+			logger.debug("sqlQueryPart " + sqlQuery);
+			
+			IItemCollection participantes = ParticipantesUtil.getParticipantes(ctx, numexp, sqlQuery, "");
+			// Si es = a 0 quiere decir que esta en sus expedientes relacionados
+			// entonces miro en cualquier otro expediente para sacar si dni
+			if (participantes.toList().size() == 0) {
+
+				participantes = ParticipantesUtil.getParticipantes(ctx, "", sqlQuery, ParticipantesUtil.ID + " DESC");
+			}
+
+			if (participantes.toList().size() != 0) {
+				Iterator<?> itParticipantes = participantes.iterator();
+
+				IItem partic = null;
+				String dniDestinatario = "";
+				
+				while (itParticipantes.hasNext() && StringUtils.isEmpty(dniDestinatario)) {
+					partic = (IItem) itParticipantes.next();
+
+					if (partic.getString(ParticipantesUtil.NDOC) != null) {
+						dniDestinatario = partic.getString(ParticipantesUtil.NDOC);
+						logger.debug("Se encuntra NDOC, se sale con valor: " + dniDestinatario);
+					}
+				}
+				logger.debug("Se tiene NDOC: " + dniDestinatario);
+				
+				participante.setNombreDestinatario( partic.getString("NOMBRE"));
+				participante.setEmailDestinatario(partic.getString("DIRECCIONTELEMATICA"));
+				participante.setTelefonoDestinatario(partic.getString("TFNO_MOVIL"));
+				participante.setNif(partic.getString("NDOC"));
+				participante.setDir3(partic.getString("DIR3"));				
+				
+			}
+
+		} catch (ISPACException e) {
+			logger.error("Error al recuperar participante" + e.getMessage(), e);
+			throw new ISPACRuleException("Error  al recuperar participante" + e.getMessage(), e);
+		}
+		return participante;
+	}
+
+//public static void main(String args[]) {
+//	
+//	String name ="ÑÑññDCRP2022/23423: Solicitud de subvención nominativa del Ayuntamiento de Carrión de Calatrava, para Mejora instalaciones y vías municipales º*?¿¡|@"; //example
+//	//String name ="Asunto de prueba Agustín  º @: / # , . . ñoñica. * ^<>ºª|?"; //example	
+//	String normalized = Normalizer.normalize(name, Form.NFD);
+//	System.out.println(normalized);
+//	String result = normalized.replaceAll("[^ A-Za-z0-9/:]", "");
+//	//String result = name.replaceAll("[^ a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ/:]", "");
+//	System.out.println(result);
+//
+//}
+	
+	
+	
 }

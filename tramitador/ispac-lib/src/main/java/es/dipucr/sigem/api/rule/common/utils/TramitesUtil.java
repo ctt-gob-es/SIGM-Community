@@ -14,7 +14,13 @@ import ieci.tdw.ispac.api.item.util.ListCollection;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.dao.tx.TXHitoDAO;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import ieci.tdw.ispac.ispactx.ITXAction;
+import ieci.tdw.ispac.ispactx.TXConstants;
+import ieci.tdw.ispac.ispactx.TXReabrirTramite;
+import ieci.tdw.ispac.ispactx.TXTransaction;
+import ieci.tdw.ispac.ispactx.TXTransactionDataContainer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,10 +47,18 @@ public class TramitesUtil {
 	
 	//Mapeo de las columnas de la tablas SPAC_DT_TRAMITES y SPAC_DT_TRAMITES_H
 	public static final String NUMEXP = "NUMEXP";
+	public static final String ID = "ID";
 	public static final String ID_TRAM_PCD = "ID_TRAM_PCD";
 	public static final String ID_TRAM_EXP = "ID_TRAM_EXP";
+	public static final String ID_FASE_PCD = "ID_FASE_PCD";
+	public static final String ID_FASE_EXP = "ID_FASE_EXP";
 	public static final String NOMBRE = "NOMBRE";
 	public static final String FECHA_CIERRE = "FECHA_CIERRE";
+	public static final String OBSERVACIONES = "OBSERVACIONES";
+	public static final String NUMEXP_RELACIONADO = "NUMEXP_RELACIONADO";
+	
+	//[dipucr-Felipe #1325] Tamaño máximo del campo observaciones
+	public static final int MAX_LENGTH_OBSERVACIONES = 1000;
 	
 	
 	//Mapeo de las propiedades que se incluyen en los datos específicos.
@@ -58,34 +72,53 @@ public class TramitesUtil {
 	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA8 = "TABLA8";
 	public static final String DATOS_ESPECIFICOS_PROPIEDAD_TABLA9 = "TABLA9";
 
-	public static void cargarObservacionesTramite (ClientContext cct, boolean campoFormateo, String numexp, int tramite, String texto) throws ISPACRuleException, ISPACException{
+	public static void cargarObservacionesTramite (IClientContext cct, boolean campoFormateo, String numexp, int tramite, String texto) throws ISPACRuleException, ISPACException{		
 		try{
 	        IItem itTram = TramitesUtil.getTramite(cct, numexp, tramite);
-			String observaciones = "";
-			if(StringUtils.isNotEmpty(itTram.getString("OBSERVACIONES"))){
-				observaciones = itTram.getString("OBSERVACIONES");			
-			}
-			if(campoFormateo){
-				observaciones=texto;
-			}
-			else{
-				observaciones=observaciones+"\n"+texto;
-			}
-			if(observaciones.length()>250){
-				observaciones = observaciones.substring(0, 250);
-			}
-			itTram.set("OBSERVACIONES", observaciones);
+	        if(itTram!=null){
+	        	String observaciones = "";
+				
+				if(StringUtils.isNotEmpty(itTram.getString(TramitesUtil.OBSERVACIONES))){
+					observaciones = itTram.getString(TramitesUtil.OBSERVACIONES);
+				}
+				
+				if(campoFormateo){
+					observaciones = texto;
+				} else{
+					observaciones = observaciones + "\n" + texto;
+				}
+				
+				if(observaciones.length() > MAX_LENGTH_OBSERVACIONES){//[dipucr-Felipe #1325]
+					observaciones = observaciones.substring(0, MAX_LENGTH_OBSERVACIONES - 1);
+				}
+				
+				itTram.set(TramitesUtil.OBSERVACIONES, observaciones);
+				itTram.store(cct);
+	        }		
+		} catch(ISPACException e){
+			LOGGER.error("Error al cargar las observaciones en el numExp " + numexp + " . " + e.getMessage(), e);
+			throw new ISPACException("Error al cargar las observaciones en el numExp " + numexp + ". " + e.getMessage(), e);
+		}
+	}
+	
+	public static void setNumexpRelacionado (IClientContext cct, String numexp, int tramite, String numexpRelacionado) throws ISPACRuleException, ISPACException{		
+		try{
+	        IItem itTram = TramitesUtil.getTramite(cct, numexp, tramite);
+			
+			itTram.set(TramitesUtil.NUMEXP_RELACIONADO, numexpRelacionado);
 			itTram.store(cct);
 		
 		} catch(ISPACException e){
-			LOGGER.error("Error al cargar las observaciones en el numExp " + numexp+ " . " + e.getMessage(), e);
-			throw new ISPACException("Error al cargar las observaciones en el numExp " + numexp+ " . " + e.getMessage(), e);
+			LOGGER.error("Error al anotar el número de expediente relacionado: '" + numexpRelacionado + "' en el trámite: '" + tramite + "' del expediente: '" + numexp + "'. " + e.getMessage(), e);
+			throw new ISPACException("Error al anotar el número de expediente relacionado: '" + numexpRelacionado + "' en el trámite: '" + tramite + "' del expediente: '" + numexp + "'. " + e.getMessage(), e);
 		}
 	}
+	
 	public static IItem getPTramiteById (IRuleContext rulectx, int idTramite) throws ISPACRuleException{
 		IClientContext cct = rulectx.getClientContext();
 		return getPTramiteById(cct, idTramite);
 	}
+	
 	public static IItem getPTramiteById (IClientContext cct, int idTramite) throws ISPACRuleException{
 		IItem itTramite  = null;
 		
@@ -141,6 +174,56 @@ public class TramitesUtil {
 		
 		
 		return itTramite;		
+	}
+	
+	public static IItem getTramiteByCode(IClientContext cct, String codTramite) throws ISPACException {
+		IItem itTramite  = null;
+		
+		try{
+			//----------------------------------------------------------------------------------------------
+	        IInvesflowAPI invesFlowAPI = cct.getAPI();
+	        IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();
+	        //----------------------------------------------------------------------------------------------
+		
+			//Obtenemos el id del trámite de "Preparación del Anuncio" en el Catálogo a partir de su código
+			String strQuery = "WHERE COD_TRAM = '"+ codTramite +"'";
+			LOGGER.debug("strQuery: "+strQuery);
+			IItemCollection collection = entitiesAPI.queryEntities("SPAC_CT_TRAMITES", strQuery);
+			Iterator<?> it = collection.iterator();
+	        if (it.hasNext()){
+	        	itTramite = (IItem)it.next();
+	        }else{
+	        	throw new ISPACInfo("No se ha encontrado el trámite con código " + codTramite);
+	        }
+	        
+		} catch(Exception e){
+			LOGGER.error("Error al recuperar el trámite " + codTramite + ". " + e.getMessage(), e);
+			throw new ISPACException("Error al recuperar el trámite " + codTramite + ". " + e.getMessage(), e);
+		}
+		
+		
+		return itTramite;		
+	}
+	
+	/**
+	 * Comprueba si existe y si es así no lo crea
+	 * **/
+	public static int creaTramiteByCodSiNOExiste(IClientContext cct, String codTramite, String numexp) throws ISPACException {
+		int idTask = Integer.MIN_VALUE;
+		
+		IItem itemCtTramite = TramitesUtil.getTramiteByCode(cct, numexp, codTramite);
+		String nombreTramite = itemCtTramite.getString("NOMBRE");
+		
+		IItemCollection tramitesCollection = TramitesUtil.getTramites(cct, numexp, " NOMBRE = '" + nombreTramite + "'", "");
+		Iterator<?> itTramitesCollection = tramitesCollection.iterator(); 
+		if(itTramitesCollection.hasNext()){
+			IItem tramite = (IItem) itTramitesCollection.next();
+			idTask = tramite.getInt(TramitesUtil.ID_TRAM_EXP);
+		}
+		else{
+			idTask = TramitesUtil.crearTramite(cct, codTramite, numexp);
+		}	
+		return idTask;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -258,7 +341,7 @@ public class TramitesUtil {
 	 * @throws ISPACRuleException
 	 */
 	@SuppressWarnings("unchecked")
-	public static int crearTramite(ClientContext cct, String codTramite, String numexp) throws ISPACRuleException{
+	public static int crearTramite(IClientContext cct, String codTramite, String numexp) throws ISPACRuleException{
 		
 		int idTask = Integer.MIN_VALUE;
 		
@@ -390,12 +473,130 @@ public class TramitesUtil {
 	}
 	
 	/**
+	 * [dipucr-Felipe #1113]
+	 * Comprueba si el trámite es de tipo protegido
+	 * @param cct
+	 * @param itemTramite
+	 * @return
+	 * @throws ISPACException
+	 */
+	private static boolean esTramiteProtegido(IClientContext cct, IItem itemTramite) throws ISPACException {
+		try{
+			int idCTTramite = itemTramite.getInt("ID_TRAM_CTL");
+			String sCodTramiteActual = TramitesUtil.getCodTram(idCTTramite, cct);
+			
+			//Comprobamos si en la tabla de validación existe el código
+			String strQuery = "WHERE VALOR = '" + sCodTramiteActual + "' AND VIGENTE = 1";
+			IItemCollection collection = null;
+			
+			try{ //Por si no existiera la tabla
+				collection = cct.getAPI().getEntitiesAPI().queryEntities("DPCR_VLDTBL_TRAM_PROTEGIDOS", strQuery);
+				
+			} catch(Exception ex1){
+				LOGGER.debug("NADA", ex1);
+				return false;
+			}
+			
+			//Vemos si el código de trámite está en la tabla
+			if (collection.toList().size() > 0){
+				return true;
+				
+			} else {
+				return false;
+			}
+		} catch(Exception ex) {
+			throw new ISPACException("Error al comprobar si el trámite a reabrir es de tipo protegido", ex);
+		}
+	}
+	public static IItem getFase(IClientContext cct, String numexp) throws ISPACRuleException{
+		IItem resultado = null;
+		try{
+			IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+			IItemCollection fasesCollection = entitiesAPI.getEntities(Constants.TABLASBBDD.SPAC_FASES, numexp);
+			for(Object oFase : fasesCollection.toList()){
+				resultado = (IItem) oFase;
+			}
+		} 
+		catch(Exception e){
+			LOGGER.error("Error al recuperar la fase del expediente: " + numexp + ". " + e.getMessage(), e);
+			throw new ISPACRuleException("Error al recuperar la fase del expediente: " + numexp + ". " + e.getMessage(), e);
+		}
+		
+		return resultado;
+	}
+	
+	public static void reabirTramite(ClientContext cct, IItem itemTramite, String numexp) throws ISPACException{
+		//INICIO [dipucr-Felipe #1113]
+		IInvesflowAPI invesFlowAPI = cct.getAPI();
+		ITXTransaction txTransaction = invesFlowAPI.getTransactionAPI();
+		
+		
+		int idTramite = itemTramite.getKeyInt();
+		int idTramPcd = itemTramite.getInt("ID_TRAM_PCD");
+		int idFasePdc = itemTramite.getInt("ID_FASE_EXP");
+		String idRespClosed = itemTramite.getString("ID_RESP_CLOSED");
+		
+		cct.beginTX();
+		
+    	if (esTramiteProtegido(cct, itemTramite)){
+    		throw new ISPACException("Este es un trámite especialmente protegido y no se puede reabrir. Si es indispensable, consulte con el administrador", "", false);
+			
+    	} else {
+			IItem faseActiva = getFase(cct, numexp);
+			if(null != faseActiva){
+				String idFaseBpm = faseActiva.getString("ID_FASE_BPM");									
+				
+				//Si las dos fases son iguales se puede abrir trámite
+				if(idFaseBpm.equals(idFasePdc + "")){
+					ITXAction action = new TXReabrirTramite(numexp, faseActiva.getKeyInt(), idTramite, idRespClosed, idTramPcd);
+					run(action, cct, txTransaction);
+					
+					TXTransactionDataContainer dataContainer = new TXTransactionDataContainer((ClientContext) cct);
+					
+					
+				} else {
+					throw new ISPACException("El trámite que deseas abrir está en otra fase, retrocede o avanza fase hasta que el trámite se visualice en 'Datos de Trámites'", "", false);
+				}
+		
+			} else {
+				throw new ISPACException("El expediente está cerrado, no se puede reabrir trámite", "", false);
+			}
+    	}
+    	
+    	cct.endTX(true);
+	}
+	
+	protected static void run(ITXAction action, IClientContext cct, ITXTransaction itxTransaction) throws ISPACException {
+		TXTransactionDataContainer dataContainer = null;
+
+		try	{			
+			dataContainer = new TXTransactionDataContainer((ClientContext) cct);	
+			action.lock((ClientContext)cct,dataContainer);
+			action.run((ClientContext)cct, dataContainer, itxTransaction);
+			dataContainer.persist();
+			
+		} catch(ISPACException e) {
+			LOGGER.error("ERROR. " + e.getMessage() , e);
+			dataContainer.setError();
+			throw e;
+			
+		} catch(Exception e) {
+			LOGGER.error("ERROR. " + e.getMessage(), e);
+			dataContainer.setError();
+			throw new ISPACException(e);
+		} finally {
+			dataContainer.release();
+		}
+	}
+	
+	/**
 	 * Cierra el trámite a partir de su id
 	 * @param idTramBpm
 	 * @param rulectx
 	 * @throws ISPACRuleException
 	 */
 	public static void cerrarTramite(IClientContext cct, int idTramite, String numexp) throws ISPACRuleException{
+		String nombreTramite = "";
 		
 		try{
 			//----------------------------------------------------------------------------------------------
@@ -412,12 +613,14 @@ public class TramitesUtil {
 	        if (itTrams.hasNext()){
 	        	tram = ((IItem)itTrams.next());
 	        	int idTram = tram.getInt("ID");
+	        	nombreTramite = StringUtils.defaultString(tram.getString("NOMBRE"));
+
 	        	tx.closeTask(idTram);
 	        }
 			
 		} catch(Exception e) {
-			LOGGER.error("Error al cerrar el trámite " + idTramite + " en el expediente " + numexp + ". " + e.getMessage(), e);
-			throw new ISPACRuleException("Error al cerrar el trámite " + idTramite + " en el expediente " + numexp + ". " + e.getMessage(), e);
+			LOGGER.error("Error al cerrar el trámite: " + nombreTramite + " (id_tramite: " + idTramite + ") en el expediente " + numexp + ". " + e.getMessage(), e);
+			throw new ISPACRuleException("Error al cerrar el trámite: " + nombreTramite + " (id_tramite: " + idTramite + ") en el expediente " + numexp + ". " + e.getMessage(), e);
 		}
 	}
 	
@@ -559,6 +762,8 @@ public class TramitesUtil {
 			tramite_nuevo.set("ID_SUBPROCESO", tramite_viejo.getInt("ID_SUBPROCESO"));
 		
 		tramite_nuevo.set("ID_RESP_CLOSED", tramite_viejo.getString("ID_RESP_CLOSED"));
+		
+		tramite_nuevo.set("NUMEXP_RELACIONADO", tramite_viejo.getString("NUMEXP_RELACIONADO"));
 
 		tramite_nuevo.store(cct);
 	}
@@ -591,6 +796,26 @@ public class TramitesUtil {
 		if(resultado == null || resultado.toList().size() == 0){
 			resultado = entitiesAPI.getEntities(Constants.TABLASBBDD.SPAC_DT_TRAMITES_H, numexp, null);	        
 		}
+
+		return resultado;
+	}
+	
+	public static IItemCollection getTramitesNoHistorico(IClientContext cct, String numexp)throws ISPACException{
+		IItemCollection resultado;
+		
+		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+		
+		resultado = entitiesAPI.getEntities(Constants.TABLASBBDD.SPAC_DT_TRAMITES, numexp, null);	        
+
+		return resultado;
+	}
+	
+	public static IItemCollection getTramitesDelHistorico(IClientContext cct, String numexp)throws ISPACException{
+		IItemCollection resultado;
+		
+		IEntitiesAPI entitiesAPI = cct.getAPI().getEntitiesAPI();
+		
+		resultado = entitiesAPI.getEntities(Constants.TABLASBBDD.SPAC_DT_TRAMITES_H, numexp, null);	        
 
 		return resultado;
 	}
@@ -777,5 +1002,47 @@ public class TramitesUtil {
 		}
         
 		return nombreTramite;
+	}
+
+	public static String getObservacionesTramites(IClientContext cct, String numexp, int idTramite) {
+		String observaciones = "";
+		
+		try{
+			IItem itTram = TramitesUtil.getTramite(cct, numexp, idTramite);
+			
+			if(StringUtils.isNotEmpty(itTram.getString(TramitesUtil.OBSERVACIONES))){
+				observaciones = itTram.getString(TramitesUtil.OBSERVACIONES);
+			}
+			
+		} catch(ISPACException e){
+			LOGGER.error("ERROR al recupear las observaciones del trámite: " + idTramite + ", del expediente: " + numexp + ". " + e.getMessage(), e);
+		}
+		
+		return observaciones;
+	}
+
+	public static boolean observacionesTramiteContains(IClientContext cct, String numexp, int idTramite, String textoObservaciones) {
+		return StringUtils.isNotEmpty(TramitesUtil.getObservacionesTramites(cct, numexp, idTramite)) && TramitesUtil.getObservacionesTramites(cct, numexp, idTramite).contains(textoObservaciones);
+	}
+
+	public static void cierraTramites(IClientContext cct, IEntitiesAPI entitiesAPI, String numexp) throws ISPACRuleException {
+		ITXTransaction transaction;
+		try {
+			transaction = new TXTransaction((ClientContext) cct);
+			
+			String strQuery = "WHERE NUMEXP = '" + numexp + "'";
+			IItemCollection collectionTrams = entitiesAPI.queryEntities("SPAC_TRAMITES", strQuery);
+			
+			Iterator<?> itTrams = collectionTrams.iterator();
+			IItem tram = null;
+			while (itTrams.hasNext()) {
+				tram = (IItem) itTrams.next();
+				int idTram = tram.getInt("ID");
+				transaction.closeTask(idTram);
+			}
+		} catch (Exception e) {
+			LOGGER.error("Error al cerrar el trámite del expediente: " + numexp + ". " + e.getMessage(), e);
+			throw new ISPACRuleException("Error al cerrar el trámite del expediente: " + numexp + ". " + e.getMessage(), e);
+		}
 	}
 }

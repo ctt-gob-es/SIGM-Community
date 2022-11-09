@@ -132,4 +132,17 @@ public class SignCircuitHeaderDAO extends ObjectDAO
 		objlist.query(cnt, sql);
 		return objlist;
 	}
+	
+	/**
+	 * Obtiene el circuito de firmas a partir de su descripcion
+	 * @param cnt Conexi&oacute;n a BD
+	 * @return Lista de todos los circuitos de firma definidos en el sistema.
+	 * @throws ISPACException
+	 */
+	public static CollectionDAO getCircuitByDescripcion(DbCnt cnt, String descripcion) throws ISPACException {
+    	String sql = "WHERE DESCRIPCION LIKE '%"+descripcion+"%'";
+		CollectionDAO objlist = new CollectionDAO(SignCircuitHeaderDAO.class);
+		objlist.query(cnt, sql);
+		return objlist;
+	}
 }

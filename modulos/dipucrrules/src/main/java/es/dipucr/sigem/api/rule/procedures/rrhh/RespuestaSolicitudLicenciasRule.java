@@ -8,10 +8,12 @@ import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRule;
 import ieci.tdw.ispac.api.rule.IRuleContext;
 import ieci.tdw.ispac.ispaclib.common.constants.SignStatesConstants;
+import ieci.tdw.ispac.ispaclib.context.ClientContext;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 
 import org.apache.log4j.Logger;
 
+import es.dipucr.sigem.api.rule.common.utils.BloqueosFirmaUtil;
 import es.dipucr.sigem.api.rule.common.utils.CircuitosUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
@@ -75,8 +77,16 @@ public class RespuestaSolicitudLicenciasRule implements IRule
 				bFirmado = false;
 				strMotivo = itemDocumento.getString("MOTIVO_RECHAZO");
 			}
-			//[eCenpri-Felipe #601] Datos del circuito de firma
-			String firmantes = CircuitosUtil.getFirmantesCircuito(rulectx);
+			//INICIO [eCenpri-Felipe #601] Datos del circuito de firma
+			//[dipucr-Felipe #1246]
+			boolean bPortafirmas = entitiesAPI.isDocumentPortafirmas(itemDocumento);
+			String firmantes = null;
+			if (bPortafirmas){
+				firmantes = CircuitosUtil.getFirmantesDocumentoPortafirmas(cct, idDoc);
+			}
+			else{
+				firmantes = CircuitosUtil.getFirmantesCircuito(rulectx);//[dipucr-Felipe #1246]
+			}
 			
 			//Desglosamos el id de solicitud en NIF, año y NºLicencia
 			String numexp = DocumentosUtil.getNumExp(entitiesAPI, idDoc);
@@ -125,6 +135,8 @@ public class RespuestaSolicitudLicenciasRule implements IRule
 			}//FIN [dipucr-Felipe #693]
 			
 			//Cerramos el trámite y el expediente
+			int idTramite = itemDocumento.getInt("ID_TRAMITE");
+			BloqueosFirmaUtil.cerrarSesionYEliminarBloqueos((ClientContext) cct, idTramite); //[dipucr-Felipe #1294]
 			ExpedientesUtil.cerrarExpediente(cct, numexp);
 		}
 		catch (Exception e) {

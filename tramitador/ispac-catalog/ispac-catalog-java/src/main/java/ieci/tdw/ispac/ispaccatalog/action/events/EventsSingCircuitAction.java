@@ -50,8 +50,7 @@ public class EventsSingCircuitAction extends BaseDispatchAction {
 				ISecurityAPI.FUNC_INV_SIGN_CIRCUITS_READ,
 				ISecurityAPI.FUNC_INV_SIGN_CIRCUITS_EDIT });
 
-		ProcessSignConnector processSignConnector = ProcessSignConnectorFactory
-		.getInstance().getProcessSignConnector();
+		ProcessSignConnector processSignConnector = ProcessSignConnectorFactory.getInstance(session.getClientContext()).getProcessSignConnector();
 
 		int entityId = Integer.parseInt(request.getParameter("entityId"));
         int intIdObj = Integer.parseInt(request.getParameter("regId"));

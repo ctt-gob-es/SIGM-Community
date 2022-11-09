@@ -124,7 +124,7 @@ public class DipucrFaceRevisarFacturaRule implements IRule
 
 			//Obtenemos los datos de la factura
 			IItem itemFactura = DipucrFaceFacturasUtil.getFacturaEntity(cct, numexp);
-			String nreg = itemFactura.getString("NREG_FACE");
+//			String nreg = itemFactura.getString("NREG_FACE");
 			
 			//Obtenemos los datos de la revision de facturas
 			collection = entitiesAPI.getEntities("REVISION_EFACTURA", numexp);
@@ -224,7 +224,7 @@ public class DipucrFaceRevisarFacturaRule implements IRule
 				//al circuito de firma que corresponda
 				if (bFirmas){
 					//Iniciamos el circuito de firma
-					signAPI.initCircuit(idCircuito, idDocumento);
+					signAPI.initCircuitPortafirmas(idCircuito, idDocumento);//[dipucr-Felipe #1246]
 				}
 				//Si lo revisa Compras, limpiamos la pestaña "Revisión eFactura" 
 				else{
@@ -245,19 +245,29 @@ public class DipucrFaceRevisarFacturaRule implements IRule
 				
 				//Cambiamos el estado de la factura en FACe y la aplicación Factur@
 				//[dipucr-Felipe #1151] Sólo si no estamos en el trámite de tramitación previa del servicio
-				if (!bTramRevisionServicio){
-					if (sCodTramiteActual.equals(DipucrFaceFacturasUtil.COD_TRAM_REVISION1)){
-						if(bFirmas || bTramitacionPrevia){
-							DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, nreg, EstadosFace.VERIFICADA_RCF, -1, "");
-							DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, nreg, EstadosFace.RECIBIDA_DESTINO, 0, "");
+				try{
+					if (!bTramRevisionServicio){
+						if (sCodTramiteActual.equals(DipucrFaceFacturasUtil.COD_TRAM_REVISION1)){
+							if(bFirmas || bTramitacionPrevia){
+								DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, itemFactura, EstadosFace.VERIFICADA_RCF, -1, "");
+								DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, itemFactura, EstadosFace.RECIBIDA_DESTINO, 0, "");
+							}
+							else{
+								DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, itemFactura, EstadosFace.VERIFICADA_RCF, 0, "");
+							}
 						}
 						else{
-							DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, nreg, EstadosFace.VERIFICADA_RCF, 0, "");
+							DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, itemFactura, EstadosFace.RECIBIDA_DESTINO, 1, "");
 						}
 					}
-					else{
-						DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, nreg, EstadosFace.RECIBIDA_DESTINO, 1, "");
+				}
+				//[dipucr-Felipe #1472] Si ha insertado la factura en sical pero falla al cambiarle el estado
+				//Quitamos la firma del portafirmas
+				catch(Exception ex){
+					if (bFirmas){
+						signAPI.deleteCircuitPortafirmas(idDocumento);
 					}
+					throw ex;
 				}
 			}
 			//NO CONFORMADA
@@ -267,7 +277,7 @@ public class DipucrFaceRevisarFacturaRule implements IRule
 				if (!bTramRevisionServicio){
 					//Ponemos la factura como "Rechazada"
 					String motivo = itemRevisarFactura.getString("MOTIVO");
-					DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, nreg, EstadosFace.RECHAZADA, 0, motivo);
+					DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, itemFactura, EstadosFace.RECHAZADA, 0, motivo);
 							
 //					ExpedientesUtil.avanzarFase(cct, numexp);
 				}
@@ -352,9 +362,9 @@ public class DipucrFaceRevisarFacturaRule implements IRule
 					itemRevisarFactura.store(cct);
 					
 					//Retrocedemos el estado de la factura en FACe
-					DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, nreg, EstadosFace.VERIFICADA_RCF, 0, "");
+					DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, itemFactura, EstadosFace.VERIFICADA_RCF, 0, "");
 					if (DipucrFaceFacturasUtil.COD_TRAM_REVISION1.equals(sCodUltimoTram)){
-						DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, nreg, EstadosFace.RECIBIDA_RCF, 0, "");
+						DipucrFaceFacturasUtil.cambiarEstadoFactura(cct, itemFactura, EstadosFace.RECIBIDA_RCF, 0, "");
 					}
 				}
 			}

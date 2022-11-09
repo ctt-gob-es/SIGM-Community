@@ -345,7 +345,8 @@
 																					&nbsp;&nbsp;<html:select property="property(SPAC_CTOS_FIRMA_CABECERA:SECUENCIA)" styleClass="input">
 																										<html:option value="1" key="portafirmas.secuencia.cascada"/>
 																										<html:option value="2" key="portafirmas.secuencia.paralelo"/>
-																										<html:option value="3" key="portafirmas.secuencia.primer.firmante"/>
+																										<%-- [Ticket1298#Teresa]
+																										<html:option value="3" key="portafirmas.secuencia.primer.firmante"/>--%>
 																									</html:select>&nbsp;&nbsp;<bean:message key="catalog.data.obligatory"/>
 																					<div id="formErrors">
 																						<html:errors property="property(SPAC_CTOS_FIRMA_CABECERA:SECUENCIA)"/>

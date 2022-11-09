@@ -2,7 +2,7 @@
  * GestionCSVWebServiceSoapBindingStub.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis 1.3 Oct 05, 2005 (05:23:37 EDT) WSDL2Java emitter.
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
 package ieci.tecdoc.sgm.gestioncsv.ws.client.axis;
@@ -16,13 +16,39 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
     static org.apache.axis.description.OperationDesc [] _operations;
 
     static {
-        _operations = new org.apache.axis.description.OperationDesc[7];
+        _operations = new org.apache.axis.description.OperationDesc[10];
         _initOperationDesc1();
     }
 
     private static void _initOperationDesc1(){
         org.apache.axis.description.OperationDesc oper;
         org.apache.axis.description.ParameterDesc param;
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("getContenidoDocumentoOriginal");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "entidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://dto.services.core.sgm.tecdoc.ieci", "Entidad"), ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci", "StringB64"));
+        oper.setReturnClass(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "getContenidoDocumentoOriginalReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[0] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("existeContenidoDocumentoOriginal");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "entidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://dto.services.core.sgm.tecdoc.ieci", "Entidad"), ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci", "BooleanRetorno"));
+        oper.setReturnClass(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.BooleanRetorno.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "existeContenidoDocumentoOriginalReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[1] = oper;
+
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("generarCSV");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "entidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://dto.services.core.sgm.tecdoc.ieci", "Entidad"), ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad.class, false, false);
@@ -34,7 +60,7 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
         oper.setReturnQName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "generarCSVReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[0] = oper;
+        _operations[2] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getInfoDocumentoByCSV");
@@ -47,7 +73,7 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
         oper.setReturnQName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "getInfoDocumentoByCSVReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[1] = oper;
+        _operations[3] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("getDocumentoByCSV");
@@ -60,7 +86,7 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
         oper.setReturnQName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "getDocumentoByCSVReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[2] = oper;
+        _operations[4] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("deleteInfoDocumento");
@@ -73,7 +99,7 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
         oper.setReturnQName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "deleteInfoDocumentoReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[3] = oper;
+        _operations[5] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("existeContenidoDocumento");
@@ -86,20 +112,7 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
         oper.setReturnQName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "existeContenidoDocumentoReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[4] = oper;
-
-        oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("getContenidoDocumento");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "entidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://dto.services.core.sgm.tecdoc.ieci", "Entidad"), ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad.class, false, false);
-        oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci", "StringB64"));
-        oper.setReturnClass(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64.class);
-        oper.setReturnQName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "getContenidoDocumentoReturn"));
-        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
-        oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[5] = oper;
+        _operations[6] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("writeDocumento");
@@ -114,7 +127,35 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
         oper.setReturnQName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "writeDocumentoReturn"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
-        _operations[6] = oper;
+        _operations[7] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("writeDocumentoOriginal");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "entidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://dto.services.core.sgm.tecdoc.ieci", "Entidad"), ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "stringB64Encoded"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://dto.services.core.sgm.tecdoc.ieci", "RetornoServicio"));
+        oper.setReturnClass(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.RetornoServicio.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "writeDocumentoOriginalReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[8] = oper;
+
+        oper = new org.apache.axis.description.OperationDesc();
+        oper.setName("getContenidoDocumento");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "entidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://dto.services.core.sgm.tecdoc.ieci", "Entidad"), ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad.class, false, false);
+        oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "id"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci", "StringB64"));
+        oper.setReturnClass(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "getContenidoDocumentoReturn"));
+        oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
+        oper.setUse(org.apache.axis.constants.Use.LITERAL);
+        _operations[9] = oper;
 
     }
 
@@ -133,7 +174,7 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
         } else {
             super.service = service;
         }
-        ((org.apache.axis.client.Service)super.service).setTypeMappingVersion("1.2");
+        ((org.apache.axis.client.Service)super.service).setTypeMappingVersion("1.1");
             java.lang.Class cls;
             javax.xml.namespace.QName qName;
             javax.xml.namespace.QName qName2;
@@ -262,12 +303,80 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
         }
     }
 
-    public ieci.tecdoc.sgm.gestioncsv.ws.client.axis.InfoDocumentoCSVRetorno generarCSV(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad entidad, ieci.tecdoc.sgm.gestioncsv.ws.client.axis.InfoDocumentoCSVFormDTO infoDocumentoForm) throws java.rmi.RemoteException {
+    public ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64 getContenidoDocumentoOriginal(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad entidad, java.lang.String id) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
         _call.setOperation(_operations[0]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "getContenidoDocumentoOriginal"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, id});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64) org.apache.axis.utils.JavaUtils.convert(_resp, ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64.class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public ieci.tecdoc.sgm.gestioncsv.ws.client.axis.BooleanRetorno existeContenidoDocumentoOriginal(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad entidad, java.lang.String id) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[1]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "existeContenidoDocumentoOriginal"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, id});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.BooleanRetorno) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.BooleanRetorno) org.apache.axis.utils.JavaUtils.convert(_resp, ieci.tecdoc.sgm.gestioncsv.ws.client.axis.BooleanRetorno.class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public ieci.tecdoc.sgm.gestioncsv.ws.client.axis.InfoDocumentoCSVRetorno generarCSV(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad entidad, ieci.tecdoc.sgm.gestioncsv.ws.client.axis.InfoDocumentoCSVFormDTO infoDocumentoForm) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[2]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -301,7 +410,7 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[1]);
+        _call.setOperation(_operations[3]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -335,7 +444,7 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[2]);
+        _call.setOperation(_operations[4]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -369,7 +478,7 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[3]);
+        _call.setOperation(_operations[5]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -403,7 +512,7 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[4]);
+        _call.setOperation(_operations[6]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -432,46 +541,12 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
 }
     }
 
-    public ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64 getContenidoDocumento(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad entidad, java.lang.String id) throws java.rmi.RemoteException {
-        if (super.cachedEndpoint == null) {
-            throw new org.apache.axis.NoEndPointException();
-        }
-        org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[5]);
-        _call.setUseSOAPAction(true);
-        _call.setSOAPActionURI("");
-        _call.setEncodingStyle(null);
-        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
-        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
-        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "getContenidoDocumento"));
-
-        setRequestHeaders(_call);
-        setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, id});
-
-        if (_resp instanceof java.rmi.RemoteException) {
-            throw (java.rmi.RemoteException)_resp;
-        }
-        else {
-            extractAttachments(_call);
-            try {
-                return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64) _resp;
-            } catch (java.lang.Exception _exception) {
-                return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64) org.apache.axis.utils.JavaUtils.convert(_resp, ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64.class);
-            }
-        }
-  } catch (org.apache.axis.AxisFault axisFaultException) {
-  throw axisFaultException;
-}
-    }
-
     public ieci.tecdoc.sgm.gestioncsv.ws.client.axis.RetornoServicio writeDocumento(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad entidad, java.lang.String id, java.lang.String stringB64Encoded) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
         org.apache.axis.client.Call _call = createCall();
-        _call.setOperation(_operations[6]);
+        _call.setOperation(_operations[7]);
         _call.setUseSOAPAction(true);
         _call.setSOAPActionURI("");
         _call.setEncodingStyle(null);
@@ -493,6 +568,74 @@ public class GestionCSVWebServiceSoapBindingStub extends org.apache.axis.client.
                 return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.RetornoServicio) _resp;
             } catch (java.lang.Exception _exception) {
                 return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.RetornoServicio) org.apache.axis.utils.JavaUtils.convert(_resp, ieci.tecdoc.sgm.gestioncsv.ws.client.axis.RetornoServicio.class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public ieci.tecdoc.sgm.gestioncsv.ws.client.axis.RetornoServicio writeDocumentoOriginal(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad entidad, java.lang.String id, java.lang.String stringB64Encoded) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[8]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "writeDocumentoOriginal"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, id, stringB64Encoded});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.RetornoServicio) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.RetornoServicio) org.apache.axis.utils.JavaUtils.convert(_resp, ieci.tecdoc.sgm.gestioncsv.ws.client.axis.RetornoServicio.class);
+            }
+        }
+  } catch (org.apache.axis.AxisFault axisFaultException) {
+  throw axisFaultException;
+}
+    }
+
+    public ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64 getContenidoDocumento(ieci.tecdoc.sgm.gestioncsv.ws.client.axis.Entidad entidad, java.lang.String id) throws java.rmi.RemoteException {
+        if (super.cachedEndpoint == null) {
+            throw new org.apache.axis.NoEndPointException();
+        }
+        org.apache.axis.client.Call _call = createCall();
+        _call.setOperation(_operations[9]);
+        _call.setUseSOAPAction(true);
+        _call.setSOAPActionURI("");
+        _call.setEncodingStyle(null);
+        _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
+        _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
+        _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
+        _call.setOperationName(new javax.xml.namespace.QName("http://server.ws.gestioncsv.sgm.tecdoc.ieci", "getContenidoDocumento"));
+
+        setRequestHeaders(_call);
+        setAttachments(_call);
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, id});
+
+        if (_resp instanceof java.rmi.RemoteException) {
+            throw (java.rmi.RemoteException)_resp;
+        }
+        else {
+            extractAttachments(_call);
+            try {
+                return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64) _resp;
+            } catch (java.lang.Exception _exception) {
+                return (ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64) org.apache.axis.utils.JavaUtils.convert(_resp, ieci.tecdoc.sgm.gestioncsv.ws.client.axis.StringB64.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {

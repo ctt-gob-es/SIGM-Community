@@ -305,6 +305,38 @@ public class GestionCSVWSRemoteClient implements ServicioGestionCSV {
 		}
 
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see ieci.tecdoc.sgm.core.services.gestioncsv.ServicioGestionCSV#existeContenidoDocumentoOriginal(ieci.tecdoc.sgm.core.services.dto.Entidad,
+	 *      java.lang.String)
+	 */
+	public boolean existeContenidoDocumentoOriginal(Entidad entidad, String id) throws CSVException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("existeContenidoDocumento(Entidad, String) - start");
+		}
+
+		try {
+			BooleanRetorno booleanRetorno = getService().existeContenidoDocumentoOriginal(
+					getEntidadWS(entidad), id);
+			if (ServiciosUtils.isReturnOK((IRetornoServicio) booleanRetorno)) {
+
+				boolean returnboolean = booleanRetorno.isValor();
+				if (logger.isDebugEnabled()) {
+					logger.debug("existeContenidoDocumento(Entidad, String) - end");
+				}
+				return returnboolean;
+			} else {
+				throw getCSVException((IRetornoServicio) booleanRetorno);
+			}
+		} catch (RemoteException e) {
+			logger.error("existeContenidoDocumento(Entidad, String)", e);
+
+			throw new CSVException(CSVException.EXC_GENERIC_EXCEPCION, e);
+		}
+
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -319,6 +351,39 @@ public class GestionCSVWSRemoteClient implements ServicioGestionCSV {
 
 		try {
 			StringB64 stringB64 = getService().getContenidoDocumento(getEntidadWS(entidad), id);
+			if (ServiciosUtils.isReturnOK((IRetornoServicio) stringB64)) {
+
+				byte[] contenido = getStringB64Servicio(stringB64);
+
+				if (logger.isDebugEnabled()) {
+					logger.debug("getContenidoDocumento(Entidad, String) - end");
+				}
+				return contenido;
+
+			} else {
+				throw getCSVException((IRetornoServicio) stringB64);
+			}
+
+		} catch (RemoteException e) {
+			logger.error("getContenidoDocumento(Entidad, String)", e);
+
+			throw new CSVException(CSVException.EXC_GENERIC_EXCEPCION, e);
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see ieci.tecdoc.sgm.core.services.gestioncsv.ServicioGestionCSV#getContenidoDocumentoOriginal(ieci.tecdoc.sgm.core.services.dto.Entidad,
+	 *      java.lang.String)
+	 */
+	public byte[] getContenidoDocumentoOriginal(Entidad entidad, String id) throws CSVException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("getContenidoDocumento(Entidad, String) - start");
+		}
+
+		try {
+			StringB64 stringB64 = getService().getContenidoDocumentoOriginal(getEntidadWS(entidad), id);
 			if (ServiciosUtils.isReturnOK((IRetornoServicio) stringB64)) {
 
 				byte[] contenido = getStringB64Servicio(stringB64);
@@ -355,6 +420,43 @@ public class GestionCSVWSRemoteClient implements ServicioGestionCSV {
 
 		try {
 			RetornoServicio retornoServicio = getService().writeDocumento(getEntidadWS(entidad),
+					id, outputStreamEncoded);
+			if (!ServiciosUtils.isReturnOK((IRetornoServicio) retornoServicio)) {
+				throw getCSVException((IRetornoServicio) retornoServicio);
+			} else {
+				outputStream.write(outputStreamEncoded.getBytes());
+			}
+		} catch (RemoteException e) {
+			logger.error("writeDocumento(Entidad, String, OutputStream)", e);
+
+			throw new CSVException(CSVException.EXC_GENERIC_EXCEPCION, e);
+		} catch (IOException e) {
+			logger.error("writeDocumento(Entidad, String, OutputStream)", e);
+
+			throw new CSVException(CSVException.EXC_GENERIC_EXCEPCION, e);
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("writeDocumento(Entidad, String, OutputStream) - end");
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see ieci.tecdoc.sgm.core.services.gestioncsv.ServicioGestionCSV#writeDocumentoOriginal(ieci.tecdoc.sgm.core.services.dto.Entidad,
+	 *      java.lang.String, java.io.OutputStream)
+	 */
+	public void writeDocumentoOriginal(Entidad entidad, String id, OutputStream outputStream)
+			throws CSVException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("writeDocumento(Entidad, String, OutputStream) - start");
+		}
+
+		String outputStreamEncoded = getString(outputStream);
+
+		try {
+			RetornoServicio retornoServicio = getService().writeDocumentoOriginal(getEntidadWS(entidad),
 					id, outputStreamEncoded);
 			if (!ServiciosUtils.isReturnOK((IRetornoServicio) retornoServicio)) {
 				throw getCSVException((IRetornoServicio) retornoServicio);

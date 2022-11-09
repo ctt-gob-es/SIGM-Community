@@ -1,6 +1,8 @@
 package ieci.tecdoc.sgm.tram.ws.server;
 
 import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 import ieci.tecdoc.sgm.core.exception.SigemException;
 import ieci.tecdoc.sgm.core.services.ConstantesServicios;
 import ieci.tecdoc.sgm.core.services.LocalizadorServicios;
@@ -33,11 +35,14 @@ import ieci.tecdoc.sgm.tram.ws.server.dto.OrganoProductor;
 import ieci.tecdoc.sgm.tram.ws.server.dto.Procedimiento;
 
 import java.util.Date;
+import java.util.Iterator;
 
 import javax.xml.soap.SOAPException;
 
 import org.apache.axis.MessageContext;
 import org.apache.log4j.Logger;
+
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 
 /**
  * Implementación del servicio web de Tramitación.
@@ -213,6 +218,7 @@ public class TramitacionWebService {
      * [Dipucr-Agustin #781]
      * Obtiene el contenido del documento.
      * @param guid GUID del documento
+     * @param idEntidad codigo de entidad de sigem.
      * @return Contenido del documento.
      */
     public Binario getFicheroTemp(String idEntidad, String guid) {
@@ -238,12 +244,44 @@ public class TramitacionWebService {
 		return (Binario) ServiciosUtils.completeReturnOK(binario);	
     }
     
+    /**
+     * [Dipucr-Agustin #1297]
+     * Obtiene el contenido del justificante de firma que genera sigem a partir de la firma de portafirmas
+     * @param guid GUID del documento
+     * @param identidad GUID idEntidad
+     * @return Contenido del documento.
+     */
+    public Binario getJustificanteFirma(String idEntidad, String guid) {
+		Binario binario = new Binario();
+		
+		try {
+			ServicioTramitacion service = getServicioTramitacion();	
+			binario.setContenido(service.getJustificanteFirma(idEntidad, guid));
+			
+		} catch (TramitacionException e) {
+			LOGGER.error("Error al obtener el fichero.", e);
+			return (Binario) 
+				ServiciosUtils.completeReturnError(binario, e.getErrorCode());
+		} catch (SigemException e) {
+			LOGGER.error("Error al obtener el fichero.", e);
+			return (Binario) 
+				ServiciosUtils.completeReturnError(binario, e.getErrorCode());
+		} catch (Throwable e){
+			LOGGER.error("Error al obtener el fichero.", e);
+			return (Binario) ServiciosUtils.completeReturnError(binario);
+		}
+		
+		return (Binario) ServiciosUtils.completeReturnOK(binario);	
+    }
+    
     
     /**
      * [Dipucr-Agustin #781]
      * Escribe el contenido del documento.
-     * @param guid GUID del documento
-     * @return Resultado de la operacion.
+     * @param guid GUID del documento.
+     * @param idEntidad codigo de entidad de sigem.
+     * @param data contenido del documento.
+     * @return boolean resultado de la operacion.
      * @throws Exception 
      */
     public boolean setFicheroTemp(String idEntidad, String guid, byte[] data) {
@@ -277,6 +315,27 @@ public class TramitacionWebService {
 			
 		} catch (Exception e) {
 			LOGGER.error("Error al anular la licencia.", e);
+			return (Booleano) ServiciosUtils.completeReturnError(ret, e.getMessage());
+		}
+		return (Booleano) ServiciosUtils.completeReturnOK(ret);
+    }
+    
+    /**
+     * [dipucr-Felipe #1771]
+     * @param idEntidad
+     * @param numexp
+     * @return
+     * @throws TramitacionException
+     */
+    public Booleano anularSolicitudPortalEmpleado(String idEntidad, String numexp, String documentoAnular) {
+    	
+    	Booleano ret = new Booleano();
+		try {
+			ServicioTramitacion service = getServicioTramitacion();	
+			ret.setValor(service.anularSolicitudPortalEmpleado(idEntidad, numexp, documentoAnular));
+			
+		} catch (Exception e) {
+			LOGGER.error("Error al anular la solicitud del empleado.", e);
 			return (Booleano) ServiciosUtils.completeReturnError(ret, e.getMessage());
 		}
 		return (Booleano) ServiciosUtils.completeReturnOK(ret);
@@ -669,6 +728,49 @@ public class TramitacionWebService {
 		}
 		
 		return (Booleano) ServiciosUtils.completeReturnOK(ret);	       	
+    }
+    
+    /**
+     * Añade documentos a un expediente de aprobación de nomina.
+     * @param idEntidad Identificador de la entidad.
+     * @param numExp Número de expediente.
+     * @param regNum Número de registro de entrada.
+     * @param regDate Fecha de registro de entrada.
+     * @param documents Lista de documentos asociados al expediente.
+     * @return Cierto si los documentos se han creado correctamente.
+     */
+    public Booleano anexarDocsExpedienteAprobacionNomina(String idEntidad, String mes, DocumentoExpediente document, String codPcd) {
+
+		Booleano ret = new Booleano();		
+		
+		try {
+			ServicioTramitacion service = getServicioTramitacion();	
+			//Obtener el número de expediente de Aprobación de nomina por el mes que nos pongan
+			String[] vnumExp = service.queryExpedientes(idEntidad, "WHERE NUMEXP IN (SELECT NUMEXP FROM NOMINA_APROBACION WHERE MES='"+mes.toUpperCase()+"') AND CODPROCEDIMIENTO='"+codPcd+"'");
+			//Crear el trámite para insertar el documento
+			for (int i = 0; i < vnumExp.length; i++) {
+				String numExp = vnumExp[i];				
+				int idTramite = service.creaTramiteByCod(idEntidad, "ANEXOS", numExp);
+				DocumentoExpediente[] doc = new DocumentoExpediente[1];
+				doc[0] = document;
+				ret.setValor(service.anexarDocsTramite(idEntidad, numExp, idTramite, null, null,  getCoreDocumentosExpediente(doc)));			
+			}
+			
+			
+		} catch (TramitacionException e) {
+			LOGGER.error("Error al iniciar el expediente.", e);
+			return (Booleano) 
+				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
+		} catch (SigemException e) {
+			LOGGER.error("Error al iniciar el expediente.", e);
+			return (Booleano) 
+				ServiciosUtils.completeReturnError(ret, e.getErrorCode());
+		} catch (Throwable e){
+			LOGGER.error("Error al iniciar el expediente.", e);
+			return (Booleano) ServiciosUtils.completeReturnError(ret);
+		}
+		
+		return (Booleano) ServiciosUtils.completeReturnOK(ret);	
     }
     
     /**
@@ -1257,5 +1359,38 @@ public class TramitacionWebService {
 		}
 
 		return documento;
+    }
+    
+    /**
+     * [dipucr-Felipe #1745]
+     * @param idEntidad
+     * @param password
+     * @param nombreDocumento
+     * @param documento
+     * @return
+     * @throws TramitacionException
+     */
+    public Binario sellarDocumento(String idEntidad, String password, String nombreDocumento, Binario documento) {
+    	
+		Binario binario = new Binario();
+		
+		try {
+			ServicioTramitacion service = getServicioTramitacion();	
+			binario.setContenido(service.sellarDocumento(idEntidad, password, nombreDocumento, documento.getContenido()));
+			
+		} catch (TramitacionException e) {
+			LOGGER.error("Error al obtener el fichero.", e);
+			return (Binario) 
+				ServiciosUtils.completeReturnError(binario, e.getErrorCode());
+		} catch (SigemException e) {
+			LOGGER.error("Error al obtener el fichero.", e);
+			return (Binario) 
+				ServiciosUtils.completeReturnError(binario, e.getErrorCode());
+		} catch (Throwable e){
+			LOGGER.error("Error al obtener el fichero.", e);
+			return (Binario) ServiciosUtils.completeReturnError(binario);
+		}
+		
+		return (Binario) ServiciosUtils.completeReturnOK(binario);	
     }
 }

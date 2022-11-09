@@ -44,12 +44,34 @@ public abstract class AbstractAplicacionExternaConnector extends BaseConnector i
 
 		return false;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.fwktd.csv.api.connector.aplicacionExterna.AplicacionExternaConnector#existeDocumentoOriginal(java.lang.String, java.util.Map)
+	 */
+	public boolean existeDocumentoOriginal(String csv, Map<String, String> params) {
+
+		logger.info("Llamada a existeDocumentoOriginal: csv=[{}], params=[{}]", csv, params);
+
+		return false;
+	}
 
 	/**
 	 * {@inheritDoc}
 	 * @see es.ieci.tecdoc.fwktd.csv.api.connector.aplicacionExterna.AplicacionExternaConnector#getContenidoDocumento(java.lang.String, java.util.Map)
 	 */
 	public byte[] getContenidoDocumento(String csv, Map<String, String> params) {
+
+		logger.info("Llamada a getContenidoDocumento: csv=[{}], params=[{}]", csv, params);
+
+		return null;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.fwktd.csv.api.connector.aplicacionExterna.AplicacionExternaConnector#getContenidoDocumentoOriginal(java.lang.String, java.util.Map)
+	 */
+	public byte[] getContenidoDocumentoOriginal(String csv, Map<String, String> params) {
 
 		logger.info("Llamada a getContenidoDocumento: csv=[{}], params=[{}]", csv, params);
 
@@ -66,5 +88,12 @@ public abstract class AbstractAplicacionExternaConnector extends BaseConnector i
 		logger.info("Llamada a writeDocumento: csv=[{}], params=[{}]", csv, params);
 
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.fwktd.csv.api.connector.aplicacionExterna.AplicacionExternaConnector#writeDocumentoOriginal(java.lang.String, java.io.OutputStream, java.util.Map)
+	 */
+	public void writeDocumentoOriginal(String csv, OutputStream outputStream, Map<String, String> params) throws IOException {
+		logger.info("Llamada a writeDocumentoOriginal: csv=[{}], params=[{}]", csv, params);
+	}
 }

@@ -32,6 +32,12 @@
 				validate="false"> 
 				<forward name="success" path="/searchResult.jsp"/> 
 		</action>
+		<action path="/showDocumentOriginal" 
+				type="com.tsol.modulos.buscador.actions.ShowDocumentOriginalAction"
+				scope="request"
+				validate="false"> 
+				<forward name="success" path="/searchResult.jsp"/> 
+		</action>
 		<!-- INICIO [eCenpri-Felipe #828] -->
 		<action path="/getDocument" 
 				type="com.tsol.modulos.buscador.actions.GetDocumentAction"

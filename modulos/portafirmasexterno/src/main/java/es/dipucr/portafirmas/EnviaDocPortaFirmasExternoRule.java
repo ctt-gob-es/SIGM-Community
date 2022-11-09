@@ -1,5 +1,22 @@
 package es.dipucr.portafirmas;
 
+import ieci.tdw.ispac.api.IEntitiesAPI;
+import ieci.tdw.ispac.api.IInvesflowAPI;
+import ieci.tdw.ispac.api.errors.ISPACException;
+import ieci.tdw.ispac.api.errors.ISPACRuleException;
+import ieci.tdw.ispac.api.impl.EntitiesAPI;
+import ieci.tdw.ispac.api.item.IItem;
+import ieci.tdw.ispac.api.item.IItemCollection;
+import ieci.tdw.ispac.api.rule.IRule;
+import ieci.tdw.ispac.api.rule.IRuleContext;
+import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.sign.SignDocument;
+import ieci.tdw.ispac.ispaclib.util.FileTemporaryManager;
+import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
+import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import ieci.tecdoc.sgm.tram.sign.Sigm30SignConnector;
+
+import java.io.File;
 import java.rmi.RemoteException;
 import java.util.Iterator;
 
@@ -18,24 +35,12 @@ import _0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.SendRequestRe
 import _0.v2.modify.pfirma.cice.juntadeandalucia.PfirmaException;
 import es.dipucr.portafirmas.common.Configuracion;
 import es.dipucr.portafirmas.common.CreacionObjetosPortafirmas;
+import es.dipucr.portafirmas.common.DipucrFuncionesComunes;
 import es.dipucr.portafirmas.common.ServiciosWebPortaFirmasFunciones;
 import es.dipucr.sigem.api.rule.common.utils.ConsultasGenericasUtil;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
-import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 import es.dipucr.sigem.api.rule.common.utils.ResponsablesUtil;
 import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
-import ieci.tecdoc.sgm.core.services.entidades.Entidad;
-import ieci.tdw.ispac.api.IEntitiesAPI;
-import ieci.tdw.ispac.api.IInvesflowAPI;
-import ieci.tdw.ispac.api.errors.ISPACException;
-import ieci.tdw.ispac.api.errors.ISPACRuleException;
-import ieci.tdw.ispac.api.impl.EntitiesAPI;
-import ieci.tdw.ispac.api.item.IItem;
-import ieci.tdw.ispac.api.item.IItemCollection;
-import ieci.tdw.ispac.api.rule.IRule;
-import ieci.tdw.ispac.api.rule.IRuleContext;
-import ieci.tdw.ispac.ispaclib.context.ClientContext;
-import ieci.tdw.ispac.ispaclib.utils.StringUtils;
 
 public class EnviaDocPortaFirmasExternoRule implements IRule{
 	
@@ -57,13 +62,13 @@ public class EnviaDocPortaFirmasExternoRule implements IRule{
 			IEntitiesAPI entitiesAPI = invesFlowAPI.getEntitiesAPI();		
 	        //----------------------------------------------------------------------------------------------
 			
-			Iterator<IItem> rellenadoFirmantesContinuacion = ConsultasGenericasUtil.queryEntities(rulectx, "FIRMA_DOC_MASFIRMANTES", "NUMEXP='"+rulectx.getNumExp()+"'");
+			Iterator<IItem> rellenadoFirmantesContinuacion = ConsultasGenericasUtil.queryEntities(rulectx.getClientContext(), "FIRMA_DOC_MASFIRMANTES", "NUMEXP='"+rulectx.getNumExp()+"'");
 			
-			Iterator<IItem>  iDocMandado = ConsultasGenericasUtil.queryEntities(rulectx, "FIRMA_DOC_EXTERNO_IDDOC", "NUMEXP='"+rulectx.getNumExp()+"' AND ID_TRAMITE='"+rulectx.getTaskId()+"'");
+			Iterator<IItem>  iDocMandado = ConsultasGenericasUtil.queryEntities(rulectx.getClientContext(), "FIRMA_DOC_EXTERNO_IDDOC", "NUMEXP='"+rulectx.getNumExp()+"' AND ID_TRAMITE='"+rulectx.getTaskId()+"'");
 			if(rellenadoFirmantesContinuacion.hasNext()){
 				if(!iDocMandado.hasNext()){
 					
-					IItemCollection itCollection = DocumentosUtil.getDocumentosByTramites(rulectx, rulectx.getNumExp(), rulectx.getTaskId());
+					IItemCollection itCollection = DocumentosUtil.getDocumentosByTramites(rulectx.getClientContext(), rulectx.getNumExp(), rulectx.getTaskId());
 					Iterator<IItem> itDoc = itCollection.iterator();
 					
 					while (itDoc.hasNext()){
@@ -136,7 +141,7 @@ public class EnviaDocPortaFirmasExternoRule implements IRule{
 	        //----------------------------------------------------------------------------------------------
 			
 			
-			Iterator<IItem>  iDocMandado = ConsultasGenericasUtil.queryEntities(rulectx, "FIRMA_DOC_EXTERNO_IDDOC", "NUMEXP='"+rulectx.getNumExp()+"' AND ID_TRAMITE='"+rulectx.getTaskId()+"'");			
+			Iterator<IItem>  iDocMandado = ConsultasGenericasUtil.queryEntities(rulectx.getClientContext(), "FIRMA_DOC_EXTERNO_IDDOC", "NUMEXP='"+rulectx.getNumExp()+"' AND ID_TRAMITE='"+rulectx.getTaskId()+"'");			
 			if(!iDocMandado.hasNext()){
 				//String direccionPortaFirmaExterno = DipucrCommonFunctions.getVarGlobal(Configuracion.DIRECCION_PORTAFIRMASEXTERNOMODIFY);
 		        String direccionPortaFirmaExterno = ServiciosWebPortaFirmasFunciones.getDireccionSWModify();
@@ -148,7 +153,7 @@ public class EnviaDocPortaFirmasExternoRule implements IRule{
 				/**
 				 * documentList: Lista de documentos
 				 * **/
-				IItemCollection itCollection = DocumentosUtil.getDocumentosByTramites(rulectx, rulectx.getNumExp(), rulectx.getTaskId());
+				IItemCollection itCollection = DocumentosUtil.getDocumentosByTramites(rulectx.getClientContext(), rulectx.getNumExp(), rulectx.getTaskId());
 				Iterator<IItem> itDoc = itCollection.iterator();
 				
 				//No puedo utilizar los datos específicos porque se estan utilizando para insertar un participante.
@@ -161,27 +166,74 @@ public class EnviaDocPortaFirmasExternoRule implements IRule{
 				else{
 					tipoFirma = "CASCADA";
 				}
-				
-				/**
-				 * Envio Petición
-				 * **/
-				
-				Request request = CreacionObjetosPortafirmas.getRequest(rulectx, tipoFirma);
-				
-				CreateRequest createRequest6 = new CreateRequest();
-				createRequest6.setAuthentication(authentication);
-				createRequest6.setRequest(request);
-				CreateRequestResponse idPeticion = modify.createRequest(createRequest6);
-				if(itCollection!=null){
-					logger.warn("Números de documentos a mandar: "+itCollection.toList().size());
-				}
-				
-				logger.warn("Identificador de la petición. "+idPeticion.getRequestId());
-						
-				if(!iDocMandado.hasNext()){				
-					if (itDoc.hasNext()){
-						IItem docFirma = itDoc.next();			
+
+				if (itDoc.hasNext()){
+					IItem docFirma = itDoc.next();
+					/**
+					 * Envio Petición
+					 * **/
+					String name = docFirma.getString("NOMBRE")+".pdf";
+					String extension = MimetypeMapping.getMimeType("pdf");
+					Request request = CreacionObjetosPortafirmas.getRequest(rulectx, tipoFirma, name, extension);
 					
+					CreateRequest createRequest6 = new CreateRequest();
+					createRequest6.setAuthentication(authentication);
+					createRequest6.setRequest(request);
+					CreateRequestResponse idPeticion = modify.createRequest(createRequest6);
+					if(itCollection!=null){
+						logger.warn("Números de documentos a mandar: "+itCollection.toList().size());
+					}
+					
+					logger.warn("Identificador de la petición. "+idPeticion.getRequestId());
+						
+					if(!iDocMandado.hasNext()){				
+					
+						String cve = null;
+						if(StringUtils.isNotEmpty(docFirma.getString(DocumentosUtil.COD_COTEJO)))cve = docFirma.getString(DocumentosUtil.COD_COTEJO);
+						
+						
+						File pdfFile = null;
+						if(docFirma.getString("INFOPAG_RDE")!=null){
+							pdfFile = DocumentosUtil.getFile(cct, docFirma.getString("INFOPAG_RDE"), docFirma.getString("NOMBRE") + "-" + docFirma.getKeyInt(), docFirma.getString("EXTENSION_RDE"));
+						}
+						else{
+							if(docFirma.getString("EXTENSION").equals("pdf")){
+								pdfFile = DocumentosUtil.getFile(cct, docFirma.getString("INFOPAG"), docFirma.getString("NOMBRE") + "-" + docFirma.getKeyInt(), docFirma.getString("EXTENSION"));
+							}
+						}
+						File fileBandaGris = null;
+						if(StringUtils.isEmpty(cve)){
+							SignDocument signDocument = new SignDocument(docFirma);
+							
+//							DipucrSignConnector signConnector = new DipucrSignConnector();
+//							ISignConnector signConnector = SignConnectorFactory.getInstance(cct).getSignConnector();
+							Sigm30SignConnector signConnector = new Sigm30SignConnector();
+							signConnector.initializate(signDocument, rulectx.getClientContext());
+							
+							String codCotejo = signConnector.addCodVerificacion(signDocument, docFirma.getDate(DocumentosUtil.FAPROBACION), cct);
+							
+							
+							String pathFileTemp = FileTemporaryManager.getInstance().put(pdfFile.getAbsolutePath(), ".pdf");
+							
+							try {
+								DipucrFuncionesComunes.addGrayBand(cct, signDocument.getDocumentType(), pdfFile, pathFileTemp, codCotejo);
+								fileBandaGris = new File (FileTemporaryManager.getInstance().getFileTemporaryPath()+ "/" + pathFileTemp);
+								
+//								IItem itDocConve = DocumentosUtil.getTipoDocByCodigo(cct, "convenio");
+//								DocumentosUtil.generaYAnexaDocumento(rulectx, itDocConve.getInt("ID"), "Prueba con banda", fileBandaGris, "PDF");
+								
+							} catch (Exception e) {
+								logger.error("Error al incrustar la banda gris Numexp. "+rulectx.getNumExp()+" - "+e.getMessage(),e);
+								throw new ISPACRuleException("Error al incrustar la banda gris Numexp. "+rulectx.getNumExp()+" Error - "+e.getMessage(),e);
+							}
+						}
+						else{
+							fileBandaGris = pdfFile;
+						}
+						
+						
+						
+
 						/*
 						 * Insertar el documento
 						 * */
@@ -189,7 +241,7 @@ public class EnviaDocPortaFirmasExternoRule implements IRule{
 						peticion.set("ID_PETICION", idPeticion.getRequestId());
 						InsertDocument insertDocument0 = new InsertDocument();
 						insertDocument0.setAuthentication(authentication);
-						insertDocument0.setDocument(CreacionObjetosPortafirmas.getDocumento(cct, docFirma));
+						insertDocument0.setDocument(CreacionObjetosPortafirmas.getDocumento(cct, docFirma, fileBandaGris));
 						insertDocument0.setRequestId(idPeticion.getRequestId());
 						InsertDocumentResponse insertdoc = modify.insertDocument(insertDocument0);
 						
@@ -216,6 +268,8 @@ public class EnviaDocPortaFirmasExternoRule implements IRule{
 						SendRequestResponse requestResp = modify.sendRequest(sendRequest8);
 						logger.warn("Identificador envio solicitud. "+requestResp.getRequestId());
 						logger.warn("--. "+requestResp.getPullParser(null).toString());
+			
+					
 					}				
 				}
 				else{

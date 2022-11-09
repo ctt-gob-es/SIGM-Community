@@ -307,6 +307,54 @@ public class GestionCSVWebService {
 		}
 		return (BooleanRetorno) ServiciosUtils.completeReturnOK(retorno);
 	}
+	
+	/**
+	 * Comprueba si el contenido del documento original firmado se puede descargar de la
+	 * aplicación externa
+	 *
+	 * @param entidad
+	 *            Entidad sobre la que estamos trabajando
+	 * @param id
+	 *            Identificador del documento
+	 * @return true: Si existe el contenido del documento. false: Si no existe.
+	 */
+	public BooleanRetorno existeContenidoDocumentoOriginal(Entidad entidad, String id) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("existeContenidoDocumento(Entidad, String) - start Entidad: [" + entidad.getIdentificador() + "] ID: [" + id + "]");
+		}
+
+		boolean existe = false;
+		BooleanRetorno retorno = new BooleanRetorno();
+		
+		try {
+			existe = getServicioGestionCSV().existeContenidoDocumentoOriginal(entidad, id);
+			retorno.setValor(existe);
+			
+		} catch (SOAPException e) {
+			logger.error("existeContenidoDocumento(Entidad, String)", e);
+
+			BooleanRetorno returnBooleanRetorno = (BooleanRetorno) ServiciosUtils.completeReturnError(retorno);
+			
+			if (logger.isDebugEnabled()) {
+				logger.debug("existeContenidoDocumento(Entidad, String) - end");
+			}
+			return returnBooleanRetorno;
+			
+		} catch (SigemException e) {
+			logger.error("existeContenidoDocumento(Entidad, String)", e);
+
+			BooleanRetorno returnBooleanRetorno = (BooleanRetorno) ServiciosUtils.completeReturnError(retorno, e.getErrorCode());
+			if (logger.isDebugEnabled()) {
+				logger.debug("existeContenidoDocumento(Entidad, String) - end");
+			}
+			return returnBooleanRetorno;
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("existeContenidoDocumento(Entidad, String) - end");
+		}
+		return (BooleanRetorno) ServiciosUtils.completeReturnOK(retorno);
+	}
 
 	/**
 	 * Obtiene el contenido de un documento a partir de su identificador
@@ -327,6 +375,52 @@ public class GestionCSVWebService {
 		StringB64 byteArray = new StringB64();
 		try {
 			contenido = getServicioGestionCSV().getContenidoDocumento(entidad, id);
+			byteArray = this.getStringB64WS(contenido);
+
+		} catch (SOAPException e) {
+			logger.error("getContenidoDocumento(Entidad, String)", e);
+
+			StringB64 returnStringB64 = (StringB64) ServiciosUtils.completeReturnError(byteArray);
+			if (logger.isDebugEnabled()) {
+				logger.debug("getContenidoDocumento(Entidad, String) - end");
+			}
+			return returnStringB64;
+		} catch (SigemException e) {
+			logger.error("SigemException getContenidoDocumento(Entidad, String)", e);
+
+			StringB64 returnStringB64 = (StringB64) ServiciosUtils.completeReturnError(byteArray,
+					e.getErrorCode());
+			if (logger.isDebugEnabled()) {
+				logger.debug("getContenidoDocumento(Entidad, String) - end");
+			}
+			return returnStringB64;
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("getContenidoDocumento(Entidad, String) - end");
+		}
+		return (StringB64) ServiciosUtils.completeReturnOK(byteArray);
+	}
+	
+	/**
+	 * Obtiene el contenido de un documento original firmadoa partir de su identificador
+	 *
+	 * @param entidad
+	 *            Entidad sobre la que estamos trabajando
+	 * @param id
+	 *            Identificador del documento
+	 * @return Contenido del documento.
+	 */
+	public StringB64 getContenidoDocumentoOriginal(Entidad entidad, String id) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("getContenidoDocumento(Entidad, String) - start Entidad: ["
+					+ entidad.getIdentificador() + "] ID: [" + id + "]");
+		}
+
+		byte[] contenido = null;
+		StringB64 byteArray = new StringB64();
+		try {
+			contenido = getServicioGestionCSV().getContenidoDocumentoOriginal(entidad, id);
 			byteArray = this.getStringB64WS(contenido);
 
 		} catch (SOAPException e) {
@@ -377,6 +471,63 @@ public class GestionCSVWebService {
 		try {
 			ByteArrayOutputStream outputStream = this.getOS(stringB64Encoded);
 			getServicioGestionCSV().writeDocumento(entidad, id, outputStream);
+
+			RetornoServicio returnRetornoServicio = ServiciosUtils.createReturnOK();
+			if (logger.isDebugEnabled()) {
+				logger.debug("writeDocumento(Entidad, String, String) - end");
+			}
+			return returnRetornoServicio;
+		} catch (SOAPException e) {
+			logger.error("writeDocumento(Entidad, String, String)", e);
+
+			RetornoServicio returnRetornoServicio = ServiciosUtils.createReturnError();
+			if (logger.isDebugEnabled()) {
+				logger.debug("writeDocumento(Entidad, String, String) - end");
+			}
+			return returnRetornoServicio;
+		} catch (SigemException e) {
+			logger.error("writeDocumento(Entidad, String, String)", e);
+
+			RetornoServicio returnRetornoServicio = ServiciosUtils.createReturnError();
+			if (logger.isDebugEnabled()) {
+				logger.debug("writeDocumento(Entidad, String, String) - end");
+			}
+			return returnRetornoServicio;
+		} catch (IOException e) {
+			logger.error("writeDocumento(Entidad, String, String)", e);
+
+			RetornoServicio returnRetornoServicio = ServiciosUtils.createReturnError();
+			if (logger.isDebugEnabled()) {
+				logger.debug("writeDocumento(Entidad, String, String) - end");
+			}
+			return returnRetornoServicio;
+		}
+
+	}
+	
+	/**
+	 * Escribe el contenido de un documento original firmado a partir del identificador en el
+	 * OutputStrem
+	 *
+	 * @param entidad
+	 *            Entidad sobre la que estamos trabajando
+	 * @param id
+	 *            Identificador del documento
+	 * @param outputStream
+	 *            OutputStream sobre el que escribiremos el contenido del
+	 *            documento
+	 *
+	 */
+
+	public RetornoServicio writeDocumentoOriginal(Entidad entidad, String id, String stringB64Encoded) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("writeDocumento(Entidad, String, String) - start Entidad: ["
+					+ entidad.getIdentificador() + "] ID: [" + id + "]");
+		}
+
+		try {
+			ByteArrayOutputStream outputStream = this.getOS(stringB64Encoded);
+			getServicioGestionCSV().writeDocumentoOriginal(entidad, id, outputStream);
 
 			RetornoServicio returnRetornoServicio = ServiciosUtils.createReturnOK();
 			if (logger.isDebugEnabled()) {

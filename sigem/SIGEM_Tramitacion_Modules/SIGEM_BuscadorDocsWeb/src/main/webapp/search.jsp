@@ -58,7 +58,10 @@
 		                		<input type="submit" class="ok" value='<bean:message key="search.form.button"/>' style="position:relative; left:535px;"/>
 		              			<br/><br/>
 		            		</html:form>
-		            		<br/>De conformidad con lo dispuesto en el art. 18.1.b) de la ley 11/2007, de 22 de junio, de acceso electrónico de los ciudadanos a los Servicios Públicos, mediante la inserción del Código Seguro de Verificación (CVE) que aparece en la banda gris del documento electrónico, se permite al interesado la comprobación de la integridad del documento en esta sede electrónica.<br/>
+		            		<br/>
+		            		<label style="position:relative; left:350px" class="error">
+		            			<bean:message key="label.textoLegal"/>
+		            		</label>
 		          		</div>
 		        	</div>
 		      	</div>

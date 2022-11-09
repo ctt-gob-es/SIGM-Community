@@ -15,14 +15,21 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import com.itextpdf.text.pdf.PRStream;
+import com.itextpdf.text.pdf.PdfArray;
+import com.itextpdf.text.pdf.PdfDictionary;
+import com.itextpdf.text.pdf.PdfName;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Image;
@@ -494,7 +501,6 @@ public class PdfUtil extends FileUtils {
 		
 	}
 	
-	
 	/**
 	 * Anexa un documento adjunto a un PDF
 	 * @param writer
@@ -514,6 +520,65 @@ public class PdfUtil extends FileUtils {
 		catch(IOException e){
 	        LOGGER.error("Error al concatenar los archivos del documento", e);
 		}
+	}
+	
+	/**
+	 * [dipucr-Felipe #1246] Extraer los anexos de un fichero PDF
+	 * @return
+	 * @throws IOException 
+	 */
+	public static Map<String, byte[]> extraerAnexos(File file) throws ISPACException {
+
+		Map<String, byte[]> files = new HashMap<String, byte[]>();
+		
+		try{
+			FileInputStream fis = new FileInputStream(file);
+			com.itextpdf.text.pdf.PdfReader reader = new com.itextpdf.text.pdf.PdfReader(fis);
+			PdfDictionary root = reader.getCatalog();
+			PdfDictionary documentnames = root.getAsDict(PdfName.NAMES);
+			
+			if (null != documentnames){//Hay anexos en el documento
+				
+				PdfDictionary embeddedfiles = documentnames.getAsDict(PdfName.EMBEDDEDFILES);
+				
+				if (null != embeddedfiles){ //Controlamos nulos
+					PdfArray filespecs = embeddedfiles.getAsArray(PdfName.NAMES);
+					PdfDictionary filespec;
+					PdfDictionary refs;
+		//			FileOutputStream fos;
+					PRStream stream;
+			
+					if (null != filespecs){ //Controlamos nulos
+						for (int i = 0; i < filespecs.size();) {
+							filespecs.getAsString(i++);
+							filespec = filespecs.getAsDict(i++);
+							refs = filespec.getAsDict(PdfName.EF);
+							
+							for (PdfName key : refs.getKeys()) {
+								
+								if (!files.containsKey(filespec.getAsString(key).toString())){
+					//				fos = new FileOutputStream(String.format(PATH, filespec.getAsString(key).toString()));
+									stream = (PRStream) com.itextpdf.text.pdf.PdfReader.getPdfObject(refs.getAsIndirectObject(key));
+					//				fos.write(com.itextpdf.text.pdf.PdfReader.getStreamBytes(stream));
+					//				fos.flush();
+					//				fos.close();
+									files.put(filespec.getAsString(key).toString(), com.itextpdf.text.pdf.PdfReader.getStreamBytes(stream));
+								}
+							}
+						}
+					}
+				}
+			}
+		    reader.close();
+		    fis.close();
+		}
+		catch(Exception ex){
+			String error = "Error al obtener los anexos del documento " + file.getAbsolutePath() + ": " + ex.getMessage();
+			LOGGER.error(error, ex);
+			throw new ISPACException(error, ex);
+		}
+		
+		return files;
 	}
 	
 	/**
@@ -649,7 +714,67 @@ public class PdfUtil extends FileUtils {
 		}
 		document.setMargins(document.leftMargin()-20, document.rightMargin(), document.topMargin(), document.bottomMargin());
 		
-		
 	}
+	
+	/**
+	 * Elimina las firmas de un documento
+	 * @param fileFirmado
+	 * @return
+	 */
+	public static File eliminarFirmas(File fileFirmado) throws ISPACException{
 		
+		File fileSinFirmas = null;
+		try{
+			FileInputStream fis = new FileInputStream(fileFirmado);
+			PdfReader reader = new PdfReader((InputStream) fis);
+			reader.removeFields();
+			
+			FileTemporaryManager ftMgr = FileTemporaryManager.getInstance();
+			fileSinFirmas = ftMgr.newFile();
+			OutputStream os = new FileOutputStream(fileSinFirmas);
+			PdfStamper stamper = new PdfStamper(reader, os);
+			
+			stamper.close();
+			reader.close();
+		}
+		catch(Exception ex){
+			String error = "Error al eliminar las firmas del documento " + fileFirmado.getAbsolutePath();
+			LOGGER.error(error, ex);
+			throw new ISPACException(error, ex);
+		}
+		
+		return fileSinFirmas;
+	}
+	
+	/**
+	 * [dipucr-Felipe #1413]
+	 * Convierte un pdf interactivo con formularios en un pdf de sólo texto 
+	 * @param fileFirmado
+	 * @return
+	 */
+	public static File convertirPdfSoloTexto(File fileRelleno) throws ISPACException{
+		
+		File fileSoloTexto = null;
+		try{
+			FileInputStream fis = new FileInputStream(fileRelleno);
+			PdfReader reader = new PdfReader((InputStream) fis);
+			
+			fileSoloTexto = FileTemporaryManager.getInstance().newFile(".pdf");
+			OutputStream os = new FileOutputStream(fileSoloTexto);
+			
+			PdfStamper stamper = new PdfStamper(reader, os);
+			stamper.setFormFlattening(true);
+			stamper.setFreeTextFlattening(true);
+			
+			stamper.close();
+			reader.close();
+		}
+		catch(Exception ex){
+			String error = "Error al aplanar el documento " + fileRelleno.getAbsolutePath();
+			LOGGER.error(error, ex);
+			throw new ISPACException(error, ex);
+		}
+		
+		return fileSoloTexto;
+	}
 }

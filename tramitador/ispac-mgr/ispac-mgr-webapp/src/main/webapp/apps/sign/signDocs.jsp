@@ -93,7 +93,7 @@
 		</script>    		
  
 
-	<html:form action="/signDocuments.do">
+	<html:form action="/signDocuments3Fases.do">
 	<div id="contenido" class="move">
 		<div class="ficha">
 			<div class="encabezado_ficha">

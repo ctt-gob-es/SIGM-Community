@@ -43,6 +43,39 @@ public class DocumentsHelper {
 
 		return existe;
 	}
+	
+	/**
+	 * Comprobar si existe un documento que tenga asignado el CSV recibido y valor en el campo INFOPAG_RDE_ORIGINAL.
+	 *
+	 * @param context
+	 *            Contexto de tramitación.
+	 * @param csv
+	 *            CSV del documento
+	 * @return Cierto si existe un documento con el CSV asignado en su Código de
+	 *         Cotejo, en caso contrario, retorna falso.
+	 * @throws ISPACException
+	 *             Si se produce algún error.
+	 */
+	public static boolean existeDocumentoOriginal(IClientContext context, String csv) throws ISPACException {
+
+		boolean existe = false;
+
+		// Consulta
+		String sqlQuery = "WHERE COD_COTEJO = '" + DBUtil.replaceQuotes(csv) + "'";
+		IItemCollection documents = DocumentosUtil.queryDocumentos(context, sqlQuery);
+		
+		if (documents.next()) {
+
+			IItem document = documents.value();
+
+			// Obtener el identificador del documento original en el repositorio
+			String guid = document.getString("INFOPAG_RDE_ORIGINAL");
+
+			existe = StringUtils.isNotEmpty(guid);
+		}
+
+		return existe;
+	}
 
 	/**
 	 * Obtener el contenido del documento que tenga asignado el CSV recibido.
@@ -83,6 +116,40 @@ public class DocumentsHelper {
 			// Obtener el contenido del documento
 			content = ieci.tdw.ispac.services.helpers.DocumentsHelper
 					.getContenidoDocumento(context, guid);
+		}
+
+		return content;
+	}
+	
+	/**
+	 * Obtener el contenido del documento original que tenga asignado el CSV recibido.
+	 *
+	 * @param context
+	 *            Contexto de tramitación.
+	 * @param csv
+	 *            CSV del documento
+	 * @return Contenido del documento.
+	 * @throws ISPACException
+	 *             Si se produce algún error.
+	 */
+	public static byte[] getContenidoDocumentoOriginal(IClientContext context, String csv) throws ISPACException {
+
+		// Contenido del documento
+		byte[] content = null;
+
+		// Consulta
+		String sqlQuery = "WHERE COD_COTEJO = '" + DBUtil.replaceQuotes(csv) + "'";
+		IItemCollection documents = DocumentosUtil.queryDocumentos(context, sqlQuery);
+		
+		if (documents.next()) {
+
+			IItem document = documents.value();
+
+			// Obtener el identificador del documento original en el repositorio
+			String guid = StringUtils.defaultString(document.getString("INFOPAG_RDE_ORIGINAL"));
+			
+			// Obtener el contenido del documento
+			content = ieci.tdw.ispac.services.helpers.DocumentsHelper.getContenidoDocumento(context, guid);
 		}
 
 		return content;

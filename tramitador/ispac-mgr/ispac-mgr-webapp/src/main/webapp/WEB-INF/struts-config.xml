@@ -7,6 +7,9 @@
 	<form-beans>
 		<form-bean name="defaultForm"
 			type="ieci.tdw.ispac.ispacmgr.action.form.EntityForm" />
+		<!-- [dipucr-Felipe #1606] -->
+		<form-bean name="multiTableForm"
+			type="ieci.tdw.ispac.ispacmgr.action.form.MultiTableEntityForm" />
 		<form-bean name="loginForm"
 			type="ieci.tdw.ispac.ispacmgr.action.form.LoginForm" />
 		<form-bean name="formsForm"
@@ -157,8 +160,8 @@
 			type="ieci.tdw.ispac.ispacmgr.action.ShowStagesListAction">
 			<forward name="success" path="stagesList" />
 		</action>
-		<action path="/showProcessList" name="batchForm"
-			type="ieci.tdw.ispac.ispacmgr.action.ShowProcessListAction">
+		<action path="/showProcessList" name="defaultForm"
+			type="ieci.tdw.ispac.ispacmgr.action.ShowProcessListAction" scope="request">
 			<forward name="success" path="processList" />
 		</action>
 
@@ -233,7 +236,7 @@
 
 
 		<action path="/showSignDetail"
-			type="es.dipucr.sigem.DetallesCircuitoFirma.action.ShowSignDetailCustomAction" name="defaultForm"
+			type="ieci.tdw.ispac.ispacmgr.action.ShowSignDetailAction" name="defaultForm"
 			scope="request" validate="false">
 			<forward name="success" path="/ispac/common/documentSignDetail.jsp" />
 		</action>
@@ -293,6 +296,12 @@
 			name="batchForm" scope="request" validate="false">
 			<forward name="success" path="/ispac/common/batchTaskConfirm.jsp" />
 		</action>
+		
+		<!-- [dipucr-Felipe #1606] -->
+		<action path="/showLastExpedients" name="batchForm"
+			type="ieci.tdw.ispac.ispacmgr.action.ShowLastExpedientsAction">
+			<forward name="success" path="lastExpedientsList" redirect="false" />
+		</action>
 
 
 		<action path="/showMilestone"
@@ -305,6 +314,12 @@
 			type="ieci.tdw.ispac.ispacmgr.action.ShowTaskListExpedientAction">
 			<forward name="success" path="taskListExpedient" redirect="false" />
 		</action>
+		
+		<!-- [dipucr-Felipe #987] -->
+		<action path="/generateFoliado" type="ieci.tdw.ispac.ispacmgr.action.GenerateFoliadoAction" />
+		
+		<!-- [dipucr-Felipe #1378] -->
+		<action path="/generateFoliadoCompletoSinAdjuntos" type="ieci.tdw.ispac.ispacmgr.action.GenerateFoliadoCompletoSinAdjuntosAction" />
 
 		<!-- Generación de informes -->
 		<action path="/showReports" type="ieci.tdw.ispac.ispacmgr.action.ShowReportsAction"
@@ -352,6 +367,10 @@
 		</action>
 		<action path="/showDocument"
 			type="ieci.tdw.ispac.ispacmgr.action.ShowDocumentAction" />
+		
+		<!-- [dipucr-Felipe #898] -->	
+		<action path="/showDocumentPortafirmas"
+			type="ieci.tdw.ispac.ispacmgr.action.ShowDocumentPortafirmasAction" />
 
 		<action path="/showSignedDocument"
 			type="ieci.tdw.ispac.ispacmgr.action.ShowSignedDocumentAction" />
@@ -386,8 +405,13 @@
 			<forward name="success" path="/ispac/common/uploadScannedFiles.jsp" />
 		</action>
 		<action path="/showIntrayList"
-			type="ieci.tdw.ispac.ispacmgr.action.ShowIntrayListAction">
+			type="ieci.tdw.ispac.ispacmgr.action.ShowIntrayListAction" name="batchForm">
 			<forward name="success" path="intrayList" />
+		</action>
+		<!-- [dipucr-Felipe #1606] -->
+		<action path="/showIntrayListArchived"
+			type="ieci.tdw.ispac.ispacmgr.action.ShowIntrayListArchivedAction" name="batchForm">
+			<forward name="success" path="intrayListArchived" />
 		</action>
 		<action path="/showIntray" type="ieci.tdw.ispac.ispacmgr.action.ShowIntrayAction"
 			name="defaultForm" scope="request" validate="false">
@@ -560,6 +584,13 @@
 			<forward name="setSubstitute" path="/apps/setSubstitute.jsp" />
 		</action>
 		<!-- FIN [dipucr-Felipe 3#395] -->
+		
+		<!-- INICIO [dipucr-Felipe #852] -->
+		<action path="/getPartidaGastoSical"
+			type="es.dipucr.sigem.actions.contratacion.GetPartidaGastoSicalAction"
+			scope="request" validate="false">
+		</action>
+		<!-- FIN [dipucr-Felipe #852] -->
 
 		<action path="/showPcdGUI"
 			type="ieci.tdw.ispac.ispacmgr.action.ShowProcedureGUIAction" scope="request"
@@ -699,6 +730,17 @@
 			type="ieci.tdw.ispac.ispacmgr.action.CreateIntrayProcessAction">
 			<!-- forward name="success" path="/showIntrayList.do"/ -->
 		</action>
+		<!-- [dipucr-Felipe #1606] Archivo multiple de registros distribuidos -->
+		<action path="/archiveIntraysMultiple" type="ieci.tdw.ispac.ispacmgr.action.ArchiveIntraysMultipleAction"
+			name="batchForm" scope="request" validate="false">
+			<forward name="success" path="/showIntrayList.do" redirect="true" />
+		</action>
+		<!-- [dipucr-Felipe #1689] -->
+		<action path="/downloadDocumentsZipIntrayAction"
+			type="ieci.tdw.ispac.ispacmgr.action.DownloadDocumentsZipIntrayAction"
+			scope="request" validate="false">
+		</action>
+		
 
 		<!-- Generación de documentos -->
 
@@ -791,7 +833,14 @@
 				path="/apps/selectParticipantesToGenerateDocBloque.jsp" />
 			<forward name="success" path="/apps/hideFrame.jsp?refresh=true" />
 		</action>
-
+		
+		<!-- [dipucr-Felipe #1606] DipucrTramita - Creacion avanzada de documentos -->
+		<action path="/attachAvanzadoAnexosBloque"
+			type="ieci.tdw.ispac.ispacmgr.action.AttachAvanzadoAnexosBloqueAction"
+			name="multiTableForm" parameter="method" scope="request" validate="false">
+			<forward name="form" path="/ispac/common/attachAvanzado.jsp" />
+			<forward name="success" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
 
 		<action path="/selectTemplateDocumentEntity"
 			type="ieci.tdw.ispac.ispacmgr.action.SelectTemplateDocumentEntityAction"
@@ -879,6 +928,17 @@
 			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
 			
 		</action>
+		
+		<!-- INICIO [dipucr-Felipe #1606] -->
+		<action path="/sendTrasladoManual"
+			type="ieci.tdw.ispac.ispacmgr.action.SendTrasladoManualAction"
+			name="defaultForm" scope="request" parameter="method" validate="false">
+			
+			<forward name="form" path="/apps/sendTrasladoManualForm.jsp" />
+			<forward name="success" path="/apps/summaryTrasladar.jsp" />
+			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
+		<!-- FIN [dipucr-Felipe #1606] -->
 
 		<action path="/notifyDocuments"
 			type="ieci.tdw.ispac.ispacmgr.action.NotifyDocumentsAction" name="defaultForm"
@@ -944,6 +1004,89 @@
 			<forward name="failure" path="/apps/sign/failure.jsp" />
 			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
 		</action>
+		
+		<!-- [dipucr-Felipe #1360] -->
+		<action path="/forceSignDocument"
+			type="ieci.tdw.ispac.ispacmgr.action.ForceSignDocumentAction" parameter="method"
+			scope="request" validate="false">
+			<forward name="success" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
+		
+		<!-- INICIO [dipucr-Felipe #1366] -->
+		<action path="/retrySignDocument"
+			type="ieci.tdw.ispac.ispacmgr.action.RetrySignDocumentAction" parameter="method"
+			scope="request" validate="false">
+			<forward name="success" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
+		
+		<action path="/resetSignDocument"
+			type="ieci.tdw.ispac.ispacmgr.action.ResetSignDocumentAction" parameter="method"
+			scope="request" validate="false">
+			<forward name="success" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
+		<!-- FIN [dipucr-Felipe #1366] -->
+		
+		<!-- INICIO [dipucr-Felipe #1706] -->
+		<action path="/signDocumentByExternals"
+			type="ieci.tdw.ispac.ispacmgr.action.SignDocumentByExternalsAction"
+			name="defaultForm" scope="request" parameter="method" validate="false">
+			
+			<forward name="form" path="/apps/signByExternalsForm.jsp" />
+			<forward name="success" path="/apps/sign/summaryDocs.jsp" />
+			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
+		<!-- FIN [dipucr-Felipe #1706] -->
+		
+		<!-- INICIO [dipucr-Felipe #1246] Firma electronica. Compatibilidad con firma 3 fases antigua -->
+		<!-- ELIMINAR CUANDO SE COMPLETE LA INTEGRACION DE TODOS LOS AYUNTAMIENTOS -->
+		<action name="signForm" path="/signDocument3Fases"
+			type="ieci.tdw.ispac.ispacmgr.action.SignDocument3FasesAction" parameter="method"
+			scope="request" validate="false">
+			<forward name="selectOption" path="/apps/sign/selectOption3Fases.jsp" />
+			<forward name="selectCircuit" path="/apps/sign/selectCircuit.jsp" />
+			<forward name="showProperties" path="/apps/sign/setPropertiesSingProcess.jsp" />
+			<forward name="sign" path="/apps/sign/sign.jsp" />
+			<forward name="nofirmar" path="/apps/sign/noFirmar.jsp" /> <!-- [eCenpri-Felipe #818] -->
+			<forward name="success" path="/apps/sign/summary.jsp" />
+			<forward name="failure" path="/apps/sign/failure.jsp" />
+			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
+
+		<action name="signForm" path="/signDocuments3Fases"
+			type="ieci.tdw.ispac.ispacmgr.action.SignDocuments3FasesAction" parameter="method"
+			scope="request" validate="false">
+			<forward name="selectOption" path="/apps/sign/selectOption3Fases.jsp" />
+			<forward name="selectCircuit" path="/apps/sign/selectCircuit.jsp" />
+			<forward name="showProperties" path="/apps/sign/setPropertiesSingProcess.jsp" />
+			<forward name="sign" path="/apps/sign/signDocs.jsp" />
+			<forward name="nofirmar" path="/apps/sign/noFirmar.jsp" /> <!-- [eCenpri-Felipe #818] -->
+			<forward name="success" path="/apps/sign/summaryDocs.jsp" />
+			<forward name="failure" path="/apps/sign/failure.jsp" />
+			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
+		
+		<action name="batchSignForm" path="/signAllDocument3Fases"
+			type="es.dipucr.sigem.sgm.tram.sign.action.SignAllDocument3FasesAction" parameter="method"
+			scope="request" validate="false">
+			<forward name="selectOptionAllDocument" path="/apps/sign/selectOptionAllDocument.jsp" />
+			<forward name="selectCircuitAllDocument" path="/apps/sign/selectCircuitAllDocument.jsp" />
+			<forward name="sign" path="/apps/sign/allSign.jsp" />
+			<forward name="success" path="/apps/sign/summaryDocs.jsp" />
+			<forward name="nofirmar" path="/apps/sign/noFirmar.jsp" /> <!-- [eCenpri-Felipe #818] -->
+			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
+		
+		<action name="batchSignForm" path="/batchSign"
+			type="ieci.tdw.ispac.ispacmgr.action.BatchSignAction" scope="session"
+			parameter="method">
+			<forward name="batchSign" path="/apps/sign/batchSign.jsp" />
+			<forward name="success" path="/apps/sign/summary.jsp" />
+			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
+			<forward name="nofirmar" path="/apps/sign/noFirmar.jsp" /> <!-- [eCenpri-Felipe #818] -->
+			<forward name="failureResumen" path="/apps/sign/failureResumen.jsp" />
+		</action>
+		<!-- FIN [dipucr-Felipe #1246] Firma electronica. Compatibilidad con firma 3 fases -->
+		<!-- ELIMINAR CUANDO SE COMPLETE LA INTEGRACION DE TODOS LOS AYUNTAMIENTOS -->
 
 		<action name="defaultForm" path="/showBatchSignList"
 			type="ieci.tdw.ispac.ispacmgr.action.ShowBatchSignListAction" scope="request">
@@ -954,16 +1097,6 @@
 			type="ieci.tdw.ispac.ispacmgr.action.ShowSignHistoricAction" scope="request">
 			<forward name="success" path="signHistoric" redirect="true" />
 			<forward name="error" path="/showSignHistoric.do" redirect="false" />
-		</action>
-
-		<action name="batchSignForm" path="/batchSign"
-			type="ieci.tdw.ispac.ispacmgr.action.BatchSignAction" scope="session"
-			parameter="method">
-			<forward name="batchSign" path="/apps/sign/batchSign.jsp" />
-			<forward name="success" path="/apps/sign/summary.jsp" />
-			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
-			<forward name="nofirmar" path="/apps/sign/noFirmar.jsp" /> <!-- [eCenpri-Felipe #818] -->
-			<forward name="failureResumen" path="/apps/sign/failureResumen.jsp" />
 		</action>
 
 		<!-- Clonar Expediente -->
@@ -1042,18 +1175,19 @@
 		</action>
 		<!-- [MQE Ticket #41] Fin modificaciones -->
 
-		<!-- [Tere Ticket #97] Mejora Firmar Todos los documento -->
-		<action name="batchSignForm" path="/signAllDocument"
-			type="es.dipucr.sigem.sgm.tram.sign.action.SignAllDocumentAction"
-			scope="session" parameter="method">
-			<forward name="selectOptionAllDocument" path="/apps/sign/selectOptionAllDocument.jsp" />
-			<forward name="selectCircuitAllDocument" path="/apps/sign/selectCircuitAllDocument.jsp" />
-			<forward name="sign" path="/apps/sign/allSign.jsp" />
+		<!-- INICIO [dipucr-Felipe #1246] Nuevo firmar todo -->
+		<action name="signForm" path="/signAllDocument"
+			type="es.dipucr.sigem.sgm.tram.sign.action.SignAllDocumentAction" parameter="method"
+			scope="request" validate="false">
+			<forward name="selectOption" path="/apps/sign/selectOption.jsp" />
+			<forward name="selectCircuit" path="/apps/sign/selectCircuit.jsp" />
+			<forward name="showProperties" path="/apps/sign/setPropertiesSingProcess.jsp" />
+			<forward name="sign" path="/apps/sign/signDocs.jsp" />
 			<forward name="success" path="/apps/sign/summaryDocs.jsp" />
-			<forward name="nofirmar" path="/apps/sign/noFirmar.jsp" /> <!-- [eCenpri-Felipe #818] -->
+			<forward name="failure" path="/apps/sign/failure.jsp" />
 			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
 		</action>
-		<!-- [Tere Ticket #97] Mejora Firmar Todos los documento -->
+		<!-- FIN [dipucr-Felipe #1246] Nuevo firmar todo -->
 
 		<!-- INICIO [eCenpri-Felipe Ticket #107] 29.09.10 Registrar todos -->
 		<action path="/insertAllOutputRegistry"
@@ -1073,11 +1207,11 @@
 			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
 		</action>
 
-		<action path="/showSignDetailCustom"
-			type="es.dipucr.sigem.DetallesCircuitoFirma.action.ShowSignDetailCustomAction"
-			name="defaultForm" scope="request" validate="false">
-			<forward name="success" path="/ispac/common/documentSignDetail.jsp" />
-		</action>
+<!-- 		<action path="/showSignDetailCustom" -->
+<!-- 			type="es.dipucr.sigem.DetallesCircuitoFirma.action.ShowSignDetailCustomAction" -->
+<!-- 			name="defaultForm" scope="request" validate="false"> -->
+<!-- 			<forward name="success" path="/ispac/common/documentSignDetail.jsp" /> -->
+<!-- 		</action> -->
 		<!-- [Manu Ticket #111] Fin modificaciones -->
 
 		<!-- [Manu Ticket #127] Inicio Añadir opción importar-exportar participantes -->
@@ -1101,21 +1235,19 @@
 			type="ieci.tdw.ispac.ispacmgr.action.CreateSearchExpedientAssociateAction"
 			parameter="method" name="defaultForm" scope="request" validate="false">
 			<forward name="results" path="/apps/busquedaProcedResult.jsp" />
-			<forward name="success" path="/showProcedureList.do" />
+<!-- 			<forward name="success" path="/showProcedureList.do" /> -->
+			<forward name="success" path="/apps/hideFrame.jsp?refresh=true" />
 		</action>
 		<!-- [Tere Ticket #184] Trámite genérico -->
 		
-		<!-- [Teresa Ticket #254] Comparece-Sigem Modificar procedimiento representantes para comunicar con Comparece -->
-		<action path="/accesoComparece"
-			type="es.dipucr.sigem.api.action.AccesoCompareceAction"
-			name="defaultForm" scope="session"
-			input="/accesoComparece.do" validate="false">
+		<!-- [dipucr-Felipe #1088] -->
+		<action path="/CreateNewExpedientAssociate"
+			type="ieci.tdw.ispac.ispacmgr.action.CreateNewExpedientAssociateAction"
+			parameter="method" name="defaultForm" scope="request" validate="false">
+			<forward name="results" path="/apps/busquedaNewProcedResult.jsp" />
+			<forward name="success" path="/showProcedureList.do" />
+		</action>		
 
-			<forward name="showexp" path="/showExpedient.do" redirect="true"/>
-			<forward name="showsubprocess" path="/showSubProcess.do" redirect="true"/>
-			<forward name="showtask" path="/showTask.do" redirect="true"/>
-		</action>
-		
 		<action path="/deleteRegEntityComparece" 
 			type="es.dipucr.sigem.api.action.DeleteCompareceAction" 
 			name="defaultForm" scope="session" validate="false">
@@ -1139,11 +1271,17 @@
 			<forward name="noPerm" path="/showIntray.do" redirect="true" />
 			<!-- [Manu Ticket #76] FIN ALSIGM3 Error al aceptar distribución de registros 
 				que no corresponden -->
+			<!-- [dipucr-Felipe #1606] Error frames solapados --> 
+			<forward name="gotoExpAuto" path="/ispac/common/gotoExpAutoIntray.jsp" />
 		</action>
+		
+		<!-- [dipucr-Felipe #1606] Error frames solapados  -->
+		<action path="/gotoExpedientIntray"
+			type="es.dipucr.ispacmgr.action.GotoExpedientIntrayAction" name="defaultForm"
+			scope="request" validate="false" />
 
 		<action path="/cargaDocExp" type="es.dipucr.ispacmgr.action.CreateExpedientAddDoc"
 			name="defaultForm" scope="request" validate="false">
-
 		</action>
 		<!-- [Teresa] Fin Ticket #373 #393 -->
 
@@ -1164,6 +1302,23 @@
 		</action>
 		<!-- MQE #511 añadimos la nueva opción Borrar todos los Participantes -->
 
+		<!-- [dipucr-Felipe #1749] Marcar todas concesiones pagadas -->
+		<action name="setTodasConcesionesPagadas" path="/setTodasConcesionesPagadas"
+			type="es.dipucr.bdns.action.SetTodasConcesionesPagadasAction"
+			scope="session" parameter="method">
+			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
+			<forward name="failure" path="/apps/error.jsp" />
+			<forward name="success" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
+		
+		<!-- [dipucr-Felipe #1724] Convertir participantes-->
+		<action name="convertirParticipantes" path="/convertirParticipantes"
+			type="es.dipucr.sigem.api.action.participantes.ConvertirParticipantesAction"
+			scope="session" parameter="method">
+			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
+			<forward name="failure" path="/apps/error.jsp" />
+			<forward name="success" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
 
 		<!-- [MQE Ticket #707] INICIO ver todos los trámites -->
 		<action path="/ShowAllTaskAction" type="es.dipucr.sigem.api.action.ShowAllTaskAction">
@@ -1175,6 +1330,12 @@
 			<forward name="success" path="/apps/showAllTaskAnteriores.jsp" />
 		</action>
 		<!-- [MQE Ticket #707] FIN Ver todos los trámites -->
+		
+		<!-- [dipucr-Felipe] #1560 -->
+		<action path="/ShowAllTaskFaseAnteriorAction"
+			type="ieci.tdw.ispac.ispacmgr.action.ShowAllTaskFaseAnteriorAction">
+			<forward name="success" path="/apps/showAllTaskFaseAnterior.jsp" />
+		</action>
 
 		<!-- INICIO [eCenpri-Felipe #953] Vista del documento de factura desde 
 			el expediente de anuncio -->
@@ -1228,12 +1389,14 @@
 		<action path="/obtenerProcedimientos"
 			type="es.dipucr.sigem.api.action.ObtenerProcedimientosAction"  scope="request" validate="false" parameter="method">
 			<forward name="success" path="/jsp/muestraProcedimientos.jsp" />
+			<forward name="error" path="/ispac/error.jsp" />
 		</action>
 
 		<action path="/cargaDatosServicios"
 			type="es.dipucr.sigem.api.action.PeticionSincronaAction" scope="request"
 			validate="false">
 			<forward name="success" path="/jsp/peticionSincronaDatosEspecificos.jsp" />
+			<forward name="cerrarFrame" path="/jsp/cerrarFrame.jsp" />
 		</action>
 
 		<action path="/cargaDatosEspecificos"
@@ -1375,14 +1538,102 @@
 				validate="false"> 
 				<forward name="success" path="/jsp/selectValueSubstitute.jsp"/>
 				<forward name="setSubstitute" path="/apps/setSubstituteOnChange.jsp"/>
+				<forward name="successPlaza" path="/jsp/personal/seleccionPersonal/selectValueSubstitutePlaza.jsp"/>
 		</action>
 		
 		<action path="/setSubstitutePersonal"
 				type="es.dipucr.sigem.api.rule.procedures.personal.SetListadoPuestoTrabajoAction">
 				<forward name="success" path="/jsp/puestoTrabajo/setSubstitutePuestoTrabajo.jsp"/>
+				<forward name="successPlaza" path="/jsp/personal/seleccionPersonal/setSubstitutePlaza.jsp"/>
 		</action>
 		<!-- [Dipucr-Teresa Ticket #512] - FIN - ALSIGM3 Nueva provisión puestos de trabajo -->
+		
+		<!-- [Dipucr-Manu Ticket #1215] - INICIO - ALSIGM3 Subvenciones 2.0 -->
+		<action path="/selectSubstituteFilterNumexp"
+			type="ieci.tdw.ispac.ispacmgr.action.SelectSubstituteFilterNumexpAction" name="defaultForm">
+			<forward name="success" path="/apps/selectSubstitute.jsp" />
+			<forward name="setSubstitute" path="/apps/setSubstitute.jsp" />
+		</action>
+		<!-- [Dipucr-Manu Ticket #1215] - FIN - ALSIGM3 Subvenciones 2.0 -->
+		
+		<action path="/showProcessTipoList" name="batchForm"
+			type="ieci.tdw.ispac.ispacmgr.action.ShowProcessTipoListAction">
+			<forward name="success" path="processTipoList" />
+		</action>
+		
+		<!--  [Dipucr-Manu Ticket #1174] * INICIO - ALSIGM3 Añadir opción anular circuito de firma a todos los documentos -->
+		<action name="defaultForm" path="/anularAllSignCircuits"
+			type="es.dipucr.sigem.anularCircuitoFirmas.action.AnularTodosCircuitosFirmaAction"
+			scope="session" parameter="method">
+			<forward name="success" path="/apps/sign/summaryDocs.jsp" />
+			<forward name="failure" path="/apps/sign/failure.jsp" />
+		</action>
+		<!--  [Dipucr-Manu Ticket #1174] * FIN - ALSIGM3 Añadir opción anular circuito de firma a todos los documentos -->
+		
+		<!-- [dipucr-Felipe #1193] -->
+		<action path="/showBDNSPagosDevoluciones" type="es.dipucr.bdns.action.ShowBDNSPagosDevolucionesAction"
+			name="defaultForm">
+			<forward name="success" path="/apps/bdns/pagosDevoluciones.jsp" />
+		</action>
+		
+		<!-- [Dipucr-Manu Ticket #1200] INICIO - Integración con SW de Apodera -->
+		<action path="/storeApodera" type="ieci.tdw.ispac.ispacmgr.action.StoreApoderaAction"
+			name="defaultForm" scope="session" input="/showManagerState.do"
+			validate="false">
 
+			<forward name="showexp" path="/showExpedient.do" redirect="true" />
+			<forward name="showsubprocess" path="/showSubProcess.do"
+				redirect="true" />
+			<forward name="showtask" path="/showTask.do" redirect="true" />
+		</action>
+		
+		<action name="borrarTodosApoderamientos" path="/borrarTodosApoderamientos"
+			type="ieci.tdw.ispac.ispacmgr.action.apodera.BorrarTodosApoderamientosAction"
+			scope="session" parameter="method">
+			<forward name="refresh" path="/apps/hideFrame.jsp?refresh=true" />
+			<forward name="success" path="/apps/hideFrame.jsp?refresh=true" />
+		</action>
+		
+		<action path="/attachJustificanteApodera" type="ieci.tdw.ispac.ispacmgr.action.AttachJustificanteApoderaAction">
+			<forward name="success" path="/ispac/common/attachFile.jsp" />
+		</action>
+		
+		<!-- [Dipucr-Manu Ticket #1200] FIN - Integración con SW de Apodera -->
+		
+		<!-- [Dipucr-Tere Ticket #852] INICIO SICALWIN-->
+		<action path="/getPartidaGastoRetencionCredito" 
+				type="es.dipucr.sigem.api.rule.procedures.contratacion.GetPartidaGastoRetencionCreditoSicalAction" 
+				scope="request"
+				validate="false"> 
+				<forward name="success" path="/jsp/contratacion/setSubstituteContratacion.jsp"/>
+				<forward name="setSubstitute" path="/jsp/intervencion/selectSubstituteSICAL.jsp"/>
+		</action>
+		<action path="/setSubstituteOperacion" 
+				type="es.dipucr.sigem.api.rule.procedures.contratacion.GetOperacionSicalAction" 
+				scope="request"
+				validate="false"> 
+				<forward name="success" path="/jsp/contratacion/setSubstituteContratacion.jsp"/>
+		</action>
+		<action path="/cargarDTO" 
+				type="es.dipucr.sigem.api.rule.procedures.contratacion.CargarDTOSicalwinAction" 
+				scope="request"
+				validate="false"> 
+				<forward name="success" path="/jsp/contratacion/cargarDTO.jsp"/>
+		</action>
+		
+		<!-- [Dipucr-Tere Ticket #852] FIN SICALWIN-->
+		
+		<action path="/createTaskDecretoDirecto" type="ieci.tdw.ispac.ispacmgr.action.CreateTaskDecretoDirectoAction"
+			name="batchForm" scope="request" validate="false">
+			<forward name="success" path="/ispac/common/batchTaskConfirm.jsp" />
+		</action>
+		
+		<action path="/createTaskNotificacionesDecretoDirecto" type="ieci.tdw.ispac.ispacmgr.action.CreateTaskNotificacionesDecretoDirectoAction"
+			name="batchForm" scope="request" validate="false">
+			<forward name="success" path="/ispac/common/batchTaskConfirm.jsp" />
+		</action>
+		
+		
 	</action-mappings>
 
 	<!-- Controlador -->
@@ -1391,11 +1642,13 @@
 
 	<!-- [Manu Ticket #734] SIGEM Tramitador Anexar documento: Ampliar máximo 
 		tamaño de archivo -->
+		<!-- [Agustin Ticket ##1735] SIGEM Tramitador Anexar documento: Ampliar máximo, lo subo a 700 megas 
+		tamaño de archivo -->
 	<!-- <controller nocache="false" processorClass="org.apache.struts.tiles.TilesRequestProcessor" 
 		maxFileSize="10M" /> -->
 	<controller nocache="false"
 		processorClass="org.apache.struts.tiles.TilesRequestProcessor"
-		maxFileSize="500M" />
+		maxFileSize="700M" />
 	<!-- [Manu Ticket #734] SIGEM Tramitador Anexar documento: Ampliar máximo 
 		tamaño de archivo -->
 

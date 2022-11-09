@@ -39,6 +39,11 @@ public class SearchBean
 	/* [eCenpri-Felipe #828] Estado del documento.  */
 	private String estado;
 	
+	/**
+	 * Indica si el mostrar botón para descargar justificante de firma y documento original firmado o solo el botón de siempre
+	 */
+	private String firmaConJustificante;
+	
 	
 	public SearchBean() {
 		super();
@@ -55,6 +60,8 @@ public class SearchBean
 		destino = null;
 		//FIN [eCenpri-Felipe #625]
 		estado = null; //[eCenpri-Felipe #828]
+		
+		firmaConJustificante = "false";
 	}
 
 	public String getCodCotejo() {
@@ -151,6 +158,14 @@ public class SearchBean
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	
+	public String getFirmaConJustificante(){
+		return firmaConJustificante;
+	}
+	
+	public void setFirmaConJustificante(String firmaConJustificante) {
+		this.firmaConJustificante = firmaConJustificante;
 	}
 
 }

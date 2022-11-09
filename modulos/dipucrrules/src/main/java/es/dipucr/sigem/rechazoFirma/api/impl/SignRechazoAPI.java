@@ -26,6 +26,12 @@ import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.rechazoFirma.sign.SignCircuitInstanceRechazoDAO;
 import es.dipucr.sigem.rechazoFirma.sign.SignRechazoCircuitMgr;
 
+@Deprecated
+/**
+ * Usamos la nueva clase adapotada al portafirmas en ispac-lib
+ * @author FELIPE
+ *
+ */
 public class SignRechazoAPI extends SignAPI {
 
 	public static final Logger logger = Logger.getLogger(SignRechazoAPI.class);
@@ -73,7 +79,6 @@ public class SignRechazoAPI extends SignAPI {
 				SignDocument signDocument = new SignDocument(document);
 				
 				signDocument.setEntityId(entityId);//2.0
-				
 				signDocument.setIdPcd(idPcd);
 				signDocument.setNumExp(numExp);
 				
@@ -90,14 +95,14 @@ public class SignRechazoAPI extends SignAPI {
 //				IItemCollection tramitesAbiertos = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_DT_TRAMITES, consulta);
 				IItemCollection tramitesAbiertos = TramitesUtil.queryTramites(mcontext, consulta);//[eCenpri-Felipe #1023]
 				IItem tramiteDAO = (IItem) tramitesAbiertos.iterator().next();
-				String observaciones = tramiteDAO.getString("OBSERVACIONES");
+				String observaciones = tramiteDAO.getString(TramitesUtil.OBSERVACIONES);
 				if(observaciones != null && !observaciones.equals("")) observaciones += "\n";
 				else observaciones="";
 				String nombreUsuarioRechazo = mcontext.getUser().getName();
 				observaciones += "Rechazado por " + nombreUsuarioRechazo + ": "+ motivoRechazo;
 				//observaciones += motivoRechazo;
 				if(observaciones.length()>254) observaciones = observaciones.substring(0,253);
-				tramiteDAO.set("OBSERVACIONES", observaciones);
+				tramiteDAO.set(TramitesUtil.OBSERVACIONES, observaciones);
 				tramiteDAO.store(mcontext);		
 				
 				//[eCenpri-Felipe #354/#206] Se pone el motivo rechazo antes de ejecutar las reglas de evento Fin Circuito de Firma

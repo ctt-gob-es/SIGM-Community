@@ -4,8 +4,13 @@ import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.ispaclib.context.IClientContext;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
+import ieci.tecdoc.sgm.core.config.impl.spring.SigemConfigFilePathResolver;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.HashMap;
+
+import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.DipucrPropertiesConfiguration;
 import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
@@ -15,11 +20,13 @@ import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
  * 
  */
 public class FirmaConfiguration extends DipucrPropertiesConfiguration {
+	
+	/** Logger de la clase **/
+	protected static final Logger LOGGER = Logger.getLogger(FirmaConfiguration.class);
 
 	private static final long serialVersionUID = 5013658649831582105L;
 
-	private static HashMap<String, FirmaConfiguration> instancesHash = 
-			new HashMap<String, FirmaConfiguration>(); //[dipucr-Felipe 3#260]
+	private static HashMap<String, FirmaConfiguration> instancesHash = new HashMap<String, FirmaConfiguration>(); //[dipucr-Felipe 3#260]
 
 	public static final String DEFAULT_CONFIG_FILENAME = "firma.properties";
 
@@ -30,6 +37,36 @@ public class FirmaConfiguration extends DipucrPropertiesConfiguration {
 		public static String PASSWORD = "librodecretos.password";
 	}
 	
+	//[dipucr-Felipe #1246]
+	public interface GRAYBAND{
+		public static String TEXT1 = "firmar.grayband.text1";
+		public static String TEXT2 = "firmar.grayband.text2";
+		public static String FIRMANTE = "firmar.grayband.firmante";
+		public static String PAGINAS = "firmar.grayband.paginas";
+	}
+	
+	/* ============================================================================
+	 * Configuración del conector de gestión de firmas. Portafimas
+	 */
+	public final static String PROCESS_SIGN_CONNECTOR_CLASS="PROCESS_SIGN_CONNECTOR_CLASS";
+	
+	/* ============================================================================
+	 * Configuración del conector de gestión de firmas. Portafimas
+	 */
+	public final static String PROCESS_SIGN_CONNECTOR_QUERY_URL="PROCESS_SIGN_CONNECTOR_QUERY_URL";
+	public final static String PROCESS_SIGN_CONNECTOR_MODIFY_URL="PROCESS_SIGN_CONNECTOR_MODIFY_URL";
+	public final static String PROCESS_SIGN_CONNECTOR_ADMIN_URL="PROCESS_SIGN_CONNECTOR_ADMIN_URL";
+	public final static String PROCESS_SIGN_CONNECTOR_USER="PROCESS_SIGN_CONNECTOR_USER";
+	public final static String PROCESS_SIGN_CONNECTOR_PASSWORD="PROCESS_SIGN_CONNECTOR_PASSWORD";
+	public final static String PROCESS_SIGN_CONNECTOR_APPLICATION="PROCESS_SIGN_CONNECTOR_APPLICATION";
+	public final static String PROCESS_SIGN_CONNECTOR_DOCTYPE="PROCESS_SIGN_CONNECTOR_DOCTYPE";
+
+	
+	/* =========================================================================
+	 * Gestión de firmas digitales
+	 * ====================================================================== */
+	public final static String DIGITAL_SIGN_CONNECTOR_CLASS = "DIGITAL_SIGN_CONNECTOR_CLASS";
+
 	/**
 	 * Constructor.
 	 */
@@ -87,5 +124,30 @@ public class FirmaConfiguration extends DipucrPropertiesConfiguration {
 		FirmaConfiguration firmaConfig = new FirmaConfiguration();
 		firmaConfig.createInstance(entidad, DEFAULT_CONFIG_FILENAME);
 		return firmaConfig;
+	}
+	
+	/**
+	 * Sobre escribimos el método, pues se llamará desde otros proyectos que no sean la tramitación web
+	 */
+	@Override
+	protected void initiate(String configFileName) throws ISPACException {
+		
+		try {
+
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Cargando fichero de configuración: " + configFileName);
+			}
+	
+			// Cargar la información del fichero
+//			InputStream in = ConfigurationHelper.getConfigFileInputStream(configFileName);
+			String fullPath = SigemConfigFilePathResolver.getInstance().resolveFullPath(configFileName, "/SIGEM_Tramitacion");
+			FileInputStream in = new FileInputStream(new File(fullPath));
+			load(in);
+			in.close();
+			
+		} catch (Exception e) {
+			LOGGER.info("Error al inicializar el fichero de configuración: " + configFileName, e);
+			throw new ISPACException(e);
+		}
 	}
 }

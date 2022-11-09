@@ -24,12 +24,28 @@ public class MockAplicacionExternaConnectorImpl extends AbstractAplicacionExtern
 			return true;
 		}
 	}
+	
+	public boolean existeDocumentoOriginal(String csv, Map<String, String> params) {
+		if ("XXXXX".equals(csv)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	public byte[] getContenidoDocumento(String csv, Map<String, String> params) {
 		if ("XXXXX".equals(csv)) {
 			return null;
 		} else {
 			return "Contenido del documento".getBytes();
+		}
+	}
+	
+	public byte[] getContenidoDocumentoOriginal(String csv, Map<String, String> params) {
+		if ("XXXXX".equals(csv)) {
+			return null;
+		} else {
+			return "Contenido del documento original".getBytes();
 		}
 	}
 
@@ -40,5 +56,11 @@ public class MockAplicacionExternaConnectorImpl extends AbstractAplicacionExtern
 			outputStream.flush();
 		}
 	}
-
+	
+	public void writeDocumentoOriginal(String csv, OutputStream outputStream, Map<String, String> params) throws IOException {
+		if (!"XXXXX".equals(csv)) {
+			outputStream.write("Contenido del documento".getBytes());
+			outputStream.flush();
+		}
+	}
 }

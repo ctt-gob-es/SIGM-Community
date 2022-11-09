@@ -51,11 +51,11 @@
 						</div>
 					</logic:messagesPresent> 
 					<p>
-					<c:url var="_link" value="signAllDocument.do">
+					<c:url var="_link" value="signAllDocument3Fases.do">
 						<c:param name="method" value="${appConstants.actions.INIT_SIGN}"></c:param>
 					</c:url>
-					<a class="linkSign" href='<c:out value="${_link}"/>' onclick="this.style.visibility='hidden';document.getElementById('circuito').style.visibility='hidden';document.getElementById('etiqueta').style.display='';document.getElementById('btnCancel').style.display='none';"><bean:message key="sign.document.now"/></a>
-					<c:url var="_link" value="signAllDocument.do">
+					<a class="linkSign" href='<c:out value="${_link}"/>' onclick="this.style.visibility='hidden';document.getElementById('circuito').style.visibility='hidden';document.getElementById('etiqueta').style.display='';document.getElementById('btnCancel').style.display='none';"><bean:message key="sign.document.now3Fases"/></a>
+					<c:url var="_link" value="signAllDocument3Fases.do">
 						<c:param name="method" value="${appConstants.actions.SELECT_SIGN_CIRCUIT}"></c:param>
 					</c:url>
 					<a class="link" href='<c:out value="${_link}"/>' id='circuito'><bean:message key="sign.document.circuit.init"/></a>

@@ -102,11 +102,31 @@
 </script>
 
 
-
-
 <ispac:rewrite id="imgcalendar" href="img/calendar/" />
 <ispac:rewrite id="jscalendar" href="../scripts/calendar.js" />
 <ispac:rewrite id="buttoncalendar" href="img/calendar/calendarM.gif" />
+
+<!-- INICIO [dipucr-Felipe #1246] Compatibilidad Firma 3 fases -->
+<%@page import = "ieci.tdw.ispac.ispaclib.session.OrganizationUser"%>
+<%@page import = "ieci.tdw.ispac.ispaclib.session.OrganizationUserInfo"%>
+<%@page import = "ieci.tdw.ispac.ispaclib.sign.SignConnectorFactory" %>
+<% 
+	OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+	String entityId = info.getOrganizationId();
+	boolean bFirma3Fases = SignConnectorFactory.isDefaultImplClass(entityId);
+
+	//INICIO [dipucr-Felipe #1366]
+	String totalSupervisor = String.valueOf(request.getAttribute("totalSupervisor"));
+	String docPortafirmas = String.valueOf(request.getAttribute("docPortafirmas"));
+%>
+<c:set var="_totalSupervisor">
+	<%=totalSupervisor %>
+</c:set>
+<c:set var="_docPortafirmas">
+	<%=docPortafirmas %>
+</c:set>
+<!-- FIN [dipucr-Felipe #1366] -->
+<!-- FIN [dipucr-Felipe #1246] Compatibilidad Firma 3 fases -->
 
 
 
@@ -989,7 +1009,7 @@
 											key="es.dipucr.rechazo.motivo"/>:</nobr></td>
 										<td colspan="3" height="25"><html:textarea
 											property="property(SPAC_DT_DOCUMENTOS:MOTIVO_RECHAZO)"
-											styleClass="inputReadOnly" readonly="true" rows="3" cols="130" style="color:red"/>
+											styleClass="inputReadOnly" readonly="true" rows="3" cols="130" style="color:var(--rojodipucr)"/>
 										</td>
 									</tr>
 									</logic:notEmpty>
@@ -1347,12 +1367,14 @@
 											style="font-size:4px; border-bottom:0px dotted #5C65A0;">&nbsp;</td>
 									</tr>
 
-									<c:set var="digitalSignManagementActive" value="${ISPACConfiguration.DIGITAL_SIGN_CONNECTOR_CLASS}" />
-									<logic:notEqual name="defaultForm"
-												property="property(SPAC_DT_DOCUMENTOS:TP_REG)"
-												value="ENTRADA">
+									<%-- [dipucr-Felipe #1246] Adaptar al cambio multientidad de firma de Manu --%>
+<%-- 									<c:set var="digitalSignManagementActive" value="${ISPACConfiguration.DIGITAL_SIGN_CONNECTOR_CLASS}" /> --%>
+<%-- 									<logic:notEqual name="defaultForm" --%>
+<!-- 												property="property(SPAC_DT_DOCUMENTOS:TP_REG)" -->
+<!-- 												value="ENTRADA"> -->
 
-									<c:if test="${!empty digitalSignManagementActive}">
+<%-- 									<c:if test="${!empty digitalSignManagementActive}"> --%>
+									<c:if test="${true}">
 
 										<tr>
 											<td colspan="4"><img
@@ -1379,15 +1401,30 @@
 
 																		<c:set var="_method" value="${appConstants.actions.SELECT_OPTION}" />
 																		<jsp:useBean id="_method" type="java.lang.String" />
-																		<ispac:linkframe
-																			target="workframe"
-																			action='<%="signDocument.do?method="+_method%>'
-																			titleKey="forms.tasks.sign"
-																			inputField="property(SPAC_DT_DOCUMENTOS:ID)"
-																			showFrame="true" styleClass="tdlink" height="480"
-																			width="640" needToConfirm="true">
-																		</ispac:linkframe>
-
+																		
+																		<!-- [dipucr-Felipe #1246] Compatibilidad con firma 3 fases -->
+																		<% if(bFirma3Fases){ %>
+																			<ispac:linkframe
+ 																				target="workframe"
+ 																				action='<%="signDocument3Fases.do?method="+_method%>'
+ 																				titleKey="forms.tasks.sign"
+ 																				inputField="property(SPAC_DT_DOCUMENTOS:ID)"
+ 																				showFrame="true" styleClass="tdlink" height="480"
+ 																				width="640" needToConfirm="true">
+ 																			</ispac:linkframe>
+	  																	<% }
+																		   else{
+																		%>
+																			<ispac:linkframe
+																				target="workframe"
+																				action='<%="signDocument.do"%>'
+																				titleKey="forms.tasks.sign"
+																				inputField="property(SPAC_DT_DOCUMENTOS:ID)"
+																				showFrame="true" styleClass="tdlink" height="480"
+																				width="640" needToConfirm="true">
+																			</ispac:linkframe>
+																		<% } %>
+																		
 																	</td>
 																	<td><img src='<ispac:rewrite href="img/pixel.gif"/>'
 																		border="0" width="10px" /></td>
@@ -1443,7 +1480,7 @@
 																	<td class="formsTitleB" height="20px">
 																		<ispac:linkframe
 																			target="workframe"
-																			action='<%="showSignDetailCustom.do?"%>'
+																			action='<%="showSignDetail.do?"%>'
 																			titleKey="forms.tasks.detailSign"
 																			inputField="SPAC_DT_DOCUMENTOS:ID"
 																			showFrame="true" styleClass="tdlink" height="480"
@@ -1480,6 +1517,56 @@
 											</logic:notEmpty>
 										<!--MQE fin de la opción anular circuito de firma-->
 
+										<!-- [dipucr-Felipe #1366]-->
+										<logic:notEmpty name="defaultForm" property="property(SPAC_DT_DOCUMENTOS:INFOPAG)">
+											<c:if test="${(_docPortafirmas && _totalSupervisor)}">
+												<tr>
+													<td colspan="4" style="text-align:right">
+														<table border="0" cellspacing="0" cellpadding="0">
+															<tr>
+																<c:if test="${(_signState == appConstants.signStates.PENDIENTE_PORTAFIRMAS)}">
+																	<td class="formsTitleB" height="20px">
+																		<ispac:linkframe
+																			target="workframe"
+																			action='<%="retrySignDocument.do?"%>'
+																			titleKey="forms.tasks.retrySign"
+																			inputField="SPAC_DT_DOCUMENTOS:ID"
+																			showFrame="true" styleClass="tdlink" height="480"
+																			width="640" needToConfirm="true">															
+																		</ispac:linkframe>																	
+																	</td>
+																	<td><img src='<ispac:rewrite href="img/pixel.gif"/>'
+																			border="0" width="10px" />
+																	</td>
+																</c:if>
+																<c:if test="${(_signState == appConstants.signStates.FIRMADO || _signState == appConstants.signStates.PENDIENTE_PORTAFIRMAS)}">
+																	<td class="formsTitleB" height="20px" style="color:red">
+																		<ispac:linkframe
+																			target="workframe"
+																			action='<%="resetSignDocument.do?"%>'
+																			titleKey="forms.tasks.resetSign"
+																			inputField="SPAC_DT_DOCUMENTOS:ID"
+																			showFrame="true" styleClass="tdlinkRed" height="480"
+																			width="640" needToConfirm="true">															
+																		</ispac:linkframe>																	
+																	</td>
+																	<td><img src='<ispac:rewrite href="img/pixel.gif"/>'
+																			border="0" width="10px" />
+																	</td>
+																</c:if>
+    															</tr>
+														</table>
+													</td>
+												</tr>													
+												<tr>
+													<td colspan="4"><img
+														src='<ispac:rewrite href="img/pixel.gif"/>' border="0"
+														height="4px" /></td>
+												</tr>
+											</c:if>
+										</logic:notEmpty>
+										<!--[dipucr-Felipe #1366-->
+
 										<logic:equal value="false" name="_localReadonly">
 
 											<logic:notEmpty name="defaultForm" property="property(SPAC_DT_DOCUMENTOS:INFOPAG)">
@@ -1495,7 +1582,7 @@
 																	<td class="formsTitleB" height="20px">
 																		<ispac:linkframe
 																			target="workframe"
-																			action='<%="showSignDetailCustom.do?"%>'
+																			action='<%="showSignDetail.do?"%>'
 																			titleKey="forms.tasks.detailSign"
 																			inputField="SPAC_DT_DOCUMENTOS:ID"
 																			showFrame="true" styleClass="tdlink" height="480"
@@ -1553,7 +1640,7 @@
 										</tr>
 
 									</c:if>
-									</logic:notEqual>
+<%-- 									</logic:notEqual> --%>
 
 									<tr>
 										<td colspan="4"><img src='<ispac:rewrite href="img/pixel.gif"/>' border="0" height="4px" /></td>

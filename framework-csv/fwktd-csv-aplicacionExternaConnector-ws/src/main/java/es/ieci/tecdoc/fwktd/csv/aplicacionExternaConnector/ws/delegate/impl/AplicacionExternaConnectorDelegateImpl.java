@@ -26,12 +26,28 @@ public class AplicacionExternaConnectorDelegateImpl implements
 	public boolean existeDocumento(String csv) {
 		return false;
 	}
+	
+	/**
+	 * {@inheritDo
+	 * @see es.ieci.tecdoc.fwktd.csv.aplicacionExternaConnector.ws.delegate.AplicacionExternaConnectorDelegate#existeDocumentoOriginal(java.lang.String)
+	 */
+	public boolean existeDocumentoOriginal(String csv) {
+		return false;
+	}
 
 	/**
 	 * {@inheritDoc}
 	 * @see es.ieci.tecdoc.fwktd.csv.aplicacionExternaConnector.ws.delegate.AplicacionExternaConnectorDelegate#getContenidoDocumento(java.lang.String)
 	 */
 	public byte[] getContenidoDocumento(String csv) {
+		return null;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.ieci.tecdoc.fwktd.csv.aplicacionExternaConnector.ws.delegate.AplicacionExternaConnectorDelegate#getContenidoDocumentoOriginal(java.lang.String)
+	 */
+	public byte[] getContenidoDocumentoOriginal(String csv) {
 		return null;
 	}
 }

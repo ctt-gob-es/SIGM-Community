@@ -143,7 +143,7 @@ public class DocumentoController extends MultiActionController {
 		//[dipucr-Felipe #290]
 		String idEntidad = request.getParameter(PARAMETRO_ID_ENTIDAD);
 		
-		List listaEntidades = obtenerListaEntidades();
+		List<?> listaEntidades = obtenerListaEntidades();
 		ModelAndView mav = new ModelAndView(getViewName());
 		if (listaEntidades.size() == 1) {
 			Entidad oEntidad = (Entidad) listaEntidades.get(0);
@@ -208,7 +208,11 @@ public class DocumentoController extends MultiActionController {
 				if (infoDocumento == null) {
 					logger.info("No se ha encontrado el documento con CSV [{}]", csv);
 					mensajeError = getMessageSourceAccessor().getMessage("error.csv.notFound");
+					
+				} else {
+					infoDocumento.setFirmaConJustificante(getDocumentoDelegate().existeContenidoDocumentoOriginal(infoDocumento.getId()));
 				}
+
 
 				logger.info("InfoDocumento: {}", infoDocumento);
 
@@ -317,6 +321,78 @@ public class DocumentoController extends MultiActionController {
 
 		return mav;
 	}
+	
+	/**
+	 * Descarga el documento.
+	 * 
+	 * @param request
+	 *            HttpServletRequest.
+	 * @param response
+	 *            HttpServletResponse
+	 * @return ModelAndView
+	 * @throws Exception
+	 *             si ocurre algún error.
+	 */
+	public ModelAndView dodownloadOriginal(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		String mensajeError = null;
+		String idEntidad = (String) request.getSession().getAttribute(PARAMETRO_ID_ENTIDAD);
+		MultiEntityContextHolder.setEntity(idEntidad);
+
+		// Obtener la información del documento en sesión
+		InfoDocumentoVO infoDocumento = (InfoDocumentoVO) request.getSession().getAttribute(INFO_DOCUMENTO_SESSION_KEY);
+		logger.info("InfoDocumento: {}", infoDocumento);
+
+		if (infoDocumento == null) {
+			logger.info("No se ha encontrado la información del documento en la sesión del usuario");
+			mensajeError = getMessageSourceAccessor().getMessage("error.csv.infoDocumento.notFound");
+		} else {
+
+			// Comprobar si el documento tiene marca de disponible
+			if (!infoDocumento.isDisponible()) {
+				logger.info("El documento con CSV [{}] no está disponible", infoDocumento.getCsv());
+				mensajeError = getMessageSourceAccessor().getMessage("error.csv.document.notAvailable", new Object[] { infoDocumento.getCsv() });
+			} else {
+
+				try {
+
+					// Comprobar si el documento está disponible en la
+					// aplicación externa					
+					if (!getDocumentoDelegate().existeContenidoDocumentoOriginal(infoDocumento.getId())) {
+						logger.info("El documento con CSV [{}] no está disponible en la aplicación externa", infoDocumento.getCsv());
+						mensajeError = getMessageSourceAccessor().getMessage("error.csv.document.notAvailable", new Object[] { infoDocumento.getCsv() });
+						
+					} else {
+						logger.info("Descargando el documento con CSV [{}]", infoDocumento.getCsv());
+
+						// Descarga del documento
+						response.setContentType(infoDocumento.getTipoMime());
+						response.setHeader("Content-Disposition", "attachment; filename=\"" + infoDocumento.getNombre() + "\"");
+
+						getDocumentoDelegate().writeDocumentoOriginal(infoDocumento.getId(), response.getOutputStream());
+
+						return null;
+					}
+
+				} catch (CSVException e) {
+					logger.error("Error inesperado obteniendo la información del CSV [" + infoDocumento.getCsv() + "]", e);
+					mensajeError = getMessageSourceAccessor().getMessage("error.general", new Object[] { e.getLocalizedMessage() });
+					
+				} catch (Throwable t) {
+					logger.error("Error inesperado obteniendo la información del CSV [" + infoDocumento.getCsv() + "]", t);
+					mensajeError = getMessageSourceAccessor().getMessage("error.general", new Object[] { t.getLocalizedMessage() });
+				}
+			}
+		}
+
+		ModelAndView mav = new ModelAndView(getDownloadErrorViewName());
+		mav.addObject(CSV, (infoDocumento != null ? infoDocumento.getCsv() : null));
+		mav.addObject(INFO_DOCUMENTO, infoDocumento);
+		mav.addObject(MENSAJE_ERROR, mensajeError);
+
+		return mav;
+	}
 
 	/**
 	 * Obtiene la lista de entidades del sistema SIGEM
@@ -324,26 +400,26 @@ public class DocumentoController extends MultiActionController {
 	 * @return List ArrayList de objetos
 	 *         eci.tecdoc.sgm.core.services.dto.Entidad
 	 */
-	private List obtenerListaEntidades() {
+	private List<Entidad> obtenerListaEntidades() {
 		try {
 			ServicioEntidades oServicio = LocalizadorServicios.getServicioEntidades();
-			List oLista = oServicio.obtenerEntidades();
+			List<?> oLista = oServicio.obtenerEntidades();
 			return getEntidades(oLista);
+			
 		} catch (Exception e) {
-			return new ArrayList();
+			return new ArrayList<Entidad>();
 		}
 	}
 
-	private List getEntidades(List oLista) {
-		if (oLista == null)
-			return new ArrayList();
+	private List<Entidad> getEntidades(List<?> oLista) {
+		
+		List<Entidad> resultado = new ArrayList<Entidad>();
 
 		for (int i = 0; i < oLista.size(); i++) {
-			oLista.set(i,
-					getEntidad((ieci.tecdoc.sgm.core.services.entidades.Entidad) oLista.get(i)));
+			resultado.add(getEntidad((ieci.tecdoc.sgm.core.services.entidades.Entidad) oLista.get(i)));
 		}
 
-		return oLista;
+		return resultado;
 	}
 
 	private Entidad getEntidad(ieci.tecdoc.sgm.core.services.entidades.Entidad oEntidad) {

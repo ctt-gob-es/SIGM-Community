@@ -67,7 +67,7 @@
 		<repository>
 			<id>repo_arch</id>
 			<name>repo_arch</name>
-			<url>file:${project.basedir}/lib</url>
+			<url>file:${project.basedir}/../../lib</url>
 		</repository>
 	</repositories>
 
@@ -86,6 +86,10 @@
 					<groupId>es.ieci.tecdoc.invesdoc</groupId>
 					<artifactId>invesdoc-admin</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>javax.xml.bind</groupId>
+					<artifactId>jaxb-api</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -93,7 +97,11 @@
 			<artifactId>Clienteligero</artifactId>
 			<version>3.0</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>es.dipucr.subvenciones</groupId>
+			<artifactId>Subvenciones</artifactId>
+			<version>3.0</version>
+		</dependency>
 		<dependency>
 			<groupId>es.ieci.tecdoc.iflow</groupId>
 			<artifactId>ispac-catalog-java</artifactId>
@@ -213,7 +221,7 @@
 						<target>${jdk.version}</target>
 						<encoding>CP1252</encoding>
 						<fork>true</fork>
-						<executable>${JAVA_1_5_HOME}/bin/javac</executable>
+						<executable>${JAVA_1_6_HOME}/bin/javac</executable>
 					</configuration>
 				</plugin>
 				<plugin>

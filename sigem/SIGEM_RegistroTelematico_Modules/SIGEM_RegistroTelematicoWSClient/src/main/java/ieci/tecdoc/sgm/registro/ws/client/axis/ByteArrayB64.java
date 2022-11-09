@@ -8,8 +8,7 @@
 package ieci.tecdoc.sgm.registro.ws.client.axis;
 
 public class ByteArrayB64  extends ieci.tecdoc.sgm.registro.ws.client.axis.RetornoServicio  implements java.io.Serializable {
-
-	private java.lang.String byteArrayB64;
+    private java.lang.String byteArrayB64;
 
     public ByteArrayB64() {
     }

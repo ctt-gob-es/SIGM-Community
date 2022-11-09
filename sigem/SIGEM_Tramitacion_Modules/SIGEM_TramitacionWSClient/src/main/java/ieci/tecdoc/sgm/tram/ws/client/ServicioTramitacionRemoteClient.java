@@ -972,6 +972,17 @@ public class ServicioTramitacionRemoteClient implements ServicioTramitacion {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+    /**
+     * [Dipucr-Agustin #1297]
+     * Obtiene el contenido del justificante de firma que genera sigem a partir de la firma de portafirmas
+     * @param guid GUID del documento
+     * @param identidad GUID idEntidad
+     * @return Contenido del documento.
+     */
+    public byte [] getJustificanteFirma(String idEntidad, String guid) throws TramitacionException {
+		return null;
+    }
 
 	//[dipucr-Felipe ]
 	public String[] queryEntities(String idEntidad, String entidad,
@@ -982,6 +993,13 @@ public class ServicioTramitacionRemoteClient implements ServicioTramitacion {
 	
 	//[dipucr-Felipe #860]
 	public boolean anularLicenciaRRHH(String idEntidad, String numexp)
+			throws TramitacionException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	//[dipucr-Felipe #1771]
+	public boolean anularSolicitudPortalEmpleado(String idEntidad, String numexp, String documentoAnular)
 			throws TramitacionException {
 		// TODO Auto-generated method stub
 		return false;
@@ -1000,4 +1018,50 @@ public class ServicioTramitacionRemoteClient implements ServicioTramitacion {
 		}
 	}
 
+	/**
+	 * [dipucr-Felipe #1246]
+	 */
+	public String rechazarDocumento(String idEntidad, String numExp,
+			String idDocumento, String motivo, String idUsuario,
+			String nombreUsuario) throws TramitacionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String[] queryExpedientes(String idEntidad, String consutla) throws TramitacionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int creaTramiteByCod(String idEntidad, String codTramite, String numExp) throws TramitacionException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	/***
+	 * Inserta un apoderamiento en la pesataña de los apoderamientos del expediente
+	 * @param idEntidad
+	 * @param numExp
+	 * @param representado
+	 * @param representante
+	 * @return
+	 * @throws TramitacionException
+	 */
+	public boolean insertaApoderamiento(String idEntidad, String numExp, String representado, String representante) throws TramitacionException{
+		return false;
+	}
+	
+	/**
+     * [dipucr-Felipe #1745]
+     * @param idEntidad
+     * @param password
+     * @param nombreDocumento
+     * @param documento
+     * @return
+     * @throws TramitacionException
+     */
+	public byte[] sellarDocumento(String idEntidad, String password, String nombreDocumento, byte[] documento) throws TramitacionException{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

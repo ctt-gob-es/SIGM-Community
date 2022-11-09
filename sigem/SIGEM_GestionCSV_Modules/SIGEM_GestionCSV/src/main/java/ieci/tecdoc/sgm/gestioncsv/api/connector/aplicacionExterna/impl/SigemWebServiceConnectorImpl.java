@@ -83,6 +83,21 @@ public class SigemWebServiceConnectorImpl extends AbstractAplicacionExternaConne
 		AplicacionExternaCSVConnectorWS aplicacionExternaCSVConnectorWS = getAplicacionExternaCSVConnectorWS(params);
 		return aplicacionExternaCSVConnectorWS.existeDocumento(csv, entity);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see es.ieci.tecdoc.fwktd.csv.api.connector.aplicacionExterna.AplicacionExternaConnector#existeDocumentoOriginal(java.lang.String,
+	 *      java.util.Map)
+	 */
+	public boolean existeDocumentoOriginal(String csv, Map<String, String> params) {
+
+		logger.info("Llamada a existeDocumento: csv=[{}], params=[{}]", csv, params);
+		String entity = MultiEntityContextHolder.getEntity();
+
+		AplicacionExternaCSVConnectorWS aplicacionExternaCSVConnectorWS = getAplicacionExternaCSVConnectorWS(params);
+		return aplicacionExternaCSVConnectorWS.existeDocumentoOriginal(csv, entity);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -97,6 +112,21 @@ public class SigemWebServiceConnectorImpl extends AbstractAplicacionExternaConne
 		String entity = MultiEntityContextHolder.getEntity();
 		AplicacionExternaCSVConnectorWS aplicacionExternaCSVConnectorWS = getAplicacionExternaCSVConnectorWS(params);
 		return aplicacionExternaCSVConnectorWS.getContenidoDocumento(csv, entity);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see es.ieci.tecdoc.fwktd.csv.api.connector.aplicacionExterna.AplicacionExternaConnector#getContenidoDocumentoOriginal(java.lang.String,
+	 *      java.util.Map)
+	 */
+	public byte[] getContenidoDocumentoOriginal(String csv, Map<String, String> params) {
+
+		logger.info("Llamada a getContenidoDocumento: csv=[{}], params=[{}]", csv, params);
+
+		String entity = MultiEntityContextHolder.getEntity();
+		AplicacionExternaCSVConnectorWS aplicacionExternaCSVConnectorWS = getAplicacionExternaCSVConnectorWS(params);
+		return aplicacionExternaCSVConnectorWS.getContenidoDocumentoOriginal(csv, entity);
 	}
 
 	/**
@@ -114,6 +144,33 @@ public class SigemWebServiceConnectorImpl extends AbstractAplicacionExternaConne
 
 		AplicacionExternaCSVConnectorWS aplicacionExternaCSVConnectorWS = getAplicacionExternaCSVConnectorWS(params);
 		byte[] contenido = aplicacionExternaCSVConnectorWS.getContenidoDocumento(csv, entity);
+
+		if ((contenido != null) && (contenido.length > 0)) {
+
+			logger.info("Escribiendo {} bytes...", contenido.length);
+
+			outputStream.write(contenido);
+			outputStream.flush();
+
+		} else {
+			logger.info("El contenido está vacío");
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see es.ieci.tecdoc.fwktd.csv.api.connector.aplicacionExterna.AplicacionExternaConnector#writeDocumentoOriginal(java.lang.String,
+	 *      java.io.OutputStream, java.util.Map)
+	 */
+	public void writeDocumentoOriginal(String csv, OutputStream outputStream, Map<String, String> params) throws IOException {
+
+		logger.info("Llamada a writeDocumento: csv=[{}], params=[{}]", csv, params);
+
+		String entity = MultiEntityContextHolder.getEntity();
+
+		AplicacionExternaCSVConnectorWS aplicacionExternaCSVConnectorWS = getAplicacionExternaCSVConnectorWS(params);
+		byte[] contenido = aplicacionExternaCSVConnectorWS.getContenidoDocumentoOriginal(csv, entity);
 
 		if ((contenido != null) && (contenido.length > 0)) {
 

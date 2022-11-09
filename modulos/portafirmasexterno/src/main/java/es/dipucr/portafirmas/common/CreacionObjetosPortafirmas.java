@@ -7,18 +7,35 @@ import ieci.tdw.ispac.api.errors.ISPACRuleException;
 import ieci.tdw.ispac.api.item.IItem;
 import ieci.tdw.ispac.api.item.IItemCollection;
 import ieci.tdw.ispac.api.rule.IRuleContext;
+import ieci.tdw.ispac.ispaclib.configuration.ConfigurationHelper;
 import ieci.tdw.ispac.ispaclib.context.ClientContext;
+import ieci.tdw.ispac.ispaclib.context.IClientContext;
+import ieci.tdw.ispac.ispaclib.utils.InetUtils;
 import ieci.tdw.ispac.ispaclib.utils.MimetypeMapping;
+import ieci.tecdoc.sgm.tram.sign.PortafirmasMinhapProcessSignConnector;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.security.Key;
+import java.security.KeyFactory;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.security.spec.KeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Properties;
 
 import javax.activation.DataHandler;
+import javax.crypto.Cipher;
 
 import org.apache.log4j.Logger;
 
@@ -37,6 +54,7 @@ import _0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.SeparateJobToUs
 import _0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.UpdateEnhancedJobs;
 import _0.v2.admin.pfirma.cice.juntadeandalucia.AdminServiceStub.User;
 import _0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.Document;
+import _0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.DocumentList;
 import _0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.DocumentType;
 import _0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.ImportanceLevel;
 import _0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.RemitterList;
@@ -53,7 +71,10 @@ import _0.v2.modify.pfirma.cice.juntadeandalucia.ModifyServiceStub.UserJob;
 import com.sun.istack.ByteArrayDataSource;
 
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.EntidadesAdmUtil;
 import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
+
+import org.apache.commons.codec.binary.Base64;
 
 public class CreacionObjetosPortafirmas {
 	
@@ -196,9 +217,80 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 		
 		return usuariosAlta;
 	}
+	
+	private static String encriptar(String textoAEncriptar, IClientContext cct) throws Exception
+	  {
+	    String filePath = "config_" + EntidadesAdmUtil.obtenerEntidad(cct) + File.separator;
+	    String sslPropertiesPath = ConfigurationHelper.getConfigFilePath(filePath) + "firma.properties";
+	    Properties sslProperties = readFileProperties(sslPropertiesPath);
+
+	    KeyStore store = KeyStore.getInstance("PKCS12");
+
+	    FileInputStream fis = new FileInputStream("/config/certificados/foliado.p12");
+	    store.load(fis, sslProperties.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
+
+	    PrivateKey key = (PrivateKey)store.getKey("foliado", sslProperties.getProperty("javax.net.ssl.keyStorePassword").toCharArray());
+	    Certificate cert = store.getCertificate("foliado");
+	    PublicKey publicKey = cert.getPublicKey();
+
+	    Cipher c = Cipher.getInstance(key.getAlgorithm());
+	    c.init(1, key);
+
+	    byte[] encriptado = c.doFinal(textoAEncriptar.getBytes());
+
+	    String res = URLEncoder.encode(new String(Base64.encodeBase64(encriptado)), "UTF-8");
+
+	    c.init(2, publicKey);
+
+	    byte[] deencoded = Base64.decodeBase64(URLDecoder.decode(res, "UTF-8"));
+
+	    byte[] bytesDesencriptados = c.doFinal(deencoded);
+	    String textoDesencripado = new String(bytesDesencriptados);
+
+	    return res;
+	  }
+
+	  private static PublicKey loadPublicKey(String fileName) throws Exception
+	  {
+	    FileInputStream fis = new FileInputStream(fileName);
+	    int numBtyes = fis.available();
+	    byte[] bytes = new byte[numBtyes];
+	    fis.read(bytes);
+	    fis.close();
+
+	    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+	    KeySpec keySpec = new X509EncodedKeySpec(bytes);
+	    PublicKey keyFromBytes = keyFactory.generatePublic(keySpec);
+	    return keyFromBytes;
+	  }
+
+	  private static void saveKey(Key key, String fileName) throws Exception {
+	    byte[] publicKeyBytes = key.getEncoded();
+	    FileOutputStream fos = new FileOutputStream(fileName);
+	    fos.write(publicKeyBytes);
+	    fos.close();
+	  }
+
+	  public static Properties readFileProperties(String pathResource)
+	    throws Exception
+	  {
+	    Properties properties = new Properties();
+	    try
+	    {
+	      FileInputStream fis = new FileInputStream(pathResource);
+	      properties.load(fis);
+	    }
+	    catch (Exception e) {
+	      logger.error("Error. " + e.getMessage(), e);
+	      throw new Exception("THERE IS NO PROPERTIES FILE: " + pathResource);
+	    }
+
+	    return properties;
+	  }
 
 	@SuppressWarnings("unchecked")
-	public static Request getRequest(IRuleContext rulectx, String tipoFirma) throws ISPACRuleException {
+	public static Request getRequest(IRuleContext rulectx, String tipoFirma, String name, String extension) throws ISPACRuleException {
+
 		Request request = new Request();
 		try{
 			//----------------------------------------------------------------------------------------------
@@ -260,9 +352,21 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 			//cal.set(2014, Calendar.JULY, 30);
 			//request.setFexpiration(cal);
 			
-			request.setReference(rulectx.getNumExp());
+			String dir = InetUtils.getLocalHostAddress();
+
+		    String idDocu = "";
 			
-			request.setText(expediente.getString("NOMBREPROCEDIMIENTO")+" - "+asunto);
+			request.setReference(rulectx.getNumExp()+PortafirmasMinhapProcessSignConnector.REFERENCE_SEPARATOR+idDocu+PortafirmasMinhapProcessSignConnector.REFERENCE_SEPARATOR+EntidadesAdmUtil.obtenerEntidad(cct));
+			
+			String idEncruptado = new String(Base64.encodeBase64(idDocu.getBytes()));
+
+			String direccionFoliado = "https://" + dir + ":4443/SIGEM_AutenticacionWeb/seleccionEntidad.do?REDIRECCION=IndiceElectronico&tramiteId=" + idEncruptado + "&ENTIDAD_ID="
+					+ EntidadesAdmUtil.obtenerEntidad(cct);
+			logger.warn("direccionFoliado " + direccionFoliado);
+
+			request.setText("<a href=\"" + direccionFoliado + "\" target=\"_blank\" style=\"color:red;\">Consulta expediente completo</a>");
+			
+			//request.setText(expediente.getString("NOMBREPROCEDIMIENTO")+" - "+asunto);
 			
 			
 			/**
@@ -325,7 +429,14 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 			if(tipoFirma.equals("PARALELA")){
 				request.setSignType(SignType.value2);
 			}
-						
+			
+			DocumentList documentList = new DocumentList();
+			Document[] documentos = new Document[1];
+			Document documento = new Document();
+			documento.setMime(extension);
+			documento.setName(name);
+			documentList.setDocument(documentos);
+			request.setDocumentList(documentList);
 			
 			/**
 			 * importanceLevel: Nivel de importancia de la petición
@@ -337,6 +448,7 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 			
 			IItemCollection itColFirmantes = entitiesAPI.queryEntities("FIRMA_DOC_EXTERNO", "WHERE NUMEXP='"+rulectx.getNumExp()+"' ORDER BY ORDEN_FIRMA ASC");
 			Iterator<IItem> iteratorFirmantes = itColFirmantes.iterator();
+			
 			/**
 			 * signLineList: Lista de líneas de firma de la solicitud.
 			 * **/
@@ -413,7 +525,7 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 		return separateJobToUser;
 	}
 
-	public static Document getDocumento(ClientContext cct, IItem docFirma) throws ISPACRuleException {
+	public static Document getDocumento(ClientContext cct, IItem docFirma, File pdfFile) throws ISPACRuleException {
 		Document doc = new Document();
 		
 		//[Dipucr-Agustin] #766 Mientras que no cambiemos la forma de trabajar siempre poner pdf, estaba cogiendo en algunos casos extension odt o doc
@@ -431,17 +543,8 @@ public static InsertEnhancedJobs crearObjetoInsertEnhancedJobs(Authentication au
 			documentType.setIdentifier(docFirma.getInt("ID")+"");
 			documentType.setDescription(docFirma.getString("DESCRIPCION"));
 			documentType.setValid(true);
-			doc.setDocumentType(documentType);		
+			doc.setDocumentType(documentType);			
 			
-			File pdfFile = null;
-			if(docFirma.getString("INFOPAG_RDE")!=null){
-				pdfFile = DocumentosUtil.getFile(cct, docFirma.getString("INFOPAG_RDE"), docFirma.getString("NOMBRE"), docFirma.getString("EXTENSION_RDE"));
-			}
-			else{
-				if(docFirma.getString("EXTENSION").equals("pdf")){
-					pdfFile = DocumentosUtil.getFile(cct, docFirma.getString("INFOPAG"), docFirma.getString("NOMBRE"), docFirma.getString("EXTENSION"));
-				}
-			}
 			//pdfFile = new File("C:\\Teresa\\borrar\\Pap.pdf");
 			byte[] data = new byte[(int) pdfFile.length()];
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

@@ -85,6 +85,18 @@ public interface ServicioGestionCSV {
 	 * @return true: Si existe el contenido del documento. false: Si no existe.
 	 */
 	public boolean existeContenidoDocumento(Entidad entidad, String id) throws CSVException;
+	
+	/**
+	 * Comprueba si el contenido del documento original firmado se puede descargar de la
+	 * aplicación externa
+	 * 
+	 * @param entidad
+	 *            Entidad sobre la que estamos trabajando
+	 * @param id
+	 *            Identificador del documento
+	 * @return true: Si existe el contenido del documento. false: Si no existe.
+	 */
+	public boolean existeContenidoDocumentoOriginal(Entidad entidad, String id) throws CSVException;
 
 	/**
 	 * Obtiene el contenido de un documento a partir de su identificador
@@ -96,6 +108,17 @@ public interface ServicioGestionCSV {
 	 * @return Contenido del documento.
 	 */
 	public byte[] getContenidoDocumento(Entidad entidad, String id) throws CSVException;
+	
+	/**
+	 * Obtiene el contenido de un documento original firmado a partir de su identificador
+	 * 
+	 * @param entidad
+	 *            Entidad sobre la que estamos trabajando
+	 * @param id
+	 *            Identificador del documento
+	 * @return Contenido del documento.
+	 */
+	public byte[] getContenidoDocumentoOriginal(Entidad entidad, String id) throws CSVException;
 
 	/**
 	 * Escribe el contenido de un documento a partir del identificador en el
@@ -111,6 +134,21 @@ public interface ServicioGestionCSV {
 	 * 
 	 */
 	public void writeDocumento(Entidad entidad, String id, OutputStream outputStream) throws CSVException;
+	
+	/**
+	 * Escribe el contenido de un documento original firmado a partir del identificador en el
+	 * OutputStrem
+	 * 
+	 * @param entidad
+	 *            Entidad sobre la que estamos trabajando
+	 * @param id
+	 *            Identificador del documento
+	 * @param outputStream
+	 *            OutputStream sobre el que escribiremos el contenido del
+	 *            documento
+	 * 
+	 */
+	public void writeDocumentoOriginal(Entidad entidad, String id, OutputStream outputStream) throws CSVException;
 
 	/**
 	 * @return el servicioDocumentos

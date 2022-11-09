@@ -72,6 +72,18 @@ public class DocumentoDelegateImpl implements DocumentoDelegate {
 
 		return getServicioDocumentos().existeContenidoDocumento(id);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.web.delegate.DocumentoDelegate#existeContenidoDocumentoOriginal(java.lang.String)
+	 */
+	public boolean existeContenidoDocumentoOriginal(String id) {
+
+		logger.info("Llamada a existeContenidoDocumento: id=[{}]", id);
+
+		return getServicioDocumentos().existeContenidoDocumentoOriginal(id);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -85,5 +97,16 @@ public class DocumentoDelegateImpl implements DocumentoDelegate {
 
 		getServicioDocumentos().writeDocumento(id, outputStream);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see es.ieci.tecdoc.fwktd.csv.web.delegate.DocumentoDelegate#writeDocumentoOriginal(java.lang.String, java.io.OutputStream)
+	 */
+	public void writeDocumentoOriginal(String id, OutputStream outputStream) throws IOException {
 
+		logger.info("Llamada a writeDocumento: id=[{}]", id);
+
+		getServicioDocumentos().writeDocumentoOriginal(id, outputStream);
+	}
 }

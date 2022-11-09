@@ -39,6 +39,17 @@ public class CustodiaManager extends ServiceManager {
     public byte [] getFichero(String guid) throws ISPACException {
 	    return DocumentsHelper.getContenidoDocumento(getContext(), guid);
     }
+    
+    /**
+     * [DipuCR-Agustin #1297]
+     * Obtiene el contenido del documento.
+     * @param guid GUID del documento
+     * @return Contenido del documento.
+     * @throws ISPACException si ocurre algún error.
+     */
+    public byte [] getFicheroJustificanteFirma(String guid) throws ISPACException {
+	    return DocumentsHelper.getContenidoDocumentoJustificanteFirma(getContext(), guid);
+    }
 
 	/**
 	 * Obtiene la información de origen e integridad del documento.

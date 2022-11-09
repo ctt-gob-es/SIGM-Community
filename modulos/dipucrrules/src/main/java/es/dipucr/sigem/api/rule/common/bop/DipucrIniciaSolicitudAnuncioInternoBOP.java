@@ -5,7 +5,6 @@ import ieci.tdw.ispac.api.IGenDocAPI;
 import ieci.tdw.ispac.api.IInvesflowAPI;
 import ieci.tdw.ispac.api.ISignAPI;
 import ieci.tdw.ispac.api.ITXTransaction;
-import ieci.tdw.ispac.api.entities.SpacEntities;
 import ieci.tdw.ispac.api.errors.ISPACException;
 import ieci.tdw.ispac.api.errors.ISPACInfo;
 import ieci.tdw.ispac.api.errors.ISPACRuleException;
@@ -32,45 +31,46 @@ import com.sun.star.lang.XComponent;
 
 import es.dipucr.sigem.api.rule.common.utils.DipucrCommonFunctions;
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesRelacionadosUtil;
+import es.dipucr.sigem.api.rule.common.utils.TramitesUtil;
 import es.dipucr.sigem.api.rule.procedures.Constants;
 
 public class DipucrIniciaSolicitudAnuncioInternoBOP implements IRule{
 	
-	private static final Logger logger = Logger.getLogger(DipucrIniciaSolicitudAnuncioInternoBOP.class);
+	private static final Logger LOGGER = Logger.getLogger(DipucrIniciaSolicitudAnuncioInternoBOP.class);
 	
 	//Se puede heredar de esta clase, y al darle valor a ésta variable con el id del circuito de firma deseado, además de generar el anuncio 
 	//comienza el circuito de firma 
 	protected int idCircuitoFirma = -1;
 
 	public void cancel(IRuleContext rulectx) throws ISPACRuleException {
+		//No hace nada
 	}
 
-	@SuppressWarnings("rawtypes")
 	public Object execute(IRuleContext rulectx) throws ISPACRuleException {
 		
 		try {			
-			logger.info("INICIO - " +this.getClass().getName());
+			LOGGER.info("INICIO - " +this.getClass().getName());
 			IClientContext cct = (ClientContext) rulectx.getClientContext();
 			IInvesflowAPI invesflowAPI = cct.getAPI();
 			IEntitiesAPI entitiesAPI = invesflowAPI.getEntitiesAPI();
 			
 			IItemCollection collection = entitiesAPI.getDocuments(rulectx.getNumExp(), "ID_TRAMITE ="+rulectx.getTaskId(), "");
-	        Iterator it = collection.iterator();
+	        Iterator<?> it = collection.iterator();
 	        while (it.hasNext()){
 	        	IItem doc = (IItem)it.next();
 	        	String descripcionDoc = doc.getString("DESCRIPCION");
 	        	generaAnuncio(rulectx, descripcionDoc);
 	        }			
-			logger.info("FIN - " + this.getClass().getName());
+			LOGGER.info("FIN - " + this.getClass().getName());
 		} catch (ISPACRuleException e) { 
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void generaAnuncio(IRuleContext rulectx, String descripcionDoc) throws Exception {
 		
 		IClientContext cct = (ClientContext) rulectx.getClientContext();
@@ -82,7 +82,7 @@ public class DipucrIniciaSolicitudAnuncioInternoBOP implements IRule{
 		ISignAPI signAPI = invesflowAPI.getSignAPI();
 		
 		// Obtener el código de procedimiento para el número de expediente
-		Map params = new HashMap();
+		Map<String, String> params = new HashMap<String, String>();
 		params.put("COD_PCD", "PCD-121");
 
 		// Crear el proceso del expediente
@@ -92,26 +92,24 @@ public class DipucrIniciaSolicitudAnuncioInternoBOP implements IRule{
 		process = invesflowAPI.getProcess(nIdProcess2);
 		
 		String numExpHijo = process.getString("NUMEXP");
-
-		IItem registro = entitiesAPI.createEntity(SpacEntities.SPAC_EXP_RELACIONADOS);
-
-		registro.set("NUMEXP_PADRE", rulectx.getNumExp());
-		registro.set("NUMEXP_HIJO", numExpHijo);
-		registro.set("RELACION", "Anuncio BOP");
-
-		registro.store(cct);
+		
+		ExpedientesRelacionadosUtil.relacionaExpedientes(cct, rulectx.getNumExp(), numExpHijo, "Anuncio BOP");
+		
+		TramitesUtil.setNumexpRelacionado(cct, rulectx.getNumExp(), rulectx.getTaskId(), numExpHijo);
+		
+		TramitesUtil.cargarObservacionesTramite(cct, false, rulectx.getNumExp(), rulectx.getTaskId(), "Anuncio BOP - Exp.Relacionado: " + numExpHijo);
 
 		//Creamos el trámite
-		String strQueryAux = "WHERE NUMEXP='" + numExpHijo + "'";
+		String strQueryAux = "WHERE NUMEXP = '" + numExpHijo + "'";
 		IItemCollection collExpsAux = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_FASES, strQueryAux);
-		Iterator itExpsAux = collExpsAux.iterator();
+		Iterator<?> itExpsAux = collExpsAux.iterator();
 
 		IItem iExpedienteAux = ((IItem)itExpsAux.next());
 		int idFase = iExpedienteAux.getInt("ID");
 		int idFaseDecreto = iExpedienteAux.getInt("ID_FASE");
 		strQueryAux = "WHERE ID_FASE = "+idFaseDecreto+" ORDER BY ORDEN ASC";
 		IItemCollection iTramiteProp = entitiesAPI.queryEntities(Constants.TABLASBBDD.SPAC_P_TRAMITES, strQueryAux);
-		Iterator ITramiteProp = iTramiteProp.iterator();
+		Iterator<?> ITramiteProp = iTramiteProp.iterator();
 		int idTramite=0;
 		IItem tramite = (IItem)ITramiteProp.next();
 		idTramite = tramite.getInt("ID");
@@ -172,10 +170,9 @@ public class DipucrIniciaSolicitudAnuncioInternoBOP implements IRule{
 		
 		String strInfoPag = "";
     	
-        IItemCollection collection = DocumentosUtil.getDocumentsByDescripcion(numExpHijo, rulectx, Constants.BOP._DOC_ANUNCIO);
-        Iterator it = collection.iterator();
-        if (it.hasNext())
-        {
+        IItemCollection collection = DocumentosUtil.getDocumentsByDescripcion(numExpHijo, cct, Constants.BOP._DOC_ANUNCIO);
+        Iterator<?> it = collection.iterator();
+        if (it.hasNext()) {
         	IItem doc = (IItem)it.next();
         	strInfoPag = doc.getString("INFOPAG");
         }
@@ -184,8 +181,8 @@ public class DipucrIniciaSolicitudAnuncioInternoBOP implements IRule{
 		file.delete();   		  		
 		
 		//Documento original
-		IItemCollection colProp = entitiesAPI.getDocuments(rulectx.getNumExp(), "DESCRIPCION LIKE '"+descripcionDoc+"' AND ID_TRAMITE = "+rulectx.getTaskId(), "");
-		Iterator itProp = colProp.iterator();
+		IItemCollection colProp = entitiesAPI.getDocuments(rulectx.getNumExp(), "DESCRIPCION LIKE '" + descripcionDoc + "' AND ID_TRAMITE = " + rulectx.getTaskId(), "");
+		Iterator<?> itProp = colProp.iterator();
 		IItem iPropuesta = (IItem)itProp.next();
         String infopag = iPropuesta.getString("INFOPAG");
         
@@ -205,11 +202,11 @@ public class DipucrIniciaSolicitudAnuncioInternoBOP implements IRule{
 		//Guarda el resultado en gestor documental
         int tpdoc = DocumentosUtil.getTipoDoc(cct, Constants.BOP._DOC_ANUNCIO, DocumentosUtil.BUSQUEDA_EXACTA, false);
 
-		IItem newdoc = DocumentosUtil.generaYAnexaDocumento(rulectx, idTramitePropuesta, tpdoc, descripcionDoc, file, Constants._EXTENSION_ODT);
+		IItem newdoc = DocumentosUtil.generaYAnexaDocumento(cct, idTramitePropuesta, tpdoc, descripcionDoc, file, Constants._EXTENSION_ODT);
 		int docId = newdoc.getInt("ID");
 		
 		if(idCircuitoFirma > -1){
-			signAPI.initCircuit(idCircuitoFirma, docId);
+			signAPI.initCircuitPortafirmas(idCircuitoFirma, docId);//[dipucr-Felipe #1246]
 		}
 		
 		//Borra los documentos intermedios del gestor documental
@@ -232,10 +229,10 @@ public class DipucrIniciaSolicitudAnuncioInternoBOP implements IRule{
 	}
 
 	public boolean init(IRuleContext rulectx) throws ISPACRuleException {
-		return true;
+		return Boolean.TRUE;
 	}
 
 	public boolean validate(IRuleContext rulectx) throws ISPACRuleException {
-		return true;
+		return Boolean.TRUE;
 	}
 }

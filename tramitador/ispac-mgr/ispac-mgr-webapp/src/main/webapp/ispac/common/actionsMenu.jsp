@@ -11,10 +11,10 @@
 	<tr>
 		<td width="470px">
 		
-		<div id="botonera"><p class="menu_bt" ><a href="javascript:menu();" id="imgMenu" class="imgMenuOn">&nbsp;</a></p></div>
+<!-- 		<div id="botonera"><p class="menu_bt" ><a href="javascript:menu();" id="imgMenu" class="imgMenuOn">&nbsp;</a></p></div> -->
     	<div id="contenido_menu" class="menu_desplegado">
     		<div id="navegacion">
-    			<div class="encabezado_nav"><h3> </h3></div>
+<!--     			<div class="encabezado_nav"><h3> </h3></div> -->
     			<div class="cuerpo_nav">
     				<div class="contenido_cuerpo_nav">
 						<logic:present name="menus">
@@ -81,6 +81,46 @@
 				</div> <!-- fin navegacion -->
 			</div><!--contenido_menu-->
 		</td>
-	</tr>								
+	</tr>
+	<!-- INICIO [dipucr-Felipe #1246] Compatibilidad Firma 3 fases -->
+	<%@page import = "ieci.tdw.ispac.ispaclib.session.OrganizationUser"%>
+	<%@page import = "ieci.tdw.ispac.ispaclib.session.OrganizationUserInfo"%>
+	<%@page import = "ieci.tdw.ispac.ispaclib.sign.SignConnectorFactory" %>
+	<% 
+		OrganizationUserInfo info = OrganizationUser.getOrganizationUserInfo();
+		String entityId = info.getOrganizationId();
+		boolean bPortafirmas = SignConnectorFactory.isPortafirmasImplClass(entityId);
+		if (bPortafirmas){
+	%>
+	<tr>
+		<td width="470px">	
+			<div style="width:80%; margin:0 auto" >
+				<br/><br/>
+				<a href="https://portafirmas.dipucr.es/pf" target="_blank" >
+					<img src='<ispac:rewrite href="img/portafirmas_link.png"/>' style="height:30px;"/> 
+				</a>
+			</div>			
+		</td>		
+	</tr>
+	<tr>
+		<td>
+			<div style="width:80%; margin:0 auto" >
+				<br/><br/>
+				<a href="https://nextcloud.dipucr.es/index.php/s/kbieDxfEa2FpepL" target="_blank" >
+						<img src='<ispac:rewrite href="img/manuales.png"/>' style="height:30px;"/> 
+				</a>
+			</div>
+			<div style="width:80%; margin:0 auto" >
+				<br/><br/>
+				<a href="https://nextcloud.dipucr.es/index.php/s/E4wbK7pksPSL3EB" target="_blank" >
+						<img src='<ispac:rewrite href="img/herramientas.png"/>' style="height:30px;"/> 
+				</a>
+			</div>
+		</td>		
+	</tr>
+	<%
+		}
+	%>
+	<!-- FIN [dipucr-Felipe #1246]  -->
 </table>
 

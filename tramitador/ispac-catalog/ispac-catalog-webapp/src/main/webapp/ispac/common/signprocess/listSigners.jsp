@@ -86,6 +86,13 @@
 		document.getElementById("move").style.left = "0px";
 		window.parent.showFrame(target, action, '', '');
 	}
+
+	//[dipucr-Felipe #1536] Tecla enter - Ejecutamos el mismo evento que en el botón buscar
+	function checkEnterKey(e) {
+		if(e && e.keyCode == 13) {
+			redirect('/viewSignersAction.do?busqueda=true&filtro=' + document.getElementById('txtFiltro').value);
+		}
+	}
 </script>
 
 
@@ -124,7 +131,10 @@
 
 						<bean:define id="nombreS"><bean:message key="portafirmas.nombre"/></bean:define>
 						<bean:define id="tipoFirmanteS"><bean:message key="portafirmas.tipoFirmante"/></bean:define>
-						<bean:define id="identificadorS"><bean:message key="portafirmas.identificador"/></bean:define>
+						<bean:define id="identificadorS"><bean:message key="portafirmas.nif"/></bean:define>
+						<bean:define id="nameALSIGM"><bean:message key="portafirmas.usuario"/></bean:define>
+						<bean:define id="idALSIGM"><bean:message key="portafirmas.identificador"/></bean:define>
+						
 
 <div id="navmenu">
 	<tiles:insert page="../tiles/AppErrorsTile.jsp" ignore="true" flush="false"/>
@@ -133,7 +143,8 @@
 <td width="5px"><img src='<ispac:rewrite href="img/pixel.gif"/>' align="center" valign="top" border="0"/></td>
 
 						<html:form action='/showSignProcessList.do'>
-							<div id="buscador"><bean:message key="catalog.search.firmantes.identificador"/>:&nbsp;
+							<div id="buscador" onKeyPress="return checkEnterKey(event)"><!-- [dipucr-Felipe #1536] -->
+									<bean:message key="catalog.search.firmantes.identificador"/>:&nbsp;
 									<input type="text" id="txtFiltro" class="input" size="40" maxlength="50" value='<%=(request.getParameter("filtro")!=null?request.getParameter("filtro"):"")%>'/>
 									<html:button property="filtra" styleClass="form_button_white" onclick="javascript:redirect('/viewSignersAction.do?busqueda=true&filtro=' + document.getElementById('txtFiltro').value)">
 										<bean:message key="search.button"/>
@@ -147,7 +158,8 @@
 
 										<display:column>
 											<bean:define name="signer" id="uid" property="identifier"/>
-											<input type="radio" value="<%=uid%>" name="uid" id="uid" onclick="javascript:selectSigner('<bean:write name="signer" property="name"/>', '<bean:write name="signer" property="tipoFirmante"/>','<bean:write name="signer" property="identifier"/>');"/>
+											<input type="radio" value="<%=uid%>" name="uid" id="uid" onclick="javascript:selectSigner('<bean:write name="signer" property="nameALSIGM"/>', '<bean:write name="signer" property="tipoFirmante"/>','<bean:write name="signer" property="idALSIGM"/>');"/>
+
 										</display:column>
 
 										<display:column title="<%=tipoFirmanteS%>" sortable="true" >
@@ -157,6 +169,11 @@
 										<display:column property="identifier" title="<%=identificadorS%>" sortable="true"/>
 
 										<display:column property="name" title="<%=nombreS%>" sortable="true" />
+										
+										<display:column property="nameALSIGM" title="<%=nameALSIGM%>" sortable="true" />
+										
+										<display:column property="idALSIGM" title="<%=idALSIGM%>" sortable="true" />
+										
 
 							</display:table>
 							<br/>

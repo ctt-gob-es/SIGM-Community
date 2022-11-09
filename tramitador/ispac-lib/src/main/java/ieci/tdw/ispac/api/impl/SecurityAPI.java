@@ -23,6 +23,7 @@ import ieci.tdw.ispac.ispaclib.security.SecurityMgr;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -342,7 +343,8 @@ public class SecurityAPI implements ISecurityAPI
 				mcontext.endTX(bCommit);
 			}
     	}
-    }
+    }   
+   
     
     public void modifyFechSustitucion(int id,
 			 						  Date fechaInicio, 
@@ -380,6 +382,56 @@ public class SecurityAPI implements ISecurityAPI
 				mcontext.endTX(bCommit);
 			}
 		}
+    }
+    
+       
+    public Map<String, Object> getSustitucion(String idsSustitucionFecha) throws ISPACException{
+    	Map<String, Object> parameters = new HashMap<String, Object> ();  
+    	// Conexión de la transacción
+    	DbCnt cnt = mcontext.getConnection();
+		try {		
+			
+			// Eliminar las relaciones entre los sustitutos y los períodos de sustitución
+			String sqlWhere = "WHERE ID ="+idsSustitucionFecha;    				
+			CollectionDAO collection = new CollectionDAO(SustitucionFechaDAO.class);
+			collection.query(cnt, sqlWhere);
+			IItemCollection coleSustFech = collection.disconnect();
+			for (Iterator<IItem> iterator = coleSustFech.iterator(); iterator.hasNext();) {
+				IItem sustFecha = (IItem) iterator.next();
+				int id_sustitucion = sustFecha.getInt("ID_SUSTITUCION");
+				int id_fechsustitucion = sustFecha.getInt("ID_FECHSUSTITUCION");
+				
+				sqlWhere = "WHERE ID ="+id_sustitucion;    				
+				collection = new CollectionDAO(SustitucionDAO.class);
+				collection.query(cnt, sqlWhere);
+				IItemCollection coleSustitucion = collection.disconnect();
+				for (Iterator<IItem> iteratorSust = coleSustitucion.iterator(); iteratorSust.hasNext();) {  
+					IItem sust = (IItem) iteratorSust.next();
+					String uid_sustituto = (String) sust.getString("UID_SUSTITUTO");
+					parameters.put("uid_sustituto", uid_sustituto);
+					String uid_sustituido = (String) sust.getString("UID_SUSTITUIDO");
+					parameters.put("uid_sustituido", uid_sustituido);
+				}
+				
+				sqlWhere = "WHERE ID ="+id_fechsustitucion;    				
+				collection = new CollectionDAO(FechSustitucionesDAO.class);
+				collection.query(cnt, sqlWhere);
+				IItemCollection coleFecha = collection.disconnect();
+				for (Iterator<IItem> iteratorFecha = coleFecha.iterator(); iteratorFecha.hasNext();) {  
+					IItem fecha = (IItem) iteratorFecha.next();
+					Date fechaInicio = (Date) fecha.getDate("FECHA_INICIO");
+					parameters.put("fecha_inicio", fechaInicio);
+					Date fechaFin = (Date) fecha.getDate("FECHA_FIN");
+					parameters.put("fecha_fin", fechaFin);
+				}
+				
+			}
+
+		}
+		finally {
+			mcontext.releaseConnection(cnt);
+		}		
+		return parameters;
     }
     
     public void deleteSustituciones(String[] idsSustitucionFecha) throws ISPACException {

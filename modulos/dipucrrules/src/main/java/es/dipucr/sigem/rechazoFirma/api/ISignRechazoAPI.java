@@ -8,6 +8,7 @@ import ieci.tdw.ispac.ispaclib.sign.SignDocument;
 import java.util.Date;
 import java.util.List;
 
+@Deprecated
 public interface ISignRechazoAPI extends ISignAPI {
 
 	public List rechazarFirma(String[] stepIds, String signCertificate, String entityId, String motivoRechazo) throws ISPACException;

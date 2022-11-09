@@ -19,6 +19,11 @@
         <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:id" type="tns:string"/>
         <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:stringB64Encoded" type="tns:string"/>
       </operation>
+      <operation xmlns:operNS="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:rtns="http://dto.services.core.sgm.tecdoc.ieci" name="writeDocumentoOriginal" qname="operNS:writeDocumentoOriginal" returnQName="retNS:writeDocumentoOriginalReturn" returnType="rtns:RetornoServicio" soapAction="">
+        <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://dto.services.core.sgm.tecdoc.ieci" qname="pns:entidad" type="tns:Entidad"/>
+        <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:id" type="tns:string"/>
+        <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:stringB64Encoded" type="tns:string"/>
+      </operation>
       <operation xmlns:operNS="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:rtns="http://dto.services.core.sgm.tecdoc.ieci" name="deleteInfoDocumento" qname="operNS:deleteInfoDocumento" returnQName="retNS:deleteInfoDocumentoReturn" returnType="rtns:RetornoServicio" soapAction="">
         <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://dto.services.core.sgm.tecdoc.ieci" qname="pns:entidad" type="tns:Entidad"/>
         <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:id" type="tns:string"/>
@@ -31,7 +36,15 @@
         <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://dto.services.core.sgm.tecdoc.ieci" qname="pns:entidad" type="tns:Entidad"/>
         <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:id" type="tns:string"/>
       </operation>
+      <operation xmlns:operNS="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci" name="getContenidoDocumentoOriginal" qname="operNS:getContenidoDocumentoOriginal" returnQName="retNS:getContenidoDocumentoOriginalReturn" returnType="rtns:StringB64" soapAction="">
+        <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://dto.services.core.sgm.tecdoc.ieci" qname="pns:entidad" type="tns:Entidad"/>
+        <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:id" type="tns:string"/>
+      </operation>
       <operation xmlns:operNS="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci" name="existeContenidoDocumento" qname="operNS:existeContenidoDocumento" returnQName="retNS:existeContenidoDocumentoReturn" returnType="rtns:BooleanRetorno" soapAction="">
+        <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://dto.services.core.sgm.tecdoc.ieci" qname="pns:entidad" type="tns:Entidad"/>
+        <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:id" type="tns:string"/>
+      </operation>
+      <operation xmlns:operNS="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:retNS="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:rtns="http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci" name="existeContenidoDocumentoOriginal" qname="operNS:existeContenidoDocumentoOriginal" returnQName="retNS:existeContenidoDocumentoOriginalReturn" returnType="rtns:BooleanRetorno" soapAction="">
         <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://dto.services.core.sgm.tecdoc.ieci" qname="pns:entidad" type="tns:Entidad"/>
         <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:id" type="tns:string"/>
       </operation>
@@ -39,7 +52,7 @@
         <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://dto.services.core.sgm.tecdoc.ieci" qname="pns:entidad" type="tns:Entidad"/>
         <parameter xmlns:pns="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:csv" type="tns:string"/>
       </operation>
-      <parameter name="allowedMethods" value="deleteInfoDocumento getInfoDocumentoByCSV existeContenidoDocumento writeDocumento generarCSV getDocumentoByCSV getContenidoDocumento"/>
+      <parameter name="allowedMethods" value="deleteInfoDocumento getInfoDocumentoByCSV existeContenidoDocumento existeContenidoDocumentoOriginal writeDocumento writeDocumentoOriginal generarCSV getDocumentoByCSV getContenidoDocumento getContenidoDocumentoOriginal"/>
 
       <typeMapping xmlns:ns="http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci" qname="ns:InfoDocumentoCSVFormDTO" type="java:ieci.tecdoc.sgm.gestioncsv.ws.server.dto.InfoDocumentoCSVFormDTO" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>
       <typeMapping xmlns:ns="http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci" qname="ns:StringB64" type="java:ieci.tecdoc.sgm.gestioncsv.ws.server.dto.StringB64" serializer="org.apache.axis.encoding.ser.BeanSerializerFactory" deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory" encodingStyle=""/>

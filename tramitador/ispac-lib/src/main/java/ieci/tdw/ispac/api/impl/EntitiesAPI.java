@@ -68,7 +68,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import es.dipucr.sigem.api.rule.common.utils.DocumentosUtil;
+import es.dipucr.sigem.api.rule.common.utils.ExpedientesUtil;
 import es.dipucr.sigem.api.rule.common.utils.GestorDatosFirma;
+import es.dipucr.sigem.portafirmas.DipucrDocPortafirmas;
 
 public class EntitiesAPI implements IEntitiesAPI
 {
@@ -1111,6 +1113,18 @@ public class EntitiesAPI implements IEntitiesAPI
     public IItemCollection getExpedientsByRegNum(String regNum) throws ISPACException {
     	return queryEntities(ISPACEntities.DT_ID_EXPEDIENTES,
     			"WHERE NREG='" + DBUtil.replaceQuotes(regNum) + "' ORDER BY NUMEXP");
+    }
+    
+    /**
+     * Obtiene los registros históricos de la entidad de expedietes
+     * a partir del número de registro.
+     *
+     * @param regNum Número de registro.
+     * @return Lista de expedientes.
+     * @throws ISPACException si ocurre algún error.
+     */
+    public IItemCollection getExpedientsByRegNumHistorico(String regNum) throws ISPACException {
+    	return queryEntities(ExpedientesUtil.SPAC_EXPEDIENTES_H, "WHERE NREG='" + DBUtil.replaceQuotes(regNum) + "' ORDER BY NUMEXP");
     }
 
     /* (non-Javadoc)
@@ -2558,6 +2572,30 @@ public class EntitiesAPI implements IEntitiesAPI
             mcontext.releaseConnection(cnt);
         }
     }
+    
+    /**
+     * [dipucr-Felipe #1246]
+     * Documentos pendientes de la descarga del portafirmas por errores
+     */
+    public int countTaskDocumentsErrorPortafirmas(int taskId) throws ISPACException {
+
+        DbCnt cnt = mcontext.getConnection();
+        try
+        {
+			String query = "WHERE ID_TRAMITE=" + taskId
+				+ " AND ESTADOFIRMA='" + SignStatesConstants.PENDIENTE_PORTAFIRMAS + "'";
+
+            return EntityFactoryDAO.getInstance().countEntities(cnt, SpacEntities.SPAC_DT_DOCUMENTOS, query);
+        }
+        catch (ISPACException ie)
+        {
+            throw new ISPACException("Error en EntitiesAPI:countTaskDocumentsErrorPortafirmas(" + taskId + ")", ie);
+        }
+        finally
+        {
+            mcontext.releaseConnection(cnt);
+        }
+    }
 
     /* (non-Javadoc)
      * @see ieci.tdw.ispac.api.IEntitiesAPI#queryEntities(java.util.Map, java.lang.String)
@@ -3227,7 +3265,8 @@ public class EntitiesAPI implements IEntitiesAPI
 		IItemCollection itemcol=getEntities(SpacEntities.SPAC_DT_DOCUMENTOS, numExp);
 		while(itemcol.next()){
 			IItem document=itemcol.value();
-			deleteDocument(document);
+//			deleteDocument(document);
+			dipucrFakeDeleteDocument(document);//[dipucr-Felipe #1462]
 		}
 		if(logger.isDebugEnabled()){
 			logger.debug("Se han eliminado todos los documentos del expediente"+numExp);
@@ -3260,6 +3299,100 @@ public class EntitiesAPI implements IEntitiesAPI
 	}
 
 	/**
+	 * [dipucr-Felipe #1462]
+	 * Simula el borrado de un documento insertándolo en la tabla de documentos borrados
+	 *
+	 * @param documentId Id del documento
+	 * @throws ISPACException
+	 */
+	public void dipucrFakeDeleteDocument(int documentId) throws ISPACException {
+
+		// Obtener el documento
+    	IItem document = getEntity(SpacEntities.SPAC_DT_DOCUMENTOS, documentId);
+
+    	// Eliminar el documento
+    	dipucrFakeDeleteDocument(document);
+	}
+	/**
+	 * [dipucr-Felipe #1462]
+	 * Simula el borrado de un documento insertándolo en la tabla de documentos borrados
+	 *
+	 * @param document Documento a borrar
+	 * @throws ISPACException
+	 */
+	public void dipucrFakeDeleteDocument(IItem document) throws ISPACException {
+		
+		IInvesflowAPI invesflowAPI = mcontext.getAPI();
+		ISignAPI singAPI = invesflowAPI.getSignAPI();
+
+		// Ejecución en un contexto transaccional
+		boolean ongoingTX = mcontext.ongoingTX();
+		boolean bCommit = false;
+
+        try {
+			if (!ongoingTX) {
+				mcontext.beginTX();
+			}
+
+			// Eliminar las referencias al documento en un circuito de firma
+			if (isDocumentPortafirmas(document)){
+				//Sólo eliminamos peticiones pendientes del portafirmas, no firmadas ni rechazadas pues podría
+				//darse el caso que queramos recuperar el doc de las copias y necesitemos toda su integridad
+				String estadoFirma = document.getString("ESTADOFIRMA");
+				if (SignStatesConstants.PENDIENTE_CIRCUITO_FIRMA.equals(estadoFirma)){
+					singAPI.deleteCircuitPortafirmas(document.getKeyInt());
+					DipucrDocPortafirmas docPortafirmas = new DipucrDocPortafirmas(mcontext, document);
+					docPortafirmas.delete();
+				}
+			}
+			else{
+		        IItemCollection itemcol = singAPI.getStepsByDocument(document.getKeyInt());
+				while(itemcol.next()) {
+	
+				    IItem stepSignCircuit = itemcol.value();
+				    stepSignCircuit.delete(mcontext);
+				}
+			}
+			
+			// [dipucr-Felipe #817] Eliminar los datos de firma del documento
+			GestorDatosFirma.deleteDatosFirma(mcontext, document);
+
+			// Antes del borrado de la tabla de documentos, lo copiamos en la tabla de borrados
+			DocumentosUtil.copiaDtDocumentosBorrados(mcontext, document);
+			
+	        // Eliminar el registro que almacena los datos del documento
+			document.delete(mcontext);
+
+			// Hitos y auditoría del borrado
+	    	String numExpediente = document.getString("NUMEXP");
+	    	String idDoc = String.valueOf(document.getKeyInt());
+	    	
+	    	String docTypeName = "";
+	    	int docType = document.getInt(DocumentosUtil.ID_TPDOC);
+
+	    	if (document.getInt(DocumentosUtil.ID_TPDOC) != 0) {
+				CTTpDocDAO tpdoc = new CTTpDocDAO(mcontext.getConnection(), docType);
+				docTypeName = "'" + tpdoc.getString("NOMBRE") + "'";
+			}
+			
+	    	if (null != mcontext.getStateContext()){//[dipucr-Felipe #854]
+				ITXTransaction txapi = mcontext.getAPI().getTransactionAPI();			
+				txapi.newMilestone(mcontext.getStateContext().getProcessId(), mcontext.getStateContext().getStagePcdId(), mcontext.getStateContext().getTaskPcdId(), TXConstants.MILESTONE_DOCUMENTO_DELETED,
+						new StringBuffer("<?xml version='1.0' encoding='ISO-8859-1'?>").append("<infoaux>").append(docTypeName).append("</infoaux>").toString(), "Documento " + docTypeName + " borrado");
+	    	}
+	    		    	
+	    	auditEliminacionDocumento(idDoc, numExpediente);
+			// Si todo ha sido correcto se hace commit de la transacción
+			bCommit = true;
+	    }
+	    finally {
+			if (!ongoingTX) {
+				mcontext.endTX(bCommit);
+			}
+		}
+	}
+	
+	/**
 	 * Elimina el documento.
 	 * Esto conlleva eliminar el registro con los datos del documento,
 	 * los documento físicos asociados (fichero original y fichero firmado)
@@ -3277,6 +3410,7 @@ public class EntitiesAPI implements IEntitiesAPI
     	// Obtener las referencias al documento en los repositorios
     	String docref = document.getString("INFOPAG");
     	String docrefRDE = document.getString("INFOPAG_RDE");
+    	String docrefRDEOriginal = document.getString("INFOPAG_RDE_ORIGINAL");//[dipucr-Felipe #1246]
 
 		// Ejecución en un contexto transaccional
 		boolean ongoingTX = mcontext.ongoingTX();
@@ -3289,11 +3423,19 @@ public class EntitiesAPI implements IEntitiesAPI
 	    	//DbCnt cnt = mcontext.getConnection();
 
 			// Eliminar las referencias al documento en un circuito de firma
-	        IItemCollection itemcol = singAPI.getStepsByDocument(document.getKeyInt());
-			while(itemcol.next()) {
-
-			    IItem stepSignCircuit = itemcol.value();
-			    stepSignCircuit.delete(mcontext);
+			//[dipucr-Felipe #1246]
+			if (isDocumentPortafirmas(document)){
+				singAPI.deleteCircuitPortafirmas(document.getKeyInt());
+				DipucrDocPortafirmas docPortafirmas = new DipucrDocPortafirmas(mcontext, document);
+				docPortafirmas.delete();
+			}
+			else{
+		        IItemCollection itemcol = singAPI.getStepsByDocument(document.getKeyInt());
+				while(itemcol.next()) {
+	
+				    IItem stepSignCircuit = itemcol.value();
+				    stepSignCircuit.delete(mcontext);
+				}
 			}
 			
 			// [dipucr-Felipe #817] Eliminar los datos de firma del documento
@@ -3319,6 +3461,14 @@ public class EntitiesAPI implements IEntitiesAPI
 		    		// Eliminar el documento fisico del gestor documental
 		            genDocAPI.deleteDocument(connectorSession, docrefRDE);
 		    	}
+		    	
+		    	// INICIO [dipucr-Felipe #1246] Borrar el documento original firmado del portafirmas
+		    	if (StringUtils.isNotEmpty(docrefRDEOriginal)) {
+
+		    		// Eliminar el documento fisico del gestor documental
+		            genDocAPI.deleteDocument(connectorSession, docrefRDEOriginal);
+		    	}
+		    	// FIN [dipucr-Felipe #1246]
 			}catch(ISPACNullObject e){
 					logger.error("Documento no encontrado "+e.toString());
 			}
@@ -3356,6 +3506,18 @@ public class EntitiesAPI implements IEntitiesAPI
 		}
 	}
 
+	/**
+	 * [dipucr-Felipe #1246]
+	 * @param document
+	 * @return true si el documento se ha enviado a firmas en el portafirmas
+	 * @throws ISPACException 
+	 */
+	public boolean isDocumentPortafirmas(IItem document) throws ISPACException {
+
+		String idProcesoFirma = document.getString("ID_PROCESO_FIRMA");
+		return StringUtils.isNotEmpty(idProcesoFirma) && !org.apache.commons.lang.StringUtils.isNumeric(idProcesoFirma);
+	}
+	
 
 	/**
 	 * @param sDocRef
@@ -3423,7 +3585,8 @@ public class EntitiesAPI implements IEntitiesAPI
 			while(itemcol.next()) {
 
 			    IItem document = itemcol.value();
-			    deleteDocument(document);
+//			    deleteDocument(document);
+			    dipucrFakeDeleteDocument(document);//[dipucr-Felipe #1462]
 			}
 
 	    	// Eliminar el trámite

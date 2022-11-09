@@ -212,11 +212,19 @@
         <parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:csv" type="tns:string"/>
         <parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:entidad" type="tns:string"/>
       </operation>
+      <operation xmlns:operNS="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:retNS="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="getContenidoDocumentoOriginal" qname="operNS:getContenidoDocumentoOriginal" returnQName="retNS:getContenidoDocumentoOriginalReturn" returnType="rtns:base64Binary" soapAction="">
+        <parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:csv" type="tns:string"/>
+        <parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:entidad" type="tns:string"/>
+      </operation>
       <operation xmlns:operNS="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:retNS="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="existeDocumento" qname="operNS:existeDocumento" returnQName="retNS:existeDocumentoReturn" returnType="rtns:boolean" soapAction="">
         <parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:csv" type="tns:string"/>
         <parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:entidad" type="tns:string"/>
       </operation>
-      <parameter name="allowedMethods" value="getContenidoDocumento existeDocumento"/>
+      <operation xmlns:operNS="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:retNS="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:rtns="http://www.w3.org/2001/XMLSchema" name="existeDocumentoOriginal" qname="operNS:existeDocumentoOriginal" returnQName="retNS:existeDocumentoOriginalReturn" returnType="rtns:boolean" soapAction="">
+        <parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:csv" type="tns:string"/>
+        <parameter xmlns:pns="http://server.connector.csv.ws.sgm.tecdoc.ieci" xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="pns:entidad" type="tns:string"/>
+      </operation>
+      <parameter name="allowedMethods" value="getContenidoDocumento getContenidoDocumentoOriginal existeDocumento existeDocumentoOriginal"/>
 
   </service>
 

@@ -58,6 +58,17 @@ public class AplicacionExternaCSVConnectorWS {
 		
 		return existe;
 	}
+	
+	/**
+	 * De momento no se implementa la opción de documento original firmado para el registro presencial
+	 */
+	public boolean existeDocumentoOriginal(java.lang.String csv, String entidad) throws java.rmi.RemoteException {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("existeDocumentoOriginal(java.lang.String) - start. CSV: [{}]",csv);
+		}
+
+		return false;
+	}
 		
 	public byte[] getContenidoDocumento(java.lang.String csv, String entidad) throws java.rmi.RemoteException {
 
@@ -97,6 +108,14 @@ public class AplicacionExternaCSVConnectorWS {
 			LOGGER.debug("getContenidoDocumento(java.lang.String, String) - end");
 		}
 		return content;
+	}
+	
+	/**
+	 * De momento no se implementa la opción de documento original firmado para el registro presencial
+	 */
+	public byte[] getContenidoDocumentoOriginal(java.lang.String csv, String entidad) throws java.rmi.RemoteException {
+
+		return null;
 	}
 	
 	private String[] recuperaInfoDoc(String entidad, String csv) throws SQLException {

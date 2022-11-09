@@ -32,6 +32,11 @@
    <parameter qname="ns4:id" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
    <parameter qname="ns4:stringB64Encoded" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
   </operation>
+  <operation name="writeDocumentoOriginal" qname="ns4:writeDocumentoOriginal" returnQName="ns4:writeDocumentoOriginalReturn" returnType="ns5:RetornoServicio" soapAction="" xmlns:ns4="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:ns5="http://dto.services.core.sgm.tecdoc.ieci">
+   <parameter qname="ns4:entidad" type="ns5:Entidad"/>
+   <parameter qname="ns4:id" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+   <parameter qname="ns4:stringB64Encoded" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+  </operation>
   <operation name="deleteInfoDocumento" qname="ns6:deleteInfoDocumento" returnQName="ns6:deleteInfoDocumentoReturn" returnType="ns7:RetornoServicio" soapAction="" xmlns:ns6="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:ns7="http://dto.services.core.sgm.tecdoc.ieci">
    <parameter qname="ns6:entidad" type="ns7:Entidad"/>
    <parameter qname="ns6:id" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
@@ -44,7 +49,15 @@
    <parameter qname="ns11:entidad" type="ns13:Entidad" xmlns:ns13="http://dto.services.core.sgm.tecdoc.ieci"/>
    <parameter qname="ns11:id" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
   </operation>
+  <operation name="getContenidoDocumentoOriginal" qname="ns11:getContenidoDocumentoOriginal" returnQName="ns11:getContenidoDocumentoOriginalReturn" returnType="ns12:StringB64" soapAction="" xmlns:ns11="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:ns12="http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci">
+   <parameter qname="ns11:entidad" type="ns13:Entidad" xmlns:ns13="http://dto.services.core.sgm.tecdoc.ieci"/>
+   <parameter qname="ns11:id" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+  </operation>
   <operation name="existeContenidoDocumento" qname="ns14:existeContenidoDocumento" returnQName="ns14:existeContenidoDocumentoReturn" returnType="ns15:BooleanRetorno" soapAction="" xmlns:ns14="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:ns15="http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci">
+   <parameter qname="ns14:entidad" type="ns16:Entidad" xmlns:ns16="http://dto.services.core.sgm.tecdoc.ieci"/>
+   <parameter qname="ns14:id" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+  </operation>
+    <operation name="existeContenidoDocumentoOriginal" qname="ns14:existeContenidoDocumentoOriginal" returnQName="ns14:existeContenidoDocumentoOriginalReturn" returnType="ns15:BooleanRetorno" soapAction="" xmlns:ns14="http://server.ws.gestioncsv.sgm.tecdoc.ieci" xmlns:ns15="http://dto.server.ws.gestioncsv.sgm.tecdoc.ieci">
    <parameter qname="ns14:entidad" type="ns16:Entidad" xmlns:ns16="http://dto.services.core.sgm.tecdoc.ieci"/>
    <parameter qname="ns14:id" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
   </operation>
@@ -52,7 +65,7 @@
    <parameter qname="ns17:entidad" type="ns19:Entidad" xmlns:ns19="http://dto.services.core.sgm.tecdoc.ieci"/>
    <parameter qname="ns17:csv" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
   </operation>
-  <parameter name="allowedMethods" value="deleteInfoDocumento getInfoDocumentoByCSV existeContenidoDocumento writeDocumento generarCSV getDocumentoByCSV getContenidoDocumento"/>
+  <parameter name="allowedMethods" value="deleteInfoDocumento getInfoDocumentoByCSV existeContenidoDocumento existeContenidoDocumentoOriginal writeDocumento writeDocumentoOriginal generarCSV getDocumentoByCSV getContenidoDocumento getContenidoDocumentoOriginal"/>
   <parameter name="typeMappingVersion" value="1.2"/>
   <parameter name="wsdlPortType" value="GestionCSVWebService"/>
   <parameter name="className" value="ieci.tecdoc.sgm.gestioncsv.ws.server.GestionCSVWebService"/>

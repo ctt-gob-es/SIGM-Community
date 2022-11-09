@@ -43,11 +43,7 @@ import ieci.tdw.ispac.ispaclib.sicres.vo.Register;
 import ieci.tdw.ispac.ispaclib.sicres.vo.RegisterInfo;
 import ieci.tdw.ispac.ispaclib.sicres.vo.RegisterType;
 import ieci.tdw.ispac.ispaclib.sicres.vo.ThirdPerson;
-import ieci.tdw.ispac.ispaclib.sign.portafirmas.ProcessSignConnectorFactory;
-import ieci.tdw.ispac.ispaclib.thirdparty.IElectronicAddressAdapter;
-import ieci.tdw.ispac.ispaclib.thirdparty.IPostalAddressAdapter;
-import ieci.tdw.ispac.ispaclib.thirdparty.IThirdPartyAdapter;
-import ieci.tdw.ispac.ispaclib.util.ISPACConfiguration;
+import ieci.tdw.ispac.ispaclib.sign.SignConnectorFactory;
 import ieci.tdw.ispac.ispaclib.utils.ArrayUtils;
 import ieci.tdw.ispac.ispaclib.utils.DBUtil;
 import ieci.tdw.ispac.ispaclib.utils.StringUtils;
@@ -63,6 +59,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+
+import es.dipucr.sigem.api.rule.common.utils.TercerosUtil;
 
 /**
  * API para gestionar la información de la bandeja de entrada.
@@ -139,13 +137,14 @@ public class InboxAPI implements IInboxAPI {
 		// Registros distribuidos
 		if (registerAPI.existConnector()) {
 			int nIntrays = registerAPI.countIntrais();
-			if (nIntrays > 0){
+			//[dipucr-Felipe #1606] Para que salga el link aunque sea 0 y se puedan ver los registros archivados/devueltos
+//			if (nIntrays > 0){
 				inboxItem = new GenericItem(propSet, "NOMBRE");
 				inboxItem.set("NOMBRE", "sucesos.registro");
 				inboxItem.set("URL", "showIntrayList.do");
 				inboxItem.set("COUNT", nIntrays);
 				inboxItems.add(inboxItem);
-			}
+//			}
 		}
 
 //		Terms terms = new Terms(m_ctx);
@@ -177,16 +176,26 @@ public class InboxAPI implements IInboxAPI {
 	    }
 
 	    // Portafirmas
-	    if (ProcessSignConnectorFactory.getInstance().isDefaultConnector() && StringUtils.isNotBlank(ISPACConfiguration.getInstance().getProperty(
-	    		ISPACConfiguration.DIGITAL_SIGN_CONNECTOR_CLASS))) {
-	        ISignAPI signAPI = invesflowAPI.getSignAPI();
+	    // INICIO [dipucr-Felipe #1246]
+//	    if (ProcessSignConnectorFactory.getInstance(m_ctx).isDefaultConnector() && StringUtils.isNotBlank(FirmaConfiguration.getInstance(m_ctx).get(FirmaConfiguration.DIGITAL_SIGN_CONNECTOR_CLASS))) {
+        ISignAPI signAPI = invesflowAPI.getSignAPI();
+	    int countFirmas = signAPI.countCircuitsStepts(m_ctx.getRespId());
+	    
+	    if (SignConnectorFactory.isDefaultImplClass(m_ctx) || countFirmas > 0){//Portafirmas por defecto de SIGEM
 			inboxItem = new GenericItem(propSet, "NOMBRE");
 			inboxItem.set("NOMBRE", "sucesos.portafirmas");
 			inboxItem.set("URL", "showBatchSignList.do");
-			inboxItem.set("COUNT", signAPI.countCircuitsStepts(m_ctx.getRespId()));
+			inboxItem.set("COUNT", countFirmas);
 			inboxItems.add(inboxItem);
 	    }
-
+	    else{//Portafirmas MINHAP
+	    	inboxItem = new GenericItem(propSet, "NOMBRE");
+			inboxItem.set("NOMBRE", "sucesos.historicoFirmas");
+			inboxItem.set("URL", "showSignHistoric.do");
+//			inboxItem.set("COUNT", countFirmas);
+			inboxItems.add(inboxItem);
+	    }
+	    // FIN [dipucr-Felipe #1246]
 
 	    if(StringUtils.equalsIgnoreCase(resp, IResponsible.SUPERVISOR)||StringUtils.equalsIgnoreCase(resp, IResponsible.SUPERVISOR_MONITORING)){
 	    	int nProcessSentTrash = invesflowAPI.countExpedientsSentToTrash();
@@ -288,19 +297,61 @@ public class InboxAPI implements IInboxAPI {
 	 * @return Lista de registros distribuidos ({@link Intray}).
 	 * @throws ISPACException si ocurre algún error.
 	 */
+	@SuppressWarnings("rawtypes")
 	public List getIntrays() throws ISPACException {
 		if (!registerAPI.existConnector()) {
 			throw new ISPACException("exception.sicres.notConfigured");
 		}
-
-		// TODO: Auditar la consulta de registros distribuidos
-
 		List intrays = registerAPI.getIntrays();
+		
+		//[dipucr-Felipe #1501] Rellenamos el interesado principal de la lista de interesados
+		setIntraysMainSenderName(intrays);
+		
 		if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))
 
 		auditarConsultaRegistrosDistribuidos(intrays);
 
 		return intrays;
+	}
+	
+	/**
+	 * [dipucr-Felipe #1606]
+	 * Obtiene la lista de registros distribuidos ARCHIVADOS o DEVUELTOS asociados al usuario conectado.
+	 * @return Lista de registros distribuidos ({@link Intray}).
+	 * @throws ISPACException si ocurre algún error.
+	 */
+	@SuppressWarnings("rawtypes")
+	public List getIntraysArchived() throws ISPACException {
+		if (!registerAPI.existConnector()) {
+			throw new ISPACException("exception.sicres.notConfigured");
+		}
+
+		List intrays = registerAPI.getIntraysArchived();
+		
+		//[dipucr-Felipe #1501] Rellenamos el interesado principal de la lista de interesados
+		setIntraysMainSenderName(intrays);
+		
+		if(ConfiguratorAudit.getInstance().getPropertyBoolean(ConfigurationAuditFileKeys.KEY_AUDITORIA_ENABLE))
+			auditarConsultaRegistrosDistribuidos(intrays);
+
+		return intrays;
+	}
+
+	/**
+	 * [dipucr-Felipe #1501]
+	 * Rellena el campo de interesado principal en cada uno de los registros de la lista
+	 * @param intrays - Pasamos el listado de registros por referencia
+	 */
+	@SuppressWarnings("rawtypes")
+	private void setIntraysMainSenderName(List intrays) {
+		
+		for (Object obj : intrays){
+			Intray intray = (Intray) obj;
+			ThirdPerson[] arrRemitentes = intray.getRegisterSender();
+			if (null != arrRemitentes && arrRemitentes.length > 0){
+				intray.setMainSenderName(arrRemitentes[0].getName());
+			}
+		}
 	}
 
 	/**
@@ -495,11 +546,6 @@ public class InboxAPI implements IInboxAPI {
 					RegisterHelper.insertParticipants(m_ctx, registerNumber,RegisterType.ENTRADA, numExp, false);
 				}
 
-
-
-
-
-
 	    		// Fecha de registro
 	    		expedient.set("FREG", registerDate);
 
@@ -507,70 +553,8 @@ public class InboxAPI implements IInboxAPI {
 
 	            	// INTERESADO PRINCIPAL
 	            	if (!ArrayUtils.isEmpty(inReg.getRegisterData().getParticipants())) {
-
 	                	ThirdPerson thirdPerson = inReg.getRegisterData().getParticipants() [0];
-	                	if (thirdPerson != null) {
-
-	                		// Obtener el interesado principal
-		                	IThirdPartyAdapter thirdParty = null;
-
-		                	if ((thirdPartyAPI != null) && StringUtils.isNotBlank(thirdPerson.getId())) {
-		                		thirdParty = thirdPartyAPI.lookupById(thirdPerson.getId(), thirdPerson.getAddressId(), null);
-	                		}
-
-		                	if (thirdParty != null) {
-
-			                	expedient.set("TIPOPERSONA", thirdParty.getTipoPersona());
-			                	expedient.set("IDTITULAR", thirdParty.getIdExt());
-			                	expedient.set("NIFCIFTITULAR", thirdParty.getIdentificacion());
-			                	expedient.set("IDENTIDADTITULAR", thirdParty.getNombreCompleto());
-
-			                	if (itemRegisterES != null){
-				    				itemRegisterES.set("ID_INTERESADO", thirdParty.getIdExt());
-				    				itemRegisterES.set("INTERESADO", thirdParty.getNombreCompleto());
-			                	}
-
-
-			                	IPostalAddressAdapter dirPostal = thirdParty.getDefaultDireccionPostal();
-			                	if (dirPostal != null) {
-			                		expedient.set("IDDIRECCIONPOSTAL", dirPostal.getId());
-				                	expedient.set("DOMICILIO", dirPostal.getDireccionPostal());
-				                	expedient.set("CPOSTAL", dirPostal.getCodigoPostal());
-				                	expedient.set("CIUDAD", dirPostal.getMunicipio());
-				                	expedient.set("TFNOFIJO", dirPostal.getTelefono());
-
-				                	String regionPais = dirPostal.getProvincia();
-				                	if (StringUtils.isNotEmpty(dirPostal.getPais()))
-				                		regionPais += "/"+dirPostal.getPais();
-
-				                	expedient.set("REGIONPAIS", regionPais);
-			                	}
-
-			                	IElectronicAddressAdapter dirElectronica = thirdParty.getDefaultDireccionElectronica();
-			                	if (dirElectronica != null) {
-			                		if (dirElectronica.getTipo() == IElectronicAddressAdapter.PHONE_TYPE) {
-			                			expedient.set("TFNOMOVIL", dirElectronica.getDireccion());
-			                		} else {
-			                			expedient.set("DIRECCIONTELEMATICA", dirElectronica.getDireccion());
-			                		}
-			                	}
-
-			                	String addressType = "P";
-			                	if (thirdParty.isNotificacionTelematica()) {
-			                		addressType = "T";
-			                	}
-			                	expedient.set("TIPODIRECCIONINTERESADO", addressType);
-
-		                	} else {
-		                		//Interesado principal no validado
-		                		expedient.set("IDENTIDADTITULAR", thirdPerson.getName());
-		                		expedient.set("DOMICILIO", thirdPerson.getAddress());
-
-			                	if (itemRegisterES != null){
-				    				itemRegisterES.set("INTERESADO", thirdPerson.getName());
-			                	}
-		                	}
-	                	}
+	                	TercerosUtil.setInteresadoExpedienteByTercero(m_ctx, numExp, expedient, thirdPerson, false);
 	            	}
 
 	            	// ASUNTO (se corresponde con el resumen de registro)
@@ -775,6 +759,18 @@ public class InboxAPI implements IInboxAPI {
 			throw new ISPACException("exception.sicres.notConfigured");
 		}
 		registerAPI.getAnnexe(register, annexe, out);
+	}
+	
+	/**
+	 * [dipucr-Felipe #1689]
+	 * Sobrecargamos el método para dar la posibilidad de no cerrar el stream
+	 */
+	public void getAnnexe(String register, String annexe, OutputStream out, boolean bCloseStream)
+			throws ISPACException {
+		if (!registerAPI.existConnector()) {
+			throw new ISPACException("exception.sicres.notConfigured");
+		}
+		registerAPI.getAnnexe(register, annexe, out, bCloseStream);
 	}
 
 	/**

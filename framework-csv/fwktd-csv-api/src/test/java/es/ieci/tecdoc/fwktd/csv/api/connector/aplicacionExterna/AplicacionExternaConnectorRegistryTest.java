@@ -50,6 +50,18 @@ public class AplicacionExternaConnectorRegistryTest extends AbstractJUnit4Spring
 			public void writeDocumento(String csv, OutputStream outputStream, Map<String, String> params)
 					throws IOException {
 			}
+
+			public boolean existeDocumentoOriginal(String csv, Map<String, String> params) {
+				return false;
+			}
+
+			public byte[] getContenidoDocumentoOriginal(String csv, Map<String, String> params) {
+				return null;
+			}
+
+			public void writeDocumentoOriginal(String csv, OutputStream outputStream, Map<String, String> params) throws IOException {
+				
+			}
 		});
 
 		conectores = fwktd_csv_aplicacionExternaConnectorRegistry.getConectores();

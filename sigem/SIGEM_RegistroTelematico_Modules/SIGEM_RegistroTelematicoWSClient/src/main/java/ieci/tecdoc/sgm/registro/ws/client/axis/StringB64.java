@@ -7,9 +7,7 @@
 
 package ieci.tecdoc.sgm.registro.ws.client.axis;
 
-import ieci.tecdoc.sgm.core.services.dto.IRetornoServicio;
-
-public class StringB64  extends ieci.tecdoc.sgm.registro.ws.client.axis.RetornoServicio  implements java.io.Serializable, IRetornoServicio {
+public class StringB64  extends ieci.tecdoc.sgm.registro.ws.client.axis.RetornoServicio  implements java.io.Serializable {
     private java.lang.String stringB64;
 
     public StringB64() {
@@ -28,7 +26,7 @@ public class StringB64  extends ieci.tecdoc.sgm.registro.ws.client.axis.RetornoS
 
     /**
      * Gets the stringB64 value for this StringB64.
-     *
+     * 
      * @return stringB64
      */
     public java.lang.String getStringB64() {
@@ -38,7 +36,7 @@ public class StringB64  extends ieci.tecdoc.sgm.registro.ws.client.axis.RetornoS
 
     /**
      * Sets the stringB64 value for this StringB64.
-     *
+     * 
      * @param stringB64
      */
     public void setStringB64(java.lang.String stringB64) {
@@ -56,8 +54,8 @@ public class StringB64  extends ieci.tecdoc.sgm.registro.ws.client.axis.RetornoS
         }
         __equalsCalc = obj;
         boolean _equals;
-        _equals = super.equals(obj) &&
-            ((this.stringB64==null && other.getStringB64()==null) ||
+        _equals = super.equals(obj) && 
+            ((this.stringB64==null && other.getStringB64()==null) || 
              (this.stringB64!=null &&
               this.stringB64.equals(other.getStringB64())));
         __equalsCalc = null;
@@ -103,10 +101,10 @@ public class StringB64  extends ieci.tecdoc.sgm.registro.ws.client.axis.RetornoS
      * Get Custom Serializer
      */
     public static org.apache.axis.encoding.Serializer getSerializer(
-           java.lang.String mechType,
-           java.lang.Class _javaType,
+           java.lang.String mechType, 
+           java.lang.Class _javaType,  
            javax.xml.namespace.QName _xmlType) {
-        return
+        return 
           new  org.apache.axis.encoding.ser.BeanSerializer(
             _javaType, _xmlType, typeDesc);
     }
@@ -115,10 +113,10 @@ public class StringB64  extends ieci.tecdoc.sgm.registro.ws.client.axis.RetornoS
      * Get Custom Deserializer
      */
     public static org.apache.axis.encoding.Deserializer getDeserializer(
-           java.lang.String mechType,
-           java.lang.Class _javaType,
+           java.lang.String mechType, 
+           java.lang.Class _javaType,  
            javax.xml.namespace.QName _xmlType) {
-        return
+        return 
           new  org.apache.axis.encoding.ser.BeanDeserializer(
             _javaType, _xmlType, typeDesc);
     }

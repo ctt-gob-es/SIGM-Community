@@ -179,7 +179,7 @@ public class EnviarComisionServicioAFirmaRule implements IRule
     		itemExpediente.store(cct);
 			
     		//Esta instrucción coge el sustituto de firma, si está definido
-    		signAPI.initCircuit(idCircuitoFirma, idDocumento);
+    		signAPI.initCircuitPortafirmas(idCircuitoFirma, idDocumento);//[dipucr-Felipe #1246]
     		
     		//Petición al WS
 			String nreg = itemExpediente.getString("NREG");
