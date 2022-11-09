@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>afirma-signfolder-proxy</display-name>
+  <servlet>
+    <description>Servicio de Portafirmas</description>
+    <servlet-name>ProxyService</servlet-name>
+    <servlet-class>es.gob.afirma.signfolder.server.proxy.ProxyService</servlet-class>
+  </servlet>
+  <servlet>
+  	<description>Servicio de version</description>
+  	<servlet-name>VersionService</servlet-name>
+  	<servlet-class>es.gob.afirma.signfolder.server.proxy.VersionService</servlet-class>
+  </servlet>
+  <servlet>
+  	<description>
+  	</description>
+  	<display-name>ClaveResultService</display-name>
+  	<servlet-name>ClaveResultService</servlet-name>
+  	<servlet-class>es.gob.afirma.signfolder.server.proxy.ClaveResultService</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ProxyService</servlet-name>
+    <url-pattern>/pf</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>VersionService</servlet-name>
+  	<url-pattern>/version</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>ClaveResultService</servlet-name>
+  	<url-pattern>/claveResultService</url-pattern>
+  </servlet-mapping>
+</web-app>

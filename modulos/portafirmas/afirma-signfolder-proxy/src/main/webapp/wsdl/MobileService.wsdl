@@ -1,0 +1,1054 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="MobileService"
+	targetNamespace="urn:juntadeandalucia:cice:pfirma:mobile:v2.0"
+	xmlns:pfirma="urn:juntadeandalucia:cice:pfirma:mobile:v2.0"
+	xmlns:request="urn:juntadeandalucia:cice:pfirma:mobile:request:v2.0"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:type="urn:juntadeandalucia:cice:pfirma:mobile:type:v2.0"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+	<wsdl:types>
+		<xsd:schema targetNamespace="urn:juntadeandalucia:cice:pfirma:mobile:request:v2.0"
+			xmlns:pfirma="urn:juntadeandalucia:cice:pfirma:mobile:v2.0"
+			xmlns:request="urn:juntadeandalucia:cice:pfirma:mobile:request:v2.0"
+			xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:type="urn:juntadeandalucia:cice:pfirma:mobile:type:v2.0"
+			xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+			<xsd:import namespace="urn:juntadeandalucia:cice:pfirma:mobile:type:v2.0"
+				schemaLocation="MobileServiceTypes.xsd" />
+
+			<xsd:element name="queryRequestList">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="state" type="xsd:string" />
+						<xsd:element name="initPage" type="xsd:string" />
+						<xsd:element name="pageSize" type="xsd:string" />
+						<xsd:element name="signFormats" type="type:mobileStringList" />
+						<xsd:element name="filters" type="type:mobileRequestFilterList" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="queryRequestListResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="requestList" type="type:mobileRequestList" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="queryRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="requestId" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="queryRequestResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="request" type="type:mobileRequest" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="documentPreview">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="documentId" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="documentPreviewResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="document" type="type:mobileDocument" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="getDocumentsToSign">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="requestTagId" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="getDocumentsToSignResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="documentList" type="type:mobileDocumentList" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="saveSign">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="requestTagId" type="xsd:string" />
+						<xsd:element name="docSignInfoList" type="type:mobileDocSignInfoList" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="saveSignResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="result" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="rejectRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="requestId" type="xsd:string" />
+						<xsd:element name="textRejection" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="rejectRequestResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="responseId" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="queryApplicationsMobile">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="queryApplicationsMobileResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="applicationList" type="type:mobileApplicationList" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="approveRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="requestTagId" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="approveRequestResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="responseId" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="signPreview">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="documentId" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="signPreviewResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="document" type="type:mobileDocument" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="reportPreview">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="documentId" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="reportPreviewResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="document" type="type:mobileDocument" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="registerSIMUser">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="register" type="type:mobileSIMUser" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="registerSIMUserResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="registerStatus" type="type:mobileSIMUserStatus" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="validateUser">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="validateUserResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="nifCif" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="updateNotifyPush">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="estadoNotifyPush" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="updateNotifyPushResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="resultado" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="estadoNotifyPush">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="estadoNotifyPushResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="valorNotifyPush" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="solicitudAccesoClave">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="spUrl" type="xsd:string" />
+						<xsd:element name="spReturn" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="solicitudAccesoClaveResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="solicitudAccesoClaveRespuesta"
+							type="type:mobileAccesoClave" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="procesarRespuestaClave">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="samlresponse" type="xsd:string" />
+						<xsd:element name="remoteHost" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="procesarRespuestaClaveResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="nifCif" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="fireTransaction">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="idRequestList" type="type:mobileStringList" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="fireTransactionResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="fireTransactionResponse" type="type:mobileFireTrasactionResponse" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="signFireCloud">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="certificate" type="xsd:base64Binary" />
+						<xsd:element name="idRequestList" type="type:mobileStringList" />
+						<xsd:element minOccurs="0" name="transactionId"
+							nillable="false" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="signFireCloudResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="fireRequestList" type="type:mobileFireRequestList" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="getUserByRoleRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="role" type="xsd:string" />
+						<xsd:element name="id" type="xsd:base64Binary" />
+						<xsd:element name="pageNum" type="xsd:string" />
+						<xsd:element name="pageSize" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="getUserByRoleResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="rolesListResult" type="type:rolesList" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="getUserRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="id" type="xsd:base64Binary" />
+						<xsd:element name="pageNum" type="xsd:string" />
+						<xsd:element name="pageSize" type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="getUserResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="userListResult" type="type:userList" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="verifyPetitionsRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="id" type="xsd:base64Binary" />
+						<xsd:element name="petitions" type="type:idList" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="verifyPetitionsResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="verifyResult" type="xsd:boolean" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="createRoleRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="id" type="xsd:base64Binary" />
+						<xsd:element name="userId" type="xsd:string" />
+						<xsd:element name="selectedRole" type="xsd:string" />
+						<xsd:element name="authInfo" type="type:authorizationInfo" />
+						<xsd:element name="appIds" type="type:idList" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="createRoleResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="result" type="xsd:boolean" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="approveRequestResponse">
+		<wsdl:part element="request:approveRequestResponse" name="approveRequestResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="signPreviewResponse">
+		<wsdl:part element="request:signPreviewResponse" name="signPreviewResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="mobileException">
+		<wsdl:part element="type:mobileError" name="mobileException">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="rejectRequest">
+		<wsdl:part element="request:rejectRequest" name="rejectRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="signFireCloudResponse">
+		<wsdl:part element="request:signFireCloudResponse" name="signFireCloudResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="fireTransaction">
+		<wsdl:part element="request:fireTransaction" name="fireTransaction">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getDocumentsToSign">
+		<wsdl:part element="request:getDocumentsToSign" name="getDocumentsToSign">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="queryRequestList">
+		<wsdl:part element="request:queryRequestList" name="queryRequestList">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="validateUserResponse">
+		<wsdl:part element="request:validateUserResponse" name="validateUserResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="queryApplicationsMobileResponse">
+		<wsdl:part element="request:queryApplicationsMobileResponse"
+			name="queryApplicationsMobileResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="solicitudAccesoClaveResponse">
+		<wsdl:part element="request:solicitudAccesoClaveResponse"
+			name="solicitudAccesoClaveResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="updateNotifyPushResponse">
+		<wsdl:part element="request:updateNotifyPushResponse" name="updateNotifyPushResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="reportPreviewResponse">
+		<wsdl:part element="request:reportPreviewResponse" name="reportPreviewResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="estadoNotifyPushResponse">
+		<wsdl:part element="request:estadoNotifyPushResponse" name="estadoNotifyPushResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="queryRequestResponse">
+		<wsdl:part element="request:queryRequestResponse" name="queryRequestResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="saveSignResponse">
+		<wsdl:part element="request:saveSignResponse" name="saveSignResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="estadoNotifyPush">
+		<wsdl:part element="request:estadoNotifyPush" name="estadoNotifyPush">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="signFireCloud">
+		<wsdl:part element="request:signFireCloud" name="signFireCloud">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="procesarRespuestaClaveResponse">
+		<wsdl:part element="request:procesarRespuestaClaveResponse"
+			name="procesarRespuestaClaveResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="queryRequest">
+		<wsdl:part element="request:queryRequest" name="queryRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="validateUser">
+		<wsdl:part element="request:validateUser" name="validateUser">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="documentPreviewResponse">
+		<wsdl:part element="request:documentPreviewResponse" name="documentPreviewResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="solicitudAccesoClave">
+		<wsdl:part element="request:solicitudAccesoClave" name="solicitudAccesoClave">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="fireTransactionResponse">
+		<wsdl:part element="request:fireTransactionResponse" name="fireTransactionResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="registerSIMUserResponse">
+		<wsdl:part element="request:registerSIMUserResponse" name="registerSIMUserResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="queryRequestListResponse">
+		<wsdl:part element="request:queryRequestListResponse" name="queryRequestListResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="documentPreview">
+		<wsdl:part element="request:documentPreview" name="documentPreview">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="saveSign">
+		<wsdl:part element="request:saveSign" name="saveSign">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="signPreview">
+		<wsdl:part element="request:signPreview" name="signPreview">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="reportPreview">
+		<wsdl:part element="request:reportPreview" name="reportPreview">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="procesarRespuestaClave">
+		<wsdl:part element="request:procesarRespuestaClave" name="procesarRespuestaClave">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="approveRequest">
+		<wsdl:part element="request:approveRequest" name="approveRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="registerSIMUser">
+		<wsdl:part element="request:registerSIMUser" name="registerSIMUser">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="queryApplicationsMobile">
+		<wsdl:part element="request:queryApplicationsMobile" name="queryApplicationsMobile">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getDocumentsToSignResponse">
+		<wsdl:part element="request:getDocumentsToSignResponse"
+			name="getDocumentsToSignResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="rejectRequestResponse">
+		<wsdl:part element="request:rejectRequestResponse" name="rejectRequestResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="updateNotifyPush">
+		<wsdl:part element="request:updateNotifyPush" name="updateNotifyPush">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getUserByRoleRequest">
+		<wsdl:part element="request:getUserByRoleRequest" name="getUserByRoleRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getUserByRoleResponse">
+		<wsdl:part element="request:getUserByRoleResponse" name="getUserByRoleResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getUserRequest">
+		<wsdl:part element="request:getUserRequest" name="getUserRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="getUserResponse">
+		<wsdl:part element="request:getUserResponse" name="getUserResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="verifyPetitionsRequest">
+		<wsdl:part element="request:verifyPetitionsRequest" name="verifyPetitionsRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="verifyPetitionsResponse">
+		<wsdl:part element="request:verifyPetitionsResponse" name="verifyPetitionsResponse">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="createRoleRequest">
+		<wsdl:part element="request:createRoleRequest" name="createRoleRequest">
+		</wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="createRoleResponse">
+		<wsdl:part element="request:createRoleResponse" name="createRoleResponse">
+		</wsdl:part>
+	</wsdl:message>
+
+	<wsdl:portType name="MobileService">
+		<wsdl:operation name="queryRequestList">
+			<wsdl:input message="pfirma:queryRequestList" name="queryRequestList">
+			</wsdl:input>
+			<wsdl:output message="pfirma:queryRequestListResponse"
+				name="queryRequestListResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="queryRequest">
+			<wsdl:input message="pfirma:queryRequest" name="queryRequest">
+			</wsdl:input>
+			<wsdl:output message="pfirma:queryRequestResponse" name="queryRequestResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="documentPreview">
+			<wsdl:input message="pfirma:documentPreview" name="documentPreview">
+			</wsdl:input>
+			<wsdl:output message="pfirma:documentPreviewResponse"
+				name="documentPreviewResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getDocumentsToSign">
+			<wsdl:input message="pfirma:getDocumentsToSign" name="getDocumentsToSign">
+			</wsdl:input>
+			<wsdl:output message="pfirma:getDocumentsToSignResponse"
+				name="getDocumentsToSignResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="saveSign">
+			<wsdl:input message="pfirma:saveSign" name="saveSign">
+			</wsdl:input>
+			<wsdl:output message="pfirma:saveSignResponse" name="saveSignResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="rejectRequest">
+			<wsdl:input message="pfirma:rejectRequest" name="rejectRequest">
+			</wsdl:input>
+			<wsdl:output message="pfirma:rejectRequestResponse" name="rejectRequestResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="queryApplicationsMobile">
+			<wsdl:input message="pfirma:queryApplicationsMobile" name="queryApplicationsMobile">
+			</wsdl:input>
+			<wsdl:output message="pfirma:queryApplicationsMobileResponse"
+				name="queryApplicationsMobileResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="approveRequest">
+			<wsdl:input message="pfirma:approveRequest" name="approveRequest">
+			</wsdl:input>
+			<wsdl:output message="pfirma:approveRequestResponse"
+				name="approveRequestResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="signPreview">
+			<wsdl:input message="pfirma:signPreview" name="signPreview">
+			</wsdl:input>
+			<wsdl:output message="pfirma:signPreviewResponse" name="signPreviewResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="reportPreview">
+			<wsdl:input message="pfirma:reportPreview" name="reportPreview">
+			</wsdl:input>
+			<wsdl:output message="pfirma:reportPreviewResponse" name="reportPreviewResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="registerSIMUser">
+			<wsdl:input message="pfirma:registerSIMUser" name="registerSIMUser">
+			</wsdl:input>
+			<wsdl:output message="pfirma:registerSIMUserResponse"
+				name="registerSIMUserResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="validateUser">
+			<wsdl:input message="pfirma:validateUser" name="validateUser">
+			</wsdl:input>
+			<wsdl:output message="pfirma:validateUserResponse" name="validateUserResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="updateNotifyPush">
+			<wsdl:input message="pfirma:updateNotifyPush" name="updateNotifyPush">
+			</wsdl:input>
+			<wsdl:output message="pfirma:updateNotifyPushResponse"
+				name="updateNotifyPushResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="estadoNotifyPush">
+			<wsdl:input message="pfirma:estadoNotifyPush" name="estadoNotifyPush">
+			</wsdl:input>
+			<wsdl:output message="pfirma:estadoNotifyPushResponse"
+				name="estadoNotifyPushResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="solicitudAccesoClave">
+			<wsdl:input message="pfirma:solicitudAccesoClave" name="solicitudAccesoClave">
+			</wsdl:input>
+			<wsdl:output message="pfirma:solicitudAccesoClaveResponse"
+				name="solicitudAccesoClaveResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="procesarRespuestaClave">
+			<wsdl:input message="pfirma:procesarRespuestaClave" name="procesarRespuestaClave">
+			</wsdl:input>
+			<wsdl:output message="pfirma:procesarRespuestaClaveResponse"
+				name="procesarRespuestaClaveResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="fireTransaction">
+			<wsdl:input message="pfirma:fireTransaction" name="fireTransaction">
+			</wsdl:input>
+			<wsdl:output message="pfirma:fireTransactionResponse"
+				name="fireTransactionResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="signFireCloud">
+			<wsdl:input message="pfirma:signFireCloud" name="signFireCloud">
+			</wsdl:input>
+			<wsdl:output message="pfirma:signFireCloudResponse" name="signFireCloudResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getUserByRole">
+			<wsdl:input message="pfirma:getUserByRoleRequest" name="getUserByRoleRequest">
+			</wsdl:input>
+			<wsdl:output message="pfirma:getUserByRoleResponse" name="getUserByRoleResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getUser">
+			<wsdl:input message="pfirma:getUserRequest" name="getUserRequest">
+			</wsdl:input>
+			<wsdl:output message="pfirma:getUserResponse" name="getUserResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="verifyPetitions">
+			<wsdl:input message="pfirma:verifyPetitionsRequest" name="verifyPetitionsRequest">
+			</wsdl:input>
+			<wsdl:output message="pfirma:verifyPetitionsResponse"
+				name="verifyPetitionsResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="createRole">
+			<wsdl:input message="pfirma:createRoleRequest" name="createRoleRequest">
+			</wsdl:input>
+			<wsdl:output message="pfirma:createRoleResponse" name="createRoleResponse">
+			</wsdl:output>
+			<wsdl:fault message="pfirma:mobileException" name="mobileException">
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="MobileServiceSoapBinding" type="pfirma:MobileService">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="queryRequestList">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="queryRequestList">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="queryRequestListResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="queryRequest">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="queryRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="queryRequestResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="documentPreview">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="documentPreview">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="documentPreviewResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getDocumentsToSign">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="getDocumentsToSign">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getDocumentsToSignResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="saveSign">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="saveSign">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="saveSignResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="rejectRequest">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="rejectRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="rejectRequestResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="queryApplicationsMobile">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="queryApplicationsMobile">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="queryApplicationsMobileResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="approveRequest">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="approveRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="approveRequestResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="signPreview">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="signPreview">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="signPreviewResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="reportPreview">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="reportPreview">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="reportPreviewResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="registerSIMUser">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="registerSIMUser">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="registerSIMUserResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="validateUser">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="validateUser">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="validateUserResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="updateNotifyPush">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="updateNotifyPush">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="updateNotifyPushResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="estadoNotifyPush">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="estadoNotifyPush">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="estadoNotifyPushResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="solicitudAccesoClave">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="solicitudAccesoClave">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="solicitudAccesoClaveResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="procesarRespuestaClave">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="procesarRespuestaClave">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="procesarRespuestaClaveResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="fireTransaction">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="fireTransaction">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="fireTransactionResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="signFireCloud">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="signFireCloud">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="signFireCloudResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getUserByRole">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="getUserByRoleRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getUserByRoleResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="verifyPetitions">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="verifyPetitionsRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="verifyPetitionsResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="getUser">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="getUserRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="getUserResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="createRole">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="createRoleRequest">
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output name="createRoleResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="mobileException">
+				<soap:fault name="mobileException" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="MobileService">
+		<wsdl:port name="MobileServicePort" binding="pfirma:MobileServiceSoapBinding">
+			<soap:address location="http://192.168.56.1:8080/MobileServicePort" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
