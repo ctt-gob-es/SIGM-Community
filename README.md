@@ -36,5 +36,4 @@ Dicho fichero se encuentran en el directorio raiz del proyecto.
 
 La siguiente «Licencia Pública de la Unión Europea» («European Union Public Licence EUPL») se ha elaborado en el marco de IDABC, programa de la Comunidad Europea cuyo objetivo es promover la prestación interoperable de servicios de administración electrónica europea a las administraciones públicas, las empresas y los ciudadanos. IDABC prolonga y profundiza el anterior programa IDA («Intercambio de Datos entre Administraciones»). 
 
-<a href="[https://joinup.ec.europa.eu/system/files/ES/EUPL%20v.1.1%20-%20Licencia.pdf](https://joinup.ec.europa.eu/sites/default/files/custom-page/attachment/eupl1.1.-licence-es_0.pdf)" target="_new">EUPL 1.1</a>
-
+<a href="https://joinup.ec.europa.eu/sites/default/files/custom-page/attachment/eupl1.1.-licence-es_0.pdf" target="_new">EUPL 1.1</a>
