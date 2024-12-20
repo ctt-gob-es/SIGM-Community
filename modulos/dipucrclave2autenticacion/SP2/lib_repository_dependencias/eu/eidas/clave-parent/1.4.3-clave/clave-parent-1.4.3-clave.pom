@@ -60,7 +60,7 @@
         <log4j.api>2.3</log4j.api>
         <xmlunit.version>1.5</xmlunit.version>
         <bdr.econnector.version>1.2.2</bdr.econnector.version>
-        <struts.version>2.3.32</struts.version>
+        <struts.version>6.4.0</struts.version>
         <icu4j.version>55.1</icu4j.version>
         <vaadin.version>7.4.2</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
