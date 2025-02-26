@@ -37,7 +37,7 @@
     <spring.security.version>3.0.2.RELEASE</spring.security.version>
     <spring.web.flow.version>2.0.8.RELEASE</spring.web.flow.version>
     <ibatis.version>2.3.4.726</ibatis.version>
-    <hibernate.version>3.5.0-Final</hibernate.version>
+    <hibernate.version>5.3.20.Final</hibernate.version>
     <slf4j.version>1.5.8</slf4j.version>
     <log4j.version>1.2.14</log4j.version>
     <commons.logging.version>1.1</commons.logging.version>
