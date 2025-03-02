@@ -44,7 +44,7 @@
     <commons.lang.version>2.5</commons.lang.version>
     <commons.collections.version>3.2.1</commons.collections.version>
     <commons.codec.version>1.5</commons.codec.version>
-    <junit.version>4.8.1</junit.version>
+    <junit.version>4.13.1</junit.version>
     <dbunit.version>2.4.7</dbunit.version>
     <easymock.version>2.5.2</easymock.version>
     <axis.version>1.4</axis.version>
