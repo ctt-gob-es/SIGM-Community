@@ -33,7 +33,7 @@
     <scm.repo.browse.url>https://10.228.75.66/trac/framework-td/browser/trunk</scm.repo.browse.url>
     <issue.management.url>https://10.228.75.66/trac/framework-td</issue.management.url>
 
-    <spring.version>3.0.2.RELEASE</spring.version>
+    <spring.version>5.2.20.RELEASE</spring.version>
     <spring.security.version>3.0.2.RELEASE</spring.security.version>
     <spring.web.flow.version>2.0.8.RELEASE</spring.web.flow.version>
     <ibatis.version>2.3.4.726</ibatis.version>
