@@ -10,7 +10,7 @@
 	<packaging>jar</packaging>
 	<description>Modulo que contiene la capa web de integración con el nuevo api de isicres</description>
 	<properties>
-		<dwr.version>3.0.M1</dwr.version>
+		<dwr.version>3.0.1-RELEASE</dwr.version>
 	</properties>
 
 	<dependencies>
