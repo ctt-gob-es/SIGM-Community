@@ -13,7 +13,7 @@
 	<name>SIGEM_ServicioIntermediacionClienteLigeroWS</name>
 	
 	<properties>
-		<hibertane.version>3.5.0-Final</hibertane.version>
+		<hibertane.version>5.3.20.Final</hibertane.version>
 		<hibertane.jpa.version>1.0.0.Final</hibertane.jpa.version>
 		<hibertane.commons.annotations.version>3.2.0.Final</hibertane.commons.annotations.version>
 		<javax.activation.version>1.1</javax.activation.version>
