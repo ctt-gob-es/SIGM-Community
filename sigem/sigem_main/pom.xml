@@ -104,7 +104,7 @@
 		<servlet-api.version>2.4</servlet-api.version>
 
 		<!-- Test dependencies properties -->
-		<junit.version>3.8.1</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<postgresql.driver.version>8.3-603.jdbc3</postgresql.driver.version>
 		<xbean-spring.version>3.6</xbean-spring.version>
 
